@@ -1,32 +1,39 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 ruby "2.3.1"
 
-gem 'rails', '~> 5.0.0'
-gem 'pg', '~> 0.18'
-gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2'
+gem "rails", "~> 5.0.0"
+gem "pg", "~> 0.18"
+gem "sass-rails", "~> 5.0"
+gem "uglifier", ">= 1.3.0"
+gem "coffee-rails", "~> 4.2"
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# gem "therubyracer", platforms: :ruby
 
-gem 'jquery-rails'
-gem 'jbuilder', '~> 2.5'
+gem "jquery-rails"
+gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-gem 'dotenv-rails'
+# gem "bcrypt", "~> 3.1.7"
+gem "dotenv-rails"
+gem "devise", "~> 4.2.0"
 
 
 group :development, :test do
-  gem 'byebug', platform: :mri
+  gem "byebug", platform: :mri
 end
 
 group :development do
+  gem "xray-rails"
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
-  gem 'listen', '~> 3.0.5'
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem "web-console"
+  gem "listen", "~> 3.0.5"
+  gem "spring"
+  gem "spring-watcher-listen", "~> 2.0.0"
+  gem "annotate"
+  gem "letter_opener"
+  gem "better_errors"
+  gem "binding_of_caller"
+  gem "factory_girl_rails"
 end
 
-gem 'rails_12factor', group: :production
+gem "rails_12factor", group: :production
