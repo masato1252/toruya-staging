@@ -48,7 +48,7 @@ a img:hover, #header .logo a:hover, #header #phone a:hover, #footerLogo a:hover,
 .floatL {
   float: left;
 }
-div.error, div.caution {
+div.error, div.caution, #error_explanation {
   border: 1px solid;
   padding: 10px 20px;
   margin-bottom: 20px;
@@ -57,7 +57,7 @@ div.error {
   background: #fcecf3;
   border-color: #f7c5db;
 }
-div.caution {
+div.caution, #error_explanation  {
   background: #fffeeb;
   border-color: #fff100;
 }

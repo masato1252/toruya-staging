@@ -1,5 +1,19 @@
 .container {
   margin-top: 90px;
+
+  .tbd-items {
+    border-bottom: 1px solid #333;
+    padding: 10px 0;
+  }
+
+  .field_with_errors {
+    label {
+      color: #FF0000;
+    }
+    input {
+      border: 1px solid #FF0000;
+    }
+  }
 }
 
 #footer {
