@@ -1,0 +1,59 @@
+header {
+  background: #464342;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 75px;
+}
+header dl { padding: 16px 28px 0; }
+header dl:first-child { float: left; }
+header dl:last-child { float: right; }
+header dl:first-child dd { padding-right: 28px; }
+header dl:last-child dd { padding-left: 28px; }
+header dl dd { 
+  display: inline-block;
+  vertical-align: middle;
+}
+header a, header a:link, header a:visited {
+  display: block;
+  background-position: center top;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  width: 45px;
+  text-align: center;
+  font-size: 8px;
+  padding-top: 35px;
+  color: #d0d0d0;
+  position: relative;
+}
+header #NAVhome a { background-image: url(asset-path("screen/mainnav_home.png")); }
+header #NAVcaution a { background-image: url(asset-path("screen/mainnav_caution.png")); }
+header #NAVhelp a { background-image: url(asset-path("screen/mainnav_help.png")); }
+header #NAVsetting a { background-image: url(asset-path("screen/mainnav_setting.png")); }
+header #NAVcaution a strong {
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: center;
+  color: #fff;
+  background: transparent url(asset-path("screen/mainnav_caution_num.png")) center center no-repeat;
+  display: block;
+  width: 20px;
+  height: 20px;
+  font-weight: bold;
+  line-height: 20px;
+    font-size: 11px;
+}
+
+/* Footer */
+#footer {
+  border-top: 1px solid #e0e0e0;
+  color: #ccc;
+  font-size: 14px;
+  clear: both;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+#footer .content { margin: 20px; }

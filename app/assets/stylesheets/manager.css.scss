@@ -1,0 +1,220 @@
+/* Shop Select */
+.shopSelect h2 { text-align: center; }
+.shopSelect #shopNav {
+  display: table;
+  border-spacing: 20px;
+  margin: auto;
+}
+.shopSelect #shopNav div {
+  display: table-cell;
+}
+.shopSelect a.BTNorange span { font-weight: normal; }
+.shopSelect a.BTNorange {
+  text-align: center;
+  line-height: 1.4;
+  height: auto;
+  padding: 10px 20px;
+}
+
+/* Contents */
+.contents {
+  margin: 75px 0 0 0;
+  padding: 0 0 30px 0;
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+}
+.shopIndex .contents { 
+  padding: 0px;
+  margin: 75px 0 0 0;
+}
+#sideNav, #content, #calendar, #mainNav { 
+    vertical-align: top;
+  display: table-cell;
+}
+#sideNav {
+  background: #aaa;
+  width: 250px;
+    border-right: 1px solid #858585;
+}
+#sideNav dl dt, #sideNav dl dd ul li {  }
+#sideNav dl a, #sideNav dl a:link, #sideNav dl a:visited {
+  display: block;
+  color: #E8E8E8;
+  background: #aaa;
+  padding: 20px;
+  width: 150px;
+}
+#sideNav dl dt a, #sideNav dl dd ul li a, #sideNav dl dd ul { border-bottom: 1px solid #858585; }
+#sideNav dl dd ul li:last-child a { border: 0px; }
+#sideNav dl dd ul li { padding-left: 20px; }
+#sideNav dl a:hover { color: #606060; }
+#sideNav dl dt.here a, #sideNav dl dd ul li.here, #sideNav dl dd ul li.here a {
+  color: #6fa89f;
+  background: #fff;
+}
+#content #subNav {
+  background: #d0d0d0;
+  border-bottom: 1px solid #858585;
+  padding: 10px 20px;
+}
+#content #subNav h2 {
+  line-height: 35px;
+  text-align: center;
+  margin: 0;
+}
+#content #subNav .btns { position: absolute; right: 20px; top: 10px; }
+#content #subNav a {
+  height: 35px;
+    line-height: 35px;
+}
+#content #about {
+  margin: 20px;
+  border-bottom: 1px solid #aaa;
+  color: #888;
+  padding: 0 15px 20px 15px;
+}
+#content #about p { line-height: 1.4; }
+#content form {
+  margin: 20px;
+  padding: 0 20px;
+  color: #8F8F8F;
+}
+#content form h3 {
+  font-size: 16px;
+  margin: 10px 0 5px 0;
+  text-indent: 10px;
+}
+#content .formRow dl, #content .formRow ul { 
+  border: 1px solid #DFDFDF;
+  background: #fff;
+  padding: 10px 20px;
+  display: table-row;
+}
+#content .formRow ul.form:first-of-type {
+  border-radius: 10px 10px 0 0 / 10px 10px 0 0;
+  -moz-border-radius: 10px 10px 0 0 / 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0 / 10px 10px 0 0;
+  -o-border-radius: 10px 10px 0 0 / 10px 10px 0 0;
+  -ms-border-radius: 10px 10px 0 0 / 10px 10px 0 0;
+}
+#content .formRow ul.form:last-child {
+    -webkit-border-bottom-right-radius: 10px;  
+    -webkit-border-bottom-left-radius: 10px;  
+    -moz-border-radius-bottomright: 10px;  
+    -moz-border-radius-bottomleft: 10px; 
+}
+#content form dl dt, #content form dl dd, #content form ul li {
+  display: table-cell;
+  vertical-align: middle;
+}
+#content form dl dt p, #content form dl dd input, #content form ul li.rowTTL p, #content form ul li input {
+  padding: 10px 20px;
+}
+#content form dl dt, #content form ul li.rowTTL {
+  color: #888;
+  padding-right: 20px;
+}
+#content form dl dt strong, #content form h3 strong, #content form ul li.rowTTL strong {
+  color: #fff;
+  background: #CF0003;
+  display: inline-block;
+  font-size: 10px;
+  padding: 3px 5px;
+  margin-left: 10px;
+  border-radius: 5px; /* 記述無し */
+  -moz-border-radius: 5px; /* Firefox */
+  -webkit-border-radius: 5px; /* Google Chrome、Safari */
+  -o-border-radius: 5px; /* Opera */
+  -ms-border-radius: 5px; /* Internet Explorer */
+}
+#content form dl dd input, #content form ul li input {
+  border: 0px;
+  color: #333;
+}
+#content form dl.tableTTL, #content form ul.tableTTL {
+  background: transparent;
+  border: 0px;
+  text-align: center;
+  color: #BABABA;
+  font-size: 14px;
+}
+.BTNonoff, .BTNopenclose, .BTNyesno, .BTNinout {
+  display: none;
+}
+.BTNonoff + label, .BTNopenclose + label, .BTNyesno + label, .BTNinout + label {}
+.BTNonoff + label:before, .BTNonoff + label:after, .BTNopenclose + label:before, .BTNopenclose + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after {
+  display: inline-block;
+  padding: .2em .5em;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  line-height: 1.5;
+  font-size: 14px;
+  padding: 5px;
+}
+.BTNonoff + label:before, .BTNopenclose + label:before, .BTNyesno + label:before, .BTNinout + label:before {
+  background: #DEDEDE;
+  color: #000000;
+  border-top-left-radius: .3em;
+  border-bottom-left-radius: .3em;
+}
+.BTNonoff + label:after, .BTNopenclose + label:after, .BTNyesno + label:after, .BTNinout + label:after {
+  background: #ABABAB;
+  color: #ABABAB;
+  border-top-right-radius: .3em;
+  border-bottom-right-radius: .3em;
+}
+.BTNonoff + label:before, .BTNonoff + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 2.5em; }
+.BTNopenclose + label:before, .BTNopenclose + label:after { width: 3.5em; }
+.BTNonoff + label:before { content: "OFF"; }
+.BTNonoff + label:after { content: "ON"; }
+.BTNyesno + label:before { content: "NO"; }
+.BTNyesno + label:after { content: "YES"; }
+.BTNinout + label:before { content: "OUT"; }
+.BTNinout + label:after { content: "IN"; }
+.BTNopenclose + label:before { content: "CLOSE"; }
+.BTNopenclose + label:after { content: "OPEN"; }
+.BTNonoff:checked + label:before, .BTNopenclose:checked + label:before, .BTNyesno:checked + label:before, .BTNinout:checked + label:before {
+  background: #60938a;
+  color: #60938a;
+}
+.BTNonoff:checked + label:after, .BTNopenclose:checked + label:after, .BTNyesno:checked + label:after, .BTNinout:checked + label:after {
+  background: #96bfb8;
+  color: #FFFFFF;
+}
+#content form #footerav {
+  text-align: center;
+  padding-top: 20px;
+}
+
+/* Dashboard */
+#dashboard {
+  border-collapse: separate;
+    border-spacing: 20px;
+}
+#mainNav { padding-top: 20px; }
+#mainNav dl dd { padding-bottom: 10px; }
+#mainNav a, #mainNav a:link, #mainNav a:visited {
+  background-repeat: no-repeat;
+  background-position: center 15px;
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 15px;
+    font-size: 24px;
+    line-height: 24px;
+    width: 140px;
+    height: inherit;
+}
+#mainNav #NAVnewResv a { background-image:    url(asset-path("screen/btn_newresv.png")); }
+#mainNav #NAVsearchResv a { background-image: url(asset-path("screen/btn_searchresv.png")); }
+#mainNav #NAVcustomers a { background-image:  url(asset-path("screen/btn_customers.png")); }
+.shopIndex #footer { display: none; }
+/*clear all*/
+#aa:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; 
+}

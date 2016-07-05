@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Kasaike</title>
+    <title>Toruyaースモールビジネスの顧客管理ツールー</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    "application", media: "all" %>
@@ -9,11 +9,15 @@
   </head>
 
   <body>
+    <header>
+      <h1><a href="">Toruma</a></h1>
+    </header>
     <ul>
       <li><%= link_to t("common.sign_in"), new_user_session_path %></li>
       <li><%= link_to t("common.sign_up"), new_user_registration_path %></li>
     </ul>
     <%= flash_messages %>
     <%= yield %>
+    <div id="footer"><div class="content">&copy; Kasai, Inc.</div></div>
   </body>
 </html>
