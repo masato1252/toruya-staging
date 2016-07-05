@@ -4,7 +4,6 @@ ruby "2.3.1"
 
 gem "rails", "~> 5.0.0"
 gem "pg", "~> 0.18"
-gem "sass-rails", "~> 5.0"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.2"
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -14,6 +13,8 @@ gem "jquery-rails"
 gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem "bcrypt", "~> 3.1.7"
+gem "bootstrap-sass", "~> 3.3.6"
+gem 'sass-rails', "~> 5.0.5"
 gem "dotenv-rails"
 gem "devise", "~> 4.2.0"
 
