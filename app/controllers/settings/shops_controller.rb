@@ -1,4 +1,4 @@
-class Settings::ShopsController < ApplicationController
+class Settings::ShopsController < DashboardController
   before_action :authenticate_user!, :only => [:new, :create, :edit, :update]
   before_action :set_shop, only: [:show, :edit, :update, :destroy]
 
