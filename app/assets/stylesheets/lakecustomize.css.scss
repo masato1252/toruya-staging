@@ -1,5 +1,6 @@
 $red: #FF0000;
 $gray: #333333;
+$light_gray: #CCCCCC;
 
 header {
   z-index: 9999999;
@@ -43,6 +44,18 @@ form {
 
   label.control-label {
     padding-top: 11px;
+  }
+}
+
+.new_shop {
+  div.shop-name {
+    padding-bottom: 10px;
+    border-bottom: 1px solid $light_gray;
+  }
+
+  div.shop-contact {
+    padding-top: 10px;
+    border-bottom: 1px solid $light_gray;
   }
 }
 

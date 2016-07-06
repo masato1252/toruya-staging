@@ -1,8 +1,6 @@
 <%= form_for(shop, url: (shop.new_record? ? settings_shops_path(shop) : settings_shop_path(shop))) do |f| %>
   <% if shop.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(shop.errors.count, "error") %> prohibited this shop from being saved:</h2>
-
       <ul>
       <% shop.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -11,73 +9,79 @@
     </div>
   <% end %>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :name %>
-    </label>
+  <div class="shop-name">
+    <h3>店名</h3>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :name %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :name %>
+      <div class="col-sm-9">
+        <%= f.text_field :name, placeholder: true %>
+      </div>
+    </div>
+
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :shortname %>
+      </label>
+
+      <div class="col-sm-9">
+        <%= f.text_field :shortname, placeholder: true %>
+      </div>
     </div>
   </div>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :shortname %>
-    </label>
+  <div class="shop-contact">
+    <h3>連絡先</h3>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :zip_code %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :shortname %>
+      <div class="col-sm-9">
+        <%= f.text_field :zip_code, placeholder: true %>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :zip_code %>
-    </label>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :address %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :zip_code %>
+      <div class="col-sm-9">
+        <%= f.text_field :address, placeholder: true %>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :address %>
-    </label>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :phone_number %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :address %>
+      <div class="col-sm-9">
+        <%= f.text_field :phone_number, placeholder: true %>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :phone_number %>
-    </label>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :email %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :phone_number %>
+      <div class="col-sm-9">
+        <%= f.text_field :email, placeholder: true %>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <abbr class="required" title="required">*</abbr> <%= f.label :email %>
-    </label>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <%= f.label :website %>
+      </label>
 
-    <div class="col-sm-9">
-      <%= f.text_field :email %>
-    </div>
-  </div>
-
-  <div class="form-group url required row">
-    <label class="url required control-label col-sm-2 control-label">
-      <%= f.label :website %>
-    </label>
-
-    <div class="col-sm-9">
-      <%= f.text_field :website %>
+      <div class="col-sm-9">
+        <%= f.text_field :website, placeholder: true %>
+      </div>
     </div>
   </div>
 
