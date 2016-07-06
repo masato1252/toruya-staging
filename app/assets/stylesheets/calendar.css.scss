@@ -1,0 +1,104 @@
+.border-box {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+#calendar {
+  display: block;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  background: white;
+  width: 300px;
+  border: solid 1px #cccccc;
+  margin-bottom: 10px;
+
+  .header {
+    float: left;
+    width: 100%;
+    background: #2875c7;
+    height: 40px;
+    color: white;
+    > {
+      * {
+        height: 40px;
+        line-height: 40px !important;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      i {
+        float: left;
+        width: 40px;
+        font-size: 1.125em;
+        font-weight: bold;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        padding: 0 10px;
+        cursor: pointer;
+        &.fa-angle-left {
+          text-align: left;
+        }
+        &.fa-angle-right {
+          text-align: right;
+          margin-left: -40px;
+        }
+      }
+      span {
+        float: left;
+        width: 100%;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        padding-left: 50px;
+        margin-left: -40px;
+        text-align: center;
+        padding-right: 40px;
+        color: inherit;
+      }
+    }
+  }
+
+  .week {
+    float: left;
+    width: 100%;
+    border-top: solid 1px #cccccc;
+    &:first-child {
+      border-top: none;
+    }
+    > span.day {
+      float: left;
+      width: 14.285714285714286%;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      border-left: solid 1px #cccccc;
+      font-size: 0.75em;
+      text-align: center;
+      height: 30px;
+      line-height: 30px !important;
+      display: inline-block;
+      vertical-align: middle;
+      background: white;
+      cursor: pointer;
+      color: black;
+      &:first-child {
+        border-left: none;
+      }
+      &.today {
+        background: #E3F2FF;
+      }
+      &.different-month {
+        color: #C0C0C0;
+      }
+      &.selected {
+        background: #2875c7;
+        color: white;
+      }
+    }
+
+    .names > span {
+      color: #2875c7;
+      font-weight: bold;
+    }
+  }
+}
