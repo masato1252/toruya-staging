@@ -1,4 +1,9 @@
+$red: #FF0000;
+$gray: #333333;
+
 header {
+  z-index: 9999999;
+
   #shop {
     color: #000000;
   }
@@ -8,17 +13,36 @@ header {
   margin-top: 90px;
 
   .tbd-items {
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid $gray;
     padding: 10px 0;
+  }
+}
+
+form {
+  #error_explanation {
+    ul li {
+      display: list-item;
+    }
+  }
+
+  abbr.required {
+    float: left;
+    padding-right: 3px;
+    color: $red;
   }
 
   .field_with_errors {
     label {
-      color: #FF0000;
+      color: $red;
     }
+
     input {
-      border: 1px solid #FF0000;
+      border: 1px solid $red;
     }
+  }
+
+  label.control-label {
+    padding-top: 11px;
   }
 }
 

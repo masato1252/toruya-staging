@@ -17,4 +17,9 @@
 
 class Shop < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :user_id }
+  validates :shortname, presence: true, uniqueness: { scope: :user_id }
+  validates :zip_code, presence: true
+  validates :phone_number, presence: true
+  validates :email, presence: true
+  validates :address, presence: true
 end

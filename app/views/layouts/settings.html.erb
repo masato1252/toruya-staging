@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+  </head>
+
+  <body>
+    <header>
+      <dl>
+        <dd id="NAVhome"><a href="">Home</a></dd>
+        <dd id="NAVshopSelect">
+          <%= select_tag "shop", options_from_collection_for_select(shops, "id", "name") %>
+        </dd>
+      </dl>
+      <dl>
+        <dd id="NAVcaution"><a href="news/"><strong>1</strong>NEWS</a></dd>
+        <dd id="NAVhelp"><a href="help/">HELP</a></dd>
+        <dd id="NAVsetting"><a href="setting/">設定</a></dd>
+      </dl>
+    </header>
+    <div class="contents">
+      <%= render "layouts/settings_sider" %>
+      <div id="content">
+        <%= flash_messages %>
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>
