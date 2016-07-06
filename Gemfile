@@ -17,6 +17,8 @@ gem "bootstrap-sass", "~> 3.3.6"
 gem 'sass-rails', "~> 5.0.5"
 gem "dotenv-rails"
 gem "devise", "~> 4.2.0"
+gem "react-rails", "~> 1.8.0"
+gem "underscore-rails", "~> 1.8.3"
 
 
 group :development, :test do
