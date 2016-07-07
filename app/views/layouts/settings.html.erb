@@ -13,7 +13,10 @@
       <dl>
         <dd id="NAVhome"><a href="">Home</a></dd>
         <dd id="NAVshopSelect">
-          <%= select_tag "shop", options_from_collection_for_select(shops, "id", "name") %>
+          <%= react_component("UI.ShopsSelect",
+                              { shops: shops.map{|s| { value: settings_shop_path(s), label: s.name }},
+                                selected_shop: (shops.present? ? settings_shop_path(@shop || shops.first) : "") },
+                              { id: "shop", prerender: true }) %>
         </dd>
       </dl>
       <dl>
