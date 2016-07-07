@@ -14,8 +14,8 @@
         <dd id="NAVhome"><%= link_to "Home", root_path %></dd>
         <dd id="NAVshopSelect">
           <%= react_component("UI.ShopsSelect",
-                              { shops: shops.map{|s| { value: settings_shop_path(s), label: s.name }},
-                                selected_shop: (shops.present? ? settings_shop_path(@shop || shops.first) : "") },
+                              { shops: shops_select_options,
+                                selected_shop: selected_shop_path },
                               { id: "shop", prerender: true }) %>
         </dd>
       </dl>
