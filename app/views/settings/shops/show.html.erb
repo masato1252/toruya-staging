@@ -1,3 +1,10 @@
+<div class="clearfix">
+  <%= react_component("UI.Calendar",
+                      { selected: {},
+                        day_names: I18n.t("date.abbr_day_names") },
+                      { id: "calendar", prerender: true }) %>
+</div>
+
 <p id="notice"><%= notice %></p>
 
 <p>

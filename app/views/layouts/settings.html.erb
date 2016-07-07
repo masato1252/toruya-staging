@@ -11,7 +11,7 @@
   <body>
     <header>
       <dl>
-        <dd id="NAVhome"><a href="">Home</a></dd>
+        <dd id="NAVhome"><%= link_to "Home", root_path %></dd>
         <dd id="NAVshopSelect">
           <%= react_component("UI.ShopsSelect",
                               { shops: shops.map{|s| { value: settings_shop_path(s), label: s.name }},
@@ -22,7 +22,7 @@
       <dl>
         <dd id="NAVcaution"><a href="news/"><strong>1</strong>NEWS</a></dd>
         <dd id="NAVhelp"><a href="help/">HELP</a></dd>
-        <dd id="NAVsetting"><a href="setting/">設定</a></dd>
+        <dd id="NAVsetting"><%= link_to "設定", new_settings_shop_path %></dd>
       </dl>
     </header>
     <div class="contents">

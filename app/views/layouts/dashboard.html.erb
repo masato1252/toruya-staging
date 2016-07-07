@@ -23,20 +23,7 @@
       </dl>
     </header>
     <div class="container">
-      <ul class="tbd-items">
-        <% if user_signed_in? %>
-          <li>
-            <%= current_user.email %>
-            <%= link_to t("common.sign_out"), destroy_user_session_path, :method=>'delete' %>
-          </li>
-        <% end %>
-        <li>
-          <%= link_to t("common.sign_in"), new_user_session_path %>
-        </li>
-        <li>
-          <%= link_to t("common.sign_up"), new_user_registration_path %>
-        </li>
-      </ul>
+      <%= render "layouts/tbd_items" %>
       <%= flash_messages %>
       <%= yield %>
     </div>
