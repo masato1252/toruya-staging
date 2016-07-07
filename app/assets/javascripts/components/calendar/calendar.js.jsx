@@ -1,3 +1,6 @@
+//= require "components/calendar/day_names"
+//= require "components/calendar/week"
+
 "use strict";
 
 UI.define("Calendar", function() {
@@ -22,8 +25,6 @@ UI.define("Calendar", function() {
     },
 
     select: function(day) {
-      // this.props.selected = day.date;
-      // this.forceUpdate();
       this.setState({ month: day.date});
     },
 
@@ -34,7 +35,7 @@ UI.define("Calendar", function() {
           {this.renderMonthLabel()}
         <i className="fa fa-angle-right" onClick={this.next}></i>
       </div>
-      <UI.DayNames />
+      <UI.DayNames dayNames={this.props.dayNames} />
       {this.renderWeeks()}
       </div>;
     },
@@ -47,7 +48,11 @@ UI.define("Calendar", function() {
               count = 0;
 
               while (!done) {
-                weeks.push(<UI.Week key={date.toString()} date={date.clone()} month={this.state.month} select={this.select} selected={this.state.month} />);
+                weeks.push(<UI.Week key={date.toString()}
+                                    date={date.clone()}
+                                    month={this.state.month}
+                                    select={this.select}
+                                    selected={this.state.month} />);
                 date.add(1, "w");
                 done = count++ > 2 && monthIndex !== date.month();
                 monthIndex = date.month();

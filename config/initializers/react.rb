@@ -6,5 +6,6 @@ Rails.application.configure do
     files: ["react-server.js", "underscore.js", "ui.js", "prerendered_components.js"], # files to load for prerendering
     replay_console: true,                 # if true, console.* will be replayed client-side
   }
+  config.react.camelize_props = true
 end
 

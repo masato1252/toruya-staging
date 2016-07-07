@@ -2,7 +2,10 @@
 <h1>Shops</h1>
 
 <div class="clearfix">
-  <%= react_component("UI.Calendar", {selected: {}}, {id: "calendar"}) %>
+  <%= react_component("UI.Calendar",
+                      { selected: {},
+                        day_names: I18n.t("date.abbr_day_names") },
+                      { id: "calendar", prerender: true }) %>
 </div>
 <table>
   <thead>
