@@ -37,13 +37,14 @@ header #NAVcaution a strong {
   top: 0;
   text-align: center;
   color: #fff;
-  background: transparent url(asset-path("screen/mainnav_caution_num.png")) center center no-repeat;
   display: block;
   width: 20px;
   height: 20px;
   font-weight: bold;
   line-height: 20px;
-    font-size: 11px;
+  font-size: 11px;
+  background-color: red;
+  border-radius: 50%;
 }
 
 /* Footer */
