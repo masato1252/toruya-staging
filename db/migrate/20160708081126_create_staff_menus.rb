@@ -3,6 +3,7 @@ class CreateStaffMenus < ActiveRecord::Migration[5.0]
     create_table :staff_menus do |t|
       t.integer :staff_id, null: false
       t.integer :menu_id, null: false
+      t.integer :max_customers
 
       t.timestamps
     end

@@ -31,7 +31,7 @@ class Settings::MenusController < DashboardController
     respond_to do |format|
       if @menu.save
         format.html { redirect_to settings_shop_menus_path(shop), notice: 'Menu was successfully created.' }
-        format.json { render :show, status: :created, location: @settings_menu }
+        format.json { render :show, status: :created, location: @menu }
       else
         format.html { render :new }
         format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
@@ -45,7 +45,7 @@ class Settings::MenusController < DashboardController
     respond_to do |format|
       if @menu.update(menu_params)
         format.html { redirect_to settings_shop_menus_path(shop), notice: 'Menu was successfully updated.' }
-        format.json { render :show, status: :ok, location: @settings_menu }
+        format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit }
         format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
@@ -71,6 +71,7 @@ class Settings::MenusController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def menu_params
-    params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number, staff_ids: [])
+    params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number,
+                                 staff_ids: [], staff_menus_attributes: [[:max_customers, :staff_id]])
   end
 end

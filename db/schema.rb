@@ -41,10 +41,11 @@ ActiveRecord::Schema.define(version: 20160708081126) do
   end
 
   create_table "staff_menus", force: :cascade do |t|
-    t.integer  "staff_id",   null: false
-    t.integer  "menu_id",    null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "staff_id",      null: false
+    t.integer  "menu_id",       null: false
+    t.integer  "max_customers"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.index ["staff_id", "menu_id"], name: "index_staff_menus_on_staff_id_and_menu_id", unique: true, using: :btree
   end
 

@@ -42,6 +42,7 @@ UI.define("StaffsSelect", function() {
             onChange={this._handleOptionStaffClick}
             includeBlank={true}
           />
+          <input type="hidden" value="" name="menu[staff_ids][]" />
           {this._renderValidStaff()}
         </div>
       )
@@ -54,16 +55,12 @@ UI.define("StaffsSelect", function() {
             return(
               <UI.CustomHiddenField
               key={staff.value}
-              label={staff.label}
-              value={staff.value}
+              option={staff}
               onClick={this._handleVaildStaffClick}
-              name="menu[staff_ids][]" />
+              name="" />
             );
           }.bind(this))
         )
-      }
-      else {
-        return <input type="hidden" value="" name="menu[staff_ids][]" />
       }
     }
   });
