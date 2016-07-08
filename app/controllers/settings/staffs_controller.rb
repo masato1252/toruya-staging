@@ -64,11 +64,6 @@ class Settings::StaffsController < DashboardController
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  def shop
-    @shop = current_user.shops.find(params[:shop_id])
-  end
-
   def set_staff
     @staff = shop.staffs.find_by(id: params[:id])
     redirect_to settings_shop_staffs_path(shop) unless @staff
@@ -76,6 +71,6 @@ class Settings::StaffsController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:shop_id, :name, :shortname)
+    params.require(:staff).permit(:name, :shortname)
   end
 end

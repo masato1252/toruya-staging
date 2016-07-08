@@ -16,8 +16,4 @@ module ShopHelper
   def selected_shop_value
     shop.try(:to_param) || shops.first.try(:to_param)
   end
-
-  def shop
-    @shop
-  end
 end

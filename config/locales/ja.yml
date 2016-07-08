@@ -9,8 +9,13 @@ ja:
         email: "Email"
         website: "http://"
       staff:
-        name: "Family Name"
-        shortname: "Family Name kana"
+        name: "氏名"
+        shortname: "しめい"
+      menu:
+        name: "メニュー名"
+        shortname: "短縮名"
+        minutes: "所要時間(分)"
+        min_staffs_number: "最低担当者数"
     select:
       prompt: 選択してください
     submit:
@@ -42,6 +47,11 @@ ja:
       staff:
         name: "氏名"
         shortname: "しめい"
+      menu:
+        name: "メニュー名"
+        shortname: "短縮名"
+        minutes: "所要時間"
+        min_staffs_number: "最低担当者数"
   date:
     abbr_day_names:
     - 日

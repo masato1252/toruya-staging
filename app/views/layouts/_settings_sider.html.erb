@@ -7,7 +7,7 @@
         <% if shop.try(:persisted?) %>
           <li><a href="bushours.html">Business Hours</a></li>
           <%= active_link_to "Staff", settings_shop_staffs_path(shop), active: [["settings/staffs"], []], wrap_tag: :li, class_active: "here" %>
-          <li><a href="menu.html">Menu</a></li>
+          <%= active_link_to "Menu", settings_shop_menus_path(shop), active: [["settings/menus"], []], wrap_tag: :li, class_active: "here" %>
           <li><a href="price.html">Price</a></li>
           <li><a href="calendars.html">Calendars</a></li>
         <% end %>

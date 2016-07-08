@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :settings do
     resources :shops do
       resources :staffs
+      resources :menus
     end
   end
 

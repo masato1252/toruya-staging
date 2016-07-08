@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Menus</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Shop</th>
+      <th>Name</th>
+      <th>Shortname</th>
+      <th>Minutes</th>
+      <th>Min staffs number</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @menus.each do |menu| %>
+      <tr>
+        <td><%= menu.shop_id %></td>
+        <td><%= menu.name %></td>
+        <td><%= menu.shortname %></td>
+        <td><%= menu.minutes %></td>
+        <td><%= menu.min_staffs_number %></td>
+        <td><%= link_to 'Edit', edit_settings_shop_menu_path(shop, menu) %></td>
+        <td><%= link_to 'Destroy', settings_shop_menu_path(shop, menu), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Settings Menu', new_settings_shop_menu_path(shop) %>

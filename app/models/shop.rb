@@ -24,4 +24,5 @@ class Shop < ApplicationRecord
   validates :address, presence: true
 
   has_many :staffs
+  has_many :menus
 end

@@ -1,0 +1,55 @@
+<%= form_for(menu, url: url) do |f| %>
+  <% if menu.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% menu.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group url required row">
+    <label class="url required control-label col-sm-2 control-label">
+      <abbr class="required" title="required">*</abbr> <%= f.label :name %>
+    </label>
+
+    <div class="col-sm-9">
+      <%= f.text_field :name, placeholder: true %>
+    </div>
+  </div>
+
+  <div class="form-group url required row">
+    <label class="url required control-label col-sm-2 control-label">
+      <%= f.label :shortname %>
+    </label>
+
+    <div class="col-sm-9">
+      <%= f.text_field :shortname, placeholder: true %>
+    </div>
+  </div>
+
+  <div class="form-group url required row">
+    <label class="url required control-label col-sm-2 control-label">
+      <%= f.label :minutes %>
+    </label>
+
+    <div class="col-sm-9">
+      <%= f.number_field :minutes, placeholder: true %>
+    </div>
+  </div>
+
+  <div class="form-group url required row">
+    <label class="url required control-label col-sm-2 control-label">
+      <%= f.label :min_staffs_number %>
+    </label>
+
+    <div class="col-sm-9">
+      <%= f.number_field :min_staffs_number, placeholder: true %>
+    </div>
+  </div>
+
+  <div id="footerav" class="actions">
+    <%= f.submit "save", class: "BTNtarco" %>
+  </div>
+<% end %>
