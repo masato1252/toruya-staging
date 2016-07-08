@@ -21,6 +21,7 @@ gem "react-rails", "~> 1.8.0"
 gem "underscore-rails", "~> 1.8.3"
 gem "momentjs-rails", "~> 2.11.1"
 gem "font-awesome-rails", "~> 4.6.3"
+gem "active_link_to", "~> 1.0.3"
 
 
 group :development, :test do
