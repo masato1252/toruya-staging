@@ -12,7 +12,12 @@ UI.define("ShopsSelect", function() {
 
     _handleChange: function(event) {
       this.setState({[event.target.name]: event.target.value});
-      window.location.href = event.target.value;
+      var shopPathRegexp = /shops\/\d+/;
+
+      if (location.pathname.match(shopPathRegexp)) {
+        var newLocation = location.href.replace(shopPathRegexp, `shops/${event.target.value}`)
+        window.location.href = newLocation;
+      }
     },
 
     render: function() {
