@@ -71,6 +71,6 @@ class Settings::MenusController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def menu_params
-    params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number)
+    params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number, staff_ids: [])
   end
 end

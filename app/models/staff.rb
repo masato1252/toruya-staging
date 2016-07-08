@@ -11,7 +11,9 @@
 #
 
 class Staff < ApplicationRecord
-  validates :shop, presence: true
   validates :name, presence: true
   validates :shortname, presence: true
+
+  has_many :staff_menus
+  has_many :menus, through: :staff_menus
 end

@@ -14,4 +14,7 @@
 
 class Menu < ApplicationRecord
   validates :name, presence: true
+
+  has_many :staff_menus
+  has_many :staffs, through: :staff_menus
 end
