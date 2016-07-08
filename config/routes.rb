@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   namespace :settings do
-    resources :shops
+    resources :shops do
+      resources :staffs
+    end
   end
 
   devise_for :users

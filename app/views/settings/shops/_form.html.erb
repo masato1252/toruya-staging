@@ -2,14 +2,14 @@
   <% if shop.errors.any? %>
     <div id="error_explanation">
       <ul>
-      <% shop.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% shop.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="shop-name">
+  <div class="form-block">
     <h3>店名</h3>
     <div class="form-group url required row">
       <label class="url required control-label col-sm-2 control-label">
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div class="shop-contact">
+  <div class="form-block">
     <h3>連絡先</h3>
     <div class="form-group url required row">
       <label class="url required control-label col-sm-2 control-label">

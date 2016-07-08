@@ -47,14 +47,10 @@ form {
   }
 }
 
-.new_shop {
-  div.shop-name {
-    padding-bottom: 10px;
-    border-bottom: 1px solid $light_gray;
-  }
-
-  div.shop-contact {
-    padding-top: 10px;
+form {
+  div.form-block {
+    padding-bottom: 5px;
+    padding-top: 5px;
     border-bottom: 1px solid $light_gray;
   }
 }

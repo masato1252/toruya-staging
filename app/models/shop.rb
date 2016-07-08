@@ -22,4 +22,6 @@ class Shop < ApplicationRecord
   validates :phone_number, presence: true
   validates :email, presence: true
   validates :address, presence: true
+
+  has_many :staffs
 end

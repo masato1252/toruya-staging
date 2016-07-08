@@ -1,0 +1,38 @@
+<%= form_for(staff, url: (staff.new_record? ? settings_shop_staffs_path(shop, staff) : settings_shop_staff_path(shop, staff))) do |f| %>
+  <% if staff.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% staff.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-block">
+    <h3>Staff Informations</h3>
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :name %>
+      </label>
+
+      <div class="col-sm-9">
+        <%= f.text_field :name, placeholder: true %>
+      </div>
+    </div>
+
+    <div class="form-group url required row">
+      <label class="url required control-label col-sm-2 control-label">
+        <abbr class="required" title="required">*</abbr> <%= f.label :shortname %>
+      </label>
+
+      <div class="col-sm-9">
+        <%= f.text_field :shortname, placeholder: true %>
+      </div>
+    </div>
+  </div>
+
+  <div id="footerav" class="actions">
+    <%= f.submit "save", class: "BTNtarco" %>
+  </div>
+<% end %>

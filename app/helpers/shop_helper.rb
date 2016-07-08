@@ -10,11 +10,11 @@ module ShopHelper
 
   private
   def shops_select_options
-    shops.map{|s| { value: s.id, label: s.name } }
+    shops.map{|s| { value: s.to_param, label: s.name } }
   end
 
   def selected_shop_value
-    shop.try(:id) || shops.first.try(:id)
+    shop.try(:to_param) || shops.first.try(:to_param)
   end
 
   def shop

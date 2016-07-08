@@ -1,14 +1,16 @@
 <nav id="sideNav">
   <dl>
-    <dt><a href="">基本情報</a></dt>
+    <dt><%= link_to "基本情報", settings_shops_path %></dt>
     <dd>
       <ul>
         <li class="here"><%= link_to "Shop Info", new_settings_shop_path %></li>
-        <li><a href="bushours.html">Business Hours</a></li>
-        <li><a href="staff.html">Staff</a></li>
-        <li><a href="menu.html">Menu</a></li>
-        <li><a href="price.html">Price</a></li>
-        <li><a href="calendars.html">Calendars</a></li>
+        <% if shop.try(:persisted?) %>
+          <li><a href="bushours.html">Business Hours</a></li>
+          <li><%= link_to "Staff", settings_shop_staffs_path(shop) %></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="price.html">Price</a></li>
+          <li><a href="calendars.html">Calendars</a></li>
+        <% end %>
       </ul>
     </dd>
   </dl>

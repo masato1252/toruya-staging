@@ -8,6 +8,9 @@ ja:
         phone_number: "TEL"
         email: "Email"
         website: "http://"
+      staff:
+        name: "Family Name"
+        shortname: "Family Name kana"
     select:
       prompt: 選択してください
     submit:
@@ -36,6 +39,9 @@ ja:
         phone_number: "TEL"
         email: "Email"
         website: "WEB"
+      staff:
+        name: "氏名"
+        shortname: "しめい"
   date:
     abbr_day_names:
     - 日

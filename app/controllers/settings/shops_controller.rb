@@ -1,6 +1,6 @@
 class Settings::ShopsController < DashboardController
   layout "settings"
-  before_action :authenticate_user!, :only => [:new, :create, :edit, :update]
+  before_action :authenticate_user!
   before_action :set_shop, only: [:show, :edit, :update, :destroy]
 
   # GET /shops
@@ -64,13 +64,13 @@ class Settings::ShopsController < DashboardController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_shop
-      @shop = current_user.shops.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_shop
+    @shop = current_user.shops.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def shop_params
-      params.require(:shop).permit(:user_id, :name, :shortname, :zip_code, :phone_number, :email, :website, :address)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def shop_params
+    params.require(:shop).permit(:user_id, :name, :shortname, :zip_code, :phone_number, :email, :website, :address)
+  end
 end
