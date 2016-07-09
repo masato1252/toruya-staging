@@ -51,7 +51,9 @@ UI.define("MenuStaffSelect", function() {
           />
           <input type="hidden" value="" name="menu[staff_ids][]" />
           <input type="hidden" value="" name="staff[menu_ids][]" />
-          {this._renderSelectedOptions()}
+          <div className="selected-options">
+            {this._renderSelectedOptions()}
+          </div>
         </div>
       )
     },

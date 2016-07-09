@@ -14,14 +14,18 @@ UI.define("SelectedOptionField", function() {
 
     render: function() {
       return (
-        <div>
+        <div className="selected-option">
           <div>
             {this.props.option.label}
+          </div>
+          <div>
               <input type="number"
                      onChange={this._handleChange}
                      value={this.state.number}
                      placeholder={this.props.placeholder}
                      name={this.props.maxCustomerFieldName} />
+          </div>
+          <div>
             <a href="#" className="btn btn-danger" value={this.props.option.value} onClick={this.props.onClick}>
               <i className="fa fa-minus-circle fa-3" aria-hidden="true" value={this.props.option.value}></i>
               Delete

@@ -102,6 +102,18 @@ form {
         margin-left: 12px;
         margin-right: 12px;
       }
+
+      .selected-options {
+        display: table;
+
+        .selected-option {
+          display: table-row;
+
+          & > div {
+            display: table-cell;
+          }
+        }
+      }
     }
   }
 
