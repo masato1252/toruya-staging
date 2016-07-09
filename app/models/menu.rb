@@ -15,7 +15,7 @@
 class Menu < ApplicationRecord
   validates :name, presence: true
 
-  has_many :staff_menus
+  has_many :staff_menus, inverse_of: :menu
   has_many :staffs, through: :staff_menus
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
