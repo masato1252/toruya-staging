@@ -1,29 +1,28 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Menus</h1>
-
-<table>
+<%= render "info" %>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>Shop</th>
-      <th>Name</th>
-      <th>Shortname</th>
-      <th>Minutes</th>
-      <th>Min staffs number</th>
-      <th colspan="3"></th>
+      <th><%= Menu.human_attribute_name(:name) %></th>
+      <th><%= Menu.human_attribute_name(:shortname) %></th>
+      <th><%= Menu.human_attribute_name(:minutes) %></th>
+      <th><%= Menu.human_attribute_name(:min_staffs_number) %></th>
+      <th>Staffs</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
     <% @menus.each do |menu| %>
       <tr>
-        <td><%= menu.shop_id %></td>
         <td><%= menu.name %></td>
         <td><%= menu.shortname %></td>
         <td><%= menu.minutes %></td>
         <td><%= menu.min_staffs_number %></td>
-        <td><%= link_to 'Edit', edit_settings_shop_menu_path(shop, menu) %></td>
-        <td><%= link_to 'Destroy', settings_shop_menu_path(shop, menu), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= menu.staffs.map(&:name).join(", ") %></td>
+        <td>
+          <%= link_to 'Edit', edit_settings_shop_menu_path(shop, menu), class: "btn btn-default" %>
+          <%= link_to 'Destroy', settings_shop_menu_path(shop, menu), class: "btn btn-default btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
       </tr>
     <% end %>
   </tbody>
@@ -31,4 +30,4 @@
 
 <br>
 
-<%= link_to 'New Settings Menu', new_settings_shop_menu_path(shop) %>
+<%= link_to 'New Menu', new_settings_shop_menu_path(shop), class: "btn btn-primary" %>

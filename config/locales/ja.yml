@@ -16,6 +16,8 @@ ja:
         shortname: "短縮名"
         minutes: "所要時間(分)"
         min_staffs_number: "最低担当者数"
+      staff_menus:
+        max_customers: "最高客戶数"
     select:
       prompt: 選択してください
     submit:
@@ -52,6 +54,8 @@ ja:
         shortname: "短縮名"
         minutes: "所要時間"
         min_staffs_number: "最低担当者数"
+      staff_menu:
+        max_customers: "最高客戶数"
   date:
     abbr_day_names:
     - 日

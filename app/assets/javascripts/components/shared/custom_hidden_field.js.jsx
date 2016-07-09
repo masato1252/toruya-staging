@@ -17,10 +17,15 @@ UI.define("CustomHiddenField", function() {
         <div>
           <div>
             {this.props.option.label}
-            <i className="fa fa-minus fa-2" aria-hidden="true"
-               value={this.props.option.value} onClick={this.props.onClick}>
-            </i>
-            <input type="number" onChange={this._handleChange} value={this.state.number} name="menu[staff_menus_attributes][][max_customers]" />
+              <input type="number"
+                     onChange={this._handleChange}
+                     value={this.state.number}
+                     placeholder={this.props.placeholder}
+                     name="menu[staff_menus_attributes][][max_customers]" />
+            <a href="#" className="btn btn-danger" value={this.props.option.value} onClick={this.props.onClick}>
+              <i className="fa fa-minus-circle fa-3" aria-hidden="true" value={this.props.option.value}></i>
+              Delete
+            </a>
           </div>
           <input type="hidden" value={this.props.option.value} name="menu[staff_menus_attributes][][staff_id]" />
         </div>

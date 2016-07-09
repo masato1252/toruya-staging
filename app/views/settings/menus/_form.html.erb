@@ -50,11 +50,12 @@
       </div>
     </div>
   </div>
-  <div class="form-block">
+  <div class="form-block staff-of-menu">
     <h2>対応従業員</h2>
     <%= react_component("UI.StaffsSelect",
                         { option_staffs: (shop.staffs - menu.staffs).map{|s| { value: s.id, label: s.name }},
-                          valid_staffs: menu.staff_menus.includes(:staff).map{|s| { value: s.staff_id, label: s.staff.name, number: s.max_customers }}
+                          valid_staffs: menu.staff_menus.includes(:staff).map{|s| { value: s.staff_id, label: s.staff.name, number: s.max_customers }},
+                          staff_of_menu_placeholder: StaffMenu.human_attribute_name(:max_customers)
                         }) %>
   </div>
 

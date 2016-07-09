@@ -6,7 +6,7 @@ class Settings::MenusController < DashboardController
   # GET /settings/menus
   # GET /settings/menus.json
   def index
-    @menus = shop.menus.all
+    @menus = shop.menus.includes(:staffs).all
   end
 
   # GET /settings/menus/1
@@ -43,6 +43,7 @@ class Settings::MenusController < DashboardController
   # PATCH/PUT /settings/menus/1.json
   def update
     respond_to do |format|
+      # TODO: we always return staff_ids=[] to delete all its staff_menus, then create again. Try to fix it in right way.
       if @menu.update(menu_params)
         format.html { redirect_to settings_shop_menus_path(shop), notice: 'Menu was successfully updated.' }
         format.json { render :show, status: :ok, location: @menu }

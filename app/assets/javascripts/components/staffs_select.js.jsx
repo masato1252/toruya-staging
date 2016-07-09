@@ -13,17 +13,18 @@ UI.define("StaffsSelect", function() {
     },
 
     _handleOptionStaffClick: function(event) {
+      event.preventDefault();
       var validStaffs = this.state.validStaffs.slice(0);
       var originalOptionStaffs = this.state.optionStaffs.slice(0);
 
       var newOptionStaffs = _.reject(originalOptionStaffs, function(staff){ return staff.value == event.target.value; });
       var newValidStaff = _.find(originalOptionStaffs, function(staff){ return staff.value == event.target.value; });
       validStaffs.push(newValidStaff);
-
       this.setState({validStaffs: validStaffs, optionStaffs: _.sortBy(newOptionStaffs, "value")});
     },
 
     _handleVaildStaffClick: function(event) {
+      event.preventDefault();
       var originalValidStaff = this.state.validStaffs.slice(0);
       var optionStaffs = this.state.optionStaffs.slice(0);
 
@@ -54,10 +55,11 @@ UI.define("StaffsSelect", function() {
           this.state.validStaffs.map(function(staff) {
             return(
               <UI.CustomHiddenField
-              key={staff.value}
-              option={staff}
-              onClick={this._handleVaildStaffClick}
-              name="" />
+                  key={staff.value}
+                  placeholder={this.props.staffOfMenuPlaceholder}
+                  option={staff}
+                  onClick={this._handleVaildStaffClick}
+                  name="" />
             );
           }.bind(this))
         )
