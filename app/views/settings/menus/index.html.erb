@@ -21,7 +21,7 @@
         <td><%= menu.staffs.map(&:name).join(", ") %></td>
         <td>
           <%= link_to 'Edit', edit_settings_shop_menu_path(shop, menu), class: "btn btn-default" %>
-          <%= link_to 'Destroy', settings_shop_menu_path(shop, menu), class: "btn btn-default btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to 'Destroy', settings_shop_menu_path(shop, menu), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
         </td>
       </tr>
     <% end %>

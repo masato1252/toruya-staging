@@ -91,8 +91,8 @@ form {
     padding-top: 5px;
     border-bottom: 1px solid $light_gray;
 
-    // menu form
-    &.staff-of-menu {
+    // menu form, staff form
+    &.staff-of-menu, &.menu-of-staff {
       select {
         margin-bottom: 18px;
       }

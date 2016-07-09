@@ -16,4 +16,6 @@ class Staff < ApplicationRecord
 
   has_many :staff_menus
   has_many :menus, through: :staff_menus
+
+  accepts_nested_attributes_for :staff_menus, allow_destroy: true
 end

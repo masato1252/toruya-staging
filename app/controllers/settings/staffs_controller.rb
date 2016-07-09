@@ -30,7 +30,7 @@ class Settings::StaffsController < DashboardController
 
     respond_to do |format|
       if @staff.save
-        format.html { redirect_to settings_shop_staff_path(shop, @staff), notice: 'Staff was successfully created.' }
+        format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully created.' }
         format.json { render :show, status: :created, location: @staff }
       else
         format.html { render :new }
@@ -44,7 +44,7 @@ class Settings::StaffsController < DashboardController
   def update
     respond_to do |format|
       if @staff.update(staff_params)
-        format.html { redirect_to settings_shop_staff_path(shop, @staff), notice: 'Staff was successfully updated.' }
+        format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
         format.html { render :edit }
@@ -71,6 +71,7 @@ class Settings::StaffsController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:name, :shortname)
+    params.require(:staff).permit(:name, :shortname,
+                                  menu_ids: [], staff_menus_attributes: [[:max_customers, :menu_id]])
   end
 end
