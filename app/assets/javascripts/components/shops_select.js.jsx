@@ -16,7 +16,7 @@ UI.define("ShopsSelect", function() {
 
       if (location.pathname.match(shopPathRegexp)) {
         var newLocation = location.href.replace(shopPathRegexp, `shops/${event.target.value}`)
-        window.location.href = newLocation;
+        location = newLocation;
       }
     },
 
