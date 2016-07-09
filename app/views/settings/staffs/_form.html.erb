@@ -32,17 +32,6 @@
     </div>
   </div>
 
-  <div class="form-block menu-of-staff">
-    <h2>対応Menu</h2>
-    <%= react_component("UI.MenuStaffSelect",
-                        { options: (shop.menus - staff.menus).map{|s| { value: s.id, label: s.name }},
-                          selected_options: staff.staff_menus.includes(:menu).map{|s| { value: s.menu_id, label: s.menu.name, number: s.max_customers }},
-                          placeholder: StaffMenu.human_attribute_name(:max_customers),
-                          max_customer_field_name: "staff[staff_menus_attributes][][max_customers]",
-                          selected_field_name: "staff[staff_menus_attributes][][menu_id]"
-                        }) %>
-  </div>
-
   <div id="footerav" class="actions">
     <%= f.submit "save", class: "BTNtarco" %>
   </div>
