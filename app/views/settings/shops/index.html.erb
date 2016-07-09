@@ -1,25 +1,20 @@
-<p id="notice"><%= notice %></p>
-<h1>Shops</h1>
-
-<table>
+<%= render "info" %>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>User</th>
-      <th>Name</th>
-      <th>Shortname</th>
-      <th>Zip code</th>
-      <th>Phone number</th>
-      <th>Email</th>
-      <th>Website</th>
-      <th>Address</th>
-      <th colspan="3"></th>
+      <th><%= Shop.human_attribute_name(:name) %></th>
+      <th><%= Shop.human_attribute_name(:shortname) %></th>
+      <th><%= Shop.human_attribute_name(:zip_code) %></th>
+      <th><%= Shop.human_attribute_name(:phone_number) %></th>
+      <th><%= Shop.human_attribute_name(:email) %></th>
+      <th><%= Shop.human_attribute_name(:website) %></th>
+      <th><%= Shop.human_attribute_name(:address) %></th>
     </tr>
   </thead>
 
   <tbody>
     <% @shops.each do |shop| %>
       <tr>
-        <td><%= shop.user_id %></td>
         <td><%= shop.name %></td>
         <td><%= shop.shortname %></td>
         <td><%= shop.zip_code %></td>
@@ -27,9 +22,9 @@
         <td><%= shop.email %></td>
         <td><%= shop.website %></td>
         <td><%= shop.address %></td>
-        <td><%= link_to 'Show', settings_shop_path(shop) %></td>
-        <td><%= link_to 'Edit', edit_settings_shop_path(shop) %></td>
-        <td><%= link_to 'Destroy', settings_shop_path(shop), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', settings_shop_path(shop), class: "btn btn-success" %></td>
+        <td><%= link_to 'Edit', edit_settings_shop_path(shop), class: "btn btn-default" %></td>
+        <td><%= link_to 'Destroy', settings_shop_path(shop), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -37,4 +32,4 @@
 
 <br>
 
-<%= link_to 'New Shop', new_settings_shop_path %>
+<%= link_to 'New Shop', new_settings_shop_path, class: "btn btn-primary" %>
