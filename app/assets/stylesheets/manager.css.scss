@@ -184,17 +184,16 @@ header a, header a:link, header a:visited {
   position: relative;
 }
 header #NAVhome a { background-image: url(asset-path("screen/mainnav_home.png")); }
-header #NAVtoday a { background-image: url(asset_path("screen/mainnav_today.png"); }
-header #NAVcaution a { background-image: url(asset_path("screen/mainnav_caution.png"); }
-header #NAVhelp a { background-image: url(asset_path("screen/mainnav_help.png"); }
-header #NAVsetting a { background-image: url(asset_path("screen/mainnav_setting.png"); }
+header #NAVtoday a { background-image: url(asset-path("screen/mainnav_today.png")); }
+header #NAVcaution a { background-image: url(asset-path("screen/mainnav_caution.png")); }
+header #NAVhelp a { background-image: url(asset-path("screen/mainnav_help.png")); }
+header #NAVsetting a { background-image: url(asset-path("screen/mainnav_setting.png")); }
 header #NAVcaution a strong {
   position: absolute;
   right: 0;
   top: 0;
   text-align: center;
   color: #fff;
-  background: transparent url(asset_path("screen/mainnav_caution_num.png") center center no-repeat;
   display: block;
   width: 20px;
   height: 20px;
@@ -519,8 +518,8 @@ header #NAVcaution a strong {
   background-repeat: no-repeat;
   background-position: center center;
 }
-#calendar .days a.here { background-image: url(asset_path("screen/calendar_here.png"); }
-#calendar .days .today a.here { background-image: url(asset_path("screen/calendar_today.png"); }
+#calendar .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
+#calendar .days .today a.here { background-image: url(asset-path("screen/calendar_today.png")); }
 #calendar #calStatus {
   padding-top: 10px;
   text-align: left;
@@ -534,11 +533,11 @@ header #NAVcaution a strong {
   background-repeat: no-repeat;
   padding-left: 27px;
 }
-#calendar #calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset_path("screen/calsts_checkin.png"); }
-#calendar #calStatus dd.checkout, #resList .checkout .calendar { background-image: url(asset_path("screen/calsts_checkout.png"); }
-#calendar #calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset_path("screen/calsts_noshow.png"); }
-#calendar #calStatus dd.pending, #resList .pending .calendar { background-image: url(asset_path("screen/calsts_pending.png"); }
-#calendar #calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset_path("screen/calsts_reserved.png"); }
+#calendar #calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset-path("screen/calsts_checkin.png")); }
+#calendar #calStatus dd.checkout, #resList .checkout .calendar { background-image: url(asset-path("screen/calsts_checkout.png")); }
+#calendar #calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset-path("screen/calsts_noshow.png")); }
+#calendar #calStatus dd.pending, #resList .pending .calendar { background-image: url(asset-path("screen/calsts_pending.png")); }
+#calendar #calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset-path("screen/calsts_reserved.png")); }
 #resList {
   min-width: 525px;
   background: #fff;
@@ -593,9 +592,9 @@ header #NAVcaution a strong {
     width: 140px;
     height: inherit;
 }
-#mainNav #NAVnewResv a { background-image: url(asset_path("screen/btn_newresv.png"); }
-#mainNav #NAVsearchResv a { background-image: url(asset_path("screen/btn_searchresv.png"); }
-#mainNav #NAVcustomers a { background-image: url(asset_path("screen/btn_customers.png"); }
+#mainNav #NAVnewResv a { background-image: url(asset-path("screen/btn_newresv.png")); }
+#mainNav #NAVsearchResv a { background-image: url(asset-path("screen/btn_searchresv.png")); }
+#mainNav #NAVcustomers a { background-image: url(asset-path("screen/btn_customers.png")); }
 #dashboard #sevenDays {
   color: #858585;
   display: table;
@@ -742,8 +741,8 @@ header #NAVcaution a strong {
   background-repeat: no-repeat;
   background-position: center center;
 }
-#searchRev .calendars .days a.here { background-image: url(asset_path("screen/calendar_here.png"); }
-#searchRev .calendars .days .today a { background-image: url(asset_path("screen/calendar_today.png"); }
+#searchRev .calendars .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
+#searchRev .calendars .days .today a { background-image: url(asset-path("screen/calendar_today.png")); }
 #searchRev .footer { padding: 10px 20px; }
 /* Footer */
 #footer {

@@ -14,6 +14,11 @@ header {
   #shop {
     color: #000000;
   }
+
+  #NAVcaution a strong {
+    background-color: $red;
+    border-radius: 50%
+  }
 }
 
 #footer {
@@ -98,7 +103,7 @@ form {
       }
 
       input {
-        width: 120px;
+        width: 150px;
         margin-left: 12px;
         margin-right: 12px;
       }
