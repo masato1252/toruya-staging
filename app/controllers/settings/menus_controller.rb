@@ -26,6 +26,7 @@ class Settings::MenusController < DashboardController
   # POST /settings/menus
   # POST /settings/menus.json
   def create
+    menu_params[:staff_menus_attributes].reject!{|param| param["staff_id"].blank? }
     @menu = shop.menus.new(menu_params)
 
     respond_to do |format|
@@ -44,6 +45,7 @@ class Settings::MenusController < DashboardController
   def update
     respond_to do |format|
       # TODO: we always return staff_ids=[] to delete all its staff_menus, then create again. Try to fix it in right way.
+      menu_params[:staff_menus_attributes].reject!{|param| param["staff_id"].blank? }
       if @menu.update(menu_params)
         format.html { redirect_to settings_shop_menus_path(shop), notice: 'Menu was successfully updated.' }
         format.json { render :show, status: :ok, location: @menu }
@@ -72,7 +74,7 @@ class Settings::MenusController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def menu_params
-    params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number,
-                                 staff_ids: [], staff_menus_attributes: [[:max_customers, :staff_id]])
+    @menu_params ||= params.require(:menu).permit(:name, :shortname, :minutes, :min_staffs_number,
+                                                  staff_ids: [], staff_menus_attributes: [[:max_customers, :staff_id]])
   end
 end

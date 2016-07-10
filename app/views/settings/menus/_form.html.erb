@@ -52,13 +52,37 @@
   </div>
   <div class="form-block staff-of-menu">
     <h2>対応従業員</h2>
-    <%= react_component("UI.MenuStaffSelect",
+    <%#= react_component("UI.MenuStaffSelect",
                         { options: (shop.staffs - menu.staffs).map{|s| { value: s.id, label: s.name }},
                           selected_options: menu.staff_menus.includes(:staff).map{|s| { value: s.staff_id, label: s.staff.name, number: s.max_customers }},
                           placeholder: StaffMenu.human_attribute_name(:max_customers),
                           max_customer_field_name: "menu[staff_menus_attributes][][max_customers]",
                           selected_field_name: "menu[staff_menus_attributes][][staff_id]"
                         }) %>
+    <div id="doStaff" class="formRow">
+      <ul class="tableTTL">
+        <li class="rowTTL">Staff Name</li>
+        <li class="capability">Capability</li>
+        <li class="capability">Max Customers</li>
+      </ul>
+      <input type="hidden" value="" name="menu[staff_ids][]" />
+        <% shop.staffs.includes(:staff_menus).each do |staff| %>
+          <% staff_menu = staff.staff_menus.find{|s| s.menu_id == params[:id].to_i } %>
+          <dl>
+            <dt><%= staff.name %></dt>
+            <dd class="capability">
+              <%= check_box_tag "menu[staff_menus_attributes][][staff_id]",
+                staff.id, staff_menu.present?, class: "BTNyesno", id: "staff-#{staff.id}" %>
+              <label for=<%= "staff-#{staff.id}" %>></label>
+            </dd>
+            <dd>
+              <%= number_field_tag "menu[staff_menus_attributes][][max_customers]",
+                staff_menu.try(:max_customers),
+                placeholder: StaffMenu.human_attribute_name(:max_customers) %>
+            </dd>
+          </dl>
+        <% end %>
+    </div>
   </div>
 
   <div id="footerav" class="actions">
