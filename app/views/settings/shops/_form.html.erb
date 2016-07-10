@@ -1,4 +1,4 @@
-<%= form_for(shop, url: (shop.new_record? ? settings_shops_path(shop) : settings_shop_path(shop))) do |f| %>
+<%= form_for(shop, url: url) do |f| %>
   <% if shop.errors.any? %>
     <div id="error_explanation">
       <ul>

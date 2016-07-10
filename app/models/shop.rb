@@ -16,7 +16,7 @@
 #
 
 class Shop < ApplicationRecord
-  validates :name, presence: true, uniqueness: { scope: :user_id }
+  validates :name, presence: true, uniqueness: { scope: :user_id }, format: { without: /\// }
   validates :shortname, presence: true, uniqueness: { scope: :user_id }
   validates :zip_code, presence: true
   validates :phone_number, presence: true
@@ -25,4 +25,12 @@ class Shop < ApplicationRecord
 
   has_many :staffs
   has_many :menus
+
+  def to_param
+    if name.parameterize.present?
+      "#{id}-#{name.parameterize}"
+    else
+      "#{id}-#{name.tr(" ", "")}"
+    end
+  end
 end

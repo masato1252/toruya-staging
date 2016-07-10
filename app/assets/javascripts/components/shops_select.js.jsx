@@ -12,7 +12,7 @@ UI.define("ShopsSelect", function() {
 
     _handleChange: function(event) {
       this.setState({[event.target.name]: event.target.value});
-      var shopPathRegexp = /shops\/\d+/;
+      var shopPathRegexp = /shops\/([^\/]+)/;
 
       if (location.pathname.match(shopPathRegexp)) {
         var newLocation = location.href.replace(shopPathRegexp, `shops/${event.target.value}`)
