@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (4.11.0)
     actioncable (5.0.0)
       actionpack (= 5.0.0)
       nio4r (~> 1.2)
@@ -24,6 +25,8 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active_interaction (3.2.0)
+      activemodel (>= 4, < 6)
     active_link_to (1.0.3)
       actionpack
     activejob (5.0.0)
@@ -236,6 +239,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aasm (~> 4.11.0)
+  active_interaction (~> 3.2.0)
   active_link_to (~> 1.0.3)
   annotate
   better_errors

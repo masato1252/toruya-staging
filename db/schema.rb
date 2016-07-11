@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160708081126) do
+ActiveRecord::Schema.define(version: 20160711124845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "business_schedules", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "staff_id"
+    t.string   "business_state"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "days_of_week"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["shop_id", "business_state", "days_of_week"], name: "shop_day_of_week_index", using: :btree
+  end
 
   create_table "menus", force: :cascade do |t|
     t.integer  "shop_id",           null: false

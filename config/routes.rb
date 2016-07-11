@@ -3,6 +3,12 @@ Rails.application.routes.draw do
     resources :shops do
       resources :staffs
       resources :menus
+      resources :business_schedules, only: [:index] do
+        collection do
+          get "edit"
+          post "update", as: :update
+        end
+      end
     end
   end
 

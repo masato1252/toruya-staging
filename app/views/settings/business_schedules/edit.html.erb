@@ -1,0 +1,63 @@
+<div id="subNav">
+  <h2>基本情報 − Business Hours</h2>
+</div>
+<div id="about">
+  <p>Please enter business hours here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<%= form_tag update_settings_shop_business_schedules_path, method: :post do %>
+  <h3>基本営業時間<strong>必須項目</strong></h3>
+  <div id="busHour" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL">Day</li>
+      <li class="openClose">OPEN/CLOSE</li>
+      <li class="openTime">OPEN</li>
+      <li class="closeTime">CLOSE</li>
+    </ul>
+    <% BusinessSchedule::WDAYS.each do |wday| %>
+      <% business_schedule = @wdays_business_schedules.find{ |schedule| schedule.days_of_week == wday } %>
+
+      <dl class="form">
+        <dt><%= I18n.t("date.day_names").at(wday) %></dt>
+        <dd class="openClose">
+          <%= hidden_field_tag "business_schedules[][id]", business_schedule.try(:id) %>
+          <%= hidden_field_tag "business_schedules[][days_of_week]", wday %>
+          <%= check_box_tag "business_schedules[][business_state]", "opened", business_schedule.try(:business_state) == "opened",
+            class: "BTNopenclose", id: "day#{wday}" %>
+          <label for="day<%= wday %>"></label>
+        </dd>
+        <dd class="openTime"><input type="time" size="20"></dd>
+        <dd class="closeTime"><input type="time" size="20"></dd>
+      </dl>
+    <% end %>
+  </div>
+
+  <h3>祝日<strong>必須項目</strong></h3>
+  <div id="hoddday" class="formRow">
+    <dl>
+      <dt>Japanese holiday</dt>
+      <dd><input type="checkbox" class="BTNopenclose" id="holidayJP" value="open"><label for="holidayJP"></label><span class="caution">※Check to set it closed for Japanese holidays.</span></dd>
+    </dl>
+  </div>
+
+  <h3>臨時休業</h3>
+  <div id="tempHoliday" class="formRow">
+    <ul class="tableTTL">
+      <li class="date">Date</li>
+      <li class="startTime">Start Time</li>
+      <li class="endTime">End Time</li>
+      <li class="closeReason">Reason of closing</li>
+    </ul>
+    <dl>
+      <dt><input type="date"></dt>
+      <dd class="startTime"><input type="time" size="20"></dd>
+      <dd class="endTime"><input type="time" size="20"></dd>
+      <dd class="closeReason"><input type="text" size="40"></dd>
+      <dd class="add"><a href="" class="BTNtarco">ADD a Row</a></dd>
+    </dl>
+  </div>
+
+  <div id="footerav">
+    <%= submit_tag "Save", class: "BTNtarco" %>
+  </div>
+<% end %>
