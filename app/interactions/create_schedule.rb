@@ -1,7 +1,7 @@
 class CreateSchedule < ActiveInteraction::Base
   object :shop, class: Shop
   hash :attrs do
-    string :id, default: nil
+    string :id
     integer :days_of_week
     string :business_state, default: "closed"
   end
