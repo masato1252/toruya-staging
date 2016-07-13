@@ -18,6 +18,6 @@ class Settings::BusinessSchedulesController < DashboardController
 
   private
   def schedules_params
-    params.permit(business_schedules: [:id, :business_state, :days_of_week])
+    params.permit(business_schedules: [:id, :business_state, :days_of_week, :start_time, :end_time])
   end
 end

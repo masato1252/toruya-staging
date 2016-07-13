@@ -26,8 +26,12 @@
             class: "BTNopenclose", id: "day#{wday}" %>
           <label for="day<%= wday %>"></label>
         </dd>
-        <dd class="openTime"><input type="time" size="20"></dd>
-        <dd class="closeTime"><input type="time" size="20"></dd>
+        <dd class="openTime">
+          <%= time_field_tag "business_schedules[][start_time]", business_schedule.try(:start_time).try(:to_s, :time), size: 30 %>
+        </dd>
+        <dd class="closeTime">
+          <%= time_field_tag "business_schedules[][end_time]", business_schedule.try(:end_time).try(:to_s, :time), size: 30 %>
+        </dd>
       </dl>
     <% end %>
   </div>

@@ -6,8 +6,8 @@
 #  shop_id        :integer
 #  staff_id       :integer
 #  business_state :string
-#  start_time     :time
-#  end_time       :time
+#  start_time     :datetime
+#  end_time       :datetime
 #  days_of_week   :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

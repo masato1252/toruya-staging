@@ -4,6 +4,8 @@ class CreateSchedule < ActiveInteraction::Base
     string :id
     integer :days_of_week
     string :business_state, default: "closed"
+    string :start_time, default: nil
+    string :end_time, default: nil
   end
 
   def execute
