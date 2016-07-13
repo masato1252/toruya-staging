@@ -1,4 +1,4 @@
-class CreateSchedule < ActiveInteraction::Base
+class CreateBusinessSchedule < ActiveInteraction::Base
   object :shop, class: Shop
   hash :attrs do
     string :id

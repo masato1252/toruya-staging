@@ -26,6 +26,7 @@ class Shop < ApplicationRecord
   has_many :staffs
   has_many :menus
   has_many :business_schedules
+  has_many :custom_schedules
 
   def to_param
     if name.parameterize.present?

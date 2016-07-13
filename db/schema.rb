@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711124845) do
+ActiveRecord::Schema.define(version: 20160713083223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 20160711124845) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["shop_id", "business_state", "days_of_week"], name: "shop_day_of_week_index", using: :btree
+    t.index ["shop_id"], name: "index_business_schedules_on_shop_id", using: :btree
+  end
+
+  create_table "custom_schedules", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "staff_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.text     "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "menus", force: :cascade do |t|
