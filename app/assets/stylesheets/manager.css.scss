@@ -21,7 +21,7 @@ body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 12pt;
   margin: 0;
-  padding: 0px;
+  padding: 75px 0 72px 0;
   height: 100%;
   color: #555;
 }
@@ -106,8 +106,18 @@ input, select {
     font-size: inherit;
     line-height: inherit;
 }
-input, select { padding: 8px 0; }
-input { text-indent: 10px; }
+input { padding: 8px 0; }
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url(asset-path("screen/calendar_select.png"));
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  line-height: 35px;
+  height: 35px;
+  padding: 0 25px 0 15px;
+}
 input:placeholder { color: #ccc; }
 input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited {
   border-radius: 6px; /* 記述無し */
@@ -188,6 +198,10 @@ header #NAVtoday a { background-image: url(asset-path("screen/mainnav_today.png"
 header #NAVcaution a { background-image: url(asset-path("screen/mainnav_caution.png")); }
 header #NAVhelp a { background-image: url(asset-path("screen/mainnav_help.png")); }
 header #NAVsetting a { background-image: url(asset-path("screen/mainnav_setting.png")); }
+header select {
+  font-size: 15px;
+  background-color: #ddd;
+}
 header #NAVcaution a strong {
   position: absolute;
   right: 0;
@@ -201,6 +215,15 @@ header #NAVcaution a strong {
   line-height: 20px;
     font-size: 11px;
 }
+/* Footer */
+footer {
+  background: #d0d0d0;
+  color: #666;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+#footer .content { margin: 20px; }
 /* Login Page */
 #login {
   width: 300px;
@@ -232,26 +255,33 @@ header #NAVcaution a strong {
 }
 /* Contents */
 .contents {
-  margin: 75px 0 0 0;
-  padding: 0 0 30px 0;
-  width: 100%;
-  display: table;
-  border-collapse: collapse;
+  padding: 20px;
+  height: 100%;
 }
-.shopIndex .contents { 
-  padding: 0px;
-  margin: 95px 0 0 0;
+body.setting { padding-bottom: 0; }
+.setting .contents { 
+  margin: 0;
+  padding: 0;
+}
+.contents .sidel {
+  color: #858585;
+  padding-right: 20px;
+}
+.contBody {
+  width: 100%;
+  height: 100%;
 }
 #sideNav, #content { 
     vertical-align: top;
   display: table-cell;
 }
+.setting #content { width: 100%; }
 #sideNav {
   background: #aaa;
   width: 250px;
     border-right: 1px solid #858585;
+  height: 100%;
 }
-#sideNav dl dt, #sideNav dl dd ul li {  }
 #sideNav dl a, #sideNav dl a:link, #sideNav dl a:visited {
   display: block;
   color: #E8E8E8;
@@ -259,14 +289,21 @@ header #NAVcaution a strong {
   padding: 20px;
   width: 150px;
 }
-#sideNav dl dt a, #sideNav dl dd ul li a, #sideNav dl dd ul { border-bottom: 1px solid #858585; }
+#sideNav dl dt, #sideNav dl dd ul li a, #sideNav dl dd ul { border-bottom: 1px solid #858585; }
 #sideNav dl dd ul li:last-child a { border: 0px; }
 #sideNav dl dd ul li { padding-left: 20px; }
-#sideNav dl a:hover { color: #606060; }
+#sideNav dl a:hover { color: #d5d5d5; }
 #sideNav dl dt.here a, #sideNav dl dd ul li.here, #sideNav dl dd ul li.here a {
   color: #6fa89f;
   background: #fff;
 }
+#sideNav dl dt a { text-indent: 30px; }
+#sideNav dl.shop dt a { background: #aaa url(asset-path("screen/settingnav_shop.png")) no-repeat left 20px center; }
+#sideNav dl.publish dt a { background: #aaa url(asset-path("screen/settingnav_publish.png")) no-repeat left 20px center; }
+#sideNav dl.share dt a { background: #aaa url(asset-path("screen/settingnav_share.png")) no-repeat left 20px center; }
+#sideNav dl.apps dt a { background: #aaa url(asset-path("screen/settingnav_apps.png")) no-repeat left 20px center; }
+#sideNav dl.account dt a { background: #aaa url(asset-path("screen/settingnav_account.png")) no-repeat left 20px center; }
+#sideNav dl.logout dt a { background: #aaa url(asset-path("screen/settingnav_logout.png")) no-repeat left 20px center; }
 #content #subNav {
   background: #d0d0d0;
   border-bottom: 1px solid #858585;
@@ -446,8 +483,54 @@ header #NAVcaution a strong {
   text-align: center;
   padding-top: 20px;
 }
+.tabs {
+  width: 100%;
+  display: flex;
+    display: -moz-flex;
+    display: -o-flex;
+    display: -webkit-flex;
+    display: -ms-flex;
+    flex-direction: row;
+    -moz-flex-direction: row;
+    -o-flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    justify-content: space-between;
+}
+.tabs a, .tabs a:link, .tabs a:visited {
+  border-radius: 5px 5px 0 0; /* 記述無し */
+  -moz-border-radius: 5px 5px 0 0; /* Firefox */
+  -webkit-border-radius: 5px 5px 0 0; /* Google Chrome、Safari */
+  -o-border-radius: 5px 5px 0 0; /* Opera */
+  -ms-border-radius: 5px 5px 0 0; /* Internet Explorer */
+  border: 1px solid #b3b3b3;
+  background: #d0d0d0;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 40px;
+  height: 40px;
+  color: #fff;
+  padding: 0 20px;
+  position: relative;
+  bottom: -1px;
+  z-index: 1px;
+}
+.tabs a:hover, .tabs a.here:hover {
+  color: #666;
+  opacity: 1;
+}
+.tabs a.here {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  color: #b3b3b3;
+}
+.tabs a.here:hover  { background: #fff; }
+.tabBody {
+  border: 1px solid #b3b3b3;
+  background: #fff;
+}
 /* Dashboard */
-#dashboard {
+#dashboard, #customer {
   display: flex;
   display: -moz-flex;
   display: -o-flex;
@@ -461,11 +544,9 @@ header #NAVcaution a strong {
   justify-content: space-between;
 }
 #calendar {
-  min-width: 252px;
-  color: #858585;
   text-align: center;
   font-size: 14px;
-  padding: 0 20px;
+  min-width: 252px;
 }
 #calendar ul li { display: inline-block; }
 #calendar .month { padding-bottom: 10px; }
@@ -488,6 +569,11 @@ header #NAVcaution a strong {
   -ms-border-radius: 5px; /* Internet Explorer */
   padding: 0 10px;
 }
+#calendar .month select {
+  width: 92px;
+  background-color: #fff;
+}
+#calendar .month select#calYear { margin-right: 5px; }
 #calendar .weekdays { border-bottom: 1px solid #858585; }
 #calendar .weekdays, #calendar .days { background: #fff; }
 #calendar .weekdays li, #calendar .days li { width: 12.9%; }
@@ -520,28 +606,28 @@ header #NAVcaution a strong {
 }
 #calendar .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
 #calendar .days .today a.here { background-image: url(asset-path("screen/calendar_today.png")); }
-#calendar #calStatus {
+#calStatus, #customer #resultList ul {
   padding-top: 10px;
   text-align: left;
   width: 130px;
     margin: auto;
+  font-size: 14px;
 }
-#calendar #calStatus dd {
+#calStatus dd, #customer #resultList ul li {
   line-height: 22px;
   padding-bottom: 5px;
   background-position: left top;
   background-repeat: no-repeat;
   padding-left: 27px;
 }
-#calendar #calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset-path("screen/calsts_checkin.png")); }
-#calendar #calStatus dd.checkout, #resList .checkout .calendar { background-image: url(asset-path("screen/calsts_checkout.png")); }
-#calendar #calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset-path("screen/calsts_noshow.png")); }
-#calendar #calStatus dd.pending, #resList .pending .calendar { background-image: url(asset-path("screen/calsts_pending.png")); }
-#calendar #calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset-path("screen/calsts_reserved.png")); }
+#calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset-path("screen/calsts_checkin.png")); }
+#calStatus dd.checkout, #resList .checkout .calendar, #customer #resultList ul li.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
+#calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset-path("screen/calsts_noshow.png")); }
+#calStatus dd.pending, #resList .pending .calendar, #customer #resultList ul li.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
+#calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset-path("screen/calsts_reserved.png")); }
 #resList {
-  min-width: 525px;
   background: #fff;
-  width: 100%;
+  min-width: 476px;
 }
 #resList dl.tableTTL, #resList a {
   border-bottom: 1px solid #B3B3B3;
@@ -553,14 +639,14 @@ header #NAVcaution a strong {
   padding-bottom: 3px;
   color: #B3B3B3;
 }
-#resList dd.time, #resList dd.calendar, #resList dd.menu { font-size: 11pt; }
+#resList dd.date, #resList dd.time, #resList dd.calendar, #resList dd.menu { font-size: 11pt; }
 #resList dl dt, #resList dl dd {
   vertical-align: middle;
   display: inline-block;
 }
 #resList dl dd { line-height: 22px; }
 #resList .time {
-  width: 10%;
+  width: 42px;
   text-align: right;
   padding-right: 5px;
   line-height: 1.2em;
@@ -573,13 +659,58 @@ header #NAVcaution a strong {
   background-position: left center;
   padding-left: 30px;
 }
+#resList .date {
+  text-align: right;
+  width: 52px;
+}
 #resList a, #resList a:link, #resList a:visited {
   display: block;
   padding: 5px 0 5px 20px;
   color: #444444;
 }
 #resList a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
-#mainNav { padding: 0 20px; }
+#resList #record {
+  height: 100%;
+  position: relative;
+  overflow: scroll;
+}
+#resList .float {
+  position: absolute;
+  z-index: 1001;
+  box-shadow:0px 0px 6px 1px #d6d6d6;
+  -moz-box-shadow:0px 0px 6px 1px #d6d6d6;
+  -webkit-box-shadow:0px 0px 6px 1px #d6d6d6;
+}
+#resList .float div:first-child {
+  background: #fff;
+  border: 1px solid #b3b3b3;
+  padding: 20px;
+}
+#resList .float p {
+  text-align: left;
+  width: auto;
+  padding-bottom: 5px;
+}
+#resList .float dl { padding-top: 5px; }
+#resList .float dl dd a {
+  text-index: 0;
+  line-height: 30px;
+  height: 30px;
+  padding: 0 20px;
+  text-align: center;
+}
+#resList .float dl dd a.BTNgray { border-color: #666; }
+#resList .float dl dd a.BTNyellow { border-color: #e6a21f; }
+#resList .float dl dd a.BTNorange { border-color: #b0450d; }
+#resList .float dl dd a.BTNtarco { border-color: #60938a; }
+#resList .float .bubbleTop {
+  background: transparent url(asset-path("screen/float_top.png")) top center no-repeat;
+  height: 8px;
+  width: 100%;
+  position: absolute;
+  top: -7px;
+}
+#mainNav { padding-left: 20px; }
 #mainNav dl dd { padding-bottom: 10px; }
 #mainNav a, #mainNav a:link, #mainNav a:visited {
   background-repeat: no-repeat;
@@ -595,62 +726,7 @@ header #NAVcaution a strong {
 #mainNav #NAVnewResv a { background-image: url(asset-path("screen/btn_newresv.png")); }
 #mainNav #NAVsearchResv a { background-image: url(asset-path("screen/btn_searchresv.png")); }
 #mainNav #NAVcustomers a { background-image: url(asset-path("screen/btn_customers.png")); }
-#dashboard #sevenDays {
-  color: #858585;
-  display: table;
-  border-collapse: separate;
-    border-spacing: 4px;
-  width: initial;
-  margin-top: -20px;
-}
-#dashboard #sevenDays dl, #dashboard #sevenDays ul { 
-  display: table-row;
-  font-size: 14px;
-  text-align: center;
-}
-#dashboard #sevenDays dl dt, #dashboard #sevenDays dl dd, #dashboard #sevenDays ul li { 
-  text-align: center;
-  display: table-cell;
-}
-#dashboard #sevenDays dl dt { width: 48px; }
-#dashboard #sevenDays dl:last-child { height: 92px; }
-#dashboard #sevenDays dl:first-child dt, #dashboard #sevenDays dl:first-child dd { vertical-align: bottom; }
-#dashboard #sevenDays dl:last-child dt, #dashboard #sevenDays dl:last-child dd { vertical-align: middle; }
-#dashboard #sevenDays h2 { 
-  font-size: 20px;
-    margin-bottom: 0px;
-  text-align: left;
-  text-indent: 10px;
-}
-#dashboard #sevenDays dl dd a, #dashboard #sevenDays dl dt a {
-  display: block;
-  width: 90px;
-  height: 90px;
-  text-align: center;
-  font-size: 28px;
-  color: #fff;
-  background: #aaa;
-  border: 1px solid #858585;
-  border-radius: 10px; /* 記述無し */
-  -moz-border-radius: 10px; /* Firefox */
-  -webkit-border-radius: 10px; /* Google Chrome、Safari */
-  -o-border-radius: 10px; /* Opera */
-  -ms-border-radius: 10px; /* Internet Explorer */
-}
-#dashboard #sevenDays dl dd a span {
-  font-size: 14px;
-  padding-top: 15px;
-  padding-bottom: 5px;
-  display: block;
-}
-#dashboard #sevenDays dl dt a {
-  background-color: #707070;
-  background-position: center center;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  overflow: hidden;
-  width: 48px;
-}
+#mainNav #NAVsave a { background-image: url(asset-path("screen/btn_save.png")); }
 .shopIndex #footer { display: none; }
 /* Search */
 #searchRev {
@@ -744,17 +820,114 @@ header #NAVcaution a strong {
 #searchRev .calendars .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
 #searchRev .calendars .days .today a { background-image: url(asset-path("screen/calendar_today.png")); }
 #searchRev .footer { padding: 10px 20px; }
-/* Footer */
-#footer {
-  border-top: 1px solid #e0e0e0;
-  color: #ccc;
-  font-size: 14px;
-  clear: both;
-  position: fixed;
-  bottom: 0;
+/* Customer */
+#customer #resultList {
+  min-width: 230px;
+  overflow: scroll;
+}
+#customer #resultList ul { margin-left: 0; }
+#customer #resultList ul li { display: inline-block; }
+#customer #resultList ul li:last-child { margin-left: 10px; }
+#customer #resultList div {
+  overflow: scroll;
+  background: #fff;
+}
+#customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited {
+  display: block;
+  border-bottom: 1px solid #b3b3b3;
+  padding: 12px 15px;
+  color: #444;
+}
+#customer #resultList a.here { background-color: #dceae7; }
+#customer #resultList dl {
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 32px;
+}
+#customer #resultList dl.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
+#customer #resultList dl.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
+#customer #resultList dt { font-size: 15px; }
+#customer #resultList dd {
+  text-align: right;
+  font-size: 13px;
+}
+#customerInfo #basic { padding-bottom: 10px; }
+#customerInfo #basic input { text-indent: 10px; }
+#customerInfo #basic dl { padding-bottom: 5px; }
+#customerInfo #basic dl dt, #customerInfo #basic dl dd {
+  display: inline-block;
+}
+#customerInfo #basic dl dt { width: 110px; }
+#customerInfo #basic dl dd { width: 39.8%; }
+#customerInfo #basic select#customerSts {
+  border-color: #b3b3b3;
+  background-color: #d0d0d0;
+}
+#customerInfo #basic select.vip, #customerInfo #basic option[value="vip"] {
+  border-color: #b0450d;
+  background-color: #ca4e0f;
+}
+#customerInfo #basic input, #customerInfo #basic select {
+  line-height: 47px;
+  height: 47px;
+  padding-top: 0;
+  padding-bottom: 0;
   width: 100%;
 }
-#footer .content { margin: 20px; }
+#customerInfo .tabs a { width: 40%; }
+#customerInfo #resList #record { padding-top: 33px; }
+#customerInfo #resList .year {
+  text-align: center;
+  background: #d0d0d0;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.customer #resList { min-width: 554px; }
+.customer footer ul {
+  position: relative;
+  padding: 10px 20px;
+}
+.customer footer ul li { display: inline-block; }
+.customer footer ul li:last-child {
+  position: absolute;
+  right: 20px;
+}
+.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input {
+  border-radius: 6px; /* 記述無し */
+  -moz-border-radius: 6px; /* Firefox */
+  -webkit-border-radius: 6px; /* Google Chrome、Safari */
+  -o-border-radius: 6px; /* Opera */
+  -ms-border-radius: 6px; /* Internet Explorer */
+  line-height: 50px;
+  color: #fff;
+  font-size: 23pt;
+  height: 50px;
+  line-height: 50px;
+  border: 1px solid #464342;
+  background: #858585;
+}
+.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited {
+  padding: 0;
+  text-align: center;
+  width: 50px;
+  display: block;
+}
+.customer footer ul li a.here {
+  background: #6fa89f;
+  border-color: #60938a;
+}
+.customer footer ul li input {
+  text-indent: 45px;
+  width: 100%;
+  background: #858585 url(asset-path("screen/footer_search.png")) no-repeat 10px center;
+  padding: 0;
+}
+.customer footer ul li input:placeholder-shown { color: #D8D8D8; }
+.customer footer ul li input::-webkit-input-placeholder { color: #D8D8D8; }
+.customer footer ul li input:-ms-input-placeholder { color: #D8D8D8; }
+.customer footer ul li input::-moz-placeholder { color: #D8D8D8; }
 /*clear all*/
 #aa:after {
   content: ".";

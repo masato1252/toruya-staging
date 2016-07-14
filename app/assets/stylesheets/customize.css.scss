@@ -7,6 +7,22 @@ $green1: #97bfb8;
 $green2: #60938a;
 
 
+/* Overwrite Bootstrap START */
+* {
+  box-sizing: initial;
+
+  &:before, &:after {
+    box-sizing: initial;
+  }
+}
+
+label {
+  display: inline;
+  font-weight: normal;
+}
+/* Overwrite Bootstrap END */
+
+
 /* Overwrite START */
 header {
   z-index: 9999999;
@@ -49,7 +65,6 @@ a, button {
 table.table {
   width: initial;
 }
-
 /* Overwrite END */
 
 /* New Design START */
