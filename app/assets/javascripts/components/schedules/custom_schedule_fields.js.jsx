@@ -7,12 +7,18 @@ UI.define("CustomScheduleFields", function() {
         start_time_date_part: this.props.schedule.startTimeDatePart || "",
         start_time_time_part: this.props.schedule.startTimeTimePart || "",
         end_time: this.props.schedule.endTime || "",
-        reason: this.props.schedule.reason || ""
+        reason: this.props.schedule.reason || "",
+        delete_flag: false
       });
     },
 
     _handleChnage: function(event) {
       this.setState({[event.target.dataset.name]: event.target.value})
+    },
+
+    _handleCustomRow: function(event) {
+      event.preventDefault();
+      this.setState({delete_flag: !this.state.delete_flag})
     },
 
     render: function() {
@@ -58,8 +64,11 @@ UI.define("CustomScheduleFields", function() {
             size="40"
             onChange={this._handleChnage} />
           </dd>
+            {this.state.delete_flag ? <input type="hidden" name="custom_schedules[][_destroy]" value="true" /> : null}
           <dd className="add">
-            <a href="" className="BTNtarco">Remove</a>
+            <a href="#" className="BTNtarco" onClick={this._handleCustomRow}>
+              { this.state.delete_flag ? "Recover" : "Cancel" }
+            </a>
           </dd>
         </dl>
       );

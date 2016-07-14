@@ -28,6 +28,6 @@ class Settings::BusinessSchedulesController < DashboardController
   end
 
   def custom_schedules_params
-    params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time, :reason])
+    params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time, :reason, :_destroy])
   end
 end
