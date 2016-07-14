@@ -17,10 +17,12 @@ class Settings::StaffsController < DashboardController
   # GET /staffs/new
   def new
     @staff = shop.staffs.new
+    @wdays_business_schedules = []
   end
 
   # GET /staffs/1/edit
   def edit
+    @wdays_business_schedules = shop.business_schedules.where(staff_id: @staff.id).order(:days_of_week)
   end
 
   # POST /staffs
@@ -42,6 +44,10 @@ class Settings::StaffsController < DashboardController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
+    business_schedules_params[:business_schedules].each do |attrs|
+      CreateBusinessSchedule.run(shop: shop, staff: @staff, attrs: attrs.to_h)
+    end
+
     respond_to do |format|
       if @staff.update(staff_params)
         format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully updated.' }
@@ -64,6 +70,7 @@ class Settings::StaffsController < DashboardController
   end
 
   private
+
   def set_staff
     @staff = shop.staffs.find_by(id: params[:id])
     redirect_to settings_shop_staffs_path(shop) unless @staff
@@ -73,5 +80,9 @@ class Settings::StaffsController < DashboardController
   def staff_params
     params.require(:staff).permit(:name, :shortname, :full_time,
                                   menu_ids: [], staff_menus_attributes: [[:max_customers, :menu_id]])
+  end
+
+  def business_schedules_params
+    params.permit(business_schedules: [:id, :business_state, :days_of_week, :start_time, :end_time])
   end
 end

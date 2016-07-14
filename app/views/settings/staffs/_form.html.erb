@@ -43,6 +43,41 @@
     </dl>
   </div>
 
+  <div id="parttime" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL">Day</li>
+      <li class="inOut">Comes IN/OUT</li>
+      <li class="startTime">Start</li>
+      <li class="endsTime">Ends</li>
+    </ul>
+
+    <div id="workingTime" class="formRow">
+      <% BusinessSchedule::WDAYS.each do |wday| %>
+        <% business_schedule = @wdays_business_schedules.find{ |schedule| schedule.days_of_week == wday } %>
+        <dl>
+          <dt><%= I18n.t("date.day_names").at(wday) %></dt>
+          <%= hidden_field_tag "business_schedules[][id]", business_schedule.try(:id) %>
+          <%= hidden_field_tag "business_schedules[][days_of_week]", wday %>
+          <dd class="inOut">
+            <%= check_box_tag "business_schedules[][business_state]", "opened", business_schedule.try(:business_state) == "opened",
+              class: "BTNinout", id: "day#{wday}" %>
+            <label for="day<%= wday %>"></label>
+          </dd>
+          <dd class="startTime">
+            <%= time_field_tag "business_schedules[][start_time]", business_schedule.try(:start_time).try(:to_s, :time), size: 20 %>
+          </dd>
+          <dd class="endsTime">
+            <%= time_field_tag "business_schedules[][end_time]", business_schedule.try(:end_time).try(:to_s, :time), size: 20 %>
+          </dd>
+        </dl>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="footerav">
+    <input type="submit" class="BTNtarco" value="Save">
+  </div>
+
   <!--div class="form-block menu-of-staff">
     <h2>対応Menu</h2>
     <%#= react_component("UI.MenuStaffSelect",
@@ -54,7 +89,4 @@
                         }) %>
   </div-->
 
-  <div id="footerav" class="actions">
-    <%= f.submit "save", class: "BTNtarco" %>
-  </div>
 <% end %>

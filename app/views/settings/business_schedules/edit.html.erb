@@ -20,7 +20,7 @@
       <dl class="form">
         <dt><%= I18n.t("date.day_names").at(wday) %></dt>
         <dd class="openClose">
-          <%= hidden_field_tag "business_schedules[][id]", business_schedule.id if business_schedule.try(:id) %>
+          <%= hidden_field_tag "business_schedules[][id]", business_schedule.try(:id) %>
           <%= hidden_field_tag "business_schedules[][days_of_week]", wday %>
           <%= check_box_tag "business_schedules[][business_state]", "opened", business_schedule.try(:business_state) == "opened",
             class: "BTNopenclose", id: "day#{wday}" %>
