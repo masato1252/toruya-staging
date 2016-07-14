@@ -16,6 +16,8 @@ class CustomSchedule < ApplicationRecord
   attr_accessor :start_time_date_part, :start_time_time_part
 
   scope :for_shop, -> { where(staff_id: nil) }
+  scope :future, -> { where("start_time > ?", Time.now.yesterday) }
+
   before_validation :set_start_time
 
   def set_start_time

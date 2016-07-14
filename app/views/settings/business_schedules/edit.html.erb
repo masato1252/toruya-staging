@@ -40,7 +40,12 @@
   <div id="hoddday" class="formRow">
     <dl>
       <dt>Japanese holiday</dt>
-      <dd><input type="checkbox" class="BTNopenclose" id="holidayJP" value="open"><label for="holidayJP"></label><span class="caution">※Check to set it closed for Japanese holidays.</span></dd>
+      <dd>
+        <%= check_box_tag "shop[holiday_working]", true, shop.holiday_working,
+          class: "BTNopenclose", id: "holidayJP" %>
+        <label for="holidayJP"></label>
+        <span class="caution">※Check to set it closed for Japanese holidays.</span>
+      </dd>
     </dl>
   </div>
 

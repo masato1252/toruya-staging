@@ -5,7 +5,7 @@
       <ul>
         <%= active_link_to "Shop Info", settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
         <% if shop.try(:persisted?) %>
-          <%= active_link_to "Business Hours", settings_shop_business_schedules_path(shop), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+          <%= active_link_to "Business Hours", edit_settings_shop_business_schedules_path(shop), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
           <%= active_link_to "Staff", settings_shop_staffs_path(shop), active: [["settings/staffs"], []], wrap_tag: :li, class_active: "here" %>
           <%= active_link_to "Menu", settings_shop_menus_path(shop), active: [["settings/menus"], []], wrap_tag: :li, class_active: "here" %>
           <li><a href="price.html">Price</a></li>

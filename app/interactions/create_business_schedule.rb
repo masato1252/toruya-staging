@@ -10,6 +10,8 @@ class CreateBusinessSchedule < ActiveInteraction::Base
 
   def execute
     schedule = shop.business_schedules.for_shop.find_or_initialize_by(id: attrs[:id])
-    schedule.update(attrs.except(:id))
+    unless schedule.update(attrs.except(:id))
+      errors.merge!(schedule.errors)
+    end
   end
 end

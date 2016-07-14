@@ -1,12 +1,9 @@
 class Settings::BusinessSchedulesController < DashboardController
   layout "settings"
 
-  def index
-  end
-
   def edit
     @wdays_business_schedules = shop.business_schedules.for_shop.order(:days_of_week)
-    @custom_schedules = shop.custom_schedules.for_shop.where("start_time > ?", Time.now.yesterday).order(:start_time)
+    @custom_schedules = shop.custom_schedules.for_shop.order(:start_time)
   end
 
   def update
@@ -16,7 +13,11 @@ class Settings::BusinessSchedulesController < DashboardController
 
     custom_schedules_params[:custom_schedules].each do |attrs|
       CreateCustomSchedule.run(shop: shop, attrs: attrs.to_h)
-    end
+    end if custom_schedules_params[:custom_schedules]
+
+    update_shop = UpdateShop.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
+
+    flash[:alert] = update_shop.errors.full_messages.join(", ")
 
     redirect_to edit_settings_shop_business_schedules_path(shop)
   end
@@ -29,5 +30,9 @@ class Settings::BusinessSchedulesController < DashboardController
 
   def custom_schedules_params
     params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time, :reason, :_destroy])
+  end
+
+  def shop_params
+    params.permit(shop: :holiday_working)
   end
 end
