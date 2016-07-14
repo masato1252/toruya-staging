@@ -49,6 +49,7 @@ ja:
       staff:
         name: "氏名"
         shortname: "しめい"
+        full_time: "常勤"
       menu:
         name: "メニュー名"
         shortname: "短縮名"

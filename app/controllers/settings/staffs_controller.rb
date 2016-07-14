@@ -6,7 +6,7 @@ class Settings::StaffsController < DashboardController
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = shop.staffs.all
+    @staffs = shop.staffs.all.order(:id)
   end
 
   # GET /staffs/1
@@ -71,7 +71,7 @@ class Settings::StaffsController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:name, :shortname,
+    params.require(:staff).permit(:name, :shortname, :full_time,
                                   menu_ids: [], staff_menus_attributes: [[:max_customers, :menu_id]])
   end
 end

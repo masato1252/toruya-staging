@@ -4,6 +4,7 @@
     <tr>
       <th><%= Staff.human_attribute_name(:name) %></th>
       <th><%= Staff.human_attribute_name(:shortname) %></th>
+      <th><%= Staff.human_attribute_name(:full_time) %></th>
       <th>Menus</th>
     </tr>
   </thead>
@@ -13,6 +14,13 @@
       <tr>
         <td><%= staff.name %></td>
         <td><%= staff.shortname %></td>
+        <td>
+          <% if staff.full_time %>
+            <i class="fa fa-check" aria-hidden="true"></i>
+          <% else %>
+            <i class="fa fa-times" aria-hidden="true"></i>
+          <% end %>
+        </td>
         <td><%= staff.menus.map(&:name).join(", ") %></td>
         <td><%= link_to 'Edit', edit_settings_shop_staff_path(shop, staff), class: "btn btn-default" %></td>
         <td><%= link_to 'Destroy', settings_shop_staff_path(shop, staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %></td>
