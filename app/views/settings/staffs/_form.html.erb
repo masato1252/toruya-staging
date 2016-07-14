@@ -11,25 +11,28 @@
 
   <div class="form-block">
     <h3>Staff Informations</h3>
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :name %>
-      </label>
-
-      <div class="col-sm-9">
-        <%= f.text_field :name, placeholder: true %>
-      </div>
+    <div id="staffInfo" class="formRow">
+      <dl>
+        <dt>氏名</dt>
+        <dd class="familyName">
+          <%= f.text_field :last_name, placeholder: "Family Name" %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :first_name, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>しめい</dt>
+        <dd class="familyName">
+          <%= f.text_field :last_shortname, placeholder: "Family Name Kana" %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :first_shortname, placeholder: "First Name Kana" %>
+        </dd>
+      </dl>
     </div>
 
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :shortname %>
-      </label>
 
-      <div class="col-sm-9">
-        <%= f.text_field :shortname, placeholder: true %>
-      </div>
-    </div>
   </div>
 
   <h3>勤務日時<strong>必須項目</strong></h3>

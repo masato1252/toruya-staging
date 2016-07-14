@@ -28,7 +28,8 @@ class Settings::StaffsController < DashboardController
   # POST /staffs
   # POST /staffs.json
   def create
-    @staff = shop.staffs.new(staff_params)
+    @staff = shop.staffs.new(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
+                                                shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
 
     respond_to do |format|
       if @staff.save
@@ -49,7 +50,8 @@ class Settings::StaffsController < DashboardController
     end
 
     respond_to do |format|
-      if @staff.update(staff_params)
+      if @staff.update(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
+                                                shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
         format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
@@ -78,7 +80,7 @@ class Settings::StaffsController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:name, :shortname, :full_time,
+    params.require(:staff).permit(:first_name, :last_name, :first_shortname, :last_shortname, :full_time,
                                   menu_ids: [], staff_menus_attributes: [[:max_customers, :menu_id]])
   end
 
