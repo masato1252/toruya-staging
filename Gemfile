@@ -14,21 +14,22 @@ gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem "bcrypt", "~> 3.1.7"
 gem "bootstrap-sass", "~> 3.3.6"
-gem 'sass-rails', "~> 5.0.5"
-gem "dotenv-rails"
+gem "sass-rails", "~> 5.0.5"
+gem "dotenv-rails", :require => 'dotenv/rails-now'
 gem "devise", "~> 4.2.0"
+gem "omniauth-google-oauth2"
 gem "react-rails", "~> 1.8.0"
 gem "underscore-rails", "~> 1.8.3"
 gem "momentjs-rails", "~> 2.11.1"
 gem "font-awesome-rails", "~> 4.6.3"
 gem "active_link_to", "~> 1.0.3"
 gem "aasm", "~> 4.11.0"
-gem 'active_interaction', '~> 3.2.0'
+gem "active_interaction", "~> 3.2.0"
 
 
 group :development, :test do
   gem "byebug", platform: :mri
-  gem 'rspec-rails', '~> 3.5.0'
+  gem "rspec-rails", "~> 3.5.0"
 end
 
 group :development do

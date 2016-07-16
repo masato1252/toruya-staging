@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160714130846) do
+ActiveRecord::Schema.define(version: 20160716040038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "access_providers", force: :cascade do |t|
+    t.string   "access_token"
+    t.string   "refresh_token"
+    t.string   "provider"
+    t.string   "uid"
+    t.integer  "user_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid", using: :btree
+  end
 
   create_table "business_schedules", force: :cascade do |t|
     t.integer  "shop_id"

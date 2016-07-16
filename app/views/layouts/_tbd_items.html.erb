@@ -4,6 +4,7 @@
       <%= current_user.email %>
       <%= link_to t("common.sign_out"), destroy_user_session_path, :method=>'delete' %>
       <%= link_to "Shops", settings_shops_path %>
+      <%= link_to "Sign In with Google", user_google_oauth2_omniauth_authorize_path %>
     </li>
   <% end %>
   <li>

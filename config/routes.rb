@@ -12,6 +12,6 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks" }
   root to: "home#index"
 end

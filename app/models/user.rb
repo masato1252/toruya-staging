@@ -27,7 +27,8 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :lockable
+         :confirmable, :lockable, :omniauthable
 
   has_many :shops
+  has_one :access_provider
 end
