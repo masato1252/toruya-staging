@@ -127,6 +127,7 @@ GEM
       os (~> 0.9)
       signet (~> 0.7)
     hashie (3.4.4)
+    holidays (4.5.0)
     i18n (0.7.0)
     jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
@@ -312,6 +313,7 @@ DEPENDENCIES
   factory_girl_rails
   font-awesome-rails (~> 4.6.3)
   google-api-client (~> 0.8.6)
+  holidays (~> 4.5.0)
   jbuilder (~> 2.5)
   jquery-rails
   letter_opener
