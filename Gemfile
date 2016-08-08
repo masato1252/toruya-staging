@@ -27,11 +27,13 @@ gem "active_link_to", "~> 1.0.3"
 gem "aasm", "~> 4.11.0"
 gem "active_interaction", "~> 3.2.0"
 gem "holidays", "~> 4.5.0"
+gem "default_value_for", "~> 3.0.0"
 
 
 group :development, :test do
   gem "byebug", platform: :mri
   gem "rspec-rails", "~> 3.5.0"
+  gem "timecop", "~> 0.8.0"
 end
 
 group :development do

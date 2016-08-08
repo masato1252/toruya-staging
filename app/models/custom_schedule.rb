@@ -15,13 +15,15 @@
 class CustomSchedule < ApplicationRecord
   attr_accessor :start_time_date_part, :start_time_time_part
 
+  belongs_to :shop
+
   scope :for_shop, -> { where(staff_id: nil) }
   scope :future, -> { where("start_time > ?", Time.now.yesterday) }
 
   before_validation :set_start_time
 
   def set_start_time
-    self.start_time = Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
+    self.start_time ||= Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
   end
 
   def start_time_date

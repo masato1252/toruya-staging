@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160716040038) do
+ActiveRecord::Schema.define(version: 20160805002152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,15 @@ ActiveRecord::Schema.define(version: 20160716040038) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "customers", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "menus", force: :cascade do |t|
     t.integer  "shop_id",           null: false
     t.string   "name",              null: false
@@ -58,6 +67,30 @@ ActiveRecord::Schema.define(version: 20160716040038) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.index ["shop_id"], name: "index_menus_on_shop_id", using: :btree
+  end
+
+  create_table "reservation_settings", force: :cascade do |t|
+    t.integer  "menu_id"
+    t.string   "name"
+    t.string   "short_name"
+    t.string   "reservation_type"
+    t.string   "day_type"
+    t.string   "time_type"
+    t.integer  "day"
+    t.integer  "day_of_week"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "menu_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "shops", force: :cascade do |t|

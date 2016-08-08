@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :shops do
+    resources :customers
+    resources :reservations
+  end
+
   namespace :settings do
     resources :shops do
       resources :staffs

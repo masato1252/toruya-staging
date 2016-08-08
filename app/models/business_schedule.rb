@@ -22,5 +22,8 @@ class BusinessSchedule < ApplicationRecord
   validates :days_of_week, inclusion: { in: 0..6 }, if: -> { days_of_week.present? }
   validates :business_state, inclusion: { in: BUSINESS_STATE }
 
+  belongs_to :shop
+
   scope :for_shop, -> { where(staff_id: nil) }
+  scope :opened, -> { where(business_state: "opened") }
 end
