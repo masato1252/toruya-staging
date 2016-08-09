@@ -17,6 +17,9 @@ class Menu < ApplicationRecord
 
   has_many :staff_menus, inverse_of: :menu
   has_many :staffs, through: :staff_menus
+  has_many :reservation_settings
+  has_many :reservations
+  belongs_to :shop
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 end

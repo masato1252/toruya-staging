@@ -22,4 +22,16 @@ FactoryGirl.define do
     days_of_week { Date.today.wday }
     business_state "opened"
   end
+
+  factory :menu do
+    association :shop
+    name "foo"
+    shortname "f"
+  end
+
+  factory :reservation_setting do
+    association :menu
+    name "foo"
+    short_name "f"
+  end
 end

@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20160805002152) do
     t.string   "time_type"
     t.integer  "day"
     t.integer  "day_of_week"
+    t.integer  "nth_of_week"
     t.datetime "start_time"
     t.datetime "end_time"
     t.datetime "created_at",       null: false

@@ -66,6 +66,40 @@ class Shop < ApplicationRecord
     business_working_schedule(date)
   end
 
+  def available_reservation_menus(business_time_range)
+    start_time = business_time_range.first
+    end_time = business_time_range.last
+    distance_in_minutes = ((end_time - start_time)/60.0).round
+
+    # when all staffs already have reservations at this time
+    # if reservations.where("start_time >= and end_time <= ?", start_time, end_time).includes(:staffs).
+    #  map(&:staff_ids).flatten.uniq == shop.staff_ids
+    #  return
+    # end
+
+    scoped = menus.joins(:reservation_settings).
+      where("reservation_type = ? and minutes <= ?", "block", distance_in_minutes)
+
+    scoped.
+      where("day_type = ?", "business_days").
+      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time).
+    or(
+      scoped.
+      where("day_type = ? and day_of_week = ?", "weekly", start_time.wday).
+      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("day_type = ? and day = ?", "number_of_day_monthly", start_time.day).
+      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("day_type = ? and nth_of_week = ? and day_of_week = ?", "day_of_week_monthly", start_time.week_of_month, start_time.wday).
+      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
+    )
+  end
+
   private
 
   def business_schedule(date)
