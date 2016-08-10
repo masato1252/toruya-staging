@@ -29,6 +29,7 @@ class Shop < ApplicationRecord
   has_many :business_schedules
   has_many :custom_schedules
   has_many :customers
+  has_many :reservations
   belongs_to :user
 
   def to_param
@@ -72,10 +73,10 @@ class Shop < ApplicationRecord
     distance_in_minutes = ((end_time - start_time)/60.0).round
 
     # when all staffs already have reservations at this time
-    # if reservations.where("start_time >= and end_time <= ?", start_time, end_time).includes(:staffs).
-    #  map(&:staff_ids).flatten.uniq == shop.staff_ids
-    #  return
-    # end
+    if staff_ids.present? && reservations.where("start_time >= ? and end_time <= ?", start_time, end_time).includes(:staffs).
+      map(&:staff_ids).flatten.uniq == staff_ids
+      return
+    end
 
     scoped = menus.joins(:reservation_settings).
       where("reservation_type = ? and minutes <= ?", "block", distance_in_minutes)
@@ -97,6 +98,32 @@ class Shop < ApplicationRecord
       scoped.
       where("day_type = ? and nth_of_week = ? and day_of_week = ?", "day_of_week_monthly", start_time.week_of_month, start_time.wday).
       where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
+    )
+  end
+
+  def available_staffs(menu, business_time_range)
+    start_time = business_time_range.first
+    end_time = business_time_range.last
+
+    # All staffs could do this menu already have reservation
+    if menu.staff_ids.present? &&
+      reservations.where(menu: menu).where("start_time >= ? and end_time <= ?", start_time, end_time).includes(:staffs).
+      map(&:staff_ids).flatten.uniq == menu.staff_ids
+      return
+    end
+
+    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules)
+
+    scoped.
+      where(full_time: true).
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time >= ? and custom_schedules.end_time <= ?))", start_time, end_time).
+    or(
+      scoped.
+      where("business_schedules.business_state = ? and days_of_week = ? ", "opened", business_time_range.first.wday).
+      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time).
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time >= ? and custom_schedules.end_time <= ?))", start_time, end_time)
     )
   end
 

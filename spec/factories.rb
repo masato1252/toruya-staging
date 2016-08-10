@@ -15,11 +15,13 @@ FactoryGirl.define do
   end
 
   factory :custom_schedule do
+    association :shop
+    association :staff
   end
 
   factory :business_schedule do
     association :shop
-    days_of_week { Date.today.wday }
+    days_of_week { start_time.wday }
     business_state "opened"
   end
 
@@ -33,5 +35,16 @@ FactoryGirl.define do
     association :menu
     name "foo"
     short_name "f"
+  end
+
+  factory :reservation do
+    association :shop
+    association :menu
+  end
+
+  factory :staff do
+    association :shop
+    name "foo"
+    shortname "f"
   end
 end

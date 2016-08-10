@@ -17,8 +17,11 @@ class Staff < ApplicationRecord
   validates :name, presence: true
   validates :shortname, presence: true
 
+  belongs_to :shop
   has_many :staff_menus
   has_many :menus, through: :staff_menus
+  has_many :business_schedules
+  has_many :custom_schedules
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 

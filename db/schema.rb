@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160805002152) do
+ActiveRecord::Schema.define(version: 20160810124115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,14 @@ ActiveRecord::Schema.define(version: 20160805002152) do
     t.index ["shop_id"], name: "index_menus_on_shop_id", using: :btree
   end
 
+  create_table "reservation_customers", force: :cascade do |t|
+    t.integer  "reservation_id"
+    t.integer  "customer_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true, using: :btree
+  end
+
   create_table "reservation_settings", force: :cascade do |t|
     t.integer  "menu_id"
     t.string   "name"
@@ -83,6 +91,14 @@ ActiveRecord::Schema.define(version: 20160805002152) do
     t.datetime "end_time"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+  end
+
+  create_table "reservation_staffs", force: :cascade do |t|
+    t.integer  "reservation_id"
+    t.integer  "staff_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["reservation_id", "staff_id"], name: "index_reservation_staffs_on_reservation_id_and_staff_id", unique: true, using: :btree
   end
 
   create_table "reservations", force: :cascade do |t|

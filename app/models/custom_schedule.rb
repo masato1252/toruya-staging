@@ -15,7 +15,8 @@
 class CustomSchedule < ApplicationRecord
   attr_accessor :start_time_date_part, :start_time_time_part
 
-  belongs_to :shop
+  belongs_to :shop, optional: true
+  belongs_to :staff, optional: true
 
   scope :for_shop, -> { where(staff_id: nil) }
   scope :future, -> { where("start_time > ?", Time.now.yesterday) }
