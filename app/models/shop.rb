@@ -131,7 +131,7 @@ class Shop < ApplicationRecord
 
   def business_schedule(date)
     @business_schedule ||= {}
-    @business_schedule[date.wday] ||= business_schedules.where(days_of_week: date.wday).opened.first
+    @business_schedule[date.wday] ||= business_schedules.for_shop.where(days_of_week: date.wday).opened.first
   end
 
   def business_working_schedule(date)

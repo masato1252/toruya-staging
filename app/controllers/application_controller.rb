@@ -3,9 +3,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   before_action :configure_permitted_parameters, if: :devise_controller?
 
- rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound do
-   redirect_to root_path, :alert => "This page does not exist."
- end
+  rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound do
+    redirect_to root_path, :alert => "This page does not exist."
+  end
 
   private
   def configure_permitted_parameters

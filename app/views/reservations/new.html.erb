@@ -1,5 +1,14 @@
 <h1>New Reservation</h1>
 
-<%= render 'form', reservation: @reservation %>
+<%= react_component("UI.Reservation.Form",
+                    { reservation: @reservation.attributes.merge(start_time_date_part: @reservation.start_time_date,
+                                                                 start_time_time_part: @reservation.start_time_time,
+                                                                 end_time: @reservation.end_time.try(:to_s, :time)),
+                      shop_id: shop.id,
+                      available_times_path: times_shop_reservations_available_options_path(shop),
+                      available_menus_path:  menus_shop_reservations_available_options_path(shop),
+                      available_staffs_path: staffs_shop_reservations_available_options_path(shop)
+} ) %>
+<%# <%= render 'form', reservation: @reservation, url: shop_reservations_path(shop) %>
 
-<%= link_to 'Back', reservations_path %>
+<%= link_to 'Back', shop_reservations_path(shop) %>

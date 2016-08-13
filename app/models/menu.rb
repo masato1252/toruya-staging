@@ -13,7 +13,12 @@
 #
 
 class Menu < ApplicationRecord
+  default_value_for :minutes, 60
+  default_value_for :min_staffs_number, 1
+
   validates :name, presence: true
+  validates :minutes, presence: true
+  validates :min_staffs_number, numericality: { greater_than: 0 }
 
   has_many :staff_menus, inverse_of: :menu
   has_many :staffs, through: :staff_menus

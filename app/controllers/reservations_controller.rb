@@ -1,10 +1,10 @@
-class ReservationsController < ApplicationController
+class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
 
   # GET /reservations
   # GET /reservations.json
   def index
-    @reservations = Reservation.all
+    @reservations = shop.reservations.all
   end
 
   # GET /reservations/1
@@ -14,7 +14,7 @@ class ReservationsController < ApplicationController
 
   # GET /reservations/new
   def new
-    @reservation = Reservation.new
+    @reservation = shop.reservations.new(start_time: Time.zone.now)
   end
 
   # GET /reservations/1/edit
@@ -24,7 +24,7 @@ class ReservationsController < ApplicationController
   # POST /reservations
   # POST /reservations.json
   def create
-    @reservation = Reservation.new(reservation_params)
+    @reservation = shop.reservations.new(reservation_params)
 
     respond_to do |format|
       if @reservation.save
@@ -61,22 +61,14 @@ class ReservationsController < ApplicationController
     end
   end
 
-  def available_time
-    date = Time.zone.parse(params[:date])
-    shop.available_time(date)
-  end
-
-  def available_menus
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_reservation
-      @reservation = Reservation.find(params[:id])
+      @reservation = shop.reservations.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
-      params.require(:reservation).permit(:shop_id, :menu_id, :start_time, :end_time)
+      params.require(:reservation).permit(:menu_id, :start_time, :end_time)
     end
 end

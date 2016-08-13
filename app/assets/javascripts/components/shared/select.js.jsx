@@ -2,6 +2,12 @@
 
 UI.define("Select", function() {
   var Select = React.createClass({
+    getDefaultProps: function() {
+      return {
+        blankOption: " -- select an option -- "
+      };
+    },
+
     render: function() {
       var optionsList = [];
       optionsList = this.props.options.map(function(option) {
@@ -9,15 +15,11 @@ UI.define("Select", function() {
       });
 
       if (this.props.includeBlank) {
-        optionsList.unshift(<option disabled value="" key=""> -- select an option -- </option>);
+        optionsList.unshift(<option disabled value="" key="">{this.props.blankOption}</option>);
       }
 
       return(
-        <select id={this.props.id}
-                className={this.props.className}
-                name={this.props.name}
-                value={this.props.value}
-                onChange={this.props.onChange}>
+        <select {...this.props} >
           {optionsList}
         </select>
       );

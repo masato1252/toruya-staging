@@ -2,6 +2,14 @@ Rails.application.routes.draw do
   resources :shops do
     resources :customers
     resources :reservations
+
+    namespace :reservations do
+      resource :available_options, only: [] do
+        get :times
+        get :menus
+        get :staffs
+      end
+    end
   end
 
   namespace :settings do
