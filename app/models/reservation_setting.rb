@@ -31,7 +31,7 @@ class ReservationSetting < ApplicationRecord
   validates :name, presence: true
   validates :reservation_type, presence: true, inclusion: { in: TYPES }
   validates :day_type, presence: true, inclusion: { in: DAY_TYPES }
-  validates :days, inclusion: { in: DAY_TYPES }, allow_blank: true
+  validates :day, inclusion: { in: DAYS }, allow_blank: true
   validates :day_of_week, inclusion: { in: DAY_OF_WEEK }, allow_blank: true
 
   belongs_to :menu

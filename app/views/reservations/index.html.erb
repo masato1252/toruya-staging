@@ -20,9 +20,7 @@
         <td><%= reservation.menu_id %></td>
         <td><%= reservation.start_time %></td>
         <td><%= reservation.end_time %></td>
-        <td><%= link_to 'Show', reservation %></td>
-        <td><%= link_to 'Edit', edit_reservation_path(reservation) %></td>
-        <td><%= link_to 'Destroy', reservation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Edit', edit_shop_reservation_path(shop, reservation) %></td>
       </tr>
     <% end %>
   </tbody>

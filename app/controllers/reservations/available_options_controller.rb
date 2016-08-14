@@ -4,12 +4,7 @@ class Reservations::AvailableOptionsController < DashboardController
   end
 
   def menus
-    @menus = shop.available_reservation_menus(start_time..end_time)
-
-    @staffs = if @menus.present?
-      @selected_menu = @menus.first
-      shop.available_staffs(@selected_menu, start_time..end_time)
-    end
+    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
   end
 
   def staffs

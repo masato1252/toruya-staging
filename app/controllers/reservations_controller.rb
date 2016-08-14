@@ -24,11 +24,12 @@ class ReservationsController < DashboardController
   # POST /reservations
   # POST /reservations.json
   def create
+    debugger
     @reservation = shop.reservations.new(reservation_params)
 
     respond_to do |format|
       if @reservation.save
-        format.html { redirect_to @reservation, notice: 'Reservation was successfully created.' }
+        format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully created.' }
         format.json { render :show, status: :created, location: @reservation }
       else
         format.html { render :new }
@@ -42,7 +43,7 @@ class ReservationsController < DashboardController
   def update
     respond_to do |format|
       if @reservation.update(reservation_params)
-        format.html { redirect_to @reservation, notice: 'Reservation was successfully updated.' }
+        format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully updated.' }
         format.json { render :show, status: :ok, location: @reservation }
       else
         format.html { render :edit }
@@ -69,6 +70,7 @@ class ReservationsController < DashboardController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
-      params.require(:reservation).permit(:menu_id, :start_time, :end_time)
+      params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
+                                          :customer_ids, :staff_ids)
     end
 end

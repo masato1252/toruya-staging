@@ -77,46 +77,121 @@ RSpec.describe Shop, type: :model do
       end
     end
 
-    context "when menus reservation is available on each business days" do
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days")) }
+    shared_examples "available menus" do
+      context "when menus reservation is available on each business days" do
+        before { test_data if respond_to?(:test_data) }
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days")) }
 
-      it "returns available reservation menus" do
-        expect(shop.available_reservation_menus(time_range)).to include(menu)
+        it "returns available reservation menus" do
+          expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when reservation setting time is not available" do
+          before { test_data if respond_to?(:test_data) }
+          let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days", start_time: now.advance(minute: 0), end_time: now.advance(minutes: 59))) }
+
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+        end
+
+        context "when menu does not have enough staffs" do
+          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2) }
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+        end
       end
 
-      context "when reservation setting time is not available" do
-        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days", start_time: now.advance(minute: 0), end_time: now.advance(minutes: 59))) }
+      context "when menus reservation is available on each Friday" do
+        before { Timecop.freeze(Date.new(2016, 8, 5)) }
+        before { test_data if respond_to?(:test_data) }
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "weekly", day_of_week: 5)) }
 
-        it "returns empty" do
-          expect(shop.available_reservation_menus(time_range)).to be_empty
+        it "returns available reservation menus" do
+          expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when menu does not have enough staffs" do
+          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2) }
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+        end
+      end
+
+      context "when menus reservation is available on second day of each Month" do
+        before { Timecop.freeze(Date.new(2016, 8, 2)) }
+        before { test_data if respond_to?(:test_data) }
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "number_of_day_monthly", day: 2)) }
+
+        it "returns available reservation menus" do
+          expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when menu does not have enough staffs" do
+          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2) }
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+        end
+      end
+
+      context "when menus reservation is available on second Friday of each Month" do
+        before { Timecop.freeze(Date.new(2016, 8, 12)) }
+        before { test_data if respond_to?(:test_data) }
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "day_of_week_monthly", nth_of_week: 2, day_of_week: 5)) }
+
+        it "returns available reservation menus" do
+          expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when menu does not have enough staffs" do
+          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2) }
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
         end
       end
     end
 
-    context "when menus reservation is available on each Friday" do
-      before { Timecop.freeze(Date.new(2016, 8, 5)) }
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "weekly", day_of_week: 5)) }
+    context "when staff is full time" do
+      let(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: true) }
+      before do
+        menu.staffs << staff
+      end
 
-      it "returns available reservation menus" do
-        expect(shop.available_reservation_menus(time_range)).to include(menu)
+      it_behaves_like "available menus"
+
+      context "when staff asks for leave on that date but not at that time" do
+        it_behaves_like "available menus" do
+          let(:test_data) do
+            FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first.advance(hours: -2), end_time: time_range.last.advance(hours: -2))
+          end
+        end
       end
     end
 
-    context "when menus reservation is available on second day of each Month" do
-      before { Timecop.freeze(Date.new(2016, 8, 2)) }
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "number_of_day_monthly", day: 2)) }
-
-      it "returns available reservation menus" do
-        expect(shop.available_reservation_menus(time_range)).to include(menu)
+    context "when staff has work schedule on that date" do
+      it_behaves_like "available menus" do
+        let(:test_data) do
+          staff = FactoryGirl.create(:staff, shop: shop, full_time: false)
+          menu.staffs << staff
+          FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
+                             start_time: time_range.first, end_time: time_range.last)
+        end
       end
-    end
 
-    context "when menus reservation is available on second Friday of each Month" do
-      before { Timecop.freeze(Date.new(2016, 8, 12)) }
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "day_of_week_monthly", nth_of_week: 2, day_of_week: 5)) }
-
-      it "returns available reservation menus" do
-        expect(shop.available_reservation_menus(time_range)).to include(menu)
+      context "when staff asks for leave on that date but not at that time" do
+        it_behaves_like "available menus" do
+          let(:test_data) do
+            staff = FactoryGirl.create(:staff, shop: shop, full_time: false)
+            menu.staffs << staff
+            FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
+                               start_time: time_range.first, end_time: time_range.last)
+            FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first.advance(hours: -2), end_time: time_range.last.advance(hours: -2))
+          end
+        end
       end
     end
   end

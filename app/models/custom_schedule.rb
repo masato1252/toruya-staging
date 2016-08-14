@@ -13,7 +13,7 @@
 #
 
 class CustomSchedule < ApplicationRecord
-  attr_accessor :start_time_date_part, :start_time_time_part
+  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
   belongs_to :shop, optional: true
   belongs_to :staff, optional: true
@@ -28,7 +28,7 @@ class CustomSchedule < ApplicationRecord
   end
 
   def set_end_time
-    self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time}")
+    self.end_time ||= Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
   end
 
   def start_time_date

@@ -78,27 +78,49 @@ class Shop < ApplicationRecord
       return
     end
 
-    scoped = menus.joins(:reservation_settings).
-      where("reservation_type = ? and minutes <= ?", "block", distance_in_minutes)
+    scoped = menus.
+      joins(:reservation_settings, :staffs).
+      joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id").
+      where("minutes <= ?", distance_in_minutes)
 
-    scoped.
-      where("day_type = ?", "business_days").
-      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time).
+    scoped = scoped.
+      where("staffs.full_time = ?", true).
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time >= ? and custom_schedules.end_time <= ?))", start_time, end_time).
     or(
       scoped.
-      where("day_type = ? and day_of_week = ?", "weekly", start_time.wday).
-      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
-    ).
-    or(
-      scoped.
-      where("day_type = ? and day = ?", "number_of_day_monthly", start_time.day).
-      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
-    ).
-    or(
-      scoped.
-      where("day_type = ? and nth_of_week = ? and day_of_week = ?", "day_of_week_monthly", start_time.week_of_month, start_time.wday).
-      where("(start_time is NULL and end_time is NULL) or (start_time <= ? and end_time >= ?)", start_time, end_time)
+      where("business_schedules.business_state = ? and days_of_week = ? ", "opened", business_time_range.first.wday).
+      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time).
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time >= ? and custom_schedules.end_time <= ?))", start_time, end_time)
     )
+
+    scoped = scoped.
+      where("reservation_settings.day_type = ?", "business_days").
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and reservation_settings.day_of_week = ?", "weekly", start_time.wday).
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and reservation_settings.day = ?", "number_of_day_monthly", start_time.day).
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
+             reservation_settings.day_of_week = ?", "day_of_week_monthly", start_time.week_of_month, start_time.wday).
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+    )
+
+    scoped.select("menus.*").group("menus.id").having("count(staffs.id) >= min_staffs_number")
   end
 
   def available_staffs(menu, business_time_range)

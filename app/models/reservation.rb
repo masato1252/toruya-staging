@@ -12,7 +12,10 @@
 #
 
 class Reservation < ApplicationRecord
-  attr_accessor :start_time_date_part, :start_time_time_part
+  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
+
+  validates :start_time, presence: true
+  validates :end_time, presence: true
 
   belongs_to :shop
   belongs_to :menu
@@ -28,7 +31,7 @@ class Reservation < ApplicationRecord
   end
 
   def set_end_time
-    self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time}")
+    self.end_time ||= Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
   end
 
   def start_time_date
@@ -37,5 +40,9 @@ class Reservation < ApplicationRecord
 
   def start_time_time
     start_time.to_s(:time)
+  end
+
+  def end_time_time
+    end_time.try(:to_s, :time)
   end
 end

@@ -3,11 +3,15 @@
 <%= react_component("UI.Reservation.Form",
                     { reservation: @reservation.attributes.merge(start_time_date_part: @reservation.start_time_date,
                                                                  start_time_time_part: @reservation.start_time_time,
-                                                                 end_time: @reservation.end_time.try(:to_s, :time)),
+                                                                 end_time_time_part: @reservation.end_time_time),
                       shop_id: shop.id,
                       available_times_path: times_shop_reservations_available_options_path(shop),
                       available_menus_path:  menus_shop_reservations_available_options_path(shop),
-                      available_staffs_path: staffs_shop_reservations_available_options_path(shop)
+                      available_staffs_path: staffs_shop_reservations_available_options_path(shop),
+                      options: shop.customers.map { |m| { label: m.name, value: m.id } },
+                      selected_options: [],
+                      form_authenticity_token: form_authenticity_token,
+                      reservation_create_path: shop_reservations_path(shop)
 } ) %>
 <%# <%= render 'form', reservation: @reservation, url: shop_reservations_path(shop) %>
 

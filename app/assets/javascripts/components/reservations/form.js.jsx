@@ -8,10 +8,12 @@ UI.define("Reservation.Form", function() {
       return ({
         start_time_date_part: this.props.reservation.startTimeDatePart || "",
         start_time_time_part: this.props.reservation.startTimeTimePart || "",
-        end_time: this.props.reservation.endTime || "",
+        end_time_time_part: this.props.reservation.endTimeTimePart || "",
         start_time_restriction: "",
         end_time_restriction: "",
-        menu_id: {},
+        menu_id: "",
+        customer_ids: [],
+        staff_ids: [],
         min_staffs_number: 0,
         menu_options: [],
         staff_options: []
@@ -27,6 +29,16 @@ UI.define("Reservation.Form", function() {
       this._retrieveAvailableTimes()
     },
 
+    handleCustomerSelect: function() {
+      this.setState({customer_ids: $("[data-name='customer_id']").map(function() { return $(this).val() })});
+    },
+
+    _isValidToReserve: function() {
+      //TODO need customer_ids
+      return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
+        this.state.menu_id && this.state.staff_ids.length
+    },
+
     _handleChange: function(event) {
       event.preventDefault();
       var eventTargetName = event.target.dataset.name;
@@ -36,11 +48,14 @@ UI.define("Reservation.Form", function() {
             this._retrieveAvailableTimes();
             break;
           case "start_time_time_part":
-          case "end_time":
+          case "end_time_time_part":
             this._retrieveAvailableMenus();
             break;
           case "menu_id":
             this._retrieveAvailableStaffs();
+            break;
+          case "staff_id":
+            this.setState({ staff_ids: $("[data-name='staff_id']").map(function() { return $(this).val() }) });
             break;
         }
       }.bind(this))
@@ -71,15 +86,25 @@ UI.define("Reservation.Form", function() {
 
       this.currentRequest = jQuery.ajax({
         url: this.props.availableMenusPath,
-        data: {date: this.state.start_time_date_part, start_time_time_part: this.state.start_time_time_part, end_time: this.state.end_time},
+        data: {
+          start_time_date_part: this.state.start_time_date_part,
+          start_time_time_part: this.state.start_time_time_part,
+          end_time_time_part: this.state.end_time_time_part
+        },
         dataType: "json",
       }).done(
       function(result) {
-          _this.setState({menu_options: result["menu"]["options"],
-                          menu_id: result["menu"]["selected_option"]["id"],
-                          menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
-                          staff_options: result["staff"]["options"]
-          });
+        _this.setState({menu_options: result["menu"]["options"],
+                        menu_id: result["menu"]["selected_option"]["id"],
+                        menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
+                        staff_options: result["staff"]["options"]
+        }, function() {
+          this.setState({staff_ids: _.map(this.state.staff_options, function(o) { return o.value }) });
+        });
+
+        if (result["menu"]["options"].length == 0) {
+          alert("No available menu");
+        }
       }).fail(function(errors){
       }).always(function() {
         _this.setState({Loading: false});
@@ -96,9 +121,9 @@ UI.define("Reservation.Form", function() {
       this.currentRequest = jQuery.ajax({
         url: this.props.availableStaffsPath,
         data: {
-          date: this.state.start_time_date_part,
+          start_time_date_part: this.state.start_time_date_part,
           start_time_time_part: this.state.start_time_time_part,
-          end_time: this.state.end_time,
+          end_time_time_part: this.state.end_time_time_part,
           menu_id: this.state.menu_id
         },
         dataType: "json",
@@ -107,6 +132,8 @@ UI.define("Reservation.Form", function() {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
           staff_options: result["staff"]["options"]
+        }, function() {
+          this.setState({staff_ids: _.map(this.state.staff_options, function(o) { return o.value }) });
         });
       }).fail(function(errors){
       }).always(function() {
@@ -127,6 +154,7 @@ UI.define("Reservation.Form", function() {
           onChange={this._handleChange}
         />)
       }
+
       return select_components
     },
 
@@ -136,7 +164,6 @@ UI.define("Reservation.Form", function() {
           <div>
             <input
               type="date"
-              name="reservation[start_time_date_part]"
               data-name="start_time_date_part"
               value={this.state.start_time_date_part}
               onChange={this._handleChange} />
@@ -144,15 +171,13 @@ UI.define("Reservation.Form", function() {
           <div>
             <input
               type="time"
-              name="reservation[start_time_time_part]"
               data-name="start_time_time_part"
               value={this.state.start_time_time_part}
               onChange={this._handleChange} />
             ~
             <input
               type="time"
-              name="reservation[end_time]"
-              data-name="end_time"
+              data-name="end_time_time_part"
               value={this.state.end_time}
               onChange={this._handleChange} />
               {
@@ -164,14 +189,24 @@ UI.define("Reservation.Form", function() {
           <div class="field">
             <UI.Select options={this.state.menu_options}
               value={this.state.menu_id}
-              name="reservation[menu_id]"
               data-name="menu_id"
               onChange={this._handleChange}
             />
           </div>
           <div class="field">
             {this.renderStaffSelects()}
-          </div>
+            </div>
+            <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
+              <input name="utf8" type="hidden" value="✓" />
+              <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+              <input name="reservation[menu_id]" type="hidden" value={this.state.menu_id} />
+              <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
+              <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
+              <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
+              <input name="reservation[customer_ids]" type="hidden" value={this.state.customer_ids} />
+              <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
+              <button type="submit" disabled={!this._isValidToReserve()}>Reserve</button>
+            </form>
         </div>
       );
     }
