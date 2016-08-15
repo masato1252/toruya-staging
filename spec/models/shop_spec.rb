@@ -201,8 +201,8 @@ RSpec.describe Shop, type: :model do
       let(:staff) { FactoryGirl.create(:staff, shop: shop) }
       before do
         reservation = FactoryGirl.create(:reservation, shop: shop, menu: menu, start_time: time_range.first, end_time: time_range.last)
-        menu.staffs << staff
-        reservation.staffs << staff
+        menu.staff_ids = staff.id
+        reservation.staff_ids = staff.id
       end
 
       it "returns nil" do
@@ -220,13 +220,40 @@ RSpec.describe Shop, type: :model do
         expect(shop.available_staffs(menu, time_range)).to include(staff)
       end
 
-      context "when staff asks for leave on that date is at that time" do
-        before do
-          FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first, end_time: time_range.last)
+      context "when staff asks for leave on that date is during that time" do
+        # business start time  -> custom_schedule start time -> business end_time
+        context "when custom_schedule start time is between business start time and end time" do
+          before do
+            FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first.advance(minutes: 10), end_time: time_range.last)
+          end
+
+          it "returns empty" do
+            expect(shop.available_staffs(menu, time_range)).to be_empty
+          end
         end
 
-        it "returns empty" do
-          expect(shop.available_staffs(menu, time_range)).to be_empty
+        # business start time  -> custom_schedule end time -> business end_time
+        context "when custom_schedule end time time is between business start time and end time" do
+          before do
+            FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first, end_time: time_range.last.advance(minutes: -20))
+          end
+
+          it "returns empty" do
+            expect(shop.available_staffs(menu, time_range)).to be_empty
+          end
+        end
+
+        # custom_schedule start time -> business start time  -> business end_time -> custom_schedule end time
+        context "when custom_schedule time is ealier than business start time and custom_schedule end time is later than business end time" do
+          before do
+            FactoryGirl.create(:custom_schedule, staff: staff,
+                                                 start_time: time_range.first.advance(minutes: -20),
+                                                 end_time: time_range.last.advance(minutes: 20))
+          end
+
+          it "returns empty" do
+            expect(shop.available_staffs(menu, time_range)).to be_empty
+          end
         end
       end
 

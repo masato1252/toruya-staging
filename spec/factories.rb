@@ -40,11 +40,21 @@ FactoryGirl.define do
   factory :reservation do
     association :shop
     association :menu
+    start_time { Time.zone.now }
+    end_time { Time.zone.now.advance(hours: 1) }
+    staff_ids { FactoryGirl.create(:staff, shop: shop).id }
+    customer_ids { FactoryGirl.create(:customer, shop: shop).id }
   end
 
   factory :staff do
     association :shop
     name "foo"
     shortname "f"
+  end
+
+  factory :customer do
+    association :shop
+    last_name "last_name"
+    first_name "first_name"
   end
 end

@@ -14,7 +14,9 @@
 class Customer < ApplicationRecord
   default_value_for :state, "normal"
   STATES = %w(vip normal)
+
   validates :state, inclusion: { in: STATES }
+  belongs_to :shop
 
   def name
     "#{last_name} #{first_name}"

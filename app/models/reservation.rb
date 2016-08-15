@@ -16,6 +16,8 @@ class Reservation < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
+  validates :reservation_staffs, presence: true
+  validates :reservation_customers, presence: true
   validate :duplicate_staff_or_customer
 
   belongs_to :shop
@@ -50,6 +52,14 @@ class Reservation < ApplicationRecord
   private
 
   def duplicate_staff_or_customer
-    #TODO
+    scoped = shop.reservations.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
+      where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
+
+    if scoped.where("reservation_staffs.staff_id in (?)", staff_ids)
+      .or(
+        scoped.where("reservation_customers.customer_id in (?)", customer_ids)
+      ).exists?
+      errors.add(:base, "This is a duplicated reservation, please check your reservation time, staffs or customers")
+    end
   end
 end
