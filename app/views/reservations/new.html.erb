@@ -6,7 +6,7 @@
                       start_time_time_part: @reservation.start_time_time_part,
                       end_time_time_part: @reservation.end_time_time_part,
                       staff_ids: @reservation.staff_ids,
-                      customer_ids: @reservation.customer_ids),
+                      customers: @reservation.customers.map { |c| { label: c.name, value: c.id } }),
                       shop_id: shop.id,
                       min_staffs_number: @result ? @result[:selected_menu].try(:min_staffs_number) : nil,
                       menu_options: @result ? @result[:menus].map { |m| { label: m.name, value: m.id } } : nil,

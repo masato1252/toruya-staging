@@ -1,5 +1,6 @@
 //= require "components/shared/select"
-//
+//= require "components/reservations/customers_list"
+
 "use strict";
 
 UI.define("Reservation.Form", function() {
@@ -12,7 +13,7 @@ UI.define("Reservation.Form", function() {
         start_time_restriction: this.props.startTimeRestriction || "",
         end_time_restriction: this.props.endTimeRestriction || "",
         menu_id: this.props.reservation.menuId || "",
-        customer_ids: this.props.reservation.customerIds || [],
+        customers: this.props.reservation.customers || [],
         staff_ids: this.props.reservation.staffIds || [],
         menu_min_staffs_number: this.props.minStaffsNumber || 0,
         menu_options: this.props.menuOptions || [],
@@ -31,14 +32,18 @@ UI.define("Reservation.Form", function() {
       }
     },
 
-    handleCustomerSelect: function() {
-      this.setState({customer_ids: $("[data-name='customer_id']").map(function() { return $(this).val() })});
+    handleCustomerRemove: function(customer_id, event) {
+      var customers = _.reject(this.state.customers, function(option) {
+        return option.value == customer_id;
+      });
+
+      this.setState({customers: customers})
     },
 
     _isValidToReserve: function() {
       //TODO need customer_ids
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
-        this.state.menu_id && this.state.staff_ids.length
+        this.state.menu_id && this.state.staff_ids.length && this.state.customers.length
     },
 
     _handleChange: function(event) {
@@ -207,7 +212,11 @@ UI.define("Reservation.Form", function() {
           </div>
           <div class="field">
             {this.renderStaffSelects()}
-            </div>
+          </div>
+          <div class="field">
+          <UI.Reservation.CustomersList customers={this.state.customers}
+              handleCustomerRemove={this.handleCustomerRemove} />
+          </div>
             <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
@@ -215,7 +224,7 @@ UI.define("Reservation.Form", function() {
               <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
               <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
               <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
-              <input name="reservation[customer_ids]" type="hidden" value={this.state.customer_ids} />
+              <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; })} />
               <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
               <button type="submit" disabled={!this._isValidToReserve()}>Reserve</button>
             </form>
