@@ -9,14 +9,14 @@ UI.define("Reservation.Form", function() {
         start_time_date_part: this.props.reservation.startTimeDatePart || "",
         start_time_time_part: this.props.reservation.startTimeTimePart || "",
         end_time_time_part: this.props.reservation.endTimeTimePart || "",
-        start_time_restriction: "",
-        end_time_restriction: "",
-        menu_id: "",
-        customer_ids: [],
-        staff_ids: [],
-        min_staffs_number: 0,
-        menu_options: [],
-        staff_options: []
+        start_time_restriction: this.props.startTimeRestriction || "",
+        end_time_restriction: this.props.endTimeRestriction || "",
+        menu_id: this.props.reservation.menuId || "",
+        customer_ids: this.props.reservation.customerIds || [],
+        staff_ids: this.props.reservation.staffIds || [],
+        menu_min_staffs_number: this.props.minStaffsNumber || 0,
+        menu_options: this.props.menuOptions || [],
+        staff_options: this.props.staffOptions || []
       });
     },
 
@@ -26,7 +26,9 @@ UI.define("Reservation.Form", function() {
     },
 
     componentDidMount: function() {
-      this._retrieveAvailableTimes()
+      if (!this.state.menu_id) {
+        this._retrieveAvailableTimes()
+      }
     },
 
     handleCustomerSelect: function() {
@@ -144,14 +146,24 @@ UI.define("Reservation.Form", function() {
     renderStaffSelects: function() {
       var select_components = [];
       for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
-        select_components.push(<UI.Select options={this.state.staff_options}
-          key={i}
-          value={this.state.staff_options[i] ? this.state.staff_options[i]["value"] : ""}
-          includeBlank={!this.state.staff_options[i]}
-          blankOption="No valid option"
-          name="reservation[staff_id]"
-          data-name="staff_id"
-          onChange={this._handleChange}
+        var value;
+        if (this.state.staff_ids[i]) {
+          value = this.state.staff_ids[i]
+        }
+        else if (this.state.staff_options[i]) {
+          value = this.state.staff_options[i]["value"]
+        }
+        else {
+          value = ""
+        }
+
+        select_components.push(
+          <UI.Select options={this.state.staff_options}
+            prefix={`option-${i}`}
+            key={value}
+            value={value}
+            data-name="staff_id"
+            onChange={this._handleChange}
         />)
       }
 
@@ -178,7 +190,7 @@ UI.define("Reservation.Form", function() {
             <input
               type="time"
               data-name="end_time_time_part"
-              value={this.state.end_time}
+              value={this.state.end_time_time_part}
               onChange={this._handleChange} />
               {
                 this.state.start_time_restriction && this.state.end_time_restriction ?

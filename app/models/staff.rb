@@ -12,6 +12,8 @@
 #
 
 class Staff < ApplicationRecord
+  default_value_for :full_time, true
+
   attr_accessor :first_name, :last_name, :first_shortname, :last_shortname
 
   validates :name, presence: true

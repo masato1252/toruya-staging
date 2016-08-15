@@ -16,6 +16,7 @@ class Reservation < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
+  validate :duplicate_staff_or_customer
 
   belongs_to :shop
   belongs_to :menu
@@ -44,5 +45,11 @@ class Reservation < ApplicationRecord
 
   def end_time_time
     end_time.try(:to_s, :time)
+  end
+
+  private
+
+  def duplicate_staff_or_customer
+    #TODO
   end
 end

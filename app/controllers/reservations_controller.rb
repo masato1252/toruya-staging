@@ -14,7 +14,19 @@ class ReservationsController < DashboardController
 
   # GET /reservations/new
   def new
-    @reservation = shop.reservations.new(start_time: Time.zone.now)
+    @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
+                                         start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
+                                         end_time_time_part: params[:end_time_time_part],
+                                         menu_id: params[:menu_id],
+                                         staff_ids: params[:staff_ids].try(:split, ","),
+                                         customer_ids: params[:customer_ids].try(:split, ","))
+    if params[:menu_id]
+      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
+    end
+
+    if params[:end_time_time_part]
+      @time_ranges = shop.available_time(Time.zone.parse(params[:start_time_date_part]).to_date)
+    end
   end
 
   # GET /reservations/1/edit
@@ -24,16 +36,13 @@ class ReservationsController < DashboardController
   # POST /reservations
   # POST /reservations.json
   def create
-    debugger
-    @reservation = shop.reservations.new(reservation_params)
+    outcome = Reservations::CreateReservation.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
-      if @reservation.save
-        format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully created.' }
-        format.json { render :show, status: :created, location: @reservation }
+      if outcome.valid?
+        format.html { redirect_to shop_reservations_path(shop), notice: "Reservation was successfully created."}
       else
-        format.html { render :new }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
+        format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
       end
     end
   end

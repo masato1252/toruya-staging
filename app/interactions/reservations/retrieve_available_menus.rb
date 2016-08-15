@@ -13,14 +13,17 @@ module Reservations
       string :start_time_date_part
       string :start_time_time_part
       string :end_time_time_part
+      integer :menu_id, default: nil
     end
 
     def execute
       menus = shop.available_reservation_menus(reservation_time)
 
       staffs = if menus.present?
-                 selected_menu = menus.first
+                 selected_menu = shop.menus.find_by(id: params["menu_id"]) || menus.first
                  shop.available_staffs(selected_menu, reservation_time)
+               else
+                 []
                end
 
       { menus: menus, staffs: staffs, selected_menu: selected_menu }

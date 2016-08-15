@@ -18,10 +18,10 @@ class Reservations::AvailableOptionsController < DashboardController
   private
 
   def start_time
-    @start_time ||= Time.zone.parse("#{params[:date]}-#{params[:start_time_time_part]}")
+    @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
   end
 
   def end_time
-    @end_time ||= Time.zone.parse("#{params[:date]}-#{params[:end_time]}")
+    @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
   end
 end

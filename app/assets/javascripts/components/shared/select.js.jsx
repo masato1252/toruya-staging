@@ -11,8 +11,8 @@ UI.define("Select", function() {
     render: function() {
       var optionsList = [];
       optionsList = this.props.options.map(function(option) {
-        return <option key={option.value} value={option.value}>{option.label}</option>;
-      });
+        return <option key={`${this.props.prefix}-${option.value}`} value={option.value}>{option.label}</option>;
+      }.bind(this));
 
       if (this.props.includeBlank) {
         optionsList.unshift(<option disabled value="" key="">{this.props.blankOption}</option>);
