@@ -1,25 +1,22 @@
-<div id="resNew">
-  <%= react_component("UI.Reservation.Form",
-                      { reservation: @reservation.attributes.merge(
-                        start_time_date_part: @reservation.start_time_date_part,
-                        start_time_time_part: @reservation.start_time_time_part,
-                        end_time_time_part: @reservation.end_time_time_part,
-                        staff_ids: @reservation.staff_ids,
-                        customers: @reservation.customers.map { |c| { label: c.name, value: c.id } }),
-                        shop_id: shop.id,
-                        min_staffs_number: @result ? @result[:selected_menu].try(:min_staffs_number) : nil,
-                        menu_options: @result ? @result[:menus].map { |m| { label: m.name, value: m.id } } : nil,
-                        staff_options: @result ? @result[:staffs].map { |s| { label: s.name, value: s.id } } : nil,
-                        start_time_restriction: @time_ranges.try(:first).try(:to_s, :simple_time),
-                        end_time_restriction: @time_ranges.try(:last).try(:to_s, :simple_time),
-                        available_times_path: times_shop_reservations_available_options_path(shop),
-                        available_menus_path:  menus_shop_reservations_available_options_path(shop),
-                        available_staffs_path: staffs_shop_reservations_available_options_path(shop),
-                        options: shop.customers.map { |m| { label: m.name, value: m.id } },
-                        selected_options: [],
-                        form_authenticity_token: form_authenticity_token,
-                        reservation_create_path: shop_reservations_path(shop)
-  } ) %>
-</div>
-
-<%= link_to 'Back', shop_reservations_path(shop) %>
+<%= react_component("UI.Reservation.Form",
+                    { reservation: @reservation.attributes.merge(
+                      start_time_date_part: @reservation.start_time_date_part,
+                      start_time_time_part: @reservation.start_time_time_part,
+                      end_time_time_part: @reservation.end_time_time_part,
+                      staff_ids: @reservation.staff_ids,
+                      customers: @reservation.customers.map { |c| { label: c.name, value: c.id } }),
+                      shop_id: shop.id,
+                      min_staffs_number: @result ? @result[:selected_menu].try(:min_staffs_number) : nil,
+                      menu_options: @result ? @result[:menus].map { |m| { label: m.name, value: m.id } } : nil,
+                      staff_options: @result ? @result[:staffs].map { |s| { label: s.name, value: s.id } } : nil,
+                      start_time_restriction: @time_ranges.try(:first).try(:to_s, :simple_time),
+                      end_time_restriction: @time_ranges.try(:last).try(:to_s, :simple_time),
+                      available_times_path: times_shop_reservations_available_options_path(shop),
+                      available_menus_path:  menus_shop_reservations_available_options_path(shop),
+                      available_staffs_path: staffs_shop_reservations_available_options_path(shop),
+                      customer_add_path: shop_customers_path(shop),
+                      options: shop.customers.map { |m| { label: m.name, value: m.id } },
+                      selected_options: [],
+                      form_authenticity_token: form_authenticity_token,
+                      reservation_create_path: shop_reservations_path(shop)
+} ) %>

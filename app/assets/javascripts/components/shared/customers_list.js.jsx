@@ -16,9 +16,9 @@ UI.define("Common.CustomersList", function() {
       var customerOptions = this.props.customers.map(function(customer) {
         return (
           <UI.Common.CustomerOption
-            key={customer.value} customer={customer}
-            handleCustomerRemove={_this.props.handleCustomerRemove}
-            handleCustomerSelect={_this.handleCustomerSelect} />
+            {..._this.props}
+            customer={customer}
+            key={customer.value} />
         );
       });
 

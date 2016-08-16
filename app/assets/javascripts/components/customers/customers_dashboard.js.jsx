@@ -4,10 +4,17 @@
 
 UI.define("Customers.Dashboard", function() {
   var CustomersDashboard = React.createClass({
-    render: function() {
+    getInitialState: function() {
+      return ({
+        customers: this.props.customers
+      });
+    },
 
+    render: function() {
       return(
-        <UI.Common.CustomersList customers={this.state.customers} />
+        <div id="resNew">
+          <UI.Common.CustomersList customers={this.state.customers} />
+        </div>
       );
     }
   });

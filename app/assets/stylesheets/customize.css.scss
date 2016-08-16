@@ -67,8 +67,21 @@ table.table {
 }
 
 
-#resNew #customerList dl {
-  padding-left: 0px;
+#resNew {
+  #customers {
+    min-width: 300px;
+
+    #customerList {
+
+      dl {
+        padding-left: 0px;
+
+        dt {
+          word-wrap: break-word;
+        }
+      }
+    }
+  }
 }
 /* Overwrite END */
 
@@ -152,7 +165,7 @@ form {
 
   .customer-symbol {
     width: 70px;
-    line-height: 20px
+    line-height: 20px;
     text-align: center;
   }
 
@@ -180,7 +193,8 @@ form {
     color: white;
     line-height: 32px;
     border-radius: 5px;
-    font-size: 23px
+    font-size: 23px;
+    cursor: pointer;
   }
 }
 

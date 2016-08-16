@@ -32,6 +32,21 @@ UI.define("Reservation.Form", function() {
       }
     },
 
+    handleCustomerAdd: function(event) {
+      event.preventDefault();
+
+      var params = $.param({
+        menu_id: this.state.menu_id,
+        start_time_date_part: this.state.start_time_date_part,
+        start_time_time_part: this.state.start_time_time_part,
+        end_time_time_part: this.state.end_time_time_part,
+        customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(","),
+        staff_ids: this.state.staff_ids.join(",")
+      })
+
+      window.location = `${this.props.customerAddPath}?${params}`
+    },
+
     handleCustomerRemove: function(customer_id, event) {
       var customers = _.reject(this.state.customers, function(option) {
         return option.value == customer_id;
@@ -41,7 +56,6 @@ UI.define("Reservation.Form", function() {
     },
 
     _isValidToReserve: function() {
-      //TODO need customer_ids
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
         this.state.menu_id && this.state.staff_ids.length && this.state.customers.length
     },
@@ -178,45 +192,56 @@ UI.define("Reservation.Form", function() {
     render: function() {
       return (
         <div>
-          <div>
-            <input
-              type="date"
-              data-name="start_time_date_part"
-              value={this.state.start_time_date_part}
-              onChange={this._handleChange} />
+          <div id="resNew" className="contents">
+            <div className="resInfo" className="contBody">
+              <div>
+                <input
+                  type="date"
+                  data-name="start_time_date_part"
+                  value={this.state.start_time_date_part}
+                  onChange={this._handleChange} />
+              </div>
+              <div>
+                <input
+                  type="time"
+                  data-name="start_time_time_part"
+                  value={this.state.start_time_time_part}
+                  onChange={this._handleChange} />
+                ~
+                <input
+                  type="time"
+                  data-name="end_time_time_part"
+                  value={this.state.end_time_time_part}
+                  onChange={this._handleChange} />
+                  {
+                    this.state.start_time_restriction && this.state.end_time_restriction ?
+                      <span>※Business Hour from {this.state.start_time_restriction} to {this.state.end_time_restriction}</span> :
+                      <span>Not working</span>
+                  }
+              </div>
+              <div class="field">
+                <UI.Select options={this.state.menu_options}
+                  value={this.state.menu_id}
+                  data-name="menu_id"
+                  onChange={this._handleChange}
+                />
+              </div>
+              <div class="field">
+                {this.renderStaffSelects()}
+              </div>
+           </div>
+
+           <div id="customers">
+             <h2>顧客
+               <a onClick={this.handleCustomerAdd} className="BTNtarco" id="addCustomer">追加</a>
+             </h2>
+
+             <UI.Common.CustomersList
+               customers={this.state.customers}
+               handleCustomerRemove={this.handleCustomerRemove} />
+           </div>
           </div>
-          <div>
-            <input
-              type="time"
-              data-name="start_time_time_part"
-              value={this.state.start_time_time_part}
-              onChange={this._handleChange} />
-            ~
-            <input
-              type="time"
-              data-name="end_time_time_part"
-              value={this.state.end_time_time_part}
-              onChange={this._handleChange} />
-              {
-                this.state.start_time_restriction && this.state.end_time_restriction ?
-                  <span>※Business Hour from {this.state.start_time_restriction} to {this.state.end_time_restriction}</span> :
-                  <span>Not working</span>
-              }
-          </div>
-          <div class="field">
-            <UI.Select options={this.state.menu_options}
-              value={this.state.menu_id}
-              data-name="menu_id"
-              onChange={this._handleChange}
-            />
-          </div>
-          <div class="field">
-            {this.renderStaffSelects()}
-          </div>
-          <div class="field">
-          <UI.Common.CustomersList customers={this.state.customers}
-              handleCustomerRemove={this.handleCustomerRemove} />
-          </div>
+          <footer>
             <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
@@ -224,10 +249,11 @@ UI.define("Reservation.Form", function() {
               <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
               <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
               <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
-              <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; })} />
+              <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
               <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
               <button type="submit" disabled={!this._isValidToReserve()}>Reserve</button>
             </form>
+          </footer>
         </div>
       );
     }

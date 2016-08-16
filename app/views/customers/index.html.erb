@@ -1,33 +1,5 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Customers</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Shop</th>
-      <th>Customer</th>
-      <th>Last name</th>
-      <th>First name</th>
-      <th>State</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @customers.each do |customer| %>
-      <tr>
-        <td><%= customer.last_name %></td>
-        <td><%= customer.first_name %></td>
-        <td><%= customer.state %></td>
-        <td><%= link_to 'Show', shop_customer_path(shop, customer) %></td>
-        <td><%= link_to 'Edit', edit_shop_customer_path(shop, customer) %></td>
-        <td><%= link_to 'Destroy', shop_customer_path(shop, customer), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Customer', new_shop_customer_path(shop) %>
+<%= react_component("UI.Customers.Dashboard",
+                    { customers: shop.customers.map { |c| { label: c.name, value: c.id } }
+}) %>
