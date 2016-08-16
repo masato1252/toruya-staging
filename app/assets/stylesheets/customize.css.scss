@@ -65,6 +65,11 @@ a, button {
 table.table {
   width: initial;
 }
+
+
+#resNew #customerList dl {
+  padding-left: 0px;
+}
 /* Overwrite END */
 
 /* New Design START */
@@ -141,4 +146,42 @@ form {
     margin: 3px;
   }
 }
+
+.customer-option {
+  padding: 10px;
+
+  .customer-symbol {
+    width: 70px;
+    line-height: 20px
+    text-align: center;
+  }
+
+  .customer-level-symbol {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+
+    &.regular {
+      background-color: #d0d0d0;
+      border: 1px solid #b3b3b3;
+    }
+
+    &.vip {
+      background-color: #ca4e0f;
+    }
+  }
+
+  .customer-remove-symbol {
+    background-color: #fcbe46;
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    color: white;
+    line-height: 32px;
+    border-radius: 5px;
+    font-size: 23px
+  }
+}
+
 /* New Design END */

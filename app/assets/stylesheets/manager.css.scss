@@ -21,10 +21,12 @@ body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 12pt;
   margin: 0;
-  padding: 75px 0 72px 0;
+  padding-top: 75px;
   height: 100%;
   color: #555;
 }
+body.resNew, body.customer { padding-bottom: 72px; }
+body.setting, body.publish { padding-bottom: 0; }
 img {
   border-top-width: 0px;
   border-right-width: 0px;
@@ -100,14 +102,17 @@ input, select {
   -o-border-radius: 4px; /* Opera */
   -ms-border-radius: 4px; /* Internet Explorer */
   border: 1px solid #CCCCCC;
-  background: #fff;
   line-height: 1.5;
   font-family: inherit;
     font-size: inherit;
     line-height: inherit;
 }
-input { padding: 8px 0; }
-select {
+input {
+  padding: 8px 0;
+  background-color: #fffef5;
+}
+select { background-color: #fff; }
+select, input[type="date"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -118,7 +123,17 @@ select {
   height: 35px;
   padding: 0 25px 0 15px;
 }
+input[type="date"], input[type="time"] {
+  text-align: center;
+  text-indent: 0 !important;
+}
+input[type="date"] {
+  width: 150px !important;
+  padding-right: 5px;
+}
+input[type="time"] { width: 80px; }
 input:placeholder { color: #ccc; }
+input:disabled, select:disabled { background-color: #d0d0d0; }
 input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited {
   border-radius: 6px; /* 記述無し */
   -moz-border-radius: 6px; /* Firefox */
@@ -198,6 +213,8 @@ header #NAVtoday a { background-image: url(asset-path("screen/mainnav_today.png"
 header #NAVcaution a { background-image: url(asset-path("screen/mainnav_caution.png")); }
 header #NAVhelp a { background-image: url(asset-path("screen/mainnav_help.png")); }
 header #NAVsetting a { background-image: url(asset-path("screen/mainnav_setting.png")); }
+header #NAVpublish a { background-image: url(asset-path("screen/mainnav_publish.png")); }
+header #NAVlogout a { background-image: url(asset-path("screen/mainnav_logout.png")); }
 header select {
   font-size: 15px;
   background-color: #ddd;
@@ -208,6 +225,7 @@ header #NAVcaution a strong {
   top: 0;
   text-align: center;
   color: #fff;
+  background: transparent url(asset-path("screen/mainnav_caution_num.png")) center center no-repeat;
   display: block;
   width: 20px;
   height: 20px;
@@ -225,6 +243,22 @@ footer {
 }
 #footer .content { margin: 20px; }
 /* Login Page */
+.login, .shopSelect { padding-bottom: 0; }
+.login header h1, .shopSelect header h1, .setting header h1 {
+  padding-top: 25px;
+  padding-bottom: 0;
+  float: left;
+}
+.login header h1 a, .shopSelect header h1 a, .setting header h1 a {
+  background-image: url(asset-path("screen/logo_white.png"));
+  width: 99px;
+  height: 31px;
+  text-indent: -9999px;
+  text-align: left;
+  overflow: hidden;
+  padding-top: 0;
+  margin-left: 20px;
+}
 #login {
   width: 300px;
   margin: auto;
@@ -237,13 +271,13 @@ footer {
 #login input { width: 100%; }
 #login div { padding-bottom: 15px; }
 /* Shop Select */
-.shopSelect h2 { text-align: center; }
-.shopSelect #shopNav {
+.shopSelect #shopNav h2 { text-align: center; }
+.shopSelect nav {
   display: table;
   border-spacing: 20px;
   margin: auto;
 }
-.shopSelect #shopNav div {
+.shopSelect nav div {
   display: table-cell;
 }
 .shopSelect a.BTNorange span { font-weight: normal; }
@@ -258,8 +292,7 @@ footer {
   padding: 20px;
   height: 100%;
 }
-body.setting { padding-bottom: 0; }
-.setting .contents { 
+.setting .contents, .publish .contents { 
   margin: 0;
   padding: 0;
 }
@@ -275,9 +308,9 @@ body.setting { padding-bottom: 0; }
     vertical-align: top;
   display: table-cell;
 }
-.setting #content { width: 100%; }
+.setting #content, .publish #content { width: 100%; }
 #sideNav {
-  background: #aaa;
+  background: #9e9e9e;
   width: 250px;
     border-right: 1px solid #858585;
   height: 100%;
@@ -285,25 +318,44 @@ body.setting { padding-bottom: 0; }
 #sideNav dl a, #sideNav dl a:link, #sideNav dl a:visited {
   display: block;
   color: #E8E8E8;
-  background: #aaa;
   padding: 20px;
   width: 150px;
 }
+#sideNav dl > a, #sideNav dl > a:link, #sideNav dl > a:visited { background-color: #9e9e9e; }
 #sideNav dl dt, #sideNav dl dd ul li a, #sideNav dl dd ul { border-bottom: 1px solid #858585; }
+#sideNav dl dd ul { background-color: #aaa; }
+#sideNav dl dd ul a, #sideNav dl dd ul a:link, #sideNav dl dd ul a:visited { color: #ddd; }
 #sideNav dl dd ul li:last-child a { border: 0px; }
 #sideNav dl dd ul li { padding-left: 20px; }
 #sideNav dl a:hover { color: #d5d5d5; }
 #sideNav dl dt.here a, #sideNav dl dd ul li.here, #sideNav dl dd ul li.here a {
-  color: #6fa89f;
-  background: #fff;
+  color: #fff;
+  font-weight: bold;
+  position: relative;
 }
-#sideNav dl dt a { text-indent: 30px; }
-#sideNav dl.shop dt a { background: #aaa url(asset-path("screen/settingnav_shop.png")) no-repeat left 20px center; }
-#sideNav dl.publish dt a { background: #aaa url(asset-path("screen/settingnav_publish.png")) no-repeat left 20px center; }
-#sideNav dl.share dt a { background: #aaa url(asset-path("screen/settingnav_share.png")) no-repeat left 20px center; }
-#sideNav dl.apps dt a { background: #aaa url(asset-path("screen/settingnav_apps.png")) no-repeat left 20px center; }
-#sideNav dl.account dt a { background: #aaa url(asset-path("screen/settingnav_account.png")) no-repeat left 20px center; }
-#sideNav dl.logout dt a { background: #aaa url(asset-path("screen/settingnav_logout.png")) no-repeat left 20px center; }
+#sideNav dl dt a {
+  text-indent: 30px;
+  background-repeat: no-repeat;
+  background-position: left 20px center;
+}
+#sideNav dl.shop dt a { background-image: url(asset-path("screen/settingnav_shop.png")); }
+#sideNav dl.staff dt a { background-image: url(asset-path("screen/settingnav_staff.png")); }
+#sideNav dl.contacts dt a { background-image: url(asset-path("screen/settingnav_contacts.png")); }
+#sideNav dl.calendars dt a { background-image: url(asset-path("screen/settingnav_calendar.png")); }
+#sideNav dl.publish dt a { background-image: url(asset-path("screen/settingnav_publish.png")); }
+#sideNav dl.share dt a { background-image: url(asset-path("screen/settingnav_share.png")); }
+#sideNav dl.apps dt a { background-image: url(asset-path("screen/settingnav_apps.png")); }
+#sideNav dl.account dt a, #sideNav dl.settings dt a { background-image: url(asset-path("screen/settingnav_account.png")); }
+#sideNav dl.logout dt a { background-image: url(asset-path("screen/settingnav_logout.png")); }
+#sideNav dl.menu dt a { background-image: url(asset-path("screen/settingnav_menu.png")); }
+#sideNav dl.shopSelect dt {
+  text-align: center;
+  padding: 20px;
+}
+#sideNav dl.shopSelect dt select {
+  background-color: #e8e8e8;
+  width: 100%;
+}
 #content #subNav {
   background: #d0d0d0;
   border-bottom: 1px solid #858585;
@@ -326,15 +378,19 @@ body.setting { padding-bottom: 0; }
   padding: 0 15px 20px 15px;
 }
 #content #about p { line-height: 1.4; }
-#content #about a.addNew { float: right; }
+#content #about .function { float: right; }
+#content #about .function li {
+  display: inline-block;
+  margin-left: 10px;
+}
 #content form {
   margin: 20px;
   padding: 0 20px;
   color: #8F8F8F;
 }
-#content form h3 {
+#content form h3, #resNew h2 {
   font-size: 16px;
-  margin: 10px 0 5px 0;
+  margin: 20px 0 10px 0;
   text-indent: 10px;
 }
 #content .formRow dl, #content .formRow ul { 
@@ -365,11 +421,35 @@ body.setting { padding-bottom: 0; }
   display: table-cell;
   vertical-align: middle;
 }
+#content form .checkbox dd { display: inherit; }
+#content form .checkbox dd input[type="checkbox"] + label, #content form .checkbox dd input[type="radio"] + label {
+  width: 100%;
+    display: block;
+}
+#content form #google #autoLinkedTo dd { line-height: 2.5em; }
 #content form dl dt p, #content form dl dd input {
   padding: 10px 20px;
 }
+#content form dl dt { position: relative; }
 #content .rowTTL, #content form dl dt, #content .tableTTL .check { padding-right: 20px; }
-#content .rowTTL, #content form dl dt, #content .tableTTL { position: relative; }
+#content .rowTTL, #content form dl dt, #content .tableTTL .check { padding-right: 20px; }
+#content #staffInfo .familyName { padding-right: 10px; }
+#content #working a.editWorktime, #content #working a.editWorktime:link, #content #working a.editWorktime:visited {
+  height: 30px;
+  line-height: 30px;
+  float: right;
+    margin-left: 10px;
+}
+#content #working .partTime {
+  border: none;
+}
+#content #working .partTime ul {
+  border: none;
+  padding: 10px 0;
+}
+#content #working .partTime ul .tableTTL, #content #working .partTime ul .time { width: 100px; }
+#content #working .partTime ul .tableTTL { font-weight: bold; }
+#content #working .partTime ul .time { text-align: center; }
 #content form dl dt strong, #content form h3 strong {
   color: #fff;
   background: #CF0003;
@@ -395,23 +475,39 @@ body.setting { padding-bottom: 0; }
 #content form ul.tableTTL {
   background: transparent;
   border: 0px;
-  text-align: center;
   color: #BABABA;
   font-size: 14px;
 }
-#content #shopNames dl dt, #content #contacts dl dt, #content #staffList .rowTTL, #content #staffList dl dt, #content #menuList .rowTTL { width: 160px; }
-#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffList .updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #parttime .inOut, #content #menuList .updateTime { width: 90px; }
-#content #staffInfo dt, #content .tableTTL .check, #content .formRow .check { width: 60px; }
-#content #busHour .openClose { width: 118px; }
-#content #menuInfo dl dt, #content #calendarInfo dt, #content #google dt { width: 100px; }
+#content #prices .rankPrice { width: 240px; }
+#content #tempHoliday .closeReason { width: 220px; }
+#content #calendarList .rowTTL, #content #calendarList .toruyaCal, #content #doMenu .menuCat, #content #doMenu .menu, #content #doMenu .menuMax, #content #contactList .rowTTL, #content #rankList .rowTTL, #content #shopList .rowTTL, #content #priceList .rowTTL, #content #priceMenu .rowTTL { width: 200px; }
+#content #tempHoliday .date { width: 180px; }
+#content #shopNames dl dt, #content #staffList .rowTTL, #content #staffList .rowTTL, #content #menuList .rowTTL, #content #prices .rowTTL { width: 160px; }
+#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffList .updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #calendarList .function.updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #frameInfo dt { width: 90px; }
+#content #staffInfo dt, #content .tableTTL .check, #content .formRow .check, #content #frameDetail dt { width: 60px; }
+#content #busHour .openClose, #content #contacts dl dt, #content #contactList .updateTime, #content #rankList .updateTime, #content #shopList .updateTime, #content #tempHoliday .startTime, #content #tempHoliday .endsTime, #content #priceList .updateTime, #content #prices .customerRank, #content #priceMenu .quantity { width: 130px; }
+#content .workingTime .startTime, #content .workingTime .endsTime { width: 140px; }
+#content #belong dt, #content #staffAccount dt, #content #calendarList .updateTime, #content #parttime .inOut, #content .workingTime .rowTTL, #content .workingTime .inOut, #content #priceMenu .menu { width: 118px; }
+#content #menuInfo dl dt, #content #calendarInfo dt, #content #priceInfo dt, #content #google dt, #content #contactsInfo dt { width: 100px; }
+#content #tempHoliday .date { padding-right: 0; }
+#content #prices .rankPrice input, #content form input[type="number"] { margin-right: 10px; }
 #content #busHour .openTime, #content #busHour .closeTime, #content #parttime .startTime, #content #parttime .endsTime {
   width: 126px;
   padding: 0 5px;
 }
 #content .formRow .function { padding: 0 5px; }
-#content .formRow .function a, #content .tableTTL .check a, #content .formRow .add a, #content form h3.menuCategory a.addNew {
+#content .formRow .function a, #content .tableTTL .check a, #content .formRow .add a, #content form h3.menuCategory a.addNew, #content form .resFrame a {
   line-height: 30px;
   height: 30px;
+}
+#content .formRow .menuEnds ul, #content #frameDetail dd ul {
+  padding: 0;
+  border: none;
+}
+#content .formRow .menuEnds ul li, #content #frameDetail dd ul li input { padding: 0 5px; }
+#content #frameDetail dd ul li {
+  display: block;
+  line-height: 2.5em;
 }
 #content form h3.menuCategory {
   position: relative;
@@ -431,15 +527,87 @@ body.setting { padding-bottom: 0; }
   padding-right: 10px;
 }
 #content .formRow .check { text-align: center; }
+#content .formRow input[type="number"] { width: 50px; }
+#content .formRow .rankPrice input[type="number"], #content .formRow .menuLength input[type="number"] { width: 100px; }
 #content form input[type="date"], #content form input[type="time"] {
   border: none;
-  background: #fffef5;
+  background-color: #fffef5;
 }
-.BTNonoff, .BTNopenclose, .BTNyesno, .BTNinout {
-  display: none;
+input[type="radio"], input[type="checkbox"] { display: none; }
+input[type="radio"] + label, input[type="checkbox"] + label, #MonthlyFrameSetting dl:last-of-type dt {
+  line-height: 2em;
+  padding-left: 25px;
 }
-.BTNonoff + label, .BTNopenclose + label, .BTNyesno + label, .BTNinout + label {}
-.BTNonoff + label:before, .BTNonoff + label:after, .BTNopenclose + label:before, .BTNopenclose + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after {
+input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background: transparent url(asset-path("screen/footer_flow_done.png")) left center no-repeat; }
+.BTNswitch, .BTNselect {
+  border-radius: 5px; /* 記述無し */
+  -moz-border-radius: 5px; /* Firefox */
+  -webkit-border-radius: 5px; /* Google Chrome、Safari */
+  -o-border-radius: 5px; /* Opera */
+  -ms-border-radius: 5px; /* Internet Explorer */
+  padding: 0;
+  display: -webkit-flex; /* Safari */
+  display: flex;
+  -webkit-flex-wrap: nowrap; /* Safari */
+  flex-wrap: nowrap;
+  -webkit-flex-direction: row; /* Safari */
+  flex-direction:         row;
+ }
+.BTNswitch#resFrameType label { width: 80px; }
+.BTNswitch#frameDate, .BTNswitch#frameTime { margin-bottom: 10px; }
+.BTNswitch#autoLinkedTo label { width: 22%; }
+.BTNswitch#frameDate label, .BTNswitch#menuEnds label, .BTNswitch#autoLinkedTo label { width: 33.3%; }/* 3 */
+.BTNswitch#frameTime label { width: 50%; }/* 2 */
+.BTNswitch input, .BTNselect input { display: none; }
+.BTNswitch input[type="radio"] + label, .BTNswitch input[type="checkbox"] + label, .BTNselect input[type="radio"] + label, .BTNselect input[type="checkbox"] + label {
+  display: inline-block;
+  line-height: 2em;
+  cursor: pointer;
+    padding: 0 10px;
+  text-align: center;
+  background-image: none;
+}
+.BTNselect input[type="radio"] + label, .BTNselect input[type="checkbox"] + label { line-height: 2.5em; }
+.BTNselect input[type="radio"] + label span, .BTNselect input[type="checkbox"] + label span { padding: 0 10px; }
+.BTNswitch label {
+  color: #6fa89f;
+  border: 1px solid #6fa89f;
+}
+.BTNselect label {
+  color: #858585;
+  background: #D0D0D0;
+  border-right: 1px solid #A3A3A3;
+}
+.BTNswitch label:first-of-type, .BTNselect label:last-of-type { border-right: none; }
+.BTNswitch label:last-of-type, .BTNswitch label:nth-of-type(3) { border-left: none; }
+.BTNswitch label:first-of-type, .BTNselect label:first-of-type {
+  border-radius: 5px 0 0 5px; /* 記述無し */
+  -moz-border-radius: 5px 0 0 5px; /* Firefox */
+  -webkit-border-radius: 5px 0 0 5px; /* Google Chrome、Safari */
+  -o-border-radius: 5px 0 0 5px; /* Opera */
+  -ms-border-radius: 5px 0 0 5px; /* Internet Explorer */
+}
+.BTNswitch label:last-of-type, .BTNselect label:last-of-type {
+  border-radius: 0 5px 5px 0; /* 記述無し */
+  -moz-border-radius: 0 5px 5px 0; /* Firefox */
+  -webkit-border-radius: 0 5px 5px 0; /* Google Chrome、Safari */
+  -o-border-radius: 0 5px 5px 0; /* Opera */
+  -ms-border-radius: 0 5px 5px 0; /* Internet Explorer */
+}
+.BTNswitch input[type="radio"]:checked + label, .BTNselect input[type="radio"]:checked + label, .BTNselect input[type="checkbox"]:checked + label {
+  color: #fff;
+  background: #6fa89f;
+}
+.BTNonoff, .BTNopenclose, .BTNyesno, .BTNalwaysIN, .BTNinout { display: none; }
+.check input[type="checkbox"] {
+  display: block;
+  margin: auto;
+}
+input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + label, input[type="checkbox"].BTNyesno + label, input[type="checkbox"].BTNalwaysIN + label, input[type="checkbox"].BTNinout + label, .check input[type="checkbox"] + label {
+  background-image: none;
+  padding-left: 0;
+}
+.BTNonoff + label:before, .BTNonoff + label:after, .BTNopenclose + label:before, .BTNopenclose + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after, .BTNinout + label:before, .BTNinout + label:after {
   display: inline-block;
   padding: .2em .5em;
   overflow: hidden;
@@ -449,40 +617,51 @@ body.setting { padding-bottom: 0; }
   font-size: 14px;
   padding: 5px;
 }
-.BTNonoff + label:before, .BTNopenclose + label:before, .BTNyesno + label:before, .BTNinout + label:before {
+.BTNonoff + label:before, .BTNopenclose + label:before, .BTNyesno + label:before, .BTNinout + label:before, .BTNalwaysIN + label:before, .BTNalwaysIN + label:before {
   background: #DEDEDE;
   color: #000000;
   border-top-left-radius: .3em;
   border-bottom-left-radius: .3em;
 }
-.BTNonoff + label:after, .BTNopenclose + label:after, .BTNyesno + label:after, .BTNinout + label:after {
+.BTNonoff + label:after, .BTNopenclose + label:after, .BTNyesno + label:after, .BTNinout + label:after, .BTNalwaysIN + label:after {
   background: #ABABAB;
   color: #ABABAB;
   border-top-right-radius: .3em;
   border-bottom-right-radius: .3em;
 }
 .BTNonoff + label:before, .BTNonoff + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 2.5em; }
-.BTNopenclose + label:before, .BTNopenclose + label:after { width: 3.5em; }
+.BTNopenclose + label:before, .BTNopenclose + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after { width: 3.5em; }
+#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 3em; }
+.BTNalwaysIN + label:before { content: "非常勤"; }
+.BTNalwaysIN + label:after { content: "常勤"; }
 .BTNonoff + label:before { content: "OFF"; }
 .BTNonoff + label:after { content: "ON"; }
 .BTNyesno + label:before { content: "NO"; }
 .BTNyesno + label:after { content: "YES"; }
+#doStaff .BTNyesno + label:before { content: "未対応"; }
+#doStaff .BTNyesno + label:after { content: "対応"; }
+/*#accountUse.BTNyesno + label:before { content: "なし"; }
+#accountUse.BTNyesno + label:after { content: "あり"; }*/
 .BTNinout + label:before { content: "OUT"; }
 .BTNinout + label:after { content: "IN"; }
 .BTNopenclose + label:before { content: "CLOSE"; }
 .BTNopenclose + label:after { content: "OPEN"; }
-.BTNonoff:checked + label:before, .BTNopenclose:checked + label:before, .BTNyesno:checked + label:before, .BTNinout:checked + label:before {
+.BTNonoff:checked + label:before, .BTNopenclose:checked + label:before, .BTNalwaysIN:checked + label:before, .BTNyesno:checked + label:before, .BTNinout:checked + label:before {
   background: #60938a;
   color: #60938a;
 }
-.BTNonoff:checked + label:after, .BTNopenclose:checked + label:after, .BTNyesno:checked + label:after, .BTNinout:checked + label:after {
+.BTNonoff:checked + label:after, .BTNopenclose:checked + label:after, .BTNyesno:checked + label:after, .BTNalwaysIN:checked + label:after, .BTNinout:checked + label:after {
   background: #96bfb8;
   color: #FFFFFF;
 }
-#content form #footerav {
+#content form #footerav, .window ul.windowFooter {
   text-align: center;
-  padding-top: 20px;
+  padding: 20px 0;
 }
+#content form #footerav li, #content form .window ul.windowFooter li {
+  display: inline-block;
+}
+#content form #footerav a, #content form #footerav a:link, #content form #footerav a:visited, .window .windowFooter a, .window .windowFooter a:link, .window .windowFooter a:visited { width: 100px; }
 .tabs {
   width: 100%;
   display: flex;
@@ -529,8 +708,41 @@ body.setting { padding-bottom: 0; }
   border: 1px solid #b3b3b3;
   background: #fff;
 }
+.window {
+  background: #f2f2f2;
+  border: 1px solid #858585;
+  padding: 0;
+  width: 600px;
+    margin: 0 auto;
+}
+.window h2 {
+  background: #aaa;
+  border-bottom: 1px solid #858585;
+  margin-bottom: 0;
+  padding: 10px;
+  text-align: center;
+  line-height: 30px;
+    color: #fff;
+}
+.window h2 a, .window h2 a:link, .window h2 a:visited {
+  float: right;
+  line-height: 28px;
+    height: 28px;
+}
+.window .windowCont {
+  padding: 20px;
+}
+.window ul.windowFooter {
+  padding: 0 20px 20px 20px;
+  text-align: center;
+}
+.window .windowFooter a, .window .windowFooter a:link, .window .windowFooter a:visited {
+  margin: 0 auto;
+  width: 100px;
+}
+.window#parttime .inOut, .window#parttime .startTime, .window#parttime .endsTime { text-align: center; }
 /* Dashboard */
-#dashboard, #customer {
+#dashboard, #customer, #resNew, #shopNav {
   display: flex;
   display: -moz-flex;
   display: -o-flex;
@@ -606,14 +818,14 @@ body.setting { padding-bottom: 0; }
 }
 #calendar .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
 #calendar .days .today a.here { background-image: url(asset-path("screen/calendar_today.png")); }
-#calStatus, #customer #resultList ul {
+#calStatus, #customer #resultList ul, #resNew #customers ul {
   padding-top: 10px;
   text-align: left;
   width: 130px;
     margin: auto;
   font-size: 14px;
 }
-#calStatus dd, #customer #resultList ul li {
+#calStatus dd, #customer #resultList ul li, #resNew #customers ul li {
   line-height: 22px;
   padding-bottom: 5px;
   background-position: left top;
@@ -621,9 +833,9 @@ body.setting { padding-bottom: 0; }
   padding-left: 27px;
 }
 #calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset-path("screen/calsts_checkin.png")); }
-#calStatus dd.checkout, #resList .checkout .calendar, #customer #resultList ul li.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
+#calStatus dd.checkout, #resList .checkout .calendar, #customer #resultList ul li.regular, #resNew #customers ul li.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
 #calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset-path("screen/calsts_noshow.png")); }
-#calStatus dd.pending, #resList .pending .calendar, #customer #resultList ul li.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
+#calStatus dd.pending, #resList .pending .calendar, #customer #resultList ul li.vip, #resNew #customers ul li.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
 #calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset-path("screen/calsts_reserved.png")); }
 #resList {
   background: #fff;
@@ -672,7 +884,8 @@ body.setting { padding-bottom: 0; }
 #resList #record {
   height: 100%;
   position: relative;
-  overflow: scroll;
+  overflow-y: scroll;
+    overflow-x: hidden;
 }
 #resList .float {
   position: absolute;
@@ -726,6 +939,7 @@ body.setting { padding-bottom: 0; }
 #mainNav #NAVnewResv a { background-image: url(asset-path("screen/btn_newresv.png")); }
 #mainNav #NAVsearchResv a { background-image: url(asset-path("screen/btn_searchresv.png")); }
 #mainNav #NAVcustomers a { background-image: url(asset-path("screen/btn_customers.png")); }
+#mainNav #NAVaddCustomer a { background-image: url(asset-path("screen/btn_addcustomer.png")); }
 #mainNav #NAVsave a { background-image: url(asset-path("screen/btn_save.png")); }
 .shopIndex #footer { display: none; }
 /* Search */
@@ -823,42 +1037,45 @@ body.setting { padding-bottom: 0; }
 /* Customer */
 #customer #resultList {
   min-width: 230px;
-  overflow: scroll;
+  overflow-y: scroll;
+    overflow-x: hidden;
 }
 #customer #resultList ul { margin-left: 0; }
-#customer #resultList ul li { display: inline-block; }
+#customer #resultList ul li, #resNew #customers ul li { display: inline-block; }
 #customer #resultList ul li:last-child { margin-left: 10px; }
-#customer #resultList div {
-  overflow: scroll;
+#customer #resultList div, #resNew #customerList {
+  overflow-y: scroll;
+    overflow-x: hidden;
   background: #fff;
 }
-#customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited {
+#customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited,
+#resNew #customerList a, #resNew #customerList a:link, #resNew #customerList a:visited {
   display: block;
   border-bottom: 1px solid #b3b3b3;
   padding: 12px 15px;
   color: #444;
 }
 #customer #resultList a.here { background-color: #dceae7; }
-#customer #resultList dl {
+#customer #resultList dl, #resNew #customerList dl {
   background-position: left center;
   background-repeat: no-repeat;
   padding-left: 32px;
 }
-#customer #resultList dl.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
-#customer #resultList dl.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
-#customer #resultList dt { font-size: 15px; }
-#customer #resultList dd {
+#customer #resultList dl.regular, #resNew #customerList dl.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
+#customer #resultList dl.vip, #resNew #customerList dl.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
+#customer #resultList dt, #resNew #customerList dt { font-size: 15px; }
+#customer #resultList dd, #resNew #customerList dt .place {
   text-align: right;
   font-size: 13px;
 }
 #customerInfo #basic { padding-bottom: 10px; }
-#customerInfo #basic input { text-indent: 10px; }
+#customerInfo #basic input, #resNew #resInfo input { text-indent: 10px; }
 #customerInfo #basic dl { padding-bottom: 5px; }
 #customerInfo #basic dl dt, #customerInfo #basic dl dd {
   display: inline-block;
 }
 #customerInfo #basic dl dt { width: 110px; }
-#customerInfo #basic dl dd { width: 39.8%; }
+/*#customerInfo #basic dl dd { width: 39.8%; }*/
 #customerInfo #basic select#customerSts {
   border-color: #b3b3b3;
   background-color: #d0d0d0;
@@ -874,6 +1091,7 @@ body.setting { padding-bottom: 0; }
   padding-bottom: 0;
   width: 100%;
 }
+/*#customerInfo #basic input[type="date"] { width: 94%; }*/
 #customerInfo .tabs a { width: 40%; }
 #customerInfo #resList #record { padding-top: 33px; }
 #customerInfo #resList .year {
@@ -885,16 +1103,17 @@ body.setting { padding-bottom: 0; }
   width: 100%;
 }
 .customer #resList { min-width: 554px; }
-.customer footer ul {
+.customer footer ul, .resNew footer ul {
   position: relative;
   padding: 10px 20px;
 }
-.customer footer ul li { display: inline-block; }
+.customer footer ul li, .resNew footer ul li, .resNew footer ul ol { display: inline-block; }
 .customer footer ul li:last-child {
   position: absolute;
   right: 20px;
 }
-.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input {
+.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input,
+.resNew footer ul li a, .resNew footer ul li a:link, .resNew footer ul li a:visited {
   border-radius: 6px; /* 記述無し */
   -moz-border-radius: 6px; /* Firefox */
   -webkit-border-radius: 6px; /* Google Chrome、Safari */
@@ -905,10 +1124,13 @@ body.setting { padding-bottom: 0; }
   font-size: 23pt;
   height: 50px;
   line-height: 50px;
+}
+.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input {
   border: 1px solid #464342;
   background: #858585;
 }
-.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited {
+.customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited,
+.resNew footer ul li a, .resNew footer ul li a:link, .resNew footer ul li a:visited {
   padding: 0;
   text-align: center;
   width: 50px;
@@ -928,6 +1150,135 @@ body.setting { padding-bottom: 0; }
 .customer footer ul li input::-webkit-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input:-ms-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input::-moz-placeholder { color: #D8D8D8; }
+/* Reservation */
+#resNew #resInfo {
+  color: #8F8F8F;
+  padding-right: 20px;
+}
+#resNew #resInfo .formRow, #resNew #customerList dl { border-bottom: 1px solid #b3b3b3; }
+#resNew #resInfo .formRow {
+  display: table;
+    width: 100%;
+  margin-bottom: 10px;
+}
+#resNew #resInfo .formRow .form {
+  padding-bottom: 10px;
+  display: table-row;
+  height: 54px;
+}
+#resNew #resInfo .formRow .form dt, #resNew #resInfo .formRow .form dd { display: table-cell; }
+#resNew #resInfo #resDate dt, #resNew #resInfo #resMemo dt { width: 50px; }
+#resNew #resInfo #resCalMenu dt { width: 80px; }
+#resNew #resInfo .subinfo {
+  padding-left: 10px;
+  font-size: 14px;
+}
+#resNew #resInfo #resMemo, #resNew #customerList dl:last-child, #resNew #customerList dl a, #resNew #customerList dl a:link, #resNew #customerList dl a:visited { border-bottom: none; }
+#resNew #resInfo #resMemo input {
+  width: 100%;
+  height:100px;
+}
+#resNew #resInfo h2, #resNew #customers h2 {
+  background-repeat: no-repeat;
+  background-position: left center;
+  height: 29px;
+  color: #858585;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 21px;
+}
+#resNew #resInfo h2 {
+  background-image: url(asset-path("screen/res_detail.png"));
+  text-indent: 40px;
+}
+#resNew #customers h2 {
+  background-image: url(asset-path("screen/res_customer.png"));
+  text-indent: 35px;
+}
+#resNew #customers h2 #addCustomer {
+  float: right;
+  height: 29px;
+  line-height: 29px;
+}
+#resNew #customers { min-width: 290px; }
+#resNew #customers ul { margin-right: 0; }
+#resNew #customerList dl > a, #resNew #customerList dl dt, #resNew #customerList dl dd { display: inline-block; }
+#resNew #customerList dl dt, #resNew #customerList dl dd { vertical-align: middle; }
+#resNew #customerList dl dt { width: 180px; }
+#resNew #customerList dl dd a, #resNew #customerList dl dd a:link, #resNew #customerList dl dd a:visited {
+  background-image: url(asset-path("screen/btn_delete_ss.png"));
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+  text-indent: -9999px;
+  overflow: hidden;
+  padding: 10px;
+  line-height: 17px;
+    text-align: left;
+}
+#resNew #customerList dl {
+    background-position: left 20px center;
+  padding-left: 52px;
+}
+.resNew footer #newResFlow { float: left; }
+.resNew footer #BTNfunctions { float: right; }
+.resNew footer #newResFlow, .resNew footer #newResFlow ol {
+  border-radius: 20px; /* 記述無し */
+  -moz-border-radius: 20px; /* Firefox */
+  -webkit-border-radius: 20px; /* Google Chrome、Safari */
+  -o-border-radius: 20px; /* Opera */
+  -ms-border-radius: 20px; /* Internet Explorer */
+}
+.resNew footer #newResFlow {
+  background: #f2f2f2;
+  border: 5px solid #b3b3b3;
+  color: #858585;
+  padding: 0;
+    margin-top: 16px;
+  margin-left: 20px;
+}
+.resNew footer #newResFlow ol {
+  background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
+  line-height: 20px;
+  height: 20px;
+  padding: 5px 25px 5px 10px;
+}
+.resNew footer #newResFlow ol:first-child { padding-left: 25px; }
+.resNew footer #newResFlow ol:last-child { background-image: none; }
+.resNew footer #newResFlow ol.done {
+  color: #6fa89f;
+  background-image:
+    url(asset-path("screen/footer_flow_arrow.png")), /* 最前面の背景レイヤーの背景画像 */
+    url(asset-path("screen/footer_flow_done.png"));
+
+  background-repeat:
+  no-repeat, /* 最前面の背景レイヤーに対応 */
+  no-repeat;
+  
+  background-position:
+  right center, /* 最前面の背景レイヤーに対応 */
+  left 8px center;
+  padding-left: 25px;
+}
+.resNew footer #newResFlow ol.now {
+  background: #6fa89f;
+  color: #fff;
+}
+.resNew footer #BTNfunctions li a, .resNew footer #BTNfunctions li a:link, .resNew footer #BTNfunctions li a:visited {
+  width: inherit;
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  padding-right: 10px;
+}
+.resNew footer #BTNfunctions li a#BTNsave {
+  background-image: url(asset-path("screen/btn_save_s.png"));
+  padding-left: 55px;
+}
+.resNew footer #BTNfunctions li a#BTNdel {
+  background-image: url(asset-path("screen/btn_delete_s.png"));
+  padding-left: 40px;
+}
 /*clear all*/
 #aa:after {
   content: ".";

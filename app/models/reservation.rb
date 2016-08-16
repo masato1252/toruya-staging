@@ -52,7 +52,7 @@ class Reservation < ApplicationRecord
   private
 
   def duplicate_staff_or_customer
-    scoped = shop.reservations.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
+    scoped = Reservation.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
       where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
 
     if scoped.where("reservation_staffs.staff_id in (?)", staff_ids)

@@ -16,9 +16,7 @@ module Reservations
     end
 
     def execute
-      reservation = shop.reservations.new(params.except(:staff_ids, :customer_ids))
-      reservation.staff_ids = params[:staff_ids]
-      reservation.customer_ids = params[:customer_ids]
+      reservation = shop.reservations.new(params)
       unless reservation.save
         errors.merge!(reservation.errors)
       end

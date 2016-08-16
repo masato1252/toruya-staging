@@ -1,5 +1,5 @@
 //= require "components/shared/select"
-//= require "components/reservations/customers_list"
+//= require "components/shared/customers_list"
 
 "use strict";
 
@@ -214,7 +214,7 @@ UI.define("Reservation.Form", function() {
             {this.renderStaffSelects()}
           </div>
           <div class="field">
-          <UI.Reservation.CustomersList customers={this.state.customers}
+          <UI.Common.CustomersList customers={this.state.customers}
               handleCustomerRemove={this.handleCustomerRemove} />
           </div>
             <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
