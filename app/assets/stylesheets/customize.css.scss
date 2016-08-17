@@ -162,11 +162,16 @@ form {
 
 .customer-option {
   padding: 10px;
+  cursor: pointer;
+
+  &.here {
+    background-color: #dceae7;
+  }
 
   .customer-symbol {
     width: 70px;
     line-height: 20px;
-    text-align: center;
+    text-align: center !important;
   }
 
   .customer-level-symbol {

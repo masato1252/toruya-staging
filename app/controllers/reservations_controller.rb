@@ -18,13 +18,13 @@ class ReservationsController < DashboardController
                                          start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
                                          end_time_time_part: params[:end_time_time_part],
                                          menu_id: params[:menu_id],
-                                         staff_ids: params[:staff_ids].try(:split, ","),
-                                         customer_ids: params[:customer_ids].try(:split, ","))
-    if params[:menu_id]
+                                         staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
+                                         customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
+    if params[:menu_id].present?
       @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
     end
 
-    if params[:end_time_time_part]
+    if params[:end_time_time_part].present?
       @time_ranges = shop.available_time(Time.zone.parse(params[:start_time_date_part]).to_date)
     end
   end

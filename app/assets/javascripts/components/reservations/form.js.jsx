@@ -40,8 +40,8 @@ UI.define("Reservation.Form", function() {
         start_time_date_part: this.state.start_time_date_part,
         start_time_time_part: this.state.start_time_time_part,
         end_time_time_part: this.state.end_time_time_part,
-        customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(","),
-        staff_ids: this.state.staff_ids.join(",")
+        staff_ids: this.state.staff_ids.join(","),
+        customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       })
 
       window.location = `${this.props.customerAddPath}?${params}`
