@@ -83,12 +83,49 @@ table.table {
     }
   }
 }
+
+input[type="time"] {
+  width: 120px;
+}
+input {
+  padding: 8px;
+}
+
+input[type="date"] {
+  padding: 0 25px 0 10px;
+}
+
+button {
+  border-radius: 6px; /* 記述無し */
+  line-height: 50px;
+  color: #fff;
+  font-size: 23pt;
+  height: 50px;
+  line-height: 50px;
+}
+
+footer {
+  button {
+    margin-left: 6px;
+  }
+
+  .fa-chevron-right {
+    color: #dadada;
+  }
+}
+
+button.BTNyellow {
+  background: #fcbe46;
+  border: 1px #e6a21f solid;
+}
+button.BTNorange {
+  background: #ca4e0e;
+  border: 1px #b0450d solid;
+}
 /* Overwrite END */
 
 /* New Design START */
 .container {
-  margin-top: 90px;
-
   .tbd-items {
     border-bottom: 1px solid $gray;
     padding: 10px 0;

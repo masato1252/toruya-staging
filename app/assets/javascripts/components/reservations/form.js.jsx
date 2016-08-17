@@ -193,41 +193,68 @@ UI.define("Reservation.Form", function() {
       return (
         <div>
           <div id="resNew" className="contents">
-            <div className="resInfo" className="contBody">
-              <div>
-                <input
-                  type="date"
-                  data-name="start_time_date_part"
-                  value={this.state.start_time_date_part}
-                  onChange={this._handleChange} />
+            <div id="resInfo" className="contBody">
+              <h2>予約詳細</h2>
+              <div id="resDateTime" className="formRow">
+                <dl className="form" id="resDate">
+                  <dt>日付</dt>
+                  <dd className="input">
+                    <input
+                      type="date"
+                      data-name="start_time_date_part"
+                      value={this.state.start_time_date_part}
+                      onChange={this._handleChange} />
+                  </dd>
+                </dl>
+                <dl className="form" id="resTime">
+                  <dt>時間</dt>
+                  <dd className="input">
+                    <input
+                      type="time"
+                      data-name="start_time_time_part"
+                      value={this.state.start_time_time_part}
+                      onChange={this._handleChange} />
+                    〜
+                    <input
+                      type="time"
+                      data-name="end_time_time_part"
+                      value={this.state.end_time_time_part}
+                      onChange={this._handleChange} />
+                      <span className="subinfo">
+                        {
+                          this.state.start_time_restriction && this.state.end_time_restriction ?
+                          `※Business Hour from ${this.state.start_time_restriction} to ${this.state.end_time_restriction}` :
+                          "Not working"
+                        }
+                      </span>
+                  </dd>
+                </dl>
               </div>
-              <div>
-                <input
-                  type="time"
-                  data-name="start_time_time_part"
-                  value={this.state.start_time_time_part}
-                  onChange={this._handleChange} />
-                ~
-                <input
-                  type="time"
-                  data-name="end_time_time_part"
-                  value={this.state.end_time_time_part}
-                  onChange={this._handleChange} />
-                  {
-                    this.state.start_time_restriction && this.state.end_time_restriction ?
-                      <span>※Business Hour from {this.state.start_time_restriction} to {this.state.end_time_restriction}</span> :
-                      <span>Not working</span>
-                  }
-              </div>
-              <div class="field">
-                <UI.Select options={this.state.menu_options}
-                  value={this.state.menu_id}
-                  data-name="menu_id"
-                  onChange={this._handleChange}
-                />
-              </div>
-              <div class="field">
-                {this.renderStaffSelects()}
+              <div id="resCalMenu" className="formRow">
+                <dl className="form" id="resMenu">
+                  <dt>メニュー</dt>
+                  <dd className="input">
+                    <UI.Select options={this.state.menu_options}
+                      value={this.state.menu_id}
+                      data-name="menu_id"
+                      onChange={this._handleChange}
+                    />
+                  </dd>
+                </dl>
+                <dl className="form" id="resStaff">
+                  <dt>担当者</dt>
+                  <dd className="input">
+                    {this.renderStaffSelects()}
+                  </dd>
+                </dl>
+                <dl className="form" id="resCal">
+                  <dt>予約台帳</dt>
+                  <dd className="input"><select id="resCalendar" disabled="">
+                    <option value="1">Calendar 1</option>
+                    <option value="2">Calendar 2</option>
+                    <option value="3">Calendar 3</option>
+                  </select><span class="subinfo">※Linked to Menu</span></dd>
+                </dl>
               </div>
            </div>
 
@@ -242,17 +269,36 @@ UI.define("Reservation.Form", function() {
            </div>
           </div>
           <footer>
-            <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
-              <input name="utf8" type="hidden" value="✓" />
-              <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-              <input name="reservation[menu_id]" type="hidden" value={this.state.menu_id} />
-              <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
-              <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
-              <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
-              <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
-              <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
-              <button type="submit" disabled={!this._isValidToReserve()}>Reserve</button>
-            </form>
+            <ul id="newResFlow">
+              <ol className="done"><i className="fa fa-check" aria-hidden="true"></i>予約詳細</ol>
+              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
+              <ol>顧客</ol>
+              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
+              <ol>完了</ol>
+            </ul>
+            <ul id="BTNfunctions">
+              <li>
+                <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
+                  <input name="utf8" type="hidden" value="✓" />
+                  <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+                  <input name="reservation[menu_id]" type="hidden" value={this.state.menu_id} />
+                  <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
+                  <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
+                  <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
+                  <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
+                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
+                  <button type="submit" id="BTNsave" className="BTNyellow" disabled={!this._isValidToReserve()}>
+                    <i className="fa fa-folder-o" aria-hidden="true"></i>保存
+                  </button>
+                </form>
+
+              </li>
+              <li>
+                <button href="" id="BTNdel" className="BTNorange">
+                  <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
+                </button>
+              </li>
+            </ul>
           </footer>
         </div>
       );

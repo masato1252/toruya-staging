@@ -14,6 +14,8 @@ class ReservationsController < DashboardController
 
   # GET /reservations/new
   def new
+    @body_class = "resNew"
+
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
                                          start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
                                          end_time_time_part: params[:end_time_time_part],

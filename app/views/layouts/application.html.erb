@@ -8,7 +8,7 @@
     <%= javascript_include_tag "application" %>
   </head>
 
-  <body>
+  <body id="manager" class=<%= body_class %>>
     <header>
       <dl>
         <dd id="NAVhome"><a href="">Home</a></dd>
@@ -22,11 +22,9 @@
         <dd id="NAVsetting"><a href="setting/">設定</a></dd>
       </dl>
     </header>
-    <div class="container">
-      <%= render "layouts/tbd_items" %>
+    <div>
       <%= flash_messages %>
       <%= yield %>
     </div>
-    <div id="footer"><div class="content">&copy; Kasai, Inc.</div></div>
   </body>
 </html>
