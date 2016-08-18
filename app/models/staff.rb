@@ -24,6 +24,8 @@ class Staff < ApplicationRecord
   has_many :menus, through: :staff_menus
   has_many :business_schedules
   has_many :custom_schedules
+  has_many :reservation_staffs
+  has_many :reservations, through: :reservation_staffs
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 

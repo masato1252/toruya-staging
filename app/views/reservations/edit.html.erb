@@ -1,6 +1,6 @@
-<h1>Editing Reservation</h1>
-
-<%= render 'form', reservation: @reservation %>
-
-<%= link_to 'Show', @reservation %> |
-<%= link_to 'Back', reservations_path %>
+<%= render "form", {
+  date: @reservation.start_time_date,
+  start_time: @reservation.start_time_time,
+  end_time: @reservation.end_time_time,
+  reservation_path: shop_reservation_path(shop, @reservation)
+} %>

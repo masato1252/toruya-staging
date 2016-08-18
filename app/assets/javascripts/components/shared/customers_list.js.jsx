@@ -23,11 +23,9 @@ UI.define("Common.CustomersList", function() {
       });
 
       return(
-        <div id="customers">
           <div id="customerList">
             {customerOptions}
           </div>
-        </div>
       );
     }
   });

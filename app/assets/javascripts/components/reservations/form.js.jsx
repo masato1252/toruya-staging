@@ -40,7 +40,7 @@ UI.define("Reservation.Form", function() {
         start_time_date_part: this.state.start_time_date_part,
         start_time_time_part: this.state.start_time_time_part,
         end_time_time_part: this.state.end_time_time_part,
-        staff_ids: this.state.staff_ids.join(","),
+        staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
         customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       })
 
@@ -57,7 +57,8 @@ UI.define("Reservation.Form", function() {
 
     _isValidToReserve: function() {
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
-        this.state.menu_id && this.state.staff_ids.length && this.state.customers.length
+        this.state.menu_id && this.state.staff_ids.length && this.state.customers.length &&
+          $.unique(this.state.staff_ids).length == this.state.menu_min_staffs_number
     },
 
     _handleChange: function(event) {
@@ -103,6 +104,10 @@ UI.define("Reservation.Form", function() {
 
       if (this.currentRequest != null) {
         this.currentRequest.abort();
+      }
+
+      if (!this.state.start_time_date_part || !this.state.start_time_time_part || !this.state.end_time_time_part) {
+        return;
       }
 
       this.currentRequest = jQuery.ajax({
@@ -169,7 +174,7 @@ UI.define("Reservation.Form", function() {
         if (this.state.staff_ids[i]) {
           value = this.state.staff_ids[i]
         }
-        else if (this.state.staff_options[i]) {
+        else if (!this.state.staff_ids && this.state.staff_options[i]) {
           value = this.state.staff_options[i]["value"]
         }
         else {
@@ -179,9 +184,10 @@ UI.define("Reservation.Form", function() {
         select_components.push(
           <UI.Select options={this.state.staff_options}
             prefix={`option-${i}`}
-            key={value}
-            value={value}
+            key={`${i}-${value}`}
+            defaultValue={value}
             data-name="staff_id"
+            includeBlank={value.length == 0}
             onChange={this._handleChange}
         />)
       }
@@ -278,15 +284,16 @@ UI.define("Reservation.Form", function() {
             </ul>
             <ul id="BTNfunctions">
               <li>
-                <form acceptCharset="UTF-8" action={this.props.reservationCreatePath} method="post">
+                <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
                   <input name="utf8" type="hidden" value="✓" />
+                  { this.props.reservation.id ?  <input name="_method" type="hidden" value="PUT" /> : null }
                   <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
                   <input name="reservation[menu_id]" type="hidden" value={this.state.menu_id} />
                   <input name="reservation[start_time_date_part]" type="hidden" value={this.state.start_time_date_part} />
                   <input name="reservation[start_time_time_part]" type="hidden" value={this.state.start_time_time_part} />
                   <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
                   <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
-                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids} />
+                  <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <button type="submit" id="BTNsave" className="BTNyellow" disabled={!this._isValidToReserve()}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>保存
                   </button>

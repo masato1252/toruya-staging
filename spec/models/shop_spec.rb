@@ -101,6 +101,31 @@ RSpec.describe Shop, type: :model do
             expect(shop.available_reservation_menus(time_range)).to be_empty
           end
         end
+
+        context "when staff already reservations during that time" do
+          let!(:reservation) { FactoryGirl.create(:reservation, staffs: [staff], start_time: time_range.first, end_time: time_range.last) }
+
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+
+          context "when passing reservation id" do
+            it "returns available reservation menus ignore the passed reservation" do
+              expect(shop.available_reservation_menus(time_range, reservation.id)).to include(menu)
+            end
+          end
+        end
+
+        context "when staff had reservations not during that time" do
+          before { FactoryGirl.create(:reservation, staffs: [staff],
+                                      start_time: time_range.first.advance(hours: -2),
+                                      end_time: time_range.first.advance(hours: -1))}
+
+          it "returns available reservation menus" do
+            expect(shop.available_reservation_menus(time_range)).to include(menu)
+          end
+        end
+
       end
 
       context "when menus reservation is available on each Friday" do
@@ -173,9 +198,9 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when staff has work schedule on that date" do
+      let(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: false) }
       it_behaves_like "available menus" do
         let(:test_data) do
-          staff = FactoryGirl.create(:staff, shop: shop, full_time: false)
           menu.staffs << staff
           FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
                              start_time: time_range.first, end_time: time_range.last)
@@ -185,7 +210,6 @@ RSpec.describe Shop, type: :model do
       context "when staff asks for leave on that date but not at that time" do
         it_behaves_like "available menus" do
           let(:test_data) do
-            staff = FactoryGirl.create(:staff, shop: shop, full_time: false)
             menu.staffs << staff
             FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
                                start_time: time_range.first, end_time: time_range.last)

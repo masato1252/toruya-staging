@@ -1,11 +1,12 @@
 module Reservations
-  class CreateReservation < ActiveInteraction::Base
+  class AddReservation < ActiveInteraction::Base
     set_callback :type_check, :before do
       params[:staff_ids] = params[:staff_ids].present? ? params[:staff_ids].split(",") : []
       params[:customer_ids] = params[:customer_ids].present? ? params[:customer_ids].split(",") : []
     end
 
     object :shop, class: Shop
+    object :reservation, class: Reservation, default: nil
     hash :params do
       string :start_time_date_part
       string :start_time_time_part
@@ -16,9 +17,14 @@ module Reservations
     end
 
     def execute
-      reservation = shop.reservations.new(params)
-      unless reservation.save
-        errors.merge!(reservation.errors)
+      _reservation = if reservation
+                       reservation.attributes = params
+                       reservation
+                     else
+                       shop.reservations.new(params)
+                     end
+      unless _reservation.save
+        errors.merge!(_reservation.errors)
       end
       reservation
     end

@@ -67,7 +67,7 @@ class Shop < ApplicationRecord
     business_working_schedule(date)
   end
 
-  def available_reservation_menus(business_time_range)
+  def available_reservation_menus(business_time_range, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last
     distance_in_minutes = ((end_time - start_time)/60.0).round
@@ -86,11 +86,16 @@ class Shop < ApplicationRecord
     scoped = menus.
       joins(:reservation_settings, :staffs).
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id").
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id
+             LEFT OUTER JOIN reservation_staffs ON reservation_staffs.staff_id = staffs.id
+             LEFT OUTER JOIN reservations ON reservations.id = reservation_staffs.reservation_id").
       where("minutes <= ?", distance_in_minutes).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
-             start_time: start_time, end_time: end_time)
+             start_time: start_time, end_time: end_time).
+     where("(reservations.start_time is NULL and reservations.end_time is NULL) or
+             reservations.id = ? or
+            (NOT(reservations.start_time <= ? and reservations.end_time >= ?))", reservation_id, end_time, start_time)
 
 
     scoped = scoped.
@@ -127,7 +132,7 @@ class Shop < ApplicationRecord
     scoped.select("menus.*").group("menus.id").having("count(staffs.id) >= min_staffs_number")
   end
 
-  def available_staffs(menu, business_time_range)
+  def available_staffs(menu, business_time_range, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last
 
@@ -138,9 +143,12 @@ class Shop < ApplicationRecord
       return
     end
 
-    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules).
+    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules, :reservations).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
-             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)
+             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time).
+      where("(reservations.start_time is NULL and reservations.end_time is NULL) or
+              reservations.id = ? or
+             (NOT(reservations.start_time <= ? and reservations.end_time >= ?))", reservation_id, end_time, start_time)
 
     scoped.
       where(full_time: true).
@@ -149,6 +157,8 @@ class Shop < ApplicationRecord
       where("business_schedules.business_state = ? and days_of_week = ? ", "opened", business_time_range.first.wday).
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
+
+    scoped.select("staffs.*").group("staffs.id")
   end
 
   private

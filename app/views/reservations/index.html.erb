@@ -16,8 +16,8 @@
       <tr>
         <td><%= reservation.shop_id %></td>
         <td><%= reservation.menu_id %></td>
-        <td><%= reservation.start_time %></td>
-        <td><%= reservation.end_time %></td>
+        <td><%= reservation.start_time.to_s(:full_datetime_without_timezone) %></td>
+        <td><%= reservation.end_time.to_s(:full_datetime_without_timezone) %></td>
         <td><%= link_to 'Edit', edit_shop_reservation_path(shop, reservation) %></td>
       </tr>
     <% end %>

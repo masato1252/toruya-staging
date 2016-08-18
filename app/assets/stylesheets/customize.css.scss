@@ -122,6 +122,11 @@ button.BTNorange {
   background: #ca4e0e;
   border: 1px #b0450d solid;
 }
+
+button[disabled], .disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
 /* Overwrite END */
 
 /* New Design START */

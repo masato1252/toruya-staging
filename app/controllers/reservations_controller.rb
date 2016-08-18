@@ -33,12 +33,15 @@ class ReservationsController < DashboardController
 
   # GET /reservations/1/edit
   def edit
+    @body_class = "resNew"
+    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation)
+    @time_ranges = shop.available_time(@reservation.start_time.to_date)
   end
 
   # POST /reservations
   # POST /reservations.json
   def create
-    outcome = Reservations::CreateReservation.run(shop: shop, params: reservation_params.to_h)
+    outcome = Reservations::AddReservation.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
@@ -52,8 +55,10 @@ class ReservationsController < DashboardController
   # PATCH/PUT /reservations/1
   # PATCH/PUT /reservations/1.json
   def update
+    outcome = Reservations::AddReservation.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
+
     respond_to do |format|
-      if @reservation.update(reservation_params)
+      if outcome.valid?
         format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully updated.' }
         format.json { render :show, status: :ok, location: @reservation }
       else

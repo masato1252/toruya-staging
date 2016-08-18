@@ -1,37 +1,20 @@
-<%= form_for(reservation, url: url) do |f| %>
-  <% if reservation.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(reservation.errors.count, "error") %> prohibited this reservation from being saved:</h2>
-
-      <ul>
-      <% reservation.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :menu_id %>
-    <%= f.select :menu_id, shop.menus.map { |m| [m.name, m.id] } %>
-  </div>
-
-  <div class="field">
-    <%= f.label :start_time %>
-    <%= f.date_select :start_time %>
-  </div>
-
-  <div class="field">
-    <%= f.label :start_time %>
-    <%= f.time_select :start_time %>
-  </div>
-
-  <div class="field">
-    <%= f.label :end_time %>
-    <%= f.time_select :end_time %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+<%= react_component("UI.Reservation.Form",
+                    { reservation: @reservation.attributes.merge(
+                      start_time_date_part: date,
+                      start_time_time_part: start_time,
+                      end_time_time_part: end_time,
+                      staff_ids: @reservation.staff_ids,
+                      customers: @reservation.customers.map { |c| { label: c.name, value: c.id } }),
+                      shop_id: shop.id,
+                      min_staffs_number: @result && @result[:selected_menu] ? @result[:selected_menu].try(:min_staffs_number) : nil,
+                      menu_options: @result && @result[:menus] ? @result[:menus].map { |m| { label: m.name, value: m.id } } : nil,
+                      staff_options: @result && @result[:staffs] ? @result[:staffs].map { |s| { label: s.name, value: s.id } } : nil,
+                      start_time_restriction: @time_ranges.try(:first).try(:to_s, :simple_time),
+                      end_time_restriction: @time_ranges.try(:last).try(:to_s, :simple_time),
+                      available_times_path: times_shop_reservations_available_options_path(shop),
+                      available_menus_path:  menus_shop_reservations_available_options_path(shop),
+                      available_staffs_path: staffs_shop_reservations_available_options_path(shop),
+                      customer_add_path: shop_customers_path(shop),
+                      form_authenticity_token: form_authenticity_token,
+                      reservation_path: reservation_path
+} ) %>
