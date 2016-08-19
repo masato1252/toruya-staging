@@ -1,8 +1,8 @@
 class CreateReservationCustomers < ActiveRecord::Migration[5.0]
   def change
     create_table :reservation_customers do |t|
-      t.integer :reservation_id
-      t.integer :customer_id
+      t.integer :reservation_id, null: false
+      t.integer :customer_id, null: false
 
       t.timestamps
     end

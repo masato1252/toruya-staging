@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810124115) do
+ActiveRecord::Schema.define(version: 20160819151128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20160810124115) do
     t.datetime "updated_at",     null: false
     t.index ["shop_id", "business_state", "days_of_week"], name: "shop_day_of_week_index", using: :btree
     t.index ["shop_id"], name: "index_business_schedules_on_shop_id", using: :btree
+    t.index ["staff_id", "business_state", "days_of_week"], name: "business_schedules_index", using: :btree
   end
 
   create_table "custom_schedules", force: :cascade do |t|
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160810124115) do
     t.text     "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["staff_id", "start_time", "end_time"], name: "custom_schedules_index", using: :btree
   end
 
   create_table "customers", force: :cascade do |t|
@@ -70,8 +72,8 @@ ActiveRecord::Schema.define(version: 20160810124115) do
   end
 
   create_table "reservation_customers", force: :cascade do |t|
-    t.integer  "reservation_id"
-    t.integer  "customer_id"
+    t.integer  "reservation_id", null: false
+    t.integer  "customer_id",    null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true, using: :btree
@@ -81,7 +83,6 @@ ActiveRecord::Schema.define(version: 20160810124115) do
     t.integer  "menu_id"
     t.string   "name"
     t.string   "short_name"
-    t.string   "reservation_type"
     t.string   "day_type"
     t.string   "time_type"
     t.integer  "day"
@@ -89,25 +90,28 @@ ActiveRecord::Schema.define(version: 20160810124115) do
     t.integer  "nth_of_week"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["menu_id", "start_time", "end_time", "day_type", "day_of_week", "day", "nth_of_week"], name: "reservation_settings_index", using: :btree
   end
 
   create_table "reservation_staffs", force: :cascade do |t|
-    t.integer  "reservation_id"
-    t.integer  "staff_id"
+    t.integer  "reservation_id", null: false
+    t.integer  "staff_id",       null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["reservation_id", "staff_id"], name: "index_reservation_staffs_on_reservation_id_and_staff_id", unique: true, using: :btree
   end
 
   create_table "reservations", force: :cascade do |t|
-    t.integer  "shop_id"
-    t.integer  "menu_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
+    t.integer  "shop_id",    null: false
+    t.integer  "menu_id",    null: false
+    t.datetime "start_time", null: false
+    t.datetime "end_time",   null: false
+    t.text     "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["shop_id", "menu_id", "start_time", "end_time"], name: "reservation_index", using: :btree
   end
 
   create_table "shops", force: :cascade do |t|
