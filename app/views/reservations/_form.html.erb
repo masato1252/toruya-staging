@@ -4,7 +4,7 @@
                       start_time_time_part: start_time,
                       end_time_time_part: end_time,
                       staff_ids: reservation.staff_ids,
-                      customers: reservation.customers.map { |c| { label: c.name, value: c.id } }),
+                      customers: reservation.customers.map { |c| { label: c.name, value: c.id, level: c.state } }),
                       min_staffs_number: @result && @result[:selected_menu] ? @result[:selected_menu].try(:min_staffs_number) : nil,
                       menu_options: @result && @result[:menu_options] ? @result[:menu_options].map { |m| { label: m.name, value: m.id } } : nil,
                       staff_options: @result && @result[:staff_options] ? @result[:staff_options].map { |s| { label: s.name, value: s.id } } : nil,

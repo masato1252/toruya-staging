@@ -36,6 +36,7 @@ UI.define("Reservation.Form", function() {
       event.preventDefault();
 
       var params = $.param({
+        from_reservation: true,
         reservation_id: this.props.reservation.id,
         menu_id: this.state.menu_id,
         start_time_date_part: this.state.start_time_date_part,

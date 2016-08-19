@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
 <%= react_component("UI.Customers.Dashboard",
-                    { customers: shop.customers.map { |c| { label: c.name, value: c.id } },
+                    { customers: shop.customers.map { |c| { label: c.name, value: c.id, level: c.state } },
                       add_reservation_path: @add_reservation_path
 }) %>

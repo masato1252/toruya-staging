@@ -6,11 +6,13 @@ class CustomersController < DashboardController
   def index
     @customers = shop.customers.all
 
-    @add_reservation_path = if params[:reservation_id].present?
-                              edit_shop_reservation_path(shop, id: params[:reservation_id])
-                            elsif params[:menu_id].present?
-                              new_shop_reservation_path(shop)
-                            end
+    if params[:from_reservation]
+      @add_reservation_path = if params[:reservation_id].present?
+                                edit_shop_reservation_path(shop, id: params[:reservation_id])
+                              else
+                                new_shop_reservation_path(shop)
+                              end
+    end
   end
 
   # GET /customers/1
