@@ -78,6 +78,13 @@ table.table {
 
         dt {
           word-wrap: break-word;
+          font-weight: normal;
+          box-sizing: border-box;
+          padding-right: 15px;
+
+          .place {
+            text-align: right;
+          }
         }
       }
     }

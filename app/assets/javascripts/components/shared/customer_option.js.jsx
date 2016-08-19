@@ -22,7 +22,7 @@ UI.define("Common.CustomerOption", function() {
           </dd>
           <dt onClick={this._handleClick}>
             <p>{this.props.customer.label}</p>
-            <p class="place">Address</p>
+            <p className="place">Address</p>
           </dt>
           {this.props.handleCustomerRemove ? <dd onClick={this._handleRemove}>
             <span className="customer-remove-symbol glyphicon glyphicon-remove" />
