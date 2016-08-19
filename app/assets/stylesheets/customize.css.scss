@@ -127,6 +127,14 @@ button[disabled], .disabled {
   opacity: .45;
   cursor: not-allowed;
 }
+
+#resNew #customers ul {
+  width: 145px;
+
+  li {
+    padding-left: 12px;
+  }
+}
 /* Overwrite END */
 
 /* New Design START */
@@ -216,22 +224,6 @@ form {
     text-align: center !important;
   }
 
-  .customer-level-symbol {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-
-    &.normal {
-      background-color: #d0d0d0;
-      border: 1px solid #b3b3b3;
-    }
-
-    &.vip {
-      background-color: #ca4e0f;
-    }
-  }
-
   .customer-remove-symbol {
     background-color: #fcbe46;
     width: 32px;
@@ -245,4 +237,28 @@ form {
   }
 }
 
+.customer-level-symbol {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  vertical-align: middle;
+
+  &.normal {
+    background-color: #d0d0d0;
+    border: 1px solid #b3b3b3;
+  }
+
+  &.vip {
+    background-color: #ca4e0f;
+    border: 1px solid #b0450d;
+  }
+}
+
+#customerLevels {
+  .wording {
+    vertical-align: middle;
+    margin-left: 3px;
+  }
+}
 /* New Design END */
