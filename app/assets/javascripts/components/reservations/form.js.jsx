@@ -303,11 +303,17 @@ UI.define("Reservation.Form", function() {
                 </form>
 
               </li>
-              <li>
-                <button href="" id="BTNdel" className="BTNorange">
-                  <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
-                </button>
-              </li>
+              {this.props.reservation.id ? (
+                <li>
+                  <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
+                    <input name="_method" type="hidden" value="DELETE" />
+                    <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+                    <button id="BTNdel" className="BTNorange" rel="nofollow">
+                      <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
+                    </button>
+                  </form>
+                </li>) : null
+              }
             </ul>
           </footer>
         </div>

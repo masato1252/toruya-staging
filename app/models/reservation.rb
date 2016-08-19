@@ -22,9 +22,9 @@ class Reservation < ApplicationRecord
 
   belongs_to :shop
   belongs_to :menu
-  has_many :reservation_staffs
+  has_many :reservation_staffs, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
-  has_many :reservation_customers
+  has_many :reservation_customers, dependent: :destroy
   has_many :customers, through: :reservation_customers
 
   before_validation :set_start_time, :set_end_time

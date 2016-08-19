@@ -73,7 +73,7 @@ class ReservationsController < DashboardController
   def destroy
     @reservation.destroy
     respond_to do |format|
-      format.html { redirect_to reservations_url, notice: 'Reservation was successfully destroyed.' }
+      format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
