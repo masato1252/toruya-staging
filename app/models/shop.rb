@@ -73,10 +73,7 @@ class Shop < ApplicationRecord
     end_time = business_time_range.last
     distance_in_minutes = ((end_time - start_time)/60.0).round
 
-    scoped = reservations
-    .or(reservations.where("reservations.start_time BETWEEN ? AND ?", start_time, end_time))
-    .or(reservations.where("reservations.end_time BETWEEN ? AND ?", start_time, end_time))
-    .or(reservations.where("reservations.start_time <= ? AND reservations.end_time >= ?", start_time, end_time))
+    scoped = reservations.where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
 
     # when all staffs already have reservations at this time
     if staff_ids.present? && scoped.includes(:staffs).

@@ -19,6 +19,7 @@ class ReservationsController < DashboardController
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
                                          start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
                                          end_time_time_part: params[:end_time_time_part],
+                                         memo: params[:memo],
                                          menu_id: params[:menu_id],
                                          staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
                                          customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
@@ -87,6 +88,6 @@ class ReservationsController < DashboardController
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
       params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                          :customer_ids, :staff_ids)
+                                          :customer_ids, :staff_ids, :memo)
     end
 end

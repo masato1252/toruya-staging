@@ -15,9 +15,10 @@ UI.define("Reservation.Form", function() {
         menu_id: this.props.reservation.menuId || "",
         customers: this.props.reservation.customers || [],
         staff_ids: this.props.reservation.staffIds || [],
+        memo: this.props.reservation.memo || "",
         menu_min_staffs_number: this.props.minStaffsNumber || 0,
         menu_options: this.props.menuOptions || [],
-        staff_options: this.props.staffOptions || []
+        staff_options: this.props.staffOptions || [],
       });
     },
 
@@ -39,11 +40,12 @@ UI.define("Reservation.Form", function() {
         from_reservation: true,
         reservation_id: this.props.reservation.id,
         menu_id: this.state.menu_id,
+        memo: this.state.memo,
         start_time_date_part: this.state.start_time_date_part,
         start_time_time_part: this.state.start_time_time_part,
         end_time_time_part: this.state.end_time_time_part,
         staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
-        customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
+        customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(","),
       })
 
       window.location = `${this.props.customerAddPath}?${params}`
@@ -274,6 +276,14 @@ UI.define("Reservation.Form", function() {
                   </select><span class="subinfo">※Linked to Menu</span></dd>
                 </dl>
               </div>
+              <div id="resMemo" className="formRow">
+                <dl className="form" id="resMemoRow">
+                  <dt>メモ</dt>
+                  <dd className="input">
+                    <input type="textarea" id="memo" placeholder="Memo" data-name="memo" value={this.state.memo} onChange={this._handleChange}  />
+                  </dd>
+                </dl>
+              </div>
            </div>
 
            <div id="customers">
@@ -312,6 +322,7 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[end_time_time_part]" type="hidden" value={this.state.end_time_time_part} />
                   <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
+                  <input name="reservation[memo]" type="hidden" value={this.state.memo} />
                   <button type="submit" id="BTNsave" className="BTNyellow" disabled={!this._isValidToReserve()}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>保存
                   </button>

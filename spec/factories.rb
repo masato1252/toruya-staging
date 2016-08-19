@@ -35,6 +35,23 @@ FactoryGirl.define do
     association :menu
     name "foo"
     short_name "f"
+    day_type "business_days"
+
+    trait :weekly do
+      day_type "weekly"
+      sequence(:days_of_week) { |n| n%7 }
+    end
+
+    trait :number_of_day_monthly do
+      day_type "number_of_day_monthly"
+      sequence(:day) { |n| n%28 }
+    end
+
+    trait :day_of_week_monthly do
+      day_type "day_of_week_monthly"
+      sequence(:nth_of_week) { |n| n%4 }
+      sequence(:days_of_week) { |n| n%7 }
+    end
   end
 
   factory :reservation do

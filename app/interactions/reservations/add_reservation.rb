@@ -14,6 +14,7 @@ module Reservations
       integer :menu_id
       array :staff_ids
       array :customer_ids
+      string :memo, default: nil
     end
 
     def execute
