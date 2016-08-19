@@ -36,6 +36,7 @@ UI.define("Reservation.Form", function() {
       event.preventDefault();
 
       var params = $.param({
+        reservation_id: this.props.reservation.id,
         menu_id: this.state.menu_id,
         start_time_date_part: this.state.start_time_date_part,
         start_time_time_part: this.state.start_time_time_part,
@@ -76,11 +77,13 @@ UI.define("Reservation.Form", function() {
           case "menu_id":
             this._retrieveAvailableStaffs();
             break;
-          case "staff_id":
-            this.setState({ staff_ids: $("[data-name='staff_id']").map(function() { return $(this).val() }) });
-            break;
         }
       }.bind(this))
+    },
+
+    _handleStaffChange: function(event) {
+      event.preventDefault();
+      this.setState({ staff_ids: $("[data-name='staff_id']").map(function() { return $(this).val() }) });
     },
 
     _retrieveAvailableTimes: function() {
@@ -113,6 +116,7 @@ UI.define("Reservation.Form", function() {
       this.currentRequest = jQuery.ajax({
         url: this.props.availableMenusPath,
         data: {
+          reservation_id: this.props.reservation.id,
           start_time_date_part: this.state.start_time_date_part,
           start_time_time_part: this.state.start_time_time_part,
           end_time_time_part: this.state.end_time_time_part
@@ -123,9 +127,8 @@ UI.define("Reservation.Form", function() {
         _this.setState({menu_options: result["menu"]["options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
-                        staff_options: result["staff"]["options"]
-        }, function() {
-          this.setState({staff_ids: _.map(this.state.staff_options, function(o) { return o.value }) });
+                        staff_options: result["staff"]["options"],
+                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
         });
 
         if (result["menu"]["options"].length == 0) {
@@ -147,6 +150,7 @@ UI.define("Reservation.Form", function() {
       this.currentRequest = jQuery.ajax({
         url: this.props.availableStaffsPath,
         data: {
+          reservation_id: this.props.reservation.id,
           start_time_date_part: this.state.start_time_date_part,
           start_time_time_part: this.state.start_time_time_part,
           end_time_time_part: this.state.end_time_time_part,
@@ -157,9 +161,8 @@ UI.define("Reservation.Form", function() {
       function(result) {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
-          staff_options: result["staff"]["options"]
-        }, function() {
-          this.setState({staff_ids: _.map(this.state.staff_options, function(o) { return o.value }) });
+          staff_options: result["staff"]["options"],
+          staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
         });
       }).fail(function(errors){
       }).always(function() {
@@ -188,7 +191,7 @@ UI.define("Reservation.Form", function() {
             defaultValue={value}
             data-name="staff_id"
             includeBlank={value.length == 0}
-            onChange={this._handleChange}
+            onChange={this._handleStaffChange}
         />)
       }
 

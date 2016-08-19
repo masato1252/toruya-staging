@@ -2,5 +2,6 @@
   date: @reservation.start_time_date_part,
   start_time: @reservation.start_time_time_part,
   end_time: @reservation.end_time_time_part,
-  reservation_path: shop_reservations_path(shop)
+  reservation_path: shop_reservations_path(shop),
+  reservation: @reservation
 } %>

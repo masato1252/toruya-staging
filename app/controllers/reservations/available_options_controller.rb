@@ -4,12 +4,14 @@ class Reservations::AvailableOptionsController < DashboardController
   end
 
   def menus
-    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
+    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop,
+                                                        params: params.permit!.to_h,
+                                                        reservation: Reservation.find_by(id: params[:reservation_id]))
   end
 
   def staffs
     @menu = shop.menus.find(params[:menu_id])
-    @staffs = shop.available_staffs(@menu, start_time..end_time)
+    @staffs = shop.available_staffs(@menu, start_time..end_time, params[:reservation_id])
   end
 
   def customers

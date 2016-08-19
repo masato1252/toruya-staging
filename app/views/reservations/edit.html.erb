@@ -2,5 +2,6 @@
   date: @reservation.start_time_date,
   start_time: @reservation.start_time_time,
   end_time: @reservation.end_time_time,
-  reservation_path: shop_reservation_path(shop, @reservation)
+  reservation_path: shop_reservation_path(shop, @reservation),
+  reservation: @result[:reservation]
 } %>

@@ -34,7 +34,7 @@ class ReservationsController < DashboardController
   # GET /reservations/1/edit
   def edit
     @body_class = "resNew"
-    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation)
+    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
     @time_ranges = shop.available_time(@reservation.start_time.to_date)
   end
 

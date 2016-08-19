@@ -5,6 +5,12 @@ class CustomersController < DashboardController
   # GET /customers.json
   def index
     @customers = shop.customers.all
+
+    @add_reservation_path = if params[:reservation_id].present?
+                              edit_shop_reservation_path(shop, id: params[:reservation_id])
+                            elsif params[:menu_id].present?
+                              new_shop_reservation_path(shop)
+                            end
   end
 
   # GET /customers/1

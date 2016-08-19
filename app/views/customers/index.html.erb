@@ -2,5 +2,5 @@
 
 <%= react_component("UI.Customers.Dashboard",
                     { customers: shop.customers.map { |c| { label: c.name, value: c.id } },
-                      add_reservation_path: new_shop_reservation_path(shop)
+                      add_reservation_path: @add_reservation_path
 }) %>
