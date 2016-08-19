@@ -111,7 +111,7 @@ RSpec.describe Shop, type: :model do
 
           context "when passing reservation id" do
             it "returns available reservation menus ignore the passed reservation" do
-              expect(shop.available_reservation_menus(time_range, reservation.id)).to include(menu)
+              expect(shop.available_reservation_menus(time_range, 1, reservation.id)).to include(menu)
             end
           end
         end

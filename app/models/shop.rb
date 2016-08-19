@@ -67,7 +67,8 @@ class Shop < ApplicationRecord
     business_working_schedule(date)
   end
 
-  def available_reservation_menus(business_time_range, reservation_id=nil)
+  def available_reservation_menus(business_time_range, number_of_customer=1, reservation_id=nil)
+    number_of_customer = (number_of_customer.zero? || number_of_customer.nil?) ? 1 : number_of_customer
     start_time = business_time_range.first
     end_time = business_time_range.last
     distance_in_minutes = ((end_time - start_time)/60.0).round
@@ -129,7 +130,7 @@ class Shop < ApplicationRecord
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
     )
 
-    scoped.select("menus.*").group("menus.id").having("count(staffs.id) >= min_staffs_number")
+    scoped.select("menus.*").group("menus.id").having("count(staffs.id) >= (min_staffs_number * #{number_of_customer})")
   end
 
   def available_staffs(menu, business_time_range, reservation_id=nil)

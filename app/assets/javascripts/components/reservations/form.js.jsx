@@ -59,7 +59,7 @@ UI.define("Reservation.Form", function() {
     _isValidToReserve: function() {
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
         this.state.menu_id && this.state.staff_ids.length && this.state.customers.length &&
-          $.unique(this.state.staff_ids).length == this.state.menu_min_staffs_number
+          $.unique(this.state.staff_ids).length == (this._requiredStaffsNumber(this.state.menu_min_staffs_number))
     },
 
     _handleChange: function(event) {
@@ -128,7 +128,7 @@ UI.define("Reservation.Form", function() {
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
                         staff_options: result["staff"]["options"],
-                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
+                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, _this._requiredStaffsNumber(result["menu"]["selected_option"]["min_staffs_number"]))
         });
 
         if (result["menu"]["options"].length == 0) {
@@ -162,7 +162,7 @@ UI.define("Reservation.Form", function() {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
           staff_options: result["staff"]["options"],
-          staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
+          staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, _this._requiredStaffsNumber(result["menu"]["selected_option"]["min_staffs_number"]))
         });
       }).fail(function(errors){
       }).always(function() {
@@ -170,9 +170,17 @@ UI.define("Reservation.Form", function() {
       });
     },
 
+    _requiredStaffsNumber: function(min_staffs_number) {
+      var customerNumber;
+      customerNumber = this.state.customers.length;
+      customerNumber = customerNumber == 0 ? 1 : customerNumber;
+      min_staffs_number = (min_staffs_number == 0 || !min_staffs_number) ? 1 : min_staffs_number
+      return min_staffs_number * customerNumber;
+    },
+
     renderStaffSelects: function() {
       var select_components = [];
-      for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
+      for (var i = 0; i < this._requiredStaffsNumber(this.state.menu_min_staffs_number); i++) {
         var value;
         if (this.state.staff_ids[i]) {
           value = this.state.staff_ids[i]
