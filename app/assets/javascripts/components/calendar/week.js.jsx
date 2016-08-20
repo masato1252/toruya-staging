@@ -18,7 +18,7 @@ UI.define("Week", function() {
 
         days.push(
           <span key={day.date.toString()}
-                className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}
+                className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selectedDate) ? " selected" : "")}
                 onClick={this.props.select.bind(null, day)}>{day.number}
           </span>
         );

@@ -72,6 +72,7 @@ class Shop < ApplicationRecord
     start_time = business_time_range.first
     end_time = business_time_range.last
     distance_in_minutes = ((end_time - start_time)/60.0).round
+    reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
     scoped = reservations.where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
 
@@ -133,6 +134,7 @@ class Shop < ApplicationRecord
   def available_staffs(menu, business_time_range, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last
+    reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
     # All staffs could do this menu already have reservation
     if menu.staff_ids.present? &&

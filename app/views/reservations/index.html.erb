@@ -4,7 +4,7 @@
                         { selected: {},
                           day_names: I18n.t("date.abbr_day_names"),
                           reservations_path: shop_reservations_path(shop),
-                          selected_date: params[:date]
+                          selected_date: params[:reservation_date]
                         },
                           { id: "custom-calendar", prerender: true }) %>
   </div>
@@ -12,6 +12,7 @@
   <div id="resList" class="contBody">
     <dl class="tableTTL">
       <dt class="time">開始<br>終了</dt>
+      <dt class="reservation-states"></dt>
       <dt class="calendar">カレンダー</dt>
       <dt class="menu">メニュー</dt>
       <dt class="customer">顧客氏名</dt>
@@ -19,12 +20,13 @@
     <div id="record">
       <% @reservations.each do |reservation| %>
         <%
-          customers = reservation.customers
-          customer_names = customers.map(&:first_name).join(", ")
+          customer_names = reservation.customers.pluck(:first_name).join(", ")
+          staff_names = reservation.staffs.pluck(:name).join(", ")
         %>
         <a href="#" class="checkin" data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
           <dl class="">
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
+            <dd><span class="reservation-state normal"></span></dd>
             <dd class="calendar">Calendar3</dd>
             <dd class="menu"><%= reservation.menu.name %></dd>
             <dd class="customer"><%= customer_names %></dd>
@@ -45,6 +47,9 @@
                 <div class="reservation-menu">
                   <%= reservation.menu.name %>
                 </div>
+                <div>
+                  <%= staff_names %>
+                </div>
               </div>
               <div class="modal-footer">
                 <dl>
@@ -64,7 +69,7 @@
   <div id="mainNav">
     <dl>
       <dd id="NAVnewResv">
-        <%= link_to new_shop_reservation_path(shop), class: "BTNtarco" do %>
+        <%= link_to new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNtarco" do %>
           <span>新規予約</span>
         <% end %>
       </dd>

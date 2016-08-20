@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   resources :shops do
     resources :customers
     resources :reservations do
-      get "/:date", to: "reservations#index", on: :collection, constraints: { date: /\d{4}-\d{1,2}-\d{1,2}/ }
+      get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
     end
 
     namespace :reservations do

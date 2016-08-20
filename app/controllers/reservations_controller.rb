@@ -5,9 +5,9 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
-    params[:date] ||= Time.zone.now.to_s(:date)
+    params[:reservation_date] ||= Time.zone.now.to_s(:date)
 
-    @reservations = shop.reservations.where("DATE(start_time) = ?", params[:date]).includes(:menu, :customers)
+    @reservations = shop.reservations.where("DATE(start_time) = ?", params[:reservation_date]).includes(:menu, :customers, :staffs)
   end
 
   # GET /reservations/1
@@ -49,7 +49,7 @@ class ReservationsController < DashboardController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to shop_reservations_path(shop), notice: "Reservation was successfully created."}
+        format.html { redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: "Reservation was successfully created."}
       else
         format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
       end
@@ -63,7 +63,7 @@ class ReservationsController < DashboardController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to shop_reservations_path(shop), notice: 'Reservation was successfully updated.' }
+        format.html { redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: 'Reservation was successfully updated.' }
         format.json { render :show, status: :ok, location: @reservation }
       else
         format.html { render :edit }

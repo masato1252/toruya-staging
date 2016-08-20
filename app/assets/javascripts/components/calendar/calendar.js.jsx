@@ -9,7 +9,8 @@ UI.define("Calendar", function() {
       var startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
       return {
-        month: startDate.clone()
+        month: startDate.clone(),
+        selectedDate: startDate.clone()
       };
     },
 
@@ -26,16 +27,16 @@ UI.define("Calendar", function() {
     },
 
     select: function(day) {
-      this.setState({ month: day.date});
+      this.setState({ month: day.date, selectedDate: day.date });
       location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
     },
 
     render: function() {
       return <div>
               <div className="header">
-                <i className="fa fa-angle-left" onClick={this.previous}></i>
+                <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
                   <span>{this.state.month.format("MMMM, YYYY")}</span>
-                <i className="fa fa-angle-right" onClick={this.next}></i>
+                <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
               </div>
               <UI.DayNames dayNames={this.props.dayNames} />
               {this.renderWeeks()}
@@ -54,6 +55,7 @@ UI.define("Calendar", function() {
                                 date={date.clone()}
                                 month={this.state.month}
                                 select={this.select}
+                                selectedDate={this.state.selectedDate}
                                 selected={this.state.month} />);
             date.add(1, "w");
             done = count++ > 2 && monthIndex !== date.month();
