@@ -35,7 +35,7 @@ UI.define("Calendar", function() {
       return <div>
               <div className="header">
                 <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
-                  <span>{this.state.month.format("MMMM, YYYY")}</span>
+                  <span>{this.state.month.format("YYYY MMMM")}</span>
                 <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
               </div>
               <UI.DayNames dayNames={this.props.dayNames} />

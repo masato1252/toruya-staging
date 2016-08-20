@@ -38,7 +38,7 @@ module Reservations
     end
 
     def execute
-      reservation.attributes = params.except(:reservation_id, :controller, :action) if reservation
+      reservation.attributes = params.except(:reservation_id, :controller, :action, :from_reservation) if reservation
       menu_options = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
       menu_option_ids = menu_options.map(&:id)
 
