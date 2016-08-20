@@ -121,13 +121,43 @@ footer {
   }
 }
 
-button.BTNyellow {
-  background: #fcbe46;
-  border: 1px #e6a21f solid;
-}
-button.BTNorange {
-  background: #ca4e0e;
-  border: 1px #b0450d solid;
+#manager {
+  #resList {
+    height: 100vh;
+
+    a.btn {
+      padding: 15px;
+      height: 0;
+      line-height: 0;
+    }
+  }
+
+  button.BTNyellow, a.BTNyellow {
+    background-color: #fcbe46;
+    border: 1px #e6a21f solid;
+  }
+  button.BTNorange, a.BTNorange {
+    background-color: #ca4e0e;
+    border: 1px #b0450d solid;
+  }
+
+  a.BTNgray {
+    background-color: #888;
+    border-color: #666;
+  }
+
+  a.BTNtarco {
+    background-color: #60938a;
+    border-color: #488479;
+  }
+
+  #resNew #customers ul {
+    width: 145px;
+
+    li {
+      padding-left: 12px;
+    }
+  }
 }
 
 button[disabled], .disabled {
@@ -135,12 +165,12 @@ button[disabled], .disabled {
   cursor: not-allowed;
 }
 
-#resNew #customers ul {
-  width: 145px;
+.modal-header {
+  padding: 15px 15px 0px 15px;
+}
 
-  li {
-    padding-left: 12px;
-  }
+.modal-content {
+  top: 100px;
 }
 /* Overwrite END */
 

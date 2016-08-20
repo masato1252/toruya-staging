@@ -1,29 +1,75 @@
-<h1>Reservations</h1>
+<div id="dashboard" class="contents">
+  <div id="calendar" class="sidel">
+    <%= react_component("UI.Calendar",
+                        { selected: {},
+                          day_names: I18n.t("date.abbr_day_names") },
+                          { id: "custom-calendar", prerender: true }) %>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Shop</th>
-      <th>Menu</th>
-      <th>Start time</th>
-      <th>End time</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <div id="resList" class="contBody">
+    <dl class="tableTTL">
+      <dt class="time">開始<br>終了</dt>
+      <dt class="calendar">カレンダー</dt>
+      <dt class="menu">メニュー</dt>
+      <dt class="customer">顧客氏名</dt>
+    </dl>
+    <div id="record">
+      <% @reservations.each do |reservation| %>
+        <%
+          customers = reservation.customers
+          customer_names = customers.map(&:first_name).join(", ")
+        %>
+        <a href="#" class="checkin" data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
+          <dl class="">
+            <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
+            <dd class="calendar">Calendar3</dd>
+            <dd class="menu"><%= reservation.menu.name %></dd>
+            <dd class="customer"><%= customer_names %></dd>
+          </dl>
+        </a>
+        <div class="modal fade" id="reservationModal<%= reservation.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"><%= customer_names %></h4>
+              </div>
+              <div class="modal-body">
+                <div class="reservation-time">
+                  <%= l(reservation.start_time, format: :date) %>
+                  <%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %>
+                </div>
+                <div class="reservation-menu">
+                  <%= reservation.menu.name %>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <dl>
+                  <dd><a href="" class="btn BTNyellow">CHECK OUT</a></dd>
+                  <dd><a href="" class="btn BTNyellow">CHECK IN</a></dd>
+                  <dd><a href="" class="btn BTNtarco">ACCEPT</a></dd>
+                  <dd><%= link_to "EDIT", edit_shop_reservation_path(shop, reservation), class: "btn BTNgray" %></dd>
+                  <dd><a href="" class="btn BTNorange">CANCELL</a></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="mainNav">
+    <dl>
+      <dd id="NAVnewResv">
+        <%= link_to new_shop_reservation_path(shop), class: "BTNtarco" do %>
+          <span>新規予約</span>
+        <% end %>
+      </dd>
+      <dd id="NAVcustomers">
+        <%= link_to shop_customers_path(shop), class: "BTNtarco" do %>
+          <span>顧客台帳</span>
+        <% end %>
+      </dd>
+    </dl>
 
-  <tbody>
-    <% @reservations.each do |reservation| %>
-      <tr>
-        <td><%= reservation.shop_id %></td>
-        <td><%= reservation.menu_id %></td>
-        <td><%= reservation.start_time.to_s(:full_datetime_without_timezone) %></td>
-        <td><%= reservation.end_time.to_s(:full_datetime_without_timezone) %></td>
-        <td><%= link_to 'Edit', edit_shop_reservation_path(shop, reservation) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Reservation', new_shop_reservation_path(shop) %>
+</div>

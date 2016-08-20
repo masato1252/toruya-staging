@@ -4,7 +4,9 @@ class ReservationsController < DashboardController
   # GET /reservations
   # GET /reservations.json
   def index
-    @reservations = shop.reservations.all
+    @body_class = "shopIndex"
+
+    @reservations = shop.reservations.all.includes(:menu, :customers)
   end
 
   # GET /reservations/1
