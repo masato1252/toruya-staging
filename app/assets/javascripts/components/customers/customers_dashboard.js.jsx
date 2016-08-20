@@ -43,11 +43,11 @@ UI.define("Customers.Dashboard", function() {
               </dd>
             </dl>
             <dl id="calStatus">
-              <dd className="reserved">予約</dd>
-              <dd className="checkin">チェックイン</dd>
-              <dd className="checkout">チェックアウト</dd>
-              <dd className="noshow">未来店</dd>
-              <dd className="pending">承認待ち</dd>
+              <dd><span className="reservation-state reserved"></span>予約</dd>
+              <dd><span className="reservation-state checkin"></span>チェックイン</dd>
+              <dd><span className="reservation-state checkout"></span>チェックアウト</dd>
+              <dd><span className="reservation-state noshow"></span>未来店</dd>
+              <dd><span className="reservation-state pending"></span>承認待ち</dd>
             </dl>
           </div>
 

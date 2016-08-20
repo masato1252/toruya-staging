@@ -140,25 +140,6 @@ footer {
     }
   }
 
-  button.BTNyellow, a.BTNyellow {
-    background-color: #fcbe46;
-    border: 1px #e6a21f solid;
-  }
-  button.BTNorange, a.BTNorange {
-    background-color: #ca4e0e;
-    border: 1px #b0450d solid;
-  }
-
-  a.BTNgray {
-    background-color: #888;
-    border-color: #666;
-  }
-
-  a.BTNtarco {
-    background-color: #60938a;
-    border-color: #488479;
-  }
-
   #resNew #customers ul {
     width: 145px;
 
@@ -169,6 +150,14 @@ footer {
 
   #calendar {
     width: 600px;
+  }
+
+  #calStatus {
+    width: 200px;
+
+    .reservation-state {
+      margin-right: 3px;
+    }
   }
 }
 
@@ -183,6 +172,35 @@ button[disabled], .disabled {
 
 .modal-content {
   top: 100px;
+}
+
+button.BTNyellow, a.BTNyellow, .BTNyellow, .checkin {
+  background-color: #fcbe46;
+  border: 1px #e6a21f solid;
+}
+button.BTNorange, a.BTNorange, .BTNorange, .vip, .pending {
+  background-color: #ca4e0e;
+  border: 1px #b0450d solid;
+}
+
+a.BTNgray, .BTNgray {
+  background-color: #888;
+  border-color: #666;
+}
+
+a.BTNtarco, .BTNtarco, .reserved {
+  background-color: #60938a;
+  border-color: #488479;
+}
+
+.normal, .checkout {
+  background-color: #d0d0d0;
+  border: 1px solid #b3b3b3;
+}
+
+.noshow {
+  background-color: #aecfc8;
+  border: 1px solid #84b3aa;
 }
 
 /* Overwrite END */
@@ -293,16 +311,6 @@ form {
   height: 20px;
   border-radius: 3px;
   vertical-align: middle;
-
-  &.normal {
-    background-color: #d0d0d0;
-    border: 1px solid #b3b3b3;
-  }
-
-  &.vip {
-    background-color: #ca4e0f;
-    border: 1px solid #b0450d;
-  }
 }
 
 #customerLevels {

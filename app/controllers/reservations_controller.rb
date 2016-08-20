@@ -5,9 +5,13 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
-    params[:reservation_date] ||= Time.zone.now.to_s(:date)
+    params[:reservation_date] ||= Time.zone.now.to_date
+    date = Time.zone.parse(params[:reservation_date])
 
-    @reservations = shop.reservations.where("DATE(start_time) = ?", params[:reservation_date]).includes(:menu, :customers, :staffs)
+    @reservations = shop.reservations.
+      where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day).
+      includes(:menu, :customers, :staffs).
+      order("reservations.start_time ASC")
   end
 
   # GET /reservations/1

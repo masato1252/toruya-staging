@@ -43,7 +43,7 @@ module Reservations
       menu_option_ids = menu_options.map(&:id)
 
       staff_options = if menu_options.present?
-                        selected_menu = if menu_option_ids.include?(params[:menu_id])
+                        selected_menu = if menu_option_ids.include?(params[:menu_id].to_i)
                                           shop.menus.find_by(id: params["menu_id"])
                                         elsif menu_option_ids.include?(reservation.try(:menu).try(:id))
                                           reservation.try(:menu)
