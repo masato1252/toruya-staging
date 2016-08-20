@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :shops do
     resources :customers
-    resources :reservations
+    resources :reservations do
+      get "/:date", to: "reservations#index", on: :collection, constraints: { date: /\d{4}-\d{1,2}-\d{1,2}/ }
+    end
 
     namespace :reservations do
       resource :available_options, only: [] do

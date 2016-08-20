@@ -6,7 +6,8 @@
 UI.define("Calendar", function() {
   var Calendar = React.createClass({
     getInitialState: function() {
-      var startDate = moment().startOf("day")
+      var startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
+
       return {
         month: startDate.clone()
       };
@@ -26,6 +27,7 @@ UI.define("Calendar", function() {
 
     select: function(day) {
       this.setState({ month: day.date});
+      location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
     },
 
     render: function() {

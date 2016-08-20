@@ -5,8 +5,9 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
+    params[:date] ||= Time.zone.now.to_s(:date)
 
-    @reservations = shop.reservations.all.includes(:menu, :customers)
+    @reservations = shop.reservations.where("DATE(start_time) = ?", params[:date]).includes(:menu, :customers)
   end
 
   # GET /reservations/1
