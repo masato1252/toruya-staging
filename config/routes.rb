@@ -3,6 +3,15 @@ Rails.application.routes.draw do
     resources :customers
     resources :reservations do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+
+      scope module: "reservations" do
+        resource :states, only: [] do
+          put :accept
+          put :check_in
+          put :check_out
+          put :cancel
+        end
+      end
     end
 
     namespace :reservations do

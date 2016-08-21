@@ -174,7 +174,7 @@ button[disabled], .disabled {
   top: 100px;
 }
 
-button.BTNyellow, a.BTNyellow, .BTNyellow, .checkin {
+button.BTNyellow, a.BTNyellow, .BTNyellow, .checkin, .checked_in {
   background-color: #fcbe46;
   border: 1px #e6a21f solid;
 }
@@ -193,7 +193,7 @@ a.BTNtarco, .BTNtarco, .reserved {
   border-color: #488479;
 }
 
-.normal, .checkout {
+.normal, .checkout, .checked_out {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }

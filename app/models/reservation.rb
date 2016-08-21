@@ -12,12 +12,12 @@
 #
 
 class Reservation < ApplicationRecord
+  include AASM
   attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
   validates :start_time, presence: true
   validates :end_time, presence: true
   validates :reservation_staffs, presence: true
-  validates :reservation_customers, presence: true
   validate :duplicate_staff_or_customer
 
   belongs_to :shop
@@ -28,6 +28,30 @@ class Reservation < ApplicationRecord
   has_many :customers, through: :reservation_customers
 
   before_validation :set_start_time, :set_end_time
+
+  scope :visible, -> { where("aasm_state != ?", "canceled") }
+  scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
+
+  aasm do
+    state :pending, initial: true
+    state :reserved, :noshow, :checked_in, :checked_out, :canceled
+
+    event :accept do
+      transitions from: :pending, to: :reserved
+    end
+
+    event :check_in do
+      transitions from: [:reserved, :noshow], to: :checked_in
+    end
+
+    event :check_out do
+      transitions from: :checked_in, to: :checked_out
+    end
+
+    event :cancel do
+      transitions from: [:pending, :reserved, :noshow, :checked_in], to: :canceled
+    end
+  end
 
   def set_start_time
     if start_time_date_part && start_time_time_part

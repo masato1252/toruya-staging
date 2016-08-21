@@ -61,8 +61,7 @@ UI.define("Reservation.Form", function() {
 
     _isValidToReserve: function() {
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
-        this.state.menu_id && this.state.staff_ids.length && this.state.customers.length &&
-          $.unique(this.state.staff_ids).length == (this._requiredStaffsNumber(this.state.menu_min_staffs_number))
+        this.state.menu_id && this.state.staff_ids.length && $.unique(this.state.staff_ids).length == (this._requiredStaffsNumber(this.state.menu_min_staffs_number))
     },
 
     _handleChange: function(event) {

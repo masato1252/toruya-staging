@@ -4,7 +4,7 @@ class CustomersController < DashboardController
   # GET /customers
   # GET /customers.json
   def index
-    @customers = shop.customers.all
+    @customers = shop.customers.order("updated_at DESC").limit(10)
 
     if params[:from_reservation]
       @add_reservation_path = if params[:reservation_id].present?

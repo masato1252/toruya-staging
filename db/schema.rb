@@ -108,10 +108,11 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.integer  "menu_id",    null: false
     t.datetime "start_time", null: false
     t.datetime "end_time",   null: false
+    t.string   "aasm_state", null: false
     t.text     "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "menu_id", "start_time", "end_time"], name: "reservation_index", using: :btree
+    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "end_time"], name: "reservation_index", using: :btree
   end
 
   create_table "shops", force: :cascade do |t|

@@ -5,11 +5,9 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
-    params[:reservation_date] ||= Time.zone.now.to_date
-    date = Time.zone.parse(params[:reservation_date])
+    date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]) : Time.zone.now.to_date
 
-    @reservations = shop.reservations.
-      where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day).
+    @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
   end
@@ -34,7 +32,7 @@ class ReservationsController < DashboardController
       @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
     end
 
-    if params[:end_time_time_part].present?
+    if params[:start_time_date_part].present?
       @time_ranges = shop.available_time(Time.zone.parse(params[:start_time_date_part]).to_date)
     end
   end

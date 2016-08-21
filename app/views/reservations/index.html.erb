@@ -32,7 +32,7 @@
         <a href="#" class="" data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
           <dl class="">
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
-            <dd><span class="reservation-state normal"></span></dd>
+            <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
             <dd class="calendar">Calendar3</dd>
             <dd class="menu"><%= reservation.menu.name %></dd>
             <dd class="customer"><%= customer_names %></dd>
@@ -43,12 +43,14 @@
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><%= customer_names %></h4>
-              </div>
-              <div class="modal-body">
-                <div class="reservation-time">
+                <h4 class="modal-title" id="myModalLabel">
                   <%= l(reservation.start_time, format: :date) %>
                   <%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <%= customer_names %>
                 </div>
                 <div class="reservation-menu">
                   <%= reservation.menu.name %>
@@ -59,11 +61,33 @@
               </div>
               <div class="modal-footer">
                 <dl>
-                  <dd><a href="" class="btn BTNyellow">CHECK OUT</a></dd>
-                  <dd><a href="" class="btn BTNyellow">CHECK IN</a></dd>
-                  <dd><a href="" class="btn BTNtarco">ACCEPT</a></dd>
-                  <dd><%= link_to "EDIT", edit_shop_reservation_path(shop, reservation), class: "btn BTNgray" %></dd>
-                  <dd><a href="" class="btn BTNorange">CANCELL</a></dd>
+                  <% if reservation.checked_in? %>
+                    <dd>
+                      <%= link_to "CHECK OUT", check_out_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow", method: :put %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.reserved? || reservation.noshow? %>
+                    <dd>
+                      <%= link_to "CHECK IN", check_in_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow", method: :put %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.pending? %>
+                    <dd>
+                      <%= link_to "ACCEPT", accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco", method: :put %>
+                    </dd>
+                  <% end %>
+
+                  <dd>
+                    <%= link_to "EDIT", edit_shop_reservation_path(shop, reservation), class: "btn BTNgray" %>
+                  </dd>
+
+                  <% if !reservation.checked_out? %>
+                    <dd>
+                      <%= link_to "CANCEL", cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange", method: :put %>
+                    </dd>
+                  <% end %>
                 </dl>
               </div>
             </div>
