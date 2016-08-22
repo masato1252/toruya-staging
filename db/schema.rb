@@ -30,14 +30,14 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.integer  "shop_id"
     t.integer  "staff_id"
     t.string   "business_state"
+    t.integer  "day_of_week"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.integer  "days_of_week"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.index ["shop_id", "business_state", "days_of_week"], name: "shop_day_of_week_index", using: :btree
-    t.index ["shop_id"], name: "index_business_schedules_on_shop_id", using: :btree
-    t.index ["staff_id", "business_state", "days_of_week"], name: "business_schedules_index", using: :btree
+    t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_day_of_week_index", using: :btree
+    t.index ["staff_id", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_day_of_week_index", using: :btree
+    t.index ["staff_id", "business_state", "day_of_week"], name: "business_schedules_index", using: :btree
   end
 
   create_table "custom_schedules", force: :cascade do |t|
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.string   "shortname"
     t.integer  "minutes"
     t.integer  "min_staffs_number"
+    t.integer  "max_seat_number"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.index ["shop_id"], name: "index_menus_on_shop_id", using: :btree

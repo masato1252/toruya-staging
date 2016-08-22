@@ -8,6 +8,7 @@
 #  shortname         :string
 #  minutes           :integer
 #  min_staffs_number :integer
+#  max_seat_number   :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
@@ -19,6 +20,7 @@ class Menu < ApplicationRecord
   validates :name, presence: true
   validates :minutes, presence: true
   validates :min_staffs_number, numericality: { greater_than: 0 }
+  validate :valid_max_seat_number
 
   has_many :staff_menus, inverse_of: :menu
   has_many :staffs, through: :staff_menus
@@ -27,4 +29,12 @@ class Menu < ApplicationRecord
   belongs_to :shop
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
+
+  def valid_max_seat_number
+    if min_staffs_number > 1 && (!max_seat_number || (max_seat_number == 0))
+      errors.add(:max_seat_number, "Menu have multiple staffs required, max_seat_number need to be specified")
+    elsif min_staffs_number <= 1
+      errors.add(:max_seat_number, "Menu only need one staff, don't need max_seat_number")
+    end
+  end
 end

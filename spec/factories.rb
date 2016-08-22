@@ -21,7 +21,7 @@ FactoryGirl.define do
 
   factory :business_schedule do
     association :shop
-    days_of_week { start_time.wday }
+    day_of_week { start_time.wday }
     business_state "opened"
   end
 
@@ -39,7 +39,7 @@ FactoryGirl.define do
 
     trait :weekly do
       day_type "weekly"
-      sequence(:days_of_week) { |n| n%7 }
+      sequence(:day_of_week) { |n| n%7 }
     end
 
     trait :number_of_day_monthly do
@@ -50,7 +50,7 @@ FactoryGirl.define do
     trait :day_of_week_monthly do
       day_type "day_of_week_monthly"
       sequence(:nth_of_week) { |n| n%4 }
-      sequence(:days_of_week) { |n| n%7 }
+      sequence(:day_of_week) { |n| n%7 }
     end
   end
 
@@ -67,6 +67,7 @@ FactoryGirl.define do
     association :shop
     name "foo"
     shortname "f"
+    full_time true
   end
 
   factory :customer do

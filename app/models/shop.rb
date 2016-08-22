@@ -101,7 +101,7 @@ class Shop < ApplicationRecord
       where("staffs.full_time = ?", true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and days_of_week = ? ", "opened", business_time_range.first.wday)
+      where("business_schedules.business_state = ? and day_of_week = ? ", "opened", business_time_range.first.wday)
     )
 
     scoped = scoped.
@@ -154,7 +154,7 @@ class Shop < ApplicationRecord
       where(full_time: true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and days_of_week = ? ", "opened", business_time_range.first.wday).
+      where("business_schedules.business_state = ? and day_of_week = ? ", "opened", business_time_range.first.wday).
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 
@@ -165,7 +165,7 @@ class Shop < ApplicationRecord
 
   def business_schedule(date)
     @business_schedule ||= {}
-    @business_schedule[date.wday] ||= business_schedules.for_shop.where(days_of_week: date.wday).opened.first
+    @business_schedule[date.wday] ||= business_schedules.for_shop.where(day_of_week: date.wday).opened.first
   end
 
   def business_working_schedule(date)

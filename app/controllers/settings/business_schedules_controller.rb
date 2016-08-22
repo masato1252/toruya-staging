@@ -2,7 +2,7 @@ class Settings::BusinessSchedulesController < DashboardController
   layout "settings"
 
   def edit
-    @wdays_business_schedules = shop.business_schedules.for_shop.order(:days_of_week)
+    @wdays_business_schedules = shop.business_schedules.for_shop.order(:day_of_week)
     @custom_schedules = shop.custom_schedules.for_shop.order(:start_time)
   end
 
@@ -25,7 +25,7 @@ class Settings::BusinessSchedulesController < DashboardController
   private
 
   def business_schedules_params
-    params.permit(business_schedules: [:id, :business_state, :days_of_week, :start_time, :end_time])
+    params.permit(business_schedules: [:id, :business_state, :day_of_week, :start_time, :end_time])
   end
 
   def custom_schedules_params

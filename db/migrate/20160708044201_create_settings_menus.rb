@@ -6,6 +6,7 @@ class CreateSettingsMenus < ActiveRecord::Migration[5.0]
       t.string :shortname
       t.integer :minutes
       t.integer :min_staffs_number
+      t.integer :max_seat_number
 
       t.timestamps
     end

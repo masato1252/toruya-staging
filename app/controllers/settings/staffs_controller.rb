@@ -22,7 +22,7 @@ class Settings::StaffsController < DashboardController
 
   # GET /staffs/1/edit
   def edit
-    @wdays_business_schedules = shop.business_schedules.where(staff_id: @staff.id).order(:days_of_week)
+    @wdays_business_schedules = shop.business_schedules.where(staff_id: @staff.id).order(:day_of_week)
   end
 
   # POST /staffs
@@ -85,6 +85,6 @@ class Settings::StaffsController < DashboardController
   end
 
   def business_schedules_params
-    params.permit(business_schedules: [:id, :business_state, :days_of_week, :start_time, :end_time])
+    params.permit(business_schedules: [:id, :business_state, :day_of_week, :start_time, :end_time])
   end
 end

@@ -3,10 +3,12 @@
 # Table name: reservations
 #
 #  id         :integer          not null, primary key
-#  shop_id    :integer
-#  menu_id    :integer
-#  start_time :datetime
-#  end_time   :datetime
+#  shop_id    :integer          not null
+#  menu_id    :integer          not null
+#  start_time :datetime         not null
+#  end_time   :datetime         not null
+#  aasm_state :string           not null
+#  memo       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

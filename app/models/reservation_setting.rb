@@ -2,20 +2,19 @@
 #
 # Table name: reservation_settings
 #
-#  id               :integer          not null, primary key
-#  menu_id          :integer
-#  name             :string
-#  short_name       :string
-#  reservation_type :string
-#  day_type         :string
-#  time_type        :string
-#  day              :integer
-#  day_of_week      :integer
-#  nth_of_week      :integer
-#  start_time       :datetime
-#  end_time         :datetime
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
+#  id          :integer          not null, primary key
+#  menu_id     :integer
+#  name        :string
+#  short_name  :string
+#  day_type    :string
+#  time_type   :string
+#  day         :integer
+#  day_of_week :integer
+#  nth_of_week :integer
+#  start_time  :datetime
+#  end_time    :datetime
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 class ReservationSetting < ApplicationRecord

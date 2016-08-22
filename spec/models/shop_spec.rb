@@ -202,7 +202,7 @@ RSpec.describe Shop, type: :model do
       it_behaves_like "available menus" do
         let(:test_data) do
           menu.staffs << staff
-          FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
+          FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
                              start_time: time_range.first, end_time: time_range.last)
         end
       end
@@ -211,7 +211,7 @@ RSpec.describe Shop, type: :model do
         it_behaves_like "available menus" do
           let(:test_data) do
             menu.staffs << staff
-            FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
+            FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
                                start_time: time_range.first, end_time: time_range.last)
             FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first.advance(hours: -2), end_time: time_range.last.advance(hours: -2))
           end
@@ -296,7 +296,7 @@ RSpec.describe Shop, type: :model do
       let!(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: false) }
       before do
         menu.staffs << staff
-        FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", days_of_week: time_range.first.wday,
+        FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
                            start_time: time_range.first, end_time: time_range.last)
       end
 

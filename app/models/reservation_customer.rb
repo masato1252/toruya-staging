@@ -3,8 +3,8 @@
 # Table name: reservation_customers
 #
 #  id             :integer          not null, primary key
-#  reservation_id :integer
-#  customer_id    :integer
+#  reservation_id :integer          not null
+#  customer_id    :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #

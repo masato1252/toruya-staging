@@ -3,7 +3,7 @@ class CreateBusinessSchedule < ActiveInteraction::Base
   object :staff, class: Staff, default: nil
   hash :attrs do
     string :id, default: nil
-    integer :days_of_week
+    integer :day_of_week
     string :business_state, default: "closed"
     string :start_time, default: nil
     string :end_time, default: nil
