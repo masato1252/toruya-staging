@@ -21,6 +21,8 @@ class BusinessSchedule < ApplicationRecord
   validates :day_of_week, uniqueness: { scope: [:shop_id, :staff_id, :day_of_week] }
   validates :day_of_week, inclusion: { in: 0..6 }, if: -> { day_of_week.present? }
   validates :business_state, inclusion: { in: BUSINESS_STATE }
+  validates :start_time, presence: true, if: -> { business_state == "opened" }
+  validates :end_time, presence: true, if: -> { business_state == "opened" }
 
   belongs_to :shop, optional: true
   belongs_to :staff, optional: true

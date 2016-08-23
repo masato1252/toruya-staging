@@ -17,6 +17,7 @@ UI.define("Reservation.Form", function() {
         staff_ids: this.props.reservation.staffIds || [],
         memo: this.props.reservation.memo || "",
         menu_min_staffs_number: this.props.minStaffsNumber || 0,
+        menu_max_seat_number: this.props.maxSeatNumber,
         menu_options: this.props.menuOptions || [],
         staff_options: this.props.staffOptions || [],
       });
@@ -59,9 +60,37 @@ UI.define("Reservation.Form", function() {
       this.setState({customers: customers})
     },
 
+    _maxCustomerLimit: function() {
+      var _this = this;
+      if (this.state.menu_min_staffs_number) {
+        if (this.state.menu_min_staffs_number == 1) {
+          var selected_staffs = _.filter(_this.state.staff_options, function(staff) { return _.contains(_this.state.staff_ids, `${staff.value}`) })
+          return _.reduce(selected_staffs, function(num, staff){ return staff.maxCustomers + num; }, 0);
+        }
+        else {
+          return this.state.menu_max_seat_number;
+        }
+      }
+      else {
+        return null;
+      }
+    },
+
+    _isValidCustomerNumber: function() {
+      var customersLimit;
+      if (customersLimit = this._maxCustomerLimit()) {
+        return (customersLimit >= this.state.customers.length);
+      }
+      else {
+        return true;
+      }
+    },
+
     _isValidToReserve: function() {
       return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
-        this.state.menu_id && this.state.staff_ids.length && $.unique(this.state.staff_ids).length == (this._requiredStaffsNumber(this.state.menu_min_staffs_number))
+        this.state.menu_id && this.state.staff_ids.length &&
+          $.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number &&
+            this._isValidCustomerNumber()
     },
 
     _handleChange: function(event) {
@@ -85,7 +114,9 @@ UI.define("Reservation.Form", function() {
 
     _handleStaffChange: function(event) {
       event.preventDefault();
-      this.setState({ staff_ids: $("[data-name='staff_id']").map(function() { return $(this).val() }) });
+      var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
+
+      this.setState({ staff_ids: selected_staff_ids });
     },
 
     _retrieveAvailableTimes: function() {
@@ -129,8 +160,9 @@ UI.define("Reservation.Form", function() {
         _this.setState({menu_options: result["menu"]["options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
+                        menu_max_seat_number: result["menu"]["selected_option"]["max_seat_number"],
                         staff_options: result["staff"]["options"],
-                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, _this._requiredStaffsNumber(result["menu"]["selected_option"]["min_staffs_number"]))
+                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
         });
 
         if (result["menu"]["options"].length == 0) {
@@ -164,7 +196,7 @@ UI.define("Reservation.Form", function() {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
           staff_options: result["staff"]["options"],
-          staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, _this._requiredStaffsNumber(result["menu"]["selected_option"]["min_staffs_number"]))
+          staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
         });
       }).fail(function(errors){
       }).always(function() {
@@ -182,7 +214,8 @@ UI.define("Reservation.Form", function() {
 
     renderStaffSelects: function() {
       var select_components = [];
-      for (var i = 0; i < this._requiredStaffsNumber(this.state.menu_min_staffs_number); i++) {
+
+      for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
         var value;
         if (this.state.staff_ids[i]) {
           value = this.state.staff_ids[i]

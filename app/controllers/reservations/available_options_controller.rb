@@ -14,9 +14,6 @@ class Reservations::AvailableOptionsController < DashboardController
     @staffs = shop.available_staffs(@menu, start_time..end_time, params[:reservation_id])
   end
 
-  def customers
-  end
-
   private
 
   def start_time
