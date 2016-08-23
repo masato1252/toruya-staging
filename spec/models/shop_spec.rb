@@ -67,9 +67,9 @@ RSpec.describe Shop, type: :model do
     context "when all staffs already had reservations at that time" do
       let(:staff) { FactoryGirl.create(:staff, shop: shop) }
       before do
-        reservation = FactoryGirl.create(:reservation, shop: shop, menu: menu, start_time: time_range.first, end_time: time_range.last)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
-        reservation.staffs << staff
+        FactoryGirl.create(:reservation, shop: shop, menu: menu,
+                           start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
       end
 
       it "returns nil" do
@@ -84,6 +84,49 @@ RSpec.describe Shop, type: :model do
 
         it "returns available reservation menus" do
           expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when menu min_staffs_number = 1" do
+          context "when customers number is more than all staffs max_customers" do
+            it "returns empty" do
+              expect(shop.available_reservation_menus(time_range, 3)).to be_empty
+            end
+          end
+
+          context "when customers number is less than all staffs max_customers" do
+            it "returns available reservation menus" do
+              expect(shop.available_reservation_menus(time_range, 2)).to include(menu)
+            end
+          end
+        end
+
+        context "when menu min_staffs_number > 1" do
+          let(:menu) { FactoryGirl.create(:menu, :lecture, shop: shop, minutes: 60) }
+
+          context "when staffs count is more than menus.min_staffs_number" do
+            let(:staff2) { FactoryGirl.create(:staff, shop: shop, full_time: true) }
+            before do
+              FactoryGirl.create(:staff_menu, menu: menu, staff: staff2)
+            end
+
+            context "when menu max_seat_number is more than customers number" do
+              it "returns available reservation menus" do
+                expect(shop.available_reservation_menus(time_range, 3)).to include(menu)
+              end
+            end
+
+            context "when menu max_seat_number is less than customers number" do
+              it "returns empty" do
+                expect(shop.available_reservation_menus(time_range, 4)).to be_empty
+              end
+            end
+          end
+
+          context "when staffs count is less than menu.min_staffs_number" do
+            it "returns empty" do
+              expect(shop.available_reservation_menus(time_range)).to be_empty
+            end
+          end
         end
 
         context "when reservation setting time is not available" do
@@ -103,7 +146,7 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when staff already reservations during that time" do
-          let!(:reservation) { FactoryGirl.create(:reservation, staffs: [staff], start_time: time_range.first, end_time: time_range.last) }
+          let!(:reservation) { FactoryGirl.create(:reservation, menu: menu, staffs: [staff], start_time: time_range.first, end_time: time_range.last) }
 
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
@@ -114,12 +157,22 @@ RSpec.describe Shop, type: :model do
               expect(shop.available_reservation_menus(time_range, 1, reservation.id)).to include(menu)
             end
           end
+
+          context "when the reservation's menu min_staffs_number is nil" do
+            let(:menu) { FactoryGirl.create(:menu, :easy, shop: shop) }
+
+            it "returns available reservation menus ignore min_staffs_number nil reservations" do
+              expect(shop.available_reservation_menus(time_range)).to include(menu)
+            end
+          end
         end
 
         context "when staff had reservations not during that time" do
-          before { FactoryGirl.create(:reservation, staffs: [staff],
-                                      start_time: time_range.first.advance(hours: -2),
-                                      end_time: time_range.first.advance(hours: -1))}
+          before do
+            FactoryGirl.create(:reservation, menu: menu, staffs: [staff],
+                               start_time: time_range.first.advance(hours: -2),
+                               end_time: time_range.first.advance(hours: -1))
+          end
 
           it "returns available reservation menus" do
             expect(shop.available_reservation_menus(time_range)).to include(menu)
@@ -225,9 +278,9 @@ RSpec.describe Shop, type: :model do
     context "when all menu's staffs already had reservations at that time" do
       let(:staff) { FactoryGirl.create(:staff, shop: shop) }
       before do
-        reservation = FactoryGirl.create(:reservation, shop: shop, menu: menu, start_time: time_range.first, end_time: time_range.last)
-        menu.staff_ids = staff.id
-        reservation.staff_ids = staff.id
+        FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
+        FactoryGirl.create(:reservation, shop: shop, menu: menu,
+                                         start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
       end
 
       it "returns nil" do

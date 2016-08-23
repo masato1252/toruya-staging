@@ -21,6 +21,7 @@ class Reservation < ApplicationRecord
   validates :end_time, presence: true
   validates :reservation_staffs, presence: true
   validate :duplicate_staff_or_customer
+  validate :enough_staffs_for_customers
 
   belongs_to :shop
   belongs_to :menu
@@ -90,6 +91,19 @@ class Reservation < ApplicationRecord
         scoped.where("reservation_customers.customer_id in (?)", customer_ids)
       ).exists?
       errors.add(:base, "This is a duplicated reservation, please check your reservation time, staffs or customers")
+    end
+  end
+
+  def enough_staffs_for_customers
+    min_staffs_number = menu.min_staffs_number
+    return unless min_staffs_number
+
+    if staff_ids.size < min_staffs_number
+      errors.add(:base, "Not enough staffs for menu")
+    elsif min_staffs_number == 1 && StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).sum(:max_customers) < customer_ids.size
+      errors.add(:base, "Not enough staffs for customers")
+    elsif min_staffs_number > 1 && menu.max_seat_number < customer_ids.size
+      errors.add(:base, "Not enough seat for customers")
     end
   end
 end

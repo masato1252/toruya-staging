@@ -94,14 +94,14 @@ class Shop < ApplicationRecord
              start_time: start_time, end_time: end_time).
      where("(reservations.start_time is NULL and reservations.end_time is NULL) or
              reservations.id = ? or
+             menus.min_staffs_number is NULL or
             (NOT(reservations.start_time <= ? and reservations.end_time >= ?))", reservation_id, end_time, start_time)
-
 
     scoped = scoped.
       where("staffs.full_time = ?", true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and day_of_week = ? ", "opened", business_time_range.first.wday)
+      where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday)
     )
 
     scoped = scoped.
@@ -128,7 +128,13 @@ class Shop < ApplicationRecord
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
     )
 
-    scoped.select("menus.*").group("menus.id").having("count(staffs.id) >= (min_staffs_number * #{number_of_customer})")
+    scoped.select("menus.*").group("menus.id").having("
+      CASE
+        WHEN menus.min_staffs_number = 1 THEN sum(staff_menus.max_customers) >= #{number_of_customer}
+        WHEN menus.min_staffs_number > 1 THEN count(staffs.id) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number
+        ELSE true
+      END
+    ")
   end
 
   def available_staffs(menu, business_time_range, reservation_id=nil)
@@ -144,6 +150,7 @@ class Shop < ApplicationRecord
     end
 
     scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules, :reservations).
+      includes(:staff_menus).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time).
       where("(reservations.start_time is NULL and reservations.end_time is NULL) or
@@ -154,7 +161,7 @@ class Shop < ApplicationRecord
       where(full_time: true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and day_of_week = ? ", "opened", business_time_range.first.wday).
+      where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday).
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 

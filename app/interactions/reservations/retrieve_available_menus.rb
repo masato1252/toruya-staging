@@ -39,27 +39,32 @@ module Reservations
 
     def execute
       reservation.attributes = params.except(:reservation_id, :controller, :action, :from_reservation) if reservation
-      menu_options = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
-      menu_option_ids = menu_options.map(&:id)
+      menus = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id)).to_a
+      menu_ids = menus.map(&:id)
 
-      staff_options = if menu_options.present?
-                        selected_menu = if menu_option_ids.include?(params[:menu_id].to_i)
-                                          shop.menus.find_by(id: params["menu_id"])
-                                        elsif menu_option_ids.include?(reservation.try(:menu).try(:id))
-                                          reservation.try(:menu)
-                                        else
-                                          menu_options.first
-                                        end
+      # When user pick some invalid option, like add new customer, that cause the selected menu is invalid.
+      # We want to add it back to keep the same option as user selects before.
+      if params[:menu_id] && menu_ids.exclude?(params[:menu_id].to_i)
+        menus.push(Menu.find(params[:menu_id]))
+        menu_ids = menus.map(&:id)
+      end
 
-                        shop.available_staffs(selected_menu, reservation_time, reservation.try(:id))
-                      else
-                        []
-                      end
 
-      { menu_options: menu_options,
-        staff_options: staff_options,
-        selected_menu: selected_menu,
-        reservation: reservation }
+      staffs = if menus.present?
+                 selected_menu = if menu_ids.include?(params[:menu_id].to_i)
+                                   shop.menus.find_by(id: params["menu_id"])
+                                 elsif menu_ids.include?(reservation.try(:menu).try(:id))
+                                   reservation.try(:menu)
+                                 else
+                                   menus.first
+                                 end
+
+                 shop.available_staffs(selected_menu, reservation_time, reservation.try(:id))
+               else
+                 []
+               end
+
+      { menus: menus, staffs: staffs, selected_menu: selected_menu, reservation: reservation }
     end
   end
 end
