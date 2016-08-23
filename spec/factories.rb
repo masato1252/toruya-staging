@@ -24,8 +24,8 @@ FactoryGirl.define do
     association :shop
     day_of_week { start_time.wday }
     business_state "opened"
-    start_time { Time.local(2016, 8, 22, 3, 0, 0) }
-    end_time { Time.local(2016, 8, 22, 20, 0, 0) }
+    start_time { Time.local(2016, 8, 22, 8, 0, 0) }
+    end_time { Time.local(2016, 8, 22, 19, 0, 0) }
   end
 
   factory :menu do

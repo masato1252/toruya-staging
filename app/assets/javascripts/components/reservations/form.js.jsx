@@ -76,6 +76,23 @@ UI.define("Reservation.Form", function() {
       }
     },
 
+    _isValidReservationTime: function() {
+      if (this.state.start_time_restriction && this.state.end_time_restriction &&
+          this.state.start_time_time_part && this.state.end_time_time_part) {
+
+        var reservation_start_time = moment(`${this.state.start_time_date_part} ${this.state.start_time_time_part}`);
+        var reservation_end_time = moment(`${this.state.start_time_date_part} ${this.state.end_time_time_part}`);
+
+        return reservation_start_time  >= moment(`${this.state.start_time_date_part} ${this.state.start_time_restriction}`) &&
+               reservation_end_time <= moment(`${this.state.start_time_date_part} ${this.state.end_time_restriction}`) &&
+               reservation_start_time < reservation_end_time
+
+      }
+      else {
+        return false;
+      }
+    },
+
     _isValidCustomerNumber: function() {
       var customersLimit;
       if (customersLimit = this._maxCustomerLimit()) {
@@ -142,7 +159,7 @@ UI.define("Reservation.Form", function() {
         this.currentRequest.abort();
       }
 
-      if (!this.state.start_time_date_part || !this.state.start_time_time_part || !this.state.end_time_time_part) {
+      if (!this._isValidReservationTime()) {
         return;
       }
 
@@ -272,6 +289,9 @@ UI.define("Reservation.Form", function() {
                       data-name="end_time_time_part"
                       value={this.state.end_time_time_part}
                       onChange={this._handleChange} />
+                      <span className="danger">
+                        { this._isValidReservationTime() ? null : " invalid reservation time" }
+                      </span>
                       <span className="subinfo">
                         {
                           this.state.start_time_restriction && this.state.end_time_restriction ?

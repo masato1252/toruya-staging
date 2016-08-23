@@ -20,6 +20,7 @@ class Reservation < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
   validates :reservation_staffs, presence: true
+  validate :end_time_larger_than_start_time
   validate :duplicate_staff_or_customer
   validate :enough_staffs_for_customers
 
@@ -81,6 +82,12 @@ class Reservation < ApplicationRecord
   end
 
   private
+
+  def end_time_larger_than_start_time
+    if start_time && end_time
+      end_time > start_time
+    end
+  end
 
   def duplicate_staff_or_customer
     scoped = Reservation.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
