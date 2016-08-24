@@ -1,5 +1,6 @@
 //= require "components/calendar/day_names"
 //= require "components/calendar/week"
+//= require "components/shared/select"
 
 "use strict";
 
@@ -31,11 +32,36 @@ UI.define("Calendar", function() {
       location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
     },
 
+    handleYearSelect: function(event) {
+      event.preventDefault();
+      this.setState({month: moment(event.target.value)});
+    },
+
+    renderYearSelector: function() {
+      var startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
+      var years = [];
+      var month;
+
+      for (var i = 0; i <= 3; i++) {
+        month = moment().clone();
+        var year = month.add(i, "Y");
+
+        years.push({value: year.format("YYYY-MM"), label: year.format("YYYY")})
+      }
+
+      return (
+        <UI.Select
+          options={years}
+          defaultValue={startDate.format("YYYY-MM")}
+          onChange={this.handleYearSelect}
+        />);
+    },
+
     render: function() {
       return <div>
               <div className="header">
                 <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
-                  <span>{this.state.month.format("YYYY MMMM")}</span>
+                  {this.renderYearSelector()}
                 <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
               </div>
               <UI.DayNames dayNames={this.props.dayNames} />

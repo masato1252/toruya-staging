@@ -4,6 +4,7 @@ UI.define("Select", function() {
   var Select = React.createClass({
     getDefaultProps: function() {
       return {
+        prefix: "",
         blankOption: " -- select an option -- "
       };
     },
@@ -28,4 +29,3 @@ UI.define("Select", function() {
 
   return Select;
 });
-
