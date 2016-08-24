@@ -138,6 +138,11 @@ footer {
     .reservation-states {
       width: 26px;
     }
+
+    a.noshow, a.checked_out {
+      color: #B3B3B3
+    }
+
   }
 
   #resNew #customers ul {
@@ -149,7 +154,7 @@ footer {
   }
 
   #calendar {
-    width: 600px;
+    width: 400px;
   }
 
   #calStatus {
@@ -174,11 +179,11 @@ button[disabled], .disabled {
   top: 100px;
 }
 
-button.BTNyellow, a.BTNyellow, .BTNyellow, .checkin, .checked_in {
+button.BTNyellow, a.BTNyellow, .BTNyellow, span.checkin, span.checked_in {
   background-color: #fcbe46;
   border: 1px #e6a21f solid;
 }
-button.BTNorange, a.BTNorange, .BTNorange, .vip, .pending {
+button.BTNorange, a.BTNorange, .BTNorange, .vip, span.pending {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
 }
@@ -188,12 +193,12 @@ a.BTNgray, .BTNgray {
   border-color: #666;
 }
 
-a.BTNtarco, .BTNtarco, .reserved {
+a.BTNtarco, .BTNtarco, span.reserved {
   background-color: #60938a;
   border-color: #488479;
 }
 
-.normal, .checkout, .checked_out {
+span.normal, span.checkout, span.checked_out {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }

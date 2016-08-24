@@ -30,7 +30,7 @@
           customer_names = reservation.customers.pluck(:first_name).join(", ")
           staff_names = reservation.staffs.pluck(:name).join(", ")
         %>
-        <a href="#" class="" data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
+        <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
           <dl class="">
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
