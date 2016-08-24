@@ -7,11 +7,11 @@
 UI.define("Calendar", function() {
   var Calendar = React.createClass({
     getInitialState: function() {
-      var startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
+      this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
       return {
-        month: startDate.clone(),
-        selectedDate: startDate.clone()
+        month: this.startDate.clone(),
+        selectedDate: this.startDate.clone()
       };
     },
 
@@ -32,28 +32,43 @@ UI.define("Calendar", function() {
       location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
     },
 
-    handleYearSelect: function(event) {
+    handleCalendarSelect: function(event) {
       event.preventDefault();
       this.setState({month: moment(event.target.value)});
     },
 
     renderYearSelector: function() {
-      var startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
       var years = [];
-      var month;
 
       for (var i = 0; i <= 3; i++) {
-        month = moment().clone();
-        var year = month.add(i, "Y");
+        var newYear = moment().clone().add(i, "Y");
+        var newYearMonth = moment({year: newYear.year(), month: this.state.month.month()});
 
-        years.push({value: year.format("YYYY-MM"), label: year.format("YYYY")})
+        years.push({value: newYearMonth.format("YYYY-MM"), label: newYearMonth.format("YYYY")})
       }
 
       return (
         <UI.Select
           options={years}
-          defaultValue={startDate.format("YYYY-MM")}
-          onChange={this.handleYearSelect}
+          value={this.state.month.format("YYYY-MM")}
+          onChange={this.handleCalendarSelect}
+        />);
+    },
+
+    renderMonthSelector: function () {
+      var months = [];
+      var yearStart = this.state.month.clone().startOf('year')
+
+      this.props.monthNames.forEach(function(month, i) {
+        var newMonth = yearStart.clone().add(i, "M");
+        months.push({value: newMonth.format("YYYY-MM"), label: month})
+      })
+
+      return (
+        <UI.Select
+          options={months}
+          value={this.state.month.format("YYYY-MM")}
+          onChange={this.handleCalendarSelect}
         />);
     },
 
@@ -62,6 +77,7 @@ UI.define("Calendar", function() {
               <div className="header">
                 <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
                   {this.renderYearSelector()}
+                  {this.renderMonthSelector()}
                 <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
               </div>
               <UI.DayNames dayNames={this.props.dayNames} />

@@ -2,6 +2,7 @@
   <div id="calendar" class="sidel">
     <%= react_component("UI.Calendar",
                         { day_names: I18n.t("date.abbr_day_names"),
+                          month_names: I18n.t("date.abbr_month_names").compact,
                           reservations_path: shop_reservations_path(shop),
                           selected_date: params[:reservation_date]
                         },
@@ -76,6 +77,12 @@
                   <% if reservation.pending? %>
                     <dd>
                       <%= link_to "ACCEPT", accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco", method: :put %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.reserved? || reservation.noshow? || reservation.checked_out? %>
+                    <dd>
+                      <%= link_to "PEND", pend_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray", method: :put %>
                     </dd>
                   <% end %>
 
