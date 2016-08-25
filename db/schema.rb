@@ -55,9 +55,12 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.integer  "shop_id"
     t.string   "last_name"
     t.string   "first_name"
+    t.string   "jp_last_name"
+    t.string   "jp_first_name"
     t.string   "state"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
   end
 
   create_table "menus", force: :cascade do |t|

@@ -66,17 +66,18 @@ table.table {
   width: initial;
 }
 
-
 #resNew {
   #customers {
     min-width: 300px;
 
     #customerList {
+      color: #444;
 
       dl {
         padding-left: 0px;
 
         dt {
+          width: 200px;
           word-wrap: break-word;
           font-weight: normal;
           box-sizing: border-box;
@@ -166,6 +167,26 @@ footer {
   }
 }
 
+#customer {
+  #resultList {
+    ul {
+      li {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.customer {
+  footer {
+    ul {
+      li {
+        margin-right: 3px;
+       }
+    }
+  }
+}
+
 button[disabled], .disabled {
   opacity: .45;
   cursor: not-allowed;
@@ -198,7 +219,7 @@ a.BTNtarco, .BTNtarco, span.reserved {
   border-color: #488479;
 }
 
-span.normal, span.checkout, span.checked_out {
+span.normal, i.normal, span.checkout, span.checked_out {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }
@@ -296,7 +317,7 @@ form {
   }
 
   .customer-symbol {
-    width: 70px;
+    width: 40px;
     line-height: 20px;
     text-align: center !important;
   }
@@ -322,7 +343,7 @@ form {
   vertical-align: middle;
 }
 
-#customerLevels {
+#customerLevels, #resultList {
   .wording {
     vertical-align: middle;
     margin-left: 3px;

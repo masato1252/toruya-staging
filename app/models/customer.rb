@@ -19,6 +19,6 @@ class Customer < ApplicationRecord
   belongs_to :shop
 
   def name
-    "#{last_name} #{first_name}"
+    "#{jp_last_name} #{jp_first_name}".presence || "#{first_name} #{last_name} "
   end
 end

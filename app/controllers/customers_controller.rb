@@ -4,6 +4,8 @@ class CustomersController < DashboardController
   # GET /customers
   # GET /customers.json
   def index
+    @body_class = "customer"
+
     @customers = shop.customers.order("updated_at DESC").limit(10)
 
     if params[:from_reservation]
@@ -67,6 +69,10 @@ class CustomersController < DashboardController
       format.html { redirect_to shop_customers_path(shop), notice: 'Customer was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def filter
+    @customers = Customers::FilterCustomers.run(pattern_number: params[:pattern_number]).result
   end
 
   private
