@@ -75,6 +75,11 @@ class CustomersController < DashboardController
     @customers = Customers::FilterCustomers.run(pattern_number: params[:pattern_number]).result
   end
 
+  def search
+    @customers = Customers::SearchCustomers.run(keyword: params[:keyword]).result
+    render action: :filter
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer

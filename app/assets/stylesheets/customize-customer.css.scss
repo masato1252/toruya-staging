@@ -1,0 +1,38 @@
+.customer {
+  footer {
+    ul {
+      li {
+        margin-right: 3px;
+
+        .search-symbol {
+          position: absolute;
+          color: white;
+          top: 8px;
+          left: 8px;
+        }
+      }
+    }
+  }
+}
+
+#customer {
+  #resultList {
+    ul {
+      li {
+        padding-left: 0;
+      }
+    }
+  }
+
+  #customerInfo {
+    dl {
+      dd, dt {
+        padding: 0 3px 0 3px;
+      }
+
+      input[type="date"] {
+        width: 186px !important;
+      }
+    }
+  }
+}

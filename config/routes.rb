@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     resources :customers do
       collection do
         get :filter
+        get :search
       end
     end
     resources :reservations do

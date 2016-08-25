@@ -58,6 +58,9 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.string   "jp_last_name"
     t.string   "jp_first_name"
     t.string   "state"
+    t.string   "phone_number"
+    t.string   "phone_type"
+    t.date     "birthday"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree

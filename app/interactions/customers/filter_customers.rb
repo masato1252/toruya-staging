@@ -17,9 +17,9 @@ class Customers::FilterCustomers < ActiveInteraction::Base
   def execute
     scoped = Customer.all
     scoped.
-      where("lower(jp_last_name) SIMILAR TO ?", "(#{regexp_pattern})%").
+      where("jp_last_name SIMILAR TO ?", "(#{regexp_pattern})%").
       or(
-        scoped.where("lower(jp_first_name) SIMILAR TO ?", "(#{regexp_pattern})%")
+        scoped.where("jp_first_name SIMILAR TO ?", "(#{regexp_pattern})%")
       )
   end
 

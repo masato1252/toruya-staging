@@ -1,0 +1,108 @@
+.resNew {
+  #resNew {
+    #customers {
+      min-width: 300px;
+
+      #customerList {
+        color: #444;
+
+        dl {
+          padding-left: 0px;
+
+          dt {
+            width: 176px;
+            word-wrap: break-word;
+            font-weight: normal;
+            box-sizing: border-box;
+            padding-right: 15px;
+
+            .place {
+              text-align: right;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+#resNew {
+  #customers {
+    min-width: 300px;
+
+    #customerList {
+      color: #444;
+
+      dl {
+        padding-left: 0px;
+
+        dt {
+          width: 176px;
+          word-wrap: break-word;
+          font-weight: normal;
+          box-sizing: border-box;
+          padding-right: 15px;
+
+          .place {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
+
+#manager {
+  #resList {
+    height: 100vh;
+
+    a.btn {
+      padding: 15px;
+      height: 0;
+      line-height: 0;
+    }
+
+    .calendar {
+      padding-left: 0;
+    }
+
+    .reservation-states {
+      width: 26px;
+    }
+
+    a.noshow, a.checked_out {
+      color: #B3B3B3
+    }
+
+  }
+
+  #resNew #customers ul {
+    width: 145px;
+
+    li {
+      padding-left: 12px;
+    }
+  }
+
+  #calendar {
+    width: 400px;
+  }
+
+  #calStatus {
+    width: 200px;
+
+    .reservation-state {
+      margin-right: 3px;
+    }
+  }
+}
+
+footer {
+  button {
+    margin-left: 6px;
+  }
+
+  .fa-chevron-right {
+    color: #dadada;
+  }
+}
+

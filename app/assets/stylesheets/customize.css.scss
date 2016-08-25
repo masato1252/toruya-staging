@@ -9,10 +9,10 @@ $green2: #60938a;
 
 /* Overwrite Bootstrap START */
 * {
-  box-sizing: initial;
+  box-sizing: border-box;
 
   &:before, &:after {
-    box-sizing: initial;
+    box-sizing: border-box;
   }
 }
 
@@ -66,32 +66,6 @@ table.table {
   width: initial;
 }
 
-#resNew {
-  #customers {
-    min-width: 300px;
-
-    #customerList {
-      color: #444;
-
-      dl {
-        padding-left: 0px;
-
-        dt {
-          width: 200px;
-          word-wrap: break-word;
-          font-weight: normal;
-          box-sizing: border-box;
-          padding-right: 15px;
-
-          .place {
-            text-align: right;
-          }
-        }
-      }
-    }
-  }
-}
-
 input[type="time"] {
   width: 120px;
 }
@@ -104,87 +78,12 @@ input[type="date"] {
 }
 
 button {
-  border-radius: 6px; /* 記述無し */
+  border-radius: 6px;
   line-height: 50px;
   color: #fff;
   font-size: 23pt;
   height: 50px;
   line-height: 50px;
-}
-
-footer {
-  button {
-    margin-left: 6px;
-  }
-
-  .fa-chevron-right {
-    color: #dadada;
-  }
-}
-
-#manager {
-  #resList {
-    height: 100vh;
-
-    a.btn {
-      padding: 15px;
-      height: 0;
-      line-height: 0;
-    }
-
-    .calendar {
-      padding-left: 0;
-    }
-
-    .reservation-states {
-      width: 26px;
-    }
-
-    a.noshow, a.checked_out {
-      color: #B3B3B3
-    }
-
-  }
-
-  #resNew #customers ul {
-    width: 145px;
-
-    li {
-      padding-left: 12px;
-    }
-  }
-
-  #calendar {
-    width: 400px;
-  }
-
-  #calStatus {
-    width: 200px;
-
-    .reservation-state {
-      margin-right: 3px;
-    }
-  }
-}
-
-#customer {
-  #resultList {
-    ul {
-      li {
-        padding-left: 0;
-      }
-    }
-  }
-}
-
-.customer {
-  footer {
-    ul {
-      li {
-        margin-right: 3px;
-       }
-    }
-  }
 }
 
 button[disabled], .disabled {
