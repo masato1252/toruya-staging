@@ -14,7 +14,13 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleCustomerSelect: function(customer_id, event) {
-      this.setState({selected_customer_id: customer_id});
+      if (this.state.selected_customer_id == customer_id) {
+        this.setState({selected_customer_id: "", customer: {}});
+      }
+      else {
+        var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
+        this.setState({selected_customer_id: customer_id, customer: selected_customer});
+      }
     },
 
     handleAddCustomerToReservation: function(event) {
@@ -23,15 +29,44 @@ UI.define("Customers.Dashboard", function() {
     },
 
     isCustomerdataValid: function() {
-      return this.state.customer.first_name || this.state.customer.last_name || this.state.customer.jp_first_name || this.state.customer.jp_last_name
+      return this.state.customer.firstName || this.state.customer.lastName || this.state.customer.jpFirstName || this.state.customer.jpLastName
     },
 
     handleCreateCustomer: function(event) {
       event.preventDefault();
 
+      var _this = this;
+
       if (this.isCustomerdataValid()) {
-        $("#new_customer_form").submit();
+        var valuesToSubmit = $("#new_customer_form").serialize();
+
+        $.ajax({
+          type: "POST",
+          url: this.props.saveCustomerPath, //sumbits it to the given url of the form
+          data: valuesToSubmit,
+          dataType: "JSON"
+        }).success(function(result){
+          _this.state.customers.unshift(result["customer"])
+          _this.setState({customers: _this.state.customers, customer: {}, selected_customer_id: ""});
+        });
       }
+    },
+
+    handleDeleteCustomer: function(event) {
+      event.preventDefault();
+
+      var _this = this;
+
+      this.setState({customers: _.reject(this.state.customers, function(customer) {
+        return customer.id == _this.state.selected_customer_id;
+      }), customer: {}, selected_customer_id: ""})
+
+      jQuery.ajax({
+        type: "POST",
+        url: this.props.deleteCustomerPath,
+        data: { _method: "delete", id: this.state.selected_customer_id },
+        dataType: "json",
+      })
     },
 
     filterCustomers: function(event) {
@@ -124,15 +159,15 @@ UI.define("Customers.Dashboard", function() {
                   </dt>
                   <dd>
                   <input type="text" id="familyName" placeholder="姓"
-                    data-name="last_name"
-                    value={this.state.customer.last_name}
+                    data-name="lastName"
+                    value={this.state.customer.lastName}
                     onChange={this.handleCustomerDataChange}
                   />
                   </dd>
                   <dd>
                   <input type="text" id="firstName" placeholder="名"
-                    data-name="first_name"
-                    value={this.state.customer.first_name}
+                    data-name="firstName"
+                    value={this.state.customer.firstName}
                     onChange={this.handleCustomerDataChange}
                   />
                   </dd>
@@ -141,15 +176,15 @@ UI.define("Customers.Dashboard", function() {
                 <dt></dt>
                 <dd>
                 <input type="text" id="familyNameKana" placeholder="せい"
-                  data-name="jp_last_name"
-                  value={this.state.customer.jp_last_name}
+                  data-name="jpLastName"
+                  value={this.state.customer.jpLastName}
                   onChange={this.handleCustomerDataChange}
                 />
                 </dd>
                 <dd>
                 <input type="text" id="firstNameKana" placeholder="めい"
-                  data-name="jp_first_name"
-                  value={this.state.customer.jp_first_name}
+                  data-name="jpFirstName"
+                  value={this.state.customer.jpFirstName}
                   onChange={this.handleCustomerDataChange}
                 />
                 </dd>
@@ -159,15 +194,15 @@ UI.define("Customers.Dashboard", function() {
                     <UI.Select
                       id="phoneType"
                       options={[{label: "自宅", value: "home"}, {label: "携帯", value: "mobile"}]}
-                      value={this.state.customer.phone_type}
-                      data-name="phone_type"
+                      value={this.state.customer.phoneType}
+                      data-name="phoneType"
                       onChange={this.handleCustomerDataChange}
                       />
                   </dt>
                   <dd>
                   <input type="text" id="phone" placeholder="電話番号"
-                    data-name="phone_number"
-                    value={this.state.customer.phone_number}
+                    data-name="phoneNumber"
+                    value={this.state.customer.phoneNumber}
                     onChange={this.handleCustomerDataChange}
                   />
                   </dd>
@@ -215,22 +250,28 @@ UI.define("Customers.Dashboard", function() {
                       </dd>
                       <dd id="NAVsave">
                         <form id="new_customer_form"
-                          acceptCharset="UTF-8" action={this.props.addCustomerPath} method="post">
-                          <input name="customer[id]" type="hidden" value={this.props.customer.id} />
-                          <input name="customer[first_name]" type="hidden" value={this.props.customer.first_name} />
-                          <input name="customer[last_name]" type="hidden" value={this.props.customer.last_name} />
-                          <input name="customer[jp_last_name]" type="hidden" value={this.props.customer.jp_last_name} />
-                          <input name="customer[jp_first_name]" type="hidden" value={this.props.customer.jp_first_name} />
-                          <input name="customer[state]" type="hidden" value={this.props.customer.state} />
-                          <input name="customer[phone_type]" type="hidden" value={this.props.customer.phone_type} />
-                          <input name="customer[phone_number]" type="hidden" value={this.props.customer.phone_number} />
-                          <input name="customer[birthday]" type="hidden" value={this.props.customer.birthday} />
+                          acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
+                          <input name="customer[id]" type="hidden" value={this.state.customer.id} />
+                          <input name="customer[first_name]" type="hidden" value={this.state.customer.firstName} />
+                          <input name="customer[last_name]" type="hidden" value={this.state.customer.lastName} />
+                          <input name="customer[jp_last_name]" type="hidden" value={this.state.customer.jpLastName} />
+                          <input name="customer[jp_first_name]" type="hidden" value={this.state.customer.jpFirstName} />
+                          <input name="customer[state]" type="hidden" value={this.state.customer.state} />
+                          <input name="customer[phone_type]" type="hidden" value={this.state.customer.phoneType} />
+                          <input name="customer[phone_number]" type="hidden" value={this.state.customer.phoneNumber} />
+                          <input name="customer[birthday]" type="hidden" value={this.state.customer.birthday} />
                           <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
                           <a href="#"
                              className={`BTNyellow ${this.isCustomerdataValid() ? null : "disabled"}`} onClick={this.handleCreateCustomer}><span>上書き保存</span>
                           </a>
                         </form>
                       </dd>
+                      { this.state.selected_customer_id ? <dd id="">
+                        <a href="#" className="BTNorange" onClick={this.handleDeleteCustomer}>
+                          <span>DELETE</span>
+                        </a>
+                      </dd> : null
+                      }
                     </dl>
                     <dl id="calStatus">
                       <dd><span className="reservation-state reserved"></span>予約</dd>

@@ -11,6 +11,6 @@ module OptionsHelper
 
   def customer_options(customers)
     return [] unless customers.present?
-    customers.map { |c| { label: c.name, value: c.id, level: c.state } }
+    customers.map { |c| React.camelize_props(c.attributes.merge(label: c.name, value: c.id, level: c.state)) }
   end
 end

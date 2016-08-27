@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
   resources :shops do
-    resources :customers do
+    resources :customers, only: [:index] do
       collection do
         get :filter
         get :search
+        delete :delete
+        post :save
       end
     end
+
     resources :reservations do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
 

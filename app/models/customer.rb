@@ -17,7 +17,7 @@
 #
 
 class Customer < ApplicationRecord
-  default_value_for :state, "normal"
+  default_value_for :state, "regular"
   default_value_for :last_name, ""
   default_value_for :first_name, ""
   default_value_for :jp_last_name, ""
@@ -25,7 +25,7 @@ class Customer < ApplicationRecord
   default_value_for :phone_number, ""
   default_value_for :phone_type, "mobile"
 
-  STATES = %w(vip normal)
+  STATES = %w(vip regular)
   PHONE_TYPES = %w(mobile home)
 
   validates :state, inclusion: { in: STATES }
