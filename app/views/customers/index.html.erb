@@ -1,6 +1,10 @@
 <%= react_component("UI.Customers.Dashboard",
-                    { customers: customer_options(shop.customers),
+                    { customers: customer_options(@customers),
+                      customer: Customer.new,
+                      from_reservation: params[:from_reservation],
                       add_reservation_path: @add_reservation_path,
+                      add_customer_path: shop_customers_path(shop),
                       customers_filter_path: filter_shop_customers_path,
-                      customers_search_path: search_shop_customers_path
+                      customers_search_path: search_shop_customers_path,
+                      form_authenticity_token: form_authenticity_token
 }) %>

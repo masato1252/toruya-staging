@@ -32,4 +32,3 @@ UI.define("Common.CustomersList", function() {
 
   return CustomersList;
 });
-

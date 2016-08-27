@@ -8,7 +8,8 @@ UI.define("Customers.Dashboard", function() {
       return ({
         customers: this.props.customers,
         selected_customer_id: "",
-        selectedFilterPatternNumber: ""
+        selectedFilterPatternNumber: "",
+        customer: this.props.customer
       });
     },
 
@@ -19,6 +20,18 @@ UI.define("Customers.Dashboard", function() {
     handleAddCustomerToReservation: function(event) {
       event.preventDefault();
       window.location = this.props.addReservationPath + window.location.search + "," + this.state.selected_customer_id;
+    },
+
+    isCustomerdataValid: function() {
+      return this.state.customer.first_name || this.state.customer.last_name || this.state.customer.jp_first_name || this.state.customer.jp_last_name
+    },
+
+    handleCreateCustomer: function(event) {
+      event.preventDefault();
+
+      if (this.isCustomerdataValid()) {
+        $("#new_customer_form").submit();
+      }
     },
 
     filterCustomers: function(event) {
@@ -69,6 +82,15 @@ UI.define("Customers.Dashboard", function() {
       }
     },
 
+    handleCustomerDataChange: function(event) {
+      event.preventDefault();
+      var newCustomer = this.state.customer;
+
+      newCustomer[event.target.dataset.name] = event.target.value;
+
+      this.setState({customer: newCustomer});
+    },
+
     render: function() {
       return(
         <div>
@@ -91,39 +113,70 @@ UI.define("Customers.Dashboard", function() {
               <div id="basic">
                 <dl>
                   <dt>
-                    <select id="customerSts">
-                      <option value="regular" selected="selected">一般</option>
-                      <option value="vip">VIP</option>
-                    </select>
+                    <UI.Select
+                      id="customerSts"
+                      options={[{label: "一般", value: "regular"}, {label: "VIP", value: "vip"}]}
+                      value={this.state.customer.state}
+                      data-name="state"
+                      className={this.state.customer.state == "vip" ? "vip" : null}
+                      onChange={this.handleCustomerDataChange}
+                      />
                   </dt>
                   <dd>
-                    <input type="text" id="familyName" placeholder="姓" />
+                  <input type="text" id="familyName" placeholder="姓"
+                    data-name="last_name"
+                    value={this.state.customer.last_name}
+                    onChange={this.handleCustomerDataChange}
+                  />
                   </dd>
                   <dd>
-                    <input type="text" id="firstName" placeholder="名" />
+                  <input type="text" id="firstName" placeholder="名"
+                    data-name="first_name"
+                    value={this.state.customer.first_name}
+                    onChange={this.handleCustomerDataChange}
+                  />
                   </dd>
                 </dl>
                 <dl>
                 <dt></dt>
                 <dd>
-                  <input type="text" id="familyNameKana" placeholder="せい" />
+                <input type="text" id="familyNameKana" placeholder="せい"
+                  data-name="jp_last_name"
+                  value={this.state.customer.jp_last_name}
+                  onChange={this.handleCustomerDataChange}
+                />
                 </dd>
                 <dd>
-                  <input type="text" id="firstNameKana" placeholder="めい" />
+                <input type="text" id="firstNameKana" placeholder="めい"
+                  data-name="jp_first_name"
+                  value={this.state.customer.jp_first_name}
+                  onChange={this.handleCustomerDataChange}
+                />
                 </dd>
               </dl>
                 <dl>
                   <dt>
-                    <select id="phoneType">
-                    <option value="home" selected="selected">自宅</option>
-                    <option value="mobile">携帯</option>
-                    </select>
+                    <UI.Select
+                      id="phoneType"
+                      options={[{label: "自宅", value: "home"}, {label: "携帯", value: "mobile"}]}
+                      value={this.state.customer.phone_type}
+                      data-name="phone_type"
+                      onChange={this.handleCustomerDataChange}
+                      />
                   </dt>
                   <dd>
-                  <input type="text" id="phone" placeholder="電話番号" />
+                  <input type="text" id="phone" placeholder="電話番号"
+                    data-name="phone_number"
+                    value={this.state.customer.phone_number}
+                    onChange={this.handleCustomerDataChange}
+                  />
                   </dd>
                   <dd>
-                  <input type="date" id="dob" placeholder="お誕生日" />
+                  <input type="date" id="dob" placeholder="お誕生日"
+                    data-name="birthday"
+                    value={this.state.customer.birthday || ""}
+                    onChange={this.handleCustomerDataChange}
+                  />
                   </dd>
                 </dl>
               </div>
@@ -147,7 +200,7 @@ UI.define("Customers.Dashboard", function() {
             </div>
 
             <div id="mainNav">
-              { this.props.addReservationPath ? (
+              { this.props.fromReservation ? (
                 <dl>
                   <dd id="NAVaddCustomer">
                     <a href="#" className="BTNyellow" onClick={this.handleAddCustomerToReservation}>
@@ -157,8 +210,27 @@ UI.define("Customers.Dashboard", function() {
                   </dl>) : (
                   <div>
                     <dl>
-                      <dd id="NAVnewResv"><a href="#" className="BTNtarco"><span>新規予約</span></a></dd>
-                      <dd id="NAVsave"><a href="#" className="BTNyellow"><span>上書き保存</span></a></dd>
+                      <dd id="NAVnewResv">
+                        <a href={this.props.addReservationPath} className="BTNtarco"><span>新規予約</span></a>
+                      </dd>
+                      <dd id="NAVsave">
+                        <form id="new_customer_form"
+                          acceptCharset="UTF-8" action={this.props.addCustomerPath} method="post">
+                          <input name="customer[id]" type="hidden" value={this.props.customer.id} />
+                          <input name="customer[first_name]" type="hidden" value={this.props.customer.first_name} />
+                          <input name="customer[last_name]" type="hidden" value={this.props.customer.last_name} />
+                          <input name="customer[jp_last_name]" type="hidden" value={this.props.customer.jp_last_name} />
+                          <input name="customer[jp_first_name]" type="hidden" value={this.props.customer.jp_first_name} />
+                          <input name="customer[state]" type="hidden" value={this.props.customer.state} />
+                          <input name="customer[phone_type]" type="hidden" value={this.props.customer.phone_type} />
+                          <input name="customer[phone_number]" type="hidden" value={this.props.customer.phone_number} />
+                          <input name="customer[birthday]" type="hidden" value={this.props.customer.birthday} />
+                          <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+                          <a href="#"
+                             className={`BTNyellow ${this.isCustomerdataValid() ? null : "disabled"}`} onClick={this.handleCreateCustomer}><span>上書き保存</span>
+                          </a>
+                        </form>
+                      </dd>
                     </dl>
                     <dl id="calStatus">
                       <dd><span className="reservation-state reserved"></span>予約</dd>

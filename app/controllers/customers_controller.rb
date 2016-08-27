@@ -8,13 +8,11 @@ class CustomersController < DashboardController
 
     @customers = shop.customers.order("updated_at DESC").limit(10)
 
-    if params[:from_reservation]
-      @add_reservation_path = if params[:reservation_id].present?
-                                edit_shop_reservation_path(shop, id: params[:reservation_id])
-                              else
-                                new_shop_reservation_path(shop)
-                              end
-    end
+    @add_reservation_path = if params[:reservation_id].present?
+                              edit_shop_reservation_path(shop, id: params[:reservation_id])
+                            else
+                              new_shop_reservation_path(shop)
+                            end
   end
 
   # GET /customers/1
@@ -38,7 +36,7 @@ class CustomersController < DashboardController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to shop_customer_path(shop, @customer), notice: 'Customer was successfully created.' }
+        format.html { redirect_to shop_customers_path(shop), notice: 'Customer was successfully created.' }
         format.json { render :show, status: :created, location: @customer }
       else
         format.html { render :new }
@@ -52,7 +50,7 @@ class CustomersController < DashboardController
   def update
     respond_to do |format|
       if @customer.update(customer_params)
-        format.html { redirect_to shop_customer_path(shop, @customer), notice: 'Customer was successfully updated.' }
+        format.html { redirect_to shop_customers_path(shop), notice: 'Customer was successfully updated.' }
         format.json { render :show, status: :ok, location: @customer }
       else
         format.html { render :edit }
@@ -81,13 +79,13 @@ class CustomersController < DashboardController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_customer
-      @customer = shop.customers.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_customer
+    @customer = shop.customers.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def customer_params
-      params.require(:customer).permit(:last_name, :first_name, :state)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def customer_params
+    params.require(:customer).permit(:last_name, :first_name, :jp_last_name, :jp_first_name, :state, :phone_type, :phone_number, :birthday)
+  end
 end

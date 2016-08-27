@@ -86,9 +86,9 @@ button {
   line-height: 50px;
 }
 
-button[disabled], .disabled {
+button[disabled], a.disabled {
   opacity: .45;
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 .modal-header {
