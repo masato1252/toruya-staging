@@ -5,6 +5,9 @@
 UI.define("Customers.Dashboard", function() {
   var CustomersDashboard = React.createClass({
     getInitialState: function() {
+      this.currentCustomersType = "recent" // recent, filter, search
+      this.lastQuery = ""
+
       return ({
         customers: this.props.customers,
         selected_customer_id: "",
@@ -38,7 +41,7 @@ UI.define("Customers.Dashboard", function() {
       var _this = this;
 
       if (this.isCustomerdataValid()) {
-        var valuesToSubmit = $("#new_customer_form").serialize();
+        var valuesToSubmit = $(this.customerForm).serialize();
 
         $.ajax({
           type: "POST",
@@ -69,52 +72,97 @@ UI.define("Customers.Dashboard", function() {
       })
     },
 
+    handleMoreCustomers: function(event) {
+      switch (this.currentCustomersType) {
+        case "recent":
+          this.recentCutomers()
+          break;
+        case "filter":
+          this.filterCustomers()
+          break;
+        case "search":
+          this.SearchCustomers()
+          break;
+      }
+    },
+
+    recentCutomers: function() {
+      var originalCustomers = this.state.customers;
+      var data;
+
+      if (this.currentCustomersType != "recent") {
+        originalCustomers = [];
+        this.currentCustomersType = "recent";
+      }
+      data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
+
+      this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
+    },
+
     filterCustomers: function(event) {
-      event.preventDefault();
+      var data;
+      var originalCustomers = this.state.customers;
+
+      if (event) {
+        event.preventDefault();
+        if (this.currentCustomersType != "filter" || event.target.value != this.lastQuery) {
+          originalCustomers = [];
+          this.currentCustomersType = "filter";
+        }
+
+        this.lastQuery = event.target.value
+        data =  { pattern_number: this.lastQuery }
+      }
+      else {
+        data =  { pattern_number: this.lastQuery,
+                  last_customer_id: this.state.customers[this.state.customers.length-1].id }
+      }
+
+      this.setState({selectedFilterPatternNumber: this.lastQuery})
+      this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
+    },
+
+    SearchCustomers: function(event) {
+      if ((event && event.key === 'Enter') || !event) {
+        var data, originalCustomers;
+        var originalCustomers = this.state.customers;
+
+        if (event) {
+          event.preventDefault();
+          if (this.currentCustomersType != "search" || event.target.value != this.lastQuery) {
+            originalCustomers = [];
+            this.currentCustomersType = "search";
+          }
+
+          this.lastQuery = event.target.value
+          data = { keyword: this.lastQuery };
+        }
+        else {
+          data =  { keyword: this.lastQuery,
+                    last_customer_id: this.state.customers[this.state.customers.length-1].id }
+        }
+
+        this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
+      }
+    },
+
+    customersRequest: function(path, data, originalCustomers) {
       var _this = this;
 
       if (this.currentRequest != null) {
         this.currentRequest.abort();
       }
 
-      this.setState({selectedFilterPatternNumber: event.target.value})
-
       this.currentRequest = jQuery.ajax({
-        url: this.props.customersFilterPath,
-        data: { pattern_number: event.target.value },
+        url: path,
+        data: data,
         dataType: "json",
-      }).done(
-        function(result) {
-          _this.setState({customers: result["customers"]});
+      }).done(function(result) {
+        _this.setState({customers: originalCustomers.concat(result["customers"])});
       }).fail(function(errors){
       }).always(function() {
         _this.setState({Loading: false});
       });
-    },
-
-    handleSearch: function(event) {
-      if (event.key === 'Enter') {
-        console.log('do validate');
-
-        event.preventDefault();
-        var _this = this;
-
-        if (this.currentRequest != null) {
-          this.currentRequest.abort();
-        }
-
-        this.currentRequest = jQuery.ajax({
-          url: this.props.customersSearchPath,
-          data: { keyword: event.target.value },
-          dataType: "json",
-        }).done(
-          function(result) {
-            _this.setState({customers: result["customers"]});
-        }).fail(function(errors){
-        }).always(function() {
-          _this.setState({Loading: false});
-        });
-      }
     },
 
     handleCustomerDataChange: function(event) {
@@ -140,6 +188,7 @@ UI.define("Customers.Dashboard", function() {
                   <UI.Common.CustomersList
                     customers={this.state.customers}
                     handleCustomerSelect={this.handleCustomerSelect}
+                    handleMoreCustomers={this.handleMoreCustomers}
                     selected_customer_id={this.state.selected_customer_id} />
                 </div>
               </div>
@@ -250,6 +299,7 @@ UI.define("Customers.Dashboard", function() {
                       </dd>
                       <dd id="NAVsave">
                         <form id="new_customer_form"
+                          ref={(c) => {this.customerForm = c}}
                           acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
                           <input name="customer[id]" type="hidden" value={this.state.customer.id} />
                           <input name="customer[first_name]" type="hidden" value={this.state.customer.firstName} />
@@ -302,7 +352,7 @@ UI.define("Customers.Dashboard", function() {
               }
               <li>
                 <i className="fa fa-search fa-2x search-symbol" aria-hidden="true"></i>
-                <input type="text" id="search" placeholder="Name or TEL" onKeyPress={this.handleSearch} />
+                <input type="text" id="search" placeholder="Name or TEL" onKeyPress={this.SearchCustomers} />
               </li>
              </ul>
           </footer>

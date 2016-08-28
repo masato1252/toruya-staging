@@ -13,9 +13,13 @@ class Customers::FilterCustomers < ActiveInteraction::Base
     ('a'..'z').to_a
   ]
   integer :pattern_number
+  integer :last_customer_id, default: nil
+  integer :pre_page, default: 50
 
   def execute
-    scoped = Customer.all
+    scoped = Customer.order("id").limit(pre_page)
+    scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
+
     scoped.
       where("jp_last_name SIMILAR TO ?", "(#{regexp_pattern})%").
       or(

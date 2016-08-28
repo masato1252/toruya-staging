@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       collection do
         get :filter
         get :search
+        get :recent
         delete :delete
         post :save
       end

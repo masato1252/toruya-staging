@@ -10,6 +10,17 @@ UI.define("Common.CustomersList", function() {
       }
     },
 
+    _atEnd: function() {
+      return $(this.customerList).scrollTop() + $(this.customerList).innerHeight() >=
+          $(this.customerList)[0].scrollHeight
+    },
+
+    _handleScroll: function() {
+      if (this._atEnd()) {
+        this.props.handleMoreCustomers();
+      }
+    },
+
     render: function() {
       var _this = this;
 
@@ -23,7 +34,7 @@ UI.define("Common.CustomersList", function() {
       });
 
       return(
-          <div id="customerList">
+          <div id="customerList" ref={(c) => this.customerList = c} onScroll={this._handleScroll}>
             {customerOptions}
           </div>
       );

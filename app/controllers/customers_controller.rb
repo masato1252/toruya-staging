@@ -4,7 +4,7 @@ class CustomersController < DashboardController
   def index
     @body_class = "customer"
 
-    @customers = shop.customers.order("updated_at DESC").limit(10)
+    @customers = shop.customers.order("updated_at DESC").limit(50)
 
     @add_reservation_path = if params[:reservation_id].present?
                               edit_shop_reservation_path(shop, id: params[:reservation_id])
@@ -34,13 +34,25 @@ class CustomersController < DashboardController
     end
   end
 
+  def recent
+    @customers = shop.customers.order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(50)
+    render action: :query
+  end
+
   def filter
-    @customers = Customers::FilterCustomers.run(pattern_number: params[:pattern_number]).result
+    @customers = Customers::FilterCustomers.run(
+      pattern_number: params[:pattern_number],
+      last_customer_id: params[:last_customer_id]
+    ).result
+    render action: :query
   end
 
   def search
-    @customers = Customers::SearchCustomers.run(keyword: params[:keyword]).result
-    render action: :filter
+    @customers = Customers::SearchCustomers.run(
+      keyword: params[:keyword],
+      last_customer_id: params[:last_customer_id]
+    ).result
+    render action: :query
   end
 
   private
