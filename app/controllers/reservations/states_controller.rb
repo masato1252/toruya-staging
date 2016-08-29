@@ -1,4 +1,9 @@
 class Reservations::StatesController < DashboardController
+  def pend
+    reservation.pend!
+    redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: "Change Successfully"
+  end
+
   def accept
     reservation.accept!
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: "Change Successfully"
@@ -15,7 +20,7 @@ class Reservations::StatesController < DashboardController
   end
 
   def cancel
-    reservation.cancel!
+    reservation.destroy
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: "Change Successfully"
   end
 

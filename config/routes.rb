@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
       scope module: "reservations" do
         resource :states, only: [] do
+          put :pend
           put :accept
           put :check_in
           put :check_out

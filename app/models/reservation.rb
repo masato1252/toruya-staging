@@ -40,6 +40,10 @@ class Reservation < ApplicationRecord
     state :pending, initial: true
     state :reserved, :noshow, :checked_in, :checked_out, :canceled
 
+    event :pend do
+      transitions from: [:reserved, :noshow, :checked_out], to: :pending
+    end
+
     event :accept do
       transitions from: :pending, to: :reserved
     end
@@ -52,9 +56,9 @@ class Reservation < ApplicationRecord
       transitions from: :checked_in, to: :checked_out
     end
 
-    event :cancel do
-      transitions from: [:pending, :reserved, :noshow, :checked_in], to: :canceled
-    end
+    # event :cancel do
+    #   transitions from: [:pending, :reserved, :noshow, :checked_in], to: :canceled
+    # end
   end
 
   def set_start_time
