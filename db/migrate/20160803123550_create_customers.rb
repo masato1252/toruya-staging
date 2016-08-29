@@ -1,7 +1,7 @@
 class CreateCustomers < ActiveRecord::Migration[5.0]
   def change
     create_table :customers do |t|
-      t.integer :shop_id
+      t.integer :user_id
       t.string :last_name
       t.string :first_name
       t.string :jp_last_name
@@ -14,6 +14,6 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :customers, [:jp_last_name, :jp_first_name], name: "jp_name_index"
+    add_index :customers, [:user_id, :jp_last_name, :jp_first_name], name: "jp_name_index"
   end
 end

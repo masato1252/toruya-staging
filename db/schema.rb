@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20160819151128) do
   end
 
   create_table "customers", force: :cascade do |t|
-    t.integer  "shop_id"
+    t.integer  "user_id"
     t.string   "last_name"
     t.string   "first_name"
     t.string   "jp_last_name"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.date     "birthday"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
-    t.index ["jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
+    t.index ["user_id", "jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
   end
 
   create_table "menus", force: :cascade do |t|
@@ -147,14 +147,13 @@ ActiveRecord::Schema.define(version: 20160819151128) do
   end
 
   create_table "staffs", force: :cascade do |t|
-    t.integer  "shop_id",    null: false
+    t.integer  "user_id",    null: false
     t.string   "name",       null: false
     t.string   "shortname"
+    t.boolean  "full_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean  "full_time"
-    t.index ["shop_id", "full_time"], name: "index_staffs_on_shop_id_and_full_time", using: :btree
-    t.index ["shop_id"], name: "index_staffs_on_shop_id", using: :btree
+    t.index ["user_id", "full_time"], name: "index_staffs_on_user_id_and_full_time", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

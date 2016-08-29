@@ -1,13 +1,14 @@
 class CreateStaffs < ActiveRecord::Migration[5.0]
   def change
     create_table :staffs do |t|
-      t.integer :shop_id, null: false
+      t.integer :user_id, null: false
       t.string :name, null: false
       t.string :shortname
+      t.boolean :full_time
 
       t.timestamps
     end
 
-    add_index :staffs, :shop_id
+    add_index :staffs, [:user_id, :full_time]
   end
 end
