@@ -76,7 +76,7 @@ class Shop < ApplicationRecord
     distance_in_minutes = ((end_time - start_time)/60.0).round
     reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
-    scoped = reservations.where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
+    scoped = reservations.where("reservations.start_time <= ? AND reservations.ready_time >= ?", end_time, start_time)
 
     # when all staffs already have reservations at this time
     if staff_ids.present? && scoped.includes(:staffs).
@@ -89,15 +89,17 @@ class Shop < ApplicationRecord
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id
              LEFT OUTER JOIN reservation_staffs ON reservation_staffs.staff_id = staffs.id
-             LEFT OUTER JOIN reservations ON reservations.id = reservation_staffs.reservation_id").
+             LEFT OUTER JOIN reservations ON reservations.id = reservation_staffs.reservation_id")
+
+    scoped = scoped.
       where("minutes <= ?", distance_in_minutes).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
              start_time: start_time, end_time: end_time).
-     where("(reservations.start_time is NULL and reservations.end_time is NULL) or
+      where("(reservations.start_time is NULL and reservations.end_time is NULL) or
              reservations.id = ? or
              menus.min_staffs_number is NULL or
-            (NOT(reservations.start_time <= ? and reservations.end_time >= ?))", reservation_id, end_time, start_time)
+            (NOT(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?))", reservation_id, end_time, start_time)
 
     scoped = scoped.
       where("staffs.full_time = ?", true).
@@ -132,8 +134,8 @@ class Shop < ApplicationRecord
 
     scoped.select("menus.*").group("menus.id").having("
       CASE
-        WHEN menus.min_staffs_number = 1 THEN sum(staff_menus.max_customers) >= #{number_of_customer}
-        WHEN menus.min_staffs_number > 1 THEN count(staffs.id) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number
+        WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
+        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number
         ELSE true
       END
     ")
@@ -141,12 +143,12 @@ class Shop < ApplicationRecord
 
   def available_staffs(menu, business_time_range, reservation_id=nil)
     start_time = business_time_range.first
-    end_time = business_time_range.last
+    end_time = business_time_range.last + menu.interval.to_i.minutes
     reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
     # All staffs could do this menu already have reservation
     if menu.staff_ids.present? &&
-      reservations.where(menu: menu).where("start_time >= ? and end_time <= ?", start_time, end_time).includes(:staffs).
+      reservations.where(menu: menu).where("start_time >= ? and ready_time <= ?", start_time, end_time).includes(:staffs).
       map(&:staff_ids).flatten.uniq == menu.staff_ids
       return
     end
@@ -157,7 +159,7 @@ class Shop < ApplicationRecord
              (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time).
       where("(reservations.start_time is NULL and reservations.end_time is NULL) or
               reservations.id = ? or
-             (NOT(reservations.start_time <= ? and reservations.end_time >= ?))", reservation_id, end_time, start_time)
+             (NOT(reservations.start_time <= ? and reservations.ready_time >= ?))", reservation_id, end_time, start_time)
 
     scoped.
       where(full_time: true).

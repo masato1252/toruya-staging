@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Shop, type: :model do
+  let(:user) { shop.user }
   let(:shop) { FactoryGirl.create(:shop) }
   let(:now) { Time.zone.now }
-  let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60) }
+  let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60) }
   let(:time_range) { now..now.advance(minutes: 60) }
 
   describe "#available_time" do
@@ -65,8 +66,9 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when all staffs already had reservations at that time" do
-      let(:staff) { FactoryGirl.create(:staff, shop: shop) }
+      let(:staff) { FactoryGirl.create(:staff, user: user) }
       before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
         FactoryGirl.create(:reservation, shop: shop, menu: menu,
                            start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
@@ -101,11 +103,15 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when menu min_staffs_number > 1" do
-          let(:menu) { FactoryGirl.create(:menu, :lecture, shop: shop, minutes: 60) }
+          let(:menu) { FactoryGirl.create(:menu, :lecture, user: user, minutes: 60) }
+          before do
+            FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+          end
 
           context "when staffs count is more than menus.min_staffs_number" do
-            let(:staff2) { FactoryGirl.create(:staff, shop: shop, full_time: true) }
+            let(:staff2) { FactoryGirl.create(:staff, user: user, full_time: true) }
             before do
+              FactoryGirl.create(:shop_staff, staff: staff2, shop: shop)
               FactoryGirl.create(:staff_menu, menu: menu, staff: staff2)
             end
 
@@ -139,7 +145,10 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when menu does not have enough staffs" do
-          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          before do
+            FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+          end
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
           end
@@ -159,7 +168,10 @@ RSpec.describe Shop, type: :model do
           end
 
           context "when the reservation's menu min_staffs_number is nil" do
-            let(:menu) { FactoryGirl.create(:menu, :easy, shop: shop) }
+            let(:menu) { FactoryGirl.create(:menu, :easy, user: user) }
+            before do
+              FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+            end
 
             it "returns available reservation menus ignore min_staffs_number nil reservations" do
               expect(shop.available_reservation_menus(time_range)).to include(menu)
@@ -191,7 +203,10 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when menu does not have enough staffs" do
-          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          before do
+            FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+          end
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
           end
@@ -208,7 +223,10 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when menu does not have enough staffs" do
-          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          before do
+            FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+          end
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
           end
@@ -225,7 +243,10 @@ RSpec.describe Shop, type: :model do
         end
 
         context "when menu does not have enough staffs" do
-          let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60, min_staffs_number: 2, max_seat_number: 6) }
+          before do
+            FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+          end
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
           end
@@ -234,8 +255,10 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when staff is full time" do
-      let(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: true) }
+      let(:staff) { FactoryGirl.create(:staff, user: user, full_time: true) }
       before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
+        FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
       end
 
@@ -251,7 +274,11 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when staff has work schedule on that date" do
-      let(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: false) }
+      let(:staff) { FactoryGirl.create(:staff, user: user, full_time: false) }
+      before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
+        FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+      end
       it_behaves_like "available menus" do
         let(:test_data) do
           FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
@@ -261,7 +288,10 @@ RSpec.describe Shop, type: :model do
       end
 
       context "when staff asks for leave on that date but not at that time" do
-        let(:menu) { FactoryGirl.create(:menu, shop: shop, minutes: 60) }
+        let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60) }
+        before do
+          FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
+        end
         it_behaves_like "available menus" do
           let(:test_data) do
             FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
@@ -276,8 +306,10 @@ RSpec.describe Shop, type: :model do
 
   describe "#available_staffs" do
     context "when all menu's staffs already had reservations at that time" do
-      let(:staff) { FactoryGirl.create(:staff, shop: shop) }
+      let(:staff) { FactoryGirl.create(:staff, user: user) }
       before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
+        FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
         FactoryGirl.create(:reservation, shop: shop, menu: menu,
                                          start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
@@ -289,8 +321,9 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when staff is full time" do
-      let!(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: true) }
+      let!(:staff) { FactoryGirl.create(:staff, user: user, full_time: true) }
       before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
       end
 
@@ -347,8 +380,10 @@ RSpec.describe Shop, type: :model do
     end
 
     context "when staff has work schedule on that date" do
-      let!(:staff) { FactoryGirl.create(:staff, shop: shop, full_time: false) }
+      let!(:staff) { FactoryGirl.create(:staff, user: user, full_time: false) }
       before do
+        FactoryGirl.create(:shop_staff, staff: staff, shop: shop)
+        FactoryGirl.create(:shop_menu, menu: menu, shop: shop)
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
         FactoryGirl.create(:business_schedule, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
                            start_time: time_range.first, end_time: time_range.last)

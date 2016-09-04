@@ -17,6 +17,7 @@
 class Menu < ApplicationRecord
   default_value_for :minutes, 60
   default_value_for :min_staffs_number, 1
+  default_value_for :interval, 0
 
   validates :name, presence: true
   validates :minutes, presence: true
@@ -30,6 +31,7 @@ class Menu < ApplicationRecord
   has_many :shops, through: :shop_menus
   has_many :reservation_settings
   has_many :reservations
+  belongs_to :user
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
 

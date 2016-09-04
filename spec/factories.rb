@@ -29,7 +29,7 @@ FactoryGirl.define do
   end
 
   factory :menu do
-    association :shop
+    association :user
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:shortname) { |n| "m-#{n}" }
     minutes 60
@@ -73,12 +73,12 @@ FactoryGirl.define do
     association :menu
     start_time { Time.zone.now }
     end_time { Time.zone.now.advance(hours: 1) }
-    staff_ids { FactoryGirl.create(:staff, shop: shop).id }
-    customer_ids { FactoryGirl.create(:customer, shop: shop).id }
+    staff_ids { FactoryGirl.create(:staff).id }
+    customer_ids { FactoryGirl.create(:customer).id }
   end
 
   factory :staff do
-    association :shop
+    association :user
     sequence(:name) { |n| "staff-#{n}" }
     sequence(:shortname) { |n| "s-#{n}" }
     full_time true
@@ -90,8 +90,18 @@ FactoryGirl.define do
     max_customers 2
   end
 
-  factory :customer do
+  factory :shop_staff do
     association :shop
+    association :staff
+  end
+
+  factory :shop_menu do
+    association :shop
+    association :menu
+  end
+
+  factory :customer do
+    association :user
     sequence(:last_name) { |n| "last_name-#{n}" }
     sequence(:first_name) { |n| "first_name-#{n}" }
   end

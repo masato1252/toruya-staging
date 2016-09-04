@@ -10,4 +10,6 @@
 #
 
 class ShopStaff < ApplicationRecord
+  belongs_to :shop
+  belongs_to :staff
 end

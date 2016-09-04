@@ -14,6 +14,8 @@
 #  updated_at :datetime         not null
 #
 
+
+# ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
   include AASM
   attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
@@ -32,7 +34,7 @@ class Reservation < ApplicationRecord
   has_many :reservation_customers, dependent: :destroy
   has_many :customers, through: :reservation_customers
 
-  before_validation :set_start_time, :set_end_time
+  before_validation :set_start_time, :set_end_time, :set_ready_time
 
   scope :visible, -> { where("aasm_state != ?", "canceled") }
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
@@ -72,6 +74,10 @@ class Reservation < ApplicationRecord
     if start_time_date_part && end_time_time_part
       self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
     end
+  end
+
+  def set_ready_time
+    self.ready_time = end_time + menu.interval.to_i.minutes
   end
 
   def start_time_date
