@@ -33,6 +33,7 @@ FactoryGirl.define do
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:shortname) { |n| "m-#{n}" }
     minutes 60
+    interval 10
     min_staffs_number 1
 
     trait :lecture do

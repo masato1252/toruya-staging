@@ -25,7 +25,12 @@
     }
   }
 }
+
 #resNew {
+  input[type="date"] {
+    width: 190px !important;
+  }
+
   #customers {
     min-width: 300px;
 

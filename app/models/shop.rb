@@ -85,17 +85,17 @@ class Shop < ApplicationRecord
     end
 
     scoped = menus.
-      joins(:reservation_settings, :staffs).
-      joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
+      joins(:reservation_settings).
+      joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
+             LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
+             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id
              LEFT OUTER JOIN reservation_staffs ON reservation_staffs.staff_id = staffs.id
              LEFT OUTER JOIN reservations ON reservations.id = reservation_staffs.reservation_id")
 
     scoped = scoped.
       where("minutes <= ?", distance_in_minutes).
-      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
-             (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
-             start_time: start_time, end_time: end_time).
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))", start_time: start_time, end_time: end_time).
       where("(reservations.start_time is NULL and reservations.end_time is NULL) or
              reservations.id = ? or
              menus.min_staffs_number is NULL or

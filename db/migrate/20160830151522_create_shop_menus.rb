@@ -7,6 +7,6 @@ class CreateShopMenus < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :shop_menus, [:shop_id, :menu_id]
+    add_index :shop_menus, [:shop_id, :menu_id], unique: true
   end
 end

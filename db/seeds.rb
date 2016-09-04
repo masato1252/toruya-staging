@@ -6,6 +6,12 @@ staff = FactoryGirl.create(:staff, user: user)
 staff2 = FactoryGirl.create(:staff, user: user)
 FactoryGirl.create(:reservation_setting, menu: menu)
 FactoryGirl.create(:reservation_setting, menu: lecture_menu)
+
+FactoryGirl.create(:shop_menu, shop: shop, menu: menu)
+FactoryGirl.create(:shop_menu, shop: shop, menu: lecture_menu)
+FactoryGirl.create(:shop_staff, shop: shop, staff: staff)
+FactoryGirl.create(:shop_staff, shop: shop, staff: staff2)
+
 FactoryGirl.create(:staff_menu, staff: staff, menu: menu, max_customers: 2)
 FactoryGirl.create(:staff_menu, staff: staff2, menu: menu, max_customers: 2)
 FactoryGirl.create(:staff_menu, staff: staff, menu: lecture_menu, max_customers: nil)

@@ -12,4 +12,5 @@
 class ShopMenu < ApplicationRecord
   belongs_to :shop
   belongs_to :menu
+  validates :menu_id, uniqueness: { scope: [:shop_id] }
 end

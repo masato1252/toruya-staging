@@ -11,7 +11,9 @@
   <body id="manager" class=<%= body_class %>>
     <header>
       <dl>
-        <dd id="NAVhome"><a href="">Home</a></dd>
+        <dd id="NAVhome">
+          <%= link_to "Home", root_path %>
+        </dd>
         <dd id="NAVshopSelect">
           <%= shops_select_component %>
         </dd>
