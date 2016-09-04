@@ -6,7 +6,7 @@ class Settings::StaffsController < DashboardController
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = shop.staffs.all.order(:id)
+    @staffs = super_user.staffs.all.order(:id)
   end
 
   # GET /staffs/1
@@ -16,24 +16,24 @@ class Settings::StaffsController < DashboardController
 
   # GET /staffs/new
   def new
-    @staff = shop.staffs.new
+    @staff = super_user.staffs.new
     @wdays_business_schedules = []
   end
 
   # GET /staffs/1/edit
   def edit
-    @wdays_business_schedules = shop.business_schedules.where(staff_id: @staff.id).order(:day_of_week)
+    @wdays_business_schedules = super_user.business_schedules.where(staff_id: @staff.id).order(:day_of_week)
   end
 
   # POST /staffs
   # POST /staffs.json
   def create
-    @staff = shop.staffs.new(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
+    @staff = super_user.staffs.new(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
                                                 shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
 
     respond_to do |format|
       if @staff.save
-        format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully created.' }
+        format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully created.' }
         format.json { render :show, status: :created, location: @staff }
       else
         format.html { render :new }
@@ -52,7 +52,7 @@ class Settings::StaffsController < DashboardController
     respond_to do |format|
       if @staff.update(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
                                                 shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
-        format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully updated.' }
+        format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
         format.html { render :edit }
@@ -66,7 +66,7 @@ class Settings::StaffsController < DashboardController
   def destroy
     @staff.destroy
     respond_to do |format|
-      format.html { redirect_to settings_shop_staffs_path(shop), notice: 'Staff was successfully destroyed.' }
+      format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -74,8 +74,8 @@ class Settings::StaffsController < DashboardController
   private
 
   def set_staff
-    @staff = shop.staffs.find_by(id: params[:id])
-    redirect_to settings_shop_staffs_path(shop) unless @staff
+    @staff = super_user.staffs.find_by(id: params[:id])
+    redirect_to settings_staffs_path(shop) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

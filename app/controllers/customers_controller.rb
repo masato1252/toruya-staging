@@ -4,7 +4,7 @@ class CustomersController < DashboardController
   def index
     @body_class = "customer"
 
-    @customers = shop.customers.order("updated_at DESC").limit(50)
+    @customers = super_user.customers.order("updated_at DESC").limit(50)
 
     @add_reservation_path = if params[:reservation_id].present?
                               edit_shop_reservation_path(shop, id: params[:reservation_id])
@@ -17,16 +17,16 @@ class CustomersController < DashboardController
   # POST /customers.json
   def save
     if customer_params[:id].present?
-      @customer = shop.customers.find(customer_params[:id])
+      @customer = super_user.customers.find(customer_params[:id])
       @customer.update(customer_params)
     else
-      @customer = shop.customers.new(customer_params)
+      @customer = super_user.customers.new(customer_params)
       @customer.save
     end
   end
 
   def delete
-    @customer = shop.customers.find(params[:id])
+    @customer = super_user.customers.find(params[:id])
     @customer.destroy
 
     respond_to do |format|
@@ -35,12 +35,13 @@ class CustomersController < DashboardController
   end
 
   def recent
-    @customers = shop.customers.order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(50)
+    @customers = super_user.customers.order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(50)
     render action: :query
   end
 
   def filter
     @customers = Customers::FilterCustomers.run(
+      super_user: super_user,
       pattern_number: params[:pattern_number],
       last_customer_id: params[:last_customer_id]
     ).result
@@ -49,6 +50,7 @@ class CustomersController < DashboardController
 
   def search
     @customers = Customers::SearchCustomers.run(
+      super_user: super_user,
       keyword: params[:keyword],
       last_customer_id: params[:last_customer_id]
     ).result

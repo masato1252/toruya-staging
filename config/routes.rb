@@ -34,9 +34,11 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
-    resources :shops do
-      resources :staffs
-      resources :menus
+    resources :staffs
+    resources :business_schedules, only: [:index]
+    resources :menus
+
+    resources :shops, except: [:show] do
       resources :business_schedules, only: [] do
         collection do
           get "edit"

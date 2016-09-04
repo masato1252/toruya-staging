@@ -1,34 +1,36 @@
 <%= render "info" %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= Staff.human_attribute_name(:name) %></th>
-      <th><%= Staff.human_attribute_name(:shortname) %></th>
-      <th><%= Staff.human_attribute_name(:full_time) %></th>
-      <th>Menus</th>
-    </tr>
-  </thead>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to 'Add a New Staff', new_settings_staff_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p>Here is the list of staff you set.<br>Toruya will accept reservation based on this setting.</p>
+</div>
 
-  <tbody>
+<form>
+  <div id="staffList" class="formRow">
+    <ul class="tableTTL">
+      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="rowTTL">Staff Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
     <% @staffs.each do |staff| %>
-      <tr>
-        <td><%= staff.name %></td>
-        <td><%= staff.shortname %></td>
-        <td>
+      <dl>
+        <dt class="check"><input type="checkbox"></dt>
+        <dt class="rowTTL">
           <% if staff.full_time %>
             <i class="fa fa-check" aria-hidden="true"></i>
           <% else %>
             <i class="fa fa-times" aria-hidden="true"></i>
           <% end %>
-        </td>
-        <td><%= staff.menus.map(&:name).join(", ") %></td>
-        <td><%= link_to 'Edit', edit_settings_shop_staff_path(shop, staff), class: "btn btn-default" %></td>
-        <td><%= link_to 'Destroy', settings_shop_staff_path(shop, staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+          <%= staff.name %>
+        </dt>
+        <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to 'Edit', edit_settings_staff_path(staff), class: "BTNtarco" %>
+        </dd>
+      </dl>
     <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Staff', new_settings_shop_staff_path(shop), class: "btn btn-primary" %>
+  </div>
+</form>

@@ -1,35 +1,32 @@
 <%= render "info" %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= Shop.human_attribute_name(:name) %></th>
-      <th><%= Shop.human_attribute_name(:shortname) %></th>
-      <th><%= Shop.human_attribute_name(:zip_code) %></th>
-      <th><%= Shop.human_attribute_name(:phone_number) %></th>
-      <th><%= Shop.human_attribute_name(:email) %></th>
-      <th><%= Shop.human_attribute_name(:website) %></th>
-      <th><%= Shop.human_attribute_name(:address) %></th>
-    </tr>
-  </thead>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to "Add a New Shop", new_settings_shop_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p>Please enter shop informations here.<br>This information will be displayed to your customers.</p>
+</div>
 
-  <tbody>
+<form>
+  <div id="shopList" class="formRow">
+    <ul class="tableTTL">
+      <li class="check">Delete</li>
+      <li class="rowTTL">Shop Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
     <% @shops.each do |shop| %>
-      <tr>
-        <td><%= shop.name %></td>
-        <td><%= shop.shortname %></td>
-        <td><%= shop.zip_code %></td>
-        <td><%= shop.phone_number %></td>
-        <td><%= shop.email %></td>
-        <td><%= shop.website %></td>
-        <td><%= shop.address %></td>
-        <td><%= link_to 'Show', settings_shop_path(shop), class: "btn btn-success" %></td>
-        <td><%= link_to 'Edit', edit_settings_shop_path(shop), class: "btn btn-default" %></td>
-        <td><%= link_to 'Destroy', settings_shop_path(shop), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <dl>
+        <dt>
+          <%= link_to 'DELETE', settings_shop_path(shop), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </dt>
+        <dt class="rowTTL"><%= shop.name %></dt>
+        <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to "Edit", edit_settings_shop_path(shop), class: "BTNtarco" %>
+        </dd>
+      </dl>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</form>
 
-<br>
-
-<%= link_to 'New Shop', new_settings_shop_path, class: "btn btn-primary" %>

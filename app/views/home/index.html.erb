@@ -1,1 +1,12 @@
 <h1>Home</h1>
+
+<ul>
+  <% @shops.each do |shop| %>
+    <li>
+      <%= link_to shop.name, shop_reservations_path(shop) %>
+    </li>
+  <% end %>
+  <li>
+    <%= link_to "Setting Shops", settings_shops_path %>
+  </li>
+</ul>

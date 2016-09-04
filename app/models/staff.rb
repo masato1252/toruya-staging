@@ -3,12 +3,12 @@
 # Table name: staffs
 #
 #  id         :integer          not null, primary key
-#  shop_id    :integer          not null
+#  user_id    :integer          not null
 #  name       :string           not null
 #  shortname  :string
+#  full_time  :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  full_time  :boolean
 #
 
 class Staff < ApplicationRecord
@@ -17,9 +17,9 @@ class Staff < ApplicationRecord
   attr_accessor :first_name, :last_name, :first_shortname, :last_shortname
 
   validates :name, presence: true
-  validates :shortname, presence: true
+  # validates :shortname, presence: true
 
-  belongs_to :shop
+  belongs_to :user
   has_many :staff_menus
   has_many :menus, through: :staff_menus
   has_many :business_schedules
@@ -30,18 +30,18 @@ class Staff < ApplicationRecord
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 
   def last_name
-    name.split(" ").first
+    name.split(" ").first if name
   end
 
   def first_name
-    name.split(" ").last
+    name.split(" ").last if name
   end
 
   def last_shortname
-    shortname.split(" ").first
+    shortname.split(" ").first if shortname
   end
 
   def first_shortname
-    shortname.split(" ").last
+    shortname.split(" ").last if shortname
   end
 end

@@ -1,6 +1,9 @@
 class Settings::BusinessSchedulesController < DashboardController
   layout "settings"
 
+  def index
+  end
+
   def edit
     @wdays_business_schedules = shop.business_schedules.for_shop.order(:day_of_week)
     @custom_schedules = shop.custom_schedules.for_shop.order(:start_time)
@@ -19,7 +22,7 @@ class Settings::BusinessSchedulesController < DashboardController
 
     flash[:alert] = update_shop.errors.full_messages.join(", ")
 
-    redirect_to edit_settings_shop_business_schedules_path(shop)
+    redirect_to settings_business_schedules_path
   end
 
   private

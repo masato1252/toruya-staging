@@ -30,5 +30,8 @@ class User < ApplicationRecord
          :confirmable, :lockable, :omniauthable
 
   has_many :shops
+  has_many :menus
+  has_many :staffs
+  has_many :customers
   has_one :access_provider
 end

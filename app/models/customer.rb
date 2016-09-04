@@ -3,7 +3,7 @@
 # Table name: customers
 #
 #  id            :integer          not null, primary key
-#  shop_id       :integer
+#  user_id       :integer
 #  last_name     :string
 #  first_name    :string
 #  jp_last_name  :string
@@ -30,7 +30,7 @@ class Customer < ApplicationRecord
 
   validates :state, inclusion: { in: STATES }
   validates :phone_type, inclusion: { in: PHONE_TYPES }
-  belongs_to :shop
+  belongs_to :user
 
   def name
     "#{jp_last_name} #{jp_first_name}".presence || "#{first_name} #{last_name} "

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160819151128) do
+ActiveRecord::Schema.define(version: 20160830235902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,15 +67,16 @@ ActiveRecord::Schema.define(version: 20160819151128) do
   end
 
   create_table "menus", force: :cascade do |t|
-    t.integer  "shop_id",           null: false
+    t.integer  "user_id",           null: false
     t.string   "name",              null: false
     t.string   "shortname"
     t.integer  "minutes"
+    t.integer  "interval"
     t.integer  "min_staffs_number"
     t.integer  "max_seat_number"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.index ["shop_id"], name: "index_menus_on_shop_id", using: :btree
+    t.index ["user_id"], name: "index_menus_on_user_id", using: :btree
   end
 
   create_table "reservation_customers", force: :cascade do |t|
@@ -115,11 +116,28 @@ ActiveRecord::Schema.define(version: 20160819151128) do
     t.integer  "menu_id",    null: false
     t.datetime "start_time", null: false
     t.datetime "end_time",   null: false
+    t.datetime "ready_time", null: false
     t.string   "aasm_state", null: false
     t.text     "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "end_time"], name: "reservation_index", using: :btree
+    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index", using: :btree
+  end
+
+  create_table "shop_menus", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "menu_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "menu_id"], name: "index_shop_menus_on_shop_id_and_menu_id", using: :btree
+  end
+
+  create_table "shop_staffs", force: :cascade do |t|
+    t.integer  "shop_id"
+    t.integer  "staff_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", using: :btree
   end
 
   create_table "shops", force: :cascade do |t|

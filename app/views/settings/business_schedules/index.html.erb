@@ -1,0 +1,23 @@
+<div id="subNav">
+  <h2>基本情報 − Business Hours</h2>
+</div>
+<div id="about">
+  <p>Please enter business hours here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+<form>
+  <div id="shopList" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL">Shop Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
+    <% super_user.shops.each do |shop| %>
+      <dl>
+        <dt class="rowTTL"><%= shop.name %></dt>
+        <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to "Edit Bus-hour", edit_settings_shop_business_schedules_path(shop), class: "BTNtarco" %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+</form>

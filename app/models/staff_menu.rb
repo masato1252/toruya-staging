@@ -11,6 +11,19 @@
 #
 
 class StaffMenu < ApplicationRecord
+  default_value_for :max_customers, 1
   belongs_to :menu
   belongs_to :staff
+
+  validate :valid_max_customers
+
+  private
+
+  def valid_max_customers
+    if menu.min_staffs_number && menu.min_staffs_number == 1
+      if !max_customers || (max_customers && max_customers < 1)
+        errors.add(:max_customers, "need specific max_customers number")
+      end
+    end
+  end
 end

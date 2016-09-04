@@ -57,7 +57,13 @@
                                 end_time: schedule.end_time.try(:to_s, :time))
     }} %>
 
-  <div id="footerav">
-    <%= submit_tag "Save", class: "BTNtarco" %>
-  </div>
+  <ul id="footerav">
+    <li>
+      <%= link_to "Cancel", settings_business_schedules_path, class: "BTNtarco" %>
+    </li>
+    <li>
+      <%= submit_tag "保存", class: "BTNyellow" %>
+    </li>
+  </ul>
+
 <% end %>

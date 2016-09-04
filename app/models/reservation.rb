@@ -7,6 +7,7 @@
 #  menu_id    :integer          not null
 #  start_time :datetime         not null
 #  end_time   :datetime         not null
+#  ready_time :datetime         not null
 #  aasm_state :string           not null
 #  memo       :text
 #  created_at :datetime         not null

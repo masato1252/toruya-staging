@@ -1,33 +1,34 @@
 <%= render "info" %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= Menu.human_attribute_name(:name) %></th>
-      <th><%= Menu.human_attribute_name(:shortname) %></th>
-      <th><%= Menu.human_attribute_name(:minutes) %></th>
-      <th><%= Menu.human_attribute_name(:min_staffs_number) %></th>
-      <th>Staffs</th>
-      <th></th>
-    </tr>
-  </thead>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to 'Add a New Menu', new_settings_menu_path, class: "BTNyellow addNew" %>
+    </li>
+    <li><a href="menu_category.html" class="BTNtarco addNew">Edit Category</a></li>
+  </ul>
+  <p>Please enter menu here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
 
-  <tbody>
+<form>
+  <div id="menuList" class="formRow">
+    <ul class="tableTTL">
+      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="rowTTL">Menu Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
     <% @menus.each do |menu| %>
-      <tr>
-        <td><%= menu.name %></td>
-        <td><%= menu.shortname %></td>
-        <td><%= menu.minutes %></td>
-        <td><%= menu.min_staffs_number %></td>
-        <td><%= menu.staffs.map(&:name).join(", ") %></td>
-        <td>
-          <%= link_to 'Edit', edit_settings_shop_menu_path(shop, menu), class: "btn btn-default" %>
-          <%= link_to 'Destroy', settings_shop_menu_path(shop, menu), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
-        </td>
-      </tr>
+      <dl>
+        <dt class="check">
+          <%= link_to 'Delete', settings_menu_path(menu), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </dt>
+        <dt class="rowTTL"><%= menu.name %></dt>
+        <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to 'Edit Menu', edit_settings_menu_path(menu), class: "BTNtarco" %>
+        </dd>
+      </dl>
     <% end %>
-  </tbody>
-</table>
-
+  </div>
+</form>
 <br>
 
-<%= link_to 'New Menu', new_settings_shop_menu_path(shop), class: "btn btn-primary" %>

@@ -1,36 +1,77 @@
 <nav id="sideNav">
-  <dl>
-    <dt><%= link_to "基本情報", settings_shops_path %></dt>
+  <dl class="shop">
+    <%= active_link_to "基本情報", settings_shops_path,
+      active: [["settings/shops", "settings/business_schedules"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
     <dd>
       <ul>
         <%= active_link_to "Shop Info", settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
-        <% if shop.try(:persisted?) %>
-          <%= active_link_to "Business Hours", edit_settings_shop_business_schedules_path(shop), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-          <%= active_link_to "Staff", settings_shop_staffs_path(shop), active: [["settings/staffs"], []], wrap_tag: :li, class_active: "here" %>
-          <%= active_link_to "Menu", settings_shop_menus_path(shop), active: [["settings/menus"], []], wrap_tag: :li, class_active: "here" %>
-          <li><a href="price.html">Price</a></li>
-          <li><a href="calendars.html">Calendars</a></li>
-        <% end %>
+        <%= active_link_to "Business Hours", settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+        <li><a href="menu_resframe.html">予約枠</a></li>
       </ul>
     </dd>
   </dl>
-  <dl>
-    <dt><a href="../publish/">公開page</a></dt>
+  <dl class="menu">
+    <%= active_link_to "Menu & Price", settings_menus_path,
+      active: [["settings/menus"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
+    <dd>
+      <ul>
+        <%= active_link_to "Menu", settings_menus_path,
+          active: [["settings/menus"]],
+          wrap_tag: :li,
+          class_active: "here" %>
+        <li><a href="menu_category.html">Menu Category</a></li>
+        <li><a href="price.html">Price</a></li>
+        <li><a href="price_category.html">Price Category</a></li>
+      </ul>
+    </dd>
   </dl>
-  <dl>
-    <dt><a href="../share/">Share</a></dt>
+  <dl class="staff">
+    <%= active_link_to "スタッフ", settings_staffs_path,
+      active: [["settings/staffs"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
+    <dd>
+      <ul>
+        <%= active_link_to "Staff Info", settings_staffs_path,
+          active: [["settings/staffs"]],
+          wrap_tag: :li,
+          class_active: "here" %>
+        <li><a href="staff_worktime.html">勤務日時</a></li>
+      </ul>
+    </dd>
   </dl>
-  <dl>
-    <dt><a href="../apps/">店舗Apps</a></dt>
+  <dl class="contacts">
+    <dt><a href="contacts.html">Contacts</a></dt>
+    <dd>
+      <ul>
+        <li class="here"><a href="contacts.html">Contact Info</a></li>
+        <li><a href="contacts_ranks.html">Ranks</a></li>
+        <li><a href="contacts_synk.html">Synk Google</a></li>
+      </ul>
+    </dd>
   </dl>
-  <dl>
-    <ul>
-      <li><a href="../account/">Account</a></li>
-      <li><a href="../account/">Account Info</a></li>
-      <li><a href="../account/plans.html">Plans</a></li>
-    </ul>
+  <dl class="calendars">
+    <dt><a href="calendars.html">Calendars</a></dt>
+    <dd>
+      <ul>
+        <li class="here"><a href="calendars.html">Calendar Info</a></li>
+        <li><a href="calendars_synk.html">Synk Google</a></li>
+      </ul>
+    </dd>
   </dl>
-  <dl>
-    <dt><a href="../login.html">Log Out</a></dt>
+  <dl class="apps">
+    <dt><a href="apps/index.html">店舗Apps</a></dt>
+  </dl>
+  <dl class="account">
+    <dt><a href="account/index.html">Account</a></dt>
+  </dl>
+  <dl class="logout">
+    <dt>
+      <%= link_to t("common.sign_out"), destroy_user_session_path, :method=>'delete' %>
+    </dt>
   </dl>
 </nav>

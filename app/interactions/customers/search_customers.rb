@@ -1,10 +1,11 @@
 class Customers::SearchCustomers < ActiveInteraction::Base
+  object :super_user, class: User
   string :keyword
   integer :last_customer_id, default: nil
   integer :pre_page, default: 50
 
   def execute
-    scoped = Customer.order("id").limit(pre_page)
+    scoped = super_user.customers.order("id").limit(pre_page)
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped.where("

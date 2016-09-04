@@ -1,91 +1,60 @@
 <%= form_for(shop, url: url) do |f| %>
-  <% if shop.errors.any? %>
-    <div id="error_explanation">
-      <ul>
-        <% shop.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="form-block">
-    <h3>店名</h3>
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :name %>
-      </label>
-
-      <div class="col-sm-9">
-        <%= f.text_field :name, placeholder: true %>
-      </div>
-    </div>
-
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :shortname %>
-      </label>
-
-      <div class="col-sm-9">
+  <h3>店名</h3>
+  <div id="shopNames" class="formRow">
+    <dl>
+      <dt>店舗名<strong>必須項目</strong></dt>
+      <dd>
+        <%= f.text_field :name, placeholder: true, size: 20 %>
+      </dd>
+    </dl>
+    <dl>
+      <dt>短縮店舗名<strong>必須項目</strong></dt>
+      <dd>
         <%= f.text_field :shortname, placeholder: true %>
-      </div>
-    </div>
+      </dd>
+    </dl>
   </div>
 
-  <div class="form-block">
-    <h3>連絡先</h3>
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :zip_code %>
-      </label>
-
-      <div class="col-sm-9">
+  <h3>連絡先</h3>
+  <div id="contacts" class="formRow">
+    <dl>
+      <dt>Zip Code<strong>必須項目</strong></dt>
+      <dd>
         <%= f.text_field :zip_code, placeholder: true %>
-      </div>
-    </div>
-
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :address %>
-      </label>
-
-      <div class="col-sm-9">
+      </dd>
+    </dl>
+    <dl>
+      <dt>住所<strong>必須項目</strong></dt>
+      <dd>
         <%= f.text_field :address, placeholder: true %>
-      </div>
-    </div>
-
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :phone_number %>
-      </label>
-
-      <div class="col-sm-9">
+      </dd>
+    </dl>
+    <dl>
+      <dt>TEL<strong>必須項目</strong></dt>
+      <dd>
         <%= f.text_field :phone_number, placeholder: true %>
-      </div>
-    </div>
-
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <abbr class="required" title="required">*</abbr> <%= f.label :email %>
-      </label>
-
-      <div class="col-sm-9">
-        <%= f.text_field :email, placeholder: true %>
-      </div>
-    </div>
-
-    <div class="form-group url required row">
-      <label class="url required control-label col-sm-2 control-label">
-        <%= f.label :website %>
-      </label>
-
-      <div class="col-sm-9">
+      </dd>
+    </dl>
+    <dl>
+      <dt>Email<strong>必須項目</strong></dt>
+      <dd>
+        <%= f.text_field :email, placeholder: true, maxlength: 7 %>
+      </dd>
+    </dl>
+    <dl>
+      <dt>WEB</dt>
+      <dd>
         <%= f.text_field :website, placeholder: true %>
-      </div>
-    </div>
+      </dd>
+    </dl>
   </div>
 
-  <div id="footerav" class="actions">
-    <%= f.submit "save", class: "BTNtarco" %>
-  </div>
+  <ul id="footerav">
+    <li>
+      <%= link_to "Cancel", settings_shops_path, class: "BTNtarco" %>
+    </li>
+    <li>
+      <%= f.submit "保存", class: "BTNyellow" %>
+    </li>
+  </ul>
 <% end %>

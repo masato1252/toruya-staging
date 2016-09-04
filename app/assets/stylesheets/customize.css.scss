@@ -67,7 +67,7 @@ table.table {
 }
 
 input[type="time"] {
-  width: 120px;
+  width: 150px;
 }
 input {
   padding: 8px;
@@ -86,7 +86,11 @@ button {
   line-height: 50px;
 }
 
-button[disabled], a.disabled {
+button.close {
+  height: 25px;
+}
+
+button[disabled], a.disabled, input[disabled] {
   opacity: .45;
   cursor: not-allowed !important;
 }

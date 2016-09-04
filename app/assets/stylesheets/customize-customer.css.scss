@@ -1,5 +1,11 @@
-#customerList {
-  height: 80vh;
+#resNew {
+  #customerList {
+    height: 80vh;
+
+    dl.customer-option {
+      border-bottom: 1px solid #b3b3b3;
+    }
+  }
 }
 
 .customer {

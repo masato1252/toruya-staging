@@ -18,4 +18,9 @@ class DashboardController < ActionController::Base
     @shop ||= current_user.shops.find_by(id: params[:shop_id])
   end
   helper_method :shop
+
+  def super_user
+    current_user
+  end
+  helper_method :super_user
 end

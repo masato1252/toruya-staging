@@ -1,0 +1,59 @@
+.setting {
+  #content {
+    #contacts {
+      dl dt {
+        width: 160px;
+      }
+    }
+  }
+
+  #content #busHour dl dt {
+    width: 110px;
+  }
+
+  .BTNopenclose + label:before, .BTNopenclose + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after {
+    width: 4em;
+  }
+
+  #sideNav {
+    dl dt a {
+      width: 164px;
+      padding: 20px 0px 20px 0px;
+    }
+    dl a {
+      width: 164px;
+      padding: 20px 0px 20px 0px;
+    }
+
+    dd {
+      display: none;
+    }
+
+    dt.here + dd {
+      display: block
+    }
+  }
+
+  input[type="date"] {
+    width: 182px !important;
+  }
+
+  #content .formRow input[type="number"] {
+    width: 90px;
+  }
+
+  #doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after {
+    width: 4em;
+  }
+
+  #shopSelect {
+    input[type="checkbox"]:checked + label {
+      &:before {
+        font-family: "FontAwesome";
+        content: "\f00c";
+        color: #00A54E;
+        margin-right: 12px;
+      }
+    }
+  }
+}
