@@ -59,11 +59,6 @@ UI.define("Settings.MenuForm", function() {
       })
     },
 
-    _maxCustomersRequired: function(staff_id) {
-      return this.selectedStaff(staff_id) &&
-       this.state.menu.min_staffs_number && this.state.menu.min_staffs_number == 1
-    },
-
     _isValidMenu: function() {
       var maxCustomersList = this.state.staffMenus.map((staff_menu) => { return staff_menu.maxCustomers })
 
@@ -151,32 +146,22 @@ UI.define("Settings.MenuForm", function() {
                 />人
               </dd>
             </dl>
-            {
-              (this.state.menu.min_staffs_number && this.state.menu.min_staffs_number > 1) ? (
-                <dl>
-                  <dt>Max Seat Number</dt>
-                  <dd>
-                    <input
-                      placeholder="Max Seat Number"
-                      maxlength="10"
-                      size="10"
-                      className="minStaff"
-                      type="number"
-                      name="menu[max_seat_number]"
-                      data-name="max_seat_number"
-                      defaultValue={this.state.menu.max_seat_number}
-                      onChange={this._handleMenuData}
-                    />人
-                  </dd>
-                </dl>
-              ) : (
+            <dl>
+              <dt>Max Seat Number</dt>
+              <dd>
                 <input
-                  type="hidden"
+                  placeholder="Max Seat Number"
+                  maxlength="10"
+                  size="10"
+                  className="minStaff"
+                  type="number"
                   name="menu[max_seat_number]"
-                  value=""
-                />
-              )
-            }
+                  data-name="max_seat_number"
+                  defaultValue={this.state.menu.max_seat_number}
+                  onChange={this._handleMenuData}
+                />人
+              </dd>
+            </dl>
           </div>
 
           <h3 className="shopSelect">利用店舗</h3>
@@ -227,7 +212,7 @@ UI.define("Settings.MenuForm", function() {
                     </dd>
                     <dd>
                       {
-                        this._maxCustomersRequired(staff.id) ? <input type="number"
+                        this.selectedStaff(staff.id) ? <input type="number"
                              defaultValue={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : null}
                              data-name="max-customers"
                              data-staff-id={staff.id}

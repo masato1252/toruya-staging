@@ -23,7 +23,6 @@ class Menu < ApplicationRecord
   validates :minutes, presence: true
   validates :min_staffs_number, numericality: { greater_than: 0 }, allow_blank: true
   validates :max_seat_number, numericality: { greater_than: 0 }, allow_blank: true
-  validate :valid_max_seat_number
 
   has_many :staff_menus, inverse_of: :menu
   has_many :staffs, through: :staff_menus
@@ -34,16 +33,6 @@ class Menu < ApplicationRecord
   belongs_to :user
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
-
-  def valid_max_seat_number
-    return unless min_staffs_number
-
-    if min_staffs_number > 1 && !max_seat_number
-      errors.add(:max_seat_number, " need to be > 0. Menu have multiple staffs required")
-    elsif min_staffs_number == 1 && max_seat_number
-      errors.add(:max_seat_number, " should be nil, Menu only need one staff")
-    end
-  end
 
   private
 

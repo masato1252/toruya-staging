@@ -88,8 +88,8 @@ class Shop < ApplicationRecord
       joins(:reservation_settings).
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
-             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id")
+             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}")
 
     scoped = scoped.
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
@@ -99,7 +99,7 @@ class Shop < ApplicationRecord
              start_time: start_time, end_time: end_time)
 
     scoped = scoped.
-      where("staffs.full_time = ?", true).
+      where("business_schedules.full_time = ?", true)
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday)
@@ -136,47 +136,6 @@ class Shop < ApplicationRecord
         ELSE true
       END
     ")
-
-    # Find the menus that have reservations and all staffs could do that menu alreay had reservations
-    # reserved_menus = menus.
-    #   where.not(min_staffs_number: nil).
-    #   joins("JOIN reservations ON reservations.menu_id = menus.id
-    #          JOIN reservation_staffs ON reservation_staffs.reservation_id = reservations.id
-    #          JOIN staff_menus on staff_menus.menu_id = menus.id ").
-    #   where(id: candidate_menus.map(&:id)).
-    #   where.not("reservations.id" => reservation_id).
-    #   where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)", end_time, start_time).
-    #   group("menus.id").
-    #   having("count(DISTINCT(staff_menus.staff_id)) = count(DISTINCT(reservation_staffs.staff_id))")
-    #
-    # if reserved_menus.present?
-    #   # staffs had shop's reservations during that time
-    #
-    #   reserved_staff_ids = reserved_menus.map do |menu|
-    #     reservations.
-    #       includes(:reservation_staffs).
-    #       where(menu_id: reserved_menus).
-    #       where("(start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * #{menu.interval})) and reservations.ready_time >= ?)",
-    #             end_time, start_time).
-    #       map(&:staff_ids)
-    #   end.flatten.uniq
-    #
-    #   new_candidate_menus = candidate_menus - reserved_menus
-    #
-    #   menus.
-    #     left_outer_joins(:staff_menus).
-    #     where(id: new_candidate_menus).
-    #     where.not("staff_menus.staff_id" => reserved_staff_ids).
-    #     group("menus.id").having("
-    #       CASE
-    #         WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
-    #         WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number AND sum(staff_menus.max_customers) >= #{number_of_customer}
-    #         ELSE true
-    #       END
-    #     ")
-    # else
-    #   candidate_menus
-    # end
   end
 
   def available_staffs(menu, business_time_range, reservation_id=nil)
@@ -196,14 +155,16 @@ class Shop < ApplicationRecord
       return
     end
 
-    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules).
+    scoped = menu.staffs.
+      joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}")
       includes(:staff_menus).
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)#.
 
-    candidate_staffs = scoped.
-      where(full_time: true).
+    scoped = scoped.
+      where("business_schedules.full_time = ?", true).
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday).
