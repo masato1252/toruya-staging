@@ -89,17 +89,14 @@ class Shop < ApplicationRecord
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
              LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id
-             LEFT OUTER JOIN reservation_staffs ON reservation_staffs.staff_id = staffs.id
-             LEFT OUTER JOIN reservations ON reservations.id = reservation_staffs.reservation_id")
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id")
 
     scoped = scoped.
+      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
       where("minutes <= ?", distance_in_minutes).
-      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))", start_time: start_time, end_time: end_time).
-      where("(reservations.start_time is NULL and reservations.end_time is NULL) or
-             reservations.id = ? or
-             menus.min_staffs_number is NULL or
-            (NOT(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?))", reservation_id, end_time, start_time)
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
+             start_time: start_time, end_time: end_time)
 
     scoped = scoped.
       where("staffs.full_time = ?", true).
@@ -135,16 +132,62 @@ class Shop < ApplicationRecord
     scoped.select("menus.*").group("menus.id").having("
       CASE
         WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
-        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number
+        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number AND sum(staff_menus.max_customers) >= #{number_of_customer}
         ELSE true
       END
     ")
+
+    # Find the menus that have reservations and all staffs could do that menu alreay had reservations
+    # reserved_menus = menus.
+    #   where.not(min_staffs_number: nil).
+    #   joins("JOIN reservations ON reservations.menu_id = menus.id
+    #          JOIN reservation_staffs ON reservation_staffs.reservation_id = reservations.id
+    #          JOIN staff_menus on staff_menus.menu_id = menus.id ").
+    #   where(id: candidate_menus.map(&:id)).
+    #   where.not("reservations.id" => reservation_id).
+    #   where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)", end_time, start_time).
+    #   group("menus.id").
+    #   having("count(DISTINCT(staff_menus.staff_id)) = count(DISTINCT(reservation_staffs.staff_id))")
+    #
+    # if reserved_menus.present?
+    #   # staffs had shop's reservations during that time
+    #
+    #   reserved_staff_ids = reserved_menus.map do |menu|
+    #     reservations.
+    #       includes(:reservation_staffs).
+    #       where(menu_id: reserved_menus).
+    #       where("(start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * #{menu.interval})) and reservations.ready_time >= ?)",
+    #             end_time, start_time).
+    #       map(&:staff_ids)
+    #   end.flatten.uniq
+    #
+    #   new_candidate_menus = candidate_menus - reserved_menus
+    #
+    #   menus.
+    #     left_outer_joins(:staff_menus).
+    #     where(id: new_candidate_menus).
+    #     where.not("staff_menus.staff_id" => reserved_staff_ids).
+    #     group("menus.id").having("
+    #       CASE
+    #         WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
+    #         WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number AND sum(staff_menus.max_customers) >= #{number_of_customer}
+    #         ELSE true
+    #       END
+    #     ")
+    # else
+    #   candidate_menus
+    # end
   end
 
   def available_staffs(menu, business_time_range, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last + menu.interval.to_i.minutes
     reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
+
+    # If this menu doesn't take any man power, then it could be assigned to anyone
+    unless menu.min_staffs_number
+      return menu.staffs
+    end
 
     # All staffs could do this menu already have reservation
     if menu.staff_ids.present? &&
@@ -153,15 +196,13 @@ class Shop < ApplicationRecord
       return
     end
 
-    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules, :reservations).
+    scoped = menu.staffs.left_outer_joins(:business_schedules, :custom_schedules).
       includes(:staff_menus).
+      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
-             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time).
-      where("(reservations.start_time is NULL and reservations.end_time is NULL) or
-              reservations.id = ? or
-             (NOT(reservations.start_time <= ? and reservations.ready_time >= ?))", reservation_id, end_time, start_time)
+             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)#.
 
-    scoped.
+    candidate_staffs = scoped.
       where(full_time: true).
     or(
       scoped.
@@ -173,6 +214,17 @@ class Shop < ApplicationRecord
   end
 
   private
+
+  # staffs had reservations during that time
+  def reserved_staff_ids(start_time, end_time)
+    @reserved_staff_ids ||= ReservationStaff.
+      joins(reservation: :menu).
+      where.not("menus.min_staffs_number": nil).
+      where("reservations.staff_id": staff_ids).
+      where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)",
+          end_time, start_time).
+      pluck(:staff_id).uniq
+  end
 
   def business_schedule(date)
     @business_schedule ||= {}
