@@ -16,7 +16,6 @@ class Settings::StaffsController < SettingsController
   def new
     @staff = super_user.staffs.new
     @shops = super_user.shops
-    # @wdays_business_schedules = []
   end
 
   # GET /staffs/1/edit
@@ -27,8 +26,7 @@ class Settings::StaffsController < SettingsController
   # POST /staffs
   # POST /staffs.json
   def create
-    @staff = super_user.staffs.new(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
-                                                shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
+    @staff = super_user.staffs.new(staff_params)
 
     respond_to do |format|
       if @staff.save
@@ -45,7 +43,7 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1.json
   def update
     respond_to do |format|
-      if @staff.update(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}", shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
+      if @staff.update(staff_params)
         format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
@@ -74,6 +72,6 @@ class Settings::StaffsController < SettingsController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:first_name, :last_name, :first_shortname, :last_shortname, shop_ids: [])
+    params.require(:staff).permit(:first_name, :last_name, :jp_first_name, :jp_last_name, shop_ids: [])
   end
 end

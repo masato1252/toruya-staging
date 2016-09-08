@@ -99,7 +99,7 @@ class Shop < ApplicationRecord
              start_time: start_time, end_time: end_time)
 
     scoped = scoped.
-      where("business_schedules.full_time = ?", true)
+      where("business_schedules.full_time = ?", true).
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday)

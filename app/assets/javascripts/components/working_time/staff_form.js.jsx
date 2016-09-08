@@ -61,8 +61,8 @@ UI.define("WorkingTime.StaffForm", function() {
 
           <div id="staffInfo" className="formRow">
             <dl>
-              <dd className="familyName"><input type="text" defaultValue={this.props.staff.name} disabled /></dd>
-              <dd className="firstName"><input type="text" defaultValue={this.props.staff.shortname} disabled /></dd>
+              <dd className="familyName"><input type="text" defaultValue={this.props.staff.last_name} disabled /></dd>
+              <dd className="firstName"><input type="text" defaultValue={this.props.staff.first_name} disabled /></dd>
             </dl>
           </div>
 

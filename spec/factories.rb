@@ -80,9 +80,8 @@ FactoryGirl.define do
 
   factory :staff do
     association :user
-    sequence(:name) { |n| "staff-#{n}" }
-    sequence(:shortname) { |n| "s-#{n}" }
-    full_time true
+    sequence(:last_name) { |n| "last_name-#{n}" }
+    sequence(:first_name) { |n| "first_name-#{n}" }
   end
 
   factory :staff_menu do
