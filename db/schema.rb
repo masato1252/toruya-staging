@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20160830235902) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_working_time_index", using: :btree
-    t.index ["staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index", using: :btree
+    t.index ["shop_id", "staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index", using: :btree
   end
 
   create_table "custom_schedules", force: :cascade do |t|

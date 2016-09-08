@@ -13,6 +13,6 @@ class CreateBusinessSchedules < ActiveRecord::Migration[5.0]
     end
 
     add_index :business_schedules, [:shop_id, :business_state, :day_of_week, :start_time, :end_time], name: :shop_working_time_index
-    add_index :business_schedules, [:staff_id, :full_time, :business_state, :day_of_week, :start_time, :end_time], name: :staff_working_time_index
+    add_index :business_schedules, [:shop_id, :staff_id, :full_time, :business_state, :day_of_week, :start_time, :end_time], name: :staff_working_time_index
   end
 end

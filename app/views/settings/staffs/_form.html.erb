@@ -32,9 +32,8 @@
   </div>
   <h3>Belonging Shop<strong>必須項目</strong></h3>
   <div id="belong" class="formRow">
-    <%
-      shop_ids = staff.shop_staffs.pluck(:shop_id)
-    %>
+    <% shop_ids = staff.shop_staffs.pluck(:shop_id) %>
+    <input type="hidden" name="staff[shop_ids][]" value="">
     <% @shops.each do |shop| %>
       <dl class="checkbox">
         <dd>

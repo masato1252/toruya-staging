@@ -42,8 +42,10 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
+    outcome = UpdateStaff.run(staff: @staff, attrs: staff_params.to_h)
+
     respond_to do |format|
-      if @staff.update(staff_params)
+      if outcome.valid?
         format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
