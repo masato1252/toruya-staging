@@ -1,6 +1,4 @@
-class Settings::BusinessSchedulesController < DashboardController
-  layout "settings"
-
+class Settings::BusinessSchedulesController < SettingsController
   def index
   end
 

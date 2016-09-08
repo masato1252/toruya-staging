@@ -29,15 +29,15 @@ ActiveRecord::Schema.define(version: 20160830235902) do
   create_table "business_schedules", force: :cascade do |t|
     t.integer  "shop_id"
     t.integer  "staff_id"
+    t.boolean  "full_time"
     t.string   "business_state"
     t.integer  "day_of_week"
     t.datetime "start_time"
     t.datetime "end_time"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_day_of_week_index", using: :btree
-    t.index ["staff_id", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_day_of_week_index", using: :btree
-    t.index ["staff_id", "business_state", "day_of_week"], name: "business_schedules_index", using: :btree
+    t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_working_time_index", using: :btree
+    t.index ["staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index", using: :btree
   end
 
   create_table "custom_schedules", force: :cascade do |t|
@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(version: 20160830235902) do
     t.integer  "staff_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", using: :btree
+    t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", unique: true, using: :btree
   end
 
   create_table "shops", force: :cascade do |t|
@@ -168,10 +168,9 @@ ActiveRecord::Schema.define(version: 20160830235902) do
     t.integer  "user_id",    null: false
     t.string   "name",       null: false
     t.string   "shortname"
-    t.boolean  "full_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "full_time"], name: "index_staffs_on_user_id_and_full_time", using: :btree
+    t.index ["user_id"], name: "index_staffs_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

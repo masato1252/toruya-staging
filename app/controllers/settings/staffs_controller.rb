@@ -1,6 +1,4 @@
-class Settings::StaffsController < DashboardController
-  layout "settings"
-  before_action :authenticate_user!
+class Settings::StaffsController < SettingsController
   before_action :set_staff, only: [:show, :edit, :update, :destroy]
 
   # GET /staffs
@@ -17,12 +15,13 @@ class Settings::StaffsController < DashboardController
   # GET /staffs/new
   def new
     @staff = super_user.staffs.new
-    @wdays_business_schedules = []
+    @shops = super_user.shops
+    # @wdays_business_schedules = []
   end
 
   # GET /staffs/1/edit
   def edit
-    @wdays_business_schedules = super_user.business_schedules.where(staff_id: @staff.id).order(:day_of_week)
+    @shops = super_user.shops
   end
 
   # POST /staffs
@@ -45,13 +44,8 @@ class Settings::StaffsController < DashboardController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    business_schedules_params[:business_schedules].each do |attrs|
-      CreateBusinessSchedule.run(shop: shop, staff: @staff, attrs: attrs.to_h)
-    end
-
     respond_to do |format|
-      if @staff.update(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}",
-                                                shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
+      if @staff.update(staff_params.merge(name: "#{staff_params[:last_name]} #{staff_params[:first_name]}", shortname: "#{staff_params[:last_shortname]} #{staff_params[:first_shortname]}"))
         format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
@@ -80,11 +74,6 @@ class Settings::StaffsController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:first_name, :last_name, :first_shortname, :last_shortname, :full_time,
-                                  menu_ids: [], staff_menus_attributes: [[:max_customers, :menu_id]])
-  end
-
-  def business_schedules_params
-    params.permit(business_schedules: [:id, :business_state, :day_of_week, :start_time, :end_time])
+    params.require(:staff).permit(:first_name, :last_name, :first_shortname, :last_shortname, shop_ids: [])
   end
 end

@@ -1,12 +1,10 @@
-class Settings::ShopsController < DashboardController
-  layout "settings"
-  before_action :authenticate_user!
+class Settings::ShopsController < SettingsController
   before_action :set_shop, only: [:show, :edit, :update, :destroy]
 
   # GET /shops
   # GET /shops.json
   def index
-    @shops = current_user.shops.all
+    @shops = current_user.shops.order("id").all
   end
 
   # GET /shops/1

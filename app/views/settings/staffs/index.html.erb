@@ -19,11 +19,6 @@
       <dl>
         <dt class="check"><input type="checkbox"></dt>
         <dt class="rowTTL">
-          <% if staff.full_time %>
-            <i class="fa fa-check" aria-hidden="true"></i>
-          <% else %>
-            <i class="fa fa-times" aria-hidden="true"></i>
-          <% end %>
           <%= staff.name %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>

@@ -38,6 +38,10 @@ Rails.application.routes.draw do
     resources :business_schedules, only: [:index]
     resources :menus
 
+    namespace :working_time do
+      resources :staffs, only: [:index, :edit, :update]
+    end
+
     resources :shops, except: [:show] do
       resources :business_schedules, only: [] do
         collection do

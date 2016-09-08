@@ -31,7 +31,7 @@
   </dl>
   <dl class="staff">
     <%= active_link_to "スタッフ", settings_staffs_path,
-      active: [["settings/staffs"]],
+      active: [["settings/staffs", "settings/working_time/staffs"]],
       wrap_tag: :dt,
       class_active: "here" %>
     <dd>
@@ -40,7 +40,10 @@
           active: [["settings/staffs"]],
           wrap_tag: :li,
           class_active: "here" %>
-        <li><a href="staff_worktime.html">勤務日時</a></li>
+        <%= active_link_to "勤務日時", settings_working_time_staffs_path,
+          active: [["settings/working_time/staffs"]],
+          wrap_tag: :li,
+          class_active: "here" %>
       </ul>
     </dd>
   </dl>

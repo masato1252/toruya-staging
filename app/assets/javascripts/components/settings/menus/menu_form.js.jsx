@@ -220,7 +220,6 @@ UI.define("Settings.MenuForm", function() {
                         name="menu[staff_menus_attributes][][staff_id]"
                         id={`staff-${staff.id}`}
                         value={staff.id}
-                        defaultChecked={_.contains(this.defaultSelectedStaffIds, staff.id)}
                         checked={!!this.selectedStaff(staff.id)}
                         onChange={this._handleStaffCheck}
                       />

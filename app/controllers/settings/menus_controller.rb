@@ -1,6 +1,4 @@
-class Settings::MenusController < DashboardController
-  layout "settings"
-  before_action :authenticate_user!
+class Settings::MenusController < SettingsController
   before_action :set_menu, only: [:show, :edit, :update, :destroy]
 
   # GET /settings/menus

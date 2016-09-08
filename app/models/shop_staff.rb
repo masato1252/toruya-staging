@@ -12,4 +12,6 @@
 class ShopStaff < ApplicationRecord
   belongs_to :shop
   belongs_to :staff
+
+  validates :staff_id, uniqueness: { scope: [:shop_id] }
 end

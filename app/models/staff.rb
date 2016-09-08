@@ -6,14 +6,11 @@
 #  user_id    :integer          not null
 #  name       :string           not null
 #  shortname  :string
-#  full_time  :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
 class Staff < ApplicationRecord
-  default_value_for :full_time, true
-
   attr_accessor :first_name, :last_name, :first_shortname, :last_shortname
 
   validates :name, presence: true
@@ -22,6 +19,8 @@ class Staff < ApplicationRecord
   belongs_to :user
   has_many :staff_menus
   has_many :menus, through: :staff_menus
+  has_many :shop_staffs
+  has_many :shops, through: :shop_staffs
   has_many :business_schedules
   has_many :custom_schedules
   has_many :reservation_staffs
@@ -34,7 +33,7 @@ class Staff < ApplicationRecord
   end
 
   def first_name
-    name.split(" ").last if name
+    name.split(" ").second if name
   end
 
   def last_shortname
@@ -42,6 +41,6 @@ class Staff < ApplicationRecord
   end
 
   def first_shortname
-    shortname.split(" ").last if shortname
+    shortname.split(" ").second if shortname
   end
 end

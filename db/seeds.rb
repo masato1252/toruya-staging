@@ -2,10 +2,13 @@ user = FactoryGirl.create(:user, email: "superadmin@email.com", password: "passw
 shop = FactoryGirl.create(:shop, user: user)
 menu = FactoryGirl.create(:menu, user: user, max_seat_number: nil)
 lecture_menu = FactoryGirl.create(:menu, :lecture, user: user)
+vip_menu = FactoryGirl.create(:menu, :lecture, user: user)
 staff = FactoryGirl.create(:staff, user: user)
 staff2 = FactoryGirl.create(:staff, user: user)
+
 FactoryGirl.create(:reservation_setting, menu: menu)
 FactoryGirl.create(:reservation_setting, menu: lecture_menu)
+FactoryGirl.create(:reservation_setting, menu: vip_menu)
 
 FactoryGirl.create(:shop_menu, shop: shop, menu: menu)
 FactoryGirl.create(:shop_menu, shop: shop, menu: lecture_menu)

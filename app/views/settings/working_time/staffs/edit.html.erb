@@ -1,0 +1,16 @@
+<div id="about">
+  <p>Please enter staff worktime informations here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<%= react_component("UI.WorkingTime.StaffForm", {
+  staff: @staff,
+  save_staff_path: settings_working_time_staff_path(@staff),
+  cancel_path: settings_working_time_staffs_path,
+  shops: @staff.shops,
+  full_time_schedules: @full_time_schedules,
+  full_time_shops: @full_time_schedules.map(&:shop),
+  wdays: BusinessSchedule::WDAYS.map { |wday| I18n.t("date.day_names").at(wday) },
+  wdays_business_schedules_by_shop: @wdays_business_schedules_by_shop,
+  form_authenticity_token: form_authenticity_token
+})
+%>

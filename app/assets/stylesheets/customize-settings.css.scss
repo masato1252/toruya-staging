@@ -46,7 +46,7 @@
     width: 4em;
   }
 
-  #shopSelect {
+  #shopSelect, #belong {
     input[type="checkbox"]:checked + label {
       &:before {
         font-family: "FontAwesome";

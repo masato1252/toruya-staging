@@ -3,6 +3,7 @@ class CreateBusinessSchedules < ActiveRecord::Migration[5.0]
     create_table :business_schedules do |t|
       t.integer :shop_id
       t.integer :staff_id
+      t.boolean :full_time
       t.string :business_state
       t.integer :day_of_week
       t.datetime :start_time
@@ -11,7 +12,7 @@ class CreateBusinessSchedules < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :business_schedules, [:shop_id, :business_state, :day_of_week, :start_time, :end_time], name: :shop_day_of_week_index
-    add_index :business_schedules, [:staff_id, :business_state, :day_of_week, :start_time, :end_time], name: :staff_day_of_week_index
+    add_index :business_schedules, [:shop_id, :business_state, :day_of_week, :start_time, :end_time], name: :shop_working_time_index
+    add_index :business_schedules, [:staff_id, :full_time, :business_state, :day_of_week, :start_time, :end_time], name: :staff_working_time_index
   end
 end
