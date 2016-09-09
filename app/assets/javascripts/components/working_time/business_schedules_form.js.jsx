@@ -23,7 +23,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                 var schedule = _.find(this.props.wdays_business_schedules, function(business_schedule) {
                   return business_schedule.day_of_week == day_index
                 })
-                
+
                 return (
                   <dl key={`shop-${this.props.shop.id}-${wday}`}>
                     <dt>{wday}</dt>

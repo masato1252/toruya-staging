@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     resources :staffs
     resources :business_schedules, only: [:index]
     resources :menus
+    resources :reservation_settings
 
     namespace :working_time do
       resources :staffs, only: [:index, :edit, :update]

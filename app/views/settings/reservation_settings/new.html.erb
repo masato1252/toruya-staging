@@ -1,0 +1,11 @@
+<div id="subNav">
+  <h2>基本情報 − Add a New 予約枠</h2>
+</div>
+<div id="about">
+  <p>Please enter menu informations here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<%= react_component "UI.ReservationSettings.Form", {
+  setting: @reservation_setting,
+  day_names: I18n.t("date.abbr_day_names")
+} %>

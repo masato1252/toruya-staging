@@ -1,0 +1,32 @@
+<div id="subNav">
+  <h2>基本情報 − 予約枠</h2>
+</div>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to "Add a New 予約枠", new_settings_reservation_setting_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p>Here is the list of 予約枠 you set.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<form>
+  <div id="resframeList" class="formRow">
+    <ul class="tableTTL">
+      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="rowTTL">予約枠 Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
+
+    <% @reservation_settings.each do |setting| %>
+      <dl>
+        <dt class="check"><input type="checkbox"></dt>
+        <dt class="rowTTL"><%= setting.name %></dt>
+        <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to edit_settings_reservation_setting_path(setting), class: "BTNtarco" %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+</form>

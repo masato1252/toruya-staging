@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160830235902) do
+ActiveRecord::Schema.define(version: 20160908140827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,17 @@ ActiveRecord::Schema.define(version: 20160830235902) do
     t.index ["user_id", "jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
   end
 
+  create_table "menu_reservation_setting_rules", force: :cascade do |t|
+    t.integer  "menu_id"
+    t.string   "reservation_type"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.integer  "repeats"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["menu_id", "reservation_type", "start_date", "end_date"], name: "menu_reservation_setting_rules_index", using: :btree
+  end
+
   create_table "menus", force: :cascade do |t|
     t.integer  "user_id",           null: false
     t.string   "name",              null: false
@@ -87,20 +98,27 @@ ActiveRecord::Schema.define(version: 20160830235902) do
     t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true, using: :btree
   end
 
-  create_table "reservation_settings", force: :cascade do |t|
+  create_table "reservation_setting_menus", force: :cascade do |t|
+    t.integer  "reservation_setting_id"
     t.integer  "menu_id"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["reservation_setting_id", "menu_id"], name: "reservation_setting_menus_index", using: :btree
+  end
+
+  create_table "reservation_settings", force: :cascade do |t|
+    t.integer  "user_id"
     t.string   "name"
     t.string   "short_name"
     t.string   "day_type"
-    t.string   "time_type"
     t.integer  "day"
-    t.integer  "day_of_week"
     t.integer  "nth_of_week"
+    t.string   "days_of_week", default: [],              array: true
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["menu_id", "start_time", "end_time", "day_type", "day_of_week", "day", "nth_of_week"], name: "reservation_settings_index", using: :btree
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["user_id", "start_time", "end_time", "day_type", "days_of_week", "day", "nth_of_week"], name: "reservation_setting_index", using: :btree
   end
 
   create_table "reservation_staffs", force: :cascade do |t|

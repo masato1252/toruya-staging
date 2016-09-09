@@ -1,14 +1,14 @@
 <nav id="sideNav">
   <dl class="shop">
     <%= active_link_to "基本情報", settings_shops_path,
-      active: [["settings/shops", "settings/business_schedules"]],
+      active: [["settings/shops", "settings/business_schedules", "settings/reservation_settings"]],
       wrap_tag: :dt,
       class_active: "here" %>
     <dd>
       <ul>
         <%= active_link_to "Shop Info", settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
         <%= active_link_to "Business Hours", settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-        <li><a href="menu_resframe.html">予約枠</a></li>
+        <%= active_link_to "予約枠", settings_reservation_settings_path, active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
       </ul>
     </dd>
   </dl>
