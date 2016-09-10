@@ -9,7 +9,8 @@ UI.define("Settings.MenuForm", function() {
       return ({
         menu: this.props.menu,
         selectedStaffs: this.props.selectedStaffs,
-        staffMenus: this.props.staffMenus
+        staffMenus: this.props.staffMenus,
+        selectedReservationSettingRule: this.props.selectedReservationSettingRule || {}
       });
     },
 
@@ -21,6 +22,11 @@ UI.define("Settings.MenuForm", function() {
 
     selectedStaffMenu: function(staff_id) {
       return _.find(this.state.staffMenus, function(staff_menu) { return `${staff_menu.staffId}` == `${staff_id}` })
+    },
+
+    switchReservationType: function(event) {
+      this.state.selectedReservationSettingRule.reservation_type = event.target.dataset.value;
+      this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule});
     },
 
     _handleStaffCheck: function(event) {
@@ -183,6 +189,112 @@ UI.define("Settings.MenuForm", function() {
                 );
               }.bind(this))}
           </div>
+          <h3 className="resFrame">予約受付方法</h3>
+          <div id="resFrame" className="formRow">
+            <dl className="resFrameType">
+              <dt>予約枠</dt>
+              <dd>
+                <UI.Select
+                  name="menu[reservation_setting_id]"
+                  options={this.props.reservationSettings}
+                  defaultValue ={this.props.selectedReservationSetting.id}
+                  />
+              </dd>
+              <dt className="function">
+                <a href="menu_resframe.html" className="BTNtarco">Edit 予約枠</a>
+              </dt>
+              <dt className="function">
+                <a href="menu_resframe_add.html" className="BTNyellow">ADD a New 予約枠</a>
+              </dt>
+            </dl>
+            <dl className="menuStarts">
+              <dt>受付開始</dt>
+              <dd>
+                <input
+                  type="date"
+                  placeholder="開始日"
+                  name="menu[menu_reservation_setting_rule_attributes][start_date]"
+                  defaultValue={
+                    this.state.selectedReservationSettingRule.start_date ? moment(this.state.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : ""
+                  }
+                  />
+              </dd>
+            </dl>
+            <dl className="menuEnds">
+              <dt>受付終了</dt>
+              <dd>
+                <input
+                  type="hidden"
+                  name="menu[menu_reservation_setting_rule_attributes][reservation_type]"
+                  value={this.state.selectedReservationSettingRule.reservation_type}
+                  />
+
+                <div className="BTNselect" id="menuEnds">
+                  <input
+                    type="radio"
+                    id="menuEnds1"
+                    name="menuEnds"
+                    checked={!this.state.selectedReservationSettingRule.reservation_type}
+                    onChange={this.switchReservationType}
+                    />
+                  <label htmlFor="menuEnds1"><span>None</span></label>
+
+                  <input
+                    type="radio"
+                    id="menuEnds2"
+                    name="menuEnds"
+                    data-value="repeating"
+                    checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
+                    onChange={this.switchReservationType}
+                    />
+                  <label htmlFor="menuEnds2"><span>After repeating</span></label>
+
+                  <input
+                    type="radio"
+                    name="menuEnds"
+                    id="menuEnds3"
+                    data-value="date"
+                    checked={this.state.selectedReservationSettingRule.reservation_type == "date"}
+                    onChange={this.switchReservationType}
+                    />
+                  <label htmlFor="menuEnds3"><span>指定日</span></label>
+                </div>
+              </dd>
+            </dl>
+              {
+                this.state.selectedReservationSettingRule.reservation_type == "repeating" ? (
+                  <dl id="menuEndsRepeat">
+                    <dt>Repeat Setting</dt>
+                    <dd>
+                      <input
+                        type="number"
+                        size="3"
+                        maxlength="3"
+                        name="menu[menu_reservation_setting_rule_attributes][repeats]"
+                        defaultValue={this.state.selectedReservationSettingRule.repeats}
+                        /> times
+                    </dd>
+                  </dl>
+                ) : null
+              }
+              {
+                this.state.selectedReservationSettingRule.reservation_type == "date" ? (
+                  <dl id="menuEndsDate">
+                    <dt>Ends Date Setting</dt>
+                    <dd>
+                      <input
+                        type="date"
+                        placeholder="終了日"
+                        name="menu[menu_reservation_setting_rule_attributes][end_date]"
+                        defaultValue={
+                          this.state.selectedReservationSettingRule.end_date ? moment(this.state.selectedReservationSettingRule.end_date).format("YYYY-MM-DD") : ""
+                        }
+                        />
+                    </dd>
+                  </dl>
+                ) : null
+              }
+            </div>
 
           <h3>対応従業員</h3>
           <div id="doStaff" className="formRow">

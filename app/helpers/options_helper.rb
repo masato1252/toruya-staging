@@ -9,6 +9,10 @@ module OptionsHelper
     shops.map { |s| React.camelize_props(s.attributes) }
   end
 
+  def reservation_setting_options(reservation_settings)
+    reservation_settings.map { |s| { label: s.name, value: s.id } }
+  end
+
   def staff_options(staffs, selected_menu)
     return unless staffs && selected_menu
     staffs.map { |s| { label: s.name, value: s.id.to_s, maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.max_customers } }

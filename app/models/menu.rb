@@ -28,7 +28,6 @@ class Menu < ApplicationRecord
   has_many :staffs, through: :staff_menus
   has_many :shop_menus, inverse_of: :menu
   has_many :shops, through: :shop_menus
-  has_many :reservation_settings
   has_many :reservations
   belongs_to :user
   has_one :reservation_setting_menu

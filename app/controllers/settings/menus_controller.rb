@@ -41,8 +41,12 @@ class Settings::MenusController < SettingsController
   # PATCH/PUT /settings/menus/1.json
   def update
     respond_to do |format|
-      # TODO: we always return staff_ids=[] to delete all its staff_menus, then create again. Try to fix it in right way.
-      if @menu.update(menu_params)
+      outcome = UpdateMenu.run(menu: @menu,
+                               attrs: menu_params.to_h,
+                               reservation_setting_id: menu_params[:reservation_setting_id],
+                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+
+      if outcome.valid?
         format.html { redirect_to settings_menus_path, notice: 'Menu was successfully updated.' }
         format.json { render :show, status: :ok, location: @menu }
       else
@@ -72,7 +76,10 @@ class Settings::MenusController < SettingsController
   def menu_params
     @menu_params ||= params.require(:menu).permit(
     :name, :shortname, :minutes, :interval, :min_staffs_number, :max_seat_number,
+    :reservation_setting_id,
     staff_ids: [], shop_ids: [],
-    staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]])
+    staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]],
+    menu_reservation_setting_rule_attributes: [:start_date, :end_date, :repeats, :reservation_type],
+    )
   end
 end
