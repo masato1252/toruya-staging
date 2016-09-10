@@ -4,7 +4,8 @@
 <div id="about">
   <p>Please enter menu informations here.<br>Toruya will accept reservation based on this setting.</p>
 </div>
+
 <%= render partial: "form", locals: {
   reservation_setting: @reservation_setting,
-  url: settings_reservation_settings_path }
+  url: settings_reservation_setting_path(@reservation_setting) }
 %>

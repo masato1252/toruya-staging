@@ -24,7 +24,7 @@
         <dt class="rowTTL"><%= setting.name %></dt>
         <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to edit_settings_reservation_setting_path(setting), class: "BTNtarco" %>
+          <%= link_to "Edit 予約枠", edit_settings_reservation_setting_path(setting), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>
