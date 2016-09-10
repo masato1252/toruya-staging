@@ -9,13 +9,31 @@ module OptionsHelper
     shops.map { |s| React.camelize_props(s.attributes) }
   end
 
-  def reservation_setting_options(reservation_settings)
-    reservation_settings.map { |s| { label: s.name, value: s.id } }
+  def reservation_setting_options(reservation_settings, menu)
+    reservation_settings.map do |s|
+      reservation_setting_option(s, menu)
+    end
+  end
+
+  def reservation_setting_option(setting, menu)
+    h = {
+      label: setting.name, value: setting.id, id: setting.id
+    }
+
+    if setting.id
+      h.merge!(editPath: edit_settings_reservation_setting_path(setting, from_menu: true, menu_id: menu.id))
+    end
+    h
   end
 
   def staff_options(staffs, selected_menu)
     return unless staffs && selected_menu
-    staffs.map { |s| { label: s.name, value: s.id.to_s, maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.max_customers } }
+    staffs.map do |s|
+       {
+          label: s.name, value: s.id.to_s,
+          maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.max_customers
+       }
+    end
   end
 
   def customer_options(customers)

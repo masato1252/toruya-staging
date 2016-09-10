@@ -12,7 +12,15 @@ class Settings::ReservationSettingsController < SettingsController
   def create
     @reservation_setting = super_user.reservation_settings.new(reservation_setting_params)
     if @reservation_setting.save
-      redirect_to settings_reservation_settings_path
+      if params[:from_menu]
+        if params[:menu_id]
+          redirect_to edit_settings_menu_path(id: params[:menu_id])
+        else
+          redirect_to new_settings_menus_path
+        end
+      else
+        redirect_to settings_reservation_settings_path
+      end
     else
     end
   end
@@ -21,14 +29,18 @@ class Settings::ReservationSettingsController < SettingsController
   end
 
   def update
-    respond_to do |format|
-      if @reservation_setting.update(reservation_setting_params)
-        format.html { redirect_to settings_reservation_settings_path, notice: 'Menu was successfully updated.' }
-        format.json { render :show, status: :ok, location: @menu }
+    if @reservation_setting.update(reservation_setting_params)
+      if params[:from_menu]
+        if params[:menu_id]
+          redirect_to edit_settings_menu_path(id: params[:menu_id])
+        else
+          redirect_to new_settings_menus_path
+        end
       else
-        format.html { render :edit }
-        format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
+        redirect_to settings_reservation_settings_path
       end
+    else
+      render :edit
     end
   end
 

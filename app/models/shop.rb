@@ -85,7 +85,8 @@ class Shop < ApplicationRecord
     end
 
     scoped = menus.
-      joins(:reservation_settings).
+      joins(:reservation_setting,
+            :menu_reservation_setting_rule).
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
              LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
@@ -98,12 +99,20 @@ class Shop < ApplicationRecord
              (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
              start_time: start_time, end_time: end_time)
 
+    # Fiter Staffs schedule
     scoped = scoped.
       where("business_schedules.full_time = ?", true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and business_schedules.day_of_week = ? ", "opened", business_time_range.first.wday)
+      where("business_schedules.business_state = ? and ? = ANY(business_schedules.days_of_week)", "opened", business_time_range.first.wday).
+      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
+
+    # Shops
+    today = Time.zone.now.to_s(:date)
+    scoped = scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
+    scoped = scoped.where("menu_reservation_setting_rules.end_date is NULL OR
+                           menu_reservation_setting_rules.end_date >= ?", today)
 
     scoped = scoped.
       where("reservation_settings.day_type = ?", "business_days").

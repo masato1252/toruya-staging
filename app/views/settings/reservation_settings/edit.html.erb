@@ -7,5 +7,5 @@
 
 <%= render partial: "form", locals: {
   reservation_setting: @reservation_setting,
-  url: settings_reservation_setting_path(@reservation_setting) }
+  url: settings_reservation_setting_path(@reservation_setting, from_menu: params[:from_menu], menu_id: params[:menu_id]) }
 %>

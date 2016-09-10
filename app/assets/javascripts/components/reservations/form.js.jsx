@@ -63,12 +63,18 @@ UI.define("Reservation.Form", function() {
     _maxCustomerLimit: function() {
       var _this = this;
       if (this.state.menu_min_staffs_number) {
-        if (this.state.menu_min_staffs_number == 1) {
-          var selected_staffs = _.filter(_this.state.staff_options, function(staff) { return _.contains(_this.state.staff_ids, `${staff.value}`) })
-          return _.reduce(selected_staffs, function(num, staff){ return staff.maxCustomers + num; }, 0);
+        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
+           return _.contains(_this.state.staff_ids, `${staff.value}`)
+        })
+        var staffMaxCustomersTotal = _.reduce(selected_staffs, function(num, staff) {
+           return staff.maxCustomers + num;
+        }, 0);
+
+        if (this.state.menu_max_seat_number) {
+          return _.min([staffMaxCustomersTotal, this.state.menu_max_seat_number]);
         }
         else {
-          return this.state.menu_max_seat_number;
+          return staffMaxCustomersTotal;
         }
       }
       else {

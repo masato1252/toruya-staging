@@ -10,6 +10,7 @@ UI.define("Settings.MenuForm", function() {
         menu: this.props.menu,
         selectedStaffs: this.props.selectedStaffs,
         staffMenus: this.props.staffMenus,
+        selectedReservationSetting: this.props.selectedReservationSetting,
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {}
       });
     },
@@ -27,6 +28,14 @@ UI.define("Settings.MenuForm", function() {
     switchReservationType: function(event) {
       this.state.selectedReservationSettingRule.reservation_type = event.target.dataset.value;
       this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule});
+    },
+
+    changeReservationSetting: function(event) {
+      var selectedReservationSetting = _.find(this.props.reservationSettings, function(reservation_setting) {
+         return `${reservation_setting.id}` == event.target.value
+      })
+
+      this.setState({selectedReservationSetting: selectedReservationSetting});
     },
 
     _handleStaffCheck: function(event) {
@@ -197,14 +206,15 @@ UI.define("Settings.MenuForm", function() {
                 <UI.Select
                   name="menu[reservation_setting_id]"
                   options={this.props.reservationSettings}
-                  defaultValue ={this.props.selectedReservationSetting.id}
+                  value ={this.state.selectedReservationSetting.id}
+                  onChange={this.changeReservationSetting}
                   />
               </dd>
               <dt className="function">
-                <a href="menu_resframe.html" className="BTNtarco">Edit 予約枠</a>
+                <a href={this.state.selectedReservationSetting.editPath} className="BTNtarco">Edit 予約枠</a>
               </dt>
               <dt className="function">
-                <a href="menu_resframe_add.html" className="BTNyellow">ADD a New 予約枠</a>
+                <a href={this.props.addReservationSettingPath} className="BTNyellow">ADD a New 予約枠</a>
               </dt>
             </dl>
             <dl className="menuStarts">
