@@ -1,0 +1,30 @@
+<div id="subNav">
+  <h2>基本情報 − Menu Categories</h2>
+</div>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to "Add a New Category", new_settings_category_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p>Please enter menu Category here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+<form>
+  <div id="menuList" class="formRow">
+    <ul class="tableTTL">
+      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="rowTTL">Category Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
+    <% @settings_categories.each do |settings_category| %>
+      <dl>
+        <dt class="check"><input type="checkbox"></dt>
+        <dt class="rowTTL"><%= settings_category.name %></dt>
+        <dd class="updateTime"><%= settings_category.updated_at.to_s(:date) %></dd>
+        <dd class="function">
+          <%= link_to "Edit", edit_settings_category_path(settings_category), class: "BTNtarco" %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+</form>

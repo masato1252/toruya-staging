@@ -35,4 +35,5 @@ class User < ApplicationRecord
   has_many :staffs
   has_many :customers
   has_many :reservation_settings
+  has_many :categories
 end

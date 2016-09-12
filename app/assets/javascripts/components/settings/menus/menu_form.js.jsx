@@ -4,6 +4,7 @@ UI.define("Settings.MenuForm", function() {
   var MenuForm = React.createClass({
     getInitialState: function() {
       this.defaultSelectedShopIds = this.props.selectedShops.map(function(shop) { return shop.id });
+      this.defaultSelectedCategoryIds = this.props.selectedCategories.map(function(category) { return category.id });
       this.defaultSelectedStaffIds = this.props.selectedStaffs.map(function(staff) { return staff.id });
 
       return ({
@@ -305,6 +306,28 @@ UI.define("Settings.MenuForm", function() {
                 ) : null
               }
             </div>
+          <h3 className="menuCategory">
+            Category
+            <a href={this.props.newCategoryPath} className="BTNyellow addNew">ADD a New Category</a>
+          </h3>
+          <div id="category" className="formRow">
+              {this.props.categories.map(function(category) {
+                return(
+                  <dl className="checkbox" key={`category-${category.id}`}>
+                    <dd>
+                      <input
+                        type="checkbox"
+                        name="menu[category_ids][]"
+                        id={`category-${category.id}`}
+                        value={category.id}
+                        defaultChecked={_.contains(this.defaultSelectedCategoryIds, category.id)}
+                      />
+                    <label htmlFor={`category-${category.id}`}>{category.name}</label>
+                    </dd>
+                  </dl>
+                );
+              }.bind(this))}
+          </div>
 
           <h3>対応従業員</h3>
           <div id="doStaff" className="formRow">

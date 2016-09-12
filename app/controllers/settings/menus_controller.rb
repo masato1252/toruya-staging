@@ -77,7 +77,7 @@ class Settings::MenusController < SettingsController
     @menu_params ||= params.require(:menu).permit(
     :name, :shortname, :minutes, :interval, :min_staffs_number, :max_seat_number,
     :reservation_setting_id,
-    staff_ids: [], shop_ids: [],
+    staff_ids: [], shop_ids: [], category_ids: [],
     staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]],
     menu_reservation_setting_rule_attributes: [:start_date, :end_date, :repeats, :reservation_type],
     )

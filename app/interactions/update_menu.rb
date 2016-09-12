@@ -8,6 +8,7 @@ class UpdateMenu < ActiveInteraction::Base
     integer :min_staffs_number, default: nil
     integer :max_seat_number, default: nil
     array :shop_ids, default: []
+    array :category_ids, default: []
     array :staff_menus_attributes, default: []
   end
 

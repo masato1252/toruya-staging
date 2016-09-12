@@ -34,10 +34,11 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
-    resources :staffs
+    resources :staffs, except: [:show]
     resources :business_schedules, only: [:index]
-    resources :menus
-    resources :reservation_settings
+    resources :menus, except: [:show]
+    resources :reservation_settings, except: [:show]
+    resources :categories, except: [:show]
 
     namespace :working_time do
       resources :staffs, only: [:index, :edit, :update]

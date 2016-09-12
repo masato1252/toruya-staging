@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908140827) do
+ActiveRecord::Schema.define(version: 20160912094849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,15 @@ ActiveRecord::Schema.define(version: 20160908140827) do
     t.index ["shop_id", "staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index", using: :btree
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "short_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
+  end
+
   create_table "custom_schedules", force: :cascade do |t|
     t.integer  "shop_id"
     t.integer  "staff_id"
@@ -64,6 +73,14 @@ ActiveRecord::Schema.define(version: 20160908140827) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.index ["user_id", "jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
+  end
+
+  create_table "menu_categories", force: :cascade do |t|
+    t.integer  "menu_id"
+    t.integer  "category_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["menu_id", "category_id"], name: "index_menu_categories_on_menu_id_and_category_id", using: :btree
   end
 
   create_table "menu_reservation_setting_rules", force: :cascade do |t|

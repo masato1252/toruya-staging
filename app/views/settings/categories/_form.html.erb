@@ -1,0 +1,29 @@
+<form>
+
+
+</form>
+<%= form_for(category, url: url) do |f| %>
+  <h3>Menu Category Informations<strong>必須項目</strong></h3>
+  <div id="menuInfo" class="formRow">
+    <dl>
+      <dt>カテゴリー名</dt>
+      <dd>
+        <%= f.text_field :name, max_length: 30 %>
+      </dd>
+    </dl>
+    <dl>
+      <dt>短縮名</dt>
+      <dd>
+        <%= f.text_field :short_name, max_length: 10 %>
+      </dd>
+    </dl>
+  </div>
+  <ul id="footerav">
+    <li>
+      <%= link_to "Cancel", settings_categories_path, class: "BTNtarco" %>
+    </li>
+    <li>
+      <%= f.submit "保存", class: "BTNyellow" %>
+    </li>
+  </ul>
+<% end %>

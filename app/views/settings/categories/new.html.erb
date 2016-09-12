@@ -1,0 +1,10 @@
+<div id="subNav">
+  <h2>基本情報 − Add a New Menu Category</h2>
+</div>
+<div id="about">
+  <p>Please enter menu category informations here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<%= render 'form',
+ category: @category,
+ url: settings_categories_path(from_menu: params[:from_menu], menu_id: params[:menu_id]) %>
