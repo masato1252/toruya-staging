@@ -47,7 +47,7 @@ FactoryGirl.define do
   end
 
   factory :reservation_setting do
-    association :menu
+    association :user
     sequence(:name) { |n| "settings-#{n}" }
     sequence(:short_name) { |n| "s-#{n}" }
     day_type "business_days"
@@ -67,6 +67,11 @@ FactoryGirl.define do
       sequence(:nth_of_week) { |n| n%4 }
       sequence(:day_of_week) { |n| n%7 }
     end
+  end
+
+  factory :reservation_setting_menu do
+    association :reservation_setting
+    association :menu
   end
 
   factory :reservation do

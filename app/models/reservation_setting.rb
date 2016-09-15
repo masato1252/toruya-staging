@@ -26,4 +26,6 @@ class ReservationSetting < ApplicationRecord
   validates :name, presence: true
   validates :day_type, presence: true, inclusion: { in: DAY_TYPES }
   validates :day, inclusion: { in: DAYS }, allow_blank: true
+
+  belongs_to :user
 end
