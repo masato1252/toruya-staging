@@ -1,4 +1,9 @@
 FactoryGirl.define do
+  factory :shop_menu do
+    association :shop
+    association :menu
+  end
+
   factory :user do
     sequence(:email) { |n| "foo#{n}@gmail.com" }
     password "foobar78"
@@ -29,7 +34,13 @@ FactoryGirl.define do
   end
 
   factory :menu do
-    association :user
+    _user = FactoryGirl.create(:user)
+
+    transient do
+      shop FactoryGirl.create(:shop, user: _user)
+    end
+
+    user { _user }
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:shortname) { |n| "m-#{n}" }
     minutes 60
@@ -43,6 +54,10 @@ FactoryGirl.define do
 
     trait :easy do
       min_staffs_number nil
+    end
+
+    after(:create) do |menu, proxy|
+      FactoryGirl.create(:shop_menu, menu: menu, shop: proxy.shop)
     end
   end
 
@@ -112,10 +127,13 @@ FactoryGirl.define do
     sequence(:first_name) { |n| "first_name-#{n}" }
 
     trait :full_time do
-
       after(:create) do |staff, proxy|
         FactoryGirl.create(:business_schedule, shop: proxy.shop, staff: staff, full_time: true)
       end
+    end
+
+    after(:create) do |staff, proxy|
+      FactoryGirl.create(:shop_staff, staff: staff, shop: proxy.shop)
     end
   end
 
@@ -128,11 +146,6 @@ FactoryGirl.define do
   factory :shop_staff do
     association :shop
     association :staff
-  end
-
-  factory :shop_menu do
-    association :shop
-    association :menu
   end
 
   factory :customer do
