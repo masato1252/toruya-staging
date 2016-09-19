@@ -47,31 +47,48 @@ FactoryGirl.define do
   end
 
   factory :reservation_setting do
-    association :user
+    _user = FactoryGirl.create(:user)
+
+    user { _user }
+
     sequence(:name) { |n| "settings-#{n}" }
     sequence(:short_name) { |n| "s-#{n}" }
     day_type "business_days"
 
+    transient do
+      menu FactoryGirl.create(:menu, user: _user)
+    end
+
     trait :weekly do
       day_type "weekly"
-      sequence(:day_of_week) { |n| n%7 }
+      sequence(:days_of_week) { |n| [n%7] }
     end
 
     trait :number_of_day_monthly do
-      day_type "number_of_day_monthly"
+      day_type "monthly"
       sequence(:day) { |n| n%28 }
     end
 
     trait :day_of_week_monthly do
-      day_type "day_of_week_monthly"
+      day_type "monthly"
       sequence(:nth_of_week) { |n| n%4 }
-      sequence(:day_of_week) { |n| n%7 }
+      sequence(:days_of_week) { |n| [n%7] }
+    end
+
+    after(:create) do |setting, proxy|
+      FactoryGirl.create(:reservation_setting_menu, reservation_setting: setting, menu: proxy.menu)
+      FactoryGirl.create(:menu_reservation_setting_rule, menu: proxy.menu)
     end
   end
 
   factory :reservation_setting_menu do
     association :reservation_setting
     association :menu
+  end
+
+  factory :menu_reservation_setting_rule do
+    association :menu
+    start_date { Date.today }
   end
 
   factory :reservation do
@@ -84,9 +101,22 @@ FactoryGirl.define do
   end
 
   factory :staff do
-    association :user
+    _user = FactoryGirl.create(:user)
+
+    transient do
+      shop FactoryGirl.create(:shop, user: _user)
+    end
+
+    user { _user }
     sequence(:last_name) { |n| "last_name-#{n}" }
     sequence(:first_name) { |n| "first_name-#{n}" }
+
+    trait :full_time do
+
+      after(:create) do |staff, proxy|
+        FactoryGirl.create(:business_schedule, shop: proxy.shop, staff: staff, full_time: true)
+      end
+    end
   end
 
   factory :staff_menu do

@@ -93,7 +93,7 @@ class Shop < ApplicationRecord
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}")
 
     scoped = scoped.
-      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
+      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
       where("minutes <= ?", distance_in_minutes).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
@@ -104,7 +104,7 @@ class Shop < ApplicationRecord
       where("business_schedules.full_time = ?", true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and ? = ANY(business_schedules.days_of_week)", "opened", business_time_range.first.wday).
+      where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 
@@ -120,7 +120,7 @@ class Shop < ApplicationRecord
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time).
     or(
       scoped.
-      where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", start_time.wday).
+      where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}").
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
     ).
@@ -133,7 +133,7 @@ class Shop < ApplicationRecord
     or(
       scoped.
       where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
-             ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, start_time.wday).
+             ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}").
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
     )
@@ -166,17 +166,17 @@ class Shop < ApplicationRecord
 
     scoped = menu.staffs.
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}")
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}").
       includes(:staff_menus).
-      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time)).
+      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
-             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)#.
+             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)
 
     scoped = scoped.
       where("business_schedules.full_time = ?", true).
     or(
       scoped.
-      where("business_schedules.business_state = ? and ? = ANY(business_schedules.days_of_week)", "opened", business_time_range.first.wday).
+      where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 
@@ -186,11 +186,12 @@ class Shop < ApplicationRecord
   private
 
   # staffs had reservations during that time
-  def reserved_staff_ids(start_time, end_time)
+  def reserved_staff_ids(start_time, end_time, reservation_id=nil)
     @reserved_staff_ids ||= ReservationStaff.
       joins(reservation: :menu).
+      where.not(reservation_id: reservation_id).
       where.not("menus.min_staffs_number": nil).
-      where("reservations.staff_id": staff_ids).
+      where("reservation_staffs.staff_id": staff_ids).
       where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)",
           end_time, start_time).
       pluck(:staff_id).uniq
