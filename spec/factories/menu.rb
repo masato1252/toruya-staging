@@ -1,0 +1,29 @@
+FactoryGirl.define do
+  factory :menu do
+    _user = FactoryGirl.create(:user)
+
+    transient do
+      shop FactoryGirl.create(:shop, user: _user)
+    end
+
+    user { _user }
+    sequence(:name) { |n| "menu-#{n}" }
+    sequence(:shortname) { |n| "m-#{n}" }
+    minutes 60
+    interval 10
+    min_staffs_number 1
+
+    trait :lecture do
+      min_staffs_number 2
+      max_seat_number 3
+    end
+
+    trait :easy do
+      min_staffs_number nil
+    end
+
+    after(:create) do |menu, proxy|
+      FactoryGirl.create(:shop_menu, menu: menu, shop: proxy.shop)
+    end
+  end
+end
