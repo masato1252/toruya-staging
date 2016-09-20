@@ -90,5 +90,21 @@ RSpec.describe MenuReservationSettingRule, type: :model do
         end
       end
     end
+
+    context "when reservation_setting is monthly repeat" do
+      let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 3) }
+      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
+
+      context "when every day is business_days(no business_schedules)" do
+        it "returns expected dates" do
+          expect(menu_rule.repeating_dates).to eq([
+                                                  {
+            shop: shop,
+            dates: [Date.new(2016, 10, 15), Date.new(2016, 11, 15), Date.new(2016, 12, 15)]
+          }
+          ])
+        end
+      end
+    end
   end
 end

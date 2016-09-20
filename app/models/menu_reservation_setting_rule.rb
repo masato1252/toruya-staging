@@ -71,6 +71,32 @@ class MenuReservationSettingRule < ApplicationRecord
         }
       end
     when "monthly"
+      repeat_day = menu.reservation_setting.day
+
+      # number_of_day_monthly
+      if repeat_day.present?
+        menu.shops.map do |shop|
+          business_schedules_exist = shop.business_schedules.for_shop.exists?
+          init_advance_month = beginning_date.day > repeat_day ? 1 : 0
+          n = 0
+
+          repeat_dates = repeats.times.map do
+            begin
+              matched_date = Date.new(beginning_date.year, beginning_date.month, repeat_day).advance(months: init_advance_month + n)
+              n += 1
+            end until (business_schedules_exist ? shop.available_time(matched_date) : true)
+
+            matched_date
+          end
+
+          {
+            shop: shop,
+            dates: repeat_dates
+          }
+        end
+      else
+        # days_of_week_monthly
+      end
     end
   end
 
