@@ -7,7 +7,7 @@ FactoryGirl.define do
   factory :user do
     sequence(:email) { |n| "foo#{n}@gmail.com" }
     password "foobar78"
-    confirmed_at { Time.now }
+    confirmed_at { Time.zone.now }
   end
 
   factory :shop do
@@ -29,8 +29,8 @@ FactoryGirl.define do
     association :shop
     day_of_week { start_time.wday }
     business_state "opened"
-    start_time { Time.local(2016, 8, 22, 8, 0, 0) }
-    end_time { Time.local(2016, 8, 22, 19, 0, 0) }
+    start_time { Time.zone.local(2016, 8, 22, 8, 0, 0) }
+    end_time { Time.zone.local(2016, 8, 22, 19, 0, 0) }
   end
 
   factory :reservation_setting_menu do
@@ -40,7 +40,7 @@ FactoryGirl.define do
 
   factory :menu_reservation_setting_rule do
     association :menu
-    start_date { Date.today }
+    start_date { Time.zone.now.to_date }
   end
 
   factory :reservation do
