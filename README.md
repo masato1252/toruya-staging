@@ -1,3 +1,5 @@
+https://circleci.com/gh/ilake/kasaike.svg?style=shield&circle-token=26cf5b272616507c31dc43e7831e98b1ca2362ed
+
 # README
 
 This README would normally document whatever steps are necessary to get the
