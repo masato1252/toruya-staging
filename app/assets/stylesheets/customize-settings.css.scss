@@ -62,8 +62,8 @@
     }
   }
 
-  #shopSelect, #belong, #category {
-    input[type="checkbox"]:checked + label {
+  #shopSelect, #belong, #category, .check-area {
+    input[type="checkbox"]:checked + label,  input[type="radio"]:checked + label{
       &:before {
         font-family: "FontAwesome";
         content: "\f00c";

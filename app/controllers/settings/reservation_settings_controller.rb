@@ -29,7 +29,7 @@ class Settings::ReservationSettingsController < SettingsController
   end
 
   def update
-    if @reservation_setting.update(reservation_setting_params)
+    if @reservation_setting.update(reservation_setting_params.reverse_merge(day: nil, nth_of_week: nil, days_of_week: nil))
       if params[:from_menu]
         if params[:menu_id]
           redirect_to edit_settings_menu_path(id: params[:menu_id])

@@ -3,7 +3,8 @@ UI.define("ReservationSettings.Form", function() {
     getInitialState: function() {
       return {
         setting: this.props.setting,
-        isAllBusinessHours: !this.props.setting.start_time && !this.props.setting.end_time
+        isAllBusinessHours: !this.props.setting.start_time && !this.props.setting.end_time,
+        number_of_day_monthly: !!this.props.setting.day,
       }
     },
 
@@ -18,6 +19,15 @@ UI.define("ReservationSettings.Form", function() {
       }
       else {
         this.setState({isAllBusinessHours: true});
+      }
+    },
+
+    switchMonthlyType: function(event) {
+      if (event.target.dataset.value == "number_of_day_monthly") {
+        this.setState({number_of_day_monthly: true});
+      }
+      else {
+        this.setState({number_of_day_monthly: false});
       }
     },
 
@@ -100,7 +110,7 @@ UI.define("ReservationSettings.Form", function() {
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
                           return (
-                            <div>
+                            <div key={`frameDate${i}`}>
                               <input
                                 type="checkbox"
                                 name="reservation_setting[days_of_week][]"
@@ -124,8 +134,15 @@ UI.define("ReservationSettings.Form", function() {
               <div id="MonthlyFrameSetting" className="setDetail formRow">
                 <h3 className="frameDayMonthly">Monthly Frame Setting</h3>
                 <dl>
-                  <dt>
-                    <input type="radio" name="frameDayMonthly" id="frameDayMonthly1" checked="" />
+                  <dt className="check-area">
+                    <input
+                      type="radio"
+                      name="frameDayMonthly"
+                      id="frameDayMonthly1"
+                      data-value="number_of_day_monthly"
+                      checked={this.state.number_of_day_monthly}
+                      onChange={this.switchMonthlyType}
+                      />
                     <label htmlFor="frameDayMonthly1">Number of the day</label>
                   </dt>
                   <dd>毎月
@@ -134,13 +151,22 @@ UI.define("ReservationSettings.Form", function() {
                       size="2"
                       maxlength="2"
                       name="reservation_setting[day]"
+                      disabled={!this.state.number_of_day_monthly}
                       defaultValue={this.state.setting.day}
                     />
                       日
                     </dd>
                 </dl>
                 <dl>
-                  <dt>
+                  <dt className="check-area">
+                    <input
+                      type="radio"
+                      name="frameDayMonthly"
+                      id="frameDayMonthly2"
+                      data-value="days_of_week_monthly"
+                      checked={!this.state.number_of_day_monthly}
+                      onChange={this.switchMonthlyType}
+                    />
                     <label htmlFor="frameDayMonthly2">Number of the week</label>
                   </dt>
                   <dd>毎月第
@@ -149,6 +175,7 @@ UI.define("ReservationSettings.Form", function() {
                       size="1"
                       maxlength="1"
                       name="reservation_setting[nth_of_week]"
+                      disabled={this.state.number_of_day_monthly}
                       defaultValue={this.state.setting.nth_of_week}
                       />
                   </dd>
@@ -159,12 +186,13 @@ UI.define("ReservationSettings.Form", function() {
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
                           return (
-                            <div>
+                            <div key={`frameDayMonthlyWeekday${i}`}>
                               <input
                                 type="checkbox"
                                 name="reservation_setting[days_of_week][]"
                                 value={i}
                                 defaultChecked={_.contains(this.state.setting.days_of_week, `${i}`)}
+                                disabled={this.state.number_of_day_monthly}
                                 id={`frameDayMonthlyWeekday${i}`} />
                               <label htmlFor={`frameDayMonthlyWeekday${i}`}><span>{dayName}</span></label>
                             </div>
