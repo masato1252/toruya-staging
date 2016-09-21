@@ -1,12 +1,10 @@
 FactoryGirl.define do
   factory :menu do
-    _user = FactoryGirl.create(:user)
-
     transient do
-      shop FactoryGirl.create(:shop, user: _user)
+      shop { FactoryGirl.create(:shop, user: user) }
     end
 
-    user { _user }
+    user { FactoryGirl.create(:user) }
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:shortname) { |n| "m-#{n}" }
     minutes 60

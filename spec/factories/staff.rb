@@ -1,12 +1,10 @@
 FactoryGirl.define do
   factory :staff do
-    _user = FactoryGirl.create(:user)
-
     transient do
-      shop FactoryGirl.create(:shop, user: _user)
+      shop { FactoryGirl.create(:shop, user: user) }
     end
 
-    user { _user }
+    user { FactoryGirl.create(:user) }
     sequence(:last_name) { |n| "last_name-#{n}" }
     sequence(:first_name) { |n| "first_name-#{n}" }
 
