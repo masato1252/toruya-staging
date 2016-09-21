@@ -28,4 +28,8 @@ class ReservationSetting < ApplicationRecord
   validates :day, inclusion: { in: DAYS }, allow_blank: true
 
   belongs_to :user
+
+  def number_of_day_monthly?
+    day.present?
+  end
 end
