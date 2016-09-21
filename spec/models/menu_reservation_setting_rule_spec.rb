@@ -13,14 +13,13 @@ RSpec.describe MenuReservationSettingRule, type: :model do
     context "when reservation_setting is for all business_days" do
       let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, menu: menu) }
 
-      context "when every day is business_days(no business_schedules)" do
+      context "when there is no business_schedules, Monday ~ Friday is working_day" do
         it "returns expected dates" do
           expect(menu_rule.repeating_dates).to eq([
             {
               shop: shop,
-              dates: [Date.new(2016, 9, 20), Date.new(2016, 9, 21),
-                      Date.new(2016, 9, 22), Date.new(2016, 9, 23), Date.new(2016, 9, 24),
-                      Date.new(2016, 9, 25), Date.new(2016, 9, 26)]
+              dates: [Date.new(2016, 9, 20), Date.new(2016, 9, 21), Date.new(2016, 9, 22), Date.new(2016, 9, 23),
+                      Date.new(2016, 9, 26), Date.new(2016, 9, 27), Date.new(2016, 9, 28)]
             }
           ])
         end
@@ -50,7 +49,7 @@ RSpec.describe MenuReservationSettingRule, type: :model do
     context "when reservation_setting is weekly repeat" do
       let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :weekly, menu: menu, days_of_week: [1, 3, 5]) }
 
-      context "when every day is business_days(no business_schedules)" do
+      context "when there is no business_schedules, Monday ~ Friday is working_day" do
         it "returns expected dates" do
           expect(menu_rule.repeating_dates).to eq([
             {
@@ -95,12 +94,12 @@ RSpec.describe MenuReservationSettingRule, type: :model do
       let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 3) }
       let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
 
-      context "when every day is business_days(no business_schedules)" do
+      context "when there is no business_schedules, Monday ~ Friday is working_day" do
         it "returns expected dates" do
           expect(menu_rule.repeating_dates).to eq([
                                                   {
             shop: shop,
-            dates: [Date.new(2016, 10, 15), Date.new(2016, 11, 15), Date.new(2016, 12, 15)]
+            dates: [Date.new(2016, 11, 15), Date.new(2016, 12, 15), Date.new(2017, 2, 15)]
           }
           ])
         end

@@ -32,7 +32,7 @@ class MenuReservationSettingRule < ApplicationRecord
           begin
             matched_date = beginning_date.advance(days: n)
             n += 1
-          end until (business_schedules_exist ? shop.available_time(matched_date) : true)
+          end until (business_schedules_exist ? shop.available_time(matched_date) : matched_date.working_day?)
 
           matched_date
         end
@@ -60,7 +60,7 @@ class MenuReservationSettingRule < ApplicationRecord
           begin
             matched_date = get_next_day(matched_date, setting_days_of_week.at(nth_match_day%routine))
             nth_match_day += 1
-          end until (business_schedules_exist ? shop.available_time(matched_date) : true)
+          end until (business_schedules_exist ? shop.available_time(matched_date) : matched_date.working_day?)
 
           matched_date
         end
@@ -84,7 +84,7 @@ class MenuReservationSettingRule < ApplicationRecord
             begin
               matched_date = Date.new(beginning_date.year, beginning_date.month, repeat_day).advance(months: init_advance_month + n)
               n += 1
-            end until (business_schedules_exist ? shop.available_time(matched_date) : true)
+            end until (business_schedules_exist ? shop.available_time(matched_date) :  matched_date.working_day?)
 
             matched_date
           end
