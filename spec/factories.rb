@@ -49,7 +49,7 @@ FactoryGirl.define do
     start_time { Time.zone.now }
     end_time { Time.zone.now.advance(hours: 1) }
     staff_ids { FactoryGirl.create(:staff).id }
-    customer_ids { FactoryGirl.create(:customer).id }
+    customer_ids { [FactoryGirl.create(:customer).id] }
   end
 
   factory :staff_menu do

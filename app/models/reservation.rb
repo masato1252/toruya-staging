@@ -118,9 +118,9 @@ class Reservation < ApplicationRecord
 
     if staff_ids.size < min_staffs_number
       errors.add(:base, "Not enough staffs for menu")
-    elsif min_staffs_number == 1 && StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).sum(:max_customers) < customer_ids.size
+    elsif min_staffs_number == 1 && menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size
       errors.add(:base, "Not enough staffs for customers")
-    elsif min_staffs_number > 1 && menu.max_seat_number < customer_ids.size
+    elsif min_staffs_number > 1 && (menu.max_seat_number < customer_ids.size || menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size)
       errors.add(:base, "Not enough seat for customers")
     end
   end
