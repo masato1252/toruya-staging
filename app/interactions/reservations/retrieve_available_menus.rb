@@ -39,7 +39,8 @@ module Reservations
 
     def execute
       reservation.attributes = params.except(:reservation_id, :controller, :action, :from_reservation) if reservation
-      menus = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id)).to_a
+      menus_scope = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
+      menus = menus_scope.to_a
       menu_ids = menus.map(&:id)
 
       # When user pick some invalid option, like add new customer, that cause the selected menu is invalid.
@@ -64,7 +65,47 @@ module Reservations
                  []
                end
 
-      { menus: menus, staffs: staffs, selected_menu: selected_menu, reservation: reservation }
+      {
+        menus: menus, staffs: staffs, selected_menu: selected_menu, reservation: reservation,
+        category_menus: category_with_menus(menus_scope)
+      }
+    end
+
+    # [
+    #  {:category_id=>1, :category_name=>"category1", :menus=>[{:menu_id=>1, :menu_name=>"menu-1"}, {:menu_id=>2, :menu_name=>"menu-2"}]},
+    #  {:category_id=>2, :category_name=>"category2", :menus=>[{:menu_id=>1, :menu_name=>"menu-1"}, {:menu_id=>3, :menu_name=>"menu-3"}]},
+    #  {:category_id=>3, :category_name=>"category3", :menus=>[{:menu_id=>2, :menu_name=>"menu-2"}, {:menu_id=>3, :menu_name=>"menu-3"}]}
+    # ]
+    def category_with_menus(menus_scope)
+      menus = menus_scope.includes(:categories)
+      menu_categories = menus.map do |menu|
+        categories = menu.categories.map do |category|
+          {
+            category_id: category.id,
+            category_name: category.name
+          }
+        end
+
+        {
+          menu_id: menu.id,
+          menu_name: menu.name,
+          categories: categories
+        }
+      end
+
+      all_menu_categories = menu_categories.map do |menu_category|
+        menu_category[:categories]
+      end.flatten.uniq
+
+      all_menu_categories.map do |category|
+        menus = menu_categories.map do |menu_category|
+          if menu_category[:categories].any? { |category_hash| category_hash[:category_id] == category[:category_id] }
+            { menu_id: menu_category[:menu_id], menu_name: menu_category[:menu_name] }
+          end
+        end.compact
+
+        category.merge(menus: menus)
+      end
     end
   end
 end
