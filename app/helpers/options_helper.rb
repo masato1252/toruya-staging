@@ -16,11 +16,11 @@ module OptionsHelper
   end
 
   def reservation_setting_option(setting, menu)
-    h = {
-      label: setting.name, value: setting.id, id: setting.id
-    }
+    if setting.try(:id)
+      h = {
+        label: setting.name, value: setting.id, id: setting.id
+      }
 
-    if setting.id
       h.merge!(editPath: edit_settings_reservation_setting_path(setting, from_menu: true, menu_id: menu.id))
     end
     h

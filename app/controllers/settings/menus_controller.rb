@@ -24,14 +24,19 @@ class Settings::MenusController < SettingsController
   # POST /settings/menus
   # POST /settings/menus.json
   def create
-    @menu = super_user.menus.new(menu_params)
+    @menu = super_user.menus.new(menu_params.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes))
 
     respond_to do |format|
-      if @menu.save
-        format.html { redirect_to settings_menus_path, notice: 'Menu was successfully created.' }
-        format.json { render :show, status: :created, location: @menu }
+      outcome = UpdateMenu.run(menu: @menu,
+                               attrs: menu_params.to_h.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes),
+                               reservation_setting_id: menu_params[:reservation_setting_id],
+                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+
+      if outcome.valid?
+        format.html { redirect_to settings_menus_path, notice: 'Menu was successfully updated.' }
+        format.json { render :show, status: :ok, location: @menu }
       else
-        format.html { render :new }
+        format.html { render :edit }
         format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
       end
     end
@@ -42,7 +47,7 @@ class Settings::MenusController < SettingsController
   def update
     respond_to do |format|
       outcome = UpdateMenu.run(menu: @menu,
-                               attrs: menu_params.to_h,
+                               attrs: menu_params.to_h.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes),
                                reservation_setting_id: menu_params[:reservation_setting_id],
                                menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 

@@ -110,9 +110,9 @@ class Shop < ApplicationRecord
 
     # Shops
     today = Time.zone.now.to_s(:date)
-    scoped = scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
-    scoped = scoped.where("menu_reservation_setting_rules.end_date is NULL OR
-                           menu_reservation_setting_rules.end_date >= ?", today)
+    scoped = scoped.
+      where("menu_reservation_setting_rules.start_date <= ?", today).
+      where("menu_reservation_setting_rules.end_date is NULL OR menu_reservation_setting_rules.end_date >= ?", today)
 
     scoped = scoped.
       where("reservation_settings.day_type = ?", "business_days").

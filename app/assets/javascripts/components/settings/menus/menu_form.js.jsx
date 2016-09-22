@@ -11,7 +11,7 @@ UI.define("Settings.MenuForm", function() {
         menu: this.props.menu,
         selectedStaffs: this.props.selectedStaffs,
         staffMenus: this.props.staffMenus,
-        selectedReservationSetting: this.props.selectedReservationSetting,
+        selectedReservationSetting: this.props.selectedReservationSetting || {},
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {}
       });
     },
