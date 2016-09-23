@@ -71,7 +71,26 @@ class Settings::MenusController < SettingsController
     end
   end
 
+  def repeating_dates
+    shop_repeating_dates =  Menus::RetrieveRepeatingDates.run!(reservation_setting_id: params[:reservation_setting_id],
+                                                               shop_ids: params[:shop_ids].try(:split, ","),
+                                                               repeats: params[:repeats],
+                                                               start_date: params[:start_date])
+    sentence = shop_repeating_dates.map do |shop_repeating_date|
+      name = shop_repeating_date[:shop] ? shop_repeating_date[:shop].name : ""
+      dates = shop_repeating_date[:dates]
+      if name.present?
+        "#{name}: #{shop_repeating_date[:dates].join(", ")}"
+      else
+        shop_repeating_date[:dates].join(", ")
+      end
+    end.join("; ")
+
+    render json: {sentence: sentence}
+  end
+
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_menu
     @menu = super_user.menus.find(params[:id])

@@ -7,13 +7,22 @@ UI.define("Settings.MenuForm", function() {
       this.defaultSelectedCategoryIds = this.props.selectedCategories.map(function(category) { return category.id });
       this.defaultSelectedStaffIds = this.props.selectedStaffs.map(function(staff) { return staff.id });
 
+      var start_date = this.props.selectedReservationSettingRule.start_date ?  moment(this.props.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : "";
+      this.props.selectedReservationSettingRule.start_date = start_date;
+
       return ({
         menu: this.props.menu,
         selectedStaffs: this.props.selectedStaffs,
         staffMenus: this.props.staffMenus,
         selectedReservationSetting: this.props.selectedReservationSetting || {},
-        selectedReservationSettingRule: this.props.selectedReservationSettingRule || {}
+        selectedReservationSettingRule: this.props.selectedReservationSettingRule || {},
+        repeatingDateSentence: "",
+        selectedShopIds: this.defaultSelectedShopIds
       });
+    },
+
+    componentDidMount: function() {
+      this._retrieveRepeatingDates()
     },
 
     selectedStaff: function(staff_id) {
@@ -31,12 +40,54 @@ UI.define("Settings.MenuForm", function() {
       this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule});
     },
 
-    changeReservationSetting: function(event) {
-      var selectedReservationSetting = _.find(this.props.reservationSettings, function(reservation_setting) {
-         return `${reservation_setting.id}` == event.target.value
-      })
+    _handleReservationSettingRuleChange: function(event) {
+      if (event.target.dataset.name == "selectedReservationSetting") {
+        var selectedReservationSetting = _.find(this.props.reservationSettings, function(reservation_setting) {
+          return `${reservation_setting.id}` == event.target.value
+        })
+        this.setState({selectedReservationSetting: selectedReservationSetting}, this._retrieveRepeatingDates);
+      }
+      else {
+        this.state.selectedReservationSettingRule[event.target.dataset.name] = event.target.value;
+        this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule}, this._retrieveRepeatingDates);
+      }
+    },
 
-      this.setState({selectedReservationSetting: selectedReservationSetting});
+    _isValidRepeatConditions: function() {
+      return (
+        this.state.selectedReservationSettingRule.reservation_type == "repeating" &&
+        this.state.selectedReservationSettingRule.start_date &&
+        this.state.selectedReservationSettingRule.repeats &&
+        this.state.selectedReservationSetting
+      )
+    },
+
+    _retrieveRepeatingDates: function() {
+      var _this = this;
+
+      if (this.currentRequest != null) {
+        this.currentRequest.abort();
+      }
+
+      if (!this._isValidRepeatConditions()) {
+        return;
+      }
+
+      this.currentRequest = jQuery.ajax({
+        url: _this.props.repeatingDatesPath,
+        data: {
+          reservation_setting_id: _this.state.selectedReservationSetting.id,
+          shop_ids: _this.state.selectedShopIds.join(","),
+          repeats: _this.state.selectedReservationSettingRule.repeats,
+          start_date: _this.state.selectedReservationSettingRule.start_date,
+        },
+        dataType: "json",
+      }).done(
+        function(result) {
+          _this.setState({repeatingDateSentence: result["sentence"]});
+        }).fail(function(errors){
+        }).always(function() {
+        });
     },
 
     _handleStaffCheck: function(event) {
@@ -66,6 +117,11 @@ UI.define("Settings.MenuForm", function() {
       });
 
       this.setState({staffMenus: newStaffMenus});
+    },
+
+    _handleShopCheck: function() {
+      var selectedShopIds = $("#shopSelect input:checked").map(function() { return $(this).val() })
+      this.setState({selectedShopIds: Array.prototype.slice.call(selectedShopIds)}, this._retrieveRepeatingDates)
     },
 
     _handleMenuData: function(event) {
@@ -101,7 +157,7 @@ UI.define("Settings.MenuForm", function() {
                   type="text"
                   name="menu[name]"
                   data-name="name"
-                  defaultValue={this.state.menu.name}
+                  value={this.state.menu.name}
                   onChange={this._handleMenuData}
                   />
               </dd>
@@ -116,7 +172,7 @@ UI.define("Settings.MenuForm", function() {
                   type="text"
                   name="menu[shortname]"
                   data-name="shortname"
-                  defaultValue={this.state.menu.shortname}
+                  value={this.state.menu.shortname}
                   onChange={this._handleMenuData}
                   />
               </dd>
@@ -157,7 +213,7 @@ UI.define("Settings.MenuForm", function() {
                   type="number"
                   name="menu[min_staffs_number]"
                   data-name="min_staffs_number"
-                  defaultValue={this.state.menu.min_staffs_number}
+                  value={this.state.menu.min_staffs_number}
                   onChange={this._handleMenuData}
                 />人
               </dd>
@@ -173,7 +229,7 @@ UI.define("Settings.MenuForm", function() {
                   type="number"
                   name="menu[max_seat_number]"
                   data-name="max_seat_number"
-                  defaultValue={this.state.menu.max_seat_number}
+                  value={this.state.menu.max_seat_number}
                   onChange={this._handleMenuData}
                 />人
               </dd>
@@ -190,8 +246,9 @@ UI.define("Settings.MenuForm", function() {
                         type="checkbox"
                         name="menu[shop_ids][]"
                         id={`shop-${shop.id}`}
-                        value={shop.id}
+                        defaultValue={shop.id}
                         defaultChecked={_.contains(this.defaultSelectedShopIds, shop.id)}
+                        onChange={this._handleShopCheck}
                       />
                     <label htmlFor={`shop-${shop.id}`}>{shop.name}</label>
                     </dd>
@@ -206,9 +263,10 @@ UI.define("Settings.MenuForm", function() {
               <dd>
                 <UI.Select
                   name="menu[reservation_setting_id]"
+                  data-name="selectedReservationSetting"
                   options={this.props.reservationSettings}
                   value ={this.state.selectedReservationSetting.id}
-                  onChange={this.changeReservationSetting}
+                  onChange={this._handleReservationSettingRuleChange}
                   />
               </dd>
               <dt className="function">
@@ -225,9 +283,9 @@ UI.define("Settings.MenuForm", function() {
                   type="date"
                   placeholder="開始日"
                   name="menu[menu_reservation_setting_rule_attributes][start_date]"
-                  defaultValue={
-                    this.state.selectedReservationSettingRule.start_date ? moment(this.state.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : ""
-                  }
+                  value={this.state.selectedReservationSettingRule.start_date}
+                  data-name="start_date"
+                  onChange={this._handleReservationSettingRuleChange}
                   />
               </dd>
             </dl>
@@ -282,8 +340,11 @@ UI.define("Settings.MenuForm", function() {
                         size="3"
                         maxlength="3"
                         name="menu[menu_reservation_setting_rule_attributes][repeats]"
-                        defaultValue={this.state.selectedReservationSettingRule.repeats}
+                        value={this.state.selectedReservationSettingRule.repeats}
+                        data-name="repeats"
+                        onChange={this._handleReservationSettingRuleChange}
                         /> times
+                        <span className="repeating-sentence">{this.state.repeatingDateSentence}</span>
                     </dd>
                   </dl>
                 ) : null
@@ -319,7 +380,7 @@ UI.define("Settings.MenuForm", function() {
                         type="checkbox"
                         name="menu[category_ids][]"
                         id={`category-${category.id}`}
-                        value={category.id}
+                        defaultValue={category.id}
                         defaultChecked={_.contains(this.defaultSelectedCategoryIds, category.id)}
                       />
                     <label htmlFor={`category-${category.id}`}>{category.name}</label>
@@ -358,7 +419,7 @@ UI.define("Settings.MenuForm", function() {
                     <dd>
                       {
                         this.selectedStaff(staff.id) ? <input type="number"
-                             defaultValue={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : null}
+                             value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : null}
                              data-name="max-customers"
                              data-staff-id={staff.id}
                              onChange={this._handleStaffMaxCustomers}

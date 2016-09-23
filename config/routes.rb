@@ -36,7 +36,9 @@ Rails.application.routes.draw do
   namespace :settings do
     resources :staffs, except: [:show]
     resources :business_schedules, only: [:index]
-    resources :menus, except: [:show]
+    resources :menus, except: [:show] do
+      get :repeating_dates, on: :collection
+    end
     resources :reservation_settings, except: [:show]
     resources :categories, except: [:show]
 
