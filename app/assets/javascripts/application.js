@@ -20,4 +20,5 @@
 //= require components
 //= require moment
 //= require moment/ja.js
+//= require select2
 //= require_tree .

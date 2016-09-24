@@ -29,6 +29,7 @@ gem "active_interaction", "~> 3.2.0"
 gem "holidays", "~> 4.5.0"
 gem "default_value_for", "~> 3.0.0"
 gem "week_of_month"
+gem "select2-rails", "~> 4.0.3"
 
 
 group :development, :test do

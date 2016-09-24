@@ -32,6 +32,14 @@ UI.define("Reservation.Form", function() {
       if (!this.state.menu_id) {
         this._retrieveAvailableTimes()
       }
+
+      this.applySelect2();
+    },
+
+    applySelect2: function() {
+      $("#select2").select2({
+        theme: "bootstrap"
+      });
     },
 
     handleCustomerAdd: function(event) {
@@ -191,6 +199,11 @@ UI.define("Reservation.Form", function() {
         if (result["menu"]["group_options"].length == 0) {
           alert("No available menu");
         }
+
+        setTimeout(function() {
+          _this.applySelect2();
+        }, 0);
+
       }).fail(function(errors){
       }).always(function() {
         _this.setState({Loading: false});
@@ -312,11 +325,14 @@ UI.define("Reservation.Form", function() {
                 <dl className="form" id="resMenu">
                   <dt>メニュー</dt>
                   <dd className="input">
-                    <UI.Select options={this.state.menu_group_options}
-                      value={this.state.menu_id}
-                      data-name="menu_id"
-                      onChange={this._handleChange}
-                    />
+                    <label htmlFor="select2">
+                      <UI.Select options={this.state.menu_group_options}
+                        id="select2"
+                        value={this.state.menu_id}
+                        data-name="menu_id"
+                        onChange={this._handleChange}
+                      />
+                    </label>
                   </dd>
                 </dl>
                 <dl className="form" id="resStaff">
