@@ -30,7 +30,7 @@ class CreateBusinessSchedule < ActiveInteraction::Base
       if schedule.update(attrs.except(:id)) && staff
         shop.business_schedules.where(staff_id: staff.id, full_time: true).destroy_all
       else
-        errors.merge!(schedule.errors)
+        errors.merge!(schedule.errors) if schedule.errors.present?
       end
     end
   end

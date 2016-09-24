@@ -35,6 +35,7 @@ class Menu < ApplicationRecord
   has_one :reservation_setting_menu
   has_one :reservation_setting, through: :reservation_setting_menu
   has_one :menu_reservation_setting_rule
+  has_many :shop_menu_repeating_dates
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
 

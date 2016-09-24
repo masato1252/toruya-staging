@@ -17,4 +17,8 @@ class MenuReservationSettingRule < ApplicationRecord
   belongs_to :menu
 
   validates :reservation_type, inclusion: { in: TYPES }, allow_blank: true
+
+  def repeating?
+    reservation_type == "repeating"
+  end
 end

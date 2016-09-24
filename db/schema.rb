@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160912094849) do
+ActiveRecord::Schema.define(version: 20160924015503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,18 @@ ActiveRecord::Schema.define(version: 20160912094849) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index", using: :btree
+  end
+
+  create_table "shop_menu_repeating_dates", force: :cascade do |t|
+    t.integer  "shop_id",                 null: false
+    t.integer  "menu_id",                 null: false
+    t.string   "dates",      default: [],              array: true
+    t.date     "end_date"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["menu_id"], name: "index_shop_menu_repeating_dates_on_menu_id", using: :btree
+    t.index ["shop_id", "menu_id"], name: "index_shop_menu_repeating_dates_on_shop_id_and_menu_id", unique: true, using: :btree
+    t.index ["shop_id"], name: "index_shop_menu_repeating_dates_on_shop_id", using: :btree
   end
 
   create_table "shop_menus", force: :cascade do |t|

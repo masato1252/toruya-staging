@@ -18,6 +18,21 @@ class Settings::BusinessSchedulesController < SettingsController
 
     update_shop = UpdateShop.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
 
+    # Recalculate repeating dates
+    ShopMenuRepeatingDate.
+      includes(menu: [:menu_reservation_setting_rule, :reservation_setting]).where(shop: shop).
+      future.each do |menu_repeating_date|
+        menu = menu_repeating_date.menu
+        shop_repeating_dates =  Menus::RetrieveRepeatingDates.run!(reservation_setting_id: menu.reservation_setting.id,
+                                                                   shop_ids: [shop.id],
+                                                                   repeats: menu.menu_reservation_setting_rule.repeats,
+                                                                   start_date: menu.menu_reservation_setting_rule.start_date)
+
+        menu_repeating_date.dates = shop_repeating_dates.first[:dates]
+        menu_repeating_date.end_date = shop_repeating_dates.first[:dates].last
+        menu_repeating_date.save
+      end
+
     flash[:alert] = update_shop.errors.full_messages.join(", ")
 
     redirect_to settings_business_schedules_path

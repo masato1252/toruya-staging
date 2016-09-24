@@ -88,6 +88,28 @@ RSpec.describe Shop, type: :model do
           expect(shop.available_reservation_menus(time_range)).to include(menu)
         end
 
+        context "when menu is repeating rule" do
+          before do
+            menu.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
+            FactoryGirl.create(:shop_menu_repeating_date, shop: shop, menu: menu)
+          end
+
+          it "returns available reservation menus" do
+            expect(shop.available_reservation_menus(time_range)).to include(menu)
+          end
+        end
+
+        context "when menu is due date rule" do
+          before do
+            menu.menu_reservation_setting_rule.update_attributes(reservation_type: "date", end_date: Time.zone.now.tomorrow.to_date)
+            FactoryGirl.create(:shop_menu_repeating_date, shop: shop, menu: menu)
+          end
+
+          it "returns available reservation menus" do
+            expect(shop.available_reservation_menus(time_range)).to include(menu)
+          end
+        end
+
         context "when menu min_staffs_number = 1" do
           context "when customers number is more than max staff max_customers" do
             it "returns empty" do

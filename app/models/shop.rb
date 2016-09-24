@@ -90,7 +90,9 @@ class Shop < ApplicationRecord
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
              LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}")
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}
+             LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
+                                                          shop_menu_repeating_dates.shop_id = #{id}")
 
     scoped = scoped.
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
@@ -110,9 +112,14 @@ class Shop < ApplicationRecord
 
     # Shops
     today = Time.zone.now.to_s(:date)
-    scoped = scoped.
-      where("menu_reservation_setting_rules.start_date <= ?", today).
-      where("menu_reservation_setting_rules.end_date is NULL OR menu_reservation_setting_rules.end_date >= ?", today)
+    scoped = scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
+    scoped = scoped.where("menu_reservation_setting_rules.reservation_type is NULL AND menu_reservation_setting_rules.end_date is NULL").
+      or(
+        scoped.where("menu_reservation_setting_rules.reservation_type = 'date' AND menu_reservation_setting_rules.end_date >= ?", today)
+      ).
+      or(
+        scoped.where("menu_reservation_setting_rules.reservation_type = 'repeating' AND ? = ANY(shop_menu_repeating_dates.dates)", today)
+      )
 
     scoped = scoped.
       where("reservation_settings.day_type = ?", "business_days").

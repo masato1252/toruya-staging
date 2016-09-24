@@ -41,6 +41,20 @@ FactoryGirl.define do
   factory :menu_reservation_setting_rule do
     association :menu
     start_date { Time.zone.now.to_date }
+
+    trait :repeating do
+      repeats 2
+
+      after(:create) do |rule|
+        FactoryGirl.create(:shop_menu_repeating_date, shop: menu.shop, menu: menu)
+      end
+    end
+  end
+
+  factory :shop_menu_repeating_date do
+    association :shop
+    association :menu
+    dates { [Time.zone.now.to_date, Time.zone.now.tomorrow.to_date] }
   end
 
   factory :reservation do

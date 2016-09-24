@@ -3,7 +3,7 @@ class UpdateShop < ActiveInteraction::Base
   boolean :holiday_working, default: false
 
   def execute
-    unless shop.update(holiday_working: holiday_working)
+    unless shop.reload.update(holiday_working: holiday_working)
       errors.merge!(shop.errors)
     end
   end
