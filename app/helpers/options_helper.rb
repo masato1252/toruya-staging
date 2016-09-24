@@ -4,6 +4,17 @@ module OptionsHelper
     menus.map { |m| { label: m.name, value: m.id, maxSeatNumber: m.max_seat_number } }
   end
 
+  def menu_group_options(category_menus)
+    return unless category_menus
+
+    category_menus.map do |category_menu|
+      {
+        group_label: category_menu[:category].name,
+        options: menu_options(category_menu[:menus])
+      }
+    end
+  end
+
   def shop_options(shops)
     return [] unless shops.present?
     shops.map { |s| React.camelize_props(s.attributes) }

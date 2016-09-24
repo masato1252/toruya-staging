@@ -18,14 +18,14 @@ UI.define("Reservation.Form", function() {
         memo: this.props.reservation.memo || "",
         menu_min_staffs_number: this.props.minStaffsNumber || 0,
         menu_max_seat_number: this.props.maxSeatNumber,
-        menu_options: this.props.menuOptions || [],
+        menu_group_options: this.props.menuGroupOptions || [],
         staff_options: this.props.staffOptions || [],
       });
     },
 
     componentWillMount: function() {
       this._retrieveAvailableTimes = _.debounce(this._retrieveAvailableTimes, 1000); // delay 1 second
-      this._retrieveAvailableMenus = _.debounce(this._retrieveAvailableMenus, 200); // delay 1 second
+      this._retrieveAvailableMenus = _.debounce(this._retrieveAvailableMenus, 1000); // delay 1 second
     },
 
     componentDidMount: function() {
@@ -180,7 +180,7 @@ UI.define("Reservation.Form", function() {
         dataType: "json",
       }).done(
       function(result) {
-        _this.setState({menu_options: result["menu"]["options"],
+        _this.setState({menu_group_options: result["menu"]["group_options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
                         menu_max_seat_number: result["menu"]["selected_option"]["max_seat_number"],
@@ -188,7 +188,7 @@ UI.define("Reservation.Form", function() {
                         staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
         });
 
-        if (result["menu"]["options"].length == 0) {
+        if (result["menu"]["group_options"].length == 0) {
           alert("No available menu");
         }
       }).fail(function(errors){
@@ -312,7 +312,7 @@ UI.define("Reservation.Form", function() {
                 <dl className="form" id="resMenu">
                   <dt>メニュー</dt>
                   <dd className="input">
-                    <UI.Select options={this.state.menu_options}
+                    <UI.Select options={this.state.menu_group_options}
                       value={this.state.menu_id}
                       data-name="menu_id"
                       onChange={this._handleChange}

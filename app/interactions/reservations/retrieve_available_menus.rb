@@ -72,23 +72,18 @@ module Reservations
     end
 
     # [
-    #  {:category_id=>1, :category_name=>"category1", :menus=>[{:menu_id=>1, :menu_name=>"menu-1"}, {:menu_id=>2, :menu_name=>"menu-2"}]},
-    #  {:category_id=>2, :category_name=>"category2", :menus=>[{:menu_id=>1, :menu_name=>"menu-1"}, {:menu_id=>3, :menu_name=>"menu-3"}]},
-    #  {:category_id=>3, :category_name=>"category3", :menus=>[{:menu_id=>2, :menu_name=>"menu-2"}, {:menu_id=>3, :menu_name=>"menu-3"}]}
+    #  {:category => @category, :menus=>[@menu1, @menu2 ...]},
+    #   ...
     # ]
     def category_with_menus(menus_scope)
       menus = menus_scope.includes(:categories)
       menu_categories = menus.map do |menu|
         categories = menu.categories.map do |category|
-          {
-            category_id: category.id,
-            category_name: category.name
-          }
+          { category: category }
         end
 
         {
-          menu_id: menu.id,
-          menu_name: menu.name,
+          menu: menu,
           categories: categories
         }
       end
@@ -99,8 +94,8 @@ module Reservations
 
       all_menu_categories.map do |category|
         menus = menu_categories.map do |menu_category|
-          if menu_category[:categories].any? { |category_hash| category_hash[:category_id] == category[:category_id] }
-            { menu_id: menu_category[:menu_id], menu_name: menu_category[:menu_name] }
+          if menu_category[:categories].any? { |category_hash| category_hash[:category] == category[:category] }
+            menu_category[:menu]
           end
         end.compact
 

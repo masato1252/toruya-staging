@@ -7,7 +7,7 @@
                       customers: reservation.customers.map { |c| { label: c.name, value: c.id, level: c.state } }),
                       min_staffs_number: @result.try(:[], :selected_menu).try(:min_staffs_number),
                       max_seat_number: @result.try(:[], :selected_menu).try(:max_seat_number),
-                      menu_options: menu_options(@result.try(:[], :menus)),
+                      menu_group_options: menu_group_options(@result.try(:[], :category_menus)),
                       staff_options: staff_options(@result.try(:[], :staffs), @result.try(:[], :selected_menu)),
                       start_time_restriction: @time_ranges.try(:first).try(:to_s, :time),
                       end_time_restriction: @time_ranges.try(:last).try(:to_s, :time),
