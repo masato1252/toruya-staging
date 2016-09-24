@@ -16,7 +16,7 @@ class Settings::ReservationSettingsController < SettingsController
         if params[:menu_id]
           redirect_to edit_settings_menu_path(id: params[:menu_id])
         else
-          redirect_to new_settings_menus_path
+          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id)
         end
       else
         redirect_to settings_reservation_settings_path
@@ -34,7 +34,7 @@ class Settings::ReservationSettingsController < SettingsController
         if params[:menu_id]
           redirect_to edit_settings_menu_path(id: params[:menu_id])
         else
-          redirect_to new_settings_menus_path
+          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id)
         end
       else
         redirect_to settings_reservation_settings_path
