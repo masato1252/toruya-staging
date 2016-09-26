@@ -122,7 +122,9 @@ module Menus
           # (2016, 10, 1).get_next_day_of_week("monday", 3)
           matched_date_number = matched_date.send("all_#{I18n.t("date.day_names").at(day_of_week).downcase}s_in_month")[reservation_setting.nth_of_week - 1]
           matched_date.change(day: matched_date_number) if matched_date_number
-        end.compact.find_all { |date| date >= start_date }
+        end.compact.find_all do |date|
+          date >= start_date && (business_schedules_exist ? shop.available_time(date) : date.working_day? && !date.holiday?(:jp))
+        end
 
         matched_date = (candidate_dates.flatten.last || matched_date).next_month.beginning_of_month
       end until candidate_dates.flatten.size >= repeats

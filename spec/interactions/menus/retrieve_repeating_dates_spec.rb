@@ -147,7 +147,7 @@ RSpec.describe Menus::RetrieveRepeatingDates do
               start_date: menu_rule.start_date
             )).to eq([{
               shop: shop,
-              dates: [Date.new(2016, 10, 10), Date.new(2016, 10, 11), Date.new(2016, 11, 8), Date.new(2016, 11, 14), Date.new(2016, 12, 12)]
+              dates: [Date.new(2016, 10, 11), Date.new(2016, 11, 8), Date.new(2016, 11, 14), Date.new(2016, 12, 12), Date.new(2016, 12, 13)]
             }
             ])
           end
