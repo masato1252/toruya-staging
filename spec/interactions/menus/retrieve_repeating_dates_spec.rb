@@ -112,20 +112,45 @@ RSpec.describe Menus::RetrieveRepeatingDates do
 
     context "when reservation_setting is monthly repeat" do
       let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 3) }
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
 
-      context "when there is no business_schedules, Monday ~ Friday is working_day" do
-        it "returns expected dates" do
-          expect(Menus::RetrieveRepeatingDates.run!(
-            reservation_setting_id: reservation_setting.id,
-            shop_ids: [shop.id],
-            repeats: menu_rule.repeats,
-            start_date: menu_rule.start_date
-          )).to eq([{
-            shop: shop,
-            dates: [Date.new(2016, 11, 15), Date.new(2016, 12, 15), Date.new(2017, 2, 15)]
-          }
-          ])
+      context "when reservation_setting is number_of_day_monthly repeating" do
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
+
+        context "when there is no business_schedules, Monday ~ Friday is working_day" do
+          it "returns expected dates" do
+            expect(Menus::RetrieveRepeatingDates.run!(
+              reservation_setting_id: reservation_setting.id,
+              shop_ids: [shop.id],
+              repeats: menu_rule.repeats,
+              start_date: menu_rule.start_date
+            )).to eq([{
+              shop: shop,
+              dates: [Date.new(2016, 11, 15), Date.new(2016, 12, 15), Date.new(2017, 2, 15)]
+            }
+            ])
+          end
+        end
+      end
+
+      context "when reservation_setting is number_of_day_monthly repeating" do
+        let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 5) }
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :day_of_week_monthly,
+                                                        menu: menu,
+                                                        days_of_week: [1, 2], nth_of_week: 2) }
+
+        context "when there is no business_schedules, Monday ~ Friday is working_day" do
+          it "returns expected dates" do
+            expect(Menus::RetrieveRepeatingDates.run!(
+              reservation_setting_id: reservation_setting.id,
+              shop_ids: [shop.id],
+              repeats: menu_rule.repeats,
+              start_date: menu_rule.start_date
+            )).to eq([{
+              shop: shop,
+              dates: [Date.new(2016, 10, 10), Date.new(2016, 10, 11), Date.new(2016, 11, 8), Date.new(2016, 11, 14), Date.new(2016, 12, 12)]
+            }
+            ])
+          end
         end
       end
     end

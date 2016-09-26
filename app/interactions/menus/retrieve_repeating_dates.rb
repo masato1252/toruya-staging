@@ -24,6 +24,9 @@ module Menus
           end
         else
           # days_of_week_monthly
+          shops.map do |shop|
+            days_of_week_monthly_repeating_dates_calculator(shop)
+          end
         end
       end
     end
@@ -102,6 +105,31 @@ module Menus
       {
         shop: shop,
         dates: repeat_dates
+      }
+    end
+
+    def days_of_week_monthly_repeating_dates_calculator(shop=nil)
+      setting_days_of_week = reservation_setting.days_of_week.map(&:to_i)
+      business_schedules_exist = shop && shop.business_schedules.for_shop.exists?
+      routine = setting_days_of_week.count
+
+      candidate_dates = []
+
+      matched_date = start_date
+
+      begin
+        candidate_dates << setting_days_of_week.map do |day_of_week|
+          # (2016, 10, 1).get_next_day_of_week("monday", 3)
+          matched_date_number = matched_date.send("all_#{I18n.t("date.day_names").at(day_of_week).downcase}s_in_month")[reservation_setting.nth_of_week - 1]
+          matched_date.change(day: matched_date_number) if matched_date_number
+        end.compact.find_all { |date| date >= start_date }
+
+        matched_date = (candidate_dates.flatten.last || matched_date).next_month.beginning_of_month
+      end until candidate_dates.flatten.size >= repeats
+
+      {
+        shop: shop,
+        dates: candidate_dates.flatten.sort.first(repeats)
       }
     end
 
