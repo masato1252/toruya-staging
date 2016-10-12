@@ -12,7 +12,6 @@ class GoogleCalendarWrapper
     @client.authorization.client_secret = ENV['GOOGLE_CLIENT_SECRET']
     @client.authorization.refresh!
     @service = @client.discovered_api('calendar', 'v3')
-    debugger
   end
 
   # array of calendar

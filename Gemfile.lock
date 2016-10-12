@@ -328,6 +328,7 @@ DEPENDENCIES
   letter_opener
   listen (~> 3.0.5)
   momentjs-rails (~> 2.11.1)
+  nokogiri (~> 1.6.8)
   omniauth-google-oauth2
   pg (~> 0.18)
   rails (~> 5.0.0)
