@@ -18,7 +18,6 @@ gem "sass-rails", "~> 5.0.5"
 gem "dotenv-rails", :require => "dotenv/rails-now"
 gem "devise", "~> 4.2.0"
 gem "omniauth-google-oauth2"
-gem "google-api-client", "~> 0.8.6", :require => "google/api_client"
 gem "react-rails", "~> 1.8.0"
 gem "underscore-rails", "~> 1.8.3"
 gem "momentjs-rails", "~> 2.11.1"
@@ -31,6 +30,7 @@ gem "default_value_for", "~> 3.0.0"
 gem "week_of_month"
 gem "select2-rails", "~> 4.0.3"
 gem "nokogiri", "~> 1.6.8"
+gem "google_contacts_api", path: "/Users/iamilake/rails_app/Toruya/google_contacts_api"
 
 
 group :development, :test do
