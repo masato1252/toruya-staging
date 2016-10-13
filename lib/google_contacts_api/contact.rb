@@ -10,6 +10,9 @@ module GoogleContactsApi
     include GoogleContactsApi::Group
 
     BASE_URL = "https://www.google.com/m8/feeds/contacts/default/full"
+    EMAIL_TYPES = %i(work home other).freeze
+    PHONE_TYPES = %i(work home other mobile main home_fax work_fax pager).freeze
+    GOOGLE_VOICE_LABEL = "grandcentral"
 
     def list(options = {})
       result = get(BASE_URL, parameters: { 'alt' => 'json', 'updated-min' => options[:since] || '1901-01-16T00:00:00', 'max-results' => '100000' }.merge(options))
@@ -75,11 +78,6 @@ module GoogleContactsApi
     def update(contact_id, options)
       content = show(contact_id)
       doc = Nokogiri::XML(CGI::unescape(content).delete("\n"))
-
-      # contact_email = if matched = doc.xpath("//*[name()='id']").first.content.match(/contacts\/(.*)\/base/)
-      #                   matched[1]
-      #                 end
-
       doc = handle_contact_options(doc, options)
       put("#{BASE_URL}/#{contact_id}", doc.to_xml)
     end
@@ -153,24 +151,28 @@ module GoogleContactsApi
           # email: { work: { address: address, primary: false }, other: {...}}
           doc.xpath("//*[name()='gd:email']").remove
           value.each do |email_type, email_value|
-            # email_type: home, work, other
-            if %i(work home other).include?(email_type)
-              doc.children.children.last.add_next_sibling(
-                %Q|<gd:email rel="http://schemas.google.com/g/2005##{email_type}" address="#{email_value[:address]}" primary="#{!!email_value[:primary]}" />|
-              )
-            else
-              doc.children.children.last.add_next_sibling(
-                %Q|<gd:email label="#{email_type}" address="#{email_value[:address]}" primary="#{!!email_value[:primary]}" />|
-              )
-            end
+            attr = if EMAIL_TYPES.include?(email_type)
+                     %Q|rel="http://schemas.google.com/g/2005##{email_type}"|
+                   else
+                     %Q|label="#{email_type}"|
+                   end
+
+            doc.children.children.last.add_next_sibling(
+              %Q|<gd:email #{attr} address="#{email_value[:address]}" primary="#{!!email_value[:primary]}" />|
+            )
           end
         when :phone
           # phone: { work: { number: number, primary: false } }
           doc.xpath("//*[name()='gd:phoneNumber']").remove
           value.each do |phone_type, phone_value|
-            # phone_type: home, work, mobile
+            attr = if PHONE_TYPES.include?(phone_type)
+                     %Q|rel="http://schemas.google.com/g/2005##{phone_type}"|
+                   else
+                     %Q|label="#{phone_type}"|
+                   end
+
             doc.children.children.last.add_next_sibling(
-              %Q|<gd:phoneNumber rel="http://schemas.google.com/g/2005##{phone_type}" primary="#{!!phone_value[:primary]}">#{phone_value[:number]}</gd:phoneNumber>|
+              %Q|<gd:phoneNumber #{attr} primary="#{!!phone_value[:primary]}">#{phone_value[:number]}</gd:phoneNumber>|
             )
           end
         when :address
