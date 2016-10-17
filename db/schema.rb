@@ -64,15 +64,17 @@ ActiveRecord::Schema.define(version: 20160924015503) do
     t.integer  "user_id"
     t.string   "last_name"
     t.string   "first_name"
-    t.string   "jp_last_name"
-    t.string   "jp_first_name"
-    t.string   "state"
-    t.string   "phone_number"
-    t.string   "phone_type"
+    t.string   "phonetic_last_name"
+    t.string   "phonetic_first_name"
+    t.string   "address"
+    t.string   "google_account_token"
+    t.string   "google_contact_id"
+    t.string   "google_contact_group_ids", default: [],              array: true
     t.date     "birthday"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["user_id", "jp_last_name", "jp_first_name"], name: "jp_name_index", using: :btree
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.index ["user_id", "google_contact_id"], name: "index_customers_on_user_id_and_google_contact_id", using: :btree
+    t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
   end
 
   create_table "menu_categories", force: :cascade do |t|
