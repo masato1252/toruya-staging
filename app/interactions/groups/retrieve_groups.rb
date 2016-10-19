@@ -1,5 +1,6 @@
 # From google to Toruya
 class Groups::RetrieveGroups < ActiveInteraction::Base
+  BACKUP_GROUP_NAME = "From-Toruya"
   object :user, class: User
 
   def execute
@@ -10,6 +11,6 @@ class Groups::RetrieveGroups < ActiveInteraction::Base
   private
 
   def exclude_system_groups(groups)
-    groups.delete_if { |group| group.title.match(/System Group:/) }
+    groups.delete_if { |group| group.title.match(/(System Group:|\A#{BACKUP_GROUP_NAME}\Z)/) }
   end
 end
