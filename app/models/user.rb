@@ -36,6 +36,7 @@ class User < ApplicationRecord
   has_many :customers
   has_many :reservation_settings
   has_many :categories
+  has_many :contact_groups
 
-  delegate :access_token, :refresh_token, to: :access_provider
+  delegate :access_token, :refresh_token, :uid, to: :access_provider
 end

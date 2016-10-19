@@ -54,6 +54,11 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    resources :synchronizations, only: [:index]
+    resources :contact_groups, except: [:index, :destroy] do
+      post "sync", on: :member
+    end
   end
 
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks" }

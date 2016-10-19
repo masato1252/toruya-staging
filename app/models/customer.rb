@@ -9,8 +9,8 @@
 #  phonetic_last_name       :string
 #  phonetic_first_name      :string
 #  address                  :string
-#  google_account_token     :string
-#  google_contact_id        :string
+#  google_uid               :string           not null
+#  google_contact_id        :string           not null
 #  google_contact_group_ids :string           default([]), is an Array
 #  birthday                 :date
 #  created_at               :datetime         not null
@@ -26,6 +26,8 @@ class Customer < ApplicationRecord
   attr_accessor :phone_numbers
 
   belongs_to :user
+
+  validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true
 
   def name
     "#{phonetic_last_name} #{phonetic_first_name}".presence || "#{first_name} #{last_name} "

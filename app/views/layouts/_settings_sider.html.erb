@@ -51,12 +51,16 @@
     </dd>
   </dl>
   <dl class="contacts">
-    <dt><a href="contacts.html">Contacts</a></dt>
+    <%= active_link_to "Contacts", settings_synchronizations_path,
+      active: [["settings/synchronizations"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
     <dd>
       <ul>
-        <li class="here"><a href="contacts.html">Contact Info</a></li>
-        <li><a href="contacts_ranks.html">Ranks</a></li>
-        <li><a href="contacts_synk.html">Synk Google</a></li>
+        <%= active_link_to "Sync Google", settings_synchronizations_path,
+          active: [["settings/synchronizations"]],
+          wrap_tag: :li,
+          class_active: "here" %>
       </ul>
     </dd>
   </dl>

@@ -1,0 +1,37 @@
+<div id="subNav">
+  <h2>Google account synchronization</h2>
+</div>
+<div id="about">
+  <p>Please sync your google account and the google group you want here.</p>
+</div>
+
+
+<form>
+  <div>
+    <%= link_to "Sign in Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
+  </div>
+
+  <div id="customize-table" class="formRow table">
+    <dl class="header">
+      <dd>Google title</dd>
+      <dd>Connect with</dd>
+      <dd>Sync</dd>
+    </dl>
+    <% @google_groups.each do |google_group| %>
+      <% contact_group = synced_with(google_group, @contact_groups) %>
+      <dl class="body">
+        <dd><%= google_group.title %></dd>
+        <dd>
+          <% if contact_group %>
+            <%= link_to contact_group.name, edit_settings_contact_group_path(contact_group) %>
+          <% else %>
+            <%= link_to "Connect", new_settings_contact_group_path(google_group_id: google_group.id, name: google_group.title) %>
+          <% end %>
+        </dd>
+        <dd>
+          <%= link_to "Sync from #{contact_group.name}", sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success" if contact_group %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+</form>

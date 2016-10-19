@@ -1,7 +1,7 @@
 PATH
   remote: /Users/iamilake/rails_app/Toruya/google_contacts_api
   specs:
-    google_contacts_api (0.1.1)
+    google_contacts_api (0.1.2)
       google-api-client (~> 0.8.6)
       hashie (~> 3.4.4)
       nokogiri (~> 1.6.8)

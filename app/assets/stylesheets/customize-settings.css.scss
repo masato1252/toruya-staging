@@ -76,4 +76,34 @@
       }
     }
   }
+
+  #customize-table {
+    display: table;
+
+    dl.header {
+      border: 0;
+      background-color: #f2f2f2;
+    }
+
+    .body {
+      dl:first-of-type {
+        -webkit-border-top-left-radius: 10px;
+        -webkit-border-top-right-radius: 10px;
+      }
+
+      dl:last-of-type {
+        -webkit-border-bottom-left-radius: 10px;
+        -webkit-border-bottom-right-radius: 10px;
+      }
+    }
+
+    dl {
+      display: table-row;
+
+      dt, dd {
+        display: table-cell;
+        padding: 10px;
+      }
+    }
+  }
 }

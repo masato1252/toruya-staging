@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160924015503) do
+ActiveRecord::Schema.define(version: 20161018154942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,17 @@ ActiveRecord::Schema.define(version: 20160924015503) do
     t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
   end
 
+  create_table "contact_groups", force: :cascade do |t|
+    t.integer  "user_id",         null: false
+    t.string   "google_uid",      null: false
+    t.string   "google_group_id", null: false
+    t.string   "name",            null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["user_id", "google_uid", "google_group_id"], name: "contact_groups_google_index", unique: true, using: :btree
+    t.index ["user_id"], name: "index_contact_groups_on_user_id", using: :btree
+  end
+
   create_table "custom_schedules", force: :cascade do |t|
     t.integer  "shop_id"
     t.integer  "staff_id"
@@ -67,13 +78,13 @@ ActiveRecord::Schema.define(version: 20160924015503) do
     t.string   "phonetic_last_name"
     t.string   "phonetic_first_name"
     t.string   "address"
-    t.string   "google_account_token"
-    t.string   "google_contact_id"
+    t.string   "google_uid",                            null: false
+    t.string   "google_contact_id",                     null: false
     t.string   "google_contact_group_ids", default: [],              array: true
     t.date     "birthday"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
-    t.index ["user_id", "google_contact_id"], name: "index_customers_on_user_id_and_google_contact_id", using: :btree
+    t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true, using: :btree
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
   end
 

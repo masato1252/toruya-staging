@@ -16,12 +16,13 @@ class Customers::ImportCustomers < ActiveInteraction::Base
       customer.google_contact_group_ids = google_contact.group_ids
       customer.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
       customer.address = primary_part_address(google_contact.addresses)
-      customer.google_account_token = user.access_token
+      customer.google_uid = user.access_token
       customer.save
     end
   end
 
   private
+
   def primary_address(addresses)
     return unless addresses
 

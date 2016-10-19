@@ -7,8 +7,8 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
       t.string :phonetic_last_name
       t.string :phonetic_first_name
       t.string :address
-      t.string :google_account_token # use to keep the user's google account access_token to avoid user sync his/her two google accounts.
-      t.string :google_contact_id
+      t.string :google_uid, null: false # use to keep the user's google account access_token to avoid user sync his/her two google accounts.
+      t.string :google_contact_id, null: false
       t.string :google_contact_group_ids, array: true, default: []
       t.date :birthday
 
@@ -16,6 +16,6 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
     end
 
     add_index :customers, [:user_id, :phonetic_last_name, :phonetic_first_name], name: "jp_name_index"
-    add_index :customers, [:user_id, :google_contact_id]
+    add_index :customers, [:user_id, :google_uid, :google_contact_id], name: "customers_google_index", unique: true
   end
 end
