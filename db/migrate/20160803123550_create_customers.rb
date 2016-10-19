@@ -1,14 +1,14 @@
 class CreateCustomers < ActiveRecord::Migration[5.0]
   def change
     create_table :customers do |t|
-      t.integer :user_id
+      t.references :user, null: false
       t.string :last_name
       t.string :first_name
       t.string :phonetic_last_name
       t.string :phonetic_first_name
       t.string :address
-      t.string :google_uid, null: false # use to keep the user's google account access_token to avoid user sync his/her two google accounts.
-      t.string :google_contact_id, null: false
+      t.string :google_uid # use to keep the user's google account access_token to avoid user sync his/her two google accounts.
+      t.string :google_contact_id
       t.string :google_contact_group_ids, array: true, default: []
       t.date :birthday
 

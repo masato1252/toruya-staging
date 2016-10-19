@@ -3,14 +3,14 @@
 # Table name: customers
 #
 #  id                       :integer          not null, primary key
-#  user_id                  :integer
+#  user_id                  :integer          not null
 #  last_name                :string
 #  first_name               :string
 #  phonetic_last_name       :string
 #  phonetic_first_name      :string
 #  address                  :string
-#  google_uid               :string           not null
-#  google_contact_id        :string           not null
+#  google_uid               :string
+#  google_contact_id        :string
 #  google_contact_group_ids :string           default([]), is an Array
 #  birthday                 :date
 #  created_at               :datetime         not null

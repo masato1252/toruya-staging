@@ -72,20 +72,21 @@ ActiveRecord::Schema.define(version: 20161018154942) do
   end
 
   create_table "customers", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",                               null: false
     t.string   "last_name"
     t.string   "first_name"
     t.string   "phonetic_last_name"
     t.string   "phonetic_first_name"
     t.string   "address"
-    t.string   "google_uid",                            null: false
-    t.string   "google_contact_id",                     null: false
+    t.string   "google_uid"
+    t.string   "google_contact_id"
     t.string   "google_contact_group_ids", default: [],              array: true
     t.date     "birthday"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true, using: :btree
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
+    t.index ["user_id"], name: "index_customers_on_user_id", using: :btree
   end
 
   create_table "menu_categories", force: :cascade do |t|
