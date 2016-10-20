@@ -7,6 +7,7 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
     google_contacts = google_user.group_contacts(google_group_id)
 
+    customers_without_backup_group = []
     google_contacts.each do |google_contact|
       customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
       customer.first_name = google_contact.first_name
@@ -18,6 +19,13 @@ class Customers::ImportCustomers < ActiveInteraction::Base
       customer.address = primary_part_address(google_contact.addresses)
       customer.google_uid = user.uid
       customer.save
+
+      customers_without_backup_group << customer if customer.google_contact_group_ids.exclude?(google_backup_group_id)
+    end
+
+    # Add user to Toruya backup group
+    customers_without_backup_group.each do |customer|
+      google_user.update_contact(customer.google_contact_id, { add_group_ids: [google_backup_group_id] })
     end
   end
 
@@ -44,5 +52,14 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     if address.city || address.region
       "#{address.city},#{address.region}"
     end
+  end
+
+  def google_backup_group_id
+    @google_backup_group_id ||=
+      if contact_group = ContactGroup.find_by(name: Groups::CreateBackupGroup::BACKUP_GROUP_NAME, google_uid: user.uid)
+        contact_group.google_group_id
+      else
+        Groups::CreateBackupGroup.run!(user: user).google_group_id
+      end
   end
 end

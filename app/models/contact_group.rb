@@ -12,6 +12,8 @@
 #
 
 class ContactGroup < ApplicationRecord
+  belongs_to :user
+
   validates :google_group_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true
   validates :name, presence: true
 end
