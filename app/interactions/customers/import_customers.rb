@@ -49,7 +49,7 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     return unless addresses
 
     address_type, address = primary_address(addresses)
-    if address.city || address.region
+    if address && (address.city || address.region)
       "#{address.city},#{address.region}"
     end
   end
