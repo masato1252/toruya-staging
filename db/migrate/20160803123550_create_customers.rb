@@ -2,6 +2,7 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
   def change
     create_table :customers do |t|
       t.references :user, null: false
+      t.references :contact_group
       t.string :last_name
       t.string :first_name
       t.string :phonetic_last_name

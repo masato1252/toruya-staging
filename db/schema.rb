@@ -50,13 +50,15 @@ ActiveRecord::Schema.define(version: 20161018154942) do
   end
 
   create_table "contact_groups", force: :cascade do |t|
-    t.integer  "user_id",         null: false
-    t.string   "google_uid",      null: false
-    t.string   "google_group_id", null: false
-    t.string   "name",            null: false
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["user_id", "google_uid", "google_group_id"], name: "contact_groups_google_index", unique: true, using: :btree
+    t.integer  "user_id",                null: false
+    t.string   "google_uid",             null: false
+    t.string   "google_group_name"
+    t.string   "google_group_id"
+    t.string   "backup_google_group_id", null: false
+    t.string   "name",                   null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true, using: :btree
     t.index ["user_id"], name: "index_contact_groups_on_user_id", using: :btree
   end
 
@@ -73,6 +75,7 @@ ActiveRecord::Schema.define(version: 20161018154942) do
 
   create_table "customers", force: :cascade do |t|
     t.integer  "user_id",                               null: false
+    t.integer  "contact_group_id"
     t.string   "last_name"
     t.string   "first_name"
     t.string   "phonetic_last_name"
@@ -84,6 +87,7 @@ ActiveRecord::Schema.define(version: 20161018154942) do
     t.date     "birthday"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
+    t.index ["contact_group_id"], name: "index_customers_on_contact_group_id", using: :btree
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true, using: :btree
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
     t.index ["user_id"], name: "index_customers_on_user_id", using: :btree

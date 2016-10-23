@@ -3,9 +3,9 @@ class CallbacksController < Devise::OmniauthCallbacksController
     outcome = CreateGoogleOauth.run(user: current_user, auth: request.env["omniauth.auth"])
 
     if outcome.valid?
-      redirect_to settings_synchronizations_path
+      redirect_to settings_contact_groups_path
     else
-      redirect_to settings_synchronizations_path, notice: 'Access Denied.'
+      redirect_to settings_contact_groups_path, notice: 'Access Denied.'
     end
   end
 end

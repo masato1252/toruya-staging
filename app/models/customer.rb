@@ -4,6 +4,7 @@
 #
 #  id                       :integer          not null, primary key
 #  user_id                  :integer          not null
+#  contact_group_id         :integer
 #  last_name                :string
 #  first_name               :string
 #  phonetic_last_name       :string
@@ -26,6 +27,7 @@ class Customer < ApplicationRecord
   attr_accessor :phone_numbers
 
   belongs_to :user
+  belongs_to :contact_group
 
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true
 

@@ -1,0 +1,31 @@
+  <div id="subNav">
+    <h2>Google account synchronization</h2>
+  </div>
+  <div id="about">
+    <p>Please sync your google account and the google group you want here.</p>
+  </div>
+
+  <form>
+    <div>
+      <%= link_to "#{current_user.uid ? "Re" : ""}connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary"  %>
+    </div>
+
+    <h1>Contact group: <%= @contact_group.name %></h1>
+    Choose the google group you want to bind
+    <div id="customize-table" class="formRow table">
+      <dl class="header">
+        <dd>Google Name</dd>
+      </dl>
+      <% @google_groups.each do |google_group| %>
+        <dl class="body">
+          <dd><%= google_group.title %></dd>
+          <dd>
+            <%= link_to "Bind", bind_settings_contact_group_path(@contact_group,
+                                                                 google_group_id: google_group.id,
+                                                                 google_group_name: google_group.title), method: :post, class: "btn btn-success", data: { confirm: "Are you sure binding this google group (#{google_group.title}) with Toruya group (#{@contact_group.name}) ?", disable_with: "Processing" } %>
+          </dd>
+        </dl>
+      <% end %>
+    </div>
+    <%= link_to "New Contact Group", new_settings_contact_group_path, class: "btn btn-success" %>
+  </form>

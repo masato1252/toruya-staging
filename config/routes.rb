@@ -55,9 +55,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :synchronizations, only: [:index]
-    resources :contact_groups, except: [:index, :destroy] do
-      post "sync", on: :member
+    resources :contact_groups do
+      member do
+        post "sync"
+        post "bind"
+        get "connections"
+      end
     end
   end
 

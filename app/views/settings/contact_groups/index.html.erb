@@ -1,0 +1,35 @@
+<div id="subNav">
+  <h2>Google account synchronization</h2>
+</div>
+<div id="about">
+  <p>Please sync your google account and the google group you want here.</p>
+</div>
+
+<form>
+  <div id="customize-table" class="formRow table">
+    <dl class="header">
+      <dd>Name</dd>
+      <dd>Connect Google Group</dd>
+      <dd>Synchronization</dd>
+    </dl>
+    <% @contact_groups.each do |contact_group| %>
+      <dl class="body">
+        <dd><%= contact_group.name %></dd>
+        <dd>
+          <% if contact_group.google_group_name %>
+            <%= contact_group.google_group_name %>
+          <% else %>
+            <%= link_to "Connect", connections_settings_contact_group_path(contact_group) %>
+          <% end %>
+        </dd>
+        <dd>
+          <%= link_to "Sync", sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: "Processing" } if contact_group.google_group_name %>
+        </dd>
+        <dd>
+          <%= link_to "Delete", settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger", data: { disable_with: "Processing" } unless contact_group.google_group_name %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+  <%= link_to "New Contact Group", new_settings_contact_group_path, class: "btn btn-success" %>
+</form>
