@@ -2,10 +2,11 @@
 # Import from original importing group and backup group
 # If customer already had backup_google_group_id, don't need to backup in another group
 class Customers::ImportCustomers < ActiveInteraction::Base
-  object :user, class: User
+  attr_reader :user
   object :contact_group, class: ContactGroup
 
   def execute
+    @user = contact_group.user
     google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
     import_google_contacts = google_user.group_contacts(contact_group.google_group_id)
     backup_google_contacts = google_user.group_contacts(contact_group.backup_google_group_id)

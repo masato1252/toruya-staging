@@ -14,5 +14,6 @@ module Kasaike
     config.i18n.default_locale = 'ja' if Rails.env.production?
     config.i18n.locale = 'ja' if Rails.env.production?
     config.time_zone = "Tokyo"
+    config.active_job.queue_adapter = :delayed_job
   end
 end

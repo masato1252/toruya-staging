@@ -58,11 +58,9 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def sync
-    outcome = Customers::ImportCustomers.run(user: super_user, contact_group: @contact_group)
-    if outcome.valid?
-      flash[:notice] = "Synchronization completed"
-    end
+    CustomersImporterJob.perform_later(@contact_group)
 
+    flash[:notice] = "We are importing your customers, would notify you when the process finished"
     redirect_to settings_contact_groups_path
   end
 
