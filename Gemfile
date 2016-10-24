@@ -30,7 +30,7 @@ gem "default_value_for", "~> 3.0.0"
 gem "week_of_month"
 gem "select2-rails", "~> 4.0.3"
 gem "nokogiri", "~> 1.6.8"
-gem "google_contacts_api", path: "/Users/iamilake/rails_app/Toruya/google_contacts_api"
+gem "google_contacts_api", github: "ilake/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
 
 group :development, :test do
