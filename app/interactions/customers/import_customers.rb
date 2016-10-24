@@ -12,30 +12,14 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     all_backup_google_group_ids = user.contact_groups.pluck(:backup_google_group_id)
 
     backup_google_contacts.each do |google_contact|
-      customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
-      customer.first_name = google_contact.first_name
-      customer.last_name = google_contact.last_name
-      customer.phonetic_last_name = google_contact.phonetic_last_name
-      customer.phonetic_first_name = google_contact.phonetic_first_name
-      customer.google_contact_group_ids = google_contact.group_ids
-      customer.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
-      customer.address = primary_part_address(google_contact.addresses)
-      customer.google_uid = user.uid
+      customer = build_customer(google_contact)
       customer.save
     end
 
     customers_without_backup_group = []
 
     import_google_contacts.each do |google_contact|
-      customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
-      customer.first_name = google_contact.first_name
-      customer.last_name = google_contact.last_name
-      customer.phonetic_last_name = google_contact.phonetic_last_name
-      customer.phonetic_first_name = google_contact.phonetic_first_name
-      customer.google_contact_group_ids = google_contact.group_ids
-      customer.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
-      customer.address = primary_part_address(google_contact.addresses)
-      customer.google_uid = user.uid
+      customer = build_customer(google_contact)
 
       if (customer.google_contact_group_ids & all_backup_google_group_ids).blank?
         customers_without_backup_group << customer
@@ -47,9 +31,14 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     end
 
     # Add user to Toruya backup group
-    customers_without_backup_group.each do |customer|
-      google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
+    threads = customers_without_backup_group.map do |customer|
+      Thread.new do
+        ActiveRecord::Base.connection_pool.with_connection do
+          google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
+        end
+      end
     end
+    threads.each(&:join)
   end
 
   private
@@ -75,5 +64,18 @@ class Customers::ImportCustomers < ActiveInteraction::Base
     if address && (address.city || address.region)
       "#{address.city},#{address.region}"
     end
+  end
+
+  def build_customer(google_contact)
+    customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
+    customer.first_name = google_contact.first_name
+    customer.last_name = google_contact.last_name
+    customer.phonetic_last_name = google_contact.phonetic_last_name
+    customer.phonetic_first_name = google_contact.phonetic_first_name
+    customer.google_contact_group_ids = google_contact.group_ids
+    customer.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
+    customer.address = primary_part_address(google_contact.addresses)
+    customer.google_uid = user.uid
+    customer
   end
 end
