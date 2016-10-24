@@ -4,10 +4,10 @@
 #
 #  id                     :integer          not null, primary key
 #  user_id                :integer          not null
-#  google_uid             :string           not null
+#  google_uid             :string
 #  google_group_name      :string
 #  google_group_id        :string
-#  backup_google_group_id :string           not null
+#  backup_google_group_id :string
 #  name                   :string           not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
@@ -20,9 +20,9 @@ class ContactGroup < ApplicationRecord
   validates :name, uniqueness: { scope: [:user_id] }, presence: true
 
   before_destroy do
-    return true if google_group_id.blank?
-
-    errors.add :base, "Already binding with google group"
-    throw(:abort)
+    if google_group_id.present?
+      errors.add :base, "Already binding with google group"
+      throw(:abort)
+    end
   end
 end

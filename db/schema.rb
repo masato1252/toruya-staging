@@ -51,10 +51,10 @@ ActiveRecord::Schema.define(version: 20161024135214) do
 
   create_table "contact_groups", force: :cascade do |t|
     t.integer  "user_id",                null: false
-    t.string   "google_uid",             null: false
+    t.string   "google_uid"
     t.string   "google_group_name"
     t.string   "google_group_id"
-    t.string   "backup_google_group_id", null: false
+    t.string   "backup_google_group_id"
     t.string   "name",                   null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false

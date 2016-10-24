@@ -10,12 +10,11 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def create
-    outcome = Groups::CreateGroup.run(user: super_user, contact_group_params: contact_group_params.to_h)
+    @contact_group = super_user.contact_groups.new(contact_group_params)
 
-    if outcome.valid?
+    if @contact_group.save
       redirect_to settings_contact_groups_path
     else
-      @contact_group = outcome.result
       render :new
     end
   end
@@ -49,9 +48,13 @@ class Settings::ContactGroupsController < SettingsController
 
   def bind
     respond_to do |format|
-      if @contact_group.update(google_group_id: params[:google_group_id], google_group_name: params[:google_group_name])
+      outcome = Groups::CreateGroup.run(contact_group: @contact_group,
+                                        google_group_id: params[:google_group_id],
+                                        google_group_name: params[:google_group_name])
+      if outcome.valid?
         format.html { redirect_to settings_contact_groups_path, notice: 'Contact Groups was successfully binded.' }
       else
+        @contact_group = outcome.result
         format.html { render :edit }
       end
     end
