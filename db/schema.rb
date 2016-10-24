@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20161024135214) do
     t.text     "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["staff_id", "start_time", "end_time"], name: "custom_schedules_index", using: :btree
+    t.index ["shop_id", "staff_id", "start_time", "end_time"], name: "custom_schedules_index", using: :btree
   end
 
   create_table "customers", force: :cascade do |t|

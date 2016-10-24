@@ -10,6 +10,6 @@ class CreateCustomSchedules < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :business_schedules, [:shop_id]
+    add_index :custom_schedules, [:shop_id, :staff_id, :start_time, :end_time], name: :custom_schedules_index
   end
 end
