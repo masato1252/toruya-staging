@@ -33,7 +33,6 @@ gem "nokogiri", "~> 1.6.8"
 gem "google_contacts_api", path: "/Users/iamilake/rails_app/Toruya/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
 
-
 group :development, :test do
   gem "byebug", platform: :mri
   gem "rspec-rails", "~> 3.5.0"
@@ -49,7 +48,7 @@ group :development do
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
   gem "annotate"
-  gem "letter_opener"
+  gem "letter_opener", "~> 1.4.1"
   gem "better_errors"
   gem "binding_of_caller"
   gem "factory_girl_rails"

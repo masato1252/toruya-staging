@@ -6,6 +6,7 @@ class CustomersImporterJob < ApplicationJob
 
     if outcome.valid?
       # Send Synchronization Completed Email
+      NotificationMailer.customers_import_finished(contact_group).deliver_now
     else
       # What should we do
     end

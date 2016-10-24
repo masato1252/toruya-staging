@@ -339,7 +339,7 @@ DEPENDENCIES
   holidays (~> 4.5.0)
   jbuilder (~> 2.5)
   jquery-rails
-  letter_opener
+  letter_opener (~> 1.4.1)
   listen (~> 3.0.5)
   momentjs-rails (~> 2.11.1)
   nokogiri (~> 1.6.8)
