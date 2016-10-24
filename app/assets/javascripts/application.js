@@ -21,4 +21,5 @@
 //= require moment
 //= require moment/ja.js
 //= require select2
+//= require atomic_requests.js
 //= require_tree .
