@@ -209,7 +209,7 @@ ActiveRecord::Schema.define(version: 20161024135214) do
     t.integer  "menu_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "menu_id"], name: "index_shop_menus_on_shop_id_and_menu_id", using: :btree
+    t.index ["shop_id", "menu_id"], name: "index_shop_menus_on_shop_id_and_menu_id", unique: true, using: :btree
   end
 
   create_table "shop_staffs", force: :cascade do |t|
@@ -222,13 +222,13 @@ ActiveRecord::Schema.define(version: 20161024135214) do
 
   create_table "shops", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "name"
-    t.string   "shortname"
-    t.string   "zip_code"
-    t.string   "phone_number"
-    t.string   "email"
+    t.string   "name",            null: false
+    t.string   "shortname",       null: false
+    t.string   "zip_code",        null: false
+    t.string   "phone_number",    null: false
+    t.string   "email",           null: false
+    t.string   "address",         null: false
     t.string   "website"
-    t.string   "address"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.boolean  "holiday_working"

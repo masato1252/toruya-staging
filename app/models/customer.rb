@@ -29,7 +29,7 @@ class Customer < ApplicationRecord
   belongs_to :user
   belongs_to :contact_group
 
-  validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true
+  validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
 
   def name
     "#{phonetic_last_name} #{phonetic_first_name}".presence || "#{first_name} #{last_name} "
