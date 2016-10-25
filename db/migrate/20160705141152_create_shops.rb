@@ -9,6 +9,7 @@ class CreateShops < ActiveRecord::Migration[5.0]
       t.string :email, null: false
       t.string :address, null: false
       t.string :website
+      t.boolean :holiday_working
       t.timestamps
     end
   end
