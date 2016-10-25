@@ -9,10 +9,9 @@ class Customers::SearchCustomers < ActiveInteraction::Base
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped.where("
-      jp_last_name like :keyword or
-      jp_first_name like :keyword or
+      phonetic_last_name like :keyword or
+      phonetic_first_name like :keyword or
       last_name like :keyword or
-      first_name like :keyword or
-      phone_number like :keyword", keyword: "%#{keyword}%")
+      first_name like :keyword", keyword: "%#{keyword}%")
   end
 end

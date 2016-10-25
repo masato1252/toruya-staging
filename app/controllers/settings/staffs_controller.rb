@@ -74,6 +74,6 @@ class Settings::StaffsController < SettingsController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def staff_params
-    params.require(:staff).permit(:first_name, :last_name, :jp_first_name, :jp_last_name, shop_ids: [])
+    params.require(:staff).permit(:first_name, :last_name, :phonetic_first_name, :phonetic_last_name, shop_ids: [])
   end
 end

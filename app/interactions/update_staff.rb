@@ -5,8 +5,8 @@ class UpdateStaff < ActiveInteraction::Base
   hash :attrs do
     string :first_name, default: nil
     string :last_name, default: nil
-    string :jp_first_name, default: nil
-    string :jp_last_name, default: nil
+    string :phonetic_first_name, default: nil
+    string :phonetic_last_name, default: nil
     array :shop_ids, default: nil
   end
 

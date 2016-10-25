@@ -244,13 +244,13 @@ ActiveRecord::Schema.define(version: 20161024135214) do
   end
 
   create_table "staffs", force: :cascade do |t|
-    t.integer  "user_id",       null: false
+    t.integer  "user_id",             null: false
     t.string   "last_name"
     t.string   "first_name"
-    t.string   "jp_last_name"
-    t.string   "jp_first_name"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.string   "phonetic_last_name"
+    t.string   "phonetic_first_name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.index ["user_id"], name: "index_staffs_on_user_id", using: :btree
   end
 

@@ -4,8 +4,8 @@ class CreateStaffs < ActiveRecord::Migration[5.0]
       t.integer :user_id, null: false
       t.string :last_name
       t.string :first_name
-      t.string :jp_last_name
-      t.string :jp_first_name
+      t.string :phonetic_last_name
+      t.string :phonetic_first_name
 
       t.timestamps
     end

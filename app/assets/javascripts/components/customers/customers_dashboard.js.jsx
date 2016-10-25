@@ -1,5 +1,7 @@
 //= require "components/shared/customers_list"
-//
+//= require "components/customers/customer_info"
+//= require "components/customers/search_bar"
+
 "use strict";
 
 UI.define("Customers.Dashboard", function() {
@@ -193,95 +195,10 @@ UI.define("Customers.Dashboard", function() {
                 </div>
               </div>
             </div>
-            <div id="customerInfo" className="contBody">
-              <div id="basic">
-                <dl>
-                  <dt>
-                    <UI.Select
-                      id="customerSts"
-                      options={[{label: "一般", value: "regular"}, {label: "VIP", value: "vip"}]}
-                      value={this.state.customer.state}
-                      data-name="state"
-                      className={this.state.customer.state == "vip" ? "vip" : null}
-                      onChange={this.handleCustomerDataChange}
-                      />
-                  </dt>
-                  <dd>
-                  <input type="text" id="familyName" placeholder="姓"
-                    data-name="lastName"
-                    value={this.state.customer.lastName}
-                    onChange={this.handleCustomerDataChange}
-                  />
-                  </dd>
-                  <dd>
-                  <input type="text" id="firstName" placeholder="名"
-                    data-name="firstName"
-                    value={this.state.customer.firstName}
-                    onChange={this.handleCustomerDataChange}
-                  />
-                  </dd>
-                </dl>
-                <dl>
-                <dt></dt>
-                <dd>
-                <input type="text" id="familyNameKana" placeholder="せい"
-                  data-name="jpLastName"
-                  value={this.state.customer.jpLastName}
-                  onChange={this.handleCustomerDataChange}
-                />
-                </dd>
-                <dd>
-                <input type="text" id="firstNameKana" placeholder="めい"
-                  data-name="jpFirstName"
-                  value={this.state.customer.jpFirstName}
-                  onChange={this.handleCustomerDataChange}
-                />
-                </dd>
-              </dl>
-                <dl>
-                  <dt>
-                    <UI.Select
-                      id="phoneType"
-                      options={[{label: "自宅", value: "home"}, {label: "携帯", value: "mobile"}]}
-                      value={this.state.customer.phoneType}
-                      data-name="phoneType"
-                      onChange={this.handleCustomerDataChange}
-                      />
-                  </dt>
-                  <dd>
-                  <input type="text" id="phone" placeholder="電話番号"
-                    data-name="phoneNumber"
-                    value={this.state.customer.phoneNumber}
-                    onChange={this.handleCustomerDataChange}
-                  />
-                  </dd>
-                  <dd>
-                  <input type="date" id="dob" placeholder="お誕生日"
-                    data-name="birthday"
-                    value={this.state.customer.birthday || ""}
-                    onChange={this.handleCustomerDataChange}
-                  />
-                  </dd>
-                </dl>
-              </div>
-              <div id="tabs" className="tabs">
-                <a href="#resList" className="here">利用履歴</a>
-                <a href="#detailInfo" className="">顧客情報</a>
-              </div>
-              <div id="resList" className="tabBody">
-                <dl className="tableTTL">
-                  <dt className="date">ご利用日</dt>
-                  <dt className="time">開始<br />終了</dt>
-                  <dt className="calendar">カレンダー</dt>
-                  <dt className="menu">メニュー</dt>
-                </dl>
-                <div id="record">
-                </div>
-               </div>
-              <div id="detailInfo" className="tabBody">
-                Detailed Info
-              </div>
-            </div>
+
+            <UI.Customers.CustomerInfo
+              customer={this.state.customer}
+              handleCustomerDataChange={this.handleCustomerDataChange} />
 
             <div id="mainNav">
               { this.props.fromReservation ? (
@@ -304,8 +221,8 @@ UI.define("Customers.Dashboard", function() {
                           <input name="customer[id]" type="hidden" value={this.state.customer.id} />
                           <input name="customer[first_name]" type="hidden" value={this.state.customer.firstName} />
                           <input name="customer[last_name]" type="hidden" value={this.state.customer.lastName} />
-                          <input name="customer[jp_last_name]" type="hidden" value={this.state.customer.jpLastName} />
-                          <input name="customer[jp_first_name]" type="hidden" value={this.state.customer.jpFirstName} />
+                          <input name="customer[phonetic_last_name]" type="hidden" value={this.state.customer.jpLastName} />
+                          <input name="customer[phonetic_first_name]" type="hidden" value={this.state.customer.jpFirstName} />
                           <input name="customer[state]" type="hidden" value={this.state.customer.state} />
                           <input name="customer[phone_type]" type="hidden" value={this.state.customer.phoneType} />
                           <input name="customer[phone_number]" type="hidden" value={this.state.customer.phoneNumber} />
@@ -336,25 +253,10 @@ UI.define("Customers.Dashboard", function() {
             </div>
           </div>
           <footer>
-          <ul>
-              {
-               ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "A"].map(function(symbol, i) {
-                 return (
-                   <li key={symbol}
-                       onClick={this.filterCustomers}
-                       value={i} >
-                     <a href="#"
-                        value={i}
-                        className={this.state.selectedFilterPatternNumber == `${i}` ? "here" : null }>{symbol}</a>
-                   </li>
-                 )
-               }.bind(this))
-              }
-              <li>
-                <i className="fa fa-search fa-2x search-symbol" aria-hidden="true"></i>
-                <input type="text" id="search" placeholder="Name or TEL" onKeyPress={this.SearchCustomers} />
-              </li>
-             </ul>
+            <UI.Customers.SearchBar
+              filterCustomers={this.filterCustomers}
+              selectedFilterPatternNumber={this.state.selectedFilterPatternNumber}
+              SearchCustomers={this.SearchCustomers} />
           </footer>
         </div>
       );

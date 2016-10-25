@@ -61,6 +61,6 @@ class CustomersController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def customer_params
-    params.require(:customer).permit(:id, :last_name, :first_name, :jp_last_name, :jp_first_name, :state, :phone_type, :phone_number, :birthday)
+    params.require(:customer).permit(:id, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :state, :phone_type, :phone_number, :birthday)
   end
 end

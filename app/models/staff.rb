@@ -2,14 +2,14 @@
 #
 # Table name: staffs
 #
-#  id            :integer          not null, primary key
-#  user_id       :integer          not null
-#  last_name     :string
-#  first_name    :string
-#  jp_last_name  :string
-#  jp_first_name :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id                  :integer          not null, primary key
+#  user_id             :integer          not null
+#  last_name           :string
+#  first_name          :string
+#  phonetic_last_name  :string
+#  phonetic_first_name :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #
 
 class Staff < ApplicationRecord
@@ -26,6 +26,6 @@ class Staff < ApplicationRecord
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 
   def name
-    "#{jp_last_name} #{jp_first_name}".presence || "#{first_name} #{last_name} "
+    "#{phonetic_last_name} #{phonetic_first_name}".presence || "#{first_name} #{last_name} "
   end
 end

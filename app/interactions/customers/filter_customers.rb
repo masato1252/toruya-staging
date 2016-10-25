@@ -22,9 +22,9 @@ class Customers::FilterCustomers < ActiveInteraction::Base
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped.
-      where("jp_last_name SIMILAR TO ?", "(#{regexp_pattern})%").
+      where("phonetic_last_name SIMILAR TO ?", "(#{regexp_pattern})%").
       or(
-        scoped.where("jp_first_name SIMILAR TO ?", "(#{regexp_pattern})%")
+        scoped.where("phonetic_first_name SIMILAR TO ?", "(#{regexp_pattern})%")
       )
   end
 
