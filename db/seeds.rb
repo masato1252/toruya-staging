@@ -6,34 +6,24 @@ end
 
 create(:user, email: "superadmin@email.com", password: "password123", confirmed_at: Time.now) do |user|
   create(:shop, user: user) do |shop|
-    menu = create(:menu, user: user, max_seat_number: nil) do |menu|
-      create(:reservation_setting, user: user) do |setting|
-        create(:reservation_setting_menu, reservation_setting: setting, menu: menu)
-      end
-      create(:shop_menu, shop: shop, menu: menu)
+    menu = create(:menu, user: user, max_seat_number: nil, shop: shop) do |menu|
+      create(:reservation_setting, user: user, menu: menu)
     end
 
-    lecture_menu = create(:menu, :lecture, user: user) do |lecture_menu|
-      create(:reservation_setting, user: user) do |setting|
-        create(:reservation_setting_menu, reservation_setting: setting, menu: lecture_menu)
-      end
-      create(:shop_menu, shop: shop, menu: lecture_menu)
+    lecture_menu = create(:menu, :lecture, user: user, shop: shop) do |lecture_menu|
+      create(:reservation_setting, user: user, menu: lecture_menu)
     end
 
-    create(:menu, :lecture, user: user) do |vip_menu|
-      create(:reservation_setting, user: user) do |setting|
-        create(:reservation_setting_menu, reservation_setting: setting, menu: vip_menu)
-      end
+    create(:menu, :lecture, user: user, shop: shop) do |vip_menu|
+      create(:reservation_setting, user: user, menu: vip_menu)
     end
 
-    create(:staff, user: user) do |staff|
-      create(:shop_staff, shop: shop, staff: staff)
+    create(:staff, shop: shop, user: user) do |staff|
       create(:staff_menu, staff: staff, menu: menu, max_customers: 2)
       create(:staff_menu, staff: staff, menu: lecture_menu, max_customers: nil)
     end
 
-    create(:staff, user: user) do |staff2|
-      create(:shop_staff, shop: shop, staff: staff2)
+    create(:staff, shop: shop, user: user) do |staff2|
       create(:staff_menu, staff: staff2, menu: menu, max_customers: 2)
       create(:staff_menu, staff: staff2, menu: lecture_menu, max_customers: nil)
     end
