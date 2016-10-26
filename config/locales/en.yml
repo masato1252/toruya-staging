@@ -40,6 +40,7 @@ en:
     formats:
       default: "%m-%d-%Y"
       long: "%B %d, %Y"
+      year_month_date: "%Y-%m-%d"
       short: "%b %d"
     month_names:
     -

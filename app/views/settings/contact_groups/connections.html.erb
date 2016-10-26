@@ -6,10 +6,6 @@
   </div>
 
   <form>
-    <div>
-      <%= link_to "#{current_user.uid ? "Re" : ""}connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary"  %>
-    </div>
-
     <h1>Contact group: <%= @contact_group.name %></h1>
     Choose the google group you want to bind
     <div id="customize-table" class="formRow table">

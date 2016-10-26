@@ -1,5 +1,6 @@
 //= require "components/shared/customers_list"
 //= require "components/customers/customer_info"
+//= require "components/customers/customer_info_view"
 //= require "components/customers/search_bar"
 
 "use strict";
@@ -196,7 +197,7 @@ UI.define("Customers.Dashboard", function() {
               </div>
             </div>
 
-            <UI.Customers.CustomerInfo
+            <UI.Customers.CustomerInfoView
               customer={this.state.customer}
               handleCustomerDataChange={this.handleCustomerDataChange} />
 

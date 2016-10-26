@@ -3,6 +3,7 @@ class Groups::RetrieveGroups < ActiveInteraction::Base
   object :user, class: User
 
   def execute
+    return [] unless user.access_token
     google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
     exclude_used_groups(exclude_system_groups(google_user.groups))
   end

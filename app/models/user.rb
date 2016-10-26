@@ -38,5 +38,5 @@ class User < ApplicationRecord
   has_many :categories
   has_many :contact_groups
 
-  delegate :access_token, :refresh_token, :uid, to: :access_provider
+  delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
 end

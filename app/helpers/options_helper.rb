@@ -49,7 +49,14 @@ module OptionsHelper
 
   def customer_options(customers)
     return [] unless customers.present?
-    customers.map { |c| React.camelize_props(c.attributes.merge(label: c.name, value: c.id, level: c.state)) }
+    customers.map do |c|
+      React.camelize_props(c.attributes.merge(
+        label: c.name,
+        value: c.id,
+        group_name: c.contact_group.try(:name),
+        birthday: (c.birthday ? I18n.l(c.birthday, format: :year_month_date) : "")
+      ))
+    end
   end
 
   def react_attributes(array)

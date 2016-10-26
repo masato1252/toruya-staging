@@ -6,6 +6,10 @@
 </div>
 
 <form>
+  <div>
+    <%= link_to "#{current_user.uid ? "Re" : ""}connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary"  %>
+  </div>
+
   <div id="customize-table" class="formRow table">
     <dl class="header">
       <dd>Name</dd>
