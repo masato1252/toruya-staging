@@ -13,6 +13,15 @@ class CustomersController < DashboardController
                             end
   end
 
+  def show
+    customer = super_user.customers.find(params[:id])
+    @customer = if customer.google_contact_id
+                  customer.build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: customer))
+                else
+                  customer
+                end
+  end
+
   # POST /customers
   # POST /customers.json
   def save

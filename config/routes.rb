@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :shops do
-    resources :customers, only: [:index] do
+    resources :customers, only: [:index, :show] do
       collection do
         get :filter
         get :search

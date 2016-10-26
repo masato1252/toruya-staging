@@ -1,1 +1,1 @@
-json.extract! @customer, :id, :shop_id, :customer, :last_name, :first_name, :state, :created_at, :updated_at
+json.extract! @customer, :id, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :primary_email, :address, :emails, :addresses, :birthday

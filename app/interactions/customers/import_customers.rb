@@ -44,39 +44,9 @@ class Customers::ImportCustomers < ActiveInteraction::Base
 
   private
 
-  def primary_address(addresses)
-    return unless addresses
-
-    if primary_address = addresses.find { |address_type, address| address.primary }
-      primary_address
-    elsif home_address = addresses.find { |address_type, address| address_type == "home" }
-      home_address
-    elsif work_address = addresses.find { |address_type, address| address_type == "work" }
-      work_address
-    else
-      addresses.first
-    end
-  end
-
-  def primary_part_address(addresses)
-    return unless addresses
-
-    address_type, address = primary_address(addresses)
-    if address && (address.city || address.region)
-      "#{address.city},#{address.region}"
-    end
-  end
-
   def build_customer(google_contact)
     customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
-    customer.first_name = google_contact.first_name
-    customer.last_name = google_contact.last_name
-    customer.phonetic_last_name = google_contact.phonetic_last_name
-    customer.phonetic_first_name = google_contact.phonetic_first_name
-    customer.google_contact_group_ids = google_contact.group_ids
-    customer.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
-    customer.address = primary_part_address(google_contact.addresses)
-    customer.google_uid = user.uid
+    customer.build_by_google_contact(google_contact, true)
     customer
   end
 end
