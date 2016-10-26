@@ -6,6 +6,13 @@ margin: 0;
 padding: 0;
 border: 0;
 }
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+         -o-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+}
 ul li, dt, dd, dl li {
 list-style: none;
 }
@@ -131,10 +138,11 @@ input[type="date"] {
   width: 150px !important;
   padding-right: 5px;
 }
-input[type="time"] { width: 80px; }
+input[type="time"] { width: 100px; }
+input.address { width: 400px; }
 input:placeholder { color: #ccc; }
 input:disabled, select:disabled { background-color: #d0d0d0; }
-input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited {
+input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited, .signup #socialLogin ul li a, a.BTNgray:visited, .signup #socialLogin ul li a:link, a.BTNgray:visited, .signup #socialLogin ul li a:visited {
   border-radius: 6px; /* 記述無し */
   -moz-border-radius: 6px; /* Firefox */
   -webkit-border-radius: 6px; /* Google Chrome、Safari */
@@ -160,8 +168,10 @@ input.BTNyellow, a.BTNyellow { background: #fcbe46; border-color: #e6a21f; }
 input.BTNyellow:hover, a.BTNyellow:hover { background: #e6a21f; border-color: #d79a23; }
 input.BTNtarco, a.BTNtarco { background: #97bfb8; border-color: #60938a; }
 input.BTNtarco:hover, a.BTNtarco:hover { background: #60938a; border-color: #488479; }
-input.BTNgray, a.BTNgray { background: #ccc; border-color: #666; }
+input.BTNgray, a.BTNgray { background: #d0d0d0; border-color: #b3b3b3; }
 input.BTNgray:hover, a.BTNgray:hover { background: #888; border-color: #666; }
+.signup #socialLogin ul li a { background: #fff; border-color: #ccc; }
+.signup #socialLogin ul li a:hover { background: #ccc; border-color: #888; }
 h1 {
   color: #ca4e0e;
   padding: 20px 0 30px 0;
@@ -192,7 +202,7 @@ header dl:first-child { float: left; }
 header dl:last-child { float: right; }
 header dl:first-child dd { padding-right: 28px; }
 header dl:last-child dd { padding-left: 28px; }
-header dl dd {
+header dl dd { 
   display: inline-block;
   vertical-align: middle;
 }
@@ -244,12 +254,12 @@ footer {
 #footer .content { margin: 20px; }
 /* Login Page */
 .login, .shopSelect { padding-bottom: 0; }
-.login header h1, .shopSelect header h1, .setting header h1 {
+.login header h1, .signup header h1, .firstSetting header h1, .shopSelect header h1, .setting header h1 {
   padding-top: 25px;
   padding-bottom: 0;
   float: left;
 }
-.login header h1 a, .shopSelect header h1 a, .setting header h1 a {
+.login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
   background-image: url(asset-path("screen/logo_white.png"));
   width: 99px;
   height: 31px;
@@ -266,10 +276,89 @@ footer {
 }
 #login h2 {
   text-align: center;
-  padding-bottom: 20px;
 }
 #login input { width: 100%; }
+#login input[type="text"], #login input[type="email"], #login input[type="password"] { padding: 10px; }
+#login input:focus { border-color: #60938a; }
 #login div { padding-bottom: 15px; }
+#login #forgotPass {
+  text-align: right;
+  padding-top: 15px;
+}
+#login #socialLogin {
+  padding: 20px 0;
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+  border-color: #CCCCCC;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#login aside {
+  text-align: center;
+}
+#login #socialLogin a {
+  margin: 0 10px;
+}
+/* Signup Pages */
+.signup #login aside p {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.signup #login aside ul li {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.signup #login #socialLogin a {
+  margin: 0;
+  text-align: center;
+}
+.signup #login #socialLogin { border-bottom: none; }
+.signup #login aside a i {
+  float: left;
+    line-height: 50px;
+}
+.signup #login main input[type="password"]:first-child { margin-bottom: 5px; }
+.signup #login #SLgoogle, .firstSetting #contactsGsync #Gsync { background: #de4b39; border-color: #92483b; }
+.signup #login #SLfacebook { background: #3b5999; border-color: #304972; }
+.signup #login #SLtwitter { background: #54adf1; border-color: #4d89ad; }
+/* First Setting */
+.firstSetting #progress {
+  margin: 20px;
+  border: 2px solid #aaa;
+  padding: 0 3px;
+}
+.firstSetting #progress li {
+  float: left;
+  font-size: 11pt;
+  line-height: 2em;
+  text-align: center;
+  width: 25%;
+  background: #d0d0d0 url(asset-path("screen/firstsetting_steps.png")) right center no-repeat;
+  border-width: 5px 3px;
+  border-style: solid;
+  border-color: #f2f2f2;
+  color: #f2f2f2;
+}
+.firstSetting #progress li.done { color: #888; }
+.firstSetting #progress li i { padding-right: 10px; }
+.firstSetting #progress li.here {
+  color: #fff;
+  background-color: #6fa89f;
+  font-weight: bold;
+}
+.firstSetting #plans label {
+  width: 25%;
+}
+.firstSetting #paymentSetting .BTNselect label span strong {
+  padding-right: 20px;
+}
+.firstSetting #contactsGsync a i { padding-right: 10px; }
+.firstSetting #contactsGsync a.BTNyellow {
+  display: inline-block;
+  margin-left: 10px;
+  line-height: 30px;
+    height: 30px;
+}
 /* Shop Select */
 .shopSelect #shopNav h2 { text-align: center; }
 .shopSelect nav {
@@ -292,7 +381,7 @@ footer {
   padding: 20px;
   height: 100%;
 }
-.setting .contents, .publish .contents {
+.setting .contents, .publish .contents { 
   margin: 0;
   padding: 0;
 }
@@ -304,7 +393,7 @@ footer {
   width: 100%;
   height: 100%;
 }
-#sideNav, #content {
+#sideNav, #content { 
     vertical-align: top;
   display: table-cell;
 }
@@ -393,7 +482,7 @@ footer {
   margin: 20px 0 10px 0;
   text-indent: 10px;
 }
-#content .formRow dl, #content .formRow ul {
+#content .formRow dl, #content .formRow ul { 
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: #DFDFDF;
@@ -428,7 +517,7 @@ footer {
 }
 #content form #google #autoLinkedTo dd { line-height: 2.5em; }
 #content form dl dt p, #content form dl dd input {
-  padding: 10px 20px;
+  padding: 10px;
 }
 #content form dl dt { position: relative; }
 #content .rowTTL, #content form dl dt, #content .tableTTL .check { padding-right: 20px; }
@@ -482,15 +571,16 @@ footer {
 #content #tempHoliday .closeReason { width: 220px; }
 #content #calendarList .rowTTL, #content #calendarList .toruyaCal, #content #doMenu .menuCat, #content #doMenu .menu, #content #doMenu .menuMax, #content #contactList .rowTTL, #content #rankList .rowTTL, #content #shopList .rowTTL, #content #priceList .rowTTL, #content #priceMenu .rowTTL { width: 200px; }
 #content #tempHoliday .date { width: 180px; }
-#content #shopNames dl dt, #content #staffList .rowTTL, #content #staffList .rowTTL, #content #menuList .rowTTL, #content #prices .rowTTL { width: 160px; }
-#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffList .updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #calendarList .function.updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #frameInfo dt { width: 90px; }
-#content #staffInfo dt, #content .tableTTL .check, #content .formRow .check, #content #frameDetail dt { width: 60px; }
-#content #busHour .openClose, #content #contacts dl dt, #content #contactList .updateTime, #content #rankList .updateTime, #content #shopList .updateTime, #content #tempHoliday .startTime, #content #tempHoliday .endsTime, #content #priceList .updateTime, #content #prices .customerRank, #content #priceMenu .quantity { width: 130px; }
+#content #shopNames dl dt, #content #staffList .rowTTL, #content #staffList .rowTTL, #content #menuList .rowTTL, #content #prices .rowTTL, .firstSetting #content #companyInfo dt { width: 160px; }
+#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffList .updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #calendarList .function.updateTime, #content #staffInfo .firstName, #content #menuList .updateTime, #content #frameInfo dt, .firstSetting #content #adminInfo dt, #content #staffInfo dt { width: 90px; }
+#content .tableTTL .check, #content #menuList .staff, #content .formRow .check, #content #frameDetail dt { width: 60px; }
+#content #busHour .openClose, #content #contacts dl dt, #content #contactList .updateTime, #content #rankList .updateTime, #content #shopList .updateTime, #content #tempHoliday .startTime, #content #tempHoliday .endsTime, #content #priceList .updateTime, #content #prices .customerRank, #content #priceMenu .quantity, #content #menuList .blocks { width: 130px; }
 #content .workingTime .startTime, #content .workingTime .endsTime { width: 140px; }
 #content #belong dt, #content #staffAccount dt, #content #calendarList .updateTime, #content #parttime .inOut, #content .workingTime .rowTTL, #content .workingTime .inOut, #content #priceMenu .menu { width: 118px; }
 #content #menuInfo dl dt, #content #calendarInfo dt, #content #priceInfo dt, #content #google dt, #content #contactsInfo dt { width: 100px; }
 #content #tempHoliday .date { padding-right: 0; }
 #content #prices .rankPrice input, #content form input[type="number"] { margin-right: 10px; }
+#content #staffInfo .familyName, .firstSetting #content #adminInfo .familyName { padding-right: 10px; }
 #content #busHour .openTime, #content #busHour .closeTime, #content #parttime .startTime, #content #parttime .endsTime {
   width: 126px;
   padding: 0 5px;
@@ -629,9 +719,10 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   border-top-right-radius: .3em;
   border-bottom-right-radius: .3em;
 }
-.BTNonoff + label:before, .BTNonoff + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 2.5em; }
-.BTNopenclose + label:before, .BTNopenclose + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after { width: 3.5em; }
-#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 3em; }
+.BTNonoff + label:before, .BTNonoff + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 3em; }
+.BTNopenclose + label:before, .BTNopenclose + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after { width: 4em; }
+#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 3.5em; }
+#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 4.5em; }
 .BTNalwaysIN + label:before { content: "非常勤"; }
 .BTNalwaysIN + label:after { content: "常勤"; }
 .BTNonoff + label:before { content: "OFF"; }
@@ -933,7 +1024,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
     padding-bottom: 15px;
     font-size: 24px;
     line-height: 24px;
-    width: 140px;
+    width: 170px;
     height: inherit;
 }
 #mainNav #NAVnewResv a { background-image: url(asset-path("screen/btn_newresv.png")); }
@@ -969,7 +1060,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   color: #fff;
   font-weight: bold;
 }
-#searchRev .calendars, #searchRev .footer {
+#searchRev .calendars, #searchRev .footer { 
   padding: 10px;
   display: flex;
   display: -moz-flex;
@@ -1048,6 +1139,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
     overflow-x: hidden;
   background: #fff;
 }
+#customer #resultList div { overflow: scroll; }
 #customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited,
 #resNew #customerList a, #resNew #customerList a:link, #resNew #customerList a:visited {
   display: block;
@@ -1068,36 +1160,74 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   text-align: right;
   font-size: 13px;
 }
-#customerInfo #basic { padding-bottom: 10px; }
-#customerInfo #basic input, #resNew #resInfo input { text-indent: 10px; }
-#customerInfo #basic dl { padding-bottom: 5px; }
-#customerInfo #basic dl dt, #customerInfo #basic dl dd {
+#customerInfo #basic, #customerInfoNew #basic, #customerInfoEdit #basic { padding-bottom: 10px; }
+#customerInfoEdit #basic input, #customerInfoNew #basic input, #resNew #resInfo input { text-indent: 10px; }
+#customerInfoEdit #basic dl ul li, #customerInfoNew #basic dl ul li { padding-bottom: 5px; }
+#customerInfoEdit #basic dl ul li i, #customerInfoNew #basic dl ul li i { margin-right: 5px; }
+#customerInfo #basic dl dt, #customerInfo #basic dl dd, #customerInfoNew #basic dl dt, #customerInfoNew #basic dl dd, #customerInfoEdit #basic dl dt, #customerInfoEdit #basic dl dd {
   display: inline-block;
+  vertical-align: middle;
 }
-#customerInfo #basic dl dt { width: 110px; }
-/*#customerInfo #basic dl dd { width: 39.8%; }*/
-#customerInfo #basic select#customerSts {
-  border-color: #b3b3b3;
+#customerInfo #basic dl dt, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dt { width: 110px; }
+#customerInfo #basic dl dd:nth-child(2) {
+  width: 55%;
+}
+#customerInfo #basic dl dd:nth-child(2) ul li {
+  width: 100%;
+  text-align: center;
+}
+#customerInfo #basic dl dd:nth-child(2) ul:not(.kana) {
+  font-size: 20pt;
+    font-weight: bold;
+}
+#customerInfo #basic a.BTNtarco {
+  text-align: center;
+  display: inline-block;
+  margin-left: 10px;
+  line-height: 54px;
+}
+#customerInfo #basic dl dt li:first-child { margin-bottom: 5px; }
+#customerInfo #basic dl dt li {
+  text-align: center;
+  font-size: 90%;
+  border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -o-border-radius: 6px;
+    -ms-border-radius: 6px;
+  padding: 5px;
+}
+#customerInfoEdit #basic select#customerSts, #customerInfoNew #basic select#customerSts, #customerInfo #basic dl dt li {
+  border: 1px solid #b3b3b3;
   background-color: #d0d0d0;
 }
-#customerInfo #basic select.vip, #customerInfo #basic option[value="vip"] {
+#customerInfoEdit #basic select#customerSts.vip, #customerInfoNew #basic select#customerSts.vip, #customerInfo #basic dl dt li.vip {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   border-color: #b0450d;
   background-color: #ca4e0f;
+  color: #fff;
 }
-#customerInfo #basic input, #customerInfo #basic select {
+#customerInfoEdit #basic input, #customerInfoEdit #basic select, #customerInfoNew #basic input, #customerInfoNew #basic select {
   line-height: 47px;
   height: 47px;
   padding-top: 0;
   padding-bottom: 0;
+}
+#customerInfoEdit #basic dt select, #customerInfoNew #basic dt select {
   width: 100%;
 }
-/*#customerInfo #basic input[type="date"] { width: 94%; }*/
 #customerInfo .tabs a { width: 40%; }
 #customerInfo #resList #record { padding-top: 33px; }
-#customerInfo #resList .year {
+#customerInfo #resList .menu { width: 40%; }
+#customerInfo #resList .shop { width: 20%; }
+#customerInfo #resList .year, #customerInfo #detailInfoEdit dl dt, #customerInfoNew #detailInfoEdit dl dt {
   text-align: center;
   background: #d0d0d0;
   color: #fff;
+}
+#customerInfo #resList .year {
   position: absolute;
   top: 0;
   width: 100%;
@@ -1150,6 +1280,84 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 .customer footer ul li input::-webkit-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input:-ms-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input::-moz-placeholder { color: #D8D8D8; }
+/* #customerInfo #detailInfo */
+#customerInfo .tabBody, #customerInfoNew .tabBody, #customerInfoEdit .tabBody { overflow: scroll; }
+#customerInfo #basic dl dd ul li, #customerInfo #detailInfoEdit dl dd ul li, #customerInfoEdit #basic dl dd ul li, #customerInfoNew #basic dl dd ul li {
+  display: inline-block;
+  vertical-align: middle;
+}
+#customerInfo #detailInfo > ul, #customerInfo #detailInfo dl, #customerInfoEdit #detailInfo > ul, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo > ul, #customerInfoNew #detailInfo dl {
+  padding: 10px 0;
+  margin: 10px;
+}
+#customerInfo #detailInfo dl, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo dl {
+  border-top: 1px solid #B3B3B3;
+}
+#customerInfo #detailInfo dl dt, #customerInfo #detailInfo dl dd {
+}
+#customerInfo #detailInfo dl dt, #customerInfo #detailInfo li.left, #customerInfoEdit #detailInfo dl dt, #customerInfoEdit #detailInfo li.left, #customerInfoNew #detailInfo dl dt, #customerInfoNew #detailInfo li.left {
+  float: left;
+}
+#customerInfo #detailInfo dl dt, #customerInfoEdit #detailInfo dl dt, #customerInfoNew #detailInfo dl dt {
+  color: #B3B3B3;
+}
+#customerInfo #detailInfo dl dt.delete a, #customerInfo #detailInfo dl dt.delete a:link, #customerInfo #detailInfo dl dt.delete a:visited {
+  color: #ca4e0f;
+}
+#customerInfo #detailInfo dl dd, #customerInfo #detailInfo li.right, #customerInfoEdit #detailInfo dl dd, #customerInfoEdit #detailInfo li.right, #customerInfoNew #detailInfo dl dd, #customerInfoNew #detailInfo li.right {
+  float: right;
+  text-align: right;
+}
+#customerInfo #detailInfo dl dd { width: 80%; }
+#customerInfo #detailInfo dl dt { width: 20%; }
+#customerInfoEdit #detailInfo dl dd, #customerInfoNew #detailInfo dl dd { text-align: left; }
+#customerInfo #detailInfo dl dd ul, #customerInfoNew #detailInfo dl dd ul, #customerInfoEdit #detailInfo dl dd ul { padding: 5px 0 0 0; }
+#customerInfo #detailInfo dl dd ul li, #customerInfoNew #detailInfo dl dd ul li, #customerInfoEdit #detailInfo dl dd ul li {
+  padding-bottom: 5px;
+}
+#customerInfo #detailInfo dl dd ul li span, #customerInfoNew #detailInfo dl dd ul li span, #customerInfoEdit #detailInfo dl dd ul li span { padding-right: 5px; }
+#customerInfo #detailInfo dl dd ul li.memo span, #customerInfoNew #detailInfo dl dd ul li.memo span, #customerInfoEdit #detailInfo dl dd ul li.memo span {
+    vertical-align: top;
+    display: inline-block;
+}
+#customerInfo #detailInfo .phone li, #customerInfo #detailInfo .email li, #customerInfo #detailInfo li.customerID, #customerInfo #detailInfo li.dob { width: 49%; }
+#customerInfoEdit #detailInfo input, #customerInfoNew #detailInfo input { padding: 8px 10px; margin-left: 5px; }
+#customerInfoEdit #detailInfo input#zipcode3, #customerInfoNew #detailInfo input#zipcode3 { width: 65px; }
+#customerInfoEdit #detailInfo input#zipcode4, #customerInfoNew #detailInfo input#zipcode4 { width: 70px; }
+#customerInfoEdit #detailInfo .addrRest input, #customerInfoEdit #detailInfo .email input, #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .addrRest input, #customerInfoNew #detailInfo .email input, #customerInfoNew #detailInfo .memo textarea { min-width: 310px; max-width: 400px; }
+#customerInfoEdit #detailInfo .phone input, #customerInfoNew #detailInfo .phone input { width: 150px; }
+#customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .memo textarea { font-size:14px; }
+#customerInfoEdit #detailInfo  a.BTNtarco, #customerInfoEdit #detailInfo  a.BTNyellow, #customerInfoNew #detailInfo  a.BTNtarco, #customerInfoNew #detailInfo a.BTNyellow {
+  display: inline-block;
+    line-height: 30px;
+    height: 30px;
+    width: 30px;
+    padding: 0;
+    text-align: center;
+    margin-left: 5px;
+}
+#customerInfo #detailInfo .phone dd li>i, #customerInfo #detailInfo .email dd li>i{
+  padding: 0 5px 0 0;
+  width: 35px;
+    text-align: right;
+  vertical-align: middle;
+}
+#customerInfo #detailInfo .phone dt, #customerInfo #detailInfo .email dt { position: relative; }
+#customerInfo #detailInfo .phone dt a, #customerInfo #detailInfo .email dt a, #customerInfo #detailInfo .phone dd a, #customerInfo #detailInfo .email dd a {
+    height: 40px;
+  width: 40px;
+  padding: 0;
+    text-align: center;
+}
+#customerInfo #detailInfo .phone dt a, #customerInfo #detailInfo .email dt a {
+  position: absolute;
+  right: 8px;
+    top: 8px;
+}
+#customerInfo #detailInfo .phone dd a, #customerInfo #detailInfo .email dd a {
+  display: inline-block;
+  margin-left: 10px;
+}
 /* Reservation */
 #resNew #resInfo {
   color: #8F8F8F;
@@ -1255,7 +1463,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat:
   no-repeat, /* 最前面の背景レイヤーに対応 */
   no-repeat;
-
+  
   background-position:
   right center, /* 最前面の背景レイヤーに対応 */
   left 8px center;
@@ -1280,10 +1488,10 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   padding-left: 40px;
 }
 /*clear all*/
-#aa:after {
+#aa:after, .firstSetting #progress:after, #customerInfo #detailInfo > ul:after, #customerInfo #detailInfo dl:after, #customerInfoEdit #detailInfo > ul:after, #customerInfoEdit #detailInfo dl:after, #customerInfoNew #detailInfo > ul:after, #customerInfoNew #detailInfo dl:after {
   content: ".";
   display: block;
   height: 0;
   clear: both;
-  visibility: hidden;
+  visibility: hidden; 
 }
