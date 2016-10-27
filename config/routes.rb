@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
   resources :shops do
-    resources :customers, only: [:index, :show] do
+    resources :customers, only: [:index] do
       collection do
         get :filter
         get :search
         get :recent
+        get :detail
         delete :delete
         post :save
       end

@@ -54,7 +54,13 @@ module OptionsHelper
         label: c.name,
         value: c.id,
         group_name: c.contact_group.try(:name),
-        birthday: (c.birthday ? I18n.l(c.birthday, format: :year_month_date) : "")
+        birthday: (c.birthday ? I18n.l(c.birthday, format: :year_month_date) : ""),
+        emails: c.emails || [],
+        phone_numbers: c.phone_numbers || [],
+        addresses: c.addresses,
+        primary_email: c.primary_email,
+        primary_phone: c.primary_phone,
+        display_address: c.display_address
       ))
     end
   end

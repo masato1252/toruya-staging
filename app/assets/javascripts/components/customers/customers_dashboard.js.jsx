@@ -19,6 +19,21 @@ UI.define("Customers.Dashboard", function() {
       });
     },
 
+    fetchCustomerDetails: function(event) {
+      var _this = this;
+      event.preventDefault();
+      if (this.state.customer) {
+        $.ajax({
+          type: "GET",
+          url: this.props.customerDetailPath,
+          data: { id: this.state.customer.id },
+          dataType: "JSON"
+        }).success(function(result) {
+          _this.setState({customer: result["customer"]});
+        });
+      }
+    },
+
     handleCustomerSelect: function(customer_id, event) {
       if (this.state.selected_customer_id == customer_id) {
         this.setState({selected_customer_id: "", customer: {}});
@@ -199,7 +214,8 @@ UI.define("Customers.Dashboard", function() {
 
             <UI.Customers.CustomerInfoView
               customer={this.state.customer}
-              handleCustomerDataChange={this.handleCustomerDataChange} />
+              handleCustomerDataChange={this.handleCustomerDataChange}
+              fetchCustomerDetails={this.fetchCustomerDetails} />
 
             <div id="mainNav">
               { this.props.fromReservation ? (

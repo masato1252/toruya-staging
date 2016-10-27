@@ -46,7 +46,7 @@ class Customers::ImportCustomers < ActiveInteraction::Base
 
   def build_customer(google_contact)
     customer = user.customers.find_or_initialize_by(google_contact_id: google_contact.id)
-    customer.build_by_google_contact(google_contact, true)
+    customer.build_by_google_contact(google_contact)
     customer
   end
 end

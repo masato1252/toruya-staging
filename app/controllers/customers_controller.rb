@@ -13,13 +13,14 @@ class CustomersController < DashboardController
                             end
   end
 
-  def show
+  def detail
     customer = super_user.customers.find(params[:id])
     @customer = if customer.google_contact_id
                   customer.build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: customer))
                 else
                   customer
                 end
+    render action: :show
   end
 
   # POST /customers
@@ -32,6 +33,8 @@ class CustomersController < DashboardController
       @customer = super_user.customers.new(customer_params)
       @customer.save
     end
+
+    render action: :show
   end
 
   def delete
