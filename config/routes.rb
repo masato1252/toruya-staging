@@ -42,6 +42,7 @@ Rails.application.routes.draw do
     end
     resources :reservation_settings, except: [:show]
     resources :categories, except: [:show]
+    resources :ranks, except: [:show]
 
     namespace :working_time do
       resources :staffs, only: [:index, :edit, :update]

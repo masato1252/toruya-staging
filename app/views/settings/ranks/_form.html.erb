@@ -1,0 +1,19 @@
+<%= form_for(rank, url: url) do |f| %>
+  <h3>Rank Informations<strong>必須項目</strong></h3>
+  <div id="menuInfo" class="formRow">
+    <dl>
+      <dt>ランク名</dt>
+      <dd>
+        <%= f.text_field :name, placeholder: "Rank Name", max_length: 30 %>
+      </dd>
+    </dl>
+  </div>
+  <ul id="footerav">
+    <li>
+      <%= link_to "Cancel", settings_ranks_path, class: "BTNtarco" %>
+    </li>
+    <li>
+      <%= f.submit "保存", class: "BTNyellow" %>
+    </li>
+  </ul>
+<% end %>

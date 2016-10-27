@@ -1,0 +1,35 @@
+<div id="subNav">
+  <h2>Contacts − Ranks</h2>
+</div>
+
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to "Add a New Rank", new_settings_rank_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p>There are the list of Customer Rank here.<br>Toruya will accept reservation based on this setting.</p>
+</div>
+
+<form>
+  <div id="rankList" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL">Rank Name</li>
+      <li class="updateTime">update time</li>
+    </ul>
+    <% @ranks.each do |rank| %>
+    <dl>
+      <dt class="rowTTL"><%= rank.name %></dt>
+      <dd class="updateTime"><%= rank.updated_at.to_s(:date) %></dd>
+      <dd class="function">
+        <%= link_to "Edit Rank", edit_settings_rank_path(rank), class: "BTNtarco" %>
+      </dd>
+      <dd class="function">
+        <%= link_to settings_rank_path(rank), method: :delete, data: { confirm: "Are you sure?" }, class: "BTNorange", title: "Delete" do %>
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        <% end %>
+      </dd>
+    </dl>
+    <% end %>
+  </div>
+</form>
