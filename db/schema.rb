@@ -230,15 +230,16 @@ ActiveRecord::Schema.define(version: 20161027141005) do
 
   create_table "shops", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "name",         null: false
-    t.string   "shortname",    null: false
-    t.string   "zip_code",     null: false
-    t.string   "phone_number", null: false
-    t.string   "email",        null: false
-    t.string   "address",      null: false
+    t.string   "name",            null: false
+    t.string   "shortname",       null: false
+    t.string   "zip_code",        null: false
+    t.string   "phone_number",    null: false
+    t.string   "email",           null: false
+    t.string   "address",         null: false
     t.string   "website"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.boolean  "holiday_working"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.index ["user_id"], name: "index_shops_on_user_id", using: :btree
   end
 

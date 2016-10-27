@@ -2,17 +2,18 @@
 #
 # Table name: shops
 #
-#  id           :integer          not null, primary key
-#  user_id      :integer
-#  name         :string           not null
-#  shortname    :string           not null
-#  zip_code     :string           not null
-#  phone_number :string           not null
-#  email        :string           not null
-#  address      :string           not null
-#  website      :string
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id              :integer          not null, primary key
+#  user_id         :integer
+#  name            :string           not null
+#  shortname       :string           not null
+#  zip_code        :string           not null
+#  phone_number    :string           not null
+#  email           :string           not null
+#  address         :string           not null
+#  website         :string
+#  holiday_working :boolean
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 class Shop < ApplicationRecord
