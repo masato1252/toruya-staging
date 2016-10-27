@@ -14,6 +14,8 @@
 #
 
 class ContactGroup < ApplicationRecord
+  has_many :ranking, class_name: ContactGroupRanking
+  has_many :ranks, through: :ranking
   belongs_to :user
 
   validates :google_group_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true

@@ -3,6 +3,7 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
     create_table :customers do |t|
       t.references :user, null: false
       t.references :contact_group
+      t.belongs_to :rank
       t.string :last_name
       t.string :first_name
       t.string :phonetic_last_name

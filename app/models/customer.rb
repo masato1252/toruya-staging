@@ -5,6 +5,7 @@
 #  id                       :integer          not null, primary key
 #  user_id                  :integer          not null
 #  contact_group_id         :integer
+#  rank_id                  :integer
 #  last_name                :string
 #  first_name               :string
 #  phonetic_last_name       :string

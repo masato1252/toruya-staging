@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027141005) do
+ActiveRecord::Schema.define(version: 20161027234643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,15 @@ ActiveRecord::Schema.define(version: 20161027141005) do
     t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
   end
 
+  create_table "contact_group_rankings", force: :cascade do |t|
+    t.integer  "contact_group_id"
+    t.integer  "rank_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["contact_group_id"], name: "index_contact_group_rankings_on_contact_group_id", using: :btree
+    t.index ["rank_id"], name: "index_contact_group_rankings_on_rank_id", using: :btree
+  end
+
   create_table "contact_groups", force: :cascade do |t|
     t.integer  "user_id",                null: false
     t.string   "google_uid"
@@ -76,6 +85,7 @@ ActiveRecord::Schema.define(version: 20161027141005) do
   create_table "customers", force: :cascade do |t|
     t.integer  "user_id",                               null: false
     t.integer  "contact_group_id"
+    t.integer  "rank_id"
     t.string   "last_name"
     t.string   "first_name"
     t.string   "phonetic_last_name"
@@ -88,6 +98,7 @@ ActiveRecord::Schema.define(version: 20161027141005) do
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.index ["contact_group_id"], name: "index_customers_on_contact_group_id", using: :btree
+    t.index ["rank_id"], name: "index_customers_on_rank_id", using: :btree
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true, using: :btree
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
     t.index ["user_id"], name: "index_customers_on_user_id", using: :btree
