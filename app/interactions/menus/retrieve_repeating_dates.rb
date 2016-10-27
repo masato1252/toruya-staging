@@ -1,5 +1,6 @@
 module Menus
   class RetrieveRepeatingDates < ActiveInteraction::Base
+    DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].freeze
     integer :reservation_setting_id
     array :shop_ids, default: []
     integer :repeats
@@ -120,7 +121,7 @@ module Menus
       begin
         candidate_dates << setting_days_of_week.map do |day_of_week|
           # (2016, 10, 1).get_next_day_of_week("monday", 3)
-          matched_date_number = matched_date.send("all_#{I18n.t("date.day_names").at(day_of_week).downcase}s_in_month")[reservation_setting.nth_of_week - 1]
+          matched_date_number = matched_date.send("all_#{DAYS.at(day_of_week)}s_in_month")[reservation_setting.nth_of_week - 1]
           matched_date.change(day: matched_date_number) if matched_date_number
         end.compact.find_all do |date|
           date >= start_date && (business_schedules_exist ? shop.available_time(date) : date.working_day? && !date.holiday?(:jp))
