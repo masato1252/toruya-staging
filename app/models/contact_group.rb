@@ -14,7 +14,7 @@
 #
 
 class ContactGroup < ApplicationRecord
-  has_many :rankings, class_name: ContactGroupRanking
+  has_many :rankings, class_name: ContactGroupRanking, dependent: :destroy
   has_many :ranks, through: :rankings
   belongs_to :user
 
