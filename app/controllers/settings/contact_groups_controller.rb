@@ -27,7 +27,9 @@ class Settings::ContactGroupsController < SettingsController
 
   def update
     respond_to do |format|
-      if @contact_group.update(contact_group_params)
+      outcome = Groups::UpdateGroup.run(contact_group: @contact_group, params: contact_group_params.to_h)
+
+      if outcome.valid?
         format.html { redirect_to settings_contact_groups_path, notice: 'Contact group was successfully updated.' }
       else
         format.html { render :edit }

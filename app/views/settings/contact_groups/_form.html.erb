@@ -1,15 +1,13 @@
 <%= form_for(contact_group, url: url) do |f| %>
-  <% unless contact_group.google_group_name %>
-    <h3>Contacts Informations<strong>必須項目</strong></h3>
-    <div id="contactsInfo" class="formRow">
-      <dl>
-        <dt>顧客台帳名</dt>
-        <dd>
-          <%= f.text_field :name, max_length: 30 %>
-        </dd>
-      </dl>
-    </div>
-  <% end %>
+  <h3>Contacts Informations<strong>必須項目</strong></h3>
+  <div id="contactsInfo" class="formRow">
+    <dl>
+      <dt>顧客台帳名</dt>
+      <dd>
+        <%= f.text_field :name, max_length: 30 %>
+      </dd>
+    </dl>
+  </div>
   <h3>Ranks<strong>必須項目</strong></h3>
   <div id="contactsRanks" class="formRow">
     <% @ranks.each do |rank| %>
