@@ -30,10 +30,10 @@
           <%= link_to "Sync", sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: "Processing" } if contact_group.google_group_name %>
         </dd>
         <dd>
-          <%= link_to "Delete", settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger", data: { disable_with: "Processing" } unless contact_group.google_group_name %>
-        </dd>
-        <dd>
-          <%= link_to "Edit", edit_settings_contact_group_path(contact_group), class: "btn btn-primary", data: { disable_with: "Processing" } %>
+          <%= link_to "Edit Contacts", edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: "Processing" } %>
+          <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger btn-bold", data: { disable_with: "Processing" } do %>
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          <% end unless contact_group.google_group_name %>
         </dd>
       </dl>
     <% end %>

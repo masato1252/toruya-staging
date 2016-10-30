@@ -60,6 +60,15 @@ a, button {
     background-color: $danger;
     border-color: #d43f3a;
   }
+
+  &.btn-bold {
+    font-weight: bold;
+  }
+
+  &.btn-light-green {
+    background-color: #97bfb8;
+    border-color: #60938a;
+  }
 }
 
 table.table {
