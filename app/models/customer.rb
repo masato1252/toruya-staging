@@ -20,6 +20,8 @@
 #
 
 class Customer < ApplicationRecord
+  RANKING_COLORS = %s(ca4e0e d0d0d0 60938a fcbe46 aecfc8)
+
   default_value_for :last_name, ""
   default_value_for :first_name, ""
   default_value_for :phonetic_last_name, ""
