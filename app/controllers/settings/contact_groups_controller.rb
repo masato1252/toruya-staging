@@ -1,12 +1,13 @@
 class Settings::ContactGroupsController < SettingsController
   before_action :set_contact_group, only: [:edit, :update, :sync, :connections, :bind, :destroy]
-
   def index
     @contact_groups = super_user.contact_groups
   end
 
   def new
     @contact_group = super_user.contact_groups.new
+    @ranks = super_user.ranks
+    @ranking_ids = []
   end
 
   def create
@@ -20,6 +21,8 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def edit
+    @ranks = super_user.ranks
+    @ranking_ids = @contact_group.rankings.pluck(:rank_id)
   end
 
   def update
@@ -70,7 +73,7 @@ class Settings::ContactGroupsController < SettingsController
   private
 
   def contact_group_params
-    params.require(:contact_group).permit(:name)
+    params.require(:contact_group).permit(:name, rank_ids: [])
   end
 
   def set_contact_group

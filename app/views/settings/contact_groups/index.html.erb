@@ -32,6 +32,9 @@
         <dd>
           <%= link_to "Delete", settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger", data: { disable_with: "Processing" } unless contact_group.google_group_name %>
         </dd>
+        <dd>
+          <%= link_to "Edit", edit_settings_contact_group_path(contact_group), class: "btn btn-primary", data: { disable_with: "Processing" } %>
+        </dd>
       </dl>
     <% end %>
   </div>

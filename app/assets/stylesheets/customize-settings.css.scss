@@ -66,8 +66,19 @@
     }
   }
 
-  #shopSelect, #belong, #category, .check-area {
-    input[type="checkbox"]:checked + label,  input[type="radio"]:checked + label{
+  #shopSelect, #belong, #category, .check-area, .checkbox {
+    label {
+      display: inline-block;
+    }
+
+    input[type="checkbox"] + label,  input[type="radio"] + label {
+      &:before {
+        content: " ";
+        margin-right: 28px;
+      }
+    }
+
+    input[type="checkbox"]:checked + label,  input[type="radio"]:checked + label {
       &:before {
         font-family: "FontAwesome";
         content: "\f00c";
