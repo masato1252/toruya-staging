@@ -250,12 +250,6 @@ UI.define("Customers.Dashboard", function() {
                           </a>
                         </form>
                       </dd>
-                      { this.state.selected_customer_id ? <dd id="">
-                        <a href="#" className="BTNorange" onClick={this.handleDeleteCustomer}>
-                          <span>DELETE</span>
-                        </a>
-                      </dd> : null
-                      }
                     </dl>
                     <dl id="calStatus">
                       <dd><span className="reservation-state reserved"></span>予約</dd>
