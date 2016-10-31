@@ -64,7 +64,7 @@ UI.define("Customers.CustomerInfoView", function() {
               </dt>
               <dd>
                 <ul className="kana">
-                  <li>{this.props.customer.phoneticFirstName}　{this.props.customer.phoneticLastName}</li>
+                  <li>{this.props.customer.phoneticLastName} {this.props.customer.phoneticFirstName}</li>
                 </ul>
                 <ul><li>{this.props.customer.lastName} {this.props.customer.firstName}</li></ul>
               </dd>

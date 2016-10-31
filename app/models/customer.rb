@@ -34,7 +34,7 @@ class Customer < ApplicationRecord
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
 
   def name
-    "#{phonetic_last_name} #{phonetic_first_name}".presence || "#{first_name} #{last_name} "
+    "#{last_name} #{first_name}".presence || "#{phonetic_last_name} #{phonetic_first_name}".presence
   end
 
   def build_by_google_contact(google_contact)
