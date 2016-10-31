@@ -83,13 +83,6 @@ UI.define("Customers.CustomerInfoView", function() {
                     </a>
                   ) : null
                 }
-                {
-                  this.props.customer.googleContactId ? (
-                    <a className="BTNtarco" onClick={this.props.fetchCustomerDetails}>
-                      <i className="fa fa-refresh fa-2x" aria-hidden="true" title="sync"></i>
-                    </a>
-                  ) : null
-                }
               </dd>
             </dl>
           </div>
@@ -107,7 +100,7 @@ UI.define("Customers.CustomerInfoView", function() {
             <dl className="phone">
               <dt>Phone</dt>
               <dd>
-                {this.props.customer.phoneNumbers.map(function(phoneNumber) {
+                {(this.props.customer.phoneNumbers || []).map(function(phoneNumber) {
                   return this.phoneRender(phoneNumber);
                 }.bind(this))}
               </dd>
@@ -115,7 +108,7 @@ UI.define("Customers.CustomerInfoView", function() {
             <dl className="email">
               <dt>Email</dt>
               <dd>
-                {this.props.customer.emails.map(function(email) {
+                {(this.props.customer.emails || []).map(function(email) {
                   return this.emailRender(email);
                 }.bind(this))}
               </dd>

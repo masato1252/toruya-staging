@@ -19,9 +19,8 @@ UI.define("Customers.Dashboard", function() {
       });
     },
 
-    fetchCustomerDetails: function(event) {
+    fetchCustomerDetails: function() {
       var _this = this;
-      event.preventDefault();
       if (this.state.customer) {
         $.ajax({
           type: "GET",
@@ -40,7 +39,7 @@ UI.define("Customers.Dashboard", function() {
       }
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
-        this.setState({selected_customer_id: customer_id, customer: selected_customer});
+        this.setState({selected_customer_id: customer_id, customer: selected_customer}, this.fetchCustomerDetails);
       }
     },
 
