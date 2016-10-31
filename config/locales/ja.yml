@@ -1,4 +1,7 @@
 ja:
+  constants:
+    rank:
+      regular: "一般"
   helpers:
     placeholder:
       shop:

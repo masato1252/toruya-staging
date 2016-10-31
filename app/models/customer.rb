@@ -30,8 +30,11 @@ class Customer < ApplicationRecord
 
   belongs_to :user
   belongs_to :contact_group
+  belongs_to :rank
 
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
+
+  before_validation :assign_default_rank
 
   def name
     "#{last_name} #{first_name}".presence || "#{phonetic_last_name} #{phonetic_first_name}".presence
@@ -78,5 +81,11 @@ class Customer < ApplicationRecord
     if address && (address.value.city || address.value.region)
       "#{address.value.city},#{address.value.region}"
     end
+  end
+
+  private
+
+  def assign_default_rank
+    self.rank ||= contact_group.ranks.find_by(key: Rank::REGULAR_KEY)
   end
 end

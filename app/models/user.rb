@@ -46,7 +46,7 @@ class User < ApplicationRecord
   private
 
   def create_default_ranks
-    ranks.create(name: "VIP")
-    ranks.create(name: "Regular")
+    ranks.create(name: "VIP", key: Rank::VIP_KEY)
+    ranks.create(name: I18n.t("constants.rank.regular"), key: Rank::REGULAR_KEY)
   end
 end

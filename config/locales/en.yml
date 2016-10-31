@@ -1,4 +1,7 @@
 en:
+  constants:
+    rank:
+      regular: "Regular"
   activerecord:
     errors:
       messages:
