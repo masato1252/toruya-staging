@@ -7,7 +7,11 @@
 
 <form>
   <div>
-    <%= link_to "#{current_user.uid ? "Re" : ""}connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary"  %>
+    <% if current_user.uid %>
+      <%= link_to "Reconnect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"}  %>
+    <% else %>
+      <%= link_to "Connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
 
   <div id="customize-table" class="formRow table">
