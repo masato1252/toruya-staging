@@ -6,8 +6,6 @@ class Settings::ContactGroupsController < SettingsController
 
   def new
     @contact_group = super_user.contact_groups.new
-    @ranks = super_user.ranks
-    @ranking_ids = []
   end
 
   def create
@@ -22,7 +20,6 @@ class Settings::ContactGroupsController < SettingsController
 
   def edit
     @ranks = super_user.ranks
-    @ranking_ids = @contact_group.rankings.pluck(:rank_id)
   end
 
   def update

@@ -8,23 +8,6 @@
       </dd>
     </dl>
   </div>
-  <h3>Ranks<strong>必須項目</strong></h3>
-  <div id="contactsRanks" class="formRow">
-    <% @ranks.each do |rank| %>
-      <dl class="checkbox">
-        <dd>
-          <input
-            name="contact_group[rank_ids][]"
-            id="contactsRankRegular-<%= rank.id %>"
-            type="checkbox"
-            value=<%= rank.id %>
-            <%= "checked" if @ranking_ids.include?(rank.id) %>
-            >
-          <label for="contactsRankRegular-<%= rank.id %>"><%= rank.name %></label>
-        </dd>
-      </dl>
-    <% end %>
-  </div>
   <ul id="footerav">
     <li>
       <%= link_to "Cancel", settings_contact_groups_path, class: "BTNtarco" %>

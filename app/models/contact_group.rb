@@ -27,4 +27,12 @@ class ContactGroup < ApplicationRecord
       throw(:abort)
     end
   end
+
+  before_validation :assign_default_rankings, on: :create
+
+  private
+
+  def assign_default_rankings
+    self.rank_ids = user.rank_ids if rank_ids.blank?
+  end
 end
