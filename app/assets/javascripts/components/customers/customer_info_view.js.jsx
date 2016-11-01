@@ -59,7 +59,10 @@ UI.define("Customers.CustomerInfoView", function() {
                   {this.props.customer.groupName ?
                     <li>{this.props.customer.groupName}</li> : null
                   }
-                  <li className="vip">VIP</li>
+                  {
+                    this.props.customer.rank ?
+                      <li className={this.props.customer.rank.key}>{this.props.customer.rank.name}</li> : null
+                  }
                 </ul>
               </dt>
               <dd>

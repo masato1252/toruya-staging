@@ -54,6 +54,7 @@ module OptionsHelper
         label: c.name,
         value: c.id,
         group_name: c.contact_group.try(:name),
+        rank: c.rank,
         birthday: (c.birthday ? I18n.l(c.birthday, format: :year_month_date) : ""),
         emails: c.emails || [],
         phone_numbers: c.phone_numbers || [],
