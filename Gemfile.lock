@@ -1,11 +1,17 @@
 GIT
   remote: git://github.com/ilake/google_contacts_api.git
-  revision: f805c2d13c2ef03a6ede8ebe08e9eeb4a55916d8
+  revision: 3675f6d40fb0d4a39d8f8b67d5dfd8641ad0fef4
   specs:
-    google_contacts_api (0.1.5)
+    google_contacts_api (0.1.6)
       google-api-client (~> 0.8.6)
       hashie (~> 3.4.4)
       nokogiri (~> 1.6.8)
+
+GIT
+  remote: git://github.com/ilake/jp_prefecture.git
+  revision: ef96a2590f4a0cb6acfb018ee9ebfef4fa9c769b
+  specs:
+    jp_prefecture (0.8.1)
 
 GEM
   remote: https://rubygems.org/
@@ -337,8 +343,10 @@ DEPENDENCIES
   factory_girl_rails
   font-awesome-rails (~> 4.6.3)
   google_contacts_api!
+  hashie (~> 3.4.4)
   holidays (~> 4.5.0)
   jbuilder (~> 2.5)
+  jp_prefecture (~> 0.8.1)!
   jquery-rails
   letter_opener (~> 1.4.1)
   listen (~> 3.0.5)

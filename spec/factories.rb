@@ -66,6 +66,12 @@ FactoryGirl.define do
     customer_ids { [FactoryGirl.create(:customer).id] }
   end
 
+  factory :rank do
+    association :user
+    name "Regular"
+    key Rank::REGULAR_KEY
+  end
+
   factory :staff_menu do
     association :staff
     association :menu
@@ -77,8 +83,15 @@ FactoryGirl.define do
     association :staff
   end
 
+  factory :contact_group do
+    association :user
+    sequence(:name) { |n| "group-#{n}" }
+    sequence(:backup_google_group_id) { |n| "backup_google_group_id-#{n}" }
+  end
+
   factory :customer do
     association :user
+    association :contact_group
     sequence(:last_name) { |n| "last_name-#{n}" }
     sequence(:first_name) { |n| "first_name-#{n}" }
   end

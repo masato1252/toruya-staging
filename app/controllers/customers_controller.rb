@@ -11,6 +11,8 @@ class CustomersController < DashboardController
                             else
                               new_shop_reservation_path(shop)
                             end
+    @contact_groups = super_user.contact_groups
+    @ranks = super_user.ranks
   end
 
   def detail
@@ -26,13 +28,8 @@ class CustomersController < DashboardController
   # POST /customers
   # POST /customers.json
   def save
-    if customer_params[:id].present?
-      @customer = super_user.customers.find(customer_params[:id])
-      @customer.update(customer_params)
-    else
-      @customer = super_user.customers.new(customer_params)
-      @customer.save
-    end
+    outcome = Customers::SaveCustomer.run(user: super_user, params: params[:customer].permit!.to_h)
+    @customer = outcome.result
 
     render action: :show
   end
@@ -73,6 +70,12 @@ class CustomersController < DashboardController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def customer_params
-    params.require(:customer).permit(:id, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :state, :phone_type, :phone_number, :birthday)
+    params.require(:customer).permit(
+      :id, :contact_group_id, :rank_id, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name,
+      :primary_phone, :primary_email,
+      :phone_type, :phone_number, :birthday,
+      address: [:postcode1, :postcode2, :region, :city, :street1, :street2],
+      phone_numbers: []
+    )
   end
 end

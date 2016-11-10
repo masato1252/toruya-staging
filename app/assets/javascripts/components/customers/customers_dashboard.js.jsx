@@ -53,26 +53,6 @@ UI.define("Customers.Dashboard", function() {
       return this.state.customer.firstName || this.state.customer.lastName || this.state.customer.jpFirstName || this.state.customer.jpLastName
     },
 
-    handleCreateCustomer: function(event) {
-      event.preventDefault();
-
-      var _this = this;
-
-      if (this.isCustomerdataValid()) {
-        var valuesToSubmit = $(this.customerForm).serialize();
-
-        $.ajax({
-          type: "POST",
-          url: this.props.saveCustomerPath, //sumbits it to the given url of the form
-          data: valuesToSubmit,
-          dataType: "JSON"
-        }).success(function(result){
-          _this.state.customers.unshift(result["customer"])
-          _this.setState({customers: _this.state.customers, customer: {}, selected_customer_id: ""});
-        });
-      }
-    },
-
     handleDeleteCustomer: function(event) {
       event.preventDefault();
 
@@ -183,11 +163,93 @@ UI.define("Customers.Dashboard", function() {
       });
     },
 
+    _handleCreatedCustomer: function(customer) {
+      // if (this.isCustomerdataValid()) {
+        // var valuesToSubmit = $(this.customerForm).serialize();
+        //
+        // $.ajax({
+        //   type: "POST",
+        //   url: this.props.saveCustomerPath, //sumbits it to the given url of the form
+        //   data: valuesToSubmit,
+        //   dataType: "JSON"
+        // }).success(function(result){
+          if (!this.state.customers.find(function(c) { return(c.id == customer.id); })) {
+            this.state.customers.unshift(customer)
+          }
+          this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
+        // });
+      // }
+    },
+
+    removeOption: function(optionType, index) {
+      event.preventDefault();
+      var newCustomer = this.state.customer;
+      newCustomer[optionType].splice(index, 1)
+
+      this.setState({customer: newCustomer});
+    },
+
+    addOption: function(optionType, index) {
+      event.preventDefault();
+      var newCustomer = this.state.customer;
+      var defaultValue = optionType == "emails" ? { address: ""} : "";
+
+      newCustomer[optionType].push({ type: "home", value: defaultValue });
+
+      this.setState({customer: newCustomer});
+    },
+
     handleCustomerDataChange: function(event) {
       event.preventDefault();
       var newCustomer = this.state.customer;
+      var keyName = event.target.dataset.name;
 
-      newCustomer[event.target.dataset.name] = event.target.value;
+      if (keyName == "birthday-year" || keyName == "birthday-month" || keyName == "birthday-day") {
+        var key = event.target.dataset.name.split("-");
+        newCustomer[key[0]][key[1]] = event.target.value;
+      }
+      else {
+        newCustomer[keyName] = event.target.value;
+      }
+
+      this.setState({customer: newCustomer});
+    },
+
+    handleCustomerGoogleDataChange: function(event) {
+      event.preventDefault();
+      var newCustomer = this.state.customer;
+
+      switch (event.target.dataset.name) {
+        case "primaryPhone":
+          var value = event.target.value.split(this.props.delimiter);
+          newCustomer[event.target.dataset.name] = { type: value[0], value: value[1] };
+          break;
+        case "primaryEmail":
+          var value = event.target.value.split(this.props.delimiter);
+          newCustomer[event.target.dataset.name] = { type: value[0], value: { address: value[1] }};
+          break;
+        case "primaryAddress-postcode1":
+        case "primaryAddress-postcode2":
+        case "primaryAddress-region":
+        case "primaryAddress-city":
+        case "primaryAddress-street1":
+        case "primaryAddress-street2":
+          var key = event.target.dataset.name.split("-");
+          newCustomer[key[0]] = newCustomer[key[0]] || {};
+          newCustomer[key[0]]["value"] = newCustomer[key[0]]["value"] || {};
+          newCustomer[key[0]]["value"][key[1]] = event.target.value;
+          break;
+        case "phoneNumbers-type":
+        case "phoneNumbers-value":
+        case "emails-type":
+          var key = event.target.dataset.valueName.split("-");
+          newCustomer[key[0]][parseInt(key[2])][key[1]] = event.target.value;
+          break;
+        case "emails-value":
+          var key = event.target.dataset.valueName.split("-");
+          newCustomer.emails[parseInt(key[2])]["value"]["address"] = event.target.value;
+          break;
+      }
 
       this.setState({customer: newCustomer});
     },
@@ -212,10 +274,24 @@ UI.define("Customers.Dashboard", function() {
               </div>
             </div>
 
-            <UI.Customers.CustomerInfoView
+            <UI.Customers.CustomerInfoEdit
               customer={this.state.customer}
+              contactGroups={this.props.contactGroups}
+              ranks={this.props.ranks}
+              regions={this.props.regions}
+              yearOptions={this.props.yearOptions}
+              monthOptions={this.props.monthOptions}
+              dayOptions={this.props.dayOptions}
+              removeOption={this.removeOption}
+              addOption={this.addOption}
+              formAuthenticityToken={this.props.formAuthenticityToken}
               handleCustomerDataChange={this.handleCustomerDataChange}
-              fetchCustomerDetails={this.fetchCustomerDetails} />
+              handleCustomerGoogleDataChange={this.handleCustomerGoogleDataChange}
+              handleCreatedCustomer={this._handleCreatedCustomer}
+              saveCustomerPath={this.props.saveCustomerPath}
+              fetchCustomerDetails={this.fetchCustomerDetails}
+              delimiter={this.props.delimiter}
+            />
 
             <div id="mainNav">
               { this.props.fromReservation ? (
@@ -245,9 +321,6 @@ UI.define("Customers.Dashboard", function() {
                           <input name="customer[phone_number]" type="hidden" value={this.state.customer.phoneNumber} />
                           <input name="customer[birthday]" type="hidden" value={this.state.customer.birthday} />
                           <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                          <a href="#"
-                             className={`BTNyellow ${this.isCustomerdataValid() ? null : "disabled"}`} onClick={this.handleCreateCustomer}><span>上書き保存</span>
-                          </a>
                         </form>
                       </dd>
                     </dl>

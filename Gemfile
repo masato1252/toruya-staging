@@ -32,12 +32,16 @@ gem "select2-rails", "~> 4.0.3"
 gem "nokogiri", "~> 1.6.8"
 gem "google_contacts_api", github: "ilake/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
+gem "jp_prefecture", "~> 0.8.1", github: "ilake/jp_prefecture"
+gem "hashie", "~> 3.4.4"
+
 
 group :development, :test do
   gem "byebug", platform: :mri
   gem "rspec-rails", "~> 3.5.0"
   gem "timecop", "~> 0.8.0"
   gem "database_cleaner"
+  gem "factory_girl_rails"
 end
 
 group :development do
@@ -51,7 +55,6 @@ group :development do
   gem "letter_opener", "~> 1.4.1"
   gem "better_errors"
   gem "binding_of_caller"
-  gem "factory_girl_rails"
 end
 
 gem "rails_12factor", group: :production

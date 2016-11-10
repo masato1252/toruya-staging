@@ -1,4 +1,9 @@
 module OptionsHelper
+  def default_options(items)
+    return unless items
+    items.map { |i| { label: i.name, value: i.id } }
+  end
+
   def menu_options(menus)
     return unless menus
     menus.map { |m| { label: m.name, value: m.id, maxSeatNumber: m.max_seat_number } }
@@ -55,12 +60,20 @@ module OptionsHelper
         value: c.id,
         group_name: c.contact_group.try(:name),
         rank: c.rank,
-        birthday: (c.birthday ? I18n.l(c.birthday, format: :year_month_date) : ""),
+        birthday: (c.birthday ? { year: c.birthday.year, month: c.birthday.month, day: c.birthday.day } : ""),
         emails: c.emails || [],
         phone_numbers: c.phone_numbers || [],
         addresses: c.addresses,
-        primary_email: c.primary_email,
-        primary_phone: c.primary_phone,
+        other_addresses: c.other_addresses.to_json,
+        primary_email: c.primary_email || {},
+        primary_phone: c.primary_phone || {},
+        primary_address: c.primary_address ? Hashie::Mash.new(c.primary_address).tap do |address|
+           address.value.postcode1 = address.value.postcode ? address.value.postcode.first(3) : ""
+           address.value.postcode2 = address.value.postcode ? address.value.postcode[3..-1] : ""
+           streets = address.value.street ? address.value.street.split(",") : []
+           address.value.street1 = streets.first
+           address.value.street2 = streets[1..-1].join(",")
+        end : {},
         display_address: c.display_address
       ))
     end

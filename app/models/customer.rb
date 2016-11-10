@@ -26,7 +26,7 @@ class Customer < ApplicationRecord
   default_value_for :first_name, ""
   default_value_for :phonetic_last_name, ""
   default_value_for :phonetic_first_name, ""
-  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone
+  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses
 
   belongs_to :user
   belongs_to :contact_group
@@ -48,9 +48,10 @@ class Customer < ApplicationRecord
     self.phonetic_first_name = google_contact.phonetic_first_name
     self.google_contact_group_ids = google_contact.group_ids
     self.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
-    self.primary_address = primary_value(google_contact.addresses)
-    self.address = primary_part_address(google_contact.addresses)
     self.addresses = google_contact.addresses
+    self.primary_address = primary_value(google_contact.addresses)
+    self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
+    self.address = primary_part_address(google_contact.addresses)
     self.emails = google_contact.emails
     self.phone_numbers = google_contact.phone_numbers
     self.primary_email = google_contact.primary_email
@@ -59,7 +60,18 @@ class Customer < ApplicationRecord
   end
 
   def display_address
-    (primary_address && primary_address.value.formatted_address) || address
+    (primary_address && primary_address["value"]["formatted_address"]) || address
+  end
+
+  def google_contact_attributes(google_groups_changes={})
+    {
+      name: { familyName: last_name, givenName: first_name},
+      phonetic_name: { familyName: phonetic_last_name, givenName: phonetic_first_name},
+      emails: emails,
+      phone_numbers: phone_numbers,
+      addresses: addresses,
+      birthday: birthday.try(:to_s)
+    }.merge(google_groups_changes || {}).with_indifferent_access
   end
 
   private
@@ -79,11 +91,9 @@ class Customer < ApplicationRecord
 
     address = primary_value(addresses)
     if address && (address.value.city || address.value.region)
-      "#{address.value.city},#{address.value.region}"
+      [address.value.city, address.value.region].compact.join(",")
     end
   end
-
-  private
 
   def assign_default_rank
     self.rank ||= contact_group.ranks.find_by(key: Rank::REGULAR_KEY)

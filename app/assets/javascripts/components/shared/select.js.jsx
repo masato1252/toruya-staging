@@ -15,8 +15,8 @@ UI.define("Select", function() {
 
       // [{label: ..., value: ...}, {...}]
       if (this.props.options.length == 0 || this.props.options[0].label) {
-        optionsList = this.props.options.map(function(option) {
-          return <option key={`${_this.props.prefix}-${option.value}`} value={option.value}>{option.label}</option>;
+        optionsList = this.props.options.map(function(option, i) {
+          return <option key={`${_this.props.prefix}-${option.value}-${i}`} value={option.value}>{option.label}</option>;
         });
       } else {
       // [ {group_label: ..., options: [{label: ..., value: ...}]}, {...}]
