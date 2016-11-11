@@ -64,14 +64,16 @@ class Customer < ApplicationRecord
   end
 
   def google_contact_attributes(google_groups_changes={})
-    {
+    h = {
       name: { familyName: last_name, givenName: first_name},
       phonetic_name: { familyName: phonetic_last_name, givenName: phonetic_first_name},
       emails: emails,
       phone_numbers: phone_numbers,
       addresses: addresses,
-      birthday: birthday.try(:to_s)
-    }.merge(google_groups_changes || {}).with_indifferent_access
+    }.merge(google_groups_changes || {})
+
+    h.merge!(birthday: birthday.try(:to_s)) if birthday
+    h.with_indifferent_access
   end
 
   private

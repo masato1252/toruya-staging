@@ -64,15 +64,15 @@ module OptionsHelper
         emails: c.emails || [],
         phone_numbers: c.phone_numbers || [],
         addresses: c.addresses,
-        other_addresses: c.other_addresses.to_json,
+        other_addresses: c.other_addresses.try(:present?) ? c.other_addresses.to_json : nil,
         primary_email: c.primary_email || {},
         primary_phone: c.primary_phone || {},
-        primary_address: c.primary_address ? Hashie::Mash.new(c.primary_address).tap do |address|
+        primary_address: c.primary_address.present? ? Hashie::Mash.new(c.primary_address).tap do |address|
            address.value.postcode1 = address.value.postcode ? address.value.postcode.first(3) : ""
            address.value.postcode2 = address.value.postcode ? address.value.postcode[3..-1] : ""
            streets = address.value.street ? address.value.street.split(",") : []
            address.value.street1 = streets.first
-           address.value.street2 = streets[1..-1].join(",")
+           address.value.street2 = streets[1..-1].try(:join, ",")
         end : {},
         display_address: c.display_address
       ))

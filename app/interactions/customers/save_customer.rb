@@ -5,7 +5,7 @@ class Customers::SaveCustomer < ActiveInteraction::Base
     if params[:primary_address] && (params[:primary_address][:region] || params[:primary_address][:city])
       params[:address] = [params[:primary_address][:city], params[:primary_address][:region]].reject(&:blank?).join(",")
       params[:primary_address] = {
-          type: params[:primary_address][:type],
+          type: params[:primary_address][:type].presence || "home",
           value: {
             postcode: "#{params[:primary_address][:postcode1]}#{params[:primary_address][:postcode2]}",
             region: params[:primary_address][:region],
@@ -14,7 +14,7 @@ class Customers::SaveCustomer < ActiveInteraction::Base
           },
           primary: true
       }
-      params[:other_addresses] = JSON.parse(params[:other_addresses])
+      params[:other_addresses] = params[:other_addresses].present? ? JSON.parse(params[:other_addresses]) : []
       params[:addresses] = [params[:primary_address]] + params[:other_addresses]
     end
 
@@ -105,15 +105,19 @@ class Customers::SaveCustomer < ActiveInteraction::Base
       customer.google_contact_group_ids = google_group_ids
     end
 
-    if customer.save
+    if customer.valid?
       google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
       google_contact_attributes = customer.google_contact_attributes(google_groups_changes)
 
       if customer.google_contact_id
         google_user.update_contact(customer.google_contact_id, google_contact_attributes)
       else
-        google_user.create_contact(google_contact_attributes)
+        result = google_user.create_contact(google_contact_attributes)
+        customer.google_contact_id = result.id
+        customer.google_uid = user.uid
       end
+
+      customer.save
     end
 
     customer

@@ -64,8 +64,16 @@ UI.define("Customers.CustomerInfoEdit", function() {
             acceptCharset="UTF-8"
             action={this.props.saveCustomerPath}
             method="post">
-            <input type="hidden" name="customer[id]" value={this.props.customer.id} />
-            <input type="hidden" name="customer[other_addresses]" value={this.props.customer.otherAddresses} />
+            {
+              this.props.customer.id ? (
+                <input type="hidden" name="customer[id]" value={this.props.customer.id} />
+              ) : null
+            }
+            {
+              this.props.customer.otherAddresses ? (
+                <input type="hidden" name="customer[other_addresses]" value={this.props.customer.otherAddresses } />
+              ) : null
+            }
             <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
           <div id="basic">
             <dl>
