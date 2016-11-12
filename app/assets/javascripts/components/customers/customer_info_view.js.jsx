@@ -73,14 +73,14 @@ UI.define("Customers.CustomerInfoView", function() {
               </dd>
               <dd>
                 {
-                  this.props.customer.primaryPhone ? (
+                  this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
                     <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
                       <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
                     </a>
                   ) : null
                 }
                 {
-                  this.props.customer.primaryEmail ? (
+                  this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? (
                     <a href={`mail:${this.props.customer.primaryEmail.value.address}`} className="BTNtarco">
                       <i className="fa fa-envelope fa-2x" aria-hidden="true" title="mail"></i>
                     </a>
@@ -95,7 +95,11 @@ UI.define("Customers.CustomerInfoView", function() {
             <a href="#" className="here">顧客情報</a>
           </div>
           <div id="detailInfo" className="tabBody" style={{height: "425px"}}>
-            <ul className="functions"><li className="right"><a href="customer_info_edit.html">EDIT</a></li></ul>
+            <ul className="functions">
+              <li className="right">
+                <a href="#" onClick={this.props.switchEditMode}>EDIT</a>
+              </li>
+            </ul>
             <dl className="Address">
               <dt>Address</dt>
               <dd>{this.props.customer.displayAddress}</dd>
@@ -117,9 +121,9 @@ UI.define("Customers.CustomerInfoView", function() {
               </dd>
             </dl>
             <div className="others">
-              <dl className="customerID"><dt>顧客ID</dt><dd>DHS0001</dd></dl>
+              <dl className="customerID"><dt>顧客ID</dt><dd>{this.props.customer.customerId}</dd></dl>
               <dl className="dob"><dt>DOB</dt><dd>{this.props.customer.birthday}</dd></dl>
-              <dl className="memo"><dt>Memo</dt><dd>hahaha its's a memo</dd></dl>
+              <dl className="memo"><dt>Memo</dt><dd>{this.props.customer.memo}</dd></dl>
             </div>
           </div>
         </div>

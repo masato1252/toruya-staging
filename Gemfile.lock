@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/ilake/google_contacts_api.git
-  revision: 3675f6d40fb0d4a39d8f8b67d5dfd8641ad0fef4
+  revision: a4faa03957971cbf4fa6e52c86fef8f1ea1e6773
   specs:
-    google_contacts_api (0.1.6)
+    google_contacts_api (0.1.7)
       google-api-client (~> 0.8.6)
       hashie (~> 3.4.4)
       nokogiri (~> 1.6.8)

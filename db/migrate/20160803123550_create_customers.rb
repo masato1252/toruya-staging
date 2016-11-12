@@ -8,6 +8,8 @@ class CreateCustomers < ActiveRecord::Migration[5.0]
       t.string :first_name
       t.string :phonetic_last_name
       t.string :phonetic_first_name
+      t.string :custom_id
+      t.text   :memo
       t.string :address
       t.string :google_uid # use to keep the user's google account access_token to avoid user sync his/her two google accounts.
       t.string :google_contact_id

@@ -2,21 +2,21 @@ class Customers::SaveCustomer < ActiveInteraction::Base
   DELIMITER = "-=-".freeze
 
   set_callback :type_check, :before do
-    if params[:primary_address] && (params[:primary_address][:region] || params[:primary_address][:city])
-      params[:address] = [params[:primary_address][:city], params[:primary_address][:region]].reject(&:blank?).join(",")
-      params[:primary_address] = {
-          type: params[:primary_address][:type].presence || "home",
-          value: {
-            postcode: "#{params[:primary_address][:postcode1]}#{params[:primary_address][:postcode2]}",
-            region: params[:primary_address][:region],
-            city: params[:primary_address][:city],
-            street: [params[:primary_address][:street1], params[:primary_address][:street2]].reject(&:blank?).join(",")
-          },
-          primary: true
-      }
-      params[:other_addresses] = params[:other_addresses].present? ? JSON.parse(params[:other_addresses]) : []
-      params[:addresses] = [params[:primary_address]] + params[:other_addresses]
-    end
+    # if params[:primary_address] && (params[:primary_address][:region].present? || params[:primary_address][:city].present?)
+    params[:address] = [params[:primary_address][:city], params[:primary_address][:region]].reject(&:blank?).join(",")
+    params[:primary_address] = {
+        type: params[:primary_address][:type],
+        value: {
+          postcode: "#{params[:primary_address][:postcode1]}#{params[:primary_address][:postcode2]}",
+          region: params[:primary_address][:region],
+          city: params[:primary_address][:city],
+          street: [params[:primary_address][:street1], params[:primary_address][:street2]].reject(&:blank?).join(",")
+        },
+        primary: true
+    }
+    params[:other_addresses] = params[:other_addresses].present? ? JSON.parse(params[:other_addresses]) : []
+    params[:addresses] = [params[:primary_address]] + params[:other_addresses]
+    # end
 
     if params[:dob]
       params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.today.year,
@@ -80,6 +80,8 @@ class Customers::SaveCustomer < ActiveInteraction::Base
       integer :day, default: nil
     end
     date :birthday, default: nil
+    string :custom_id, default: nil
+    string :memo, default: nil
   end
 
   def execute
@@ -105,6 +107,7 @@ class Customers::SaveCustomer < ActiveInteraction::Base
       customer.google_contact_group_ids = google_group_ids
     end
 
+    # TODO: test two addresses case
     if customer.valid?
       google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
       google_contact_attributes = customer.google_contact_attributes(google_groups_changes)

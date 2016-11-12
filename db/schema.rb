@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 20161027234643) do
     t.string   "first_name"
     t.string   "phonetic_last_name"
     t.string   "phonetic_first_name"
+    t.string   "custom_id"
+    t.text     "memo"
     t.string   "address"
     t.string   "google_uid"
     t.string   "google_contact_id"
