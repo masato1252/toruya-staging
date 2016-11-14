@@ -27,8 +27,8 @@
     <div id="record">
       <% @reservations.each do |reservation| %>
         <%
-          customer_names = reservation.customers.pluck(:first_name).join(", ")
-          staff_names = reservation.staffs.pluck(:name).join(", ")
+          customer_names = reservation.customers.map(&:first_name).join(", ")
+          staff_names = reservation.staffs.map(&:name).join(", ")
         %>
         <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
           <dl class="">

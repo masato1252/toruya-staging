@@ -91,7 +91,7 @@ UI.define("Customers.CustomerInfoView", function() {
           </div>
 
           <div id="tabs" className="tabs">
-            <a href="customer.html" className="">利用履歴</a>
+            <a href="#" className="" onClick={this.props.switchReservationMode}>利用履歴</a>
             <a href="#" className="here">顧客情報</a>
           </div>
           <div id="detailInfo" className="tabBody" style={{height: "425px"}}>

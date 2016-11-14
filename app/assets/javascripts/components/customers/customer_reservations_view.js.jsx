@@ -1,0 +1,205 @@
+"use strict";
+
+UI.define("Customers.CustomerReservationsView", function() {
+  var CustomerReservationsView = React.createClass({
+    statics: {
+      reservactionBehaviors: {
+        "checked_in": [{ label: "CHECK OUT", action: "check_out", btn_color: "BTNyellow" }],
+        "reserved": [{ label: "CHECK IN", action: "check_in", btn_color: "BTNyellow" },
+                     { label: "PEND", action: "pend", btn_color: "BTNgray" }],
+        "noshow": [{ label: "CHECK IN", action: "check_in", btn_color: "BTNyellow" },
+                   { label: "PEND", action: "pend", btn_color: "BTNgray" }],
+        "pending": [{ label: "ACCEPT", action: "accept", btn_color: "BTNtarco" }],
+        "checked_out": [{ label: "PEND", action: "pend" }],
+      }
+    },
+
+    getInitialState: function() {
+      return ({
+        reservations: []
+      });
+    },
+
+    componentDidMount: function() {
+      this.fetchReservations();
+    },
+
+    fetchReservations: function() {
+      var _this = this;
+
+      if (this.props.customer.id) {
+        this.props.switchProcessing(function() {
+          $.ajax({
+            type: "GET",
+            url: _this.props.customerReservationsPath,
+            data: { id: _this.props.customer.id },
+            dataType: "JSON"
+          }).success(function(result) {
+            _this.setState({ reservations: result["reservations"] });
+            _this.props.switchProcessing();
+          });
+        });
+      }
+    },
+
+    handleReservationStateChange: function() {
+
+    },
+
+    renderReservations: function() {
+      var previousYear;
+      var _this = this;
+      var reservationsView = this.state.reservations.map(function(reservation, i) {
+        var divider = null;
+        if (reservation.year != previousYear) {
+          previousYear = reservation.year;
+          divider = (
+            <a href="#" className="year">
+              <dl>
+                <dd className="date">{reservation.year}</dd>
+              </dl>
+            </a>
+          )
+        }
+        return (
+          <div key={`reservation-${reservation.id}`}>
+            {divider}
+            <a href="#"
+              className={reservation.state}
+              data-toggle="modal"
+              data-target={`#reservationModal${reservation.id}`}
+              >
+              <dl>
+                <dd className="date">{reservation.date}</dd>
+                <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
+                <dd><span className={`reservation-state ${reservation.state}`}></span></dd>
+                <dd className="menu">{reservation.menu}</dd>
+                <dd className="shop">{reservation.shop}</dd>
+              </dl>
+            </a>
+            <div className="modal fade" id={`reservationModal${reservation.id}`} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 className="modal-title" id="myModalLabel">
+                      {reservation.date}
+                      {reservation.startTime} 〜 {reservation.endTime}
+                    </h4>
+                  </div>
+                  <div className="modal-body">
+                    <div className="reservation-menu">
+                      {reservation.menu}
+                    </div>
+                    <div>
+                      {reservation.staffs}
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <dl>
+                      {CustomerReservationsView.reservactionBehaviors[reservation.state].map(function(behavior) {
+                        return (
+                          <dd>
+                            <a href="#"
+                              className={`btn ${behavior["btn_color"]}`}
+                              data-method="put"
+                              onClick={_this.handleReservationStateChange(reservation.id, behavior["action"])}>
+                              {behavior["label"]}
+                            </a>
+                          </dd>
+                        );
+                      })}
+                      <dd>
+                        <a href="#" className="btn BTNgray">EDIT</a>
+                      </dd>
+                      {
+                        reservation.state != "checked_out" ? (
+                          <dd>
+                          <a href="#"
+                            className="btn BTNorange"
+                            data-method="put"
+                            onClick={_this.handleReservationStateChange(reservation.id, "cancel")}
+                            >CANCEL</a>
+                          </dd>
+                        ) : null
+                      }
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      });
+
+      return reservationsView
+    },
+
+    render: function() {
+      return (
+        <div id="customerInfo" className="contBody">
+          <div id="basic">
+            <dl>
+              <dt>
+                <ul>
+                  {this.props.customer.groupName ?
+                    <li>{this.props.customer.groupName}</li> : null
+                  }
+                  {
+                    this.props.customer.rank ?
+                      <li className={this.props.customer.rank.key}>{this.props.customer.rank.name}</li> : null
+                  }
+                </ul>
+              </dt>
+              <dd>
+                <ul className="kana">
+                  <li>{this.props.customer.phoneticLastName} {this.props.customer.phoneticFirstName}</li>
+                </ul>
+                <ul><li>{this.props.customer.lastName} {this.props.customer.firstName}</li></ul>
+              </dd>
+              <dd>
+                {
+                  this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
+                    <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
+                      <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
+                    </a>
+                  ) : null
+                }
+                {
+                  this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? (
+                    <a href={`mail:${this.props.customer.primaryEmail.value.address}`} className="BTNtarco">
+                      <i className="fa fa-envelope fa-2x" aria-hidden="true" title="mail"></i>
+                    </a>
+                  ) : null
+                }
+              </dd>
+            </dl>
+          </div>
+
+          <div id="tabs" className="tabs">
+            <a href="#" className="here">利用履歴</a>
+            <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>
+          </div>
+
+          <div id="resList" className="tabBody" style={{height: "425px"}}>
+            <dl className="tableTTL">
+              <dt className="date">ご利用日</dt>
+              <dt className="time">開始<br />終了</dt>
+              <dt className="reservation-states"></dt>
+              <dt className="menu">メニュー</dt>
+              <dt className="shop">店舗</dt>
+              </dl>
+
+            <div id="record">
+              {this.renderReservations()}
+            </div>
+          </div>
+        </div>
+      );
+    }
+  });
+
+  return CustomerReservationsView;
+});

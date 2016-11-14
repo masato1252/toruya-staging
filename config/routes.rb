@@ -34,6 +34,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope module: "customers", as: "customer", path: "customer" do
+    resources :reservations, only: [:index]
+  end
+
   namespace :settings do
     resources :staffs, except: [:show]
     resources :business_schedules, only: [:index]

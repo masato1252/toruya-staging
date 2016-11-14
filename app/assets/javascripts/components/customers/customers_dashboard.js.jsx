@@ -2,6 +2,7 @@
 //= require "components/customers/customer_info"
 //= require "components/customers/customer_info_view"
 //= require "components/customers/customer_info_edit"
+//= require "components/customers/customer_reservations_view"
 //= require "components/customers/search_bar"
 //= require "components/shared/processing_bar"
 
@@ -19,6 +20,7 @@ UI.define("Customers.Dashboard", function() {
         selectedFilterPatternNumber: "",
         customer: this.props.customer,
         edit_mode: true,
+        reservation_mode: false,
         processing: false});
     },
 
@@ -37,9 +39,7 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleCustomerSelect: function(customer_id, event) {
-      if (this.state.processing) {
-        return;
-      }
+      if (this.state.processing) { return; }
       if (this.state.selected_customer_id == customer_id) {
         this.setState({selected_customer_id: "", customer: {}});
       }
@@ -258,13 +258,70 @@ UI.define("Customers.Dashboard", function() {
     },
 
     switchEditMode: function() {
+      if (this.state.processing) { return; }
       this.setState({ edit_mode: !this.state.edit_mode });
+    },
+
+    switchReservationMode: function(event) {
+      event.preventDefault();
+      if (this.state.processing) { return; }
+      if (this.state.customer.id) {
+        this.setState({ reservation_mode: !this.state.reservation_mode });
+      }
     },
 
     switchProcessing: function(callback) {
       this.setState({ processing: !this.state.processing }, function() {
         if (callback) callback()
       });
+    },
+
+    renderCustomerView: function() {
+      if (this.state.reservation_mode) {
+        return (
+          <UI.Customers.CustomerReservationsView
+            customer={this.state.customer}
+            switchReservationMode={this.switchReservationMode}
+            customerReservationsPath={this.props.customerReservationsPath}
+            switchProcessing={this.switchProcessing}
+            />
+        )
+      }
+      else if (this.state.edit_mode) {
+        return (
+          <UI.Customers.CustomerInfoEdit
+            customer={this.state.customer}
+            contactGroups={this.props.contactGroups}
+            ranks={this.props.ranks}
+            regions={this.props.regions}
+            yearOptions={this.props.yearOptions}
+            monthOptions={this.props.monthOptions}
+            dayOptions={this.props.dayOptions}
+            removeOption={this.removeOption}
+            addOption={this.addOption}
+            formAuthenticityToken={this.props.formAuthenticityToken}
+            handleCustomerDataChange={this.handleCustomerDataChange}
+            handleCustomerGoogleDataChange={this.handleCustomerGoogleDataChange}
+            handleCreatedCustomer={this._handleCreatedCustomer}
+            switchEditMode={this.switchEditMode}
+            switchProcessing={this.switchProcessing}
+            switchReservationMode={this.switchReservationMode}
+            saveCustomerPath={this.props.saveCustomerPath}
+            fetchCustomerDetails={this.fetchCustomerDetails}
+            delimiter={this.props.delimiter}
+            />
+        )
+      }
+      else {
+        return (
+          <UI.Customers.CustomerInfoView
+            customer={this.state.customer}
+            switchEditMode={this.switchEditMode}
+            switchReservationMode={this.switchReservationMode}
+            />
+        );
+      }
+
     },
 
     render: function() {
@@ -288,34 +345,7 @@ UI.define("Customers.Dashboard", function() {
               </div>
             </div>
 
-            {this.state.edit_mode ? (
-              <UI.Customers.CustomerInfoEdit
-                customer={this.state.customer}
-                contactGroups={this.props.contactGroups}
-                ranks={this.props.ranks}
-                regions={this.props.regions}
-                yearOptions={this.props.yearOptions}
-                monthOptions={this.props.monthOptions}
-                dayOptions={this.props.dayOptions}
-                removeOption={this.removeOption}
-                addOption={this.addOption}
-                formAuthenticityToken={this.props.formAuthenticityToken}
-                handleCustomerDataChange={this.handleCustomerDataChange}
-                handleCustomerGoogleDataChange={this.handleCustomerGoogleDataChange}
-                handleCreatedCustomer={this._handleCreatedCustomer}
-                switchEditMode={this.switchEditMode}
-                switchProcessing={this.switchProcessing}
-                saveCustomerPath={this.props.saveCustomerPath}
-                fetchCustomerDetails={this.fetchCustomerDetails}
-                delimiter={this.props.delimiter}
-                />
-            ) : (
-              <UI.Customers.CustomerInfoView
-                customer={this.state.customer}
-                switchEditMode={this.switchEditMode}
-                />
-            )
-          }
+            {this.renderCustomerView()}
 
             <div id="mainNav">
               { this.props.fromReservation ? (

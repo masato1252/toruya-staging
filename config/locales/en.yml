@@ -211,4 +211,6 @@ en:
       long: "%B %d, %Y %I:%M %p"
       short: "%d %b %I:%M %p"
       date: "%B %d, %Y"
+      hour_minute: "%H:%M"
+      month_day_wday: "%m/%d(%a)"
     pm: pm

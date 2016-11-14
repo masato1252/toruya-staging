@@ -55,5 +55,27 @@
       background: #97bfb8;
       border-color: #60938a;
     }
+
+    #resList {
+      #record {
+        padding-top: 0;
+      }
+
+      .date {
+        width: 70px;
+      }
+
+      .time {
+        width: 60px;
+      }
+
+      .year {
+        position: relative;
+      }
+    }
+  }
+
+  #customerInfoEdit .tabs a {
+    width: 40%;
   }
 }

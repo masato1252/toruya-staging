@@ -28,6 +28,8 @@ class Customer < ApplicationRecord
   default_value_for :phonetic_first_name, ""
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses
 
+  has_many :reservation_customers, dependent: :destroy
+  has_many :reservations, through: :reservation_customers
   belongs_to :user
   belongs_to :contact_group
   belongs_to :rank
