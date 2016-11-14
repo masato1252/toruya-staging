@@ -20,7 +20,7 @@ UI.define("Customers.Dashboard", function() {
         selectedFilterPatternNumber: "",
         customer: this.props.customer,
         edit_mode: true,
-        reservation_mode: false,
+        reservation_mode: this.props.reservationMode,
         processing: false});
     },
 
@@ -284,6 +284,9 @@ UI.define("Customers.Dashboard", function() {
             switchReservationMode={this.switchReservationMode}
             customerReservationsPath={this.props.customerReservationsPath}
             switchProcessing={this.switchProcessing}
+            stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
+            editCustomerReservationsPath={this.props.editCustomerReservationsPath}
+            shop={this.props.shop}
             />
         )
       }

@@ -1,6 +1,8 @@
 <%= react_component("UI.Customers.Dashboard",
-                    { customers: customer_options(@customers),
-                      customer: customer_options([super_user.customers.new]).first,
+                    { shop: shop,
+                      customers: customer_options(@customers),
+                      customer: customer_options([ @customer || super_user.customers.new]).first,
+                      reservation_mode: !!@customer,
                       from_reservation: params[:from_reservation],
                       add_reservation_path: @add_reservation_path,
                       contact_groups: default_options(@contact_groups),
@@ -16,6 +18,8 @@
                       customers_search_path: search_shop_customers_path(shop),
                       customers_recent_path: recent_shop_customers_path(shop),
                       customer_reservations_path: customer_reservations_path,
+                      state_customer_reservations_path: state_customer_reservations_path,
+                      edit_customer_reservations_path: edit_customer_reservations_path,
                       delimiter: Customers::SaveCustomer::DELIMITER,
                       form_authenticity_token: form_authenticity_token
 }) %>

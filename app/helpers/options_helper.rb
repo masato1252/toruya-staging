@@ -81,7 +81,8 @@ module OptionsHelper
 
   def reservation_options(reservations)
     reservations.map do |r|
-      React.camelize_props({ id: r.id,
+      React.camelize_props({
+        id: r.id,
         year: r.start_time.year,
         date: I18n.l(r.start_time, format: :month_day_wday),
         start_time: I18n.l(r.start_time, format: :hour_minute),
@@ -89,6 +90,7 @@ module OptionsHelper
         menu: r.menu.name,
         shop: r.shop.name,
         state: r.aasm_state,
+        shop_id: r.shop_id,
         staffs: r.staffs.map(&:name).join(", ")
       })
     end

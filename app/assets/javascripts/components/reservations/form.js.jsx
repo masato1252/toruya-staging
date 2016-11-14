@@ -397,6 +397,8 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
+                  { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
+                  { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
                   <button type="submit" id="BTNsave" className="BTNyellow" disabled={!this._isValidToReserve()}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>保存
                   </button>

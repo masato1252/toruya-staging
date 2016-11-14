@@ -5,6 +5,7 @@ class CustomersController < DashboardController
     @body_class = "customer"
 
     @customers = super_user.customers.includes(:contact_group).order("updated_at DESC").limit(50)
+    @customer = super_user.customers.includes(:contact_group).find_by(id: params[:customer_id])
 
     @add_reservation_path = if params[:reservation_id].present?
                               edit_shop_reservation_path(shop, id: params[:reservation_id])

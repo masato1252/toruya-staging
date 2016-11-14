@@ -62,7 +62,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           )
         }
         return (
-          <div key={`reservation-${reservation.id}`}>
+          <div key={`reservation-${reservation.id}`} id={`reservation-${reservation.id}`}>
             {divider}
             <a href="#"
               className={reservation.state}
@@ -101,26 +101,30 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <dl>
                       {CustomerReservationsView.reservactionBehaviors[reservation.state].map(function(behavior) {
                         return (
-                          <dd>
-                            <a href="#"
+                          <dd key={`reseravtion-${reservation.id}-action-${behavior["action"]}`}>
+                            <a
+                              href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=${behavior["action"]}&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                               className={`btn ${behavior["btn_color"]}`}
-                              data-method="put"
-                              onClick={_this.handleReservationStateChange(reservation.id, behavior["action"])}>
+                              data-method="put" >
                               {behavior["label"]}
                             </a>
                           </dd>
                         );
                       })}
                       <dd>
-                        <a href="#" className="btn BTNgray">EDIT</a>
+                        <a
+                          href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}
+                          className="btn BTNgray">
+                          EDIT
+                        </a>
                       </dd>
                       {
                         reservation.state != "checked_out" ? (
                           <dd>
-                          <a href="#"
+                          <a
+                            href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                             className="btn BTNorange"
                             data-method="put"
-                            onClick={_this.handleReservationStateChange(reservation.id, "cancel")}
                             >CANCEL</a>
                           </dd>
                         ) : null

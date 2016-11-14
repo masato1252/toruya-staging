@@ -35,7 +35,12 @@ Rails.application.routes.draw do
   end
 
   scope module: "customers", as: "customer", path: "customer" do
-    resources :reservations, only: [:index]
+    resources :reservations, only: [:index] do
+      collection do
+        put :state
+        get :edit
+      end
+    end
   end
 
   namespace :settings do
