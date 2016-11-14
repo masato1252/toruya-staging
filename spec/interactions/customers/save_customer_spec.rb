@@ -8,16 +8,16 @@ RSpec.describe Customers::SaveCustomer do
   let(:rank) { FactoryGirl.create(:rank, user: user) }
   let(:params) do
     {
-      "id"=> customer.id,
-      "contact_group_id"=> contact_group2.id,
-      "rank_id"=> rank.id,
-      "last_name"=>"劉",
-      "first_name"=>"治子",
-      "phonetic_last_name"=>"りゅう",
-      "phonetic_first_name"=>"はるこ",
-      "primary_phone"=>"mobile-08036238534",
-      "primary_email"=>"home-taiwanhimawari@gmail.com",
-      "primary_address"=> {
+      :id => customer.id,
+      :contact_group_id => contact_group2.id,
+      :rank_id => rank.id,
+      :last_name =>"劉",
+      :first_name =>"治子",
+      :phonetic_last_name =>"りゅう",
+      :phonetic_first_name =>"はるこ",
+      :primary_phone =>"mobile#{described_class::DELIMITER}08036238534",
+      :primary_email =>"home#{described_class::DELIMITER}taiwanhimawari@gmail.com",
+      :primary_address => {
         type: "home",
         postcode1: "123",
         postcode2: "456",
@@ -26,27 +26,31 @@ RSpec.describe Customers::SaveCustomer do
         street1: "street1",
         street2: "street2"
       },
-      "other_addresses" =>
+      :other_addresses =>
       "[{\"type\":\"work\",\"value\":{\"formatted_address\":\"台灣桃園市哈哈街123號4樓之5\",\"street\":\"哈哈街123號4樓之5\",\"region\":\"桃園市\",\"country\":\"台灣\"}}]",
-      "phone_numbers"=> [
+      :phone_numbers => [
         {"type"=>"mobile", "value"=>"08036238534"},
         {"type"=>"home", "value"=>"0524095796"},
         {"type"=>"work", "value"=>"0524002529"}
       ],
-      "emails"=> [
+      :emails => [
         {"type"=>"home", "value"=>"taiwanhimawari@gmail.com"},
         {"type"=>"unknown", "value"=>"studioha3@dreamhint.com"},
         {"type"=>"work", "value"=>"haruko_liu@dreamhint.com"}
       ],
-      "dob" => { year: 1950, month: 11, day: 20 }
+      :dob => { year: 1950, month: 11, day: 20 }
     }
   end
 
   describe "#execute" do
+    before do
+      google_user = spy(create_contact: spy)
+      allow(GoogleContactsApi::User).to receive(:new).and_return(google_user)
+    end
+
     it "updates the params value" do
       outcome = Customers::SaveCustomer.run(user: user, params: params)
       updated_customer = outcome.result
-      debugger
       expect(updated_customer).to eq(customer.reload)
       expect(updated_customer.birthday).to eq(Date.new(1950, 11, 20))
       expect(updated_customer.address).to eq("bar,foo")

@@ -25,8 +25,8 @@ class Customers::SaveCustomer < ActiveInteraction::Base
     end
 
     if params[:phone_numbers].present?
-      type, *number = params[:primary_phone].split("-=-")
-      params[:primary_phone] = { "type" => type, "value" => number.join("-") }
+      type, *number = params[:primary_phone].split(DELIMITER)
+      params[:primary_phone] = { "type" => type, "value" => number.join(DELIMITER) }
 
       params[:phone_numbers].find do |phone_number_hash|
         if phone_number_hash == params[:primary_phone]
@@ -36,8 +36,8 @@ class Customers::SaveCustomer < ActiveInteraction::Base
     end
 
     if params[:emails].present?
-      type, *email= params[:primary_email].split("-=-")
-      params[:primary_email] = { "type" => type, "value" => { "address" => email.join("-") } }
+      type, *email= params[:primary_email].split(DELIMITER)
+      params[:primary_email] = { "type" => type, "value" => { "address" => email.join(DELIMITER) } }
 
       params[:emails].find do |email_hash|
         if email_hash == params[:primary_email]
