@@ -285,4 +285,13 @@ form {
   opacity: 0.87;
   color: #FFF
 }
+
+#error_explanation {
+  color: #f00;
+
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+  }
+}
 /* New Design END */

@@ -1,4 +1,16 @@
 <%= form_for(profile, url: url) do |f| %>
+  <% if profile.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(profile.errors.count, "error") %> prohibited this test from being saved:</h2>
+
+      <ul>
+      <% profile.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <h3>管理者情報<strong>必須項目</strong></h3>
   <div id="adminInfo" class="formRow">
     <dl>
@@ -37,7 +49,7 @@
     <dl>
       <dt>住所<strong>必須項目</strong></dt>
       <dd>
-        <%= f.text_field :zip_code, placeholder: "Address", class: "address" %>
+        <%= f.text_field :address, placeholder: "Address", class: "address" %>
       </dd>
     </dl>
     <dl>

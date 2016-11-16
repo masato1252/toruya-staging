@@ -1,0 +1,29 @@
+<form>
+  <div id="customize-table" class="formRow table">
+    <dl>
+      <dd>Name</dd>
+      <dd><%= @profile.name %></dd>
+    </dl>
+    <dl>
+      <dd>Company Name</dd>
+      <dd><%= @profile.company_name %></dd>
+    </dl>
+    <dl>
+      <dd>Zip Code</dd>
+      <dd><%= @profile.zip_code %></dd>
+    </dl>
+    <dl>
+      <dd>Address</dd>
+      <dd><%= @profile.address %></dd>
+    </dl>
+    <dl>
+      <dd>Phone Number</dd>
+      <dd><%= @profile.phone_number %></dd>
+    </dl>
+    <dl>
+      <dd>Website</dd>
+      <dd><%= @profile.website %></dd>
+    </dl>
+  </div>
+  <%= link_to "EDIT", edit_settings_profile_path, class: "btn btn-primary" %>
+</form>
