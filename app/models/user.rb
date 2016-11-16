@@ -30,6 +30,7 @@ class User < ApplicationRecord
          :confirmable, :lockable, :omniauthable
 
   has_one :access_provider
+  has_one :profile
   has_many :shops
   has_many :menus
   has_many :staffs

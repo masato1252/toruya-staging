@@ -10,6 +10,8 @@
 #  first_name               :string
 #  phonetic_last_name       :string
 #  phonetic_first_name      :string
+#  custom_id                :string
+#  memo                     :text
 #  address                  :string
 #  google_uid               :string
 #  google_contact_id        :string
@@ -20,12 +22,8 @@
 #
 
 class Customer < ApplicationRecord
-  RANKING_COLORS = %s(ca4e0e d0d0d0 60938a fcbe46 aecfc8)
+  include NormalizeName
 
-  default_value_for :last_name, ""
-  default_value_for :first_name, ""
-  default_value_for :phonetic_last_name, ""
-  default_value_for :phonetic_first_name, ""
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses
 
   has_many :reservation_customers, dependent: :destroy
@@ -37,10 +35,6 @@ class Customer < ApplicationRecord
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
 
   before_validation :assign_default_rank
-
-  def name
-    "#{last_name} #{first_name}".presence || "#{phonetic_last_name} #{phonetic_first_name}".presence
-  end
 
   def build_by_google_contact(google_contact)
     self.google_uid = user.uid

@@ -13,6 +13,8 @@
 #
 
 class Staff < ApplicationRecord
+  include NormalizeName
+
   belongs_to :user
   has_many :staff_menus
   has_many :menus, through: :staff_menus
@@ -24,8 +26,4 @@ class Staff < ApplicationRecord
   has_many :reservations, through: :reservation_staffs
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
-
-  def name
-    "#{phonetic_last_name} #{phonetic_first_name}".presence || "#{first_name} #{last_name} "
-  end
 end

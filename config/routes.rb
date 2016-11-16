@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
+    resource :profile
     resources :staffs, except: [:show]
     resources :business_schedules, only: [:index]
     resources :menus, except: [:show] do

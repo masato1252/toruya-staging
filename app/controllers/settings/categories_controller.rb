@@ -64,13 +64,14 @@ class Settings::CategoriesController < SettingsController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_category
-      @category = super_user.categories.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def settings_category_params
-      params.require(:category).permit(:name, :short_name)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_category
+    @category = super_user.categories.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def settings_category_params
+    params.require(:category).permit(:name, :short_name)
+  end
 end
