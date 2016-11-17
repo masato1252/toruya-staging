@@ -12,13 +12,15 @@
 <form>
   <div id="menuList" class="formRow">
     <ul class="tableTTL">
-      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="check">Delete</li>
       <li class="rowTTL">Category Name</li>
       <li class="updateTime">update time</li>
     </ul>
     <% @settings_categories.each do |settings_category| %>
       <dl>
-        <dt class="check"><input type="checkbox"></dt>
+        <dt class="check">
+          <%= link_to 'DELETE', settings_category_path(settings_category), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </dt>
         <dt class="rowTTL"><%= settings_category.name %></dt>
         <dd class="updateTime"><%= settings_category.updated_at.to_s(:date) %></dd>
         <dd class="function">

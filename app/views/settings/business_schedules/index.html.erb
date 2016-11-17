@@ -10,7 +10,7 @@
       <li class="rowTTL">Shop Name</li>
       <li class="updateTime">update time</li>
     </ul>
-    <% super_user.shops.each do |shop| %>
+    <% super_user.shops.order("id").each do |shop| %>
       <dl>
         <dt class="rowTTL"><%= shop.name %></dt>
         <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>

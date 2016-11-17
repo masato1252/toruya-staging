@@ -44,6 +44,11 @@ class Settings::ReservationSettingsController < SettingsController
     end
   end
 
+  def destroy
+    @reservation_setting.destroy
+    redirect_to settings_reservation_settings_path
+  end
+
 
   private
   # Use callbacks to share common setup or constraints between actions.

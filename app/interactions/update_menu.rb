@@ -52,7 +52,7 @@ class UpdateMenu < ActiveInteraction::Base
 
       ShopMenuRepeatingDate.where(menu: menu).where.not(shop_id: menu.shop_ids).delete_all
     else
-      ShopMenuRepeatingDate.where(menu: menu).where.delete_all
+      ShopMenuRepeatingDate.where(menu: menu).delete_all
     end
   end
 end

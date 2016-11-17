@@ -29,8 +29,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
-  has_one :access_provider
-  has_one :profile
+  has_one :access_provider, dependent: :destroy
+  has_one :profile, dependent: :destroy
   has_many :shops
   has_many :menus
   has_many :staffs

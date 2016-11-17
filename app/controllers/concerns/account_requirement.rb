@@ -11,7 +11,7 @@ module AccountRequirement
 
   def require_user_name
     if !current_user.name
-      flash.now[:alert] = "Please go to #{view_context.link_to("Account page", settings_contact_groups_path)} to fill your information".html_safe
+      flash.now[:alert] = "Please go to #{view_context.link_to("Account page", settings_profile_path)} to fill your information".html_safe
     end
   end
 
@@ -29,7 +29,7 @@ module AccountRequirement
 
   def require_menu
     if !current_user.menus.exists?
-      flash.now[:alert] = "Please go to #{view_context.link_to("Menu page", settings_shops_path)} to create your Menu".html_safe
+      flash.now[:alert] = "Please go to #{view_context.link_to("Menu page", settings_menus_path)} to create your Menu".html_safe
     end
   end
 end

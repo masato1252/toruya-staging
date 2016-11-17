@@ -11,13 +11,15 @@
 <form>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
-      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="check">Delete</li>
       <li class="rowTTL">Staff Name</li>
       <li class="updateTime">update time</li>
     </ul>
     <% @staffs.each do |staff| %>
       <dl>
-        <dt class="check"><input type="checkbox"></dt>
+        <dt class="check">
+          <%= link_to 'DELETE', settings_staff_path(staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </dt>
         <dt class="rowTTL">
           <%= staff.name %>
         </dt>

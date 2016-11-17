@@ -13,14 +13,14 @@
 <form>
   <div id="resframeList" class="formRow">
     <ul class="tableTTL">
-      <li class="check"><a href="" class="BTNorange">Delete</a></li>
+      <li class="check">Delete</li>
       <li class="rowTTL">予約枠 Name</li>
       <li class="updateTime">update time</li>
     </ul>
 
     <% @reservation_settings.each do |setting| %>
       <dl>
-        <dt class="check"><input type="checkbox"></dt>
+        <dt class="check"><%= link_to "DELETE", settings_reservation_setting_path(setting), method: :delete, class: "btn btn-danger", data: {confirm: "Are are sure" }%></dt>
         <dt class="rowTTL"><%= setting.name %></dt>
         <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>
         <dd class="function">

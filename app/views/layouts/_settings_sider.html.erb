@@ -14,7 +14,7 @@
   </dl>
   <dl class="menu">
     <%= active_link_to "Menu & Price", settings_menus_path,
-      active: [["settings/menus"]],
+      active: [["settings/menus", "settings/categories"]],
       wrap_tag: :dt,
       class_active: "here" %>
     <dd>
@@ -27,8 +27,6 @@
           active: [["settings/categories"]],
           wrap_tag: :li,
           class_active: "here" %>
-        <li><a href="price.html">Price</a></li>
-        <li><a href="price_category.html">Price Category</a></li>
       </ul>
     </dd>
   </dl>

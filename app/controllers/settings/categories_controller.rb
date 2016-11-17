@@ -31,7 +31,7 @@ class Settings::CategoriesController < SettingsController
         if params[:menu_id]
           redirect_to edit_settings_menu_path(id: params[:menu_id])
         else
-          redirect_to new_settings_menus_path
+          redirect_to new_settings_menu_path
         end
       else
         redirect_to settings_categories_path
