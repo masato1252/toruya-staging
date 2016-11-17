@@ -47,7 +47,7 @@ class ReservationsController < DashboardController
   # POST /reservations
   # POST /reservations.json
   def create
-    outcome = Reservations::AddReservation.run(shop: shop, params: reservation_params.to_h)
+    outcome = Reservations::AddReservation.run(shop: shop, user: current_user, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
@@ -61,7 +61,7 @@ class ReservationsController < DashboardController
   # PATCH/PUT /reservations/1
   # PATCH/PUT /reservations/1.json
   def update
-    outcome = Reservations::AddReservation.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::AddReservation.run(shop: shop, user: current_user, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?

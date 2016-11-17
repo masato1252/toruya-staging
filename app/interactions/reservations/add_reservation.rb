@@ -5,8 +5,9 @@ module Reservations
       params[:customer_ids] = params[:customer_ids].present? ? params[:customer_ids].split(",") : []
     end
 
-    object :shop, class: Shop
-    object :reservation, class: Reservation, default: nil
+    object :shop
+    object :user
+    object :reservation, default: nil
     hash :params do
       string :start_time_date_part
       string :start_time_time_part
@@ -22,6 +23,10 @@ module Reservations
                        reservation.attributes = params
                        reservation
                      else
+                       # TODO: Future Feature
+                       # if current_user.is_super_user?
+                         params.merge!(aasm_state: "reserved")
+                       # end
                        shop.reservations.new(params)
                      end
       unless _reservation.save
