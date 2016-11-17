@@ -42,6 +42,11 @@
   </div>
 
   <div id="footerav">
-    <input type="submit" class="BTNtarco" value="Save">
+    <li>
+      <%= link_to "Cancel", settings_shops_path, class: "BTNtarco" %>
+    </li>
+    <li>
+      <%= f.submit "保存", class: "BTNyellow" %>
+    </li>
   </div>
 <% end %>
