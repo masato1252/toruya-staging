@@ -26,4 +26,7 @@ class Staff < ApplicationRecord
   has_many :reservations, through: :reservation_staffs
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
+
+  validates :last_name, presence: true
+  validates :first_name, presence: true
 end

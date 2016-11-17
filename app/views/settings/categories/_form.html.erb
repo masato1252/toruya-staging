@@ -1,4 +1,6 @@
 <%= form_for(category, url: url) do |f| %>
+  <%= render "settings/form_errors", object: category %>
+
   <h3>Menu Category Informations<strong>必須項目</strong></h3>
   <div id="menuInfo" class="formRow">
     <dl>

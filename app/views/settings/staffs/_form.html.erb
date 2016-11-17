@@ -1,13 +1,5 @@
 <%= form_for(staff, url: url) do |f| %>
-  <% if staff.errors.any? %>
-    <div id="error_explanation">
-      <ul>
-        <% staff.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render "settings/form_errors", object: staff %>
 
   <h3>Staff Informations<strong>必須項目</strong></h3>
   <div id="staffInfo" class="formRow">

@@ -1,4 +1,6 @@
 <%= form_for(shop, url: url) do |f| %>
+  <%= render "settings/form_errors", object: shop %>
+
   <h3>店名</h3>
   <div id="shopNames" class="formRow">
     <dl>

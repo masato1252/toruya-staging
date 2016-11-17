@@ -33,6 +33,7 @@ class Settings::StaffsController < SettingsController
         format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully created.' }
         format.json { render :show, status: :created, location: @staff }
       else
+        @shops = super_user.shops
         format.html { render :new }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
       end
@@ -49,6 +50,7 @@ class Settings::StaffsController < SettingsController
         format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
         format.json { render :show, status: :ok, location: @staff }
       else
+        @shops = super_user.shops
         format.html { render :edit }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
       end
