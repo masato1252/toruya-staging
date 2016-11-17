@@ -41,6 +41,7 @@ class User < ApplicationRecord
   has_many :contact_groups
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
+  delegate :name, to: :profile, allow_nil: true
 
   after_commit :create_default_ranks
 

@@ -64,20 +64,11 @@
       </ul>
     </dd>
   </dl>
-  <dl class="calendars">
-    <dt><a href="calendars.html">Calendars</a></dt>
-    <dd>
-      <ul>
-        <li class="here"><a href="calendars.html">Calendar Info</a></li>
-        <li><a href="calendars_synk.html">Synk Google</a></li>
-      </ul>
-    </dd>
-  </dl>
-  <dl class="apps">
-    <dt><a href="apps/index.html">店舗Apps</a></dt>
-  </dl>
   <dl class="account">
-    <dt><a href="account/index.html">Account</a></dt>
+    <%= active_link_to "Account", settings_profile_path,
+      active: [["settings/profiles"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
   </dl>
   <dl class="logout">
     <dt>

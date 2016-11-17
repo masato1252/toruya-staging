@@ -2,6 +2,8 @@ class SettingsController < ActionController::Base
   layout "settings"
   before_action :authenticate_user!
 
+  include AccountRequirement
+
   def shops
     @shops ||= current_user.shops
   end
