@@ -1,12 +1,10 @@
-<h1>Home</h1>
-
-<ul>
-  <% @shops.each do |shop| %>
-    <li>
-      <%= link_to shop.name, shop_reservations_path(shop) %>
-    </li>
-  <% end %>
-  <li>
-    <%= link_to "Settings", settings_shops_path %>
-  </li>
-</ul>
+<div id="shopNav" class="contents">
+  <h2>店舗選択</h2>
+  <nav>
+    <% @shops.each do |shop| %>
+      <div>
+        <%= link_to shop.name, shop_reservations_path(shop), class: "BTNorange" %>
+      </div>
+    <% end %>
+  </nav>
+</div>

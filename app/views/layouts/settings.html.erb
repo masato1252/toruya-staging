@@ -11,7 +11,9 @@
   <body class="setting firstSetting">
     <header>
       <dl>
-        <dd id="NAVhome"><%= link_to "Home", root_path %></dd>
+        <dd>
+          <%= link_to "Toruya", root_path, id: "logo" %>
+        </dd>
         <dd id="NAVshopSelect">
           <%= shops_select_component %>
         </dd>

@@ -149,6 +149,9 @@ span.normal, i.normal, span.regular, i.regular, span.checkout, span.checked_out 
   color: #d9534f;
 }
 
+header dl:first-child dd {
+  padding-right: 60px;
+}
 /* Overwrite END */
 
 /* New Design START */
@@ -160,12 +163,6 @@ span.normal, i.normal, span.regular, i.regular, span.checkout, span.checked_out 
 }
 
 form {
-  #error_explanation {
-    ul li {
-      display: list-item;
-    }
-  }
-
   abbr.required {
     float: left;
     padding-right: 3px;
@@ -297,5 +294,11 @@ form {
     list-style: none;
     margin: 0 0 18px 0;
   }
+}
+
+#logo {
+  font-family: 'Tillana', cursive;
+  font-size: 32px;
+  padding-top: 0px;
 }
 /* New Design END */

@@ -8,12 +8,18 @@
     <%= javascript_include_tag "application" %>
   </head>
 
-  <body>
+  <body class="shopSelect">
     <header>
-      <h1><a href="">Toruma</a></h1>
+      <dl>
+        <dd>
+          <%= link_to "Toruya", root_path, id: "logo" %>
+        </dd>
+      </dl>
+      <dl>
+        <dd id="NAVsetting"><%= link_to "設定", settings_shops_path %></dd>
+      </dl>
     </header>
     <div class="container">
-      <%= render "layouts/tbd_items" %>
       <%= flash_messages %>
       <%= yield %>
     </div>

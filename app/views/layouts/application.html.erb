@@ -11,16 +11,14 @@
   <body id="manager" class=<%= body_class %>>
     <header>
       <dl>
-        <dd id="NAVhome">
-          <%= link_to "Home", root_path %>
+        <dd>
+          <%= link_to "Toruya", root_path, id: "logo" %>
         </dd>
         <dd id="NAVshopSelect">
           <%= shops_select_component %>
         </dd>
       </dl>
       <dl>
-        <dd id="NAVcaution"><a href="news/"><strong>1</strong>NEWS</a></dd>
-        <dd id="NAVhelp"><a href="help/">HELP</a></dd>
         <dd id="NAVsetting"><%= link_to "設定", settings_shops_path %></dd>
       </dl>
     </header>
