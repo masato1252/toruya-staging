@@ -7,7 +7,7 @@ class UpdateMenu < ActiveInteraction::Base
   object :menu, class: Menu
   hash :attrs do
     string :name
-    string :shortname, default: nil
+    string :short_name, default: nil
     integer :minutes, default: nil
     integer :interval, default: nil
     integer :min_staffs_number, default: nil

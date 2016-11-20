@@ -6,7 +6,7 @@ FactoryGirl.define do
 
     user { FactoryGirl.create(:user) }
     sequence(:name) { |n| "menu-#{n}" }
-    sequence(:shortname) { |n| "m-#{n}" }
+    sequence(:short_name) { |n| "m-#{n}" }
     minutes 60
     interval 10
     min_staffs_number 1

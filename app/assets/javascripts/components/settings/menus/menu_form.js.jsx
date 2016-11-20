@@ -134,7 +134,7 @@ UI.define("Settings.MenuForm", function() {
     _isValidMenu: function() {
       var maxCustomersList = this.state.staffMenus.map((staff_menu) => { return staff_menu.maxCustomers })
 
-      return this.state.menu.name && this.state.menu.shortname && this.state.menu.min_staffs_number &&
+      return this.state.menu.name && this.state.menu.short_name && this.state.menu.min_staffs_number &&
       (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
       (this.state.menu.min_staffs_number == 1 ? _.every(maxCustomersList) : true)
     },
@@ -167,12 +167,12 @@ UI.define("Settings.MenuForm", function() {
               <dd>
                 <input
                   placeholder="Menu Shorten Name"
-                  maxlength="10"
-                  size="10"
+                  maxlength="15"
+                  size="15"
                   type="text"
-                  name="menu[shortname]"
-                  data-name="shortname"
-                  value={this.state.menu.shortname}
+                  name="menu[short_name]"
+                  data-name="short_name"
+                  value={this.state.menu.short_name}
                   onChange={this._handleMenuData}
                   />
               </dd>
@@ -184,9 +184,10 @@ UI.define("Settings.MenuForm", function() {
                   maxlength="5"
                   size="5"
                   type="number"
-                  value="60"
                   name="menu[minutes]"
-                  defaultValue={this.state.menu.minutes}
+                  data-name="minutes"
+                  value={this.state.menu.minutes}
+                  onChange={this._handleMenuData}
                 />分
               </dd>
             </dl>

@@ -6,17 +6,16 @@ ja:
     placeholder:
       shop:
         name: "店舗名"
-        shortname: "短縮店舗名"
+        short_name: "短縮店舗名"
         address: "住所"
         phone_number: "TEL"
         email: "Email"
         website: "http://"
       staff:
         name: "氏名"
-        shortname: "しめい"
       menu:
         name: "メニュー名"
-        shortname: "短縮名"
+        short_name: "短縮名"
         minutes: "所要時間(分)"
         min_staffs_number: "最低担当者数"
       staff_menus:
@@ -44,18 +43,17 @@ ja:
         password_confirmation: "input password again"
       shop:
         name: "店舗名"
-        shortname: "短縮店舗名"
+        short_name: "短縮店舗名"
         address: "住所"
         phone_number: "TEL"
         email: "Email"
         website: "WEB"
       staff:
         name: "氏名"
-        shortname: "しめい"
         full_time: "常勤"
       menu:
         name: "メニュー名"
-        shortname: "短縮名"
+        short_name: "短縮名"
         minutes: "所要時間"
         min_staffs_number: "最低担当者数"
       staff_menu:

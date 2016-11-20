@@ -103,7 +103,7 @@ class Settings::MenusController < SettingsController
   # Never trust parameters from the scary internet, only allow the white list through.
   def menu_params
     @menu_params ||= params.require(:menu).permit(
-    :name, :shortname, :minutes, :interval, :min_staffs_number, :max_seat_number,
+    :name, :short_name, :minutes, :interval, :min_staffs_number, :max_seat_number,
     :reservation_setting_id,
     staff_ids: [], shop_ids: [], category_ids: [],
     staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]],

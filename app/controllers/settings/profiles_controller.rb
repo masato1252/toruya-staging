@@ -2,6 +2,9 @@ class Settings::ProfilesController < SettingsController
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
 
   def show
+    unless @profile
+      redirect_to new_settings_profile_path
+    end
   end
 
   def new

@@ -69,6 +69,6 @@ class Settings::ShopsController < SettingsController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def shop_params
-    params.require(:shop).permit(:user_id, :name, :shortname, :zip_code, :phone_number, :email, :website, :address)
+    params.require(:shop).permit(:user_id, :name, :short_name, :zip_code, :phone_number, :email, :website, :address)
   end
 end

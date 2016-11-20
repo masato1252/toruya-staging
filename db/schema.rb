@@ -43,7 +43,6 @@ ActiveRecord::Schema.define(version: 20161116133354) do
   create_table "categories", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name"
-    t.string   "short_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
@@ -143,7 +142,7 @@ ActiveRecord::Schema.define(version: 20161116133354) do
   create_table "menus", force: :cascade do |t|
     t.integer  "user_id",           null: false
     t.string   "name",              null: false
-    t.string   "shortname"
+    t.string   "short_name"
     t.integer  "minutes"
     t.integer  "interval"
     t.integer  "min_staffs_number"
@@ -261,7 +260,7 @@ ActiveRecord::Schema.define(version: 20161116133354) do
   create_table "shops", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name",            null: false
-    t.string   "shortname",       null: false
+    t.string   "short_name",      null: false
     t.string   "zip_code",        null: false
     t.string   "phone_number",    null: false
     t.string   "email",           null: false

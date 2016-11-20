@@ -5,7 +5,7 @@
 #  id                :integer          not null, primary key
 #  user_id           :integer          not null
 #  name              :string           not null
-#  shortname         :string
+#  short_name        :string
 #  minutes           :integer
 #  interval          :integer
 #  min_staffs_number :integer
@@ -23,6 +23,7 @@ class Menu < ApplicationRecord
   validates :minutes, presence: true
   validates :min_staffs_number, numericality: { greater_than: 0 }, allow_blank: true
   validates :max_seat_number, numericality: { greater_than: 0 }, allow_blank: true
+  validates :short_name, length: { maximum: 15 }
 
   has_many :staff_menus, inverse_of: :menu, dependent: :destroy
   has_many :staffs, through: :staff_menus

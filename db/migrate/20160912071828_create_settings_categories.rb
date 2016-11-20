@@ -3,7 +3,6 @@ class CreateSettingsCategories < ActiveRecord::Migration[5.0]
     create_table :categories do |t|
       t.integer :user_id
       t.string :name
-      t.string :short_name
 
       t.timestamps
     end

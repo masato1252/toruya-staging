@@ -5,7 +5,7 @@
 #  id              :integer          not null, primary key
 #  user_id         :integer
 #  name            :string           not null
-#  shortname       :string           not null
+#  short_name      :string           not null
 #  zip_code        :string           not null
 #  phone_number    :string           not null
 #  email           :string           not null
@@ -18,7 +18,7 @@
 
 class Shop < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :user_id }, format: { without: /\// }
-  validates :shortname, presence: true, uniqueness: { scope: :user_id }
+  validates :short_name, presence: true, uniqueness: { scope: :user_id }
   validates :zip_code, presence: true
   validates :phone_number, presence: true
   validates :email, presence: true

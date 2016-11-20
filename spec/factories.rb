@@ -13,7 +13,7 @@ FactoryGirl.define do
   factory :shop do
     association :user
     sequence(:name) { |n| "foo#{n}" }
-    sequence(:shortname) { |n| "f#{n}" }
+    sequence(:short_name) { |n| "f#{n}" }
     zip_code "160-0005"
     phone_number "123456789"
     sequence(:email) { |n| "foo#{n}@gmail.com" }

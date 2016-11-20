@@ -3,7 +3,7 @@ class CreateShops < ActiveRecord::Migration[5.0]
     create_table :shops do |t|
       t.references :user
       t.string :name, null: false
-      t.string :shortname, null: false
+      t.string :short_name, null: false
       t.string :zip_code, null: false
       t.string :phone_number, null: false
       t.string :email, null: false

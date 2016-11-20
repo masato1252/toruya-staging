@@ -16,8 +16,8 @@
   selected_shops: react_attributes(menu.shops),
   categories: react_attributes(super_user.categories),
   selected_categories: react_attributes(menu.categories),
-  staffs: react_attributes(super_user.staffs),
-  selected_staffs: react_attributes(menu.staffs),
+  staffs: staff_attributes_options(super_user.staffs),
+  selected_staffs: staff_attributes_options(menu.staffs),
   staff_menus: react_attributes(menu.staff_menus),
   form_authenticity_token: form_authenticity_token
 })%>

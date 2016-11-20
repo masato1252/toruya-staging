@@ -52,6 +52,14 @@ module OptionsHelper
     end
   end
 
+  def staff_attributes_options(staffs)
+    return [] unless staffs.present?
+
+    staffs.map do |s|
+      React.camelize_props(s.attributes.merge(name: s.name))
+    end
+  end
+
   def customer_options(customers)
     return [] unless customers.present?
     customers.map do |c|
