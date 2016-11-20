@@ -5,7 +5,7 @@ RSpec.describe Customers::SaveCustomer do
   let(:customer) { FactoryGirl.create(:customer, user: user, contact_group: contact_group) }
   let(:contact_group) { FactoryGirl.create(:contact_group, user: user) }
   let(:contact_group2) { FactoryGirl.create(:contact_group, user: user) }
-  let(:rank) { FactoryGirl.create(:rank, user: user) }
+  let(:rank) { user.ranks.first }
   let(:params) do
     {
       :id => customer.id,
