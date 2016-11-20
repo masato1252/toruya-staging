@@ -84,9 +84,10 @@ class Settings::MenusController < SettingsController
       name = shop_repeating_date[:shop] ? shop_repeating_date[:shop].name : ""
       dates = shop_repeating_date[:dates]
       if name.present?
-        "#{name}: #{shop_repeating_date[:dates].join(", ")}"
+        # "#{name}: #{shop_repeating_date[:dates].join(", ")}"
+        "#{name}: #{shop_repeating_date[:dates].last}"
       else
-        shop_repeating_date[:dates].join(", ")
+        shop_repeating_date[:dates].last
       end
     end.join("; ")
 
