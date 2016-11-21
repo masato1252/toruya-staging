@@ -34,7 +34,7 @@ gem "google_contacts_api", github: "ilake/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
 gem "jp_prefecture", "~> 0.8.1", github: "ilake/jp_prefecture"
 gem "hashie", "~> 3.4.4"
-
+gem "rollbar", "~> 2.13.3"
 
 group :development, :test do
   gem "byebug", platform: :mri

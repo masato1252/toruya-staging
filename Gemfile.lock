@@ -257,6 +257,8 @@ GEM
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
     retriable (1.4.1)
+    rollbar (2.13.3)
+      multi_json
     rspec-core (3.5.0)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -357,6 +359,7 @@ DEPENDENCIES
   rails (~> 5.0.0)
   rails_12factor
   react-rails (~> 1.8.0)
+  rollbar (~> 2.13.3)
   rspec-rails (~> 3.5.0)
   sass-rails (~> 5.0.5)
   select2-rails (~> 4.0.3)
