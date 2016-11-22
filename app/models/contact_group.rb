@@ -30,6 +30,9 @@ class ContactGroup < ApplicationRecord
 
   before_validation :assign_default_rankings, on: :create
 
+  scope :connected, -> { where.not(backup_google_group_id: nil) }
+  scope :unconnect, -> { where(backup_google_group_id: nil) }
+
   private
 
   def assign_default_rankings

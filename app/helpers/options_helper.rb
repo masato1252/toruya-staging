@@ -12,11 +12,17 @@ module OptionsHelper
   def menu_group_options(category_menus)
     return unless category_menus
 
-    category_menus.map do |category_menu|
-      {
-        group_label: category_menu[:category].name,
-        options: menu_options(category_menu[:menus])
-      }
+    if category_menus.first[:category]
+      # When it indeed is category of menus
+      category_menus.map do |category_menu|
+        {
+          group_label: category_menu[:category].name,
+          options: menu_options(category_menu[:menus])
+        }
+      end
+    else
+      # When some menu doesn't have category
+      menu_options(category_menus)
     end
   end
 

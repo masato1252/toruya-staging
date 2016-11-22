@@ -132,11 +132,15 @@ UI.define("Settings.MenuForm", function() {
     },
 
     _isValidMenu: function() {
-      var maxCustomersList = this.state.staffMenus.map((staff_menu) => { return staff_menu.maxCustomers })
+      var selectedShopIds = $("#shopSelect input:checked").map(function() { return $(this).val() })
+      var maxCustomersList = $("[data-name=max-customers]").map(function() { return $(this).val() });
+      var selectedStaffNumber = $("[data-name=staff-selection]:checked").length;
 
-      return this.state.menu.name && this.state.menu.short_name && this.state.menu.min_staffs_number &&
+      return this.state.menu.name && this.state.menu.short_name &&
       (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
-      (this.state.menu.min_staffs_number == 1 ? _.every(maxCustomersList) : true)
+      (this.state.menu.min_staffs_number ? _.every(maxCustomersList) : true) &&
+      selectedShopIds.length > 0 &&
+      selectedStaffNumber > 0
     },
 
     render: function() {
@@ -397,7 +401,7 @@ UI.define("Settings.MenuForm", function() {
                 return(
                   <dl key={`staff-${staff.id}`}>
                     {
-                      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).id : ""} />
+                      this.selectedStaffMenu(staff.id) ? <input type="hidden" name="menu[staff_menus_attributes][][id]" value={this.selectedStaffMenu(staff.id).id} /> : null
                     }
                     {
                       _.contains(this.defaultSelectedStaffIds, staff.id) && !this.selectedStaff(staff.id) ?
@@ -412,6 +416,7 @@ UI.define("Settings.MenuForm", function() {
                         name="menu[staff_menus_attributes][][staff_id]"
                         id={`staff-${staff.id}`}
                         value={staff.id}
+                        data-name="staff-selection"
                         checked={!!this.selectedStaff(staff.id)}
                         onChange={this._handleStaffCheck}
                       />

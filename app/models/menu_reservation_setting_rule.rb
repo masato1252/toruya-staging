@@ -16,7 +16,7 @@ class MenuReservationSettingRule < ApplicationRecord
   TYPES = %w(date repeating)
   belongs_to :menu
 
-  validates :reservation_type, inclusion: { in: TYPES }, allow_blank: true
+  validates :reservation_type, inclusion: { in: TYPES }, allow_nil: true
 
   def repeating?
     reservation_type == "repeating"

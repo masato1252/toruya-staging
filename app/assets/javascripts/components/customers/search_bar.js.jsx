@@ -25,7 +25,7 @@ UI.define("Customers.SearchBar", function() {
             }
             <li>
               <i className="fa fa-search fa-2x search-symbol" aria-hidden="true"></i>
-              <input type="text" id="search" placeholder="Name or TEL" onKeyPress={this.props.SearchCustomers} />
+              <input type="text" id="search" placeholder="Name" onKeyPress={this.props.SearchCustomers} />
             </li>
          </ul>
       );

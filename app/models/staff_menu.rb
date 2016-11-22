@@ -16,6 +16,7 @@ class StaffMenu < ApplicationRecord
   belongs_to :staff
 
   validate :valid_max_customers
+  validates :staff_id, uniqueness: { scope: [:menu_id] }
 
   private
 

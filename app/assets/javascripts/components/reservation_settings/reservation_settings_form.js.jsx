@@ -31,6 +31,11 @@ UI.define("ReservationSettings.Form", function() {
       }
     },
 
+    handleSettingChange: function(event) {
+      this.state.setting[event.target.dataset.name] = event.target.value
+      this.setState({setting: this.state.setting});
+    },
+
     render: function() {
       return (
         <form acceptCharset="UTF-8" action={this.props.saveSettingPath} method="post">
@@ -48,7 +53,9 @@ UI.define("ReservationSettings.Form", function() {
                   placeholder="予約枠 Name"
                   maxlength="30"
                   name="reservation_setting[name]"
-                  defaultValue={this.state.setting.name}
+                  data-name="name"
+                  value={this.state.setting.name}
+                  onChange={this.handleSettingChange}
                   />
               </dd>
             </dl>
@@ -60,7 +67,9 @@ UI.define("ReservationSettings.Form", function() {
                   placeholder="予約枠 Shorten Name"
                   maxlength="10"
                   name="reservation_setting[short_name]"
-                  defaultValue={this.state.setting.short_name}
+                  data-name="short_name"
+                  value={this.state.setting.short_name}
+                  onChange={this.handleSettingChange}
                 />
               </dd>
             </dl>
@@ -263,6 +272,7 @@ UI.define("ReservationSettings.Form", function() {
                 name="commit"
                 value="保存"
                 className="BTNyellow"
+                disabled={!this.state.setting.name || !this.state.setting.short_name}
                 data-disable-with="保存"
                 />
               </li>

@@ -341,14 +341,6 @@ UI.define("Reservation.Form", function() {
                     {this.renderStaffSelects()}
                   </dd>
                 </dl>
-                <dl className="form" id="resCal">
-                  <dt>予約台帳</dt>
-                  <dd className="input"><select id="resCalendar" disabled="">
-                    <option value="1">Calendar 1</option>
-                    <option value="2">Calendar 2</option>
-                    <option value="3">Calendar 3</option>
-                  </select><span class="subinfo">※Linked to Menu</span></dd>
-                </dl>
               </div>
               <div id="resMemo" className="formRow">
                 <dl className="form" id="resMemoRow">

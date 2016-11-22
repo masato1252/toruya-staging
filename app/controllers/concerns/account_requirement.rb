@@ -20,8 +20,8 @@ module AccountRequirement
   end
 
   def require_contacts
-    if !current_user.uid || !current_user.contact_groups.exists?
-      flash.now[:alert] = "Please go to #{view_context.link_to("Contacts page", settings_contact_groups_path)} to connect your google account".html_safe
+    if !current_user.uid || !current_user.contact_groups.connected.exists? || current_user.contact_groups.unconnect.exists?
+      flash.now[:alert] = "Please go to #{view_context.link_to("Contacts page", settings_contact_groups_path)} to connect your google account with your toruya groups".html_safe
     end
   end
 
@@ -57,7 +57,7 @@ module AccountRequirement
 
   def require_reservation_settings
     if !current_user.reservation_settings.exists?
-      flash.now[:alert] = "Please go to #{view_context.link_to("Reservation Settings page", new_settings_reservation_settings_path)} to set your reservation settings".html_safe
+      flash.now[:alert] = "Please go to #{view_context.link_to("Reservation Settings page", new_settings_reservation_setting_path)} to set your reservation settings".html_safe
     end
   end
 end

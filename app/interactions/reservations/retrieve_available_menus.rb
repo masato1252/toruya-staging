@@ -92,7 +92,7 @@ module Reservations
         menu_category[:categories]
       end.flatten.uniq
 
-      all_menu_categories.map do |category|
+      all_menu_categories = all_menu_categories.map do |category|
         menus = menu_categories.map do |menu_category|
           if menu_category[:categories].any? { |category_hash| category_hash[:category] == category[:category] }
             menu_category[:menu]
@@ -100,6 +100,13 @@ module Reservations
         end.compact
 
         category.merge(menus: menus)
+      end
+
+      # When some menus doesn't have category, we just don't use any category
+      if all_menu_categories.map{|category| category[:menus] }.flatten.size != menus.size
+        menus
+      else
+        all_menu_categories
       end
     end
   end

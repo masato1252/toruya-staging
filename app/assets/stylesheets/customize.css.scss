@@ -152,6 +152,21 @@ span.normal, i.normal, span.regular, i.regular, span.checkout, span.checked_out 
 header dl:first-child dd {
   padding-right: 60px;
 }
+
+#content #tempHoliday {
+
+  .date {
+    width: 228px;
+  }
+
+  .startTime {
+    width: 148px;
+  }
+
+  .endTime {
+    width: 135px;
+  }
+}
 /* Overwrite END */
 
 /* New Design START */
@@ -293,6 +308,10 @@ form {
   ul {
     list-style: none;
     margin: 0 0 18px 0;
+
+    li.error-list {
+      display: list-item;
+    }
   }
 }
 

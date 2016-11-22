@@ -27,7 +27,7 @@
           <% if contact_group.google_group_name %>
             <%= contact_group.google_group_name %>
           <% else %>
-            <%= link_to "Connect", connections_settings_contact_group_path(contact_group) %>
+            <%= link_to "Connect", connections_settings_contact_group_path(contact_group) if current_user.uid %>
           <% end %>
         </dd>
         <dd>

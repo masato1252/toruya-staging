@@ -21,8 +21,8 @@ class Menu < ApplicationRecord
 
   validates :name, presence: true
   validates :minutes, presence: true
-  validates :min_staffs_number, numericality: { greater_than: 0 }, allow_blank: true
-  validates :max_seat_number, numericality: { greater_than: 0 }, allow_blank: true
+  validates :min_staffs_number, numericality: { greater_than: 0 }, allow_nil: true
+  validates :max_seat_number, numericality: { greater_than: 0 }, allow_nil: true
   validates :short_name, length: { maximum: 15 }
 
   has_many :staff_menus, inverse_of: :menu, dependent: :destroy
