@@ -84,6 +84,7 @@ class Shop < ApplicationRecord
       return Menu.none
     end
 
+    # menu that has reservation_setting and menu_reservation_setting_rules
     scoped = menus.
       joins(:reservation_setting,
             :menu_reservation_setting_rule).
@@ -94,6 +95,9 @@ class Shop < ApplicationRecord
              LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
                                                           shop_menu_repeating_dates.shop_id = #{id}")
 
+    # menus's staffs could not had reservation during reservation time
+    # menus time is longer enough
+    # shop doesn't have custom_schedules(closed temporary) during reservation time
     scoped = scoped.
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
       where("minutes <= ?", distance_in_minutes).
@@ -101,7 +105,7 @@ class Shop < ApplicationRecord
              (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
              start_time: start_time, end_time: end_time)
 
-    # Fiter Staffs schedule
+    # Menu staffs schedule need to be full_time or work during reservation time
     scoped = scoped.
       where("business_schedules.full_time = ?", true).
     or(
@@ -110,8 +114,9 @@ class Shop < ApplicationRecord
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 
-    # Shops
     today = Time.zone.now.to_s(:date)
+
+    # Menu need reservation setting to be reserved
     scoped = scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
     scoped = scoped.where("menu_reservation_setting_rules.reservation_type is NULL AND menu_reservation_setting_rules.end_date is NULL").
       or(
@@ -145,6 +150,7 @@ class Shop < ApplicationRecord
              (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
     )
 
+    # Menu with customers need to be afforded by staff
     scoped.select("menus.*").group("menus.id").having("
       CASE
         WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
