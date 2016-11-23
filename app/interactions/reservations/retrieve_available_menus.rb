@@ -43,14 +43,6 @@ module Reservations
       menus = menus_scope.to_a
       menu_ids = menus.map(&:id)
 
-      # When user pick some invalid option, like add new customer, that cause the selected menu is invalid.
-      # We want to add it back to keep the same option as user selects before.
-      if params[:menu_id] && menu_ids.exclude?(params[:menu_id].to_i)
-        menus.push(Menu.find(params[:menu_id]))
-        menu_ids = menus.map(&:id)
-      end
-
-
       staffs = if menus_scope.exists?
                  selected_menu = if menu_ids.include?(params[:menu_id].to_i)
                                    shop.menus.find_by(id: params["menu_id"])
