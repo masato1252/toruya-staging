@@ -12,11 +12,6 @@ class ReservationsController < DashboardController
       order("reservations.start_time ASC")
   end
 
-  # GET /reservations/1
-  # GET /reservations/1.json
-  def show
-  end
-
   # GET /reservations/new
   def new
     @body_class = "resNew"
@@ -74,6 +69,7 @@ class ReservationsController < DashboardController
         end
         format.json { render :show, status: :ok, location: @reservation }
       else
+        @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: reservation_params.to_h)
         format.html { render :edit }
         format.json { render json: @reservation.errors, status: :unprocessable_entity }
       end
@@ -91,14 +87,14 @@ class ReservationsController < DashboardController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_reservation
-      @reservation = shop.reservations.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_reservation
+    @reservation = shop.reservations.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def reservation_params
-      params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                          :customer_ids, :staff_ids, :memo)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def reservation_params
+    params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
+                                        :customer_ids, :staff_ids, :memo)
+  end
 end

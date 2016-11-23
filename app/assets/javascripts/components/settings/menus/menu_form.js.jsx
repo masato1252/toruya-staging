@@ -138,7 +138,7 @@ UI.define("Settings.MenuForm", function() {
 
       return this.state.menu.name && this.state.menu.short_name &&
       (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
-      (this.state.menu.min_staffs_number ? _.every(maxCustomersList) : true) &&
+      (this.state.menu.min_staffs_number ? _.every(maxCustomersList) && maxCustomersList.length: true) &&
       selectedShopIds.length > 0 &&
       selectedStaffNumber > 0
     },

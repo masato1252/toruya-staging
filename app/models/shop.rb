@@ -76,12 +76,12 @@ class Shop < ApplicationRecord
     distance_in_minutes = ((end_time - start_time)/60.0).round
     reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
-    scoped = reservations.where("reservations.start_time <= ? AND reservations.ready_time >= ?", end_time, start_time)
+    reservations_scope = reservations.where("reservations.start_time <= ? AND reservations.ready_time >= ?", end_time, start_time)
+    reservations_scope = reservations_scope.where.not("reservations.id = ?", reservation_id) if reservation_id
 
     # when all staffs already have reservations at this time
-    if staff_ids.present? && scoped.includes(:staffs).
-      map(&:staff_ids).flatten.uniq == staff_ids
-      return
+    if staff_ids.present? && reservations_scope.includes(:staffs).map(&:staff_ids).flatten.uniq == staff_ids
+      return Menu.none
     end
 
     scoped = menus.
@@ -164,11 +164,12 @@ class Shop < ApplicationRecord
       return menu.staffs
     end
 
+    reservations_scope = reservations.where(menu: menu).where("start_time >= ? and ready_time <= ?", start_time, end_time)
+    reservations_scope = reservations_scope.where.not("reservations.id = ?", reservation_id) if reservation_id
+
     # All staffs could do this menu already have reservation
-    if menu.staff_ids.present? &&
-      reservations.where(menu: menu).where("start_time >= ? and ready_time <= ?", start_time, end_time).includes(:staffs).
-      map(&:staff_ids).flatten.uniq == menu.staff_ids
-      return
+    if menu.staff_ids.present? && reservations_scope.includes(:staffs).map(&:staff_ids).flatten.uniq == menu.staff_ids
+      return Staff.none
     end
 
     scoped = menu.staffs.

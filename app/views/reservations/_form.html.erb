@@ -8,6 +8,7 @@
                       ),
                       from_customer_id: params[:from_customer_id],
                       from_shop_id: params[:from_shop_id],
+                      menu_id: @result.try(:[], :selected_menu).try(:id),
                       min_staffs_number: @result.try(:[], :selected_menu).try(:min_staffs_number),
                       max_seat_number: @result.try(:[], :selected_menu).try(:max_seat_number),
                       menu_group_options: menu_group_options(@result.try(:[], :category_menus)),

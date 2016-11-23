@@ -2,7 +2,7 @@ module Reservations
   class RetrieveAvailableMenus < ActiveInteraction::Base
     set_callback :type_check, :before do
       params[:staff_ids] = if params[:staff_ids].present?
-                             params[:staff_ids].split(",")
+                             params[:staff_ids].split(",").map{ |s| s if s.present? }.compact.uniq
                            elsif reservation
                              reservation.staff_ids
                            else
@@ -10,7 +10,7 @@ module Reservations
                            end
 
       params[:customer_ids] = if params[:customer_ids].present?
-                             params[:customer_ids].split(",")
+                             params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
                            elsif reservation
                              reservation.customer_ids
                            else
@@ -51,7 +51,7 @@ module Reservations
       end
 
 
-      staffs = if menus.present?
+      staffs = if menus_scope.exists?
                  selected_menu = if menu_ids.include?(params[:menu_id].to_i)
                                    shop.menus.find_by(id: params["menu_id"])
                                  elsif menu_ids.include?(reservation.try(:menu).try(:id))

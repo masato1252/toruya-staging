@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :reservations do
+    resources :reservations, except: [:show] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
 
       scope module: "reservations" do

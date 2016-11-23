@@ -12,7 +12,7 @@ module OptionsHelper
   def menu_group_options(category_menus)
     return unless category_menus
 
-    if category_menus.first[:category]
+    if category_menus.first && category_menus.first[:category]
       # When it indeed is category of menus
       category_menus.map do |category_menu|
         {

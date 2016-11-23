@@ -6,13 +6,15 @@
 UI.define("Reservation.Form", function() {
   var ReservationForm = React.createClass({
     getInitialState: function() {
+      var menu_id = "";
+
       return ({
         start_time_date_part: this.props.reservation.startTimeDatePart || "",
         start_time_time_part: this.props.reservation.startTimeTimePart || "",
         end_time_time_part: this.props.reservation.endTimeTimePart || "",
         start_time_restriction: this.props.startTimeRestriction || "",
         end_time_restriction: this.props.endTimeRestriction || "",
-        menu_id: this.props.reservation.menuId || "",
+        menu_id: this.props.menuId || "",
         customers: this.props.reservation.customers || [],
         staff_ids: this.props.reservation.staffIds || [],
         memo: this.props.reservation.memo || "",
@@ -61,11 +63,12 @@ UI.define("Reservation.Form", function() {
     },
 
     handleCustomerRemove: function(customer_id, event) {
+      var _this = this;
       var customers = _.reject(this.state.customers, function(option) {
         return option.value == customer_id;
       });
 
-      this.setState({customers: customers})
+      this.setState({customers: customers}, _this._retrieveAvailableMenus)
     },
 
     _maxCustomerLimit: function() {
@@ -183,7 +186,8 @@ UI.define("Reservation.Form", function() {
           reservation_id: this.props.reservation.id,
           start_time_date_part: this.state.start_time_date_part,
           start_time_time_part: this.state.start_time_time_part,
-          end_time_time_part: this.state.end_time_time_part
+          end_time_time_part: this.state.end_time_time_part,
+          customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
         },
         dataType: "json",
       }).done(
@@ -309,7 +313,7 @@ UI.define("Reservation.Form", function() {
                       value={this.state.end_time_time_part}
                       onChange={this._handleChange} />
                       <span className="danger">
-                        { this._isValidReservationTime() ? null : " invalid reservation time" }
+                        { this._isValidReservationTime() ? null : " Need a valid reservation time" }
                       </span>
                       <span className="subinfo">
                         {
