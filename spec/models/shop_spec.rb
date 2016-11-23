@@ -73,8 +73,8 @@ RSpec.describe Shop, type: :model do
                            start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
       end
 
-      it "returns nil" do
-        expect(shop.available_reservation_menus(time_range)).to be_nil
+      it "returns none" do
+        expect(shop.available_reservation_menus(time_range)).to eq(Menu.none)
       end
     end
 
@@ -357,8 +357,8 @@ RSpec.describe Shop, type: :model do
                              start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
         end
 
-        it "returns nil" do
-          expect(shop.available_staffs(menu, time_range)).to be_nil
+        it "returns none" do
+          expect(shop.available_staffs(menu, time_range)).to eq(Staff.none)
         end
 
         context "when there are other staffs could work on that menu during that time" do

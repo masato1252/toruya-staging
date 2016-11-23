@@ -29,13 +29,4 @@ class Staff < ApplicationRecord
 
   validates :last_name, presence: true
   validates :first_name, presence: true
-  validate :at_least_one_shop
-
-  private
-
-  def at_least_one_shop
-    unless shop_staffs.exists?
-      errors.add(:base, "Staff need to be at least one shop")
-    end
-  end
 end
