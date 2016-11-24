@@ -39,9 +39,12 @@ UI.define("Reservation.Form", function() {
     },
 
     applySelect2: function() {
+      var _this = this;
+
       $("#select2").select2({
         theme: "bootstrap"
-      });
+      })
+      .on("change", _this._handleChange);
     },
 
     handleCustomerAdd: function(event) {
@@ -255,25 +258,36 @@ UI.define("Reservation.Form", function() {
     renderStaffSelects: function() {
       var select_components = [];
 
-      for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
-        var value;
-        if (this.state.staff_ids[i]) {
-          value = this.state.staff_ids[i]
-        }
-        else if (!this.state.staff_ids && this.state.staff_options[i]) {
-          value = this.state.staff_options[i]["value"]
-        }
-        else {
-          value = ""
-        }
+      if (this.state.menu_min_staffs_number) {
+        for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
+          var value;
+          if (this.state.staff_ids[i]) {
+            value = this.state.staff_ids[i]
+          }
+          else if (!this.state.staff_ids && this.state.staff_options[i]) {
+            value = this.state.staff_options[i]["value"]
+          }
+          else {
+            value = ""
+          }
 
+          select_components.push(
+            <UI.Select options={this.state.staff_options}
+              prefix={`option-${i}`}
+              key={`${i}-${value}`}
+              defaultValue={value}
+              data-name="staff_id"
+              includeBlank={value.length == 0}
+              onChange={this._handleStaffChange}
+          />)
+        }
+      }
+      else {
         select_components.push(
           <UI.Select options={this.state.staff_options}
-            prefix={`option-${i}`}
-            key={`${i}-${value}`}
-            defaultValue={value}
+            key="no-power"
+            defaultValue={this.state.staff_ids[0]}
             data-name="staff_id"
-            includeBlank={value.length == 0}
             onChange={this._handleStaffChange}
         />)
       }

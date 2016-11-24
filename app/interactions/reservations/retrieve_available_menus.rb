@@ -16,6 +16,7 @@ module Reservations
                            else
                              []
                            end
+
       params[:menu_id] = params[:menu_id].presence || reservation.try(:menu_id)
       params[:start_time_date_part] = params[:start_time_date_part].presence || reservation.try(:start_time_date)
       params[:start_time_time_part] = params[:start_time_time_part].presence || reservation.try(:start_time_time)
@@ -40,10 +41,13 @@ module Reservations
     def execute
       reservation.attributes = params.except(:reservation_id, :controller, :action, :from_reservation) if reservation
       menus_scope = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
-      menus = menus_scope.to_a
+
+      _category_with_menus = category_with_menus(menus_scope)
+
+      menus = _category_with_menus[:menus]
       menu_ids = menus.map(&:id)
 
-      staffs = if menus_scope.exists?
+      staffs = if menus.present?
                  selected_menu = if menu_ids.include?(params[:menu_id].to_i)
                                    shop.menus.find_by(id: params["menu_id"])
                                  elsif menu_ids.include?(reservation.try(:menu).try(:id))
@@ -57,9 +61,13 @@ module Reservations
                  []
                end
 
+      staffs = (staffs + _category_with_menus[:no_manpower_staffs]).uniq
+
       {
-        menus: menus, staffs: staffs, selected_menu: selected_menu, reservation: reservation,
-        category_menus: category_with_menus(menus_scope)
+        category_menus: _category_with_menus[:category_with_menus],
+        selected_menu: selected_menu,
+        staffs: staffs,
+        reservation: reservation
       }
     end
 
@@ -69,6 +77,8 @@ module Reservations
     # ]
     def category_with_menus(menus_scope)
       menus = menus_scope.includes(:categories)
+      menus = (menus + no_manpower_staffs_with_menus[:menus].includes(:categories)).uniq
+
       menu_categories = menus.map do |menu|
         categories = menu.categories.map do |category|
           { category: category }
@@ -96,10 +106,22 @@ module Reservations
 
       # When some menus doesn't have category, we just don't use any category
       if all_menu_categories.map{|category| category[:menus] }.flatten.size != menus.size
-        menus
+        {
+          menus: menus,
+          category_with_menus: menus,
+          no_manpower_staffs: no_manpower_staffs_with_menus[:staffs]
+        }
       else
-        all_menu_categories
+        {
+          menus: menus,
+          category_with_menus: all_menu_categories,
+          no_manpower_staffs: no_manpower_staffs_with_menus[:staffs]
+        }
       end
+    end
+
+    def no_manpower_staffs_with_menus
+      @no_manpower_staffs_with_menus ||= shop.no_manpower_staffs_with_menus(reservation_time)
     end
   end
 end

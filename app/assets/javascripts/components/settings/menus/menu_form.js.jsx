@@ -401,8 +401,9 @@ UI.define("Settings.MenuForm", function() {
                 return(
                   <dl key={`staff-${staff.id}`}>
                     {
-                      this.selectedStaffMenu(staff.id) ? <input type="hidden" name="menu[staff_menus_attributes][][id]" value={this.selectedStaffMenu(staff.id).id} /> : null
+                      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).id : ""} />
                     }
+
                     {
                       _.contains(this.defaultSelectedStaffIds, staff.id) && !this.selectedStaff(staff.id) ?
                       <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null

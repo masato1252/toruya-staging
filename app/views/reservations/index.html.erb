@@ -20,7 +20,6 @@
     <dl class="tableTTL">
       <dt class="time">開始<br>終了</dt>
       <dt class="reservation-states"></dt>
-      <dt class="calendar">カレンダー</dt>
       <dt class="menu">メニュー</dt>
       <dt class="customer">顧客氏名</dt>
     </dl>
@@ -34,7 +33,6 @@
           <dl class="">
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
-            <dd class="calendar">Calendar3</dd>
             <dd class="menu"><%= reservation.menu.name %></dd>
             <dd class="customer"><%= customer_names %></dd>
           </dl>

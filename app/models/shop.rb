@@ -17,6 +17,8 @@
 #
 
 class Shop < ApplicationRecord
+  include ReservationChecking
+
   validates :name, presence: true, uniqueness: { scope: :user_id }, format: { without: /\// }
   validates :short_name, presence: true, uniqueness: { scope: :user_id }
   validates :zip_code, presence: true
@@ -195,6 +197,36 @@ class Shop < ApplicationRecord
     )
 
     scoped.select("staffs.*").group("staffs.id")
+  end
+
+  # No manpower menus are available for anytime, just valid staffs work during that time.
+  def no_manpower_staffs_with_menus(business_time_range)
+    start_time = business_time_range.first
+    end_time = business_time_range.last
+
+    scoped = staffs.
+      joins(:menus).
+      where("menus.min_staffs_number" => nil).
+      joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
+             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}").
+      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
+             (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)
+
+    scoped = scoped.
+      where("business_schedules.full_time = ?", true).
+    or(
+      scoped.
+      where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
+      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
+    )
+
+    staffs = scoped.select("staffs.*").group("staffs.id")
+    _menus = menus.joins(:staff_menus).where("staff_menus.staff_id" => staffs.map(&:id)).where(min_staffs_number: nil)
+
+    {
+      staffs: staffs,
+      menus: _menus
+    }
   end
 
   private

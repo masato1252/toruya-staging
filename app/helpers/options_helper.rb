@@ -53,7 +53,7 @@ module OptionsHelper
     staffs.map do |s|
        {
           label: s.name, value: s.id.to_s,
-          maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.max_customers
+          maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.try(:max_customers)
        }
     end
   end

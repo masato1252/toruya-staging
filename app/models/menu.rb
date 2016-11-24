@@ -15,6 +15,8 @@
 #
 
 class Menu < ApplicationRecord
+  include ReservationChecking
+
   default_value_for :minutes, 60
   default_value_for :min_staffs_number, 1
   default_value_for :interval, 0
