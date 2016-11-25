@@ -124,10 +124,15 @@ UI.define("Reservation.Form", function() {
     },
 
     _isValidToReserve: function() {
-      return this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part &&
-        this.state.menu_id && this.state.staff_ids.length &&
-          $.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number &&
-            this._isValidCustomerNumber()
+      return (
+        this.state.start_time_date_part &&
+        this.state.start_time_time_part &&
+        this.state.end_time_time_part &&
+        this.state.menu_id &&
+        this.state.staff_ids.length &&
+        (this.state.menu_min_staffs_number ? $.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number : true) &&
+        this._isValidCustomerNumber()
+      )
     },
 
     _handleChange: function(event) {
@@ -200,7 +205,7 @@ UI.define("Reservation.Form", function() {
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
                         menu_max_seat_number: result["menu"]["selected_option"]["max_seat_number"],
                         staff_options: result["staff"]["options"],
-                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
+                        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
         });
 
         if (result["menu"]["group_options"].length == 0) {
@@ -239,7 +244,7 @@ UI.define("Reservation.Form", function() {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
           staff_options: result["staff"]["options"],
-          staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"])
+          staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
         });
       }).fail(function(errors){
       }).always(function() {

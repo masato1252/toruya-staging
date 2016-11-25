@@ -50,8 +50,6 @@ module Reservations
       staffs = if menus.present?
                  selected_menu = if menu_ids.include?(params[:menu_id].to_i)
                                    shop.menus.find_by(id: params[:menu_id])
-                                 elsif menu_ids.include?(reservation.try(:menu).try(:id))
-                                   reservation.try(:menu)
                                  else
                                    menus.first
                                  end
@@ -71,16 +69,18 @@ module Reservations
 
     # [
     #  {:category => @category, :menus=>[@menu1, @menu2 ...]},
-    #   ...
     # ]
     def category_with_menus(menus_scope)
       menus = menus_scope.includes(:categories)
       menus = (menus + no_manpower_menus.includes(:categories)).uniq
 
+      all_menu_categories = []
       menu_categories = menus.map do |menu|
         categories = menu.categories.map do |category|
           { category: category }
         end
+
+        all_menu_categories << categories
 
         {
           menu: menu,
@@ -88,22 +88,21 @@ module Reservations
         }
       end
 
-      all_menu_categories = menu_categories.map do |menu_category|
-        menu_category[:categories]
-      end.flatten.uniq
+      all_category_menus = []
 
-      all_menu_categories = all_menu_categories.map do |category|
+      all_menu_categories = all_menu_categories.flatten.uniq.map do |category|
         _menus = menu_categories.map do |menu_category|
           if menu_category[:categories].any? { |category_hash| category_hash[:category] == category[:category] }
             menu_category[:menu]
           end
         end.compact
 
+        all_category_menus << _menus
         category.merge(menus: _menus)
       end
 
       # When some menus doesn't have category, we just don't use any category
-      if all_menu_categories.map{ |category| category[:menus] }.flatten.uniq.size != menus.size
+      if all_category_menus.flatten.uniq.size != menus.size
         {
           menus: menus,
           category_with_menus: menus

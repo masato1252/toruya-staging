@@ -2,6 +2,18 @@
   <p>Please enter menu informations here.<br>Toruya will accept reservation based on this setting.</p>
 </div>
 
+<%
+  staff_menus = menu.staff_menus.to_a
+  staffs = menu.staffs
+
+  whole_staff_menus = super_user.staffs.map do |staff|
+    if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
+      staff_menu
+    else
+      menu.staff_menus.build(staff_id: staff.id)
+    end
+  end
+%>
 <%= react_component("UI.Settings.MenuForm", {
   save_menu_path: url,
   cancel_path: settings_menus_path,
@@ -17,7 +29,7 @@
   categories: react_attributes(super_user.categories),
   selected_categories: react_attributes(menu.categories),
   staffs: staff_attributes_options(super_user.staffs),
-  selected_staffs: staff_attributes_options(menu.staffs),
-  staff_menus: react_attributes(menu.staff_menus),
+  selected_staffs: staff_attributes_options(staffs),
+  staff_menus: react_attributes(whole_staff_menus),
   form_authenticity_token: form_authenticity_token
 })%>

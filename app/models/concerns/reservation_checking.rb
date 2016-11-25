@@ -8,7 +8,7 @@ module ReservationChecking
   private
 
   def check_reservations
-    if reservation_staffs.exists?
+    if reservations.exists?
       errors.add(:base, "There are reservations exists belongs to this staff.")
       throw(:abort)
     end

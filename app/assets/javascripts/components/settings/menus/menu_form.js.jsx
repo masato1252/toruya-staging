@@ -430,7 +430,7 @@ UI.define("Settings.MenuForm", function() {
                     <dd>
                       {
                         this.selectedStaff(staff.id) ? <input type="number"
-                             value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : null}
+                             value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : ""}
                              data-name="max-customers"
                              data-staff-id={staff.id}
                              onChange={this._handleStaffMaxCustomers}

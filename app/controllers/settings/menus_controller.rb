@@ -28,7 +28,7 @@ class Settings::MenusController < SettingsController
   # POST /settings/menus
   # POST /settings/menus.json
   def create
-    @menu = super_user.menus.new(menu_params.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes))
+    @menu = super_user.menus.new
 
     respond_to do |format|
       outcome = UpdateMenu.run(menu: @menu,
