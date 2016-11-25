@@ -132,18 +132,19 @@ UI.define("Settings.MenuForm", function() {
     },
 
     _isValidMenu: function() {
-      var selectedShopIds = $("#shopSelect input:checked").map(function() { return $(this).val() })
-      var maxCustomersList = $("[data-name=max-customers]").map(function() { return $(this).val() });
-      var selectedStaffNumber = $("[data-name=staff-selection]:checked").length;
+      var maxCustomersList = this.state.selectedStaffs.map(function(selectedStaff) {
+        return this.selectedStaffMenu(selectedStaff.id).maxCustomers
+      }.bind(this))
 
-      // (maxCustomersList.length ? maxCustomersList.length == selectedStaffNumber : true) condition
-      // is handle the _isValidMenu is faster than vom changes
-      return this.state.menu.name && this.state.menu.short_name &&
-      (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
-      (this.state.menu.min_staffs_number ? _.every(maxCustomersList) && maxCustomersList.length: true) &&
-      selectedShopIds.length > 0 &&
-      selectedStaffNumber > 0 &&
-      (maxCustomersList.length ? maxCustomersList.length == selectedStaffNumber : true)
+      return (
+        this.state.menu.name &&
+        this.state.menu.short_name &&
+        this.state.selectedShopIds.length > 0 &&
+        this.state.selectedStaffs.length > 0 &&
+        (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
+        (this.state.menu.min_staffs_number ? _.every(maxCustomersList) : true)
+      )
+
     },
 
     render: function() {
