@@ -14,7 +14,6 @@ class Reservations::AvailableOptionsController < DashboardController
     reservation_time = start_time..end_time
 
     @staffs = shop.available_staffs(@menu, reservation_time, params[:reservation_id])
-    @staffs = (@staffs + shop.no_manpower_staffs_with_menus(reservation_time)[:staffs]).uniq unless @menu.min_staffs_number
   end
 
   private

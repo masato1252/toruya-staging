@@ -200,13 +200,13 @@ class Shop < ApplicationRecord
   end
 
   # No manpower menus are available for anytime, just valid staffs work during that time.
-  def no_manpower_staffs_with_menus(business_time_range)
+  def no_manpower_menus(business_time_range)
     start_time = business_time_range.first
     end_time = business_time_range.last
 
-    scoped = staffs.
-      joins(:menus).
+    scoped = menus.
       where("menus.min_staffs_number" => nil).
+      joins(:staffs).
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}").
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
@@ -220,13 +220,7 @@ class Shop < ApplicationRecord
       where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
     )
 
-    staffs = scoped.select("staffs.*").group("staffs.id")
-    _menus = menus.joins(:staff_menus).where("staff_menus.staff_id" => staffs.map(&:id)).where(min_staffs_number: nil)
-
-    {
-      staffs: staffs,
-      menus: _menus
-    }
+    scoped.select("menus.*").group("menus.id")
   end
 
   private
