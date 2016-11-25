@@ -76,15 +76,6 @@ class Shop < ApplicationRecord
     start_time = business_time_range.first
     end_time = business_time_range.last
     distance_in_minutes = ((end_time - start_time)/60.0).round
-    reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
-
-    reservations_scope = reservations.where("reservations.start_time <= ? AND reservations.ready_time >= ?", end_time, start_time)
-    reservations_scope = reservations_scope.where.not("reservations.id = ?", reservation_id) if reservation_id
-
-    # when all staffs already have reservations at this time
-    if staff_ids.present? && reservations_scope.includes(:staffs).map(&:staff_ids).flatten.uniq == staff_ids
-      return Menu.none
-    end
 
     # menu that has reservation_setting and menu_reservation_setting_rules
     scoped = menus.
@@ -165,19 +156,10 @@ class Shop < ApplicationRecord
   def available_staffs(menu, business_time_range, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last + menu.interval.to_i.minutes
-    reservation_id = reservation_id.presence || nil # sql don't support reservation_id pass empty string
 
     # If this menu doesn't take any man power, then it could be assigned to anyone
     unless menu.min_staffs_number
       return menu.staffs
-    end
-
-    reservations_scope = reservations.where(menu: menu).where("start_time >= ? and ready_time <= ?", start_time, end_time)
-    reservations_scope = reservations_scope.where.not("reservations.id = ?", reservation_id) if reservation_id
-
-    # All staffs could do this menu already have reservation
-    if menu.staff_ids.present? && reservations_scope.includes(:staffs).map(&:staff_ids).flatten.uniq == menu.staff_ids
-      return Staff.none
     end
 
     scoped = menu.staffs.
@@ -227,9 +209,10 @@ class Shop < ApplicationRecord
 
   # staffs had reservations during that time
   def reserved_staff_ids(start_time, end_time, reservation_id=nil)
+    # reservation_id.presence: sql don't support reservation_id pass empty string
     @reserved_staff_ids ||= ReservationStaff.
       joins(reservation: :menu).
-      where.not(reservation_id: reservation_id).
+      where.not(reservation_id: reservation_id.presence).
       where.not("menus.min_staffs_number": nil).
       where("reservation_staffs.staff_id": staff_ids).
       where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)",
