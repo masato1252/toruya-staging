@@ -210,12 +210,14 @@ class Shop < ApplicationRecord
   # staffs had reservations during that time
   def reserved_staff_ids(start_time, end_time, reservation_id=nil)
     # reservation_id.presence: sql don't support reservation_id pass empty string
+    # start_time/ready_time checking is >, < not, >=, <= that means we accept reservation is overlap 1 minute
+
     @reserved_staff_ids ||= ReservationStaff.
       joins(reservation: :menu).
       where.not(reservation_id: reservation_id.presence).
       where.not("menus.min_staffs_number": nil).
       where("reservation_staffs.staff_id": staff_ids).
-      where("(reservations.start_time <= (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time >= ?)",
+      where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",
           end_time, start_time).
       pluck(:staff_id).uniq
   end
