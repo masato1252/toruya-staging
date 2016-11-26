@@ -6,14 +6,15 @@
   staff_menus = menu.staff_menus.to_a
   staffs = menu.staffs
 
-  whole_staff_menus = super_user.staffs.map do |staff|
+  menu_staffs_options = super_user.staffs.map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
-      staff_menu
+      MenuStaff.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
     else
-      menu.staff_menus.build(staff_id: staff.id)
+      MenuStaff.new(id: nil, name: staff.name, staff_id: staff.id, menu_id: menu.try(:id), max_customers: "", checked: false)
     end
   end
 %>
+
 <%= react_component("UI.Settings.MenuForm", {
   save_menu_path: url,
   cancel_path: settings_menus_path,
@@ -28,8 +29,6 @@
   selected_shops: react_attributes(menu.shops),
   categories: react_attributes(super_user.categories),
   selected_categories: react_attributes(menu.categories),
-  staffs: staff_attributes_options(super_user.staffs),
-  selected_staffs: staff_attributes_options(staffs),
-  staff_menus: react_attributes(whole_staff_menus),
+  menu_staffs_options: react_attributes(menu_staffs_options),
   form_authenticity_token: form_authenticity_token
 })%>

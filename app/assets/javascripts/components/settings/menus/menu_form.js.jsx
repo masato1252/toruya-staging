@@ -5,17 +5,15 @@ UI.define("Settings.MenuForm", function() {
     getInitialState: function() {
       this.defaultSelectedShopIds = this.props.selectedShops.map(function(shop) { return shop.id });
       this.defaultSelectedCategoryIds = this.props.selectedCategories.map(function(category) { return category.id });
-      this.defaultSelectedStaffIds = this.props.selectedStaffs.map(function(staff) { return staff.id });
 
       var start_date = this.props.selectedReservationSettingRule.start_date ?  moment(this.props.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : "";
       this.props.selectedReservationSettingRule.start_date = start_date;
 
       return ({
         menu: this.props.menu,
-        selectedStaffs: this.props.selectedStaffs,
-        staffMenus: this.props.staffMenus,
         selectedReservationSetting: this.props.selectedReservationSetting || {},
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {},
+        menuStaffsOptions: this.props.menuStaffsOptions || {},
         repeatingDateSentence: "",
         selectedShopIds: this.defaultSelectedShopIds
       });
@@ -25,14 +23,10 @@ UI.define("Settings.MenuForm", function() {
       this._retrieveRepeatingDates()
     },
 
-    selectedStaff: function(staff_id) {
-      return _.find(this.state.selectedStaffs, function(selected_staff) {
-         return `${selected_staff.id}` == `${staff_id}`
+    selectedMenuStaffOption: function(staff_id) {
+      return _.find(this.state.menuStaffsOptions, function(menuStaffOption) {
+         return `${menuStaffOption.staffId}` == `${staff_id}`
       })
-    },
-
-    selectedStaffMenu: function(staff_id) {
-      return _.find(this.state.staffMenus, function(staff_menu) { return `${staff_menu.staffId}` == `${staff_id}` })
     },
 
     switchReservationType: function(event) {
@@ -91,32 +85,15 @@ UI.define("Settings.MenuForm", function() {
     },
 
     _handleStaffCheck: function(event) {
-      var _this = this;
-      var newSelectedStaffs;
+      this.selectedMenuStaffOption(event.target.value).checked = !this.selectedMenuStaffOption(event.target.value).checked
 
-      if (this.selectedStaff(event.target.value)) {
-        newSelectedStaffs = _.reject(_this.state.selectedStaffs.slice(0), function(selected_staff) {
-          return `${selected_staff.id}` == event.target.value
-        })
-      }
-      else {
-        newSelectedStaffs = _this.state.selectedStaffs.slice(0)
-        newSelectedStaffs.push({id: event.target.value})
-      }
-
-      this.setState({selectedStaffs: newSelectedStaffs});
+      this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
     },
 
     _handleStaffMaxCustomers: function(event) {
-      var newStaffMenus = this.state.staffMenus.slice(0);
+      this.selectedMenuStaffOption(`${event.target.dataset.staffId}`).maxCustomers = event.target.value;
 
-      newStaffMenus.forEach(function(staff_menu) {
-        if (`${staff_menu.staffId}` == `${event.target.dataset.staffId}`) {
-          staff_menu.maxCustomers = event.target.value;
-        }
-      });
-
-      this.setState({staffMenus: newStaffMenus});
+      this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
     },
 
     _handleShopCheck: function() {
@@ -132,17 +109,21 @@ UI.define("Settings.MenuForm", function() {
     },
 
     _isValidMenu: function() {
-      var maxCustomersList = this.state.selectedStaffs.map(function(selectedStaff) {
-        return this.selectedStaffMenu(selectedStaff.id).maxCustomers
-      }.bind(this))
+      var checkedMenuStaffsOptions = _.filter(this.state.menuStaffsOptions, function(menuStaffOption) {
+        return menuStaffOption.checked
+      })
+
+      var checkedMaxCustomerValues = checkedMenuStaffsOptions.map(function(checkedMenuStaffOption) {
+        return checkedMenuStaffOption.maxCustomers
+      })
 
       return (
         this.state.menu.name &&
         this.state.menu.short_name &&
         this.state.selectedShopIds.length > 0 &&
-        this.state.selectedStaffs.length > 0 &&
+        checkedMenuStaffsOptions.length > 0 &&
         (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
-        (this.state.menu.min_staffs_number ? _.every(maxCustomersList) : true)
+        (this.state.menu.min_staffs_number ? _.every(checkedMaxCustomerValues) : true)
       )
 
     },
@@ -401,38 +382,39 @@ UI.define("Settings.MenuForm", function() {
 
           <h3>対応従業員</h3>
           <div id="doStaff" className="formRow">
-              {this.props.staffs.map(function(staff) {
+              {this.state.menuStaffsOptions.map(function(menuStaffOption) {
                 return(
-                  <dl key={`staff-${staff.id}`}>
+                  <dl key={`staff-${menuStaffOption.staffId}`}>
                     {
-                      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).id : ""} />
+                      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={menuStaffOption.id || ""} />
                     }
 
                     {
-                      _.contains(this.defaultSelectedStaffIds, staff.id) && !this.selectedStaff(staff.id) ?
+                      menuStaffOption.id && !menuStaffOption.checked ?
                       <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
                     }
 
-                    <dt>{staff.name}</dt>
+                    <dt>{menuStaffOption.name}</dt>
                     <dd className="capability">
                       <input
                         type="checkbox"
                         className="BTNyesno"
                         name="menu[staff_menus_attributes][][staff_id]"
-                        id={`staff-${staff.id}`}
-                        value={staff.id}
+                        id={`staff-${menuStaffOption.staffId}`}
+                        value={menuStaffOption.staffId}
                         data-name="staff-selection"
-                        checked={!!this.selectedStaff(staff.id)}
+                        checked={menuStaffOption.checked}
                         onChange={this._handleStaffCheck}
                       />
-                    <label htmlFor={`staff-${staff.id}`}></label>
+                    <label htmlFor={`staff-${menuStaffOption.staffId}`}></label>
                     </dd>
                     <dd>
                       {
-                        this.selectedStaff(staff.id) ? <input type="number"
-                             value={this.selectedStaffMenu(staff.id) ? this.selectedStaffMenu(staff.id).maxCustomers : ""}
+                        menuStaffOption.checked ?
+                          <input type="number"
+                             value={menuStaffOption.maxCustomers}
                              data-name="max-customers"
-                             data-staff-id={staff.id}
+                             data-staff-id={menuStaffOption.staffId}
                              onChange={this._handleStaffMaxCustomers}
                              name="menu[staff_menus_attributes][][max_customers]" /> : null
                       }
