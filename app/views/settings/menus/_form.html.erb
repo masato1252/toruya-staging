@@ -6,12 +6,22 @@
   staff_menus = menu.staff_menus.to_a
   staffs = menu.staffs
 
-  menu_staffs_options = super_user.staffs.map do |staff|
+  menu_staffs_options = super_user.staffs.order("created_at").map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
-      MenuStaff.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
+      Option.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
     else
-      MenuStaff.new(id: nil, name: staff.name, staff_id: staff.id, menu_id: menu.try(:id), max_customers: "", checked: false)
+      Option.new(id: nil, name: staff.name, staff_id: staff.id, menu_id: menu.try(:id), max_customers: "", checked: false)
     end
+  end
+
+  shops = menu.shops.to_a
+  shops_options = super_user.shops.order("created_at").map do |shop|
+    Option.new(id: shop.id, name: shop.name, checked: shops.any? { |s| s.id == shop.id })
+  end
+
+  categories = menu.categories.to_a
+  cateogries_options = super_user.categories.order("created_at").map do |category|
+    Option.new(id: category.id, name: category.name, checked: categories.any? { |c| c.id == category.id })
   end
 %>
 
@@ -25,10 +35,8 @@
   reservation_settings: reservation_setting_options(super_user.reservation_settings.order("id"), menu),
   selected_reservation_setting: reservation_setting_option(reservation_setting, menu),
   selected_reservation_setting_rule: menu_reservation_setting_rule,
-  shops: react_attributes(super_user.shops.order("id")),
-  selected_shops: react_attributes(menu.shops),
-  categories: react_attributes(super_user.categories),
-  selected_categories: react_attributes(menu.categories),
+  shops_options: react_attributes(shops_options),
+  categories_options: react_attributes(cateogries_options),
   menu_staffs_options: react_attributes(menu_staffs_options),
   form_authenticity_token: form_authenticity_token
 })%>

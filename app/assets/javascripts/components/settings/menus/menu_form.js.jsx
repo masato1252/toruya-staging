@@ -3,9 +3,6 @@
 UI.define("Settings.MenuForm", function() {
   var MenuForm = React.createClass({
     getInitialState: function() {
-      this.defaultSelectedShopIds = this.props.selectedShops.map(function(shop) { return shop.id });
-      this.defaultSelectedCategoryIds = this.props.selectedCategories.map(function(category) { return category.id });
-
       var start_date = this.props.selectedReservationSettingRule.start_date ?  moment(this.props.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : "";
       this.props.selectedReservationSettingRule.start_date = start_date;
 
@@ -13,9 +10,9 @@ UI.define("Settings.MenuForm", function() {
         menu: this.props.menu,
         selectedReservationSetting: this.props.selectedReservationSetting || {},
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {},
-        menuStaffsOptions: this.props.menuStaffsOptions || {},
-        repeatingDateSentence: "",
-        selectedShopIds: this.defaultSelectedShopIds
+        shopsOptions: this.props.shopsOptions,
+        menuStaffsOptions: this.props.menuStaffsOptions,
+        repeatingDateSentence: ""
       });
     },
 
@@ -96,9 +93,14 @@ UI.define("Settings.MenuForm", function() {
       this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
     },
 
-    _handleShopCheck: function() {
-      var selectedShopIds = $("#shopSelect input:checked").map(function() { return $(this).val() })
-      this.setState({selectedShopIds: Array.prototype.slice.call(selectedShopIds)}, this._retrieveRepeatingDates)
+    _handleShopCheck: function(event) {
+      var selectedShopOption = _.find(this.state.shopsOptions, function(shopOption) {
+        return `${shopOption.id}` == `${event.target.value}`
+      })
+
+      selectedShopOption.checked = !selectedShopOption.checked
+
+      this.setState({shopsOptions: this.state.shopsOptions}, this._retrieveRepeatingDates)
     },
 
     _handleMenuData: function(event) {
@@ -113,6 +115,10 @@ UI.define("Settings.MenuForm", function() {
         return menuStaffOption.checked
       })
 
+      var checkedShopsOptions = _.filter(this.state.shopsOptions, function(shopOption) {
+        return shopOption.checked
+      })
+
       var checkedMaxCustomerValues = checkedMenuStaffsOptions.map(function(checkedMenuStaffOption) {
         return checkedMenuStaffOption.maxCustomers
       })
@@ -120,7 +126,7 @@ UI.define("Settings.MenuForm", function() {
       return (
         this.state.menu.name &&
         this.state.menu.short_name &&
-        this.state.selectedShopIds.length > 0 &&
+        checkedShopsOptions.length > 0 &&
         checkedMenuStaffsOptions.length > 0 &&
         (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
         (this.state.menu.min_staffs_number ? _.every(checkedMaxCustomerValues) : true)
@@ -228,19 +234,19 @@ UI.define("Settings.MenuForm", function() {
 
           <h3 className="shopSelect">利用店舗</h3>
           <div id="shopSelect" className="formRow">
-              {this.props.shops.map(function(shop) {
+              {this.state.shopsOptions.map(function(shopOption) {
                 return(
-                  <dl className="checkbox" key={`shop-${shop.id}`}>
+                  <dl className="checkbox" key={`shop-${shopOption.id}`}>
                     <dd>
                       <input
                         type="checkbox"
                         name="menu[shop_ids][]"
-                        id={`shop-${shop.id}`}
-                        defaultValue={shop.id}
-                        defaultChecked={_.contains(this.defaultSelectedShopIds, shop.id)}
+                        id={`shop-${shopOption.id}`}
+                        value={shopOption.id}
+                        checked={shopOption.checked}
                         onChange={this._handleShopCheck}
                       />
-                    <label htmlFor={`shop-${shop.id}`}>{shop.name}</label>
+                    <label htmlFor={`shop-${shopOption.id}`}>{shopOption.name}</label>
                     </dd>
                   </dl>
                 );
@@ -362,18 +368,18 @@ UI.define("Settings.MenuForm", function() {
             <a href={this.props.newCategoryPath} className="BTNyellow addNew">ADD a New Category</a>
           </h3>
           <div id="category" className="formRow">
-              {this.props.categories.map(function(category) {
+              {this.props.categoriesOptions.map(function(categoryOption) {
                 return(
-                  <dl className="checkbox" key={`category-${category.id}`}>
+                  <dl className="checkbox" key={`category-${categoryOption.id}`}>
                     <dd>
                       <input
                         type="checkbox"
                         name="menu[category_ids][]"
-                        id={`category-${category.id}`}
-                        defaultValue={category.id}
-                        defaultChecked={_.contains(this.defaultSelectedCategoryIds, category.id)}
+                        id={`category-${categoryOption.id}`}
+                        defaultValue={categoryOption.id}
+                        defaultChecked={categoryOption.checked}
                       />
-                    <label htmlFor={`category-${category.id}`}>{category.name}</label>
+                    <label htmlFor={`category-${categoryOption.id}`}>{categoryOption.name}</label>
                     </dd>
                   </dl>
                 );
