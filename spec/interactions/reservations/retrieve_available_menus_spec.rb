@@ -2,8 +2,8 @@ require "rails_helper"
 
 RSpec.describe Reservations::RetrieveAvailableMenus do
   describe "#execute" do
-    let(:now) { Time.zone.now }
-    let(:time_range) { now..now.advance(minutes: 60) }
+    let(:now) { Time.local(2016, 11, 9, 9)}
+    let(:time_range) { now..(now.advance(minutes: 60)) }
     let(:user) { shop.user }
     let(:shop) { FactoryGirl.create(:shop) }
     let(:staff) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
