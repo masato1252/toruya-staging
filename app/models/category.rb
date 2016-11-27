@@ -12,6 +12,7 @@
 class Category < ApplicationRecord
   has_many :menu_categories, dependent: :destroy
   has_many :menus, through: :menu_categories
+  belongs_to :user
 
-  validates :name, presence: true, length: { maximum: 15 }
+  validates :name, presence: true, uniqueness: { scope: [:user_id] }, length: { maximum: 15 }
 end

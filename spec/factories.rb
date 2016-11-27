@@ -72,6 +72,28 @@ FactoryGirl.define do
     key Rank::REGULAR_KEY
   end
 
+  factory :category do
+    association :user
+    sequence(:name) { |n| "category-#{n}" }
+
+    transient do
+      menus []
+    end
+
+    after(:create) do |category, proxy|
+      if proxy.menus.present?
+        proxy.menus.each do |menu|
+          FactoryGirl.create(:menu_category, category: category, menu: menu)
+        end
+      end
+    end
+  end
+
+  factory :menu_category do
+    association :menu
+    association :category
+  end
+
   factory :staff_menu do
     association :staff
     association :menu

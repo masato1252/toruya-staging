@@ -1,21 +1,13 @@
 module Reservations
   class RetrieveAvailableMenus < ActiveInteraction::Base
     set_callback :type_check, :before do
-      params[:staff_ids] = if params[:staff_ids].present?
-                             params[:staff_ids].split(",").map{ |s| s if s.present? }.compact.uniq
-                           elsif reservation
-                             reservation.staff_ids
-                           else
-                             []
-                           end
-
       params[:customer_ids] = if params[:customer_ids].present?
-                             params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
-                           elsif reservation
-                             reservation.customer_ids
-                           else
-                             []
-                           end
+                                params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
+                              elsif reservation
+                                reservation.customer_ids
+                              else
+                                []
+                              end
 
       params[:menu_id] = params[:menu_id].presence || reservation.try(:menu_id)
       params[:start_time_date_part] = params[:start_time_date_part].presence || reservation.try(:start_time_date)
@@ -26,20 +18,20 @@ module Reservations
       self.reservation_time ||= start_time..end_time
     end
 
-    object :shop, class: Shop
-    object :reservation_time, class: Range, default: nil
-    object :reservation, class: Reservation, default: nil
-    hash :params do
+    object :shop
+    object :reservation_time, class: Range
+    object :reservation, default: nil
+    # XXX: ActiveInteraction BUG, it need to pass default value here, otherwise it would not strip other keys.
+    hash :params, default: {} do
       string :start_time_date_part, default: nil
       string :start_time_time_part, default: nil
       string :end_time_time_part, default: nil
       integer :menu_id, default: nil
-      array :staff_ids, default: nil
       array :customer_ids, default: nil
     end
 
     def execute
-      reservation.attributes = params.except(:reservation_id, :controller, :action, :from_reservation) if reservation
+      reservation.attributes = params if reservation
       menus_scope = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
 
       _category_with_menus = category_with_menus(menus_scope)
@@ -66,6 +58,8 @@ module Reservations
         reservation: reservation
       }
     end
+
+    private
 
     # [
     #  {:category => @category, :menus=>[@menu1, @menu2 ...]},

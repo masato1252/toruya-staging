@@ -215,7 +215,7 @@ RSpec.describe Shop, type: :model do
           end
 
           context "when the reservation's menu min_staffs_number is nil" do
-            let(:menu) { FactoryGirl.create(:menu, :easy, user: user, shop: shop) }
+            let(:menu) { FactoryGirl.create(:menu, :no_manpower, user: user, shop: shop) }
 
             it "returns available reservation menus ignore min_staffs_number nil reservations" do
               expect(shop.available_reservation_menus(time_range)).to include(menu)
