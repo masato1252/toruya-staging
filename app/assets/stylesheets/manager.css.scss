@@ -123,9 +123,6 @@ select, input[type="date"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background-image: url(asset-path("screen/calendar_select.png"));
-  background-repeat: no-repeat;
-  background-position: right 10px center;
   line-height: 35px;
   height: 35px;
   padding: 0 25px 0 15px;
@@ -218,13 +215,6 @@ header a, header a:link, header a:visited {
   color: #d0d0d0;
   position: relative;
 }
-header #NAVhome a { background-image: url(asset-path("screen/mainnav_home.png")); }
-header #NAVtoday a { background-image: url(asset-path("screen/mainnav_today.png")); }
-header #NAVcaution a { background-image: url(asset-path("screen/mainnav_caution.png")); }
-header #NAVhelp a { background-image: url(asset-path("screen/mainnav_help.png")); }
-header #NAVsetting a { background-image: url(asset-path("screen/mainnav_setting.png")); }
-header #NAVpublish a { background-image: url(asset-path("screen/mainnav_publish.png")); }
-header #NAVlogout a { background-image: url(asset-path("screen/mainnav_logout.png")); }
 header select {
   font-size: 15px;
   background-color: #ddd;
@@ -235,7 +225,6 @@ header #NAVcaution a strong {
   top: 0;
   text-align: center;
   color: #fff;
-  background: transparent url(asset-path("screen/mainnav_caution_num.png")) center center no-repeat;
   display: block;
   width: 20px;
   height: 20px;
@@ -260,7 +249,6 @@ footer {
   float: left;
 }
 .login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
-  background-image: url(asset-path("screen/logo_white.png"));
   width: 99px;
   height: 31px;
   text-indent: -9999px;
@@ -333,7 +321,6 @@ footer {
   line-height: 2em;
   text-align: center;
   width: 25%;
-  background: #d0d0d0 url(asset-path("screen/firstsetting_steps.png")) right center no-repeat;
   border-width: 5px 3px;
   border-style: solid;
   border-color: #f2f2f2;
@@ -427,16 +414,6 @@ footer {
   background-repeat: no-repeat;
   background-position: left 20px center;
 }
-#sideNav dl.shop dt a { background-image: url(asset-path("screen/settingnav_shop.png")); }
-#sideNav dl.staff dt a { background-image: url(asset-path("screen/settingnav_staff.png")); }
-#sideNav dl.contacts dt a { background-image: url(asset-path("screen/settingnav_contacts.png")); }
-#sideNav dl.calendars dt a { background-image: url(asset-path("screen/settingnav_calendar.png")); }
-#sideNav dl.publish dt a { background-image: url(asset-path("screen/settingnav_publish.png")); }
-#sideNav dl.share dt a { background-image: url(asset-path("screen/settingnav_share.png")); }
-#sideNav dl.apps dt a { background-image: url(asset-path("screen/settingnav_apps.png")); }
-#sideNav dl.account dt a, #sideNav dl.settings dt a { background-image: url(asset-path("screen/settingnav_account.png")); }
-#sideNav dl.logout dt a { background-image: url(asset-path("screen/settingnav_logout.png")); }
-#sideNav dl.menu dt a { background-image: url(asset-path("screen/settingnav_menu.png")); }
 #sideNav dl.shopSelect dt {
   text-align: center;
   padding: 20px;
@@ -628,7 +605,6 @@ input[type="radio"] + label, input[type="checkbox"] + label, #MonthlyFrameSettin
   line-height: 2em;
   padding-left: 25px;
 }
-input[type="radio"]:checked + label, input[type="checkbox"]:checked + label { background: transparent url(asset-path("screen/footer_flow_done.png")) left center no-repeat; }
 .BTNswitch, .BTNselect {
   border-radius: 5px; /* 記述無し */
   -moz-border-radius: 5px; /* Firefox */
@@ -907,8 +883,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   background-position: center center;
 }
-#calendar .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
-#calendar .days .today a.here { background-image: url(asset-path("screen/calendar_today.png")); }
 #calStatus, #customer #resultList ul, #resNew #customers ul {
   padding-top: 10px;
   text-align: left;
@@ -923,11 +897,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   padding-left: 27px;
 }
-#calStatus dd.checkin, #resList .checkin .calendar { background-image: url(asset-path("screen/calsts_checkin.png")); }
-#calStatus dd.checkout, #resList .checkout .calendar, #customer #resultList ul li.regular, #resNew #customers ul li.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
-#calStatus dd.noshow, #resList .noshow .calendar { background-image: url(asset-path("screen/calsts_noshow.png")); }
-#calStatus dd.pending, #resList .pending .calendar, #customer #resultList ul li.vip, #resNew #customers ul li.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
-#calStatus dd.reserved, #resList .reserved .calendar { background-image: url(asset-path("screen/calsts_reserved.png")); }
 #resList {
   background: #fff;
   min-width: 476px;
@@ -1008,7 +977,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #resList .float dl dd a.BTNorange { border-color: #b0450d; }
 #resList .float dl dd a.BTNtarco { border-color: #60938a; }
 #resList .float .bubbleTop {
-  background: transparent url(asset-path("screen/float_top.png")) top center no-repeat;
   height: 8px;
   width: 100%;
   position: absolute;
@@ -1027,11 +995,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
     width: 170px;
     height: inherit;
 }
-#mainNav #NAVnewResv a { background-image: url(asset-path("screen/btn_newresv.png")); }
-#mainNav #NAVsearchResv a { background-image: url(asset-path("screen/btn_searchresv.png")); }
-#mainNav #NAVcustomers a { background-image: url(asset-path("screen/btn_customers.png")); }
-#mainNav #NAVaddCustomer a { background-image: url(asset-path("screen/btn_addcustomer.png")); }
-#mainNav #NAVsave a { background-image: url(asset-path("screen/btn_save.png")); }
 .shopIndex #footer { display: none; }
 /* Search */
 #searchRev {
@@ -1122,8 +1085,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   background-position: center center;
 }
-#searchRev .calendars .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
-#searchRev .calendars .days .today a { background-image: url(asset-path("screen/calendar_today.png")); }
 #searchRev .footer { padding: 10px 20px; }
 /* Customer */
 #customer #resultList {
@@ -1153,8 +1114,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   padding-left: 32px;
 }
-#customer #resultList dl.regular, #resNew #customerList dl.regular { background-image: url(asset-path("screen/calsts_checkout.png")); }
-#customer #resultList dl.vip, #resNew #customerList dl.vip { background-image: url(asset-path("screen/calsts_pending.png")); }
 #customer #resultList dt, #resNew #customerList dt { font-size: 15px; }
 #customer #resultList dd, #resNew #customerList dt .place {
   text-align: right;
@@ -1273,7 +1232,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 .customer footer ul li input {
   text-indent: 45px;
   width: 100%;
-  background: #858585 url(asset-path("screen/footer_search.png")) no-repeat 10px center;
   padding: 0;
 }
 .customer footer ul li input:placeholder-shown { color: #D8D8D8; }
@@ -1396,11 +1354,9 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   font-size: 21px;
 }
 #resNew #resInfo h2 {
-  background-image: url(asset-path("screen/res_detail.png"));
   text-indent: 40px;
 }
 #resNew #customers h2 {
-  background-image: url(asset-path("screen/res_customer.png"));
   text-indent: 35px;
 }
 #resNew #customers h2 #addCustomer {
@@ -1414,7 +1370,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #resNew #customerList dl dt, #resNew #customerList dl dd { vertical-align: middle; }
 #resNew #customerList dl dt { width: 180px; }
 #resNew #customerList dl dd a, #resNew #customerList dl dd a:link, #resNew #customerList dl dd a:visited {
-  background-image: url(asset-path("screen/btn_delete_ss.png"));
   background-position: center center;
   background-repeat: no-repeat;
   width: 10px;
@@ -1447,7 +1402,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   margin-left: 20px;
 }
 .resNew footer #newResFlow ol {
-  background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
   line-height: 20px;
   height: 20px;
   padding: 5px 25px 5px 10px;
@@ -1456,17 +1410,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 .resNew footer #newResFlow ol:last-child { background-image: none; }
 .resNew footer #newResFlow ol.done {
   color: #6fa89f;
-  background-image:
-    url(asset-path("screen/footer_flow_arrow.png")), /* 最前面の背景レイヤーの背景画像 */
-    url(asset-path("screen/footer_flow_done.png"));
-
-  background-repeat:
-  no-repeat, /* 最前面の背景レイヤーに対応 */
-  no-repeat;
-  
-  background-position:
-  right center, /* 最前面の背景レイヤーに対応 */
-  left 8px center;
   padding-left: 25px;
 }
 .resNew footer #newResFlow ol.now {
@@ -1480,11 +1423,9 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   padding-right: 10px;
 }
 .resNew footer #BTNfunctions li a#BTNsave {
-  background-image: url(asset-path("screen/btn_save_s.png"));
   padding-left: 55px;
 }
 .resNew footer #BTNfunctions li a#BTNdel {
-  background-image: url(asset-path("screen/btn_delete_s.png"));
   padding-left: 40px;
 }
 /*clear all*/
