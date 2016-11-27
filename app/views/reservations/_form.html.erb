@@ -4,7 +4,7 @@
                         start_time_time_part: start_time,
                         end_time_time_part: end_time,
                         staff_ids: reservation.staff_ids.map(&:to_s),
-                        customers: reservation.customers.map { |c| { label: c.name, value: c.id, level: c.rank_id } }
+                        customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
                       from_customer_id: params[:from_customer_id],
                       from_shop_id: params[:from_shop_id],

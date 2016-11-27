@@ -18,7 +18,7 @@ UI.define("Common.CustomerOption", function() {
       return(
         <dl className={`customer-option ${this.props.selected_customer_id && this.props.selected_customer_id == this.props.customer.value ? "here" : null}`}>
           <dd onClick={this._handleClick} className="customer-symbol">
-            <span className={`customer-level-symbol ${this.props.customer.level}`} />
+            <span className={`customer-level-symbol ${this.props.customer.rank.key}`} />
           </dd>
           <dt onClick={this._handleClick}>
             <p>{this.props.customer.label}</p>
