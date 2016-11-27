@@ -1,5 +1,6 @@
 //= require "components/shared/select"
 //= require "components/shared/customers_list"
+//= require "components/shared/processing_bar"
 
 "use strict";
 
@@ -22,12 +23,13 @@ UI.define("Reservation.Form", function() {
         menu_max_seat_number: this.props.maxSeatNumber,
         menu_group_options: this.props.menuGroupOptions || [],
         staff_options: this.props.staffOptions || [],
+        processing: false
       });
     },
 
     componentWillMount: function() {
-      this._retrieveAvailableTimes = _.debounce(this._retrieveAvailableTimes, 1000); // delay 1 second
-      this._retrieveAvailableMenus = _.debounce(this._retrieveAvailableMenus, 1000); // delay 1 second
+      // this._retrieveAvailableTimes = _.debounce(this._retrieveAvailableTimes, 1000); // delay 1 second
+      // this._retrieveAvailableMenus = _.debounce(this._retrieveAvailableMenus, 1000); // delay 1 second
     },
 
     componentDidMount: function() {
@@ -168,12 +170,20 @@ UI.define("Reservation.Form", function() {
         url: this.props.availableTimesPath,
         data: {date: this.state.start_time_date_part},
         dataType: "json",
-      }).done(
+        beforeSend: function() {
+          _this.setState({ processing: true });
+        }
+      })
+      .done(
         function(result) {
-          _this.setState({start_time_restriction: result["start_time_restriction"], end_time_restriction: result["end_time_restriction"]});
+          _this.setState({
+            start_time_restriction: result["start_time_restriction"],
+            end_time_restriction: result["end_time_restriction"],
+            processing: false
+          });
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({Loading: false});
+        _this.setState({ processing: false });
       });
     },
 
@@ -198,7 +208,11 @@ UI.define("Reservation.Form", function() {
           customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
         },
         dataType: "json",
-      }).done(
+        beforeSend: function() {
+          _this.setState({ processing: true });
+        }
+      })
+      .done(
       function(result) {
         _this.setState({menu_group_options: result["menu"]["group_options"],
                         menu_id: result["menu"]["selected_option"]["id"],
@@ -215,10 +229,9 @@ UI.define("Reservation.Form", function() {
         setTimeout(function() {
           _this.applySelect2();
         }, 0);
-
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({Loading: false});
+        _this.setState({ processing: false });
       });
     },
 
@@ -239,16 +252,21 @@ UI.define("Reservation.Form", function() {
           menu_id: this.state.menu_id
         },
         dataType: "json",
-      }).done(
+        beforeSend: function() {
+          _this.setState({ processing: true });
+        }
+      })
+      .done(
       function(result) {
         _this.setState({
           menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
           staff_options: result["staff"]["options"],
-          staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
+          staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1),
+          processing: false
         });
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({Loading: false});
+        _this.setState({ processing: false });
       });
     },
 
@@ -303,6 +321,7 @@ UI.define("Reservation.Form", function() {
     render: function() {
       return (
         <div>
+          <UI.ProcessingBar processing={this.state.processing} />
           <div id="resNew" className="contents">
             <div id="resInfo" className="contBody">
               <h2>予約詳細</h2>
