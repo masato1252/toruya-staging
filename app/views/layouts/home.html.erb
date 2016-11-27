@@ -9,16 +9,7 @@
   </head>
 
   <body class="shopSelect">
-    <header>
-      <dl>
-        <dd>
-          <%= link_to "Toruya", root_path, id: "logo" %>
-        </dd>
-      </dl>
-      <dl>
-        <dd id="NAVsetting"><%= link_to "設定", settings_shops_path %></dd>
-      </dl>
-    </header>
+    <%= render "layouts/header_bar" %>
     <div class="container">
       <%= flash_messages %>
       <%= yield %>

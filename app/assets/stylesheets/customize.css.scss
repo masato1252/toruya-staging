@@ -167,6 +167,14 @@ header dl:first-child dd {
     width: 135px;
   }
 }
+
+header a.setting {
+  padding-top: 0;
+
+  i {
+    font-size: 6em !important;
+  }
+}
 /* Overwrite END */
 
 /* New Design START */
