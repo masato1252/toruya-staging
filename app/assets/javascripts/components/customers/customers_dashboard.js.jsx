@@ -46,8 +46,11 @@ UI.define("Customers.Dashboard", function() {
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
         this.setState(
-          {selected_customer_id: customer_id, customer: selected_customer, processing: true},
-          this.fetchCustomerDetails);
+          {selected_customer_id: customer_id, customer: selected_customer, processing: true}, function() {
+            this.fetchCustomerDetails();
+            this.CustomerReservationsView.fetchReservations();
+          }.bind(this)
+          );
       }
     },
 
@@ -167,21 +170,10 @@ UI.define("Customers.Dashboard", function() {
     },
 
     _handleCreatedCustomer: function(customer) {
-      // if (this.isCustomerdataValid()) {
-        // var valuesToSubmit = $(this.customerForm).serialize();
-        //
-        // $.ajax({
-        //   type: "POST",
-        //   url: this.props.saveCustomerPath, //sumbits it to the given url of the form
-        //   data: valuesToSubmit,
-        //   dataType: "JSON"
-        // }).success(function(result){
-          if (!this.state.customers.find(function(c) { return(c.id == customer.id); })) {
-            this.state.customers.unshift(customer)
-          }
-          this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
-        // });
-      // }
+      if (!this.state.customers.find(function(c) { return(c.id == customer.id); })) {
+        this.state.customers.unshift(customer)
+      }
+      this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
     },
 
     removeOption: function(optionType, index) {
@@ -280,6 +272,7 @@ UI.define("Customers.Dashboard", function() {
       if (this.state.reservation_mode) {
         return (
           <UI.Customers.CustomerReservationsView
+            ref={(c) => this.CustomerReservationsView = c }
             customer={this.state.customer}
             switchReservationMode={this.switchReservationMode}
             customerReservationsPath={this.props.customerReservationsPath}
