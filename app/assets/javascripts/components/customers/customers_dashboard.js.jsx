@@ -21,7 +21,8 @@ UI.define("Customers.Dashboard", function() {
         customer: this.props.customer,
         edit_mode: true,
         reservation_mode: this.props.reservationMode,
-        processing: false});
+        processing: false
+      });
     },
 
     fetchCustomerDetails: function() {
@@ -48,7 +49,7 @@ UI.define("Customers.Dashboard", function() {
         this.setState(
           {selected_customer_id: customer_id, customer: selected_customer, processing: true}, function() {
             this.fetchCustomerDetails();
-            this.CustomerReservationsView.fetchReservations();
+            this.CustomerReservationsView.fetchReservations()
           }.bind(this)
           );
       }

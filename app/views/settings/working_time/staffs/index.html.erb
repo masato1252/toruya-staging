@@ -15,7 +15,7 @@
         <dt><%= staff.name %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("common.edit"), edit_settings_working_time_staff_path(staff), class: "BTNtarco" %>
+          <%= link_to t("action.edit"), edit_settings_working_time_staff_path(staff), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>

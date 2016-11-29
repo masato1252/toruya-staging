@@ -4,7 +4,7 @@ class Settings::MenusController < SettingsController
   # GET /settings/menus
   # GET /settings/menus.json
   def index
-    @menus = super_user.menus.includes(:staffs).all
+    @menus = super_user.menus.includes(:staffs, :reservation_setting).all
   end
 
   # GET /settings/menus/1

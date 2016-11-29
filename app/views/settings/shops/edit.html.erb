@@ -1,2 +1,7 @@
-<%= render "info" %>
+<div id="subNav">
+  <h2>基本情報 − <%= t("settings.shop.new_title")%></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.shop.info_1") %><br><%= t("settings.shop.info_2") %></p>
+</div>
 <%= render 'form', shop: @shop, url: settings_shop_path(shop) %>

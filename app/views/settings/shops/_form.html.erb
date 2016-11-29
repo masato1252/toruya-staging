@@ -20,25 +20,25 @@
   <h3>連絡先</h3>
   <div id="contacts" class="formRow">
     <dl>
-      <dt>Zip Code<strong>必須項目</strong></dt>
+      <dt><%= t("common.zip_code") %><strong>必須項目</strong></dt>
       <dd>
         <%= f.text_field :zip_code, placeholder: true %>
       </dd>
     </dl>
     <dl>
-      <dt>住所<strong>必須項目</strong></dt>
+      <dt><%= t("common.address") %><strong>必須項目</strong></dt>
       <dd>
         <%= f.text_field :address, placeholder: true %>
       </dd>
     </dl>
     <dl>
-      <dt>TEL<strong>必須項目</strong></dt>
+      <dt><%= t("common.phone_number") %><strong>必須項目</strong></dt>
       <dd>
         <%= f.text_field :phone_number, placeholder: true %>
       </dd>
     </dl>
     <dl>
-      <dt>Email<strong>必須項目</strong></dt>
+      <dt><%= t("common.email") %><strong>必須項目</strong></dt>
       <dd>
         <%= f.text_field :email, placeholder: true %>
       </dd>
@@ -53,7 +53,7 @@
 
   <ul id="footerav">
     <li>
-      <%= link_to "Cancel", settings_shops_path, class: "BTNtarco" %>
+      <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
     </li>
     <li>
       <%= f.submit "保存", class: "BTNyellow" %>

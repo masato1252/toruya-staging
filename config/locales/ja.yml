@@ -1,12 +1,23 @@
 ja:
-  common:
+  action:
     delete: 削除
     edit: 編集
+    cancel: キャンセル
     log_out: ログアウト
+  common:
+    date: 日付
+    day: 曜日
+    start_time: 開始時間
+    end_time: 終了時間
     updated_time: 更新時間
+    zip_code: 郵便番号
+    address: 住所
+    phone_number: 電話番号
+    email: メール
   settings:
     shop:
       info_title:  店舗情報
+      new_title: 店舗情報の新規作成
       new_button: 新規店舗作成
       info_1: 店舗情報を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
@@ -15,17 +26,36 @@ ja:
       info_title: 営業時間
       info_1: 営業時間を設定してください。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      japan_holidays: 日本の祝日
+      japan_holidays_close_tip: 日本の祝日を休みにする場合は【CLOSE】にします。
+      reason_of_closing: 休業理由
+      new_closing_btn: 臨時休業日を追加
+      open_time: 開店時間
+      close_time: 閉店時間
     reservation_setting:
+      new_title: の新規作成
       new_button: 予約枠を新規作成
       info_1: 設定された予約枠一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 予約枠名
+      info_label: 基本情報
+      all_business_days: 全営業時間
+      weekly: 毎週
+      monthly: 毎月
+      weekly_setting: 毎週の受付設定
+      monthly_setting: 毎月の受付設定
+      number_of_day: 日にち
+      number_of_week: 週数
+      all_business_hours: 全営業時間
+      custom_time: 個別設定
     menu:
       info_title: メニュー
       new_button: メニューを新規作成
       info_1: 設定されたメニュー一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: メニュー名
+      staff: 対応スタッフ
+      reservation_setting_name: 予約枠
     category:
       info_title: メニューカテゴリー
       new_button: カテゴリーを新規作成

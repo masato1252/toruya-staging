@@ -1,12 +1,23 @@
 en:
-  common:
+  action:
     delete: Delete
     edit: edit
+    cancel: Cancel
     log_out: Log out
+  common:
+    date: Date
+    day: Day
+    start_time: Start Time
+    end_time: End Time
     updated_time: Update time
+    zip_code: Zip code
+    address: Address
+    phone_number: Phone Number
+    email: E-Mail
   settings:
     shop:
       info_title: Shop Info
+      new_title: Add a New Shop
       new_button: Add a New Shop
       info_1: Please enter shop informations here.
       info_2: This information will be displayed to your customers.
@@ -15,17 +26,36 @@ en:
       info_title: Business Hours
       info_1: Please enter business hours here.
       info_2: Toruya will accept reservation based on this setting.
+      japan_holidays: Japanese holiday
+      japan_holidays_close_tip: Check to set it closed for Japanese holidays.
+      reason_of_closing: Reason of closing
+      new_closing_btn: Add a Row
+      open_time: OPEN
+      close_time: CLOSE
     reservation_setting:
+      new_title: Add a New Reservation Setting
       new_button: Add a New Reservation Setting
       info_1: Here is the list of reservation settings you set.
       info_2: oruya will accept reservation based on this setting.
       name: Name
+      info_label: Information
+      all_business_days: All Business Days
+      weekly: Weekly
+      monthly: Monthly
+      weekly_setting: Weekly Frame Setting
+      monthly_setting: Monthly Frame Setting
+      number_of_day: Number of the day
+      number_of_week: Number of the week
+      all_business_hours: All Business Hours
+      custom_time: Custom Time
     menu:
       info_title: Menu
       new_button: Add a New Menu
       info_1: Please enter menu here.
       info_2: Toruya will accept reservation based on this setting.
       name: Name
+      staff: Staff
+      reservation_setting_name: Reservation setting name
     category:
       info_title: Category
       new_button: Add a New Category

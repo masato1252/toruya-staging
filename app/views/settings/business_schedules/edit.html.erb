@@ -1,18 +1,18 @@
 <div id="subNav">
-  <h2>基本情報 − Business Hours</h2>
+  <h2>基本情報 − <%= t("settings.business_hours.info_title") %> <%= shop.name %></h2>
 </div>
 <div id="about">
-  <p>Please enter business hours here.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.business_hours.info_1") %><br><%= t("settings.business_hours.info_2") %></p>
 </div>
 
 <%= form_tag update_settings_shop_business_schedules_path, method: :post do %>
   <h3>基本営業時間<strong>必須項目</strong></h3>
   <div id="busHour" class="formRow">
     <ul class="tableTTL">
-      <li class="rowTTL">Day</li>
+      <li class="rowTTL"><%= t("common.day") %></li>
       <li class="openClose">OPEN/CLOSE</li>
-      <li class="openTime">OPEN</li>
-      <li class="closeTime">CLOSE</li>
+      <li class="openTime"><%= t("settings.business_hours.open_time") %></li>
+      <li class="closeTime"><%= t("settings.business_hours.close_time") %></li>
     </ul>
     <% BusinessSchedule::WDAYS.each do |wday| %>
       <% business_schedule = @wdays_business_schedules.find{ |schedule| schedule.day_of_week == wday } %>
@@ -39,12 +39,12 @@
   <h3>祝日<strong>必須項目</strong></h3>
   <div id="hoddday" class="formRow">
     <dl>
-      <dt>Japanese holiday</dt>
+      <dt><%= t"settings.business_hours.japan_holidays" %></dt>
       <dd>
         <%= check_box_tag "shop[holiday_working]", true, shop.holiday_working,
           class: "BTNopenclose", id: "holidayJP" %>
         <label for="holidayJP"></label>
-        <span class="caution">※Check to set it closed for Japanese holidays.</span>
+        <span class="caution">※<%= t"settings.business_hours.japan_holidays_close_tip" %></span>
       </dd>
     </dl>
   </div>
@@ -59,7 +59,7 @@
 
   <ul id="footerav">
     <li>
-      <%= link_to "Cancel", settings_business_schedules_path, class: "BTNtarco" %>
+      <%= link_to t("action.cancel"), settings_business_schedules_path, class: "BTNtarco" %>
     </li>
     <li>
       <%= submit_tag "保存", class: "BTNyellow" %>

@@ -43,7 +43,7 @@ UI.define("ReservationSettings.Form", function() {
           { this.props.setting.id ?  <input name="_method" type="hidden" value="PUT" /> : null }
           <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
 
-          <h3 className="frameInfo">予約枠 Informations<strong>必須項目</strong></h3>
+          <h3 className="frameInfo"><%= I18n.t("settings.reservation_setting.info_label") %><strong>必須項目</strong></h3>
           <div id="frameInfo" className="formRow">
             <dl>
               <dt>枠名</dt>
@@ -85,7 +85,7 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "business_days"}
               onChange={this.swithDayType}
               />
-            <label htmlFor="frameDay1"><span>All Business Days</span></label>
+              <label htmlFor="frameDay1"><span><%= I18n.t("settings.reservation_setting.all_business_days") %></span></label>
 
             <input
               type="radio"
@@ -95,7 +95,7 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "weekly"}
               onChange={this.swithDayType}
               />
-            <label htmlFor="frameDay2"><span>Weekly</span></label>
+            <label htmlFor="frameDay2"><span><%= I18n.t("settings.reservation_setting.weekly") %></span></label>
 
             <input
               type="radio"
@@ -105,16 +105,16 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "monthly"}
               onChange={this.swithDayType}
               />
-            <label htmlFor="frameDay3"><span>Monthly</span></label>
+            <label htmlFor="frameDay3"><span><%= I18n.t("settings.reservation_setting.monthly") %></span></label>
             <input type="hidden" name="reservation_setting[day_type]" value={this.state.setting.day_type} />
           </div>
 
           {
             this.state.setting.day_type == "weekly" ? (
               <div id="weeklyFrameSetting" className="setDetail formRow">
-                <h3 className="frameDayMonthly">Weekly Frame Setting</h3>
+                <h3 className="frameDayMonthly"><%= I18n.t("settings.reservation_setting.weekly_setting") %></h3>
                 <dl>
-                  <dt>Day of the week</dt>
+                  <dt><%= I18n.t("common.day") %></dt>
                   <dd>
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
@@ -141,7 +141,7 @@ UI.define("ReservationSettings.Form", function() {
           {
             this.state.setting.day_type == "monthly" ? (
               <div id="MonthlyFrameSetting" className="setDetail formRow">
-                <h3 className="frameDayMonthly">Monthly Frame Setting</h3>
+                <h3 className="frameDayMonthly"><%= I18n.t("settings.reservation_setting.monthly_setting") %></h3>
                 <dl>
                   <dt className="check-area">
                     <input
@@ -152,7 +152,7 @@ UI.define("ReservationSettings.Form", function() {
                       checked={this.state.number_of_day_monthly}
                       onChange={this.switchMonthlyType}
                       />
-                    <label htmlFor="frameDayMonthly1">Number of the day</label>
+                    <label htmlFor="frameDayMonthly1"><%= I18n.t("settings.reservation_setting.number_of_day") %></label>
                   </dt>
                   <dd>毎月
                     <input
@@ -176,7 +176,7 @@ UI.define("ReservationSettings.Form", function() {
                       checked={!this.state.number_of_day_monthly}
                       onChange={this.switchMonthlyType}
                     />
-                    <label htmlFor="frameDayMonthly2">Number of the week</label>
+                    <label htmlFor="frameDayMonthly2"><%= I18n.t("settings.reservation_setting.number_of_week") %></label>
                   </dt>
                   <dd>毎月第
                     <input
@@ -190,7 +190,7 @@ UI.define("ReservationSettings.Form", function() {
                   </dd>
                 </dl>
                 <dl>
-                  <dt>Day of the week</dt>
+                  <dt><%= I18n.t("common.day") %></dt>
                   <dd>
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
@@ -224,7 +224,7 @@ UI.define("ReservationSettings.Form", function() {
               data-value="all_time"
               onClick={this.swithTimeType}
                />
-            <label htmlFor="frameTime1"><span>All Business Hours</span></label>
+             <label htmlFor="frameTime1"><span><%= I18n.t("settings.reservation_setting.all_business_hours") %></span></label>
             <input
               type="radio"
               name="frameTime"
@@ -233,13 +233,13 @@ UI.define("ReservationSettings.Form", function() {
               data-value="custom_time"
               onClick={this.swithTimeType}
             />
-            <label htmlFor="frameTime2"><span>個別設定</span></label>
+            <label htmlFor="frameTime2"><span><%= I18n.t("settings.reservation_setting.custom_time") %></span></label>
           </div>
           {
             (this.state.isAllBusinessHours) ? null : (
               <div className="setDetail formRow">
                 <dl>
-                  <dt>Starts from</dt>
+                <dt><%= I18n.t("common.start_time") %></dt>
                   <dd>
                     <input
                       type="time"
@@ -249,7 +249,7 @@ UI.define("ReservationSettings.Form", function() {
                   </dd>
                 </dl>
                 <dl>
-                  <dt>Ends at</dt>
+                  <dt><%= I18n.t("common.end_time") %></dt>
                   <dd>
                     <input
                       type="time"
@@ -264,7 +264,7 @@ UI.define("ReservationSettings.Form", function() {
 
           <ul id="footerav">
             <li>
-              <a className="BTNtarco" href={this.props.cancelPath}>Cancel</a>
+              <a className="BTNtarco" href={this.props.cancelPath}><%= I18n.t("action.cancel") %></a>
             </li>
             <li>
               <input
