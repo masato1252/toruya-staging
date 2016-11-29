@@ -6,24 +6,24 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to "Shop Info", settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to "Business Hours", settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to t("settings.shop.info_title"), settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to t("settings.business_hours.info_title"), settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
         <%= active_link_to "予約枠", settings_reservation_settings_path, active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
       </ul>
     </dd>
   </dl>
   <dl class="menu">
-    <%= active_link_to "Menu", settings_menus_path,
+    <%= active_link_to t("settings.menu.info_title"), settings_menus_path,
       active: [["settings/menus", "settings/categories"]],
       wrap_tag: :dt,
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to "Menu", settings_menus_path,
+        <%= active_link_to t("settings.menu.info_title"), settings_menus_path,
           active: [["settings/menus"]],
           wrap_tag: :li,
           class_active: "here" %>
-        <%= active_link_to "Menu Category", settings_categories_path,
+        <%= active_link_to t("settings.category.info_title"), settings_categories_path,
           active: [["settings/categories"]],
           wrap_tag: :li,
           class_active: "here" %>
@@ -37,7 +37,7 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to "Staff Info", settings_staffs_path,
+        <%= active_link_to t("settings.staff.info_title"), settings_staffs_path,
           active: [["settings/staffs"]],
           wrap_tag: :li,
           class_active: "here" %>
@@ -49,13 +49,13 @@
     </dd>
   </dl>
   <dl class="contacts">
-    <%= active_link_to "Contacts", settings_contact_groups_path,
+    <%= active_link_to t("settings.contact.info_title"), settings_contact_groups_path,
       active: [["settings/contact_groups", "settings/ranks"]],
       wrap_tag: :dt,
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to "Sync Google", settings_contact_groups_path,
+        <%= active_link_to t("settings.contact.sync_google"), settings_contact_groups_path,
           active: [["settings/contact_groups"]],
           wrap_tag: :li,
           class_active: "here" %>
@@ -63,14 +63,14 @@
     </dd>
   </dl>
   <dl class="account">
-    <%= active_link_to "Account", settings_profile_path,
+    <%= active_link_to t("settings.account.info_title"), settings_profile_path,
       active: [["settings/profiles"]],
       wrap_tag: :dt,
       class_active: "here" %>
   </dl>
   <dl class="logout">
     <dt>
-      <%= link_to t("common.sign_out"), destroy_user_session_path, :method=>'delete' %>
+      <%= link_to t("common.log_out"), destroy_user_session_path, :method=>'delete' %>
     </dt>
   </dl>
 </nav>

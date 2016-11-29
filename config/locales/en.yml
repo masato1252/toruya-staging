@@ -1,4 +1,53 @@
 en:
+  common:
+    delete: Delete
+    edit: edit
+    log_out: Log out
+    updated_time: Update time
+  settings:
+    shop:
+      info_title: Shop Info
+      new_button: Add a New Shop
+      info_1: Please enter shop informations here.
+      info_2: This information will be displayed to your customers.
+      name: Shop Name
+    business_hours:
+      info_title: Business Hours
+      info_1: Please enter business hours here.
+      info_2: Toruya will accept reservation based on this setting.
+    reservation_setting:
+      new_button: Add a New Reservation Setting
+      info_1: Here is the list of reservation settings you set.
+      info_2: oruya will accept reservation based on this setting.
+      name: Name
+    menu:
+      info_title: Menu
+      new_button: Add a New Menu
+      info_1: Please enter menu here.
+      info_2: Toruya will accept reservation based on this setting.
+      name: Name
+    category:
+      info_title: Category
+      new_button: Add a New Category
+      info_1: Please enter category here.
+      info_2: Toruya will accept reservation based on this setting.
+      name: Name
+    staff:
+      info_title: Staff Info
+      new_button: Add a New Staff
+      info_1: Here is the list of staff you set.
+      info_2: Toruya will accept reservation based on this setting.
+      name: Name
+    staff_working_time:
+      info_1: Here is the list of staff you set.
+      info_2: Toruya will accept reservation based on this setting.
+    contact:
+      info_title: Contact
+      new_button: Add a New Contact
+      name: Name
+      sync_google: Sync Google
+    account:
+      info_title: Account
   constants:
     rank:
       regular: "Regular"

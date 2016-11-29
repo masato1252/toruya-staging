@@ -4,27 +4,29 @@
 <div id="about">
   <ul class="function">
     <li>
-      <%= link_to "Add a New 予約枠", new_settings_reservation_setting_path, class: "BTNyellow addNew" %>
+      <%= link_to t("settings.reservation_setting.new_button"), new_settings_reservation_setting_path, class: "BTNyellow addNew" %>
     </li>
   </ul>
-  <p>Here is the list of 予約枠 you set.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.reservation_setting.info_1") %><br><%= t("settings.reservation_setting.info_2") %></p>
 </div>
 
 <form>
   <div id="resframeList" class="formRow">
     <ul class="tableTTL">
-      <li class="check">Delete</li>
-      <li class="rowTTL">予約枠 Name</li>
-      <li class="updateTime">update time</li>
+      <li class="check"><%= t("common.delete") %></li>
+      <li class="rowTTL"><%= t("settings.reservation_setting.name") %></li>
+      <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
 
     <% @reservation_settings.each do |setting| %>
       <dl>
-        <dt class="check"><%= link_to "DELETE", settings_reservation_setting_path(setting), method: :delete, class: "btn btn-danger", data: {confirm: "Are are sure" }%></dt>
+        <dt class="check">
+          <%= link_to t("common.delete"), settings_reservation_setting_path(setting), method: :delete, class: "btn btn-danger", data: {confirm: "Are are sure" }%>
+        </dt>
         <dt class="rowTTL"><%= setting.name %></dt>
         <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to "Edit 予約枠", edit_settings_reservation_setting_path(setting), class: "BTNtarco" %>
+          <%= link_to t("common.edit"), edit_settings_reservation_setting_path(setting), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>

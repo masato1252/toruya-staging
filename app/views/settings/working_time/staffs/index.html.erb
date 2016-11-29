@@ -2,20 +2,20 @@
   <h2>Staff − 勤務日時</h2>
 </div>
 <div id="about">
-  <p>There is the list of staff you set.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.staff_working_time.info_1") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 <form>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
-      <li class="rowTTL">Staff Name</li>
-      <li class="updateTime">update time</li>
+      <li class="rowTTL"><%= t("settings.staff.name") %></li>
+      <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
     <% @staffs.each do |staff| %>
       <dl>
         <dt><%= staff.name %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to "Set 勤務日時", edit_settings_working_time_staff_path(staff), class: "BTNtarco" %>
+          <%= link_to t("common.edit"), edit_settings_working_time_staff_path(staff), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>

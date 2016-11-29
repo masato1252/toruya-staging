@@ -2,30 +2,30 @@
 <div id="about">
   <ul class="function">
     <li>
-      <%= link_to 'Add a New Staff', new_settings_staff_path, class: "BTNyellow addNew" %>
+      <%= link_to t("settings.staff.new_button"), new_settings_staff_path, class: "BTNyellow addNew" %>
     </li>
   </ul>
-  <p>Here is the list of staff you set.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.staff.info_1") %><br /><%= t("settings.staff.info_2") %></p>
 </div>
 
 <form>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
-      <li class="check">Delete</li>
-      <li class="rowTTL">Staff Name</li>
-      <li class="updateTime">update time</li>
+      <li class="check"><%= t("common.delete") %></li>
+      <li class="rowTTL"><%= t("settings.staff.name") %></li>
+      <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
     <% @staffs.each do |staff| %>
       <dl>
         <dt class="check">
-          <%= link_to 'DELETE', settings_staff_path(staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t("common.delete"), settings_staff_path(staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
         </dt>
         <dt class="rowTTL">
           <%= staff.name %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to 'Edit', edit_settings_staff_path(staff), class: "BTNtarco" %>
+          <%= link_to t("common.edit"), edit_settings_staff_path(staff), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>

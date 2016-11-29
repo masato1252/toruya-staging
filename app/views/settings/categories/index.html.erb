@@ -1,30 +1,30 @@
 <div id="subNav">
-  <h2>基本情報 − Menu Categories</h2>
+  <h2>基本情報 − <%= t("settings.category.info_title") %></h2>
 </div>
 <div id="about">
   <ul class="function">
     <li>
-      <%= link_to "Add a New Category", new_settings_category_path, class: "BTNyellow addNew" %>
+      <%= link_to t("settings.category.new_button"), new_settings_category_path, class: "BTNyellow addNew" %>
     </li>
   </ul>
-  <p>Please enter menu Category here.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.category.info_1") %><br /><%= t("settings.category.info_2") %></p>
 </div>
 <form>
   <div id="menuList" class="formRow">
     <ul class="tableTTL">
-      <li class="check">Delete</li>
-      <li class="rowTTL">Category Name</li>
-      <li class="updateTime">update time</li>
+      <li class="check"><%= t("common.delete") %></li>
+      <li class="rowTTL"><%= t("settings.category.name") %></li>
+      <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
     <% @settings_categories.each do |settings_category| %>
       <dl>
         <dt class="check">
-          <%= link_to 'DELETE', settings_category_path(settings_category), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t("common.delete"), settings_category_path(settings_category), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
         </dt>
         <dt class="rowTTL"><%= settings_category.name %></dt>
         <dd class="updateTime"><%= settings_category.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to "Edit", edit_settings_category_path(settings_category), class: "BTNtarco" %>
+          <%= link_to t("common.edit"), edit_settings_category_path(settings_category), class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>

@@ -1,5 +1,5 @@
 <div id="subNav">
-  <h2>Google account synchronization</h2>
+  <h2><%= t("settings.contact.info_title") %></h2>
 </div>
 <div id="about">
   <p>Please sync your google account and the google group you want here.</p>
@@ -16,7 +16,7 @@
 
   <div id="customize-table" class="formRow table">
     <dl class="header">
-      <dd>Name</dd>
+      <dd><%= t("settings.contact.info_title") %></dd>
       <dd>Connect Google Group</dd>
       <dd>Synchronization</dd>
     </dl>
@@ -34,7 +34,7 @@
           <%= link_to "Sync", sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: "Processing" } if contact_group.google_group_name %>
         </dd>
         <dd>
-          <%= link_to "Edit Contacts", edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: "Processing" } %>
+          <%= link_to t("common.edit"), edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: "Processing" } %>
           <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger btn-bold", data: { disable_with: "Processing" } do %>
             <i class="fa fa-trash" aria-hidden="true"></i>
           <% end unless contact_group.google_group_name %>
@@ -42,5 +42,9 @@
       </dl>
     <% end %>
   </div>
-  <%= link_to "New Contact Group", new_settings_contact_group_path, class: "btn btn-success" %>
+  <ul class="function">
+    <li>
+      <%= link_to t("settings.contact.new_button"), new_settings_contact_group_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
 </form>
