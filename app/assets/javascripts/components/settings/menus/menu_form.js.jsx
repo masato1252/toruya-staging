@@ -140,7 +140,7 @@ UI.define("Settings.MenuForm", function() {
           <input name="utf8" type="hidden" value="✓" />
           {this.props.menu.id ? <input type="hidden" name="_method" value="PUT" /> : null}
           <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
-          <h3>Menu Informations<strong>必須項目</strong></h3>
+          <h3>{this.props.infoLabel}<strong>必須項目</strong></h3>
           <div id="menuInfo" className="formRow">
             <dl>
               <dt>メニュー名</dt>
@@ -187,7 +187,7 @@ UI.define("Settings.MenuForm", function() {
               </dd>
             </dl>
             <dl>
-              <dt>Interval</dt>
+              <dt>{this.props.intervalLabel}</dt>
               <dd>
                 <input
                   type="number"
@@ -215,10 +215,10 @@ UI.define("Settings.MenuForm", function() {
               </dd>
             </dl>
             <dl>
-              <dt>Max Seat Number</dt>
+              <dt>{this.props.maxCustomersLabel}</dt>
               <dd>
                 <input
-                  placeholder="Max Seat Number"
+                  placeholder={this.props.maxCustomersLabel}
                   maxlength="10"
                   size="10"
                   className="minStaff"
@@ -266,10 +266,10 @@ UI.define("Settings.MenuForm", function() {
                   />
               </dd>
               <dt className="function">
-                <a href={this.state.selectedReservationSetting.editPath} className="BTNtarco">Edit 予約枠</a>
+                <a href={this.state.selectedReservationSetting.editPath} className="BTNtarco">{this.props.edit}</a>
               </dt>
               <dt className="function">
-                <a href={this.props.addReservationSettingPath} className="BTNyellow">ADD a New 予約枠</a>
+                <a href={this.props.addReservationSettingPath} className="BTNyellow">{this.props.addNewReservationSettingBtn}</a>
               </dt>
             </dl>
             <dl className="menuStarts">
@@ -302,7 +302,7 @@ UI.define("Settings.MenuForm", function() {
                     checked={!this.state.selectedReservationSettingRule.reservation_type}
                     onChange={this.switchReservationType}
                     />
-                  <label htmlFor="menuEnds1"><span>None</span></label>
+                  <label htmlFor="menuEnds1"><span>{this.props.reservationEndingRuleNone}</span></label>
 
                   <input
                     type="radio"
@@ -312,7 +312,7 @@ UI.define("Settings.MenuForm", function() {
                     checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
                     onChange={this.switchReservationType}
                     />
-                  <label htmlFor="menuEnds2"><span>After repeating</span></label>
+                  <label htmlFor="menuEnds2"><span>{this.props.reservationEndingRuleRepeating}</span></label>
 
                   <input
                     type="radio"
@@ -329,7 +329,7 @@ UI.define("Settings.MenuForm", function() {
               {
                 this.state.selectedReservationSettingRule.reservation_type == "repeating" ? (
                   <dl id="menuEndsRepeat">
-                    <dt>Repeat Setting</dt>
+                    <dt>{this.props.reservationEndingRuleRepeatingSetting}</dt>
                     <dd>
                       <input
                         type="number"
@@ -339,7 +339,7 @@ UI.define("Settings.MenuForm", function() {
                         value={this.state.selectedReservationSettingRule.repeats}
                         data-name="repeats"
                         onChange={this._handleReservationSettingRuleChange}
-                        /> times
+                        /> {this.props.reservationEndingRuleRepeatingTimes}
                         <span className="repeating-sentence">{this.state.repeatingDateSentence}</span>
                     </dd>
                   </dl>
@@ -348,7 +348,7 @@ UI.define("Settings.MenuForm", function() {
               {
                 this.state.selectedReservationSettingRule.reservation_type == "date" ? (
                   <dl id="menuEndsDate">
-                    <dt>Ends Date Setting</dt>
+                    <dt>{this.props.reservationEndingRuleEndDateSetting}</dt>
                     <dd>
                       <input
                         type="date"
@@ -364,8 +364,8 @@ UI.define("Settings.MenuForm", function() {
               }
             </div>
           <h3 className="menuCategory">
-            Category
-            <a href={this.props.newCategoryPath} className="BTNyellow addNew">ADD a New Category</a>
+            {this.props.categoryLabel}
+            <a href={this.props.newCategoryPath} className="BTNyellow addNew">{this.props.newCategoryBtn}</a>
           </h3>
           <div id="category" className="formRow">
               {this.props.categoriesOptions.map(function(categoryOption) {
@@ -432,7 +432,7 @@ UI.define("Settings.MenuForm", function() {
 
           <ul id="footerav">
             <li>
-              <a className="BTNtarco" href={this.props.cancelPath}>Cancel</a>
+              <a className="BTNtarco" href={this.props.cancelPath}>{this.props.cancelBtn}</a>
             </li>
             <li>
               <input

@@ -97,15 +97,15 @@ UI.define("Customers.CustomerInfoView", function() {
           <div id="detailInfo" className="tabBody" style={{height: "425px"}}>
             <ul className="functions">
               <li className="right">
-                <a href="#" onClick={this.props.switchEditMode}>EDIT</a>
+                <a href="#" onClick={this.props.switchEditMode}>{this.props.editBtn}</a>
               </li>
             </ul>
             <dl className="Address">
-              <dt>Address</dt>
+              <dt>{this.props.addressLabel}</dt>
               <dd>{this.props.customer.displayAddress}</dd>
             </dl>
             <dl className="phone">
-              <dt>Phone</dt>
+              <dt>{this.props.phoneLabel}</dt>
               <dd>
                 {(this.props.customer.phoneNumbers || []).map(function(phoneNumber) {
                   return this.phoneRender(phoneNumber);
@@ -113,7 +113,7 @@ UI.define("Customers.CustomerInfoView", function() {
               </dd>
             </dl>
             <dl className="email">
-              <dt>Email</dt>
+              <dt>{this.props.emailLabel}</dt>
               <dd>
                 {(this.props.customer.emails || []).map(function(email) {
                   return this.emailRender(email);
@@ -122,11 +122,11 @@ UI.define("Customers.CustomerInfoView", function() {
             </dl>
             <div className="others">
               <dl className="customerID"><dt>顧客ID</dt><dd>{this.props.customer.customerId}</dd></dl>
-              <dl className="dob"><dt>DOB</dt>
+              <dl className="dob"><dt>{this.props.birthdayLabel}</dt>
               <dd>
                 {this.props.customer.birthday ? `${this.props.customer.birthday.year}-${this.props.customer.birthday.month}-${this.props.customer.birthday.day}` : null }
               </dd></dl>
-              <dl className="memo"><dt>Memo</dt><dd>{this.props.customer.memo}</dd></dl>
+              <dl className="memo"><dt>{this.props.memoLabel}</dt><dd>{this.props.customer.memo}</dd></dl>
             </div>
           </div>
         </div>

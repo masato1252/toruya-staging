@@ -1,7 +1,7 @@
 <%= form_for(category, url: url) do |f| %>
   <%= render "settings/form_errors", object: category %>
 
-  <h3>Menu Category Informations<strong>必須項目</strong></h3>
+  <h3><%= t("settings.category.info_label") %><strong>必須項目</strong></h3>
   <div id="menuInfo" class="formRow">
     <dl>
       <dt>カテゴリー名</dt>
@@ -12,7 +12,7 @@
   </div>
   <ul id="footerav">
     <li>
-      <%= link_to "Cancel", settings_categories_path, class: "BTNtarco" %>
+      <%= link_to t("action.cancel"), settings_categories_path, class: "BTNtarco" %>
     </li>
     <li>
       <%= f.submit "保存", class: "BTNyellow" %>

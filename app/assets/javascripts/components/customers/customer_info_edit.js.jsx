@@ -214,14 +214,14 @@ UI.define("Customers.CustomerInfoEdit", function() {
             <li className="right">
               {
                 this.isCustomerdataValid() ? (
-                  <a href="#" onClick={this.handleCreateCustomer}>Save</a>
+                  <a href="#" onClick={this.handleCreateCustomer}>{this.props.saveBtn}</a>
                 ) : null
               }
             </li>
           </ul>
 
           <dl className="Address">
-            <dt>Address</dt>
+            <dt>{this.props.addressLabel}</dt>
             <dd>
               <ul classname="addrzip">
                 <li classname="zipcode">〒
@@ -300,7 +300,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
           </dl>
           <dl className="phone">
             <dt>
-              Phone
+              {this.props.phoneLabel}
               <a onClick={this.props.addOption.bind(null, "phoneNumbers")}
                 className="BTNtarco"
                 title="追加">
@@ -344,7 +344,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
             </dl>
             <dl className="email">
               <dt>
-                Email
+                {this.props.emailLabel}
                 <a onClick={this.props.addOption.bind(null, "emails")}
                   className="BTNtarco"
                   title="追加">
@@ -399,7 +399,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
               </dd>
             </dl>
             <dl className="dob">
-              <dt><label for="dob">DOB</label></dt>
+              <dt><label htmlFor="dob">{this.props.birthdayLabel}</label></dt>
               <dd>
                 <UI.Select
                   id="dobYear"
@@ -434,7 +434,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
               </dd>
             </dl>
             <dl className="memo">
-              <dt><label for="memo">Memo</label></dt>
+              <dt><label htmlFor="memo">{this.props.memoLabel}</label></dt>
               <dd>
                 <textarea
                   placeholder="Memo"

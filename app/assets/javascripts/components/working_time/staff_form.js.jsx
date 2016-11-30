@@ -57,7 +57,7 @@ UI.define("WorkingTime.StaffForm", function() {
           <input name="utf8" type="hidden" value="✓" />
           <input type="hidden" name="_method" value="patch" />
           <input type="hidden" name="authenticity_token" value={this.props.FormAuthenticityToken} />
-          <h3>Staff Name</h3>
+          <h3>{this.props.nameLabel}</h3>
 
           <div id="staffInfo" className="formRow">
             <dl>
@@ -103,6 +103,10 @@ UI.define("WorkingTime.StaffForm", function() {
                   shop={shop}
                   wdays={this.props.wdays}
                   wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}
+                  dayLabel={this.props.dayLabel}
+                  inOutLabel={this.props.inOutLabel}
+                  startLabel={this.props.startLabel}
+                  endLabel={this.props.endLabel}
                 />
               );
             }.bind(this))
@@ -111,7 +115,7 @@ UI.define("WorkingTime.StaffForm", function() {
           <div id="footerav">
           </div>
           <ul id="footerav">
-            <li><a href={this.props.cancelPath} className="BTNtarco">Cancel</a></li>
+            <li><a href={this.props.cancelPath} className="BTNtarco">{this.props.cancelBtn}</a></li>
             <li><input type="submit" className="BTNyellow" value="保存" /></li>
           </ul>
         </form>

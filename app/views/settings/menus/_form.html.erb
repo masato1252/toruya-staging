@@ -1,5 +1,5 @@
 <div id="about">
-  <p>Please enter menu informations here.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.menu.info_1") %><br /><%= t("settings.menu.info_2") %></p>
 </div>
 
 <%
@@ -38,5 +38,18 @@
   shops_options: react_attributes(shops_options),
   categories_options: react_attributes(cateogries_options),
   menu_staffs_options: react_attributes(menu_staffs_options),
-  form_authenticity_token: form_authenticity_token
+  form_authenticity_token: form_authenticity_token,
+  info_label: I18n.t("settings.menu.info_label"),
+  interval_label: Menu.human_attribute_name(:interval),
+  max_customers_label: Menu.human_attribute_name(:max_customers),
+  edit: I18n.t("action.edit"),
+  add_new_reservation_setting_btn: I18n.t("settings.menu.add_new_reservation_setting_btn"),
+  reservation_ending_rule_none: I18n.t("settings.menu.reservation_ending_rule_none"),
+  reservation_ending_rule_repeating: I18n.t("settings.menu.reservation_ending_rule_repeating"),
+  reservation_ending_rule_repeating_setting: I18n.t("settings.menu.reservation_ending_rule_repeating_setting"),
+  reservation_ending_rule_repeating_times: I18n.t("settings.menu.reservation_ending_rule_repeating_times"),
+  reservation_ending_rule_end_date_setting: I18n.t("settings.menu.reservation_ending_rule_end_date_setting"),
+  category_label: I18n.t("settings.menu.category_label"),
+  new_category_btn: I18n.t("settings.menu.new_category_btn"),
+  cancel_btn: I18n.t("action.cancel")
 })%>

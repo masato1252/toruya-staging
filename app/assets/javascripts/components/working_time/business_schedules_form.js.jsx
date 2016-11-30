@@ -13,10 +13,10 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
           <h3>{this.props.shop.name} 勤務日時</h3>
           <div id="parttime" className="formRow">
             <ul className="tableTTL">
-              <li className="rowTTL">Day</li>
-              <li className="inOut">Comes IN/OUT</li>
-              <li className="startTime">Start</li>
-              <li className="endsTime">Ends</li>
+              <li className="rowTTL">{this.props.dayLabel}</li>
+              <li className="inOut">{this.props.inOutLabel}</li>
+              <li className="startTime">{this.props.startLabel}</li>
+              <li className="endsTime">{this.props.endLabel}</li>
             </ul>
             <div id="workingTime" className="formRow">
               { this.props.wdays.map(function(wday, day_index) {

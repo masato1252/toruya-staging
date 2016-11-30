@@ -1,7 +1,7 @@
 <%= form_for(staff, url: url) do |f| %>
   <%= render "settings/form_errors", object: staff %>
 
-  <h3>Staff Informations<strong>必須項目</strong></h3>
+  <h3><%= t("settings.staff.info_label") %><strong>必須項目</strong></h3>
   <div id="staffInfo" class="formRow">
     <dl>
       <dt>氏名</dt>
@@ -22,7 +22,7 @@
       </dd>
     </dl>
   </div>
-  <h3>Belonging Shop<strong>必須項目</strong></h3>
+  <h3><%= t("settings.staff.shop_label") %><strong>必須項目</strong></h3>
   <div id="belong" class="formRow">
     <% shop_ids = staff.shop_staffs.pluck(:shop_id) %>
     <input type="hidden" name="staff[shop_ids][]" value="">
@@ -43,7 +43,7 @@
 
   <div id="footerav">
     <li>
-      <%= link_to "Cancel", settings_shops_path, class: "BTNtarco" %>
+      <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
     </li>
     <li>
       <%= f.submit "保存", class: "BTNyellow" %>

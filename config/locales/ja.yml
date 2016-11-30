@@ -4,6 +4,7 @@ ja:
     edit: 編集
     cancel: キャンセル
     log_out: ログアウト
+    save: 保存
   common:
     date: 日付
     day: 曜日
@@ -14,6 +15,8 @@ ja:
     address: 住所
     phone_number: 電話番号
     email: メール
+    birthday: 生年月日
+    memo: メモ
   settings:
     shop:
       info_title:  店舗情報
@@ -50,30 +53,52 @@ ja:
       custom_time: 個別設定
     menu:
       info_title: メニュー
+      info_label: メニュー基本設定
+      new_title: メニューの新規作成
       new_button: メニューを新規作成
       info_1: 設定されたメニュー一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: メニュー名
       staff: 対応スタッフ
       reservation_setting_name: 予約枠
+      add_new_reservation_setting_btn: を追加
+      reservation_ending_rule_none: 終了しない
+      reservation_ending_rule_repeating: 繰り返し後
+      reservation_ending_rule_repeating_setting: 繰り返し設定
+      reservation_ending_rule_repeating_times: 回
+      reservation_ending_rule_end_date_setting: 終了日
+      category_label: カテゴリー
+      new_category_btn: カテゴリーを追加
     category:
       info_title: メニューカテゴリー
+      info_label: 基本設定
+      new_title: メニューカテゴリーの新規作成
       new_button: カテゴリーを新規作成
       info_1: 設定されたメニューカテゴリーの一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: カテゴリー名
     staff:
       info_title: 基本情報
+      new_title: スタッフの新規作成
       new_button: スタッフを新規作成
+      info_label: 基本情報
       info_1: 既に設定されているスタッフ一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
+      shop_label: 勤務店舗
     staff_working_time:
       info_1: スタッフの勤務日時です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      in_out_label: 出勤／休み
+      start_label: 出勤予定
+      end_label: 退勤予定
     contact:
       info_title: 顧客台帳
+      new_title: 新規台帳作成
       new_button: 新規台帳作成
+      info_1: 新しい顧客台帳の基本設定をします。
+      info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      info_label: 台帳情報
       name: 台帳名
       sync_google: Google同期設定
     account:
@@ -114,6 +139,7 @@ ja:
           has_many: "%{record}が存在しているので削除できません"
     models:
       user: "User"
+      staff: スタッフ
     attributes:
       user:
         password: "Password"
@@ -135,6 +161,8 @@ ja:
         short_name: "短縮名"
         minutes: "所要時間"
         min_staffs_number: "最低担当者数"
+        interval: インターバル
+        max_customers: 最大シート数
       staff_menu:
         max_customers: "最高客戶数"
   date:

@@ -1,5 +1,8 @@
+<div id="subNav">
+  <h2><%= Staff.model_name.human %> − 勤務時間</h2>
+</div>
 <div id="about">
-  <p>Please enter staff worktime informations here.<br>Toruya will accept reservation based on this setting.</p>
+  <p><%= t("settings.staff_working_time.info_1") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 <% if @staff.shops.exists? %>
   <%= react_component("UI.WorkingTime.StaffForm", {
@@ -11,7 +14,13 @@
     full_time_shops: @full_time_schedules.map(&:shop),
     wdays: BusinessSchedule::WDAYS.map { |wday| I18n.t("date.day_names").at(wday) },
     wdays_business_schedules_by_shop: @wdays_business_schedules_by_shop,
-    form_authenticity_token: form_authenticity_token
+    form_authenticity_token: form_authenticity_token,
+    name_label: "#{Staff.model_name.human}#{I18n.t("settings.staff.name")}",
+    day_label: I18n.t("common.day"),
+    in_out_label: I18n.t("settings.staff_working_time.in_out_label"),
+    start_label: I18n.t("settings.staff_working_time.start_label"),
+    end_label: I18n.t("settings.staff_working_time.end_label"),
+    cancel_btn: I18n.t("action.cancel")
   })
   %>
 <% else %>

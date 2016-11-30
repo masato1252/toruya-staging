@@ -4,6 +4,7 @@ en:
     edit: edit
     cancel: Cancel
     log_out: Log out
+    save: Save
   common:
     date: Date
     day: Day
@@ -14,6 +15,8 @@ en:
     address: Address
     phone_number: Phone Number
     email: E-Mail
+    birthday: Birthday
+    memo: Memo
   settings:
     shop:
       info_title: Shop Info
@@ -50,30 +53,52 @@ en:
       custom_time: Custom Time
     menu:
       info_title: Menu
+      info_label: Information
+      new_title: Add a New Menu
       new_button: Add a New Menu
       info_1: Please enter menu here.
       info_2: Toruya will accept reservation based on this setting.
       name: Name
       staff: Staff
       reservation_setting_name: Reservation setting name
+      add_new_reservation_setting_btn: ADD a New Reservation Setting
+      reservation_ending_rule_none: None
+      reservation_ending_rule_repeating: After repeating
+      reservation_ending_rule_repeating_setting: Repeat Setting
+      reservation_ending_rule_repeating_times: times
+      reservation_ending_rule_end_date_setting: Ends Date Setting
+      category_label: Category
+      new_category_btn: ADD a New Category
     category:
       info_title: Category
+      info_label: Information
+      new_title: Add a New Category
       new_button: Add a New Category
       info_1: Please enter category here.
       info_2: Toruya will accept reservation based on this setting.
       name: Name
     staff:
       info_title: Staff Info
+      new_title: Add a New Staff
       new_button: Add a New Staff
+      info_label: Information
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.
       name: Name
+      shop_label: Belonging Shop
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.
+      in_out_label: Come IN/OUT
+      start_label: Start
+      end_label: End
     contact:
       info_title: Contact
+      new_title : Add a New Contact
       new_button: Add a New Contact
+      info_1: Please enter contacts informations here.
+      info_2: Toruya will accept reservation based on this setting.
+      info_label: Information
       name: Name
       sync_google: Sync Google
     account:

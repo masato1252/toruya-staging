@@ -306,6 +306,12 @@ UI.define("Customers.Dashboard", function() {
             saveCustomerPath={this.props.saveCustomerPath}
             fetchCustomerDetails={this.fetchCustomerDetails}
             delimiter={this.props.delimiter}
+            addressLabel={this.props.addressLabel}
+            phoneLabel={this.props.phoneLabel}
+            emailLabel={this.props.emailLabel}
+            birthdayLabel={this.props.birthdayLabel}
+            memoLabel={this.props.memoLabel}
+            saveBtn={this.props.saveBtn}
             />
         )
       }
@@ -315,6 +321,12 @@ UI.define("Customers.Dashboard", function() {
             customer={this.state.customer}
             switchEditMode={this.switchEditMode}
             switchReservationMode={this.switchReservationMode}
+            addressLabel={this.props.addressLabel}
+            phoneLabel={this.props.phoneLabel}
+            emailLabel={this.props.emailLabel}
+            birthdayLabel={this.props.birthdayLabel}
+            memoLabel={this.props.memoLabel}
+            editBtn={this.props.editBtn}
             />
         );
       }
