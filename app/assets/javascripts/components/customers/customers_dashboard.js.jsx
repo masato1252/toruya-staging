@@ -361,6 +361,7 @@ UI.define("Customers.Dashboard", function() {
                 <dl>
                   <dd id="NAVaddCustomer">
                     <a href="#" className="BTNyellow" onClick={this.handleAddCustomerToReservation}>
+                      <i className="fa fa-calendar-plus-o fa-2x"></i>
                       <span>顧客選択</span>
                     </a>
                   </dd>
@@ -368,7 +369,10 @@ UI.define("Customers.Dashboard", function() {
                   <div>
                     <dl>
                       <dd id="NAVnewResv">
-                        <a href={this.props.addReservationPath} className="BTNtarco"><span>新規予約</span></a>
+                        <a href={this.props.addReservationPath} className="BTNtarco">
+                          <i className="fa fa-calendar-plus-o fa-2x"></i>
+                          <span>新規予約</span>
+                        </a>
                       </dd>
                       <dd id="NAVsave">
                         <form id="new_customer_form"
