@@ -2,7 +2,8 @@ class Groups::UpdateGroup < ActiveInteraction::Base
   object :contact_group, class: ContactGroup
   hash :params do
     string :name
-    array :rank_ids
+    # XXX: Don't support custom ranks settings now
+    # array :rank_ids, default: nil
   end
 
   def execute
