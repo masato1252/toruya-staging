@@ -1,7 +1,7 @@
 require 'mailer_methods'
 
 class NotificationMailer < ActionMailer::Base
-  default from: "Toruya <toruya.services@gmail.com>"
+  default from: ENV["MAIL_FROM"]
 
   include MailerMethods
 
