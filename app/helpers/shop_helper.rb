@@ -4,7 +4,7 @@ module ShopHelper
       react_component("UI.ShopsSelect",
                       { shops: shops_select_options,
                         selected_shop: selected_shop_value },
-                      { id: "shop", prerender: true })
+                      { id: "shop" })
     end
   end
 
