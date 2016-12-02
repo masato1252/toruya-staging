@@ -49,7 +49,9 @@ UI.define("Customers.Dashboard", function() {
         this.setState(
           {selected_customer_id: customer_id, customer: selected_customer, processing: true}, function() {
             this.fetchCustomerDetails();
-            this.CustomerReservationsView.fetchReservations()
+            if (this.CustomerReservationsView) {
+              this.CustomerReservationsView.fetchReservations()
+            }
           }.bind(this)
           );
       }
