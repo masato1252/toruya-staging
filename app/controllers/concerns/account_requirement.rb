@@ -24,10 +24,12 @@ module AccountRequirement
           redirect_to new_settings_profile_path
         end
       elsif !session[:contact_checking]
+        # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
           flash[:alert] = "Please connect your google account with your toruya groups"
 
           redirect_to settings_contact_groups_path
+        # If user doesn't go to restriction path, go to previous restriction path, just display waring message to remind him.
         elsif except_path("settings/contact_groups")
           flash.now[:alert] = "Please go to #{view_context.link_to("Contacts page", settings_contact_groups_path)} to connect your google account with your toruya groups".html_safe
         end
