@@ -36,6 +36,7 @@ gem "jp_prefecture", "~> 0.8.1", github: "ilake/jp_prefecture"
 gem "hashie", "~> 3.4.4"
 gem "rollbar", "~> 2.13.3"
 gem "sendgrid-rails", "~> 3.1.0"
+gem "delayed-web", "~> 0.4.2"
 
 group :development, :test do
   gem "byebug", platform: :mri

@@ -45,6 +45,10 @@ class User < ApplicationRecord
 
   after_commit :create_default_ranks
 
+  def super_admin?
+    ["lake.ilakela@gmail.com"].include?(email)
+  end
+
   private
 
   def create_default_ranks
