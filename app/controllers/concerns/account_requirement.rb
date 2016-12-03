@@ -1,5 +1,6 @@
 module AccountRequirement
   extend ActiveSupport::Concern
+  ALLOWED_ACCESS_CONTROLLERS = ["settings/menus", "settings/reservation_settings", "settings/working_time/staffs", "settings/staffs", "business_schedules", "settings/shops", "settings/contact_groups", "settings/profiles"].freeze
 
   included do
     before_action :require_user_name
@@ -14,15 +15,16 @@ module AccountRequirement
   end
 
   def check_requirement
+
     if current_user
       if !session[:user_name_checking]
-        if except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last)
           flash[:alert] = "Please fill your information"
 
           redirect_to new_settings_profile_path
         end
       elsif !session[:contact_checking]
-        if except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
           flash[:alert] = "Please connect your google account with your toruya groups"
 
           redirect_to settings_contact_groups_path
@@ -30,7 +32,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Contacts page", settings_contact_groups_path)} to connect your google account with your toruya groups".html_safe
         end
       elsif !session[:shop_checking]
-        if except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(3))
           flash[:alert] = "Please create your shops"
 
           redirect_to new_settings_shop_path
@@ -38,7 +40,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Shop page", new_settings_shop_path)} to create your shops".html_safe
         end
       elsif !session[:business_hours_checking]
-        if except_path("business_schedules") && except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(4))
           flash[:alert] = "Please set shop business schedules"
 
           redirect_to settings_business_schedules_path
@@ -46,7 +48,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Business Schedule page", settings_business_schedules_path)} to set your business schedule".html_safe
         end
       elsif !session[:staffs_checking]
-        if except_path("settings/staffs") && except_path("business_schedules") && except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(5))
           flash[:alert] = "Please create your staffs"
 
           redirect_to new_settings_staff_path
@@ -54,7 +56,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Staff page", new_settings_staff_path)} to create your staffs".html_safe
         end
       elsif !session[:working_time_checking]
-        if except_path("settings/working_time/staffs") && except_path("settings/staffs") && except_path("business_schedules") && except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(6))
           flash[:alert] = "Please set their schedules"
 
           redirect_to settings_working_time_staffs_path
@@ -62,7 +64,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Staff business_schedules page", settings_working_time_staffs_path)} to set their schedules".html_safe
         end
       elsif !session[:reservation_settings_checking]
-        if except_path("settings/reservation_settings") && except_path("settings/working_time/staffs") && except_path("settings/staffs") && except_path("business_schedules") && except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS.last(7))
           flash[:alert] = "Please set your reservation settings"
 
           redirect_to new_settings_reservation_setting_path
@@ -70,7 +72,7 @@ module AccountRequirement
           flash.now[:alert] = "Please go to #{view_context.link_to("Reservation Settings page", new_settings_reservation_setting_path)} to set your reservation settings".html_safe
         end
       elsif !session[:menu_checking]
-        if except_path("settings/menus") && except_path("settings/reservation_settings") && except_path("settings/working_time/staffs") && except_path("settings/staffs") && except_path("business_schedules") && except_path("settings/shops") && except_path("settings/contact_groups") && except_path("settings/profile")
+        if except_path(ALLOWED_ACCESS_CONTROLLERS)
           flash[:alert] = "Please create your Menu"
 
           redirect_to new_settings_menu_path
@@ -131,7 +133,7 @@ module AccountRequirement
 
   private
 
-  def except_path(exclude_path)
-    !request.fullpath.match(/#{exclude_path}/)
+  def except_path(controllers)
+    !Array(controllers).member?(params[:controller])
   end
 end
