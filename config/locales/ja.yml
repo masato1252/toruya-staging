@@ -24,6 +24,7 @@ ja:
     email: メール
     birthday: 生年月日
     memo: メモ
+    name: 氏名
   settings:
     shop:
       info_title:  店舗情報
@@ -32,6 +33,7 @@ ja:
       info_1: 店舗情報を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 店舗名
+      create_successfully_message: 店舗情報を保存しました。
     business_hours:
       info_title: 営業時間
       info_1: 営業時間を設定してください。
@@ -48,8 +50,10 @@ ja:
       info_1: 設定された予約枠一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 予約枠名
+      name_label: 枠名
+      short_name: 短縮名
       info_label: 基本情報
-      all_business_days: 全営業時間
+      all_business_days: 全営業日
       weekly: 毎週
       monthly: 毎月
       weekly_setting: 毎週の受付設定
@@ -123,6 +127,8 @@ ja:
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
     account:
       info_title: アカウント
+    profile:
+      info_title: まずはアカウント設定
   constants:
     rank:
       regular: "一般"
@@ -185,6 +191,15 @@ ja:
         max_customers: 最大シート数
       staff_menu:
         max_customers: "最高客戶数"
+      profile:
+        last_name: 姓
+        first_name: 名
+        phonetic_last_name: せい
+        phonetic_first_name: めい
+        company_name: 社名・屋号
+        zip_code: 郵便番号
+        address: 住所
+        phone_number: 電話番号
   date:
     abbr_day_names:
     - 日

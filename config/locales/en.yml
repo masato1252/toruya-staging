@@ -24,6 +24,11 @@ en:
     email: E-Mail
     birthday: Birthday
     memo: Memo
+    family_name: Family Name
+    first_name: First Name
+    family_name_kana: Family Name Kana
+    first_name_kana: First Name Kana
+    company_name: Company Name
   settings:
     shop:
       info_title: Shop Info
@@ -32,6 +37,7 @@ en:
       info_1: Please enter shop informations here.
       info_2: This information will be displayed to your customers.
       name: Shop Name
+      create_successfully_message: Shop was successfully created.
     business_hours:
       info_title: Business Hours
       info_1: Please enter business hours here.
@@ -48,6 +54,8 @@ en:
       info_1: Here is the list of reservation settings you set.
       info_2: oruya will accept reservation based on this setting.
       name: Name
+      name_placeholder: Setting name
+      short_name: Short name
       info_label: Information
       all_business_days: All Business Days
       weekly: Weekly
@@ -123,6 +131,8 @@ en:
       importing_message: We are importing your customers, would notify you when the process finished.
     account:
       info_title: Account
+    profile:
+      info_title: Let's Setup Your Account and Shop'
   constants:
     rank:
       regular: "Regular"

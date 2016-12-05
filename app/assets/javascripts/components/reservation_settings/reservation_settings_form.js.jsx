@@ -43,14 +43,14 @@ UI.define("ReservationSettings.Form", function() {
           { this.props.setting.id ?  <input name="_method" type="hidden" value="PUT" /> : null }
           <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
 
-          <h3 className="frameInfo"><%= I18n.t("settings.reservation_setting.info_label") %><strong>必須項目</strong></h3>
+          <h3 className="frameInfo">{this.props.infoLabel}<strong>必須項目</strong></h3>
           <div id="frameInfo" className="formRow">
             <dl>
-              <dt>枠名</dt>
+              <dt>{this.props.nameLabel}</dt>
               <dd>
                 <input
                   type="text"
-                  placeholder="予約枠 Name"
+                  placeholder={this.props.nameLabel}
                   maxlength="30"
                   name="reservation_setting[name]"
                   data-name="name"
@@ -60,11 +60,11 @@ UI.define("ReservationSettings.Form", function() {
               </dd>
             </dl>
             <dl>
-              <dt>短縮名</dt>
+              <dt>{this.props.shortName}</dt>
               <dd>
                 <input
                   type="text"
-                  placeholder="予約枠 Shorten Name"
+                  placeholder={this.props.shortName}
                   maxlength="10"
                   name="reservation_setting[short_name]"
                   data-name="short_name"
@@ -85,7 +85,7 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "business_days"}
               onChange={this.swithDayType}
               />
-              <label htmlFor="frameDay1"><span><%= I18n.t("settings.reservation_setting.all_business_days") %></span></label>
+              <label htmlFor="frameDay1"><span>{this.props.allBusinessDaysLabel}</span></label>
 
             <input
               type="radio"
@@ -95,7 +95,7 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "weekly"}
               onChange={this.swithDayType}
               />
-            <label htmlFor="frameDay2"><span><%= I18n.t("settings.reservation_setting.weekly") %></span></label>
+            <label htmlFor="frameDay2"><span>{this.props.weeklyLabel}</span></label>
 
             <input
               type="radio"
@@ -105,16 +105,16 @@ UI.define("ReservationSettings.Form", function() {
               checked={this.state.setting.day_type == "monthly"}
               onChange={this.swithDayType}
               />
-            <label htmlFor="frameDay3"><span><%= I18n.t("settings.reservation_setting.monthly") %></span></label>
+            <label htmlFor="frameDay3"><span>{this.props.monthlyLabel}</span></label>
             <input type="hidden" name="reservation_setting[day_type]" value={this.state.setting.day_type} />
           </div>
 
           {
             this.state.setting.day_type == "weekly" ? (
               <div id="weeklyFrameSetting" className="setDetail formRow">
-                <h3 className="frameDayMonthly"><%= I18n.t("settings.reservation_setting.weekly_setting") %></h3>
+                <h3 className="frameDayMonthly">{this.props.weeklySettingLabel}</h3>
                 <dl>
-                  <dt><%= I18n.t("common.day") %></dt>
+                  <dt>{this.props.dayLabel}</dt>
                   <dd>
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
@@ -141,7 +141,7 @@ UI.define("ReservationSettings.Form", function() {
           {
             this.state.setting.day_type == "monthly" ? (
               <div id="MonthlyFrameSetting" className="setDetail formRow">
-                <h3 className="frameDayMonthly"><%= I18n.t("settings.reservation_setting.monthly_setting") %></h3>
+                <h3 className="frameDayMonthly">{this.props.monthlySettingLabel}</h3>
                 <dl>
                   <dt className="check-area">
                     <input
@@ -152,7 +152,7 @@ UI.define("ReservationSettings.Form", function() {
                       checked={this.state.number_of_day_monthly}
                       onChange={this.switchMonthlyType}
                       />
-                    <label htmlFor="frameDayMonthly1"><%= I18n.t("settings.reservation_setting.number_of_day") %></label>
+                    <label htmlFor="frameDayMonthly1">{this.props.numberOfDayLabel}</label>
                   </dt>
                   <dd>毎月
                     <input
@@ -176,7 +176,7 @@ UI.define("ReservationSettings.Form", function() {
                       checked={!this.state.number_of_day_monthly}
                       onChange={this.switchMonthlyType}
                     />
-                    <label htmlFor="frameDayMonthly2"><%= I18n.t("settings.reservation_setting.number_of_week") %></label>
+                    <label htmlFor="frameDayMonthly2">{this.props.numberOfWeekLabel}</label>
                   </dt>
                   <dd>毎月第
                     <input
@@ -190,7 +190,7 @@ UI.define("ReservationSettings.Form", function() {
                   </dd>
                 </dl>
                 <dl>
-                  <dt><%= I18n.t("common.day") %></dt>
+                  <dt>{this.props.dayLabel}</dt>
                   <dd>
                     <div className="BTNselect">
                       { this.props.dayNames.map(function(dayName, i) {
@@ -224,7 +224,7 @@ UI.define("ReservationSettings.Form", function() {
               data-value="all_time"
               onClick={this.swithTimeType}
                />
-             <label htmlFor="frameTime1"><span><%= I18n.t("settings.reservation_setting.all_business_hours") %></span></label>
+               <label htmlFor="frameTime1"><span>{this.props.allBusinessHoursLabel}</span></label>
             <input
               type="radio"
               name="frameTime"
@@ -233,13 +233,13 @@ UI.define("ReservationSettings.Form", function() {
               data-value="custom_time"
               onClick={this.swithTimeType}
             />
-            <label htmlFor="frameTime2"><span><%= I18n.t("settings.reservation_setting.custom_time") %></span></label>
+            <label htmlFor="frameTime2"><span>{this.props.customTimeLabel}</span></label>
           </div>
           {
             (this.state.isAllBusinessHours) ? null : (
               <div className="setDetail formRow">
                 <dl>
-                <dt><%= I18n.t("common.start_time") %></dt>
+                  <dt>{this.props.startTimeLabel}</dt>
                   <dd>
                     <input
                       type="time"
@@ -249,7 +249,7 @@ UI.define("ReservationSettings.Form", function() {
                   </dd>
                 </dl>
                 <dl>
-                  <dt><%= I18n.t("common.end_time") %></dt>
+                  <dt>{this.props.endTimeLabel}</dt>
                   <dd>
                     <input
                       type="time"
@@ -264,7 +264,7 @@ UI.define("ReservationSettings.Form", function() {
 
           <ul id="footerav">
             <li>
-              <a className="BTNtarco" href={this.props.cancelPath}><%= I18n.t("action.cancel") %></a>
+              <a className="BTNtarco" href={this.props.cancelPath}>{this.props.cancelBtn}</a>
             </li>
             <li>
               <input

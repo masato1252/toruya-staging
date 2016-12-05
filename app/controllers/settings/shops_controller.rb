@@ -28,7 +28,7 @@ class Settings::ShopsController < SettingsController
 
     respond_to do |format|
       if @shop.save
-        format.html { redirect_to settings_shops_path , notice: 'Shop was successfully created.' }
+        format.html { redirect_to settings_shops_path , notice: I18n.t("settings.shop.create_successfully_message") }
         format.json { render :show, status: :created, location: @shop }
       else
         format.html { render :new }

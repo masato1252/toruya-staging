@@ -1,23 +1,23 @@
 <form>
   <div id="customize-table" class="formRow table">
     <dl>
-      <dd>Name</dd>
+      <dd><%= t("common.name") %></dd>
       <dd><%= @profile.name %></dd>
     </dl>
     <dl>
-      <dd>Company Name</dd>
+      <dd><%= Profile.human_attribute_name(:company_name) %></dd>
       <dd><%= @profile.company_name %></dd>
     </dl>
     <dl>
-      <dd>Zip Code</dd>
+      <dd><%= Profile.human_attribute_name(:zip_code) %></dd>
       <dd><%= @profile.zip_code %></dd>
     </dl>
     <dl>
-      <dd>Address</dd>
+      <dd><%= Profile.human_attribute_name(:address) %></dd>
       <dd><%= @profile.address %></dd>
     </dl>
     <dl>
-      <dd>Phone Number</dd>
+      <dd><%= Profile.human_attribute_name(:phone_number) %></dd>
       <dd><%= @profile.phone_number %></dd>
     </dl>
     <dl>
@@ -25,5 +25,5 @@
       <dd><%= @profile.website %></dd>
     </dl>
   </div>
-  <%= link_to "EDIT", edit_settings_profile_path, class: "btn btn-primary" %>
+  <%= link_to t("action.edit"), edit_settings_profile_path, class: "btn btn-primary" %>
 </form>
