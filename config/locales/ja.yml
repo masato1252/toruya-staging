@@ -1,4 +1,10 @@
 ja:
+  requirement:
+    contact_redirect_message: Please connect your google account with your toruya groups
+    contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
+    contact_warning_link_title: Google同期設定
+    business_schedule_warning_message: "%{link}にて営業日時を設定してください。"
+    business_schedule_warning_link_title: 営業時間設定ページ
   action:
     delete: 削除
     edit: 編集
@@ -6,6 +12,7 @@ ja:
     log_out: ログアウト
     save: 保存
   common:
+    processing: インポート中
     date: 日付
     day: 曜日
     start_time: 開始時間
@@ -95,12 +102,25 @@ ja:
     contact:
       info_title: 顧客台帳
       new_title: 新規台帳作成
-      new_button: 新規台帳作成
+      new_button: 新規グループを作成
       info_1: 新しい顧客台帳の基本設定をします。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       info_label: 台帳情報
       name: 台帳名
       sync_google: Google同期設定
+      connect_google: Googleアカウントを設定
+      reconnect_google: Googleアカウントを再設定
+      connected_google_group_title: Google連絡先グループ
+      synchronization_title: 同期状態
+      connect: 同期設定する
+      sync: 同期
+      google_account_synchronization: Googleアカウント同期設定
+      connection_binding_desc: インポートするGoogle連絡先グループを選択するか『新規グループを作成』ボタンを押してください。
+      google_group_name: 既存Google連絡先グループ
+      bind_btn: インポート
+      binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
+      bind_successfully_message: Google連絡先データのインポート準備が完了しました。
+      importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
     account:
       info_title: アカウント
   constants:

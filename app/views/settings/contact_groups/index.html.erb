@@ -8,17 +8,17 @@
 <form>
   <div>
     <% if current_user.uid %>
-      <%= link_to "Reconnect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"}  %>
+      <%= link_to t("settings.contact.reconnect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"}  %>
     <% else %>
-      <%= link_to "Connect Google account", user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
+      <%= link_to t("settings.contact.connect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
     <% end %>
   </div>
 
   <div id="customize-table" class="formRow table">
     <dl class="header">
       <dd><%= t("settings.contact.info_title") %></dd>
-      <dd>Connect Google Group</dd>
-      <dd>Synchronization</dd>
+      <dd><%= t("settings.contact.connected_google_group_title") %></dd>
+      <dd><%= t("settings.contact.synchronization_title") %></dd>
     </dl>
     <% @contact_groups.each do |contact_group| %>
       <dl class="body">
@@ -27,15 +27,15 @@
           <% if contact_group.google_group_name %>
             <%= contact_group.google_group_name %>
           <% else %>
-            <%= link_to "Connect", connections_settings_contact_group_path(contact_group) if current_user.uid %>
+            <%= link_to t("settings.contact.connect"), connections_settings_contact_group_path(contact_group) if current_user.uid %>
           <% end %>
         </dd>
         <dd>
-          <%= link_to "Sync", sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: "Processing" } if contact_group.google_group_name %>
+          <%= link_to t("settings.contact.sync"), sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: t("common.processing") } if contact_group.google_group_name %>
         </dd>
         <dd>
-          <%= link_to t("action.edit"), edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: "Processing" } %>
-          <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger btn-bold", data: { disable_with: "Processing" } do %>
+          <%= link_to t("action.edit"), edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: t("common.processing") } %>
+          <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger btn-bold", data: { disable_with: t("common.processing") } do %>
             <i class="fa fa-trash" aria-hidden="true"></i>
           <% end unless contact_group.google_group_name %>
         </dd>

@@ -26,12 +26,12 @@ module AccountRequirement
       elsif !session[:contact_checking]
         # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
-          flash[:alert] = "Please connect your google account with your toruya groups"
+          flash[:alert] = I18n.t("requirement.contact_redirect_message")
 
           redirect_to settings_contact_groups_path
         # If user doesn't go to restriction path, go to previous restriction path, just display waring message to remind him.
         elsif except_path("settings/contact_groups")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Contacts page", settings_contact_groups_path)} to connect your google account with your toruya groups".html_safe
+          flash.now[:alert] = I18n.t("requirement.contact_warning_message", link: view_context.link_to(I18n.t("requirement.contact_warning_link_title"), settings_contact_groups_path)).html_safe
         end
       elsif !session[:shop_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(3))
@@ -47,7 +47,7 @@ module AccountRequirement
 
           redirect_to settings_business_schedules_path
         elsif except_path("business_schedules")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Business Schedule page", settings_business_schedules_path)} to set your business schedule".html_safe
+          flash.now[:alert] = I18n.t("requirement.business_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.business_schedule_warning_link_title"), settings_business_schedules_path)).html_safe
         end
       elsif !session[:staffs_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(5))

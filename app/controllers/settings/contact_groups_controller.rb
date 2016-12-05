@@ -54,7 +54,7 @@ class Settings::ContactGroupsController < SettingsController
                                         google_group_id: params[:google_group_id],
                                         google_group_name: params[:google_group_name])
       if outcome.valid?
-        format.html { redirect_to settings_contact_groups_path, notice: 'Contact Groups was successfully binded.' }
+        format.html { redirect_to settings_contact_groups_path, notice: I18n.t("settings.contact.bind_successfully_message") }
       else
         @contact_group = outcome.result
         format.html { render :edit }
@@ -65,8 +65,7 @@ class Settings::ContactGroupsController < SettingsController
   def sync
     CustomersImporterJob.perform_later(@contact_group)
 
-    flash[:notice] = "We are importing your customers, would notify you when the process finished"
-    redirect_to settings_contact_groups_path
+    redirect_to settings_contact_groups_path, notice: I18n.t("settings.contact.importing_message")
   end
 
   private
