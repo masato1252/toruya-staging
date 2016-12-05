@@ -1,6 +1,6 @@
 module AccountRequirement
   extend ActiveSupport::Concern
-  ALLOWED_ACCESS_CONTROLLERS = ["settings/menus", "settings/reservation_settings", "settings/working_time/staffs", "settings/staffs", "business_schedules", "settings/shops", "settings/contact_groups", "settings/profiles"].freeze
+  ALLOWED_ACCESS_CONTROLLERS = ["settings/menus", "settings/reservation_settings", "settings/working_time/staffs", "settings/staffs", "settings/business_schedules", "settings/shops", "settings/contact_groups", "settings/profiles"].freeze
 
   included do
     before_action :require_user_name
