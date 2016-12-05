@@ -51,18 +51,25 @@
 
   <h3>臨時休業</h3>
   <%= react_component "UI.CustomSchedules",
-    { custom_schedules: @custom_schedules.map{ |schedule|
-      schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
-                                start_time_time_part: schedule.start_time_time,
-                                end_time: schedule.end_time.try(:to_s, :time))
-    }} %>
+    {
+    custom_schedules: @custom_schedules.map { |schedule|
+    schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
+                              start_time_time_part: schedule.start_time_time,
+                              end_time: schedule.end_time.try(:to_s, :time))
+  },
+    date_label: I18n.t("common.date"),
+    start_time_label: I18n.t("common.start_time"),
+    end_time_label: I18n.t("common.end_time"),
+    reason_of_closing_label: I18n.t("settings.business_hours.reason_of_closing"),
+    new_closing_btn: I18n.t("settings.business_hours.new_closing_btn"),
+  } %>
 
   <ul id="footerav">
     <li>
       <%= link_to t("action.cancel"), settings_business_schedules_path, class: "BTNtarco" %>
     </li>
     <li>
-      <%= submit_tag "保存", class: "BTNyellow" %>
+      <%= submit_tag t("action.save"), class: "BTNyellow" %>
     </li>
   </ul>
 

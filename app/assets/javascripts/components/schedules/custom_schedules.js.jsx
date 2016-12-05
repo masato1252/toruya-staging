@@ -45,10 +45,10 @@ UI.define("CustomSchedules", function() {
       return (
       <div id="tempHoliday" className="formRow">
         <ul className="tableTTL">
-          <li className="date"><%= I18n.t("common.date") %></li>
-          <li className="startTime"><%= I18n.t("common.start_time") %></li>
-          <li className="endTime"><%= I18n.t("common.end_time") %></li>
-          <li className="closeReason"><%= I18n.t("settings.business_hours.reason_of_closing") %></li>
+          <li className="date">{this.props.dateLabel}</li>
+          <li className="startTime">{this.props.startTimeLabel}</li>
+          <li className="endTime">{this.props.endTimeLabel}</li>
+          <li className="closeReason">{this.props.reasonOfClosingLabel}</li>
         </ul>
         <dl>
           <dt>
@@ -63,7 +63,7 @@ UI.define("CustomSchedules", function() {
             <input type="text" name="reason" placeholder="Write your reason(optional)" value={this.state.reason} size="40" onChange={this._handleChnage} />
           </dd>
           <dd className="add">
-            <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}><%= I18n.t("settings.business_hours.new_closing_btn") %></a>
+            <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>
           </dd>
           </dl>
          {this.state.customSchedules.map(function(schedule, i) {
