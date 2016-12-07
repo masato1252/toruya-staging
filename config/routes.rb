@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks" }
 
   authenticated :user, -> user { user.super_admin? } do
-    mount Delayed::Web::Engine, at: "/delayed_jobs"
+    mount Delayed::Web::Engine, at: "/_jobs"
   end
 
   root to: "home#index"
