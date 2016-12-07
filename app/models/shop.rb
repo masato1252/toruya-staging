@@ -90,7 +90,7 @@ class Shop < ApplicationRecord
 
     # menus's staffs could not had reservation during reservation time
     # menus time is longer enough
-    # shop doesn't have custom_schedules(closed temporary) during reservation time
+    # shop doesn't have custom_schedules(closed temporary) during reservation time.
     scoped = scoped.
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
       where("minutes <= ?", distance_in_minutes).
