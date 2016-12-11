@@ -52,6 +52,10 @@ UI.define("Reservation.Form", function() {
     handleCustomerAdd: function(event) {
       event.preventDefault();
 
+      if (this.state.menu_group_options.length == 0) {
+        return;
+      }
+
       var params = $.param({
         from_reservation: true,
         reservation_id: this.props.reservation.id,
@@ -396,7 +400,7 @@ UI.define("Reservation.Form", function() {
 
            <div id="customers">
              <h2>顧客
-               <a onClick={this.handleCustomerAdd} className="BTNtarco" id="addCustomer">追加</a>
+               <a onClick={this.handleCustomerAdd} className={`BTNtarco ${this.state.menu_group_options.length != 0 ? "" : "disabled"}`} id="addCustomer">追加</a>
              </h2>
 
              <UI.Common.CustomersList
