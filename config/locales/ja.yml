@@ -305,15 +305,15 @@ ja:
       present: は入力しないでください
       confirmation: と%{attribute}の入力が一致しません
       empty: を入力してください
-      equal_to: は%{count}にしてください
+      equal_to: は%{value}にしてください
       even: は偶数にしてください
       exclusion: は予約されています
-      greater_than: は%{count}より大きい値にしてください
-      greater_than_or_equal_to: は%{count}以上の値にしてください
+      greater_than: は%{value}より大きい値にしてください
+      greater_than_or_equal_to: は%{value}以上の値にしてください
       inclusion: は一覧にありません
       invalid: は不正な値です
-      less_than: は%{count}より小さい値にしてください
-      less_than_or_equal_to: は%{count}以下の値にしてください
+      less_than: は%{value}より小さい値にしてください
+      less_than_or_equal_to: は%{value}以下の値にしてください
       model_invalid: "バリデーションに失敗しました: %{errors}"
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
