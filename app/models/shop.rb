@@ -122,25 +122,25 @@ class Shop < ApplicationRecord
     scoped = scoped.
       where("reservation_settings.day_type = ?", "business_days").
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time).
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time).
     or(
       scoped.
       where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}").
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
     ).
     or(
       scoped.
       where("reservation_settings.day_type = ? and reservation_settings.day = ?", "monthly", start_time.day).
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
     ).
     or(
       scoped.
       where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
              ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}").
       where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-             (reservation_settings.start_time <= ? and reservation_settings.end_time >= ?)", start_time, end_time)
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
     )
 
     # Menu with customers need to be afforded by staff
@@ -175,7 +175,7 @@ class Shop < ApplicationRecord
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
-      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
+      where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
     )
 
     scoped.select("staffs.*").group("staffs.id")
@@ -199,7 +199,7 @@ class Shop < ApplicationRecord
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
-      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
+      where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
     )
 
     scoped.select("menus.*").group("menus.id")
