@@ -44,7 +44,12 @@ UI.define("Reservation.Form", function() {
       var _this = this;
 
       $("#select2").select2({
-        theme: "bootstrap"
+        theme: "bootstrap",
+        "language": {
+          "noResults": function() {
+            return _this.props.noMenuMessage;
+          }
+        }
       })
       .on("change", _this._handleChange);
     },
@@ -227,7 +232,7 @@ UI.define("Reservation.Form", function() {
         });
 
         if (result["menu"]["group_options"].length == 0) {
-          alert("No available menu");
+          alert(this.props.noValidMenuAlert);
         }
 
         setTimeout(function() {
@@ -355,12 +360,12 @@ UI.define("Reservation.Form", function() {
                       value={this.state.end_time_time_part}
                       onChange={this._handleChange} />
                       <span className="danger">
-                        { this._isValidReservationTime() ? null : " Need a valid reservation time" }
+                        { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }
                       </span>
                       <span className="subinfo">
                         {
                           this.state.start_time_restriction && this.state.end_time_restriction ?
-                          `※Business Hour from ${this.state.start_time_restriction} to ${this.state.end_time_restriction}` :
+                          `${this.props.businessTimeSuggestion} ${this.state.start_time_restriction} ~ ${this.state.end_time_restriction}` :
                           "Not working"
                         }
                       </span>

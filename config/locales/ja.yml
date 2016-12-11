@@ -25,6 +25,11 @@ ja:
     birthday: 生年月日
     memo: メモ
     name: 氏名
+  reservation:
+    valid_time_tip_message: 予約時間が正しくありません。
+    business_time_suggestion: "※営業時間"
+    no_valid_menu_alert: メニューを入力してください。
+    no_menu_message: 検索結果なし
   settings:
     shop:
       info_title:  店舗情報

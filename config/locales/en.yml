@@ -29,6 +29,11 @@ en:
     family_name_kana: Family Name Kana
     first_name_kana: First Name Kana
     company_name: Company Name
+  reservation:
+    valid_time_tip_message: Need a valid reservation time
+    business_time_suggestion: "※Business Hour"
+    no_valid_menu_alert: No available menu
+    no_menu_message: No results found
   settings:
     shop:
       info_title: Shop Info
