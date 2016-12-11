@@ -184,6 +184,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    moment_timezone-rails (0.5.0)
     momentjs-rails (2.11.1)
       railties (>= 3.1)
     multi_json (1.12.1)
@@ -358,6 +359,7 @@ DEPENDENCIES
   jquery-rails
   letter_opener (~> 1.4.1)
   listen (~> 3.0.5)
+  moment_timezone-rails (~> 0.5.0)
   momentjs-rails (~> 2.11.1)
   nokogiri (~> 1.6.8)
   omniauth-google-oauth2

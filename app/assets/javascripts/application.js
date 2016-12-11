@@ -19,6 +19,7 @@
 //= require ui
 //= require components
 //= require moment
+//= require moment-timezone-with-data
 //= require moment/ja.js
 //= require select2
 //= require atomic_requests.js
