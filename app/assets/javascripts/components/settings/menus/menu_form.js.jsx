@@ -386,8 +386,12 @@ UI.define("Settings.MenuForm", function() {
               }.bind(this))}
           </div>
 
-          <h3>対応従業員</h3>
-          <div id="doStaff" className="formRow">
+          <div id="customize-table" className="formRow menu-staffs-table">
+              <dl className="header">
+                <dt>対応従業員</dt>
+                <dd></dd>
+                <dd>Corresponding number of people</dd>
+              </dl>
               {this.state.menuStaffsOptions.map(function(menuStaffOption) {
                 return(
                   <dl key={`staff-${menuStaffOption.staffId}`}>
@@ -400,7 +404,7 @@ UI.define("Settings.MenuForm", function() {
                       <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
                     }
 
-                    <dt>{menuStaffOption.name}</dt>
+                    <dt className="staff-name">{menuStaffOption.name}</dt>
                     <dd className="capability">
                       <input
                         type="checkbox"

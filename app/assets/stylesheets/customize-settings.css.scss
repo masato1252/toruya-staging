@@ -120,6 +120,19 @@
         padding: 10px;
       }
     }
+
+    // menu staff options
+    &.menu-staffs-table {
+      width: 100%;
+
+      dt.staff-name {
+        width: 150px;
+      }
+
+      dd.capability {
+        width: 170px;
+      }
+    }
   }
 }
 
