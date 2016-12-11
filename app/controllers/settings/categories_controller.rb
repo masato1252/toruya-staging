@@ -46,7 +46,7 @@ class Settings::CategoriesController < SettingsController
   def update
     respond_to do |format|
       if @category.update(settings_category_params)
-        format.html { redirect_to settings_categories_path, notice: 'Category was successfully updated.' }
+        format.html { redirect_to settings_categories_path, notice: I18n.t("common.create_or_update_successfully_message") }
       else
         format.html { render :edit }
       end

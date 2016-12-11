@@ -60,7 +60,7 @@ UI.define("CustomSchedules", function() {
             <input type="time" name="end_time" defaultValue="23:59" value={this.state.end_time} size="20" onChange={this._handleChnage} />
           </dd>
           <dd className="closeReason">
-            <input type="text" name="reason" placeholder="Write your reason(optional)" value={this.state.reason} size="40" onChange={this._handleChnage} />
+            <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChnage} />
           </dd>
           <dd className="add">
             <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>

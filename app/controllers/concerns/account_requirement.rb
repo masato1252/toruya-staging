@@ -51,11 +51,11 @@ module AccountRequirement
         end
       elsif !session[:staffs_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(5))
-          flash[:alert] = "Please create your staffs"
+          flash[:alert] = I18n.t("requirement.staff_redirect_message")
 
           redirect_to new_settings_staff_path
         elsif except_path("settings/staffs")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Staff page", new_settings_staff_path)} to create your staffs".html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_warning_message", link: view_context.link_to(I18n.t("requirement.staff_warning_link_title"), new_settings_staff_path)).html_safe
         end
       elsif !session[:working_time_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(6))
@@ -63,7 +63,7 @@ module AccountRequirement
 
           redirect_to settings_working_time_staffs_path
         elsif except_path("settings/working_time/staffs")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Staff business_schedules page", settings_working_time_staffs_path)} to set their schedules".html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_working_time_staffs_path)).html_safe
         end
       elsif !session[:reservation_settings_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(7))
@@ -75,11 +75,11 @@ module AccountRequirement
         end
       elsif !session[:menu_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS)
-          flash[:alert] = "Please create your Menu"
+          flash[:alert] = I18n.t("requirement.menu_redirect_message")
 
           redirect_to new_settings_menu_path
         elsif except_path("settings/menus")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Menu page", new_settings_menu_path)} to create your Menu".html_safe
+          flash.now[:alert] = I18n.t("requirement.menu_warning_message", link: view_context.link_to(I18n.t("requirement.menu_warning_link_title"), new_settings_menu_path)).html_safe
         end
       end
     end

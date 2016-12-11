@@ -5,6 +5,14 @@ en:
     contact_warning_link_title: Contacts page
     business_schedule_warning_message: Please go to %{link} to set your business.
     business_schedule_warning_link_title: Business Schedule page
+    staff_redirect_message: Please create your staffs
+    staff_warning_message: Please go to %{link} page to create your staffs.
+    staff_warning_link_title: Staff page
+    staff_working_schedule_warning_message: Please go to %{link} to set their schedules.
+    staff_working_schedule_warning_link_title: Staff business_schedules page
+    menu_redirect_message: Please create your Menu
+    menu_warning_message: Please go to %{link} page to create your Menu.
+    menu_warning_link_title: Menu page
   action:
     delete: Delete
     edit: edit
@@ -24,11 +32,9 @@ en:
     email: E-Mail
     birthday: Birthday
     memo: Memo
-    family_name: Family Name
-    first_name: First Name
-    family_name_kana: Family Name Kana
-    first_name_kana: First Name Kana
+    name: Name
     company_name: Company Name
+    create_or_update_successfully_message: Updated successfully
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -51,6 +57,7 @@ en:
       japan_holidays_close_tip: Check to set it closed for Japanese holidays.
       reason_of_closing: Reason of closing
       new_closing_btn: Add a Row
+      closing_reason: write your reason(optional)
       open_time: OPEN
       close_time: CLOSE
     reservation_setting:
