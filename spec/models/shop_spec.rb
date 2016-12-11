@@ -15,8 +15,8 @@ RSpec.describe Shop, type: :model do
 
       context "when shop has business_schedule" do
         let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
-                                                     start_time: now.beginning_of_day + 7.hours,
-                                                     end_time: now.beginning_of_day + 18.hours) }
+                                                     start_time: (now.beginning_of_day + 7.hours).advance(months: -1),
+                                                     end_time: (now.beginning_of_day + 18.hours).advance(months: -1)) }
 
         it "returns available time range" do
           expect(shop.available_time(now.to_date)).to eq((now.beginning_of_day + 16.hours)..(now.beginning_of_day + 18.hours))
@@ -36,8 +36,8 @@ RSpec.describe Shop, type: :model do
       context "when shop needs to work" do
         let(:shop) { FactoryGirl.create(:shop, holiday_working: true) }
         let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
-                                                      start_time: now.beginning_of_day + 7.hours,
-                                                      end_time: now.beginning_of_day + 18.hours) }
+                                                      start_time: (now.beginning_of_day + 7.hours).advance(months: -1),
+                                                      end_time: (now.beginning_of_day + 18.hours).advance(months: -1)) }
 
 
         it "returns available time range" do
@@ -174,7 +174,7 @@ RSpec.describe Shop, type: :model do
 
         context "when reservation setting time is not available" do
           before { test_data if respond_to?(:test_data) }
-          let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days", start_time: now.advance(minute: 0), end_time: now.advance(minutes: 59))) }
+          let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days", start_time: now.advance(months: -1, minute: 0), end_time: now.advance(months: -1, minutes: 59))) }
 
           it "returns empty" do
             expect(shop.available_reservation_menus(time_range)).to be_empty
@@ -318,7 +318,7 @@ RSpec.describe Shop, type: :model do
         let(:test_data) do
           FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
           FactoryGirl.create(:business_schedule, shop: shop, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
-                             start_time: time_range.first, end_time: time_range.last)
+                             start_time: time_range.first.advance(months: -1), end_time: time_range.last.advance(months: -1))
         end
       end
 
