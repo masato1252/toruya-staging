@@ -104,7 +104,7 @@ class Shop < ApplicationRecord
     or(
       scoped.
       where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", business_time_range.first.wday).
-      where("business_schedules.start_time <= ? and business_schedules.end_time >= ?", start_time, end_time)
+      where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
     )
 
     today = Time.zone.now.to_s(:date)
