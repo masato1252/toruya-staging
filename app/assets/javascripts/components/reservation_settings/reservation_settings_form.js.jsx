@@ -244,7 +244,7 @@ UI.define("ReservationSettings.Form", function() {
                     <input
                       type="time"
                       name="reservation_setting[start_time]"
-                      defaultValue={moment(this.state.setting.start_time).format("HH:mm")}
+                      defaultValue={moment(this.state.setting.start_time).tz(this.props.timezone).format("HH:mm")}
                       />
                   </dd>
                 </dl>
@@ -254,7 +254,7 @@ UI.define("ReservationSettings.Form", function() {
                     <input
                       type="time"
                       name="reservation_setting[end_time]"
-                      defaultValue={moment(this.state.setting.end_time).format("HH:mm")}
+                      defaultValue={moment(this.state.setting.end_time).tz(this.props.timezone).format("HH:mm")}
                       />
                   </dd>
                 </dl>

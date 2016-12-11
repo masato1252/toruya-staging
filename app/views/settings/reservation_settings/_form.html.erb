@@ -1,4 +1,5 @@
 <%= react_component "UI.ReservationSettings.Form", {
+  timezone: Time.zone.tzinfo.identifier,
   save_setting_path: url,
   cancel_path: settings_reservation_settings_path,
   form_authenticity_token: form_authenticity_token,

@@ -100,6 +100,7 @@ UI.define("WorkingTime.StaffForm", function() {
               return (
                 <UI.WorkingTime.BusinessScheduleForm
                   key={`schedule-${shop.id}`}
+                  timezone={this.props.timezone}
                   shop={shop}
                   wdays={this.props.wdays}
                   wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}

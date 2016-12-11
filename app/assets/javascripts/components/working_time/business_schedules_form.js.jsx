@@ -52,7 +52,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                         type="time"
                         name={`business_schedules[${this.props.shop.id}][${wday}][start_time]`}
                         size="20"
-                        defaultValue={schedule ? moment(schedule.start_time).format("HH:mm") : ""}
+                        defaultValue={schedule ? moment(schedule.start_time).tz(this.props.timezone).format("HH:mm") : ""}
                          />
                     </dd>
                     <dd classNameName="endsTime">
@@ -60,7 +60,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                         type="time"
                         name={`business_schedules[${this.props.shop.id}][${wday}][end_time]`}
                         size="20"
-                        defaultValue={schedule ? moment(schedule.end_time).format("HH:mm") : ""}
+                        defaultValue={schedule ? moment(schedule.end_time).tz(this.props.timezone).format("HH:mm") : ""}
                       />
                     </dd>
                   </dl>
