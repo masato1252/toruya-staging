@@ -114,7 +114,7 @@ class Reservation < ApplicationRecord
 
   def enough_staffs_for_customers
     min_staffs_number = menu.min_staffs_number
-    return unless min_staffs_number
+    return if min_staffs_number.zero?
 
     if staff_ids.size < min_staffs_number
       errors.add(:base, "Not enough staffs for menu")

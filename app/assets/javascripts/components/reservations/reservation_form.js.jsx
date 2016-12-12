@@ -141,7 +141,7 @@ UI.define("Reservation.Form", function() {
         this.state.end_time_time_part &&
         this.state.menu_id &&
         this.state.staff_ids.length &&
-        (this.state.menu_min_staffs_number ? $.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number : true) &&
+        ($.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number) &&
         this._isValidCustomerNumber()
       )
     },
@@ -290,7 +290,7 @@ UI.define("Reservation.Form", function() {
     renderStaffSelects: function() {
       var select_components = [];
 
-      if (this.state.menu_min_staffs_number) {
+      if (this.state.menu_min_staffs_number > 0) {
         for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
           var value;
           if (this.state.staff_ids[i]) {

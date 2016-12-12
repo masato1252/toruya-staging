@@ -21,7 +21,7 @@ class StaffMenu < ApplicationRecord
   private
 
   def valid_max_customers
-    if menu.min_staffs_number && menu.min_staffs_number == 1
+    if menu.min_staffs_number == 1
       if !max_customers || (max_customers && max_customers < 1)
         errors.add(:max_customers, "need specific max_customers number")
       end

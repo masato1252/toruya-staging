@@ -31,7 +31,7 @@ module Reservations
     end
 
     def execute
-      reservation.attributes = params if reservation
+      reservation.attributes = params.slice(:start_time_date_part, :start_time_time_part, :end_time_time_part, :menu_id, :customer_ids) if reservation
       menus_scope = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
 
       _category_with_menus = category_with_menus(menus_scope)

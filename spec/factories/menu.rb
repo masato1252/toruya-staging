@@ -21,7 +21,7 @@ FactoryGirl.define do
     end
 
     trait :no_manpower do
-      min_staffs_number nil
+      min_staffs_number 0
     end
 
     trait :with_reservation_setting do

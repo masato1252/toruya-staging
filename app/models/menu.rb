@@ -23,7 +23,7 @@ class Menu < ApplicationRecord
 
   validates :name, presence: true
   validates :minutes, presence: true
-  validates :min_staffs_number, numericality: { greater_than: 0 }, allow_nil: true
+  validates :min_staffs_number, numericality: { greater_than_or_equal_to: 0 }
   validates :max_seat_number, numericality: { greater_than: 0 }, allow_nil: true
   validates :short_name, length: { maximum: 15 }
 
