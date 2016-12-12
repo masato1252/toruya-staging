@@ -394,7 +394,7 @@ UI.define("Settings.MenuForm", function() {
           <div id="customize-table" className="formRow menu-staffs-table">
               <dl className="header">
                 <dt>対応従業員</dt>
-                <dd></dd>
+                <dd>対応</dd>
                 <dd>Corresponding number of people</dd>
               </dl>
               {this.state.menuStaffsOptions.map(function(menuStaffOption) {
@@ -432,6 +432,9 @@ UI.define("Settings.MenuForm", function() {
                              data-staff-id={menuStaffOption.staffId}
                              onChange={this._handleStaffMaxCustomers}
                              name="menu[staff_menus_attributes][][max_customers]" /> : null
+                      }
+                      {
+                        menuStaffOption.checked ? "人" : null
                       }
                     </dd>
                   </dl>
