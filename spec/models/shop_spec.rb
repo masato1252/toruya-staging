@@ -15,11 +15,11 @@ RSpec.describe Shop, type: :model do
 
       context "when shop has business_schedule" do
         let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
-                                                     start_time: (now.beginning_of_day + 7.hours).advance(months: -1),
-                                                     end_time: (now.beginning_of_day + 18.hours).advance(months: -1)) }
+                                                     start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
+                                                     end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
         it "returns available time range" do
-          expect(shop.available_time(now.to_date)).to eq((now.beginning_of_day + 16.hours)..(now.beginning_of_day + 18.hours))
+          expect(shop.available_time(now.to_date)).to eq(custom_schedule.end_time..business_schedule.end_time)
         end
       end
 
@@ -36,12 +36,12 @@ RSpec.describe Shop, type: :model do
       context "when shop needs to work" do
         let(:shop) { FactoryGirl.create(:shop, holiday_working: true) }
         let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
-                                                      start_time: (now.beginning_of_day + 7.hours).advance(months: -1),
-                                                      end_time: (now.beginning_of_day + 18.hours).advance(months: -1)) }
+                                                      start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
+                                                      end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
 
         it "returns available time range" do
-          expect(shop.available_time(now.to_date)).to eq((now.beginning_of_day + 7.hours)..(now.beginning_of_day + 18.hours))
+          expect(shop.available_time(now.to_date)).to eq(business_schedule.start_time..business_schedule.end_time)
         end
       end
 
@@ -317,8 +317,10 @@ RSpec.describe Shop, type: :model do
       it_behaves_like "available menus" do
         let(:test_data) do
           FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
-          FactoryGirl.create(:business_schedule, shop: shop, staff: staff, business_state: "opened", day_of_week: time_range.first.wday,
-                             start_time: time_range.first.advance(months: -1), end_time: time_range.last.advance(months: -1))
+          FactoryGirl.create(:business_schedule, shop: shop, staff: staff, business_state: "opened",
+                             day_of_week: time_range.first.advance(weeks: -1).wday,
+                             start_time: time_range.first.advance(weeks: -1),
+                             end_time: time_range.last.advance(weeks: -1))
         end
       end
 

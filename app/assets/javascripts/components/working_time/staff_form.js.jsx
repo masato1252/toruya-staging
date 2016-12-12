@@ -112,6 +112,16 @@ UI.define("WorkingTime.StaffForm", function() {
               );
             }.bind(this))
           }
+          <h3>臨時休業</h3>
+          <UI.CustomSchedules
+            customSchedules={this.props.customSchedules}
+            dateLabel={this.props.dateLabel}
+            startTimeLabel={this.props.startTimeLabel}
+            endTimeLabel={this.props.endTimeLabel}
+            reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+            newClosingBtn={this.props.newClosingBtn}
+            closingReason={this.props.closingReason}
+          />
 
           <div id="footerav">
           </div>

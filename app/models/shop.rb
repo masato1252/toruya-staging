@@ -83,8 +83,10 @@ class Shop < ApplicationRecord
             :menu_reservation_setting_rule).
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
-             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
-             LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}
+             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND
+                                                   business_schedules.shop_id = #{id}
+             LEFT OUTER JOIN custom_schedules shop_custom_schedules ON shop_custom_schedules.staff_id = staffs.id AND
+                                                                       shop_custom_schedules.shop_id = #{id}
              LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
                                                           shop_menu_repeating_dates.shop_id = #{id}")
 
@@ -93,9 +95,10 @@ class Shop < ApplicationRecord
     # shop doesn't have custom_schedules(closed temporary) during reservation time.
     scoped = scoped.
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
+      where.not("staff_menus.staff_id" => custom_schedules_staff_ids(start_time, end_time)).
       where("minutes <= ?", distance_in_minutes).
-      where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
-             (NOT(custom_schedules.start_time <= :end_time AND custom_schedules.end_time >= :start_time))",
+      where("(shop_custom_schedules.start_time is NULL and shop_custom_schedules.end_time is NULL) or
+             (NOT(shop_custom_schedules.start_time <= :end_time AND shop_custom_schedules.end_time >= :start_time))",
              start_time: start_time, end_time: end_time)
 
     # Menu staffs schedule need to be full_time or work during reservation time
@@ -157,16 +160,12 @@ class Shop < ApplicationRecord
     start_time = business_time_range.first
     end_time = business_time_range.last + menu.interval.to_i.minutes
 
-    # If this menu doesn't take any man power, then it could be assigned to anyone
-    unless menu.min_staffs_number
-      return menu.staffs
-    end
-
     scoped = menu.staffs.
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}").
       includes(:staff_menus).
       where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
+      where.not("staff_menus.staff_id" => custom_schedules_staff_ids(start_time, end_time)).
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
              (NOT(custom_schedules.start_time <= ? and custom_schedules.end_time >= ?))", end_time, start_time)
 
@@ -187,8 +186,9 @@ class Shop < ApplicationRecord
     end_time = business_time_range.last
 
     scoped = menus.
-      where("menus.min_staffs_number" => nil).
+      where("menus.min_staffs_number" => 0).
       joins(:staffs).
+      where.not("staffs.id" => custom_schedules_staff_ids(start_time, end_time)).
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}
              LEFT OUTER JOIN custom_schedules ON custom_schedules.staff_id = staffs.id AND custom_schedules.shop_id = #{id}").
       where("(custom_schedules.start_time is NULL and custom_schedules.end_time is NULL) or
@@ -215,11 +215,18 @@ class Shop < ApplicationRecord
     @reserved_staff_ids ||= ReservationStaff.
       joins(reservation: :menu).
       where.not(reservation_id: reservation_id.presence).
-      where.not("menus.min_staffs_number": nil).
+      where.not("menus.min_staffs_number" => 0).
       where("reservation_staffs.staff_id": staff_ids).
       where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",
           end_time, start_time).
-      pluck(:staff_id).uniq
+      pluck("DISTINCT staff_id")
+  end
+
+  def custom_schedules_staff_ids(start_time, end_time)
+    CustomSchedule.
+      where(staff_id: staff_ids).
+      where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time).
+      pluck("DISTINCT staff_id")
   end
 
   def business_schedule(date)

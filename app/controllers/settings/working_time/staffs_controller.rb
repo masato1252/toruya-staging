@@ -9,6 +9,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @staff = super_user.staffs.find_by(id: params[:id])
     @full_time_schedules = @staff.business_schedules.full_time
     @wdays_business_schedules_by_shop = @staff.business_schedules.order(:day_of_week).group_by(&:shop_id)
+    @custom_schedules = @staff.custom_schedules.order(:start_time)
   end
 
   def update
@@ -22,6 +23,10 @@ class Settings::WorkingTime::StaffsController < SettingsController
       end
     end
 
+    custom_schedules_params[:custom_schedules].each do |attrs|
+      CreateCustomSchedule.run(staff: @staff, attrs: attrs.to_h)
+    end if custom_schedules_params[:custom_schedules]
+
     redirect_to settings_working_time_staffs_path
   end
 
@@ -30,5 +35,9 @@ class Settings::WorkingTime::StaffsController < SettingsController
   def set_staff
     @staff = super_user.staffs.find_by(id: params[:id])
     redirect_to settings_staffs_path(shop) unless @staff
+  end
+
+  def custom_schedules_params
+    params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time, :reason, :_destroy])
   end
 end

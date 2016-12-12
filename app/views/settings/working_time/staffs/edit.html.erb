@@ -21,7 +21,17 @@
     in_out_label: I18n.t("settings.staff_working_time.in_out_label"),
     start_label: I18n.t("settings.staff_working_time.start_label"),
     end_label: I18n.t("settings.staff_working_time.end_label"),
-    cancel_btn: I18n.t("action.cancel")
+    cancel_btn: I18n.t("action.cancel"),
+    custom_schedules: @custom_schedules.map { |schedule|
+    schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
+                              start_time_time_part: schedule.start_time_time,
+                              end_time: schedule.end_time.try(:to_s, :time)) },
+    date_label: I18n.t("common.date"),
+    start_time_label: I18n.t("common.start_time"),
+    end_time_label: I18n.t("common.end_time"),
+    reason_of_closing_label: I18n.t("settings.business_hours.reason_of_closing"),
+    new_closing_btn: I18n.t("settings.business_hours.new_closing_btn"),
+    closing_reason: I18n.t("settings.business_hours.closing_reason")
   })
   %>
 <% else %>
