@@ -32,7 +32,10 @@ class Settings::MenusController < SettingsController
 
     respond_to do |format|
       outcome = UpdateMenu.run(menu: @menu,
-                               attrs: menu_params.to_h.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes),
+                               attrs: menu_params.to_h.except(:reservation_setting_id,
+                                                              :menu_reservation_setting_rule_attributes,
+                                                              :new_categories),
+                               new_categories: menu_params[:new_categories],
                                reservation_setting_id: menu_params[:reservation_setting_id],
                                menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
@@ -51,7 +54,10 @@ class Settings::MenusController < SettingsController
   def update
     respond_to do |format|
       outcome = UpdateMenu.run(menu: @menu,
-                               attrs: menu_params.to_h.except(:reservation_setting_id, :menu_reservation_setting_rule_attributes),
+                               attrs: menu_params.to_h.except(:reservation_setting_id,
+                                                              :menu_reservation_setting_rule_attributes,
+                                                              :new_categories),
+                               new_categories: menu_params[:new_categories],
                                reservation_setting_id: menu_params[:reservation_setting_id],
                                menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
@@ -107,6 +113,7 @@ class Settings::MenusController < SettingsController
     :name, :short_name, :minutes, :interval, :min_staffs_number, :max_seat_number,
     :reservation_setting_id,
     staff_ids: [], shop_ids: [], category_ids: [],
+    new_categories: [],
     staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]],
     menu_reservation_setting_rule_attributes: [:start_date, :end_date, :repeats, :reservation_type],
     )

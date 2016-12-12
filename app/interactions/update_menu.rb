@@ -25,9 +25,17 @@ class UpdateMenu < ActiveInteraction::Base
     date :end_date, default: nil
     integer :repeats, default: nil
   end
+  array :new_categories, default: []
 
   def execute
+    categories = new_categories.map do |category_name|
+      menu.user.categories.create(name: category_name)
+    end
+
+    attrs[:category_ids] = (attrs[:category_ids].presence || []).push(*categories.map(&:id)) if categories.present?
+
     menu.attributes = attrs
+
     unless menu.save
       errors.merge!(menu.errors)
     end

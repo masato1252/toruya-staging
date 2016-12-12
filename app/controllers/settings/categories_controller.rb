@@ -27,15 +27,7 @@ class Settings::CategoriesController < SettingsController
     @category = super_user.categories.new(settings_category_params)
 
     if @category.save
-      if params[:from_menu]
-        if params[:menu_id]
-          redirect_to edit_settings_menu_path(id: params[:menu_id])
-        else
-          redirect_to new_settings_menu_path
-        end
-      else
-        redirect_to settings_categories_path
-      end
+      redirect_to settings_categories_path
     else
       render :new
     end

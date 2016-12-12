@@ -1,3 +1,5 @@
+//= require "components/settings/new_categories"
+
 "use strict";
 
 UI.define("Settings.MenuForm", function() {
@@ -366,25 +368,27 @@ UI.define("Settings.MenuForm", function() {
             </div>
           <h3 className="menuCategory">
             {this.props.categoryLabel}
-            <a href={this.props.newCategoryPath} className="BTNyellow addNew">{this.props.newCategoryBtn}</a>
           </h3>
           <div id="category" className="formRow">
-              {this.props.categoriesOptions.map(function(categoryOption) {
-                return(
-                  <dl className="checkbox" key={`category-${categoryOption.id}`}>
-                    <dd>
-                      <input
-                        type="checkbox"
-                        name="menu[category_ids][]"
-                        id={`category-${categoryOption.id}`}
-                        defaultValue={categoryOption.id}
-                        defaultChecked={categoryOption.checked}
-                      />
-                    <label htmlFor={`category-${categoryOption.id}`}>{categoryOption.name}</label>
-                    </dd>
-                  </dl>
-                );
-              }.bind(this))}
+            <UI.Settings.NewCategories
+              newCategoryBtn={this.props.newCategoryBtn}
+              />
+            {this.props.categoriesOptions.map(function(categoryOption) {
+              return(
+                <dl className="checkbox" key={`category-${categoryOption.id}`}>
+                  <dd>
+                    <input
+                      type="checkbox"
+                      name="menu[category_ids][]"
+                      id={`category-${categoryOption.id}`}
+                      defaultValue={categoryOption.id}
+                      defaultChecked={categoryOption.checked}
+                    />
+                  <label htmlFor={`category-${categoryOption.id}`}>{categoryOption.name}</label>
+                  </dd>
+                </dl>
+              );
+            }.bind(this))}
           </div>
 
           <div id="customize-table" className="formRow menu-staffs-table">
