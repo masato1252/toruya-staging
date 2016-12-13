@@ -11,7 +11,7 @@ class NotificationMailer < ActionMailer::Base
     @contact_group = contact_group
 
     mail(:to => contact_group.user.email,
-         :subject => subject("Contact Import already finisehd"))
+         :subject => "Toruya顧客台帳のGoogle同期作業が完了しました。")
 
   end
 end
