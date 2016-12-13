@@ -14,6 +14,7 @@
 #
 
 class ContactGroup < ApplicationRecord
+  GOOGLE_GROUP_PREFIX = "Toruya"
   has_many :rankings, class_name: ContactGroupRanking, dependent: :destroy
   has_many :ranks, through: :rankings
   belongs_to :user
@@ -32,6 +33,10 @@ class ContactGroup < ApplicationRecord
 
   scope :connected, -> { where.not(backup_google_group_id: nil) }
   scope :unconnect, -> { where(backup_google_group_id: nil) }
+
+  def google_backup_group_name
+    "#{GOOGLE_GROUP_PREFIX}-#{name}"
+  end
 
   private
 

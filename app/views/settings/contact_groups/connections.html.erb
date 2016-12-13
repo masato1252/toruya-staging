@@ -28,4 +28,12 @@
         </dl>
       <% end %>
     </div>
+    <hr />
+    <% if @google_groups.present? %>
+      <h2>Or you don't want to connect with google </h2>
+    <% end %>
+    <%= link_to "Only Use Toruya Google Group", bind_settings_contact_group_path(@contact_group),
+      method: :post,
+      class: "btn btn-success",
+        data: { confirm: "Are you sure?", disable_with: t("common.processing") } %>
   </form>

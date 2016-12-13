@@ -1,4 +1,8 @@
 Hi
 
 Your contact import process already finished
-form google group: <%= @contact_group.google_group_name %> to Toruya group: <%= @contact_group.name %>
+<% if @contact_group.google_group_name %>
+from your google group: <%= @contact_group.google_group_name %> to Toruya group: <%= @contact_group.name %>
+<% else %>
+from Toruya google group: <%= @contact_group.google_backup_group_name %> to Toruya group: <%= @contact_group.name %>
+<% end %>

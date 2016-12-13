@@ -11,7 +11,7 @@ class Groups::UpdateGroup < ActiveInteraction::Base
     google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
 
     if contact_group.update(params) && contact_group.backup_google_group_id
-      google_user.update_group(contact_group.backup_google_group_id, "#{Groups::CreateGroup::PREFIX}-#{params[:name]}")
+      google_user.update_group(contact_group.backup_google_group_id, "#{ContactGroup::GOOGLE_GROUP_PREFIX}-#{params[:name]}")
     end
   end
 end

@@ -1,14 +1,13 @@
 class Groups::CreateGroup < ActiveInteraction::Base
-  PREFIX = "Toruya"
   object :contact_group, class: ContactGroup
-  string :google_group_id
-  string :google_group_name
+  string :google_group_id, default: nil
+  string :google_group_name, default: nil
 
   def execute
     user = contact_group.user
     google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
 
-    backup_google_group = google_user.create_group("#{PREFIX}-#{contact_group.name}")
+    backup_google_group = google_user.create_group(contact_group.google_backup_group_name)
 
     contact_group.google_group_name = google_group_name
     contact_group.google_group_id = google_group_id

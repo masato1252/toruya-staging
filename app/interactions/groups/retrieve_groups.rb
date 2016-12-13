@@ -11,7 +11,7 @@ class Groups::RetrieveGroups < ActiveInteraction::Base
   private
 
   def exclude_system_groups(groups)
-    groups.delete_if { |group| group.title.match(/(System Group:|#{Groups::CreateGroup::PREFIX})/) }
+    groups.delete_if { |group| group.title.match(/(System Group:|#{ContactGroup::GOOGLE_GROUP_PREFIX})/) }
   end
 
   def exclude_used_groups(groups)
