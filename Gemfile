@@ -38,6 +38,7 @@ gem "hashie", "~> 3.4.4"
 gem "rollbar", "~> 2.13.3"
 gem "sendgrid-rails", "~> 3.1.0"
 gem "delayed-web", "~> 0.4.2"
+gem "puma", "~> 3.4.0"
 
 group :development, :test do
   gem "byebug", platform: :mri
