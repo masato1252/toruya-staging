@@ -180,7 +180,6 @@ UI.define("Customers.Dashboard", function() {
     },
 
     removeOption: function(optionType, index) {
-      event.preventDefault();
       var newCustomer = this.state.customer;
       newCustomer[optionType].splice(index, 1)
 
@@ -188,7 +187,6 @@ UI.define("Customers.Dashboard", function() {
     },
 
     addOption: function(optionType, index) {
-      event.preventDefault();
       var newCustomer = this.state.customer;
       var defaultValue = optionType == "emails" ? { address: ""} : "";
 
