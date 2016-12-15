@@ -180,7 +180,7 @@ class Shop < ApplicationRecord
     scoped.select("staffs.*").group("staffs.id")
   end
 
-  # No manpower menus are available for anytime, just valid staffs work during that time.
+  # No manpower menus are available for anytime, just needs valid staffs work during that time.
   def no_manpower_menus(business_time_range)
     start_time = business_time_range.first
     end_time = business_time_range.last

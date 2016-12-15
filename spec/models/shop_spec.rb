@@ -56,28 +56,6 @@ RSpec.describe Shop, type: :model do
   describe "#available_reservation_menus" do
     let(:params) {{ menu: menu }}
 
-    context "when reservation time is shorter than menu required times" do
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, params.merge(day_type: "business_days")) }
-      let(:time_range) { now..now.advance(minutes: 59) }
-
-      it "returns empty" do
-        expect(shop.available_reservation_menus(time_range)).to be_empty
-      end
-    end
-
-    context "when all staffs already had reservations at that time" do
-      let(:staff) { FactoryGirl.create(:staff, user: user, shop: shop) }
-      before do
-        FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
-        FactoryGirl.create(:reservation, shop: shop, menu: menu,
-                           start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
-      end
-
-      it "returns none" do
-        expect(shop.available_reservation_menus(time_range)).to eq(Menu.none)
-      end
-    end
-
     shared_examples "available menus" do
       context "when menus reservation is available on each business days" do
         before { test_data if respond_to?(:test_data) }
@@ -86,6 +64,14 @@ RSpec.describe Shop, type: :model do
 
         it "returns available reservation menus" do
           expect(shop.available_reservation_menus(time_range)).to include(menu)
+        end
+
+        context "when reservation time is shorter than menu required times" do
+          let(:time_range) { now..now.advance(minutes: 59) }
+
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
         end
 
         context "when menu is repeating rule" do
@@ -235,6 +221,13 @@ RSpec.describe Shop, type: :model do
           end
         end
 
+        context "when staff had custom_schedule during that time" do
+          let!(:custom_schedule) { FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first, end_time: time_range.last) }
+
+          it "returns empty" do
+            expect(shop.available_reservation_menus(time_range)).to be_empty
+          end
+        end
       end
 
       context "when menus reservation is available on each Friday" do
@@ -340,8 +333,6 @@ RSpec.describe Shop, type: :model do
   end
 
   describe "#available_staffs" do
-
-
     context "when staff is full time" do
       let!(:staff) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
 
@@ -470,6 +461,36 @@ RSpec.describe Shop, type: :model do
         it "returns available staffs" do
           expect(shop.available_staffs(menu, booking_time)).to include(staff)
         end
+      end
+    end
+  end
+
+  describe "#no_manpower_menus" do
+    let(:menu) { FactoryGirl.create(:menu, user: user, minutes: 60, shop: shop) }
+    let(:no_manpower_menus) { FactoryGirl.create(:menu, :no_manpower, user: user, minutes: 60, shop: shop) }
+    let(:staff) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
+    before do
+      FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
+      FactoryGirl.create(:staff_menu, menu: no_manpower_menus, staff: staff)
+    end
+
+    context "when even staff already reservation during that time" do
+      before do
+        FactoryGirl.create(:reservation, shop: shop, menu: menu,
+                           start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
+      end
+
+      it "still returns no_manpower menus" do
+        expect(shop.available_reservation_menus(time_range)).to eq(Menu.none)
+        expect(shop.no_manpower_menus(time_range)).to include(no_manpower_menus)
+      end
+    end
+
+    context "when staff had custom_schedule during that time" do
+      let!(:custom_schedule) { FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first, end_time: time_range.last) }
+
+      it "returns empty" do
+        expect(shop.no_manpower_menus(time_range)).to eq(Menu.none)
       end
     end
   end
