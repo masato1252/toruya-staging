@@ -18,7 +18,7 @@ class Customers::Filter < ActiveInteraction::Base
   integer :pre_page, default: 50
 
   def execute
-    scoped = super_user.customers.order("id").limit(pre_page)
+    scoped = super_user.customers.includes(:rank, :contact_group).order("id").limit(pre_page)
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped.
