@@ -34,8 +34,10 @@ UI.define("Customers.Dashboard", function() {
           data: { id: this.state.customer.id },
           dataType: "JSON"
         }).success(function(result) {
-          _this.setState({customer: result["customer"], processing: false});
-        });
+          _this.setState({customer: result["customer"]});
+        }).always(function() {
+        _this.setState({processing: false});
+      });
       }
     },
 
@@ -80,6 +82,7 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleMoreCustomers: function(event) {
+      this.setState({processing: true});
       switch (this.currentCustomersType) {
         case "recent":
           this.recentCutomers()
@@ -168,7 +171,7 @@ UI.define("Customers.Dashboard", function() {
         _this.setState({customers: originalCustomers.concat(result["customers"])});
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({Loading: false});
+        _this.setState({processing: false});
       });
     },
 
