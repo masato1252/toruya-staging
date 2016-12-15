@@ -29,7 +29,7 @@ class CustomersController < DashboardController
   # POST /customers
   # POST /customers.json
   def save
-    outcome = Customers::SaveCustomer.run(user: super_user, params: params[:customer].permit!.to_h)
+    outcome = Customers::Save.run(user: super_user, params: params[:customer].permit!.to_h)
     @customer = outcome.result
 
     render action: :show
@@ -50,7 +50,7 @@ class CustomersController < DashboardController
   end
 
   def filter
-    @customers = Customers::FilterCustomers.run(
+    @customers = Customers::Filter.run(
       super_user: super_user,
       pattern_number: params[:pattern_number],
       last_customer_id: params[:last_customer_id]
@@ -59,7 +59,7 @@ class CustomersController < DashboardController
   end
 
   def search
-    @customers = Customers::SearchCustomers.run(
+    @customers = Customers::Search.run(
       super_user: super_user,
       keyword: params[:keyword],
       last_customer_id: params[:last_customer_id]

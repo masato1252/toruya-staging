@@ -1,7 +1,7 @@
 # From google to Toruya
 # Import from original importing group and backup group
 # If customer already had backup_google_group_id, don't need to backup in another group
-class Customers::ImportCustomers < ActiveInteraction::Base
+class Customers::Import < ActiveInteraction::Base
   attr_reader :user
   object :contact_group, class: ContactGroup
 

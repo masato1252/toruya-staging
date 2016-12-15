@@ -1,4 +1,4 @@
-class Customers::SaveCustomer < ActiveInteraction::Base
+class Customers::Save < ActiveInteraction::Base
   DELIMITER = "-=-".freeze
 
   set_callback :type_check, :before do

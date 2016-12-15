@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Customers::SaveCustomer do
+RSpec.describe Customers::Save do
   let(:user) { FactoryGirl.create(:user) }
   let(:customer) { FactoryGirl.create(:customer, user: user, contact_group: contact_group) }
   let(:contact_group) { FactoryGirl.create(:contact_group, user: user) }
@@ -49,7 +49,7 @@ RSpec.describe Customers::SaveCustomer do
     end
 
     it "updates the params value" do
-      outcome = Customers::SaveCustomer.run(user: user, params: params)
+      outcome = Customers::Save.run(user: user, params: params)
       updated_customer = outcome.result
       expect(updated_customer).to eq(customer.reload)
       expect(updated_customer.birthday).to eq(Date.new(1950, 11, 20))

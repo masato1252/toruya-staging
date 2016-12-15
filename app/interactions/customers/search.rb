@@ -1,4 +1,4 @@
-class Customers::SearchCustomers < ActiveInteraction::Base
+class Customers::Search < ActiveInteraction::Base
   object :super_user, class: User
   string :keyword
   integer :last_customer_id, default: nil
@@ -9,9 +9,9 @@ class Customers::SearchCustomers < ActiveInteraction::Base
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped.where("
-      phonetic_last_name like :keyword or
-      phonetic_first_name like :keyword or
-      last_name like :keyword or
-      first_name like :keyword", keyword: "%#{keyword}%")
+      phonetic_last_name ilike :keyword or
+      phonetic_first_name ilike :keyword or
+      last_name ilike :keyword or
+      first_name ilike :keyword", keyword: "%#{keyword}%")
   end
 end

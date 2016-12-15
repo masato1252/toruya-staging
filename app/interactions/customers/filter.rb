@@ -1,4 +1,4 @@
-class Customers::FilterCustomers < ActiveInteraction::Base
+class Customers::Filter < ActiveInteraction::Base
   PATTERN = [
     %w(あ い う え お ア イ ウ エ オ),
     %w(か き く け こ カ キ ク ケ コ),
@@ -31,6 +31,6 @@ class Customers::FilterCustomers < ActiveInteraction::Base
   private
 
   def regexp_pattern
-    @regexp_pattern ||= "#{Customers::FilterCustomers::PATTERN[pattern_number].join("|")}"
+    @regexp_pattern ||= "#{PATTERN[pattern_number].join("|")}"
   end
 end
