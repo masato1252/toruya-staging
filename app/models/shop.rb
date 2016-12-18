@@ -83,6 +83,7 @@ class Shop < ApplicationRecord
             :menu_reservation_setting_rule).
       joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
              LEFT OUTER JOIN staffs ON staffs.id = staff_menus.staff_id
+             LEFT OUTER JOIN shop_menus ON shop_menus.shop_id = #{id}
              LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND
                                                    business_schedules.shop_id = #{id}
              LEFT OUTER JOIN custom_schedules shop_custom_schedules ON shop_custom_schedules.staff_id = staffs.id AND
@@ -147,10 +148,10 @@ class Shop < ApplicationRecord
     )
 
     # Menu with customers need to be afforded by staff
-    scoped.select("menus.*").group("menus.id").having("
+    scoped.select("menus.*, max(shop_menus.max_seat_number) as max_seat_number").group("menus.id").having("
       CASE
         WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
-        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= menus.max_seat_number AND sum(staff_menus.max_customers) >= #{number_of_customer}
+        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staffs.id)) >= menus.min_staffs_number AND #{number_of_customer} <= shop_menus.max_seat_number AND sum(staff_menus.max_customers) >= #{number_of_customer}
         ELSE true
       END
     ")

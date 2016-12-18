@@ -3,6 +3,7 @@ FactoryGirl.define do
     transient do
       shop { FactoryGirl.create(:shop, user: user) }
       staffs []
+      max_seat_number { 3 }
     end
 
     transient do
@@ -17,7 +18,6 @@ FactoryGirl.define do
 
     trait :lecture do
       min_staffs_number 2
-      max_seat_number 3
     end
 
     trait :no_manpower do
@@ -31,7 +31,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |menu, proxy|
-      FactoryGirl.create(:shop_menu, menu: menu, shop: proxy.shop)
+      FactoryGirl.create(:shop_menu, menu: menu, shop: proxy.shop, max_seat_number: proxy.max_seat_number)
 
       if proxy.staffs.present?
         proxy.staffs.each do |staff|

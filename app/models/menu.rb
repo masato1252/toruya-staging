@@ -9,7 +9,6 @@
 #  minutes           :integer
 #  interval          :integer
 #  min_staffs_number :integer
-#  max_seat_number   :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
@@ -24,7 +23,6 @@ class Menu < ApplicationRecord
   validates :name, presence: true
   validates :minutes, presence: true
   validates :min_staffs_number, numericality: { greater_than_or_equal_to: 0 }
-  validates :max_seat_number, numericality: { greater_than: 0 }, allow_nil: true
   validates :short_name, length: { maximum: 15 }
 
   has_many :staff_menus, inverse_of: :menu, dependent: :destroy
@@ -41,10 +39,15 @@ class Menu < ApplicationRecord
   has_many :shop_menu_repeating_dates, dependent: :destroy
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
+  accepts_nested_attributes_for :shop_menus, allow_destroy: true, reject_if: :reject_shops
 
   private
 
   def reject_staffs(attributes)
     attributes["id"].blank? && attributes["staff_id"].blank?
+  end
+
+  def reject_shops(attributes)
+    attributes["id"].blank? && attributes["shop_id"].blank?
   end
 end

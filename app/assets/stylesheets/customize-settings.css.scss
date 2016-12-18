@@ -90,6 +90,11 @@
         margin-right: 12px;
       }
     }
+
+    .checkbox dd input[type="checkbox"] + label {
+      width: initial;
+      display: inline-block;
+    }
   }
 
   #customize-table {

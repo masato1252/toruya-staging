@@ -123,7 +123,7 @@ RSpec.describe Shop, type: :model do
 
             context "when menu max_seat_number is more than customers number" do
               context "when staff's max_customers total is more than customers number" do
-                let(:customers_number) { menu.max_seat_number }
+                let(:customers_number) { menu.shop_menus.where(shop: shop).first.max_seat_number }
                 let(:total_staffs_customers) { shop.staffs.includes(:staff_menus).sum(:max_customers) }
 
                 it "returns available reservation menus" do
@@ -146,7 +146,7 @@ RSpec.describe Shop, type: :model do
 
             context "when menu max_seat_number is less than customers number" do
               it "returns empty" do
-                expect(shop.available_reservation_menus(time_range, menu.max_seat_number + 1)).to be_empty
+                expect(shop.available_reservation_menus(time_range, menu.shop_menus.where(shop: shop).first.max_seat_number + 1)).to be_empty
               end
             end
           end

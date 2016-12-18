@@ -76,7 +76,7 @@ RSpec.describe Reservation, type: :model do
 
   describe "#enough_staffs_for_customers" do
     let(:menu) { FactoryGirl.create(:menu, min_staffs_number: 1) }
-    let(:lecture_menu) { FactoryGirl.create(:menu, :lecture, min_staffs_number: 2, max_seat_number: 2) }
+    let(:lecture_menu) { FactoryGirl.create(:menu, :lecture, min_staffs_number: 2, max_seat_number: 2, shop: shop) }
     let(:staff) { FactoryGirl.create(:staff) }
     let(:staff2) { FactoryGirl.create(:staff) }
     let(:customer1) { FactoryGirl.create(:customer) }
@@ -84,7 +84,7 @@ RSpec.describe Reservation, type: :model do
     let(:customer3) { FactoryGirl.create(:customer) }
 
     context "when staffs number is not enough of menu" do
-      let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff]) }
+      let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff], shop: shop) }
 
       it "is invalid" do
         expect(reservation).to be_invalid
@@ -122,7 +122,7 @@ RSpec.describe Reservation, type: :model do
       end
 
       context "menu max_seat_number >= customers number" do
-        let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff, staff2], customers: [customer1, customer2]) }
+        let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff, staff2], customers: [customer1, customer2], shop: shop) }
 
         it "is valid" do
           expect(reservation).to be_valid
@@ -130,7 +130,7 @@ RSpec.describe Reservation, type: :model do
       end
 
       context "menu max_seat_number < customers number" do
-        let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff, staff2], customers: [customer1, customer2, customer3]) }
+        let(:reservation) { FactoryGirl.build(:reservation, menu: lecture_menu, staffs: [staff, staff2], customers: [customer1, customer2, customer3], shop: shop) }
 
         it "is invalid" do
           expect(reservation).to be_invalid

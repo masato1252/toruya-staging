@@ -1,6 +1,5 @@
 class UpdateMenu < ActiveInteraction::Base
   set_callback :type_check, :before do
-    attrs.merge!(max_seat_number: nil)  if attrs[:max_seat_number].blank?
     menu_reservation_setting_rule_attributes.merge!(start_date: nil)  if menu_reservation_setting_rule_attributes[:start_date].blank?
     menu_reservation_setting_rule_attributes.merge!(reservation_type: nil)  if menu_reservation_setting_rule_attributes[:reservation_type].blank?
   end
@@ -12,10 +11,9 @@ class UpdateMenu < ActiveInteraction::Base
     integer :minutes, default: nil
     integer :interval, default: nil
     integer :min_staffs_number, default: nil
-    integer :max_seat_number, default: nil
-    array :shop_ids, default: []
     array :category_ids, default: []
     array :staff_menus_attributes, default: []
+    array :shop_menus_attributes, default: []
   end
 
   integer :reservation_setting_id, default: nil

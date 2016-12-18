@@ -4,7 +4,6 @@
 
 <%
   staff_menus = menu.staff_menus.to_a
-  staffs = menu.staffs
 
   menu_staffs_options = super_user.staffs.order("created_at").map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
@@ -14,9 +13,14 @@
     end
   end
 
-  shops = menu.shops.to_a
-  shops_options = super_user.shops.order("created_at").map do |shop|
-    Option.new(id: shop.id, name: shop.name, checked: shops.any? { |s| s.id == shop.id })
+  shop_menus = menu.shop_menus.to_a
+
+  menu_shops_options = super_user.shops.order("created_at").map do |shop|
+    if shop_menu = shop_menus.find { |shop_menu| shop_menu.shop_id == shop.id }
+      Option.new(id: shop_menu.id, name: shop.name, shop_id: shop.id, max_seat_number: shop_menu.max_seat_number, checked: true)
+    else
+      Option.new(id: nil, name: shop.name, shop_id: shop.id, max_seat_number: "", checked: false)
+    end
   end
 
   categories = menu.categories.to_a
@@ -34,9 +38,9 @@
   reservation_settings: reservation_setting_options(super_user.reservation_settings.order("id"), menu),
   selected_reservation_setting: reservation_setting_option(reservation_setting, menu),
   selected_reservation_setting_rule: menu_reservation_setting_rule,
-  shops_options: react_attributes(shops_options),
-  categories_options: react_attributes(cateogries_options),
+  menu_shops_options: react_attributes(menu_shops_options),
   menu_staffs_options: react_attributes(menu_staffs_options),
+  categories_options: react_attributes(cateogries_options),
   form_authenticity_token: form_authenticity_token,
   info_label: I18n.t("settings.menu.info_label"),
   interval_label: Menu.human_attribute_name(:interval),

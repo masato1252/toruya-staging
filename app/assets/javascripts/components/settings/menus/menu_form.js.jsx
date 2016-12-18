@@ -12,7 +12,7 @@ UI.define("Settings.MenuForm", function() {
         menu: this.props.menu,
         selectedReservationSetting: this.props.selectedReservationSetting || {},
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {},
-        shopsOptions: this.props.shopsOptions,
+        menuShopsOptions: this.props.menuShopsOptions,
         menuStaffsOptions: this.props.menuStaffsOptions,
         repeatingDateSentence: ""
       });
@@ -25,6 +25,12 @@ UI.define("Settings.MenuForm", function() {
     selectedMenuStaffOption: function(staff_id) {
       return _.find(this.state.menuStaffsOptions, function(menuStaffOption) {
          return `${menuStaffOption.staffId}` == `${staff_id}`
+      })
+    },
+
+    selectedMenuShopOption: function(shop_id) {
+      return _.find(this.state.menuShopsOptions, function(menuShopOption) {
+         return `${menuShopOption.shopId}` == `${shop_id}`
       })
     },
 
@@ -66,11 +72,19 @@ UI.define("Settings.MenuForm", function() {
         return;
       }
 
+      var checkedMenuShopsOptions = _.filter(this.state.menuShopsOptions, function(menuShopOption) {
+        return menuShopOption.checked
+      })
+
+      var checkedShopIds = checkedMenuShopsOptions.map(function(checkedMenuShopOption) {
+        return checkedMenuShopOption.shopId
+      })
+
       this.currentRequest = jQuery.ajax({
         url: _this.props.repeatingDatesPath,
         data: {
           reservation_setting_id: _this.state.selectedReservationSetting.id,
-          shop_ids: _this.state.selectedShopIds.join(","),
+          shop_ids: checkedShopIds.join(","),
           repeats: _this.state.selectedReservationSettingRule.repeats,
           start_date: _this.state.selectedReservationSettingRule.start_date,
         },
@@ -96,13 +110,15 @@ UI.define("Settings.MenuForm", function() {
     },
 
     _handleShopCheck: function(event) {
-      var selectedShopOption = _.find(this.state.shopsOptions, function(shopOption) {
-        return `${shopOption.id}` == `${event.target.value}`
-      })
+      this.selectedMenuShopOption(event.target.value).checked = !this.selectedMenuShopOption(event.target.value).checked
 
-      selectedShopOption.checked = !selectedShopOption.checked
+      this.setState({menuShopsOptions: this.state.menuShopsOptions}, this._retrieveRepeatingDates)
+    },
 
-      this.setState({shopsOptions: this.state.shopsOptions}, this._retrieveRepeatingDates)
+    _handleShopMaxSeatNumber: function(event) {
+      this.selectedMenuShopOption(`${event.target.dataset.shopId}`).maxSeatNumber = event.target.value;
+
+      this.setState({menuShopsOptions: this.state.menuShopsOptions})
     },
 
     _handleMenuData: function(event) {
@@ -117,20 +133,24 @@ UI.define("Settings.MenuForm", function() {
         return menuStaffOption.checked
       })
 
-      var checkedShopsOptions = _.filter(this.state.shopsOptions, function(shopOption) {
-        return shopOption.checked
+      var checkedMenuShopsOptions = _.filter(this.state.menuShopsOptions, function(menuShopOption) {
+        return menuShopOption.checked
       })
 
       var checkedMaxCustomerValues = checkedMenuStaffsOptions.map(function(checkedMenuStaffOption) {
         return checkedMenuStaffOption.maxCustomers
       })
 
+      var checkedMaxSeatNumberValues = checkedMenuShopsOptions.map(function(checkedMenuShopOption) {
+        return checkedMenuShopOption.maxSeatNumber
+      })
+
       return (
         this.state.menu.name &&
         this.state.menu.short_name &&
-        checkedShopsOptions.length > 0 &&
+        checkedMenuShopsOptions.length > 0 &&
         checkedMenuStaffsOptions.length > 0 &&
-        (this.state.menu.min_staffs_number > 1 ? this.state.menu.max_seat_number : true) &&
+        (this.state.menu.min_staffs_number > 1 ? _.every(checkedMaxSeatNumberValues) : true) &&
         (this.state.menu.min_staffs_number ? _.every(checkedMaxCustomerValues) : true) &&
         (this.state.menu.min_staffs_number === 0 ? true : this.state.menu.min_staffs_number)
       )
@@ -217,39 +237,48 @@ UI.define("Settings.MenuForm", function() {
                 />人
               </dd>
             </dl>
-            <dl>
-              <dt>{this.props.maxCustomersLabel}</dt>
-              <dd>
-                <input
-                  placeholder={this.props.maxCustomersLabel}
-                  maxlength="10"
-                  size="10"
-                  className="minStaff"
-                  type="number"
-                  name="menu[max_seat_number]"
-                  data-name="max_seat_number"
-                  value={this.state.menu.max_seat_number}
-                  onChange={this._handleMenuData}
-                />人
-              </dd>
-            </dl>
           </div>
 
           <h3 className="shopSelect">利用店舗</h3>
           <div id="shopSelect" className="formRow">
-              {this.state.shopsOptions.map(function(shopOption) {
+              {this.state.menuShopsOptions.map(function(menuShopOption) {
                 return(
-                  <dl className="checkbox" key={`shop-${shopOption.id}`}>
+                  <dl className="checkbox" key={`shop-${menuShopOption.shopId}`}>
+                    {
+                      <input type="hidden" name="menu[shop_menus_attributes][][id]" value={menuShopOption.id || ""} />
+                    }
+
+                    {
+                      menuShopOption.id && !menuShopOption.checked ?
+                      <input type="hidden" name="menu[shop_menus_attributes][][_destroy]" value="1" /> : null
+                    }
                     <dd>
                       <input
                         type="checkbox"
-                        name="menu[shop_ids][]"
-                        id={`shop-${shopOption.id}`}
-                        value={shopOption.id}
-                        checked={shopOption.checked}
+                        name="menu[shop_menus_attributes][][shop_id]"
+                        id={`shop-${menuShopOption.shopId}`}
+                        value={menuShopOption.shopId}
+                        checked={menuShopOption.checked}
                         onChange={this._handleShopCheck}
                       />
-                    <label htmlFor={`shop-${shopOption.id}`}>{shopOption.name}</label>
+                      <label htmlFor={`shop-${menuShopOption.shopId}`}>{menuShopOption.name}</label>
+                      {
+                        menuShopOption.checked && this.state.menu.min_staffs_number > 1 ?
+                          <input
+                            placeholder={this.props.maxCustomersLabel}
+                            maxlength="10"
+                            size="10"
+                            className="minStaff"
+                            type="number"
+                            name="menu[shop_menus_attributes][][max_seat_number]"
+                            data-shop-id={menuShopOption.shopId}
+                            value={menuShopOption.maxSeatNumber}
+                            onChange={this._handleShopMaxSeatNumber}
+                          /> : null
+                      }
+                      {
+                        menuShopOption.checked && this.state.menu.min_staffs_number > 1 ? "人" : null
+                      }
                     </dd>
                   </dl>
                 );
