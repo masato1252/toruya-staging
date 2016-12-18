@@ -232,7 +232,7 @@ UI.define("Reservation.Form", function() {
         });
 
         if (result["menu"]["group_options"].length == 0) {
-          alert(this.props.noValidMenuAlert);
+          alert(_this.props.noValidMenuAlert);
         }
 
         setTimeout(function() {
