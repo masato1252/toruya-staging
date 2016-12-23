@@ -59,6 +59,7 @@ group :development do
   gem "letter_opener", "~> 1.4.1"
   gem "better_errors"
   gem "binding_of_caller"
+  gem "bullet", "~> 2.0.0"
 end
 
 gem "rails_12factor", group: :production
