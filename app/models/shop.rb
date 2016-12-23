@@ -95,8 +95,7 @@ class Shop < ApplicationRecord
     # menus's staffs could not had reservation during reservation time
     # menus time is longer enough
     scoped = scoped.
-      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
-      where.not("staff_menus.staff_id" => custom_schedules_staff_ids(start_time, end_time)).
+      where.not("staff_menus.staff_id" => (reserved_staff_ids(start_time, end_time, reservation_id) + custom_schedules_staff_ids(start_time, end_time)).uniq).
       where("minutes <= ?", distance_in_minutes)
 
     # Menu staffs schedule need to be full_time or work during reservation time
@@ -144,25 +143,68 @@ class Shop < ApplicationRecord
              (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
     )
 
+    # reserved_customer_count = reserved_customer_ids(start_time, end_time, reservation_id).count
     # Menu with customers need to be afforded by staff
-    scoped.select("menus.*, max(shop_menus.max_seat_number) as max_seat_number").group("menus.id").having("
+    no_reservation_menus = scoped.select("menus.*, max(shop_menus.max_seat_number) as max_seat_number").group("menus.id").having("
       CASE
-        WHEN menus.min_staffs_number = 1 THEN max(staff_menus.max_customers) >= #{number_of_customer}
-        WHEN menus.min_staffs_number > 1 THEN count(DISTINCT(staff_menus.staff_id)) >= menus.min_staffs_number AND #{number_of_customer} <= max(shop_menus.max_seat_number) AND sum(staff_menus.max_customers) >= #{number_of_customer}
-        ELSE true
+        WHEN menus.min_staffs_number = 1 THEN LEAST(max(staff_menus.max_customers), max(shop_menus.max_seat_number)) >= #{number_of_customer}
+        WHEN menus.min_staffs_number > 1 THEN
+          count(DISTINCT(staff_menus.staff_id)) >= menus.min_staffs_number AND
+          #{number_of_customer} <= MAX(shop_menus.max_seat_number) AND
+          (COALESCE((array_agg(staff_menus.max_customers order by staff_menus.max_customers desc))[2], 0) + MAX(staff_menus.max_customers)) >= #{number_of_customer}
+        WHEN menus.min_staffs_number = 0 THEN max(shop_menus.max_seat_number) >= #{number_of_customer}
+        ELSE TRUE
       END
     ")
+
+
+    # TODO: Some reservation Menu is probably available too.
+    # TODO: handle staff already had reservations in other case.
+    # TODO: duplication menu(should be OK)
+    # TODO: ignore reservation_id(should be OK)
+    # TODO: customer checking?(should we?)
+    # bug two same menu seperate staff
+
+    # TODO: Missing some menu0, staff for menu1, menu2 reservations, still could work for menu0 reservations
+    reservation_menus = overlap_reservations(start_time, end_time, reservation_id).group_by { |reservation| reservation.menu }.map do |menu, reservations|
+      if menu.min_staffs_number == 0
+        if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+          menu
+        end
+      elsif menu.min_staffs_number == 1
+        if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+          if reservations.any? { |reservation|
+            # staff_max_customer = reservation.staffs.first.staff_menus.first.max_customers
+            staff_max_customer = reservation.staffs.first.staff_menus.where(menu: menu).first.max_customers
+            staff_max_customer >= number_of_customer + reservation.reservation_customers.count
+          }
+            menu
+          end
+        end
+      elsif menu.min_staffs_number > 1
+        if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+          if reservations.any? { |reservation|
+            staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.where(menu: menu).first.max_customers }.min
+
+            staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
+          }
+          menu
+          end
+        end
+      end
+    end.compact
+
+    no_reservation_menus + reservation_menus + no_manpower_menus(business_time_range, number_of_customer, reservation_id)
   end
 
-  def available_staffs(menu, business_time_range, reservation_id=nil)
+  def available_staffs(menu, business_time_range, number_of_customer=1, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last + menu.interval.to_i.minutes
 
     scoped = menu.staffs.
       joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}").
       includes(:staff_menus).
-      where.not("staff_menus.staff_id" => reserved_staff_ids(start_time, end_time, reservation_id)).
-      where.not("staff_menus.staff_id" => custom_schedules_staff_ids(start_time, end_time))
+      where.not("staff_menus.staff_id" => (reserved_staff_ids(start_time, end_time, reservation_id) + custom_schedules_staff_ids(start_time, end_time)).uniq)
 
     scoped = scoped.
       where("business_schedules.full_time = ?", true).
@@ -172,23 +214,71 @@ class Shop < ApplicationRecord
       where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
     )
 
-    scoped.select("staffs.*").group("staffs.id")
+    no_reservation_staffs = scoped.select("staffs.*").group("staffs.id")
+
+    # TODO: If this is reservation Menu is probably available too.
+    # TODO: SPEC FOR THIS
+    reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
+
+    reservation_staffs = []
+    if menu.min_staffs_number == 0
+      # BUG TODO: Other reservation staff could do this too
+      if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+        all_overlap_reservations = overlap_reservations(start_time, end_time, reservation_id)
+        all_overlap_staffs = all_overlap_reservations.map {|reservation| reservation.staffs}.flatten
+        reservation_staffs = all_overlap_staffs.find_all { |staff| staff.staff_menus.where(menu: menu).exists? }
+      end
+    elsif menu.min_staffs_number == 1
+      if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+
+        reservation_staffs = reservations.map do |reservation|
+          staff = reservation.staffs.first
+          staff_max_customer = staff.staff_menus.where(menu: menu).first.max_customers
+
+          if staff_max_customer >= number_of_customer + reservation.reservation_customers.count
+            staff
+          end
+        end.compact.flatten
+      end
+    elsif menu.min_staffs_number > 1
+      if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+        reservation_staffs = reservations.map do |reservation|
+          staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.where(menu: menu).first.max_customers }.min
+
+          if staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
+            reservation.staffs
+          end
+        end.compact.flatten
+      end
+    end
+
+    (no_reservation_staffs + reservation_staffs).flatten
   end
 
   # No manpower menus are available for anytime, just needs valid staffs work during that time.
-  def no_manpower_menus(business_time_range)
+  def no_manpower_menus(business_time_range, number_of_customer=1, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last
+    distance_in_minutes = ((end_time - start_time)/60.0).round
 
     if custom_schedules_for_shop(start_time, end_time).exists?
       return Menu.none
     end
 
+    # Menu staffs schedule need to be full_time or work during reservation time
     scoped = menus.
+      joins(:reservation_setting,
+            :menu_reservation_setting_rule).
+      joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
+             LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staff_menus.staff_id AND
+                                                   business_schedules.shop_id = #{id}
+             LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
+                                                          shop_menu_repeating_dates.shop_id = #{id}")
+
+    scoped = scoped.
       where("menus.min_staffs_number" => 0).
-      joins(:staffs).
-      where.not("staffs.id" => custom_schedules_staff_ids(start_time, end_time)).
-      joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{id}")
+      where.not("staff_menus.staff_id" => custom_schedules_staff_ids(start_time, end_time)).
+      where("minutes <= ?", distance_in_minutes)
 
     scoped = scoped.
       where("business_schedules.full_time = ?", true).
@@ -198,23 +288,87 @@ class Shop < ApplicationRecord
       where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
     )
 
-    scoped.select("menus.*").group("menus.id")
+    today = Time.zone.now.to_s(:date)
+
+    # Menu need reservation setting to be reserved
+    scoped = scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
+    scoped = scoped.where("menu_reservation_setting_rules.reservation_type is NULL AND menu_reservation_setting_rules.end_date is NULL").
+      or(
+        scoped.where("menu_reservation_setting_rules.reservation_type = 'date' AND menu_reservation_setting_rules.end_date >= ?", today)
+      ).
+      or(
+        scoped.where("menu_reservation_setting_rules.reservation_type = 'repeating' AND ? = ANY(shop_menu_repeating_dates.dates)", today)
+      )
+
+    scoped = scoped.
+      where("reservation_settings.day_type = ?", "business_days").
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}").
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and reservation_settings.day = ?", "monthly", start_time.day).
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+    ).
+    or(
+      scoped.
+      where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
+             ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}").
+      where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+             (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+    )
+
+    _no_power_menus = scoped.select("menus.*").group("menus.id")
+    _no_power_menus.map do |menu|
+      reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
+
+      if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+        menu
+      end
+    end.compact
   end
 
   private
+
+  def overlap_reservations(start_time, end_time, reservation_id=nil, menu_id=nil)
+    scoped = reservations.left_outer_joins(:menu, :reservation_customers, :staffs => :staff_menus).
+      where.not(id: reservation_id.presence).
+      where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time)
+
+    scoped = scoped.where("menus.id = ?", menu_id) if menu_id
+    scoped
+  end
+
+  def reserved_customer_ids(start_time, end_time, reservation_id=nil)
+    @reserved_customer_ids ||= ReservationCustomer.
+      joins(reservation: :menu).
+      where.not(reservation_id: reservation_id.presence).
+      where("reservation_staffs.staff_id": staff_ids).
+      where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",
+          end_time, start_time).
+      pluck("DISTINCT customer_id")
+  end
 
   # staffs had reservations during that time
   def reserved_staff_ids(start_time, end_time, reservation_id=nil)
     # reservation_id.presence: sql don't support reservation_id pass empty string
     # start_time/ready_time checking is >, < not, >=, <= that means we accept reservation is overlap 1 minute
 
-    @reserved_staff_ids ||= ReservationStaff.
-      joins(reservation: :menu).
-      where.not(reservation_id: reservation_id.presence).
-      where.not("menus.min_staffs_number" => 0).
-      where("reservation_staffs.staff_id": staff_ids).
-      where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",
-          end_time, start_time).
+    scoped = ReservationStaff.joins(reservation: :menu).where.not(reservation_id: reservation_id.presence).where("reservation_staffs.staff_id": staff_ids)
+
+    now = Time.zone.now
+
+    @reserved_staff_ids ||=
+      scoped.where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",end_time, start_time).
+      or(
+        scoped.where("reservations.shop_id != ?", id).where("reservations.start_time > ? and reservations.end_time <= ?", now.beginning_of_day, now.end_of_day)
+      ).
       pluck("DISTINCT staff_id")
   end
 
