@@ -16,12 +16,20 @@ FactoryGirl.define do
     interval 10
     min_staffs_number 1
 
+    trait :no_manpower do
+      min_staffs_number 0
+    end
+
+    trait :normal do
+      min_staffs_number 1
+    end
+
     trait :lecture do
       min_staffs_number 2
     end
 
-    trait :no_manpower do
-      min_staffs_number 0
+    trait :cooperation do
+      min_staffs_number 2
     end
 
     trait :with_reservation_setting do

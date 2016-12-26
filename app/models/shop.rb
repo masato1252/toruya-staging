@@ -158,14 +158,12 @@ class Shop < ApplicationRecord
     ")
 
 
-    # TODO: Some reservation Menu is probably available too.
-    # TODO: handle staff already had reservations in other case.
-    # TODO: duplication menu(should be OK)
-    # TODO: ignore reservation_id(should be OK)
-    # TODO: customer checking?(should we?)
-    # bug two same menu seperate staff
+    # Some reservation Menu is probably available too.
+    # handle staff already had reservations in other case.
+    # duplication menu(should be OK)
+    # ignore reservation_id(should be OK)
+    # customer checking?(should we?)
 
-    # TODO: Missing some menu0, staff for menu1, menu2 reservations, still could work for menu0 reservations
     reservation_menus = overlap_reservations(start_time, end_time, reservation_id).group_by { |reservation| reservation.menu }.map do |menu, reservations|
       if menu.min_staffs_number == 0
         if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
@@ -174,7 +172,6 @@ class Shop < ApplicationRecord
       elsif menu.min_staffs_number == 1
         if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
           if reservations.any? { |reservation|
-            # staff_max_customer = reservation.staffs.first.staff_menus.first.max_customers
             staff_max_customer = reservation.staffs.first.staff_menus.where(menu: menu).first.max_customers
             staff_max_customer >= number_of_customer + reservation.reservation_customers.count
           }
@@ -194,7 +191,8 @@ class Shop < ApplicationRecord
       end
     end.compact
 
-    no_reservation_menus + reservation_menus + no_manpower_menus(business_time_range, number_of_customer, reservation_id)
+    (no_reservation_menus + reservation_menus +
+    no_manpower_menus(business_time_range, number_of_customer, reservation_id)).uniq # staff for menu1, menu2 reservations, still could work for menu0 reservations
   end
 
   def available_staffs(menu, business_time_range, number_of_customer=1, reservation_id=nil)
@@ -216,14 +214,12 @@ class Shop < ApplicationRecord
 
     no_reservation_staffs = scoped.select("staffs.*").group("staffs.id")
 
-    # TODO: If this is reservation Menu is probably available too.
-    # TODO: SPEC FOR THIS
     reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
 
     reservation_staffs = []
     if menu.min_staffs_number == 0
-      # BUG TODO: Other reservation staff could do this too
       if menu.shop_menus.where(shop: self).first.max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+        # Other reservation staff could do this too
         all_overlap_reservations = overlap_reservations(start_time, end_time, reservation_id)
         all_overlap_staffs = all_overlap_reservations.map {|reservation| reservation.staffs}.flatten
         reservation_staffs = all_overlap_staffs.find_all { |staff| staff.staff_menus.where(menu: menu).exists? }
@@ -252,10 +248,11 @@ class Shop < ApplicationRecord
       end
     end
 
-    (no_reservation_staffs + reservation_staffs).flatten
+    (no_reservation_staffs + reservation_staffs).flatten.uniq
   end
 
-  # No manpower menus are available for anytime, just needs valid staffs work during that time.
+  private
+
   def no_manpower_menus(business_time_range, number_of_customer=1, reservation_id=nil)
     start_time = business_time_range.first
     end_time = business_time_range.last
@@ -334,7 +331,6 @@ class Shop < ApplicationRecord
     end.compact
   end
 
-  private
 
   def overlap_reservations(start_time, end_time, reservation_id=nil, menu_id=nil)
     scoped = reservations.left_outer_joins(:menu, :reservation_customers, :staffs => :staff_menus).
@@ -342,7 +338,7 @@ class Shop < ApplicationRecord
       where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time)
 
     scoped = scoped.where("menus.id = ?", menu_id) if menu_id
-    scoped
+    scoped.select("reservations.*").group("reservations.id")
   end
 
   def reserved_customer_ids(start_time, end_time, reservation_id=nil)
