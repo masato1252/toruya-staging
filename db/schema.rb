@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218061913) do
+ActiveRecord::Schema.define(version: 20161226152244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,15 +217,16 @@ ActiveRecord::Schema.define(version: 20161218061913) do
   end
 
   create_table "reservations", force: :cascade do |t|
-    t.integer  "shop_id",    null: false
-    t.integer  "menu_id",    null: false
-    t.datetime "start_time", null: false
-    t.datetime "end_time",   null: false
-    t.datetime "ready_time", null: false
-    t.string   "aasm_state", null: false
+    t.integer  "shop_id",                        null: false
+    t.integer  "menu_id",                        null: false
+    t.datetime "start_time",                     null: false
+    t.datetime "end_time",                       null: false
+    t.datetime "ready_time",                     null: false
+    t.string   "aasm_state",                     null: false
     t.text     "memo"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.integer  "count_of_customers", default: 0
     t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index", using: :btree
   end
 

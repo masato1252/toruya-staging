@@ -2,18 +2,18 @@
 #
 # Table name: reservations
 #
-#  id         :integer          not null, primary key
-#  shop_id    :integer          not null
-#  menu_id    :integer          not null
-#  start_time :datetime         not null
-#  end_time   :datetime         not null
-#  ready_time :datetime         not null
-#  aasm_state :string           not null
-#  memo       :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :integer          not null, primary key
+#  shop_id         :integer          not null
+#  menu_id         :integer          not null
+#  start_time      :datetime         not null
+#  end_time        :datetime         not null
+#  ready_time      :datetime         not null
+#  aasm_state      :string           not null
+#  memo            :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  customers_count :integer          default(0)
 #
-
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord

@@ -98,20 +98,26 @@ class Shop < ApplicationRecord
         ELSE TRUE
       END
     ")
+    no_reservation_except_menu0_menus = no_reservation_except_menu0_menus.map do |menu|
+      menu
+      # Option.new(id: menu.id, name: menu.name, max_seat_number: menu.max_seat_number, occupied_number: 0)
+    end
 
     reservation_menus = overlap_reservations(start_time, end_time, reservation_id).group_by { |reservation| reservation.menu }.map do |menu, reservations|
       menu_max_seat_number = menu.shop_menus.find_by(shop: self).max_seat_number
-      customers_amount_of_reservations = reservations.sum { |reservation| reservation.reservation_customers.count }
+      customers_amount_of_reservations = reservations.sum(&:count_of_customers)
       is_enough_seat = menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
       next unless is_enough_seat
 
       if menu.min_staffs_number == 0
         menu
+        # Option.new(id: menu.id, name: menu.name, max_seat_number: menu_max_seat_number, occupied_number: customers_amount_of_reservations)
       elsif menu.min_staffs_number == 1
         if reservations.any? { |reservation|
           reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
         }
         menu
+        # Option.new(id: menu.id, name: menu.name, max_seat_number: menu_max_seat_number, occupied_number: customers_amount_of_reservations)
         end
       elsif menu.min_staffs_number > 1
         if reservations.any? { |reservation|
@@ -120,12 +126,14 @@ class Shop < ApplicationRecord
           staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
         }
         menu
+        # Option.new(id: menu.id, name: menu.name, max_seat_number: menu_max_seat_number, occupied_number: customers_amount_of_reservations)
         end
       end
     end.compact
 
     (no_reservation_except_menu0_menus + reservation_menus +
     no_manpower_menus(business_time_range, number_of_customer, reservation_id)).uniq # staff for menu1, menu2 reservations, still could work for menu0 reservations
+    # id, name, max_seat_number, occupied_number
   end
 
   def available_staffs(menu, business_time_range, number_of_customer=1, reservation_id=nil)
@@ -151,7 +159,7 @@ class Shop < ApplicationRecord
     reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
 
     menu_max_seat_number = menu.shop_menus.find_by(shop: self).max_seat_number
-    customers_amount_of_reservations = reservations.sum { |reservation| reservation.reservation_customers.count }
+    customers_amount_of_reservations = reservations.sum(&:count_of_customers)
     is_enough_seat = menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
     return no_reservation_except_menu0_staffs unless is_enough_seat
 
@@ -199,9 +207,12 @@ class Shop < ApplicationRecord
     _no_power_menus = scoped.select("menus.*").group("menus.id")
     _no_power_menus.map do |menu|
       reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
+      menu_max_seat_number = menu.shop_menus.find_by(shop: self).max_seat_number
+      customers_amount_of_reservations = reservations.sum(&:count_of_customers)
 
-      if menu.shop_menus.find_by(shop: self).max_seat_number >= number_of_customer + reservations.sum { |reservation| reservation.reservation_customers.count }
+      if menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
         menu
+        # Option.new(id: menu.id, name: menu.name, max_seat_number: menu_max_seat_number, occupied_number: customers_amount_of_reservations)
       end
     end.compact
   end
