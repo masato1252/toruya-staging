@@ -247,6 +247,18 @@ RSpec.describe Shop, type: :model do
                   end
                 end
               end
+
+              context "when there is other normal menus available" do
+                let(:normal_menu) { FactoryGirl.create(:menu, :normal, user: user, shop: shop) }
+                before { create_available_menu(normal_menu) }
+
+                it "returns available reservation menus" do
+                  menus = shop.available_reservation_menus(time_range, 1)
+
+                  expect(menus).to include(menu)
+                  expect(menus).to include(normal_menu)
+                end
+              end
             end
 
             context "when existing reservation's menu min_staffs_number is 1" do
@@ -562,6 +574,15 @@ RSpec.describe Shop, type: :model do
 
           it "returns available staffs" do
             expect(shop.available_staffs(menu, time_range)).to include(staff)
+          end
+
+          context "when there is other normal menus available" do
+            let(:normal_menu) { FactoryGirl.create(:menu, :normal, user: user, shop: shop) }
+            before { create_available_menu(normal_menu) }
+
+            it "returns available staffs" do
+              expect(shop.available_staffs(normal_menu, time_range)).to include(staff)
+            end
           end
         end
       end
