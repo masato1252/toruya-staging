@@ -75,7 +75,7 @@ RSpec.describe Shop, type: :model do
         let(:staff_max_customers) { staff.staff_menus.where(menu: menu).first.max_customers }
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
 
         context "when reservation time is shorter than menu required times" do
@@ -93,7 +93,7 @@ RSpec.describe Shop, type: :model do
           end
 
           it "returns available reservation menus" do
-            expect(shop.available_reservation_menus(time_range)).to include(menu)
+            expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
           end
         end
 
@@ -104,7 +104,7 @@ RSpec.describe Shop, type: :model do
           end
 
           it "returns available reservation menus" do
-            expect(shop.available_reservation_menus(time_range)).to include(menu)
+            expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
           end
         end
 
@@ -146,7 +146,7 @@ RSpec.describe Shop, type: :model do
 
             context "when customers number is less or equal max staffs max_customers" do
               it "returns available reservation menus" do
-                expect(shop.available_reservation_menus(time_range, staff_max_customers)).to include(menu)
+                expect(shop.available_reservation_menus(time_range, staff_max_customers).map(&:id)).to include(menu.id)
               end
             end
           end
@@ -166,7 +166,7 @@ RSpec.describe Shop, type: :model do
 
                   it "returns available reservation menus" do
                     expect(total_staffs_customers).to be >= customers_number
-                    expect(shop.available_reservation_menus(time_range, customers_number)).to include(menu)
+                    expect(shop.available_reservation_menus(time_range, customers_number).map(&:id)).to include(menu.id)
                   end
                 end
 
@@ -215,13 +215,13 @@ RSpec.describe Shop, type: :model do
               before { FactoryGirl.create(:staff_menu, menu: menu, staff: staff2) }
 
               it "returns available reservation menus" do
-                expect(shop.available_reservation_menus(time_range)).to include(menu)
+                expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
               end
             end
 
             context "when passing reservation id" do
               it "returns available reservation menus ignore the passed reservation" do
-                expect(shop.available_reservation_menus(time_range, 1, reservation.id)).to include(menu)
+                expect(shop.available_reservation_menus(time_range, 1, reservation.id).map(&:id)).to include(menu.id)
               end
             end
 
@@ -230,7 +230,7 @@ RSpec.describe Shop, type: :model do
 
               context "when menu max_seat_number is enough" do
                 it "returns available reservation menus" do
-                  expect(shop.available_reservation_menus(time_range)).to include(menu)
+                  expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
                 end
               end
 
@@ -238,7 +238,7 @@ RSpec.describe Shop, type: :model do
                 before { FactoryGirl.create(:staff_menu, menu: menu, staff: staff2) }
                 let!(:reservation2) { FactoryGirl.create(:reservation, shop: shop, menu: menu, staffs: [staff2], start_time: time_range.first, end_time: time_range.last) }
                 it "returns available reservation menus" do
-                  expect(shop.available_reservation_menus(time_range, 1)).to include(menu)
+                  expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
                 end
 
                 context "when ask too many customers" do
@@ -253,10 +253,10 @@ RSpec.describe Shop, type: :model do
                 before { create_available_menu(normal_menu) }
 
                 it "returns available reservation menus" do
-                  menus = shop.available_reservation_menus(time_range, 1)
+                  menus = shop.available_reservation_menus(time_range, 1).map(&:id)
 
-                  expect(menus).to include(menu)
-                  expect(menus).to include(normal_menu)
+                  expect(menus).to include(menu.id)
+                  expect(menus).to include(normal_menu.id)
                 end
               end
             end
@@ -266,14 +266,14 @@ RSpec.describe Shop, type: :model do
 
               context "when there is staff affordable" do
                 it "returns available reservation menus" do
-                  expect(shop.available_reservation_menus(time_range, 1)).to include(menu)
+                  expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
                 end
 
                 context "when menu max_seat_number is not enough, some seats be occupied by other staff's reservation" do
                   before { FactoryGirl.create(:staff_menu, menu: menu, staff: staff2) }
                   let!(:reservation2) { FactoryGirl.create(:reservation, shop: shop, menu: menu, staffs: [staff2], start_time: time_range.first, end_time: time_range.last) }
                   it "returns available reservation menus" do
-                    expect(shop.available_reservation_menus(time_range, 1)).to include(menu)
+                    expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
                   end
 
                   context "when ask too many customers" do
@@ -287,9 +287,9 @@ RSpec.describe Shop, type: :model do
                   before { create_available_menu(no_manpower_menu) }
 
                   it "returns available reservation menus" do
-                    menus = shop.available_reservation_menus(time_range, 1)
-                    expect(menus).to include(menu)
-                    expect(menus).to include(no_manpower_menu)
+                    menus = shop.available_reservation_menus(time_range, 1).map(&:id)
+                    expect(menus).to include(menu.id)
+                    expect(menus).to include(no_manpower_menu.id)
                   end
                 end
               end
@@ -316,7 +316,7 @@ RSpec.describe Shop, type: :model do
 
               context "when there are staffs affordable" do
                 it "returns available reservation menus" do
-                  expect(shop.available_reservation_menus(time_range, 2)).to include(menu)
+                  expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
                 end
 
                 context "when menu max_customers is enough, by one of staffs is not affordable" do
@@ -370,7 +370,7 @@ RSpec.describe Shop, type: :model do
             end
 
             it "returns available reservation menus" do
-              expect(shop.available_reservation_menus(time_range)).to include(menu)
+              expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
             end
           end
         end
@@ -381,7 +381,7 @@ RSpec.describe Shop, type: :model do
         let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, menu: menu, day_type: "weekly", days_of_week: [5]) }
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
 
         context "when menu does not have enough staffs" do
@@ -398,7 +398,7 @@ RSpec.describe Shop, type: :model do
         let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day_type: "monthly", day: 2) }
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
 
         context "when menu does not have enough staffs" do
@@ -415,7 +415,7 @@ RSpec.describe Shop, type: :model do
         let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :day_of_week_monthly, menu: menu, day_type: "monthly", nth_of_week: 2, days_of_week: [5]) }
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
 
         context "when menu does not have enough staffs" do
@@ -438,7 +438,7 @@ RSpec.describe Shop, type: :model do
         end
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
       end
     end
@@ -456,7 +456,7 @@ RSpec.describe Shop, type: :model do
         end
 
         it "returns available reservation menus" do
-          expect(shop.available_reservation_menus(time_range)).to include(menu)
+          expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
         end
       end
 
@@ -473,7 +473,7 @@ RSpec.describe Shop, type: :model do
           end
 
           it "returns available reservation menus" do
-            expect(shop.available_reservation_menus(time_range)).to include(menu)
+            expect(shop.available_reservation_menus(time_range).map(&:id)).to include(menu.id)
           end
         end
       end
@@ -489,10 +489,21 @@ RSpec.describe Shop, type: :model do
       end
 
       it "returns available staffs" do
-        expect(shop.available_staffs(menu, time_range)).to include(staff)
+        expect(shop.available_staffs(menu, time_range).map(&:id)).to include(staff.id)
       end
 
-      context "when all menu's staffs already had normal menu reservations at that time" do
+      context "when staffs don't have any reservations during that time" do
+        context "when there are other no manpower menus exists" do
+          before { create_available_menu(no_manpower_menu) }
+
+          it "returns available staffs" do
+            expect(shop.available_staffs(no_manpower_menu, time_range, 1).map(&:id)).to include(staff.id)
+            expect(shop.available_staffs(menu, time_range, 1).map(&:id)).to include(staff.id)
+          end
+        end
+      end
+
+      context "when all menu's staffs already had normal menu reservations during that time" do
         let!(:reservation) do
           FactoryGirl.create(:reservation, shop: shop, menu: menu,
                              start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
@@ -500,14 +511,14 @@ RSpec.describe Shop, type: :model do
 
         context "when staff is still affordable for the customer's quantity" do
           it "returns available staffs" do
-            expect(shop.available_staffs(menu, time_range, 1)).to include(staff)
+            expect(shop.available_staffs(menu, time_range, 1).map(&:id)).to include(staff.id)
           end
 
           context "when there are other no manpower menus exists" do
             before { create_available_menu(no_manpower_menu) }
 
             it "returns available staffs" do
-              expect(shop.available_staffs(no_manpower_menu, time_range, 1)).to include(staff)
+              expect(shop.available_staffs(no_manpower_menu, time_range, 1).map(&:id)).to include(staff.id)
             end
           end
         end
@@ -521,7 +532,7 @@ RSpec.describe Shop, type: :model do
             before { create_available_menu(no_manpower_menu) }
 
             it "returns available staffs" do
-              expect(shop.available_staffs(no_manpower_menu, time_range, 2)).to include(staff)
+              expect(shop.available_staffs(no_manpower_menu, time_range, 2).map(&:id)).to include(staff.id)
             end
           end
         end
@@ -531,8 +542,8 @@ RSpec.describe Shop, type: :model do
           before { FactoryGirl.create(:staff_menu, menu: menu, staff: staff2) }
 
           it "returns available staffs" do
-            expect(shop.available_staffs(menu, time_range)).to include(staff)
-            expect(shop.available_staffs(menu, time_range)).to include(staff2)
+            expect(shop.available_staffs(menu, time_range).map(&:id)).to include(staff.id)
+            expect(shop.available_staffs(menu, time_range).map(&:id)).to include(staff2.id)
           end
 
           context "when the existing reservation's menu's need cooperation(min_staffs_number > 1)" do
@@ -544,9 +555,9 @@ RSpec.describe Shop, type: :model do
 
             context "when staff is still affordable for the customer's quantity" do
               it "returns available staffs" do
-                menus = shop.available_staffs(menu, time_range, 1)
-                expect(menus).to include(staff)
-                expect(menus).to include(staff2)
+                staff_ids = shop.available_staffs(menu, time_range, 1).map(&:id)
+                expect(staff_ids).to include(staff.id)
+                expect(staff_ids).to include(staff2.id)
               end
 
               context "when there are other no reservation staffs could do this cooperation menu" do
@@ -558,11 +569,11 @@ RSpec.describe Shop, type: :model do
                 end
 
                 it "returns available staffs" do
-                  menus = shop.available_staffs(menu, time_range, 1)
-                  expect(menus).to include(staff)
-                  expect(menus).to include(staff2)
-                  expect(menus).to include(staff3)
-                  expect(menus).to include(staff4)
+                  staff_ids = shop.available_staffs(menu, time_range, 1).map(&:id)
+                  expect(staff_ids).to include(staff.id)
+                  expect(staff_ids).to include(staff2.id)
+                  expect(staff_ids).to include(staff3.id)
+                  expect(staff_ids).to include(staff4.id)
                 end
               end
             end
@@ -573,7 +584,7 @@ RSpec.describe Shop, type: :model do
           let(:menu) { FactoryGirl.create(:menu, user: user, min_staffs_number: 0, shop: shop) }
 
           it "returns available staffs" do
-            expect(shop.available_staffs(menu, time_range)).to include(staff)
+            expect(shop.available_staffs(menu, time_range).map(&:id)).to include(staff.id)
           end
 
           context "when there is other normal menus available" do
@@ -581,7 +592,7 @@ RSpec.describe Shop, type: :model do
             before { create_available_menu(normal_menu) }
 
             it "returns available staffs" do
-              expect(shop.available_staffs(normal_menu, time_range)).to include(staff)
+              expect(shop.available_staffs(normal_menu, time_range).map(&:id)).to include(staff.id)
             end
           end
         end
@@ -631,7 +642,7 @@ RSpec.describe Shop, type: :model do
         end
 
         it "returns available staffs" do
-          expect(shop.available_staffs(menu, time_range)).to include(staff)
+          expect(shop.available_staffs(menu, time_range).map(&:id)).to include(staff.id)
         end
       end
     end
@@ -651,7 +662,7 @@ RSpec.describe Shop, type: :model do
       end
 
       it "returns available staffs" do
-        expect(shop.available_staffs(menu, booking_time)).to include(staff)
+        expect(shop.available_staffs(menu, booking_time).map(&:id)).to include(staff.id)
       end
 
       context "when staff asks for leave on that date is at that time" do
@@ -670,7 +681,7 @@ RSpec.describe Shop, type: :model do
         end
 
         it "returns available staffs" do
-          expect(shop.available_staffs(menu, booking_time)).to include(staff)
+          expect(shop.available_staffs(menu, booking_time).map(&:id)).to include(staff.id)
         end
       end
     end
