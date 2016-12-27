@@ -24,11 +24,15 @@ class CustomSchedule < ApplicationRecord
   before_validation :set_start_time, :set_end_time
 
   def set_start_time
-    self.start_time ||= Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
+    if start_time_date_part && start_time_time_part
+      self.start_time = Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
+    end
   end
 
   def set_end_time
-    self.end_time ||= Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
+    if start_time_date_part && end_time_time_part
+      self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
+    end
   end
 
   def start_time_date

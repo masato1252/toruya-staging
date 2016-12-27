@@ -1,1 +1,1 @@
-json.selected_option menu, :id, :min_staffs_number, :max_seat_number
+json.selected_option menu_option, :id, :min_staffs_number, :available_seat

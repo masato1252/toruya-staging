@@ -31,8 +31,19 @@ RSpec.describe Shop, type: :model do
                                                      start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
                                                      end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
-        it "returns available time range" do
-          expect(shop.available_time(now.to_date)).to eq(custom_schedule.end_time..business_schedule.end_time)
+        context "when custom_schedule end time >= schedule end_time" do
+          it "returns nil" do
+            expect(shop.available_time(now.to_date)).to be_nil
+          end
+        end
+
+        context "when custom_schedule end time < schedule end_time" do
+          let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
+                                                        start_time: (now.beginning_of_day + 7.hours).advance(weeks: 1),
+                                                        end_time: (now.beginning_of_day + 18.hours).advance(weeks: 1)) }
+          it "returns available time range" do
+            expect(shop.available_time(now.to_date)).to eq(custom_schedule.end_time..business_schedule.end_time)
+          end
         end
       end
 

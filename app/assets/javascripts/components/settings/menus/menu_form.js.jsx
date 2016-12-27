@@ -150,7 +150,7 @@ UI.define("Settings.MenuForm", function() {
         this.state.menu.short_name &&
         checkedMenuShopsOptions.length > 0 &&
         checkedMenuStaffsOptions.length > 0 &&
-        (this.state.menu.min_staffs_number > 1 ? _.every(checkedMaxSeatNumberValues) : true) &&
+        _.every(checkedMaxSeatNumberValues) &&
         (this.state.menu.min_staffs_number ? _.every(checkedMaxCustomerValues) : true) &&
         (this.state.menu.min_staffs_number === 0 ? true : this.state.menu.min_staffs_number)
       )
@@ -263,7 +263,7 @@ UI.define("Settings.MenuForm", function() {
                       />
                       <label htmlFor={`shop-${menuShopOption.shopId}`}>{menuShopOption.name}</label>
                       {
-                        menuShopOption.checked && this.state.menu.min_staffs_number > 1 ?
+                        menuShopOption.checked ?
                           <input
                             placeholder={this.props.maxCustomersLabel}
                             maxlength="10"
@@ -277,7 +277,7 @@ UI.define("Settings.MenuForm", function() {
                           /> : null
                       }
                       {
-                        menuShopOption.checked && this.state.menu.min_staffs_number > 1 ? "人" : null
+                        menuShopOption.checked ? "人" : null
                       }
                     </dd>
                   </dl>

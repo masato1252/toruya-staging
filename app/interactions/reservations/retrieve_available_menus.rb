@@ -39,22 +39,22 @@ module Reservations
       menu_options = _category_with_menus[:menu_options]
       menu_ids = menu_options.map(&:id)
 
-      staffs = if menu_options.present?
-                 selected_menu = if menu_ids.include?(params[:menu_id].to_i)
-                                   shop.menus.find_by(id: params[:menu_id])
-                                 else
-                                   Menu.find(menu_ids.first)
-                                 end
+      staff_options = if menu_options.present?
+                        selected_menu_option = if menu_ids.include?(params[:menu_id].to_i)
+                                                 menu_options.find { |menu_option| menu_option.id == params[:menu_id].to_i }
+                                               else
+                                                 menu_options.first
+                                               end
 
-                 shop.available_staffs(selected_menu, reservation_time, params[:customer_ids].size, reservation.try(:id))
-               else
-                 []
-               end
+                        shop.available_staffs(shop.menus.find(selected_menu_option.id), reservation_time, params[:customer_ids].size, reservation.try(:id))
+                      else
+                        []
+                      end
 
       {
-        category_menus: _category_with_menus[:category_with_menu_options],
-        selected_menu: selected_menu,
-        staffs: staffs,
+        category_menu_options: _category_with_menus[:category_with_menu_options],
+        selected_menu_option: selected_menu_option,
+        staff_options: staff_options,
         reservation: reservation
       }
     end

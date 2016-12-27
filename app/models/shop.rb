@@ -51,7 +51,7 @@ class Shop < ApplicationRecord
     if custom_close_schedule = custom_schedules.where(start_time: date.beginning_of_day..date.end_of_day).order("end_time").last
       schedule = business_schedule(date)
 
-      if schedule
+      if schedule && schedule.end_time > custom_close_schedule.end_time
         return custom_close_schedule.end_time..schedule.end_time
       else
         return
@@ -101,7 +101,7 @@ class Shop < ApplicationRecord
     ")
 
     no_reservation_except_menu0_menus = no_reservation_except_menu0_menus.map do |menu|
-      Options::MenuOption.new(id: menu.id, name: menu.name, available_seat: menu.max_seat_number)
+      Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
     end
 
     reservation_menus = overlap_reservations(start_time, end_time, reservation_id).group_by { |reservation| reservation.menu }.map do |menu, reservations|
@@ -112,12 +112,14 @@ class Shop < ApplicationRecord
 
       if menu.min_staffs_number == 0
         Options::MenuOption.new(id: menu.id, name: menu.name,
+                                min_staffs_number: menu.min_staffs_number,
                                 available_seat: menu_max_seat_number - customers_amount_of_reservations)
       elsif menu.min_staffs_number == 1
         if reservations.any? { |reservation|
           reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
         }
         Options::MenuOption.new(id: menu.id, name: menu.name,
+                                min_staffs_number: menu.min_staffs_number,
                                 available_seat: menu_max_seat_number - customers_amount_of_reservations)
         end
       elsif menu.min_staffs_number > 1
@@ -127,6 +129,7 @@ class Shop < ApplicationRecord
           staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
         }
         Options::MenuOption.new(id: menu.id, name: menu.name,
+                                min_staffs_number: menu.min_staffs_number,
                                 available_seat: menu_max_seat_number - customers_amount_of_reservations)
         end
       end
@@ -221,6 +224,7 @@ class Shop < ApplicationRecord
 
       if menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
         Options::MenuOption.new(id: menu.id, name: menu.name,
+                                min_staffs_number: 0,
                                 available_seat: menu_max_seat_number - customers_amount_of_reservations)
       end
     end.compact

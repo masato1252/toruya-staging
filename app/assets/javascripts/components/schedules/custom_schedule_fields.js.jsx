@@ -6,7 +6,7 @@ UI.define("CustomScheduleFields", function() {
       return ({
         start_time_date_part: this.props.schedule.startTimeDatePart || "",
         start_time_time_part: this.props.schedule.startTimeTimePart || "",
-        end_time: this.props.schedule.endTime || "",
+        end_time_time_part: this.props.schedule.endTimeTimePart || "",
         reason: this.props.schedule.reason || "",
         delete_flag: false
       });
@@ -49,9 +49,9 @@ UI.define("CustomScheduleFields", function() {
           <dd className="endTime">
           <input
             type="time"
-            name="custom_schedules[][end_time]"
-            data-name="end_time"
-            value={this.state.end_time}
+            name="custom_schedules[][end_time_time_part]"
+            data-name="end_time_time_part"
+            value={this.state.end_time_time_part}
             size="20"
             onChange={this._handleChnage} />
           </dd>

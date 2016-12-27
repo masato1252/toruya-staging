@@ -5,7 +5,7 @@ class CreateCustomSchedule < ActiveInteraction::Base
     string :id, default: nil
     string :start_time_date_part, default: nil
     string :start_time_time_part, default: nil
-    string :end_time, default: nil
+    string :end_time_time_part, default: nil
     string :reason, default: nil
     boolean :_destroy, default: false
   end

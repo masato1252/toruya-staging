@@ -8,7 +8,7 @@ UI.define("CustomSchedules", function() {
       return ({
         start_time_date_part: moment().format("YYYY-MM-DD"),
         start_time_time_part: "00:00",
-        end_time: "23:59",
+        end_time_time_part: "23:59",
         reason: "",
         customSchedules: this.props.customSchedules
       });
@@ -19,7 +19,7 @@ UI.define("CustomSchedules", function() {
     },
 
     _isValidCustomSchedule: function() {
-      return (this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time);
+      return (this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part);
     },
 
     _handleAddRow: function(event) {
@@ -30,13 +30,13 @@ UI.define("CustomSchedules", function() {
       var customSchedules = this.state.customSchedules.slice(0)
       customSchedules.push({startTimeDatePart: this.state.start_time_date_part,
                             startTimeTimePart: this.state.start_time_time_part,
-                            endTime: this.state.end_time,
+                            endTimeTimePart: this.state.end_time_time_part,
                             reason: this.state.reason})
       this.setState({
         customSchedules: customSchedules,
         start_time_date_part: moment().format("YYYY-MM-DD"),
         start_time_time_part: "00:00",
-        end_time: "23:59",
+        end_time_time_part: "23:59",
         reason: ""
       })
     },
@@ -57,7 +57,7 @@ UI.define("CustomSchedules", function() {
           <dd className="startTime">
             <input type="time" name="start_time_time_part" defaultValue="00:00" value={this.state.start_time_time_part} size="20" onChange={this._handleChnage} />
           </dd><dd className="endTime">
-            <input type="time" name="end_time" defaultValue="23:59" value={this.state.end_time} size="20" onChange={this._handleChnage} />
+            <input type="time" name="end_time_time_part" defaultValue="23:59" value={this.state.end_time_time_part} size="20" onChange={this._handleChnage} />
           </dd>
           <dd className="closeReason">
             <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChnage} />

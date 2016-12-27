@@ -26,6 +26,13 @@ module OptionsHelper
     end
   end
 
+  def staff_options(staff_options, selected_menu_option)
+    return unless staff_options && selected_menu_option
+    staff_options.map do |s|
+      { label: s.name, value: s.id.to_s, handableCustomers: s.handable_customers }
+    end
+  end
+
   def shop_options(shops)
     return [] unless shops.present?
     shops.map { |s| React.camelize_props(s.attributes) }
@@ -46,13 +53,6 @@ module OptionsHelper
       h.merge!(editPath: edit_settings_reservation_setting_path(setting, from_menu: true, menu_id: menu.id))
     end
     h
-  end
-
-  def staff_options(staffs, selected_menu)
-    return unless staffs && selected_menu
-    staffs.map do |s|
-      { label: s.name, value: s.id.to_s, handableCustomers: s.handable_customers }
-    end
   end
 
   def staff_attributes_options(staffs)

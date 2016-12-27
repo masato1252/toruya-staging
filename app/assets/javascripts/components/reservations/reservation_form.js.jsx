@@ -20,7 +20,7 @@ UI.define("Reservation.Form", function() {
         staff_ids: this.props.reservation.staffIds || [],
         memo: this.props.reservation.memo || "",
         menu_min_staffs_number: this.props.minStaffsNumber || 0,
-        menu_max_seat_number: this.props.maxSeatNumber,
+        menu_available_seat: this.props.availableSeat,
         menu_group_options: this.props.menuGroupOptions || [],
         staff_options: this.props.staffOptions || [],
         processing: false
@@ -87,23 +87,31 @@ UI.define("Reservation.Form", function() {
 
     _maxCustomerLimit: function() {
       var _this = this;
-      if (this.state.menu_min_staffs_number) {
+
+      if (this.state.menu_min_staffs_number === 0) {
+        return this.state.menu_available_seat
+      }
+      else if (this.state.menu_min_staffs_number == 1) {
         var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
            return _.contains(_this.state.staff_ids, `${staff.value}`)
         })
-        var staffMaxCustomersTotal = _.reduce(selected_staffs, function(num, staff) {
-           return staff.maxCustomers + num;
-        }, 0);
 
-        if (this.state.menu_max_seat_number) {
-          return _.min([staffMaxCustomersTotal, this.state.menu_max_seat_number]);
-        }
-        else {
-          return staffMaxCustomersTotal;
+        if (selected_staffs[0]) {
+          return _.min([selected_staffs[0].handableCustomers, this.state.menu_available_seat]);
         }
       }
-      else {
-        return null;
+      else if (this.state.menu_min_staffs_number > 1) {
+        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
+           return _.contains(_this.state.staff_ids, `${staff.value}`)
+        })
+
+        var handableCustomers = selected_staffs.map(function(staff) {
+          return staff.handableCustomers;
+        });
+
+        var minCustomersHandleable = _.min(handableCustomers);
+
+        return _.min([minCustomersHandleable, this.state.menu_available_seat]);
       }
     },
 
@@ -130,7 +138,7 @@ UI.define("Reservation.Form", function() {
         return (customersLimit >= this.state.customers.length);
       }
       else {
-        return true;
+        return false;
       }
     },
 
@@ -226,7 +234,7 @@ UI.define("Reservation.Form", function() {
         _this.setState({menu_group_options: result["menu"]["group_options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
-                        menu_max_seat_number: result["menu"]["selected_option"]["max_seat_number"],
+                        menu_available_seat: result["menu"]["selected_option"]["available_seat"],
                         staff_options: result["staff"]["options"],
                         staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
         });
@@ -254,11 +262,12 @@ UI.define("Reservation.Form", function() {
       this.currentRequest = jQuery.ajax({
         url: this.props.availableStaffsPath,
         data: {
+          menu_id: this.state.menu_id,
           reservation_id: this.props.reservation.id,
           start_time_date_part: this.state.start_time_date_part,
           start_time_time_part: this.state.start_time_time_part,
           end_time_time_part: this.state.end_time_time_part,
-          menu_id: this.state.menu_id
+          customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
         },
         dataType: "json",
         beforeSend: function() {
@@ -277,14 +286,6 @@ UI.define("Reservation.Form", function() {
       }).always(function() {
         _this.setState({ processing: false });
       });
-    },
-
-    _requiredStaffsNumber: function(min_staffs_number) {
-      var customerNumber;
-      customerNumber = this.state.customers.length;
-      customerNumber = customerNumber == 0 ? 1 : customerNumber;
-      min_staffs_number = (min_staffs_number == 0 || !min_staffs_number) ? 1 : min_staffs_number
-      return min_staffs_number * customerNumber;
     },
 
     renderStaffSelects: function() {

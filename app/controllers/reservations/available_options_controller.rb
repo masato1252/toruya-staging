@@ -10,10 +10,16 @@ class Reservations::AvailableOptionsController < DashboardController
   end
 
   def staffs
-    @menu = shop.menus.find(params[:menu_id])
+    menu = shop.menus.find(params[:menu_id])
     reservation_time = start_time..end_time
+    params[:customer_ids] = if params[:customer_ids].present?
+                              params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
+                            else
+                              []
+                            end
 
-    @staffs = shop.available_staffs(@menu, reservation_time, params[:reservation_id])
+    @menu = ::Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number)
+    @staffs = shop.available_staffs(menu, reservation_time, params[:customer_ids].size, params[:reservation_id])
   end
 
   private

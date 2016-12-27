@@ -28,7 +28,7 @@ UI.define("Select", function() {
             });
 
           return (
-              <optgroup key={group_option.group_label} label={group_option.group_label}>
+              <optgroup key={group_option.group_label || group_option.groupLabel } label={group_option.group_label || group_option.groupLabel}>
                 {nested_options}
               </optgroup>
             )
