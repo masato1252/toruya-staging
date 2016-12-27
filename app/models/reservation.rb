@@ -112,16 +112,18 @@ class Reservation < ApplicationRecord
     end
   end
 
+  # TODO: New rule
   def enough_staffs_for_customers
-    min_staffs_number = menu.min_staffs_number
-    return if min_staffs_number.zero?
+    # min_staffs_number = menu.min_staffs_number
+    # return if min_staffs_number.zero?
 
-    if staff_ids.size < min_staffs_number
-      errors.add(:base, "Not enough staffs for menu")
-    elsif min_staffs_number == 1 && menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size
-      errors.add(:base, "Not enough staffs for customers")
-    elsif min_staffs_number > 1 && (menu.shop_menus.find_by(shop: shop).max_seat_number < customer_ids.size || menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size)
-      errors.add(:base, "Not enough seat for customers")
-    end
+    # if staff_ids.size < min_staffs_number
+    #   errors.add(:base, "Not enough staffs for menu")
+    # elsif min_staffs_number == 1 && menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size
+    #   errors.add(:base, "Not enough staffs for customers")
+    # elsif min_staffs_number > 1 &&
+    #   (menu.shop_menus.find_by(shop: shop).max_seat_number < customer_ids.size || menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size)
+    #   errors.add(:base, "Not enough seat for customers")
+    # end
   end
 end
