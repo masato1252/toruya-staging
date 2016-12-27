@@ -1,11 +1,10 @@
 class Options::MenuOption < Option
-  attr_reader :id, :name, :max_seat_number, :occupied_customers_count
+  attr_reader :id, :name, :available_seat
 
   def initialize(attributes = {})
     @id = attributes[:id]
     @name = attributes[:name]
-    @max_seat_number = attributes[:max_seat_number]
-    @occupied_number = attributes[:occupied_customers_count]
+    @available_seat = attributes[:available_seat]
     super
   end
 end

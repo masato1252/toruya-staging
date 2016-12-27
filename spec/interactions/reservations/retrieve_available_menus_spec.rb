@@ -20,9 +20,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
           }
         )
 
-        expect(result[:category_menus]).to eq([menu])
-        expect(result[:selected_menu]).to eq(menu)
-        expect(result[:staffs]).to eq([staff])
+        expect(result[:category_menus].map(&:id)).to eq([menu.id])
+        expect(result[:selected_menu].id).to eq(menu.id)
+        expect(result[:staffs].map(&:id)).to eq([staff.id])
         expect(result[:reservation]).to be_nil
       end
     end
@@ -40,9 +40,10 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
           }
         )
 
-        expect(result[:category_menus]).to eq([{ category: category, menus: [menu] }])
-        expect(result[:selected_menu]).to eq(menu)
-        expect(result[:staffs]).to eq([staff])
+        expect(result[:category_menus].first[:category]).to eq(category)
+        expect(result[:category_menus].first[:menu_options].map(&:id)).to eq([menu.id])
+        expect(result[:selected_menu].id).to eq(menu.id)
+        expect(result[:staffs].map(&:id)).to eq([staff.id])
         expect(result[:reservation]).to be_nil
       end
     end
@@ -60,9 +61,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
           }
         )
 
-        expect(result[:category_menus]).to eq([ menu, no_manpower_menu ])
-        expect(result[:selected_menu]).to eq(menu)
-        expect(result[:staffs]).to eq([staff])
+        expect(result[:category_menus].map(&:id)).to eq([ menu.id, no_manpower_menu.id ])
+        expect(result[:selected_menu].id).to eq(menu.id)
+        expect(result[:staffs].map(&:id)).to eq([staff.id])
         expect(result[:reservation]).to be_nil
       end
     end

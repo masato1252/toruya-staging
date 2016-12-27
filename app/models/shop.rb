@@ -87,6 +87,7 @@ class Shop < ApplicationRecord
 
     # Menu with customers need to be afforded by staff
     # staff work for menu0 would be available here.
+    # TODO: Find Second largest Value refactor: http://stackoverflow.com/questions/4910930/trying-to-find-the-second-largest-value-in-a-column-postgres-sql
     no_reservation_except_menu0_menus = scoped.select("menus.*, max(shop_menus.max_seat_number) as max_seat_number").group("menus.id").having("
       CASE
         WHEN menus.min_staffs_number = 1 THEN LEAST(max(staff_menus.max_customers), max(shop_menus.max_seat_number)) >= #{number_of_customer}
@@ -100,7 +101,7 @@ class Shop < ApplicationRecord
     ")
 
     no_reservation_except_menu0_menus = no_reservation_except_menu0_menus.map do |menu|
-      Options::MenuOption.new(id: menu.id, name: menu.name, max_seat_number: menu.max_seat_number, occupied_customers_count: 0)
+      Options::MenuOption.new(id: menu.id, name: menu.name, available_seat: menu.max_seat_number)
     end
 
     reservation_menus = overlap_reservations(start_time, end_time, reservation_id).group_by { |reservation| reservation.menu }.map do |menu, reservations|
@@ -111,15 +112,13 @@ class Shop < ApplicationRecord
 
       if menu.min_staffs_number == 0
         Options::MenuOption.new(id: menu.id, name: menu.name,
-                                max_seat_number: menu_max_seat_number,
-                                occupied_customers_count: customers_amount_of_reservations)
+                                available_seat: menu_max_seat_number - customers_amount_of_reservations)
       elsif menu.min_staffs_number == 1
         if reservations.any? { |reservation|
           reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
         }
         Options::MenuOption.new(id: menu.id, name: menu.name,
-                                max_seat_number: menu_max_seat_number,
-                                occupied_customers_count: customers_amount_of_reservations)
+                                available_seat: menu_max_seat_number - customers_amount_of_reservations)
         end
       elsif menu.min_staffs_number > 1
         if reservations.any? { |reservation|
@@ -128,8 +127,7 @@ class Shop < ApplicationRecord
           staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
         }
         Options::MenuOption.new(id: menu.id, name: menu.name,
-                                max_seat_number: menu_max_seat_number,
-                                occupied_customers_count: customers_amount_of_reservations)
+                                available_seat: menu_max_seat_number - customers_amount_of_reservations)
         end
       end
     end.compact
@@ -159,7 +157,7 @@ class Shop < ApplicationRecord
     no_reservation_except_menu0_staffs = scoped.select("staffs.*, max(staff_menus.max_customers) as max_customers").group("staffs.id")
     no_reservation_except_menu0_staffs = no_reservation_except_menu0_staffs.map do |staff|
       Options::StaffOption.new(id: staff.id, name: staff.name,
-                               max_customers: staff.max_customers, occupied_customers_count: 0)
+                               handable_customers: staff.max_customers)
     end
 
     reservations = overlap_reservations(start_time, end_time, reservation_id, menu.id)
@@ -180,16 +178,20 @@ class Shop < ApplicationRecord
         staff = reservation.staffs.first
         staff_max_customer = staff.staff_menus.find_by(menu: menu).max_customers
 
-        if staff_max_customer >= number_of_customer + reservation.reservation_customers.count
-          staff
+        if staff_max_customer >= number_of_customer + reservation.count_of_customers
+          Options::StaffOption.new(id: staff.id, name: staff.name,
+                                   handable_customers: staff_max_customer - reservation.count_of_customers )
         end
       end.compact.flatten
     elsif menu.min_staffs_number > 1
       reservation_staffs = reservations.map do |reservation|
-        staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.where(menu: menu).first.max_customers }.min
+        staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.find_by(menu: menu).max_customers }.min
 
-        if staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
-          reservation.staffs
+        if staffs_max_customer >= number_of_customer + reservation.count_of_customers
+          reservation.staffs.map do |staff|
+            Options::StaffOption.new(id: staff.id, name: staff.name,
+                                     handable_customers: staffs_max_customer - reservation.count_of_customers )
+          end
         end
       end.compact.flatten
     end
@@ -219,8 +221,7 @@ class Shop < ApplicationRecord
 
       if menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
         Options::MenuOption.new(id: menu.id, name: menu.name,
-                                max_seat_number: menu_max_seat_number,
-                                occupied_customers_count: customers_amount_of_reservations)
+                                available_seat: menu_max_seat_number - customers_amount_of_reservations)
       end
     end.compact
   end

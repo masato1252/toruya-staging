@@ -6,7 +6,7 @@ module OptionsHelper
 
   def menu_options(menus)
     return unless menus
-    menus.map { |m| { label: m.name, value: m.id, maxSeatNumber: m.max_seat_number } }
+    menus.map { |m| { label: m.name, value: m.id, availableSeat: m.available_seat } }
   end
 
   def menu_group_options(category_menus)
@@ -17,7 +17,7 @@ module OptionsHelper
       category_menus.map do |category_menu|
         {
           group_label: category_menu[:category].name,
-          options: menu_options(category_menu[:menus])
+          options: menu_options(category_menu[:menu_options])
         }
       end
     else
@@ -51,10 +51,7 @@ module OptionsHelper
   def staff_options(staffs, selected_menu)
     return unless staffs && selected_menu
     staffs.map do |s|
-       {
-          label: s.name, value: s.id.to_s,
-          maxCustomers: s.staff_menus.find { |staff_menu| staff_menu.menu_id == selected_menu.id }.try(:max_customers)
-       }
+      { label: s.name, value: s.id.to_s, handableCustomers: s.handable_customers }
     end
   end
 
