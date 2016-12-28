@@ -25,7 +25,7 @@
     custom_schedules: @custom_schedules.map { |schedule|
     schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
                               start_time_time_part: schedule.start_time_time,
-                              end_time: schedule.end_time.try(:to_s, :time)) },
+                              end_time_time_part: schedule.end_time.try(:to_s, :time)) },
     date_label: I18n.t("common.date"),
     start_time_label: I18n.t("common.start_time"),
     end_time_label: I18n.t("common.end_time"),
