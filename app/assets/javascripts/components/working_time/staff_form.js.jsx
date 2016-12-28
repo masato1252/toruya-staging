@@ -121,6 +121,7 @@ UI.define("WorkingTime.StaffForm", function() {
             reasonOfClosingLabel={this.props.reasonOfClosingLabel}
             newClosingBtn={this.props.newClosingBtn}
             closingReason={this.props.closingReason}
+            deleteBtn={this.props.deleteBtn}
           />
 
           <div id="footerav">
