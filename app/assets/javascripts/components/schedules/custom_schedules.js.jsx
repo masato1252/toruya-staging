@@ -6,9 +6,9 @@ UI.define("CustomSchedules", function() {
   var CustomSchedules = React.createClass({
     getInitialState: function() {
       return ({
-        start_time_date_part: moment().format("YYYY-MM-DD"),
-        start_time_time_part: "00:00",
-        end_time_time_part: "23:59",
+        start_time_date_part: "",
+        start_time_time_part: "",
+        end_time_time_part: "",
         reason: "",
         customSchedules: this.props.customSchedules
       });
@@ -34,9 +34,9 @@ UI.define("CustomSchedules", function() {
                             reason: this.state.reason})
       this.setState({
         customSchedules: customSchedules,
-        start_time_date_part: moment().format("YYYY-MM-DD"),
-        start_time_time_part: "00:00",
-        end_time_time_part: "23:59",
+        start_time_date_part: "",
+        start_time_time_part: "",
+        end_time_time_part: "",
         reason: ""
       })
     },
@@ -55,9 +55,9 @@ UI.define("CustomSchedules", function() {
             <input type="date" name="start_time_date_part" value={this.state.start_time_date_part} onChange={this._handleChnage}/>
           </dt>
           <dd className="startTime">
-            <input type="time" name="start_time_time_part" defaultValue="00:00" value={this.state.start_time_time_part} size="20" onChange={this._handleChnage} />
+            <input type="time" name="start_time_time_part" value={this.state.start_time_time_part} size="20" onChange={this._handleChnage} />
           </dd><dd className="endTime">
-            <input type="time" name="end_time_time_part" defaultValue="23:59" value={this.state.end_time_time_part} size="20" onChange={this._handleChnage} />
+            <input type="time" name="end_time_time_part" value={this.state.end_time_time_part} size="20" onChange={this._handleChnage} />
           </dd>
           <dd className="closeReason">
             <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChnage} />
@@ -67,8 +67,8 @@ UI.define("CustomSchedules", function() {
           </dd>
           </dl>
          {this.state.customSchedules.map(function(schedule, i) {
-           return <UI.CustomScheduleFields key={i} schedule={schedule} />
-         })}
+           return <UI.CustomScheduleFields key={i} schedule={schedule} deleteBtn={this.props.deleteBtn} />
+         }.bind(this))}
       </div>
       );
     }

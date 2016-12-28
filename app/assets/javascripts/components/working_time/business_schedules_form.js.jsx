@@ -34,7 +34,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                     <input
                       type="hidden"
                       name={`business_schedules[${this.props.shop.id}][${wday}][day_of_week]`}
-                      value={day_index} />
+                      defaultValue={day_index} />
 
                     <dd className="inOut">
                       <input
@@ -42,7 +42,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                         className="BTNinout"
                         id={`day${day_index}`}
                         name={`business_schedules[${this.props.shop.id}][${wday}][business_state]`}
-                        value="opened"
+                        defaultValue="opened"
                         defaultChecked={schedule ? schedule.business_state == "opened" : ""}
                       />
                       <label htmlFor={`day${day_index}`}></label>

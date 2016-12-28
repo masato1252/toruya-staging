@@ -22,6 +22,23 @@ UI.define("CustomScheduleFields", function() {
     },
 
     render: function() {
+      if (this.state.delete_flag) {
+        return (
+          <div>
+            {
+              this.props.schedule.id ?
+              <input type="hidden" name="custom_schedules[][id]" value={this.props.schedule.id} />
+              : null
+            }
+            {
+              this.props.schedule.id ?
+              <input type="hidden" name="custom_schedules[][_destroy]" defaultValue="true" />
+                : null
+            }
+          </div>
+        )
+      }
+
       return (
         <dl>
           {
@@ -64,10 +81,9 @@ UI.define("CustomScheduleFields", function() {
             size="40"
             onChange={this._handleChnage} />
           </dd>
-            {this.state.delete_flag ? <input type="hidden" name="custom_schedules[][_destroy]" value="true" /> : null}
           <dd className="add">
-            <a href="#" className="BTNtarco" onClick={this._handleCustomRow}>
-              { this.state.delete_flag ? "Recover" : "Cancel" }
+            <a href="#" className="btn btn-reset btn-danger" onClick={this._handleCustomRow}>
+              {this.props.deleteBtn}
             </a>
           </dd>
         </dl>

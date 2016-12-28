@@ -52,9 +52,11 @@ a, button {
     color: $white
   }
 
+  &.btn-reset {
+    line-height: initial !important;
+  }
+
   &.btn-default {
-    // background-color: $green1;
-    // border-color: $green2;
     color: $gray;
     background-color: $white;
     border-color: $light_gray;
@@ -71,13 +73,19 @@ a, button {
   }
 
   &.btn-light-green {
+    color: $white;
     background-color: #97bfb8;
     border-color: #60938a;
   }
 
   &.btn-yellow {
+    color: $white;
     background-color: #fcbe46;
     border: 1px #e6a21f solid;
+
+    &:hover {
+      color: $white;
+    }
   }
 
   &.btn-inline {
