@@ -399,9 +399,6 @@ UI.define("Settings.MenuForm", function() {
             {this.props.categoryLabel}
           </h3>
           <div id="category" className="formRow">
-            <UI.Settings.NewCategories
-              newCategoryBtn={this.props.newCategoryBtn}
-              />
             {this.props.categoriesOptions.map(function(categoryOption) {
               return(
                 <dl className="checkbox" key={`category-${categoryOption.id}`}>
@@ -418,9 +415,13 @@ UI.define("Settings.MenuForm", function() {
                 </dl>
               );
             }.bind(this))}
+            <UI.Settings.NewCategories
+            newCategoryBtn={this.props.newCategoryBtn}
+            categoryLabel={this.props.categoryLabel}
+              />
           </div>
 
-          <div id="customize-table" className="formRow menu-staffs-table">
+          <div id="customize-table" className="formRow menu-staffs-table table">
               <dl className="header">
                 <dt>対応従業員</dt>
                 <dd>対応</dd>
@@ -428,7 +429,7 @@ UI.define("Settings.MenuForm", function() {
               </dl>
               {this.state.menuStaffsOptions.map(function(menuStaffOption) {
                 return(
-                  <dl key={`staff-${menuStaffOption.staffId}`}>
+                  <dl className="body" key={`staff-${menuStaffOption.staffId}`}>
                     {
                       <input type="hidden" name="menu[staff_menus_attributes][][id]" value={menuStaffOption.id || ""} />
                     }

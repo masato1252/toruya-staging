@@ -105,18 +105,6 @@
       background-color: #f2f2f2;
     }
 
-    .body {
-      dl:first-of-type {
-        -webkit-border-top-left-radius: 10px;
-        -webkit-border-top-right-radius: 10px;
-      }
-
-      dl:last-of-type {
-        -webkit-border-bottom-left-radius: 10px;
-        -webkit-border-bottom-right-radius: 10px;
-      }
-    }
-
     dl {
       display: table-row;
 
@@ -145,5 +133,30 @@
   li {
     margin-left: 3px;
     margin-right: 3px;
+  }
+}
+
+#content .formRow dl.new-category-area:first-of-type{
+ border-top-left-radius: 0;
+ border-top-right-radius: 0;
+}
+
+#new-categories {
+  .new-category-area {
+    input {
+      margin-left: 46px;
+    }
+
+    a {
+      margin-left: 10px;
+    }
+  }
+
+  dl.new-category-row {
+    padding-left: 20px;
+
+    dd.remove {
+      padding-left: 10px;
+    }
   }
 }

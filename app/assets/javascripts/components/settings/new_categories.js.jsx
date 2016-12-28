@@ -41,18 +41,6 @@ UI.define("Settings.NewCategories", function() {
     render: function() {
       return (
         <div id="new-categories">
-          <div className="new-category-area">
-            <input
-              type="text"
-              value={this.state.newCategoryValue}
-              placeholder={this.props.categoryLabel}
-              onChange={this.handleCategoryValueChange} />
-            <a
-              className={`btn btn-yellow btn-inline ${this.state.newCategoryValue ? null : "disabled"}`} onClick={this.addNewCategory}>
-              {this.props.newCategoryBtn}
-            </a>
-          </div>
-
           {this.state.newCategories.map(function(newCategory, i) {
             return(
               <dl className="new-category-row" key={`${newCategory}-${i}`}>
@@ -62,7 +50,8 @@ UI.define("Settings.NewCategories", function() {
                     name="menu[new_categories][]"
                     defaultValue={newCategory}
                     />
-                  {newCategory}
+                  <input type="checkbox" checked />
+                  <label>{newCategory}</label>
                 </dd>
                 <dd className="remove">
                   <a className="btn btn-light-green" onClick={this.removeNewCateogry.bind(null, i)}>
@@ -72,6 +61,18 @@ UI.define("Settings.NewCategories", function() {
               </dl>
             )
           }.bind(this))}
+
+          <dl className="new-category-area">
+            <input
+              type="text"
+              value={this.state.newCategoryValue}
+              placeholder={this.props.categoryLabel}
+              onChange={this.handleCategoryValueChange} />
+            <a
+              className={`btn btn-light-green btn-inline ${this.state.newCategoryValue ? null : "disabled"}`} onClick={this.addNewCategory}>
+              {this.props.newCategoryBtn}
+            </a>
+          </dl>
         </div>
       );
     }
