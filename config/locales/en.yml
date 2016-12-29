@@ -141,6 +141,9 @@ en:
       binding_confirmation_message: Are you sure binding this google group (%{google_group_name}) with Toruya group (%{contact_group_name}) ?
       bind_successfully_message: Contact Groups was successfully binded.
       importing_message: We are importing your customers, would notify you when the process finished.
+      dont_want_connect_google: "Or you don't want to connect with google group"
+      only_use_toruya_group: Only Use Toruya Google Group
+      only_use_toruya_group_confirmation: "Are you sure?"
     account:
       info_title: Account
     profile:

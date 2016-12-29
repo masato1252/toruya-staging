@@ -30,10 +30,12 @@
     </div>
     <hr />
     <% if @google_groups.present? %>
-      <h2>Or you don't want to connect with google </h2>
+      <h2>
+        <%= t("settings.contact.dont_want_connect_google") %>
+      </h2>
     <% end %>
-    <%= link_to "Only Use Toruya Google Group", bind_settings_contact_group_path(@contact_group),
+    <%= link_to t("settings.contact.only_use_toruya_group"), bind_settings_contact_group_path(@contact_group),
       method: :post,
       class: "btn btn-success",
-        data: { confirm: "Are you sure?", disable_with: t("common.processing") } %>
+        data: { confirm: t("settings.contact.only_use_toruya_group_confirmation"), disable_with: t("common.processing") } %>
   </form>

@@ -425,7 +425,7 @@ UI.define("Settings.MenuForm", function() {
               <dl className="header">
                 <dt>対応従業員</dt>
                 <dd>対応</dd>
-                <dd>Corresponding number of people</dd>
+                <dd>対応可能人数</dd>
               </dl>
               {this.state.menuStaffsOptions.map(function(menuStaffOption) {
                 return(

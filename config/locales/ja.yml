@@ -140,6 +140,9 @@ ja:
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
       bind_successfully_message: Google連絡先データのインポート準備が完了しました。
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
+      dont_want_connect_google: インポートしたいGoogleグループが無い場合は
+      only_use_toruya_group: インポートせずに同期設定を完了する
+      only_use_toruya_group_confirmation: "Google連絡先からインポートせずに同期設定を完了します。"
     account:
       info_title: アカウント
     profile:
