@@ -1,0 +1,23 @@
+<header>
+  <dl>
+    <dd>
+      <%= link_to shop_reservations_path(shop), class: "setting" do %>
+        <i class="fa fa-calendar fa-3x" aria-hidden="true"></i><br />
+        今日
+      <% end %>
+    </dd>
+    <% if local_assigns[:shops_selector].present? %>
+      <dd id="NAVshopSelect">
+        <%= shops_select_component %>
+      </dd>
+    <% end %>
+  </dl>
+  <dl>
+    <dd>
+      <%= link_to settings_shops_path, class: "setting" do %>
+        <i class="fa fa-cog fa-3x" aria-hidden="true"></i><br />
+        設定
+      <% end %>
+    </dd>
+  </dl>
+</header>
