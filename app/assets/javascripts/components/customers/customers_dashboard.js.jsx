@@ -21,7 +21,8 @@ UI.define("Customers.Dashboard", function() {
         customer: this.props.customer,
         edit_mode: true,
         reservation_mode: this.props.reservationMode,
-        processing: false
+        processing: false,
+        no_more_customers: false
       });
     },
 
@@ -103,6 +104,7 @@ UI.define("Customers.Dashboard", function() {
       if (this.currentCustomersType != "recent") {
         originalCustomers = [];
         this.currentCustomersType = "recent";
+        this.setState({no_more_customers: false})
       }
       data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
 
@@ -119,6 +121,7 @@ UI.define("Customers.Dashboard", function() {
         if (this.currentCustomersType != "filter" || event.target.value != this.lastQuery) {
           originalCustomers = [];
           this.currentCustomersType = "filter";
+          this.setState({no_more_customers: false})
         }
 
         this.lastQuery = event.target.value
@@ -143,6 +146,7 @@ UI.define("Customers.Dashboard", function() {
           if (this.currentCustomersType != "search" || event.target.value != this.lastQuery) {
             originalCustomers = [];
             this.currentCustomersType = "search";
+            this.setState({no_more_customers: false})
           }
 
           this.lastQuery = event.target.value
@@ -165,12 +169,22 @@ UI.define("Customers.Dashboard", function() {
         this.currentRequest.abort();
       }
 
+      if (this.state.no_more_customers) {
+        this.setState({processing: false});
+        return;
+      }
+
       this.currentRequest = jQuery.ajax({
         url: path,
         data: data,
         dataType: "json",
       }).done(function(result) {
-        _this.setState({customers: originalCustomers.concat(result["customers"])});
+        if (result["customers"].length == 0) {
+          _this.setState({no_more_customers: true})
+        }
+        else {
+          _this.setState({customers: originalCustomers.concat(result["customers"])});
+        }
       }).fail(function(errors){
       }).always(function() {
         _this.setState({processing: false});
@@ -355,6 +369,11 @@ UI.define("Customers.Dashboard", function() {
                     handleCustomerSelect={this.handleCustomerSelect}
                     handleMoreCustomers={this.handleMoreCustomers}
                     selected_customer_id={this.state.selected_customer_id} />
+                  {
+                    this.state.no_more_customers ? (
+                      <strong className="no-more-customer">No More Customer</strong>
+                    ) : null
+                  }
                 </div>
               </div>
             </div>
