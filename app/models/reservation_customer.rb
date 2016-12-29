@@ -11,5 +11,5 @@
 
 class ReservationCustomer < ApplicationRecord
   belongs_to :reservation, counter_cache: :count_of_customers
-  belongs_to :customer
+  belongs_to :customer, touch: true
 end

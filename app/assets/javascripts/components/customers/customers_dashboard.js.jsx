@@ -128,7 +128,7 @@ UI.define("Customers.Dashboard", function() {
                   last_customer_id: this.state.customers[this.state.customers.length-1].id }
       }
 
-      this.setState({selectedFilterPatternNumber: this.lastQuery})
+      this.setState({selectedFilterPatternNumber: this.lastQuery, processing: true})
       this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
     },
 
@@ -152,6 +152,7 @@ UI.define("Customers.Dashboard", function() {
                     last_customer_id: this.state.customers[this.state.customers.length-1].id }
         }
 
+        this.setState({processing: true})
         this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
       }
     },

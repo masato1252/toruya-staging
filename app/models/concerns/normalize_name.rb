@@ -12,6 +12,14 @@ module NormalizeName
   end
 
   def name
-    "#{last_name} #{first_name}".presence || "#{phonetic_last_name} #{phonetic_first_name}".presence
+    "#{last_name} #{first_name}".presence || phonetic_name
+  end
+
+  def phonetic_name
+    "#{phonetic_last_name} #{phonetic_first_name}".presence
+  end
+
+  def phonetic_name_for_compare
+    "#{phonetic_last_name}#{phonetic_first_name}"
   end
 end
