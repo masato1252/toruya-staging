@@ -106,6 +106,7 @@ UI.define("Customers.Dashboard", function() {
       }
       data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
 
+      this.setState({processing: true})
       this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
     },
 

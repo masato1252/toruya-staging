@@ -11,7 +11,8 @@ UI.define("Common.CustomersList", function() {
     },
 
     _atEnd: function() {
-      return $(this.customerList).scrollTop() + $(this.customerList).innerHeight() >=
+      // 200 is a align magic number
+      return $(this.customerList).scrollTop() + $(this.customerList).innerHeight() + 200 >=
           $(this.customerList)[0].scrollHeight
     },
 
