@@ -25,9 +25,9 @@ class Customers::Filter < ActiveInteraction::Base
     scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
 
     scoped = scoped.
-      where("phonetic_last_name ~ ?", "^(#{regexp_pattern}).*$").
+      where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$").
       or(
-        scoped.where("phonetic_first_name ~ ?", "^(#{regexp_pattern}).*$")
+        scoped.where("phonetic_first_name ~* ?", "^(#{regexp_pattern}).*$")
       )
 
     scoped.to_a.sort do |x, y|
