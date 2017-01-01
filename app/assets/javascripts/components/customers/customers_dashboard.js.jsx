@@ -180,7 +180,7 @@ UI.define("Customers.Dashboard", function() {
         dataType: "json",
       }).done(function(result) {
         if (result["customers"].length == 0) {
-          _this.setState({no_more_customers: true})
+          _this.setState({no_more_customers: true, customers: originalCustomers.concat(result["customers"])})
         }
         else {
           _this.setState({customers: originalCustomers.concat(result["customers"])});
