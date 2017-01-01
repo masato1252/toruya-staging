@@ -15,5 +15,7 @@ module Kasaike
     config.i18n.locale = 'ja'
     config.time_zone = "Tokyo"
     config.active_job.queue_adapter = :delayed_job
+
+    config.active_record.schema_format = :sql
   end
 end
