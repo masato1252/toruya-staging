@@ -367,13 +367,10 @@ UI.define("Customers.Dashboard", function() {
                     customers={this.state.customers}
                     handleCustomerSelect={this.handleCustomerSelect}
                     handleMoreCustomers={this.handleMoreCustomers}
-                    selected_customer_id={this.state.selected_customer_id} />
+                    selected_customer_id={this.state.selected_customer_id}
+                    noMoreCustomers={this.state.no_more_customers}
+                    />
                   <UI.ProcessingBar processing={this.state.processing} />
-                  {
-                    this.state.no_more_customers ? (
-                      <strong className="no-more-customer">No More Customer</strong>
-                    ) : null
-                  }
                 </div>
               </div>
             </div>

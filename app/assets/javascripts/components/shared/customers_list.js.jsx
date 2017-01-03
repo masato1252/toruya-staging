@@ -41,6 +41,11 @@ UI.define("Common.CustomersList", function() {
       return(
           <div id="customerList" ref={(c) => this.customerList = c} onScroll={this._handleScroll}>
             {customerOptions}
+            {
+              this.props.noMoreCustomers ? (
+                <strong className="no-more-customer">No More Customer</strong>
+              ) : null
+            }
           </div>
       );
     }
