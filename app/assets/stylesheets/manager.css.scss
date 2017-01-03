@@ -1090,7 +1090,8 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #customer #resultList {
   min-width: 230px;
   overflow-y: scroll;
-    overflow-x: hidden;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 #customer #resultList ul { margin-left: 0; }
 #customer #resultList ul li, #resNew #customers ul li { display: inline-block; }
