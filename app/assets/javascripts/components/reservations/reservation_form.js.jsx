@@ -332,11 +332,12 @@ UI.define("Reservation.Form", function() {
     _handleSubmitClick: function(event) {
       // Prevent double clicking.
       event.preventDefault();
-      this.setState({submitting: true});
 
-      if (this._isValidToReserve()) {
-        this.submitForm();
-      }
+      this.setState({submitting: true}, function() {
+        if (this._isValidToReserve()) {
+          this.submitForm();
+        }
+      }.bind(this));
     },
 
     submitForm: function() {
