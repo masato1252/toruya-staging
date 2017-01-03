@@ -23,7 +23,8 @@ UI.define("Reservation.Form", function() {
         menu_available_seat: this.props.availableSeat,
         menu_group_options: this.props.menuGroupOptions || [],
         staff_options: this.props.staffOptions || [],
-        processing: false
+        processing: false,
+        submitting: false
       });
     },
 
@@ -328,6 +329,23 @@ UI.define("Reservation.Form", function() {
       return select_components
     },
 
+    _handleSubmitClick: function(event) {
+      // Prevent double clicking.
+      event.preventDefault();
+      this.setState({submitting: true});
+
+      if (this._isValidToReserve()) {
+        this.submitForm();
+      }
+    },
+
+    submitForm: function() {
+      // Delay submission to make sure that card token, last4, and type are set in real DOM.
+      setTimeout(function() {
+        jQuery("#save-reservation-form").submit();
+      }, 0);
+    },
+
     render: function() {
       return (
         <div>
@@ -430,7 +448,7 @@ UI.define("Reservation.Form", function() {
             </ul>
             <ul id="BTNfunctions">
               <li>
-                <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
+                <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post" id="save-reservation-form">
                   <input name="utf8" type="hidden" value="✓" />
                   { this.props.reservation.id ?  <input name="_method" type="hidden" value="PUT" /> : null }
                   <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
@@ -443,8 +461,11 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
-                  <button type="submit" id="BTNsave" className="BTNyellow" disabled={!this._isValidToReserve()}>
-                    <i className="fa fa-folder-o" aria-hidden="true"></i>保存
+                  <button type="submit" id="BTNsave" className="BTNyellow"
+                    disabled={!this._isValidToReserve() || this.state.submitting}
+                    onClick={this._handleSubmitClick}>
+                    <i className="fa fa-folder-o" aria-hidden="true"></i>
+                    {this.state.submitting ? "Processing" : "保存"}
                   </button>
                 </form>
 
@@ -454,7 +475,7 @@ UI.define("Reservation.Form", function() {
                   <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
                     <input name="_method" type="hidden" value="DELETE" />
                     <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                    <button id="BTNdel" className="BTNorange" rel="nofollow">
+                    <button id="BTNdel" className="BTNorange" rel="nofollow" >
                       <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
                     </button>
                   </form>
