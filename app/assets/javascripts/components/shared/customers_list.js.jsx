@@ -4,6 +4,10 @@
 
 UI.define("Common.CustomersList", function() {
   var CustomersList = React.createClass({
+    componentWillMount: function() {
+      this._handleScroll = _.debounce(this._handleScroll, 1500); // delay 1.5 second
+    },
+
     handleCustomerSelect: function(customer_id) {
       if (this.props.handleCustomerSelect) {
         this.props.handleCustomerSelect(customer_id);

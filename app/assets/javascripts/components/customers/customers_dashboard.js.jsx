@@ -374,6 +374,7 @@ UI.define("Customers.Dashboard", function() {
                       <strong className="no-more-customer">No More Customer</strong>
                     ) : null
                   }
+                  <UI.ProcessingBar processing={this.state.processing} />
                 </div>
               </div>
             </div>
