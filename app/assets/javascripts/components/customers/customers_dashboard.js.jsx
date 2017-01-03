@@ -169,6 +169,7 @@ UI.define("Customers.Dashboard", function() {
       }
 
       if (this.state.no_more_customers) {
+        this.setState({processing: false})
         return;
       }
 
