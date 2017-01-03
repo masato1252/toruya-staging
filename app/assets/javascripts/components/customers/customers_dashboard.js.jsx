@@ -22,6 +22,7 @@ UI.define("Customers.Dashboard", function() {
         edit_mode: true,
         reservation_mode: this.props.reservationMode,
         processing: false,
+        moreCustomerProcessing: false,
         no_more_customers: false
       });
     },
@@ -83,7 +84,7 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleMoreCustomers: function(event) {
-      this.setState({processing: true}, function() {
+      this.setState({moreCustomerProcessing: true}, function() {
         switch (this.currentCustomersType) {
           case "recent":
             this.recentCutomers()
@@ -169,7 +170,7 @@ UI.define("Customers.Dashboard", function() {
       }
 
       if (this.state.no_more_customers) {
-        this.setState({processing: false})
+        this.setState({moreCustomerProcessing: false})
         return;
       }
 
@@ -179,14 +180,14 @@ UI.define("Customers.Dashboard", function() {
         dataType: "json",
       }).done(function(result) {
         if (result["customers"].length == 0) {
-          _this.setState({no_more_customers: true, processing: false, customers: originalCustomers.concat(result["customers"])})
+          _this.setState({no_more_customers: true, moreCustomerProcessing: false, customers: originalCustomers.concat(result["customers"])})
         }
         else {
           _this.setState({customers: originalCustomers.concat(result["customers"])});
         }
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({processing: false});
+        _this.setState({moreCustomerProcessing: false});
       });
     },
 
@@ -370,7 +371,7 @@ UI.define("Customers.Dashboard", function() {
                     selected_customer_id={this.state.selected_customer_id}
                     noMoreCustomers={this.state.no_more_customers}
                     />
-                  <UI.ProcessingBar processing={this.state.processing} />
+                  <UI.ProcessingBar processing={this.state.moreCustomerProcessing} />
                 </div>
               </div>
             </div>
