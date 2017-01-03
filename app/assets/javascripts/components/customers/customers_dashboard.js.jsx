@@ -83,18 +83,19 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleMoreCustomers: function(event) {
-      this.setState({processing: true});
-      switch (this.currentCustomersType) {
-        case "recent":
-          this.recentCutomers()
-          break;
-        case "filter":
-          this.filterCustomers()
-          break;
-        case "search":
-          this.SearchCustomers()
-          break;
-      }
+      this.setState({processing: true}, function() {
+        switch (this.currentCustomersType) {
+          case "recent":
+            this.recentCutomers()
+            break;
+          case "filter":
+            this.filterCustomers()
+            break;
+          case "search":
+            this.SearchCustomers()
+            break;
+        }
+      }.bind(this));
     },
 
     recentCutomers: function() {
@@ -108,7 +109,6 @@ UI.define("Customers.Dashboard", function() {
       }
       data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
 
-      this.setState({processing: true})
       this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
     },
 
@@ -132,7 +132,7 @@ UI.define("Customers.Dashboard", function() {
                   last_customer_id: this.state.customers[this.state.customers.length-1].id }
       }
 
-      this.setState({selectedFilterPatternNumber: this.lastQuery, processing: true})
+      this.setState({selectedFilterPatternNumber: this.lastQuery})
       this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
     },
 
@@ -157,7 +157,6 @@ UI.define("Customers.Dashboard", function() {
                     last_customer_id: this.state.customers[this.state.customers.length-1].id }
         }
 
-        this.setState({processing: true})
         this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
       }
     },
@@ -170,7 +169,6 @@ UI.define("Customers.Dashboard", function() {
       }
 
       if (this.state.no_more_customers) {
-        this.setState({processing: false});
         return;
       }
 
@@ -180,7 +178,7 @@ UI.define("Customers.Dashboard", function() {
         dataType: "json",
       }).done(function(result) {
         if (result["customers"].length == 0) {
-          _this.setState({no_more_customers: true, customers: originalCustomers.concat(result["customers"])})
+          _this.setState({no_more_customers: true, processing: false, customers: originalCustomers.concat(result["customers"])})
         }
         else {
           _this.setState({customers: originalCustomers.concat(result["customers"])});

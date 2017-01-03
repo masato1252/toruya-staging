@@ -45,7 +45,7 @@ class CustomersController < DashboardController
   end
 
   def recent
-    @customers = super_user.customers.order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(50)
+    @customers = super_user.customers.includes(:rank, :contact_group).order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(50)
     render action: :query
   end
 
