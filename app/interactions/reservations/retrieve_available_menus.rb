@@ -32,7 +32,10 @@ module Reservations
 
     def execute
       reservation.attributes = params.slice(:start_time_date_part, :start_time_time_part, :end_time_time_part, :menu_id, :customer_ids) if reservation
-      menu_options = shop.available_reservation_menus(reservation_time, params[:customer_ids].size, reservation.try(:id))
+      menu_options = Reservable::Menus.run!(shop: shop,
+                                            business_time_range: reservation_time,
+                                            number_of_customer: params[:customer_ids].size,
+                                            reservation_id: reservation.try(:id))
 
       _category_with_menus = category_with_menus(menu_options)
 
@@ -46,7 +49,10 @@ module Reservations
                                                  menu_options.first
                                                end
 
-                        shop.available_staffs(shop.menus.find(selected_menu_option.id), reservation_time, params[:customer_ids].size, reservation.try(:id))
+                        Reservable::Staffs.run!(shop: shop, menu: shop.menus.find(selected_menu_option.id),
+                                                business_time_range: reservation_time,
+                                                number_of_customer: params[:customer_ids].size,
+                                                reservation_id: reservation.try(:id))
                       else
                         []
                       end

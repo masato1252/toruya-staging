@@ -1,6 +1,6 @@
 class Reservations::AvailableOptionsController < DashboardController
   def times
-    @time_ranges = shop.available_time(Time.zone.parse(params[:date]).to_date)
+    @time_ranges = Reservable::Time.run!(shop: shop, date: Time.zone.parse(params[:date]).to_date)
   end
 
   def menus
@@ -19,7 +19,10 @@ class Reservations::AvailableOptionsController < DashboardController
                             end
 
     @menu = ::Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number)
-    @staffs = shop.available_staffs(menu, reservation_time, params[:customer_ids].size, params[:reservation_id])
+    @staffs = Reservable::Staffs.run!(shop: shop, menu: menu,
+                                      business_time_range: reservation_time,
+                                      number_of_customer: params[:customer_ids].size,
+                                      reservation_id: params[:reservation_id])
   end
 
   private
