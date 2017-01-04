@@ -36,6 +36,7 @@ UI.define("Customers.CustomerReservationsView", function() {
             dataType: "JSON"
           }).success(function(result) {
             _this.setState({ reservations: result["reservations"] });
+          }).always(function() {
             _this.props.switchProcessing();
           });
         });
