@@ -5,7 +5,7 @@
 UI.define("Common.CustomersList", function() {
   var CustomersList = React.createClass({
     componentWillMount: function() {
-      this._handleScroll = _.debounce(this._handleScroll, 500); // delay 0.5 second
+      this.handleMoreCustomers = _.debounce(this.props.handleMoreCustomers, 200, true)
     },
 
     handleCustomerSelect: function(customer_id) {
@@ -15,14 +15,13 @@ UI.define("Common.CustomersList", function() {
     },
 
     _atEnd: function() {
-      // 200 is a align magic number
-      return $(this.customerList).scrollTop() + $(this.customerList).innerHeight() + 300 >=
-          $(this.customerList)[0].scrollHeight
+      // XXX: 1.2 is a magic number, I want to load data easier.
+      return $(this.customerList).scrollTop() * 1.2 + $(this.customerList).innerHeight() >= $(this.customerList)[0].scrollHeight
     },
 
     _handleScroll: function() {
       if (this._atEnd()) {
-        this.props.handleMoreCustomers();
+        this.handleMoreCustomers();
       }
     },
 
