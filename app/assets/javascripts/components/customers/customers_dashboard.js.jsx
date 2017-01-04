@@ -44,18 +44,20 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleCustomerSelect: function(customer_id, event) {
-      if (this.state.processing) { return; }
       if (this.state.selected_customer_id == customer_id) {
-        this.setState({selected_customer_id: "", customer: {}});
+        this.setState({selected_customer_id: "", customer: {}, processing: false});
       }
+      if (this.state.processing) { return; }
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
         this.setState(
           {selected_customer_id: customer_id, customer: selected_customer, processing: true}, function() {
-            this.fetchCustomerDetails();
             if (this.CustomerReservationsView) {
               this.CustomerReservationsView.fetchReservations()
             }
+
+            this.fetchCustomerDetails();
+            this.setState({processing: false})
           }.bind(this)
           );
       }
