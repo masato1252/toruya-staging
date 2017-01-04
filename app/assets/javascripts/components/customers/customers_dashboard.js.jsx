@@ -400,7 +400,7 @@ UI.define("Customers.Dashboard", function() {
                         <form id="new_customer_form"
                           ref={(c) => {this.customerForm = c}}
                           acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
-                          <input name="customer[id]" type="hidden" value={this.state.customer.id} />
+                          <input name="customer[id]" type="hidden" value={this.state.customer.id || ""} />
                           <input name="customer[first_name]" type="hidden" value={this.state.customer.firstName} />
                           <input name="customer[last_name]" type="hidden" value={this.state.customer.lastName} />
                           <input name="customer[phonetic_last_name]" type="hidden" value={this.state.customer.jpLastName} />

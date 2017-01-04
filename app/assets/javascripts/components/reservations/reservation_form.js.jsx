@@ -372,14 +372,14 @@ UI.define("Reservation.Form", function() {
                       type="time"
                       data-name="start_time_time_part"
                       value={this.state.start_time_time_part}
-                      step={300}
+                      step="300"
                       onChange={this._handleChange} />
                     〜
                     <input
                       type="time"
                       data-name="end_time_time_part"
                       value={this.state.end_time_time_part}
-                      step={300}
+                      step="300"
                       onChange={this._handleChange} />
                       <span className="danger">
                         { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }

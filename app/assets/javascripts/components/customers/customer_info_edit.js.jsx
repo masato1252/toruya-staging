@@ -84,7 +84,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   <li>
                     <UI.Select
                       options={this.props.contactGroups}
-                      value={this.props.customer.contactGroupId}
+                      value={this.props.customer.contactGroupId || ""}
                       name="customer[contact_group_id]"
                       data-name="contactGroupId"
                       onChange={this.props.handleCustomerDataChange}
@@ -95,7 +95,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       id="customerSts"
                       className={this.props.customer.rank ? this.props.customer.rank.key : 'regular'}
                       options={this.props.ranks}
-                      value={this.props.customer.rankId}
+                      value={this.props.customer.rankId || ""}
                       name="customer[rank_id]"
                       data-name="rankId"
                       onChange={this.props.handleCustomerDataChange}
@@ -110,7 +110,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       type="text"
                       id="familyName"
                       placeholder="姓"
-                      value={this.props.customer.lastName}
+                      value={this.props.customer.lastName || ""}
                       name="customer[last_name]"
                       data-name="lastName"
                       onChange={this.props.handleCustomerDataChange}
@@ -121,7 +121,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       type="text"
                       id="firstName"
                       placeholder="名"
-                      value={this.props.customer.firstName}
+                      value={this.props.customer.firstName || ""}
                       name="customer[first_name]"
                       data-name="firstName"
                       onChange={this.props.handleCustomerDataChange}
@@ -134,7 +134,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       type="text"
                       id="familyNameKana"
                       placeholder="せい"
-                      value={this.props.customer.phoneticLastName}
+                      value={this.props.customer.phoneticLastName || ""}
                       name="customer[phonetic_last_name]"
                       data-name="phoneticLastName"
                       onChange={this.props.handleCustomerDataChange}
@@ -145,7 +145,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       type="text"
                       id="firstNameKana"
                       placeholder="めい"
-                      value={this.props.customer.phoneticFirstName}
+                      value={this.props.customer.phoneticFirstName || ""}
                       name="customer[phonetic_first_name]"
                       data-name="phoneticFirstName"
                       onChange={this.props.handleCustomerDataChange}
@@ -392,7 +392,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   type="text"
                   name="customer[custom_id]"
                   placeholder="Customer ID"
-                  value={this.props.customer.customId}
+                  value={this.props.customer.customId || ""}
                   data-name="customId"
                   onChange={this.props.handleCustomerDataChange}
                   />
