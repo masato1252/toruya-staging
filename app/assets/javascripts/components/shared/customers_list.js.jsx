@@ -15,8 +15,8 @@ UI.define("Common.CustomersList", function() {
     },
 
     _atEnd: function() {
-      // XXX: 1.2 is a magic number, I want to load data easier.
-      return $(this.customerList).scrollTop() * 1.2 + $(this.customerList).innerHeight() >= $(this.customerList)[0].scrollHeight
+      // XXX: 1.5 is a magic number, I want to load data easier.
+      return $(this.customerList).scrollTop() * 1.5 + $(this.customerList).innerHeight() >= $(this.customerList)[0].scrollHeight
     },
 
     _handleScroll: function() {
