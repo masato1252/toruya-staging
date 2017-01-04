@@ -1131,7 +1131,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 }
 #customerInfo #basic dl dt, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dt { width: 110px; }
 #customerInfo #basic dl dd:nth-child(2) {
-  width: 55%;
+  width: 50%;
 }
 #customerInfo #basic dl dd:nth-child(2) ul li {
   width: 100%;
@@ -1284,7 +1284,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #customerInfoEdit #detailInfo input, #customerInfoNew #detailInfo input { padding: 8px 10px; margin-left: 5px; }
 #customerInfoEdit #detailInfo input#zipcode3, #customerInfoNew #detailInfo input#zipcode3 { width: 65px; }
 #customerInfoEdit #detailInfo input#zipcode4, #customerInfoNew #detailInfo input#zipcode4 { width: 70px; }
-#customerInfoEdit #detailInfo .addrRest input, #customerInfoEdit #detailInfo .email input, #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .addrRest input, #customerInfoNew #detailInfo .email input, #customerInfoNew #detailInfo .memo textarea { min-width: 310px; max-width: 400px; }
+#customerInfoEdit #detailInfo .addrRest input, #customerInfoEdit #detailInfo .email input, #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .addrRest input, #customerInfoNew #detailInfo .email input, #customerInfoNew #detailInfo .memo textarea { min-width: 270px; max-width: 400px; }
 #customerInfoEdit #detailInfo .phone input, #customerInfoNew #detailInfo .phone input { width: 150px; }
 #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .memo textarea { font-size:14px; }
 #customerInfoEdit #detailInfo  a.BTNtarco, #customerInfoEdit #detailInfo  a.BTNyellow, #customerInfoNew #detailInfo  a.BTNtarco, #customerInfoNew #detailInfo a.BTNyellow {
