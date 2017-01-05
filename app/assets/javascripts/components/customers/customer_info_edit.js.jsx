@@ -23,8 +23,8 @@ UI.define("Customers.CustomerInfoEdit", function() {
           dataType: "JSON"
         }).success(function(result) {
           _this.props.handleCreatedCustomer(result["customer"]);
-          _this.props.switchEditMode();
           _this.props.switchProcessing();
+          _this.props.switchEditMode();
         });
       })
     },
@@ -55,6 +55,14 @@ UI.define("Customers.CustomerInfoEdit", function() {
 
     isCustomerdataValid: function() {
       return this.props.customer.lastName && this.props.customer.firstName
+    },
+
+    _selectedRank: function() {
+      return _.find(this.props.ranks, function(rank) { return rank.value == this.props.customer.rankId; }.bind(this))
+    },
+
+    _selectedRankClass: function() {
+      return this._selectedRank() ? this._selectedRank().key : 'vip'
     },
 
     render: function() {
@@ -93,7 +101,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   <li>
                     <UI.Select
                       id="customerSts"
-                      className={this.props.customer.rank ? this.props.customer.rank.key : 'regular'}
+                      className={this._selectedRankClass()}
                       options={this.props.ranks}
                       value={this.props.customer.rankId || ""}
                       name="customer[rank_id]"

@@ -9,6 +9,11 @@ module OptionsHelper
     menus.map { |m| { label: m.name, value: m.id, availableSeat: m.available_seat } }
   end
 
+  def rank_options(ranks)
+    return unless ranks
+    ranks.map { |r| { label: r.name, value: r.id, key: r.key } }
+  end
+
   def menu_group_options(category_menus)
     return unless category_menus
 

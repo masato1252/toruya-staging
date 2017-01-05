@@ -38,10 +38,10 @@ class Customer < ApplicationRecord
 
   def build_by_google_contact(google_contact)
     self.google_uid = user.uid
-    self.first_name = google_contact.first_name
-    self.last_name = google_contact.last_name
-    self.phonetic_last_name = google_contact.phonetic_last_name
-    self.phonetic_first_name = google_contact.phonetic_first_name
+    self.first_name = google_contact.first_name || first_name
+    self.last_name = google_contact.last_name || last_name
+    self.phonetic_last_name = google_contact.phonetic_last_name || phonetic_last_name
+    self.phonetic_first_name = google_contact.phonetic_first_name || phonetic_first_name
     self.google_contact_group_ids = google_contact.group_ids
     self.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
     self.addresses = google_contact.addresses
@@ -63,9 +63,9 @@ class Customer < ApplicationRecord
     h = {
       name: { familyName: last_name, givenName: first_name},
       phonetic_name: { familyName: phonetic_last_name, givenName: phonetic_first_name},
-      emails: emails,
-      phone_numbers: phone_numbers,
-      addresses: addresses,
+      emails: Array.wrap(emails),
+      phone_numbers: Array.wrap(phone_numbers),
+      addresses: Array.wrap(addresses),
     }.merge(google_groups_changes || {})
 
     h.merge!(birthday: birthday.try(:to_s)) if birthday

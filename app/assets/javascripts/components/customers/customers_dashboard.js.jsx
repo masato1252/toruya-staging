@@ -1,5 +1,4 @@
 //= require "components/shared/customers_list"
-//= require "components/customers/customer_info"
 //= require "components/customers/customer_info_view"
 //= require "components/customers/customer_info_edit"
 //= require "components/customers/customer_reservations_view"
