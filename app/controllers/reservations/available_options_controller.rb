@@ -22,7 +22,7 @@ class Reservations::AvailableOptionsController < DashboardController
     @staffs = Reservable::Staffs.run!(shop: shop, menu: menu,
                                       business_time_range: reservation_time,
                                       number_of_customer: params[:customer_ids].size,
-                                      reservation_id: params[:reservation_id])
+                                      reservation_id: params[:reservation_id].presence)
   end
 
   private
