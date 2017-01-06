@@ -112,7 +112,7 @@ UI.define("WorkingTime.StaffForm", function() {
               );
             }.bind(this))
           }
-          <h3>臨時休業</h3>
+          <h3>臨時休暇</h3>
           <UI.CustomSchedules
             customSchedules={this.props.customSchedules}
             dateLabel={this.props.dateLabel}
