@@ -2,19 +2,17 @@
 
 UI.define("Customers.CustomerReservationsView", function() {
   var CustomerReservationsView = React.createClass({
-    statics: {
-      reservactionBehaviors: {
-        "checked_in": [{ label: "CHECK OUT", action: "check_out", btn_color: "BTNyellow" }],
-        "reserved": [{ label: "CHECK IN", action: "check_in", btn_color: "BTNyellow" },
-                     { label: "PEND", action: "pend", btn_color: "BTNgray" }],
-        "noshow": [{ label: "CHECK IN", action: "check_in", btn_color: "BTNyellow" },
-                   { label: "PEND", action: "pend", btn_color: "BTNgray" }],
-        "pending": [{ label: "ACCEPT", action: "accept", btn_color: "BTNtarco" }],
-        "checked_out": [{ label: "PEND", action: "pend" }],
-      }
-    },
-
     getInitialState: function() {
+      this.reservactionBehaviors = {
+        "checked_in": [{ label: "CHECK OUT", action: "check_out", btn_color: "BTNyellow" }],
+        "reserved": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
+                     { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
+        "noshow": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
+                   { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
+        "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
+        "checked_out": [{ label: this.props.pendBtn, action: "pend" }],
+      };
+
       return ({
         reservations: []
       });
@@ -100,7 +98,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                   </div>
                   <div className="modal-footer">
                     <dl>
-                      {CustomerReservationsView.reservactionBehaviors[reservation.state].map(function(behavior) {
+                      {this.reservactionBehaviors[reservation.state].map(function(behavior) {
                         return (
                           <dd key={`reseravtion-${reservation.id}-action-${behavior["action"]}`}>
                             <a
@@ -116,7 +114,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                         <a
                           href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}
                           className="btn BTNgray">
-                          EDIT
+                          {this.props.editBtn}
                         </a>
                       </dd>
                       {
@@ -126,7 +124,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                             href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                             className="btn BTNorange"
                             data-method="put"
-                            >CANCEL</a>
+                            >{this.props.cancelBtn}</a>
                           </dd>
                         ) : null
                       }
@@ -137,7 +135,7 @@ UI.define("Customers.CustomerReservationsView", function() {
             </div>
           </div>
         )
-      });
+      }.bind(this));
 
       return reservationsView
     },

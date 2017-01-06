@@ -46,7 +46,7 @@ class ReservationsController < DashboardController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: "Reservation was successfully created."}
+        format.html { redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_or_update_successfully_message") }
       else
         format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
       end
@@ -64,7 +64,7 @@ class ReservationsController < DashboardController
           if params[:from_customer_id]
             redirect_to shop_customers_path(shop_id: params[:shop_id], customer_id: params[:from_customer_id])
           else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: 'Reservation was successfully updated.'
+            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_or_update_successfully_message")
           end
         end
         format.json { render :show, status: :ok, location: @reservation }

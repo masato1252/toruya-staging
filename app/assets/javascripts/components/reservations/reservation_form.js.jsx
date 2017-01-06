@@ -350,7 +350,7 @@ UI.define("Reservation.Form", function() {
     render: function() {
       return (
         <div>
-          <UI.ProcessingBar processing={this.state.processing} />
+          <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <div id="resNew" className="contents">
             <div id="resInfo" className="contBody">
               <h2>予約詳細</h2>
@@ -468,7 +468,7 @@ UI.define("Reservation.Form", function() {
                     disabled={!this._isValidToReserve() || this.state.submitting}
                     onClick={this._handleSubmitClick}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>
-                    {this.state.submitting ? "Processing" : "保存"}
+                    {this.state.submitting ? this.props.processingMessage : "保存"}
                   </button>
                 </form>
 

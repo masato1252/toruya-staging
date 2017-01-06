@@ -301,6 +301,11 @@ UI.define("Customers.Dashboard", function() {
             stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
             editCustomerReservationsPath={this.props.editCustomerReservationsPath}
             shop={this.props.shop}
+            checkInBtn={this.props.checkInBtn}
+            acceptBtn={this.props.acceptBtn}
+            pendBtn={this.props.pendBtn}
+            editBtn={this.props.editBtn}
+            cancelBtn={this.props.cancelBtn}
             />
         )
       }
@@ -356,7 +361,7 @@ UI.define("Customers.Dashboard", function() {
     render: function() {
       return(
         <div>
-          <UI.ProcessingBar processing={this.state.processing} />
+          <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <div id="customer" className="contents">
             <div id="resultList" className="sidel">
               <ul>
@@ -372,7 +377,7 @@ UI.define("Customers.Dashboard", function() {
                     selected_customer_id={this.state.selected_customer_id}
                     noMoreCustomers={this.state.no_more_customers}
                     />
-                  <UI.ProcessingBar processing={this.state.moreCustomerProcessing} />
+                  <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
                 </div>
               </div>
             </div>

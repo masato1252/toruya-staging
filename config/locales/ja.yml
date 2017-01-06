@@ -20,7 +20,7 @@ ja:
     log_out: ログアウト
     save: 保存
   common:
-    processing: インポート中
+    processing: 送信中
     date: 日付
     day: 曜日
     start_time: 開始時間
@@ -39,6 +39,10 @@ ja:
     business_time_suggestion: "※営業時間"
     no_valid_menu_alert: メニューを入力してください。
     no_menu_message: 検索結果なし
+    create_or_update_successfully_message: 予約が保存されました。
+    check_in: チェックイン
+    accept: 承認
+    pend: 未承認
   settings:
     shop:
       info_title:  店舗情報
