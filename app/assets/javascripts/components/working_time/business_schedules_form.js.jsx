@@ -40,12 +40,12 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                       <input
                         type="checkbox"
                         className="BTNinout"
-                        id={`day${day_index}`}
+                        id={`shop${this.props.shop.id}-day${day_index}`}
                         name={`business_schedules[${this.props.shop.id}][${wday}][business_state]`}
                         defaultValue="opened"
                         defaultChecked={schedule ? schedule.business_state == "opened" : ""}
                       />
-                      <label htmlFor={`day${day_index}`}></label>
+                      <label htmlFor={`shop${this.props.shop.id}-day${day_index}`}></label>
                     </dd>
                     <dd className="startTime">
                       <input
