@@ -40,7 +40,8 @@ en:
     business_time_suggestion: "※Business Hour"
     no_valid_menu_alert: No available menu
     no_menu_message: No results found
-    create_or_update_successfully_message: Save successfully.
+    create_successfully_message: Save successfully.
+    update_successfully_message: Save successfully.
     check_in: Check in
     accept: Accept
     pend: Pend
