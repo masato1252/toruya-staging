@@ -239,7 +239,10 @@ UI.define("Settings.MenuForm", function() {
             </dl>
           </div>
 
-          <h3 className="shopSelect">利用店舗</h3>
+          <dl className="header">
+            <dt><h3 className="shopSelect">利用店舗</h3></dt>
+            <dd><h3 className="max-seat">席数</h3></dd>
+          </dl>
           <div id="shopSelect" className="formRow">
               {this.state.menuShopsOptions.map(function(menuShopOption) {
                 return(
