@@ -9,7 +9,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @staff = super_user.staffs.find_by(id: params[:id])
     @full_time_schedules = @staff.business_schedules.full_time
     @wdays_business_schedules_by_shop = @staff.business_schedules.order(:day_of_week).group_by(&:shop_id)
-    @custom_schedules = @staff.custom_schedules.order(:start_time)
+    @custom_schedules = @staff.custom_schedules.future.order(:start_time)
   end
 
   def update

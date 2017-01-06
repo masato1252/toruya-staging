@@ -19,7 +19,7 @@ class CustomSchedule < ApplicationRecord
   belongs_to :staff, optional: true
 
   scope :for_shop, -> { where(staff_id: nil) }
-  scope :future, -> { where("start_time > ?", Time.now.yesterday) }
+  scope :future, -> { where("start_time > ?", Time.now.at_beginning_of_day) }
 
   before_validation :set_start_time, :set_end_time
 

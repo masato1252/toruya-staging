@@ -4,7 +4,7 @@ class Settings::BusinessSchedulesController < SettingsController
 
   def edit
     @wdays_business_schedules = shop.business_schedules.for_shop.order(:day_of_week)
-    @custom_schedules = shop.custom_schedules.for_shop.order(:start_time)
+    @custom_schedules = shop.custom_schedules.for_shop.future.order(:start_time)
   end
 
   def update
