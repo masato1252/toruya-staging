@@ -61,7 +61,7 @@ ja:
       japan_holidays: 日本の祝日
       japan_holidays_close_tip: 日本の祝日を休みにする場合は【CLOSE】にします。
       reason_of_closing: 休業理由
-      new_closing_btn: 臨時休業日を追加
+      new_closing_btn: 追加
       closing_reason: 休業理由（オプション）
       open_time: 開店時間
       close_time: 閉店時間
