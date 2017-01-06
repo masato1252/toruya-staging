@@ -43,6 +43,7 @@ en:
     create_successfully_message: Save successfully.
     update_successfully_message: Save successfully.
     check_in: Check in
+    check_out: Check Out
     accept: Accept
     pend: Pend
   settings:

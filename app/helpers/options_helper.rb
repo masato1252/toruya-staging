@@ -102,7 +102,7 @@ module OptionsHelper
         year: r.start_time.year,
         date: I18n.l(r.start_time, format: :month_day_wday),
         start_time: I18n.l(r.start_time, format: :hour_minute),
-        end_time: I18n.l(r.start_time, format: :hour_minute),
+        end_time: I18n.l(r.end_time, format: :hour_minute),
         menu: r.menu.name,
         shop: r.shop.name,
         state: r.aasm_state,

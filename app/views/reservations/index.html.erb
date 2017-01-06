@@ -62,7 +62,7 @@
                 <dl>
                   <% if reservation.checked_in? %>
                     <dd>
-                      <%= link_to "CHECK OUT", check_out_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow", method: :put %>
+                      <%= link_to t("reservation.check_out"), check_out_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow", method: :put %>
                     </dd>
                   <% end %>
 

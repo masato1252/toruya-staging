@@ -4,13 +4,13 @@ UI.define("Customers.CustomerReservationsView", function() {
   var CustomerReservationsView = React.createClass({
     getInitialState: function() {
       this.reservactionBehaviors = {
-        "checked_in": [{ label: "CHECK OUT", action: "check_out", btn_color: "BTNyellow" }],
+        "checked_in": [{ label: this.props.checkOutBtn, action: "check_out", btn_color: "BTNyellow" }],
         "reserved": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
                      { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
         "noshow": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
                    { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
         "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
-        "checked_out": [{ label: this.props.pendBtn, action: "pend" }],
+        "checked_out": [{ label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
       };
 
       return ({

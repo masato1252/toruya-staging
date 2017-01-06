@@ -42,6 +42,7 @@ ja:
     create_successfully_message: 予約が保存されました。
     update_successfully_message: 予約が更新されました。
     check_in: チェックイン
+    check_out: チェックアウト
     accept: 承認
     pend: 未承認
   settings:
