@@ -124,6 +124,8 @@ ja:
       in_out_label: 出勤／休み
       start_label: 出勤予定
       end_label: 退勤予定
+      reason_of_closing: 休暇理由
+      closing_reason: 休暇理由（オプション）
     contact:
       info_title: 顧客台帳
       new_title: 新規台帳作成
