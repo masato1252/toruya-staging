@@ -62,7 +62,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
     },
 
     _selectedRankClass: function() {
-      return this._selectedRank() ? this._selectedRank().key : 'vip'
+      return this._selectedRank() ? this._selectedRank().key : 'regular'
     },
 
     render: function() {
