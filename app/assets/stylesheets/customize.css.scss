@@ -152,7 +152,12 @@ a.BTNgray, .BTNgray {
   border-color: #666;
 }
 
-a.BTNtarco, .BTNtarco, span.reserved {
+a.BTNtarco, .BTNtarco {
+  background-color: #97bfb8;
+  border-color: #488479;
+}
+
+span.reserved {
   background-color: #60938a;
   border-color: #488479;
 }

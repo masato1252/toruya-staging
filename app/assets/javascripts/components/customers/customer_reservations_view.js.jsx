@@ -113,7 +113,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                       <dd>
                         <a
                           href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}
-                          className="btn BTNgray">
+                          className="btn BTNtarco">
                           {this.props.editBtn}
                         </a>
                       </dd>
