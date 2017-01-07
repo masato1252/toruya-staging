@@ -254,7 +254,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                     type="number"
                     maxLength="4"
                     size="4"
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.postcode2 : ""}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.postcode2 ? this.props.customer.primaryAddress.value.postcode2 : ""}
                     name="customer[primary_address][postcode2]"
                     data-name="primaryAddress-postcode2"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -450,6 +450,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   rows="5"
                   name="customer[memo]"
                   data-name="memo"
+                  value={this.props.customer.memo ? this.props.customer.memo : ""}
                   onChange={this.props.handleCustomerDataChange}
                   />
               </dd>

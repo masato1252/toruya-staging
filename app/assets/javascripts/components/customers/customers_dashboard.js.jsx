@@ -45,7 +45,7 @@ UI.define("Customers.Dashboard", function() {
     handleCustomerSelect: function(customer_id, event) {
       // if (this.state.processing) { return; }
       if (this.state.selected_customer_id == customer_id) {
-        this.setState({selected_customer_id: "", customer: {}, processing: false});
+        this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true});
       }
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
@@ -193,9 +193,11 @@ UI.define("Customers.Dashboard", function() {
     },
 
     _handleCreatedCustomer: function(customer) {
-      if (!this.state.customers.find(function(c) { return(c.id == customer.id); })) {
-        this.state.customers.unshift(customer)
-      }
+      this.state.customers = _.reject(this.state.customers, function(c) {
+        return customer.id == c.id;
+      })
+
+      this.state.customers.unshift(customer)
       this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
     },
 
@@ -209,6 +211,9 @@ UI.define("Customers.Dashboard", function() {
     addOption: function(optionType, index) {
       var newCustomer = this.state.customer;
       var defaultValue = optionType == "emails" ? { address: ""} : "";
+      if (!newCustomer[optionType]) {
+        newCustomer[optionType] = [];
+      }
 
       newCustomer[optionType].push({ type: "home", value: defaultValue });
 
@@ -222,6 +227,10 @@ UI.define("Customers.Dashboard", function() {
 
       if (keyName == "birthday-year" || keyName == "birthday-month" || keyName == "birthday-day") {
         var key = event.target.dataset.name.split("-");
+        if (newCustomer["birthday"] == "") {
+          newCustomer["birthday"] = {};
+        }
+
         newCustomer[key[0]][key[1]] = event.target.value;
       }
       else {
