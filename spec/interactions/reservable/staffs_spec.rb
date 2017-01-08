@@ -64,6 +64,12 @@ RSpec.describe Reservable::Staffs do
             expect(Reservable::Staffs.run!(shop: shop, menu: menu, business_time_range: time_range, number_of_customer: 2)).to eq(Staff.none)
           end
 
+          context "menu do not have enough seat" do
+            it "returns none" do
+              expect(Reservable::Staffs.run!(shop: shop, menu: menu, business_time_range: time_range, number_of_customer: 3)).to eq(Staff.none)
+            end
+          end
+
           context "when there are other no manpower menus exists" do
             before { create_available_menu(no_manpower_menu) }
 
