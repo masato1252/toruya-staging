@@ -106,6 +106,7 @@ UI.define("Customers.Dashboard", function() {
       var stateChanges = {}
 
       if (this.currentCustomersType != "recent") {
+        $("#customerList").scrollTop(0)
         originalCustomers = [];
         this.currentCustomersType = "recent";
         stateChanges["no_more_customers"] = false
@@ -125,6 +126,7 @@ UI.define("Customers.Dashboard", function() {
 
       if (event) {
         event.preventDefault();
+        $("#customerList").scrollTop(0)
         if (this.currentCustomersType != "filter" || event.target.value != this.lastQuery) {
           originalCustomers = [];
           this.currentCustomersType = "filter";
@@ -154,6 +156,7 @@ UI.define("Customers.Dashboard", function() {
 
         if (event) {
           event.preventDefault();
+          $("#customerList").scrollTop(0)
           if (this.currentCustomersType != "search" || event.target.value != this.lastQuery) {
             originalCustomers = [];
             this.currentCustomersType = "search";
