@@ -33,7 +33,7 @@
           <dl class="">
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
-            <dd class="menu"><%= reservation.menu.name %></dd>
+            <dd class="menu"><%= reservation.menu.short_name.presence || reservation.menu.name %></dd>
             <dd class="customer"><%= customer_names %></dd>
           </dl>
         </a>
