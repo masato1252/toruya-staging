@@ -22,7 +22,7 @@ UI.define("Customers.CustomerInfoView", function() {
           break;
       }
       return (
-        <a key={phone.value} href={`mail:${phone.value}`} className="BTNtarco">
+        <a key={phone.value} href={`tel:${phone.value}`} className="BTNtarco">
           <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
         </a>
       )
@@ -43,7 +43,7 @@ UI.define("Customers.CustomerInfoView", function() {
           break;
       }
       return (
-        <a key={email.value.address} href={`tel:${email.value.address}`} className="BTNtarco">
+        <a key={email.value.address} href={`mail:${email.value.address}`} className="BTNtarco">
           <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
         </a>
       )
