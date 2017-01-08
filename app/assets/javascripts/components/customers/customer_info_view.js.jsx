@@ -121,7 +121,7 @@ UI.define("Customers.CustomerInfoView", function() {
               </dd>
             </dl>
             <div className="others">
-              <dl className="customerID"><dt>顧客ID</dt><dd>{this.props.customer.customerId}</dd></dl>
+              <dl className="customerID"><dt>顧客ID</dt><dd>{this.props.customer.customId}</dd></dl>
               <dl className="dob"><dt>{this.props.birthdayLabel}</dt>
               <dd>
                 {this.props.customer.birthday ? `${this.props.customer.birthday.year}年${this.props.customer.birthday.month}月${this.props.customer.birthday.day}日` : null }
