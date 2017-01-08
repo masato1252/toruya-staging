@@ -124,7 +124,7 @@ UI.define("Customers.CustomerInfoView", function() {
               <dl className="customerID"><dt>顧客ID</dt><dd>{this.props.customer.customerId}</dd></dl>
               <dl className="dob"><dt>{this.props.birthdayLabel}</dt>
               <dd>
-                {this.props.customer.birthday ? `${this.props.customer.birthday.year}-${this.props.customer.birthday.month}-${this.props.customer.birthday.day}` : null }
+                {this.props.customer.birthday ? `${this.props.customer.birthday.year}年${this.props.customer.birthday.month}月${this.props.customer.birthday.day}日` : null }
               </dd></dl>
               <dl className="memo"><dt>{this.props.memoLabel}</dt><dd>{this.props.customer.memo}</dd></dl>
             </div>
