@@ -9,6 +9,14 @@ module Reservable
     integer :reservation_id, default: nil
 
     def execute
+      reservations = overlap_reservations(menu.id)
+
+      menu_max_seat_number = menu.shop_menus.find_by(shop: shop).max_seat_number
+      customers_amount_of_reservations = reservations.sum(&:count_of_customers)
+      is_enough_seat = menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
+
+      return [] unless is_enough_seat
+
       scoped = menu.staffs.
         joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{shop.id}").
       includes(:staff_menus).
@@ -28,13 +36,6 @@ module Reservable
                                  handable_customers: staff.max_customers)
       end
 
-      reservations = overlap_reservations(menu.id)
-
-      menu_max_seat_number = menu.shop_menus.find_by(shop: shop).max_seat_number
-      customers_amount_of_reservations = reservations.sum(&:count_of_customers)
-      is_enough_seat = menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
-      return no_reservation_except_menu0_staffs unless is_enough_seat
-
       reservation_staffs = []
       if menu.min_staffs_number == 0
         # Other reservation(menu1, menu2) staffs still could do this menu0 too.
@@ -42,7 +43,7 @@ module Reservable
         all_overlap_staffs = all_overlap_reservations.map {|reservation| reservation.staffs}.flatten
         reservation_staffs = all_overlap_staffs.find_all { |staff| staff.staff_menus.where(menu: menu).exists? }
 
-        reservation_staffs.map do |staff|
+        reservation_staffs = reservation_staffs.map do |staff|
           Options::StaffOption.new(id: staff.id, name: staff.name,
                                    handable_customers: menu_max_seat_number - customers_amount_of_reservations)
         end
