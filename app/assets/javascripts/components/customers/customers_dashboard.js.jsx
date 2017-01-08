@@ -138,7 +138,7 @@ UI.define("Customers.Dashboard", function() {
       }
       else {
         data =  { pattern_number: this.lastQuery,
-                  last_customer_id: this.state.customers[this.state.customers.length-1].id }
+                  last_customer_id: _.max(this.state.customers.map(function(c) { return c.id })) }
       }
 
       stateChanges["selectedFilterPatternNumber"] = this.lastQuery
