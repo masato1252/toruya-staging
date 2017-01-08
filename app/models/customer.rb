@@ -56,9 +56,9 @@ class Customer < ApplicationRecord
   end
 
   def display_address
-    if primary_address && primary_address["value"]["formatted_address"]
+    if primary_address && primary_address["value"].present?
       _address = primary_formatted_address
-      postcode = [_address.value.postcode1, _address.value.postcode2].compact.join("-")
+      postcode = [_address.value.postcode1.presence, _address.value.postcode2.presence].compact.join("-")
 
       zipcode = if postcode.present?
                   "〒#{postcode} "
