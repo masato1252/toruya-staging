@@ -30,29 +30,33 @@ class Customers::Filter < ActiveInteraction::Base
         scoped.where("phonetic_first_name ~* ?", "^(#{regexp_pattern}).*$")
       )
 
-    scoped.to_a.sort do |x, y|
-      result = 0
-      n = 0
+    if pattern_number == PATTERN.length - 1
+      scoped
+    else
+      scoped.to_a.sort do |x, y|
+        result = 0
+        n = 0
 
-      if x.phonetic_name.nil? || y.phonetic_name.nil?
-        if x.phonetic_name.present?
-          -1
-        elsif y.phonetic_name.present?
-          1
+        if x.phonetic_name.nil? || y.phonetic_name.nil?
+          if x.phonetic_name.present?
+            -1
+          elsif y.phonetic_name.present?
+            1
+          else
+            0
+          end
         else
-          0
+          begin
+            # XXX: becasue there is unexpected characters so we need COMPARE_LENGTH to make sure we have a value to compare.
+            first_word_character_index = (SORT_ORDER.index(x.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
+            another_word_character_index = (SORT_ORDER.index(y.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
+            result = first_word_character_index <=> another_word_character_index
+
+            n += 1
+          end until result != 0
+
+          result
         end
-      else
-        begin
-          # XXX: becasue there is unexpected characters so we need COMPARE_LENGTH to make sure we have a value to compare.
-          first_word_character_index = (SORT_ORDER.index(x.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
-          another_word_character_index = (SORT_ORDER.index(y.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
-          result = first_word_character_index <=> another_word_character_index
-
-          n += 1
-        end until result != 0
-
-        result
       end
     end
   end
