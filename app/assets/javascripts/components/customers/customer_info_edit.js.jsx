@@ -6,8 +6,23 @@
 UI.define("Customers.CustomerInfoEdit", function() {
   var CustomerInfoEdit = React.createClass({
     getInitialState: function() {
+      this.optionMapping = {
+        home: this.props.homeLabel,
+        mobile: this.props.mobileLabel,
+        work: this.props.workLabel
+      }
+
       return ({
       });
+    },
+
+    optionMappingLabel: function(type) {
+      if (this.optionMapping[type]) {
+        return this.optionMapping[type];
+      }
+      else {
+        return type;
+      }
     },
 
     handleCreateCustomer: function(event) {
@@ -31,9 +46,9 @@ UI.define("Customers.CustomerInfoEdit", function() {
 
     itemOptions: function(items) {
       var defaultOptions = [
-        { label: "Home", value: "home" },
-        { label: "Mobile", value: "mobile" },
-        { label: "Work", value: "work" }
+        { label: this.props.homeLabel, value: "home" },
+        { label: this.props.mobileLabel, value: "mobile" },
+        { label: this.props.workLabel, value: "work" }
       ];
 
       (items || []).forEach(function(item) {
@@ -170,11 +185,11 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       prefix="primaryPhone"
                       options={(this.props.customer.phoneNumbers || []).map(function(phoneNumber) {
                         return({
-                          label: `[${phoneNumber.type}] ${phoneNumber.value}`,
+                          label: `${this.optionMappingLabel(phoneNumber.type)} ${phoneNumber.value}`,
                           value: `${phoneNumber.type}${this.props.delimiter}${phoneNumber.value}`
                         })
                       }.bind(this))}
-                      value={this.props.customer.primaryPhone ? `${this.props.customer.primaryPhone.type}${this.props.delimiter}${this.props.customer.primaryPhone.value}` : ""}
+                      value={this.props.customer.primaryPhone && this.props.customer.primaryPhone.type && this.props.customer.primaryPhone.value ? `${this.props.customer.primaryPhone.type}${this.props.delimiter}${this.props.customer.primaryPhone.value}` : ""}
                       name="customer[primary_phone]"
                       data-name="primaryPhone"
                       onChange={this.props.handleCustomerGoogleDataChange}
@@ -188,11 +203,11 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       prefix="primaryEmail"
                       options={(this.props.customer.emails || []).map(function(email) {
                         return({
-                          label: `[${email.type}] ${email.value.address}`,
+                          label: `${this.optionMappingLabel(email.type)} ${email.value.address}`,
                           value: `${email.type}${this.props.delimiter}${email.value.address}`
                         })
                       }.bind(this))}
-                      value={this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? `${this.props.customer.primaryEmail.type}${this.props.delimiter}${this.props.customer.primaryEmail.value.address}` : ""}
+                      value={this.props.customer.primaryEmail && this.props.customer.primaryEmail.type && this.props.customer.primaryEmail.value ? `${this.props.customer.primaryEmail.type}${this.props.delimiter}${this.props.customer.primaryEmail.value.address}` : ""}
                       name="customer[primary_email]"
                       data-name="primaryEmail"
                       onChange={this.props.handleCustomerGoogleDataChange}
@@ -214,7 +229,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 this.props.customer.id ? (
                   <a href="#" onClick={this.props.switchEditMode}>
                     <i className="fa fa-chevron-left" aria-hidden="true">
-                    </i>&nbsp;Back Without Save
+                    </i>&nbsp;{this.props.backWithoutSaveBtn}
                   </a>
                 ) : null
               }
@@ -243,7 +258,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                     type="number"
                     maxLength="3"
                     size="3"
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.postcode1 : ""}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.postcode1 ? this.props.customer.primaryAddress.value.postcode1 : ""}
                     name="customer[primary_address][postcode1]"
                     data-name="primaryAddress-postcode1"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -265,9 +280,9 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <li className="state">
                   <UI.Select
                     includeBlank="true"
-                    blankOption="Select A Region"
+                    blankOption={this.props.selectRegionLabel}
                     options={this.props.regions}
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.region : ""}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.region ? this.props.customer.primaryAddress.value.region : ""}
                     name="customer[primary_address][region]"
                     data-name="primaryAddress-region"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -277,7 +292,8 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   <input
                     type="text"
                     id="city"
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.city : ""}
+                    placeholder={this.props.cityPlaceholder}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.city ? this.props.customer.primaryAddress.value.city : ""}
                     name="customer[primary_address][city]"
                     data-name="primaryAddress-city"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -288,7 +304,8 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <li className="address1">
                   <input
                     type="text"
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.street1 : ""}
+                    placeholder={this.props.address1Placeholder}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.street1 ? this.props.customer.primaryAddress.value.street1 : ""}
                     name="customer[primary_address][street1]"
                     data-name="primaryAddress-street1"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -297,7 +314,8 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <li className="address1">
                   <input
                     type="text"
-                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value ? this.props.customer.primaryAddress.value.street2 : ""}
+                    placeholder={this.props.address2Placeholder}
+                    value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.street2 ? this.props.customer.primaryAddress.value.street2 : ""}
                     name="customer[primary_address][street2]"
                     data-name="primaryAddress-street2"
                     onChange={this.props.handleCustomerGoogleDataChange}
@@ -394,12 +412,12 @@ UI.define("Customers.CustomerInfoEdit", function() {
               </dd>
             </dl>
             <dl className="customerID">
-              <dt><label for="customerID">顧客ID</label></dt>
+              <dt><label for="customerID">{this.props.customerIdPlaceholder}</label></dt>
               <dd>
                 <input
                   type="text"
                   name="customer[custom_id]"
-                  placeholder="Customer ID"
+                  placeholder={this.props.customerIdPlaceholder}
                   value={this.props.customer.customId || ""}
                   data-name="customId"
                   onChange={this.props.handleCustomerDataChange}
@@ -412,7 +430,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <UI.Select
                   id="dobYear"
                   includeBlank="true"
-                  blankOption="Select A Year"
+                  blankOption={this.props.selectYearLabel}
                   options={this.props.yearOptions}
                   value={this.props.customer.birthday ? this.props.customer.birthday.year : ""}
                   name="customer[dob][year]"
@@ -422,7 +440,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <UI.Select
                   id="dobMonth"
                   includeBlank="true"
-                  blankOption="Select A Month"
+                  blankOption={this.props.selectMonthLabel}
                   options={this.props.monthOptions}
                   value={this.props.customer.birthday ? this.props.customer.birthday.month : ""}
                   name="customer[dob][month]"
@@ -432,7 +450,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 <UI.Select
                   id="dobDay"
                   includeBlank="true"
-                  blankOption="Select A Day"
+                  blankOption={this.props.selectDayLabel}
                   options={this.props.dayOptions}
                   value={this.props.customer.birthday ? this.props.customer.birthday.day : ""}
                   name="customer[dob][day]"

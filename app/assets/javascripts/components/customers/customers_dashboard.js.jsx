@@ -341,6 +341,18 @@ UI.define("Customers.Dashboard", function() {
             saveCustomerPath={this.props.saveCustomerPath}
             fetchCustomerDetails={this.fetchCustomerDetails}
             delimiter={this.props.delimiter}
+            backWithoutSaveBtn={this.props.backWithoutSaveBtn}
+            selectRegionLabel={this.props.selectRegionLabel}
+            customerIdPlaceholder={this.props.customerIdPlaceholder}
+            selectYearLabel={this.props.selectYearLabel}
+            selectMonthLabel={this.props.selectMonthLabel}
+            selectDayLabel={this.props.selectDayLabel}
+            homeLabel={this.props.homeLabel}
+            workLabel={this.props.workLabel}
+            mobileLabel={this.props.mobileLabel}
+            cityPlaceholder={this.props.cityPlaceholder}
+            address1Placeholder={this.props.address1Placeholder}
+            address2Placeholder={this.props.address2Placeholder}
             addressLabel={this.props.addressLabel}
             phoneLabel={this.props.phoneLabel}
             emailLabel={this.props.emailLabel}
@@ -416,16 +428,16 @@ UI.define("Customers.Dashboard", function() {
                         <form id="new_customer_form"
                           ref={(c) => {this.customerForm = c}}
                           acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
-                          <input name="customer[id]" type="hidden" value={this.state.customer.id || ""} />
-                          <input name="customer[first_name]" type="hidden" value={this.state.customer.firstName} />
-                          <input name="customer[last_name]" type="hidden" value={this.state.customer.lastName} />
-                          <input name="customer[phonetic_last_name]" type="hidden" value={this.state.customer.jpLastName} />
-                          <input name="customer[phonetic_first_name]" type="hidden" value={this.state.customer.jpFirstName} />
-                          <input name="customer[state]" type="hidden" value={this.state.customer.state} />
-                          <input name="customer[phone_type]" type="hidden" value={this.state.customer.phoneType} />
-                          <input name="customer[phone_number]" type="hidden" value={this.state.customer.phoneNumber} />
-                          <input name="customer[birthday]" type="hidden" value={this.state.customer.birthday} />
-                          <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+                          <input name="customer[id]" type="hidden" defaultValue={this.state.customer.id || ""} />
+                          <input name="customer[first_name]" type="hidden" defaultValue={this.state.customer.firstName || ""} />
+                          <input name="customer[last_name]" type="hidden" defaultValue={this.state.customer.lastName || ""} />
+                          <input name="customer[phonetic_last_name]" type="hidden" defaultValue={this.state.customer.jpLastName || ""} />
+                          <input name="customer[phonetic_first_name]" type="hidden" defaultValue={this.state.customer.jpFirstName || ""} />
+                          <input name="customer[state]" type="hidden" defaultValue={this.state.customer.state || ""} />
+                          <input name="customer[phone_type]" type="hidden" defaultValue={this.state.customer.phoneType || ""} />
+                          <input name="customer[phone_number]" type="hidden" defaultValue={this.state.customer.phoneNumber || ""} />
+                          <input name="customer[birthday]" type="hidden" defaultValue={this.state.customer.birthday || ""} />
+                          <input name="authenticity_token" type="hidden" defaultValue={this.props.formAuthenticityToken} />
                         </form>
                       </dd>
                     </dl>

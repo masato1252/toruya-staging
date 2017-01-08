@@ -46,6 +46,19 @@ en:
     check_out: Check Out
     accept: Accept
     pend: Pend
+  customer:
+    back_without_save: Back Without Save
+    select_region: Select a Region
+    customer_id: Customer ID
+    select_year: Select A Year
+    select_month: Select A Month
+    select_day: Select A Day
+    home: Home
+    work: Work
+    mobile: Mobile
+    city: City
+    address1: address1
+    address2: address2
   settings:
     shop:
       info_title: Shop Info
