@@ -110,6 +110,7 @@ UI.define("Customers.Dashboard", function() {
         originalCustomers = [];
         this.currentCustomersType = "recent";
         stateChanges["no_more_customers"] = false
+        stateChanges["processing"] = true
       }
 
       data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
@@ -131,6 +132,7 @@ UI.define("Customers.Dashboard", function() {
           originalCustomers = [];
           this.currentCustomersType = "filter";
           stateChanges["no_more_customers"] = false
+          stateChanges["processing"] = true
         }
 
         this.lastQuery = event.target.value
@@ -162,6 +164,7 @@ UI.define("Customers.Dashboard", function() {
             this.currentCustomersType = "search";
             stateChanges["no_more_customers"] = false
             stateChanges["selectedFilterPatternNumber"] = ""
+            stateChanges["processing"] = true
           }
 
           this.lastQuery = event.target.value
@@ -203,7 +206,7 @@ UI.define("Customers.Dashboard", function() {
         }
       }).fail(function(errors){
       }).always(function() {
-        _this.setState({moreCustomerProcessing: false});
+        _this.setState({moreCustomerProcessing: false, processing: false});
       });
     },
 
