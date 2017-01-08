@@ -103,19 +103,24 @@ UI.define("Customers.Dashboard", function() {
     recentCutomers: function() {
       var originalCustomers = this.state.customers;
       var data;
+      var stateChanges = {}
 
       if (this.currentCustomersType != "recent") {
         originalCustomers = [];
         this.currentCustomersType = "recent";
-        this.setState({no_more_customers: false})
+        stateChanges["no_more_customers"] = false
       }
+
       data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
 
-      this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
+      this.setState(stateChanges, function() {
+        this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
+      }.bind(this))
     },
 
     filterCustomers: function(event) {
       var data;
+      var stateChanges = {}
       var originalCustomers = this.state.customers;
 
       if (event) {
@@ -123,7 +128,7 @@ UI.define("Customers.Dashboard", function() {
         if (this.currentCustomersType != "filter" || event.target.value != this.lastQuery) {
           originalCustomers = [];
           this.currentCustomersType = "filter";
-          this.setState({no_more_customers: false})
+          stateChanges["no_more_customers"] = false
         }
 
         this.lastQuery = event.target.value
@@ -134,21 +139,26 @@ UI.define("Customers.Dashboard", function() {
                   last_customer_id: this.state.customers[this.state.customers.length-1].id }
       }
 
-      this.setState({selectedFilterPatternNumber: this.lastQuery})
-      this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
+      stateChanges["selectedFilterPatternNumber"] = this.lastQuery
+
+      this.setState(stateChanges, function() {
+        this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
+      }.bind(this))
     },
 
     SearchCustomers: function(event) {
       if ((event && event.key === 'Enter') || !event) {
         var data, originalCustomers;
         var originalCustomers = this.state.customers;
+        var stateChanges = {}
 
         if (event) {
           event.preventDefault();
           if (this.currentCustomersType != "search" || event.target.value != this.lastQuery) {
             originalCustomers = [];
             this.currentCustomersType = "search";
-            this.setState({no_more_customers: false})
+            stateChanges["no_more_customers"] = false
+            stateChanges["selectedFilterPatternNumber"] = ""
           }
 
           this.lastQuery = event.target.value
@@ -159,7 +169,9 @@ UI.define("Customers.Dashboard", function() {
                     last_customer_id: this.state.customers[this.state.customers.length-1].id }
         }
 
-        this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
+        this.setState(stateChanges, function() {
+          this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
+        }.bind(this))
       }
     },
 
@@ -398,6 +410,7 @@ UI.define("Customers.Dashboard", function() {
                     handleMoreCustomers={this.handleMoreCustomers}
                     selected_customer_id={this.state.selected_customer_id}
                     noMoreCustomers={this.state.no_more_customers}
+                    noMoreCustomerMessage={this.props.noMoreCustomerMessage}
                     />
                   <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
                 </div>

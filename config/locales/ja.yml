@@ -45,6 +45,8 @@ ja:
     check_out: チェックアウト
     accept: 承認
     pend: 未承認
+    shop_closed: 営業時間外
+    memo: メモ内容
   customer:
     back_without_save: 戻る（保存）
     select_region: 都道府県
@@ -58,6 +60,8 @@ ja:
     city: 市区町村
     address1: 続き住所
     address2: 建物名／部屋番号
+    no_customer: 該当データなし
+    no_more_customer: 該当データ終了
   settings:
     shop:
       info_title:  店舗情報

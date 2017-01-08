@@ -46,6 +46,8 @@ en:
     check_out: Check Out
     accept: Accept
     pend: Pend
+    shop_closed: Shop closed
+    memo: Memo
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region
@@ -59,6 +61,8 @@ en:
     city: City
     address1: address1
     address2: address2
+    no_customer: No Data
+    no_more_customer: End of Data
   settings:
     shop:
       info_title: Shop Info

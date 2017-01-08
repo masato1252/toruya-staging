@@ -42,7 +42,7 @@ UI.define("Common.CustomersList", function() {
             {customerOptions}
             {
               this.props.noMoreCustomers ? (
-                <strong className="no-more-customer">No More Customer</strong>
+                <strong className="no-more-customer">{this.props.noMoreCustomerMessage}</strong>
               ) : null
             }
           </div>
