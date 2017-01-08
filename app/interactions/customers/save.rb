@@ -3,7 +3,7 @@ class Customers::Save < ActiveInteraction::Base
 
   set_callback :type_check, :before do
     # if params[:primary_address] && (params[:primary_address][:region].present? || params[:primary_address][:city].present?)
-    params[:address] = [params[:primary_address][:city], params[:primary_address][:region]].reject(&:blank?).join(",")
+    params[:address] = [params[:primary_address][:region], params[:primary_address][:city]].reject(&:blank?).join(" ")
     params[:primary_address] = {
         type: params[:primary_address][:type],
         value: {
