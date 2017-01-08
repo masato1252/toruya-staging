@@ -87,7 +87,7 @@ class Customers::Save < ActiveInteraction::Base
   def execute
     if params[:id].present?
       customer = user.customers.find(params[:id])
-      customer.attributes = params
+      customer.attributes = params.merge(updated_at: Time.zone.now)
     else
       customer = user.customers.new(params)
     end
