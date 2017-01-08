@@ -110,7 +110,7 @@ class Customer < ApplicationRecord
 
     address = primary_value(addresses)
     if address && (address.value.city || address.value.region)
-      [address.value.city, address.value.region].compact.join(",")
+      [address.value.region, address.value.city].compact.join(" ")
     end
   end
 
