@@ -41,6 +41,11 @@ module Reservable
         all_overlap_reservations = overlap_reservations(reservation_id)
         all_overlap_staffs = all_overlap_reservations.map {|reservation| reservation.staffs}.flatten
         reservation_staffs = all_overlap_staffs.find_all { |staff| staff.staff_menus.where(menu: menu).exists? }
+
+        reservation_staffs.map do |staff|
+          Options::StaffOption.new(id: staff.id, name: staff.name,
+                                   handable_customers: menu_max_seat_number - customers_amount_of_reservations)
+        end
       elsif menu.min_staffs_number == 1
         reservation_staffs = reservations.map do |reservation|
           staff = reservation.staffs.first
