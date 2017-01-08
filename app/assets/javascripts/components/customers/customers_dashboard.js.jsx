@@ -422,6 +422,7 @@ UI.define("Customers.Dashboard", function() {
                     selected_customer_id={this.state.selected_customer_id}
                     noMoreCustomers={this.state.no_more_customers}
                     noMoreCustomerMessage={this.props.noMoreCustomerMessage}
+                    noCustomerMessage={this.props.noCustomerMessage}
                     />
                   <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
                 </div>

@@ -27,6 +27,7 @@ UI.define("Common.CustomersList", function() {
 
     render: function() {
       var _this = this;
+      var noCustomerMessage = "";
 
       var customerOptions = this.props.customers.map(function(customer) {
         return (
@@ -37,14 +38,19 @@ UI.define("Common.CustomersList", function() {
         );
       });
 
+      if (this.props.noMoreCustomers) {
+        if (customerOptions.length === 0) {
+          noCustomerMessage = <strong className="no-more-customer">{this.props.noCustomerMessage}</strong>
+        }
+        else {
+          noCustomerMessage = <strong className="no-more-customer">{this.props.noMoreCustomerMessage}</strong>
+        }
+      }
+
       return(
           <div id="customerList" ref={(c) => this.customerList = c} onScroll={this._handleScroll}>
             {customerOptions}
-            {
-              this.props.noMoreCustomers ? (
-                <strong className="no-more-customer">{this.props.noMoreCustomerMessage}</strong>
-              ) : null
-            }
+            {noCustomerMessage}
           </div>
       );
     }
