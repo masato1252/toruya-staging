@@ -56,7 +56,28 @@ class Customer < ApplicationRecord
   end
 
   def display_address
-    (primary_address && primary_address["value"]["formatted_address"]) || address
+    if primary_address && primary_address["value"]["formatted_address"]
+      _address = primary_formatted_address
+      postcode = [_address.value.postcode1, _address.value.postcode2].compact.join("-")
+
+      zipcode = if postcode.present?
+                  "〒#{postcode} "
+                end
+
+      "#{zipcode}#{_address.value.region}#{_address.value.city}#{_address.value.street1}#{_address.value.street2}"
+    else
+      address
+    end
+  end
+
+  def primary_formatted_address
+    @primary_formatted_address ||= Hashie::Mash.new(primary_address).tap do |address|
+      address.value.postcode1 = address.value.postcode ? address.value.postcode.first(3) : ""
+      address.value.postcode2 = address.value.postcode ? address.value.postcode[3..-1] : ""
+      streets = address.value.street ? address.value.street.split(",") : []
+      address.value.street1 = streets.first
+      address.value.street2 = streets[1..-1].try(:join, ",")
+    end
   end
 
   def google_contact_attributes(google_groups_changes={})
