@@ -1,8 +1,10 @@
 class Customers::Search < ActiveInteraction::Base
+  PER_PAGE = 50
+
   object :super_user, class: User
   string :keyword
   integer :last_customer_id, default: nil
-  integer :pre_page, default: 50
+  integer :pre_page, default: PER_PAGE
 
   def execute
     scoped = super_user.customers.includes(:rank, :contact_group).order("id").limit(pre_page)

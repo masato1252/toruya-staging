@@ -202,7 +202,12 @@ UI.define("Customers.Dashboard", function() {
           _this.setState({no_more_customers: true, moreCustomerProcessing: false, customers: originalCustomers.concat(result["customers"])})
         }
         else {
-          _this.setState({customers: originalCustomers.concat(result["customers"])});
+          var noMoreCustomers = false;
+          if (result["customers"].length < _this.props.perPage) {
+            noMoreCustomers = true;
+          }
+
+          _this.setState({customers: originalCustomers.concat(result["customers"]), no_more_customers: noMoreCustomers});
         }
       }).fail(function(errors){
       }).always(function() {
