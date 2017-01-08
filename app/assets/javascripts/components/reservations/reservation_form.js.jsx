@@ -388,7 +388,7 @@ UI.define("Reservation.Form", function() {
                         {
                           this.state.start_time_restriction && this.state.end_time_restriction ?
                           `${this.props.businessTimeSuggestion} ${this.state.start_time_restriction} ~ ${this.state.end_time_restriction}` :
-                          "Not working"
+                          this.props.shopClosedMessage
                         }
                       </span>
                   </dd>
@@ -420,7 +420,7 @@ UI.define("Reservation.Form", function() {
                   <dt>メモ</dt>
                   <dd className="input">
                     <textarea
-                      id="memo" placeholder="Memo" data-name="memo" cols="40" rows="4"
+                      id="memo" placeholder={this.props.memoPlaceholder} data-name="memo" cols="40" rows="4"
                       value={this.state.memo} onChange={this._handleChange} />
                   </dd>
                 </dl>
