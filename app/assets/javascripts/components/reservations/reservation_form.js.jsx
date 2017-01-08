@@ -419,9 +419,9 @@ UI.define("Reservation.Form", function() {
                 <dl className="form" id="resMemoRow">
                   <dt>メモ</dt>
                   <dd className="input">
-                    <input type="textarea" id="memo" placeholder="Memo" data-name="memo"
-                      rows="4" cols="40"
-                      value={this.state.memo} onChange={this._handleChange}  />
+                    <textarea
+                      id="memo" placeholder="Memo" data-name="memo" cols="40" rows="4"
+                      value={this.state.memo} onChange={this._handleChange} />
                   </dd>
                 </dl>
               </div>
