@@ -35,6 +35,7 @@ ja:
       updated_not_active: 'パスワードが正しく変更されました。'
       send_reset_password_instruction: "送信"
       change_password_title: パスワード再設定
+      change_password_desc: 新しいパスワードを入力してください。
       new_password: 新しいパスワード
       min_password: "英数%{min_length}文字以上"
       confirm_new_password: パスワード（確認）

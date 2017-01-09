@@ -37,6 +37,7 @@ en:
       updated_not_active: "Your password has been changed successfully."
       send_reset_password_instruction: "Send"
       change_password_title: Change your password
+      change_password_desc: We will send an email to reset password. Please type in your account email address then click send button.
       new_password: New password
       min_password: "%{min_length} characters minimum"
       confirm_new_password: Confirm new password
