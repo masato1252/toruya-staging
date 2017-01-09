@@ -6,6 +6,7 @@ en:
       confirmed: "Your email address has been successfully confirmed."
       send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
       send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+      resend_confirmation_instructions: "Resend confirmation instructions"
     failure:
       already_authenticated: "You are already signed in."
       inactive: "Your account is not activated yet."
@@ -34,6 +35,12 @@ en:
       send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
       updated: "Your password has been changed successfully. You are now signed in."
       updated_not_active: "Your password has been changed successfully."
+      send_reset_password_instruction: "Send"
+      change_password_title: Change your password
+      new_password: New password
+      min_password: "%{min_length} characters minimum"
+      confirm_new_password: Confirm new password
+      change_password_btn: Reset
     registrations:
       destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
       signed_up: "Welcome! You have signed up successfully."
@@ -43,6 +50,7 @@ en:
       update_needs_confirmation: "You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirm link to confirm your new email address."
       updated: "Your account has been updated successfully."
     sessions:
+      sign_in: 'Sign in'
       sign_up: 'Sign up'
       forget_password: 'Forgot your password?'
       dont_receive_confirmation: "Didn't receive confirmation instructions?"

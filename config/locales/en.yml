@@ -35,6 +35,7 @@ en:
     name: Name
     company_name: Company Name
     create_or_update_successfully_message: Updated successfully
+    send: Send
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -74,6 +75,7 @@ en:
       new_info_2: Toruya will accept reservation based on this setting.
       name: Shop Name
       create_successfully_message: Shop was successfully created.
+      update_successfully_message: Shop was successfully updated.
     business_hours:
       info_title: Business Hours
       info_1: Please enter business hours here.
@@ -165,11 +167,13 @@ en:
       sync_google: Sync Google
       connect_google: Connect Google account
       reconnect_google: Reconnect Google account
+      reconnect_google_confirmation_message: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"
       connected_google_group_title: Connected Google Group
       synchronization_title: Synchronization
       connect: Connect
       sync: Sync
       google_account_synchronization: Google account synchronization
+      google_account_synchronization_instructions: Please sync your google account and the google group you want here
       connection_binding_desc: Choose the google group you want to bind.
       google_group_name: Google Name
       bind_btn: Bind

@@ -8,7 +8,7 @@
 <form>
   <div>
     <% if current_user.uid %>
-      <%= link_to t("settings.contact.reconnect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"}  %>
+      <%= link_to t("settings.contact.reconnect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: t("settings.contact.reconnect_google_confirmation_message") }  %>
     <% else %>
       <%= link_to t("settings.contact.connect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
     <% end %>

@@ -27,7 +27,7 @@ class Settings::CategoriesController < SettingsController
     @category = super_user.categories.new(settings_category_params)
 
     if @category.save
-      redirect_to settings_categories_path
+      redirect_to settings_categories_path, notice: I18n.t("common.create_successfully_message")
     else
       render :new
     end
@@ -38,7 +38,7 @@ class Settings::CategoriesController < SettingsController
   def update
     respond_to do |format|
       if @category.update(settings_category_params)
-        format.html { redirect_to settings_categories_path, notice: I18n.t("common.create_or_update_successfully_message") }
+        format.html { redirect_to settings_categories_path, notice: I18n.t("common.update_successfully_message") }
       else
         format.html { render :edit }
       end

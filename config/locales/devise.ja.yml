@@ -6,6 +6,7 @@ ja:
       confirmed: 'アカウントを登録しました。'
       send_instructions: 'アカウントの有効化について数分以内にメールでご連絡します。'
       send_paranoid_instructions: "あなたのメールアドレスが登録済みの場合、本人確認用のメールが数分以内に送信されます。"
+      resend_confirmation_instructions: "登録確認メールが届かない方"
     failure:
       already_authenticated: 'すでにログインしています。'
       inactive: 'アカウントが有効化されていません。メールに記載された手順にしたがって、アカウントを有効化してください。'
@@ -32,6 +33,12 @@ ja:
       send_paranoid_instructions: "あなたのメールアドレスが登録済みの場合、パスワード再設定用のメールが数分以内に送信されます。"
       updated: 'パスワードが正しく変更されました。'
       updated_not_active: 'パスワードが正しく変更されました。'
+      send_reset_password_instruction: "送信"
+      change_password_title: パスワード再設定
+      new_password: 新しいパスワード
+      min_password: "英数%{min_length}文字以上"
+      confirm_new_password: パスワード（確認）
+      change_password_btn: 設定する
     registrations:
       destroyed: 'アカウントを削除しました。またのご利用をお待ちしております。'
       signed_up: 'アカウント登録が完了しました。'
@@ -41,8 +48,9 @@ ja:
       update_needs_confirmation: 'アカウント情報を変更しました。変更されたメールアドレスの本人確認のため、本人確認用メールより確認処理をおこなってください。'
       updated: 'アカウント情報を変更しました。'
     sessions:
+      sign_in: 'ログイン'
       sign_up: 'ユーザー登録'
-      forget_password: 'パスワード紛失'
+      forget_password: 'パスワードをお忘れの方'
       dont_receive_confirmation: "登録確認メールが届かない方"
       signed_in: 'ログインしました。'
       signed_out: 'ログアウトしました。'

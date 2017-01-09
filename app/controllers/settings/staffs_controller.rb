@@ -30,7 +30,7 @@ class Settings::StaffsController < SettingsController
 
     respond_to do |format|
       if @staff.save
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.create_or_update_successfully_message") }
+        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
         @shops = super_user.shops
@@ -47,7 +47,7 @@ class Settings::StaffsController < SettingsController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to settings_staffs_path, notice: 'Staff was successfully updated.' }
+        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.update_successfully_message") }
         format.json { render :show, status: :ok, location: @staff }
       else
         @shops = super_user.shops

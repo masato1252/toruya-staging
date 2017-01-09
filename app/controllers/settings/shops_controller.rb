@@ -42,7 +42,7 @@ class Settings::ShopsController < SettingsController
   def update
     respond_to do |format|
       if @shop.update(shop_params)
-        format.html { redirect_to settings_shops_path, notice: 'Shop was successfully updated.' }
+        format.html { redirect_to settings_shops_path, notice: I18n.t("settings.shop.update_successfully_message") }
         format.json { render :show, status: :ok, location: @shop }
       else
         format.html { render :edit }

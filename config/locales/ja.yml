@@ -34,6 +34,9 @@ ja:
     memo: メモ
     name: 氏名
     create_or_update_successfully_message: 更新完了
+    update_successfully_message: 更新完了
+    create_successfully_message: 作成完了
+    send: 送信
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -73,6 +76,7 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。
+      update_successfully_message: 店舗情報を更新しました。
     business_hours:
       info_title: 営業時間
       info_1: 営業時間を設定してください。
@@ -166,11 +170,13 @@ ja:
       sync_google: Google同期設定
       connect_google: Googleアカウントを設定
       reconnect_google: Googleアカウントを再設定
+      reconnect_google_confirmation_message: "【！注意！】すでに同期しているGmail連絡先が存在しますので、「OK」ボタンを押した時点で既存のToruya顧客データが削除されます。本当に再設定しますか？"
       connected_google_group_title: Google連絡先グループ
       synchronization_title: 同期状態
       connect: 同期設定する
       sync: 同期
       google_account_synchronization: Googleアカウント同期設定
+      google_account_synchronization_instructions: Gmail連絡先と連絡先グループをToruyaと同期します。
       connection_binding_desc: インポートするGoogle連絡先グループを選択するか『新規グループを作成』ボタンを押してください。
       google_group_name: 既存Google連絡先グループ
       bind_btn: インポート
