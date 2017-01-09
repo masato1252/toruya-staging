@@ -12,7 +12,7 @@ class Settings::ContactGroupsController < SettingsController
     @contact_group = super_user.contact_groups.new(contact_group_params)
 
     if @contact_group.save
-      redirect_to settings_contact_groups_path
+      redirect_to settings_contact_groups_path, notice: I18n.t("common.create_successfully_message")
     else
       render :new
     end
@@ -27,7 +27,7 @@ class Settings::ContactGroupsController < SettingsController
       outcome = Groups::UpdateGroup.run(contact_group: @contact_group, params: contact_group_params.to_h)
 
       if outcome.valid?
-        format.html { redirect_to settings_contact_groups_path, notice: 'Contact group was successfully updated.' }
+        format.html { redirect_to settings_contact_groups_path, notice: I18n.t("common.update_successfully_message") }
       else
         format.html { render :edit }
       end

@@ -18,7 +18,7 @@ class Settings::ProfilesController < SettingsController
     @profile = super_user.build_profile(profile_params)
 
     if @profile.save
-      redirect_to settings_profile_path
+      redirect_to settings_profile_path, notice: I18n.t("common.create_successfully_message")
     else
       render :new
     end
@@ -27,7 +27,7 @@ class Settings::ProfilesController < SettingsController
   def update
     respond_to do |format|
       if @profile.update(profile_params)
-        format.html { redirect_to settings_profile_path, notice: 'Profile was successfully updated.' }
+        format.html { redirect_to settings_profile_path, notice: I18n.t("common.update_successfully_message") }
       else
         format.html { render :edit }
       end

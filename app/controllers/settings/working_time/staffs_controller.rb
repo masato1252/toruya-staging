@@ -27,7 +27,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
       CreateCustomSchedule.run(staff: @staff, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
-    redirect_to settings_working_time_staffs_path
+    redirect_to settings_working_time_staffs_path, notice: I18n.t("common.update_successfully_message")
   end
 
   private

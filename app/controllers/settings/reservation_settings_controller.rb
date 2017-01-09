@@ -14,12 +14,12 @@ class Settings::ReservationSettingsController < SettingsController
     if @reservation_setting.save
       if params[:from_menu]
         if params[:menu_id]
-          redirect_to edit_settings_menu_path(id: params[:menu_id])
+          redirect_to edit_settings_menu_path(id: params[:menu_id]), notice: I18n.t("common.create_successfully_message")
         else
-          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id)
+          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.create_successfully_message")
         end
       else
-        redirect_to settings_reservation_settings_path
+        redirect_to settings_reservation_settings_path, notice: I18n.t("common.create_successfully_message")
       end
     else
     end
@@ -32,12 +32,12 @@ class Settings::ReservationSettingsController < SettingsController
     if @reservation_setting.update(reservation_setting_params.reverse_merge(day: nil, nth_of_week: nil, days_of_week: nil))
       if params[:from_menu]
         if params[:menu_id]
-          redirect_to edit_settings_menu_path(id: params[:menu_id])
+          redirect_to edit_settings_menu_path(id: params[:menu_id]), notice: I18n.t("common.update_successfully_message")
         else
-          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id)
+          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.update_successfully_message")
         end
       else
-        redirect_to settings_reservation_settings_path
+        redirect_to settings_reservation_settings_path, notice: I18n.t("common.update_successfully_message")
       end
     else
       render :edit
