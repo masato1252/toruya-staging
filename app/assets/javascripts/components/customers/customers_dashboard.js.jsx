@@ -43,7 +43,7 @@ UI.define("Customers.Dashboard", function() {
     },
 
     newCustomerMode: function() {
-      this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true});
+      this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, reservation_mode: false});
     },
 
     handleCustomerSelect: function(customer_id, event) {
