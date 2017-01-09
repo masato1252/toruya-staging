@@ -1,5 +1,7 @@
 <div id="login">
   <h2><%= t("devise.confirmations.resend_confirmation_instructions") %></h2>
+  <p>ユーザーアカウント認証手続きを完了するためのメールを再送信します。</p>
+  <p>登録したメールアドレスを入力し、送信ボタンをクリックしてください。</p><br />
 
   <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
     <%= devise_error_messages! %>
