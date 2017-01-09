@@ -53,7 +53,7 @@ RSpec.describe Customers::Save do
       updated_customer = outcome.result
       expect(updated_customer).to eq(customer.reload)
       expect(updated_customer.birthday).to eq(Date.new(1950, 11, 20))
-      expect(updated_customer.address).to eq("bar,foo")
+      expect(updated_customer.address).to eq("foo bar")
     end
   end
 end
