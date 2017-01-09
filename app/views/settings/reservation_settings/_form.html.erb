@@ -1,3 +1,10 @@
+<div id="subNav">
+  <h2>基本情報 − <%= t("settings.reservation_setting.new_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.reservation_setting.new_info_1") %><br /><%= t("settings.reservation_setting.new_info_2") %></p>
+</div>
+
 <%= react_component "UI.ReservationSettings.Form", {
   timezone: Time.zone.tzinfo.identifier,
   save_setting_path: url,

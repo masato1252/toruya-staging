@@ -1,3 +1,10 @@
+<div id="subNav">
+  <h2><%= t("settings.contact.info_title") %> − <%= t("settings.contact.new_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.contact.new_info_1") %><br /><%= t("settings.contact.new_info_2") %></p>
+</div>
+
 <%= form_for(contact_group, url: url) do |f| %>
   <%= render "settings/form_errors", object: contact_group %>
 

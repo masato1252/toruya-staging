@@ -1,3 +1,10 @@
+<div id="subNav">
+  <h2>基本情報 − <%= t("settings.category.new_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.category.new_info_1") %><br /><%= t("settings.category.new_info_2") %></p>
+</div>
+
 <%= form_for(category, url: url) do |f| %>
   <%= render "settings/form_errors", object: category %>
 

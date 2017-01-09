@@ -68,8 +68,10 @@ en:
       info_title: Shop Info
       new_title: Add a New Shop
       new_button: Add a New Shop
-      info_1: Please enter shop informations here.
-      info_2: This information will be displayed to your customers.
+      info_1: This is the list of existing shops.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter shops informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
       name: Shop Name
       create_successfully_message: Shop was successfully created.
     business_hours:
@@ -86,8 +88,10 @@ en:
     reservation_setting:
       new_title: Add a New Reservation Setting
       new_button: Add a New Reservation Setting
-      info_1: Here is the list of reservation settings you set.
-      info_2: oruya will accept reservation based on this setting.
+      info_1: This is the list of existing reservation frames.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter reservation frame informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       name_placeholder: Setting name
       short_name: Short name
@@ -106,8 +110,10 @@ en:
       info_label: Information
       new_title: Add a New Menu
       new_button: Add a New Menu
-      info_1: Please enter menu here.
-      info_2: Toruya will accept reservation based on this setting.
+      info_1: This is the list of existing menus.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter menu informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       staff: Staff
       reservation_setting_name: Reservation setting name
@@ -124,16 +130,20 @@ en:
       info_label: Information
       new_title: Add a New Category
       new_button: Add a New Category
-      info_1: Please enter category here.
-      info_2: Toruya will accept reservation based on this setting.
+      info_1: This is the list of existing menu categories.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter menu categories informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
       name: Name
     staff:
       info_title: Staff Info
       new_title: Add a New Staff
       new_button: Add a New Staff
       info_label: Information
-      info_1: Here is the list of staff you set.
-      info_2: Toruya will accept reservation based on this setting.
+      info_1: This is the list of existing staffs.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter staffs informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       shop_label: Belonging Shop
     staff_working_time:
@@ -146,8 +156,10 @@ en:
       info_title: Contact
       new_title : Add a New Contact
       new_button: Add a New Contact
-      info_1: Please enter contacts informations here.
-      info_2: Toruya will accept reservation based on this setting.
+      info_1: This is the list of existing Toruya contact groups.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter Toruya contact group here.
+      new_info_2: Toruya will accept reservation based on this setting.
       info_label: Information
       name: Name
       sync_google: Sync Google
@@ -171,6 +183,10 @@ en:
       info_title: Account
     profile:
       info_title: Let's Setup Your Account and Shop'
+      info_1: This is your Toruya Account setting.
+      info_2: You need to complete this setting in order to use Toruya.
+      new_info_1: Please enter Toruya account admin informations here.
+      new_info_2: You need to complete this setting in order to use Toruya.
   constants:
     rank:
       regular: "Regular"

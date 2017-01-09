@@ -67,8 +67,10 @@ ja:
       info_title:  店舗情報
       new_title: 店舗情報の新規作成
       new_button: 新規店舗作成
-      info_1: 店舗情報を設定します。
+      info_1: 設定された店舗一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: 店舗を設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。
     business_hours:
@@ -87,6 +89,8 @@ ja:
       new_button: 予約枠を新規作成
       info_1: 設定された予約枠一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: 予約枠を設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 予約枠名
       name_label: 枠名
       short_name: 短縮名
@@ -107,6 +111,8 @@ ja:
       new_button: メニューを新規作成
       info_1: 設定されたメニュー一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: メニューを設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: メニュー名
       staff: 対応スタッフ
       reservation_setting_name: 予約枠
@@ -123,16 +129,20 @@ ja:
       info_label: 基本設定
       new_title: メニューカテゴリーの新規作成
       new_button: カテゴリーを新規作成
-      info_1: 設定されたメニューカテゴリーの一覧です。
+      info_1: 設定されたメニューカテゴリー一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: メニューカテゴリーを設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: カテゴリー名
     staff:
       info_title: 基本情報
       new_title: スタッフの新規作成
       new_button: スタッフを新規作成
       info_label: 基本情報
-      info_1: 既に設定されているスタッフ一覧です。
+      info_1: 設定されたスタッフ一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: スタッフを設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
     staff_working_time:
@@ -147,8 +157,10 @@ ja:
       info_title: 顧客台帳
       new_title: 新規台帳作成
       new_button: 新規グループを作成
-      info_1: 新しい顧客台帳の基本設定をします。
+      info_1: 設定された顧客台帳一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      new_info_1: 新しい顧客台帳の基本設定をします。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       info_label: 台帳情報
       name: 台帳名
       sync_google: Google同期設定
@@ -172,6 +184,10 @@ ja:
       info_title: アカウント
     profile:
       info_title: まずはアカウント設定
+      info_1: Toruyaアカウントの登録情報です。
+      info_2: Toruyaをしようするにはこの設定を完了する必要があります。
+      new_info_1: まずは管理人情報を登録します。
+      new_info_2: 各種設定や利用料金の支払いなど、Toruyaの登録情報を管理する個人や法人を設定してください。
   constants:
     rank:
       regular: "一般"

@@ -1,9 +1,3 @@
-<div id="subNav">
-  <h2>基本情報 − <%= t("settings.reservation_setting.new_title") %></h2>
-</div>
-<div id="about">
-  <p><%= t("settings.reservation_setting.info_1") %><br /><%= t("settings.reservation_setting.info_2") %></p>
-</div>
 <%= render partial: "form", locals: {
   reservation_setting: @reservation_setting,
   url: settings_reservation_settings_path(from_menu: params[:from_menu], menu_id: params[:menu_id]) }
