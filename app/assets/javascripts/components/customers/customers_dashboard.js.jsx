@@ -42,10 +42,14 @@ UI.define("Customers.Dashboard", function() {
       }
     },
 
+    newCustomerMode: function() {
+      this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true});
+    },
+
     handleCustomerSelect: function(customer_id, event) {
       // if (this.state.processing) { return; }
       if (this.state.selected_customer_id == customer_id) {
-        this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true});
+        this.newCustomerMode()
       }
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
@@ -423,8 +427,22 @@ UI.define("Customers.Dashboard", function() {
                     noMoreCustomers={this.state.no_more_customers}
                     noMoreCustomerMessage={this.props.noMoreCustomerMessage}
                     noCustomerMessage={this.props.noCustomerMessage}
+                    displayNewCustomerBtn={this.state.selected_customer_id}
+                    newCustomerMode={this.newCustomerMode}
+                    processing={this.state.processing}
                     />
                   <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
+                  {
+                    this.state.selected_customer_id ? (
+                      <button
+                        id="new-customer-btn"
+                        className="btn btn-light-green"
+                        onClick={this.newCustomerMode}
+                        disabled={this.state.processing} >
+                        新規データ作成
+                      </button>
+                    ) : null
+                  }
                 </div>
               </div>
             </div>

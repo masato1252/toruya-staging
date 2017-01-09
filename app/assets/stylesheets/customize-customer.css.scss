@@ -1,6 +1,6 @@
 #resNew {
   #customerList {
-    height: 80vh;
+    height: 70vh;
 
     dl.customer-option {
       border-bottom: 1px solid #b3b3b3;
@@ -85,6 +85,11 @@
 
   #customerInfoEdit .tabs a {
     width: 40%;
+  }
+
+  #new-customer-btn {
+    width: 195px;
+    margin: 7px 0 3px 5px;
   }
 }
 
