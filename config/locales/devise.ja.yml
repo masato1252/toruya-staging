@@ -19,9 +19,9 @@ ja:
       unconfirmed: 'メールアドレスの本人確認が必要です。'
     mailer:
       confirmation_instructions:
-        subject: 'Toruyaユーザーアカウント認証のお願い'
+        subject: '【Toruya】ユーザーアカウント認証のお願い'
       reset_password_instructions:
-        subject: 'パスワードの再設定について'
+        subject: '【Toruya】パスワード再設定'
       unlock_instructions:
         subject: 'アカウントの凍結解除について'
     omniauth_callbacks:

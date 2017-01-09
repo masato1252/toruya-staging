@@ -1,8 +1,9 @@
 ■ユーザー登録認証手続きのお願い■
+
 -----------------
 ご登録者 様
 
-予約管理システムToruyaは、2016年12月12日に下記メールアドレスにてユーザー登録申請を受け付けました。
+予約管理システムToruyaは、<%= I18n.l(Date.today, format: :year_month_date) %> に下記メールアドレスにてユーザー登録申請を受け付けました。
 
 メールアドレス：<%= @email %>
 認証期限：<%= I18n.l(@resource.confirmation_sent_at.to_date + User.confirm_within, format: :year_month_date) %>
