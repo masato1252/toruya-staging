@@ -54,7 +54,8 @@ UI.define("Customers.Dashboard", function() {
       else {
         var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
         this.setState(
-          {selected_customer_id: customer_id, customer: selected_customer, processing: true, edit_mode: false}, function() {
+          {selected_customer_id: customer_id, customer: selected_customer,
+           processing: true, edit_mode: false, reservation_mode: true}, function() {
             if (this.CustomerReservationsView) {
               this.CustomerReservationsView.fetchReservations()
             }
