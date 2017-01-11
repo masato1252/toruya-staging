@@ -18,7 +18,7 @@
 
   <div id="resList" class="contBody">
     <dl class="tableTTL">
-      <dt class="time">開始<br>終了</dt>
+      <dt class="time">開始<br />終了</dt>
       <dt class="reservation-states"></dt>
       <dt class="menu">メニュー</dt>
       <dt class="customer">顧客氏名</dt>
@@ -31,7 +31,7 @@
         %>
         <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
           <dl class="">
-            <dd class="time"><%= reservation.start_time.to_s(:time) %><br><%= reservation.end_time.to_s(:time) %></dd>
+            <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
             <dd class="menu"><%= reservation.menu.short_name.presence || reservation.menu.name %></dd>
             <dd class="customer"><%= customer_names %></dd>
