@@ -37,7 +37,7 @@ class Settings::ProfilesController < SettingsController
   def destroy
     @category.destroy
     respond_to do |format|
-      format.html { redirect_to settings_profile_url, notice: 'Profile was successfully destroyed.' }
+      format.html { redirect_to settings_profile_url, notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

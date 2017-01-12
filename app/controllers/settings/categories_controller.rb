@@ -50,7 +50,7 @@ class Settings::CategoriesController < SettingsController
   def destroy
     @category.destroy
     respond_to do |format|
-      format.html { redirect_to settings_categories_url, notice: 'Category was successfully destroyed.' }
+      format.html { redirect_to settings_categories_url, notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

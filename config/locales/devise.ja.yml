@@ -37,7 +37,7 @@ ja:
       change_password_title: パスワード再設定
       change_password_desc: 新しいパスワードを入力してください。
       new_password: 新しいパスワード
-      min_password: "英数%{min_length}文字以上"
+      min_password: "英数字 %{min_length}文字以上"
       confirm_new_password: パスワード（確認）
       change_password_btn: 設定する
     registrations:
@@ -48,6 +48,9 @@ ja:
       signed_up_but_unconfirmed: '本人確認用のメールを送信しました。メール内のリンクからアカウントを有効化させてください。'
       update_needs_confirmation: 'アカウント情報を変更しました。変更されたメールアドレスの本人確認のため、本人確認用メールより確認処理をおこなってください。'
       updated: 'アカウント情報を変更しました。'
+      signup_title: 'ユーザー登録'
+      signup_btn: 'ユーザー登録'
+      min_password: "英数字 %{min_length}文字以上"
     sessions:
       sign_in: 'ログイン'
       sign_up: 'ユーザー登録'

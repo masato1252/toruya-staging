@@ -52,7 +52,7 @@ class Settings::RanksController < SettingsController
   def destroy
     @rank.destroy
     respond_to do |format|
-      format.html { redirect_to settings_ranks_url, notice: 'Rank was successfully destroyed.' }
+      format.html { redirect_to settings_ranks_url, notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

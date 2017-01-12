@@ -18,7 +18,7 @@
     <% @staffs.each do |staff| %>
       <dl>
         <dt class="check">
-          <%= link_to t("action.delete"), settings_staff_path(staff), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t("action.delete"), settings_staff_path(staff), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dt>
         <dt class="rowTTL">
           <%= staff.name %>

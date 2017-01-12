@@ -1,6 +1,6 @@
 ja:
   requirement:
-    contact_redirect_message: Please connect your google account with your toruya groups
+    contact_redirect_message: 顧客台帳に同期するGmail連絡先を設定してください。
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
     contact_warning_link_title: Google同期設定
     business_schedule_warning_message: "%{link}にて営業日時を設定してください。"
@@ -13,6 +13,7 @@ ja:
     menu_redirect_message: メニューを作成します。
     menu_warning_message: "%{link}にて予約可能メニューを設定してください。"
     menu_warning_link_title: メニュー設定ページ
+    profile_redirect_message: Toruyaのユーザー登録を完了してください。
   action:
     delete: 削除
     edit: 編集
@@ -33,9 +34,10 @@ ja:
     birthday: 生年月日
     memo: メモ
     name: 氏名
-    create_or_update_successfully_message: 更新完了
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
+    delete_successfully_message: 削除完了
+    are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
@@ -44,6 +46,7 @@ ja:
     no_menu_message: 検索結果なし
     create_successfully_message: 予約が保存されました。
     update_successfully_message: 予約が更新されました。
+    delete_successfully_message: 予約が削除されました。
     check_in: チェックイン
     check_out: チェックアウト
     accept: 承認
@@ -77,6 +80,7 @@ ja:
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。
       update_successfully_message: 店舗情報を更新しました。
+      delete_successfully_message: 店舗情報を削除しました。
     business_hours:
       info_title: 営業時間
       info_1: 営業時間を設定してください。

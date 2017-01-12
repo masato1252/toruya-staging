@@ -76,7 +76,7 @@ class Settings::MenusController < SettingsController
   def destroy
     @menu.destroy
     respond_to do |format|
-      format.html { redirect_to settings_menus_path, notice: 'Menu was successfully destroyed.' }
+      format.html { redirect_to settings_menus_path, notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

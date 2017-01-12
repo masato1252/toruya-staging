@@ -22,7 +22,7 @@
     <% @menus.each do |menu| %>
       <dl>
         <dt class="check">
-          <%= link_to t("action.delete"), settings_menu_path(menu), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t("action.delete"), settings_menu_path(menu), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dt>
         <dt class="rowTTL"><%= menu.name %></dt>
         <dd class="staff"><%= menu.staffs.count %></dd>

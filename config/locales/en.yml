@@ -13,6 +13,7 @@ en:
     menu_redirect_message: Please create your Menu
     menu_warning_message: Please go to %{link} page to create your Menu.
     menu_warning_link_title: Menu page
+    profile_redirect_message: Please fill your information.
   action:
     delete: Delete
     edit: edit
@@ -34,7 +35,10 @@ en:
     memo: Memo
     name: Name
     company_name: Company Name
-    create_or_update_successfully_message: Updated successfully
+    update_successfully_message: Updated successfully
+    create_successfully_message: Created successfully
+    delete_successfully_message: Deleted successfully
+    are_you_sure_message: Are you sure?
     send: Send
   reservation:
     valid_time_tip_message: Need a valid reservation time

@@ -56,7 +56,7 @@ class Settings::ShopsController < SettingsController
   def destroy
     @shop.destroy
     respond_to do |format|
-      format.html { redirect_to settings_shops_path, notice: 'Shop was successfully destroyed.' }
+      format.html { redirect_to settings_shops_path, notice: I18n.t("settings.shop.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

@@ -19,7 +19,7 @@ module AccountRequirement
     if current_user
       if !session[:user_name_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last)
-          flash[:alert] = "Please fill your information"
+          flash[:alert] = I18n.t("requirement.profile_redirect_message")
 
           redirect_to new_settings_profile_path
         end

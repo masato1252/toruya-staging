@@ -19,7 +19,7 @@
     <% @settings_categories.each do |settings_category| %>
       <dl>
         <dt class="check">
-          <%= link_to t("action.delete"), settings_category_path(settings_category), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t("action.delete"), settings_category_path(settings_category), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dt>
         <dt class="rowTTL"><%= settings_category.name %></dt>
         <dd class="updateTime"><%= settings_category.updated_at.to_s(:date) %></dd>
