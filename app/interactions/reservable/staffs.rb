@@ -31,9 +31,17 @@ module Reservable
       )
 
       no_reservation_except_menu0_staffs = scoped.select("staffs.*, max(staff_menus.max_customers) as max_customers").group("staffs.id")
-      no_reservation_except_menu0_staffs = no_reservation_except_menu0_staffs.map do |staff|
-        Options::StaffOption.new(id: staff.id, name: staff.name,
-                                 handable_customers: staff.max_customers)
+
+      no_reservation_except_menu0_staffs = if menu.min_staffs_number == 0
+        no_reservation_except_menu0_staffs.map do |staff|
+          Options::StaffOption.new(id: staff.id, name: staff.name,
+                                   handable_customers: menu_max_seat_number - customers_amount_of_reservations)
+        end
+      else
+        no_reservation_except_menu0_staffs.map do |staff|
+          Options::StaffOption.new(id: staff.id, name: staff.name,
+                                   handable_customers: staff.max_customers)
+        end
       end
 
       reservation_staffs = []
