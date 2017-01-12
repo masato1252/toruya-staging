@@ -1,5 +1,6 @@
 ActionMailer::Base.register_interceptor(SendGrid::MailInterceptor)
 ActionMailer::Base.default_url_options[:host] = ENV['MAIL_DOMAIN']
+ActionMailer::Base.default_url_options[:protocol] = ENV['HTTP_PROTOCOL']
 ActionMailer::Base.default :from => ENV['MAIL_FROM']
 
 if ENV['SENDGRID_USERNAME'] && ENV['SENDGRID_PASSWORD'] && Rails.env.production?
