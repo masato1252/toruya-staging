@@ -5,6 +5,9 @@ module Reservable
       # start_time/ready_time checking is >, < not, >=, <= that means we accept reservation is overlap 1 minute
       return @reserved_staff_ids if defined?(@reserved_staff_ids)
 
+      beginning_of_day = start_time.beginning_of_day
+      end_of_day = start_time.end_of_day
+
       scoped = ReservationStaff.joins(reservation: :menu).
         where.not(reservation_id: reservation_id.presence).
         where("reservation_staffs.staff_id": shop.staff_ids).
@@ -13,9 +16,9 @@ module Reservable
       now = ::Time.zone.now
 
       @reserved_staff_ids =
-        scoped.where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)",end_time, start_time).
+        scoped.where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time).
         or(
-          scoped.where("reservations.shop_id != ?", shop.id).where("reservations.start_time > ? and reservations.end_time <= ?", now.beginning_of_day, now.end_of_day)
+          scoped.where("reservations.shop_id != ?", shop.id).where("reservations.start_time > ? and reservations.end_time <= ?", beginning_of_day, end_of_day)
       ).
         pluck("DISTINCT staff_id")
     end
