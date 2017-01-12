@@ -13,8 +13,6 @@ module Reservable
         where("reservation_staffs.staff_id": shop.staff_ids).
         where.not("menus.min_staffs_number" => 0)
 
-      now = ::Time.zone.now
-
       @reserved_staff_ids =
         scoped.where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time).
         or(
