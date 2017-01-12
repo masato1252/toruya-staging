@@ -3,7 +3,14 @@
   <p><%= t("devise.passwords.change_password_desc") %></p><br />
 
   <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-    <%= devise_error_messages! %>
+    <% if resource.errors.include?(:reset_password_token) %>
+      <div id="error_explanation">
+        このパスワード再設定リクエストは期限切れです。<br />
+        <%= link_to "こちら", new_password_path(resource_name) %>から改めてリクエストを送信してください。<br />
+      </div>
+    <% else %>
+      <%= devise_error_messages! %>
+    <% end %>
     <%= f.hidden_field :reset_password_token %>
 
     <div class="field">
