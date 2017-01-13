@@ -21,7 +21,7 @@
     <% @reservation_settings.each do |setting| %>
       <dl>
         <dt class="check">
-          <%= link_to t("action.delete"), settings_reservation_setting_path(setting), method: :delete, class: "btn btn-danger", data: {confirm: "Are are sure" }%>
+          <%= link_to t("action.delete"), settings_reservation_setting_path(setting), method: :delete, class: "btn btn-danger", data: {confirm: t("common.are_you_sure_message") }%>
         </dt>
         <dt class="rowTTL"><%= setting.name %></dt>
         <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>

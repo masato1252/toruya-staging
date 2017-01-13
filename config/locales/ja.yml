@@ -1,19 +1,28 @@
 ja:
   requirement:
-    contact_redirect_message: 顧客台帳に同期するGmail連絡先を設定してください。
+    contact_redirect_message: 顧客台帳に同期する%{link}Gmail連絡先を設定してください。
+    contact_redirect_link_title: Gmail連絡先
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
     contact_warning_link_title: Google同期設定
+    business_schedule_redirect_message: 営業日時を設定します
     business_schedule_warning_message: "%{link}にて営業日時を設定してください。"
     business_schedule_warning_link_title: 営業時間設定ページ
     staff_redirect_message: スタッフを作成します。
     staff_warning_message: "%{link}にてスタッフ情報を設定してください。"
     staff_warning_link_title: スタッフ設定ページ
+    staff_working_schedule_redirect_message: 勤務スケジュールを設定します。
     staff_working_schedule_warning_message: "%{link}にて勤務スケジュールを設定してください。"
     staff_working_schedule_warning_link_title: 勤務日時設定ページ
     menu_redirect_message: メニューを作成します。
     menu_warning_message: "%{link}にて予約可能メニューを設定してください。"
     menu_warning_link_title: メニュー設定ページ
     profile_redirect_message: Toruyaのユーザー登録を完了してください。
+    shop_redirect_message: 店舗を作成します。
+    shop_warning_message: "%{link}にて店舗を作成してください。"
+    shop_warning_link_title: 店舗情報設定ページ
+    reservation_setting_redirect_message: 受付枠を設定します。
+    reservation_setting_warning_message: "%{link}にて予約の受付枠を設定してください。"
+    reservation_setting_warning_link_title: 予約枠設定ページ
   action:
     delete: 削除
     edit: 編集
@@ -239,7 +248,7 @@ ja:
       user:
         password: "Password"
         email: "E-mail"
-        password: "密碼"
+        password: "パスワード"
         password_confirmation: "input password again"
       shop:
         name: "店舗名"

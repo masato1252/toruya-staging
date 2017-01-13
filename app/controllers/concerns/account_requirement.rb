@@ -26,7 +26,7 @@ module AccountRequirement
       elsif !session[:contact_checking]
         # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
-          flash[:alert] = I18n.t("requirement.contact_redirect_message")
+          flash[:alert] = I18n.t("requirement.contact_redirect_message", link: view_context.link_to(I18n.t("requirement.contact_redirect_link_title"), user_google_oauth2_omniauth_authorize_path)).html_safe
 
           redirect_to settings_contact_groups_path
         # If user doesn't go to restriction path, go to previous restriction path, just display waring message to remind him.
@@ -35,15 +35,15 @@ module AccountRequirement
         end
       elsif !session[:shop_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(3))
-          flash[:alert] = "Please create your shops"
+          flash[:alert] = I18n.t("requirement.shop_redirect_message")
 
           redirect_to new_settings_shop_path
         elsif except_path("settings/shops")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Shop page", new_settings_shop_path)} to create your shops".html_safe
+          flash.now[:alert] = I18n.t("requirement.shop_warning_message", link: view_context.link_to(I18n.t("requirement.shop_warning_link_title"), new_settings_shop_path)).html_safe
         end
       elsif !session[:business_hours_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(4))
-          flash[:alert] = "Please set shop business schedules"
+          flash[:alert] = I18n.t("requirement.business_schedule_redirect_message")
 
           redirect_to settings_business_schedules_path
         elsif except_path("business_schedules")
@@ -59,7 +59,7 @@ module AccountRequirement
         end
       elsif !session[:working_time_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(6))
-          flash[:alert] = "Please set their schedules"
+          flash[:alert] = I18n.t("requirement.staff_working_schedule_redirect_message")
 
           redirect_to settings_working_time_staffs_path
         elsif except_path("settings/working_time/staffs")
@@ -67,11 +67,11 @@ module AccountRequirement
         end
       elsif !session[:reservation_settings_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(7))
-          flash[:alert] = "Please set your reservation settings"
+          flash[:alert] = I18n.t("requirement.reservation_setting_redirect_message")
 
           redirect_to new_settings_reservation_setting_path
         elsif except_path("settings/reservation_settings")
-          flash.now[:alert] = "Please go to #{view_context.link_to("Reservation Settings page", new_settings_reservation_setting_path)} to set your reservation settings".html_safe
+          flash.now[:alert] = I18n.t("requirement.reservation_setting_warning_message", link: view_context.link_to(I18n.t("requirement.reservation_setting_warning_link_title"), new_settings_reservation_setting_path)).html_safe
         end
       elsif !session[:menu_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS)
