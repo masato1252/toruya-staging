@@ -5,6 +5,7 @@ class DashboardController < ActionController::Base
   include AccountRequirement
   include ViewHelpers
   include Locale
+  include Ssl
 
   rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound do
     redirect_to root_path, :alert => "This page does not exist."

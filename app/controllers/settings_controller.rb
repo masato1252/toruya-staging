@@ -4,4 +4,5 @@ class SettingsController < ActionController::Base
   include AccountRequirement
   include ViewHelpers
   include Locale
+  include Ssl
 end
