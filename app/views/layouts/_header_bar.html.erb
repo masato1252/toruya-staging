@@ -5,17 +5,19 @@
     </dd>
   </dl>
   <dl>
-    <dd>
-      <%= link_to root_path, class: "setting" do %>
-        <i class="fa fa-calendar fa-3x" aria-hidden="true"></i><br />
-        今日
-      <% end %>
-    </dd>
-    <dd>
-      <%= link_to settings_shops_path, class: "setting" do %>
-        <i class="fa fa-cog fa-3x" aria-hidden="true"></i><br />
-        設定
-      <% end %>
-    </dd>
+    <% if current_user %>
+      <dd>
+        <%= link_to root_path, class: "setting" do %>
+          <i class="fa fa-calendar fa-3x" aria-hidden="true"></i><br />
+          今日
+        <% end %>
+      </dd>
+      <dd>
+        <%= link_to settings_shops_path, class: "setting" do %>
+          <i class="fa fa-cog fa-3x" aria-hidden="true"></i><br />
+          設定
+        <% end %>
+      </dd>
+    <% end %>
   </dl>
 </header>
