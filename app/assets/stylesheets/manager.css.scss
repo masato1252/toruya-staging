@@ -946,7 +946,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  // -webkit-overflow-scrolling: touch;
 }
 #resList .float {
   position: absolute;
