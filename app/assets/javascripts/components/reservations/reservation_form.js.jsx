@@ -166,6 +166,7 @@ UI.define("Reservation.Form", function() {
         switch(eventTargetName) {
           case "start_time_date_part":
             this._retrieveAvailableTimes();
+            return;
             break;
           case "start_time_time_part":
           case "end_time_time_part":
