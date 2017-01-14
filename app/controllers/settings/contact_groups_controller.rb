@@ -35,13 +35,8 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def destroy
-    if @contact_group.destroy
-      flash[:notice] = "Contact group delete successfully"
-    else
-      flash[:alert] = "Contact group delete unsuccessfully"
-    end
-
-    redirect_to settings_contact_groups_path
+    @contact_group.destroy
+    redirect_to settings_contact_groups_path, notice: I18n.t("common.delete_successfully_message")
   end
 
   def connections
