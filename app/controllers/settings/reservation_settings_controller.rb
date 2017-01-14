@@ -46,7 +46,7 @@ class Settings::ReservationSettingsController < SettingsController
 
   def destroy
     @reservation_setting.destroy
-    redirect_to settings_reservation_settings_path
+    redirect_to settings_reservation_settings_path, notice: I18n.t("common.delete_successfully_message")
   end
 
 
