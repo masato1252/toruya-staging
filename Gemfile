@@ -10,6 +10,7 @@ gem "coffee-rails", "~> 4.2"
 # gem "therubyracer", platforms: :ruby
 
 gem "jquery-rails"
+gem "jquery-ui-rails", "~> 6.0.0"
 gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem "bcrypt", "~> 3.1.7"
