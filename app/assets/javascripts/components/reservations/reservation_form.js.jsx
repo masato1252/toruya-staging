@@ -39,6 +39,10 @@ UI.define("Reservation.Form", function() {
       }
 
       this.applySelect2();
+
+      $('#start_time_date_part').datepicker({
+        dateFormat: 'yy-mm-dd'
+      }).datepicker( $.datepicker.regional[ "ja" ] )
     },
 
     applySelect2: function() {
@@ -361,6 +365,7 @@ UI.define("Reservation.Form", function() {
                     <input
                       type="date"
                       data-name="start_time_date_part"
+                      id="start_time_date_part"
                       value={this.state.start_time_date_part}
                       onChange={this._handleChange} />
                   </dd>
