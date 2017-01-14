@@ -33,7 +33,9 @@ RSpec.describe Reservable::Staffs do
           before { create_available_menu(no_manpower_menu) }
 
           it "returns available staffs" do
-            expect(Reservable::Staffs.run!(shop: shop, menu: no_manpower_menu, business_time_range: time_range, number_of_customer: 1).map(&:id)).to include(staff.id)
+            staff_options = Reservable::Staffs.run!(shop: shop, menu: no_manpower_menu, business_time_range: time_range, number_of_customer: 1)
+            expect(staff_options.map(&:id)).to include(staff.id)
+            expect(staff_options.map(&:handable_customers)).to include(no_manpower_menu.shop_menus.find_by(shop: shop).max_seat_number)
             expect(Reservable::Staffs.run!(shop: shop, menu: menu, business_time_range: time_range, number_of_customer: 1).map(&:id)).to include(staff.id)
           end
         end
