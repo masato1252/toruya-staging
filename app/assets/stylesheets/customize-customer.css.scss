@@ -1,10 +1,23 @@
 #resNew {
-  #customerList {
-    height: 70vh;
+  #customers {
+    min-width: 210px;
 
-    dl.customer-option {
-      border-bottom: 1px solid #b3b3b3;
-      min-height: 55px;
+    #customerList {
+      height: 70vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+
+      & * {
+        -webkit-transform: translate3d(0,0,0);
+      }
+
+      dl.customer-option {
+        border-bottom: 1px solid #b3b3b3;
+        min-height: 55px;
+        position: relative;
+        -webkit-transform: translate3d(0,0,0);
+      }
     }
   }
 }

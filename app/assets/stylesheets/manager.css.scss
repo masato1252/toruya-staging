@@ -1096,11 +1096,8 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #customer #resultList ul li, #resNew #customers ul li { display: inline-block; }
 #customer #resultList ul li:last-child { margin-left: 10px; }
 #customer #resultList div, #resNew #customerList {
-  overflow-y: scroll;
-  overflow-x: hidden;
   background: #fff;
 }
-#customer #resultList div { overflow: scroll; }
 #customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited,
 #resNew #customerList a, #resNew #customerList a:link, #resNew #customerList a:visited {
   display: block;
