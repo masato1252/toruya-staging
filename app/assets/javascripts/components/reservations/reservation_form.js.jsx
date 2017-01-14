@@ -34,6 +34,8 @@ UI.define("Reservation.Form", function() {
     },
 
     componentDidMount: function() {
+      var _this = this;
+
       if (!this.state.menu_id) {
         this._retrieveAvailableTimes()
       }
@@ -42,7 +44,8 @@ UI.define("Reservation.Form", function() {
 
       $('#start_time_date_part').datepicker({
         dateFormat: 'yy-mm-dd'
-      }).datepicker( $.datepicker.regional[ "ja" ] )
+      }).datepicker( $.datepicker.regional[ "ja" ] ).
+      on("change", _this._handleChange)
     },
 
     applySelect2: function() {
@@ -166,7 +169,6 @@ UI.define("Reservation.Form", function() {
         switch(eventTargetName) {
           case "start_time_date_part":
             this._retrieveAvailableTimes();
-            return;
             break;
           case "start_time_time_part":
           case "end_time_time_part":
@@ -364,11 +366,12 @@ UI.define("Reservation.Form", function() {
                   <dt>日付</dt>
                   <dd className="input">
                     <input
-                      type="date"
+                      readOnly
+                      type="text"
                       data-name="start_time_date_part"
                       id="start_time_date_part"
                       value={this.state.start_time_date_part}
-                      onChange={this._handleChange} />
+                      />
                   </dd>
                 </dl>
                 <dl className="form" id="resTime">
