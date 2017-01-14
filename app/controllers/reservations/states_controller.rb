@@ -1,21 +1,25 @@
 class Reservations::StatesController < DashboardController
   def pend
-    reservation.pend!
+    reservation.pend
+    reservation.save
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: I18n.t("reservation.update_successfully_message")
   end
 
   def accept
-    reservation.accept!
+    reservation.accept
+    reservation.save
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: I18n.t("reservation.update_successfully_message")
   end
 
   def check_in
-    reservation.check_in!
+    reservation.check_in
+    reservation.save
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: I18n.t("reservation.update_successfully_message")
   end
 
   def check_out
-    reservation.check_out!
+    reservation.check_out
+    reservation.save
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: I18n.t("reservation.update_successfully_message")
   end
 
