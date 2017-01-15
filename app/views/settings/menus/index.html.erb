@@ -24,7 +24,7 @@
         <dt class="check">
           <%= link_to t("action.delete"), settings_menu_path(menu), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dt>
-        <dt class="rowTTL"><%= menu.name %></dt>
+        <dt class="rowTTL"><%= menu.short_name.presence || menu.name %></dt>
         <dd class="staff"><%= menu.staffs.count %></dd>
         <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.name : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
