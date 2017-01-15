@@ -20,7 +20,7 @@
         <dt>
           <%= link_to t("action.delete"), settings_shop_path(shop), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dt>
-        <dt class="rowTTL"><%= shop.short_name.presence || shop.name %></dt>
+        <dt class="rowTTL"><%= shop.name %></dt>
         <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_shop_path(shop), class: "BTNtarco" %>
