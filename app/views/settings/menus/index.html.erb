@@ -26,7 +26,7 @@
         </dt>
         <dt class="rowTTL"><%= menu.short_name.presence || menu.name %></dt>
         <dd class="staff"><%= menu.staffs.count %></dd>
-        <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.name : "未設定" %></dd>
+        <dd class="blocks"><%= menu.reservation_setting ? (menu.reservation_setting.short_name.presence || menu.reservation_setting.name) : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_menu_path(menu), class: "BTNtarco" %>
