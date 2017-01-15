@@ -1,6 +1,6 @@
 ja:
   requirement:
-    contact_redirect_message: 顧客台帳に同期する%{link}Gmail連絡先を設定してください。
+    contact_redirect_message: 顧客台帳に同期する%{link}を設定してください。
     contact_redirect_link_title: Gmail連絡先
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
     contact_warning_link_title: Google同期設定
