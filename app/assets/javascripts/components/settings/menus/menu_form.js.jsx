@@ -169,7 +169,7 @@ UI.define("Settings.MenuForm", function() {
               <dt>メニュー名</dt>
               <dd>
                 <input
-                  placeholder="Menu Name"
+                  placeholder="メニュー名"
                   maxlength="30"
                   size="30"
                   type="text"
@@ -184,8 +184,7 @@ UI.define("Settings.MenuForm", function() {
               <dt>短縮名</dt>
               <dd>
                 <input
-                  placeholder="Menu Shorten Name"
-                  maxlength="15"
+                  placeholder="短縮名"
                   size="15"
                   type="text"
                   name="menu[short_name]"
