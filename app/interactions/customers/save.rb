@@ -92,20 +92,19 @@ class Customers::Save < ActiveInteraction::Base
       customer = user.customers.new(params)
     end
 
-    if customer.contact_group_id_changed?
-      google_group_ids = customer.google_contact_group_ids
-      new_google_group_id = user.contact_groups.find(customer.contact_group_id).backup_google_group_id
-      google_groups_changes = { add_group_ids: new_google_group_id }
-      google_group_ids.push(new_google_group_id)
+    # XXX Always update google_group_id
+    google_group_ids = customer.google_contact_group_ids
+    new_google_group_id = user.contact_groups.find(customer.contact_group_id).backup_google_group_id
+    google_groups_changes = { add_group_ids: new_google_group_id }
+    google_group_ids.push(new_google_group_id)
 
-      if customer.contact_group_id_was
-        legacy_google_group_id = user.contact_groups.find(customer.contact_group_id_was).backup_google_group_id
-        google_groups_changes.merge!(remove_group_ids: legacy_google_group_id)
-        google_group_ids.delete(legacy_google_group_id)
-      end
-
-      customer.google_contact_group_ids = google_group_ids
+    if customer.contact_group_id_changed? && customer.contact_group_id_was
+      legacy_google_group_id = user.contact_groups.find(customer.contact_group_id_was).backup_google_group_id
+      google_groups_changes.merge!(remove_group_ids: legacy_google_group_id)
+      google_group_ids.delete(legacy_google_group_id)
     end
+
+    customer.google_contact_group_ids = google_group_ids.uniq
 
     # TODO: test two addresses case
     if customer.valid?
