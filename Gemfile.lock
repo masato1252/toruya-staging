@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/ilake/google_contacts_api.git
-  revision: 07e5f640e09b43a0fb449638dc21d8a677c7d0ab
+  revision: 8d8756c25f95b10b3d3d0fcddc459bf4ebb40ff6
   specs:
-    google_contacts_api (0.1.9)
+    google_contacts_api (0.2.0)
       google-api-client (~> 0.8.6)
       hashie (~> 3.4.4)
       nokogiri (~> 1.6.8)
@@ -358,7 +358,7 @@ DEPENDENCIES
   dotenv-rails
   factory_girl_rails
   font-awesome-rails (~> 4.6.3)
-  google_contacts_api (~> 0.1.9)!
+  google_contacts_api (~> 0.2.0)!
   hashie (~> 3.4.4)
   holidays (~> 4.5.0)
   jbuilder (~> 2.5)
