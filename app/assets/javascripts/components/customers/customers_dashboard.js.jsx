@@ -259,7 +259,11 @@ UI.define("Customers.Dashboard", function() {
           newCustomer["birthday"] = {};
         }
 
-        newCustomer[key[0]][key[1]] = event.target.value;
+        if (!newCustomer["birthday"]) {
+          newCustomer["birthday"] = {}
+        }
+
+        newCustomer["birthday"][key[1]] = event.target.value;
       }
       else {
         newCustomer[keyName] = event.target.value;
