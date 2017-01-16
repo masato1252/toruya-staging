@@ -104,7 +104,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                             <a
                               href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=${behavior["action"]}&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                               className={`btn ${behavior["btn_color"]}`}
-                              data-method="put" >
+                              >
                               {behavior["label"]}
                             </a>
                           </dd>
@@ -123,7 +123,6 @@ UI.define("Customers.CustomerReservationsView", function() {
                           <a
                             href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                             className="btn BTNorange"
-                            data-method="put"
                             >{this.props.cancelBtn}</a>
                           </dd>
                         ) : null

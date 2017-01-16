@@ -16,11 +16,11 @@ Rails.application.routes.draw do
 
       scope module: "reservations" do
         resource :states, only: [] do
-          put :pend
-          put :accept
-          put :check_in
-          put :check_out
-          put :cancel
+          get :pend
+          get :accept
+          get :check_in
+          get :check_out
+          get :cancel
         end
       end
     end
@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   scope module: "customers", as: "customer", path: "customer" do
     resources :reservations, only: [:index] do
       collection do
-        put :state
+        get :state
         get :edit
       end
     end
