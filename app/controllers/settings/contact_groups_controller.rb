@@ -1,7 +1,7 @@
 class Settings::ContactGroupsController < SettingsController
   before_action :set_contact_group, only: [:edit, :update, :sync, :connections, :bind, :destroy]
   def index
-    @contact_groups = super_user.contact_groups
+    @contact_groups = super_user.contact_groups.order("id")
   end
 
   def new
