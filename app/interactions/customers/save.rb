@@ -113,7 +113,11 @@ class Customers::Save < ActiveInteraction::Base
       google_contact_attributes = customer.google_contact_attributes(google_groups_changes)
 
       if customer.google_contact_id
-        google_user.update_contact(customer.google_contact_id, google_contact_attributes)
+        new_google_contact = google_user.update_contact(customer.google_contact_id, google_contact_attributes)
+
+        if new_google_contact.try(:id)
+          customer.google_contact_id = new_google_contact.id
+        end
       else
         result = google_user.create_contact(google_contact_attributes)
         customer.google_contact_id = result.id
