@@ -33,14 +33,18 @@ class Customers::Import < ActiveInteraction::Base
     end
 
     # Add user to Toruya backup group
-    threads = customers_without_backup_group.map do |customer|
-      Thread.new do
-        ActiveRecord::Base.connection_pool.with_connection do
-          google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
-        end
-      end
+    customers_without_backup_group.each do |customer|
+      google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
     end
-    threads.each(&:join)
+    # https://rollbar.com/ilake/kasaike/items/201/
+    # threads = customers_without_backup_group.map do |customer|
+    #   Thread.new do
+    #     ActiveRecord::Base.connection_pool.with_connection do
+    #       google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
+    #     end
+    #   end
+    # end
+    # threads.each(&:join)
   end
 
   private
