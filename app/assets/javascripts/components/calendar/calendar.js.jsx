@@ -40,9 +40,9 @@ UI.define("Calendar", function() {
     renderYearSelector: function() {
       var years = [];
 
-      var yearStart = this.state.month.clone().startOf('year')
+      var yearStart = this.state.month.clone().add(-3, "Y").startOf('year')
 
-      for (var i = 0; i <= 3; i++) {
+      for (var i = 0; i <= 6; i++) {
         var newYear = yearStart.clone().add(i, "Y");
         var newYearMonth = moment({year: newYear.year(), month: this.state.month.month()});
 
