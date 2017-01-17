@@ -102,7 +102,7 @@ UI.define("Customers.CustomerInfoView", function() {
             </ul>
             <dl className="Address">
               <dt>{this.props.addressLabel}</dt>
-              <dd>{this.props.customer.displayAddress}</dd>
+              <dd>{this.props.customer.address}</dd>
             </dl>
             <dl className="phone">
               <dt>{this.props.phoneLabel}</dt>
