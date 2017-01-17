@@ -169,8 +169,9 @@ UI.define("Customers.Dashboard", function() {
 
         if (event) {
           event.preventDefault();
-          $("body").scrollTop(0)
-          $("#customerList").scrollTop(0)
+          $("body").scrollTop(0);
+          $("#customerList").scrollTop(0);
+
           if (this.currentCustomersType != "search" || event.target.value != this.lastQuery) {
             originalCustomers = [];
             this.currentCustomersType = "search";
@@ -181,6 +182,7 @@ UI.define("Customers.Dashboard", function() {
 
           this.lastQuery = event.target.value
           data = { keyword: this.lastQuery };
+          $(event.target).val("");
         }
         else {
           data =  { keyword: this.lastQuery,
