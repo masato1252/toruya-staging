@@ -233,7 +233,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
               }
             </li>
             <li className="right">
-              更新日 {this.props.customer.updatedAt} {this.props.customer.updatedByUserName}
+              更新日 {this.props.customer.lastUpdatedAt} {this.props.customer.updatedByUserName}
             </li>
           </ul>
 

@@ -76,7 +76,7 @@ module OptionsHelper
         value: c.id,
         group_name: c.contact_group.try(:name),
         updated_by_user_name: c.updated_by_user.try(:name) || "",
-        updated_at: c.updated_at ? I18n.l(c.updated_at.to_date, format: :year_month_date) : "",
+        last_updated_at: c.updated_at ? I18n.l(c.updated_at.to_date, format: :year_month_date) : "",
         rank: c.rank,
         birthday: (c.birthday ? { year: c.birthday.year, month: c.birthday.month, day: c.birthday.day } : ""),
         emails: c.emails || [],
