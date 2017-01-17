@@ -230,6 +230,9 @@ UI.define("Customers.CustomerInfoEdit", function() {
                 ) : null
               }
             </li>
+            <li className="right">
+              更新日 {this.props.customer.updatedAt} {this.props.customer.updatedByUserName}
+            </li>
           </ul>
 
           <dl className="Address">

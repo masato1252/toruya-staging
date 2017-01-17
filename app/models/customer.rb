@@ -29,6 +29,7 @@ class Customer < ApplicationRecord
   has_many :reservation_customers, dependent: :destroy
   has_many :reservations, through: :reservation_customers
   belongs_to :user
+  belongs_to :updated_by_user, class_name: "User"
   belongs_to :contact_group
   belongs_to :rank
 

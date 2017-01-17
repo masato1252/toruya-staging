@@ -29,7 +29,7 @@ class CustomersController < DashboardController
   # POST /customers
   # POST /customers.json
   def save
-    outcome = Customers::Save.run(user: super_user, params: params[:customer].permit!.to_h)
+    outcome = Customers::Save.run(user: super_user, current_user: current_user, params: params[:customer].permit!.to_h)
     @customer = outcome.result
 
     render action: :show

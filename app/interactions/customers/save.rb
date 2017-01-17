@@ -48,6 +48,7 @@ class Customers::Save < ActiveInteraction::Base
   end
 
   object :user
+  object :current_user, class: User
   hash :params do
     integer :id, default: nil, base: 10
     integer :contact_group_id, base: 10
@@ -87,9 +88,9 @@ class Customers::Save < ActiveInteraction::Base
   def execute
     if params[:id].present?
       customer = user.customers.find(params[:id])
-      customer.attributes = params.merge(updated_at: Time.zone.now)
+      customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)
     else
-      customer = user.customers.new(params)
+      customer = user.customers.new(params.merge(updated_by_user_id: current_user.id))
     end
 
     # XXX Always update google_group_id
