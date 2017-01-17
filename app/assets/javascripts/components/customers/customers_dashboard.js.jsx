@@ -467,7 +467,7 @@ UI.define("Customers.Dashboard", function() {
                   <div>
                     <dl>
                       <dd id="NAVnewResv">
-                        <a href={this.props.addReservationPath} className="BTNtarco">
+                        <a href={`${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`} className="BTNtarco">
                           <i className="fa fa-calendar-plus-o fa-2x"></i>
                           <span>新規予約</span>
                         </a>
