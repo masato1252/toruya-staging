@@ -239,12 +239,18 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleCustomerCreate: function(event) {
+      if (this.state.processing) { return ;}
       this.customer_info_edit.handleCreateCustomer(event);
     },
 
     _isCustomerDataValid: function() {
       return (this.state.customer.lastName && this.state.customer.firstName) ||
         (this.state.customer.phoneticLastName && this.state.customer.phoneticFirstName)
+    },
+
+    handleNewReservation: function(event) {
+      event.preventDefault();
+      window.location = `${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`;
     },
 
     removeOption: function(optionType, index) {
@@ -488,24 +494,30 @@ UI.define("Customers.Dashboard", function() {
                   </dl>) : (
                   <div>
                     <dl>
-                    <dd id="NAVnewResv">
                       {
                         this.state.edit_mode ? (
                           <a href="#"
                             onClick={this.handleCustomerCreate}
-                            className={`BTNyellow ${!this._isCustomerDataValid() ? "disabled" : null}`}
+                            className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
                             >
-                            <i className="fa fa-folder-o fa-2x"></i>
-                            <span>{this.props.saveBtn}</span>
+                            <dd id="NAVnewResv">
+                              <i className="fa fa-folder-o fa-2x"></i>
+                              <span>{this.props.saveBtn}</span>
+                            </dd>
                           </a>
                         ) : (
-                          <a href={`${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`} className="BTNtarco">
-                            <i className="fa fa-calendar-plus-o fa-2x"></i>
-                            <span>新規予約</span>
+                          <a
+                            href="#"
+                            onClick={this.handleNewReservation}
+                            className="BTNtarco"
+                            >
+                            <dd id="NAVnewResv">
+                              <i className="fa fa-calendar-plus-o fa-2x"></i>
+                              <span>新規予約</span>
+                            </dd>
                           </a>
                         )
                       }
-                      </dd>
                       <dd id="NAVsave">
                         <form id="new_customer_form"
                           ref={(c) => {this.customerForm = c}}
