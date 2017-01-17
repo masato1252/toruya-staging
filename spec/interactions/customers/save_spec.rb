@@ -49,7 +49,7 @@ RSpec.describe Customers::Save do
     end
 
     it "updates the params value" do
-      outcome = Customers::Save.run(user: user, params: params)
+      outcome = Customers::Save.run(user: user, current_user: user, params: params)
       updated_customer = outcome.result
       expect(updated_customer).to eq(customer.reload)
       expect(updated_customer.birthday).to eq(Date.new(1950, 11, 20))
