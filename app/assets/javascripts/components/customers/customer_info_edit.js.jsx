@@ -38,8 +38,10 @@ UI.define("Customers.CustomerInfoEdit", function() {
           dataType: "JSON"
         }).success(function(result) {
           _this.props.handleCreatedCustomer(result["customer"]);
-          _this.props.switchProcessing();
+          _this.props.forceStopProcessing();
           _this.props.switchEditMode();
+        }).always(function() {
+          _this.props.forceStopProcessing();
         });
       })
     },

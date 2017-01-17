@@ -37,7 +37,7 @@ UI.define("Customers.Dashboard", function() {
         }).success(function(result) {
           _this.setState({customer: result["customer"]});
         }).always(function() {
-        _this.setState({processing: false});
+          _this.forceStopProcessing()
       });
       }
     },
@@ -61,7 +61,6 @@ UI.define("Customers.Dashboard", function() {
             }
 
             this.fetchCustomerDetails();
-            this.setState({processing: false})
           }.bind(this)
           );
       }
@@ -349,9 +348,9 @@ UI.define("Customers.Dashboard", function() {
     },
 
     switchProcessing: function(callback) {
-      this.setState({ processing: !this.state.processing }, function() {
-        if (callback) callback()
-      });
+      this.setState({ processing: true }, function() {
+        if (callback) { callback(); }
+      })
     },
 
     forceStopProcessing: function() {
@@ -402,6 +401,7 @@ UI.define("Customers.Dashboard", function() {
             handleCreatedCustomer={this._handleCreatedCustomer}
             switchEditMode={this.switchEditMode}
             switchProcessing={this.switchProcessing}
+            forceStopProcessing={this.forceStopProcessing}
             switchReservationMode={this.switchReservationMode}
             saveCustomerPath={this.props.saveCustomerPath}
             fetchCustomerDetails={this.fetchCustomerDetails}

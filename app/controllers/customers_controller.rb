@@ -4,7 +4,7 @@ class CustomersController < DashboardController
   def index
     @body_class = "customer"
 
-    @customers = super_user.customers.includes(:rank, :contact_group).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
+    @customers = super_user.customers.includes(:rank, :contact_group, :updated_by_user).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
     @customer = super_user.customers.includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
     @add_reservation_path = if params[:reservation_id].present?
