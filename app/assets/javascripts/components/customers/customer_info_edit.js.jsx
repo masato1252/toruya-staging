@@ -131,30 +131,6 @@ UI.define("Customers.CustomerInfoEdit", function() {
                   <li>
                     <input
                       type="text"
-                      id="familyName"
-                      placeholder="姓"
-                      value={this.props.customer.lastName || ""}
-                      name="customer[last_name]"
-                      data-name="lastName"
-                      onChange={this.props.handleCustomerDataChange}
-                      />
-                  </li>
-                  <li>
-                    <input
-                      type="text"
-                      id="firstName"
-                      placeholder="名"
-                      value={this.props.customer.firstName || ""}
-                      name="customer[first_name]"
-                      data-name="firstName"
-                      onChange={this.props.handleCustomerDataChange}
-                      />
-                  </li>
-                </ul>
-                <ul>
-                  <li>
-                    <input
-                      type="text"
                       id="familyNameKana"
                       placeholder="せい"
                       value={this.props.customer.phoneticLastName || ""}
@@ -171,6 +147,30 @@ UI.define("Customers.CustomerInfoEdit", function() {
                       value={this.props.customer.phoneticFirstName || ""}
                       name="customer[phonetic_first_name]"
                       data-name="phoneticFirstName"
+                      onChange={this.props.handleCustomerDataChange}
+                      />
+                  </li>
+                </ul>
+                <ul>
+                  <li>
+                    <input
+                      type="text"
+                      id="familyName"
+                      placeholder="姓"
+                      value={this.props.customer.lastName || ""}
+                      name="customer[last_name]"
+                      data-name="lastName"
+                      onChange={this.props.handleCustomerDataChange}
+                      />
+                  </li>
+                  <li>
+                    <input
+                      type="text"
+                      id="firstName"
+                      placeholder="名"
+                      value={this.props.customer.firstName || ""}
+                      name="customer[first_name]"
+                      data-name="firstName"
                       onChange={this.props.handleCustomerDataChange}
                       />
                   </li>
