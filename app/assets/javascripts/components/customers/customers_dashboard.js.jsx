@@ -354,6 +354,10 @@ UI.define("Customers.Dashboard", function() {
       });
     },
 
+    forceStopProcessing: function() {
+      this.setState({ processing: false });
+    },
+
     renderCustomerView: function() {
       var _this = this;
 
@@ -365,6 +369,7 @@ UI.define("Customers.Dashboard", function() {
             switchReservationMode={this.switchReservationMode}
             customerReservationsPath={this.props.customerReservationsPath}
             switchProcessing={this.switchProcessing}
+            forceStopProcessing={this.forceStopProcessing}
             stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
             editCustomerReservationsPath={this.props.editCustomerReservationsPath}
             deleteConfirmationMessage={this.props.deleteConfirmationMessage}

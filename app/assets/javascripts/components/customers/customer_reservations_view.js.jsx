@@ -35,7 +35,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           }).success(function(result) {
             _this.setState({ reservations: result["reservations"] });
           }).always(function() {
-            _this.props.switchProcessing();
+            _this.props.forceStopProcessing();
           });
         });
       }
