@@ -68,10 +68,6 @@ UI.define("Customers.CustomerInfoEdit", function() {
       return defaultOptions;
     },
 
-    isCustomerdataValid: function() {
-      return this.props.customer.lastName && this.props.customer.firstName
-    },
-
     _selectedRank: function() {
       return _.find(this.props.ranks, function(rank) { return rank.value == this.props.customer.rankId; }.bind(this))
     },
@@ -231,13 +227,6 @@ UI.define("Customers.CustomerInfoEdit", function() {
                     <i className="fa fa-chevron-left" aria-hidden="true">
                     </i>&nbsp;{this.props.backWithoutSaveBtn}
                   </a>
-                ) : null
-              }
-            </li>
-            <li className="right">
-              {
-                this.isCustomerdataValid() ? (
-                  <a href="#" onClick={this.handleCreateCustomer}>{this.props.saveBtn}</a>
                 ) : null
               }
             </li>

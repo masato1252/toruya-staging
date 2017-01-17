@@ -18,7 +18,7 @@ UI.define("Customers.Dashboard", function() {
         selected_customer_id: (this.props.customer ? this.props.customer.id : ""),
         selectedFilterPatternNumber: "",
         customer: this.props.customer,
-        edit_mode: true,
+        edit_mode: !this.props.reservationMode,
         reservation_mode: this.props.reservationMode,
         processing: false,
         moreCustomerProcessing: false,
@@ -238,6 +238,15 @@ UI.define("Customers.Dashboard", function() {
       this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
     },
 
+    handleCustomerCreate: function(event) {
+      this.customer_info_edit.handleCreateCustomer(event);
+    },
+
+    _isCustomerDataValid: function() {
+      return (this.state.customer.lastName && this.state.customer.firstName) ||
+        (this.state.customer.phoneticLastName && this.state.customer.phoneticFirstName)
+    },
+
     removeOption: function(optionType, index) {
       var newCustomer = this.state.customer;
       newCustomer[optionType].splice(index, 1)
@@ -340,6 +349,8 @@ UI.define("Customers.Dashboard", function() {
     },
 
     renderCustomerView: function() {
+      var _this = this;
+
       if (this.state.reservation_mode) {
         return (
           <UI.Customers.CustomerReservationsView
@@ -364,6 +375,7 @@ UI.define("Customers.Dashboard", function() {
       else if (this.state.edit_mode) {
         return (
           <UI.Customers.CustomerInfoEdit
+            ref={function(c) { this.customer_info_edit = c }.bind(this)}
             customer={this.state.customer}
             contactGroups={this.props.contactGroups}
             ranks={this.props.ranks}
@@ -476,11 +488,23 @@ UI.define("Customers.Dashboard", function() {
                   </dl>) : (
                   <div>
                     <dl>
-                      <dd id="NAVnewResv">
-                        <a href={`${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`} className="BTNtarco">
-                          <i className="fa fa-calendar-plus-o fa-2x"></i>
-                          <span>新規予約</span>
-                        </a>
+                    <dd id="NAVnewResv">
+                      {
+                        this.state.edit_mode ? (
+                          <a href="#"
+                            onClick={this.handleCustomerCreate}
+                            className={`BTNyellow ${!this._isCustomerDataValid() ? "disabled" : null}`}
+                            >
+                            <i className="fa fa-folder-o fa-2x"></i>
+                            <span>{this.props.saveBtn}</span>
+                          </a>
+                        ) : (
+                          <a href={`${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`} className="BTNtarco">
+                            <i className="fa fa-calendar-plus-o fa-2x"></i>
+                            <span>新規予約</span>
+                          </a>
+                        )
+                      }
                       </dd>
                       <dd id="NAVsave">
                         <form id="new_customer_form"

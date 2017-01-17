@@ -65,6 +65,7 @@ ja:
     memo: メモ内容
   customer:
     back_without_save: 戻る（保存）
+    save: 上書き保存
     select_region: 都道府県
     customer_id: 顧客ID
     select_year: 年
