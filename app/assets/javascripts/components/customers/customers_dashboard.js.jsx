@@ -15,7 +15,7 @@ UI.define("Customers.Dashboard", function() {
 
       return ({
         customers: this.props.customers,
-        selected_customer_id: "",
+        selected_customer_id: (this.props.customer ? this.props.customer.id : ""),
         selectedFilterPatternNumber: "",
         customer: this.props.customer,
         edit_mode: true,
