@@ -157,6 +157,10 @@ UI.define("Customers.Dashboard", function() {
 
     SearchCustomers: function(event) {
       if ((event && event.key === 'Enter') || !event) {
+        // Hide the keyword
+        document.activeElement.blur();
+        $(event.target).blur();
+
         var data, originalCustomers;
         var originalCustomers = this.state.customers;
         var stateChanges = {}
