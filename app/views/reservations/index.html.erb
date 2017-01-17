@@ -84,15 +84,15 @@
                     </dd>
                   <% end %>
 
-                  <dd>
-                    <%= link_to t("action.edit"), edit_shop_reservation_path(shop, reservation), class: "btn BTNtarco" %>
-                  </dd>
-
                   <% if !reservation.checked_out? %>
                     <dd>
                       <%= link_to t("action.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange" %>
                     </dd>
                   <% end %>
+
+                  <dd>
+                    <%= link_to t("action.edit"), edit_shop_reservation_path(shop, reservation), class: "btn BTNtarco" %>
+                  </dd>
                 </dl>
               </div>
             </div>

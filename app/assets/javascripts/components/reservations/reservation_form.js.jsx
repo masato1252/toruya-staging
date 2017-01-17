@@ -461,6 +461,17 @@ UI.define("Reservation.Form", function() {
               <ol>完了</ol>
             </ul>
             <ul id="BTNfunctions">
+              {this.props.reservation.id ? (
+                <li>
+                  <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
+                    <input name="_method" type="hidden" value="DELETE" />
+                    <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+                    <button id="BTNdel" className="BTNorange" rel="nofollow" >
+                      <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
+                    </button>
+                  </form>
+                </li>) : null
+              }
               <li>
                 <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post" id="save-reservation-form">
                   <input name="utf8" type="hidden" value="✓" />
@@ -484,17 +495,6 @@ UI.define("Reservation.Form", function() {
                 </form>
 
               </li>
-              {this.props.reservation.id ? (
-                <li>
-                  <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
-                    <input name="_method" type="hidden" value="DELETE" />
-                    <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                    <button id="BTNdel" className="BTNorange" rel="nofollow" >
-                      <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
-                    </button>
-                  </form>
-                </li>) : null
-              }
             </ul>
           </footer>
         </div>
