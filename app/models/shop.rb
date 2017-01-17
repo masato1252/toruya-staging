@@ -35,12 +35,4 @@ class Shop < ApplicationRecord
   has_many :customers
   has_many :reservations
   belongs_to :user
-
-  def to_param
-    if name.parameterize.present?
-      "#{id}-#{name.parameterize}"
-    else
-      "#{id}-#{name.tr(" ", "")}"
-    end
-  end
 end
