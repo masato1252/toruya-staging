@@ -62,6 +62,7 @@ ja:
     accept: 承認
     pend: 未承認
     shop_closed: 営業時間外
+    cancel: 予約削除
     memo: メモ内容
   customer:
     back_without_save: 戻る（保存）
