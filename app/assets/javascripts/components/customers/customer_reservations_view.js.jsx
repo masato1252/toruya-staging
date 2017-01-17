@@ -116,6 +116,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                           <a
                             href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
                             className="btn BTNorange"
+                            data-confirm={_this.props.deleteConfirmationMessage}
                             >{this.props.cancelBtn}</a>
                           </dd>
                         ) : null

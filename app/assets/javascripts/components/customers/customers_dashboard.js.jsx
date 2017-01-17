@@ -350,6 +350,7 @@ UI.define("Customers.Dashboard", function() {
             switchProcessing={this.switchProcessing}
             stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
             editCustomerReservationsPath={this.props.editCustomerReservationsPath}
+            deleteConfirmationMessage={this.props.deleteConfirmationMessage}
             shop={this.props.shop}
             checkInBtn={this.props.checkInBtn}
             checkOutBtn={this.props.checkOutBtn}

@@ -466,7 +466,7 @@ UI.define("Reservation.Form", function() {
                   <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
                     <input name="_method" type="hidden" value="DELETE" />
                     <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                    <button id="BTNdel" className="BTNorange" rel="nofollow" >
+                    <button id="BTNdel" className="BTNorange" rel="nofollow" data-confirm={this.props.deleteConfirmationMessage}>
                       <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
                     </button>
                   </form>
