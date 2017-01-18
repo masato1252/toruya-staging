@@ -319,6 +319,9 @@ UI.define("Customers.Dashboard", function() {
           newCustomer[key[0]] = newCustomer[key[0]] || {};
           newCustomer[key[0]]["value"] = newCustomer[key[0]]["value"] || {};
           newCustomer[key[0]]["value"][key[1]] = event.target.value;
+
+          // Auto focus to postcode2 when typing 3 letters in postcode1
+          if (key[1] == "postcode1" && event.target.value.length == 3) { $("#zipcode4").focus(); }
           break;
         case "phoneNumbers-type":
         case "phoneNumbers-value":

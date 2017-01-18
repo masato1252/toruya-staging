@@ -249,9 +249,10 @@ UI.define("Customers.CustomerInfoEdit", function() {
                     />
                   <input
                     id="zipcode3"
-                    type="number"
+                    type="text"
                     maxLength="3"
                     size="3"
+                    tabIndex="1"
                     value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.postcode1 ? this.props.customer.primaryAddress.value.postcode1 : ""}
                     name="customer[primary_address][postcode1]"
                     data-name="primaryAddress-postcode1"
@@ -259,10 +260,12 @@ UI.define("Customers.CustomerInfoEdit", function() {
                     />
                   &nbsp;—&nbsp;
                   <input
+                    ref="zipcode4"
                     id="zipcode4"
-                    type="number"
+                    type="text"
                     maxLength="4"
                     size="4"
+                    tabIndex="2"
                     value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.value && this.props.customer.primaryAddress.value.postcode2 ? this.props.customer.primaryAddress.value.postcode2 : ""}
                     name="customer[primary_address][postcode2]"
                     data-name="primaryAddress-postcode2"
