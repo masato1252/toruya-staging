@@ -68,7 +68,7 @@ UI.define("Customers.Dashboard", function() {
 
     handleAddCustomerToReservation: function(event) {
       event.preventDefault();
-      window.location = this.props.addReservationPath + window.location.search + "," + this.state.selected_customer_id;
+      window.location = this.props.addReservationPath + window.location.search + "," + (this.state.selected_customer_id || "");
     },
 
     handleDeleteCustomer: function(event) {
@@ -249,7 +249,7 @@ UI.define("Customers.Dashboard", function() {
 
     handleNewReservation: function(event) {
       event.preventDefault();
-      window.location = `${this.props.addReservationPath}?customer_ids=${this.state.selected_customer_id}`;
+      window.location = `${this.props.addReservationPath}?customer_ids=${(this.state.selected_customer_id || "")}`;
     },
 
     removeOption: function(optionType, index) {
