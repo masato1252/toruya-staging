@@ -56,7 +56,7 @@ UI.define("WorkingTime.StaffForm", function() {
         <form action={this.props.saveStaffPath} accept-charset="UTF-8" method="post">
           <input name="utf8" type="hidden" value="✓" />
           <input type="hidden" name="_method" value="patch" />
-          <input type="hidden" name="authenticity_token" value={this.props.FormAuthenticityToken} />
+          <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
           <h3>{this.props.nameLabel}</h3>
 
           <div id="staffInfo" className="formRow">
