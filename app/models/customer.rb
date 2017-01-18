@@ -45,7 +45,7 @@ class Customer < ApplicationRecord
     self.phonetic_first_name = google_contact.phonetic_first_name || phonetic_first_name
     self.google_contact_group_ids = google_contact.group_ids
     self.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
-    self.addresses = google_contact.addresses
+    self.addresses = google_contact.addresses || []
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
     self.address = primary_part_address(google_contact.addresses)
