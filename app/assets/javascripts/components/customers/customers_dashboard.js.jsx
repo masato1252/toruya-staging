@@ -496,8 +496,8 @@ UI.define("Customers.Dashboard", function() {
                 <dl>
                   <dd id="NAVaddCustomer">
                     <a href="#" className={`BTNyellow ${!this.state.selected_customer_id ? "disabled" : null}`} onClick={this.handleAddCustomerToReservation}>
-                      <i className="fa fa-calendar-plus-o fa-2x"></i>
-                      <span>顧客選択</span>
+                      <i className="fa fa-user-plus fa-2x"></i>
+                      <span>この顧客で<br />決定する</span>
                     </a>
                   </dd>
                   </dl>) : (
