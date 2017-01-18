@@ -42,10 +42,16 @@ UI.define("Reservation.Form", function() {
 
       this.applySelect2();
 
-      $('#start_time_date_part').datepicker({
-        dateFormat: 'yy-mm-dd'
+      $('#hidden_start_time_date_part').datepicker({
+        dateFormat: 'yy-mm-dd',
+        buttonImageOnly: true
       }).datepicker( $.datepicker.regional[ "ja" ] ).
-      on("change", _this._handleChange)
+        on("change", _this._handleChange)
+    },
+
+    openCalendar: function(event) {
+      event.preventDefault();
+      $('#hidden_start_time_date_part').datepicker('show');
     },
 
     applySelect2: function() {
@@ -366,12 +372,19 @@ UI.define("Reservation.Form", function() {
                   <dt>日付</dt>
                   <dd className="input">
                     <input
-                      readOnly
-                      type="text"
+                      type="date"
                       data-name="start_time_date_part"
-                      id="start_time_date_part"
                       value={this.state.start_time_date_part}
+                      onChange={this._handleChange}
                       />
+                      <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
+                      <input type="hidden"
+                        id="hidden_start_time_date_part"
+                        data-name="start_time_date_part"
+                        value={this.state.start_time_date_part}
+                        />
+                        <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
+                      </a>
                   </dd>
                 </dl>
                 <dl className="form" id="resTime">
