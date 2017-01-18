@@ -31,11 +31,16 @@
     width: 190px !important;
   }
 
+  #start_time_date_part {
+    margin-right: 6px;
+  }
+
   .reservationCalendar {
     display: inline-block;
     height: 36px;
     line-height: 36px;
     margin-left: 12px;
+    font-size: 20px;
   }
 
   #customers {

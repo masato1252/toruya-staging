@@ -374,9 +374,11 @@ UI.define("Reservation.Form", function() {
                     <input
                       type="date"
                       data-name="start_time_date_part"
+                      id="start_time_date_part"
                       value={this.state.start_time_date_part}
                       onChange={this._handleChange}
                       />
+                      { this.state.start_time_date_part ? `(${moment(this.state.start_time_date_part).format("dd")})` : null }
                       <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
                       <input type="hidden"
                         id="hidden_start_time_date_part"
