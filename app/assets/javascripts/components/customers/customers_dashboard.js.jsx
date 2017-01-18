@@ -68,6 +68,7 @@ UI.define("Customers.Dashboard", function() {
 
     handleAddCustomerToReservation: function(event) {
       event.preventDefault();
+      if (!this.state.selected_customer_id) { return; }
       window.location = this.props.addReservationPath + window.location.search + "," + (this.state.selected_customer_id || "");
     },
 
@@ -491,7 +492,7 @@ UI.define("Customers.Dashboard", function() {
               { this.props.fromReservation ? (
                 <dl>
                   <dd id="NAVaddCustomer">
-                    <a href="#" className="BTNyellow" onClick={this.handleAddCustomerToReservation}>
+                    <a href="#" className={`BTNyellow ${!this.state.selected_customer_id ? "disabled" : null}`} onClick={this.handleAddCustomerToReservation}>
                       <i className="fa fa-calendar-plus-o fa-2x"></i>
                       <span>顧客選択</span>
                     </a>
