@@ -337,6 +337,9 @@ form {
 }
 
 .processing-bar {
+  position: absolute;
+  width: 100%;
+  top: 120px;
   text-align: center;
   background-color: #337ab7 !important;
   opacity: 0.87;
