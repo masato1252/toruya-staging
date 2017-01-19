@@ -492,7 +492,7 @@ UI.define("Customers.Dashboard", function() {
             {this.renderCustomerView()}
 
             <div id="mainNav">
-              { this.props.fromReservation ? (
+              { this.props.fromReservation && this.state.selected_customer_id && !this.state.edit_mode ? (
                 <dl>
                   <dd id="NAVaddCustomer">
                     <a href="#" className={`BTNyellow ${!this.state.selected_customer_id ? "disabled" : null}`} onClick={this.handleAddCustomerToReservation}>
