@@ -94,6 +94,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                     {reservation.customers.map(function(customer) {
                       return (
                         <a
+                          key={customer.id}
                           className="customer-link"
                           href={`/shops/${reservation.shopId}/customers?customer_id=${customer.id}`}>
                           {customer.name}
