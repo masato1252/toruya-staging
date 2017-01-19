@@ -239,7 +239,7 @@ UI.define("Customers.Dashboard", function() {
     },
 
     handleCustomerCreate: function(event) {
-      if (this.state.processing) { return ;}
+      if (this.state.processing || !this._isCustomerDataValid()) { return ;}
       this.customer_info_edit.handleCreateCustomer(event);
     },
 
