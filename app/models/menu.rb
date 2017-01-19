@@ -15,6 +15,7 @@
 
 class Menu < ApplicationRecord
   include ReservationChecking
+  include Helpers
 
   default_value_for :minutes, 60
   default_value_for :min_staffs_number, 1

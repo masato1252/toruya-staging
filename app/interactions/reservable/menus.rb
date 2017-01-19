@@ -32,7 +32,7 @@ module Reservable
       END")
 
       no_reservation_except_menu0_menus = no_reservation_except_menu0_menus.map do |menu|
-        Options::MenuOption.new(id: menu.id, name: menu.name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
+        Options::MenuOption.new(id: menu.id, name: menu.display_name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
       end
 
       reservation_menus = overlap_reservations.group_by { |reservation| reservation.menu }.map do |menu, reservations|
@@ -42,7 +42,7 @@ module Reservable
         next unless is_enough_seat
 
         if menu.min_staffs_number == 0
-          Options::MenuOption.new(id: menu.id, name: menu.name,
+          Options::MenuOption.new(id: menu.id, name: menu.display_name,
                                   min_staffs_number: menu.min_staffs_number,
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
         elsif menu.min_staffs_number == 1
@@ -50,7 +50,7 @@ module Reservable
             reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
           }
 
-          Options::MenuOption.new(id: menu.id, name: menu.name,
+          Options::MenuOption.new(id: menu.id, name: menu.display_name,
                                   min_staffs_number: menu.min_staffs_number,
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
           end
@@ -61,7 +61,7 @@ module Reservable
             staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
           }
 
-          Options::MenuOption.new(id: menu.id, name: menu.name,
+          Options::MenuOption.new(id: menu.id, name: menu.display_name,
                                   min_staffs_number: menu.min_staffs_number,
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
           end
@@ -83,7 +83,7 @@ module Reservable
         customers_amount_of_reservations = reservations.sum(&:count_of_customers)
 
         if menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
-          Options::MenuOption.new(id: menu.id, name: menu.name,
+          Options::MenuOption.new(id: menu.id, name: menu.display_name,
                                   min_staffs_number: 0,
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
         end

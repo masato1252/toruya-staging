@@ -17,9 +17,9 @@
 
   menu_shops_options = super_user.shops.order("created_at").map do |shop|
     if shop_menu = shop_menus.find { |shop_menu| shop_menu.shop_id == shop.id }
-      Option.new(id: shop_menu.id, name: shop.short_name.presence || shop.name, shop_id: shop.id, max_seat_number: shop_menu.max_seat_number, checked: true)
+      Option.new(id: shop_menu.id, name: shop.display_name, shop_id: shop.id, max_seat_number: shop_menu.max_seat_number, checked: true)
     else
-      Option.new(id: nil, name: shop.short_name.presence || shop.name, shop_id: shop.id, max_seat_number: "", checked: false)
+      Option.new(id: nil, name: shop.display_name, shop_id: shop.id, max_seat_number: "", checked: false)
     end
   end
 

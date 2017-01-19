@@ -17,6 +17,8 @@
 #
 
 class ReservationSetting < ApplicationRecord
+  include Helpers
+
   default_value_for :day_type, "business_days"
 
   DAY_TYPES = %w(business_days weekly monthly).freeze

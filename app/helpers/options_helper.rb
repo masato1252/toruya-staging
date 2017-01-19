@@ -99,8 +99,8 @@ module OptionsHelper
         date: I18n.l(r.start_time, format: :month_day_wday),
         start_time: I18n.l(r.start_time, format: :hour_minute),
         end_time: I18n.l(r.end_time, format: :hour_minute),
-        menu: r.menu.short_name.presence || r.menu.name,
-        shop: r.shop.short_name.presence || r.shop.name,
+        menu: r.menu.display_name,
+        shop: r.shop.display_name,
         state: r.aasm_state,
         shop_id: r.shop_id,
         staffs: r.staffs.map(&:name).join(", ")

@@ -18,6 +18,7 @@
 
 class Shop < ApplicationRecord
   include ReservationChecking
+  include Helpers
 
   validates :name, presence: true, uniqueness: { scope: :user_id }, format: { without: /\// }
   validates :short_name, presence: true, uniqueness: { scope: :user_id }
