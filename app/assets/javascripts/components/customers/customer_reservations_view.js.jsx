@@ -89,6 +89,18 @@ UI.define("Customers.CustomerReservationsView", function() {
                     </h4>
                   </div>
                   <div className="modal-body">
+                  <div>
+                    {reservation.customers.map(function(customer) {
+                      return (
+                        <a
+                          className="customer-link"
+                          href={`/shops/${reservation.shopId}/customers?customer_id=${customer.id}`}>
+                          {customer.name}
+                        </a>
+                      )
+                    })
+                    }
+                    </div>
                     <div className="reservation-menu">
                       {reservation.menu}
                     </div>

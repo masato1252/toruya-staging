@@ -103,6 +103,7 @@ module OptionsHelper
         shop: r.shop.display_name,
         state: r.aasm_state,
         shop_id: r.shop_id,
+        customers: r.customers.map { |r| { id: r.id, name: r.name } },
         staffs: r.staffs.map(&:name).join(", ")
       })
     end
