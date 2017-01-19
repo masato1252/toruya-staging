@@ -14,7 +14,7 @@ UI.define("CustomSchedules", function() {
       });
     },
 
-    _handleChnage: function(event) {
+    _handleChange: function(event) {
       this.setState({[event.target.name]: event.target.value})
     },
 
@@ -52,15 +52,19 @@ UI.define("CustomSchedules", function() {
         </ul>
         <dl>
           <dt>
-            <input type="date" name="start_time_date_part" value={this.state.start_time_date_part} onChange={this._handleChnage}/>
+            <UI.Common.DatepickerField
+              date={this.state.start_time_date_part}
+              dataName="start_time_date_part"
+              handleChange={this._handleChange}
+            />
           </dt>
           <dd className="startTime">
-            <input type="time" name="start_time_time_part" value={this.state.start_time_time_part} size="20" onChange={this._handleChnage} />
+            <input type="time" name="start_time_time_part" value={this.state.start_time_time_part} size="20" onChange={this._handleChange} />
           </dd><dd className="endTime">
-            <input type="time" name="end_time_time_part" value={this.state.end_time_time_part} size="20" onChange={this._handleChnage} />
+            <input type="time" name="end_time_time_part" value={this.state.end_time_time_part} size="20" onChange={this._handleChange} />
           </dd>
           <dd className="closeReason">
-            <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChnage} />
+            <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChange} />
           </dd>
           <dd className="add">
             <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>

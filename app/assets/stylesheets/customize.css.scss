@@ -367,4 +367,15 @@ input#user_remember_me {
   width: initial;
 }
 
+div.datepicker-field {
+  display: inline-block;
+
+  .reservationCalendar {
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    margin-left: 12px;
+    font-size: 20px;
+  }
+}
 /* New Design END */

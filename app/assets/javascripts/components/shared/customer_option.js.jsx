@@ -34,4 +34,3 @@ UI.define("Common.CustomerOption", function() {
 
   return CustomerOption;
 });
-

@@ -1,6 +1,7 @@
 //= require "components/shared/select"
 //= require "components/shared/customers_list"
 //= require "components/shared/processing_bar"
+//= require "components/shared/datepicker_field"
 
 "use strict";
 
@@ -41,17 +42,6 @@ UI.define("Reservation.Form", function() {
       }
 
       this.applySelect2();
-
-      $('#hidden_start_time_date_part').datepicker({
-        dateFormat: 'yy-mm-dd',
-        buttonImageOnly: true
-      }).datepicker( $.datepicker.regional[ "ja" ] ).
-        on("change", _this._handleChange)
-    },
-
-    openCalendar: function(event) {
-      event.preventDefault();
-      $('#hidden_start_time_date_part').datepicker('show');
     },
 
     applySelect2: function() {
@@ -402,22 +392,12 @@ UI.define("Reservation.Form", function() {
                 <dl className="form" id="resDate">
                   <dt>日付</dt>
                   <dd className="input">
-                    <input
-                      type="date"
-                      data-name="start_time_date_part"
-                      id="start_time_date_part"
-                      value={this.state.start_time_date_part}
-                      onChange={this._handleChange}
-                      />
-                      { this.state.start_time_date_part ? `(${moment(this.state.start_time_date_part).format("dd")})` : null }
-                      <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
-                      <input type="hidden"
-                        id="hidden_start_time_date_part"
-                        data-name="start_time_date_part"
-                        value={this.state.start_time_date_part}
-                        />
-                        <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
-                      </a>
+                    <UI.Common.DatepickerField
+                      date={this.state.start_time_date_part}
+                      dataName="start_time_date_part"
+                      name="start_time_date_part"
+                      handleChange={this._handleChange}
+                    />
                   </dd>
                 </dl>
                 <dl className="form" id="resTime">
