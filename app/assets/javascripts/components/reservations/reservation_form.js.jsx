@@ -71,7 +71,7 @@ UI.define("Reservation.Form", function() {
     handleCustomerAdd: function(event) {
       event.preventDefault();
 
-      if (this.state.menu_group_options.length == 0) {
+      if (this.state.menu_group_options.length == 0 || this._isMeetCustomerLimit()) {
         return;
       }
 
@@ -88,6 +88,27 @@ UI.define("Reservation.Form", function() {
       })
 
       window.location = `${this.props.customerAddPath}?${params}`
+    },
+
+    _customerAddClass: function() {
+      if (this.state.menu_group_options.length == 0) {
+        return "disabled BTNtarco";
+      }
+      else if (this._isMeetCustomerLimit()) {
+        return "disabled BTNorange"
+      }
+      else {
+        return "BTNtarco"
+      }
+    },
+
+    _customerWording: function() {
+      if (this._isMeetCustomerLimit()) {
+        return "満席"
+      }
+      else {
+        return "追加"
+      }
     },
 
     handleCustomerRemove: function(customer_id, event) {
@@ -463,7 +484,10 @@ UI.define("Reservation.Form", function() {
 
            <div id="customers">
              <h2>顧客
-               <a onClick={this.handleCustomerAdd} className={`BTNtarco ${(this.state.menu_group_options.length == 0) || this._isMeetCustomerLimit() ? "disabled" : ""}`} id="addCustomer">追加</a>
+               <a onClick={this.handleCustomerAdd}
+                 className={this._customerAddClass()}
+                 id="addCustomer">{this._customerWording()}
+               </a>
              </h2>
 
              <UI.Common.CustomersList
