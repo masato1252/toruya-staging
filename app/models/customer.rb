@@ -19,6 +19,7 @@
 #  birthday                 :date
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  updated_by_user_id       :integer
 #
 
 class Customer < ApplicationRecord
