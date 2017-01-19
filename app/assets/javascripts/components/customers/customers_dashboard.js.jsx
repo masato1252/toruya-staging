@@ -500,53 +500,54 @@ UI.define("Customers.Dashboard", function() {
                       <span>この顧客で<br />決定する</span>
                     </a>
                   </dd>
-                  </dl>) : (
-                  <div>
-                    <dl>
-                      {
-                        this.state.edit_mode ? (
-                          <a href="#"
-                            onClick={this.handleCustomerCreate}
-                            className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
-                            >
-                            <dd id="NAVnewResv">
-                              <i className="fa fa-folder-o fa-2x"></i>
-                              <span>{this.props.saveBtn}</span>
-                            </dd>
-                          </a>
-                        ) : (
-                          <a
-                            href="#"
-                            onClick={this.handleNewReservation}
-                            className="BTNtarco"
-                            >
-                            <dd id="NAVnewResv">
-                              <i className="fa fa-calendar-plus-o fa-2x"></i>
-                              <span>新規予約</span>
-                            </dd>
-                          </a>
-                        )
-                      }
-                      <dd id="NAVsave">
-                        <form id="new_customer_form"
-                          ref={(c) => {this.customerForm = c}}
-                          acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
-                          <input name="customer[id]" type="hidden" defaultValue={this.state.customer.id || ""} />
-                          <input name="customer[first_name]" type="hidden" defaultValue={this.state.customer.firstName || ""} />
-                          <input name="customer[last_name]" type="hidden" defaultValue={this.state.customer.lastName || ""} />
-                          <input name="customer[phonetic_last_name]" type="hidden" defaultValue={this.state.customer.jpLastName || ""} />
-                          <input name="customer[phonetic_first_name]" type="hidden" defaultValue={this.state.customer.jpFirstName || ""} />
-                          <input name="customer[state]" type="hidden" defaultValue={this.state.customer.state || ""} />
-                          <input name="customer[phone_type]" type="hidden" defaultValue={this.state.customer.phoneType || ""} />
-                          <input name="customer[phone_number]" type="hidden" defaultValue={this.state.customer.phoneNumber || ""} />
-                          <input name="customer[birthday]" type="hidden" defaultValue={this.state.customer.birthday || ""} />
-                          <input name="authenticity_token" type="hidden" defaultValue={this.props.formAuthenticityToken} />
-                        </form>
-                      </dd>
-                    </dl>
-                  </div>
-                  )
+                </dl>
+              ) : null
               }
+                <div>
+                  <dl>
+                    {
+                      this.state.edit_mode ? (
+                        <a href="#"
+                          onClick={this.handleCustomerCreate}
+                          className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
+                          >
+                          <dd id="NAVnewResv">
+                            <i className="fa fa-folder-o fa-2x"></i>
+                            <span>{this.props.saveBtn}</span>
+                          </dd>
+                        </a>
+                      ) : (
+                        !this.state.selected_customer_id ? (
+                        <a
+                          href="#"
+                          onClick={this.handleNewReservation}
+                          className="BTNtarco"
+                          >
+                          <dd id="NAVnewResv">
+                            <i className="fa fa-calendar-plus-o fa-2x"></i>
+                            <span>新規予約</span>
+                          </dd>
+                        </a>) : null
+                      )
+                    }
+                    <dd id="NAVsave">
+                      <form id="new_customer_form"
+                        ref={(c) => {this.customerForm = c}}
+                        acceptCharset="UTF-8" action={this.props.saveCustomerPath} method="post">
+                        <input name="customer[id]" type="hidden" defaultValue={this.state.customer.id || ""} />
+                        <input name="customer[first_name]" type="hidden" defaultValue={this.state.customer.firstName || ""} />
+                        <input name="customer[last_name]" type="hidden" defaultValue={this.state.customer.lastName || ""} />
+                        <input name="customer[phonetic_last_name]" type="hidden" defaultValue={this.state.customer.jpLastName || ""} />
+                        <input name="customer[phonetic_first_name]" type="hidden" defaultValue={this.state.customer.jpFirstName || ""} />
+                        <input name="customer[state]" type="hidden" defaultValue={this.state.customer.state || ""} />
+                        <input name="customer[phone_type]" type="hidden" defaultValue={this.state.customer.phoneType || ""} />
+                        <input name="customer[phone_number]" type="hidden" defaultValue={this.state.customer.phoneNumber || ""} />
+                        <input name="customer[birthday]" type="hidden" defaultValue={this.state.customer.birthday || ""} />
+                        <input name="authenticity_token" type="hidden" defaultValue={this.props.formAuthenticityToken} />
+                      </form>
+                    </dd>
+                  </dl>
+                </div>
             </div>
           </div>
           <footer>
