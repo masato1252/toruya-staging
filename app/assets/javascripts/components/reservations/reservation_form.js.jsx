@@ -156,6 +156,16 @@ UI.define("Reservation.Form", function() {
       }
     },
 
+    _isMeetCustomerLimit: function() {
+      var customersLimit;
+      if (customersLimit = this._maxCustomerLimit()) {
+        return (customersLimit == this.state.customers.length);
+      }
+      else {
+        return false;
+      }
+    },
+
     _isValidToReserve: function() {
       return (
         this.state.start_time_date_part &&
@@ -453,7 +463,7 @@ UI.define("Reservation.Form", function() {
 
            <div id="customers">
              <h2>顧客
-               <a onClick={this.handleCustomerAdd} className={`BTNtarco ${this.state.menu_group_options.length != 0 ? "" : "disabled"}`} id="addCustomer">追加</a>
+               <a onClick={this.handleCustomerAdd} className={`BTNtarco ${(this.state.menu_group_options.length == 0) || this._isMeetCustomerLimit() ? "disabled" : ""}`} id="addCustomer">追加</a>
              </h2>
 
              <UI.Common.CustomersList
