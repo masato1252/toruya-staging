@@ -158,14 +158,6 @@ module Reservable
       )
     end
 
-    def start_time
-      @start_time ||= business_time_range.first
-    end
-
-    def end_time
-      @end_time ||= business_time_range.last
-    end
-
     def today
       @today ||= ::Time.zone.now.to_s(:date)
     end

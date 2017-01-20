@@ -36,5 +36,13 @@ module Reservable
       scoped = scoped.where("menus.id = ?", menu_id) if menu_id
       scoped.select("reservations.*").group("reservations.id")
     end
+
+    def start_time
+      @start_time ||= business_time_range.first
+    end
+
+    def end_time
+      @end_time ||= business_time_range.last
+    end
   end
 end

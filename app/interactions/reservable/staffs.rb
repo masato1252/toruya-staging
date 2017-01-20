@@ -84,16 +84,8 @@ module Reservable
 
     private
 
-    def start_time
-      @start_time ||= business_time_range.first
-    end
-
-    def end_time
-      @end_time ||= business_time_range.last
-    end
-
     def ready_time
-      @ready_time ||= business_time_range.last + menu.interval.to_i.minutes
+      @ready_time ||= end_time + menu.interval.to_i.minutes
     end
   end
 end
