@@ -27,7 +27,7 @@ module Reservable
         or(
           scoped.
           where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
-          where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
+          where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, ready_time)
       )
 
       no_reservation_except_menu0_staffs = scoped.select("staffs.*, max(staff_menus.max_customers) as max_customers").group("staffs.id")
@@ -89,7 +89,11 @@ module Reservable
     end
 
     def end_time
-      @end_time ||= business_time_range.last + menu.interval.to_i.minutes
+      @end_time ||= business_time_range.last
+    end
+
+    def ready_time
+      @ready_time ||= business_time_range.last + menu.interval.to_i.minutes
     end
   end
 end
