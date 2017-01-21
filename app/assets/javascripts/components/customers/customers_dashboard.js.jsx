@@ -523,7 +523,6 @@ UI.define("Customers.Dashboard", function() {
                       </dd>
                     </a>
                   ) : (
-                    !this.state.selected_customer_id ? (
                     <a
                       href="#"
                       onClick={this.handleNewReservation}
@@ -533,7 +532,7 @@ UI.define("Customers.Dashboard", function() {
                         <i className="fa fa-calendar-plus-o fa-2x"></i>
                         <span>新規予約</span>
                       </dd>
-                    </a>) : null
+                    </a>
                   )
                 }
               </dl>
