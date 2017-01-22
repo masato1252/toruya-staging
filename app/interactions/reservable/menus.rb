@@ -126,7 +126,7 @@ module Reservable
       ).
       or(
         @workable_menus_scoped.
-        where("opened_custom_schedules.start_time::time <= ? and opened_custom_schedules.end_time::time >= ?", start_time, end_time)
+        where("opened_custom_schedules.start_time <= ? and opened_custom_schedules.end_time >= ?", start_time, end_time)
       )
 
       # Menu need reservation setting to be reserved

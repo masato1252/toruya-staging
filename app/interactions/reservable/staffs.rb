@@ -34,7 +34,7 @@ module Reservable
       ).
       or(
         scoped.
-        where("opened_custom_schedules.start_time::time <= ? and opened_custom_schedules.end_time::time >= ?", start_time, ready_time)
+        where("opened_custom_schedules.start_time <= ? and opened_custom_schedules.end_time >= ?", start_time, ready_time)
       )
 
       no_reservation_except_menu0_staffs = scoped.select("staffs.*, max(staff_menus.max_customers) as max_customers").group("staffs.id")
