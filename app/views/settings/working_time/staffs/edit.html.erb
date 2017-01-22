@@ -22,7 +22,11 @@
     start_label: I18n.t("settings.staff_working_time.start_label"),
     end_label: I18n.t("settings.staff_working_time.end_label"),
     cancel_btn: I18n.t("action.cancel"),
-    custom_schedules: @custom_schedules.map { |schedule|
+    closed_custom_schedules: @closed_custom_schedules.map { |schedule|
+    schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
+                              start_time_time_part: schedule.start_time_time,
+                              end_time_time_part: schedule.end_time.try(:to_s, :time)) },
+    opened_custom_schedules: @opened_custom_schedules.map { |schedule|
     schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
                               start_time_time_part: schedule.start_time_time,
                               end_time_time_part: schedule.end_time.try(:to_s, :time)) },

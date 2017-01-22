@@ -17,6 +17,12 @@ UI.define("WorkingTime.StaffForm", function() {
       )
     },
 
+    _isAllShopFullTime: function() {
+      var full_time_shop_ids = _.pluck(this.state.fullTimeShops, "id")
+
+      return full_time_shop_ids.length == this.props.shops.length;
+    },
+
     _isFullTimeShop: function(shop_id) {
       var full_time_shop_ids = _.pluck(this.state.fullTimeShops, "id")
 
@@ -114,7 +120,7 @@ UI.define("WorkingTime.StaffForm", function() {
           }
           <h3>臨時休暇</h3>
           <UI.CustomSchedules
-            customSchedules={this.props.customSchedules}
+            customSchedules={this.props.closedCustomSchedules}
             dateLabel={this.props.dateLabel}
             startTimeLabel={this.props.startTimeLabel}
             endTimeLabel={this.props.endTimeLabel}
@@ -122,7 +128,25 @@ UI.define("WorkingTime.StaffForm", function() {
             newClosingBtn={this.props.newClosingBtn}
             closingReason={this.props.closingReason}
             deleteBtn={this.props.deleteBtn}
+            open={false}
           />
+
+          {this._isAllShopFullTime() ? null : (
+            <div>
+              <h3>臨時勤務</h3>
+              <UI.CustomSchedules
+                customSchedules={this.props.openedCustomSchedules}
+                dateLabel={this.props.dateLabel}
+                startTimeLabel={this.props.startTimeLabel}
+                endTimeLabel={this.props.endTimeLabel}
+                reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+                newClosingBtn={this.props.newClosingBtn}
+                closingReason={this.props.closingReason}
+                deleteBtn={this.props.deleteBtn}
+                open={true}
+                />
+             </div>
+          )}
 
           <div id="footerav">
           </div>

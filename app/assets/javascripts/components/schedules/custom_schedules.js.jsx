@@ -4,6 +4,10 @@
 
 UI.define("CustomSchedules", function() {
   var CustomSchedules = React.createClass({
+    getDefaultProps: function() {
+      open: false
+    },
+
     getInitialState: function() {
       return ({
         start_time_date_part: "",
@@ -48,7 +52,9 @@ UI.define("CustomSchedules", function() {
           <li className="date">{this.props.dateLabel}</li>
           <li className="startTime">{this.props.startTimeLabel}</li>
           <li className="endTime">{this.props.endTimeLabel}</li>
-          <li className="closeReason">{this.props.reasonOfClosingLabel}</li>
+          {this.props.open ? null : (
+            <li className="closeReason">{this.props.reasonOfClosingLabel}</li>
+          )}
         </ul>
         <dl>
           <dt>
@@ -62,16 +68,23 @@ UI.define("CustomSchedules", function() {
             <input type="time" name="start_time_time_part" value={this.state.start_time_time_part} size="20" onChange={this._handleChange} />
           </dd><dd className="endTime">
             <input type="time" name="end_time_time_part" value={this.state.end_time_time_part} size="20" onChange={this._handleChange} />
-          </dd>
-          <dd className="closeReason">
-            <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChange} />
-          </dd>
+            </dd>
+          {this.props.open ? null : (
+            <dd className="closeReason">
+              <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChange} />
+            </dd>
+          )}
           <dd className="add">
             <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>
           </dd>
           </dl>
          {this.state.customSchedules.map(function(schedule, i) {
-           return <UI.CustomScheduleFields key={i} schedule={schedule} deleteBtn={this.props.deleteBtn} />
+           return <UI.CustomScheduleFields key={i}
+             schedule={schedule}
+             deleteBtn={this.props.deleteBtn}
+             open={this.props.open}
+             closingReason={this.props.closingReason}
+           />
          }.bind(this))}
       </div>
       );

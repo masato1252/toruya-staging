@@ -8,6 +8,7 @@ class CreateCustomSchedule < ActiveInteraction::Base
     string :end_time_time_part, default: nil
     string :reason, default: nil
     boolean :_destroy, default: false
+    boolean :open, default: false
   end
 
   def execute

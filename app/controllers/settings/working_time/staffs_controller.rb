@@ -9,7 +9,8 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @staff = super_user.staffs.find_by(id: params[:id])
     @full_time_schedules = @staff.business_schedules.full_time
     @wdays_business_schedules_by_shop = @staff.business_schedules.order(:day_of_week).group_by(&:shop_id)
-    @custom_schedules = @staff.custom_schedules.future.order(:start_time)
+    @closed_custom_schedules = @staff.custom_schedules.future.closed.order(:start_time)
+    @opened_custom_schedules = @staff.custom_schedules.future.opened.order(:start_time)
   end
 
   def update
@@ -38,6 +39,6 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def custom_schedules_params
-    params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time_time_part, :reason, :_destroy])
+    params.permit(custom_schedules: [:id, :start_time_date_part, :start_time_time_part, :end_time_time_part, :reason, :_destroy, :open])
   end
 end
