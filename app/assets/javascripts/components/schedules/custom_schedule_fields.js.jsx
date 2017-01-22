@@ -86,7 +86,7 @@ UI.define("CustomScheduleFields", function() {
                 data-name="reason"
                 value={this.state.reason}
                 placeholder={this.props.closingReason}
-                size="40"
+                size="20"
                 onChange={this._handleChnage} />
             </dd>
           )}

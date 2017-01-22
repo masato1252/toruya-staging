@@ -71,7 +71,7 @@ UI.define("CustomSchedules", function() {
             </dd>
           {this.props.open ? null : (
             <dd className="closeReason">
-              <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="40" onChange={this._handleChange} />
+              <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="20" onChange={this._handleChange} />
             </dd>
           )}
           <dd className="add">
