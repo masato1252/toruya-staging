@@ -32,7 +32,7 @@ UI.define("Common.DatepickerField", function() {
           <input type="hidden"
             id="hidden_date"
             data-name={this.props.dataName}
-            name={this.props.dataName}
+            name={this.props.name || this.props.dataName}
             value={this.props.date}
             />
             <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
