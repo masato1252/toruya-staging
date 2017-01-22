@@ -17,10 +17,6 @@ class CreateBusinessSchedule < ActiveInteraction::Base
 
   def execute
     schedule = shop.business_schedules.find_or_initialize_by(id: attrs[:id])
-    if schedule.new_record? && attrs[:business_state] == "closed" &&
-      attrs[:start_time].blank? && attrs[:end_time].blank? && attrs[:full_time].blank?
-      return
-    end
 
     if attrs[:full_time]
       schedule.update(attrs.except(:id, :business_state))
