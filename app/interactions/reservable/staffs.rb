@@ -18,9 +18,12 @@ module Reservable
       return [] unless is_enough_seat
 
       scoped = menu.staffs.
-        joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{shop.id}").
+        joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{shop.id}
+               LEFT OUTER JOIN custom_schedules opened_custom_schedules ON opened_custom_schedules.staff_id = staffs.id AND
+                                                                           opened_custom_schedules.open = true
+              ").
       includes(:staff_menus).
-        where.not("staff_menus.staff_id" => (reserved_staff_ids + custom_schedules_staff_ids).uniq)
+        where.not("staff_menus.staff_id" => (reserved_staff_ids + closed_custom_schedules_staff_ids).uniq)
 
       scoped = scoped.
         where("business_schedules.full_time = ?", true).
@@ -28,6 +31,10 @@ module Reservable
           scoped.
           where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
           where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, ready_time)
+      ).
+      or(
+        scoped.
+        where("opened_custom_schedules.start_time::time <= ? and opened_custom_schedules.end_time::time >= ?", start_time, ready_time)
       )
 
       no_reservation_except_menu0_staffs = scoped.select("staffs.*, max(staff_menus.max_customers) as max_customers").group("staffs.id")

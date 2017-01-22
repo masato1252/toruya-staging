@@ -21,9 +21,10 @@ module Reservable
         pluck("DISTINCT staff_id")
     end
 
-    def custom_schedules_staff_ids
+    def closed_custom_schedules_staff_ids
       CustomSchedule.
         where(staff_id: shop.staff_ids).
+        closed.
         where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time).
         pluck("DISTINCT staff_id")
     end

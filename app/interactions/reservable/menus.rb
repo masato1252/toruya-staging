@@ -91,7 +91,7 @@ module Reservable
     end
 
     def custom_schedules_for_shop
-      @custom_schedules_for_shop ||= shop.custom_schedules.where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
+      @custom_schedules_for_shop ||= shop.custom_schedules.closed.where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
     end
 
     def workable_menus
@@ -104,13 +104,16 @@ module Reservable
         joins("LEFT OUTER JOIN staff_menus on staff_menus.menu_id = menus.id
                LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staff_menus.staff_id AND
                                                      business_schedules.shop_id = #{shop.id}
+               LEFT OUTER JOIN custom_schedules opened_custom_schedules ON opened_custom_schedules.staff_id = staff_menus.staff_id AND
+                                                                           opened_custom_schedules.open = true
                LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
-                                                            shop_menu_repeating_dates.shop_id = #{shop.id}")
+                                                            shop_menu_repeating_dates.shop_id = #{shop.id}"
+             )
 
       # menus's staffs could not had reservation during reservation time
       # menus time is longer enough
       @workable_menus_scoped = @workable_menus_scoped.
-        where.not("staff_menus.staff_id" => custom_schedules_staff_ids).
+        where.not("staff_menus.staff_id" => closed_custom_schedules_staff_ids).
         where("minutes <= ?", distance_in_minutes)
 
       # Menu staffs schedule need to be full_time or work during reservation time
@@ -120,6 +123,10 @@ module Reservable
         @workable_menus_scoped.
         where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
         where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
+      ).
+      or(
+        @workable_menus_scoped.
+        where("opened_custom_schedules.start_time::time <= ? and opened_custom_schedules.end_time::time >= ?", start_time, end_time)
       )
 
       # Menu need reservation setting to be reserved

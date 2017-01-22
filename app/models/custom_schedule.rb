@@ -10,6 +10,7 @@
 #  reason     :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  open       :boolean          default(FALSE), not null
 #
 
 class CustomSchedule < ApplicationRecord
@@ -20,6 +21,8 @@ class CustomSchedule < ApplicationRecord
 
   scope :for_shop, -> { where(staff_id: nil) }
   scope :future, -> { where("start_time > ?", Time.now.at_beginning_of_day) }
+  scope :opened, -> { where(open: true) }
+  scope :closed, -> { where(open: false) }
 
   before_validation :set_start_time, :set_end_time
 

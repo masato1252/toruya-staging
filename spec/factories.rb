@@ -23,6 +23,11 @@ FactoryGirl.define do
   factory :custom_schedule do
     association :shop
     association :staff
+    open false
+
+    trait :opened do
+      open true
+    end
   end
 
   factory :business_schedule do

@@ -78,7 +78,7 @@ RSpec.describe Reservable::Menus do
           end
         end
 
-        context "when staff had custom_schedule during that time" do
+        context "when staff had closed custom_schedule during that time" do
           let!(:custom_schedule) { FactoryGirl.create(:custom_schedule, staff: staff, start_time: time_range.first, end_time: time_range.last) }
 
           it "returns empty" do
@@ -430,6 +430,19 @@ RSpec.describe Reservable::Menus do
             expect(Reservable::Menus.run!(shop: shop, business_time_range: time_range).map(&:id)).to include(menu.id)
           end
         end
+      end
+    end
+
+    context "when staff has open custom schedule on that date" do
+      before do
+        FactoryGirl.create(:reservation_setting, menu: menu, day_type: "business_days")
+        FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
+        FactoryGirl.create(:custom_schedule, :opened, staff: staff,
+                           start_time: time_range.first, end_time: time_range.last)
+      end
+
+      it "returns available reservation menus" do
+        expect(Reservable::Menus.run!(shop: shop, business_time_range: time_range).map(&:id)).to include(menu.id)
       end
     end
   end
