@@ -4,12 +4,16 @@ RSpec.describe Reservable::Staffs do
   let(:user) { shop.user }
   let(:shop) { FactoryGirl.create(:shop) }
   let(:now) { Time.zone.now }
-  let(:menu) { FactoryGirl.create(:menu, :normal, user: user, minutes: 60, shop: shop) }
+  let(:interval) { 10 }
+  let(:menu_time) { 60 }
+  let(:menu) { FactoryGirl.create(:menu, :normal, user: user, shop: shop, minutes: menu_time, interval: interval) }
   let(:no_manpower_menu) { FactoryGirl.create(:menu, :no_manpower, user: user, shop: shop) }
   let(:lecture_menu) { FactoryGirl.create(:menu, :lecture_menu, user: user, shop: shop) }
   let(:staff) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
   let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
-  let(:time_range) { now..now.advance(minutes: 60) }
+  let(:time_range) { now..now.advance(minutes: menu_time) }
+  let(:customer1) { FactoryGirl.create(:customer, user: user) }
+  let(:customer2) { FactoryGirl.create(:customer, user: user) }
 
   def create_available_menu(_menu)
     FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: _menu)
@@ -42,9 +46,49 @@ RSpec.describe Reservable::Staffs do
       end
 
       context "when all menu's staffs already had normal menu reservations during that time" do
+        context "when old reservation is already full" do
+          let!(:reservation) do
+            FactoryGirl.create(:reservation, shop: shop, menu: menu,
+                               start_time: time_range.first, end_time: time_range.last,
+                               staff_ids: [staff.id], customer_ids: [customer1.id, customer2.id])
+          end
+
+          context "when new reservation time doesn't overlap with old reservations" do
+            let(:new_reservation_time_range) { now.advance(minutes: -(interval + menu_time))..now.advance(minutes: -interval) }
+
+            it "returns available staffs" do
+              expect(Reservable::Staffs.run!(shop: shop, menu: menu,
+                                             business_time_range: new_reservation_time_range,
+                                             number_of_customer: 1).map(&:id)).to include(staff.id)
+            end
+          end
+
+          context "when new reservation time overlap with old reservations" do
+            let(:new_reservation_time_range) { now.advance(minutes: -69)..now.advance(minutes: -9) }
+
+            it "returns none" do
+              expect(Reservable::Staffs.run!(shop: shop, menu: menu,
+                                             business_time_range: new_reservation_time_range, number_of_customer: 1)).to eq(Staff.none)
+            end
+          end
+        end
+
         let!(:reservation) do
           FactoryGirl.create(:reservation, shop: shop, menu: menu,
-                             start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id])
+                             start_time: time_range.first, end_time: time_range.last,
+                             staff_ids: [staff.id], customer_ids: [customer1.id])
+        end
+
+        context "when new reservation time overlap with old reservations" do
+          context "when old reservation is not full" do
+            let(:new_reservation_time_range) { now.advance(minutes: -69)..now.advance(minutes: -9) }
+
+            it "returns available staffs" do
+              expect(Reservable::Staffs.run!(shop: shop, menu: menu,
+                                             business_time_range: new_reservation_time_range,
+                                             number_of_customer: 1).map(&:id)).to include(staff.id)
+            end
+          end
         end
 
         context "when staff is still affordable for the customer's quantity" do
