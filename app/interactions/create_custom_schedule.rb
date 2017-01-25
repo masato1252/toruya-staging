@@ -3,6 +3,7 @@ class CreateCustomSchedule < ActiveInteraction::Base
   object :staff, default: nil
   hash :attrs, default: {} do
     string :id, default: nil
+    string :shop_id, default: nil
     string :start_time_date_part, default: nil
     string :start_time_time_part, default: nil
     string :end_time_time_part, default: nil

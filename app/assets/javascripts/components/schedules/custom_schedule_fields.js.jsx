@@ -40,10 +40,15 @@ UI.define("CustomScheduleFields", function() {
       }
 
       return (
-        <dl>
+        <dl key={this.props.key}>
           {
             this.props.schedule.id ?
             <input type="hidden" name="custom_schedules[][id]" value={this.props.schedule.id} />
+            : null
+          }
+          {
+            this.props.shopId ?
+            <input type="hidden" name="custom_schedules[][shop_id]" value={this.props.shopId} />
             : null
           }
           <input

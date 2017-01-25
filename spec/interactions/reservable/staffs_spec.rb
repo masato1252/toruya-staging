@@ -281,7 +281,7 @@ RSpec.describe Reservable::Staffs do
       before do
         FactoryGirl.create(:reservation_setting, menu: menu, day_type: "business_days")
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
-        FactoryGirl.create(:custom_schedule, :opened, staff: staff,
+        FactoryGirl.create(:custom_schedule, :opened, staff: staff, shop: shop,
                            start_time: time_range.first, end_time: time_range.last + menu.interval.minutes)
       end
 

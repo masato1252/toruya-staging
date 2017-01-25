@@ -105,6 +105,7 @@ module Reservable
                LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staff_menus.staff_id AND
                                                      business_schedules.shop_id = #{shop.id}
                LEFT OUTER JOIN custom_schedules opened_custom_schedules ON opened_custom_schedules.staff_id = staff_menus.staff_id AND
+                                                                           opened_custom_schedules.shop_id = #{shop.id} AND
                                                                            opened_custom_schedules.open = true
                LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
                                                             shop_menu_repeating_dates.shop_id = #{shop.id}"

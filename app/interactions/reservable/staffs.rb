@@ -20,6 +20,7 @@ module Reservable
       scoped = menu.staffs.
         joins("LEFT OUTER JOIN business_schedules ON business_schedules.staff_id = staffs.id AND business_schedules.shop_id = #{shop.id}
                LEFT OUTER JOIN custom_schedules opened_custom_schedules ON opened_custom_schedules.staff_id = staffs.id AND
+                                                                           opened_custom_schedules.shop_id = #{shop.id} AND
                                                                            opened_custom_schedules.open = true
               ").
       includes(:staff_menus).

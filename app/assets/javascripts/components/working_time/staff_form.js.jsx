@@ -104,6 +104,7 @@ UI.define("WorkingTime.StaffForm", function() {
           {
             this.partTimeShops().map(function(shop) {
               return (
+              <div key={`shop-${shop.id}-schedule-setting`}>
                 <UI.WorkingTime.BusinessScheduleForm
                   key={`schedule-${shop.id}`}
                   timezone={this.props.timezone}
@@ -115,6 +116,22 @@ UI.define("WorkingTime.StaffForm", function() {
                   startLabel={this.props.startLabel}
                   endLabel={this.props.endLabel}
                 />
+                <div>
+                  <h3>{shop.name} 臨時勤務</h3>
+                  <UI.CustomSchedules
+                    customSchedules={this.props.openedCustomSchedulesByShop[`${shop.id}`] || []}
+                    shopId={shop.id}
+                    dateLabel={this.props.dateLabel}
+                    startTimeLabel={this.props.startTimeLabel}
+                    endTimeLabel={this.props.endTimeLabel}
+                    reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+                    newClosingBtn={this.props.newClosingBtn}
+                    closingReason={this.props.closingReason}
+                    deleteBtn={this.props.deleteBtn}
+                    open={true}
+                    />
+                 </div>
+               </div>
               );
             }.bind(this))
           }
@@ -131,22 +148,6 @@ UI.define("WorkingTime.StaffForm", function() {
             open={false}
           />
 
-          {this._isAllShopFullTime() ? null : (
-            <div>
-              <h3>臨時勤務</h3>
-              <UI.CustomSchedules
-                customSchedules={this.props.openedCustomSchedules}
-                dateLabel={this.props.dateLabel}
-                startTimeLabel={this.props.startTimeLabel}
-                endTimeLabel={this.props.endTimeLabel}
-                reasonOfClosingLabel={this.props.reasonOfClosingLabel}
-                newClosingBtn={this.props.newClosingBtn}
-                closingReason={this.props.closingReason}
-                deleteBtn={this.props.deleteBtn}
-                open={true}
-                />
-             </div>
-          )}
 
           <div id="footerav">
           </div>

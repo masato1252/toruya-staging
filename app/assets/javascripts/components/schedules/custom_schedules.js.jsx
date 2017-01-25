@@ -79,8 +79,9 @@ UI.define("CustomSchedules", function() {
           </dd>
           </dl>
          {this.state.customSchedules.map(function(schedule, i) {
-           return <UI.CustomScheduleFields key={i}
+           return <UI.CustomScheduleFields key={`${schedule.id}-${i}`}
              schedule={schedule}
+             shopId={this.props.shopId}
              deleteBtn={this.props.deleteBtn}
              open={this.props.open}
              closingReason={this.props.closingReason}

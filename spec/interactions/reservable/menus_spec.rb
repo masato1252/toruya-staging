@@ -398,6 +398,8 @@ RSpec.describe Reservable::Menus do
     end
 
     context "when staff has work schedule on that date" do
+      let(:staff) { FactoryGirl.create(:staff, user: user, shop: shop) }
+
       context "when menus reservation is available on each business days" do
         let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, menu: menu, day_type: "business_days") }
         let(:staff_max_customers) { staff.staff_menus.where(menu: menu).first.max_customers }
@@ -434,10 +436,12 @@ RSpec.describe Reservable::Menus do
     end
 
     context "when staff has open custom schedule on that date" do
+      let(:staff) { FactoryGirl.create(:staff, user: user, shop: shop) }
+
       before do
         FactoryGirl.create(:reservation_setting, menu: menu, day_type: "business_days")
         FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
-        FactoryGirl.create(:custom_schedule, :opened, staff: staff,
+        FactoryGirl.create(:custom_schedule, :opened, staff: staff, shop: shop,
                            start_time: time_range.first, end_time: time_range.last)
       end
 
