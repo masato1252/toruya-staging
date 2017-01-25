@@ -455,6 +455,55 @@ UI.define("Customers.Dashboard", function() {
 
     },
 
+    renderCustomerButtons: function() {
+      if (this.state.edit_mode) {
+        return (
+          <dl>
+            <a href="#"
+              onClick={this.handleCustomerCreate}
+              className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
+              >
+              <dd id="NAVnewResv">
+                <i className="fa fa-folder-o fa-2x"></i>
+                <span>{this.props.saveBtn}</span>
+              </dd>
+            </a>
+          </dl>
+        );
+      }
+      else if (this.state.selected_customer_id) {
+        if (this.props.fromReservation) {
+          return (
+            <dl>
+              <a href="#" className="BTNyellow"
+                onClick={this.handleAddCustomerToReservation}>
+                <dd id="NAVaddCustomer">
+                  <i className="fa fa-user-plus fa-2x"></i>
+                  <span>この顧客で<br />決定する</span>
+                </dd>
+              </a>
+            </dl>
+          );
+        }
+        else {
+          return (
+            <dl>
+              <a
+                href="#"
+                onClick={this.handleNewReservation}
+                className="BTNtarco"
+                >
+                <dd id="NAVnewResv">
+                  <i className="fa fa-calendar-plus-o fa-2x"></i>
+                  <span>新規予約</span>
+                </dd>
+              </a>
+            </dl>
+          );
+        }
+      }
+    },
+
     render: function() {
       return(
         <div>
@@ -498,44 +547,7 @@ UI.define("Customers.Dashboard", function() {
             {this.renderCustomerView()}
 
             <div id="mainNav">
-              { this.props.fromReservation && this.state.selected_customer_id && !this.state.edit_mode ? (
-                <dl>
-                  <a href="#" className={`BTNyellow ${!this.state.selected_customer_id ? "disabled" : null}`}
-                    onClick={this.handleAddCustomerToReservation}>
-                    <dd id="NAVaddCustomer">
-                      <i className="fa fa-user-plus fa-2x"></i>
-                      <span>この顧客で<br />決定する</span>
-                    </dd>
-                  </a>
-                </dl>
-              ) : null
-              }
-              <dl>
-                {
-                  this.state.edit_mode ? (
-                    <a href="#"
-                      onClick={this.handleCustomerCreate}
-                      className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
-                      >
-                      <dd id="NAVnewResv">
-                        <i className="fa fa-folder-o fa-2x"></i>
-                        <span>{this.props.saveBtn}</span>
-                      </dd>
-                    </a>
-                  ) : (
-                    <a
-                      href="#"
-                      onClick={this.handleNewReservation}
-                      className="BTNtarco"
-                      >
-                      <dd id="NAVnewResv">
-                        <i className="fa fa-calendar-plus-o fa-2x"></i>
-                        <span>新規予約</span>
-                      </dd>
-                    </a>
-                  )
-                }
-              </dl>
+              {this.renderCustomerButtons()}
               { this.props.fromReservation ? (
                 <dl>
                   <a href="#" className="BTNgray" onClick={this.handleWithoutCustomerToReservation}>
