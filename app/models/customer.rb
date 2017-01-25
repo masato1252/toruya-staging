@@ -38,6 +38,8 @@ class Customer < ApplicationRecord
 
   before_validation :assign_default_rank
 
+  scope :jp_chars_order, -> { order('phonetic_last_name COLLATE "C" ASC, phonetic_first_name COLLATE "C" ASC') }
+
   def build_by_google_contact(google_contact)
     self.google_uid = user.uid
     self.first_name = google_contact.first_name || first_name

@@ -12,53 +12,20 @@ class Customers::Filter < ActiveInteraction::Base
     %w(わ を ん ワ ヲ ン),
     ('a'..'z').to_a
   ]
-  SORT_ORDER = %w(あ ア い イ う ウ え エ お オ か カ が ガ き キ ぎ ギ く ク ぐ グ け ケ げ ゲ こ コ ご ゴ さ サ ざ ザ し シ じ ジ す ス ず ズ せ セ ぜ ゼ そ ソ ぞ ゾ た タ だ ダ ち チ ぢ ヂ つ ツ づ ヅ て  テ で デ と ト ど ド な ナ に ニ ぬ ヌ ね ネ の ノ は ハ ば バ ぱ パ ひ ヒ び ビ ぴ ピ ふ フ ぶ ブ ぷ プ へ ヘ べ ベ ぺ ペ ほ ホ ぼ ボ ぽ ポ ま マ み ミ む ム め メ も モ や ヤ ゐ ヰ ゆ ユ ゑ ヱ よ ヨ ら ラ り リ る ル れ レ ろ ロ わワ を ヲ ん ン)
-  COMPARE_LENGTH = SORT_ORDER.length
 
   object :super_user, class: User
   integer :pattern_number
-  integer :last_customer_id, default: nil
+  integer :page, default: 1
   integer :pre_page, default: Customers::Search::PER_PAGE
 
   def execute
-    scoped = super_user.customers.includes(:rank, :contact_group).order("id").limit(pre_page)
-    scoped = scoped.where("id > ?", last_customer_id) if last_customer_id
+    scoped = super_user.customers.jp_chars_order.includes(:rank, :contact_group, :updated_by_user).page(page).per(pre_page)
 
     scoped = scoped.
       where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$").
       or(
         scoped.where("phonetic_first_name ~* ?", "^(#{regexp_pattern}).*$")
       )
-
-    if pattern_number == PATTERN.length - 1
-      scoped
-    else
-      scoped.to_a.sort do |x, y|
-        result = 0
-        n = 0
-
-        if x.phonetic_name.nil? || y.phonetic_name.nil?
-          if x.phonetic_name.present?
-            -1
-          elsif y.phonetic_name.present?
-            1
-          else
-            0
-          end
-        else
-          begin
-            # XXX: becasue there is unexpected characters so we need COMPARE_LENGTH to make sure we have a value to compare.
-            first_word_character_index = (SORT_ORDER.index(x.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
-            another_word_character_index = (SORT_ORDER.index(y.phonetic_name_for_compare[n]) || COMPARE_LENGTH)
-            result = first_word_character_index <=> another_word_character_index
-
-            n += 1
-          end until result != 0
-
-          result
-        end
-      end
-    end
   end
 
   private

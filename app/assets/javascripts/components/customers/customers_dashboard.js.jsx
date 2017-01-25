@@ -12,6 +12,7 @@ UI.define("Customers.Dashboard", function() {
     getInitialState: function() {
       this.currentCustomersType = "recent" // recent, filter, search
       this.lastQuery = ""
+      this.currentPage = 1;
 
       return ({
         customers: this.props.customers,
@@ -122,9 +123,10 @@ UI.define("Customers.Dashboard", function() {
         this.currentCustomersType = "recent";
         stateChanges["no_more_customers"] = false
         stateChanges["processing"] = true
+        this.currentPage = 0;
       }
 
-      data =  { updated_at: this.state.customers[this.state.customers.length-1].updatedAt }
+      data = { page: this.currentPage += 1 }
 
       this.setState(stateChanges, function() {
         this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
@@ -140,6 +142,7 @@ UI.define("Customers.Dashboard", function() {
         event.preventDefault();
         $("body").scrollTop(0)
         $("#customerList").scrollTop(0)
+
         if (this.currentCustomersType != "filter" || event.target.value != this.lastQuery) {
           originalCustomers = [];
           this.currentCustomersType = "filter";
@@ -147,14 +150,11 @@ UI.define("Customers.Dashboard", function() {
           stateChanges["processing"] = true
         }
 
+        this.currentPage = 0;
         this.lastQuery = event.target.value
-        data =  { pattern_number: this.lastQuery }
-      }
-      else {
-        data =  { pattern_number: this.lastQuery,
-                  last_customer_id: _.max(this.state.customers.map(function(c) { return c.id })) }
       }
 
+      data = { pattern_number: this.lastQuery, page: this.currentPage += 1 }
       stateChanges["selectedFilterPatternNumber"] = this.lastQuery
 
       this.setState(stateChanges, function() {
@@ -185,15 +185,12 @@ UI.define("Customers.Dashboard", function() {
             stateChanges["processing"] = true
           }
 
+          this.currentPage = 0
           this.lastQuery = event.target.value
-          data = { keyword: this.lastQuery };
           $(event.target).val("");
         }
-        else {
-          data =  { keyword: this.lastQuery,
-                    last_customer_id: this.state.customers[this.state.customers.length-1].id }
-        }
 
+        data = { keyword: this.lastQuery, page: this.currentPage += 1 }
         this.setState(stateChanges, function() {
           this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
         }.bind(this))

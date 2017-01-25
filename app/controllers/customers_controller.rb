@@ -45,7 +45,10 @@ class CustomersController < DashboardController
   end
 
   def recent
-    @customers = super_user.customers.includes(:rank, :contact_group).order("updated_at DESC").where("updated_at < ?", Time.parse(params[:updated_at])).limit(Customers::Search::PER_PAGE)
+    @customers = super_user.customers.includes(:rank, :contact_group, :updated_by_user).
+      order("updated_at DESC").
+      page(params[:page].presence || 1).
+      per(Customers::Search::PER_PAGE)
     render action: :query
   end
 
@@ -53,7 +56,7 @@ class CustomersController < DashboardController
     @customers = Customers::Filter.run(
       super_user: super_user,
       pattern_number: params[:pattern_number],
-      last_customer_id: params[:last_customer_id]
+      page: params[:page].presence || 1
     ).result
     render action: :query
   end
@@ -62,7 +65,7 @@ class CustomersController < DashboardController
     @customers = Customers::Search.run(
       super_user: super_user,
       keyword: params[:keyword],
-      last_customer_id: params[:last_customer_id]
+      page: params[:page].presence || 1
     ).result
     render action: :query
   end
