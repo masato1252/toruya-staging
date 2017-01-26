@@ -5,8 +5,8 @@ RSpec.describe Customers::Filter do
 
   describe "#execute" do
     context "when matche pattern 3(た ち つ て と タ チ ツ テ ト)" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, phonetic_first_name: "トABC") }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, phonetic_first_name: "AトBC") }
+      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, phonetic_last_name: "トABC") }
+      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, phonetic_last_name: "AトBC") }
 
       it "returns expected customers" do
         result = Customers::Filter.run!(super_user: user, pattern_number: 3)
@@ -16,7 +16,7 @@ RSpec.describe Customers::Filter do
       end
 
       context "there are mulitple customers" do
-        let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, phonetic_first_name: "たABC") }
+        let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, phonetic_last_name: "たABC") }
 
         it "returns expected customers order" do
           result = Customers::Filter.run!(super_user: user, pattern_number: 3)
