@@ -21,11 +21,7 @@ class Customers::Filter < ActiveInteraction::Base
   def execute
     scoped = super_user.customers.jp_chars_order.includes(:rank, :contact_group, :updated_by_user).page(page).per(pre_page)
 
-    scoped = scoped.
-      where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$").
-      or(
-        scoped.where("phonetic_first_name ~* ?", "^(#{regexp_pattern}).*$")
-      )
+    scoped.where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$")
   end
 
   private
