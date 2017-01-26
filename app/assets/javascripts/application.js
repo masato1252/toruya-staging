@@ -25,4 +25,5 @@
 //= require moment/ja.js
 //= require select2
 //= require atomic_requests.js
+//= require side_nav.js
 //= require_tree .
