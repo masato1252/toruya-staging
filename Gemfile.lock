@@ -212,6 +212,7 @@ GEM
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    newrelic_rpm (3.18.0.329)
     nio4r (1.2.1)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -390,6 +391,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   moment_timezone-rails (~> 0.5.0)
   momentjs-rails (~> 2.11.1)
+  newrelic_rpm (~> 3.18.0)
   nokogiri (~> 1.6.8)
   omniauth-google-oauth2
   pg (~> 0.18)
