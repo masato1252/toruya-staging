@@ -41,6 +41,7 @@ gem "sendgrid-rails", "~> 3.1.0"
 gem "delayed-web", "~> 0.4.2"
 gem "puma", "~> 3.4.0"
 gem "kaminari", "~> 1.0.1"
+gem "expeditor", "~> 0.5.0"
 
 group :development, :test do
   gem "byebug", platform: :mri
