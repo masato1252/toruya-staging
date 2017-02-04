@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks" }
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
 
   authenticated :user, -> user { user.super_admin? } do
     mount Delayed::Web::Engine, at: "/_jobs"
