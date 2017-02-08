@@ -11,6 +11,10 @@ UI.define("WorkingTime.StaffForm", function() {
       }
     },
 
+    componentDidMount: function() {
+      $('form').dirtyForms();
+    },
+
     selectedSchedule: function(shop_id) {
       return _.find(this.props.fullTimeSchedules, function(schedule) {
         return `${schedule.shop_id}` == `${shop_id}` }

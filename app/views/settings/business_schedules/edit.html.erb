@@ -5,7 +5,7 @@
   <p><%= t("settings.business_hours.info_1") %><br /><%= t("settings.business_hours.info_2") %></p>
 </div>
 
-<%= form_tag update_settings_shop_business_schedules_path, method: :post do %>
+<%= form_tag update_settings_shop_business_schedules_path, method: :post, data: { behavior: "dirty-form" } do %>
   <h3>基本営業時間<strong>必須項目</strong></h3>
   <div id="busHour" class="formRow">
     <ul class="tableTTL">
@@ -74,5 +74,4 @@
       <%= submit_tag t("action.save"), class: "BTNyellow" %>
     </li>
   </ul>
-
 <% end %>
