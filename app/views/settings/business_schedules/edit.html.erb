@@ -52,6 +52,7 @@
   <h3>臨時休業</h3>
   <%= react_component "UI.CustomSchedules",
     {
+    shop_id: shop.id,
     custom_schedules: @custom_schedules.map { |schedule|
       schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
                                 start_time_time_part: schedule.start_time_time,
