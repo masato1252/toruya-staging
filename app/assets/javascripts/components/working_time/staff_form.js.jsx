@@ -12,7 +12,7 @@ UI.define("WorkingTime.StaffForm", function() {
     },
 
     componentDidMount: function() {
-      $('form').dirtyForms();
+      UI.DirtyFormHandler.init();
     },
 
     selectedSchedule: function(shop_id) {
@@ -63,7 +63,7 @@ UI.define("WorkingTime.StaffForm", function() {
 
     render: function() {
       return (
-        <form action={this.props.saveStaffPath} accept-charset="UTF-8" method="post">
+        <form action={this.props.saveStaffPath} accept-charset="UTF-8" method="post" data-behavior="dirty-form">
           <input name="utf8" type="hidden" value="✓" />
           <input type="hidden" name="_method" value="patch" />
           <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />

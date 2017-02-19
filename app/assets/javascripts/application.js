@@ -26,9 +26,5 @@
 //= require select2
 //= require atomic_requests.js
 //= require side_nav.js
-//= require jquery.dirtyforms.js
+//= require dirty_form.js
 //= require_tree .
-
-$(document).ready(function() {
-  $("[data-behavior~=dirty-form]").dirtyForms();
-});
