@@ -43,7 +43,7 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = UpdateStaff.run(staff: @staff, attrs: staff_params.to_h)
+    outcome = Staffs::Update.run(staff: @staff, attrs: staff_params.to_h)
 
     respond_to do |format|
       if outcome.valid?

@@ -16,16 +16,16 @@ class Settings::WorkingTime::StaffsController < SettingsController
   def update
     params.permit![:business_schedules].each do |shop_id, attrs|
       if attrs[:full_time]
-        CreateBusinessSchedule.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+        BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
       else
         attrs.except(:id).each do |humanize_wday, attr|
-          CreateBusinessSchedule.run(shop: Shop.find(shop_id), staff: @staff, attrs: attr.to_h)
+          BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attr.to_h)
         end
       end
     end
 
     custom_schedules_params[:custom_schedules].each do |attrs|
-      CreateCustomSchedule.run(staff: @staff, attrs: attrs.to_h)
+      CustomSchedules::Create.run(staff: @staff, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
     redirect_to settings_working_time_staffs_path, notice: I18n.t("common.update_successfully_message")

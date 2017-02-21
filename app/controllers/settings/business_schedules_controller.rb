@@ -9,14 +9,14 @@ class Settings::BusinessSchedulesController < SettingsController
 
   def update
     business_schedules_params[:business_schedules].each do |attrs|
-      CreateBusinessSchedule.run(shop: shop, attrs: attrs.to_h)
+      BusinessSchedules::Create.run(shop: shop, attrs: attrs.to_h)
     end
 
     custom_schedules_params[:custom_schedules].each do |attrs|
-      CreateCustomSchedule.run(shop: shop, attrs: attrs.to_h)
+      CustomSchedules::Create.run(shop: shop, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
-    update_shop = UpdateShop.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
+    update_shop = Shops::Update.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
 
     # Recalculate repeating dates
     ShopMenuRepeatingDate.
