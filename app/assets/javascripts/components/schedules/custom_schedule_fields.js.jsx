@@ -63,6 +63,7 @@ UI.define("CustomScheduleFields", function() {
               data-name="start_time_date_part"
               value={this.state.start_time_date_part}
               onChange={this._handleChnage} />
+              { this.state.start_time_date_part ? `(${moment(this.state.start_time_date_part).format("dd")})` : null }
           </dt>
           <dd className="startTime">
             <input
