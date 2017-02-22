@@ -19,10 +19,12 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
               <li className="endsTime">{this.props.endLabel}</li>
             </ul>
             <div id="workingTime" className="formRow">
-              { this.props.wdays.map(function(wday, day_index) {
-                var schedule = _.find(this.props.wdays_business_schedules, function(business_schedule) {
-                  return business_schedule.day_of_week == day_index
-                })
+              {
+                this.props.wdays.map(function(wday, day_index) {
+                  var wday_index = (day_index + 1)%7;
+                  var schedule = _.find(this.props.wdays_business_schedules, function(business_schedule) {
+                    return business_schedule.day_of_week == wday_index
+                  })
 
                 return (
                   <dl key={`shop-${this.props.shop.id}-${wday}`}>
@@ -34,18 +36,18 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
                     <input
                       type="hidden"
                       name={`business_schedules[${this.props.shop.id}][${wday}][day_of_week]`}
-                      defaultValue={day_index} />
+                      defaultValue={wday_index} />
 
                     <dd className="inOut">
                       <input
                         type="checkbox"
                         className="BTNinout"
-                        id={`shop${this.props.shop.id}-day${day_index}`}
+                        id={`shop${this.props.shop.id}-day${wday_index}`}
                         name={`business_schedules[${this.props.shop.id}][${wday}][business_state]`}
                         defaultValue="opened"
                         defaultChecked={schedule ? schedule.business_state == "opened" : ""}
                       />
-                      <label htmlFor={`shop${this.props.shop.id}-day${day_index}`}></label>
+                      <label htmlFor={`shop${this.props.shop.id}-day${wday_index}`}></label>
                     </dd>
                     <dd className="startTime">
                       <input
