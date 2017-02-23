@@ -5,7 +5,7 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
-    date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]) : Time.zone.now.to_date
+    date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
     @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
