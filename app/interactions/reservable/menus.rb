@@ -91,7 +91,7 @@ module Reservable
     end
 
     def custom_schedules_for_shop
-      @custom_schedules_for_shop ||= shop.custom_schedules.closed.where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
+      @custom_schedules_for_shop ||= shop.custom_schedules.for_shop.closed.where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
     end
 
     def workable_menus
