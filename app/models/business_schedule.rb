@@ -29,6 +29,7 @@ class BusinessSchedule < ApplicationRecord
   belongs_to :staff, optional: true
 
   scope :for_shop, -> { where(staff_id: nil) }
+  scope :for_staff, -> { where.not(staff_id: nil) }
   scope :opened, -> { where(business_state: "opened") }
   scope :full_time, -> { where(full_time: true) }
   scope :part_time, -> { where(full_time: nil) }

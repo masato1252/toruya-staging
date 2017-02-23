@@ -169,6 +169,8 @@ en:
       in_out_label: Come IN/OUT
       start_label: Start
       end_label: End
+      reason_of_closing: Reason of closing
+      closing_reason: Reason of closing
     contact:
       info_title: Contact
       new_title : Add a New Contact

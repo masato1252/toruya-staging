@@ -9,7 +9,7 @@ module Reservable
       # Custom -> Holiday -> Business
 
       # Custom
-      if custom_close_schedule = shop.custom_schedules.where(start_time: date.beginning_of_day..date.end_of_day).order("end_time").last
+      if custom_close_schedule = shop.custom_schedules.for_shop.where(start_time: date.beginning_of_day..date.end_of_day).order("end_time").last
         schedule = business_schedule
 
         if schedule && schedule.end_time > custom_close_schedule.end_time

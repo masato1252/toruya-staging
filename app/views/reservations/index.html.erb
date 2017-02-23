@@ -7,6 +7,24 @@
                           selected_date: params[:reservation_date]
                         },
                           { id: "custom-calendar", class: "clearfix" }) %>
+                          <dl>
+     <div class="staffs-working-schedules table">
+       <% @staffs_working_schedules.each do |staff, working_schedule| %>
+         <div class="row">
+           <div class="staff cell">
+             <%= staff.name %>
+           </div>
+           <div class="time cell">
+             <% if working_schedule[:time] %>
+               <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
+             <% end %>
+             <% if working_schedule[:reason] %>
+               <div class="danger"><%= working_schedule[:reason] %></div>
+             <% end %>
+           </div>
+         </div>
+      <% end %>
+    </div>
     <dl id="calStatus">
       <dd><span class="reservation-state reserved"></span>予約</dd>
       <dd><span class="reservation-state checkin"></span>チェックイン</dd>

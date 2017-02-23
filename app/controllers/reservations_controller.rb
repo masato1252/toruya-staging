@@ -10,6 +10,7 @@ class ReservationsController < DashboardController
     @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
+    @staffs_working_schedules = Shops::StaffsWorkingSchedules.run!(shop: shop, date: date)
   end
 
   # GET /reservations/new
