@@ -39,7 +39,7 @@ class Reservation < ApplicationRecord
   scope :visible, -> { where("aasm_state != ?", "canceled") }
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
 
-  aasm do
+  aasm :whiny_transitions => false do
     state :pending, initial: true
     state :reserved, :noshow, :checked_in, :checked_out, :canceled
 
