@@ -218,6 +218,10 @@ UI.define("Reservation.Form", function() {
     _retrieveAvailableTimes: function() {
       var _this = this;
 
+      if (!(moment(this.state.start_time_date_part).year() > 1911)) {
+        return;
+      }
+
       this.currentRequest = jQuery.ajax({
         url: this.props.availableTimesPath,
         data: {date: this.state.start_time_date_part},
