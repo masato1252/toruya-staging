@@ -62,8 +62,6 @@
 
 #manager {
   #resList {
-    height: 100vh;
-
     a.btn {
       padding: 15px;
       height: 0;
@@ -101,14 +99,14 @@
   }
 
   #calendar {
-    width: 400px;
+    // width: 400px;
   }
 
   #calStatus {
     width: 170px;
 
     .reservation-state {
-      margin-right: 3px;
+      margin-right: 5px;
     }
   }
 }
@@ -142,11 +140,13 @@ div.staffs-working-schedules {
 }
 
 div.status-list {
-  padding: 6px;
+  position: fixed;
+  bottom: 0;
+  font-size: 14px;
   text-align: center;
 
   > div {
     display: inline-block;
-    margin: 6px;
+    margin: 5px;
   }
 }

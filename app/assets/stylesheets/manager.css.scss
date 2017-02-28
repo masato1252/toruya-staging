@@ -365,7 +365,7 @@ footer {
 }
 /* Contents */
 .contents {
-  padding: 20px;
+  padding: 20px 20px 30px 20px;
   height: 100%;
 }
 .setting .contents, .publish .contents { 
@@ -378,7 +378,6 @@ footer {
 }
 .contBody {
   width: 100%;
-  height: 100%;
 }
 #sideNav, #content { 
     vertical-align: top;
@@ -826,6 +825,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   text-align: center;
   font-size: 14px;
   min-width: 252px;
+  line-height: 35px;
 }
 #calendar ul li { display: inline-block; }
 #calendar .month { padding-bottom: 10px; }
@@ -899,7 +899,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 }
 #resList {
   background: #fff;
-  min-width: 476px;
 }
 #resList dl.tableTTL, #resList a {
   border-bottom: 1px solid #B3B3B3;
@@ -942,7 +941,6 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 }
 #resList a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
 #resList #record {
-  height: 98%;
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;

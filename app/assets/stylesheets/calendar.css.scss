@@ -62,24 +62,24 @@
   }
 
   .week {
-    float: left;
-    width: 100%;
-    border-top: solid 1px #cccccc;
+    // float: left;
+    // width: 100%;
+    // border-top: solid 1px #cccccc;
     &:first-child {
       border-top: none;
     }
     > span.day {
-      float: left;
-      width: 14.285714285714286%;
+      // float: left;
+      width: 14.28%;
       box-sizing: border-box;
       -moz-box-sizing: border-box;
-      border-left: solid 1px #cccccc;
-      font-size: 15px;
+      // border-left: solid 1px #cccccc;
+      // font-size: 15px;
       text-align: center;
-      height: 40px;
-      line-height: 40px !important;
+      // height: 40px;
+      // line-height: 40px !important;
       display: inline-block;
-      vertical-align: middle;
+      // vertical-align: middle;
       background: white;
       cursor: pointer;
       color: black;

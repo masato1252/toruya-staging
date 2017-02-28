@@ -10,9 +10,7 @@
 
   <body id="manager" class=<%= body_class %>>
     <%= render "layouts/dashboard_header_bar", shops_selector: true %>
-    <div>
-      <%= flash_messages %>
-      <%= yield %>
-    </div>
+    <%= flash_messages %>
+    <%= yield %>
   </body>
 </html>
