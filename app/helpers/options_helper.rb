@@ -105,7 +105,7 @@ module OptionsHelper
         shop_id: r.shop_id,
         customers: r.customers.map { |r| { id: r.id, name: r.name } },
         staffs: r.staffs.map(&:name).join(", "),
-        memo: r.memo
+        memo: simple_format(r.memo)
       })
     end
   end

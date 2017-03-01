@@ -109,9 +109,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <div>
                       {reservation.staffs}
                     </div>
-                    <div>
-                      {reservation.memo}
-                    </div>
+                    <div dangerouslySetInnerHTML={{ __html: reservation.memo }} />
                   </div>
                   <div className="modal-footer">
                     <dl>
