@@ -109,6 +109,9 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <div>
                       {reservation.staffs}
                     </div>
+                    <div>
+                      {reservation.memo}
+                    </div>
                   </div>
                   <div className="modal-footer">
                     <dl>
