@@ -57,7 +57,7 @@ UI.define("CustomSchedules", function() {
           )}
         </ul>
         <dl>
-          <dt>
+          <dt className="date">
             <UI.Common.DatepickerField
               date={this.state.start_time_date_part}
               dataName="start_time_date_part"
@@ -74,7 +74,7 @@ UI.define("CustomSchedules", function() {
               <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="20" onChange={this._handleChange} />
             </dd>
           )}
-          <dd className="add">
+          <dd className="add function">
             <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>
           </dd>
           </dl>

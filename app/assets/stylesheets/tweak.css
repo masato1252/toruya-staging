@@ -1,0 +1,9 @@
+header dl dd a, header dl dd a:link, header dl dd a:visited {
+  padding-top: 8px;
+}
+
+#calendar .day.selected, #calendar .days a.here {
+  background: #fcbe47;
+  color: white;
+  border-radius: 50%;
+}
