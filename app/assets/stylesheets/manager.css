@@ -18,7 +18,7 @@ list-style: none;
 }
 /*start hide from IE mac*/
 html {
-  min-height: 100%;
+  height: 100%;
   margin-bottom: 1px;
   position: relative;
 }
@@ -115,8 +115,9 @@ input, select {
     line-height: inherit;
 }
 input {
-  padding: 8px 0;
+  padding: 8px;
   background-color: #fffef5;
+    -moz-appearance:textfield;
 }
 select { background-color: #fff; }
 select, input[type="date"] {
@@ -125,21 +126,25 @@ select, input[type="date"] {
   appearance: none;
   line-height: 35px;
   height: 35px;
-  padding: 0 25px 0 15px;
+  padding: 0 15px;
 }
 input[type="date"], input[type="time"] {
   text-align: center;
   text-indent: 0 !important;
 }
-input[type="date"] {
-  width: 150px !important;
-  padding-right: 5px;
+input::-webkit-calendar-picker-indicator, input::-webkit-outer-spin-button, input::-webkit-inner-spin-button, input::-webkit-clear-button {
+    -webkit-appearance: none;
+    margin: 0;
+    display: none;
 }
-input[type="time"] { width: 100px; }
-input.address { width: 400px; }
+input[type="date"] {
+  width: 120px !important;
+}
+input[type="time"] { width: 64px; }
+input.address, input[type="email"] { width: 400px; }
 input:placeholder { color: #ccc; }
 input:disabled, select:disabled { background-color: #d0d0d0; }
-input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited, .signup #socialLogin ul li a, a.BTNgray:visited, .signup #socialLogin ul li a:link, a.BTNgray:visited, .signup #socialLogin ul li a:visited {
+input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited, .signup #socialLogin ul li a, a.BTNgray:visited, .signup #socialLogin ul li a:link, a.BTNgray:visited, .signup #socialLogin ul li a:visited, button.BTNorange, button.BTNyellow, button.BTNtarco, button.BTNgray {
   border-radius: 6px; /* 記述無し */
   -moz-border-radius: 6px; /* Firefox */
   -webkit-border-radius: 6px; /* Google Chrome、Safari */
@@ -152,21 +157,22 @@ input.BTNorange, input.BTNyellow, input.BTNtarco, a.BTNorange, a.BTNorange:link,
   display: block;
   height: 50px;
   text-decoration: none;
-  padding: 0 15px;
+  padding: 0;
   border-width: 1px;
   border-style: solid;
   cursor: pointer;
   text-indent: 0;
+  text-align: center;
 }
-a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited { display: block; }
-input.BTNorange, a.BTNorange { background: #ca4e0e; border-color: #b0450d; }
-input.BTNorange:hover, a.BTNorange:hover { background: #b0450d; border-color: #984418; }
-input.BTNyellow, a.BTNyellow { background: #fcbe46; border-color: #e6a21f; }
-input.BTNyellow:hover, a.BTNyellow:hover { background: #e6a21f; border-color: #d79a23; }
-input.BTNtarco, a.BTNtarco { background: #97bfb8; border-color: #60938a; }
-input.BTNtarco:hover, a.BTNtarco:hover { background: #60938a; border-color: #488479; }
-input.BTNgray, a.BTNgray { background: #d0d0d0; border-color: #b3b3b3; }
-input.BTNgray:hover, a.BTNgray:hover { background: #888; border-color: #666; }
+a.BTNorange, a.BTNorange:link, a.BTNorange:visited, a.BTNyellow, a.BTNyellow:link, a.BTNyellow:visited, a.BTNtarco, a.BTNtarco:link, a.BTNtarco:visited, a.BTNgray, a.BTNgray:link, a.BTNgray:visited { display: inline-block; }
+input.BTNorange, a.BTNorange, button.BTNorange { background: #ca4e0e; border-color: #b0450d; }
+input.BTNorange:hover, a.BTNorange:hover, button.BTNorange:hover { background: #b0450d; border-color: #984418; }
+input.BTNyellow, a.BTNyellow, button.BTNyellow { background: #fcbe46; border-color: #e6a21f; }
+input.BTNyellow:hover, a.BTNyellow:hover, button.BTNyellow:hover { background: #e6a21f; border-color: #d79a23; }
+input.BTNtarco, a.BTNtarco, button.BTNtarco { background: #97bfb8; border-color: #60938a; }
+input.BTNtarco:hover, a.BTNtarco:hover, button.BTNtargo:hover { background: #60938a; border-color: #488479; }
+input.BTNgray, a.BTNgray, button.BTNgray { background: #d0d0d0; border-color: #b3b3b3; }
+input.BTNgray:hover, a.BTNgray:hover, button.BTNgray:hover { background: #888; border-color: #666; }
 .signup #socialLogin ul li a { background: #fff; border-color: #ccc; }
 .signup #socialLogin ul li a:hover { background: #ccc; border-color: #888; }
 h1 {
@@ -179,9 +185,11 @@ h2 {
   font-size: 16px;
   margin-bottom: 20px;
 }
-a:hover, a img:hover {
-  opacity: 0.7;
-}
+a:hover, a img:hover { opacity: 0.7; }
+input.BTNorange.disabled, a.BTNorange.disabled, a.BTNorange.disabled:hover { background: #edc1ab; border-color: #e4beab; opacity: 1; }
+input.BTNyellow.disabled, a.BTNyellow.disabled, a.BTNyellow.disabled:hover { background: #fedfa3; border-color: #f3d18f; opacity: 1; }
+input.BTNtarco.disabled, a.BTNtarco.disabled, a.BTNtarco.disabled:hover { background: #cbdfdc; border-color: #b0c9c5; opacity: 1; }
+input.BTNgray.disabled, a.BTNgray.disabled, a.BTNgray.disabled:hover { background: #e8e8e8; border-color: #dadada; opacity: 1; }
 /*----------------*/
 /* Toruya Manager */
 /*----------------*/
@@ -203,18 +211,25 @@ header dl dd {
   display: inline-block;
   vertical-align: middle;
 }
-header a, header a:link, header a:visited {
+header dl dd a, header dl dd a:link, header dl dd a:visited {
   display: block;
   background-position: center top;
   background-color: transparent;
   background-repeat: no-repeat;
-  width: 56px;
+  width: 45px;
   text-align: center;
   font-size: 8px;
   padding-top: 35px;
   color: #d0d0d0;
   position: relative;
 }
+header #NAVhome a { background-image: url(../images/screen/mainnav_home.png); }
+header #NAVtoday a { background-image: url(../images/screen/mainnav_today.png); }
+header #NAVcaution a { background-image: url(../images/screen/mainnav_caution.png); }
+header #NAVhelp a { background-image: url(../images/screen/mainnav_help.png); }
+header #NAVsetting a { background-image: url(../images/screen/mainnav_setting.png); }
+header #NAVpublish a { background-image: url(../images/screen/mainnav_publish.png); }
+header #NAVlogout a { background-image: url(../images/screen/mainnav_logout.png); }
 header select {
   font-size: 15px;
   background-color: #ddd;
@@ -225,6 +240,7 @@ header #NAVcaution a strong {
   top: 0;
   text-align: center;
   color: #fff;
+  background: transparent url(../images/screen/mainnav_caution_num.png) center center no-repeat;
   display: block;
   width: 20px;
   height: 20px;
@@ -244,18 +260,18 @@ footer {
 /* Login Page */
 .login, .shopSelect { padding-bottom: 0; }
 .login header h1, .signup header h1, .firstSetting header h1, .shopSelect header h1, .setting header h1 {
-  padding-top: 25px;
   padding-bottom: 0;
+  margin-left: 20px;
   float: left;
+  font-family: myriad-pro, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 35px;
+  line-height: 1em;
 }
 .login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
-  width: 99px;
-  height: 31px;
-  text-indent: -9999px;
-  text-align: left;
-  overflow: hidden;
   padding-top: 0;
-  margin-left: 20px;
+  color: #fff;
 }
 #login {
   width: 300px;
@@ -321,6 +337,7 @@ footer {
   line-height: 2em;
   text-align: center;
   width: 25%;
+  background: #d0d0d0 url(../images/screen/firstsetting_steps.png) right center no-repeat;
   border-width: 5px 3px;
   border-style: solid;
   border-color: #f2f2f2;
@@ -379,22 +396,23 @@ footer {
 .contBody {
   width: 100%;
 }
-#sideNav, #content { 
-    vertical-align: top;
-  display: table-cell;
-}
 .setting #content, .publish #content { width: 100%; }
+.setting #content {
+  width: 100%;
+    padding-left: 250px;
+}
 #sideNav {
   background: #9e9e9e;
   width: 250px;
     border-right: 1px solid #858585;
   height: 100%;
+  position: fixed;
 }
 #sideNav dl a, #sideNav dl a:link, #sideNav dl a:visited {
   display: block;
   color: #E8E8E8;
   padding: 20px;
-  width: 150px;
+  width: 100%;
 }
 #sideNav dl > a, #sideNav dl > a:link, #sideNav dl > a:visited { background-color: #9e9e9e; }
 #sideNav dl dt, #sideNav dl dd ul li a, #sideNav dl dd ul { border-bottom: 1px solid #858585; }
@@ -409,10 +427,22 @@ footer {
   position: relative;
 }
 #sideNav dl dt a {
-  text-indent: 30px;
-  background-repeat: no-repeat;
-  background-position: left 20px center;
 }
+#sideNav dl dt a span:before {
+  font-family: "FontAwesome";
+  font-size: 30px;
+    margin-right: 5px;
+}
+#sideNav dl.shop dt a span:before { content: "\f015"; }
+#sideNav dl.menu dt a span:before { content: "\f02c"; }
+#sideNav dl.staff dt a span:before { content: "\f27e"; }
+#sideNav dl.contacts dt a span:before { content: "\f2ba"; }
+#sideNav dl.googleSync dt a span:before { content: "\f1a0"; }
+#sideNav dl.apps dt a span:before { content: "\f10b"; }
+#sideNav dl.publish dt a { background-image: url(../images/screen/settingnav_publish.png); }
+#sideNav dl.share dt a { background-image: url(../images/screen/settingnav_share.png); }
+#sideNav dl.account dt a span:before, #sideNav dl.settings dt a span:before { content: "\f0ad"; }
+#sideNav dl.logout dt a span:before { content: "\f011"; }
 #sideNav dl.shopSelect dt {
   text-align: center;
   padding: 20px;
@@ -459,45 +489,55 @@ footer {
   text-indent: 10px;
 }
 #content .formRow dl, #content .formRow ul { 
-  border-width: 1px 1px 0 1px;
+  border-width: 1px 0 0 0;
   border-style: solid;
   border-color: #DFDFDF;
   background: #fff;
   padding: 10px 20px;
 }
-#content .formRow dl:first-of-type {
-  border-top-left-radius : 10px;
-  -webkit-border-top-left-radius: 10px;
-  -moz-border-radius-topleft: 10px;
-  border-top-right-radius : 10px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topright: 10px;
+#content .formRow .formTTL dd {
+  width: 100%;
+  text-align: right;
 }
-#content .formRow dl:last-child {
-  border-bottom-left-radius : 10px;
-  -webkit-border-bottom-left-radius: 10px;
-  -moz-border-radius-bottomleft: 10px;
-  border-bottom-right-radius : 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomright: 10px;
-  border-width: 1px;
+#content .formRow dl:first-of-type {
+  border-top: none;
+}
+#content .formRow {
+  border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+  border: 1px solid #DFDFDF;
+  overflow: hidden;
 }
 #content form ul li, #content form dl dt, #content form dl dd {
   display: table-cell;
   vertical-align: middle;
 }
-#content form .checkbox dd { display: inherit; }
-#content form .checkbox dd input[type="checkbox"] + label, #content form .checkbox dd input[type="radio"] + label {
+#content form .checkbox dd, #content form .termsCheck dd { display: inherit; }
+#content form .checkbox dd input[type="checkbox"] + label, #content form .checkbox dd input[type="radio"] + label, #content form .termsCheck input[type="checkbox"] + label {
   width: 100%;
     display: block;
+  line-height: 35px;
 }
 #content form #google #autoLinkedTo dd { line-height: 2.5em; }
 #content form dl dt p, #content form dl dd input {
   padding: 10px;
 }
-#content form dl dt { position: relative; }
-#content .rowTTL, #content form dl dt, #content .tableTTL .check { padding-right: 20px; }
-#content .rowTTL, #content form dl dt, #content .tableTTL .check { padding-right: 20px; }
+#content form dl dt {
+  position: relative;
+  white-space: nowrap;
+}
+#content .rowTTL, #content form dl dt, #content form dl dd, #content .tableTTL .check { padding-right: 10px; }
+#content form dl dd.startTime { padding-right: 0; }
+#content .formRow dl dt:last-child, #content .formRow dl dd:last-child, #content .formRow ul li:last-child { padding-right: 0; }
+#content .formRow .formTTL {
+  line-height: 37px;
+  background: #efefef;
+}
+#content .formRow .onoffSetting { border-top: 1px solid #efefef; }
+#content .formRow .formTTL dt { font-weight: bold;　}
 #content #staffInfo .familyName { padding-right: 10px; }
 #content #working a.editWorktime, #content #working a.editWorktime:link, #content #working a.editWorktime:visited {
   height: 30px;
@@ -536,36 +576,59 @@ footer {
 #content form dl dd input {
   border: 0px;
   color: #333;
+  line-height: 15px;
 }
 #content form ul.tableTTL {
   background: transparent;
   border: 0px;
-  color: #BABABA;
   font-size: 14px;
 }
-#content #prices .rankPrice { width: 240px; }
-#content #tempHoliday .closeReason { width: 220px; }
-#content #calendarList .rowTTL, #content #calendarList .toruyaCal, #content #doMenu .menuCat, #content #doMenu .menu, #content #doMenu .menuMax, #content #contactList .rowTTL, #content #rankList .rowTTL, #content #shopList .rowTTL, #content #priceList .rowTTL, #content #priceMenu .rowTTL { width: 200px; }
-#content #tempHoliday .date { width: 180px; }
-#content #shopNames dl dt, #content #staffList .rowTTL, #content #staffList .rowTTL, #content #menuList .rowTTL, #content #prices .rowTTL, .firstSetting #content #companyInfo dt { width: 160px; }
-#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffList .updateTime, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #menuList .updateTime, #content #calendarList .function.updateTime, #content #staffInfo .firstName, #content #menuList .updateTime, #content #frameInfo dt, .firstSetting #content #adminInfo dt, #content #staffInfo dt { width: 90px; }
-#content .tableTTL .check, #content #menuList .staff, #content .formRow .check, #content #frameDetail dt { width: 60px; }
-#content #busHour .openClose, #content #contacts dl dt, #content #contactList .updateTime, #content #rankList .updateTime, #content #shopList .updateTime, #content #tempHoliday .startTime, #content #tempHoliday .endsTime, #content #priceList .updateTime, #content #prices .customerRank, #content #priceMenu .quantity, #content #menuList .blocks { width: 130px; }
-#content .workingTime .startTime, #content .workingTime .endsTime { width: 140px; }
-#content #belong dt, #content #staffAccount dt, #content #calendarList .updateTime, #content #parttime .inOut, #content .workingTime .rowTTL, #content .workingTime .inOut, #content #priceMenu .menu { width: 118px; }
-#content #menuInfo dl dt, #content #calendarInfo dt, #content #priceInfo dt, #content #google dt, #content #contactsInfo dt { width: 100px; }
-#content #tempHoliday .date { padding-right: 0; }
+#content form ul.tableTTL li, #content .formRow .del, #content #menuList .staff, #content .formRow .capableMenuAmount { text-align: center; }
+#content #calendarList .rowTTL, #content #calendarList .toruyaCal { width: 200px; }
+#content #shopNames dl dt, #content #menuList .rowTTL, .firstSetting #content #companyInfo dt { width: 160px; }
+#content #busHour .rowTTL, #content #busHour dl dt, #content #parttime .rowTTL, #content #parttime dl dt, #content #staffInfo .familyName, #content #staffInfo .firstName, #content #staffInfo .firstName, #content #frameInfo dt, .contents #content #adminInfo dt, #content #staffInfo dt { width: 90px; }
+#content .formRow .check, #content #frameDetail dt { width: 60px; }
+#content #busHour .openClose, #content #contacts dl dt { width: 130px; }
+#content #staffAccount dl dt, #content #paymentSetting dl dt, #content #accountSetting dl dt { width: 150px; }
+.contents #content #companyInfo dt { width: 210px; }
+#content .formRow .onoffSetting dt {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+#content #staffAccount dt { width: 118px; }
+#content #menuInfo dl dt, #content #calendarInfo dt, #content #google dt { width: 100px; }
 #content #prices .rankPrice input, #content form input[type="number"] { margin-right: 10px; }
 #content #staffInfo .familyName, .firstSetting #content #adminInfo .familyName { padding-right: 10px; }
-#content #busHour .openTime, #content #busHour .closeTime, #content #parttime .startTime, #content #parttime .endsTime {
+#content .formRow .del, #content #menuList .staff { width: 60px; }
+#content .formRow ul .quantity { width: 86px; }
+#content .formRow ul .inOut, #content .formRow ul .inOut, #content .formRow ul .updateTime { width: 94px; }
+#content .formRow ul .check { width: 97px; }
+#content .formRow ul .startTime, #content .formRow ul .endsTime, #content .formRow .capableMenuAmount { width: 100px; }
+#content .formRow#menuInfo dl dt, #content .formRow#contactsInfo dt, #content .formRow#rankeInfo dt { width: 122px; }
+.setting #about .function a.addNew { width: 130px; }
+#content .formRow#resHow dl dt, #content #priceInfo dt, #content .formRow ul .customerPrice { width: 148px; }
+#content .formRow ul .date, #content #menuList .blocks { width: 174px; }
+#content .formRow ul .closeReason, #content .formRow#doMenu .menu, #content .formRow#prices .customerTTL, #content .formRow ul .menu { width: 197px; }
+#content .workingTime ul .rowTTL { width: 118px; }
+#content .formRow#menuList .rowTTL, #content .formRow#priceMenu .rowTTL, #content .formRow#contactList .rowTTL { width: 200px; }
+#content .formRow#staffList .rowTTL, #content .formRow#staffList dt, #content .formRow#shopList .rowTTL, #content .formRow#resframeList .rowTTL, #content .formRow#priceList .rowTTL, #content .formRow#rankList .rowTTL { width : 300px ; }
+#content .formRow#busHour .openTime, #content .formRow#busHour .closeTime, #content .formRow#parttime .startTime, #content .formRow#parttime .endsTime {
   width: 126px;
   padding: 0 5px;
 }
-#content .formRow .function { padding: 0 5px; }
-#content .formRow .function a, #content .tableTTL .check a, #content .formRow .add a, #content form h3.menuCategory a.addNew, #content form .resFrame a {
-  line-height: 30px;
-  height: 30px;
+#content .formRow .function a { margin-right: 5px; }
+#content .formRow .function a:last-child { margin-right: 0; }
+#content .formRow .function a, #content .tableTTL .check a, #content .formRow a, #content form h3.menuCategory a.addNew, #content form .resFrame a {
+  line-height: 35px;
+  height: 35px;
 }
+#content .formRow .function a { width: 65px; }
+#content .formRow .function a.calendar { width: 39px; }
+#content .formRow .del a { width: 50px; }
+#content .formRow#resFrame .function a { width: 97px; }
+#content .formRow#shopSelect .checkbox label input { margin-left: 10px; }
 #content .formRow .menuEnds ul, #content #frameDetail dd ul {
   padding: 0;
   border: none;
@@ -594,15 +657,31 @@ footer {
 }
 #content .formRow .check { text-align: center; }
 #content .formRow input[type="number"] { width: 50px; }
-#content .formRow .rankPrice input[type="number"], #content .formRow .menuLength input[type="number"] { width: 100px; }
+#content .formRow .menuLength input[type="number"] { width: 100px; }
+#content .formRow .customerPrice input[type="number"] { width: 110px; }
 #content form input[type="date"], #content form input[type="time"] {
   border: none;
   background-color: #fffef5;
 }
-input[type="radio"], input[type="checkbox"] { display: none; }
-input[type="radio"] + label, input[type="checkbox"] + label, #MonthlyFrameSetting dl:last-of-type dt {
-  line-height: 2em;
-  padding-left: 25px;
+.checkbox input[type="radio"], .checkbox input[type="checkbox"], .termsCheck input[type="checkbox"] { display: none; }
+.checkbox input[type="radio"]:checked + label:before, .checkbox input[type="checkbox"]:checked + label:before, .termsCheck input[type="checkbox"]:checked + label:before {
+  font-family: "FontAwesome";
+    content: "\f00c";
+    color: #97bfb8;
+  margin-right: 12px;
+}
+.termsCheck input[type="checkbox"]:checked + label:before {
+    margin-right: 8.5px;
+}
+.checkbox input[type="radio"] + label:before, .checkbox input[type="checkbox"] + label:before  {
+  content: " ";
+  margin-right: 28px;
+}
+.termsCheck input[type="checkbox"] + label:before {
+  font-family: "FontAwesome";
+    content: "\f096";
+    margin-right: 12px;
+  color: #D0D0D0;
 }
 .BTNswitch, .BTNselect {
   border-radius: 5px; /* 記述無し */
@@ -628,7 +707,7 @@ input[type="radio"] + label, input[type="checkbox"] + label, #MonthlyFrameSettin
   display: inline-block;
   line-height: 2em;
   cursor: pointer;
-    padding: 0 10px;
+    padding: 1 10px;
   text-align: center;
   background-image: none;
 }
@@ -663,16 +742,16 @@ input[type="radio"] + label, input[type="checkbox"] + label, #MonthlyFrameSettin
   color: #fff;
   background: #6fa89f;
 }
-.BTNonoff, .BTNopenclose, .BTNyesno, .BTNalwaysIN, .BTNinout { display: none; }
+.BTNonoff, .BTNopenclose, .BTNyesno, .BTNinout { display: none; }
 .check input[type="checkbox"] {
   display: block;
   margin: auto;
 }
-input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + label, input[type="checkbox"].BTNyesno + label, input[type="checkbox"].BTNalwaysIN + label, input[type="checkbox"].BTNinout + label, .check input[type="checkbox"] + label {
+input[type="checkbox"].BTNopenclose + label, input[type="checkbox"].BTNyesno + label, input[type="checkbox"].BTNinout + label, .check input[type="checkbox"] + label {
   background-image: none;
   padding-left: 0;
 }
-.BTNonoff + label:before, .BTNonoff + label:after, .BTNopenclose + label:before, .BTNopenclose + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after, .BTNinout + label:before, .BTNinout + label:after {
+.BTNopenclose + label:before, .BTNopenclose + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after {
   display: inline-block;
   padding: .2em .5em;
   overflow: hidden;
@@ -682,43 +761,79 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   font-size: 14px;
   padding: 5px;
 }
-.BTNonoff + label:before, .BTNopenclose + label:before, .BTNyesno + label:before, .BTNinout + label:before, .BTNalwaysIN + label:before, .BTNalwaysIN + label:before {
+.BTNopenclose + label:before, .BTNyesno + label:before, .BTNinout + label:before {
   background: #DEDEDE;
   color: #000000;
   border-top-left-radius: .3em;
   border-bottom-left-radius: .3em;
 }
-.BTNonoff + label:after, .BTNopenclose + label:after, .BTNyesno + label:after, .BTNinout + label:after, .BTNalwaysIN + label:after {
+.BTNopenclose + label:after, .BTNyesno + label:after, .BTNinout + label:after {
   background: #ABABAB;
   color: #ABABAB;
   border-top-right-radius: .3em;
   border-bottom-right-radius: .3em;
 }
-.BTNonoff + label:before, .BTNonoff + label:after, .BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 3em; }
-.BTNopenclose + label:before, .BTNopenclose + label:after, .BTNalwaysIN + label:before, .BTNalwaysIN + label:after { width: 4em; }
-#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 3.5em; }
-#doStaff .BTNyesno + label:before, #doStaff .BTNyesno + label:after { width: 4.5em; }
-.BTNalwaysIN + label:before { content: "非常勤"; }
-.BTNalwaysIN + label:after { content: "常勤"; }
-.BTNonoff + label:before { content: "OFF"; }
-.BTNonoff + label:after { content: "ON"; }
+.BTNyesno + label:before, .BTNyesno + label:after, .BTNinout + label:before, .BTNinout + label:after { width: 3em; }
+.BTNopenclose + label:before, .BTNopenclose + label:after { width: 4em; }
 .BTNyesno + label:before { content: "NO"; }
 .BTNyesno + label:after { content: "YES"; }
-#doStaff .BTNyesno + label:before { content: "未対応"; }
-#doStaff .BTNyesno + label:after { content: "対応"; }
-/*#accountUse.BTNyesno + label:before { content: "なし"; }
-#accountUse.BTNyesno + label:after { content: "あり"; }*/
 .BTNinout + label:before { content: "OUT"; }
 .BTNinout + label:after { content: "IN"; }
 .BTNopenclose + label:before { content: "CLOSE"; }
 .BTNopenclose + label:after { content: "OPEN"; }
-.BTNonoff:checked + label:before, .BTNopenclose:checked + label:before, .BTNalwaysIN:checked + label:before, .BTNyesno:checked + label:before, .BTNinout:checked + label:before {
+.BTNopenclose:checked + label:before, .BTNyesno:checked + label:before, .BTNinout:checked + label:before {
   background: #60938a;
   color: #60938a;
 }
-.BTNonoff:checked + label:after, .BTNopenclose:checked + label:after, .BTNyesno:checked + label:after, .BTNalwaysIN:checked + label:after, .BTNinout:checked + label:after {
+.BTNopenclose:checked + label:after, .BTNyesno:checked + label:after, .BTNinout:checked + label:after {
   background: #96bfb8;
   color: #FFFFFF;
+}
+input.BTNonoff + label {
+  display: block;
+  position: relative;
+  box-shadow: inset 0 0 0px 1px #d5d5d5;
+  text-indent: -5000px;
+  height: 30px;
+  width: 50px;
+  border-radius: 15px;
+}
+input.BTNonoff + label:before {
+  content: "";
+  position: absolute;
+  display: block;
+  height: 30px;
+  width: 30px;
+  top: 0;
+  left: 0;
+  border-radius: 15px;
+  background: rgba(19, 191, 17, 0);
+  -moz-transition: .25s ease-in-out;
+  -webkit-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+input.BTNonoff + label:after {
+  content: "";
+  position: absolute;
+  display: block;
+  height: 30px;
+  width: 30px;
+  top: 0;
+  left: 0px;
+  border-radius: 15px;
+  background: white;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .2), 0 2px 4px rgba(0, 0, 0, .2);
+  -moz-transition: .25s ease-in-out;
+  -webkit-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+input.BTNonoff:checked + label:before {
+  width: 50px;
+  background: #97bfb8;
+}
+input.BTNonoff:checked + label:after {
+  left: 20px;
+  box-shadow: inset 0 0 0 1px #97bfb8, 0 2px 4px rgba(0, 0, 0, .2);
 }
 #content form #footerav, .window ul.windowFooter {
   text-align: center;
@@ -727,7 +842,15 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #content form #footerav li, #content form .window ul.windowFooter li {
   display: inline-block;
 }
-#content form #footerav a, #content form #footerav a:link, #content form #footerav a:visited, .window .windowFooter a, .window .windowFooter a:link, .window .windowFooter a:visited { width: 105px; }
+input:disabled, #content form input:disabled {
+  background: #fff;
+}
+#content form #footerav a, #content form #footerav a:link, #content form #footerav a:visited, .window .windowFooter a, .window .windowFooter a:link, .window .windowFooter a:visited { width: 100px; }
+#content form #footerav.changePlan a, #content form #footerav.changePlan a:link, #content form #footerav.changePlan a:visited {
+  width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 .tabs {
   width: 100%;
   display: flex;
@@ -827,8 +950,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   min-width: 252px;
   line-height: 35px;
 }
-#calendar ul li { display: inline-block; }
-#calendar .month { padding-bottom: 10px; }
+#calendar .header, #calendar .month { padding-bottom: 10px; }
 #calendar .month ul {
     overflow: hidden;
     margin: 0;
@@ -837,8 +959,8 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 }
 #calendar .month .prev { float: left; }
 #calendar .month .next { float: right; }
-#calendar .month .prev a, #calendar .month .prev a:link, #calendar .month .prev a:visited, #calendar .month .next a, #calendar .month .next a:link, #calendar .month .next a:visited {
-  display: inline-block;
+#calendar .header i, #calendar .month .prev a, #calendar .month .prev a:link, #calendar .month .prev a:visited, #calendar .month .next a, #calendar .month .next a:link, #calendar .month .next a:visited {
+  display: block;
   background: #858585;
   color: #fff;
   border-radius: 5px; /* 記述無し */
@@ -846,43 +968,46 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   -webkit-border-radius: 5px; /* Google Chrome、Safari */
   -o-border-radius: 5px; /* Opera */
   -ms-border-radius: 5px; /* Internet Explorer */
-  padding: 0 10px;
+  line-height: 35px;
+    width: 27px;
+    font-weight: bold;
+    font-size: 28px;
 }
-#calendar .month select {
-  width: 92px;
-  background-color: #fff;
+#calendar .header i, #calendar .header select { float: left; }
+#calendar .header select { 
+  width: 35%;
+  margin-left: 5px;
 }
-#calendar .month select#calYear { margin-right: 5px; }
-#calendar .weekdays { border-bottom: 1px solid #858585; }
-#calendar .weekdays, #calendar .days { background: #fff; }
-#calendar .weekdays li, #calendar .days li { width: 12.9%; }
-#calendar .weekdays li {
+#calendar .header select:last-of-type, #calendar .month select#calYear { margin-right: 5px; }
+#calendar .header select:last-of-type, #calendar .month select { background-color: #fff; }
+#calendar .week.names, #calendar .weekdays { border-bottom: 1px solid #858585; }
+#calendar .week, #calendar .weekdays, #calendar .days { background: #fff; }
+#calendar .week span, #calendar .weekdays li, #calendar .days li { width: 14.28%; }
+#calendar .week span, #calendar .weekdays li {
     display: inline-block;
     color: #666;
     text-align: center;
-    margin-bottom: 3px;
-    margin-top: 5px;
 }
-#calendar .days {
-  border-bottom: 1px solid #d0d0d0;
-}
-#calendar .days:last-of-type { border-bottom: none; }
+#calendar .week { border-bottom: 1px solid #d0d0d0; }
+#calendar .week.names, #calendar .week:last-of-type, #calendar .days:last-of-type { border-bottom: none; }
 #calendar .days a, #calendar .days a:link, #calendar .days a:visited {
   color: #666;
   line-height: 35px;
   display: block;
   width: 100%;
 }
-#calendar .days .today a {
+#calendar .day.today, #calendar .days .today a {
   font-weight: bold;
   color: #e6a220;
 }
-#calendar .days a.here, #calendar .days .today a.here {
+#calendar .day.selected, #calendar .day.today.select, #calendar .days a.here, #calendar .days .today a.here {
   font-weight: bold;
   color: #fff;
   background-repeat: no-repeat;
   background-position: center center;
 }
+#calendar .day.selected, #calendar .days a.here { background-image: url(../images/screen/calendar_here.png); }
+#calendar .day.today.selected, #calendar .days .today a.here { background-image: url(../images/screen/calendar_today.png); }
 #calStatus, #customer #resultList ul, #resNew #customers ul {
   padding-top: 10px;
   text-align: left;
@@ -890,13 +1015,65 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
     margin: auto;
   font-size: 14px;
 }
+.reservation-state
 #calStatus dd, #customer #resultList ul li, #resNew #customers ul li {
   line-height: 22px;
   padding-bottom: 5px;
   background-position: left top;
   background-repeat: no-repeat;
-  padding-left: 27px;
 }
+#calStatus dd.checkin, #resList .checkin .calendar { background-image: url(../images/screen/calsts_checkin.png); }
+#calStatus dd.checkout, #resList .checkout .calendar, #customer #resultList ul li.regular, #resNew #customers ul li.regular { background-image: url(../images/screen/calsts_checkout.png); }
+#calStatus dd.noshow, #resList .noshow .calendar { background-image: url(../images/screen/calsts_noshow.png); }
+#calStatus dd.pending, #resList .pending .calendar, #customer #resultList ul li.vip, #resNew #customers ul li.vip { background-image: url(../images/screen/calsts_pending.png); }
+#calStatus dd.reserved, #resList .reserved .calendar { background-image: url(../images/screen/calsts_reserved.png); }
+.status-list {
+  font-size: 14px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+}
+div.status-list>div {
+    display: inline-block;
+    margin: 5px;
+}
+.customer-level-symbol, .reservation-state {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    vertical-align: middle;
+  margin-right: 3px;
+}
+span.reserved {
+    background-color: #60938a;
+    border-color: #488479;
+}
+span.checkout {
+    background-color: #d0d0d0;
+    border: 1px solid #b3b3b3;
+}
+span.checkin {
+    background-color: #fcbe46;
+    border: 1px #e6a21f solid;
+}
+span.noshow {
+    background-color: #aecfc8;
+    border: 1px solid #84b3aa;
+}
+span.pending {
+    background-color: #ca4e0e;
+    border: 1px #b0450d solid;
+}
+.staffs-working-schedules {
+  display: table;
+  margin-top: 10px;
+  font-size: 16px;
+  border-collapse: collapse;
+}
+.staffs-working-schedules .row { display: table-row; }
+.staffs-working-schedules .cell { display: table-cell; }
+.staffs-working-schedules .staff { text-align: left; }
 #resList {
   background: #fff;
 }
@@ -943,7 +1120,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #resList #record {
   position: relative;
   overflow-y: scroll;
-  overflow-x: hidden;
+    overflow-x: hidden;
 }
 #resList .float {
   position: absolute;
@@ -975,6 +1152,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #resList .float dl dd a.BTNorange { border-color: #b0450d; }
 #resList .float dl dd a.BTNtarco { border-color: #60938a; }
 #resList .float .bubbleTop {
+  background: transparent url(../images/screen/float_top.png) top center no-repeat;
   height: 8px;
   width: 100%;
   position: absolute;
@@ -986,13 +1164,18 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   background-position: center 15px;
     text-align: center;
-    padding-top: 20px;
+    padding-top: 60px;
     padding-bottom: 15px;
     font-size: 24px;
     line-height: 24px;
     width: 170px;
     height: inherit;
 }
+#mainNav #NAVnewResv a { background-image: url(../images/screen/btn_newresv.png); }
+#mainNav #NAVsearchResv a { background-image: url(../images/screen/btn_searchresv.png); }
+#mainNav #NAVcustomers a { background-image: url(../images/screen/btn_customers.png); }
+#mainNav #NAVaddCustomer a { background-image: url(../images/screen/btn_addcustomer.png); }
+#mainNav #NAVsave a { background-image: url(../images/screen/btn_save.png); }
 .shopIndex #footer { display: none; }
 /* Search */
 #searchRev {
@@ -1083,48 +1266,105 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   background-repeat: no-repeat;
   background-position: center center;
 }
+#searchRev .calendars .days a.here { background-image: url(../images/screen/calendar_here.png); }
+#searchRev .calendars .days .today a { background-image: url(../images/screen/calendar_today.png); }
 #searchRev .footer { padding: 10px 20px; }
 /* Customer */
 #customer #resultList {
   min-width: 230px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+}
+#customer #resultList a:last-of-type {
+  margin-top: 10px;
 }
 #customer #resultList ul { margin-left: 0; }
 #customer #resultList ul li, #resNew #customers ul li { display: inline-block; }
 #customer #resultList ul li:last-child { margin-left: 10px; }
-#customer #resultList div, #resNew #customerList {
+#customer #resultList #customerList, #resNew #customerList {
+  overflow-y: scroll;
+    overflow-x: hidden;
   background: #fff;
 }
-#customer #resultList a, #customer #resultList a:link, #customer #resultList a:visited,
-#resNew #customerList a, #resNew #customerList a:link, #resNew #customerList a:visited {
+#customer #resultList #customerList {
+  height: 96%;
+  overflow: scroll;
+}
+#customer #resultList #customerList a, #customer #resultList #customerList a:link, #customer #resultList #customerList a:visited, #resNew #customerList #customerList a, #resNew #customerList #customerList a:link, #resNew #customerList #customerList a:visited,
+#customer #resultList dl {
   display: block;
   border-bottom: 1px solid #b3b3b3;
   padding: 12px 15px;
   color: #444;
+  font-size: 15px;
 }
-#customer #resultList a.here { background-color: #dceae7; }
-#customer #resultList dl, #resNew #customerList dl {
-  background-position: left center;
-  background-repeat: no-repeat;
-  padding-left: 32px;
+#customer #resultList dl.here, #customer #resultList a.here { background-color: #dceae7; }
+#customer #resultList dl dt, #resNew #customerList dl dt, #customer #resultList dl dd, #resNew #customerList dl dd {
+  display: inline-block;
+  vertical-align: middle;
 }
-#customer #resultList dt, #resNew #customerList dt { font-size: 15px; }
-#customer #resultList dd, #resNew #customerList dt .place {
+#customer #resultList dd { padding-right: 10px; }
+#customer #resultList dd span {
+  display: block;
+  border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -o-border-radius: 6px;
+    -ms-border-radius: 6px;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #b3b3b3;
+    background-color: #d0d0d0;
+}
+#customer #resultList dd span.vip {
+  border-color: #b0450d;
+    background-color: #ca4e0f;
+}
+#customer #resultList dt {
+  width: 148px;
+  line-height: 1em;
+}
+#customer #resultList dt p {
+  padding: 5px 0;
+}
+#customer #resultList .place, #customer #resultList dd, #resNew #customerList dt .place {
   text-align: right;
   font-size: 13px;
+}
+#customer #resultList .no-more-customer {
+  display: block;
+  border-color: #cb845f;
+    background-color: #dc8a5f;
+    color: #fff;
+  font-weight: bold;
+  text-align: center;
+  line-height: 50px;
+}
+#customer #resultList button {
+  margin: 10px 0;
+  width: 100%;
 }
 #customerInfo #basic, #customerInfoNew #basic, #customerInfoEdit #basic { padding-bottom: 10px; }
 #customerInfoEdit #basic input, #customerInfoNew #basic input, #resNew #resInfo input { text-indent: 10px; }
 #customerInfoEdit #basic dl ul li, #customerInfoNew #basic dl ul li { padding-bottom: 5px; }
 #customerInfoEdit #basic dl ul li i, #customerInfoNew #basic dl ul li i { margin-right: 5px; }
+#resNew #resInfo a, #resNew #resInfo a:link, #resNew #resInfo input, #resNew #resInfo span, .date a, .date a:link, .date input {
+    display: inline-block;
+}
+#resNew #resInfo a, #resNew #resInfo a:link, #resNew #resInfo i, .date i {
+  font-size: 18px;
+}
+#resNew #resInfo a, #resNew #resInfo a:link, .date a, .date a:link {
+    padding: 0 10px;
+  margin-left: 5px;
+  height: 35px;
+  line-height: 35px;
+}
 #customerInfo #basic dl dt, #customerInfo #basic dl dd, #customerInfoNew #basic dl dt, #customerInfoNew #basic dl dd, #customerInfoEdit #basic dl dt, #customerInfoEdit #basic dl dd {
   display: inline-block;
   vertical-align: middle;
 }
 #customerInfo #basic dl dt, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dt { width: 110px; }
 #customerInfo #basic dl dd:nth-child(2) {
-  width: 51%;
+  width: 55%;
 }
 #customerInfo #basic dl dd:nth-child(2) ul li {
   width: 100%;
@@ -1186,7 +1426,10 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   top: 0;
   width: 100%;
 }
-.customer #resList { min-width: 554px; }
+.customer #resList, #customerInfo .tabBody {
+  width: 100%;
+  height: 82%;
+}
 .customer footer ul, .resNew footer ul {
   position: relative;
   padding: 10px 20px;
@@ -1227,6 +1470,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 .customer footer ul li input {
   text-indent: 45px;
   width: 100%;
+  background: #858585 url(../images/screen/footer_search.png) no-repeat 10px center;
   padding: 0;
 }
 .customer footer ul li input:placeholder-shown { color: #D8D8D8; }
@@ -1277,7 +1521,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #customerInfoEdit #detailInfo input, #customerInfoNew #detailInfo input { padding: 8px 10px; margin-left: 5px; }
 #customerInfoEdit #detailInfo input#zipcode3, #customerInfoNew #detailInfo input#zipcode3 { width: 65px; }
 #customerInfoEdit #detailInfo input#zipcode4, #customerInfoNew #detailInfo input#zipcode4 { width: 70px; }
-#customerInfoEdit #detailInfo .addrRest input, #customerInfoEdit #detailInfo .email input, #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .addrRest input, #customerInfoNew #detailInfo .email input, #customerInfoNew #detailInfo .memo textarea { min-width: 270px; max-width: 400px; }
+#customerInfoEdit #detailInfo .addrRest input, #customerInfoEdit #detailInfo .email input, #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .addrRest input, #customerInfoNew #detailInfo .email input, #customerInfoNew #detailInfo .memo textarea { min-width: 310px; max-width: 400px; }
 #customerInfoEdit #detailInfo .phone input, #customerInfoNew #detailInfo .phone input { width: 150px; }
 #customerInfoEdit #detailInfo .memo textarea, #customerInfoNew #detailInfo .memo textarea { font-size:14px; }
 #customerInfoEdit #detailInfo  a.BTNtarco, #customerInfoEdit #detailInfo  a.BTNyellow, #customerInfoNew #detailInfo  a.BTNtarco, #customerInfoNew #detailInfo a.BTNyellow {
@@ -1349,9 +1593,11 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   font-size: 21px;
 }
 #resNew #resInfo h2 {
+  background-image: url(../images/screen/res_detail.png);
   text-indent: 40px;
 }
 #resNew #customers h2 {
+  background-image: url(../images/screen/res_customer.png);
   text-indent: 35px;
 }
 #resNew #customers h2 #addCustomer {
@@ -1365,6 +1611,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 #resNew #customerList dl dt, #resNew #customerList dl dd { vertical-align: middle; }
 #resNew #customerList dl dt { width: 180px; }
 #resNew #customerList dl dd a, #resNew #customerList dl dd a:link, #resNew #customerList dl dd a:visited {
+  background-image: url(../images/screen/btn_delete_ss.png);
   background-position: center center;
   background-repeat: no-repeat;
   width: 10px;
@@ -1397,6 +1644,7 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   margin-left: 20px;
 }
 .resNew footer #newResFlow ol {
+  background: transparent url(../images/screen/footer_flow_arrow.png) right center no-repeat;
   line-height: 20px;
   height: 20px;
   padding: 5px 25px 5px 10px;
@@ -1405,6 +1653,17 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
 .resNew footer #newResFlow ol:last-child { background-image: none; }
 .resNew footer #newResFlow ol.done {
   color: #6fa89f;
+  background-image:
+    url(../images/screen/footer_flow_arrow.png), /* 最前面の背景レイヤーの背景画像 */
+    url(../images/screen/footer_flow_done.png);
+
+  background-repeat:
+  no-repeat, /* 最前面の背景レイヤーに対応 */
+  no-repeat;
+  
+  background-position:
+  right center, /* 最前面の背景レイヤーに対応 */
+  left 8px center;
   padding-left: 25px;
 }
 .resNew footer #newResFlow ol.now {
@@ -1418,13 +1677,15 @@ input[type="checkbox"].BTNonoff + label, input[type="checkbox"].BTNopenclose + l
   padding-right: 10px;
 }
 .resNew footer #BTNfunctions li a#BTNsave {
+  background-image: url(../images/screen/btn_save_s.png);
   padding-left: 55px;
 }
 .resNew footer #BTNfunctions li a#BTNdel {
+  background-image: url(../images/screen/btn_delete_s.png);
   padding-left: 40px;
 }
 /*clear all*/
-#aa:after, .firstSetting #progress:after, #customerInfo #detailInfo > ul:after, #customerInfo #detailInfo dl:after, #customerInfoEdit #detailInfo > ul:after, #customerInfoEdit #detailInfo dl:after, #customerInfoNew #detailInfo > ul:after, #customerInfoNew #detailInfo dl:after {
+#aa:after, .firstSetting #progress:after, #customerInfo #detailInfo > ul:after, #customerInfo #detailInfo dl:after, #customerInfoEdit #detailInfo > ul:after, #customerInfoEdit #detailInfo dl:after, #customerInfoNew #detailInfo > ul:after, #customerInfoNew #detailInfo dl:after, #calendar .header:after {
   content: ".";
   display: block;
   height: 0;

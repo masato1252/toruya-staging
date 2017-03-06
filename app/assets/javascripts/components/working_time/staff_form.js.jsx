@@ -77,34 +77,42 @@ UI.define("WorkingTime.StaffForm", function() {
           </div>
 
           <h3>勤務日時<strong>必須項目</strong></h3>
-          <div id="working" className="formRow">
+          <div id="belong" className="formRow">
             {
               this.props.shops.map(function(shop) {
                 return (
-                  <dl key={`full-time-${shop.id}`}>
-                    <dt>{shop.name}</dt>
-                    <dd>
-                      <input
-                        type="checkbox"
-                        className="BTNalwaysIN"
-                        id={`alwaysINshop-${shop.id}`}
-                        name={`business_schedules[${shop.id}][full_time]`}
-                        value="true"
-                        data-value={shop.id}
-                        checked={!!this._isFullTimeShop(shop.id)}
-                        onChange={this.handleShopFullTime}
-                        />
-                      <label htmlFor={`alwaysINshop-${shop.id}`}></label>
-                      <input
-                        type="hidden"
-                        name={`business_schedules[${shop.id}][id]`}
-                        value={this.selectedSchedule(shop.id) ? this.selectedSchedule(shop.id).id : ""} />
-                    </dd>
-                  </dl>
+                  <div key={`full-time-${shop.id}`}>
+                    <dl className="checkbox">
+                      <dd>
+                        <input type="checkbox" name="shopSelect" id={`shop${shop.id}`} checked="" />
+                        <label htmlFor={`shop${shop.id}`}>{shop.name}</label>
+                      </dd>
+                    </dl>
+                    <dl className="onoffSetting">
+                      <dt>常勤</dt>
+                      <dd>
+                        <input
+                          type="checkbox"
+                          className="BTNonoff"
+                          id={`alwaysINshop-${shop.id}`}
+                          name={`business_schedules[${shop.id}][full_time]`}
+                          value="true"
+                          data-value={shop.id}
+                          checked={!!this._isFullTimeShop(shop.id)}
+                          onChange={this.handleShopFullTime}
+                          />
+                        <label htmlFor={`alwaysINshop-${shop.id}`}></label>
+                        <input
+                          type="hidden"
+                          name={`business_schedules[${shop.id}][id]`}
+                          value={this.selectedSchedule(shop.id) ? this.selectedSchedule(shop.id).id : ""} />
+                      </dd>
+                    </dl>
+                  </div>
                 );
               }.bind(this))
             }
-          </div>
+            </div>
           {
             this.partTimeShops().map(function(shop) {
               return (
