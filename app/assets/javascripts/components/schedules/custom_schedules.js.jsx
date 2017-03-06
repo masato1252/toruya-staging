@@ -47,15 +47,7 @@ UI.define("CustomSchedules", function() {
 
     render: function() {
       return (
-      <div id="tempHoliday" className="formRow">
-        <ul className="tableTTL">
-          <li className="date">{this.props.dateLabel}</li>
-          <li className="startTime">{this.props.startTimeLabel}</li>
-          <li className="endTime">{this.props.endTimeLabel}</li>
-          {this.props.open ? null : (
-            <li className="closeReason">{this.props.reasonOfClosingLabel}</li>
-          )}
-        </ul>
+      <div id="tempWork">
         <dl>
           <dt className="date">
             <UI.Common.DatepickerField

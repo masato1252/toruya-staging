@@ -7,7 +7,8 @@ UI.define("WorkingTime.StaffForm", function() {
     getInitialState: function() {
       return {
         shops: this.props.shops,
-        fullTimeShops: this.props.fullTimeShops
+        fullTimeShops: this.props.fullTimeShops,
+        scheduleDisplaying: {}
       }
     },
 
@@ -59,6 +60,17 @@ UI.define("WorkingTime.StaffForm", function() {
       return _.reject(shops, function(shop) {
         return this._isFullTimeShop(shop.id)
       }.bind(this))
+    },
+
+    toggleSchedule: function(scheduleId) {
+      if (this.state.scheduleDisplaying[scheduleId]) {
+        this.state.scheduleDisplaying[scheduleId] = false;
+      }
+      else {
+        this.state.scheduleDisplaying[scheduleId] = true;
+      }
+
+      this.setState(this.state.scheduleDisplaying);
     },
 
     render: function() {
@@ -113,56 +125,111 @@ UI.define("WorkingTime.StaffForm", function() {
               }.bind(this))
             }
             </div>
+
           {
             this.partTimeShops().map(function(shop) {
               return (
-              <div key={`shop-${shop.id}-schedule-setting`}>
-                <UI.WorkingTime.BusinessScheduleForm
-                  key={`schedule-${shop.id}`}
-                  timezone={this.props.timezone}
-                  shop={shop}
-                  wdays={this.props.wdays}
-                  wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}
-                  dayLabel={this.props.dayLabel}
-                  inOutLabel={this.props.inOutLabel}
-                  startLabel={this.props.startLabel}
-                  endLabel={this.props.endLabel}
-                />
                 <div>
-                  <h3>{shop.name} 臨時勤務</h3>
-                  <UI.CustomSchedules
-                    customSchedules={this.props.openedCustomSchedulesByShop[`${shop.id}`] || []}
-                    shopId={shop.id}
-                    dateLabel={this.props.dateLabel}
-                    startTimeLabel={this.props.startTimeLabel}
-                    endTimeLabel={this.props.endTimeLabel}
-                    reasonOfClosingLabel={this.props.reasonOfClosingLabel}
-                    newClosingBtn={this.props.newClosingBtn}
-                    closingReason={this.props.closingReason}
-                    deleteBtn={this.props.deleteBtn}
-                    open={true}
-                    />
-                 </div>
-               </div>
+                  <h3>{shop.name} 勤務日時</h3>
+                  <div className="formRow" key={`shop-${shop.id}-schedule-setting`}>
+                    <dl className="formTTL"
+                      onClick={this.toggleSchedule.bind(
+                        this, `business_schedules_${shop.id}`)
+                      }>
+                      <dt>固定日程</dt>
+                      <dd>
+                        {
+                           this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
+                             <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                           ) : (
+                             <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                           )
+                        }
+                      </dd>
+                    </dl>
+                    {
+                      this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
+                        <UI.WorkingTime.BusinessScheduleForm
+                          key={`schedule-${shop.id}`}
+                          timezone={this.props.timezone}
+                          shop={shop}
+                          wdays={this.props.wdays}
+                          wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}
+                          dayLabel={this.props.dayLabel}
+                          inOutLabel={this.props.inOutLabel}
+                          startLabel={this.props.startLabel}
+                          endLabel={this.props.endLabel}
+                        />
+                      ) : null
+                    }
+                    <dl className="formTTL"
+                      onClick={this.toggleSchedule.bind(
+                        this, `temp_working_schedules_${shop.id}`)
+                      }>
+                      <dt>臨時出勤</dt>
+                      <dd>
+                        {
+                           this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
+                             <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                           ) : (
+                             <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                           )
+                        }
+                      </dd>
+                    </dl>
+                    {
+                      this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
+                        <UI.CustomSchedules
+                          customSchedules={this.props.openedCustomSchedulesByShop[`${shop.id}`] || []}
+                          shopId={shop.id}
+                          dateLabel={this.props.dateLabel}
+                          startTimeLabel={this.props.startTimeLabel}
+                          endTimeLabel={this.props.endTimeLabel}
+                          reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+                          newClosingBtn={this.props.newClosingBtn}
+                          closingReason={this.props.closingReason}
+                          deleteBtn={this.props.deleteBtn}
+                          open={true}
+                        />
+                      ) : null
+                    }
+                  </div>
+                </div>
               );
             }.bind(this))
           }
-          <h3>臨時休暇</h3>
-          <UI.CustomSchedules
-            customSchedules={this.props.closedCustomSchedules}
-            dateLabel={this.props.dateLabel}
-            startTimeLabel={this.props.startTimeLabel}
-            endTimeLabel={this.props.endTimeLabel}
-            reasonOfClosingLabel={this.props.reasonOfClosingLabel}
-            newClosingBtn={this.props.newClosingBtn}
-            closingReason={this.props.closingReason}
-            deleteBtn={this.props.deleteBtn}
-            open={false}
-          />
-
-
-          <div id="footerav">
+          <h3>休暇</h3>
+          <div className="formRow">
+            <dl className="formTTL"
+              onClick={this.toggleSchedule.bind(this, "temp_leaving_schedules")}>
+              <dt>休暇を設定する</dt>
+              <dd>
+              {
+                this.state.scheduleDisplaying["temp_leaving_schedules"] ? (
+                  <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                ) : (
+                  <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                )
+              }
+              </dd>
+            </dl>
+            {
+              this.state.scheduleDisplaying["temp_leaving_schedules"] ? (
+                <UI.CustomSchedules
+                  customSchedules={this.props.closedCustomSchedules}
+                  dateLabel={this.props.dateLabel}
+                  startTimeLabel={this.props.startTimeLabel}
+                  endTimeLabel={this.props.endTimeLabel}
+                  reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+                  newClosingBtn={this.props.newClosingBtn}
+                  closingReason={this.props.closingReason}
+                  deleteBtn={this.props.deleteBtn}
+                  open={false}
+                />
+              ) : null
+            }
           </div>
+
           <ul id="footerav">
             <li><a href={this.props.cancelPath} className="BTNtarco">{this.props.cancelBtn}</a></li>
             <li><input type="submit" className="BTNyellow" value="保存" /></li>
