@@ -88,7 +88,7 @@ ja:
       new_button: 新規店舗作成
       info_1: 設定された店舗一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
-      new_info_1: 店舗を設定します。
+      new_info_1: 店舗情報を設定します。
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。

@@ -96,8 +96,8 @@ UI.define("CustomScheduleFields", function() {
                 onChange={this._handleChnage} />
             </dd>
           )}
-          <dd className="add">
-            <a href="#" className="btn btn-reset btn-danger" onClick={this._handleCustomRow}>
+          <dd className="add function">
+            <a href="#" className="BTNorange" onClick={this._handleCustomRow}>
               {this.props.deleteBtn}
             </a>
           </dd>

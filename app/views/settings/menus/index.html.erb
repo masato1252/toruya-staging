@@ -13,7 +13,6 @@
 <form>
   <div id="menuList" class="formRow">
     <ul class="tableTTL">
-      <li class="check"><%= t("action.delete") %></li>
       <li class="rowTTL"><%= t("settings.menu.name") %></li>
       <li class="rowTTL"><%= t("settings.menu.staff") %></li>
       <li class="rowTTL"><%= t("settings.menu.reservation_setting_name") %></li>
@@ -21,15 +20,13 @@
     </ul>
     <% @menus.each do |menu| %>
       <dl>
-        <dt class="check">
-          <%= link_to t("action.delete"), settings_menu_path(menu), class: "btn btn-danger", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
-        </dt>
         <dt class="rowTTL"><%= menu.display_name %></dt>
         <dd class="staff"><%= menu.staffs.size %></dd>
         <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.display_name : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_menu_path(menu), class: "BTNtarco" %>
+          <%= link_to t("action.delete"), settings_menu_path(menu), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dd>
       </dl>
     <% end %>

@@ -6,31 +6,38 @@
 </div>
 
 <form>
-  <div id="customize-table" class="formRow table">
+  <h3>管理者情報<strong>必須項目</strong></h3>
+  <div id="adminInfo" class="formRow">
     <dl>
-      <dd><%= t("common.name") %></dd>
+      <dt><%= t("common.name") %></dt>
       <dd><%= @profile.name %></dd>
     </dl>
+  </div>
+
+  <h3>企業情報</h3>
+  <div id="companyInfo" class="formRow">
     <dl>
-      <dd><%= Profile.human_attribute_name(:company_name) %></dd>
+      <dt><%= Profile.human_attribute_name(:company_name) %></dt>
       <dd><%= @profile.company_name %></dd>
     </dl>
     <dl>
-      <dd><%= Profile.human_attribute_name(:zip_code) %></dd>
+      <dt><%= Profile.human_attribute_name(:zip_code) %></dt>
       <dd><%= @profile.zip_code %></dd>
     </dl>
     <dl>
-      <dd><%= Profile.human_attribute_name(:address) %></dd>
+      <dt><%= Profile.human_attribute_name(:adtress) %></dt>
       <dd><%= @profile.address %></dd>
     </dl>
     <dl>
-      <dd><%= Profile.human_attribute_name(:phone_number) %></dd>
+      <dt><%= Profile.human_attribute_name(:phone_number) %></dt>
       <dd><%= @profile.phone_number %></dd>
     </dl>
     <dl>
-      <dd>Website</dd>
+      <dt>Website</dt>
       <dd><%= @profile.website %></dd>
     </dl>
   </div>
-  <%= link_to t("action.edit"), edit_settings_profile_path, class: "btn btn-primary" %>
+  <ul id="footerav">
+    <%= link_to t("action.edit"), edit_settings_profile_path, class: "BTNyellow" %>
+  </ul>
 </form>
