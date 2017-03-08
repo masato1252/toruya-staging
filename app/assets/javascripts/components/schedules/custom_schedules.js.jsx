@@ -76,6 +76,7 @@ UI.define("CustomSchedules", function() {
              shopId={this.props.shopId}
              deleteBtn={this.props.deleteBtn}
              open={this.props.open}
+             scheduleNumber={i + 1}
              closingReason={this.props.closingReason}
            />
          }.bind(this))}
