@@ -129,7 +129,7 @@ UI.define("WorkingTime.StaffForm", function() {
           {
             this.partTimeShops().map(function(shop) {
               return (
-                <div>
+                <div key={`partTimeShops-${shop.id}`}>
                   <h3>{shop.name} 勤務日時</h3>
                   <div className="formRow" key={`shop-${shop.id}-schedule-setting`}>
                     <dl className="formTTL"
@@ -189,6 +189,7 @@ UI.define("WorkingTime.StaffForm", function() {
                           newClosingBtn={this.props.newClosingBtn}
                           closingReason={this.props.closingReason}
                           deleteBtn={this.props.deleteBtn}
+                          calendarfieldPrefix={`temp_working_schedules_${shop.id}`}
                           open={true}
                         />
                       ) : null
@@ -224,6 +225,7 @@ UI.define("WorkingTime.StaffForm", function() {
                   newClosingBtn={this.props.newClosingBtn}
                   closingReason={this.props.closingReason}
                   deleteBtn={this.props.deleteBtn}
+                  calendarfieldPrefix="temp_leaving_schedule"
                   open={false}
                 />
               ) : null

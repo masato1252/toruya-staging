@@ -17,7 +17,7 @@ UI.define("Common.DatepickerField", function() {
     },
 
     _datepickerId: function() {
-      return `schedule_hidden_date_${this.props.scheduleNumber || "default"}`
+      return `schedule_hidden_date_${this.props.calendarfieldPrefix || "default"}`
     },
 
     render: function() {

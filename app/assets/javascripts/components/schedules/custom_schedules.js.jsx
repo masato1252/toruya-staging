@@ -54,6 +54,7 @@ UI.define("CustomSchedules", function() {
               date={this.state.start_time_date_part}
               dataName="start_time_date_part"
               handleChange={this._handleChange}
+              calendarfieldPrefix={this.props.calendarfieldPrefix}
             />
           </dt>
           <dd className="startTime">
@@ -76,7 +77,7 @@ UI.define("CustomSchedules", function() {
              shopId={this.props.shopId}
              deleteBtn={this.props.deleteBtn}
              open={this.props.open}
-             scheduleNumber={i + 1}
+             calendarfieldPrefix={`${this.props.calendarfieldPrefix}-${i + 1}`}
              closingReason={this.props.closingReason}
            />
          }.bind(this))}

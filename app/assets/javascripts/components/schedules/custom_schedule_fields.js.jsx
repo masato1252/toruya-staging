@@ -71,7 +71,7 @@ UI.define("CustomScheduleFields", function() {
                     name="custom_schedules[][start_time_date_part]"
                     dataName="start_time_date_part"
                     handleChange={this._handleChange}
-                    scheduleNumber={this.props.scheduleNumber}
+                    calendarfieldPrefix={this.props.calendarfieldPrefix}
                   />
                 </span>
               ) : (
