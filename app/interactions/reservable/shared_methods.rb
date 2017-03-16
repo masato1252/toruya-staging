@@ -5,9 +5,6 @@ module Reservable
       # start_time/ready_time checking is >, < not, >=, <= that means we accept reservation is overlap 1 minute
       return @reserved_staff_ids if defined?(@reserved_staff_ids)
 
-      beginning_of_day = start_time.beginning_of_day
-      end_of_day = start_time.end_of_day
-
       scoped = ReservationStaff.joins(reservation: :menu).
         where.not(reservation_id: reservation_id.presence).
         where("reservation_staffs.staff_id": shop.staff_ids).
@@ -44,6 +41,14 @@ module Reservable
 
     def end_time
       @end_time ||= business_time_range.last
+    end
+
+    def beginning_of_day
+      @beginning_of_day ||= start_time.beginning_of_day
+    end
+
+    def end_of_day
+      @end_of_day ||= start_time.end_of_day
     end
   end
 end

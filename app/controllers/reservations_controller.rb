@@ -29,7 +29,8 @@ class ReservationsController < DashboardController
     end
 
     if params[:start_time_date_part].present?
-      @time_ranges = Reservable::Time.run!(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      @time_ranges = outcome.valid? ? outcome.result : nil
     end
   end
 
@@ -37,7 +38,8 @@ class ReservationsController < DashboardController
   def edit
     @body_class = "resNew"
     @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
-    @time_ranges = Reservable::Time.run!(shop: shop, date: @reservation.start_time.to_date)
+    outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
+    @time_ranges = outcome.valid? ? outcome.result : nil
   end
 
   # POST /reservations
