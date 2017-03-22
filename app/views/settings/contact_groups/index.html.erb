@@ -2,28 +2,34 @@
   <h2><%= t("settings.contact.info_title") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.contact.info_1") %><br /><%= t("settings.contact.info_2") %></p>
-</div>
-
-<form>
-  <div>
+  <div class="caution">
+    ※You need to set
     <% if current_user.uid %>
       <%= link_to t("settings.contact.reconnect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: t("settings.contact.reconnect_google_confirmation_message") }  %>
     <% else %>
       <%= link_to t("settings.contact.connect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
     <% end %>
+ in order to manage customers.
   </div>
+  <ul class="function">
+    <li>
+      <%= link_to t("settings.contact.new_button"), new_settings_contact_group_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p><%= t("settings.contact.info_1") %><br /><%= t("settings.contact.info_2") %></p>
+</div>
 
-  <div id="customize-table" class="formRow table">
-    <dl class="header">
-      <dd><%= t("settings.contact.info_title") %></dd>
-      <dd><%= t("settings.contact.connected_google_group_title") %></dd>
-      <dd><%= t("settings.contact.synchronization_title") %></dd>
-    </dl>
+<div id="settingForm">
+  <div id="contactList" class="formRow">
+    <ul class="tableTTL">
+      <li><%= t("settings.contact.info_title") %></li>
+      <li><%= t("settings.contact.connected_google_group_title") %></li>
+      <li><%= t("settings.contact.synchronization_title") %></li>
+    </ul>
     <% @contact_groups.each do |contact_group| %>
-      <dl class="body">
-        <dd><%= contact_group.name %></dd>
-        <dd>
+      <dl>
+        <dt class="rowTTL"><%= contact_group.name %></dt>
+        <dd class="updateTime">
           <% if contact_group.google_group_name %>
             <%= contact_group.google_group_name %>
           <% elsif contact_group.backup_google_group_id %>
@@ -32,10 +38,10 @@
             <%= link_to t("settings.contact.connect"), connections_settings_contact_group_path(contact_group) if current_user.uid %>
           <% end %>
         </dd>
-        <dd>
+        <dd class="function">
           <%= link_to t("settings.contact.sync"), sync_settings_contact_group_path(contact_group), method: :post, class: "btn btn-success", data: { disable_with: t("common.processing") } if contact_group.backup_google_group_id %>
         </dd>
-        <dd>
+        <dd class="function">
           <%= link_to t("action.edit"), edit_settings_contact_group_path(contact_group), class: "btn btn-primary btn-light-green btn-bold", data: { disable_with: t("common.processing") } %>
           <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "btn btn-danger btn-bold", data: { disable_with: t("common.processing") } do %>
             <i class="fa fa-trash" aria-hidden="true"></i>
@@ -44,9 +50,4 @@
       </dl>
     <% end %>
   </div>
-  <ul class="function">
-    <li>
-      <%= link_to t("settings.contact.new_button"), new_settings_contact_group_path, class: "BTNyellow addNew" %>
-    </li>
-  </ul>
-</form>
+</div>

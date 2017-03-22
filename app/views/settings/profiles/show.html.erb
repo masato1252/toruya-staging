@@ -5,7 +5,7 @@
   <p><%= t("settings.profile.info_1") %><br /><%= t("settings.profile.info_2") %></p>
 </div>
 
-<form>
+<div id="settingForm">
   <h3>管理者情報<strong>必須項目</strong></h3>
   <div id="adminInfo" class="formRow">
     <dl>
@@ -40,4 +40,4 @@
   <ul id="footerav">
     <%= link_to t("action.edit"), edit_settings_profile_path, class: "BTNyellow" %>
   </ul>
-</form>
+</div>

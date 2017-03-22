@@ -131,7 +131,7 @@ UI.define("WorkingTime.StaffForm", function() {
               return (
                 <div key={`partTimeShops-${shop.id}`}>
                   <h3>{shop.name} 勤務日時</h3>
-                  <div className="formRow" key={`shop-${shop.id}-schedule-setting`}>
+                  <div id="tempHoliday" className="formRow" key={`shop-${shop.id}-schedule-setting`}>
                     <dl className="formTTL"
                       onClick={this.toggleSchedule.bind(
                         this, `business_schedules_${shop.id}`)
@@ -200,7 +200,7 @@ UI.define("WorkingTime.StaffForm", function() {
             }.bind(this))
           }
           <h3>休暇</h3>
-          <div className="formRow">
+          <div id="tempHoliday" className="formRow">
             <dl className="formTTL"
               onClick={this.toggleSchedule.bind(this, "temp_leaving_schedules")}>
               <dt>休暇を設定する</dt>

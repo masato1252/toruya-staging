@@ -5,27 +5,29 @@
   <p><%= t("settings.reservation_setting.new_info_1") %><br /><%= t("settings.reservation_setting.new_info_2") %></p>
 </div>
 
-<%= react_component "UI.ReservationSettings.Form", {
-  timezone: Time.zone.tzinfo.identifier,
-  save_setting_path: url,
-  cancel_path: settings_reservation_settings_path,
-  form_authenticity_token: form_authenticity_token,
-  setting: reservation_setting,
-  day_names: I18n.t("date.abbr_day_names"),
-  info_label: I18n.t("settings.reservation_setting.info_label"),
-  short_name: I18n.t("settings.reservation_setting.short_name"),
-  name_label: I18n.t("settings.reservation_setting.name_label"),
-  all_business_days_label: I18n.t("settings.reservation_setting.all_business_days"),
-  weekly_label: I18n.t("settings.reservation_setting.weekly"),
-  monthly_label: I18n.t("settings.reservation_setting.monthly"),
-  weekly_setting_label: I18n.t("settings.reservation_setting.weekly_setting"),
-  monthly_setting_label: I18n.t("settings.reservation_setting.monthly_setting"),
-  number_of_day_label: I18n.t("settings.reservation_setting.number_of_day"),
-  number_of_week_label: I18n.t("settings.reservation_setting.number_of_week"),
-  day_label: I18n.t("common.day"),
-  all_business_hours_label: I18n.t("settings.reservation_setting.all_business_hours"),
-  custom_time_label: I18n.t("settings.reservation_setting.custom_time"),
-  start_time_label: I18n.t("common.start_time"),
-  end_time_label: I18n.t("common.end_time"),
-  cancel_btn: I18n.t("action.cancel")
-} %>
+<div id="settingForm">
+  <%= react_component "UI.ReservationSettings.Form", {
+    timezone: Time.zone.tzinfo.identifier,
+    save_setting_path: url,
+    cancel_path: settings_reservation_settings_path,
+    form_authenticity_token: form_authenticity_token,
+    setting: reservation_setting,
+    day_names: I18n.t("date.abbr_day_names"),
+    info_label: I18n.t("settings.reservation_setting.info_label"),
+    short_name: I18n.t("settings.reservation_setting.short_name"),
+    name_label: I18n.t("settings.reservation_setting.name_label"),
+    all_business_days_label: I18n.t("settings.reservation_setting.all_business_days"),
+    weekly_label: I18n.t("settings.reservation_setting.weekly"),
+    monthly_label: I18n.t("settings.reservation_setting.monthly"),
+    weekly_setting_label: I18n.t("settings.reservation_setting.weekly_setting"),
+    monthly_setting_label: I18n.t("settings.reservation_setting.monthly_setting"),
+    number_of_day_label: I18n.t("settings.reservation_setting.number_of_day"),
+    number_of_week_label: I18n.t("settings.reservation_setting.number_of_week"),
+    day_label: I18n.t("common.day"),
+    all_business_hours_label: I18n.t("settings.reservation_setting.all_business_hours"),
+    custom_time_label: I18n.t("settings.reservation_setting.custom_time"),
+    start_time_label: I18n.t("common.start_time"),
+    end_time_label: I18n.t("common.end_time"),
+    cancel_btn: I18n.t("action.cancel")
+  } %>
+</div>
