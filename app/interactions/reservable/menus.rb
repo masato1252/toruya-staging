@@ -166,10 +166,6 @@ module Reservable
       )
     end
 
-    def today
-      @today ||= ::Time.zone.now.to_s(:date)
-    end
-
     def distance_in_minutes
       @distance_in_minutes ||= ((end_time - start_time)/60.0).round
     end

@@ -35,6 +35,10 @@ module Reservable
       scoped.select("reservations.*").group("reservations.id")
     end
 
+    def today
+      @today ||= ::Time.zone.now.to_s(:date)
+    end
+
     def start_time
       @start_time ||= business_time_range.first
     end

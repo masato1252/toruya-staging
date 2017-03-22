@@ -50,6 +50,82 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      context "when reservation time is larger than menu working_time" do
+        before do
+          FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+          FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2)
+        end
+
+        let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
+
+        it "is valid" do
+          outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                menu_ids: [menu1.id, menu2.id],
+                                                business_time_range: time_range)
+
+          expect(outcome).to be_valid
+        end
+      end
+
+      # validate_interval_time
+      context "when there are reservations overlap in interval time" do
+        context "when the overlap happened on previous reservation" do
+          before do
+            FactoryGirl.create(:reservation, shop: shop, menu: menu1,
+                               start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
+                               staff_ids: [staff1.id])
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  staff_ids: [staff1.id, staff2.id],
+                                                  business_time_range: time_range)
+
+            expect(outcome).to be_invalid
+            expect(outcome.errors.details[:business_time_range]).to include(error: "previous_reservation_interval_overlap")
+            expect(outcome.errors.details[:business_time_range]).to include(error: :interval_overlap)
+            expect(outcome.errors.details[:business_time_range]).not_to include(error: "next_reservation_interval_overlap")
+          end
+        end
+
+        context "when the overlap happened on next reservation" do
+          before do
+            FactoryGirl.create(:reservation, shop: shop, menu: menu1,
+                               start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
+                               staff_ids: [staff1.id])
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  staff_ids: [staff1.id, staff2.id],
+                                                  business_time_range: time_range)
+
+            expect(outcome).to be_invalid
+            expect(outcome.errors.details[:business_time_range]).to include(error: "next_reservation_interval_overlap")
+            expect(outcome.errors.details[:business_time_range]).to include(error: :interval_overlap)
+            expect(outcome.errors.details[:business_time_range]).not_to include(error: "previous_reservation_interval_overlap")
+          end
+        end
+      end
+
+      # validate_menu_schedules
+      context "when menu doesn't allow to be booked on that date" do
+        before { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                menu_ids: [menu1.id, menu2.id],
+                                                business_time_range: time_range)
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:menu_ids]).to include(error: :unschedule_menu, menu_name: menu1.name)
+          expect(outcome.errors.details[:menu_ids]).not_to include(error: :unschedule_menu, menu_name: menu2.name)
+        end
+      end
+
+      # validate_seats_for_customers
       context "when some menus doesn't have enough seats for customers" do
         let(:menu1) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 4) }
         let(:menu2) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 3) }
@@ -66,6 +142,7 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_staffs_ability_for_customers(staff)
       context "when some staff doesn't have enough ability for customers" do
         let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
         before do
@@ -85,18 +162,6 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
-      context "when reservation time is larger than menu working_time" do
-        let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
-
-        it "is valid" do
-          outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                menu_ids: [menu1.id, menu2.id],
-                                                business_time_range: time_range)
-
-          expect(outcome).to be_valid
-        end
-      end
-
       context "when some staffs don't work on that date" do
         let(:staff2) { FactoryGirl.create(:staff, user: user, shop: shop) }
 
@@ -112,6 +177,7 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_other_shop_reservation(staff)
       context "when some staffs already had reservation in other shops" do
         before do
           FactoryGirl.create(:reservation, shop: FactoryGirl.create(:shop),
@@ -130,7 +196,8 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
-      context "when some staffs already had reservation in the same shop" do
+      # validate_same_shop_overlap_reservations(staff)
+      context "when some staffs already had overlap reservation in the same shop" do
         before do
           FactoryGirl.create(:reservation, shop: shop,
                              staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
@@ -148,6 +215,7 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_staff_ability(staff)
       context "when some staffs don't have ability for some menus" do
         let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
 

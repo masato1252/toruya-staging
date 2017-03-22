@@ -19,6 +19,8 @@ module Reservable
         errors.add(:business_time_range, :too_short)
       end
 
+      validate_interval_time
+      validate_menu_schedules
       validate_seats_for_customers
 
       return if staff_ids.blank?
@@ -59,6 +61,43 @@ module Reservable
 
     def staffs
       @staffs ||= shop.staffs.where(id: staff_ids)
+    end
+
+    def validate_interval_time
+      previous_reservation_validation_start_time = start_time.advance(minutes: -last_menu_interval_time)
+      previous_reservation_validation_end_time = start_time
+
+      if previous_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
+                                            reservation_id: reservation_id,
+                                            start_time: previous_reservation_validation_start_time,
+                                            end_time: previous_reservation_validation_end_time).
+                                            where("reservations.shop_id = ?", shop.id).exists?
+        errors.add(:business_time_range, "previous_reservation_interval_overlap")
+      end
+
+      # When the start time is the same, it will be counts as overlap reservation in this case.
+      next_reservation_validation_start_time = end_time.advance(minutes: -1)
+      next_reservation_validation_end_time = end_time.advance(minutes: last_menu_interval_time)
+
+      if next_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
+                                            reservation_id: reservation_id,
+                                            start_time: next_reservation_validation_start_time,
+                                            end_time: next_reservation_validation_end_time).
+                                            where("reservations.shop_id = ?", shop.id).exists?
+        errors.add(:business_time_range, "next_reservation_interval_overlap")
+      end
+
+      if previous_reservation_overlap || next_reservation_overlap
+        errors.add(:business_time_range, :interval_overlap)
+      end
+    end
+
+    def validate_menu_schedules
+      menus.each do |menu|
+        unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
+          errors.add(:menu_ids, :unschedule_menu, menu_name: menu.name)
+        end
+      end
     end
 
     def validate_seats_for_customers
