@@ -79,7 +79,7 @@ input {
 	font-size: 21px;
 }
 #resNew #customerList dl dd a, #resNew #customerList dl dd a:link, #resNew #customerList dl dd a:visited {
-	background-image: url(../images/screen/btn_delete_ss.png);
+	background-image: url(asset-path("screen/btn_delete_ss.png"));
 	background-position: center center;
 	background-repeat: no-repeat;
 	width: 10px;
@@ -108,7 +108,7 @@ input {
 	margin-left: 20px;
 }
 .resNew footer #newResFlow ol {
-	background: transparent url(../images/screen/footer_flow_arrow.png) right center no-repeat;
+	background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
 	line-height: 20px;
 	height: 20px;
 	padding: 5px 25px 5px 10px;
@@ -118,8 +118,8 @@ input {
 .resNew footer #newResFlow ol.done {
 	color: #6fa89f;
 	background-image:
-    url(../images/screen/footer_flow_arrow.png), /* 最前面の背景レイヤーの背景画像 */
-    url(../images/screen/footer_flow_done.png);
+    url(asset-path("screen/footer_flow_arrow.png")), /* 最前面の背景レイヤーの背景画像 */
+    url(asset-path("screen/footer_flow_done.png"));
 
 	background-repeat:
 	no-repeat, /* 最前面の背景レイヤーに対応 */

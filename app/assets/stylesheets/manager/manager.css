@@ -218,7 +218,7 @@ header dl:last-child {
 }
 header dl:first-child dd { padding-right: 10px; }
 header dl:last-child dd { padding-left: 10px; }
-header dl dd { 
+header dl dd {
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -250,9 +250,9 @@ header dl dd a strong {
 	display: block;
 	width: 20px;
 	height: 20px;
-	font-weight: bold;
-	line-height: 20px;
-    font-size: 11px;
+  font-weight: bold;
+  line-height: 20px;
+  font-size: 11px;
 	border-radius: 10px; /* 記述無し */
 	-moz-border-radius: 10px; /* Firefox */
 	-webkit-border-radius: 10px; /* Google Chrome、Safari */
@@ -358,7 +358,7 @@ footer {
 	padding: 20px 20px 30px 20px;
 	height: 100%;
 }
-.setting .contents, .firstSetting .contents, .publish .contents { 
+.setting .contents, .firstSetting .contents, .publish .contents {
 	margin: 0;
 	padding: 0;
 }
@@ -582,10 +582,10 @@ input:disabled, #content form input:disabled {
 	border: 1px solid #b3b3b3;
 	background: #d0d0d0;
 	font-size: 20px;
-	font-weight: bold;
-	line-height: 40px;
-	height: 40px;
-	color: #fff;
+  font-weight: bold;
+  line-height: 40px;
+  height: 40px;
+  color: #fff;
 	padding: 0 20px;
 	position: relative;
 	bottom: -1px;
@@ -677,12 +677,12 @@ input:disabled, #content form input:disabled {
 	-o-border-radius: 5px; /* Opera */
 	-ms-border-radius: 5px; /* Internet Explorer */
 	line-height: 35px;
-    width: 27px;
-    font-weight: bold;
-    font-size: 28px;
+  width: 27px;
+  font-weight: bold;
+  font-size: 28px;
 }
 #calendar .header i, #calendar .header select { float: left; }
-#calendar .header select { 
+#calendar .header select {
 	width: 35%;
 	margin-left: 5px;
 }
@@ -715,8 +715,8 @@ input:disabled, #content form input:disabled {
 	width: 100%;
 }
 #calendar .day.today, #calendar .days .today a {
-	font-weight: bold;
-	color: #e6a220;
+  font-weight: bold;
+  color: #e6a220;
 }
 #calendar .day.selected, #calendar .day.today.select, #calendar .days a.here, #calendar .days .today a.here {
 	font-weight: bold;
@@ -889,7 +889,7 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 #resList .float dl dd a.BTNorange { border-color: #b0450d; }
 #resList .float dl dd a.BTNtarco { border-color: #60938a; }
 #resList .float .bubbleTop {
-	background: transparent url(../images/screen/float_top.png) top center no-repeat;
+	background: transparent url(asset-path("screen/float_top.png")) top center no-repeat;
 	height: 8px;
 	width: 100%;
 	position: absolute;
@@ -940,7 +940,7 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 	color: #fff;
 	font-weight: bold;
 }
-#searchRev .calendars, #searchRev .footer { 
+#searchRev .calendars, #searchRev .footer {
 	padding: 10px;
 	display: flex;
 	display: -moz-flex;
@@ -1002,8 +1002,8 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 	background-repeat: no-repeat;
 	background-position: center center;
 }
-#searchRev .calendars .days a.here { background-image: url(../images/screen/calendar_here.png); }
-#searchRev .calendars .days .today a { background-image: url(../images/screen/calendar_today.png); }
+#searchRev .calendars .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
+#searchRev .calendars .days .today a { background-image: url(asset-path("screen/calendar_today.png")); }
 #searchRev .footer { padding: 10px 20px; }
 .customer #resList, #customerInfo .tabBody {
 	width: 100%;
@@ -1053,7 +1053,7 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 .customer footer ul li input {
 	text-indent: 45px;
 	width: 100%;
-	background: #858585 url(../images/screen/footer_search.png) no-repeat 10px center;
+	background: #858585 url(asset-path("screen/footer_search.png")) no-repeat 10px center;
 	padding: 0;
 }
 .customer footer ul li input:placeholder-shown { color: #D8D8D8; }
@@ -1144,5 +1144,5 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 	display: block;
 	height: 0;
 	clear: both;
-	visibility: hidden; 
+	visibility: hidden;
 }
