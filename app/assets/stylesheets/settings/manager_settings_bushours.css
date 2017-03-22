@@ -1,0 +1,15 @@
+/* CSS Document */
+#content .formRow#shopList .rowTTL { width : 79% ; }
+#content #settingForm .function { width: 65px; }
+#content #busHour .rowTTL { width: 110px; }
+#content #busHour .openClose { width: 130px; }
+#content #tempHoliday .date input {
+	width: 120px;
+	margin-right: 5px;
+}
+#content #tempHoliday .date a:link {
+	width: 35px;
+	font-size: 21px;
+    line-height: 35px;
+}
+#content #tempHoliday .closeReason { width: 58%; }

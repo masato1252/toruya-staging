@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.firstSetting #progress {
+	margin: 20px;
+	border: 2px solid #aaa;
+	padding: 0 3px;
+}
+.firstSetting #progress li {
+	float: left;
+	font-size: 11pt;
+	line-height: 2em;
+	text-align: center;
+	width: 25%;
+	background: #d0d0d0 url(../images/screen/firstsetting_steps.png) right center no-repeat;
+	border-width: 5px 3px;
+	border-style: solid;
+	border-color: #f2f2f2;
+	color: #f2f2f2;
+}
+.firstSetting #progress li.done { color: #888; }
+.firstSetting #progress li i { padding-right: 10px; }
+.firstSetting #progress li.here {
+	color: #fff;
+	background-color: #6fa89f;
+	font-weight: bold;
+}
+.firstSetting #plans label {
+	width: 25%;
+}
+.firstSetting #paymentSetting .BTNselect label span strong {
+	padding-right: 20px;
+}
+.firstSetting #contactsGsync a i { padding-right: 10px; }
+.firstSetting #contactsGsync a.BTNyellow {
+	display: inline-block;
+	margin-left: 10px;
+	line-height: 30px;
+    height: 30px;
+}

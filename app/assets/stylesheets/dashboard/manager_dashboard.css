@@ -1,0 +1,10 @@
+/* CSS Document */
+
+.status-list {
+    text-align: center;
+    position: fixed;
+}
+div.status-list>div {
+    display: inline-block;
+    margin: 5px;
+}
