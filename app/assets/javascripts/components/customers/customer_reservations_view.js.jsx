@@ -153,7 +153,7 @@ UI.define("Customers.CustomerReservationsView", function() {
 
     render: function() {
       return (
-        <div id="customerInfo" className="contBody">
+        <div id="customerInfoEdit" className="contBody">
           <div id="basic">
             <dl>
               <dt>

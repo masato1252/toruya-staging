@@ -479,8 +479,8 @@ UI.define("Reservation.Form", function() {
                handleCustomerRemove={this.handleCustomerRemove} />
              <div id="customerLevels">
                <ul>
-                 <li><i className="customer-level-symbol normal" /><span className="wording">一般</span></li>
-                 <li><i className="customer-level-symbol vip" /><span className="wording">VIP</span></li>
+                 <li className="regular"><i className="customer-level-symbol normal" /><span className="wording">一般</span></li>
+                 <li className="vip"><i className="customer-level-symbol vip" /><span className="wording">VIP</span></li>
                </ul>
              </div>
            </div>

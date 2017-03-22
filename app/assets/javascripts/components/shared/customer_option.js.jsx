@@ -25,7 +25,9 @@ UI.define("Common.CustomerOption", function() {
             <p className="place">{this.props.customer.address}</p>
           </dt>
           {this.props.handleCustomerRemove ? <dd onClick={this._handleRemove}>
-            <span className="customer-remove-symbol glyphicon glyphicon-remove" />
+            <span className="BTNyellow customer-remove-symbol glyphicon glyphicon-remove">
+              <i className="fa fa-times" aria-hidden="true"></i>
+            </span>
           </dd> : null}
         </dl>
       );
