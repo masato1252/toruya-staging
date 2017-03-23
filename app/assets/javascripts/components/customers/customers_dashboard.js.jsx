@@ -508,8 +508,14 @@ UI.define("Customers.Dashboard", function() {
           <div id="customer" className="contents">
             <div id="resultList" className="sidel">
               <ul>
-                <li className="regular"><i className="customer-level-symbol regular" /><span>一般</span></li>
-                <li className="vip"><i className="customer-level-symbol vip" /><span>VIP</span></li>
+                <li className="regular">
+                  <span className="customer-level-symbol regular"></span>
+                  <span>一般</span>
+                </li>
+                <li className="vip">
+                  <span className="customer-level-symbol vip"></span>
+                  <span>VIP</span>
+                </li>
               </ul>
               <UI.Common.CustomersList
                 customers={this.state.customers}
