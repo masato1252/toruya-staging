@@ -173,7 +173,7 @@
 	background: #efefef;
 }
 #content .formRow .onoffSetting { border-top: 1px solid #efefef; }
-#content .formRow .formTTL dt { font-weight: bold;　}
+#content .formRow .formTTL dt { font-weight: bold; }
 #content #staffInfo .familyName { padding-right: 10px; }
 #content #working a.editWorktime, #content #working a.editWorktime:link, #content #working a.editWorktime:visited {
 	height: 30px;
