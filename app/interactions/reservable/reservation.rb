@@ -97,6 +97,19 @@ module Reservable
         unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
           errors.add(:menu_ids, :unschedule_menu, menu_name: menu.name)
         end
+
+        if menu.menu_reservation_setting_rule
+          if menu.menu_reservation_setting_rule.start_date > ::Time.zone.now.to_date
+            errors.add(:menu_ids, :start_yet,
+                       menu_name: menu.name,
+                       start_at: menu.menu_reservation_setting_rule.start_date.to_s)
+          end
+
+          if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < ::Time.zone.now.to_date) ||
+            (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < ::Time.zone.now.to_date)
+            errors.add(:menu_ids, :is_over, menu_name: menu.name)
+          end
+        end
       end
     end
 

@@ -493,3 +493,5 @@ ja:
               not_enough_seat: "%{menu_name} 席数不足"
               not_enough_ability: "%{staff_name} %{menu_name} 対応人数超"
               unschedule_menu: "%{menu_name} 予約枠外"
+              start_yet: "%{menu_name} 受付開始 ${start_at}"
+              is_over: "%{menu_name} 受付修了"

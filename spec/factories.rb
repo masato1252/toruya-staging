@@ -60,6 +60,7 @@ FactoryGirl.define do
     association :shop
     association :menu
     dates { [Time.zone.now.to_date, Time.zone.now.tomorrow.to_date] }
+    end_date { dates.last }
   end
 
   factory :reservation do

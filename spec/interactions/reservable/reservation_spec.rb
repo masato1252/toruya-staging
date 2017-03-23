@@ -125,6 +125,59 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_menu_schedules
+      context "when menu doesn't start yet" do
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+        before { MenuReservationSettingRule.where(menu: menu2).last.update_columns(start_date: Date.tomorrow) }
+
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                menu_ids: [menu1.id, menu2.id],
+                                                business_time_range: time_range)
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:menu_ids]).to include(error: :start_yet, menu_name: menu2.name, start_at: Date.tomorrow.to_s)
+        end
+      end
+
+      # validate_menu_schedules
+      context "when menu was over" do
+        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+
+        context "when rule had a particular end date" do
+          before do
+            menu2.menu_reservation_setting_rule.update_attributes(end_date: Date.yesterday)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  business_time_range: time_range)
+
+            expect(outcome).to be_invalid
+            expect(outcome.errors.details[:menu_ids]).to include(error: :is_over, menu_name: menu2.name)
+          end
+        end
+
+        context "when rule is repeating and over last date" do
+          before do
+            menu2.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
+            FactoryGirl.create(:shop_menu_repeating_date, shop: shop, menu: menu2)
+          end
+
+          it "is invalid" do
+            Timecop.freeze(Date.tomorrow.tomorrow) do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id, menu2.id],
+                                                    business_time_range: time_range)
+
+              expect(outcome).to be_invalid
+              expect(outcome.errors.details[:menu_ids]).to include(error: :is_over, menu_name: menu2.name)
+            end
+          end
+        end
+      end
+
       # validate_seats_for_customers
       context "when some menus doesn't have enough seats for customers" do
         let(:menu1) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 4) }

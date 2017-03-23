@@ -444,3 +444,5 @@ en:
               not_enough_seat: "%{menu_name} not enough seat"
               not_enough_ability: "%{staff_name} %{menu_name} too many customers"
               unschedule_menu: "%{menu_name} Not match with reservation block"
+              start_yet: "%{menu_name} starts from ${start_at}"
+              is_over: "%{menu_name} ended"
