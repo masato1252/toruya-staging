@@ -534,7 +534,7 @@ UI.define("Customers.Dashboard", function() {
                 this.state.selected_customer_id ? (
                   <button
                     id="new-customer-btn"
-                    className="btn btn-light-green"
+                    className="BTNtarco"
                     onClick={this.newCustomerMode}
                     disabled={this.state.processing} >
                     新規データ作成
