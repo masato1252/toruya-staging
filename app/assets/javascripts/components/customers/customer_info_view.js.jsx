@@ -51,7 +51,7 @@ UI.define("Customers.CustomerInfoView", function() {
 
     render: function() {
       return (
-        <div id="customerInfoEdit" className="contBody">
+        <div id="customerInfo" className="contBody">
           <div id="basic">
             <dl>
               <dt>
