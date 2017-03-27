@@ -1,4 +1,21 @@
 class Reservations::AvailableOptionsController < DashboardController
+  def all
+    # {
+    #   menu_options: menus,
+    #   category_with_menu_options: menus
+    # }
+    menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+      ::Options::MenuOption.new(id: shop_menu.menu_id, name: shop_menu.menu.display_name,
+                              min_staffs_number: shop_menu.menu.min_staffs_number,
+                              available_seat: shop_menu.max_seat_number)
+    end
+    @menus_result = Menus::CategoryGroup.run!(menu_options: menu_options)
+
+    @staff_options = shop.staffs.map do |staff|
+      ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    end
+  end
+
   def times
     outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:date]).to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil

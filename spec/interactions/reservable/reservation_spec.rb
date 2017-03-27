@@ -46,7 +46,7 @@ RSpec.describe Reservable::Reservation do
                                                 business_time_range: time_range)
 
           expect(outcome).to be_invalid
-          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:too_short)
+          expect(outcome.errors.details[:menu_ids].first[:error]).to eq(:time_not_enough)
         end
       end
 

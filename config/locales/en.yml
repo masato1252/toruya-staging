@@ -429,20 +429,20 @@ en:
         reservable/time:
           attributes:
             date:
-              shop_closed: "Shop closed"
+              shop_closed: "^Shop closed"
         reservable/reservation:
           attributes:
             business_time_range:
-              interval_too_short: "Not enough interval time"
-              too_short: "Not enough time"
+              interval_too_short: "^Not enough interval time"
+              too_short: "^Not enough time"
             staff_ids:
-              unworking_staff: "%{staff_name} Off-day"
-              other_shop: "%{staff_name} In another shop"
-              overlap_reservations: "%{staff_name} Busy"
-              incapacity_menu: "Incompatible menu %{menu_name} %{staff_name}"
+              unworking_staff: "^%{staff_name} Off-day"
+              other_shop: "^%{staff_name} In another shop"
+              overlap_reservations: "^%{staff_name} Busy"
+              incapacity_menu: "^Incompatible menu %{menu_name} %{staff_name}"
             menu_ids:
-              not_enough_seat: "%{menu_name} not enough seat"
-              not_enough_ability: "%{staff_name} %{menu_name} too many customers"
-              unschedule_menu: "%{menu_name} Not match with reservation block"
-              start_yet: "%{menu_name} starts from ${start_at}"
-              is_over: "%{menu_name} ended"
+              not_enough_seat: "^%{menu_name} not enough seat"
+              not_enough_ability: "^%{staff_name} %{menu_name} too many customers"
+              unschedule_menu: "^%{menu_name} Not match with reservation block"
+              start_yet: "^%{menu_name} starts from ${start_at}"
+              is_over: "^%{menu_name} ended"
