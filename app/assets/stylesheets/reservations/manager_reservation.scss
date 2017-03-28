@@ -1,63 +1,63 @@
 /* CSS Document */
 /* Reservation */
 #resNew #resInfo {
-	color: #8F8F8F;
-	padding-right: 20px;
+  color: #8F8F8F;
+  padding-right: 20px;
 }
 #resNew #resInfo .formRow, #resNew #customerList dl { border-bottom: 1px solid #b3b3b3; }
 #resNew #resInfo .formRow, #resNew #customerList dl:hover {
-	opacity: 0.7;
-	cursor: pointer;
+  opacity: 0.7;
+  cursor: pointer;
 }
 #resNew #resInfo .formRow {
-	display: table;
+  display: table;
     width: 100%;
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 #resNew #resInfo .formRow .form {
-	padding-bottom: 10px;
-	display: table-row;
-	height: 54px;
+  padding-bottom: 10px;
+  display: table-row;
+  height: 54px;
 }
 #resNew #resInfo .formRow .form dt, #resNew #resInfo .formRow .form dd { display: table-cell; }
 #resNew #resInfo #resDate dt, #resNew #resInfo #resMemo dt { width: 50px; }
 #resNew #resInfo #resCalMenu dt { width: 80px; }
 #resNew #resInfo .subinfo {
-	padding-left: 10px;
-	font-size: 14px;
+  padding-left: 10px;
+  font-size: 14px;
 }
 #resNew #resInfo #resMemo, #resNew #customerList dl:last-child, #resNew #customerList dl a, #resNew #customerList dl a:link, #resNew #customerList dl a:visited { border-bottom: none; }
 #resNew #resInfo #resMemo .input {
-	height:100px;
+  height:100px;
 }
 #resNew #resInfo #resMemo .input textarea {
-	font-size: 100%;
-	padding: 5px;
+  font-size: 100%;
+  padding: 5px;
 }
 #resNew #resInfo h2, #resNew #customers h2 {
-	height: 29px;
-	color: #858585;
-	margin-top: 0;
-	margin-bottom: 10px;
-	font-size: 21px;
+  height: 29px;
+  color: #858585;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 21px;
 }
 #resNew #resInfo h2 i, #resNew #customers h2 i {
-	font-size: 26px;
-	margin-right: 3px;
+  font-size: 26px;
+  margin-right: 3px;
 }
 #resNew #resInfo #resDateTime #resDate dd #start_time_date_part, #resNew #resInfo #resDateTime #resDate dd span, #resNew #resInfo #resDateTime #resDate dd a:link { display: inline-block; }
 #resNew #resInfo #resDateTime #resDate dd #start_time_date_part { width: 120px; }
 #resNew #resInfo #resDateTime #resDate dd a:link {
-	width: 38px;
+  width: 38px;
     line-height: 38px;
     height: 38px;
-	font-size: 21px;
+  font-size: 21px;
 }
 #resNew #customers h2 #addCustomer {
-	float: right;
-	height: 35px;
-	line-height: 35px;
-	padding: 0 10px;
+  float: right;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
 }
 input {
     padding: 8px;
@@ -69,73 +69,73 @@ input {
 #resNew #customerList dl dt, #resNew #customerList dl dd { vertical-align: middle; }
 #resNew #customerList dl dt { width: 180px; }
 #resNew #customerList dl dd:last-child {
-	float: right;
-	padding: 4px 0 0 0;
+  float: right;
+  padding: 4px 0 0 0;
 }
 #resNew #customerList dl dd:last-child span {
-	width: 35px;
-	height: 35px;
-	line-height: 35px;
-	font-size: 21px;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 21px;
 }
 #resNew #customerList dl dd a, #resNew #customerList dl dd a:link, #resNew #customerList dl dd a:visited {
-	background-image: url(asset-path("screen/btn_delete_ss.png"));
-	background-position: center center;
-	background-repeat: no-repeat;
-	width: 10px;
-	height: 10px;
-	text-indent: -9999px;
-	overflow: hidden;
-	padding: 10px;
-	line-height: 17px;
+  background-image: url(asset-path("screen/btn_delete_ss.png"));
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+  text-indent: -9999px;
+  overflow: hidden;
+  padding: 10px;
+  line-height: 17px;
     text-align: left;
 }
 .resNew footer #newResFlow { float: left; }
 .resNew footer #BTNfunctions { float: right; }
 .resNew footer #newResFlow, .resNew footer #newResFlow ol {
-	border-radius: 20px; /* 記述無し */
-	-moz-border-radius: 20px; /* Firefox */
-	-webkit-border-radius: 20px; /* Google Chrome、Safari */
-	-o-border-radius: 20px; /* Opera */
-	-ms-border-radius: 20px; /* Internet Explorer */
+  border-radius: 20px; /* 記述無し */
+  -moz-border-radius: 20px; /* Firefox */
+  -webkit-border-radius: 20px; /* Google Chrome、Safari */
+  -o-border-radius: 20px; /* Opera */
+  -ms-border-radius: 20px; /* Internet Explorer */
 }
 .resNew footer #newResFlow {
-	background: #f2f2f2;
-	border: 5px solid #b3b3b3;
-	color: #858585;
-	padding: 0;
+  background: #f2f2f2;
+  border: 5px solid #b3b3b3;
+  color: #858585;
+  padding: 0;
     margin-top: 16px;
-	margin-left: 20px;
+  margin-left: 20px;
 }
 .resNew footer #newResFlow ol {
-	background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
-	line-height: 20px;
-	height: 20px;
-	padding: 5px 25px 5px 10px;
+  background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
+  line-height: 20px;
+  height: 20px;
+  padding: 5px 25px 5px 10px;
 }
 .resNew footer #newResFlow ol:first-child { padding-left: 25px; }
 .resNew footer #newResFlow ol:last-child { background-image: none; }
 .resNew footer #newResFlow ol.done {
-	color: #6fa89f;
-	background-image:
+  color: #6fa89f;
+  background-image:
     url(asset-path("screen/footer_flow_arrow.png")), /* 最前面の背景レイヤーの背景画像 */
     url(asset-path("screen/footer_flow_done.png"));
 
-	background-repeat:
-	no-repeat, /* 最前面の背景レイヤーに対応 */
-	no-repeat;
-	
-	background-position:
-	right center, /* 最前面の背景レイヤーに対応 */
-	left 8px center;
-	padding-left: 25px;
+  background-repeat:
+  no-repeat, /* 最前面の背景レイヤーに対応 */
+  no-repeat;
+
+  background-position:
+  right center, /* 最前面の背景レイヤーに対応 */
+  left 8px center;
+  padding-left: 25px;
 }
 .resNew footer #newResFlow ol.now {
-	background: #6fa89f;
-	color: #fff;
+  background: #6fa89f;
+  color: #fff;
 }
 .resNew footer #BTNfunctions li a, .resNew footer #BTNfunctions li a:link, .resNew footer #BTNfunctions li a:visited,
 .resNew footer #BTNfunctions li button {
-	width: inherit;
-	padding: 0 10px;
+  width: inherit;
+  padding: 0 10px;
 }
