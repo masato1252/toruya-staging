@@ -25,7 +25,7 @@ class CustomSchedule < ApplicationRecord
 
   scope :for_shop, -> { where(staff_id: nil) }
   scope :for_staff, -> { where.not(staff_id: nil) }
-  scope :future, -> { where("start_time > ?", Time.now.at_beginning_of_day) }
+  scope :future, -> { where("start_time > ?", Time.now.yesterday.at_beginning_of_day) }
   scope :opened, -> { where(open: true) }
   scope :closed, -> { where(open: false) }
 
