@@ -422,8 +422,11 @@ UI.define("Reservation.Form", function() {
       })
       .done(
       function(result) {
+        var menu_id = _this.state.menu_id.length ? _this.state.menu_id : result["menu"]["selected_option"]["id"]
+
         _this.setState({
           menu_group_options: result["menu"]["group_options"],
+          menu_id: menu_id,
           staff_options: result["staff"]["options"],
         });
 
