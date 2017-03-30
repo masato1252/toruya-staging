@@ -24,9 +24,12 @@ class ReservationsController < DashboardController
                                          menu_id: params[:menu_id],
                                          staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
                                          customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
-    if params[:menu_id].present?
-      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
-    end
+
+    @result = if current_user.member?
+                # We probably could take all the options at the beginning
+              elsif params[:menu_id].present?
+                @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
+              end
 
     if params[:start_time_date_part].present?
       outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
@@ -37,7 +40,12 @@ class ReservationsController < DashboardController
   # GET /reservations/1/edit
   def edit
     @body_class = "resNew"
-    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
+    @result = if current_user.member?
+                # We probably could take all the options at the beginning
+              else
+                Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
+              end
+
     outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
   end
