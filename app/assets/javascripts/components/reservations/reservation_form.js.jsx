@@ -27,7 +27,7 @@ UI.define("Reservation.Form", function() {
         errors: {},
         processing: false,
         submitting: false,
-        rough_mode: true
+        member_mode: this.props.memberMode
       });
     },
 
@@ -39,7 +39,7 @@ UI.define("Reservation.Form", function() {
     componentDidMount: function() {
       var _this = this;
 
-      if (this.state.rough_mode) {
+      if (this.state.member_mode) {
         this._retrieveAllOptions()
         this._validateReservation()
       }
@@ -113,7 +113,14 @@ UI.define("Reservation.Form", function() {
         return option.value == customer_id;
       });
 
-      this.setState({customers: customers}, _this._retrieveAvailableMenus)
+      this.setState({customers: customers}, function() {
+        if (_this.state.member_mode) {
+          _this._validateReservation()
+        }
+        else {
+          _this._retrieveAvailableMenus()
+        }
+      })
     },
 
     _maxCustomerLimit: function() {
@@ -184,7 +191,7 @@ UI.define("Reservation.Form", function() {
     },
 
     _isValidToReserve: function() {
-      if (this.state.rough_mode) {
+      if (this.state.member_mode) {
         // not allow
         let unsave_errors = _.intersection(Object.keys(this.state.errors), ["shop_closed", "unworking_staff", "other_shop", "time_not_enough", "unschedule_menu", "start_yet", "is_over"])
 
@@ -217,7 +224,7 @@ UI.define("Reservation.Form", function() {
       event.preventDefault();
       var eventTargetName = event.target.dataset.name;
       this.setState({[eventTargetName]: event.target.value}, function() {
-        if (this.state.rough_mode) {
+        if (this.state.member_mode) {
           this._validateReservation();
           // send rough validation request and set the errors
         }
@@ -244,7 +251,7 @@ UI.define("Reservation.Form", function() {
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
       this.setState({ staff_ids: selected_staff_ids }, function() {
-        if (this.state.rough_mode) {
+        if (this.state.member_mode) {
           this._validateReservation();
         }
       }.bind(this));
@@ -304,7 +311,7 @@ UI.define("Reservation.Form", function() {
         }
       })
       .done(
-      function(result) {
+        function(result) {
         _this.setState({menu_group_options: result["menu"]["group_options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
@@ -419,6 +426,10 @@ UI.define("Reservation.Form", function() {
           menu_group_options: result["menu"]["group_options"],
           staff_options: result["staff"]["options"],
         });
+
+        setTimeout(function() {
+          _this.applySelect2();
+        }, 0);
       }).fail(function(errors){
       }).always(function() {
         _this.setState({ processing: false });
@@ -445,7 +456,7 @@ UI.define("Reservation.Form", function() {
             <UI.Select options={this.state.staff_options}
               prefix={`option-${i}`}
               key={`${i}-${value}`}
-              defaultValue={value}
+              value={value}
               data-name="staff_id"
               includeBlank={value.length == 0}
               onChange={this._handleStaffChange}
@@ -466,8 +477,8 @@ UI.define("Reservation.Form", function() {
     },
 
     toggleRoughMode: function() {
-      this.setState({rough_mode: !this.state.rough_mode}, function() {
-        if (this.state.rough_mode) {
+      this.setState({member_mode: !this.state.member_mode}, function() {
+        if (this.state.member_mode) {
           // Set all menus and staffs
         } else {
           // Clean menus and staffs
@@ -604,10 +615,10 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
+                    <span className="danger">
+                      {this._staffErrors()}
+                    </span>
                   </dd>
-                  <span className="danger">
-                    {this._staffErrors()}
-                  </span>
                 </dl>
               </div>
               <div id="resMemo" className="formRow">
@@ -642,13 +653,6 @@ UI.define("Reservation.Form", function() {
            </div>
           </div>
           <footer>
-            <ul id="newResFlow">
-              <ol className="done"><i className="fa fa-check" aria-hidden="true"></i>予約詳細</ol>
-              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
-              <ol>顧客</ol>
-              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
-              <ol>完了</ol>
-            </ul>
             <ul id="BTNfunctions">
               {this.props.reservation.id ? (
                 <li>

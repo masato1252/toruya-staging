@@ -1,7 +1,7 @@
 <%= render "form", {
-  date: @reservation.start_time_date,
-  start_time: @reservation.start_time_time,
-  end_time: @reservation.end_time_time,
+  date: @result[:reservation].start_time_date_part,
+  start_time: @result[:reservation].start_time_time_part,
+  end_time: @result[:reservation].end_time_time_part,
   reservation_path: shop_reservation_path(shop, @reservation),
   reservation: @result[:reservation]
 } %>

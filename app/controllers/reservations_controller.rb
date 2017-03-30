@@ -99,31 +99,7 @@ class ReservationsController < DashboardController
     outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
 
-    outcome = Reservable::Reservation.run(
-      shop: shop,
-      date: Time.zone.parse(params[:start_time_date_part]).to_date,
-      business_time_range: start_time..end_time,
-      menu_ids: [params[:menu_id].presence].compact.uniq,
-      staff_ids: params[:staff_ids].try(:split, ",").try(:uniq) || [],
-      reservation_id: params[:reservation_id].presence,
-      number_of_customer: (params[:customer_ids].try(:split, ",").try(:uniq) || []).size
-    )
-
-    @errors = outcome.errors.details.each.with_object({}) do |(error_key, error_details), errors|
-      error_details.each do |error_detail|
-        error_reason = error_detail[:error]
-        option = error_detail.tap { |error| error_detail.delete(:error) }
-
-        error_message = if error_reason.is_a?(Symbol)
-          outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
-        else
-          outcome.errors.full_message(error_key, error_reason)
-        end
-
-        errors[error_reason] = error_message
-      end
-    end
-
+    reservation_errors
     if params[:menu_id].presence
       @menu_min_staffs_number = shop.menus.find_by(id: params[:menu_id]).min_staffs_number
     end
@@ -147,5 +123,32 @@ class ReservationsController < DashboardController
 
   def end_time
     @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
+  end
+
+  def reservation_errors
+    outcome = Reservable::Reservation.run(
+      shop: shop,
+      date: Time.zone.parse(params[:start_time_date_part]).to_date,
+      business_time_range: start_time..end_time,
+      menu_ids: [params[:menu_id].presence].compact.uniq,
+      staff_ids: params[:staff_ids].try(:split, ",").try(:uniq) || [],
+      reservation_id: params[:reservation_id].presence,
+      number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size
+    )
+
+    @errors = outcome.errors.details.each.with_object({}) do |(error_key, error_details), errors|
+      error_details.each do |error_detail|
+        error_reason = error_detail[:error]
+        option = error_detail.tap { |error| error_detail.delete(:error) }
+
+        error_message = if error_reason.is_a?(Symbol)
+          outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
+        else
+          outcome.errors.full_message(error_key, error_reason)
+        end
+
+        errors[error_reason] = error_message
+      end
+    end
   end
 end

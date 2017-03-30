@@ -8,6 +8,13 @@ module Reservations
                               else
                                 []
                               end
+      params[:staff_ids] = if params[:staff_ids].present?
+                                params[:staff_ids].split(",").map{ |c| c if c.present? }.compact.uniq
+                              elsif reservation
+                                reservation.staff_ids
+                              else
+                                []
+                              end
 
       params[:menu_id] = params[:menu_id].presence || reservation.try(:menu_id)
       params[:start_time_date_part] = params[:start_time_date_part].presence || reservation.try(:start_time_date)
@@ -28,10 +35,11 @@ module Reservations
       string :end_time_time_part, default: nil
       integer :menu_id, default: nil
       array :customer_ids, default: nil
+      array :staff_ids, default: nil
     end
 
     def execute
-      reservation.attributes = params.slice(:start_time_date_part, :start_time_time_part, :end_time_time_part, :menu_id, :customer_ids) if reservation
+      reservation.attributes = params.slice(:start_time_date_part, :start_time_time_part, :end_time_time_part, :menu_id, :customer_ids, :staff_ids) if reservation
       menu_options = Reservable::Menus.run!(shop: shop,
                                             business_time_range: reservation_time,
                                             number_of_customer: params[:customer_ids].size,
