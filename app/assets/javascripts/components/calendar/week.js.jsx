@@ -13,12 +13,14 @@ UI.define("Week", function() {
           number: date.date(),
           isCurrentMonth: date.month() === month.month(),
           isToday: date.isSame(new Date(), "day"),
+          isWeekend: (i === 0 || i === 6),
+          isHoliday: _.contains(this.props.holidayDays, date.date()),
           date: date
         };
 
         days.push(
           <span key={day.date.toString()}
-                className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selectedDate) ? " selected" : "")}
+                className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selectedDate) ? " selected" : "") + ((day.isWeekend || day.isHoliday) ? " holiday" : "")}
                 onClick={this.props.select.bind(null, day)}>{day.number}
           </span>
         );

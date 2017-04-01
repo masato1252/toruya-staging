@@ -4,10 +4,21 @@
                         { day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
                           reservations_path: shop_reservations_path(shop),
-                          selected_date: params[:reservation_date]
+                          selected_date: params[:reservation_date],
+                          holiday_days: @holiday_days,
+                          holiday_days_path: holidays_calendars_path
                         },
                           { id: "custom-calendar", class: "clearfix" }) %>
-                          <dl>
+      <% if @working_time_range %>
+        <div class="busHours table">
+          <div class="tableCell">OPEN</div>
+          <div class="tableCell"><%= @working_time_range.first.to_s(:time) %>〜<%= @working_time_range.last.to_s(:time) %></div>
+        </div>
+      <% else %>
+        <div class="busHours shopClose table">
+          <div class="tableCell">CLOSE</div>
+        </div>
+      <% end %>
      <div class="staffs-working-schedules table">
        <% @staffs_working_schedules.each do |staff, working_schedule| %>
          <div class="row">

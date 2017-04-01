@@ -77,6 +77,11 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
+  resources :calendars, only: [] do
+    collection do
+      get "holidays"
+    end
+  end
 
   authenticated :user, -> user { user.super_admin? } do
     mount Delayed::Web::Engine, at: "/_jobs"
