@@ -14,7 +14,7 @@ UI.define("Week", function() {
           isCurrentMonth: date.month() === month.month(),
           isToday: date.isSame(new Date(), "day"),
           isWeekend: (i === 0 || i === 6),
-          isHoliday: _.contains(this.props.holidayDays, date.date()),
+          isHoliday: _.contains(this.props.holidayDays, date.date()) && date.month() === month.month(),
           date: date
         };
 
