@@ -1,3 +1,17 @@
+<%
+  if current_user.member?
+    menu_id ||= local_assigns[:menu_id]
+    menu_id ||= params[:menu_id].present? ? params[:menu_id].to_i : @menu_result[:menu_options].first.id
+    min_staffs_number = shop.menus.find_by(id: menu_id).min_staffs_number
+    menu_group_options = menu_group_options(@menu_result[:category_with_menu_options])
+    staff_options = staff_options(@staff_options, [])
+  else
+    menu_id = @result.try(:[], :selected_menu_option).try(:id)
+    min_staffs_number = @result.try(:[], :selected_menu_option).try(:min_staffs_number)
+    menu_group_options = menu_group_options(@result.try(:[], :category_menu_options))
+    staff_options = staff_options(@result.try(:[], :staff_options), @result.try(:[], :selected_menu_option))
+  end
+%>
 <%= react_component("UI.Reservation.Form",
                     { reservation: reservation.attributes.merge(
                         start_time_date_part: date,
@@ -6,19 +20,21 @@
                         staff_ids: reservation.staff_ids.map(&:to_s),
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
+                      member_mode: current_user.member?,
                       from_customer_id: params[:from_customer_id],
                       from_shop_id: params[:from_shop_id],
-                      menu_id: @result.try(:[], :selected_menu_option).try(:id),
-                      min_staffs_number: @result.try(:[], :selected_menu_option).try(:min_staffs_number),
+                      menu_id: menu_id,
+                      min_staffs_number: min_staffs_number,
                       available_seat: @result.try(:[], :selected_menu_option).try(:available_seat),
-                      menu_group_options: menu_group_options(@result.try(:[], :category_menu_options)),
-                      staff_options: staff_options(@result.try(:[], :staff_options), @result.try(:[], :selected_menu_option)),
+                      menu_group_options: menu_group_options,
+                      staff_options: staff_options,
                       start_time_restriction: @time_ranges.try(:first).try(:to_s, :time),
                       end_time_restriction: @time_ranges.try(:last).try(:to_s, :time),
                       available_times_path: times_shop_reservations_available_options_path(shop),
                       available_menus_path:  menus_shop_reservations_available_options_path(shop),
                       available_staffs_path: staffs_shop_reservations_available_options_path(shop),
                       customer_add_path: shop_customers_path(shop),
+                      validate_reservation_path: validate_shop_reservations_path(shop),
                       form_authenticity_token: form_authenticity_token,
                       reservation_path: reservation_path,
                       valid_time_tip_message: I18n.t("reservation.valid_time_tip_message"),

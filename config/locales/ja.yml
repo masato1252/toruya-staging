@@ -473,3 +473,28 @@ ja:
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
     pm: 午後
+  active_interaction:
+    errors:
+      models:
+        reservable/time:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+        reservable/reservation:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+            business_time_range:
+              interval_too_short: "^インターバル不足"
+            staff_ids:
+              unworking_staff: "^%{staff_name} 休暇中"
+              other_shop: "^%{staff_name} 他店勤務中"
+              overlap_reservations: "^%{staff_name} 重複予約あり"
+              incapacity_menu: "^非対応メニュー %{menu_name} %{staff_name}"
+              not_enough_ability: "^%{staff_name} %{menu_name} 対応人数超"
+            menu_ids:
+              time_not_enough: "^所要時間不足"
+              not_enough_seat: "^%{menu_name} 席数不足"
+              unschedule_menu: "^%{menu_name} 予約枠外"
+              start_yet: "^%{menu_name} 受付開始 %{start_at}"
+              is_over: "^%{menu_name} 受付修了"

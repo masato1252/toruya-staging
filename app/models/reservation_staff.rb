@@ -12,4 +12,11 @@
 class ReservationStaff < ApplicationRecord
   belongs_to :reservation
   belongs_to :staff
+
+  def self.overlap_reservations(staff_ids: [], reservation_id: nil, start_time: , end_time:)
+    ReservationStaff.joins(reservation: :menu).
+      where.not(reservation_id: reservation_id.presence).
+      where("reservation_staffs.staff_id": staff_ids).
+      where("reservations.start_time > ? and reservations.end_time <= ?", start_time, end_time)
+  end
 end

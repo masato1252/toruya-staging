@@ -15,7 +15,7 @@ module Reservable
         if schedule && schedule.end_time > custom_close_schedule.end_time
           return custom_close_schedule.end_time..schedule.end_time
         else
-          return
+          errors.add(:date, :shop_closed)
         end
       end
 
@@ -24,7 +24,7 @@ module Reservable
         if shop.holiday_working
           return business_working_schedule
         else
-          return
+          errors.add(:date, :shop_closed)
         end
       end
 
@@ -42,6 +42,8 @@ module Reservable
     def business_working_schedule
       if schedule = business_schedule
         schedule.start_time..schedule.end_time
+      else
+        errors.add(:date, :shop_closed)
       end
     end
   end

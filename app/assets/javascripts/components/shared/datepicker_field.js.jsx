@@ -30,6 +30,7 @@ UI.define("Common.DatepickerField", function() {
             name={this.props.dataName}
             value={this.props.date}
             onChange={this.props.handleChange}
+            className={this.props.className}
             />
           { this.props.date ? `(${moment(this.props.date).format("dd")})` : null }
           <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">

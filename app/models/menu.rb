@@ -41,6 +41,54 @@ class Menu < ApplicationRecord
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
   accepts_nested_attributes_for :shop_menus, allow_destroy: true, reject_if: :reject_shops
 
+  def self.workable_scoped(shop: , start_time:, end_time: )
+    today = ::Time.zone.now.to_s(:date)
+
+    workable_menus_scoped = all.
+        joins(:reservation_setting,
+              :menu_reservation_setting_rule).
+        joins("LEFT OUTER JOIN shop_menu_repeating_dates ON shop_menu_repeating_dates.menu_id = menus.id AND
+                                                            shop_menu_repeating_dates.shop_id = #{shop.id}")
+
+      workable_menus_scoped = workable_menus_scoped.where("menu_reservation_setting_rules.start_date <= ?", today)
+
+      workable_menus_scoped = workable_menus_scoped.
+        where("menu_reservation_setting_rules.reservation_type is NULL AND
+               menu_reservation_setting_rules.end_date is NULL").
+        or(workable_menus_scoped.
+            where("menu_reservation_setting_rules.reservation_type = 'date' AND
+                   menu_reservation_setting_rules.end_date >= ?", today)
+        ).
+        or(workable_menus_scoped.
+            where("menu_reservation_setting_rules.reservation_type = 'repeating' AND
+                   ? = ANY(shop_menu_repeating_dates.dates)", today)
+        )
+
+      workable_menus_scoped = workable_menus_scoped.
+        where("reservation_settings.day_type = ?", "business_days").
+        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time).
+      or(
+        workable_menus_scoped.
+        where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}").
+        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+      ).
+      or(
+        workable_menus_scoped.
+        where("reservation_settings.day_type = ? and reservation_settings.day = ?", "monthly", start_time.day).
+        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+      ).
+      or(
+        workable_menus_scoped.
+        where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
+               ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}").
+        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
+               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+      )
+  end
+
   private
 
   def reject_staffs(attributes)
