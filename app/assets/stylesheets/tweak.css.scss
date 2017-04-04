@@ -1,3 +1,22 @@
 .field-error {
   border: 2px solid red;
 }
+
+.leftFunctions {
+  float: left;
+
+  #confirm-with-errors {
+    display: initial;
+    margin-right: 10px;
+  }
+}
+
+.errors {
+  .danger {
+    color: #d9534f;
+  }
+
+  .warning {
+    color: #fcbe46;
+  }
+}

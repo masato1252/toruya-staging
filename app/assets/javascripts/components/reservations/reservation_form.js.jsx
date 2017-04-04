@@ -7,6 +7,11 @@
 
 UI.define("Reservation.Form", function() {
   var ReservationForm = React.createClass({
+    statics: {
+      errors: ["shop_closed", "unworking_staff", "other_shop", "time_not_enough", "unschedule_menu", "start_yet", "is_over"],
+      warnings: ["interval_too_short", "overlap_reservations", "incapacity_menu", "not_enough_seat", "not_enough_ability"]
+    },
+
     getInitialState: function() {
       var menu_id = "";
 
@@ -27,7 +32,8 @@ UI.define("Reservation.Form", function() {
         errors: {},
         processing: false,
         submitting: false,
-        member_mode: this.props.memberMode
+        member_mode: this.props.memberMode,
+        rough_mode: false
       });
     },
 
@@ -192,8 +198,8 @@ UI.define("Reservation.Form", function() {
 
     _isValidToReserve: function() {
       if (this.state.member_mode) {
-        // not allow
-        let unsave_errors = _.intersection(Object.keys(this.state.errors), ["shop_closed", "unworking_staff", "other_shop", "time_not_enough", "unschedule_menu", "start_yet", "is_over"])
+        let warnings = _.intersection(Object.keys(this.state.errors), ReservationForm.warnings)
+        let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errors)
 
         return (
           this.state.start_time_date_part &&
@@ -201,11 +207,8 @@ UI.define("Reservation.Form", function() {
           this.state.end_time_time_part &&
           this.state.menu_id &&
           this.state.staff_ids.length &&
-          unsave_errors.length == 0
+          (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && warnings.length == 0))
         )
-
-        // allow
-        // ["interval_too_short", "overlap_reservations", "incapacity_menu", "not_enough_seat", "not_enough_ability"]
       }
       else {
         return (
@@ -422,7 +425,7 @@ UI.define("Reservation.Form", function() {
       })
       .done(
       function(result) {
-        var menu_id = _this.state.menu_id.length ? _this.state.menu_id : result["menu"]["selected_option"]["id"]
+        var menu_id = _this.state.menu_id ? _this.state.menu_id : result["menu"]["selected_option"]["id"]
 
         _this.setState({
           menu_group_options: result["menu"]["group_options"],
@@ -480,8 +483,8 @@ UI.define("Reservation.Form", function() {
     },
 
     toggleRoughMode: function() {
-      this.setState({member_mode: !this.state.member_mode}, function() {
-        if (this.state.member_mode) {
+      this.setState({rough_mode: !this.state.rough_mode}, function() {
+        if (this.state.rough_mode) {
           // Set all menus and staffs
         } else {
           // Clean menus and staffs
@@ -503,10 +506,17 @@ UI.define("Reservation.Form", function() {
     _displayErrors: function(error_reasons) {
       let error_messages = []
       error_reasons.forEach(function(error_reason) {
-        error_messages.push(this.state.errors[error_reason]);
+        if (this.state.errors[error_reason]) {
+          if (_.intersection([error_reason], ReservationForm.warnings).length != 0) {
+            error_messages.push(<span className="warning" key={error_reason}>{this.state.errors[error_reason]}</span>)
+          }
+          else {
+            error_messages.push(<span className="danger" key={error_reason}>{this.state.errors[error_reason]}</span>)
+          }
+        }
       }.bind(this))
 
-      return _.compact(error_messages).join(", ");
+      return _.compact(error_messages);
     },
 
     _dateErrors: function() {
@@ -558,7 +568,7 @@ UI.define("Reservation.Form", function() {
                       handleChange={this._handleChange}
                       className={this._dateErrors().length == 0 ? "" : "field-error"}
                     />
-                    <span className="danger">
+                    <span className="errors">
                       {this._dateErrors()}
                     </span>
                   </dd>
@@ -583,7 +593,7 @@ UI.define("Reservation.Form", function() {
                       onChange={this._handleChange}
                       className={this._nextReservationOverlap() ? "field-error" : ""}
                       />
-                      <span className="danger">
+                      <span className="errors">
                         { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }
                         {this._timeErrors()}
                       </span>
@@ -608,7 +618,7 @@ UI.define("Reservation.Form", function() {
                         data-name="menu_id"
                         onChange={this._handleChange}
                       />
-                      <span className="danger">
+                      <span className="errors">
                         {this._menuErrors()}
                       </span>
                     </label>
@@ -618,7 +628,7 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
-                    <span className="danger">
+                    <span className="errors">
                       {this._staffErrors()}
                     </span>
                   </dd>
@@ -656,6 +666,17 @@ UI.define("Reservation.Form", function() {
            </div>
           </div>
           <footer>
+            <ul className="leftFunctions">
+              <label htmlFor="confirm-with-errors">
+                <input
+                  type="checkbox"
+                  id="confirm-with-errors"
+                  checked={this.state.rough_mode}
+                  onChange={this.toggleRoughMode}
+                  />
+                  エラーのままこの予約を保存します
+              </label>
+            </ul>
             <ul id="BTNfunctions">
               {this.props.reservation.id ? (
                 <li>
@@ -689,7 +710,6 @@ UI.define("Reservation.Form", function() {
                     {this.state.submitting ? this.props.processingMessage : "保存"}
                   </button>
                 </form>
-
               </li>
             </ul>
           </footer>
