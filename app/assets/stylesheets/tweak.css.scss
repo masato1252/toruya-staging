@@ -1,3 +1,14 @@
+button[disabled], a.disabled, input[disabled] {
+  opacity: .45;
+  cursor: not-allowed !important;
+}
+
+#resNew #resInfo {
+  span.select2, span.select2-selection, span.selection, span.dropdown-wrapper {
+    display: block;
+  }
+}
+
 .field-error {
   border: 2px solid red;
 }
@@ -12,6 +23,10 @@
 }
 
 .errors {
+  span {
+    margin-right: 12px;
+  }
+
   .danger {
     color: #d9534f;
   }
