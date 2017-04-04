@@ -45,7 +45,6 @@ UI.define("Reservation.Form", function() {
       var _this = this;
 
       if (this.props.memberMode) {
-        this._retrieveAllOptions()
         this._validateReservation()
       }
       else if (!this.state.menu_id) {
@@ -402,39 +401,6 @@ UI.define("Reservation.Form", function() {
           errors: result["errors"],
           menu_min_staffs_number: result["menu_min_staffs_number"]
         });
-      }).fail(function(errors){
-      }).always(function() {
-        _this.setState({ processing: false });
-      });
-    },
-
-    _retrieveAllOptions: function() {
-      var _this = this;
-
-      if (this.AllOptionsRequest != null) {
-        this.AllOptionsRequest.abort();
-      }
-
-      this.AllOptionsRequest = jQuery.ajax({
-        url: this.props.allAvailableOptionsPath,
-        dataType: "json",
-        beforeSend: function() {
-          _this.setState({ processing: true });
-        }
-      })
-      .done(
-      function(result) {
-        var menu_id = _this.state.menu_id ? _this.state.menu_id : result["menu"]["selected_option"]["id"]
-
-        _this.setState({
-          menu_group_options: result["menu"]["group_options"],
-          menu_id: menu_id,
-          staff_options: result["staff"]["options"],
-        });
-
-        setTimeout(function() {
-          _this.applySelect2();
-        }, 0);
       }).fail(function(errors){
       }).always(function() {
         _this.setState({ processing: false });

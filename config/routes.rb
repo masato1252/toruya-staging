@@ -33,7 +33,6 @@ Rails.application.routes.draw do
         get :times
         get :menus
         get :staffs
-        get :all
       end
     end
   end

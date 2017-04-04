@@ -25,11 +25,11 @@ class ReservationsController < DashboardController
                                          staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
                                          customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
 
-    @result = if current_user.member?
-                # We probably could take all the options at the beginning
-              elsif params[:menu_id].present?
-                @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
-              end
+    if current_user.member?
+      all_options
+    elsif params[:menu_id].present?
+      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
+    end
 
     if params[:start_time_date_part].present?
       outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
@@ -40,11 +40,11 @@ class ReservationsController < DashboardController
   # GET /reservations/1/edit
   def edit
     @body_class = "resNew"
-    @result = if current_user.member?
-                # We probably could take all the options at the beginning
-              else
-                Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
-              end
+    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
+
+    if current_user.member?
+      all_options
+    end
 
     outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
@@ -131,6 +131,19 @@ class ReservationsController < DashboardController
 
   def end_time
     @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
+  end
+
+  def all_options
+    menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+      ::Options::MenuOption.new(id: shop_menu.menu_id, name: shop_menu.menu.display_name,
+                                min_staffs_number: shop_menu.menu.min_staffs_number,
+                                available_seat: shop_menu.max_seat_number)
+    end
+    @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
+
+    @staff_options = shop.staffs.map do |staff|
+      ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    end
   end
 
   def reservation_errors

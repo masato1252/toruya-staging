@@ -3,5 +3,6 @@
   start_time: @result[:reservation].start_time_time_part,
   end_time: @result[:reservation].end_time_time_part,
   reservation_path: shop_reservation_path(shop, @reservation),
-  reservation: @result[:reservation]
+  reservation: @result[:reservation],
+  menu_id: @result[:reservation].try(:menu_id)
 } %>
