@@ -56,7 +56,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           divider = (
             <a href="#" className="year">
               <dl>
-                <dd className="date">{reservation.year}</dd>
+                <dd>{reservation.year}</dd>
               </dl>
             </a>
           )
@@ -72,7 +72,7 @@ UI.define("Customers.CustomerReservationsView", function() {
               <dl>
                 <dd className="date">{reservation.date}</dd>
                 <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
-                <dd><span className={`reservation-state ${reservation.state}`}></span></dd>
+                <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
                 <dd className="menu">{reservation.menu}</dd>
                 <dd className="shop">{reservation.shop}</dd>
               </dl>
@@ -153,7 +153,7 @@ UI.define("Customers.CustomerReservationsView", function() {
 
     render: function() {
       return (
-        <div id="customerInfoEdit" className="contBody">
+        <div id="customerInfo" className="contBody">
           <div id="basic">
             <dl>
               <dt>
@@ -201,7 +201,7 @@ UI.define("Customers.CustomerReservationsView", function() {
             <dl className="tableTTL">
               <dt className="date">ご利用日</dt>
               <dt className="time">開始<br />終了</dt>
-              <dt className="reservation-states"></dt>
+              <dt className="resSts"></dt>
               <dt className="menu">メニュー</dt>
               <dt className="shop">店舗</dt>
               </dl>

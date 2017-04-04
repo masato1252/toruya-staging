@@ -355,7 +355,7 @@ footer {
 }
 /* Contents */
 .contents {
-  padding: 20px 20px 30px 20px;
+  padding: 20px;
   height: 100%;
 }
 .setting .contents, .firstSetting .contents, .publish .contents {
@@ -589,7 +589,7 @@ input:disabled, #content form input:disabled {
   padding: 0 20px;
   position: relative;
   bottom: -1px;
-  z-index: 1px;
+  z-index: 1;
 }
 .tabs a:hover, .tabs a.here:hover {
   color: #666;
@@ -832,7 +832,6 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 }
 #resList dl.tableTTL, #resList a {
   border-bottom: 1px solid #B3B3B3;
-  padding-left: 20px;
 }
 #resList dl.tableTTL {
   font-size: 11px;
@@ -845,12 +844,16 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
   vertical-align: middle;
   display: inline-block;
 }
-#resList dl dd { line-height: 22px; }
-#resList .time {
-  width: 42px;
-  text-align: right;
+#resList dl dd {
+  line-height: 22px;
   padding-right: 5px;
+  padding-left: 5px;
+}
+#resList .time, #resList .date { text-align: right; }
+#resList dl.tableTTL .date, #resList .time { text-align: center; }
+#resList .time {
   line-height: 1.2em;
+  width: 47px;
 }
 #resList .calendar { width: 20%; }
 #resList .menu { width: 20%; }
@@ -862,18 +865,20 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 }
 #resList .date {
   text-align: right;
-  width: 52px;
+  width: 70px;
 }
 #resList a, #resList a:link, #resList a:visited {
   display: block;
-  padding: 5px 0 5px 20px;
+  padding: 5px 0;
   color: #444444;
 }
 #resList a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
 #resList #record {
   position: relative;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-x: auto;
+  -ms-overflow-y: hidden;
 }
 #resList .float {
   position: absolute;
@@ -1029,10 +1034,14 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
   position: relative;
   padding: 10px 20px;
 }
-.customer footer ul li, .resNew footer ul li, .resNew footer ul ol { display: inline-block; }
+.customer footer ul li, .resNew footer ul li, .resNew footer ul ol {
+  display: inline-block;
+  padding-right: 5px;
+}
 .customer footer ul li:last-child {
   position: absolute;
   right: 20px;
+  padding-right: 0;
 }
 .customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input,
 .resNew footer ul li a, .resNew footer ul li a:link, .resNew footer ul li a:visited {
@@ -1079,17 +1088,23 @@ span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .custome
 .customer footer ul li input:-ms-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input::-moz-placeholder { color: #D8D8D8; }
 /* #customerInfo #detailInfo */
-#customerInfo .tabBody, #customerInfoNew .tabBody, #customerInfoEdit .tabBody { overflow: scroll; }
+#customerInfo .tabBody, #customerInfoNew .tabBody, #customerInfoEdit .tabBody {
+  overflow: scroll;
+  margin-bottom: 20px;
+}
 #customerInfo #basic dl dd ul li, #customerInfo #detailInfoEdit dl dd ul li, #customerInfoEdit #basic dl dd ul li, #customerInfoNew #basic dl dd ul li {
   display: inline-block;
   vertical-align: middle;
 }
-#customerInfo #detailInfo > ul, #customerInfo #detailInfo dl, #customerInfoEdit #detailInfo > ul, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo > ul, #customerInfoNew #detailInfo dl {
-  padding: 10px 0;
+#customerInfo #detailInfo > ul, #customerInfoEdit #detailInfo > ul, #customerInfo #detailInfo dl, #customerInfoEdit #detailInfo > ul, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo > ul, #customerInfoNew #detailInfo dl {
+  padding: 10px;
+  border-bottom: 1px solid #B3B3B3;
+}
+#customerInfo #detailInfo dl, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo > ul, #customerInfoNew #detailInfo dl {
   margin: 10px;
 }
-#customerInfo #detailInfo dl, #customerInfoEdit #detailInfo dl, #customerInfoNew #detailInfo dl {
-  border-top: 1px solid #B3B3B3;
+#customerInfo #detailInfo dl:last-child, #customerInfoEdit #detailInfo dl:last-child, #customerInfoNew #detailInfo dl:last-child {
+  border: none;
 }
 #customerInfo #detailInfo dl dt, #customerInfo #detailInfo dl dd {
 }

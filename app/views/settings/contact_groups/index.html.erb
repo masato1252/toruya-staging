@@ -42,8 +42,6 @@
             <%= link_to t("settings.contact.connect"), connections_settings_contact_group_path(contact_group), class: "BTNorange" if current_user.uid %>
           <% end %>
           <%= link_to t("settings.contact.sync"), sync_settings_contact_group_path(contact_group), method: :post, class: "BTNyellow", data: { disable_with: t("common.processing") } if contact_group.backup_google_group_id %>
-        </dd>
-        <dd class="function">
           <%= link_to t("action.edit"), edit_settings_contact_group_path(contact_group), class: "BTNtarco", data: { disable_with: t("common.processing") } %>
           <%= link_to settings_contact_group_path(contact_group), method: :delete, class: "BTNorange", data: { disable_with: t("common.processing") } do %>
             <i class="fa fa-trash" aria-hidden="true"></i>
