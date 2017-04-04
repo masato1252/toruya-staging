@@ -32,7 +32,6 @@ UI.define("Reservation.Form", function() {
         errors: {},
         processing: false,
         submitting: false,
-        member_mode: this.props.memberMode,
         rough_mode: false
       });
     },
@@ -45,7 +44,7 @@ UI.define("Reservation.Form", function() {
     componentDidMount: function() {
       var _this = this;
 
-      if (this.state.member_mode) {
+      if (this.props.memberMode) {
         this._retrieveAllOptions()
         this._validateReservation()
       }
@@ -120,7 +119,7 @@ UI.define("Reservation.Form", function() {
       });
 
       this.setState({customers: customers}, function() {
-        if (_this.state.member_mode) {
+        if (_this.props.memberMode) {
           _this._validateReservation()
         }
         else {
@@ -197,7 +196,7 @@ UI.define("Reservation.Form", function() {
     },
 
     _isValidToReserve: function() {
-      if (this.state.member_mode) {
+      if (this.props.memberMode) {
         let warnings = _.intersection(Object.keys(this.state.errors), ReservationForm.warnings)
         let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errors)
 
@@ -227,7 +226,7 @@ UI.define("Reservation.Form", function() {
       event.preventDefault();
       var eventTargetName = event.target.dataset.name;
       this.setState({[eventTargetName]: event.target.value}, function() {
-        if (this.state.member_mode) {
+        if (this.props.memberMode) {
           this._validateReservation();
           // send rough validation request and set the errors
         }
@@ -254,7 +253,7 @@ UI.define("Reservation.Form", function() {
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
       this.setState({ staff_ids: selected_staff_ids }, function() {
-        if (this.state.member_mode) {
+        if (this.props.memberMode) {
           this._validateReservation();
         }
       }.bind(this));
