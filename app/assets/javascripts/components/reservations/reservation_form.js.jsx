@@ -395,11 +395,14 @@ UI.define("Reservation.Form", function() {
       })
       .done(
       function(result) {
+        var staff_ids = _this.state.staff_ids.length ? _this.state.staff_ids : _.map(_this.state.staff_options, function(o) { return o.value }).slice(0, result["min_staffs_number"] || 1)
+
         _this.setState({
           start_time_restriction: result["start_time_restriction"],
           end_time_restriction: result["end_time_restriction"],
           errors: result["errors"],
-          menu_min_staffs_number: result["menu_min_staffs_number"]
+          menu_min_staffs_number: result["menu_min_staffs_number"],
+          staff_ids: staff_ids
         });
       }).fail(function(errors){
       }).always(function() {
@@ -438,8 +441,9 @@ UI.define("Reservation.Form", function() {
         select_components.push(
           <UI.Select options={this.state.staff_options}
             key="no-power"
-            defaultValue={this.state.staff_ids[0]}
+            value={this.state.staff_ids[0]}
             data-name="staff_id"
+            includeBlank={true}
             onChange={this._handleStaffChange}
         />)
       }
@@ -571,7 +575,7 @@ UI.define("Reservation.Form", function() {
                       className={this._nextReservationOverlap() ? "field-error" : ""}
                       />
                       <span className="errors">
-                        { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }
+                        {this._isValidReservationTime() ? null : <span className="warning">{this.props.validTimeTipMessage}</span>}
                         {this._timeErrors()}
                       </span>
                   </dd>

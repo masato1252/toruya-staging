@@ -64,7 +64,7 @@ module Reservable
     end
 
     def validate_interval_time
-      previous_reservation_validation_start_time = start_time.advance(minutes: -last_menu_interval_time)
+      previous_reservation_validation_start_time = start_time.advance(seconds: -last_menu_interval_time)
       previous_reservation_validation_end_time = start_time
 
       if previous_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
@@ -77,7 +77,7 @@ module Reservable
 
       # When the start time is the same, it will be counts as overlap reservation in this case.
       next_reservation_validation_start_time = end_time.advance(minutes: -1)
-      next_reservation_validation_end_time = end_time.advance(minutes: last_menu_interval_time)
+      next_reservation_validation_end_time = end_time.advance(seconds: last_menu_interval_time)
 
       if next_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
                                             reservation_id: reservation_id,
@@ -88,7 +88,7 @@ module Reservable
       end
 
       if previous_reservation_overlap || next_reservation_overlap
-        errors.add(:business_time_range, :interval_overlap)
+        errors.add(:business_time_range, :interval_too_short)
       end
     end
 

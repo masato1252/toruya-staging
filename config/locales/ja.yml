@@ -476,6 +476,10 @@ ja:
   active_interaction:
     errors:
       models:
+        shops/staffs_working_schedules:
+          attributes:
+            date:
+              shop_closed: "^休業日"
         reservable/time:
           attributes:
             date:
