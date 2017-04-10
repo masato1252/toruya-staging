@@ -637,7 +637,7 @@ UI.define("Reservation.Form", function() {
            </div>
           </div>
           <footer>
-            <ul className="leftFunctions">
+            <ul id="leftFunctions">
               <label htmlFor="confirm-with-errors">
                 <input
                   type="checkbox"

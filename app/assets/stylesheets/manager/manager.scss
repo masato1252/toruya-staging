@@ -9,6 +9,9 @@
   -ms-box-sizing: border-box;
   box-sizing: border-box;
 }
+* {
+  vertical-align: middle;
+}
 ul li, dt, dd, dl li {
   list-style: none;
 }
@@ -370,6 +373,11 @@ footer {
   width: 100%;
 }
 .checkbox input[type="radio"], .checkbox input[type="checkbox"], .termsCheck input[type="checkbox"] { display: none; }
+#content #settingForm .checkbox dd input[type="checkbox"] + label, #content #settingForm .checkbox dd input[type="radio"] + label, #content #settingForm .termsCheck input[type="checkbox"] + label, .resNew .checkbox input[type="checkbox"] + label {
+  width: 100%;
+  display: block;
+  line-height: 35px;
+}
 .checkbox input[type="radio"]:checked + label:before, .checkbox input[type="checkbox"]:checked + label:before, .termsCheck input[type="checkbox"]:checked + label:before {
   font-family: "FontAwesome";
   content: "\f00c";
@@ -423,21 +431,21 @@ footer {
   color: #6fa89f;
   border: 1px solid #6fa89f;
 }
-.BTNselect label {
+.BTNselect div label {
   color: #858585;
   background: #D0D0D0;
   border-right: 1px solid #A3A3A3;
 }
-.BTNswitch label:first-of-type, .BTNselect label:last-of-type { border-right: none; }
+.BTNswitch label:first-of-type, .BTNselect div:last-of-type label { border-right: none; }
 .BTNswitch label:last-of-type, .BTNswitch label:nth-of-type(3) { border-left: none; }
-.BTNswitch label:first-of-type, .BTNselect label:first-of-type {
+.BTNswitch label:first-of-type, .BTNselect div:first-of-type label {
   border-radius: 5px 0 0 5px; /* 記述無し */
   -moz-border-radius: 5px 0 0 5px; /* Firefox */
   -webkit-border-radius: 5px 0 0 5px; /* Google Chrome、Safari */
   -o-border-radius: 5px 0 0 5px; /* Opera */
   -ms-border-radius: 5px 0 0 5px; /* Internet Explorer */
 }
-.BTNswitch label:last-of-type, .BTNselect label:last-of-type {
+.BTNswitch label:last-of-type, .BTNselect div:last-of-type label {
   border-radius: 0 5px 5px 0; /* 記述無し */
   -moz-border-radius: 0 5px 5px 0; /* Firefox */
   -webkit-border-radius: 0 5px 5px 0; /* Google Chrome、Safari */

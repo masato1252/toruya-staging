@@ -13,9 +13,7 @@ button[disabled], a.disabled, input[disabled] {
   border: 2px solid red;
 }
 
-.leftFunctions {
-  float: left;
-
+#leftFunctions {
   #confirm-with-errors {
     display: initial;
     margin-right: 10px;

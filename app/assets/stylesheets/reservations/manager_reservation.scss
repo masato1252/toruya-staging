@@ -22,10 +22,35 @@
 #resNew #resInfo .formRow .form dt, #resNew #resInfo .formRow .form dd { display: table-cell; }
 #resNew #resInfo #resDate dt, #resNew #resInfo #resMemo dt { width: 50px; }
 #resNew #resInfo #resCalMenu dt { width: 80px; }
-#resNew #resInfo .subinfo {
-  padding-left: 10px;
-  font-size: 14px;
+#resNew #resInfo .busHours {
+  display: inline-block;
+  margin: 0 5px;
+  width: 200px;
+  text-align: center;
+  padding: 0;
 }
+#resNew #resInfo .busHours div {
+  line-height: 35px;
+  display: inline-block;
+}
+#resNew #resInfo .errors span {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+#resNew #resInfo .errors .danger { color: #CF0003; }
+#resNew #resInfo .errors .warning { color: #e6a21f; }
+#resNew #resInfo .errors .danger:before, #resNew #resInfo .errors .warning:before {
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  padding-right: 3px;
+}
+#resNew #resInfo .errors .danger:before { content: "\f06a"; }
+#resNew #resInfo .errors .warning:before { content: "\f058"; }
+#resNew #resInfo .field-warning { border: 2px solid #e6a21f; }
+#resNew #resInfo .field-error { border: 2px solid #CF0003; }
 #resNew #resInfo #resMemo, #resNew #customerList dl:last-child, #resNew #customerList dl a, #resNew #customerList dl a:link, #resNew #customerList dl a:visited { border-bottom: none; }
 #resNew #resInfo #resMemo .input {
   height:100px;
@@ -88,52 +113,26 @@ input {
   overflow: hidden;
   padding: 10px;
   line-height: 17px;
-    text-align: left;
+  text-align: left;
 }
-.resNew footer #newResFlow { float: left; }
+.resNew footer #leftFunctions { float: left; }
+.resNew .checkbox {
+  display: inherit;
+  line-height: 50px;
+}
+.resNew .checkbox input[type="checkbox"] + label:before {
+  font-family: "FontAwesome";
+  content: "\f096";
+  margin-right: 8px;
+  font-size: 120%;
+}
+.resNew .checkbox input[type="checkbox"]:checked + label:before {
+  content: "\f046";
+  margin-right: 5px;
+  color: #ca4e0e;
+}
+.resNew .checkbox.disabled { opacity: .7; }
 .resNew footer #BTNfunctions { float: right; }
-.resNew footer #newResFlow, .resNew footer #newResFlow ol {
-  border-radius: 20px; /* 記述無し */
-  -moz-border-radius: 20px; /* Firefox */
-  -webkit-border-radius: 20px; /* Google Chrome、Safari */
-  -o-border-radius: 20px; /* Opera */
-  -ms-border-radius: 20px; /* Internet Explorer */
-}
-.resNew footer #newResFlow {
-  background: #f2f2f2;
-  border: 5px solid #b3b3b3;
-  color: #858585;
-  padding: 0;
-    margin-top: 16px;
-  margin-left: 20px;
-}
-.resNew footer #newResFlow ol {
-  background: transparent url(asset-path("screen/footer_flow_arrow.png")) right center no-repeat;
-  line-height: 20px;
-  height: 20px;
-  padding: 5px 25px 5px 10px;
-}
-.resNew footer #newResFlow ol:first-child { padding-left: 25px; }
-.resNew footer #newResFlow ol:last-child { background-image: none; }
-.resNew footer #newResFlow ol.done {
-  color: #6fa89f;
-  background-image:
-    url(asset-path("screen/footer_flow_arrow.png")), /* 最前面の背景レイヤーの背景画像 */
-    url(asset-path("screen/footer_flow_done.png"));
-
-  background-repeat:
-  no-repeat, /* 最前面の背景レイヤーに対応 */
-  no-repeat;
-
-  background-position:
-  right center, /* 最前面の背景レイヤーに対応 */
-  left 8px center;
-  padding-left: 25px;
-}
-.resNew footer #newResFlow ol.now {
-  background: #6fa89f;
-  color: #fff;
-}
 .resNew footer #BTNfunctions li a, .resNew footer #BTNfunctions li a:link, .resNew footer #BTNfunctions li a:visited,
 .resNew footer #BTNfunctions li button {
   width: inherit;
