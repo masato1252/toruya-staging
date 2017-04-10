@@ -583,10 +583,10 @@ UI.define("Reservation.Form", function() {
                         data-name="menu_id"
                         onChange={this._handleChange}
                       />
-                      <span className="errors">
-                        {this._menuErrors()}
-                      </span>
                     </label>
+                    <span className="errors">
+                      {this._menuErrors()}
+                    </span>
                   </dd>
                 </dl>
                 <dl className="form" id="resStaff">
