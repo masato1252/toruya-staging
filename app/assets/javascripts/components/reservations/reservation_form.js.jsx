@@ -525,7 +525,10 @@ UI.define("Reservation.Form", function() {
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <div id="resNew" className="contents">
             <div id="resInfo" className="contBody">
-              <h2>予約詳細</h2>
+              <h2>
+                <i className="fa fa-calendar-o" aria-hidden="true"></i>
+                予約詳細
+              </h2>
               <div id="resDateTime" className="formRow">
                 <dl className="form" id="resDate">
                   <dt>日付</dt>
@@ -621,7 +624,9 @@ UI.define("Reservation.Form", function() {
            </div>
 
            <div id="customers">
-             <h2>顧客
+             <h2>
+               <i className="fa fa-user-plus" aria-hidden="true"></i>
+               顧客
                <a onClick={this.handleCustomerAdd}
                  className={this._customerAddClass()}
                  id="addCustomer">{this._customerWording()}
@@ -646,16 +651,18 @@ UI.define("Reservation.Form", function() {
            </div>
           </div>
           <footer>
-            <ul id="leftFunctions">
-              <label htmlFor="confirm-with-errors">
+            <ul id="leftFunctions" className="checkbox">
+              <li>
                 <input
                   type="checkbox"
                   id="confirm-with-errors"
                   checked={this.state.rough_mode}
                   onChange={this.toggleRoughMode}
-                  />
+                />
+                <label htmlFor="confirm-with-errors">
                   エラーのままこの予約を保存します
-              </label>
+                </label>
+              </li>
             </ul>
             <ul id="BTNfunctions">
               {this.props.reservation.id ? (

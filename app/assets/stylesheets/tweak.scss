@@ -8,28 +8,3 @@ button[disabled], a.disabled, input[disabled] {
     display: block;
   }
 }
-
-.field-error {
-  border: 2px solid red;
-}
-
-#leftFunctions {
-  #confirm-with-errors {
-    display: initial;
-    margin-right: 10px;
-  }
-}
-
-.errors {
-  span {
-    margin-right: 12px;
-  }
-
-  .danger {
-    color: #d9534f;
-  }
-
-  .warning {
-    color: #fcbe46;
-  }
-}
