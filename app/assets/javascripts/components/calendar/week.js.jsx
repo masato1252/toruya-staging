@@ -13,7 +13,7 @@ UI.define("Week", function() {
           number: date.date(),
           isCurrentMonth: date.month() === month.month(),
           isToday: date.isSame(new Date(), "day"),
-          isWeekend: (i === 0 || i === 6) && date.month() === month.month(),
+          isWeekend: i === 0 && date.month() === month.month(),
           isHoliday: _.contains(this.props.holidayDays, date.date()) && date.month() === month.month(),
           date: date
         };
