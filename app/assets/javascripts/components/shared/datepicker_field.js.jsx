@@ -32,7 +32,7 @@ UI.define("Common.DatepickerField", function() {
             onChange={this.props.handleChange}
             className={this.props.className}
             />
-          { this.props.date ? `(${moment(this.props.date).format("dd")})` : null }
+            { this.props.date ? <span>({moment(this.props.date).format("dd")})</span> : null }
           <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
           <input type="hidden"
             id={this._datepickerId()}

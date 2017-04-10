@@ -533,6 +533,18 @@ UI.define("Reservation.Form", function() {
                       handleChange={this._handleChange}
                       className={this._dateErrors().length == 0 ? "" : "field-error"}
                     />
+                    {
+                      this.state.start_time_restriction && this.state.end_time_restriction ? (
+                        <div className="busHours table">
+                          <div className="tableCell">OPEN</div>
+                          <div className="tableCell">{this.state.start_time_restriction}〜{this.state.end_time_restriction}</div>
+                        </div>
+                      ) : (
+                        <div className="busHours shopClose table">
+                          <div className="tableCell">CLOSE</div>
+                        </div>
+                      )
+                    }
                     <span className="errors">
                       {this._dateErrors()}
                     </span>
@@ -561,13 +573,6 @@ UI.define("Reservation.Form", function() {
                       <span className="errors">
                         { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }
                         {this._timeErrors()}
-                      </span>
-                      <span className="subinfo">
-                        {
-                          this.state.start_time_restriction && this.state.end_time_restriction ?
-                          `${this.props.businessTimeSuggestion} ${this.state.start_time_restriction} ~ ${this.state.end_time_restriction}` :
-                          this.props.shopClosedMessage
-                        }
                       </span>
                   </dd>
                 </dl>
