@@ -181,11 +181,13 @@ module Reservable
     end
 
     def validate_same_shop_overlap_reservations(staff)
-      overlap_reservations_exist = ReservationStaff.joins(reservation: :menu).
-        where.not(reservation_id: reservation_id.presence).
-        where("reservation_staffs.staff_id": staff.id).
-        where("reservations.shop_id = ?", shop.id).
-        where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time).exists?
+      overlap_reservations_exist = menus.any? do |menu|
+        ReservationStaff.joins(reservation: :menu).
+          where.not(reservation_id: reservation_id.presence).
+          where("reservation_staffs.staff_id": staff.id).
+          where("reservations.shop_id = ?", shop.id).
+          where("reservations.start_time < ? and reservations.ready_time > ?", end_time + menu.interval.minutes, start_time).exists?
+      end
 
       if overlap_reservations_exist
         errors.add(:staff_ids, :overlap_reservations, staff_name: staff.name)

@@ -11,8 +11,11 @@ class ReservationsController < DashboardController
     @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
-    @staffs_working_schedules = Shops::StaffsWorkingSchedules.run!(shop: shop, date: date)
-    @working_time_range = Reservable::Time.run!(shop: shop, date: date)
+    staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: date)
+    @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
+
+    time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+    @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
   end
 
   # GET /reservations/new
