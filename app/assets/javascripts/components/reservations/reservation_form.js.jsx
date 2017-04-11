@@ -391,6 +391,10 @@ UI.define("Reservation.Form", function() {
         this.currentRequest.abort();
       }
 
+      if (!this.state.start_time_date_part) {
+        return;
+      }
+
       this.currentRequest = jQuery.ajax({
         url: this.props.validateReservationPath,
         data: {
