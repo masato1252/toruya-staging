@@ -555,6 +555,38 @@ ALTER SEQUENCE reservation_customers_id_seq OWNED BY reservation_customers.id;
 
 
 --
+-- Name: reservation_menus; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE reservation_menus (
+    id integer NOT NULL,
+    reservation_id integer,
+    menu_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: reservation_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE reservation_menus_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reservation_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE reservation_menus_id_seq OWNED BY reservation_menus.id;
+
+
+--
 -- Name: reservation_setting_menus; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -672,7 +704,8 @@ CREATE TABLE reservations (
     memo text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    count_of_customers integer DEFAULT 0
+    count_of_customers integer DEFAULT 0,
+    with_warnings boolean DEFAULT false NOT NULL
 );
 
 
@@ -1059,6 +1092,13 @@ ALTER TABLE ONLY reservation_customers ALTER COLUMN id SET DEFAULT nextval('rese
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY reservation_menus ALTER COLUMN id SET DEFAULT nextval('reservation_menus_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY reservation_setting_menus ALTER COLUMN id SET DEFAULT nextval('reservation_setting_menus_id_seq'::regclass);
 
 
@@ -1250,6 +1290,14 @@ ALTER TABLE ONLY ranks
 
 ALTER TABLE ONLY reservation_customers
     ADD CONSTRAINT reservation_customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reservation_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY reservation_menus
+    ADD CONSTRAINT reservation_menus_pkey PRIMARY KEY (id);
 
 
 --
@@ -1663,6 +1711,6 @@ ALTER TABLE ONLY profiles
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230');
+INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230'), ('20170411092212');
 
 

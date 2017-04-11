@@ -65,6 +65,7 @@ ja:
     shop_closed: 営業時間外
     cancel: 予約削除
     memo: メモ内容
+    contain_some_warnings: 注意事項を含んだ予約です
   customer:
     back_without_save: 戻る（保存）
     save: 上書き保存

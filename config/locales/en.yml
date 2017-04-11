@@ -64,6 +64,7 @@ en:
     pend: Pend
     shop_closed: Shop closed
     memo: Memo
+    contain_some_warnings: Containing some warnings
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

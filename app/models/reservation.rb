@@ -13,6 +13,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  count_of_customers :integer          default(0)
+#  with_warnings      :boolean          default(FALSE), not null
 #
 
 # ready_time is end_time + menu.interval

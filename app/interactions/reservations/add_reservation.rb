@@ -16,6 +16,7 @@ module Reservations
       array :staff_ids
       array :customer_ids
       string :memo, default: nil
+      boolean :with_warnings
     end
 
     def execute

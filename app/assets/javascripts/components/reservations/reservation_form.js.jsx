@@ -194,9 +194,12 @@ UI.define("Reservation.Form", function() {
       }
     },
 
+    _isAnyWarning: function() {
+      return _.intersection(Object.keys(this.state.errors), ReservationForm.warnings).length !== 0 || !this._isValidReservationTime()
+    },
+
     _isValidToReserve: function() {
       if (this.props.memberMode) {
-        let warnings = _.intersection(Object.keys(this.state.errors), ReservationForm.warnings)
         let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errors)
 
         return (
@@ -205,7 +208,7 @@ UI.define("Reservation.Form", function() {
           this.state.end_time_time_part &&
           this.state.menu_id &&
           this.state.staff_ids.length &&
-          (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && warnings.length == 0))
+          (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
         )
       }
       else {
@@ -689,6 +692,7 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
+                  <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
                   <button type="submit" id="BTNsave" className="BTNyellow"

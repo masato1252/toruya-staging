@@ -51,11 +51,14 @@
           staff_names = reservation.staffs.map(&:name).join(", ")
         %>
         <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
-          <dl class="">
+          <dl>
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
             <dd class="menu"><%= reservation.menu.display_name %></dd>
             <dd class="customer"><%= customer_names %></dd>
+            <% if reservation.with_warnings %>
+              <dd class="status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+            <% end %>
           </dl>
         </a>
         <div class="modal fade" id="reservationModal<%= reservation.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -80,6 +83,11 @@
                 <div>
                   <%= staff_names %>
                 </div>
+                <% if reservation.with_warnings %>
+                <div class="warning">
+                  <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
+                </div>
+                <% end %>
                 <div>
                   <%= simple_format(reservation.memo) %>
                 </div>

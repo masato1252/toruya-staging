@@ -18,3 +18,18 @@ button[disabled], a.disabled, input[disabled] {
 .datepicker-field {
   display: inline-block;
 }
+
+#resList #record {
+  .status {
+    float: right;
+    margin-right: 12px;
+  }
+
+  .warning {
+    color: #e6a21f;
+  }
+
+  .modal-body .warning i.fa-check-circle {
+    vertical-align: baseline;
+  }
+}
