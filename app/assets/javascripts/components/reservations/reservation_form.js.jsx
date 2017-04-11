@@ -9,7 +9,9 @@ UI.define("Reservation.Form", function() {
   var ReservationForm = React.createClass({
     statics: {
       errors: ["shop_closed", "unworking_staff", "time_not_enough", "unschedule_menu", "start_yet", "is_over"],
-      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "not_enough_seat", "not_enough_ability"]
+      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "not_enough_seat", "not_enough_ability"],
+      menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
+      staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"]
     },
 
     getInitialState: function() {
@@ -52,6 +54,15 @@ UI.define("Reservation.Form", function() {
       }
 
       this.applySelect2();
+    },
+
+    componentDidUpdate: function() {
+      if (this._menuErrors().length !== 0) {
+        $(".select2-container").addClass("field-error")
+      }
+      else {
+        $(".select2-container").removeClass("field-error")
+      }
     },
 
     applySelect2: function() {
@@ -430,25 +441,37 @@ UI.define("Reservation.Form", function() {
           }
 
           select_components.push(
-            <UI.Select options={this.state.staff_options}
-              prefix={`option-${i}`}
-              key={`${i}-${value}`}
-              value={value}
-              data-name="staff_id"
-              includeBlank={value.length == 0}
-              onChange={this._handleStaffChange}
-          />)
+            <div key={`${i}-${value}`}>
+              <UI.Select options={this.state.staff_options}
+                prefix={`option-${i}`}
+                value={value}
+                data-name="staff_id"
+                includeBlank={value.length == 0}
+                onChange={this._handleStaffChange}
+                className={this._staffErrors(value) && this._staffErrors(value).length !== 0 ? "field-error" : ""}
+              />
+              <span className="errors">
+                {this._staffErrors(value)}
+              </span>
+            </div>
+          )
         }
       }
       else {
         select_components.push(
-          <UI.Select options={this.state.staff_options}
-            key="no-power"
-            value={this.state.staff_ids[0]}
-            data-name="staff_id"
-            includeBlank={true}
-            onChange={this._handleStaffChange}
-        />)
+          <div key="no-power">
+            <UI.Select options={this.state.staff_options}
+              value={this.state.staff_ids[0]}
+              data-name="staff_id"
+              includeBlank={true}
+              onChange={this._handleStaffChange}
+              className={this._staffErrors(this.state.staff_ids[0]) && this._staffErrors(this.state.staff_ids[0]).length !== 0 ? "field-error" : ""}
+            />
+            <span className="errors">
+              {this._staffErrors(this.state.staff_ids[0])}
+            </span>
+          </div>
+        )
       }
 
       return select_components
@@ -500,11 +523,13 @@ UI.define("Reservation.Form", function() {
     },
 
     _menuErrors: function() {
-      return this._displayErrors(["time_not_enough", "not_enough_seat", "not_enough_ability", "unschedule_menu", "start_yet", "is_over"]);
+      return this._displayErrors(ReservationForm.menu_errors);
     },
 
-    _staffErrors: function() {
-      return this._displayErrors(["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu"]);
+    _staffErrors: function(staff_id) {
+      if (staff_id && this.state.errors[staff_id]) {
+        return this._displayErrors(this.state.errors[staff_id]);
+      }
     },
 
     _previousReservationOverlap: function() {
@@ -609,9 +634,6 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
-                    <span className="errors">
-                      {this._staffErrors()}
-                    </span>
                   </dd>
                 </dl>
               </div>

@@ -28,7 +28,8 @@ module Reservable
       working_day_staff_ids = working_day_staffs.map(&:id)
       staffs.includes(:staff_menus).each do |staff|
         if working_day_staff_ids.exclude?(staff.id)
-          errors.add(:staff_ids, :unworking_staff, staff_name: staff.name)
+          errors.add(:staff_ids, :unworking_staff)
+          errors.add(:unworking_staff, staff.id.to_s)
         end
 
         validate_staffs_ability_for_customers(staff)
@@ -95,19 +96,18 @@ module Reservable
     def validate_menu_schedules
       menus.each do |menu|
         unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
-          errors.add(:menu_ids, :unschedule_menu, menu_name: menu.display_name)
+          errors.add(:menu_ids, :unschedule_menu)
         end
 
         if menu.menu_reservation_setting_rule
           if menu.menu_reservation_setting_rule.start_date > ::Time.zone.now.to_date
             errors.add(:menu_ids, :start_yet,
-                       menu_name: menu.display_name,
                        start_at: menu.menu_reservation_setting_rule.start_date.to_s)
           end
 
           if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < ::Time.zone.now.to_date) ||
             (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < ::Time.zone.now.to_date)
-            errors.add(:menu_ids, :is_over, menu_name: menu.display_name)
+            errors.add(:menu_ids, :is_over)
           end
         end
       end
@@ -118,7 +118,7 @@ module Reservable
 
       menus.each do |menu|
         if number_of_customer > shop_menus.find { |shop_menu| shop_menu.menu_id == menu.id }.max_seat_number
-          errors.add(:menu_ids, :not_enough_seat, menu_name: menu.display_name)
+          errors.add(:menu_ids, :not_enough_seat)
         end
       end
     end
@@ -129,7 +129,8 @@ module Reservable
       menus.each do |menu|
         if staff_menu = staff_menus.find { |staff_menu| staff_menu.menu_id == menu.id }
           if number_of_customer > staff_menu.max_customers
-            errors.add(:staff_ids, :not_enough_ability, staff_name: staff.name, menu_name: menu.display_name)
+            errors.add(:staff_ids, :not_enough_ability)
+            errors.add(:not_enough_ability, staff.id.to_s)
           end
         end
       end
@@ -176,7 +177,8 @@ module Reservable
         where("reservations.start_time > ? and reservations.end_time <= ?", beginning_of_day, end_of_day).exists?
 
       if other_shop_reservation_exist
-        errors.add(:staff_ids, :other_shop, staff_name: staff.name)
+        errors.add(:staff_ids, :other_shop)
+        errors.add(:other_shop, staff.id.to_s)
       end
     end
 
@@ -190,7 +192,8 @@ module Reservable
       end
 
       if overlap_reservations_exist
-        errors.add(:staff_ids, :overlap_reservations, staff_name: staff.name)
+        errors.add(:staff_ids, :overlap_reservations)
+        errors.add(:overlap_reservations, staff.id.to_s)
       end
     end
 
@@ -199,7 +202,8 @@ module Reservable
 
       menus.each do |menu|
         if staff_menu_ids.exclude?(menu.id)
-          errors.add(:staff_ids, :incapacity_menu, staff_name: staff.name, menu_name: menu.display_name)
+          errors.add(:staff_ids, :incapacity_menu)
+          errors.add(:incapacity_menu, staff.id.to_s)
         end
       end
     end

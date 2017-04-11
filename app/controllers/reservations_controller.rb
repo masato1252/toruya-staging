@@ -167,13 +167,14 @@ class ReservationsController < DashboardController
         error_reason = error_detail[:error]
         option = error_detail.tap { |error| error_detail.delete(:error) }
 
-        error_message = if error_reason.is_a?(Symbol)
-          outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
+        if error_reason.is_a?(Symbol)
+          errors[error_reason] = outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
+        elsif error_reason.to_i.is_a?(Integer)
+          errors[error_reason] ||= []
+          errors[error_reason] << error_key
         else
-          outcome.errors.full_message(error_key, error_reason)
+          errors[error_reason] = outcome.errors.full_message(error_key, error_reason)
         end
-
-        errors[error_reason] = error_message
       end
     end
   end

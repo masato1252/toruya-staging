@@ -120,8 +120,7 @@ RSpec.describe Reservable::Reservation do
                                                 business_time_range: time_range)
 
           expect(outcome).to be_invalid
-          expect(outcome.errors.details[:menu_ids]).to include(error: :unschedule_menu, menu_name: menu1.display_name)
-          expect(outcome.errors.details[:menu_ids]).not_to include(error: :unschedule_menu, menu_name: menu2.display_name)
+          expect(outcome.errors.details[:menu_ids]).to include(error: :unschedule_menu)
         end
       end
 
@@ -136,7 +135,7 @@ RSpec.describe Reservable::Reservation do
                                                 business_time_range: time_range)
 
           expect(outcome).to be_invalid
-          expect(outcome.errors.details[:menu_ids]).to include(error: :start_yet, menu_name: menu2.display_name, start_at: Date.tomorrow.to_s)
+          expect(outcome.errors.details[:menu_ids]).to include(error: :start_yet, start_at: Date.tomorrow.to_s)
         end
       end
 
@@ -155,7 +154,7 @@ RSpec.describe Reservable::Reservation do
                                                   business_time_range: time_range)
 
             expect(outcome).to be_invalid
-            expect(outcome.errors.details[:menu_ids]).to include(error: :is_over, menu_name: menu2.display_name)
+            expect(outcome.errors.details[:menu_ids]).to include(error: :is_over)
           end
         end
 
@@ -172,7 +171,7 @@ RSpec.describe Reservable::Reservation do
                                                     business_time_range: time_range)
 
               expect(outcome).to be_invalid
-              expect(outcome.errors.details[:menu_ids]).to include(error: :is_over, menu_name: menu2.display_name)
+              expect(outcome.errors.details[:menu_ids]).to include(error: :is_over)
             end
           end
         end
@@ -191,7 +190,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           not_enough_seat_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :not_enough_seat }
-          expect(not_enough_seat_error).to eq(error: :not_enough_seat, menu_name: menu2.display_name)
+          expect(not_enough_seat_error).to eq(error: :not_enough_seat)
         end
       end
 
@@ -211,7 +210,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           not_enough_ability_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :not_enough_ability }
-          expect(not_enough_ability_error).to eq(error: :not_enough_ability, staff_name: staff2.name, menu_name: menu2.display_name)
+          expect(not_enough_ability_error).to eq(error: :not_enough_ability)
         end
       end
 
@@ -226,7 +225,9 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :unworking_staff }
-          expect(unworking_staff_error).to eq(error: :unworking_staff, staff_name: staff2.name)
+
+          expect(unworking_staff_error).to eq(error: :unworking_staff)
+          expect(outcome.errors.details[:unworking_staff]).to include(error: staff2.id.to_s)
         end
       end
 
@@ -245,7 +246,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :other_shop }
-          expect(other_shop_error).to eq(error: :other_shop, staff_name: staff2.name)
+          expect(other_shop_error).to eq(error: :other_shop)
         end
       end
 
@@ -264,7 +265,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
-          expect(other_shop_error).to eq(error: :overlap_reservations, staff_name: staff2.name)
+          expect(other_shop_error).to eq(error: :overlap_reservations)
         end
       end
 
@@ -280,7 +281,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :incapacity_menu }
-          expect(other_shop_error).to eq(error: :incapacity_menu, staff_name: staff2.name, menu_name: menu2.display_name)
+          expect(other_shop_error).to eq(error: :incapacity_menu)
         end
       end
     end
