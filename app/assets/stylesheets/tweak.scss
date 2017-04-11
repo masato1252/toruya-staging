@@ -1,3 +1,9 @@
+.busHours.shopClose {
+  background-color: #ca4e0e;
+  border: 1px #b0450d solid;
+  color: #fff;
+}
+
 button[disabled], a.disabled, input[disabled] {
   opacity: .45;
   cursor: not-allowed !important;
@@ -7,4 +13,8 @@ button[disabled], a.disabled, input[disabled] {
   span.select2, span.select2-selection, span.selection, span.dropdown-wrapper {
     display: block;
   }
+}
+
+.datepicker-field {
+  display: inline-block;
 }

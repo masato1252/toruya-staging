@@ -748,10 +748,12 @@ input:disabled, #content form input:disabled {
   overflow-y: scroll;
   overflow-x: hidden;
   background: #fff;
+  -webkit-overflow-scrolling: touch;
 }
 #customer #resultList #customerList {
   height: 96%;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 #customer #resultList #customerList a, #customer #resultList #customerList a:link, #customer #resultList #customerList a:visited, #resNew #customerList dl a, #resNew #customerList dl a:link, #resNew #customerList dl a:visited,
 #customer #resultList dl, #resNew #customerList dl {
