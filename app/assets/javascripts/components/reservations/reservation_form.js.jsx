@@ -597,6 +597,7 @@ UI.define("Reservation.Form", function() {
                       />
                     </label>
                     <span className="errors">
+                      {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
                       {this._menuErrors()}
                     </span>
                   </dd>
