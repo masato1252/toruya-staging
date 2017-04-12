@@ -15,6 +15,7 @@ class Customers::Import < ActiveInteraction::Base
 
     backup_google_contacts.each do |google_contact|
       customer = build_customer(google_contact)
+      customer.contact_group = contact_group
       customer.save
     end
 
