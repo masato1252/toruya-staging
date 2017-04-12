@@ -11,7 +11,9 @@ UI.define("Reservation.Form", function() {
       errors: ["shop_closed", "unworking_staff", "time_not_enough", "unschedule_menu", "start_yet", "is_over"],
       warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "not_enough_seat", "not_enough_ability"],
       menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
-      staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"]
+      menu_danger_errors: ["unschedule_menu", "start_yet", "is_over"],
+      staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
+      staff_danger_errors: ["unworking_staff"]
     },
 
     getInitialState: function() {
@@ -58,10 +60,12 @@ UI.define("Reservation.Form", function() {
 
     componentDidUpdate: function() {
       if (this._menuErrors().length !== 0) {
-        $(".select2-container").addClass("field-error")
+        $(".select2-container").addClass(
+          this._menuDangerErrors().length === 0 ? "field-warning" : "field-error"
+        )
       }
       else {
-        $(".select2-container").removeClass("field-error")
+        $(".select2-container").removeClass("field-error field-warning")
       }
     },
 
@@ -452,7 +456,11 @@ UI.define("Reservation.Form", function() {
                 data-name="staff_id"
                 includeBlank={value.length == 0}
                 onChange={this._handleStaffChange}
-                className={this._staffErrors(value) && this._staffErrors(value).length !== 0 ? "field-error" : ""}
+                className={
+                  this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
+                    this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                  ) : ""
+                }
               />
               <span className="errors">
                 {this._staffErrors(value)}
@@ -462,17 +470,23 @@ UI.define("Reservation.Form", function() {
         }
       }
       else {
+        var value = this.state.staff_ids[0];
+
         select_components.push(
           <div key="no-power">
             <UI.Select options={this.state.staff_options}
-              value={this.state.staff_ids[0]}
+              value={value}
               data-name="staff_id"
               includeBlank={true}
               onChange={this._handleStaffChange}
-              className={this._staffErrors(this.state.staff_ids[0]) && this._staffErrors(this.state.staff_ids[0]).length !== 0 ? "field-error" : ""}
+              className={
+                this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
+                  this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                ) : ""
+              }
             />
             <span className="errors">
-              {this._staffErrors(this.state.staff_ids[0])}
+              {this._staffErrors(value)}
             </span>
           </div>
         )
@@ -530,9 +544,31 @@ UI.define("Reservation.Form", function() {
       return this._displayErrors(ReservationForm.menu_errors);
     },
 
+    _menuDangerErrors: function() {
+      return this._displayErrors(ReservationForm.menu_danger_errors);
+    },
+
     _staffErrors: function(staff_id) {
       if (staff_id && this.state.errors[staff_id]) {
         return this._displayErrors(this.state.errors[staff_id]);
+      }
+      else {
+        return ""
+      }
+    },
+
+    _staffDangerErrors: function(staff_id) {
+      if (staff_id && this.state.errors[staff_id]) {
+        var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.staff_danger_errors)
+        if (dangerStaffErrors.length) {
+          return this._displayErrors(dangerStaffErrors)
+        }
+        else {
+          return ""
+        }
+      }
+      else {
+        return ""
       }
     },
 
@@ -598,7 +634,7 @@ UI.define("Reservation.Form", function() {
                       value={this.state.start_time_time_part}
                       step="300"
                       onChange={this._handleChange}
-                      className={this._previousReservationOverlap() ? "field-error" : ""}
+                      className={this._previousReservationOverlap() ? "field-warning" : ""}
                      />
                     〜
                     <input
@@ -607,7 +643,7 @@ UI.define("Reservation.Form", function() {
                       value={this.state.end_time_time_part}
                       step="300"
                       onChange={this._handleChange}
-                      className={this._nextReservationOverlap() ? "field-error" : ""}
+                      className={this._nextReservationOverlap() ? "field-warning" : ""}
                       />
                       <span className="errors">
                         {this._isValidReservationTime() ? null : <span className="warning">{this.props.validTimeTipMessage}</span>}
