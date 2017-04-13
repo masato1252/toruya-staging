@@ -100,13 +100,13 @@ module Reservable
         end
 
         if menu.menu_reservation_setting_rule
-          if menu.menu_reservation_setting_rule.start_date > ::Time.zone.now.to_date
+          if menu.menu_reservation_setting_rule.start_date > date
             errors.add(:menu_ids, :start_yet,
                        start_at: menu.menu_reservation_setting_rule.start_date.to_s)
           end
 
-          if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < ::Time.zone.now.to_date) ||
-            (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < ::Time.zone.now.to_date)
+          if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < date) ||
+            (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < date)
             errors.add(:menu_ids, :is_over)
           end
         end
