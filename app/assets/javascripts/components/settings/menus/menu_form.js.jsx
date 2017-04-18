@@ -330,34 +330,40 @@ UI.define("Settings.MenuForm", function() {
                   />
 
                 <div className="BTNselect" id="menuEnds">
-                  <input
-                    type="radio"
-                    id="menuEnds1"
-                    name="menuEnds"
-                    checked={!this.state.selectedReservationSettingRule.reservation_type}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds1"><span>{this.props.reservationEndingRuleNone}</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="menuEnds1"
+                      name="menuEnds"
+                      checked={!this.state.selectedReservationSettingRule.reservation_type}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds1"><span>{this.props.reservationEndingRuleNone}</span></label>
+                  </div>
 
-                  <input
-                    type="radio"
-                    id="menuEnds2"
-                    name="menuEnds"
-                    data-value="repeating"
-                    checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds2"><span>{this.props.reservationEndingRuleRepeating}</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="menuEnds2"
+                      name="menuEnds"
+                      data-value="repeating"
+                      checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds2"><span>{this.props.reservationEndingRuleRepeating}</span></label>
+                  </div>
 
-                  <input
-                    type="radio"
-                    name="menuEnds"
-                    id="menuEnds3"
-                    data-value="date"
-                    checked={this.state.selectedReservationSettingRule.reservation_type == "date"}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds3"><span>指定日</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      name="menuEnds"
+                      id="menuEnds3"
+                      data-value="date"
+                      checked={this.state.selectedReservationSettingRule.reservation_type == "date"}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds3"><span>指定日</span></label>
+                  </div>
                 </div>
               </dd>
             </dl>
