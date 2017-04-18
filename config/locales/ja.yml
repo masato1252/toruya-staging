@@ -502,4 +502,4 @@ ja:
               not_enough_seat: "^席数不足"
               unschedule_menu: "^予約枠外"
               start_yet: "^受付開始 %{start_at}"
-              is_over: "^受付修了"
+              is_over: "^受付終了"
