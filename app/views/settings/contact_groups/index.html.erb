@@ -28,7 +28,7 @@
     <% @contact_groups.each do |contact_group| %>
       <dl>
         <dt class="rowTTL"><%= contact_group.name %></dt>
-        <dd class="updateTime">
+        <dd class="googleGroups">
           <% if contact_group.google_group_name %>
             <%= contact_group.google_group_name %>
           <% elsif contact_group.backup_google_group_id %>
