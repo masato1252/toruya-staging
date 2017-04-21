@@ -70,7 +70,7 @@ UI.define("Customers.CustomerReservationsView", function() {
               data-target={`#reservationModal${reservation.id}`}
               >
               <dl>
-                <dd className="date">{reservation.date}</dd>
+                <dd className="date">{reservation.monthDate}</dd>
                 <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
                 <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
                 <dd className="menu">{reservation.menu}</dd>
@@ -85,7 +85,9 @@ UI.define("Customers.CustomerReservationsView", function() {
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 className="modal-title" id="myModalLabel">
-                      {reservation.date}
+                      <a href={`/shops/${reservation.shopId}/reservations/${reservation.date}`}>
+                        {reservation.monthDate}
+                      </a>
                       {reservation.startTime} 〜 {reservation.endTime}
                     </h4>
                   </div>
