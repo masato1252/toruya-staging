@@ -49,18 +49,10 @@
     </dd>
   </dl>
   <dl class="contacts">
-    <%= active_link_to content_tag(:span, t("settings.contact.info_title")), "#",
+    <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_contact_groups_path,
       active: [["settings/contact_groups", "settings/ranks"]],
       wrap_tag: :dt,
       class_active: "here" %>
-    <dd>
-      <ul>
-        <%= active_link_to t("settings.contact.sync_google"), settings_contact_groups_path,
-          active: [["settings/contact_groups"]],
-          wrap_tag: :li,
-          class_active: "here" %>
-      </ul>
-    </dd>
   </dl>
   <dl class="account">
     <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_profile_path,
