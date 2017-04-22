@@ -729,8 +729,8 @@ input.BTNonoff:checked + label:after {
   background-repeat: no-repeat;
   background-position: center center;
 }
-#calendar .day.selected, #calendar .days a.here { background: #000; }
-#calendar .day.today.selected, #calendar .days .today a.here { background: #fcbe46; }
+#calendar .day.reserved { background: #B3B3B3; }
+#calendar .day.selected { background: #fcbe46; }
 #calendar .week span.different-month { color: #B3B3B3; }
 #calendar .week span.holiday { color: #E00003; }
 /* customer & reservation */
