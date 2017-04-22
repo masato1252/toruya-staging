@@ -6,7 +6,7 @@ RSpec.describe Reservable::Reservation do
   end
 
   let(:user) { shop.user }
-  let(:shop) { FactoryGirl.create(:shop) }
+  let(:shop) { FactoryGirl.create(:shop, :holiday_working) }
   let(:now) { Time.zone.now }
   let(:date) { now.to_date }
   let(:time_minutes) { 60 }
@@ -159,20 +159,19 @@ RSpec.describe Reservable::Reservation do
         end
 
         context "when rule is repeating and over last date" do
+          let(:now) { Time.zone.now.tomorrow.tomorrow }
           before do
             menu2.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
             FactoryGirl.create(:shop_menu_repeating_date, shop: shop, menu: menu2)
           end
 
           it "is invalid" do
-            Timecop.freeze(Date.tomorrow.tomorrow) do
-              outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                    menu_ids: [menu1.id, menu2.id],
-                                                    business_time_range: time_range)
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  business_time_range: time_range)
 
-              expect(outcome).to be_invalid
-              expect(outcome.errors.details[:menu_ids]).to include(error: :is_over)
-            end
+            expect(outcome).to be_invalid
+            expect(outcome.errors.details[:menu_ids]).to include(error: :is_over)
           end
         end
       end

@@ -18,6 +18,10 @@ FactoryGirl.define do
     phone_number "123456789"
     sequence(:email) { |n| "foo#{n}@gmail.com" }
     sequence(:address) { |n| "address#{n}" }
+
+    trait :holiday_working do
+      holiday_working true
+    end
   end
 
   factory :custom_schedule do
