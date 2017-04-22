@@ -263,24 +263,25 @@ UI.define("Settings.MenuForm", function() {
                         checked={menuShopOption.checked}
                         onChange={this._handleShopCheck}
                       />
-                      <label htmlFor={`shop-${menuShopOption.shopId}`}>{menuShopOption.name}</label>
-                      {
-                        menuShopOption.checked ?
-                          <input
-                            placeholder={this.props.maxCustomersLabel}
-                            maxlength="10"
-                            size="10"
-                            className="minStaff"
-                            type="number"
-                            name="menu[shop_menus_attributes][][max_seat_number]"
-                            data-shop-id={menuShopOption.shopId}
-                            value={menuShopOption.maxSeatNumber}
-                            onChange={this._handleShopMaxSeatNumber}
-                          /> : null
-                      }
-                      {
-                        menuShopOption.checked ? "人" : null
-                      }
+                      <label htmlFor={`shop-${menuShopOption.shopId}`}>{menuShopOption.name}
+                        {
+                          menuShopOption.checked ?
+                            <input
+                              placeholder={this.props.maxCustomersLabel}
+                              maxlength="10"
+                              size="10"
+                              className="minStaff"
+                              type="number"
+                              name="menu[shop_menus_attributes][][max_seat_number]"
+                              data-shop-id={menuShopOption.shopId}
+                              value={menuShopOption.maxSeatNumber}
+                              onChange={this._handleShopMaxSeatNumber}
+                            /> : null
+                        }
+                        {
+                          menuShopOption.checked ? "人" : null
+                        }
+                      </label>
                     </dd>
                   </dl>
                 );
@@ -329,34 +330,40 @@ UI.define("Settings.MenuForm", function() {
                   />
 
                 <div className="BTNselect" id="menuEnds">
-                  <input
-                    type="radio"
-                    id="menuEnds1"
-                    name="menuEnds"
-                    checked={!this.state.selectedReservationSettingRule.reservation_type}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds1"><span>{this.props.reservationEndingRuleNone}</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="menuEnds1"
+                      name="menuEnds"
+                      checked={!this.state.selectedReservationSettingRule.reservation_type}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds1"><span>{this.props.reservationEndingRuleNone}</span></label>
+                  </div>
 
-                  <input
-                    type="radio"
-                    id="menuEnds2"
-                    name="menuEnds"
-                    data-value="repeating"
-                    checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds2"><span>{this.props.reservationEndingRuleRepeating}</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      id="menuEnds2"
+                      name="menuEnds"
+                      data-value="repeating"
+                      checked={this.state.selectedReservationSettingRule.reservation_type == "repeating"}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds2"><span>{this.props.reservationEndingRuleRepeating}</span></label>
+                  </div>
 
-                  <input
-                    type="radio"
-                    name="menuEnds"
-                    id="menuEnds3"
-                    data-value="date"
-                    checked={this.state.selectedReservationSettingRule.reservation_type == "date"}
-                    onChange={this.switchReservationType}
-                    />
-                  <label htmlFor="menuEnds3"><span>指定日</span></label>
+                  <div>
+                    <input
+                      type="radio"
+                      name="menuEnds"
+                      id="menuEnds3"
+                      data-value="date"
+                      checked={this.state.selectedReservationSettingRule.reservation_type == "date"}
+                      onChange={this.switchReservationType}
+                      />
+                    <label htmlFor="menuEnds3"><span>指定日</span></label>
+                  </div>
                 </div>
               </dd>
             </dl>
@@ -424,6 +431,7 @@ UI.define("Settings.MenuForm", function() {
           </div>
 
           <div id="customize-table" className="formRow menu-staffs-table table">
+            <h3>対応従業員</h3>
               <dl className="header">
                 <dt>対応従業員</dt>
                 <dd>対応</dd>

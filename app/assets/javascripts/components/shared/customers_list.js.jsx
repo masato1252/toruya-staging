@@ -4,8 +4,25 @@
 
 UI.define("Common.CustomersList", function() {
   var CustomersList = React.createClass({
+    getInitialState: function() {
+      return ({
+        listHeight: "60vh"
+      });
+    },
+
     componentWillMount: function() {
       this.handleMoreCustomers = _.debounce(this.props.handleMoreCustomers, 200, true)
+    },
+
+    componentDidMount: function() {
+      this.setProperListHeight();
+      $(window).resize(function() {
+        this.setProperListHeight();
+      }.bind(this));
+    },
+
+    setProperListHeight: function() {
+      this.setState({listHeight: `${$(window).innerHeight() - 300} px`})
     },
 
     handleCustomerSelect: function(customer_id) {
@@ -48,7 +65,11 @@ UI.define("Common.CustomersList", function() {
       }
 
       return(
-          <div id="customerList" ref={(c) => this.customerList = c} onScroll={this._handleScroll}>
+        <div
+          id="customerList"
+          style={{height: this.state.listHeight}}
+          ref={(c) => this.customerList = c}
+          onScroll={this._handleScroll}>
             {customerOptions}
             {noCustomerMessage}
           </div>

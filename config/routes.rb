@@ -13,6 +13,9 @@ Rails.application.routes.draw do
 
     resources :reservations, except: [:show] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+      collection do
+        get :validate
+      end
 
       scope module: "reservations" do
         resource :states, only: [] do
@@ -77,6 +80,11 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
+  resources :calendars, only: [] do
+    collection do
+      get "holidays"
+    end
+  end
 
   authenticated :user, -> user { user.super_admin? } do
     mount Delayed::Web::Engine, at: "/_jobs"

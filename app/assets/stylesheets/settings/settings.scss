@@ -1,0 +1,11 @@
+.setting {
+  #sideNav {
+    dd {
+      display: none;
+    }
+
+    dt.here + dd {
+      display: block
+    }
+  }
+}

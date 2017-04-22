@@ -47,21 +47,14 @@ UI.define("CustomSchedules", function() {
 
     render: function() {
       return (
-      <div id="tempHoliday" className="formRow">
-        <ul className="tableTTL">
-          <li className="date">{this.props.dateLabel}</li>
-          <li className="startTime">{this.props.startTimeLabel}</li>
-          <li className="endTime">{this.props.endTimeLabel}</li>
-          {this.props.open ? null : (
-            <li className="closeReason">{this.props.reasonOfClosingLabel}</li>
-          )}
-        </ul>
+      <div id="tempWork">
         <dl>
-          <dt>
+          <dt className="date">
             <UI.Common.DatepickerField
               date={this.state.start_time_date_part}
               dataName="start_time_date_part"
               handleChange={this._handleChange}
+              calendarfieldPrefix={this.props.calendarfieldPrefix}
             />
           </dt>
           <dd className="startTime">
@@ -74,7 +67,7 @@ UI.define("CustomSchedules", function() {
               <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="20" onChange={this._handleChange} />
             </dd>
           )}
-          <dd className="add">
+          <dd className="add function">
             <a href="#" className={`BTNtarco ${this._isValidCustomSchedule() ? "" : "disabled"}`} onClick={this._handleAddRow}>{this.props.newClosingBtn}</a>
           </dd>
           </dl>
@@ -84,6 +77,7 @@ UI.define("CustomSchedules", function() {
              shopId={this.props.shopId}
              deleteBtn={this.props.deleteBtn}
              open={this.props.open}
+             calendarfieldPrefix={`${this.props.calendarfieldPrefix}-${i + 1}`}
              closingReason={this.props.closingReason}
            />
          }.bind(this))}

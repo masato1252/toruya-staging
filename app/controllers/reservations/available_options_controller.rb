@@ -1,6 +1,7 @@
 class Reservations::AvailableOptionsController < DashboardController
   def times
-    @time_ranges = Reservable::Time.run!(shop: shop, date: Time.zone.parse(params[:date]).to_date)
+    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:date]).to_date)
+    @time_ranges = outcome.valid? ? outcome.result : nil
   end
 
   def menus

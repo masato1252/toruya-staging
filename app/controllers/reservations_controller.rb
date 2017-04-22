@@ -6,11 +6,16 @@ class ReservationsController < DashboardController
   def index
     @body_class = "shopIndex"
     date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
-
+    holidays = Holidays.between(date.beginning_of_month, date.end_of_month)
+    @holiday_days = holidays.map { |holiday| holiday[:date].day }
     @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
-    @staffs_working_schedules = Shops::StaffsWorkingSchedules.run!(shop: shop, date: date)
+    staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: date)
+    @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
+
+    time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+    @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
   end
 
   # GET /reservations/new
@@ -19,17 +24,21 @@ class ReservationsController < DashboardController
 
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
                                          start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
-                                         end_time_time_part: params[:end_time_time_part],
+                                         end_time_time_part: params[:end_time_time_part] || Time.zone.now.advance(hours: 2).to_s(:time),
                                          memo: params[:memo],
                                          menu_id: params[:menu_id],
                                          staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
                                          customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
-    if params[:menu_id].present?
+
+    if current_user.member?
+      all_options
+    elsif params[:menu_id].present?
       @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
     end
 
     if params[:start_time_date_part].present?
-      @time_ranges = Reservable::Time.run!(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      @time_ranges = outcome.valid? ? outcome.result : nil
     end
   end
 
@@ -37,7 +46,13 @@ class ReservationsController < DashboardController
   def edit
     @body_class = "resNew"
     @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
-    @time_ranges = Reservable::Time.run!(shop: shop, date: @reservation.start_time.to_date)
+
+    if current_user.member?
+      all_options
+    end
+
+    outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
+    @time_ranges = outcome.valid? ? outcome.result : nil
   end
 
   # POST /reservations
@@ -87,6 +102,22 @@ class ReservationsController < DashboardController
     end
   end
 
+  def validate
+    params[:customer_ids] = if params[:customer_ids].present?
+                              params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
+                            else
+                              []
+                            end
+
+    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+    @time_ranges = outcome.valid? ? outcome.result : nil
+
+    reservation_errors
+    if params[:menu_id].presence
+      @menu_min_staffs_number = shop.menus.find_by(id: params[:menu_id]).min_staffs_number
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_reservation
@@ -96,6 +127,55 @@ class ReservationsController < DashboardController
   # Never trust parameters from the scary internet, only allow the white list through.
   def reservation_params
     params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                        :customer_ids, :staff_ids, :memo)
+                                        :customer_ids, :staff_ids, :memo, :with_warnings)
+  end
+
+  def start_time
+    @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
+  end
+
+  def end_time
+    @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
+  end
+
+  def all_options
+    menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+      ::Options::MenuOption.new(id: shop_menu.menu_id, name: shop_menu.menu.display_name,
+                                min_staffs_number: shop_menu.menu.min_staffs_number,
+                                available_seat: shop_menu.max_seat_number)
+    end
+    @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
+
+    @staff_options = shop.staffs.map do |staff|
+      ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    end
+  end
+
+  def reservation_errors
+    outcome = Reservable::Reservation.run(
+      shop: shop,
+      date: Time.zone.parse(params[:start_time_date_part]).to_date,
+      business_time_range: start_time..end_time,
+      menu_ids: [params[:menu_id].presence].compact.uniq,
+      staff_ids: params[:staff_ids].try(:split, ",").try(:uniq) || [],
+      reservation_id: params[:reservation_id].presence,
+      number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size
+    )
+
+    @errors = outcome.errors.details.each.with_object({}) do |(error_key, error_details), errors|
+      error_details.each do |error_detail|
+        error_reason = error_detail[:error]
+        option = error_detail.tap { |error| error_detail.delete(:error) }
+
+        if error_reason.is_a?(Symbol)
+          errors[error_reason] = outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
+        elsif error_reason.to_i.is_a?(Integer)
+          errors[error_reason] ||= []
+          errors[error_reason] << error_key
+        else
+          errors[error_reason] = outcome.errors.full_message(error_key, error_reason)
+        end
+      end
+    end
   end
 end

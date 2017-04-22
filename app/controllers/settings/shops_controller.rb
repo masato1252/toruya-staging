@@ -5,6 +5,7 @@ class Settings::ShopsController < SettingsController
   # GET /shops.json
   def index
     @shops = current_user.shops.order("id").all
+    @body_class = "businessSchedules"
   end
 
   # GET /shops/1

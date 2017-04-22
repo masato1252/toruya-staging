@@ -7,6 +7,15 @@
 
 UI.define("Reservation.Form", function() {
   var ReservationForm = React.createClass({
+    statics: {
+      errors: ["shop_closed", "unworking_staff", "time_not_enough", "unschedule_menu", "start_yet", "is_over"],
+      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "not_enough_seat", "not_enough_ability"],
+      menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
+      menu_danger_errors: ["unschedule_menu", "start_yet", "is_over"],
+      staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
+      staff_danger_errors: ["unworking_staff"]
+    },
+
     getInitialState: function() {
       var menu_id = "";
 
@@ -24,8 +33,10 @@ UI.define("Reservation.Form", function() {
         menu_available_seat: this.props.availableSeat,
         menu_group_options: this.props.menuGroupOptions || [],
         staff_options: this.props.staffOptions || [],
+        errors: {},
         processing: false,
-        submitting: false
+        submitting: false,
+        rough_mode: false
       });
     },
 
@@ -37,11 +48,25 @@ UI.define("Reservation.Form", function() {
     componentDidMount: function() {
       var _this = this;
 
-      if (!this.state.menu_id) {
+      if (this.props.memberMode) {
+        this._validateReservation()
+      }
+      else if (!this.state.menu_id) {
         this._retrieveAvailableTimes()
       }
 
       this.applySelect2();
+    },
+
+    componentDidUpdate: function() {
+      if (this._menuErrors().length !== 0) {
+        $(".select2-container").addClass(
+          this._menuDangerErrors().length === 0 ? "field-warning" : "field-error"
+        )
+      }
+      else {
+        $(".select2-container").removeClass("field-error field-warning")
+      }
     },
 
     applySelect2: function() {
@@ -107,7 +132,14 @@ UI.define("Reservation.Form", function() {
         return option.value == customer_id;
       });
 
-      this.setState({customers: customers}, _this._retrieveAvailableMenus)
+      this.setState({customers: customers}, function() {
+        if (_this.props.memberMode) {
+          _this._validateReservation()
+        }
+        else {
+          _this._retrieveAvailableMenus()
+        }
+      })
     },
 
     _maxCustomerLimit: function() {
@@ -177,33 +209,58 @@ UI.define("Reservation.Form", function() {
       }
     },
 
+    _isAnyWarning: function() {
+      return _.intersection(Object.keys(this.state.errors), ReservationForm.warnings).length !== 0 || !this._isValidReservationTime()
+    },
+
     _isValidToReserve: function() {
-      return (
-        this.state.start_time_date_part &&
-        this.state.start_time_time_part &&
-        this.state.end_time_time_part &&
-        this.state.menu_id &&
-        this.state.staff_ids.length &&
-        ($.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number) &&
-        this._isValidCustomerNumber()
-      )
+      if (this.props.memberMode) {
+        let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errors)
+
+        return (
+          this.state.start_time_date_part &&
+          this.state.start_time_time_part &&
+          this.state.end_time_time_part &&
+          this.state.menu_id &&
+          this.state.staff_ids.length &&
+          (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
+        )
+      }
+      else {
+        return (
+          this.state.start_time_date_part &&
+          this.state.start_time_time_part &&
+          this.state.end_time_time_part &&
+          this.state.menu_id &&
+          this.state.staff_ids.length &&
+          ($.unique(this.state.staff_ids).length >= this.state.menu_min_staffs_number) &&
+          this._isValidCustomerNumber()
+        )
+      }
     },
 
     _handleChange: function(event) {
       event.preventDefault();
       var eventTargetName = event.target.dataset.name;
-      this.setState({[eventTargetName]: event.target.value}, function(){
-        switch(eventTargetName) {
-          case "start_time_date_part":
-            this._retrieveAvailableTimes();
-            break;
-          case "start_time_time_part":
-          case "end_time_time_part":
-            this._retrieveAvailableMenus();
-            break;
-          case "menu_id":
-            this._retrieveAvailableStaffs();
-            break;
+      this.setState({[eventTargetName]: event.target.value}, function() {
+        if (this.props.memberMode) {
+          this._validateReservation();
+          // send rough validation request and set the errors
+        }
+        else {
+          // normal custmoer model
+          switch(eventTargetName) {
+            case "start_time_date_part":
+              this._retrieveAvailableTimes();
+              break;
+            case "start_time_time_part":
+            case "end_time_time_part":
+              this._retrieveAvailableMenus();
+              break;
+            case "menu_id":
+              this._retrieveAvailableStaffs();
+              break;
+          }
         }
       }.bind(this))
     },
@@ -212,7 +269,11 @@ UI.define("Reservation.Form", function() {
       event.preventDefault();
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
-      this.setState({ staff_ids: selected_staff_ids });
+      this.setState({ staff_ids: selected_staff_ids }, function() {
+        if (this.props.memberMode) {
+          this._validateReservation();
+        }
+      }.bind(this));
     },
 
     _retrieveAvailableTimes: function() {
@@ -269,7 +330,7 @@ UI.define("Reservation.Form", function() {
         }
       })
       .done(
-      function(result) {
+        function(result) {
         _this.setState({menu_group_options: result["menu"]["group_options"],
                         menu_id: result["menu"]["selected_option"]["id"],
                         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
@@ -327,6 +388,50 @@ UI.define("Reservation.Form", function() {
       });
     },
 
+    _validateReservation: function() {
+      var _this = this;
+
+      if (this.currentRequest != null) {
+        this.currentRequest.abort();
+      }
+
+      if (!this.state.start_time_date_part) {
+        return;
+      }
+
+      this.currentRequest = jQuery.ajax({
+        url: this.props.validateReservationPath,
+        data: {
+          menu_id: this.state.menu_id,
+          reservation_id: this.props.reservation.id,
+          start_time_date_part: this.state.start_time_date_part,
+          start_time_time_part: this.state.start_time_time_part,
+          end_time_time_part: this.state.end_time_time_part,
+          staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
+          customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
+        },
+        dataType: "json",
+        beforeSend: function() {
+          _this.setState({ processing: true });
+        }
+      })
+      .done(
+      function(result) {
+        var staff_ids = _this.state.staff_ids.length ? _this.state.staff_ids : _.map(_this.state.staff_options, function(o) { return o.value }).slice(0, result["min_staffs_number"] || 1)
+
+        _this.setState({
+          start_time_restriction: result["start_time_restriction"],
+          end_time_restriction: result["end_time_restriction"],
+          errors: result["errors"],
+          menu_min_staffs_number: result["menu_min_staffs_number"],
+          staff_ids: staff_ids
+        });
+      }).fail(function(errors){
+      }).always(function() {
+        _this.setState({ processing: false });
+      });
+    },
+
     renderStaffSelects: function() {
       var select_components = [];
 
@@ -344,27 +449,60 @@ UI.define("Reservation.Form", function() {
           }
 
           select_components.push(
-            <UI.Select options={this.state.staff_options}
-              prefix={`option-${i}`}
-              key={`${i}-${value}`}
-              defaultValue={value}
-              data-name="staff_id"
-              includeBlank={value.length == 0}
-              onChange={this._handleStaffChange}
-          />)
+            <div key={`${i}-${value}`}>
+              <UI.Select options={this.state.staff_options}
+                prefix={`option-${i}`}
+                value={value}
+                data-name="staff_id"
+                includeBlank={value.length == 0}
+                onChange={this._handleStaffChange}
+                className={
+                  this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
+                    this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                  ) : ""
+                }
+              />
+              <span className="errors">
+                {this._staffErrors(value)}
+              </span>
+            </div>
+          )
         }
       }
       else {
+        var value = this.state.staff_ids[0];
+
         select_components.push(
-          <UI.Select options={this.state.staff_options}
-            key="no-power"
-            defaultValue={this.state.staff_ids[0]}
-            data-name="staff_id"
-            onChange={this._handleStaffChange}
-        />)
+          <div key="no-power">
+            <UI.Select options={this.state.staff_options}
+              value={value}
+              data-name="staff_id"
+              includeBlank={true}
+              onChange={this._handleStaffChange}
+              className={
+                this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
+                  this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                ) : ""
+              }
+            />
+            <span className="errors">
+              {this._staffErrors(value)}
+            </span>
+          </div>
+        )
       }
 
       return select_components
+    },
+
+    toggleRoughMode: function() {
+      this.setState({rough_mode: !this.state.rough_mode}, function() {
+        if (this.state.rough_mode) {
+          // Set all menus and staffs
+        } else {
+          // Clean menus and staffs
+        }
+      })
     },
 
     _handleSubmitClick: function(event) {
@@ -376,6 +514,70 @@ UI.define("Reservation.Form", function() {
           this.submitForm();
         }
       }.bind(this));
+    },
+
+    _displayErrors: function(error_reasons) {
+      let error_messages = []
+      error_reasons.forEach(function(error_reason) {
+        if (this.state.errors[error_reason]) {
+          if (_.intersection([error_reason], ReservationForm.warnings).length != 0) {
+            error_messages.push(<span className="warning" key={error_reason}>{this.state.errors[error_reason]}</span>)
+          }
+          else {
+            error_messages.push(<span className="danger" key={error_reason}>{this.state.errors[error_reason]}</span>)
+          }
+        }
+      }.bind(this))
+
+      return _.compact(error_messages);
+    },
+
+    _dateErrors: function() {
+      return this._displayErrors(["shop_closed"]);
+    },
+
+    _timeErrors: function() {
+      return this._displayErrors(["interval_too_short"]);
+    },
+
+    _menuErrors: function() {
+      return this._displayErrors(ReservationForm.menu_errors);
+    },
+
+    _menuDangerErrors: function() {
+      return this._displayErrors(ReservationForm.menu_danger_errors);
+    },
+
+    _staffErrors: function(staff_id) {
+      if (staff_id && this.state.errors[staff_id]) {
+        return this._displayErrors(this.state.errors[staff_id]);
+      }
+      else {
+        return ""
+      }
+    },
+
+    _staffDangerErrors: function(staff_id) {
+      if (staff_id && this.state.errors[staff_id]) {
+        var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.staff_danger_errors)
+        if (dangerStaffErrors.length) {
+          return this._displayErrors(dangerStaffErrors)
+        }
+        else {
+          return ""
+        }
+      }
+      else {
+        return ""
+      }
+    },
+
+    _previousReservationOverlap: function() {
+      return this._displayErrors(["previous_reservation_interval_overlap"]).length != 0;
+    },
+
+    _nextReservationOverlap: function() {
+      return this._displayErrors(["next_reservation_interval_overlap"]).length != 0;
     },
 
     submitForm: function() {
@@ -391,7 +593,10 @@ UI.define("Reservation.Form", function() {
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <div id="resNew" className="contents">
             <div id="resInfo" className="contBody">
-              <h2>予約詳細</h2>
+              <h2>
+                <i className="fa fa-calendar-o" aria-hidden="true"></i>
+                予約詳細
+              </h2>
               <div id="resDateTime" className="formRow">
                 <dl className="form" id="resDate">
                   <dt>日付</dt>
@@ -401,7 +606,23 @@ UI.define("Reservation.Form", function() {
                       dataName="start_time_date_part"
                       name="start_time_date_part"
                       handleChange={this._handleChange}
+                      className={this._dateErrors().length == 0 ? "" : "field-error"}
                     />
+                    {
+                      this.state.start_time_restriction && this.state.end_time_restriction ? (
+                        <div className="busHours table">
+                          <div className="tableCell">OPEN</div>
+                          <div className="tableCell">{this.state.start_time_restriction}〜{this.state.end_time_restriction}</div>
+                        </div>
+                      ) : (
+                        <div className="busHours shopClose table">
+                          <div className="tableCell">CLOSE</div>
+                        </div>
+                      )
+                    }
+                    <span className="errors">
+                      {this._dateErrors()}
+                    </span>
                   </dd>
                 </dl>
                 <dl className="form" id="resTime">
@@ -412,23 +633,21 @@ UI.define("Reservation.Form", function() {
                       data-name="start_time_time_part"
                       value={this.state.start_time_time_part}
                       step="300"
-                      onChange={this._handleChange} />
+                      onChange={this._handleChange}
+                      className={this._previousReservationOverlap() ? "field-warning" : ""}
+                     />
                     〜
                     <input
                       type="time"
                       data-name="end_time_time_part"
                       value={this.state.end_time_time_part}
                       step="300"
-                      onChange={this._handleChange} />
-                      <span className="danger">
-                        { this._isValidReservationTime() ? null : ` ${this.props.validTimeTipMessage}` }
-                      </span>
-                      <span className="subinfo">
-                        {
-                          this.state.start_time_restriction && this.state.end_time_restriction ?
-                          `${this.props.businessTimeSuggestion} ${this.state.start_time_restriction} ~ ${this.state.end_time_restriction}` :
-                          this.props.shopClosedMessage
-                        }
+                      onChange={this._handleChange}
+                      className={this._nextReservationOverlap() ? "field-warning" : ""}
+                      />
+                      <span className="errors">
+                        {this._isValidReservationTime() ? null : <span className="warning">{this.props.validTimeTipMessage}</span>}
+                        {this._timeErrors()}
                       </span>
                   </dd>
                 </dl>
@@ -445,6 +664,10 @@ UI.define("Reservation.Form", function() {
                         onChange={this._handleChange}
                       />
                     </label>
+                    <span className="errors">
+                      {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
+                      {this._menuErrors()}
+                    </span>
                   </dd>
                 </dl>
                 <dl className="form" id="resStaff">
@@ -467,7 +690,9 @@ UI.define("Reservation.Form", function() {
            </div>
 
            <div id="customers">
-             <h2>顧客
+             <h2>
+               <i className="fa fa-user-plus" aria-hidden="true"></i>
+               顧客
                <a onClick={this.handleCustomerAdd}
                  className={this._customerAddClass()}
                  id="addCustomer">{this._customerWording()}
@@ -479,19 +704,31 @@ UI.define("Reservation.Form", function() {
                handleCustomerRemove={this.handleCustomerRemove} />
              <div id="customerLevels">
                <ul>
-                 <li><i className="customer-level-symbol normal" /><span className="wording">一般</span></li>
-                 <li><i className="customer-level-symbol vip" /><span className="wording">VIP</span></li>
+                 <li className="regular">
+                   <span className="customer-level-symbol regular"></span>
+                   <span>一般</span>
+                 </li>
+                 <li className="vip">
+                   <span className="customer-level-symbol vip"></span>
+                   <span className="wording">VIP</span>
+                 </li>
                </ul>
              </div>
            </div>
           </div>
           <footer>
-            <ul id="newResFlow">
-              <ol className="done"><i className="fa fa-check" aria-hidden="true"></i>予約詳細</ol>
-              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
-              <ol>顧客</ol>
-              <ol><i className="fa fa-chevron-right" aria-hidden="true"></i></ol>
-              <ol>完了</ol>
+            <ul id="leftFunctions" className="checkbox">
+              <li>
+                <input
+                  type="checkbox"
+                  id="confirm-with-errors"
+                  checked={this.state.rough_mode}
+                  onChange={this.toggleRoughMode}
+                />
+                <label htmlFor="confirm-with-errors">
+                  エラーのままこの予約を保存します
+                </label>
+              </li>
             </ul>
             <ul id="BTNfunctions">
               {this.props.reservation.id ? (
@@ -517,6 +754,7 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[customer_ids]" type="hidden" value={this.state.customers.map(function(c) { return c["value"]; }).join(",")} />
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
+                  <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
                   <button type="submit" id="BTNsave" className="BTNyellow"
@@ -526,7 +764,6 @@ UI.define("Reservation.Form", function() {
                     {this.state.submitting ? this.props.processingMessage : "保存"}
                   </button>
                 </form>
-
               </li>
             </ul>
           </footer>

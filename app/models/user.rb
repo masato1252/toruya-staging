@@ -49,6 +49,10 @@ class User < ApplicationRecord
     ["lake.ilakela@gmail.com"].include?(email)
   end
 
+  def member?
+    true
+  end
+
   private
 
   def create_default_ranks

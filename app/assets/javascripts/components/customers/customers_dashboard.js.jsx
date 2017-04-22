@@ -508,37 +508,39 @@ UI.define("Customers.Dashboard", function() {
           <div id="customer" className="contents">
             <div id="resultList" className="sidel">
               <ul>
-                <li><i className="customer-level-symbol normal" /><span className="wording">一般</span></li>
-                <li><i className="customer-level-symbol vip" /><span className="wording">VIP</span></li>
+                <li className="regular">
+                  <span className="customer-level-symbol regular"></span>
+                  <span>一般</span>
+                </li>
+                <li className="vip">
+                  <span className="customer-level-symbol vip"></span>
+                  <span>VIP</span>
+                </li>
               </ul>
-              <div id="resNew">
-                <div id="customers">
-                  <UI.Common.CustomersList
-                    customers={this.state.customers}
-                    handleCustomerSelect={this.handleCustomerSelect}
-                    handleMoreCustomers={this.handleMoreCustomers}
-                    selected_customer_id={this.state.selected_customer_id}
-                    noMoreCustomers={this.state.no_more_customers}
-                    noMoreCustomerMessage={this.props.noMoreCustomerMessage}
-                    noCustomerMessage={this.props.noCustomerMessage}
-                    displayNewCustomerBtn={this.state.selected_customer_id}
-                    newCustomerMode={this.newCustomerMode}
-                    processing={this.state.processing}
-                    />
-                  <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
-                  {
-                    this.state.selected_customer_id ? (
-                      <button
-                        id="new-customer-btn"
-                        className="btn btn-light-green"
-                        onClick={this.newCustomerMode}
-                        disabled={this.state.processing} >
-                        新規データ作成
-                      </button>
-                    ) : null
-                  }
-                </div>
-              </div>
+              <UI.Common.CustomersList
+                customers={this.state.customers}
+                handleCustomerSelect={this.handleCustomerSelect}
+                handleMoreCustomers={this.handleMoreCustomers}
+                selected_customer_id={this.state.selected_customer_id}
+                noMoreCustomers={this.state.no_more_customers}
+                noMoreCustomerMessage={this.props.noMoreCustomerMessage}
+                noCustomerMessage={this.props.noCustomerMessage}
+                displayNewCustomerBtn={this.state.selected_customer_id}
+                newCustomerMode={this.newCustomerMode}
+                processing={this.state.processing}
+                />
+              <UI.ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
+              {
+                this.state.selected_customer_id ? (
+                  <button
+                    id="new-customer-btn"
+                    className="BTNtarco"
+                    onClick={this.newCustomerMode}
+                    disabled={this.state.processing} >
+                    新規データ作成
+                  </button>
+                ) : null
+              }
             </div>
 
             {this.renderCustomerView()}

@@ -22,8 +22,8 @@ RSpec.describe Reservable::Time do
                                                       end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
         context "when custom_schedule end time >= schedule end_time" do
-          it "returns nil" do
-            expect(Reservable::Time.run!(shop: shop, date: date)).to be_nil
+          it "is invalid" do
+            expect(Reservable::Time.run(shop: shop, date: date)).to be_invalid
           end
         end
 
@@ -38,8 +38,8 @@ RSpec.describe Reservable::Time do
       end
 
       context "when shop dose not have business_schedule" do
-        it "returns nil" do
-          expect(Reservable::Time.run!(shop: shop, date: date)).to be_nil
+        it "is invalid" do
+          expect(Reservable::Time.run(shop: shop, date: date)).to be_invalid
         end
       end
     end
@@ -60,8 +60,8 @@ RSpec.describe Reservable::Time do
       end
 
       context "when shop does not need to work" do
-        it "returns nil" do
-          expect(Reservable::Time.run!(shop: shop, date: date)).to be_nil
+        it "is invalid" do
+          expect(Reservable::Time.run(shop: shop, date: date)).to be_invalid
         end
       end
     end

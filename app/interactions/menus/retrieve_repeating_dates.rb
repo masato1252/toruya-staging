@@ -47,7 +47,7 @@ module Menus
         begin
           matched_date = beginning_date.advance(days: n)
           n += 1
-        end until (business_schedules_exist ? Reservable::Time.run!(shop: shop, date: matched_date) : matched_date.working_day? && !matched_date.holiday?(:jp))
+        end until (business_schedules_exist ? Reservable::Time.run(shop: shop, date: matched_date).valid? : matched_date.working_day? && !matched_date.holiday?(:jp))
 
         matched_date
       end
@@ -76,7 +76,7 @@ module Menus
         begin
           matched_date = get_next_day(matched_date, setting_days_of_week.at(nth_match_day%routine))
           nth_match_day += 1
-        end until (business_schedules_exist ? Reservable::Time.run!(shop: shop, date: matched_date) : matched_date.working_day? && !matched_date.holiday?(:jp))
+        end until (business_schedules_exist ? Reservable::Time.run(shop: shop, date: matched_date).valid? : matched_date.working_day? && !matched_date.holiday?(:jp))
 
         matched_date
       end
@@ -98,7 +98,7 @@ module Menus
         begin
           matched_date = Date.new(beginning_date.year, beginning_date.month, repeat_day).advance(months: init_advance_month + n)
           n += 1
-        end until (business_schedules_exist ? Reservable::Time.run!(shop: shop, date: matched_date) :  matched_date.working_day? && !matched_date.holiday?(:jp))
+        end until (business_schedules_exist ? Reservable::Time.run(shop: shop, date: matched_date).valid? :  matched_date.working_day? && !matched_date.holiday?(:jp))
 
         matched_date
       end
@@ -124,7 +124,7 @@ module Menus
           matched_date_number = matched_date.send("all_#{DAYS.at(day_of_week)}s_in_month")[reservation_setting.nth_of_week - 1]
           matched_date.change(day: matched_date_number) if matched_date_number
         end.compact.find_all do |date|
-          date >= start_date && (business_schedules_exist ? Reservable::Time.run!(shop: shop, date: date) : date.working_day? && !date.holiday?(:jp))
+          date >= start_date && (business_schedules_exist ? Reservable::Time.run(shop: shop, date: date).valid? : date.working_day? && !date.holiday?(:jp))
         end
 
         matched_date = (candidate_dates.flatten.last || matched_date).next_month.beginning_of_month

@@ -24,7 +24,7 @@ module Reservable
                                                                            opened_custom_schedules.open = true
               ").
       includes(:staff_menus).
-        where.not("staff_menus.staff_id" => (reserved_staff_ids + closed_custom_schedules_staff_ids).uniq)
+        where.not("staff_menus.staff_id" => (reserved_staff_ids(menu) + closed_custom_schedules_staff_ids).uniq)
 
       scoped = scoped.
         where("business_schedules.full_time = ?", true).

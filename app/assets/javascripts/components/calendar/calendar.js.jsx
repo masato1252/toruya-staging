@@ -11,20 +11,36 @@ UI.define("Calendar", function() {
 
       return {
         month: this.startDate.clone(),
-        selectedDate: this.startDate.clone()
+        selectedDate: this.startDate.clone(),
+        holidayDays: this.props.holidayDays
       };
     },
 
     previous: function() {
+      let _this = this;
       var month = this.state.month;
       month.add(-1, "M");
-      this.setState({ month: month });
+      this.setState({ month: month }, _this._fetchHolidayDays);
     },
 
     next: function() {
+      let _this = this;
       var month = this.state.month;
       month.add(1, "M");
-      this.setState({ month: month });
+      this.setState({ month: month }, _this._fetchHolidayDays);
+    },
+
+    _fetchHolidayDays: function() {
+      let _this = this;
+
+      $.ajax({
+        type: "GET",
+        url: this.props.holidayDaysPath,
+        data: { date: this.state.month.format("YYYY-MM-DD") },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.setState({holidayDays: result["holidays"]});
+      });
     },
 
     select: function(day) {
@@ -100,6 +116,7 @@ UI.define("Calendar", function() {
                                 month={this.state.month}
                                 select={this.select}
                                 selectedDate={this.state.selectedDate}
+                                holidayDays={this.state.holidayDays}
                                 selected={this.state.month} />);
             date.add(1, "w");
             done = count++ > 2 && monthIndex !== date.month();

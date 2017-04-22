@@ -56,7 +56,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           divider = (
             <a href="#" className="year">
               <dl>
-                <dd className="date">{reservation.year}</dd>
+                <dd>{reservation.year}</dd>
               </dl>
             </a>
           )
@@ -70,9 +70,9 @@ UI.define("Customers.CustomerReservationsView", function() {
               data-target={`#reservationModal${reservation.id}`}
               >
               <dl>
-                <dd className="date">{reservation.date}</dd>
+                <dd className="date">{reservation.monthDate}</dd>
                 <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
-                <dd><span className={`reservation-state ${reservation.state}`}></span></dd>
+                <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
                 <dd className="menu">{reservation.menu}</dd>
                 <dd className="shop">{reservation.shop}</dd>
               </dl>
@@ -85,7 +85,9 @@ UI.define("Customers.CustomerReservationsView", function() {
                       <span aria-hidden="true">&times;</span>
                     </button>
                     <h4 className="modal-title" id="myModalLabel">
-                      {reservation.date}
+                      <a href={`/shops/${reservation.shopId}/reservations/${reservation.date}`}>
+                        {reservation.monthDate}
+                      </a>
                       {reservation.startTime} 〜 {reservation.endTime}
                     </h4>
                   </div>
@@ -201,7 +203,7 @@ UI.define("Customers.CustomerReservationsView", function() {
             <dl className="tableTTL">
               <dt className="date">ご利用日</dt>
               <dt className="time">開始<br />終了</dt>
-              <dt className="reservation-states"></dt>
+              <dt className="resSts"></dt>
               <dt className="menu">メニュー</dt>
               <dt className="shop">店舗</dt>
               </dl>

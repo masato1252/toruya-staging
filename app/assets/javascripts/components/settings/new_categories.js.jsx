@@ -53,8 +53,8 @@ UI.define("Settings.NewCategories", function() {
                   <input type="checkbox" checked />
                   <label>{newCategory}</label>
                 </dd>
-                <dd className="remove">
-                  <a className="btn btn-light-green" onClick={this.removeNewCateogry.bind(null, i)}>
+                <dd className="remove function">
+                  <a className="BTNorange" onClick={this.removeNewCateogry.bind(null, i)}>
                     Cancel
                   </a>
                 </dd>
@@ -63,15 +63,19 @@ UI.define("Settings.NewCategories", function() {
           }.bind(this))}
 
           <dl className="new-category-area">
-            <input
-              type="text"
-              value={this.state.newCategoryValue}
-              placeholder={this.props.categoryLabel}
-              onChange={this.handleCategoryValueChange} />
-            <a
-              className={`btn btn-light-green btn-inline ${this.state.newCategoryValue ? null : "disabled"}`} onClick={this.addNewCategory}>
-              {this.props.newCategoryBtn}
-            </a>
+            <dd>
+              <input
+                type="text"
+                value={this.state.newCategoryValue}
+                placeholder={this.props.categoryLabel}
+                onChange={this.handleCategoryValueChange} />
+            </dd>
+            <dd className="function">
+              <a
+                className={`BTNtarco ${this.state.newCategoryValue ? null : "disabled"}`} onClick={this.addNewCategory}>
+                {this.props.newCategoryBtn}
+              </a>
+            </dd>
           </dl>
         </div>
       );

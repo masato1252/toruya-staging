@@ -36,8 +36,6 @@ module Shops
         end
 
         h
-      else
-        []
       end
     end
   end

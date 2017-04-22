@@ -6,8 +6,8 @@ RSpec.describe Shops::StaffsWorkingSchedules do
     let(:date) { Date.today }
 
     context "when date is not working day" do
-      it "returns empty" do
-        expect(described_class.run!(shop: shop, date: date)).to be_empty
+      it "is invalid" do
+        expect(described_class.run(shop: shop, date: date)).to be_invalid
       end
     end
 

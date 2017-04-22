@@ -5,24 +5,26 @@
   <p><%= t("settings.contact.new_info_1") %><br /><%= t("settings.contact.new_info_2") %></p>
 </div>
 
-<%= form_for(contact_group, url: url) do |f| %>
-  <%= render "settings/form_errors", object: contact_group %>
+<div id="settingForm">
+  <%= form_for(contact_group, url: url) do |f| %>
+    <%= render "settings/form_errors", object: contact_group %>
 
-  <h3><%= t("settings.contact.info_label") %><strong>必須項目</strong></h3>
-  <div id="contactsInfo" class="formRow">
-    <dl>
-      <dt>顧客台帳名</dt>
-      <dd>
-        <%= f.text_field :name, max_length: 30 %>
-      </dd>
-    </dl>
-  </div>
-  <ul id="footerav">
-    <li>
-      <%= link_to t("action.cancel"), settings_contact_groups_path, class: "BTNtarco" %>
-    </li>
-    <li>
-      <%= f.submit "保存", class: "BTNyellow" %>
-    </li>
-  </ul>
-<% end %>
+    <h3><%= t("settings.contact.info_label") %><strong>必須項目</strong></h3>
+    <div id="contactsInfo" class="formRow">
+      <dl>
+        <dt>顧客台帳名</dt>
+        <dd>
+          <%= f.text_field :name, max_length: 30 %>
+        </dd>
+      </dl>
+    </div>
+    <ul id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_contact_groups_path, class: "BTNtarco" %>
+      </li>
+      <li>
+        <%= f.submit "保存", class: "BTNyellow" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

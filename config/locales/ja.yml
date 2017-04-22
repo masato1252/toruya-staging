@@ -65,6 +65,7 @@ ja:
     shop_closed: 営業時間外
     cancel: 予約削除
     memo: メモ内容
+    contain_some_warnings: 注意事項を含んだ予約です
   customer:
     back_without_save: 戻る（保存）
     save: 上書き保存
@@ -88,7 +89,7 @@ ja:
       new_button: 新規店舗作成
       info_1: 設定された店舗一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
-      new_info_1: 店舗を設定します。
+      new_info_1: 店舗情報を設定します。
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 店舗名
       create_successfully_message: 店舗情報を保存しました。
@@ -175,11 +176,11 @@ ja:
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
     contact:
-      info_title: 顧客台帳
+      info_title: Google同期設定
       new_title: 新規台帳作成
       new_button: 新規グループを作成
-      info_1: 設定された顧客台帳一覧です。
-      info_2: Toruyaはこの設定に基づいて予約を受け付けます。
+      info_1: こちらではToruyaと同期するGmail連絡先グループを設定してください。
+      info_2: Toruya顧客台帳のご利用にはGmail連絡先の同期が必要です。
       new_info_1: 新しい顧客台帳の基本設定をします。
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       info_label: 台帳情報
@@ -192,9 +193,10 @@ ja:
       synchronization_title: 同期状態
       connect: 同期設定する
       sync: 同期
-      google_account_synchronization: Googleアカウント同期設定
-      google_account_synchronization_instructions: Gmail連絡先と連絡先グループをToruyaと同期します。
-      connection_binding_desc: インポートするGoogle連絡先グループを選択するか『新規グループを作成』ボタンを押してください。
+      google_account_synchronization: 顧客台帳の同期
+      google_account_synchronization_instructions1: インポートするGoogle連絡先グループを選択するか
+      google_account_synchronization_instructions2: 『インポートせずに同期設定を完了する』ボタンを押してください。
+      connection_binding_desc: 既存Google連絡先グループからインポートする。
       google_group_name: 既存Google連絡先グループ
       bind_btn: インポート
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
@@ -472,3 +474,32 @@ ja:
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
     pm: 午後
+  active_interaction:
+    errors:
+      models:
+        shops/staffs_working_schedules:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+        reservable/time:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+        reservable/reservation:
+          attributes:
+            date:
+              shop_closed: "^休業日"
+            business_time_range:
+              interval_too_short: "^インターバル不足"
+            staff_ids:
+              unworking_staff: "^休暇中"
+              other_shop: "^他店勤務中"
+              overlap_reservations: "^重複予約あり"
+              incapacity_menu: "^非対応メニュー"
+              not_enough_ability: "^対応人数超"
+            menu_ids:
+              time_not_enough: "^所要時間不足"
+              not_enough_seat: "^席数不足"
+              unschedule_menu: "^予約枠外"
+              start_yet: "^受付開始 %{start_at}"
+              is_over: "^受付終了"

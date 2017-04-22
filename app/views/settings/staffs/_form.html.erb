@@ -5,55 +5,57 @@
   <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
 </div>
 
-<%= form_for(staff, url: url) do |f| %>
-  <%= render "settings/form_errors", object: staff %>
+<div id="settingForm">
+  <%= form_for(staff, url: url) do |f| %>
+    <%= render "settings/form_errors", object: staff %>
 
-  <h3><%= t("settings.staff.info_label") %><strong>必須項目</strong></h3>
-  <div id="staffInfo" class="formRow">
-    <dl>
-      <dt>氏名</dt>
-      <dd class="familyName">
-        <%= f.text_field :last_name, placeholder: "Family Name" %>
-      </dd>
-      <dd class="firstName">
-        <%= f.text_field :first_name, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt>しめい</dt>
-      <dd class="familyName">
-        <%= f.text_field :phonetic_last_name, placeholder: "Family Name Kana" %>
-      </dd>
-      <dd class="firstName">
-        <%= f.text_field :phonetic_first_name, placeholder: "First Name Kana" %>
-      </dd>
-    </dl>
-  </div>
-  <h3><%= t("settings.staff.shop_label") %><strong>必須項目</strong></h3>
-  <div id="belong" class="formRow">
-    <% shop_ids = staff.shop_staffs.pluck(:shop_id) %>
-    <input type="hidden" name="staff[shop_ids][]" value="">
-    <% @shops.each do |shop| %>
-      <dl class="checkbox">
-        <dd>
-          <input
-            type="checkbox"
-            id="shop-<%= shop.id %>"
-            name="staff[shop_ids][]"
-            value=<%= shop.id %>
-            <%= "checked" if shop_ids.include?(shop.id) %>>
-          <label for="shop-<%= shop.id %>"><%= shop.name %></label>
+    <h3><%= t("settings.staff.info_label") %><strong>必須項目</strong></h3>
+    <div id="staffInfo" class="formRow">
+      <dl>
+        <dt>氏名</dt>
+        <dd class="familyName">
+          <%= f.text_field :last_name, placeholder: "Family Name" %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :first_name, placeholder: true %>
         </dd>
       </dl>
-    <% end %>
-  </div>
+      <dl>
+        <dt>しめい</dt>
+        <dd class="familyName">
+          <%= f.text_field :phonetic_last_name, placeholder: "Family Name Kana" %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :phonetic_first_name, placeholder: "First Name Kana" %>
+        </dd>
+      </dl>
+    </div>
+    <h3><%= t("settings.staff.shop_label") %><strong>必須項目</strong></h3>
+    <div id="belong" class="formRow">
+      <% shop_ids = staff.shop_staffs.pluck(:shop_id) %>
+      <input type="hidden" name="staff[shop_ids][]" value="">
+      <% @shops.each do |shop| %>
+        <dl class="checkbox">
+          <dd>
+            <input
+              type="checkbox"
+              id="shop-<%= shop.id %>"
+              name="staff[shop_ids][]"
+              value=<%= shop.id %>
+              <%= "checked" if shop_ids.include?(shop.id) %>>
+            <label for="shop-<%= shop.id %>"><%= shop.name %></label>
+          </dd>
+        </dl>
+      <% end %>
+    </div>
 
-  <div id="footerav">
-    <li>
-      <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
-    </li>
-    <li>
-      <%= f.submit "保存", class: "BTNyellow" %>
-    </li>
-  </div>
-<% end %>
+    <div id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
+      </li>
+      <li>
+        <%= f.submit "保存", class: "BTNyellow" %>
+      </li>
+    </div>
+  <% end %>
+</div>

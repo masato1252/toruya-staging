@@ -13,6 +13,12 @@ GIT
   specs:
     jp_prefecture (0.8.1)
 
+GIT
+  remote: git://github.com/thethanghn/custom-err-msg.git
+  revision: b913309360995472507ea444c6f1a80315b99d28
+  specs:
+    custom_error_message (1.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -136,7 +142,7 @@ GEM
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
-    font-awesome-rails (4.6.3.1)
+    font-awesome-rails (4.7.0.1)
       railties (>= 3.2, < 5.1)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
@@ -370,6 +376,7 @@ DEPENDENCIES
   bullet (~> 2.0.0)
   byebug
   coffee-rails (~> 4.2)
+  custom_error_message (~> 1.2.1)!
   database_cleaner
   default_value_for (~> 3.0.0)
   delayed-web (~> 0.4.2)
@@ -378,7 +385,7 @@ DEPENDENCIES
   dotenv-rails
   expeditor (~> 0.5.0)
   factory_girl_rails
-  font-awesome-rails (~> 4.6.3)
+  font-awesome-rails (~> 4.7.0)
   google_contacts_api (~> 0.2.2)!
   hashie (~> 3.4.4)
   holidays (~> 4.5.0)

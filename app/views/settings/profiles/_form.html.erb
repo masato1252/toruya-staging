@@ -5,69 +5,71 @@
   <p><%= t("settings.profile.new_info_1") %><br /><%= t("settings.profile.new_info_2") %></p>
 </div>
 
-<%= form_for(profile, url: url) do |f| %>
-  <%= render "settings/form_errors", object: profile %>
+<div id="settingForm">
+  <%= form_for(profile, url: url) do |f| %>
+    <%= render "settings/form_errors", object: profile %>
 
-  <h3>管理者情報<strong>必須項目</strong></h3>
-  <div id="adminInfo" class="formRow">
-    <dl>
-      <dt>氏名</dt>
-      <dd class="familyName">
-        <%= f.text_field :last_name, placeholder: Profile.human_attribute_name(:last_name) %>
-      </dd>
-      <dd class="firstName">
-        <%= f.text_field :first_name, placeholder: Profile.human_attribute_name(:first_name) %>
-      </dd>
-    </dl>
-    <dl>
-      <dt>しめい</dt>
-      <dd class="familyName">
-        <%= f.text_field :phonetic_last_name, placeholder: Profile.human_attribute_name(:phonetic_last_name) %>
-      </dd>
-      <dd class="firstName">
-        <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
-      </dd>
-    </dl>
-  </div>
-  <h3>企業情報</h3>
-  <div id="companyInfo" class="formRow">
-    <dl>
-      <dt><%= Profile.human_attribute_name(:company_name) %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :company_name, placeholder: Profile.human_attribute_name(:company_name), size: 20 %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= Profile.human_attribute_name(:zip_code) %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :zip_code, placeholder: "1234567", max_length: 7 %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= Profile.human_attribute_name(:address) %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :address, placeholder: Profile.human_attribute_name(:address), class: "address" %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= Profile.human_attribute_name(:phone_number) %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.phone_field :phone_number, placeholder: "01201234567", max_length: 11 %>
-      </dd>
-    </dl>
-    <dl>
-      <dt>WEB</dt>
-      <dd>
-        <%= f.url_field :website, placeholder: "http://" %>
-      </dd>
-    </dl>
-  </div>
-  <ul id="footerav">
-    <li>
-      <%= link_to t("action.cancel"), settings_profile_path, class: "BTNtarco" if profile.persisted? %>
-    </li>
-    <li>
-      <%= f.submit t("action.save"), class: "BTNyellow" %>
-    </li>
-  </ul>
-<% end %>
+    <h3>管理者情報<strong>必須項目</strong></h3>
+    <div id="adminInfo" class="formRow">
+      <dl>
+        <dt>氏名</dt>
+        <dd class="familyName">
+          <%= f.text_field :last_name, placeholder: Profile.human_attribute_name(:last_name) %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :first_name, placeholder: Profile.human_attribute_name(:first_name) %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>しめい</dt>
+        <dd class="familyName">
+          <%= f.text_field :phonetic_last_name, placeholder: Profile.human_attribute_name(:phonetic_last_name) %>
+        </dd>
+        <dd class="firstName">
+          <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
+        </dd>
+      </dl>
+    </div>
+    <h3>企業情報</h3>
+    <div id="companyInfo" class="formRow">
+      <dl>
+        <dt><%= Profile.human_attribute_name(:company_name) %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :company_name, placeholder: Profile.human_attribute_name(:company_name), size: 20 %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= Profile.human_attribute_name(:zip_code) %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :zip_code, placeholder: "1234567", max_length: 7 %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= Profile.human_attribute_name(:address) %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :address, placeholder: Profile.human_attribute_name(:address), class: "address" %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= Profile.human_attribute_name(:phone_number) %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.phone_field :phone_number, placeholder: "01201234567", max_length: 11 %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>WEB</dt>
+        <dd>
+          <%= f.url_field :website, placeholder: "http://" %>
+        </dd>
+      </dl>
+    </div>
+    <ul id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_profile_path, class: "BTNtarco" if profile.persisted? %>
+      </li>
+      <li>
+        <%= f.submit t("action.save"), class: "BTNyellow" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

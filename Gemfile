@@ -23,7 +23,7 @@ gem "react-rails", "~> 1.8.0"
 gem "underscore-rails", "~> 1.8.3"
 gem "momentjs-rails", "~> 2.11.1"
 gem "moment_timezone-rails", "~> 0.5.0"
-gem "font-awesome-rails", "~> 4.6.3"
+gem "font-awesome-rails", "~> 4.7.0"
 gem "active_link_to", "~> 1.0.3"
 gem "aasm", "~> 4.11.0"
 gem "active_interaction", "~> 3.2.0"
@@ -43,6 +43,7 @@ gem "puma", "~> 3.4.0"
 gem "kaminari", "~> 1.0.1"
 gem "expeditor", "~> 0.5.0"
 gem "newrelic_rpm", "~> 3.18.0"
+gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 
 group :development, :test do
   gem "byebug", platform: :mri

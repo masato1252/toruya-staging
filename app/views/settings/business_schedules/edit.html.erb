@@ -5,74 +5,80 @@
   <p><%= t("settings.business_hours.info_1") %><br /><%= t("settings.business_hours.info_2") %></p>
 </div>
 
-<%= form_tag update_settings_shop_business_schedules_path, method: :post, data: { behavior: "dirty-form" } do %>
-  <h3>基本営業時間<strong>必須項目</strong></h3>
-  <div id="busHour" class="formRow">
-    <ul class="tableTTL">
-      <li class="rowTTL"><%= t("common.day") %></li>
-      <li class="openClose">OPEN/CLOSE</li>
-      <li class="openTime"><%= t("settings.business_hours.open_time") %></li>
-      <li class="closeTime"><%= t("settings.business_hours.close_time") %></li>
-    </ul>
-    <% BusinessSchedule::WDAYS.each do |wday| %>
-      <% business_schedule = @wdays_business_schedules.find{ |schedule| schedule.day_of_week == wday } %>
+<div id="settingForm">
+  <%= form_tag update_settings_shop_business_schedules_path, method: :post, data: { behavior: "dirty-form" } do %>
+    <h3>基本営業時間<strong>必須項目</strong></h3>
+    <div id="busHour" class="formRow">
+      <ul class="tableTTL">
+        <li class="rowTTL"><%= t("common.day") %></li>
+        <li class="openClose">OPEN/CLOSE</li>
+        <li class="openTime"><%= t("settings.business_hours.open_time") %></li>
+        <li class="closeTime"><%= t("settings.business_hours.close_time") %></li>
+      </ul>
+      <% BusinessSchedule::WDAYS.each do |wday| %>
+        <% business_schedule = @wdays_business_schedules.find{ |schedule| schedule.day_of_week == wday } %>
 
-      <dl class="form">
-        <dt><%= I18n.t("date.day_names").at(wday) %></dt>
-        <dd class="openClose">
-          <%= hidden_field_tag "business_schedules[][id]", business_schedule.try(:id) %>
-          <%= hidden_field_tag "business_schedules[][day_of_week]", wday %>
-          <%= check_box_tag "business_schedules[][business_state]", "opened", business_schedule.try(:business_state) == "opened",
-            class: "BTNopenclose", id: "day#{wday}" %>
-          <label for="day<%= wday %>"></label>
-        </dd>
-        <dd class="openTime">
-          <%= time_field_tag "business_schedules[][start_time]", business_schedule.try(:start_time).try(:to_s, :time), size: 30 %>
-        </dd>
-        <dd class="closeTime">
-          <%= time_field_tag "business_schedules[][end_time]", business_schedule.try(:end_time).try(:to_s, :time), size: 30 %>
+        <dl class="form">
+          <dt><%= I18n.t("date.day_names").at(wday) %></dt>
+          <dd class="openClose">
+            <%= hidden_field_tag "business_schedules[][id]", business_schedule.try(:id) %>
+            <%= hidden_field_tag "business_schedules[][day_of_week]", wday %>
+            <%= check_box_tag "business_schedules[][business_state]", "opened", business_schedule.try(:business_state) == "opened",
+              class: "BTNopenclose", id: "day#{wday}" %>
+            <label for="day<%= wday %>"></label>
+          </dd>
+          <dd class="openTime">
+            <%= time_field_tag "business_schedules[][start_time]", business_schedule.try(:start_time).try(:to_s, :time), size: 30 %>
+          </dd>
+          <dd class="closeTime">
+            <%= time_field_tag "business_schedules[][end_time]", business_schedule.try(:end_time).try(:to_s, :time), size: 30 %>
+          </dd>
+        </dl>
+      <% end %>
+    </div>
+
+    <h3>祝日<strong>必須項目</strong></h3>
+    <div id="hoddday" class="formRow">
+      <dl>
+        <dt><%= t"settings.business_hours.japan_holidays" %></dt>
+        <dd>
+          <%= check_box_tag "shop[holiday_working]", true, shop.holiday_working,
+            class: "BTNopenclose", id: "holidayJP" %>
+          <label for="holidayJP"></label>
+          <span class="caution">※<%= t"settings.business_hours.japan_holidays_close_tip" %></span>
         </dd>
       </dl>
-    <% end %>
-  </div>
+    </div>
 
-  <h3>祝日<strong>必須項目</strong></h3>
-  <div id="hoddday" class="formRow">
-    <dl>
-      <dt><%= t"settings.business_hours.japan_holidays" %></dt>
-      <dd>
-        <%= check_box_tag "shop[holiday_working]", true, shop.holiday_working,
-          class: "BTNopenclose", id: "holidayJP" %>
-        <label for="holidayJP"></label>
-        <span class="caution">※<%= t"settings.business_hours.japan_holidays_close_tip" %></span>
-      </dd>
-    </dl>
-  </div>
+    <h3>臨時休業</h3>
+    <div id="tempHoliday" class="formRow">
+      <ul class="tableTTL">
+        <li class="date"><%= I18n.t("common.date") %></li>
+        <li class="startTime"><%= I18n.t("common.start_time") %></li>
+        <li class="endsTime"><%= I18n.t("common.end_time") %></li>
+        <li class="closeReason"><%= I18n.t("settings.business_hours.reason_of_closing") %></li>
+      </ul>
+      <%= react_component "UI.CustomSchedules",
+        {
+        shop_id: shop.id,
+        custom_schedules: @custom_schedules.map { |schedule|
+          schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
+                                    start_time_time_part: schedule.start_time_time,
+                                    end_time_time_part: schedule.end_time.try(:to_s, :time))
+        },
+        new_closing_btn: I18n.t("settings.business_hours.new_closing_btn"),
+        closing_reason: I18n.t("settings.business_hours.closing_reason"),
+        delete_btn: I18n.t("action.delete")
+      } %>
+    </div>
 
-  <h3>臨時休業</h3>
-  <%= react_component "UI.CustomSchedules",
-    {
-    shop_id: shop.id,
-    custom_schedules: @custom_schedules.map { |schedule|
-      schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
-                                start_time_time_part: schedule.start_time_time,
-                                end_time_time_part: schedule.end_time.try(:to_s, :time))
-    },
-    date_label: I18n.t("common.date"),
-    start_time_label: I18n.t("common.start_time"),
-    end_time_label: I18n.t("common.end_time"),
-    reason_of_closing_label: I18n.t("settings.business_hours.reason_of_closing"),
-    new_closing_btn: I18n.t("settings.business_hours.new_closing_btn"),
-    closing_reason: I18n.t("settings.business_hours.closing_reason"),
-    delete_btn: I18n.t("action.delete")
-  } %>
-
-  <ul id="footerav">
-    <li>
-      <%= link_to t("action.cancel"), settings_business_schedules_path, class: "BTNtarco" %>
-    </li>
-    <li>
-      <%= submit_tag t("action.save"), class: "BTNyellow" %>
-    </li>
-  </ul>
-<% end %>
+    <ul id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_business_schedules_path, class: "BTNtarco" %>
+      </li>
+      <li>
+        <%= submit_tag t("action.save"), class: "BTNyellow" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

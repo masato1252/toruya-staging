@@ -2,40 +2,44 @@
     <h2><%= t("settings.contact.google_account_synchronization") %></h2>
   </div>
   <div id="about">
-    <p><%= t("settings.contact.google_account_synchronization_instructions") %></p>
+    <p>
+      <%= t("settings.contact.google_account_synchronization_instructions1") %><br />
+      <%= t("settings.contact.google_account_synchronization_instructions2") %>
+    </p>
   </div>
 
-  <form>
-    <h1><%= t("settings.contact.info_title") %>: <%= @contact_group.name %></h1>
-    <%= t("settings.contact.connection_binding_desc") %>
-    <div id="customize-table" class="formRow table">
-      <dl class="header">
-        <dd><%= t("settings.contact.google_group_name") %></dd>
-      </dl>
+  <div id="settingForm">
+    <div class="caution"><strong>顧客台帳: <%= @contact_group.name %></strong>を同期設定します。</div>
+    <h3><%= t("settings.contact.connection_binding_desc") %></h3>
+    <div id="contactList" class="formRow">
+      <ul class="tableTTL">
+        <li class="rowTTL"><%= t("settings.contact.google_group_name") %></li>
+        <li class="function"><%= t("settings.contact.synchronization_title") %></li>
+      </ul>
       <% @google_groups.each do |google_group| %>
-        <dl class="body">
-          <dd><%= google_group.title %></dd>
-          <dd>
+        <dl>
+          <dd class="rowTTL"><%= google_group.title %></dd>
+          <dd class="syncContacts">
             <%= link_to t("settings.contact.bind_btn"),
               bind_settings_contact_group_path(@contact_group,
                                                google_group_id: google_group.id,
-                                               google_group_name: google_group.title), method: :post, class: "btn btn-success",
+                                               google_group_name: google_group.title), method: :post, class: "BTNyellow",
                                                data: { confirm: t("settings.contact.binding_confirmation_message",
                                                                   google_group_name: google_group.title,
                                                                   contact_group_name: @contact_group.name),
-                                                       disable_with: t("common.processing") } %>
+                                                                  disable_with: t("common.processing") } %>
           </dd>
         </dl>
       <% end %>
     </div>
     <hr />
     <% if @google_groups.present? %>
-      <h2>
-        <%= t("settings.contact.dont_want_connect_google") %>
-      </h2>
+      <h3><%= t("settings.contact.dont_want_connect_google") %></h3>
     <% end %>
-    <%= link_to t("settings.contact.only_use_toruya_group"), bind_settings_contact_group_path(@contact_group),
-      method: :post,
-      class: "btn btn-success",
-        data: { confirm: t("settings.contact.only_use_toruya_group_confirmation"), disable_with: t("common.processing") } %>
-  </form>
+    <div id="syncContactsNew">
+      <%= link_to t("settings.contact.only_use_toruya_group"), bind_settings_contact_group_path(@contact_group),
+        method: :post,
+        class: "BTNorange",
+          data: { confirm: t("settings.contact.only_use_toruya_group_confirmation"), disable_with: t("common.processing") } %>
+    </div>
+ </div>

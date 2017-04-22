@@ -5,65 +5,67 @@
   <p><%= t("settings.shop.new_info_1") %><br /><%= t("settings.shop.new_info_2") %></p>
 </div>
 
-<%= form_for(shop, url: url) do |f| %>
-  <%= render "settings/form_errors", object: shop %>
+<div id="settingForm">
+  <%= form_for(shop, url: url) do |f| %>
+    <%= render "settings/form_errors", object: shop %>
 
-  <h3>店名</h3>
-  <div id="shopNames" class="formRow">
-    <dl>
-      <dt>店舗名<strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :name, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt>短縮店舗名<strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :short_name, placeholder: true %>
-      </dd>
-    </dl>
-  </div>
+    <h3>店名</h3>
+    <div id="shopNames" class="formRow">
+      <dl>
+        <dt>店舗名<strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :name, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>短縮店舗名<strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :short_name, placeholder: true %>
+        </dd>
+      </dl>
+    </div>
 
-  <h3>連絡先</h3>
-  <div id="contacts" class="formRow">
-    <dl>
-      <dt><%= t("common.zip_code") %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :zip_code, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= t("common.address") %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :address, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= t("common.phone_number") %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :phone_number, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt><%= t("common.email") %><strong>必須項目</strong></dt>
-      <dd>
-        <%= f.text_field :email, placeholder: true %>
-      </dd>
-    </dl>
-    <dl>
-      <dt>WEB</dt>
-      <dd>
-        <%= f.text_field :website, placeholder: true %>
-      </dd>
-    </dl>
-  </div>
+    <h3>連絡先</h3>
+    <div id="contacts" class="formRow">
+      <dl>
+        <dt><%= t("common.zip_code") %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :zip_code, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= t("common.address") %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :address, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= t("common.phone_number") %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :phone_number, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt><%= t("common.email") %><strong>必須項目</strong></dt>
+        <dd>
+          <%= f.text_field :email, placeholder: true %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>WEB</dt>
+        <dd>
+          <%= f.text_field :website, placeholder: true %>
+        </dd>
+      </dl>
+    </div>
 
-  <ul id="footerav">
-    <li>
-      <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
-    </li>
-    <li>
-      <%= f.submit "保存", class: "BTNyellow" %>
-    </li>
-  </ul>
-<% end %>
+    <ul id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
+      </li>
+      <li>
+        <%= f.submit "保存", class: "BTNyellow" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

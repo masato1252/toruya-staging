@@ -5,7 +5,7 @@ UI.define("Common.DatepickerField", function() {
     componentDidMount: function() {
       var _this = this;
 
-      $("#hidden_date").datepicker({
+      $("#" + _this._datepickerId()).datepicker({
         dateFormat: "yy-mm-dd"
       }).datepicker( $.datepicker.regional[ "ja" ] ).
         on("change", _this.props.handleChange)
@@ -13,7 +13,11 @@ UI.define("Common.DatepickerField", function() {
 
     openCalendar: function(event) {
       event.preventDefault();
-      $('#hidden_date').datepicker('show');
+      $("#" + this._datepickerId()).datepicker('show');
+    },
+
+    _datepickerId: function() {
+      return `schedule_hidden_date_${this.props.calendarfieldPrefix || "default"}`
     },
 
     render: function() {
@@ -26,11 +30,12 @@ UI.define("Common.DatepickerField", function() {
             name={this.props.dataName}
             value={this.props.date}
             onChange={this.props.handleChange}
+            className={this.props.className}
             />
-          { this.props.date ? `(${moment(this.props.date).format("dd")})` : null }
+            { this.props.date ? <span>({moment(this.props.date).format("dd")})</span> : null }
           <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
           <input type="hidden"
-            id="hidden_date"
+            id={this._datepickerId()}
             data-name={this.props.dataName}
             name={this.props.name || this.props.dataName}
             value={this.props.date}

@@ -12,8 +12,10 @@ UI.define("ProcessingBar", function() {
       }
 
       return (
-        <div className="alert processing-bar">
-          {this.props.processingMessage} <i className="fa fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+        <div className="hover_alert">
+          <div className="alert processing-bar">
+            {this.props.processingMessage} <i className="fa fa-spinner fa-spin fa-fw" aria-hidden="true"></i>
+          </div>
         </div>
       );
     }

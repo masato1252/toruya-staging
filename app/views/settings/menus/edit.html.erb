@@ -1,8 +1,11 @@
 <div id="subNav">
   <h2>基本情報 − <%= t("settings.menu.new_title") %></h2>
 </div>
-<%= render 'form',
-menu: @menu,
-url: settings_menu_path(@menu),
-menu_reservation_setting_rule: @menu_reservation_setting_rule,
-reservation_setting: @reservation_setting %>
+
+<div id="settingForm">
+  <%= render 'form',
+  menu: @menu,
+  url: settings_menu_path(@menu),
+  menu_reservation_setting_rule: @menu_reservation_setting_rule,
+  reservation_setting: @reservation_setting %>
+</div>

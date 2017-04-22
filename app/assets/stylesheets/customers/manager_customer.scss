@@ -1,0 +1,131 @@
+/* CSS Document */
+/* Customer */
+#customer.contents { margin-bottom: 72px; }
+#customer #resultList {
+  min-width: 230px;
+}
+#customer #resultList a:last-of-type {
+  margin-top: 10px;
+}
+#customer #resultList dl.here, #customer #resultList a.here { background-color: #dceae7; }
+#customer #resultList dd span.vip {
+  border-color: #b0450d;
+  background-color: #ca4e0f;
+}
+#customer #resultList dt {
+  line-height: 1em;
+}
+#customer #resultList dt p {
+  padding: 5px 0;
+}
+#customer #resultList .no-more-customer {
+  display: block;
+  border-color: #cb845f;
+  background-color: #dc8a5f;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  line-height: 50px;
+}
+#customer #resultList button {
+  margin: 10px 0;
+  width: 100%;
+}
+#customerInfo #basic, #customerInfoNew #basic, #customerInfoEdit #basic { padding-bottom: 10px; }
+#customerInfoEdit #basic input, #customerInfoNew #basic input, #customerInfo #basic input, #resNew #resInfo input { text-indent: 10px; }
+#customerInfoEdit #basic dl ul li, #customerInfoNew #basic dl ul li, #customerInfo #basic dl ul li { padding-bottom: 5px; }
+#customerInfoEdit #basic dl ul li i, #customerInfoNew #basic dl ul li i, #customerInfo #basic dl ul li i { margin-right: 5px; }
+#resNew #resInfo a, #resNew #resInfo a:link, #resNew #resInfo input, #resNew #resInfo span, .date a, .date a:link, .date input {
+  display: inline-block;
+}
+#resNew #resInfo a, #resNew #resInfo a:link, #resNew #resInfo i, .date i {
+  font-size: 18px;
+}
+#resNew #resInfo a, #resNew #resInfo a:link, .date a, .date a:link {
+  padding: 0 10px;
+  margin-left: 5px;
+  height: 35px;
+  line-height: 35px;
+}
+#customerInfo #basic dl dt, #customerInfo #basic dl dd, #customerInfoNew #basic dl dt, #customerInfoNew #basic dl dd, #customerInfoEdit #basic dl dt, #customerInfoEdit #basic dl dd {
+  display: inline-block;
+  vertical-align: middle;
+}
+#customerInfo #basic dl dt, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dt { width: 110px; }
+#customerInfo #basic dl dd:nth-child(2) {
+  width: 55%;
+}
+#customerInfo #basic dl dd:nth-child(2) ul li {
+  width: 100%;
+  text-align: center;
+}
+#customerInfo #basic dl dd:nth-child(2) ul:not(.kana) {
+  font-size: 20pt;
+  font-weight: bold;
+}
+#customerInfo #basic dl dt {
+  float: left;
+}
+#customerInfo #basic dl dd:nth-child(3) {
+  float: right;
+}
+#customerInfo #basic a.BTNtarco {
+  text-align: center;
+  display: inline-block;
+  line-height: 54px;
+  width: 60px;
+}
+#customerInfo #basic a.BTNtarco:first-child {
+  margin-left: 10px;
+}
+#customerInfo #basic dl dt li:first-child { margin-bottom: 5px; }
+#customerInfo #basic dl dt li {
+  text-align: center;
+  font-size: 90%;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -o-border-radius: 6px;
+  -ms-border-radius: 6px;
+  padding: 5px;
+}
+#customerInfoEdit #basic select#customerSts, #customerInfoNew #basic select#customerSts, #customerInfo #basic select#customerSts {
+  border: 1px solid #b3b3b3;
+  background-color: #d0d0d0;
+}
+#customerInfoEdit #basic select#customerSts.vip, #customerInfoNew #basic select#customerSts.vip, #customerInfo #basic dl dt li.vip {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-color: #b0450d;
+  background-color: #ca4e0f;
+  color: #fff;
+}
+#customerInfoEdit #basic input, #customerInfoEdit #basic select, #customerInfoNew #basic input, #customerInfoNew #basic select, #customerInfo #basic input, #customerInfo #basic select {
+  line-height: 47px;
+  height: 47px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+#customerInfoEdit #basic dt select, #customerInfoNew #basic dt select, #customerInfo #basic dt select {
+  width: 100%;
+}
+#customerInfo .tabs a { width: 40%; }
+#customerInfo #resList #record { padding-top: 33px; }
+#customerInfo #resList .menu { width: 40%; }
+#customerInfo #resList .shop { width: 100px; }
+#customerInfo #resList .year, #customerInfo #detailInfoEdit dl dt, #customerInfoNew #detailInfoEdit dl dt {
+  text-align: center;
+  background: #d0d0d0;
+  color: #fff;
+}
+#customerInfo #resList .year {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: block;
+}
+
+.status-list div {
+  margin-bottom: 3px;
+}
