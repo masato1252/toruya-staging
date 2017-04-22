@@ -4,11 +4,23 @@
   color: #fff;
 }
 
+// customers page reservations popup modal date link
+#resList .modal-title {
+  a:link, a:visited {
+    display: inline-block;
+    color: #97bfb8;
+    border-bottom: 0;
+    padding: 0;
+  }
+}
+
+// reservation new save button
 button[disabled], a.disabled, input[disabled] {
   opacity: .45;
   cursor: not-allowed !important;
 }
 
+// reservation new menu select2
 #resNew #resInfo {
   span.select2, span.select2-selection, span.selection, span.dropdown-wrapper {
     display: block;
