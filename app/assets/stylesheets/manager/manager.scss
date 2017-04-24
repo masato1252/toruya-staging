@@ -795,11 +795,11 @@ input.BTNonoff:checked + label:after {
   background-color: #60938a;
   border-color: #488479;
 }
-.checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li {
+.checked_out.reservation-state, .checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }
-.checkin.reservation-state {
+.checked_in.reservation-state, .checkin.reservation-state {
   background-color: #fcbe46;
   border: 1px #e6a21f solid;
 }
@@ -810,6 +810,10 @@ input.BTNonoff:checked + label:after {
 .pending.reservation-state, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
+}
+.cancel.reservation-state {
+  background-color: #da8356;
+  border: 1px solid #c87d56;
 }
 .staffs-working-schedules {
   display: table;
@@ -879,7 +883,8 @@ input.BTNonoff:checked + label:after {
   padding: 5px 0;
   color: #444444;
 }
-#resList a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
+#resList a.checked_out, #resList a.checked_out:link, #resList a.checked_out:visited, a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.cancel, #resList a.cancel:link, #resList a.cancel:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
+#resList a.pending, #resList a.pending:link, #resList a.pending:visited { color: #E00003; }
 #resList #record {
   position: relative;
   overflow-x: auto;
