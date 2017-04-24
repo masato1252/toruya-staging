@@ -811,7 +811,7 @@ input.BTNonoff:checked + label:after {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
 }
-.cancel.reservation-state {
+.canceled.reservation-state {
   background-color: #da8356;
   border: 1px solid #c87d56;
 }
@@ -883,7 +883,7 @@ input.BTNonoff:checked + label:after {
   padding: 5px 0;
   color: #444444;
 }
-#resList a.checked_out, #resList a.checked_out:link, #resList a.checked_out:visited, a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.cancel, #resList a.cancel:link, #resList a.cancel:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
+#resList a.checked_out, #resList a.checked_out:link, #resList a.checked_out:visited, a.checkout, #resList a.checkout:link, #resList a.checkout:visited, #resList a.canceled, #resList a.canceled:link, #resList a.canceled:visited, #resList a.noshow, #resList a.noshow:link, #resList a.noshow:visited { color: #B3B3B3; }
 #resList a.pending, #resList a.pending:link, #resList a.pending:visited { color: #E00003; }
 #resList #record {
   position: relative;
