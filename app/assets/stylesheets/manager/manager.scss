@@ -791,23 +791,23 @@ input.BTNonoff:checked + label:after {
   vertical-align: middle;
   margin-right: 3px;
 }
-span.reserved {
+.reserved.reservation-state {
   background-color: #60938a;
   border-color: #488479;
 }
-span.checkout, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li {
+.checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }
-span.checkin {
+.checkin.reservation-state {
   background-color: #fcbe46;
   border: 1px #e6a21f solid;
 }
-span.noshow {
+.noshow.reservation-state {
   background-color: #aecfc8;
   border: 1px solid #84b3aa;
 }
-span.pending, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip {
+.pending.reservation-state, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
 }
