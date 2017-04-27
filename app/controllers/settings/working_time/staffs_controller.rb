@@ -17,6 +17,9 @@ class Settings::WorkingTime::StaffsController < SettingsController
     params.permit![:business_schedules].each do |shop_id, attrs|
       if attrs[:full_time]
         BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+      elsif attrs.except(:id).blank?
+        # Select part time and don't set any routine wday schedules.
+        BusinessSchedule.where(shop_id: shop_id, staff_id: @staff.id, full_time: true).destroy_all
       else
         attrs.except(:id).each do |humanize_wday, attr|
           BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attr.to_h)
