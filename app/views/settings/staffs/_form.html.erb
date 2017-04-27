@@ -14,19 +14,19 @@
       <dl>
         <dt>氏名</dt>
         <dd class="familyName">
-          <%= f.text_field :last_name, placeholder: "Family Name" %>
+          <%= f.text_field :last_name, placeholder: Profile.human_attribute_name(:last_name) %>
         </dd>
         <dd class="firstName">
-          <%= f.text_field :first_name, placeholder: true %>
+          <%= f.text_field :first_name, placeholder: Profile.human_attribute_name(:first_name) %>
         </dd>
       </dl>
       <dl>
         <dt>しめい</dt>
         <dd class="familyName">
-          <%= f.text_field :phonetic_last_name, placeholder: "Family Name Kana" %>
+          <%= f.text_field :phonetic_last_name, placeholder: Profile.human_attribute_name(:phonetic_last_name) %>
         </dd>
         <dd class="firstName">
-          <%= f.text_field :phonetic_first_name, placeholder: "First Name Kana" %>
+          <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
         </dd>
       </dl>
     </div>
