@@ -62,7 +62,7 @@ UI.define("CustomSchedules", function() {
           </dd><dd className="endTime">
             <input type="time" name="end_time_time_part" value={this.state.end_time_time_part} size="20" onChange={this._handleChange} />
             </dd>
-          {this.props.open ? null : (
+          {this.props.open || this.props.fromStaff ? null : (
             <dd className="closeReason">
               <input type="text" name="reason" placeholder={this.props.closingReason} value={this.state.reason} size="20" onChange={this._handleChange} />
             </dd>
@@ -79,6 +79,7 @@ UI.define("CustomSchedules", function() {
              open={this.props.open}
              calendarfieldPrefix={`${this.props.calendarfieldPrefix}-${i + 1}`}
              closingReason={this.props.closingReason}
+             fromStaff={this.props.fromStaff}
            />
          }.bind(this))}
       </div>

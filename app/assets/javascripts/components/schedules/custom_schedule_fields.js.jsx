@@ -142,7 +142,7 @@ UI.define("CustomScheduleFields", function() {
               )
             }
           </dd>
-          {this.props.open ? null :
+          {this.props.open || this.props.fromStaff ? null :
             (
               this.state.edit_mode ? (
                 <dd className="closeReason">

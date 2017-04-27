@@ -190,6 +190,7 @@ UI.define("WorkingTime.StaffForm", function() {
                           closingReason={this.props.closingReason}
                           deleteBtn={this.props.deleteBtn}
                           calendarfieldPrefix={`temp_working_schedules_${shop.id}`}
+                          fromStaff={true}
                           open={true}
                         />
                       ) : null
@@ -226,6 +227,7 @@ UI.define("WorkingTime.StaffForm", function() {
                   closingReason={this.props.closingReason}
                   deleteBtn={this.props.deleteBtn}
                   calendarfieldPrefix="temp_leaving_schedule"
+                  fromStaff={true}
                   open={false}
                 />
               ) : null
