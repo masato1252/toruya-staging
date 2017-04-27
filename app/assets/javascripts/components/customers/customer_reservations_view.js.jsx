@@ -88,7 +88,9 @@ UI.define("Customers.CustomerReservationsView", function() {
                       <a href={`/shops/${reservation.shopId}/reservations/${reservation.date}`}>
                         {reservation.monthDate}
                       </a>
-                      {reservation.startTime} 〜 {reservation.endTime}
+                      <span>
+                        {reservation.startTime} 〜 {reservation.endTime}
+                      </span>
                     </h4>
                   </div>
                   <div className="modal-body">
