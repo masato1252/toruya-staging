@@ -65,7 +65,8 @@ module Reservable
     end
 
     def validate_interval_time
-      previous_reservation_validation_start_time = start_time.advance(seconds: -last_menu_interval_time)
+      # The interval time should be after reservation, so we just need to any reservation overlap start time.
+      previous_reservation_validation_start_time = start_time
       previous_reservation_validation_end_time = start_time
 
       if previous_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
