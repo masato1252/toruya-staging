@@ -117,6 +117,13 @@ UI.define("Calendar", function() {
                                 select={this.select}
                                 selectedDate={this.state.selectedDate}
                                 holidayDays={this.state.holidayDays}
+                                fullTime={this.props.fullTime}
+                                shopWorkingWdays={this.props.shopWorkingWdays}
+                                shopWorkingOnHoliday={this.props.shopWorkingOnHoliday}
+                                staffWorkingWdays={this.props.staffWorkingWdays}
+                                workingDays={this.props.workingDays}
+                                offDays={this.props.offDays}
+                                reservationDays={this.props.reservationDays}
                                 selected={this.state.month} />);
             date.add(1, "w");
             done = count++ > 2 && monthIndex !== date.month();

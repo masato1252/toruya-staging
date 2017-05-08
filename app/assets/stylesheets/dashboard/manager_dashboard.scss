@@ -1,10 +1,16 @@
 /* CSS Document */
 
-.status-list {
+#resList .status-list {
   text-align: center;
   position: fixed;
+  line-height: 14px;
 }
-div.status-list>div {
+#resList .status-list .reservation-state {
+  width: 14px;
+  height: 14px;
+}
+#resList div.status-list>div {
   display: inline-block;
-  margin: 5px;
+  margin-top: 0;
+  margin-bottom: 3px;
 }

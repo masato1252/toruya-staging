@@ -103,7 +103,6 @@
   border-bottom-width: 1px;
   font-size: 14px;
 }
-#content .formRow dl:last-child { border-bottom-width: 0; }
 #content .formRow dl:nth-child(even) { background-color: #f9f9f9; }
 #content .formRow .formTTL dd {
   width: 100%;
@@ -163,11 +162,16 @@
 }
 #content .rowTTL, #content #settingForm ul li, #content #settingForm dl dt, #content #settingForm dl dd, #content .tableTTL .check { padding-right: 10px; }
 #content .formRow dl dt:last-child, #content .formRow dl dd:last-child, #content #settingForm dl dd.function, #content .formRow ul li:last-child { padding-right: 0; }
+#content .formRow dl dd.option {
+  width: 100%;
+  text-align: right;
+}
 #content .formRow .formTTL {
   line-height: 37px;
   background: #efefef;
 }
-#content .formRow .onoffSetting { border-top: 1px solid #efefef; }
+#content .formRow > div { border-bottom: 1px solid #efefef; }
+#content .formRow > div:last-child { border-bottom-width: 0; }
 #content .formRow .formTTL dt { font-weight: bold; }
 #content #staffInfo .familyName { padding-right: 10px; }
 #content #working a.editWorktime, #content #working a.editWorktime:link, #content #working a.editWorktime:visited {
@@ -208,6 +212,8 @@
 #content .formRow ul .inOut, #content .formRow ul .inOut { width: 94px; }
 #content .formRow ul .check { width: 97px; }
 #content .formRow ul .startTime, #content .formRow ul .endsTime { min-width: 75px; max-width: 100px; }
+#content #settingForm .formRow .date a { margin-left: 3px; }
+#content #settingForm dl dd.startTime input { width: 64px; }
 #content .formRow#menuInfo dl dt, #content .formRow#contactsInfo dt, #content .formRow#rankeInfo dt { width: 122px; }
 .setting #about .function a.addNew {
   min-width: 130px;
@@ -236,7 +242,7 @@
 #content .formRow .syncContacts a, #content #syncContactsNew a { padding: 0 10px; }
 #content .formRow .function a.calendar { width: 39px; }
 #content .formRow .del a { width: 50px; }
-#content .formRow#resFrame .function a { width: 97px; }
+#content .formRow#resFrame .function a, #content .formRow#category .function a { width: 97px; }
 #content .formRow#shopSelect .checkbox label input { margin-left: 10px; }
 #content .formRow .menuEnds ul, #content #frameDetail dd ul {
   padding: 0;

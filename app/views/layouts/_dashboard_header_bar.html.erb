@@ -1,8 +1,14 @@
 <header>
   <dl>
-    <dd>
-      <%= link_to shop_reservations_path(shop), class: "setting" do %>
-        <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
+    <dd id="NAVstaffDashboard">
+      <%= link_to root_path do %>
+        <i class="fa fa-desktop" aria-hidden="true"></i>
+        HOME
+      <% end %>
+    </dd>
+    <dd id="NAVtoday">
+      <%= link_to shop_reservations_path(shop) do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
         今日
       <% end %>
     </dd>

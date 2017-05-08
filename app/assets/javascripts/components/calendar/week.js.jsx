@@ -2,6 +2,32 @@
 
 UI.define("Week", function() {
   var Week = React.createClass({
+    isContainedBy: function(container, date) {
+      return (_.contains(container, date.date()) && date.month() === this.props.month.month())
+    },
+
+    isReservedDay: function(date) {
+      return this.isContainedBy(this.props.reservationDays, date);
+    },
+
+    isHoliday: function(date, wday) {
+      var month = this.props.month;
+      var isWeekend = (wday === 0 && date.month() === month.month());
+      return isWeekend || (this.isContainedBy(this.props.holidayDays, date));
+    },
+
+    isWorkingDay: function(date, wday) {
+      if (this.isHoliday(date) && !this.props.shopWorkingOnHoliday) { return; }
+      if (this.isContainedBy(this.props.offDays, date)) { return; }
+
+      if (this.props.fullTime) {
+        return _.contains(this.props.shopWorkingWdays, wday);
+      }
+      else {
+        return _.contains(this.props.staffWorkingWdays, wday) || this.isContainedBy(this.props.workingDays, date);
+      }
+    },
+
     render: function() {
       var days = [],
           date = this.props.date,
@@ -13,14 +39,22 @@ UI.define("Week", function() {
           number: date.date(),
           isCurrentMonth: date.month() === month.month(),
           isToday: date.isSame(new Date(), "day"),
-          isWeekend: i === 0 && date.month() === month.month(),
-          isHoliday: _.contains(this.props.holidayDays, date.date()) && date.month() === month.month(),
+          isHoliday: this.isHoliday(date, i),
+          isWorkingDay: this.isWorkingDay(date, i),
+          isReservedDay: this.isReservedDay(date),
           date: date
         };
 
         days.push(
           <span key={day.date.toString()}
-                className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selectedDate) ? " selected" : "") + ((day.isWeekend || day.isHoliday) ? " holiday" : "")}
+          className={
+            "day" + (day.isToday ? " today" : "") +
+              (day.isCurrentMonth ? "" : " different-month") +
+              (day.date.isSame(this.props.selectedDate) ? " selected" : "") +
+              (day.isHoliday ? " holiday" : "") +
+              (day.isWorkingDay ? " workDay" : "") +
+              (day.isReservedDay ? " reserved" : "")
+          }
                 onClick={this.props.select.bind(null, day)}>{day.number}
           </span>
         );
