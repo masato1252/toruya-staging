@@ -82,7 +82,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
   resources :calendars, only: [] do
     collection do
-      get "holidays"
+      get "working_schedule"
     end
   end
 

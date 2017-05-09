@@ -16,7 +16,7 @@ module ViewHelpers
 
   # Use callbacks to share common setup or constraints between actions.
   def shop
-    @shop ||= current_user.shops.find_by(id: params[:shop_id])
+    @shop ||= super_user.shops.find_by(id: params[:shop_id])
   end
 
   def super_user
