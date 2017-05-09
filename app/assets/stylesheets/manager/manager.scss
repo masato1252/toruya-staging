@@ -219,21 +219,27 @@ header dl:last-child {
   margin-right: 20px;
   float: right;
 }
-header dl:first-child dd { padding-right: 10px; }
+header dl:first-child dt, header dl:first-child dd { padding-right: 10px; }
 header dl:last-child dd { padding-left: 10px; }
-header dl dd {
+header dl dt, header dl dd {
   display: inline-block;
   vertical-align: middle;
 }
-header dl dd a, header dl dd a:link, header dl dd a:visited {
+header dl dt a, header dl dt a:link, header dl dt a:visited, header dl dd a, header dl dd a:link, header dl dd a:visited {
   display: block;
   min-width: 45px;
   text-align: center;
-  font-size: 8px;
   color: #d0d0d0;
   position: relative;
 }
-header dl dd a.here, header dl dd a.here:link { color: #fff; }
+header dl dd a, header dl dd a:link, header dl dd a:visited { font-size: 8px; }
+header dl dt a.here, header dl dt a.here:link, header dl dd a.here, header dl dd a.here:link { color: #fff; }
+header dl dt h1 {
+  padding: 0;
+  font-size: 32px;
+  font-family: myriad-pro, sans-serif;
+  font-style: normal;
+}
 header dl dd a .fa {
   display: block;
   line-height: 47px;
@@ -282,16 +288,6 @@ footer {
 #footer .content { margin: 20px; }
 /* Login Page */
 .login, .shopSelect { padding-bottom: 0; }
-.login header h1, .signup header h1, .firstSetting header h1, .shopSelect header h1, .setting header h1 {
-  padding-bottom: 0;
-  margin-left: 20px;
-  float: left;
-  font-family: myriad-pro, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 35px;
-  line-height: 1em;
-}
 .login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
   padding-top: 0;
   color: #fff;
@@ -860,6 +856,20 @@ input.BTNonoff:checked + label:after {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
   color: #fff;
+}
+.sidel .staffDashboard div { padding-top: 10px; }
+.sidel .staffDashboard a {
+  font-weight: normal;
+  font-size: 16px;
+  width: 100%;
+  padding: 10px 0;
+  line-height: 19px;
+  height: inherit;
+  margin-top: 5px;
+}
+.sidel .staffDashboard a i {
+  font-size: 21px;
+  float: left;
 }
 #resList {
   background: #fff;

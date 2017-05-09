@@ -1,14 +1,13 @@
 <header>
   <dl>
-    <dd id="NAVstaffDashboard">
-      <%= link_to shop_reservations_path(shop) do %>
-        <i class="fa fa-desktop" aria-hidden="true"></i>
-        HOME
-      <% end %>
-    </dd>
+    <dt>
+      <h1>
+        <%= link_to "Toruya", root_path %>
+      </h1>
+    </dt>
     <dd id="NAVtoday">
-      <%= link_to root_path do %>
-        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+      <%= active_link_to root_path, active: [["reservations"], []], class_active: "here" do %>
+        <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
       <% end %>
     </dd>
@@ -20,7 +19,7 @@
   </dl>
   <dl>
     <dd>
-      <%= link_to settings_shops_path, class: "setting" do %>
+      <%= active_link_to settings_shops_path, active: /^\/settings/, class_active: "here" do %>
         <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
         設定
       <% end %>
