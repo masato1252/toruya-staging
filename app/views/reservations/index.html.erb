@@ -56,7 +56,12 @@
     <div id="record">
       <% @reservations.each do |reservation| %>
         <%
-          customer_names = reservation.customers.map(&:name).join(", ")
+          customer_names = reservation.customers.map(&:name)
+          customer_names_sentence = if customer_names.count > 1
+                                      "#{customer_names.first} +#{customer_names.count - 1}"
+                                    else
+                                      customer_names.first
+                                    end
           staff_names = reservation.staffs.map(&:name).join(", ")
         %>
         <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
@@ -64,7 +69,7 @@
             <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
             <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
             <dd class="menu"><%= reservation.menu.display_name %></dd>
-            <dd class="customer"><%= customer_names %></dd>
+            <dd class="customer"><%= customer_names_sentence %></dd>
             <% if reservation.with_warnings %>
               <dd class="status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
             <% end %>
