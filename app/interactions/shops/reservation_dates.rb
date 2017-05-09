@@ -1,6 +1,6 @@
 module Shops
   class ReservationDates < ActiveInteraction::Base
     object :shop
-    range :date_range
+    object :date_range, class: Range
   end
 end
