@@ -39,6 +39,7 @@ class User < ApplicationRecord
   has_many :categories
   has_many :ranks
   has_many :contact_groups
+  has_many :staff_accounts, foreign_key: :owner_id
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
@@ -51,6 +52,10 @@ class User < ApplicationRecord
 
   def member?
     true
+  end
+
+  def staff_account_in_shop(shop)
+    shop.user.staff_accounts.find_by(user: self, active_uniqueness: true).try(:staff)
   end
 
   private

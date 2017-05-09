@@ -876,6 +876,42 @@ ALTER SEQUENCE shops_id_seq OWNED BY shops.id;
 
 
 --
+-- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE staff_accounts (
+    id integer NOT NULL,
+    email character varying NOT NULL,
+    user_id integer,
+    owner_id integer NOT NULL,
+    staff_id integer NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    active_uniqueness boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: staff_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE staff_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: staff_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE staff_accounts_id_seq OWNED BY staff_accounts.id;
+
+
+--
 -- Name: staff_menus; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1155,6 +1191,13 @@ ALTER TABLE ONLY shops ALTER COLUMN id SET DEFAULT nextval('shops_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY staff_accounts ALTER COLUMN id SET DEFAULT nextval('staff_accounts_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY staff_menus ALTER COLUMN id SET DEFAULT nextval('staff_menus_id_seq'::regclass);
 
 
@@ -1373,6 +1416,14 @@ ALTER TABLE ONLY shops
 
 
 --
+-- Name: staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY staff_accounts
+    ADD CONSTRAINT staff_accounts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1481,6 +1532,13 @@ CREATE INDEX index_contact_groups_on_user_id ON contact_groups USING btree (user
 
 
 --
+-- Name: index_custom_schedules_on_staff_id_and_open; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_custom_schedules_on_staff_id_and_open ON custom_schedules USING btree (staff_id, open);
+
+
+--
 -- Name: index_customers_on_contact_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1586,6 +1644,27 @@ CREATE INDEX index_shops_on_user_id ON shops USING btree (user_id);
 
 
 --
+-- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_staff_accounts_on_owner_id ON staff_accounts USING btree (owner_id);
+
+
+--
+-- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_staff_accounts_on_staff_id ON staff_accounts USING btree (staff_id);
+
+
+--
+-- Name: index_staff_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_staff_accounts_on_user_id ON staff_accounts USING btree (user_id);
+
+
+--
 -- Name: index_staff_menus_on_staff_id_and_menu_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1677,6 +1756,20 @@ CREATE INDEX shop_working_time_index ON business_schedules USING btree (shop_id,
 
 
 --
+-- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, email, active_uniqueness);
+
+
+--
+-- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id, active_uniqueness);
+
+
+--
 -- Name: staff_custom_schedules_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1704,6 +1797,6 @@ ALTER TABLE ONLY profiles
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230'), ('20170323235228'), ('20170323235324'), ('20170411092212');
+INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230'), ('20170411092212'), ('20170509132433');
 
 
