@@ -39,11 +39,16 @@ UI.define("Calendar", function() {
 
     _fetchHolidayDays: function() {
       let _this = this;
+      var staff_id;
+
+      if (location.search.length) {
+        staff_id = location.search.replace(/\?staff_id=/, '');
+      }
 
       $.ajax({
         type: "GET",
         url: this.props.workingSchedulePath,
-        data: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD") },
+        data: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
         dataType: "JSON"
       }).success(function(result) {
         _this.setState({
@@ -61,7 +66,7 @@ UI.define("Calendar", function() {
 
     select: function(day) {
       this.setState({ month: day.date, selectedDate: day.date });
-      location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
+      location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
     },
 
     handleCalendarSelect: function(event) {
