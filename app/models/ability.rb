@@ -7,7 +7,7 @@ class Ability
 
     if user.free_level?
     elsif user.basic_level? || user.premium_level?
-      can :swith_staffs_selector, :all
+      can :swith_staffs_selector, User
     end
   end
 end
