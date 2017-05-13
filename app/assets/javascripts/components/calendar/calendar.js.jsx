@@ -27,17 +27,17 @@ UI.define("Calendar", function() {
       let _this = this;
       var month = this.state.month;
       month.add(-1, "M");
-      this.setState({ month: month }, _this._fetchHolidayDays);
+      this.setState({ month: month }, _this._fetchWorkingSchedule);
     },
 
     next: function() {
       let _this = this;
       var month = this.state.month;
       month.add(1, "M");
-      this.setState({ month: month }, _this._fetchHolidayDays);
+      this.setState({ month: month }, _this._fetchWorkingSchedule);
     },
 
-    _fetchHolidayDays: function() {
+    _fetchWorkingSchedule: function() {
       let _this = this;
       var staff_id;
 
@@ -71,7 +71,7 @@ UI.define("Calendar", function() {
 
     handleCalendarSelect: function(event) {
       event.preventDefault();
-      this.setState({month: moment(event.target.value)});
+      this.setState({month: moment(event.target.value)}, this._fetchWorkingSchedule);
     },
 
     renderYearSelector: function() {
