@@ -42,11 +42,26 @@
               id="shop-<%= shop.id %>"
               name="staff[shop_ids][]"
               value=<%= shop.id %>
-              <%= "checked" if shop_ids.include?(shop.id) %>>
+              <%= "checked" if shop_ids.include?(shop.id) %> />
             <label for="shop-<%= shop.id %>"><%= shop.name %></label>
           </dd>
         </dl>
       <% end %>
+    </div>
+    <h3>Staff Account<strong>必須項目</strong></h3>
+    <div id="staffAccount" class="formRow">
+      <dl class="onoffSetting">
+        <dt>Use staff account（スタッフアカウントを利用する）</dt>
+        <dd>
+          <input type="checkbox" class="BTNonoff" id="accountUse" name="staff_account[enabled]"
+          <%= "checked" if staff %> />
+          <label for="accountUse"></label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Email</dt>
+        <dd><input type="staff_account[email]" placeholder="Email" size="40"></dd>
+      </dl>
     </div>
 
     <div id="footerav">
