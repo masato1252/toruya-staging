@@ -15,9 +15,11 @@
       <dd id="NAVshopSelect">
         <%= shops_select_component %>
       </dd>
-      <dd id="NAVshopSelect">
-        <%= staffs_select_component %>
-      </dd>
+      <% if can? :swith_staffs_selector, User %>
+        <dd id="NAVshopSelect">
+          <%= staffs_select_component %>
+        </dd>
+      <% end %>
     <% end %>
   </dl>
   <dl>
