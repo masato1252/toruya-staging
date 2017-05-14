@@ -886,7 +886,7 @@ CREATE TABLE staff_accounts (
     owner_id integer NOT NULL,
     staff_id integer NOT NULL,
     state integer DEFAULT 0 NOT NULL,
-    active_uniqueness boolean DEFAULT false NOT NULL,
+    level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -1003,7 +1003,8 @@ CREATE TABLE users (
     unlock_token character varying,
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1759,14 +1760,14 @@ CREATE INDEX shop_working_time_index ON business_schedules USING btree (shop_id,
 -- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, email, active_uniqueness);
+CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, state, email);
 
 
 --
 -- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id, active_uniqueness);
+CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, state, user_id);
 
 
 --
@@ -1797,6 +1798,6 @@ ALTER TABLE ONLY profiles
 
 SET search_path TO "$user",public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230'), ('20170411092212'), ('20170509132433');
+INSERT INTO schema_migrations (version) VALUES ('20160705120808'), ('20160705141152'), ('20160708021248'), ('20160708044201'), ('20160708081126'), ('20160711124845'), ('20160713083223'), ('20160716040038'), ('20160803123550'), ('20160804141647'), ('20160805002152'), ('20160810123145'), ('20160810124115'), ('20160830151522'), ('20160830235902'), ('20160908135552'), ('20160908140827'), ('20160912071828'), ('20160912094849'), ('20160924015503'), ('20161018154942'), ('20161024135214'), ('20161027141005'), ('20161027234643'), ('20161116133354'), ('20161211160502'), ('20161218061913'), ('20161226152244'), ('20170101060554'), ('20170101060841'), ('20170117143626'), ('20170122022230'), ('20170411092212'), ('20170509132433'), ('20170513074508');
 
 

@@ -2,15 +2,15 @@
 #
 # Table name: staff_accounts
 #
-#  id                :integer          not null, primary key
-#  email             :string           not null
-#  user_id           :integer
-#  owner_id          :integer          not null
-#  staff_id          :integer          not null
-#  state             :integer          default("pending"), not null
-#  active_uniqueness :boolean          default(FALSE), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id         :integer          not null, primary key
+#  email      :string           not null
+#  user_id    :integer
+#  owner_id   :integer          not null
+#  staff_id   :integer          not null
+#  state      :integer          default("pending"), not null
+#  level      :integer          default("staff"), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 class StaffAccount < ApplicationRecord
@@ -20,5 +20,11 @@ class StaffAccount < ApplicationRecord
     disabled: 2
   }
 
+  enum level: {
+    staff: 0,
+    admin: 1
+  }
+
   belongs_to :staff
+  belongs_to :owner, class_name: "User"
 end
