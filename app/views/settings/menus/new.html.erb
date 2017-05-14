@@ -3,6 +3,6 @@
 </div>
 <%= render 'form',
 menu: @menu,
-url: settings_menus_path(@menu),
+url: settings_user_menus_path(super_user)(@menu),
 menu_reservation_setting_rule: @menu_reservation_setting_rule,
 reservation_setting: @reservation_setting %>

@@ -10,12 +10,14 @@
           今日
         <% end %>
       </dd>
+      <% if controller_name != "home" && super_user %>
       <dd>
-        <%= link_to settings_shops_path, class: "setting" do %>
+        <%= link_to settings_user_shops_path(super_user), class: "setting" do %>
           <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
           設定
         <% end %>
       </dd>
+      <% end %>
       <dd>
         <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
           <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>

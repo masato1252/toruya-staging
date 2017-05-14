@@ -21,65 +21,65 @@ module AccountRequirement
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last)
           flash[:alert] = I18n.t("requirement.profile_redirect_message")
 
-          redirect_to new_settings_profile_path
+          redirect_to new_settings_user_profile_path(super_user)
         end
       elsif !session[:contact_checking]
         # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
           flash[:alert] = I18n.t("requirement.contact_redirect_message", link: view_context.link_to(I18n.t("requirement.contact_redirect_link_title"), user_google_oauth2_omniauth_authorize_path)).html_safe
 
-          redirect_to settings_contact_groups_path
+          redirect_to settings_user_contact_groups_path(super_user)
         # If user doesn't go to restriction path, go to previous restriction path, just display waring message to remind him.
         elsif except_path("settings/contact_groups")
-          flash.now[:alert] = I18n.t("requirement.contact_warning_message", link: view_context.link_to(I18n.t("requirement.contact_warning_link_title"), settings_contact_groups_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.contact_warning_message", link: view_context.link_to(I18n.t("requirement.contact_warning_link_title"), settings_user_contact_groups_path(super_user))).html_safe
         end
       elsif !session[:shop_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(3))
           flash[:alert] = I18n.t("requirement.shop_redirect_message")
 
-          redirect_to new_settings_shop_path
+          redirect_to new_settings_user_shop_path(super_user)
         elsif except_path("settings/shops")
-          flash.now[:alert] = I18n.t("requirement.shop_warning_message", link: view_context.link_to(I18n.t("requirement.shop_warning_link_title"), new_settings_shop_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.shop_warning_message", link: view_context.link_to(I18n.t("requirement.shop_warning_link_title"), new_settings_user_shop_path(super_user))).html_safe
         end
       elsif !session[:business_hours_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(4))
           flash[:alert] = I18n.t("requirement.business_schedule_redirect_message")
 
-          redirect_to settings_business_schedules_path
+          redirect_to settings_user_business_schedules_path(super_user)
         elsif except_path("business_schedules")
-          flash.now[:alert] = I18n.t("requirement.business_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.business_schedule_warning_link_title"), settings_business_schedules_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.business_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.business_schedule_warning_link_title"), settings_user_business_schedules_path(super_user))).html_safe
         end
       elsif !session[:staffs_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(5))
           flash[:alert] = I18n.t("requirement.staff_redirect_message")
 
-          redirect_to new_settings_staff_path
+          redirect_to new_settings_user_staff_path(super_user)
         elsif except_path("settings/staffs")
-          flash.now[:alert] = I18n.t("requirement.staff_warning_message", link: view_context.link_to(I18n.t("requirement.staff_warning_link_title"), new_settings_staff_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_warning_message", link: view_context.link_to(I18n.t("requirement.staff_warning_link_title"), new_settings_user_staff_path(super_user))).html_safe
         end
       elsif !session[:working_time_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(6))
           flash[:alert] = I18n.t("requirement.staff_working_schedule_redirect_message")
 
-          redirect_to settings_working_time_staffs_path
+          redirect_to settings_user_working_time_staffs_path(super_user)
         elsif except_path("settings/working_time/staffs")
-          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_working_time_staffs_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_user_working_time_staffs_path(super_user))).html_safe
         end
       elsif !session[:reservation_settings_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(7))
           flash[:alert] = I18n.t("requirement.reservation_setting_redirect_message")
 
-          redirect_to new_settings_reservation_setting_path
+          redirect_to new_settings_user_reservation_setting_path(super_user)
         elsif except_path("settings/reservation_settings")
-          flash.now[:alert] = I18n.t("requirement.reservation_setting_warning_message", link: view_context.link_to(I18n.t("requirement.reservation_setting_warning_link_title"), new_settings_reservation_setting_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.reservation_setting_warning_message", link: view_context.link_to(I18n.t("requirement.reservation_setting_warning_link_title"), new_settings_user_reservation_setting_path(super_user))).html_safe
         end
       elsif !session[:menu_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS)
           flash[:alert] = I18n.t("requirement.menu_redirect_message")
 
-          redirect_to new_settings_menu_path
+          redirect_to new_settings_user_menu_path(super_user)
         elsif except_path("settings/menus")
-          flash.now[:alert] = I18n.t("requirement.menu_warning_message", link: view_context.link_to(I18n.t("requirement.menu_warning_link_title"), new_settings_menu_path)).html_safe
+          flash.now[:alert] = I18n.t("requirement.menu_warning_message", link: view_context.link_to(I18n.t("requirement.menu_warning_link_title"), new_settings_user_menu_path(super_user))).html_safe
         end
       end
     end

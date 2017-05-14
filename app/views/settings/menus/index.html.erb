@@ -4,7 +4,7 @@
 <div id="about">
   <ul class="function">
     <li>
-      <%= link_to t("settings.menu.new_button"), new_settings_menu_path, class: "BTNyellow addNew" %>
+      <%= link_to t("settings.menu.new_button"), new_settings_user_menu_path(super_user), class: "BTNyellow addNew" %>
     </li>
   </ul>
   <p><%= t("settings.menu.info_1") %><br /><%= t("settings.menu.info_2") %></p>
@@ -25,8 +25,8 @@
         <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.display_name : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_menu_path(menu), class: "BTNtarco" %>
-          <%= link_to t("action.delete"), settings_menu_path(menu), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
+          <%= link_to t("action.edit"), edit_settings_user_menu_path(super_user,menu), class: "BTNtarco" %>
+          <%= link_to t("action.delete"), settings_user_menu_path(super_user,menu), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dd>
       </dl>
     <% end %>

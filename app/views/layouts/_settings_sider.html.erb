@@ -6,9 +6,9 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to t("settings.shop.info_title"), settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to t("settings.business_hours.info_title"), settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to "予約枠", settings_reservation_settings_path, active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to t("settings.shop.info_title"), settings_user_shops_path(super_user), active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to "予約枠", settings_user_reservation_settings_path(super_user), active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
       </ul>
     </dd>
   </dl>
@@ -19,11 +19,11 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to t("settings.menu.info_title"), settings_menus_path,
+        <%= active_link_to t("settings.menu.info_title"), settings_user_menus_path(super_user),
           active: [["settings/menus"]],
           wrap_tag: :li,
           class_active: "here" %>
-        <%= active_link_to t("settings.category.info_title"), settings_categories_path,
+        <%= active_link_to t("settings.category.info_title"), settings_user_categories_path(super_user),
           active: [["settings/categories"]],
           wrap_tag: :li,
           class_active: "here" %>
@@ -37,11 +37,11 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to t("settings.staff.info_title"), settings_staffs_path,
+        <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
           active: [["settings/staffs"]],
           wrap_tag: :li,
           class_active: "here" %>
-        <%= active_link_to "勤務日時", settings_working_time_staffs_path,
+        <%= active_link_to "勤務日時", settings_user_working_time_staffs_path(super_user),
           active: [["settings/working_time/staffs"]],
           wrap_tag: :li,
           class_active: "here" %>
@@ -49,13 +49,13 @@
     </dd>
   </dl>
   <dl class="contacts">
-    <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_contact_groups_path,
+    <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_user_contact_groups_path(super_user),
       active: [["settings/contact_groups", "settings/ranks"]],
       wrap_tag: :dt,
       class_active: "here" %>
   </dl>
   <dl class="account">
-    <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_profile_path,
+    <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_user_profile_path(super_user),
       active: [["settings/profiles"]],
       wrap_tag: :dt,
       class_active: "here" %>

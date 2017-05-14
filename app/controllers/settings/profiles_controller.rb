@@ -3,7 +3,7 @@ class Settings::ProfilesController < SettingsController
 
   def show
     unless @profile
-      redirect_to new_settings_profile_path
+      redirect_to new_settings_user_profile_path(super_user)
     end
   end
 
@@ -18,7 +18,7 @@ class Settings::ProfilesController < SettingsController
     @profile = super_user.build_profile(profile_params)
 
     if @profile.save
-      redirect_to settings_profile_path, notice: I18n.t("common.create_successfully_message")
+      redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.create_successfully_message")
     else
       render :new
     end
@@ -27,7 +27,7 @@ class Settings::ProfilesController < SettingsController
   def update
     respond_to do |format|
       if @profile.update(profile_params)
-        format.html { redirect_to settings_profile_path, notice: I18n.t("common.update_successfully_message") }
+        format.html { redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.update_successfully_message") }
       else
         format.html { render :edit }
       end

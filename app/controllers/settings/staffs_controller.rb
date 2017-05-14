@@ -30,7 +30,7 @@ class Settings::StaffsController < SettingsController
 
     respond_to do |format|
       if @staff.save
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.create_successfully_message") }
+        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
         @shops = super_user.shops
@@ -47,7 +47,7 @@ class Settings::StaffsController < SettingsController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.update_successfully_message") }
+        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message") }
         format.json { render :show, status: :ok, location: @staff }
       else
         @shops = super_user.shops
@@ -62,7 +62,7 @@ class Settings::StaffsController < SettingsController
   def destroy
     @staff.destroy
     respond_to do |format|
-      format.html { redirect_to settings_staffs_path, notice: I18n.t("common.delete_successfully_message") }
+      format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end
@@ -71,7 +71,7 @@ class Settings::StaffsController < SettingsController
 
   def set_staff
     @staff = super_user.staffs.find_by(id: params[:id])
-    redirect_to settings_staffs_path(shop) unless @staff
+    redirect_to settings_user_staffs_path(super_user, shop) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

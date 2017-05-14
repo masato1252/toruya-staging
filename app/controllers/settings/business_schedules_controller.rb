@@ -35,7 +35,7 @@ class Settings::BusinessSchedulesController < SettingsController
 
     flash[:alert] = update_shop.errors.full_messages.join(", ")
 
-    redirect_to settings_business_schedules_path
+    redirect_to settings_user_business_schedules_path(super_user)
   end
 
   private
