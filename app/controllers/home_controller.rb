@@ -2,9 +2,11 @@ class HomeController < DashboardController
   layout "home"
 
   def index
-    @shops = super_user.shops.order("id")
-    if @shops.count == 1
-      redirect_to shop_reservations_path(@shops.first)
+    @shop_owners = current_user.staff_accounts.map(&:owner)
+
+    # current_user is shop owner and doesn't work for others(staff) and only have one shop
+    if (@shop_owners.count == 1 && @shop_owners.first == current_user) && current_user.shops.count == 1
+      redirect_to shop_reservations_path(shops.first)
     end
   end
 end
