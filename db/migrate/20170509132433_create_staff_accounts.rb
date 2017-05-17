@@ -10,7 +10,7 @@ class CreateStaffAccounts < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :staff_accounts, [:owner_id, :state, :email], name: :staff_account_email_index
-    add_index :staff_accounts, [:owner_id, :state, :user_id], name: :staff_account_index
+    add_index :staff_accounts, [:owner_id, :email], name: :staff_account_email_index
+    add_index :staff_accounts, [:owner_id, :user_id], name: :staff_account_index
   end
 end

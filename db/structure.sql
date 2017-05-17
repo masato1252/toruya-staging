@@ -1760,14 +1760,14 @@ CREATE INDEX shop_working_time_index ON business_schedules USING btree (shop_id,
 -- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, state, email);
+CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, email);
 
 
 --
 -- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, state, user_id);
+CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id);
 
 
 --
