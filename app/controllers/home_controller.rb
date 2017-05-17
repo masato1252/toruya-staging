@@ -2,7 +2,7 @@ class HomeController < DashboardController
   layout "home"
 
   def index
-    @shop_owners = current_user.staff_accounts.map(&:owner)
+    @shop_owners = current_user.staff_accounts.map(&:owner).push(current_user).uniq
 
     # current_user is shop owner and doesn't work for others(staff) and only have one shop
     if (@shop_owners.count == 1 && @shop_owners.first == current_user) && current_user.shops.count == 1
