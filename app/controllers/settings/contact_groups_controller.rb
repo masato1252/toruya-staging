@@ -1,5 +1,7 @@
 class Settings::ContactGroupsController < SettingsController
   before_action :set_contact_group, only: [:edit, :update, :sync, :connections, :bind, :destroy]
+  before_action :require_shop_owner
+
   def index
     @contact_groups = super_user.contact_groups.order("id")
   end
@@ -71,5 +73,11 @@ class Settings::ContactGroupsController < SettingsController
 
   def set_contact_group
     @contact_group ||= super_user.contact_groups.find(params[:id])
+  end
+
+  def require_shop_owner
+    if super_user != current_user
+      redirect_to settings_user_shops_path(super_user), alert: "Only allow shop owner to do this."
+    end
   end
 end
