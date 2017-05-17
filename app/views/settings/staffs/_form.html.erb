@@ -53,14 +53,32 @@
       <dl class="onoffSetting">
         <dt>Use staff account（スタッフアカウントを利用する）</dt>
         <dd>
-          <input type="checkbox" class="BTNonoff" id="accountUse" name="staff_account[enabled]"
-          <%= "checked" if staff %> />
+          <input name="staff_account[enabled]" type="hidden" value="false" />
+          <%= check_box_tag "staff_account[enabled]", true, (@staff_account ? !@staff_account.disabled? : true),
+            id: "accountUse", class: "BTNonoff" %>
           <label for="accountUse"></label>
         </dd>
       </dl>
       <dl>
         <dt>Email</dt>
-        <dd><input type="staff_account[email]" placeholder="Email" size="40"></dd>
+        <dd>
+          <%= text_field_tag "staff_account[email]", @staff_account.try(:email), placeholder: "Email", size: 40 %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Capability</dt>
+        <dd>
+          <div class="BTNselect">
+            <div>
+              <%= radio_button("staff_account", "level", "staff", id: "accountCapability1", class: "BTNselect") %>
+              <label for="accountCapability1"><span>Staff</span></label>
+            </div>
+            <div>
+              <%= radio_button("staff_account", "level", "admin", id: "accountCapability2", class: "BTNselect") %>
+              <label for="accountCapability2"><span>Admin</span></label>
+            </div>
+          </div>
+        </dd>
       </dl>
     </div>
 

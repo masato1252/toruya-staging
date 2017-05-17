@@ -21,6 +21,7 @@ class Settings::StaffsController < SettingsController
   # GET /staffs/1/edit
   def edit
     @shops = super_user.shops
+    @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
   end
 
   # POST /staffs
@@ -44,6 +45,7 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1.json
   def update
     outcome = Staffs::Update.run(staff: @staff, attrs: staff_params.to_h)
+    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
 
     respond_to do |format|
       if outcome.valid?

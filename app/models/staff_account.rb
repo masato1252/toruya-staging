@@ -26,5 +26,6 @@ class StaffAccount < ApplicationRecord
   }
 
   belongs_to :staff
+  belongs_to :user
   belongs_to :owner, class_name: "User"
 end
