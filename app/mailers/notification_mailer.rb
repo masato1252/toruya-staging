@@ -12,6 +12,14 @@ class NotificationMailer < ActionMailer::Base
 
     mail(:to => contact_group.user.email,
          :subject => "Toruya顧客台帳のGoogle同期作業が完了しました。")
+  end
 
+  def activate_staff_account(staff_account)
+    @staff_account = staff_account
+    @staff = @staff_account.staff
+    @owner = @staff_account.owner
+
+    mail(:to => staff_account.email,
+         :subject => "Toruya staff account connection")
   end
 end

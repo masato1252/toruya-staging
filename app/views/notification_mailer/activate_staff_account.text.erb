@@ -1,0 +1,5 @@
+Toruya member <%= @owner.name %> want to connect a staff account <%= @staff.name %>
+
+for you, please click below link to create your account
+
+<%= user_from_callbacks_staff_accounts_url(token: @staff_account.token) %>

@@ -885,6 +885,7 @@ CREATE TABLE staff_accounts (
     user_id integer,
     owner_id integer NOT NULL,
     staff_id integer NOT NULL,
+    token character varying,
     state integer DEFAULT 0 NOT NULL,
     level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
@@ -1768,6 +1769,13 @@ CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, 
 --
 
 CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id);
+
+
+--
+-- Name: staff_account_token_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX staff_account_token_index ON staff_accounts USING btree (token);
 
 
 --

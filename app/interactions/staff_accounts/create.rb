@@ -6,7 +6,7 @@ module StaffAccounts
     hash :params do
       boolean :enabled
       string :email, default: nil
-      string :level
+      string :level, default: "staff"
     end
 
     def execute
@@ -22,7 +22,7 @@ module StaffAccounts
         staff_account.state = :disabled
       end
 
-      if staff_account.email_changed?
+      if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user)
         staff_account.user = User.find_by(email: staff_account.email)
 
         if staff_account.user
@@ -31,6 +31,10 @@ module StaffAccounts
         else
           # Otherwise Send Staff Account Connect Email
           staff_account.state = :pending unless staff_account.disabled?
+          staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
+          staff_account.save
+
+          NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
         end
       end
 

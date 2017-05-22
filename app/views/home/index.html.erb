@@ -1,6 +1,6 @@
-<div id="shopNav" class="contents">
-  <h2>店舗選択</h2>
-    <% @shop_owners.each do |shop_owner| %>
+<% @shop_owners.each do |shop_owner| %>
+  <div id="shopNav" class="contents">
+    <h2><%= shop_owner.name %>店舗選択</h2>
     <nav>
       <% shop_owner.shops.each do |shop| %>
         <div>
@@ -12,5 +12,5 @@
         設定
       <% end %>
     </nav>
+  </div>
 <% end %>
-</div>

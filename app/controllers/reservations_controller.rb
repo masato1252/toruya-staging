@@ -8,6 +8,7 @@ class ReservationsController < DashboardController
     date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
     holidays = Holidays.between(date.beginning_of_month, date.end_of_month)
     @holiday_days = holidays.map { |holiday| holiday[:date].day }
+
     @reservations = shop.reservations.visible.in_date(date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
