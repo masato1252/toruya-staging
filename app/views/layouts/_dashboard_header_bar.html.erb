@@ -6,7 +6,7 @@
       </h1>
     </dt>
     <dd id="NAVtoday">
-      <%= active_link_to (local_assigns[:today_path] || shop_reservations_path(shop)), active: [["reservations"], []], class_active: "here" do %>
+      <%= active_link_to (local_assigns[:today_path] || (respond_to?(:shop) && shop && shop_reservations_path(shop)) || root_path), active: [["reservations"], []], class_active: "here" do %>
         <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
       <% end %>
