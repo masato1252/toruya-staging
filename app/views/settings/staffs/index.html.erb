@@ -1,9 +1,11 @@
 <%= render "info" %>
 <div id="about">
   <ul class="function">
-    <li>
-      <%= link_to t("settings.staff.new_button"), new_settings_staff_path, class: "BTNyellow addNew" %>
-    </li>
+    <% if can? :create, Staff %>
+      <li>
+        <%= link_to t("settings.staff.new_button"), new_settings_staff_path, class: "BTNyellow addNew" %>
+      </li>
+    <% end %>
   </ul>
   <p><%= t("settings.staff.info_1") %><br /><%= t("settings.staff.info_2") %></p>
 </div>
