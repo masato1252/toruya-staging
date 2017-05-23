@@ -127,7 +127,17 @@
   width: 100%;
   display: block;
 }
-
+#mainNav #NAVprint a {
+  font-size: 14pt;
+  font-weight: normal;
+  padding: 10px 0;
+}
+#mainNav #NAVprint a i {
+  display: inline-block;
+  margin-bottom: 0px;
+  margin-right: 5px;
+  line-height: 24px;
+}
 .status-list div {
   margin-bottom: 3px;
 }

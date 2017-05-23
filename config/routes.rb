@@ -78,6 +78,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :custom_schedules, only: [:create]
 
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
   resources :calendars, only: [] do

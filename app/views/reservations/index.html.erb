@@ -1,3 +1,6 @@
+<%
+  staff_schedule_requirement_condition = staff && @working_time_range
+%>
 <div id="dashboard" class="contents">
   <div id="calendar" class="sidel">
     <%= react_component("UI.Calendar",
@@ -26,6 +29,18 @@
       <% else %>
         <div class="busHours shopClose table">
           <div class="tableCell">CLOSE</div>
+        </div>
+      <% end %>
+      <% if staff_schedule_requirement_condition %>
+        <div class="staffDashboard">
+          <div class="edit-worktime">
+            <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+              出勤日を追加
+            </a>
+            <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+              休暇を追加
+            </a>
+          </div>
         </div>
       <% end %>
      <div class="staffs-working-schedules table">
@@ -177,3 +192,79 @@
     </dl>
   </div>
 </div>
+
+<% if staff_schedule_requirement_condition %>
+  <div class="modal fade" id="working-date-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title">
+            <%= staff.name %> <%= shop.name %>に出勤日を追加
+          </h4>
+        </div>
+
+        <%= form_tag custom_schedules_path do %>
+          <div class="modal-body">
+            <dl id="addWorkDay">
+              <%= react_component("UI.Reservation.DatetimeFields", {
+                shop_id: shop.id,
+                staff_id: staff.id,
+                open: true,
+                start_time_date_part: @date.to_s,
+                start_time_time_part: @working_time_range.first.to_s(:time),
+                end_time_time_part: @working_time_range.last.to_s(:time),
+                calendarfield_prefix: "temp_working_schedules_#{shop.id}"
+              }) %>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <dl>
+              <dd></dd>
+              <dd>
+                <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+              </dd>
+              <dd></dd>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="off-date-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title" id="myModalLabel">
+            <%= staff.name %>の休暇を追加
+          </h4>
+        </div>
+        <%= form_tag custom_schedules_path do %>
+          <div class="modal-body">
+            <dl id="addWorkDay">
+              <%= react_component("UI.Reservation.DatetimeFields", {
+                staff_id: staff.id,
+                open: false,
+                start_time_date_part: @date.to_s,
+                start_time_time_part: "00:00",
+                end_time_time_part: "23:59",
+                calendarfield_prefix: "temp_leaving_schedule"
+              }) %>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <dl>
+              <dd></dd>
+              <dd>
+                <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+              </dd>
+              <dd></dd>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

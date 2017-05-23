@@ -556,7 +556,7 @@ input.BTNonoff:checked + label:after {
   left: 20px;
   box-shadow: inset 0 0 0 1px #97bfb8, 0 2px 4px rgba(0, 0, 0, .2);
 }
-#resNew #resInfo #resDateTime #resDate dd a:link, #content #settingForm .formRow .date a {
+#resNew #resInfo #resDateTime #resDate dd a:link, #content #settingForm .formRow .date a, .modal-body #addWorkDay dt a.BTNtarco:link {
   width: 38px;
   height: 38px;
   font-size: 21px;
@@ -1224,12 +1224,14 @@ input.BTNonoff:checked + label:after {
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   z-index: 999;
-  text-align: center;
 }
 .hover_alert div {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+.hover_alert div {
+  text-align: center;
   margin: -100px 0 0 -200px;
   width: 400px;
   height: 200px;

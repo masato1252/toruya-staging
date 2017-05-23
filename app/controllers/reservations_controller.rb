@@ -5,20 +5,20 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
-    date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+    @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
-    @reservations = shop.reservations.visible.in_date(date).
+    @reservations = shop.reservations.visible.in_date(@date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
 
-    staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: date)
+    staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: @date)
     @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
 
-    time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+    time_range_outcome = Reservable::Time.run(shop: shop, date: @date)
     @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
 
-    @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+    @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
   end
 
   # GET /reservations/new
