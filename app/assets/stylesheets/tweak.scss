@@ -13,6 +13,10 @@
     padding: 0;
   }
 }
+// customers page right nav
+#mainNav dl {
+  margin-bottom: 10px;
+}
 
 // reservation new save button
 button[disabled], a.disabled, input[disabled] {

@@ -23,7 +23,8 @@ UI.define("Customers.Dashboard", function() {
         reservation_mode: this.props.reservationMode,
         processing: false,
         moreCustomerProcessing: false,
-        no_more_customers: false
+        no_more_customers: false,
+        printing_page_size: "a4"
       });
     },
 
@@ -363,6 +364,15 @@ UI.define("Customers.Dashboard", function() {
       this.setState({ processing: false });
     },
 
+    _handlePrintingPageSizeChange: function(event) {
+      this.setState({[event.target.name]: event.target.value});
+    },
+
+    handlePrinting: function() {
+      var url = `${this.props.printingPath}?customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
+      window.open(url, this.state.printing_page_size);
+    },
+
     renderCustomerView: function() {
       var _this = this;
 
@@ -557,6 +567,24 @@ UI.define("Customers.Dashboard", function() {
                   </a>
                 </dl>
               ) : null}
+              {
+
+                this.state.selected_customer_id ? (
+                  <dl>
+                    <dd id="NAVprint">
+                      <UI.Select
+                        name="printing_page_size"
+                        options={this.props.printingPageSizeOptions}
+                        value ={this.state.printing_page_size}
+                        onChange={this._handlePrintingPageSizeChange}
+                        />
+                      <a onClick={this.handlePrinting} href="#" className="BTNtarco" title="印刷" target="_blank">
+                        <i className="fa fa-print"></i>
+                      </a>
+                    </dd>
+                  </dl>
+                ) : null
+              }
             </div>
             <form id="new_customer_form"
               ref={(c) => {this.customerForm = c}}

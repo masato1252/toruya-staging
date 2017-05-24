@@ -125,7 +125,23 @@
   width: 100%;
   display: block;
 }
-
+#mainNav #NAVprint a {
+  font-size: 14pt;
+  font-weight: normal;
+  padding: 0 10px;
+  line-height: 35px;
+  display: inline-block;
+  width: inherit;
+}
+#mainNav #NAVprint i {
+  display: inline-block;
+  line-height: 21px;
+  font-size: 21px;
+}
+#mainNav #NAVprint select {
+  margin-right: 5px;
+  width: 123px;
+}
 .status-list div {
   margin-bottom: 3px;
 }

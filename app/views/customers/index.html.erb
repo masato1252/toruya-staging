@@ -51,5 +51,7 @@
                       accept_btn: I18n.t("reservation.accept"),
                       pend_btn: I18n.t("reservation.pend"),
                       cancel_btn: I18n.t("reservation.cancel"),
-                      per_page: Customers::Search::PER_PAGE
+                      per_page: Customers::Search::PER_PAGE,
+                      printing_page_size_options: Customers::PrintingController::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
+                      printing_path: new_customer_printing_path
 }) %>
