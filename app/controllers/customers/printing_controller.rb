@@ -18,10 +18,8 @@ class Customers::PrintingController < DashboardController
     specified_size = PAGE_SIZE[@page_size]
 
     render :pdf => "customer",
-      template: "customers/printing/new.pdf.erb",
       page_width: specified_size[:width],
       page_height: specified_size[:height],
-      show_as_html: params.key?('debug'),
       margin: {
         top: specified_size[:top],
         left: specified_size[:left],
