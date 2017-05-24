@@ -577,6 +577,8 @@ UI.define("Customers.Dashboard", function() {
                         options={this.props.printingPageSizeOptions}
                         value ={this.state.printing_page_size}
                         onChange={this._handlePrintingPageSizeChange}
+                        blankOption={this.props.printingPageSizeBlankOption}
+                        includeBlank={true}
                         />
                       <a onClick={this.handlePrinting} href="#" className="BTNtarco" title="印刷" target="_blank">
                         <i className="fa fa-print"></i>

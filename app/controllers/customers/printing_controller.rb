@@ -1,9 +1,9 @@
 class Customers::PrintingController < DashboardController
   PAGE_SIZE = {
-    "a4" =>         { name: "A4",            width: 210, height: 297, top: 22, left: 20 },
-    "postcard_a" => { name: "PostCard A",    width: 100, height: 148, top: 32, left: 15 },
-    "postcard_b" => { name: "PostCard B",    width: 148, height: 100, top: 32, left: 75.5, right: 2.6 },
-    "envelope" =>   { name: "Envelope Cho3", width: 235, height: 120, top: 32, left: 15 }
+    "a4" =>         { name: I18n.t("customer.printing_page_size.a4"),         width: 210, height: 297, top: 22, left: 20 },
+    "postcard_a" => { name: I18n.t("customer.printing_page_size.postcard_a"), width: 100, height: 148, top: 32, left: 15 },
+    "postcard_b" => { name: I18n.t("customer.printing_page_size.postcard_b"), width: 148, height: 100, top: 32, left: 75.5, right: 2.6 },
+    "envelope" =>   { name: I18n.t("customer.printing_page_size.envelope"),   width: 235, height: 120, top: 32, left: 15 }
   }
 
   def new
