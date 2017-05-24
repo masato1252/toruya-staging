@@ -50,7 +50,9 @@
 #customerInfo #basic dl dt, #customerInfo #basic dl dd, #customerInfoNew #basic dl dt, #customerInfoNew #basic dl dd, #customerInfoEdit #basic dl dt, #customerInfoEdit #basic dl dd {
   display: inline-block;
   vertical-align: middle;
+  padding-right: 5px;
 }
+#customerInfoNew #basic dl dd:last-child { padding-right: 0; }
 #customerInfo #basic dl dt, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dt { width: 110px; }
 #customerInfo #basic dl dd:nth-child(2) {
   width: 55%;
@@ -125,7 +127,17 @@
   width: 100%;
   display: block;
 }
-
+#mainNav #NAVprint a {
+  font-size: 14pt;
+  font-weight: normal;
+  padding: 10px 0;
+}
+#mainNav #NAVprint a i {
+  display: inline-block;
+  margin-bottom: 0px;
+  margin-right: 5px;
+  line-height: 24px;
+}
 .status-list div {
   margin-bottom: 3px;
 }

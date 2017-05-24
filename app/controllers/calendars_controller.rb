@@ -1,7 +1,8 @@
 class CalendarsController < DashboardController
-  def holidays
+  def working_schedule
     date = Time.zone.parse(params[:date]).to_date
-    holidays = Holidays.between(date.beginning_of_month, date.end_of_month)
-    @holiday_days = holidays.map { |holiday| holiday[:date].day }
+
+    @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
   end
 end

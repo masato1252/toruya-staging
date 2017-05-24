@@ -1,7 +1,12 @@
 <header>
   <dl>
-    <dd>
-      <%= link_to shop_reservations_path(shop), class: "setting" do %>
+    <dt>
+      <h1>
+        <%= link_to "Toruya", root_path %>
+      </h1>
+    </dt>
+    <dd id="NAVtoday">
+      <%= active_link_to (local_assigns[:today_path] || (respond_to?(:shop) && shop && shop_reservations_path(shop)) || root_path), active: [["reservations"], []], class_active: "here" do %>
         <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
       <% end %>
@@ -10,11 +15,16 @@
       <dd id="NAVshopSelect">
         <%= shops_select_component %>
       </dd>
+      <% if can? :swith_staffs_selector, User %>
+        <dd id="NAVshopSelect">
+          <%= staffs_select_component %>
+        </dd>
+      <% end %>
     <% end %>
   </dl>
   <dl>
     <dd>
-      <%= link_to settings_shops_path, class: "setting" do %>
+      <%= active_link_to settings_shops_path, active: /^\/settings/, class_active: "here" do %>
         <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
         設定
       <% end %>

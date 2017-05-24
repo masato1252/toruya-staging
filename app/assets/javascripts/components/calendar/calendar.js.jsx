@@ -12,7 +12,14 @@ UI.define("Calendar", function() {
       return {
         month: this.startDate.clone(),
         selectedDate: this.startDate.clone(),
-        holidayDays: this.props.holidayDays
+        holidayDays: this.props.holidayDays,
+        fullTime: this.props.fullTime,
+        shopWorkingWdays: this.props.shopWorkingWdays,
+        shopWorkingOnHoliday: this.props.shopWorkingOnHoliday,
+        staffWorkingWdays: this.props.staffWorkingWdays,
+        workingDays: this.props.workingDays,
+        offDays: this.props.offDays,
+        reservationDays: this.props.reservationDays
       };
     },
 
@@ -20,37 +27,51 @@ UI.define("Calendar", function() {
       let _this = this;
       var month = this.state.month;
       month.add(-1, "M");
-      this.setState({ month: month }, _this._fetchHolidayDays);
+      this.setState({ month: month }, _this._fetchWorkingSchedule);
     },
 
     next: function() {
       let _this = this;
       var month = this.state.month;
       month.add(1, "M");
-      this.setState({ month: month }, _this._fetchHolidayDays);
+      this.setState({ month: month }, _this._fetchWorkingSchedule);
     },
 
-    _fetchHolidayDays: function() {
+    _fetchWorkingSchedule: function() {
       let _this = this;
+      var staff_id;
+
+      if (location.search.length) {
+        staff_id = location.search.replace(/\?staff_id=/, '');
+      }
 
       $.ajax({
         type: "GET",
-        url: this.props.holidayDaysPath,
-        data: { date: this.state.month.format("YYYY-MM-DD") },
+        url: this.props.workingSchedulePath,
+        data: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
         dataType: "JSON"
       }).success(function(result) {
-        _this.setState({holidayDays: result["holidays"]});
+        _this.setState({
+          holidayDays: result["holiday_days"],
+          fullTime: result["full_time"],
+          shopWorkingWdays: result["shop_working_wdays"],
+          shopWorkingOnHoliday: result["shop_working_on_holiday"],
+          staffWorkingWdays: result["staff_working_wdays"],
+          workingDays: result["working_days"],
+          offDays: result["off_days"],
+          reservationDays: result["reservation_days"]
+        });
       });
     },
 
     select: function(day) {
       this.setState({ month: day.date, selectedDate: day.date });
-      location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}`;
+      location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
     },
 
     handleCalendarSelect: function(event) {
       event.preventDefault();
-      this.setState({month: moment(event.target.value)});
+      this.setState({month: moment(event.target.value)}, this._fetchWorkingSchedule);
     },
 
     renderYearSelector: function() {
@@ -117,6 +138,13 @@ UI.define("Calendar", function() {
                                 select={this.select}
                                 selectedDate={this.state.selectedDate}
                                 holidayDays={this.state.holidayDays}
+                                fullTime={this.state.fullTime}
+                                shopWorkingWdays={this.state.shopWorkingWdays}
+                                shopWorkingOnHoliday={this.state.shopWorkingOnHoliday}
+                                staffWorkingWdays={this.state.staffWorkingWdays}
+                                workingDays={this.state.workingDays}
+                                offDays={this.state.offDays}
+                                reservationDays={this.state.reservationDays}
                                 selected={this.state.month} />);
             date.add(1, "w");
             done = count++ > 2 && monthIndex !== date.month();

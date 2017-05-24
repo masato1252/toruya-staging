@@ -71,13 +71,6 @@
   margin-right: 3px;
 }
 #resNew #resInfo #resDateTime #resDate dd #start_time_date_part, #resNew #resInfo #resDateTime #resDate dd span, #resNew #resInfo #resDateTime #resDate dd a:link { display: inline-block; }
-#resNew #resInfo #resDateTime #resDate dd #start_time_date_part { width: 120px; }
-#resNew #resInfo #resDateTime #resDate dd a:link {
-  width: 38px;
-    line-height: 38px;
-    height: 38px;
-  font-size: 21px;
-}
 #resNew #customers h2 #addCustomer {
   float: right;
   height: 35px;
@@ -125,6 +118,7 @@ input {
   content: "\f096";
   margin-right: 8px;
   font-size: 120%;
+  color: #666;
 }
 .resNew .checkbox input[type="checkbox"]:checked + label:before {
   content: "\f046";

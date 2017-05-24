@@ -7,6 +7,8 @@ module ViewHelpers
     before_action :authenticate_user!
     helper_method :shops
     helper_method :shop
+    helper_method :staffs
+    helper_method :staff
     helper_method :super_user
   end
 
@@ -16,7 +18,16 @@ module ViewHelpers
 
   # Use callbacks to share common setup or constraints between actions.
   def shop
-    @shop ||= current_user.shops.find_by(id: params[:shop_id])
+    @shop ||= super_user.shops.find_by(id: params[:shop_id]) || super_user.shops.first
+  end
+
+  def staffs
+    @staffs ||= current_user.staffs
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def staff
+    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.staffs.first
   end
 
   def super_user

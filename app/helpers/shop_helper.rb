@@ -1,19 +1,18 @@
 module ShopHelper
   def shops_select_component
-    if request.path.match(/shops\/\d+/)
-      react_component("UI.ShopsSelect",
-                      { shops: shops_select_options,
-                        selected_shop: selected_shop_value },
-                      { id: "shop" })
-    end
+    react_component("UI.HeaderSelector",
+                    { options: shops.map{|s| { value: s.to_param, label: s.name } },
+                      selected_option: shop.to_param,
+                      is_shop_selector: true
+                    },
+                    { id: "shop" })
   end
 
-  private
-  def shops_select_options
-    shops.map{|s| { value: s.to_param, label: s.name } }
-  end
-
-  def selected_shop_value
-    shop.try(:to_param) || shops.first.try(:to_param)
+  def staffs_select_component
+    react_component("UI.HeaderSelector",
+                    { options: staffs.map{ |s| { value: s.to_param, label: s.name } },
+                      selected_option: staff.to_param
+                    },
+                    { id: "staff" })
   end
 end
