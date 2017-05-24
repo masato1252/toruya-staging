@@ -3,7 +3,7 @@ class Customers::ReservationsController < DashboardController
 
   def index
     @reservations = @customer.reservations
-    .includes(:menu, :customers, :staffs)
+    .includes(:menu, :customers, :staffs, :shop)
     .order("reservations.start_time DESC")
   end
 

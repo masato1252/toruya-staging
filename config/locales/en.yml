@@ -80,6 +80,12 @@ en:
     address2: address2
     no_customer: No Data
     no_more_customer: End of Data
+    printing_page_size:
+      paper_size: Paper size
+      a4: A4
+      postcard_a: PostCard A
+      postcard_b: PostCard B
+      envelope: Envelope
   settings:
     shop:
       info_title: Shop Info

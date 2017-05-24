@@ -130,13 +130,19 @@
 #mainNav #NAVprint a {
   font-size: 14pt;
   font-weight: normal;
-  padding: 10px 0;
-}
-#mainNav #NAVprint a i {
+  padding: 0 10px;
+  line-height: 35px;
   display: inline-block;
-  margin-bottom: 0px;
+  width: inherit;
+}
+#mainNav #NAVprint i {
+  display: inline-block;
+  line-height: 21px;
+  font-size: 21px;
+}
+#mainNav #NAVprint select {
   margin-right: 5px;
-  line-height: 24px;
+  width: 123px;
 }
 .status-list div {
   margin-bottom: 3px;

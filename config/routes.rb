@@ -44,6 +44,8 @@ Rails.application.routes.draw do
         get :edit
       end
     end
+
+    resources :printing, only: [:new]
   end
 
   namespace :settings do
