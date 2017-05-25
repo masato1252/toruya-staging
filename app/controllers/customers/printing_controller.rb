@@ -27,6 +27,7 @@ class Customers::PrintingController < DashboardController
         bottom: 0
       },
       title: @customer.name,
-      layout: false
+      show_as_html: params.key?('debug'),
+      layout: "printing"
   end
 end

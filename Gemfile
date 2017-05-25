@@ -46,7 +46,7 @@ gem "newrelic_rpm", "~> 3.18.0"
 gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf", "~> 1.1.0"
-gem "wkhtmltopdf-binary"
+gem 'wkhtmltopdf-heroku', "~> 2.12.4", group: :production
 
 group :development, :test do
   gem "byebug", platform: :mri
@@ -54,6 +54,7 @@ group :development, :test do
   gem "timecop", "~> 0.8.0"
   gem "database_cleaner"
   gem "factory_girl_rails"
+  gem "wkhtmltopdf-binary"
 end
 
 group :development do
