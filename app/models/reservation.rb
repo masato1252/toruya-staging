@@ -37,7 +37,6 @@ class Reservation < ApplicationRecord
 
   before_validation :set_start_time, :set_end_time, :set_ready_time
 
-  scope :visible, -> { where("aasm_state != ?", "canceled") }
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
 
   aasm :whiny_transitions => false do
@@ -60,9 +59,9 @@ class Reservation < ApplicationRecord
       transitions from: :checked_in, to: :checked_out
     end
 
-    # event :cancel do
-    #   transitions from: [:pending, :reserved, :noshow, :checked_in], to: :canceled
-    # end
+    event :cancel do
+      transitions from: [:pending, :reserved, :noshow, :checked_in], to: :canceled
+    end
   end
 
   def set_start_time

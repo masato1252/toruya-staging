@@ -63,7 +63,7 @@ ja:
     accept: 承認
     pend: 未承認
     shop_closed: 営業時間外
-    cancel: 予約削除
+    cancel: キャンセル
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
   customer:

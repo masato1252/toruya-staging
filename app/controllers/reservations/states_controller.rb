@@ -20,7 +20,7 @@ class Reservations::StatesController < DashboardController
   end
 
   def cancel
-    reservation.destroy
+    reservation.cancel!
     redirect_to shop_reservations_path(shop, reservation_date: params[:reservation_date]), notice: I18n.t("reservation.delete_successfully_message")
   end
 
