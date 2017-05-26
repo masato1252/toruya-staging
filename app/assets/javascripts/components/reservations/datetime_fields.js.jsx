@@ -20,7 +20,6 @@ UI.define("Reservation.DatetimeFields", function() {
       return (
         <div>
           <input type="hidden" name="staff_id" value={this.props.staffId} />
-          <input type="hidden" name="custom_schedules[][shop_id]" value={this.props.shopId} />
           <input
             type="hidden"
             name="custom_schedules[][open]"
