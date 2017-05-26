@@ -1,42 +1,14 @@
 .modal-header {
   background: #333;
   color: #fff;
+  border-radius: 6px 6px 0 0; /* 記述無し */
+  -moz-border-radius: 6px 6px 0 0; /* Firefox */
+  -webkit-border-radius: 6px 6px 0 0; /* Google Chrome、Safari */
+  -o-border-radius: 6px 6px 0 0; /* Opera */
+  -ms-border-radius: 6px 6px 0 0; /* Internet Explorer */
 }
+
 .close {
   color: #999;
   opacity: 1;
-}
-
-#working-date-modal, #off-date-modal {
-  #addWorkDay {
-    display: table;
-    margin: 30px auto;
-  }
-
-  #addWorkDay dt, #addWorkDay dd {
-    display: table-cell;
-  }
-
-  #addWorkDay dt input[type="date"] {
-    width: 120px;
-  }
-
-  #addWorkDay dd input[type="time"] {
-    width: 150px;
-  }
-
-  #addWorkDay dd.timeTo {
-    padding: 0 5px;
-  }
-
-  #addWorkDay dt a {
-    margin: 0 10px 0 5px;
-  }
-
-  .modal-footer .btn {
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    width: 120px;
-  }
 }

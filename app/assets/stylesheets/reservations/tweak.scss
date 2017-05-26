@@ -1,0 +1,33 @@
+#working-date-modal, #off-date-modal {
+  #addWorkDay {
+    display: table;
+    margin: 30px auto;
+  }
+
+  #addWorkDay dt, #addWorkDay dd {
+    display: table-cell;
+  }
+
+  #addWorkDay dt input[type="date"] {
+    width: 120px;
+  }
+
+  #addWorkDay dd input[type="time"] {
+    width: 150px;
+  }
+
+  #addWorkDay dd.timeTo {
+    padding: 0 5px;
+  }
+
+  #addWorkDay dt a {
+    margin: 0 10px 0 5px;
+  }
+
+  .modal-footer .btn {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 120px;
+  }
+}
