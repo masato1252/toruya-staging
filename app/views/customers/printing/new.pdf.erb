@@ -1,12 +1,12 @@
+<% address = @customer.primary_formatted_address %>
+
 <div class="customer-info <%= @page_size %>">
-  <div class="zip-code"><%= @customer.zipcode %></div>
-  <div class="street1">
-    <%= @customer.primary_formatted_address ? @customer.primary_formatted_address.value.street1 : nil %>
-  </div>
-  <div class="street2">
-    <%= @customer.primary_formatted_address ? @customer.primary_formatted_address.value.street2 : nil %>
-  </div>
+<div class="zip-code"><%= @customer.zipcode %></div>
+  <% if address %>
+    <div class="street1"><%= "#{address.value.region}#{address.value.city}#{address.value.street1}" %></div>
+    <div class="street2"><%= address.value.street2 %></div>
+  <% end %>
   <div class="name">
-    <%= @customer.name %>
+    <%= "#{@customer.name} 様" %>
   </div>
 </div>

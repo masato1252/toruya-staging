@@ -36,7 +36,7 @@ UI.define("Select", function() {
       }
 
       if (this.props.includeBlank) {
-        optionsList.unshift(<option disabled value="" key="">{this.props.blankOption}</option>);
+        optionsList.unshift(<option value="" key="">{this.props.blankOption}</option>);
       }
 
       return(

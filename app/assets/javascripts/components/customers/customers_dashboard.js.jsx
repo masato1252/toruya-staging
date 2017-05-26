@@ -24,7 +24,7 @@ UI.define("Customers.Dashboard", function() {
         processing: false,
         moreCustomerProcessing: false,
         no_more_customers: false,
-        printing_page_size: "a4"
+        printing_page_size: ""
       });
     },
 
@@ -368,7 +368,10 @@ UI.define("Customers.Dashboard", function() {
       this.setState({[event.target.name]: event.target.value});
     },
 
-    handlePrinting: function() {
+    handlePrinting: function(event) {
+      event.preventDefault();
+      if (!this.state.printing_page_size) { return; }
+
       var url = `${this.props.printingPath}?customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
       window.open(url, this.state.printing_page_size);
     },
@@ -580,7 +583,9 @@ UI.define("Customers.Dashboard", function() {
                         blankOption={this.props.printingPageSizeBlankOption}
                         includeBlank={true}
                         />
-                      <a onClick={this.handlePrinting} href="#" className="BTNtarco" title="印刷" target="_blank">
+                      <a onClick={this.handlePrinting} href="#"
+                        className={`BTNtarco ${this.state.printing_page_size ? null : "disabled"}`}
+                        title="印刷" target="_blank">
                         <i className="fa fa-print"></i>
                       </a>
                     </dd>
