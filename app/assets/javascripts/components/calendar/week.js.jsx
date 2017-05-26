@@ -19,6 +19,7 @@ UI.define("Week", function() {
     isWorkingDay: function(date, wday) {
       if (this.isHoliday(date) && !this.props.shopWorkingOnHoliday) { return; }
       if (this.isContainedBy(this.props.offDays, date)) { return; }
+      if (date.month() !== this.props.month.month()) { return; }
 
       if (this.props.fullTime) {
         return _.contains(this.props.shopWorkingWdays, wday);
