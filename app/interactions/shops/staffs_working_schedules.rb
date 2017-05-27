@@ -24,10 +24,10 @@ module Shops
         working_staffs = h.keys
         # custom leaving, if staff don't working on that date then we don't care about his/her OOO.
         CustomSchedule.where(staff_id: working_staffs.map(&:id)).closed.where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).includes(:staff).each do |schedule|
-          if schedule.start_time > h[schedule.staff][:time].first
+          if h[schedule.staff][:time] && schedule.start_time > h[schedule.staff][:time].first
             # working time -> leaving time
             h[schedule.staff] = { time: h[schedule.staff][:time].first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
-          elsif schedule.end_time < h[schedule.staff][:time].last
+          elsif h[schedule.staff][:time] && schedule.end_time < h[schedule.staff][:time].last
             # leaving time -> working time
             h[schedule.staff] = { time: schedule.end_time..h[schedule.staff][:time].last, reason: schedule.reason.presence || "臨時休暇" }
           else
