@@ -24,12 +24,15 @@ module Shops
         working_staffs = h.keys
         # custom leaving, if staff don't working on that date then we don't care about his/her OOO.
         CustomSchedule.where(staff_id: working_staffs.map(&:id)).closed.where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).includes(:staff).each do |schedule|
-          if h[schedule.staff][:time] && schedule.start_time > h[schedule.staff][:time].first
+
+          working_schedule_time = h[schedule.staff][:time]
+
+          if working_schedule_time && schedule.start_time > working_schedule_time.first
             # working time -> leaving time
-            h[schedule.staff] = { time: h[schedule.staff][:time].first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
-          elsif h[schedule.staff][:time] && schedule.end_time < h[schedule.staff][:time].last
+            h[schedule.staff] = { time: working_schedule_time.first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
+          elsif working_schedule_time && schedule.end_time < working_schedule_time.last
             # leaving time -> working time
-            h[schedule.staff] = { time: schedule.end_time..h[schedule.staff][:time].last, reason: schedule.reason.presence || "臨時休暇" }
+            h[schedule.staff] = { time: schedule.end_time..working_schedule_time.last, reason: schedule.reason.presence || "臨時休暇" }
           else
             h[schedule.staff] = { time: nil, reason: schedule.reason.presence || "臨時休暇" }
           end
