@@ -52,9 +52,8 @@
            <div class="time cell">
              <% if working_schedule[:time] %>
                <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
-             <% end %>
-             <% if working_schedule[:reason] %>
-               <div class="danger"><%= working_schedule[:reason] %></div>
+             <% else %>
+               臨時休暇
              <% end %>
            </div>
          </div>
