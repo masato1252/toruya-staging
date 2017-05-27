@@ -13,7 +13,7 @@ module Shops
 
         # weekly part time
         shop.business_schedules.for_staff.part_time.opened.where(day_of_week: date.wday).includes(:staff).each do |schedule|
-          h[schedule.staff] = { time: schedule.start_time..schedule.end_time }
+          h[schedule.staff] = { time: schedule.start_time_on(date)..schedule.end_time_on(date) }
         end
 
         # custom open part time
