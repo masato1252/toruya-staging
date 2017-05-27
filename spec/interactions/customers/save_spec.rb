@@ -38,7 +38,7 @@ RSpec.describe Customers::Save do
         {"type"=>"unknown", "value"=>"studioha3@dreamhint.com"},
         {"type"=>"work", "value"=>"haruko_liu@dreamhint.com"}
       ],
-      :dob => { year: 1950, month: 11, day: 20 }
+      :dob => { year: "1950", month: "11", day: "20" }
     }
   end
 
