@@ -19,10 +19,23 @@ module Staffs
       end
 
       # off dates
+      # when date is a working day unless it's all day off
       shop_closed_dates = custom_schedules_scope.closed.for_shop.map{|d| d.start_time.to_date }
-      staff_off_dates = staff.custom_schedules.closed.where(start_time: date_range).select("start_time").order("start_time").map{|d| d.start_time.to_date }
+      staff_off_date_candidates = staff.custom_schedules.closed.where(start_time: date_range).select("start_time").order("start_time").map{|d| d.start_time.to_date }
+
+      staff_off_date_candidates.each do |suspicious_date|
+        outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: suspicious_date)
+
+        if outcome.valid?
+          working_schedule_of_staffs = outcome.result
+
+          if working_schedule_of_staffs && working_schedule_of_staffs[staff] && working_schedule_of_staffs[staff][:time].nil?
+            off_dates << suspicious_date
+          end
+        end
+      end
+
       off_dates << shop_closed_dates
-      off_dates << staff_off_dates
 
       {
         full_time: is_staff_full_time,
