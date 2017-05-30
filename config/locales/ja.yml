@@ -173,6 +173,7 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
+      delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
     staff_working_time:
       info_1: スタッフの勤務日時です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
