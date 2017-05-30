@@ -22,12 +22,12 @@ module ViewHelpers
   end
 
   def staffs
-    @staffs ||= current_user.staffs
+    @staffs ||= current_user.staffs.active
   end
 
   # Use callbacks to share common setup or constraints between actions.
   def staff
-    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.staffs.first
+    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.staffs.active.first
   end
 
   def super_user

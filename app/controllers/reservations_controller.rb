@@ -149,7 +149,7 @@ class ReservationsController < DashboardController
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = shop.staffs.map do |staff|
+    @staff_options = shop.staffs.active.map do |staff|
       ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
     end
   end

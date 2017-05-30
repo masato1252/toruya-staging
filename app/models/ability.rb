@@ -6,7 +6,7 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
     if user.free_level?
-      if !user.staffs.exists?
+      if !user.staffs.active.exists?
         can :create, Staff
       end
     elsif user.basic_level? || user.premium_level?

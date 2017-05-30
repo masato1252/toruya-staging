@@ -10,6 +10,7 @@
 #  phonetic_first_name :string
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  deleted_at          :datetime
 #
 
 class Staff < ApplicationRecord
@@ -30,4 +31,6 @@ class Staff < ApplicationRecord
 
   validates :last_name, presence: true
   validates :first_name, presence: true
+
+  scope :active, -> { where(deleted_at: nil) }
 end

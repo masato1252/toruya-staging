@@ -5,7 +5,7 @@
 <%
   staff_menus = menu.staff_menus.to_a
 
-  menu_staffs_options = super_user.staffs.order("created_at").map do |staff|
+  menu_staffs_options = super_user.staffs.active.order("created_at").map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
       Option.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
     else

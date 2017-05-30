@@ -2,7 +2,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
   before_action :set_staff, only: [:edit, :update]
 
   def index
-    @staffs = super_user.staffs
+    @staffs = super_user.staffs.active
   end
 
   def edit
