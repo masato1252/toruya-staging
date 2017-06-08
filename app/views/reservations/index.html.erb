@@ -118,15 +118,17 @@
                     </dd>
                   <% end %>
 
-                  <% if reservation.reserved? || reservation.noshow? || reservation.checked_out? %>
+                  <% if reservation.reserved? || reservation.noshow? || reservation.checked_out? || reservation.canceled? %>
                     <dd>
                       <%= link_to t("reservation.pend"), pend_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray" %>
                     </dd>
                   <% end %>
 
-                  <dd>
-                    <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
-                  </dd>
+                  <% if !reservation.canceled? %>
+                    <dd>
+                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
+                    </dd>
+                  <% end %>
 
                   <dd>
                     <%= link_to t("action.edit"), edit_shop_reservation_path(shop, reservation), class: "btn BTNtarco" %>

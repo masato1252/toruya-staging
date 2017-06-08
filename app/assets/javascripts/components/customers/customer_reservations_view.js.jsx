@@ -12,8 +12,7 @@ UI.define("Customers.CustomerReservationsView", function() {
         "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
         "checked_out": [{ label: this.props.recheckInBtn, action: "check_in", btn_color: "BTNyellow" },
                         { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
-        "canceled": [{ label: this.props.recheckInBtn, action: "check_in", btn_color: "BTNyellow" },
-                        { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }]
+        "canceled": [{ label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }]
       };
 
       return ({
@@ -131,13 +130,17 @@ UI.define("Customers.CustomerReservationsView", function() {
                           </dd>
                         );
                       })}
-                      <dd>
-                      <a
-                        href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
-                        className="btn BTNorange"
-                        data-confirm={_this.props.deleteConfirmationMessage}
-                        >{this.props.cancelBtn}</a>
-                      </dd>
+                      {
+                        reservation.state !== "canceled" ? (
+                          <dd>
+                            <a
+                              href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=cancel&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
+                              className="btn BTNorange"
+                              data-confirm={_this.props.deleteConfirmationMessage}
+                              >{this.props.cancelBtn}</a>
+                          </dd>
+                        ) : null
+                      }
                       <dd>
                         <a
                           href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}
