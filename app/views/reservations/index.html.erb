@@ -122,7 +122,7 @@
               </div>
               <div class="modal-footer">
                 <dl>
-                  <% if reservation.checked_in? %>
+                  <% if reservation.may_check_out? %>
                     <dd>
                       <%= link_to t("reservation.check_out"), check_out_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
                     </dd>
@@ -140,21 +140,23 @@
                     </dd>
                   <% end %>
 
-                  <% if reservation.pending? %>
+                  <% if reservation.may_accept? %>
                     <dd>
                       <%= link_to t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
                     </dd>
                   <% end %>
 
-                  <% if reservation.reserved? || reservation.noshow? || reservation.checked_out? %>
+                  <% if reservation.may_pend? %>
                     <dd>
                       <%= link_to t("reservation.pend"), pend_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray" %>
                     </dd>
                   <% end %>
 
-                  <dd>
-                    <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
-                  </dd>
+                  <% if reservation.may_cancel? %>
+                    <dd>
+                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
+                    </dd>
+                  <% end %>
 
                   <dd>
                     <%= link_to t("action.edit"), edit_shop_reservation_path(shop, reservation), class: "btn BTNtarco" %>
