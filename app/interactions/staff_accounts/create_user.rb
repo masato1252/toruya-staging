@@ -26,6 +26,11 @@ module StaffAccounts
         else
           errors.add(:base, "email is invalid for user creation.")
         end
+      elsif staff_account && staff_account.user
+        staff_account.state = :active
+        staff_account.save
+
+        { user: user }
       else
         errors.add(:base, "token was invalid")
       end

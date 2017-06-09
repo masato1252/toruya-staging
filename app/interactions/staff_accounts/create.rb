@@ -24,18 +24,11 @@ module StaffAccounts
 
       if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user)
         staff_account.user = User.find_by(email: staff_account.email)
+        staff_account.state = :pending unless staff_account.disabled?
+        staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
+        staff_account.save
 
-        if staff_account.user
-          # If Connect Email is the same as one active user, connect user directly, active account if state is not disabled
-          staff_account.state = :active unless staff_account.disabled?
-        else
-          # Otherwise Send Staff Account Connect Email
-          staff_account.state = :pending unless staff_account.disabled?
-          staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
-          staff_account.save
-
-          NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
-        end
+        NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
       end
 
       staff_account.save
