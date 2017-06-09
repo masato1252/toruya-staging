@@ -42,16 +42,49 @@
               id="shop-<%= shop.id %>"
               name="staff[shop_ids][]"
               value=<%= shop.id %>
-              <%= "checked" if shop_ids.include?(shop.id) %>>
+              <%= "checked" if shop_ids.include?(shop.id) %> />
             <label for="shop-<%= shop.id %>"><%= shop.name %></label>
           </dd>
         </dl>
       <% end %>
     </div>
+    <h3>Staff Account<strong>必須項目</strong></h3>
+    <div id="staffAccount" class="formRow">
+      <dl class="onoffSetting">
+        <dt>Use staff account（スタッフアカウントを利用する）</dt>
+        <dd>
+          <input name="staff_account[enabled]" type="hidden" value="false" />
+          <%= check_box_tag "staff_account[enabled]", true, (@staff_account ? !@staff_account.disabled? : true),
+            id: "accountUse", class: "BTNonoff" %>
+          <label for="accountUse"></label>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Email</dt>
+        <dd>
+          <%= text_field_tag "staff_account[email]", @staff_account.try(:email), placeholder: "Email", size: 40 %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Capability</dt>
+        <dd>
+          <div class="BTNselect">
+            <div>
+              <%= radio_button("staff_account", "level", "staff", id: "accountCapability1", class: "BTNselect") %>
+              <label for="accountCapability1"><span>Staff</span></label>
+            </div>
+            <div>
+              <%= radio_button("staff_account", "level", "admin", id: "accountCapability2", class: "BTNselect") %>
+              <label for="accountCapability2"><span>Admin</span></label>
+            </div>
+          </div>
+        </dd>
+      </dl>
+    </div>
 
     <div id="footerav">
       <li>
-        <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
+        <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>
       </li>
       <li>
         <%= f.submit "保存", class: "BTNyellow" %>

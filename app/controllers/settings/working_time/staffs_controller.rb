@@ -31,14 +31,14 @@ class Settings::WorkingTime::StaffsController < SettingsController
       CustomSchedules::Create.run(staff: @staff, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
-    redirect_to settings_working_time_staffs_path, notice: I18n.t("common.update_successfully_message")
+    redirect_to settings_user_working_time_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
   end
 
   private
 
   def set_staff
     @staff = super_user.staffs.find_by(id: params[:id])
-    redirect_to settings_staffs_path(shop) unless @staff
+    redirect_to settings_user_staffs_path(super_user, shop) unless @staff
   end
 
   def custom_schedules_params

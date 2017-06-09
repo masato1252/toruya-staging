@@ -21,6 +21,7 @@ class Settings::StaffsController < SettingsController
   # GET /staffs/1/edit
   def edit
     @shops = super_user.shops
+    @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
   end
 
   # POST /staffs
@@ -31,7 +32,7 @@ class Settings::StaffsController < SettingsController
 
     respond_to do |format|
       if @staff.save
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.create_successfully_message") }
+        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
         @shops = super_user.shops
@@ -45,10 +46,11 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1.json
   def update
     outcome = Staffs::Update.run(staff: @staff, attrs: staff_params.to_h)
+    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.update_successfully_message") }
+        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message") }
         format.json { render :show, status: :ok, location: @staff }
       else
         @shops = super_user.shops
@@ -64,7 +66,7 @@ class Settings::StaffsController < SettingsController
     Staffs::Delete.run!(staff: @staff)
 
     respond_to do |format|
-      format.html { redirect_to settings_staffs_path, notice: I18n.t("common.delete_successfully_message") }
+      format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end
@@ -73,7 +75,7 @@ class Settings::StaffsController < SettingsController
 
   def set_staff
     @staff = super_user.staffs.find_by(id: params[:id])
-    redirect_to settings_staffs_path(shop) unless @staff
+    redirect_to settings_user_staffs_path(super_user, shop) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

@@ -40,7 +40,7 @@ class Settings::MenusController < SettingsController
                                   menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
       if outcome.valid?
-        format.html { redirect_to settings_menus_path, notice: I18n.t("common.create_successfully_message") }
+        format.html { redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit }
@@ -62,7 +62,7 @@ class Settings::MenusController < SettingsController
                                   menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
       if outcome.valid?
-        format.html { redirect_to settings_menus_path, notice: I18n.t("common.update_successfully_message") }
+        format.html { redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message") }
         format.json { render :show, status: :ok, location: @menu }
       else
         format.html { render :edit }
@@ -76,7 +76,7 @@ class Settings::MenusController < SettingsController
   def destroy
     @menu.destroy
     respond_to do |format|
-      format.html { redirect_to settings_menus_path, notice: I18n.t("common.delete_successfully_message") }
+      format.html { redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end

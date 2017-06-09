@@ -55,7 +55,7 @@ module OptionsHelper
         label: setting.name, value: setting.id, id: setting.id
       }
 
-      h.merge!(editPath: edit_settings_reservation_setting_path(setting, from_menu: true, menu_id: menu.id))
+      h.merge!(editPath: edit_settings_user_reservation_setting_path(super_user, setting, from_menu: true, menu_id: menu.id))
     end
     h
   end

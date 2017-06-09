@@ -13,7 +13,25 @@ class NotificationMailer < ActionMailer::Base
 
     mail(:to => contact_group.user.email,
          :subject => subject("顧客台帳のGoogle同期作業が完了しました。"))
+  end
 
+  def activate_staff_account(staff_account)
+    @staff_account = staff_account
+    @staff = @staff_account.staff
+    @owner = @staff_account.owner
+
+    shop_names = @staff.shops.pluck(:name)
+
+    @shops_sentence = if shop_names.size == 0
+                        ""
+                      elsif shop_names.size == 1
+                        shop_names.first
+                      else
+                        "#{shop_names.first} 他1つの店舗"
+                      end
+
+    mail(:to => staff_account.email,
+         :subject => "#{@shops_sentence}にスタッフとして設定されました。")
   end
 
   def staff_deleted(staff)

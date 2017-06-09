@@ -2,7 +2,7 @@ class Settings::ReservationSettingsController < SettingsController
   before_action :set_reservation_setting, only: [:edit, :update, :destroy]
 
   def index
-    @reservation_settings = super_user.reservation_settings
+    @reservation_settings = super_user.reservation_settings.order("id")
   end
 
   def new
@@ -14,12 +14,12 @@ class Settings::ReservationSettingsController < SettingsController
     if @reservation_setting.save
       if params[:from_menu]
         if params[:menu_id]
-          redirect_to edit_settings_menu_path(id: params[:menu_id]), notice: I18n.t("common.create_successfully_message")
+          redirect_to edit_settings_user_menu_path(super_user,id: params[:menu_id]), notice: I18n.t("common.create_successfully_message")
         else
-          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.create_successfully_message")
+          redirect_to new_settings_user_menu_path(super_user,reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.create_successfully_message")
         end
       else
-        redirect_to settings_reservation_settings_path, notice: I18n.t("common.create_successfully_message")
+        redirect_to settings_user_reservation_settings_path(super_user), notice: I18n.t("common.create_successfully_message")
       end
     else
     end
@@ -33,12 +33,12 @@ class Settings::ReservationSettingsController < SettingsController
       day: nil, nth_of_week: nil, days_of_week: nil, start_time: nil, end_time: nil))
       if params[:from_menu]
         if params[:menu_id]
-          redirect_to edit_settings_menu_path(id: params[:menu_id]), notice: I18n.t("common.update_successfully_message")
+          redirect_to edit_settings_user_menu_path(super_user,id: params[:menu_id]), notice: I18n.t("common.update_successfully_message")
         else
-          redirect_to new_settings_menu_path(reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.update_successfully_message")
+          redirect_to new_settings_user_menu_path(super_user,reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.update_successfully_message")
         end
       else
-        redirect_to settings_reservation_settings_path, notice: I18n.t("common.update_successfully_message")
+        redirect_to settings_user_reservation_settings_path(super_user), notice: I18n.t("common.update_successfully_message")
       end
     else
       render :edit
@@ -47,7 +47,7 @@ class Settings::ReservationSettingsController < SettingsController
 
   def destroy
     @reservation_setting.destroy
-    redirect_to settings_reservation_settings_path, notice: I18n.t("common.delete_successfully_message")
+    redirect_to settings_user_reservation_settings_path(super_user), notice: I18n.t("common.delete_successfully_message")
   end
 
 

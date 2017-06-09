@@ -21,7 +21,7 @@
           <dd class="rowTTL"><%= google_group.title %></dd>
           <dd class="syncContacts">
             <%= link_to t("settings.contact.bind_btn"),
-              bind_settings_contact_group_path(@contact_group,
+              bind_settings_user_contact_group_path(super_user, @contact_group,
                                                google_group_id: google_group.id,
                                                google_group_name: google_group.title), method: :post, class: "BTNyellow",
                                                data: { confirm: t("settings.contact.binding_confirmation_message",
@@ -37,7 +37,7 @@
       <h3><%= t("settings.contact.dont_want_connect_google") %></h3>
     <% end %>
     <div id="syncContactsNew">
-      <%= link_to t("settings.contact.only_use_toruya_group"), bind_settings_contact_group_path(@contact_group),
+      <%= link_to t("settings.contact.only_use_toruya_group"), bind_settings_user_contact_group_path(super_user, @contact_group),
         method: :post,
         class: "BTNorange",
           data: { confirm: t("settings.contact.only_use_toruya_group_confirmation"), disable_with: t("common.processing") } %>

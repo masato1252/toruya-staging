@@ -17,6 +17,8 @@ class Staff < ApplicationRecord
   include NormalizeName
   include ReservationChecking
 
+  attr_accessor :enable_staff_account
+
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, through: :staff_menus
@@ -26,6 +28,7 @@ class Staff < ApplicationRecord
   has_many :custom_schedules, dependent: :destroy
   has_many :reservation_staffs
   has_many :reservations, through: :reservation_staffs
+  has_one :staff_account
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 

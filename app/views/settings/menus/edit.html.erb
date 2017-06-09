@@ -5,7 +5,7 @@
 <div id="settingForm">
   <%= render 'form',
   menu: @menu,
-  url: settings_menu_path(@menu),
+  url: settings_user_menu_path(super_user,@menu),
   menu_reservation_setting_rule: @menu_reservation_setting_rule,
   reservation_setting: @reservation_setting %>
 </div>

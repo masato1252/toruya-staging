@@ -29,7 +29,7 @@ class Settings::ShopsController < SettingsController
 
     respond_to do |format|
       if @shop.save
-        format.html { redirect_to settings_shops_path , notice: I18n.t("settings.shop.create_successfully_message") }
+        format.html { redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message") }
         format.json { render :show, status: :created, location: @shop }
       else
         format.html { render :new }
@@ -43,7 +43,7 @@ class Settings::ShopsController < SettingsController
   def update
     respond_to do |format|
       if @shop.update(shop_params)
-        format.html { redirect_to settings_shops_path, notice: I18n.t("settings.shop.update_successfully_message") }
+        format.html { redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message") }
         format.json { render :show, status: :ok, location: @shop }
       else
         format.html { render :edit }
@@ -57,7 +57,7 @@ class Settings::ShopsController < SettingsController
   def destroy
     @shop.destroy
     respond_to do |format|
-      format.html { redirect_to settings_shops_path, notice: I18n.t("settings.shop.delete_successfully_message") }
+      format.html { redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.delete_successfully_message") }
       format.json { head :no_content }
     end
   end
