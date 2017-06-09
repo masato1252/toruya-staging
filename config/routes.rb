@@ -44,6 +44,8 @@ Rails.application.routes.draw do
         get :edit
       end
     end
+
+    resources :printing, only: [:new]
   end
 
   namespace :settings do
@@ -80,6 +82,7 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :custom_schedules, only: [:create]
 
   namespace :callbacks do
     resources :staff_accounts, only: [] do
@@ -89,7 +92,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
   resources :calendars, only: [] do
     collection do
-      get "holidays"
+      get "working_schedule"
     end
   end
 

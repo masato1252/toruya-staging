@@ -36,7 +36,7 @@ gem "google_contacts_api", "~> 0.2.2", github: "ilake/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
 gem "jp_prefecture", "~> 0.8.1", github: "ilake/jp_prefecture"
 gem "hashie", "~> 3.4.4"
-gem "rollbar", "~> 2.13.3"
+gem "rollbar", "~> 2.14.1"
 gem "sendgrid-rails", "~> 3.1.0"
 gem "delayed-web", "~> 0.4.2"
 gem "puma", "~> 3.4.0"
@@ -44,6 +44,9 @@ gem "kaminari", "~> 1.0.1"
 gem "expeditor", "~> 0.5.0"
 gem "newrelic_rpm", "~> 3.18.0"
 gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
+gem "cancancan", "~> 1.15.0"
+gem "wicked_pdf", "~> 1.1.0"
+gem "wkhtmltopdf-binary"
 
 group :development, :test do
   gem "byebug", platform: :mri

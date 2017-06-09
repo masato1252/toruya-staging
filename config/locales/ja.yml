@@ -82,6 +82,12 @@ ja:
     address2: 建物名／部屋番号
     no_customer: 該当データなし
     no_more_customer: 該当データ終了
+    printing_page_size:
+      paper_size: 用紙サイズ
+      a4: A4
+      postcard_a: ポストカード縦
+      postcard_b: ポストカード横
+      envelope: 封筒 長3
   settings:
     shop:
       info_title:  店舗情報

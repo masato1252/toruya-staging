@@ -22,13 +22,19 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  level                  :integer          default(0), not null
+#  level                  :integer          default("free"), not null
 #
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
+
+  enum level: {
+    free: 0,
+    basic: 1,
+    premium: 2
+  }, _suffix: true
 
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
@@ -52,6 +58,7 @@ class User < ApplicationRecord
     ["lake.ilakela@gmail.com"].include?(email)
   end
 
+  # shop owner or staffs
   def member?
     true
   end

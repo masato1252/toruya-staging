@@ -55,7 +55,7 @@ RSpec.describe Reservable::Time do
 
 
         it "returns available time range" do
-          expect(Reservable::Time.run!(shop: shop, date: date)).to eq(business_schedule.start_time..business_schedule.end_time)
+          expect(Reservable::Time.run!(shop: shop, date: date)).to eq(business_schedule.start_time_on(date)..business_schedule.end_time_on(date))
         end
       end
 

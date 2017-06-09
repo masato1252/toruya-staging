@@ -41,7 +41,7 @@ module Reservable
 
     def business_working_schedule
       if schedule = business_schedule
-        schedule.start_time..schedule.end_time
+        schedule.start_time_on(date)..schedule.end_time_on(date)
       else
         errors.add(:date, :shop_closed)
       end

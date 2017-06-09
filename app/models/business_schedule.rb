@@ -33,4 +33,12 @@ class BusinessSchedule < ApplicationRecord
   scope :opened, -> { where(business_state: "opened") }
   scope :full_time, -> { where(full_time: true) }
   scope :part_time, -> { where(full_time: nil) }
+
+  def start_time_on(date)
+    start_time.change(year: date.year, month: date.month, day: date.day)
+  end
+
+  def end_time_on(date)
+    end_time.change(year: date.year, month: date.month, day: date.day)
+  end
 end

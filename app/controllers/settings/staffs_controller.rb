@@ -28,6 +28,7 @@ class Settings::StaffsController < SettingsController
   # POST /staffs.json
   def create
     @staff = super_user.staffs.new(staff_params)
+    authorize! :create, Staff
 
     respond_to do |format|
       if @staff.save

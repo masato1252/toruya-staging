@@ -8,6 +8,8 @@ module ViewHelpers
     before_action :staffs_of_super_user
     helper_method :shops
     helper_method :shop
+    helper_method :staffs
+    helper_method :staff
     helper_method :super_user
   end
 
@@ -18,6 +20,15 @@ module ViewHelpers
   # Use callbacks to share common setup or constraints between actions.
   def shop
     @shop ||= Shop.find_by(id: params[:shop_id])
+  end
+
+  def staffs
+    @staffs ||= current_user.staffs
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def staff
+    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.staffs.first
   end
 
   def super_user

@@ -18,10 +18,12 @@ class Customers::Save < ActiveInteraction::Base
     params[:addresses] = [params[:primary_address]] + params[:other_addresses]
     # end
 
-    if params[:dob]
+    if params[:dob] && params[:dob][:year].present? && params[:dob][:month].present? && params[:dob][:day].present?
       params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.today.year,
                                    params[:dob][:month].try(:to_i) || 1,
                                    params[:dob][:day].try(:to_i) || 1)
+    else
+      params[:birthday] = nil
     end
 
     if params[:phone_numbers].present?
@@ -76,9 +78,9 @@ class Customers::Save < ActiveInteraction::Base
     array :phone_numbers, default: []
     array :emails, default: []
     hash :dob, default: nil do
-      integer :year, default: nil
-      integer :month, default: nil
-      integer :day, default: nil
+      string :year, default: nil
+      string :month, default: nil
+      string :day, default: nil
     end
     date :birthday, default: nil
     string :custom_id, default: nil

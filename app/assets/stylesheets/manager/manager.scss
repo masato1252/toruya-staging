@@ -219,25 +219,40 @@ header dl:last-child {
   margin-right: 20px;
   float: right;
 }
-header dl:first-child dd { padding-right: 10px; }
+header dl:first-child dt, header dl:first-child dd { padding-right: 10px; }
 header dl:last-child dd { padding-left: 10px; }
-header dl dd {
+header dl dt, header dl dd {
   display: inline-block;
   vertical-align: middle;
 }
-header dl dd a, header dl dd a:link, header dl dd a:visited {
+header dl dt a, header dl dt a:link, header dl dt a:visited, header dl dd a, header dl dd a:link, header dl dd a:visited {
   display: block;
   min-width: 45px;
   text-align: center;
-  font-size: 8px;
   color: #d0d0d0;
   position: relative;
+}
+header dl dd a, header dl dd a:link, header dl dd a:visited { font-size: 8px; }
+header dl dt a.here, header dl dt a.here:link, header dl dd a.here, header dl dd a.here:link { color: #fff; }
+header dl dt h1 {
+  padding: 0;
+  font-size: 32px;
+  font-family: myriad-pro, sans-serif;
+  font-style: normal;
 }
 header dl dd a .fa {
   display: block;
   line-height: 47px;
   height: 47px;
   font-size: 45px;
+}
+header dl dd a .fa.fa-desktop {
+  font-size: 38px;
+  padding-top: 2px;
+}
+header dl dd a .fa.fa-home {
+  font-size: 47px;
+  padding-top: 2px;
 }
 header select {
   font-size: 15px;
@@ -273,16 +288,6 @@ footer {
 #footer .content { margin: 20px; }
 /* Login Page */
 .login, .shopSelect { padding-bottom: 0; }
-.login header h1, .signup header h1, .firstSetting header h1, .shopSelect header h1, .setting header h1 {
-  padding-bottom: 0;
-  margin-left: 20px;
-  float: left;
-  font-family: myriad-pro, sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 35px;
-  line-height: 1em;
-}
 .login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
   padding-top: 0;
   color: #fff;
@@ -388,8 +393,10 @@ footer {
   margin-right: 8.5px;
 }
 .checkbox input[type="radio"] + label:before, .checkbox input[type="checkbox"] + label:before  {
-  content: " ";
-  margin-right: 28px;
+  font-family: "FontAwesome";
+  content: "\f096";
+  margin-right: 15.5px;
+  color: #ccc;
 }
 .termsCheck input[type="checkbox"] + label:before {
   font-family: "FontAwesome";
@@ -549,6 +556,13 @@ input.BTNonoff:checked + label:after {
   left: 20px;
   box-shadow: inset 0 0 0 1px #97bfb8, 0 2px 4px rgba(0, 0, 0, .2);
 }
+#resNew #resInfo #resDateTime #resDate dd a:link, #content #settingForm .formRow .date a, .modal-body #addWorkDay dt a.BTNtarco:link {
+  width: 38px;
+  height: 38px;
+  font-size: 21px;
+  line-height: 34px;
+}
+#resNew #resInfo #resDateTime #resDate dd #start_time_date_part, #settingForm .date input[type="date"] { width: 120px; }
 .window .windowFooter a, .window .windowFooter a:link, .window .windowFooter a:visited { width: 100px; }
 #content form #footerav.changePlan a, #content form #footerav.changePlan a:link, #content form #footerav.changePlan a:visited {
   width: auto;
@@ -694,10 +708,11 @@ input.BTNonoff:checked + label:after {
 #calendar .header select:last-of-type, #calendar .month select#calYear { margin-right: 5px; }
 #calendar .header select:last-of-type, #calendar .month select { background-color: #fff; }
 #calendar .week, #calendar .weekdays, #calendar .days { background: #fff; }
-#calendar .week span, #calendar .weekdays li, #calendar .days li { width: 14.28%; }
+#calendar .week span, #calendar .weekdays li, #calendar .days li { width: 13.4%; }
 #calendar .week span, #calendar .weekdays li {
   display: inline-block;
   text-align: center;
+  margin: 1px;
 }
 #calendar .weekdays li { color: #666; }
 #calendar .week span {
@@ -706,8 +721,9 @@ input.BTNonoff:checked + label:after {
   -webkit-border-radius: 20px; /* Google Chrome、Safari */
   -o-border-radius: 20px; /* Opera */
   -ms-border-radius: 20px; /* Internet Explorer */
-  line-height: 32px;
+  line-height: 26px;
   color: #333;
+  border: 2px solid #fff;
 }
 #calendar .week:not(.names) span:not(.close):hover { cursor: pointer; }
 #calendar .week { border-bottom: 1px solid #d0d0d0; }
@@ -729,9 +745,12 @@ input.BTNonoff:checked + label:after {
   background-repeat: no-repeat;
   background-position: center center;
 }
-#calendar .day.reserved { background: #B3B3B3; }
-#calendar .day.selected { background: #fcbe46; }
+#calendar .day.reserved { background: #dedede; border-color: #dedede; }
+#calendar .day.selected { background: #fcbe46; border-color: #fcbe46; }
+#calendar .day.workDay { border-color: #84b3aa; }
 #calendar .week span.different-month { color: #B3B3B3; }
+#calendar .week span.different-month.workDay { border-color: #aecfc8; }
+#calendar .week span.different-month.reserved { background: #EAEAEA; border-color: #EAEAEA; }
 #calendar .week span.holiday { color: #E00003; }
 /* customer & reservation */
 #customer #resultList ul, #resNew #customerLevels ul {
@@ -824,7 +843,7 @@ input.BTNonoff:checked + label:after {
 .staffs-working-schedules .row { display: table-row; }
 .staffs-working-schedules .cell { display: table-cell; }
 .staffs-working-schedules .staff { text-align: left; }
-.busHours {
+.busHours, .workTime {
   margin-top: 15px;
   border: 1px solid #b3b3b3; 
   background-color: #d0d0d0;
@@ -832,11 +851,25 @@ input.BTNonoff:checked + label:after {
   font-size: 16px;
   color: #666;
 }
-.busHours div:first-child { font-weight: bold; }
-.busHours.close {
+.busHours div:first-child, .workTime div:first-child { font-weight: bold; }
+.busHours.close, .workTime.off {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
   color: #fff;
+}
+.sidel .staffDashboard div { padding-top: 10px; }
+.sidel .staffDashboard a {
+  font-weight: normal;
+  font-size: 16px;
+  width: 100%;
+  padding: 10px 0;
+  line-height: 19px;
+  height: inherit;
+  margin-top: 5px;
+}
+.sidel .staffDashboard a i {
+  font-size: 21px;
+  float: left;
 }
 #resList {
   background: #fff;
@@ -866,9 +899,9 @@ input.BTNonoff:checked + label:after {
   line-height: 1.2em;
   width: 47px;
 }
-#resList .calendar { width: 20%; }
-#resList .menu { width: 20%; }
-#resList .customer { width: 40%; }
+#resList .resSts { width: 33px; }
+#resList .menu, #resList .customer { width: 30%; }
+#resList .shop { width: 20%; }
 #resList .calendar {
   background-repeat: no-repeat;
   background-position: left center;
@@ -1191,12 +1224,14 @@ input.BTNonoff:checked + label:after {
   height: 100%;
   background-color: rgba(0,0,0,0.5);
   z-index: 999;
-  text-align: center;
 }
 .hover_alert div {
   position: absolute;
   top: 50%;
   left: 50%;
+}
+.hover_alert div {
+  text-align: center;
   margin: -100px 0 0 -200px;
   width: 400px;
   height: 200px;
