@@ -81,6 +81,11 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <dd className="status warning"><i className="fa fa-check-circle" aria-hidden="true"></i></dd>
                   ) : null
                 }
+                {
+                  reservation.deletedStaffs ? (
+                    <dd className="status danger"><i className="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+                  ) : null
+                }
               </dl>
             </a>
             <div className="modal fade" id={`reservationModal${reservation.id}`} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -124,6 +129,14 @@ UI.define("Customers.CustomerReservationsView", function() {
                         <div className="warning">
                           <i className="fa fa-check-circle" aria-hidden="true"></i>
                           {this.props.withWarningsMessage}
+                        </div>
+                      ) : null
+                    }
+                    {
+                      reservation.deletedStaffs ? (
+                        <div className="danger">
+                          <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
+                          {reservation.deletedStaffs}
                         </div>
                       ) : null
                     }

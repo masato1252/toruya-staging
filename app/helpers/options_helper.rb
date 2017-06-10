@@ -93,6 +93,8 @@ module OptionsHelper
 
   def reservation_options(reservations)
     reservations.map do |r|
+      sentences = reservation_staff_sentences(r)
+
       React.camelize_props({
         id: r.id,
         year: r.start_time.year,
@@ -105,7 +107,8 @@ module OptionsHelper
         state: r.aasm_state,
         shop_id: r.shop_id,
         customers: r.customers.map { |r| { id: r.id, name: r.name } },
-        staffs: r.staffs.map(&:name).join(", "),
+        staffs: sentences[:staffs_sentence],
+        deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
         memo: simple_format(r.memo),
         with_warnings: r.with_warnings
       })

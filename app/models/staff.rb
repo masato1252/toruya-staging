@@ -36,4 +36,5 @@ class Staff < ApplicationRecord
   validates :first_name, presence: true
 
   scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
 end

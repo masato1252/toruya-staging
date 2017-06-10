@@ -65,6 +65,7 @@ en:
     shop_closed: Shop closed
     memo: Memo
     contain_some_warnings: Containing some warnings
+    deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region
