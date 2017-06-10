@@ -1,8 +1,8 @@
-■担当者の再設定のお願い■
+■担当者が削除されました■
 
 <%= line %>
 
-ご<%= @admin.name %> 様
+ご登録者 様
 
 ご利用中の予約管理システムToruyaにて、スタッフ情報が削除されました。
 
@@ -12,7 +12,9 @@
 現在、上記スタッフが担当者になっている予約データが<%= @reservations.count %>件ありますので、速やかなる担当者の再設定をお勧めいたします。
 
 <%= line %>
+
 削除されたスタッフが担当者になっている予約
+
 <%= line %>
 <% @reservations.each do |reservation| %>
   <%
@@ -21,9 +23,10 @@
                                 "#{customer_names.first} 、他#{customer_names.count - 1}名"
                               else
                                 customer_names.first
-                                end
+                              end
   %>
 <%= reservation.start_time.to_s(:date) %> <%= reservation.start_time.to_s(:time) %>~<%= reservation.end_time.to_s(:time) %> <%= customer_names_sentence %> <%= edit_shop_reservation_url(reservation.shop_id, reservation.id) %>
+
 <%= line %>
 <% end %>
 
