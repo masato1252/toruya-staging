@@ -399,6 +399,7 @@ UI.define("Customers.Dashboard", function() {
             pendBtn={this.props.pendBtn}
             editBtn={this.props.editBtn}
             cancelBtn={this.props.cancelBtn}
+            withWarningsMessage={this.props.withWarningsMessage}
             />
         )
       }
