@@ -76,6 +76,11 @@ UI.define("Customers.CustomerReservationsView", function() {
                 <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
                 <dd className="menu">{reservation.menu}</dd>
                 <dd className="shop">{reservation.shop}</dd>
+                {
+                  reservation.withWarnings ? (
+                    <dd className="status warning"><i className="fa fa-check-circle" aria-hidden="true"></i></dd>
+                  ) : null
+                }
               </dl>
             </a>
             <div className="modal fade" id={`reservationModal${reservation.id}`} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -114,6 +119,14 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <div>
                       {reservation.staffs}
                     </div>
+                    {
+                      reservation.withWarnings ? (
+                        <div className="warning">
+                          <i className="fa fa-check-circle" aria-hidden="true"></i>
+                          {this.props.withWarningsMessage}
+                        </div>
+                      ) : null
+                    }
                     <div dangerouslySetInnerHTML={{ __html: reservation.memo }} />
                   </div>
                   <div className="modal-footer">

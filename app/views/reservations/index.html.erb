@@ -112,9 +112,9 @@
                   <%= staff_names %>
                 </div>
                 <% if reservation.with_warnings %>
-                <div class="warning">
-                  <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
-                </div>
+                  <div class="warning">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
+                  </div>
                 <% end %>
                 <div>
                   <%= simple_format(reservation.memo) %>
