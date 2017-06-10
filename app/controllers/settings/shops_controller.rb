@@ -4,7 +4,7 @@ class Settings::ShopsController < SettingsController
   # GET /shops
   # GET /shops.json
   def index
-    @shops = current_user.shops.order("id").all
+    @shops = super_user.shops.order("id").all
     @body_class = "businessSchedules"
   end
 
@@ -15,7 +15,7 @@ class Settings::ShopsController < SettingsController
 
   # GET /shops/new
   def new
-    @shop = current_user.shops.new
+    @shop = super_user.shops.new
   end
 
   # GET /shops/1/edit
@@ -25,7 +25,7 @@ class Settings::ShopsController < SettingsController
   # POST /shops
   # POST /shops.json
   def create
-    @shop = current_user.shops.new(shop_params)
+    @shop = super_user.shops.new(shop_params)
 
     respond_to do |format|
       if @shop.save
@@ -65,7 +65,7 @@ class Settings::ShopsController < SettingsController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_shop
-    @shop = current_user.shops.find(params[:id])
+    @shop = super_user.shops.find(params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

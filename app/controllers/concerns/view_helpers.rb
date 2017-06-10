@@ -23,7 +23,7 @@ module ViewHelpers
   end
 
   def staffs
-    @staffs ||= current_user.staffs.active
+    @staffs ||= super_user.staffs.active
   end
 
   # Use callbacks to share common setup or constraints between actions.
