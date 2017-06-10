@@ -8,10 +8,11 @@
 UI.define("Reservation.Form", function() {
   var ReservationForm = React.createClass({
     statics: {
-      errors: ["shop_closed", "unworking_staff", "time_not_enough", "unschedule_menu", "start_yet", "is_over"],
-      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "not_enough_seat", "not_enough_ability"],
+      errors: ["shop_closed", "unworking_staff", "time_not_enough", "start_yet", "is_over"],
+      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
+                 "not_enough_seat", "not_enough_ability"],
       menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
-      menu_danger_errors: ["unschedule_menu", "start_yet", "is_over"],
+      menu_danger_errors: ["start_yet", "is_over"],
       staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
       staff_danger_errors: ["unworking_staff"]
     },
