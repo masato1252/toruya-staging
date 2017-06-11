@@ -1,7 +1,7 @@
 <%
   if current_user.member?
     menu_id ||= local_assigns[:menu_id]
-    menu_id ||= params[:menu_id].present? ? params[:menu_id].to_i : @menu_result[:menu_options].first.id
+    menu_id ||= params[:menu_id].present? ? params[:menu_id].to_i : @menu_result[:menu_options].first.try(:id)
     min_staffs_number = shop.menus.find_by(id: menu_id).min_staffs_number
     menu_group_options = menu_group_options(@menu_result[:category_with_menu_options])
     staff_options = staff_options(@staff_options, [])
