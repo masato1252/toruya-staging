@@ -15,8 +15,7 @@ module AccountRequirement
   end
 
   def check_requirement
-
-    if super_user
+    if is_owner
       if !session[:user_name_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last)
           flash[:alert] = I18n.t("requirement.profile_redirect_message")
@@ -86,49 +85,49 @@ module AccountRequirement
   end
 
   def require_user_name
-    if !session[:user_name_checking] && super_user && super_user.name
+    if !session[:user_name_checking] && is_owner && super_user.name
       session[:user_name_checking] = true
     end
   end
 
   def require_contacts
-    if !session[:contact_checking] && super_user && super_user.uid && super_user.contact_groups.connected.exists?
+    if !session[:contact_checking] && is_owner && super_user.uid && super_user.contact_groups.connected.exists?
       session[:contact_checking] = true
     end
   end
 
   def require_shop
-    if !session[:shop_checking] && super_user && super_user.shops.exists?
+    if !session[:shop_checking] && is_owner && super_user.shops.exists?
       session[:shop_checking] = true
     end
   end
 
   def require_business_hours
-    if !session[:business_hours_checking] && super_user && BusinessSchedule.where(shop_id: super_user.shop_ids).exists?
+    if !session[:business_hours_checking] && is_owner && BusinessSchedule.where(shop_id: super_user.shop_ids).exists?
       session[:business_hours_checking] = true
     end
   end
 
   def require_staffs
-    if !session[:staffs_checking] && super_user && super_user.staffs.exists?
+    if !session[:staffs_checking] && is_owner && super_user.staffs.exists?
       session[:staffs_checking] = true
     end
   end
 
   def require_working_times
-    if !session[:working_time_checking] && super_user && BusinessSchedule.where(staff_id: super_user.staff_ids).exists?
+    if !session[:working_time_checking] && is_owner && BusinessSchedule.where(staff_id: super_user.staff_ids).exists?
       session[:working_time_checking] = true
     end
   end
 
   def require_reservation_settings
-    if !session[:reservation_settings_checking] && super_user && super_user.reservation_settings.exists?
+    if !session[:reservation_settings_checking] && is_owner && super_user.reservation_settings.exists?
       session[:reservation_settings_checking] = true
     end
   end
 
   def require_menu
-    if !session[:menu_checking] && super_user && super_user.menus.exists?
+    if !session[:menu_checking] && is_owner && super_user.menus.exists?
       session[:menu_checking] = true
     end
   end

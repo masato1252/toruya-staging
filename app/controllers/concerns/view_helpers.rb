@@ -4,6 +4,7 @@ module ViewHelpers
   included do
     skip_before_action :verify_authenticity_token
     protect_from_forgery prepend: true, with: :exception
+    before_action :set_header_setting
     before_action :authenticate_user!
     helper_method :shops
     helper_method :shop
@@ -16,7 +17,6 @@ module ViewHelpers
     @shops ||= super_user.shops
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def shop
     @shop ||= Shop.find_by(id: params[:shop_id])
   end
@@ -25,9 +25,8 @@ module ViewHelpers
     @staffs ||= super_user.staffs.active
   end
 
-  # Use callbacks to share common setup or constraints between actions.
   def staff
-    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.staffs.active.first
+    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.owner_staff_accounts.find_by(user_id: current_user.id).try(:staff) || super_user.staffs.active.first
   end
 
   def super_user
@@ -36,5 +35,13 @@ module ViewHelpers
 
   def current_ability
     @current_ability ||= Ability.new(current_user, super_user)
+  end
+
+  def is_owner
+    super_user == current_user
+  end
+
+  def set_header_setting
+    @header_setting = true
   end
 end

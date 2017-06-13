@@ -23,7 +23,7 @@
     <% end %>
   </dl>
   <dl>
-    <% if controller_name != "home" && super_user %>
+    <% if @header_setting %>
       <dd>
         <%= active_link_to settings_user_shops_path(super_user), active: /^\/settings/, class_active: "here" do %>
           <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
