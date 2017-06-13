@@ -27,14 +27,26 @@ class Settings::StaffsController < SettingsController
   # POST /staffs
   # POST /staffs.json
   def create
-    @staff = super_user.staffs.new(staff_params)
     authorize! :create, Staff
 
+    staff_outcome = Staffs::Create.run(user: super_user, attrs: params[:staff].permit!.to_h)
+    staff = staff_outcome.result
+
+    StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
+    params.permit![:business_schedules].each do |shop_id, attrs|
+      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: staff, attrs: attrs.to_h)
+    end
+
+    params.permit![:shop_staff].each do |shop_id, attrs|
+      staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    end
+
     respond_to do |format|
-      if @staff.save
+      if staff_outcome.valid?
         format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
+        # @staff ???
         @shops = super_user.shops
         format.html { render :new }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
@@ -45,8 +57,15 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = Staffs::Update.run(staff: @staff, attrs: staff_params.to_h)
-    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
+    outcome = Staffs::Update.run(staff: @staff, attrs: params[:staff].permit!.to_h)
+    StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
+    params.permit![:business_schedules].each do |shop_id, attrs|
+      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+    end
+
+    params.permit![:shop_staff].each do |shop_id, attrs|
+      @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    end
 
     respond_to do |format|
       if outcome.valid?

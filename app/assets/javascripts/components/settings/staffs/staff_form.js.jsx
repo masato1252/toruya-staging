@@ -1,0 +1,158 @@
+"use strict";
+
+UI.define("Settings.Staff.Formfields", function() {
+  var StaffFormfields = React.createClass({
+    getInitialState: function() {
+      return ({
+        staffShopOptions: this.props.staffShopOptions,
+        shopDisplaying: {}
+      });
+    },
+
+    renderWorkShops: function() {
+      return (
+        this.state.staffShopOptions.map(function(option) {
+          return (
+            <dl className="checkbox" key={`shop-${option.shop_id}`}>
+              <dd>
+                <input
+                  type="checkbox"
+                  id={`shop-${option.shop_id}`}
+                  name="staff[shop_ids][]"
+                  value={option.shop_id}
+                  data-value={option.shop_id}
+                  checked={option.work_here}
+                  onChange={this.handleStaffWorkOption}
+                  />
+                <label htmlFor={`shop-${option.shop_id}`}>
+                  {option.name}
+                </label>
+              </dd>
+            </dl>
+          )
+        }.bind(this))
+      );
+    },
+
+    selectedStaffShopOption: function(shop_id) {
+      return _.find(this.state.staffShopOptions, function(option) {
+        return option.shop_id == shop_id
+      });
+    },
+
+    workingShopOptions: function() {
+      return _.filter(this.state.staffShopOptions, function(option) {
+        return option.work_here
+      })
+    },
+
+    handleStaffWorkOption: function(event) {
+      var matchedOption = this.selectedStaffShopOption(event.target.dataset.value)
+      matchedOption.work_here = !matchedOption.work_here;
+
+      this.setState({staffShopOptions: this.state.staffShopOptions});
+    },
+
+    handleShopFullTime: function(event) {
+      var matchedOption = this.selectedStaffShopOption(event.target.dataset.value)
+      matchedOption.is_full_time_schedule = !matchedOption.is_full_time_schedule;
+
+      this.setState({staffShopOptions: this.state.staffShopOptions});
+    },
+
+    toggleStaffShopView: function(shopId) {
+      if (this.state.shopDisplaying[shopId]) {
+        this.state.shopDisplaying[shopId] = false;
+      }
+      else {
+        this.state.shopDisplaying[shopId] = true;
+      }
+
+      this.setState(this.state.shopDisplaying);
+    },
+
+    renderStaffSchedulePermission: function() {
+      var view = this.workingShopOptions().map(function(option) {
+          return (
+            <div key={`working-shop-option-${option.shop_id}`}>
+              <dl className="formTTL">
+                <dt>{option.name}</dt>
+                <dd><i className="fa fa-plus-square-o" aria-hidden="true"></i></dd>
+              </dl>
+
+              <dl className="onoffSetting"><dt>Full time（常勤スタッフ）</dt>
+                <dd>
+                <input type="hidden" name={`business_schedules[${option.shop_id}][full_time]`} value="0" />
+                <input type="checkbox" className="BTNonoff"
+                  id={`alwaysINshop-${option.shop_id}`}
+                  name={`business_schedules[${option.shop_id}][full_time]`}
+                  value="1"
+                  data-value={option.shop_id}
+                  checked={option.is_full_time_schedule}
+                  onChange={this.handleShopFullTime}
+                  />
+                  <label htmlFor={`alwaysINshop-${option.shop_id}`}></label>
+                  {
+                    option.full_time_schedule_id ? (
+                      <input type="hidden"
+                        name={`business_schedules[${option.shop_id}][id]`}
+                        value={option.full_time_schedule_id} />
+                    ) : null
+                  }
+                </dd>
+              </dl>
+              <input type="hidden" name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`} value="0" />
+              {
+                !option.is_full_time_schedule ? (
+                  <dl className="onoffSetting">
+                    <dt>Allow staff to set own basic work-day（スタッフによる出勤日の基本設定を許可）</dt>
+                    <dd>
+                      <input type="checkbox" className="BTNonoff" id={`allowWork-${option.shop_id}`} defaultValue="1"
+                        name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`}
+                        defaultChecked={option.regular_schedule_permission}
+                      />
+                      <label htmlFor={`allowWork-${option.shop_id}`}></label>
+                    </dd>
+                  </dl>
+                ) : null
+              }
+              <input type="hidden" name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`} value="0" />
+              {
+                !option.is_full_time_schedule ? (
+                  <dl className="onoffSetting">
+                    <dt>Allow staff to set own temporary work-day（スタッフによる臨時出勤の設定を許可）</dt>
+                    <dd>
+                      <input type="checkbox" className="BTNonoff" id={`allowTempWork-${option.shop_id}`} defaultValue="1"
+                        name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`}
+                        defaultChecked={option.temporary_working_day_permission}
+                      />
+                      <label htmlFor={`allowTempWork-${option.shop_id}`}></label>
+                    </dd>
+                  </dl>
+                ) : null
+              }
+            </div>
+          )
+      }.bind(this))
+      return view;
+    },
+
+    render: function() {
+      return (
+        <div>
+          <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
+          <div id="belong" className="formRow">
+            <input type="hidden" name="staff[shop_ids][]" value="" />
+            {this.renderWorkShops()}
+          </div>
+          <h3>Working-Day Setting（勤務日時設定）</h3>
+          <div className="formRow">
+            {this.renderStaffSchedulePermission()}
+          </div>
+        </div>
+      );
+    }
+  });
+
+  return StaffFormfields;
+});

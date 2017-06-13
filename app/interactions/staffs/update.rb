@@ -8,6 +8,7 @@ module Staffs
       string :last_name, default: nil
       string :phonetic_first_name, default: nil
       string :phonetic_last_name, default: nil
+      boolean :staff_holiday_permission, default: false
       array :shop_ids, default: nil
     end
 
