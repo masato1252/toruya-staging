@@ -5,7 +5,7 @@ UI.define("Settings.Staff.Formfields", function() {
     getInitialState: function() {
       return ({
         staffShopOptions: this.props.staffShopOptions,
-        shopDisplaying: {}
+        shopInvisible: {}
       });
     },
 
@@ -61,74 +61,88 @@ UI.define("Settings.Staff.Formfields", function() {
     },
 
     toggleStaffShopView: function(shopId) {
-      if (this.state.shopDisplaying[shopId]) {
-        this.state.shopDisplaying[shopId] = false;
+      if (this.state.shopInvisible[shopId]) {
+        this.state.shopInvisible[shopId] = false;
       }
       else {
-        this.state.shopDisplaying[shopId] = true;
+        this.state.shopInvisible[shopId] = true;
       }
 
-      this.setState(this.state.shopDisplaying);
+      this.setState(this.state.shopInvisible);
     },
 
     renderStaffSchedulePermission: function() {
       var view = this.workingShopOptions().map(function(option) {
           return (
             <div key={`working-shop-option-${option.shop_id}`}>
-              <dl className="formTTL">
+              <dl className="formTTL" onClick={this.toggleStaffShopView.bind(this, `staff_shop_settings_${option.shop_id}`)}>
                 <dt>{option.name}</dt>
-                <dd><i className="fa fa-plus-square-o" aria-hidden="true"></i></dd>
-              </dl>
-
-              <dl className="onoffSetting"><dt>Full time（常勤スタッフ）</dt>
                 <dd>
-                <input type="hidden" name={`business_schedules[${option.shop_id}][full_time]`} value="0" />
-                <input type="checkbox" className="BTNonoff"
-                  id={`alwaysINshop-${option.shop_id}`}
-                  name={`business_schedules[${option.shop_id}][full_time]`}
-                  value="1"
-                  data-value={option.shop_id}
-                  checked={option.is_full_time_schedule}
-                  onChange={this.handleShopFullTime}
-                  />
-                  <label htmlFor={`alwaysINshop-${option.shop_id}`}></label>
                   {
-                    option.full_time_schedule_id ? (
-                      <input type="hidden"
-                        name={`business_schedules[${option.shop_id}][id]`}
-                        value={option.full_time_schedule_id} />
-                    ) : null
+                     this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
+                       <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                     ) : (
+                       <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                     )
                   }
                 </dd>
               </dl>
-              <input type="hidden" name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`} value="0" />
+
               {
-                !option.is_full_time_schedule ? (
-                  <dl className="onoffSetting">
-                    <dt>Allow staff to set own basic work-day（スタッフによる出勤日の基本設定を許可）</dt>
+                !this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
+                  <div>
+                  <dl className="onoffSetting"><dt>Full time（常勤スタッフ）</dt>
                     <dd>
-                      <input type="checkbox" className="BTNonoff" id={`allowWork-${option.shop_id}`} defaultValue="1"
-                        name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`}
-                        defaultChecked={option.regular_schedule_permission}
+                    <input type="hidden" name={`business_schedules[${option.shop_id}][full_time]`} value="0" />
+                    <input type="checkbox" className="BTNonoff"
+                      id={`alwaysINshop-${option.shop_id}`}
+                      name={`business_schedules[${option.shop_id}][full_time]`}
+                      value="1"
+                      data-value={option.shop_id}
+                      checked={option.is_full_time_schedule}
+                      onChange={this.handleShopFullTime}
                       />
-                      <label htmlFor={`allowWork-${option.shop_id}`}></label>
+                      <label htmlFor={`alwaysINshop-${option.shop_id}`}></label>
+                      {
+                        option.full_time_schedule_id ? (
+                          <input type="hidden"
+                            name={`business_schedules[${option.shop_id}][id]`}
+                            value={option.full_time_schedule_id} />
+                        ) : null
+                      }
                     </dd>
                   </dl>
-                ) : null
-              }
-              <input type="hidden" name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`} value="0" />
-              {
-                !option.is_full_time_schedule ? (
-                  <dl className="onoffSetting">
-                    <dt>Allow staff to set own temporary work-day（スタッフによる臨時出勤の設定を許可）</dt>
-                    <dd>
-                      <input type="checkbox" className="BTNonoff" id={`allowTempWork-${option.shop_id}`} defaultValue="1"
-                        name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`}
-                        defaultChecked={option.temporary_working_day_permission}
-                      />
-                      <label htmlFor={`allowTempWork-${option.shop_id}`}></label>
-                    </dd>
-                  </dl>
+                  <input type="hidden" name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`} value="0" />
+                  {
+                    !option.is_full_time_schedule ? (
+                      <dl className="onoffSetting">
+                        <dt>Allow staff to set own basic work-day（スタッフによる出勤日の基本設定を許可）</dt>
+                        <dd>
+                          <input type="checkbox" className="BTNonoff" id={`allowWork-${option.shop_id}`} defaultValue="1"
+                            name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`}
+                            defaultChecked={option.regular_schedule_permission}
+                          />
+                          <label htmlFor={`allowWork-${option.shop_id}`}></label>
+                        </dd>
+                      </dl>
+                    ) : null
+                  }
+                  <input type="hidden" name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`} value="0" />
+                  {
+                    !option.is_full_time_schedule ? (
+                      <dl className="onoffSetting">
+                        <dt>Allow staff to set own temporary work-day（スタッフによる臨時出勤の設定を許可）</dt>
+                        <dd>
+                          <input type="checkbox" className="BTNonoff" id={`allowTempWork-${option.shop_id}`} defaultValue="1"
+                            name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`}
+                            defaultChecked={option.temporary_working_day_permission}
+                          />
+                          <label htmlFor={`allowTempWork-${option.shop_id}`}></label>
+                        </dd>
+                      </dl>
+                    ) : null
+                  }
+                </div>
                 ) : null
               }
             </div>
