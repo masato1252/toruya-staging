@@ -16,7 +16,11 @@
         <dt><%= staff.name %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_user_working_time_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% if params[:mode] == "working_schedules" %>
+            <%= link_to t("action.edit"), working_schedules_settings_user_working_time_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% else %>
+            <%= link_to t("action.edit"), holiday_schedules_settings_user_working_time_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% end %>
         </dd>
       </dl>
     <% end %>

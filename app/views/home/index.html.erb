@@ -7,7 +7,7 @@
           <%= link_to shop.name, shop_reservations_path(shop), class: "BTNorange" %>
         </div>
       <% end %>
-      <%= link_to settings_user_shops_path(shop_owner) do %>
+      <%= link_to settings_path(shop_owner) do %>
         <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
         設定
       <% end %>

@@ -1,5 +1,6 @@
 class Settings::StaffsController < SettingsController
   before_action :set_staff, only: [:show, :edit, :update, :destroy]
+  skip_before_action :admin_required, only: [:edit, :update]
 
   # GET /staffs
   # GET /staffs.json
@@ -35,11 +36,11 @@ class Settings::StaffsController < SettingsController
     StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
     params.permit![:business_schedules].each do |shop_id, attrs|
       BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: staff, attrs: attrs.to_h)
-    end
+    end if params[:business_schedules]
 
     params.permit![:shop_staff].each do |shop_id, attrs|
       staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
-    end
+    end if params[:shop_staff]
 
     respond_to do |format|
       if staff_outcome.valid?
@@ -58,18 +59,31 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1.json
   def update
     outcome = Staffs::Update.run(staff: @staff, attrs: params[:staff].permit!.to_h)
-    StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
-    params.permit![:business_schedules].each do |shop_id, attrs|
-      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+    if params[:staff_account]
+      StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
     end
 
-    params.permit![:shop_staff].each do |shop_id, attrs|
-      @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    if params[:business_schedules]
+      params.permit![:business_schedules].each do |shop_id, attrs|
+        BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+      end
+    end
+
+    if params[:shop_staff]
+      params.permit![:shop_staff].each do |shop_id, attrs|
+        @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+      end
     end
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message") }
+        format.html do
+          if can?(:manage, Settings)
+            redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
+          else
+            redirect_to edit_settings_user_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
+          end
+        end
         format.json { render :show, status: :ok, location: @staff }
       else
         @shops = super_user.shops

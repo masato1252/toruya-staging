@@ -63,8 +63,12 @@ class User < ApplicationRecord
     true
   end
 
-  def staff_account_in_shop(shop)
-    shop.user.staff_accounts.find_by(user: self, active_uniqueness: true).try(:staff)
+  def current_staff_account(super_user)
+    @current_staff_account ||= super_user.owner_staff_accounts.find_by(user_id: self.id)
+  end
+
+  def current_staff(super_user)
+    @current_staff ||= current_staff_account(super_user).try(:staff)
   end
 
   private

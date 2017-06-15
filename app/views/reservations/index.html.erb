@@ -34,12 +34,17 @@
       <% if staff_schedule_requirement_condition %>
         <div class="staffDashboard">
           <div class="edit-worktime">
-            <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
-              出勤日を追加
-            </a>
-            <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
-              休暇を追加
-            </a>
+            <% if can? :update_temoporay_working_schedule, shop %>
+              <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+                出勤日を追加
+              </a>
+            <% end %>
+
+            <% if can? :manage, :staff_holiday_permission%>
+              <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+                休暇を追加
+              </a>
+            <% end %>
           </div>
         </div>
       <% end %>
@@ -227,7 +232,7 @@
                 calendarfield_prefix: "temp_working_schedules_#{shop.id}"
               }) %>
               <div class="shops-list">
-                <% shops.each do |s| %>
+                <% staff.shops.each do |s| %>
                   <div class="shop-cell">
                     <%= check_box_tag "shop_ids[]", s.id, s.id == shop.id, id: "shop-#{s.id}-schedule" %>
                     <%= label_tag "shop-#{s.id}-schedule", s.name %>

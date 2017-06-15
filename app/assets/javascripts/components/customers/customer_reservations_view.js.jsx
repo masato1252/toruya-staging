@@ -32,7 +32,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           $.ajax({
             type: "GET",
             url: _this.props.customerReservationsPath,
-            data: { id: _this.props.customer.id },
+            data: { id: _this.props.customer.id, shop_id: _this.props.shop.id},
             dataType: "JSON"
           }).success(function(result) {
             _this.setState({ reservations: result["reservations"] });

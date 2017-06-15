@@ -61,7 +61,12 @@ Rails.application.routes.draw do
       resources :ranks, except: [:show]
 
       namespace :working_time do
-        resources :staffs, only: [:index, :edit, :update]
+        resources :staffs, only: [:index, :update] do
+          member do
+            get :working_schedules
+            get :holiday_schedules
+          end
+        end
       end
 
       resources :shops, except: [:show] do
@@ -100,5 +105,6 @@ Rails.application.routes.draw do
     mount Delayed::Web::Engine, at: "/_jobs"
   end
 
+  get "settings/:super_user_id", to: "home#settings", as: :settings
   root to: "home#index"
 end

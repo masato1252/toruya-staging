@@ -6,6 +6,7 @@ module ViewHelpers
     protect_from_forgery prepend: true, with: :exception
     before_action :set_header_setting
     before_action :authenticate_user!
+    before_action :authenticate_user_permission!
     helper_method :shops
     helper_method :shop
     helper_method :staffs
@@ -14,7 +15,13 @@ module ViewHelpers
   end
 
   def shops
-    @shops ||= super_user.shops
+    @shops ||= if can?(:manage, :all_shops_selector)
+                 super_user.shops.order("id")
+               else
+                 # TODO: Need to know staff account permission.
+                 # current_user.current_staff(super_user).shops.order("id")
+                 super_user.shops.order("id")
+               end
   end
 
   def shop
@@ -22,11 +29,11 @@ module ViewHelpers
   end
 
   def staffs
-    @staffs ||= super_user.staffs.active
+    @staffs ||= super_user.staffs.active.order("id")
   end
 
   def staff
-    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || super_user.owner_staff_accounts.find_by(user_id: current_user.id).try(:staff) || super_user.staffs.active.first
+    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
   end
 
   def super_user
@@ -43,5 +50,11 @@ module ViewHelpers
 
   def set_header_setting
     @header_setting = true
+  end
+
+  def authenticate_user_permission!
+    if !is_owner && !current_user.current_staff_account(super_user).try(:active?)
+      head :not_found
+    end
   end
 end

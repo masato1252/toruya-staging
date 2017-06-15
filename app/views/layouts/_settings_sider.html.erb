@@ -43,14 +43,40 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
-          active: [["settings/staffs"]],
-          wrap_tag: :li,
-          class_active: "here" %>
-        <%= active_link_to "勤務日時", settings_user_working_time_staffs_path(super_user),
-          active: [["settings/working_time/staffs"]],
-          wrap_tag: :li,
-          class_active: "here" %>
+        <% if can? :manage, Settings %>
+          <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
+            active: [["settings/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+
+          <%= active_link_to "Work Time", settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+            active: [["settings/working_time/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+          <%= active_link_to "Holiday", settings_user_working_time_staffs_path(super_user, mode: "holiday_schedules"),
+            active: [["settings/working_time/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+        <% else %>
+          <%= active_link_to t("settings.staff.info_title"),
+            edit_settings_user_staff_path(super_user, current_user.current_staff(super_user)),
+            active: [["settings/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+            <% if can?(:manage, :staff_regular_working_day_permission) || can?(:manage, :staff_temporary_working_day_permission) %>
+              <%= active_link_to "Work Time", working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+                active: [["settings/working_time/staffs"]],
+                wrap_tag: :li,
+                class_active: "here" %>
+            <% end %>
+            <% if can?(:manage, :staff_holiday_permission) %>
+              <%= active_link_to "Holiday", holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+                active: [["settings/working_time/staffs"]],
+                wrap_tag: :li,
+                class_active: "here" %>
+            <% end %>
+        <% end %>
+
       </ul>
     </dd>
   </dl>
