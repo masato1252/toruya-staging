@@ -91,7 +91,7 @@ UI.define("Settings.Staff.Formfields", function() {
               {
                 !this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
                   <div>
-                  <dl className="onoffSetting"><dt>Full time（常勤スタッフ）</dt>
+                  <dl className="onoffSetting"><dt>{this.props.fullTimePermission}</dt>
                     <dd>
                     <input type="hidden" name={`business_schedules[${option.shop_id}][full_time]`} value="0" />
                     <input type="checkbox" className="BTNonoff"
@@ -116,7 +116,7 @@ UI.define("Settings.Staff.Formfields", function() {
                   {
                     !option.is_full_time_schedule ? (
                       <dl className="onoffSetting">
-                        <dt>Allow staff to set own basic work-day（スタッフによる出勤日の基本設定を許可）</dt>
+                        <dt>{this.props.regularWorkingTimePermission}</dt>
                         <dd>
                           <input type="checkbox" className="BTNonoff" id={`allowWork-${option.shop_id}`} defaultValue="1"
                             name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`}
@@ -131,7 +131,7 @@ UI.define("Settings.Staff.Formfields", function() {
                   {
                     !option.is_full_time_schedule ? (
                       <dl className="onoffSetting">
-                        <dt>Allow staff to set own temporary work-day（スタッフによる臨時出勤の設定を許可）</dt>
+                        <dt>{this.props.temporaryWorkingTimePermission}</dt>
                         <dd>
                           <input type="checkbox" className="BTNonoff" id={`allowTempWork-${option.shop_id}`} defaultValue="1"
                             name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`}
@@ -159,7 +159,7 @@ UI.define("Settings.Staff.Formfields", function() {
             <input type="hidden" name="staff[shop_ids][]" value="" />
             {this.renderWorkShops()}
           </div>
-          <h3>Working-Day Setting（勤務日時設定）</h3>
+          <h3>{this.props.workingSettingTitle}</h3>
           <div className="formRow">
             {this.renderStaffSchedulePermission()}
           </div>

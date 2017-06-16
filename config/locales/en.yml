@@ -171,6 +171,16 @@ en:
       new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       shop_label: Belonging Shop
+      delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
+      work_time: Work Time
+      holiday_time: Holiday
+    staff_account:
+      info_title: Staff Account
+      using_staff_account: Use staff acccount
+      email: Email
+      capability: Capability
+      staff_capability: Staff
+      admin_capability: Admin
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.
@@ -179,6 +189,13 @@ en:
       end_label: End
       reason_of_closing: Reason of closing
       closing_reason: Reason of closing
+      setting_title: Working-Day Setting
+      full_time_permission: Full time
+      regular_working_time_permission: Allow staff to set own basic work-day
+      temporary_working_time_permission: Allow staff to set own temporary work-day
+    staff_holiday_time:
+      setting_title: Off-day Setting
+      holiday_permission: Allow staff to set temporary off-day
     contact:
       info_title: Contact
       new_title : Add a New Contact

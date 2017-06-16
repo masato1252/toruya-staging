@@ -32,10 +32,10 @@
     </div>
 
     <% if can? :manage, Settings %>
-      <h3>Staff Account<strong>必須項目</strong></h3>
+      <h3><%= t("settings.staff_account.info_title") %><strong>必須項目</strong></h3>
       <div id="staffAccount" class="formRow">
         <dl class="onoffSetting">
-          <dt>Use staff account（スタッフアカウントを利用する）</dt>
+          <dt><%= t("settings.staff_account.using_staff_account") %></dt>
           <dd>
             <input name="staff_account[enabled]" type="hidden" value="false" />
             <%= check_box_tag "staff_account[enabled]", true, (@staff_account ? !@staff_account.disabled? : true),
@@ -44,22 +44,23 @@
           </dd>
         </dl>
         <dl>
-          <dt>Email</dt>
+          <dt><%= t("settings.staff_account.email") %></dt>
           <dd>
-            <%= text_field_tag "staff_account[email]", @staff_account.try(:email), placeholder: "Email", size: 40 %>
+            <%= text_field_tag "staff_account[email]", @staff_account.try(:email),
+              placeholder: t("settings.staff_account.email"), size: 40 %>
           </dd>
         </dl>
         <dl>
-          <dt>Capability</dt>
+          <dt><%= t("settings.staff_account.capability") %></dt>
           <dd>
             <div class="BTNselect">
               <div>
                 <%= radio_button("staff_account", "level", "staff", id: "accountCapability1", class: "BTNselect") %>
-                <label for="accountCapability1"><span>Staff</span></label>
+                <label for="accountCapability1"><span><%= t("settings.staff_account.staff_capability") %></span></label>
               </div>
               <div>
                 <%= radio_button("staff_account", "level", "admin", id: "accountCapability2", class: "BTNselect") %>
-                <label for="accountCapability2"><span>Admin</span></label>
+                <label for="accountCapability2"><span><%= t("settings.staff_account.admin_capability") %></span></label>
               </div>
             </div>
           </dd>
@@ -87,13 +88,17 @@
       %>
       <%= react_component "UI.Settings.Staff.Formfields", {
         shopLabel: t("settings.staff.shop_label"),
-        staff_shop_options: staff_shop_options
+        staff_shop_options: staff_shop_options,
+        working_setting_title: t("settings.staff_working_time.setting_title"),
+        full_time_permission: t("settings.staff_working_time.setting_title"),
+        regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
+        temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission")
       } %>
 
-      <h3>Off-day Setting（休暇設定）</h3>
+      <h3><%= t("settings.staff_holiday_time.setting_title") %></h3>
       <div class="formRow">
         <dl class="onoffSetting">
-          <dt>Allow staff to set temporary off-day（スタッフによる休暇の設定を許可）</dt>
+          <dt><%= t("settings.staff_holiday_time.holiday_permission") %></dt>
           <dd>
             <%= f.check_box :staff_holiday_permission, class: "BTNonoff", id: "allowTempOff" %>
             <label for="allowTempOff"></label>

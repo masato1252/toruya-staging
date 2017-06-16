@@ -34,6 +34,7 @@ class Settings::StaffsController < SettingsController
     staff = staff_outcome.result
 
     StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
+
     params.permit![:business_schedules].each do |shop_id, attrs|
       BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: staff, attrs: attrs.to_h)
     end if params[:business_schedules]
@@ -59,21 +60,16 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1.json
   def update
     outcome = Staffs::Update.run(staff: @staff, attrs: params[:staff].permit!.to_h)
-    if params[:staff_account]
-      StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h)
-    end
 
-    if params[:business_schedules]
-      params.permit![:business_schedules].each do |shop_id, attrs|
-        BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
-      end
-    end
+    StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
 
-    if params[:shop_staff]
-      params.permit![:shop_staff].each do |shop_id, attrs|
-        @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
-      end
-    end
+    params.permit![:business_schedules].each do |shop_id, attrs|
+      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
+    end if params[:business_schedules]
+
+    params.permit![:shop_staff].each do |shop_id, attrs|
+      @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    end if params[:shop_staff]
 
     respond_to do |format|
       if outcome.valid?

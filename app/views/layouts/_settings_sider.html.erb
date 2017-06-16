@@ -49,11 +49,11 @@
             wrap_tag: :li,
             class_active: "here" %>
 
-          <%= active_link_to "Work Time", settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+          <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
             active: [["settings/working_time/staffs"]],
             wrap_tag: :li,
             class_active: "here" %>
-          <%= active_link_to "Holiday", settings_user_working_time_staffs_path(super_user, mode: "holiday_schedules"),
+          <%= active_link_to t("settings.staff.holiday_time"), settings_user_working_time_staffs_path(super_user, mode: "holiday_schedules"),
             active: [["settings/working_time/staffs"]],
             wrap_tag: :li,
             class_active: "here" %>
@@ -64,13 +64,13 @@
             wrap_tag: :li,
             class_active: "here" %>
             <% if can?(:manage, :staff_regular_working_day_permission) || can?(:manage, :staff_temporary_working_day_permission) %>
-              <%= active_link_to "Work Time", working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+              <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
                 active: [["settings/working_time/staffs"]],
                 wrap_tag: :li,
                 class_active: "here" %>
             <% end %>
             <% if can?(:manage, :staff_holiday_permission) %>
-              <%= active_link_to "Holiday", holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+              <%= active_link_to t("settings.staff.holiday_time"), holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
                 active: [["settings/working_time/staffs"]],
                 wrap_tag: :li,
                 class_active: "here" %>

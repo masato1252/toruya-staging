@@ -175,6 +175,15 @@ ja:
       name: 氏名
       shop_label: 勤務店舗
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
+      work_time: 勤務時間
+      holiday_time: 休暇
+    staff_account:
+      info_title: スタッフアカウント
+      using_staff_account: スタッフアカウントを利用する
+      email: メールアドレス
+      capability: 権限
+      staff_capability: スタッフ
+      admin_capability: 管理者
     staff_working_time:
       info_1: スタッフの勤務日時です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
@@ -183,6 +192,13 @@ ja:
       end_label: 退勤予定
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
+      setting_title: 勤務日時設定
+      full_time_permission: 常勤スタッフ
+      regular_working_time_permission: スタッフによる出勤日の基本設定を許可
+      temporary_working_time_permission: スタッフによる臨時出勤の設定を許可
+    staff_holiday_time:
+      setting_title: 休暇設定
+      holiday_permission: スタッフによる休暇の設定を許可
     contact:
       info_title: Google同期設定
       new_title: 新規台帳作成

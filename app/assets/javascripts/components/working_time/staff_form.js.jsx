@@ -77,7 +77,11 @@ UI.define("WorkingTime.StaffForm", function() {
       if (this.props.mode == "working_schedules") {
         return (
           <div>
-            <h3>勤務日時<strong>必須項目</strong></h3>
+            {
+              this.partTimeShops().length ? (
+                <h3>勤務日時<strong>必須項目</strong></h3>
+              ) : <h3>常勤</h3>
+            }
             {
               this.partTimeShops().map(function(shop) {
                 return (
