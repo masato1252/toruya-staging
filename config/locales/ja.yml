@@ -193,7 +193,7 @@ ja:
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
       setting_title: 勤務日時設定
-      full_time_permission: 常勤スタッフ
+      full_time_permission: 常勤
       regular_working_time_permission: スタッフによる出勤日の基本設定を許可
       temporary_working_time_permission: スタッフによる臨時出勤の設定を許可
     staff_holiday_time:
