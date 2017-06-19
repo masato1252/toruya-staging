@@ -10,7 +10,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @mode = "working_schedules"
     @staff = super_user.staffs.find_by(id: params[:id])
     @full_time_schedules = @staff.business_schedules.full_time
-    @wdays_business_schedules_by_shop = @staff.business_schedules.order(:day_of_week).group_by(&:shop_id)
+    @wdays_business_schedules_by_shop = @staff.business_schedules.part_time.order(:day_of_week).group_by(&:shop_id)
     @opened_custom_schedules_by_shop = @staff.custom_schedules.future.opened.order(:start_time).group_by(&:shop_id)
 
     render :edit
