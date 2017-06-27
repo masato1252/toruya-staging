@@ -190,7 +190,7 @@ en:
       name: Name
       sync_google: Sync Google
       connect_google: Connect Google account
-      reconnect_google: Reconnect Google account
+      reconnect_google: "Reconnect Google account%{email}"
       reconnect_google_confirmation_message: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"
       connected_google_group_title: Connected Google Group
       synchronization_title: Synchronization
