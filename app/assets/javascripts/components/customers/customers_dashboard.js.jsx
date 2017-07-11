@@ -167,13 +167,13 @@ UI.define("Customers.Dashboard", function() {
       if ((event && event.key === 'Enter') || !event) {
         // Hide the keyword
         document.activeElement.blur();
-        $(event.target).blur();
 
         var data, originalCustomers;
         var originalCustomers = this.state.customers;
         var stateChanges = {}
 
         if (event) {
+          $(event.target).blur();
           event.preventDefault();
           $("body").scrollTop(0);
           $("#customerList").scrollTop(0);
