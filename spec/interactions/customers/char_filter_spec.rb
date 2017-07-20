@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Customers::Filter do
+RSpec.describe Customers::CharFilter do
   let(:user) { FactoryGirl.create(:user) }
 
   describe "#execute" do
@@ -9,7 +9,7 @@ RSpec.describe Customers::Filter do
       let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, phonetic_last_name: "AトBC") }
 
       it "returns expected customers" do
-        result = Customers::Filter.run!(super_user: user, pattern_number: 3)
+        result = Customers::CharFilter.run!(super_user: user, pattern_number: 3)
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
@@ -19,7 +19,7 @@ RSpec.describe Customers::Filter do
         let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, phonetic_last_name: "たABC") }
 
         it "returns expected customers order" do
-          result = Customers::Filter.run!(super_user: user, pattern_number: 3)
+          result = Customers::CharFilter.run!(super_user: user, pattern_number: 3)
 
           expect(result.first).to eq(matched_customer2)
           expect(result.second).to eq(matched_customer)

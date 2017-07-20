@@ -1,4 +1,4 @@
-class Customers::Filter < ActiveInteraction::Base
+class Customers::CharFilter < ActiveInteraction::Base
   PATTERN = [
     %w(あ ア い イ う ウ え エ お オ),
     %w(か カ き キ く ク け ケ こ コ が ガ ぎ ギ ぐ グ げ ゲ ご ゴ),
