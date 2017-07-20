@@ -20,6 +20,7 @@
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  updated_by_user_id       :integer
+#  email_types              :string
 #
 
 class Customer < ApplicationRecord
