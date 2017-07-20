@@ -2,14 +2,16 @@
 #
 # Table name: staffs
 #
-#  id                  :integer          not null, primary key
-#  user_id             :integer          not null
-#  last_name           :string
-#  first_name          :string
-#  phonetic_last_name  :string
-#  phonetic_first_name :string
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
+#  id                       :integer          not null, primary key
+#  user_id                  :integer          not null
+#  last_name                :string
+#  first_name               :string
+#  phonetic_last_name       :string
+#  phonetic_first_name      :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  deleted_at               :datetime
+#  staff_holiday_permission :boolean          default(FALSE), not null
 #
 
 class Staff < ApplicationRecord
