@@ -126,7 +126,7 @@ class Customers::Save < ActiveInteraction::Base
         customer.google_uid = user.uid
       end
 
-      customer.email_types = customer.emails.map { |email| email.type }.uniq.sort.join(",")
+      customer.email_types = customer.emails.map { |email| email[:type] }.uniq.sort.join(",")
       customer.save
     end
 
