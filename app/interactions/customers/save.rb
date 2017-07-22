@@ -127,6 +127,7 @@ class Customers::Save < ActiveInteraction::Base
       end
       # XXX: Some user use 携帯 by themselves, not system default category.
       # https://gist.github.com/ilake/cf20b88acc2c3b28021f6c234704fa33 email types migration gist.
+      # home,mobile,other,work
       customer.email_types = customer.emails.map { |email| email[:type].to_s == "携帯" ? "mobile" : email[:type].to_s }.uniq.sort.join(",")
       customer.save
     end
