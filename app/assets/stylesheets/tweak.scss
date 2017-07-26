@@ -5,18 +5,22 @@
 }
 
 // customers page reservations popup modal date link
-#resList .modal-title {
-  a:link, a:visited {
-    display: inline-block;
-    color: #97bfb8;
-    border-bottom: 0;
-    padding: 0;
+.customer {
+  #resList .modal-title {
+    a:link, a:visited {
+      display: inline-block;
+      color: #97bfb8;
+      border-bottom: 0;
+      padding: 0;
+    }
+  }
+
+  // customers page right nav
+  #mainNav dl {
+    margin-bottom: 10px;
   }
 }
-// customers page right nav
-#mainNav dl {
-  margin-bottom: 10px;
-}
+
 
 // reservation new save button
 button[disabled], a.disabled, input[disabled] {
@@ -35,24 +39,29 @@ button[disabled], a.disabled, input[disabled] {
   display: inline-block;
 }
 
+// reservations#index page
+.shopIndex {
+  #resList {
+    #record {
+      .error-status {
+        float: right;
+        margin-right: 12px;
+      }
+
+      .warning {
+        color: #e6a21f;
+      }
+
+      .modal-body .warning i.fa-check-circle {
+        vertical-align: baseline;
+      }
+    }
+  }
+}
+
+// customer/filter and reservations#index page
 #resList {
-  // used in customer/filter and reservations#index page
   &.contBody {
     overflow: scroll;
-  }
-
-  #record {
-    .error-status {
-      float: right;
-      margin-right: 12px;
-    }
-
-    .warning {
-      color: #e6a21f;
-    }
-
-    .modal-body .warning i.fa-check-circle {
-      vertical-align: baseline;
-    }
   }
 }
