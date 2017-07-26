@@ -550,7 +550,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 <dt>Select Menu：</dt>
                 <dd>
                   <ul>
-                    <li><input type="text" value="Menu1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
+                    <li><input type="text" defaultValue="Menu1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
                     <li><input type="text" placeholder="Select a Menu" /><a href="#" className="BTNyellow"><i className="fa fa-plus" aria-hidden="true"></i></a></li>
                   </ul>
                 </dd>
@@ -562,7 +562,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 <dt>Select Staff：</dt>
                 <dd>
                   <ul>
-                    <li><input type="text" value="Staff 1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
+                    <li><input type="text" defaultValue="Staff 1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
                     <li><input type="text" placeholder="Select a Staff" /><a href="#" className="BTNyellow"><i className="fa fa-plus" aria-hidden="true"></i></a></li>
                   </ul>
                 </dd>
