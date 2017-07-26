@@ -85,7 +85,7 @@
             <dd class="menu"><%= reservation.menu.display_name %></dd>
             <dd class="customer"><%= customer_names_sentence %></dd>
             <% if reservation.with_warnings %>
-              <dd class="status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+              <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
             <% end %>
           </dl>
         </a>

@@ -115,4 +115,24 @@ module OptionsHelper
   def react_attributes(array)
     array.map { |a| React.camelize_props(a.attributes) }
   end
+
+  def contact_group_options
+    default_options(super_user.contact_groups.connected)
+  end
+
+  def regions
+    JpPrefecture::Prefecture.all.map {|j| { label: j.name, value: j.name } }
+  end
+
+  def year_options
+    (1916..2016).to_a.map {|year| { label: year, value: year }}
+  end
+
+  def month_options
+    (1..12).to_a.map {|year| { label: year, value: year }}
+  end
+
+  def day_options
+    (1..31).to_a.map {|year| { label: year, value: year }}
+  end
 end
