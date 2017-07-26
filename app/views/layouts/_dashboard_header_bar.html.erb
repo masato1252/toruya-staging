@@ -24,6 +24,12 @@
   </dl>
   <dl>
     <dd>
+      <%= active_link_to customer_filter_index_path, active: /^\/customer\/filter/, class_active: "here" do %>
+        <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+        Search Data
+      <% end %>
+    </dd>
+    <dd>
       <%= active_link_to settings_shops_path, active: /^\/settings/, class_active: "here" do %>
         <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
         設定
