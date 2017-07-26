@@ -16,15 +16,31 @@ RSpec.describe Customers::Filter do
       end
     end
 
-    context "when address option exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 桑名市") }
+    context "when region option exists" do
+      context "when cities option doesn't exist" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "四重県 桑名市") }
 
-      it "returns expected customers" do
-        result = Customers::Filter.run!(super_user: user, address: "亀山市")
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, region: "三重県")
 
-        expect(result).to include(matched_customer)
-        expect(result).not_to include(unmatched_customer)
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "when cities option exists" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
+        let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, address: "三重県 亀海市") }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 桑名市") }
+
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, region: "三重県", cities: ["亀山市", "亀海市"])
+
+          expect(result).to include(matched_customer)
+          expect(result).to include(matched_customer2)
+          expect(result).not_to include(unmatched_customer)
+        end
       end
     end
 
