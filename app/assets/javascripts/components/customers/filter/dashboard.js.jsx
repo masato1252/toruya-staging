@@ -10,6 +10,10 @@ UI.define("Customers.Filter.Dashboard", function() {
       });
     },
 
+    componentDidMount: function() {
+      $(".contents").height(window.innerHeight - $("header").innerHeight() - 50);
+    },
+
     updateCustomers: function(customers) {
       this.setState({customers: customers});
     },

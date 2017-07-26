@@ -55,7 +55,22 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     onDataChange: function(event) {
-      this.setState({[event.target.dataset.name]: event.target.dataset.value || event.target.value});
+      let stateName = event.target.dataset.name;
+      let stateValue = event.target.dataset.value || event.target.value;
+
+      this.setState({[stateName]: stateValue}, function() {
+        if (
+          (stateName === "from_dob_year" || stateName === "from_dob_month" || stateName === "from_dob_day") &&
+        this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day &&
+        !this.state.to_dob_year && !this.state.to_dob_month && !this.state.to_dob_day
+      ) {
+          this.setState({
+            to_dob_year: this.state.from_dob_year,
+            to_dob_month: this.state.from_dob_month,
+            to_dob_day: this.state.from_dob_day
+          })
+        }
+      });
     },
 
     onRemoveItem: function(event) {

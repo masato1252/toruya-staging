@@ -6,7 +6,7 @@ UI.define("Customers.Filter.CustomersList", function() {
       return (
         this.props.customers.map(function(customer) {
           return (
-            <dl>
+            <dl key={customer.id}>
               <dd className="status"><span className={`customer-level-symbol ${customer.rank.key}`}></span></dd>
               <dd className="customer">{customer.label}</dd>
               <dd className="address">{customer.displayAddress}</dd>

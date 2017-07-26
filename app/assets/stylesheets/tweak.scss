@@ -35,17 +35,24 @@ button[disabled], a.disabled, input[disabled] {
   display: inline-block;
 }
 
-#resList #record {
-  .error-status {
-    float: right;
-    margin-right: 12px;
+#resList {
+  // used in customer/filter and reservations#index page
+  &.contBody {
+    overflow: scroll;
   }
 
-  .warning {
-    color: #e6a21f;
-  }
+  #record {
+    .error-status {
+      float: right;
+      margin-right: 12px;
+    }
 
-  .modal-body .warning i.fa-check-circle {
-    vertical-align: baseline;
+    .warning {
+      color: #e6a21f;
+    }
+
+    .modal-body .warning i.fa-check-circle {
+      vertical-align: baseline;
+    }
   }
 }
