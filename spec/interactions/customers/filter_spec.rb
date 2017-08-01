@@ -103,10 +103,108 @@ RSpec.describe Customers::Filter do
       let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, custom_id: "bar") }
 
       it "returns expected customers" do
-        result = Customers::Filter.run!(super_user: user, custom_id: "Foo")
+        result = Customers::Filter.run!(super_user: user, custom_ids: ["Foo"])
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
+      end
+    end
+
+    context "when reservation conditions exists" do
+      context "when has_reservation is true" do
+        let(:reservation_conditions) { { has_reservation: true } }
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
+
+        context "when date_range exists" do
+          before do
+            FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
+            FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: 2.days.ago)
+          end
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(date_range: (1.days.ago)..Time.now))
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when date_range doesn't exists" do
+          before { FactoryGirl.create(:reservation, customers: [matched_customer]) }
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions)
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when menu_ids exists" do
+          let(:matched_menu) { FactoryGirl.create(:menu, user: user) }
+          let(:unmatched_menu) { FactoryGirl.create(:menu, user: user) }
+
+          before do
+            FactoryGirl.create(:reservation, customers: [matched_customer], menu: matched_menu)
+            FactoryGirl.create(:reservation, customers: [unmatched_customer], menu: unmatched_menu)
+          end
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(menu_ids: [matched_menu.id]))
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when staff_ids exists" do
+          let(:matched_staff) { FactoryGirl.create(:staff, user: user) }
+          let(:unmatched_staff) { FactoryGirl.create(:staff, user: user) }
+
+          before do
+            FactoryGirl.create(:reservation, customers: [matched_customer], staffs: [matched_staff])
+            FactoryGirl.create(:reservation, customers: [unmatched_customer], staffs: [unmatched_staff])
+          end
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(staff_ids: [matched_staff.id]))
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when has_error exists" do
+          before do
+            FactoryGirl.create(:reservation, customers: [matched_customer], with_warnings: true)
+            FactoryGirl.create(:reservation, customers: [unmatched_customer], with_warnings: false)
+          end
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(with_warnings: true))
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when states exists" do
+          before do
+            FactoryGirl.create(:reservation, :reserved, customers: [matched_customer])
+            FactoryGirl.create(:reservation, :pending, customers: [unmatched_customer])
+          end
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(states: ["reserved"]))
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+      end
+
+      context "when has_reservation is false" do
       end
     end
   end
