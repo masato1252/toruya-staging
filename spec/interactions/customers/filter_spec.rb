@@ -16,30 +16,32 @@ RSpec.describe Customers::Filter do
       end
     end
 
-    context "when region option exists" do
-      context "when cities option doesn't exist" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "四重県 桑名市") }
+    context "when states option exists" do
+      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
+      let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, address: "二重県 清須市") }
+      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "四重県 桑名市") }
+      let!(:unmatched_customer2) { FactoryGirl.create(:customer, user: user, address: "五重県 桑名市") }
 
+
+      context "when inside option is true" do
         it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, region: "三重県")
-
-          expect(result).to include(matched_customer)
-          expect(result).not_to include(unmatched_customer)
-        end
-      end
-
-      context "when cities option exists" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
-        let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, address: "三重県 亀海市") }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 桑名市") }
-
-        it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, region: "三重県", cities: ["亀山市", "亀海市"])
+          result = Customers::Filter.run!(super_user: user, living_place: { inside: true, states: ["三重県", "二重県"] })
 
           expect(result).to include(matched_customer)
           expect(result).to include(matched_customer2)
           expect(result).not_to include(unmatched_customer)
+          expect(result).not_to include(unmatched_customer2)
+        end
+      end
+
+      context "when inside option is false" do
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, living_place: { inside: false, states: ["四重県", "五重県"] })
+
+          expect(result).to include(matched_customer)
+          expect(result).to include(matched_customer2)
+          expect(result).not_to include(unmatched_customer)
+          expect(result).not_to include(unmatched_customer2)
         end
       end
     end
@@ -86,16 +88,55 @@ RSpec.describe Customers::Filter do
       end
     end
 
-    context "when dob_range exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: 2.years.ago) }
+    context "when birthday start_date exists" do
+      context "when birthday query_type is on" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: 2.years.ago) }
 
-      it "returns expected customers" do
-        result = Customers::Filter.run!(super_user: user, dob_range: 1.year.ago.beginning_of_day..Date.today.end_of_day)
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on", start_date: Date.today })
 
-        expect(result).to include(matched_customer)
-        expect(result).not_to include(unmatched_customer)
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
       end
+
+      context "when birthday query_type is before" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "before", start_date: Date.today })
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "when birthday query_type is after" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.tomorrow) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "after", start_date: Date.today })
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "when birthday query_type is between" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
+
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "between", start_date: Date.today, end_date: Date.today.tomorrow })
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
     end
 
     context "when custom_id exists" do
@@ -111,26 +152,87 @@ RSpec.describe Customers::Filter do
     end
 
     context "when reservation conditions exists" do
+      let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
+      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
+
       context "when has_reservation is true" do
         let(:reservation_conditions) { { has_reservation: true } }
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
 
-        context "when date_range exists" do
-          before do
-            FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
-            FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: 2.days.ago)
+        context "when start_date exists" do
+          context "when query_type is on" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "on",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
           end
 
-          it "returns expected customers" do
-            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(date_range: (1.days.ago)..Time.now))
+          context "when query_type is before" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
+            end
 
-            expect(result).to include(matched_customer)
-            expect(result).not_to include(unmatched_customer)
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "before",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+
+          context "when query_type is after" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.tomorrow)
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "after",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+
+          context "when query_type is between" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day)
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "between",
+                                                start_date: Time.now.beginning_of_day,
+                                                end_date: Time.now.end_of_day))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
           end
         end
 
-        context "when date_range doesn't exists" do
+        context "when start_date doesn't exist" do
           before { FactoryGirl.create(:reservation, customers: [matched_customer]) }
 
           it "returns expected customers" do
@@ -205,6 +307,92 @@ RSpec.describe Customers::Filter do
       end
 
       context "when has_reservation is false" do
+        let(:reservation_conditions) { { has_reservation: false } }
+
+        context "when start_date exists" do
+          context "when query_type is on" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "on",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+
+          context "when query_type is before" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "before",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+
+          context "when query_type is after" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.tomorrow)
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "after",
+                                                start_date: Time.now.beginning_of_day
+              ))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+
+          context "when query_type is between" do
+            before do
+              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day)
+            end
+
+            it "returns expected customers" do
+              result = Customers::Filter.run!(super_user: user,
+                                              reservation: reservation_conditions.merge(
+                                                query_type: "between",
+                                                start_date: Time.now.beginning_of_day,
+                                                end_date: Time.now.end_of_day))
+
+              expect(result).to include(matched_customer)
+              expect(result).not_to include(unmatched_customer)
+            end
+          end
+        end
+
+        context "when start_date doesn't exist" do
+          before { FactoryGirl.create(:reservation, customers: [unmatched_customer]) }
+
+          it "returns expected customers that don't have any reservation" do
+            result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions)
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
       end
     end
   end
