@@ -25,7 +25,9 @@ UI.define("Customers.Filter.QuerySider", function() {
         from_dob_day: "",
         to_dob_year: "",
         to_dob_month: "",
-        to_dob_day: ""
+        to_dob_day: "",
+        reservationDateQueryType: "",
+        hasReservation: ""
       });
     },
 
@@ -410,7 +412,8 @@ UI.define("Customers.Filter.QuerySider", function() {
                           </li>
                           {
                             this.state.birthdayQueryType === "between" ? (
-                            <li>〜
+                            <li>
+                              To
                               <UI.Select
                                 includeBlank="true"
                                 blankOption={this.props.selectYearLabel}
@@ -489,21 +492,25 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
             <h2>Reservation Records：</h2>
             <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Reservation：</h3>
-              <dl>
-                <dt>has reservation?</dt>
+              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Date：</h3>
+              <dl className="filterFor">
                 <dd>
-                  <ul>
-                    <li><input type="radio" name="has_reservation" id="hasRes" /><label htmlFor="hasRes">YES：</label></li>
-                    <li><input type="radio" name="has_reservation" id="hasNoRes" /><label htmlFor="hasNoRes">NO：</label></li>
-                  </ul>
+                  <UI.Select
+                    options={this.props.yesNoOptions}
+                    data-name="hasReservation"
+                    value={this.state.hasReservation}
+                    onChange={this.onDataChange}
+                    />
+                  reservations
+                  <UI.Select
+                    options={this.props.dateQueryOptions}
+                    data-name="reservationDateQueryType"
+                    value={this.state.reservationDateQueryType}
+                    onChange={this.onDataChange}
+                    />
                 </dd>
               </dl>
-            </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Date：</h3>
               <dl className="date">
-                <dt>Select a Date：</dt>
                 <dd>
                   <ul>
                     <li>
