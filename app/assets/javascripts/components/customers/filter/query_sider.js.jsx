@@ -12,13 +12,14 @@ UI.define("Customers.Filter.QuerySider", function() {
       return ({
         filterCategoryDisplaying: {},
         group_ids: [],
+        livingPlaceInside: true,
+        states: [],
+        state: "",
+        has_email: "",
         email_types: [],
-        region: "",
-        city: "",
-        cities: [],
+        birthdayQueryType: "",
         custom_id: "",
         custom_ids: [],
-        has_email: "",
         from_dob_year: "",
         from_dob_month: "",
         from_dob_day: "",
@@ -164,22 +165,22 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
-    renderCitiesInput: function() {
+    renderStatesInput: function() {
       return (
-        this.state.cities.map(function(city, i) {
+        this.state.states.map(function(state, i) {
           return (
-            <li key={`${city}-${i}`}>
-              <input type="text" id="city" value={city} readOnly />
+            <li key={`${state}`}>
+              <input type="text" id="city" value={state} readOnly />
               <a href="#"
                  className="BTNorange"
-                 data-name="cities"
-                 data-value={city}
+                 data-name="states"
+                 data-value={state}
                  onClick={this.onRemoveItem} >
                  <i
                    className="fa fa-minus"
                    aria-hidden="true"
-                   data-name="cities"
-                   data-value={city}>
+                   data-name="states"
+                   data-value={state}>
                  </i>
               </a>
             </li>
@@ -229,14 +230,6 @@ UI.define("Customers.Filter.QuerySider", function() {
             <a href="search-customer_result.html" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
           </div>
 
-          <div className="filterFor">
-            <select>
-              <option value="all">Match all</option>
-              <option value="any">Match any</option>
-              <option value="no">No Match</option>
-            </select>&nbsp;of the following
-          </div>
-
           <div id="filterKeys" className="tabBody">
             <h2>Customer Info</h2>
             <div className="filterKey">
@@ -265,55 +258,49 @@ UI.define("Customers.Filter.QuerySider", function() {
               {
                 this.state.filterCategoryDisplaying["living_place"] ? (
                   <div>
-                    <dl className="state">
-                      <dt>State：都道府県</dt>
+                    <dl className="filterFor">
                       <dd>
+                        Living
                         <UI.Select
-                          includeBlank="true"
-                          blankOption={this.props.selectRegionLabel}
-                          options={this.props.regions}
-                          data-name="region"
-                          value={this.state.region}
+                          options={this.props.livingPlaceQueryTypeOptions}
+                          data-name="livingPlaceInside"
+                          value={this.state.livingPlaceInside}
                           onChange={this.onDataChange}
                           />
                       </dd>
                     </dl>
-                    {
-                      this.state.region ? (
-                        <dl className="city">
-                          <dt>City：市区町村</dt>
-                          <dd>
-                            <ul>
-                              {this.renderCitiesInput()}
-                              <li>
-                                <input
-                                  type="text"
-                                  placeholder="Type City"
-                                  value={this.state.city}
-                                  data-name="city"
-                                  onChange={this.onDataChange}
-                                  />
-                                <a
-                                  href="#"
-                                  className="BTNyellow"
-                                  onClick={this.onAddItem}
-                                  data-target-name="city"
-                                  data-name="cities"
-                                  >
-                                  <i
-                                    className="fa fa-plus"
-                                    aria-hidden="true"
-                                    data-target-name="city"
-                                    data-name="cities" >
-                                  </i>
-                                </a>
-                              </li>
-                            </ul>
-                          </dd>
-                        </dl>
-
-                      ) : null
-                    }
+                    <dl className="state">
+                      <dt>State：都道府県</dt>
+                      <dd>
+                        <ul>
+                          {this.renderStatesInput()}
+                          <li>
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectRegionLabel}
+                              options={this.props.regions}
+                              data-name="state"
+                              value={this.state.state}
+                              onChange={this.onDataChange}
+                              />
+                              <a
+                                href="#"
+                                className="BTNyellow"
+                                onClick={this.onAddItem}
+                                data-target-name="state"
+                                data-name="states"
+                                >
+                                <i
+                                  className="fa fa-plus"
+                                  aria-hidden="true"
+                                  data-target-name="state"
+                                  data-name="states" >
+                                </i>
+                              </a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
                   </div>
                 ) : null
               }
@@ -378,68 +365,85 @@ UI.define("Customers.Filter.QuerySider", function() {
               </h3>
               {
                 this.state.filterCategoryDisplaying["birthday"] ? (
-                  <dl>
-                    <dd>
-                      <ul>
-                        <li>
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectYearLabel}
-                            options={this.props.yearOptions}
-                            data-name="from_dob_year"
-                            value={this.state.from_dob_year}
-                            onChange={this.onDataChange}
-                            />
-                          /&nbsp;
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectMonthLabel}
-                            options={this.props.monthOptions}
-                            data-name="from_dob_month"
-                            value={this.state.from_dob_month}
-                            onChange={this.onDataChange}
-                            />
-                          /&nbsp;
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectDayLabel}
-                            options={this.props.dayOptions}
-                            data-name="from_dob_day"
-                            value={this.state.from_dob_day}
-                            onChange={this.onDataChange}
-                            />
-                        </li>
-                        <li>〜
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectYearLabel}
-                            options={this.props.yearOptions}
-                            data-name="to_dob_year"
-                            value={this.state.to_dob_year}
-                            onChange={this.onDataChange}
-                            />
-                          /&nbsp;
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectMonthLabel}
-                            options={this.props.monthOptions}
-                            data-name="to_dob_month"
-                            value={this.state.to_dob_month}
-                            onChange={this.onDataChange}
-                            />
-                          /&nbsp;
-                          <UI.Select
-                            includeBlank="true"
-                            blankOption={this.props.selectDayLabel}
-                            options={this.props.dayOptions}
-                            data-name="to_dob_day"
-                            value={this.state.to_dob_day}
-                            onChange={this.onDataChange}
-                            />
-                        </li>
-                      </ul>
-                    </dd>
-                  </dl>
+                  <div>
+                    <dl class="filterFor">
+                      <dd>
+                        Born
+                        <UI.Select
+                          options={this.props.birthdayQueryOptions}
+                          data-name="birthdayQueryType"
+                          value={this.state.birthdayQueryType}
+                          onChange={this.onDataChange}
+                          />
+                      </dd>
+                    </dl>
+                    <dl>
+                      <dd>
+                        <ul>
+                          <li>
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectYearLabel}
+                              options={this.props.yearOptions}
+                              data-name="from_dob_year"
+                              value={this.state.from_dob_year}
+                              onChange={this.onDataChange}
+                              />
+                            /&nbsp;
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectMonthLabel}
+                              options={this.props.monthOptions}
+                              data-name="from_dob_month"
+                              value={this.state.from_dob_month}
+                              onChange={this.onDataChange}
+                              />
+                            /&nbsp;
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectDayLabel}
+                              options={this.props.dayOptions}
+                              data-name="from_dob_day"
+                              value={this.state.from_dob_day}
+                              onChange={this.onDataChange}
+                              />
+                          </li>
+                          {
+                            this.state.birthdayQueryType === "between" ? (
+                            <li>〜
+                              <UI.Select
+                                includeBlank="true"
+                                blankOption={this.props.selectYearLabel}
+                                options={this.props.yearOptions}
+                                data-name="to_dob_year"
+                                value={this.state.to_dob_year}
+                                onChange={this.onDataChange}
+                                />
+                              /&nbsp;
+                              <UI.Select
+                                includeBlank="true"
+                                blankOption={this.props.selectMonthLabel}
+                                options={this.props.monthOptions}
+                                data-name="to_dob_month"
+                                value={this.state.to_dob_month}
+                                onChange={this.onDataChange}
+                                />
+                              /&nbsp;
+                              <UI.Select
+                                includeBlank="true"
+                                blankOption={this.props.selectDayLabel}
+                                options={this.props.dayOptions}
+                                data-name="to_dob_day"
+                                value={this.state.to_dob_day}
+                                onChange={this.onDataChange}
+                                />
+                            </li>
+                            ) : null
+                          }
+                        </ul>
+                      </dd>
+                    </dl>
+                  </div>
                 ) : null
               }
             </div>
@@ -618,18 +622,19 @@ UI.define("Customers.Filter.QuerySider", function() {
               <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
-              <input name="region" type="hidden" value={this.state.region} />
-              <input name="cities" type="hidden" value={this.state.cities.join(",")} />
+              <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
+              <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
               <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
+              <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
               <input
-                 name="dob[from]"
+                 name="birthday[start_date]"
                  type="hidden"
                  value={
                    this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day ?
                    `${this.state.from_dob_year}-${this.state.from_dob_month}-${this.state.from_dob_day}` : ""
                  } />
               <input
-                 name="dob[to]"
+                 name="birthday[end_date]"
                  type="hidden"
                  value={
                    this.state.to_dob_year && this.state.to_dob_month && this.state.to_dob_day ?

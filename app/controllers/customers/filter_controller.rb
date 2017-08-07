@@ -9,10 +9,13 @@ class Customers::FilterController < DashboardController
       group_ids: params[:group_ids].split(","),
       has_email: params[:has_email],
       email_types: params[:email_types].split(","),
-      region: params[:region],
-      cities: params[:email_types].split(","),
-      custom_ids: params[:custom_ids].split(","),
-      dob_range: params[:dob][:from].present? && params[:dob][:to].present? ? Date.parse(params[:dob][:from]).beginning_of_day..Date.parse(params[:dob][:to]).end_of_day : nil
+      living_place: { inside: params[:living_place][:inside], states: params[:living_place][:states].split(",") },
+      birthday: {
+        query_type: params[:birthday][:query_type],
+        start_date: Date.parse(params[:birthday][:start_date]),
+        end_date: Date.parse(params[:birthday][:end_date])
+      },
+      custom_ids: params[:custom_ids].split(",")
     )
 
     if outcome.valid?
