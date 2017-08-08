@@ -828,6 +828,16 @@ UI.define("Customers.Filter.QuerySider", function() {
                     value={`${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}`} />
                 ) : null
               }
+              {
+                this.state.menu_ids.join(",") ? (
+                  <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
+                ) : null
+              }
+              {
+                this.state.staff_ids.join(",") ? (
+                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
+                ) : null
+              }
 
               <div className="submit">
                 <a
