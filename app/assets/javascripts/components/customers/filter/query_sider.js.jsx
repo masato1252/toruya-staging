@@ -27,14 +27,37 @@ UI.define("Customers.Filter.QuerySider", function() {
         to_dob_month: "",
         to_dob_day: "",
         reservationDateQueryType: "on",
-        hasReservation: true,
+        hasReservation: "true",
         from_reservation_year: "",
         from_reservation_month: "",
         from_reservation_day: "",
         to_reservation_year: "",
         to_reservation_month: "",
-        to_reservation_day: ""
+        to_reservation_day: "",
+        menu_id: "",
+        menu_ids: [],
+        staff_id: "",
+        staff_ids: [],
+        reservation_with_warning: ""
       });
+    },
+
+    componentDidMount: function() {
+      this.applySelect2();
+    },
+
+    applySelect2: function() {
+      var _this = this;
+
+      $("#select2").select2({
+        theme: "bootstrap",
+        "language": {
+          "noResults": function() {
+            return _this.props.noMenuMessage;
+          }
+        }
+      })
+      .on("change", _this.onDataChange);
     },
 
     toggleCategoryDisplay: function(category_type) {
@@ -161,22 +184,22 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
-    renderStatesInput: function() {
+    renderMultipleInputs: function(items, collection_name) {
       return (
-        this.state.states.map(function(state, i) {
+        items.map(function(item) {
           return (
-            <li key={`${state}`}>
-              <input type="text" id="city" value={state} readOnly />
+            <li key={item}>
+              <input type="text" value={item} readOnly />
               <a href="#"
                  className="BTNorange"
-                 data-name="states"
-                 data-value={state}
+                 data-name={collection_name}
+                 data-value={item}
                  onClick={this.onRemoveItem} >
                  <i
                    className="fa fa-minus"
                    aria-hidden="true"
-                   data-name="states"
-                   data-value={state}>
+                   data-name={collection_name}
+                   data-value={item}>
                  </i>
               </a>
             </li>
@@ -185,22 +208,25 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
-    renderCustomIdInput: function() {
+    renderMultipleSelectInputs: function(items, collection_name, mappingOptions) {
+
       return (
-        this.state.custom_ids.map(function(custom_id, i) {
+        items.map(function(item) {
+          let option = _.find(mappingOptions, function(option) { return option.value == item; }.bind(this))
+
           return (
-            <li key={`${custom_id}-${i}`}>
-              <input type="text" value={custom_id} readOnly />
+            <li key={item}>
+              <input type="text" value={option.label} readOnly />
               <a href="#"
                  className="BTNorange"
-                 data-name="custom_ids"
-                 data-value={custom_id}
+                 data-name={collection_name}
+                 data-value={item}
                  onClick={this.onRemoveItem} >
                  <i
                    className="fa fa-minus"
                    aria-hidden="true"
-                   data-name="custom_ids"
-                   data-value={custom_id}>
+                   data-name={collection_name}
+                   data-value={item}>
                  </i>
               </a>
             </li>
@@ -269,7 +295,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                       <dt>State：都道府県</dt>
                       <dd>
                         <ul>
-                          {this.renderStatesInput()}
+                          {this.renderMultipleInputs(this.state.states, "states")}
                           <li>
                             <UI.Select
                               includeBlank="true"
@@ -279,20 +305,20 @@ UI.define("Customers.Filter.QuerySider", function() {
                               value={this.state.state}
                               onChange={this.onDataChange}
                               />
-                              <a
-                                href="#"
-                                className="BTNyellow"
-                                onClick={this.onAddItem}
+                            <a
+                              href="#"
+                              className="BTNyellow"
+                              onClick={this.onAddItem}
+                              data-target-name="state"
+                              data-name="states"
+                              >
+                              <i
+                                className="fa fa-plus"
+                                aria-hidden="true"
                                 data-target-name="state"
-                                data-name="states"
-                                >
-                                <i
-                                  className="fa fa-plus"
-                                  aria-hidden="true"
-                                  data-target-name="state"
-                                  data-name="states" >
-                                </i>
-                              </a>
+                                data-name="states" >
+                              </i>
+                            </a>
                           </li>
                         </ul>
                       </dd>
@@ -411,35 +437,35 @@ UI.define("Customers.Filter.QuerySider", function() {
                           </li>
                           {
                             this.state.birthdayQueryType === "between" ? (
-                            <li>
-                              To
-                              <UI.Select
-                                includeBlank="true"
-                                blankOption={this.props.selectYearLabel}
-                                options={this.props.yearOptions}
-                                data-name="to_dob_year"
-                                value={this.state.to_dob_year}
-                                onChange={this.onDataChange}
-                                />
-                              /&nbsp;
-                              <UI.Select
-                                includeBlank="true"
-                                blankOption={this.props.selectMonthLabel}
-                                options={this.props.monthOptions}
-                                data-name="to_dob_month"
-                                value={this.state.to_dob_month}
-                                onChange={this.onDataChange}
-                                />
-                              /&nbsp;
-                              <UI.Select
-                                includeBlank="true"
-                                blankOption={this.props.selectDayLabel}
-                                options={this.props.dayOptions}
-                                data-name="to_dob_day"
-                                value={this.state.to_dob_day}
-                                onChange={this.onDataChange}
-                                />
-                            </li>
+                              <li>
+                                To
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectYearLabel}
+                                  options={this.props.yearOptions}
+                                  data-name="to_dob_year"
+                                  value={this.state.to_dob_year}
+                                  onChange={this.onDataChange}
+                                  />
+                                /&nbsp;
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectMonthLabel}
+                                  options={this.props.monthOptions}
+                                  data-name="to_dob_month"
+                                  value={this.state.to_dob_month}
+                                  onChange={this.onDataChange}
+                                  />
+                                /&nbsp;
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectDayLabel}
+                                  options={this.props.dayOptions}
+                                  data-name="to_dob_day"
+                                  value={this.state.to_dob_day}
+                                  onChange={this.onDataChange}
+                                  />
+                              </li>
                             ) : null
                           }
                         </ul>
@@ -459,7 +485,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <dl className="customerID">
                     <dd>
                       <ul>
-                        {this.renderCustomIdInput()}
+                        {this.renderMultipleInputs(this.state.custom_ids, "custom_ids")}
                         <li>
                           <input
                             type="text"
@@ -591,69 +617,164 @@ UI.define("Customers.Filter.QuerySider", function() {
                 ) : null
               }
             </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Menu<span>(multiple choice)</span></h3>
-              <dl>
-                <dt>Select Menu：</dt>
-                <dd>
-                  <ul>
-                    <li><input type="text" defaultValue="Menu1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
-                    <li><input type="text" placeholder="Select a Menu" /><a href="#" className="BTNyellow"><i className="fa fa-plus" aria-hidden="true"></i></a></li>
-                  </ul>
-                </dd>
-              </dl>
+              {
+                this.state.hasReservation === "true" && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
+            <div>
+              <div className="filterKey">
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationMenu")} >
+                  {this.renderToggleIcon("reservationMenu")}
+                  Menu<span>(multiple choice)</span>
+                </h3>
+                {
+                  this.state.filterCategoryDisplaying["reservationMenu"] ? (
+                    <dl>
+                      <dt>Select Menu：</dt>
+                      <dd>
+                        <ul>
+                          {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
+                          <li>
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectMenuLabel}
+                              options={this.props.menuGroupOptions}
+                              id="select2"
+                              data-name="menu_id"
+                              value={this.state.menu_id}
+                              onChange={this.onDataChange}
+                            />
+                            <a
+                              href="#"
+                              className="BTNyellow"
+                              onClick={this.onAddItem}
+                              data-target-name="menu_id"
+                              data-name="menu_ids"
+                              >
+                              <i
+                                className="fa fa-plus"
+                                aria-hidden="true"
+                                data-target-name="menu_id"
+                                data-name="menu_ids" >
+                              </i>
+                            </a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  ) : null
+                }
+              </div>
+              <div className="filterKey">
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationStaff")} >
+                  {this.renderToggleIcon("reservationStaff")}
+                  Staff<span>(multiple choice)</span>
+                </h3>
+                {
+                  this.state.filterCategoryDisplaying["reservationMenu"] ? (
+                    <dl>
+                      <dt>Select Staff：</dt>
+                      <dd>
+                        <ul>
+                          {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
+                          <li>
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectStaffLabel}
+                              options={this.props.staffOptions}
+                              data-name="staff_id"
+                              value={this.state.staff_id}
+                              onChange={this.onDataChange}
+                            />
+                            <a
+                              href="#"
+                              className="BTNyellow"
+                              onClick={this.onAddItem}
+                              data-target-name="staff_id"
+                              data-name="staff_ids"
+                              >
+                              <i
+                                className="fa fa-plus"
+                                aria-hidden="true"
+                                data-target-name="staff_id"
+                                data-name="staff_ids" >
+                              </i>
+                            </a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  ) : null
+                }
+              </div>
+              <div className="filterKey">
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationWithWarning")} >
+                  {this.renderToggleIcon("reservationWithWarning")}
+                  Error：
+                </h3>
+                {
+                  this.state.filterCategoryDisplaying["reservationWithWarning"] ? (
+                  <dl>
+                    <dt>has errors?</dt>
+                    <dd>
+                      <ul>
+                        <li>
+                          <input
+                            type="radio"
+                            id="hasANerror"
+                            data-name="reservation_with_warning"
+                            data-value="true"
+                            checked={this.state.reservation_with_warning === "true"}
+                            onChange={this.onDataChange}
+                            />
+                          <label htmlFor="hasANerror">YES：有り</label>
+                        </li>
+                        <li>
+                          <input
+                            type="radio"
+                            id="hasNOrror"
+                            data-name="reservation_with_warning"
+                            data-value="false"
+                            checked={this.state.reservation_with_warning === "false"}
+                            onChange={this.onDataChange}
+                            />
+                          <label htmlFor="hasNOemail">NO：無し</label>
+                        </li>
+                      </ul>
+                    </dd>
+                  </dl>
+                  ) : null
+                }
+              </div>
+              <div className="filterKey">
+                <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Reservation status：</h3>
+                <dl>
+                  <dt>Select status</dt>
+                  <dd>
+                    <ul>
+                      <li><input type="radio" name="res_status" id="res_pending" /><label htmlFor="res_pending">pending</label></li>
+                      <li><input type="radio" name="res_status" id="res_reserved" /><label htmlFor="res_reserved">reserved</label></li>
+                      <li><input type="radio" name="res_status" id="res_cancelled" /><label htmlFor="res_cancelled">cancelled</label></li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Check-in status</h3>
+                <dl>
+                  <dt>Select status</dt>
+                  <dd>
+                    <ul>
+                      <li><input type="radio" name="checkin_status" id="checked_in" /><label htmlFor="checked_in">checked-in</label></li>
+                      <li><input type="radio" name="checkin_status" id="checked_out" /><label htmlFor="checked_out">checked-out</label></li>
+                      <li><input type="radio" name="checkin_status" id="no_show" /><label htmlFor="no_show">no-show</label></li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
             </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Staff<span>(multiple choice)</span></h3>
-              <dl>
-                <dt>Select Staff：</dt>
-                <dd>
-                  <ul>
-                    <li><input type="text" defaultValue="Staff 1" className="selected" /><a href="#" className="BTNorange"><i className="fa fa-minus" aria-hidden="true"></i></a></li>
-                    <li><input type="text" placeholder="Select a Staff" /><a href="#" className="BTNyellow"><i className="fa fa-plus" aria-hidden="true"></i></a></li>
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Error：</h3>
-              <dl>
-                <dt>has errors?</dt>
-                <dd>
-                  <ul>
-                    <li><input type="radio" name="has_errors" id="hasANerror" /><label htmlFor="hasANerror">YES：</label></li>
-                    <li><input type="radio" name="has_errors" id="hasNOrror" /><label htmlFor="hasNOrror">NO：</label></li>
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Reservation status：</h3>
-              <dl>
-                <dt>Select status</dt>
-                <dd>
-                  <ul>
-                    <li><input type="radio" name="res_status" id="res_pending" /><label htmlFor="res_pending">pending</label></li>
-                    <li><input type="radio" name="res_status" id="res_reserved" /><label htmlFor="res_reserved">reserved</label></li>
-                    <li><input type="radio" name="res_status" id="res_cancelled" /><label htmlFor="res_cancelled">cancelled</label></li>
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Check-in status</h3>
-              <dl>
-                <dt>Select status</dt>
-                <dd>
-                  <ul>
-                    <li><input type="radio" name="checkin_status" id="checked_in" /><label htmlFor="checked_in">checked-in</label></li>
-                    <li><input type="radio" name="checkin_status" id="checked_out" /><label htmlFor="checked_out">checked-out</label></li>
-                    <li><input type="radio" name="checkin_status" id="no_show" /><label htmlFor="no_show">no-show</label></li>
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            </div>
+
+                ) : null
+              }
+          </div>
             <form
               acceptCharset="UTF-8"
               id="filter-form"
@@ -666,39 +787,47 @@ UI.define("Customers.Filter.QuerySider", function() {
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
               <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
-              <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+              {
+                this.state.states.join(",") ? (
+                  <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+                ) : null
+              }
               <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
               <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
-              <input
-                 name="birthday[start_date]"
-                 type="hidden"
-                 value={
-                   this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day ?
-                   `${this.state.from_dob_year}-${this.state.from_dob_month}-${this.state.from_dob_day}` : ""
-                 } />
-              <input
-                 name="birthday[end_date]"
-                 type="hidden"
-                 value={
-                   this.state.to_dob_year && this.state.to_dob_month && this.state.to_dob_day ?
-                   `${this.state.to_dob_year}-${this.state.to_dob_month}-${this.state.to_dob_day}` : ""
-                 } />
+              {
+                this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day ? (
+                  <input
+                     name="birthday[start_date]"
+                     type="hidden"
+                     value={`${this.state.from_dob_year}-${this.state.from_dob_month}-${this.state.from_dob_day}`} />
+                 ) : null
+              }
+              {
+                this.state.to_dob_year && this.state.to_dob_month && this.state.to_dob_day ? (
+                  <input
+                     name="birthday[end_date]"
+                     type="hidden"
+                     value={`${this.state.to_dob_year}-${this.state.to_dob_month}-${this.state.to_dob_day}`} />
+                ) : null
+              }
               <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
               <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
-              <input
-                 name="reservation[start_date]"
-                 type="hidden"
-                 value={
-                   this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ?
-                   `${this.state.from_reservation_year}-${this.state.from_reservation_month}-${this.state.from_reservation_day}` : ""
-                 } />
-              <input
-                 name="reservation[end_date]"
-                 type="hidden"
-                 value={
-                   this.state.to_reservation_year && this.state.to_reservation_month && this.state.to_reservation_day ?
-                   `${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}` : ""
-                 } />
+              {
+                this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
+                  <input
+                     name="reservation[start_date]"
+                     type="hidden"
+                     value={`${this.state.from_reservation_year}-${this.state.from_reservation_month}-${this.state.from_reservation_day}`} />
+                ) : null
+              }
+              {
+                this.state.to_reservation_year && this.state.to_reservation_month && this.state.to_reservation_day ? (
+                  <input
+                    name="reservation[end_date]"
+                    type="hidden"
+                    value={`${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}`} />
+                ) : null
+              }
 
               <div className="submit">
                 <a

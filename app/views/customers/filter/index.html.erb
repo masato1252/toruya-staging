@@ -12,6 +12,9 @@
     { label: "between", value: "between"}
   ],
   yes_no_options: [ { label: "Have", value: true }, { label: "No", value: false }],
+  menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
+  menu_options: menu_group_options(@menu_result[:menu_options]),
+  staff_options: staff_options(@staff_options, []),
   filter_path: customer_filter_index_path,
   form_auth_token: form_authenticity_token,
   home_label: I18n.t("customer.home"),
@@ -21,4 +24,6 @@
   select_year_label: I18n.t("customer.select_year"),
   select_month_label: I18n.t("customer.select_month"),
   select_day_label: I18n.t("customer.select_day"),
+  select_menu_label: "Select Menu",
+  select_staff_label: "Select Staff"
 }) %>

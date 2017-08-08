@@ -74,7 +74,7 @@ class Customers::Filter < ActiveInteraction::Base
 
     if reservation && !reservation[:has_reservation].nil?
       if reservation[:has_reservation]
-        scoped = scoped.left_outer_joins(:reservations)
+        scoped = scoped.includes(:reservations).references(:reservations)
 
         if reservation[:start_date].present?
           scoped = case reservation[:query_type]
@@ -128,6 +128,6 @@ class Customers::Filter < ActiveInteraction::Base
       end
     end
 
-    scoped
+    scoped.distinct
   end
 end
