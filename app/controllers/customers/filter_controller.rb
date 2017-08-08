@@ -9,15 +9,19 @@ class Customers::FilterController < DashboardController
       group_ids: params[:group_ids].split(","),
       has_email: params[:has_email],
       email_types: params[:email_types].split(","),
-      living_place: { inside: params[:living_place][:inside], states: params[:living_place][:states].split(",") },
-      birthday: {
-        query_type: params[:birthday][:query_type],
-        start_date: Date.parse(params[:birthday][:start_date]),
-        end_date: Date.parse(params[:birthday][:end_date])
-      },
+      living_place: params[:living_place].merge(states: params[:living_place][:states].split(",")),
+      birthday: params[:birthday].merge(
+        start_date: params[:birthday][:start_date].present? ? Date.parse(params[:birthday][:start_date]) : nil,
+        end_date: params[:birthday][:end_date].present? ? Date.parse(params[:birthday][:end_date]) : nil
+      ),
+      reservation: params[:reservation].merge(
+        start_date: params[:reservation][:start_date].present? ? Date.parse(params[:reservation][:start_date]).beginning_of_day : nil,
+        end_date: params[:reservation][:end_date].present? ? Date.parse(params[:reservation][:end_date]).end_of_day : nil
+      ),
       custom_ids: params[:custom_ids].split(",")
     )
 
+    debugger
     if outcome.valid?
       @customers = outcome.result
     else

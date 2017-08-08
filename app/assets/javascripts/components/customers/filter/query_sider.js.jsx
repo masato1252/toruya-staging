@@ -17,7 +17,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         state: "",
         has_email: "",
         email_types: [],
-        birthdayQueryType: "",
+        birthdayQueryType: "on",
         custom_id: "",
         custom_ids: [],
         from_dob_year: "",
@@ -26,8 +26,14 @@ UI.define("Customers.Filter.QuerySider", function() {
         to_dob_year: "",
         to_dob_month: "",
         to_dob_day: "",
-        reservationDateQueryType: "",
-        hasReservation: ""
+        reservationDateQueryType: "on",
+        hasReservation: true,
+        from_reservation_year: "",
+        from_reservation_month: "",
+        from_reservation_day: "",
+        to_reservation_year: "",
+        to_reservation_month: "",
+        to_reservation_day: ""
       });
     },
 
@@ -61,19 +67,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       let stateName = event.target.dataset.name;
       let stateValue = event.target.dataset.value || event.target.value;
 
-      this.setState({[stateName]: stateValue}, function() {
-        if (
-          (stateName === "from_dob_year" || stateName === "from_dob_month" || stateName === "from_dob_day") &&
-        this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day &&
-        !this.state.to_dob_year && !this.state.to_dob_month && !this.state.to_dob_day
-      ) {
-          this.setState({
-            to_dob_year: this.state.from_dob_year,
-            to_dob_month: this.state.from_dob_month,
-            to_dob_day: this.state.from_dob_day
-          })
-        }
-      });
+      this.setState({[stateName]: stateValue});
     },
 
     onRemoveItem: function(event) {
@@ -372,17 +366,22 @@ UI.define("Customers.Filter.QuerySider", function() {
                       <dd>
                         Born
                         <UI.Select
-                          options={this.props.birthdayQueryOptions}
+                          options={this.props.dateQueryOptions}
                           data-name="birthdayQueryType"
                           value={this.state.birthdayQueryType}
                           onChange={this.onDataChange}
                           />
                       </dd>
                     </dl>
-                    <dl>
+                    <dl className="date">
                       <dd>
                         <ul>
                           <li>
+                            {
+                              this.state.birthdayQueryType === "between" ? (
+                                "From"
+                              ) : null
+                            }
                             <UI.Select
                               includeBlank="true"
                               blankOption={this.props.selectYearLabel}
@@ -492,68 +491,105 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
             <h2>Reservation Records：</h2>
             <div className="filterKey">
-              <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Date：</h3>
-              <dl className="filterFor">
-                <dd>
-                  <UI.Select
-                    options={this.props.yesNoOptions}
-                    data-name="hasReservation"
-                    value={this.state.hasReservation}
-                    onChange={this.onDataChange}
-                    />
-                  reservations
-                  <UI.Select
-                    options={this.props.dateQueryOptions}
-                    data-name="reservationDateQueryType"
-                    value={this.state.reservationDateQueryType}
-                    onChange={this.onDataChange}
-                    />
-                </dd>
-              </dl>
-              <dl className="date">
-                <dd>
-                  <ul>
-                    <li>
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectYearLabel}
-                        options={this.props.yearOptions}
-                        />
-                      /&nbsp;
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectMonthLabel}
-                        options={this.props.monthOptions}
-                        />
-                      /&nbsp;
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectDayLabel}
-                        options={this.props.dayOptions}
-                        />
-                    </li>
-                    <li>〜
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectYearLabel}
-                        options={this.props.yearOptions}
-                        />
-                      /&nbsp;
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectMonthLabel}
-                        options={this.props.monthOptions}
-                        />
-                      /&nbsp;
-                      <UI.Select
-                        includeBlank="true"
-                        blankOption={this.props.selectDayLabel}
-                        options={this.props.dayOptions}
-                        />
-                    </li>
-                  </ul>
-                </dd>
-              </dl>
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationDate")} >
+                {this.renderToggleIcon("reservationDate")}
+                Date：
+              </h3>
+              {
+                this.state.filterCategoryDisplaying["reservationDate"] ? (
+                  <div>
+                    <dl className="filterFor">
+                      <dd>
+                        <UI.Select
+                          options={this.props.yesNoOptions}
+                          data-name="hasReservation"
+                          value={this.state.hasReservation}
+                          onChange={this.onDataChange}
+                          />
+                        reservations
+                        <UI.Select
+                          options={this.props.dateQueryOptions}
+                          data-name="reservationDateQueryType"
+                          value={this.state.reservationDateQueryType}
+                          onChange={this.onDataChange}
+                          />
+                      </dd>
+                    </dl>
+                    <dl className="date">
+                      <dd>
+                        <ul>
+                          <li>
+                            {
+                              this.state.reservationDateQueryType === "between" ? (
+                                "From"
+                              ) : null
+                            }
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectYearLabel}
+                              options={this.props.yearOptions}
+                              data-name="from_reservation_year"
+                              value={this.state.from_reservation_year}
+                              onChange={this.onDataChange}
+                              />
+                            /&nbsp;
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectMonthLabel}
+                              options={this.props.monthOptions}
+                              data-name="from_reservation_month"
+                              value={this.state.from_reservation_month}
+                              onChange={this.onDataChange}
+                              />
+                            /&nbsp;
+                            <UI.Select
+                              includeBlank="true"
+                              blankOption={this.props.selectDayLabel}
+                              options={this.props.dayOptions}
+                              data-name="from_reservation_day"
+                              value={this.state.from_reservation_day}
+                              onChange={this.onDataChange}
+                              />
+                          </li>
+                          {
+                            this.state.reservationDateQueryType === "between" ? (
+                              <li>
+                                To
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectYearLabel}
+                                  options={this.props.yearOptions}
+                                  data-name="to_reservation_year"
+                                  value={this.state.to_reservation_year}
+                                  onChange={this.onDataChange}
+                                  />
+                                /&nbsp;
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectMonthLabel}
+                                  options={this.props.monthOptions}
+                                  data-name="to_reservation_month"
+                                  value={this.state.to_reservation_month}
+                                  onChange={this.onDataChange}
+                                  />
+                                /&nbsp;
+                                <UI.Select
+                                  includeBlank="true"
+                                  blankOption={this.props.selectDayLabel}
+                                  options={this.props.dayOptions}
+                                  data-name="to_reservation_day"
+                                  value={this.state.to_reservation_day}
+                                  onChange={this.onDataChange}
+                                  />
+                              </li>
+                            ) : null
+                          }
+                        </ul>
+                      </dd>
+                    </dl>
+                  </div>
+                ) : null
+              }
             </div>
             <div className="filterKey">
               <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Menu<span>(multiple choice)</span></h3>
@@ -646,6 +682,22 @@ UI.define("Customers.Filter.QuerySider", function() {
                  value={
                    this.state.to_dob_year && this.state.to_dob_month && this.state.to_dob_day ?
                    `${this.state.to_dob_year}-${this.state.to_dob_month}-${this.state.to_dob_day}` : ""
+                 } />
+              <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
+              <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
+              <input
+                 name="reservation[start_date]"
+                 type="hidden"
+                 value={
+                   this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ?
+                   `${this.state.from_reservation_year}-${this.state.from_reservation_month}-${this.state.from_reservation_day}` : ""
+                 } />
+              <input
+                 name="reservation[end_date]"
+                 type="hidden"
+                 value={
+                   this.state.to_reservation_year && this.state.to_reservation_month && this.state.to_reservation_day ?
+                   `${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}` : ""
                  } />
 
               <div className="submit">
