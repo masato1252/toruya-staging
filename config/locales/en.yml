@@ -63,6 +63,13 @@ en:
     accept: Accept
     pend: Pend
     shop_closed: Shop closed
+    cancel: Cancel
+    pending: Pending
+    noshow: No show
+    checked_in: Checked in
+    checked_out: Checked out
+    reserved: Reserved
+    canceled: Canceled
     memo: Memo
     contain_some_warnings: Containing some warnings
   customer:

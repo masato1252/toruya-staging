@@ -17,22 +17,21 @@ class Customers::FilterController < DashboardController
     outcome = Customers::Filter.run(
       super_user: super_user,
       group_ids: param[:group_ids].split(","),
-      has_email: param[:has_email],
-      email_types: param[:email_types].split(","),
       living_place: param[:living_place].merge(
         states: param[:living_place][:states].present? ? param[:living_place][:states].split(",") : nil
       ),
+      has_email: param[:has_email],
+      email_types: param[:email_types].split(","),
       birthday: param[:birthday].merge(
         start_date: param[:birthday][:start_date].present? ? Date.parse(param[:birthday][:start_date]) : nil,
         end_date: param[:birthday][:end_date].present? ? Date.parse(param[:birthday][:end_date]) : nil
       ),
+      custom_ids: param[:custom_ids].split(","),
       reservation: param[:reservation].merge(
         start_date: param[:reservation][:start_date].present? ? Date.parse(param[:reservation][:start_date]).beginning_of_day : nil,
         end_date: param[:reservation][:end_date].present? ? Date.parse(param[:reservation][:end_date]).end_of_day : nil,
-        menu_ids: param[:reservation][:menu_ids].present? ? param[:reservation][:menu_ids].split(",") : nil,
-        staff_ids: param[:reservation][:staff_ids].present? ? param[:reservation][:staff_ids].split(",") : nil
-      ),
-      custom_ids: param[:custom_ids].split(",")
+        states: param[:reservation][:states].present? ? param[:reservation][:states].split(",") : nil
+      )
     )
 
     if outcome.valid?

@@ -38,7 +38,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         menu_ids: [],
         staff_id: "",
         staff_ids: [],
-        reservation_with_warning: ""
+        reservation_with_warning: "",
+        reservation_states: []
       });
     },
 
@@ -142,42 +143,21 @@ UI.define("Customers.Filter.QuerySider", function() {
       });
     },
 
-    renderContactGroupOptions: function() {
+    renderCheckboxOptions: function(options, stateName) {
       return (
-        this.props.contactGroupOptions.map(function(option) {
+        options.map(function(option) {
           return (
-            <li key={`group-${option.value}`}>
+            <li key={`${stateName}-${option.value}`}>
               <input
                 type="checkbox"
-                id={`group-${option.value}`}
+                id={`${stateName}-${option.value}`}
                 onChange={this.onCheckboxChange}
-                data-name="group_ids"
+                data-name={stateName}
                 data-value={option.value}
                 value={option.value}
-                checked={_.contains(this.state.group_ids, `${option.value}`)}
+                checked={_.contains(this.state[stateName], `${option.value}`)}
                 />
-              <label htmlFor={`group-${option.value}`}>{option.label}</label>
-            </li>
-          )
-        }.bind(this))
-      )
-    },
-
-    renderEmailTypes: function() {
-      return (
-        this.emailTypes.map(function(option) {
-          return (
-            <li key={option.value} >
-              <input
-                type="checkbox"
-                id={`email-${option.value}`}
-                onChange={this.onCheckboxChange}
-                data-name="email_types"
-                data-value={option.value}
-                value={option.value}
-                checked={_.contains(this.state.email_types, `${option.value}`)}
-                />
-              <label htmlFor={`email-${option.value}`}>{option.label}</label>
+              <label htmlFor={`${stateName}-${option.value}`}>{option.label}</label>
             </li>
           )
         }.bind(this))
@@ -209,7 +189,6 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     renderMultipleSelectInputs: function(items, collection_name, mappingOptions) {
-
       return (
         items.map(function(item) {
           let option = _.find(mappingOptions, function(option) { return option.value == item; }.bind(this))
@@ -265,7 +244,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                     <dt>Select Groups</dt>
                     <dd>
                       <ul>
-                        {this.renderContactGroupOptions()}
+                        {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
                       </ul>
                     </dd>
                   </dl>
@@ -370,7 +349,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           <dt>has witch email?</dt>
                           <dd>
                             <ul>
-                              {this.renderEmailTypes()}
+                              {this.renderCheckboxOptions(this.emailTypes, "email_types")}
                             </ul>
                           </dd>
                         </dl>
@@ -750,9 +729,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <dt>Select status</dt>
                   <dd>
                     <ul>
-                      <li><input type="radio" name="res_status" id="res_pending" /><label htmlFor="res_pending">pending</label></li>
-                      <li><input type="radio" name="res_status" id="res_reserved" /><label htmlFor="res_reserved">reserved</label></li>
-                      <li><input type="radio" name="res_status" id="res_cancelled" /><label htmlFor="res_cancelled">cancelled</label></li>
+                      {this.renderCheckboxOptions(this.props.reservationStateOptions, "reservation_states")}
                     </ul>
                   </dd>
                 </dl>
@@ -829,13 +806,8 @@ UI.define("Customers.Filter.QuerySider", function() {
                 ) : null
               }
               {
-                this.state.menu_ids.join(",") ? (
-                  <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
-                ) : null
-              }
-              {
-                this.state.staff_ids.join(",") ? (
-                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
+                this.state.reservation_states.join(",") ? (
+                  <input name="reservation[states]" type="hidden" value={this.state.reservation_states.join(",")} />
                 ) : null
               }
 

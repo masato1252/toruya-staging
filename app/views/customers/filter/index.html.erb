@@ -15,6 +15,9 @@
   menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
   menu_options: menu_group_options(@menu_result[:menu_options]),
   staff_options: staff_options(@staff_options, []),
+  reservation_state_options: Reservation.aasm.states.map{ |state|
+    { label: I18n.t("reservation.#{state.name}"), value: state.name }
+  },
   filter_path: customer_filter_index_path,
   form_auth_token: form_authenticity_token,
   home_label: I18n.t("customer.home"),

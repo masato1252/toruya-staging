@@ -64,6 +64,12 @@ ja:
     pend: 未承認
     shop_closed: 営業時間外
     cancel: 予約削除
+    pending: 承認待ち
+    noshow: 未来店
+    checked_in: チェックイン
+    checked_out: チェックアウト
+    reserved: 予約
+    canceled: CANCELED
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
   customer:
