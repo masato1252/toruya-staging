@@ -1,5 +1,6 @@
 module Staffs
   class Update < ActiveInteraction::Base
+    boolean :is_manager, default: false
     object :staff
     boolean :holiday_working, default: false
 
@@ -14,7 +15,13 @@ module Staffs
 
     def execute
       previous_shop_ids = staff.shop_ids
-      if staff.update(attrs)
+      attrs_allow_to_change = if is_manager
+                                attrs
+                              else
+                                attrs.slice(:first_name, :last_name, :phonetic_first_name, :phonetic_last_name)
+                              end
+
+      if staff.update(attrs_allow_to_change)
         # clean business_schedules, custom_schedules
         (previous_shop_ids - staff.shop_ids).each do |shop_id|
           staff.business_schedules.where(shop_id: shop_id).destroy_all

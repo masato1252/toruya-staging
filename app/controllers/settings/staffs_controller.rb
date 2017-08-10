@@ -59,7 +59,9 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = Staffs::Update.run(staff: @staff, attrs: params[:staff].permit!.to_h)
+    outcome = Staffs::Update.run(is_manager: can?(:manage, Settings),
+                                 staff: @staff,
+                                 attrs: params[:staff].permit!.to_h)
 
     StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
 
