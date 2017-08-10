@@ -20,7 +20,7 @@
     </ul>
     <% @menus.each do |menu| %>
       <dl>
-        <dt class="rowTTL"><%= menu.display_name %></dt>
+        <dt class="rowTTL"><%= menu.display_name, edit_settings_menu_path(menu) %></dt>
         <dd class="staff"><%= menu.staffs.active.size %></dd>
         <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.display_name : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>

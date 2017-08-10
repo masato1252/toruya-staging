@@ -211,7 +211,7 @@ ja:
       name: 台帳名
       sync_google: Google同期設定
       connect_google: Googleアカウントを設定
-      reconnect_google: Googleアカウントを再設定
+      reconnect_google: "%{email} Googleアカウントを再設定"
       reconnect_google_confirmation_message: "【！注意！】すでに同期しているGmail連絡先が存在しますので、「OK」ボタンを押した時点で既存のToruya顧客データが削除されます。本当に再設定しますか？"
       connected_google_group_title: Google連絡先グループ
       synchronization_title: 同期状態

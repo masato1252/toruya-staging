@@ -18,9 +18,7 @@
     </ul>
     <% @staffs.each do |staff| %>
       <dl>
-        <dt class="rowTTL">
-          <%= staff.name %>
-        </dt>
+        <dt class="rowTTL"><%= link_to staff.name, edit_settings_staff_path(staff) %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>

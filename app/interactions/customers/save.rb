@@ -124,7 +124,9 @@ class Customers::Save < ActiveInteraction::Base
         customer.google_contact_id = result.id
         customer.google_uid = user.uid
       end
-
+      # XXX: Some user use 携帯 by themselves, not system default category.
+      # https://gist.github.com/ilake/cf20b88acc2c3b28021f6c234704fa33 email types migration gist.
+      customer.email_types = customer.emails.map { |email| email[:type].to_s == "携帯" ? "mobile" : email[:type].to_s }.uniq.sort.join(",")
       customer.save
     end
 

@@ -12,7 +12,7 @@
     </ul>
     <% super_user.shops.order("id").each do |shop| %>
       <dl>
-        <dt class="rowTTL"><%= shop.name %></dt>
+        <dt class="rowTTL"><%= link_to shop.name, edit_settings_shop_business_schedules_path(shop) %></dt>
         <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_user_shop_business_schedules_path(super_user, shop), class: "BTNtarco" %>
