@@ -45,9 +45,9 @@ class Settings::WorkingTime::StaffsController < SettingsController
     if can?(:manage, Settings)
       redirect_to settings_user_working_time_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
     elsif params[:business_schedules]
-      redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
+      redirect_to request.referer || working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     else
-      redirect_to holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
+      redirect_to request.referer || holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     end
   end
 
