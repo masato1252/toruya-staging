@@ -17,7 +17,7 @@
     <% @shops.each do |shop| %>
       <dl>
         <dt class="rowTTL">
-          <%= link_to shop.name, edit_settings_shop_path(shop) %>
+          <%= link_to shop.name, edit_settings_user_shop_path(super_user, shop) %>
         </dt>
         <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>
         <dd class="function">
