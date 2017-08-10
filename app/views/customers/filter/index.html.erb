@@ -15,8 +15,11 @@
   menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
   menu_options: menu_group_options(@menu_result[:menu_options]),
   staff_options: staff_options(@staff_options, []),
-  reservation_state_options: Reservation.aasm.states.map{ |state|
-    { label: I18n.t("reservation.#{state.name}"), value: state.name }
+  reservation_before_checked_in_state_options: Reservation::BEFORE_CHECKED_IN_STATES.map{ |state|
+    { label: I18n.t("reservation.#{state}"), value: state }
+  },
+  reservation_after_checked_in_state_options: Reservation::AFTER_CHECKED_IN_STATES.map{ |state|
+    { label: I18n.t("reservation.#{state}"), value: state }
   },
   filter_path: customer_filter_index_path,
   form_auth_token: form_authenticity_token,

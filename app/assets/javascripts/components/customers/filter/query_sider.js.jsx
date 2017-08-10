@@ -724,28 +724,40 @@ UI.define("Customers.Filter.QuerySider", function() {
                 }
               </div>
               <div className="filterKey">
-                <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Reservation status：</h3>
-                <dl>
-                  <dt>Select status</dt>
-                  <dd>
-                    <ul>
-                      {this.renderCheckboxOptions(this.props.reservationStateOptions, "reservation_states")}
-                    </ul>
-                  </dd>
-                </dl>
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationBeforeCheckedInStates")} >
+                  {this.renderToggleIcon("reservationBeforeCheckedInStates")}
+                  Reservation status：
+                </h3>
+                {
+                  this.state.filterCategoryDisplaying["reservationBeforeCheckedInStates"] ? (
+                    <dl>
+                      <dt>Select status</dt>
+                      <dd>
+                        <ul>
+                          {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
+                        </ul>
+                      </dd>
+                    </dl>
+                  ) : null
+                }
               </div>
               <div className="filterKey">
-                <h3><i className="fa fa-plus-square-o" aria-hidden="true"></i>Check-in status</h3>
-                <dl>
-                  <dt>Select status</dt>
-                  <dd>
-                    <ul>
-                      <li><input type="radio" name="checkin_status" id="checked_in" /><label htmlFor="checked_in">checked-in</label></li>
-                      <li><input type="radio" name="checkin_status" id="checked_out" /><label htmlFor="checked_out">checked-out</label></li>
-                      <li><input type="radio" name="checkin_status" id="no_show" /><label htmlFor="no_show">no-show</label></li>
-                    </ul>
-                  </dd>
-                </dl>
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationAfterCheckedInStates")} >
+                  {this.renderToggleIcon("reservationAfterCheckedInStates")}
+                  Check-in status：
+                </h3>
+                {
+                  this.state.filterCategoryDisplaying["reservationAfterCheckedInStates"] ? (
+                    <dl>
+                      <dt>Select status</dt>
+                      <dd>
+                        <ul>
+                          {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
+                        </ul>
+                      </dd>
+                    </dl>
+                  ) : null
+                }
               </div>
             </div>
 
