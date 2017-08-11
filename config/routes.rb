@@ -94,7 +94,7 @@ Rails.application.routes.draw do
       get ":token", to: "staff_accounts#create", on: :collection, as: :user_from # user_from_callbacks_staff_accounts
     end
   end
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
   resources :calendars, only: [] do
     collection do
       get "working_schedule"

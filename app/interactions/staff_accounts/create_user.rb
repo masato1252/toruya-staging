@@ -22,7 +22,7 @@ module StaffAccounts
           staff_account.state = :active
           staff_account.save
 
-          { user: user, reset_password_token: raw }
+          { user: user, owner: staff_account.owner, reset_password_token: raw }
         else
           errors.add(:base, "email is invalid for user creation.")
         end
@@ -30,7 +30,7 @@ module StaffAccounts
         staff_account.state = :active
         staff_account.save
 
-        { user: user }
+        { user: user, owner: staff_account.owner }
       else
         errors.add(:base, "token was invalid")
       end
