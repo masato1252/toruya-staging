@@ -9,7 +9,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         { label: this.props.workLabel, value: "work" }
       ]
 
-      return ({
+      this.initialStates = {
         filterCategoryDisplaying: {},
         group_ids: [],
         livingPlaceInside: true,
@@ -40,11 +40,17 @@ UI.define("Customers.Filter.QuerySider", function() {
         staff_ids: [],
         reservation_with_warning: "",
         reservation_states: []
-      });
+      }
+
+      return this.initialStates;
     },
 
     componentDidMount: function() {
       this.applySelect2();
+    },
+
+    reset: function() {
+      this.setState(this.getInitialState());
     },
 
     applySelect2: function() {

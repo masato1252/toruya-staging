@@ -36,11 +36,11 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
 
     if param[:reservation][:start_date].present?
       query[:reservation] = param[:reservation].merge(
-        start_date: Date.parse(param[:birthday][:start_date])
+        start_date: Date.parse(param[:reservation][:start_date]).beginning_of_day
       )
 
       if param[:reservation][:end_date]
-        query[:reservation][:end_date] = Date.parse(param[:reservation][:end_date])
+        query[:reservation][:end_date] = Date.parse(param[:reservation][:end_date]).end_of_day
       end
 
       if param[:reservation][:menu_ids].present?

@@ -47,6 +47,7 @@ Rails.application.routes.draw do
 
     resources :printing, only: [:new]
     resources :filter, only: [:index, :create]
+    resources :saved_filters, only: [:index, :show, :create]
   end
 
   namespace :settings do

@@ -16,7 +16,6 @@ class Customers::FilterController < DashboardController
 
     query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)
     outcome = Customers::Filter.run(query.merge(super_user: super_user))
-    super_user.customer_query_filters.create( name: SecureRandom.uuid, query: query)
 
     if outcome.valid?
       @customers = outcome.result

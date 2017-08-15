@@ -6,7 +6,9 @@ UI.define("Customers.Filter.Dashboard", function() {
   var CustomersFilterDashboard = React.createClass({
     getInitialState: function() {
       return ({
-        customers: []
+        customers: [],
+        selected_filter: "",
+        filter_name: ""
       });
     },
 
@@ -14,14 +16,40 @@ UI.define("Customers.Filter.Dashboard", function() {
       $(".contents").height(window.innerHeight - $("header").innerHeight() - 50);
     },
 
+    onDataChange: function(event) {
+      let stateName = event.target.dataset.name;
+      let stateValue = event.target.dataset.value || event.target.value;
+
+      this.setState({[stateName]: stateValue});
+    },
+
     updateCustomers: function(customers) {
       this.setState({customers: customers});
+    },
+
+    saveFilter: function() {
+      event.preventDefault();
+      var _this = this;
+      var valuesToSubmit = $(this.querySider.filterForm).serialize();
+
+      $.ajax({
+        type: "POST",
+        url: _this.props.saveFilterPath, //sumbits it to the given url of the form
+        data: `${valuesToSubmit}&name=${this.state.filter_name}`
+      }).done(function() {
+        _this.setState({filter_name: ""})
+        _this.querySider.reset();
+        // _this.props.handleCreatedCustomer(result["customer"]);
+        // _this.props.updateCustomers(result["customers"]);
+        // _this.props.forceStopProcessing();
+      })
     },
 
     render: function() {
       return(
         <div id="dashboard" className="contents">
           <UI.Customers.Filter.QuerySider
+            ref={(c) => {this.querySider = c}}
             {...this.props}
             updateCustomers={this.updateCustomers}
           />
@@ -33,7 +61,17 @@ UI.define("Customers.Filter.Dashboard", function() {
           <div id="mainNav">
             <dl>
               <dd id="NAVsave">
-                <a className="BTNtarco" href="#">
+                {
+                  this.state.customers.length === 0 ? null : (
+                    <input type="text"
+                       data-name="filter_name"
+                       placeholder="Write Your Filter Name"
+                       value={this.state.filter_name}
+                       onChange={this.onDataChange} />
+                  )
+                }
+                <a className={`BTNtarco ${this.state.filter_name ? null : "disabled"}`} href="#"
+                  onClick={this.saveFilter} >
                   <i className="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                   <span>Save Filter</span>
                 </a>
