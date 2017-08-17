@@ -1,14 +1,17 @@
 class Customers::SavedFiltersController < DashboardController
-  def show
-    filter = super_user.customer_query_filters.find(params[:id])
+  def fetch
+    @filter = super_user.customer_query_filters.find(params[:id])
 
-    render json: filter.query
+    @filters = super_user.customer_query_filters
+
+    render :show
   end
 
   def create
     query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)
-    super_user.customer_query_filters.create( name: params[:name], query: query)
+    @filter = super_user.customer_query_filters.create( name: params[:name], query: query)
+    @filters = super_user.customer_query_filters
 
-    head :created
+    render :show, status: :created
   end
 end

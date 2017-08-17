@@ -21,8 +21,10 @@
   reservation_after_checked_in_state_options: Reservation::AFTER_CHECKED_IN_STATES.map{ |state|
     { label: I18n.t("reservation.#{state}"), value: state }
   },
+  saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
   filter_path: customer_filter_index_path,
   save_filter_path: customer_saved_filters_path,
+  fetch_filter_path: fetch_customer_saved_filters_path,
   form_auth_token: form_authenticity_token,
   home_label: I18n.t("customer.home"),
   work_label: I18n.t("customer.work"),

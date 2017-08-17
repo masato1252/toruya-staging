@@ -7,7 +7,6 @@ UI.define("Customers.Filter.Dashboard", function() {
     getInitialState: function() {
       return ({
         customers: [],
-        selected_filter: "",
         filter_name: ""
       });
     },
@@ -35,9 +34,11 @@ UI.define("Customers.Filter.Dashboard", function() {
       $.ajax({
         type: "POST",
         url: _this.props.saveFilterPath, //sumbits it to the given url of the form
-        data: `${valuesToSubmit}&name=${this.state.filter_name}`
-      }).done(function() {
+        data: `${valuesToSubmit}&name=${this.state.filter_name}`,
+        dataType: "JSON"
+      }).done(function(result) {
         _this.setState({filter_name: ""})
+        _this.querySider.updateFilterOption(result);
         _this.querySider.reset();
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);

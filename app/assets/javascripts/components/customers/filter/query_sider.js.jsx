@@ -10,6 +10,8 @@ UI.define("Customers.Filter.QuerySider", function() {
       ]
 
       this.initialStates = {
+        savedFilterOptions: this.props.savedFilterOptions,
+        current_saved_filter: "",
         filterCategoryDisplaying: {},
         group_ids: [],
         livingPlaceInside: true,
@@ -26,8 +28,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         to_dob_year: "",
         to_dob_month: "",
         to_dob_day: "",
+        hasReservation: true,
         reservationDateQueryType: "on",
-        hasReservation: "true",
         from_reservation_year: "",
         from_reservation_month: "",
         from_reservation_day: "",
@@ -38,7 +40,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         menu_ids: [],
         staff_id: "",
         staff_ids: [],
-        reservation_with_warning: "",
+        reservation_with_warnings: "",
         reservation_states: []
       }
 
@@ -75,7 +77,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         this.state.filterCategoryDisplaying[category_type] = true;
       }
 
-      this.setState(this.state.filterCategoryDisplaying);
+      this.setState({filterCategoryDisplaying: this.state.filterCategoryDisplaying});
     },
 
     onCheckboxChange: function(event) {
@@ -100,6 +102,32 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState({[stateName]: stateValue});
     },
 
+    onSavedFilterChange: function(event) {
+      const _this = this;
+      let stateName = event.target.dataset.name;
+      let stateValue = event.target.value;
+
+      this.setState({[stateName]: stateValue});
+      // Load Filter query to option
+      $.ajax({
+        type: "GET",
+        url: this.props.fetchFilterPath, //sumbits it to the given url of the form
+        data: { id: stateValue },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.updateFilterOption(result);
+        // _this.props.forceStopProcessing();
+      }).always(function() {
+        // _this.props.forceStopProcessing();
+      });
+    },
+
+    updateFilterOption: function(query) {
+      this.setState($.extend({}, this.getInitialState(), query), function() {
+        this.submitFilterForm()
+      }.bind(this));
+    },
+
     onRemoveItem: function(event) {
       event.preventDefault();
 
@@ -119,6 +147,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
       let newValues = this.state[event.target.dataset.name];
       let newValue = this.state[event.target.dataset.targetName]
+      if (!newValue) { return; }
 
       if (_.contains(newValues, newValue)) { return; }
 
@@ -238,14 +267,24 @@ UI.define("Customers.Filter.QuerySider", function() {
           </div>
 
           <div id="filterKeys" className="tabBody">
+            <div className="filterKey">
+              <UI.Select
+                includeBlank="true"
+                blankOption="Select A Filter"
+                options={this.state.savedFilterOptions}
+                data-name="current_saved_filter"
+                value={this.state.current_saved_filter}
+                onChange={this.onSavedFilterChange}
+                />
+            </div>
             <h2>Customer Info</h2>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "customer_group")} >
-                {this.renderToggleIcon("customer_group")}
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "group_ids")} >
+                {this.renderToggleIcon("group_ids")}
                 Customer Group
               </h3>
               {
-                this.state.filterCategoryDisplaying["customer_group"] ? (
+                this.state.filterCategoryDisplaying["group_ids"] ? (
                   <dl className="groups">
                     <dt>Select Groups</dt>
                     <dd>
@@ -313,12 +352,12 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "email")} >
-                {this.renderToggleIcon("email")}
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "has_email")} >
+                {this.renderToggleIcon("has_email")}
                 Email：
               </h3>
               {
-                this.state.filterCategoryDisplaying["email"] ? (
+                this.state.filterCategoryDisplaying["has_email"] ? (
                   <div>
                     <dl>
                       <dt>has email address?</dt>
@@ -373,7 +412,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               {
                 this.state.filterCategoryDisplaying["birthday"] ? (
                   <div>
-                    <dl class="filterFor">
+                    <dl className="filterFor">
                       <dd>
                         Born
                         <UI.Select
@@ -461,12 +500,12 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "customer_id")} >
-                {this.renderToggleIcon("customer_id")}
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "custom_ids")} >
+                {this.renderToggleIcon("custom_ids")}
                 Customer ID：
               </h3>
               {
-                this.state.filterCategoryDisplaying["customer_id"] ? (
+                this.state.filterCategoryDisplaying["custom_ids"] ? (
                   <dl className="customerID">
                     <dd>
                       <ul>
@@ -481,7 +520,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                             />
                           <a
                             href="#"
-                            className="BTNyellow"
+                            className={`BTNyellow ${this.state.custom_id ? null : "disabled"}`}
                             onClick={this.onAddItem}
                             data-target-name="custom_id"
                             data-name="custom_ids"
@@ -502,12 +541,12 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
             <h2>Reservation Records：</h2>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationDate")} >
-                {this.renderToggleIcon("reservationDate")}
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation")} >
+                {this.renderToggleIcon("reservation")}
                 Date：
               </h3>
               {
-                this.state.filterCategoryDisplaying["reservationDate"] ? (
+                this.state.filterCategoryDisplaying["reservation"] ? (
                   <div>
                     <dl className="filterFor">
                       <dd>
@@ -603,15 +642,15 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
             </div>
               {
-                this.state.hasReservation === "true" && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
+                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
             <div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationMenu")} >
-                  {this.renderToggleIcon("reservationMenu")}
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
+                  {this.renderToggleIcon("menu_ids")}
                   Menu<span>(multiple choice)</span>
                 </h3>
                 {
-                  this.state.filterCategoryDisplaying["reservationMenu"] ? (
+                  this.state.filterCategoryDisplaying["menu_ids"] ? (
                     <dl>
                       <dt>Select Menu：</dt>
                       <dd>
@@ -629,7 +668,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                             />
                             <a
                               href="#"
-                              className="BTNyellow"
+                              className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
                               onClick={this.onAddItem}
                               data-target-name="menu_id"
                               data-name="menu_ids"
@@ -649,12 +688,12 @@ UI.define("Customers.Filter.QuerySider", function() {
                 }
               </div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationStaff")} >
-                  {this.renderToggleIcon("reservationStaff")}
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "staff_ids")} >
+                  {this.renderToggleIcon("staff_ids")}
                   Staff<span>(multiple choice)</span>
                 </h3>
                 {
-                  this.state.filterCategoryDisplaying["reservationMenu"] ? (
+                  this.state.filterCategoryDisplaying["staff_ids"] ? (
                     <dl>
                       <dt>Select Staff：</dt>
                       <dd>
@@ -671,7 +710,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                             />
                             <a
                               href="#"
-                              className="BTNyellow"
+                              className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
                               onClick={this.onAddItem}
                               data-target-name="staff_id"
                               data-name="staff_ids"
@@ -691,12 +730,12 @@ UI.define("Customers.Filter.QuerySider", function() {
                 }
               </div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationWithWarning")} >
-                  {this.renderToggleIcon("reservationWithWarning")}
+                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation_with_warnings")} >
+                  {this.renderToggleIcon("reservation_with_warnings")}
                   Error：
                 </h3>
                 {
-                  this.state.filterCategoryDisplaying["reservationWithWarning"] ? (
+                  this.state.filterCategoryDisplaying["reservation_with_warnings"] ? (
                   <dl>
                     <dt>has errors?</dt>
                     <dd>
@@ -705,9 +744,9 @@ UI.define("Customers.Filter.QuerySider", function() {
                           <input
                             type="radio"
                             id="hasANerror"
-                            data-name="reservation_with_warning"
+                            data-name="reservation_with_warnings"
                             data-value="true"
-                            checked={this.state.reservation_with_warning === "true"}
+                            checked={this.state.reservation_with_warnings === "true"}
                             onChange={this.onDataChange}
                             />
                           <label htmlFor="hasANerror">YES：有り</label>
@@ -716,9 +755,9 @@ UI.define("Customers.Filter.QuerySider", function() {
                           <input
                             type="radio"
                             id="hasNOrror"
-                            data-name="reservation_with_warning"
+                            data-name="reservation_with_warnings"
                             data-value="false"
-                            checked={this.state.reservation_with_warning === "false"}
+                            checked={this.state.reservation_with_warnings === "false"}
                             onChange={this.onDataChange}
                             />
                           <label htmlFor="hasNOemail">NO：無し</label>
@@ -807,6 +846,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
               <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
               <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
+              <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
               {
                 this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
                   <input
@@ -821,6 +861,16 @@ UI.define("Customers.Filter.QuerySider", function() {
                     name="reservation[end_date]"
                     type="hidden"
                     value={`${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}`} />
+                ) : null
+              }
+              {
+                this.state.menu_ids.join(",") ? (
+                  <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
+                ) : null
+              }
+              {
+                this.state.staff_ids.join(",") ? (
+                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
                 ) : null
               }
               {

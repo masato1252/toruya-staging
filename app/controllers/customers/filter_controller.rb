@@ -9,6 +9,8 @@ class Customers::FilterController < DashboardController
     @staff_options = super_user.staffs.map do |staff|
       ::Options::StaffOption.new(id: staff.id, name: staff.name)
     end
+
+    @filters = super_user.customer_query_filters
   end
 
   def create

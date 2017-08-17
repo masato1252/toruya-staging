@@ -13,7 +13,7 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
     end
 
     if param[:has_email].present?
-      query[:has_email] = ActiveModel::Type::Boolean.new.cast(param[:has_email])
+      query[:has_email] = param[:has_email]
     end
 
     if param[:email_types].present?
