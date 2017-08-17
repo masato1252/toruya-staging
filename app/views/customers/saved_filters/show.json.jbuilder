@@ -59,7 +59,7 @@ filterCategoryDisplaying = {}
 
     if !value["with_warnings"].nil?
       filterCategoryDisplaying["reservation_with_warnings"] = true
-      json.set! :reservation_with_warnings, ActiveModel::Type::Boolean.new.cast(value["with_warnings"])
+      json.set! :reservation_with_warnings, value["with_warnings"]
     end
   else
     json.set! key, value
