@@ -1,5 +1,6 @@
 json.savedFilterOptions @filters.map{ |filter| { label: filter.name, value: filter.id } }
-json.current_saved_filter @filter.id
+json.current_saved_filter_id @filter.id
+json.current_saved_filter_name @filter.name
 filterCategoryDisplaying = {}
 
 @filter.query.each do |key, value|

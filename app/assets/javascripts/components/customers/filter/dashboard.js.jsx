@@ -7,7 +7,8 @@ UI.define("Customers.Filter.Dashboard", function() {
     getInitialState: function() {
       return ({
         customers: [],
-        filter_name: ""
+        filter_name: "",
+        current_saved_filter_id: ""
       });
     },
 
@@ -20,6 +21,10 @@ UI.define("Customers.Filter.Dashboard", function() {
       let stateValue = event.target.dataset.value || event.target.value;
 
       this.setState({[stateName]: stateValue});
+    },
+
+    updateFilter: function(target, value) {
+      this.setState({ [target]: value });
     },
 
     updateCustomers: function(customers) {
@@ -37,13 +42,40 @@ UI.define("Customers.Filter.Dashboard", function() {
         data: `${valuesToSubmit}&name=${this.state.filter_name}`,
         dataType: "JSON"
       }).done(function(result) {
-        _this.setState({filter_name: ""})
-        _this.querySider.updateFilterOption(result);
+        _this.querySider.updateFilterOption(result, false);
         _this.querySider.reset();
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
         // _this.props.forceStopProcessing();
       })
+    },
+
+    deleteFilter: function() {
+      event.preventDefault();
+      var _this = this;
+
+      $.ajax({
+        type: "POST",
+        url: _this.props.deleteFilterPath, //sumbits it to the given url of the form
+        data: { _method: "delete", id: this.state.current_saved_filter_id },
+        dataType: "JSON"
+      }).done(function(result) {
+        _this.querySider.updateFilterOption(result, false);
+        _this.querySider.reset();
+        _this.setState({customers: []});
+        // _this.props.forceStopProcessing();
+      })
+    },
+
+    renderDeleteFilterButton: function() {
+      if (this.state.current_saved_filter_id) {
+        return (
+          <a className="BTNtarco" href="#" onClick={this.deleteFilter} >
+            <i className="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+            <span>Delete Filter</span>
+          </a>
+        )
+      }
     },
 
     render: function() {
@@ -53,6 +85,7 @@ UI.define("Customers.Filter.Dashboard", function() {
             ref={(c) => {this.querySider = c}}
             {...this.props}
             updateCustomers={this.updateCustomers}
+            updateFilter={this.updateFilter}
           />
           <UI.Customers.Filter.CustomersList
             {...this.props}
@@ -76,6 +109,9 @@ UI.define("Customers.Filter.Dashboard", function() {
                   <i className="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                   <span>Save Filter</span>
                 </a>
+              </dd>
+              <dd id="NAVdelete">
+                {this.renderDeleteFilterButton()}
               </dd>
               <dd id="NAVprintList"><select><option>Print List</option><option>A4</option></select><a href="#" className="BTNtarco" title="印刷"><i className="fa fa-print"></i></a></dd>
               <dd id="NAVprintAddress"><select><option>Print Address</option><option>A4</option><option>Postcard Vert</option><option>Postcard Horiz</option><option>Envelope Cho3</option></select><a href="#" className="BTNtarco" title="印刷"><i className="fa fa-print"></i></a></dd>

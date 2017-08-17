@@ -11,7 +11,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
       this.initialStates = {
         savedFilterOptions: this.props.savedFilterOptions,
-        current_saved_filter: "",
+        current_saved_filter_id: "",
         filterCategoryDisplaying: {},
         group_ids: [],
         livingPlaceInside: true,
@@ -52,7 +52,9 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     reset: function() {
-      this.setState(this.getInitialState());
+      this.setState(_.omit(this.getInitialState(), "savedFilterOptions"));
+      this.props.updateFilter("filter_name", "");
+      this.props.updateFilter("current_saved_filter_id", "");
     },
 
     applySelect2: function() {
@@ -109,6 +111,11 @@ UI.define("Customers.Filter.QuerySider", function() {
 
       this.setState({[stateName]: stateValue});
       // Load Filter query to option
+      if (!stateValue) {
+        this.reset();
+        this.props.updateCustomers([]);
+        return;
+      }
       $.ajax({
         type: "GET",
         url: this.props.fetchFilterPath, //sumbits it to the given url of the form
@@ -122,10 +129,14 @@ UI.define("Customers.Filter.QuerySider", function() {
       });
     },
 
-    updateFilterOption: function(query) {
+    updateFilterOption: function(query, queryCustomers=true) {
       this.setState($.extend({}, this.getInitialState(), query), function() {
-        this.submitFilterForm()
+        if (queryCustomers) {
+          this.submitFilterForm()
+        }
       }.bind(this));
+      this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
+      this.props.updateFilter("current_saved_filter_id", query["current_saved_filter_id"]);
     },
 
     onRemoveItem: function(event) {
@@ -272,8 +283,8 @@ UI.define("Customers.Filter.QuerySider", function() {
                 includeBlank="true"
                 blankOption="Select A Filter"
                 options={this.state.savedFilterOptions}
-                data-name="current_saved_filter"
-                value={this.state.current_saved_filter}
+                data-name="current_saved_filter_id"
+                value={this.state.current_saved_filter_id}
                 onChange={this.onSavedFilterChange}
                 />
             </div>
@@ -817,6 +828,11 @@ UI.define("Customers.Filter.QuerySider", function() {
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
+              {
+                this.state.current_saved_filter_id ? (
+                  <input name="id" type="hidden" value={this.state.current_saved_filter_id} />
+                ) : null
+              }
               <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />

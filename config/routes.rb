@@ -48,7 +48,10 @@ Rails.application.routes.draw do
     resources :printing, only: [:new]
     resources :filter, only: [:index, :create]
     resources :saved_filters, only: [:index, :create] do
-      get :fetch, on: :collection
+      collection do
+        get :fetch
+        delete :delete
+      end
     end
   end
 
