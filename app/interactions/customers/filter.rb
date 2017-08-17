@@ -13,7 +13,6 @@ class Customers::Filter < ActiveInteraction::Base
     date :end_date, default: nil
   end
 
-  object :dob_range, default: nil, class: Range
   array :custom_ids, default: nil
   hash :reservation, default: nil do
     boolean :has_reservation, default: nil
@@ -72,11 +71,13 @@ class Customers::Filter < ActiveInteraction::Base
       scoped = scoped.where(custom_ids_sql)
     end
 
-    if reservation && !reservation[:has_reservation].nil?
+    # XXX
+    # Don't handle reservation without date case currently.
+    if reservation && reservation[:start_date].present?
       if reservation[:has_reservation]
         scoped = scoped.includes(:reservations).references(:reservations)
 
-        if reservation[:start_date].present?
+        # if reservation[:start_date].present?
           scoped = case reservation[:query_type]
                    when "on"
                      scoped.where("reservations.start_time": reservation[:start_date]..reservation[:start_date].end_of_day)
@@ -87,9 +88,9 @@ class Customers::Filter < ActiveInteraction::Base
                    when "between"
                      scoped.where("reservations.start_time": reservation[:start_date]..reservation[:end_date])
                    end
-        else
-          scoped = scoped.where("reservations.id is not NULL")
-        end
+        # else
+        #   scoped = scoped.where("reservations.id is not NULL")
+        # end
 
         if reservation[:menu_ids].present?
           scoped = scoped.where("reservations.menu_id": reservation[:menu_ids])
@@ -111,7 +112,7 @@ class Customers::Filter < ActiveInteraction::Base
         # No reservation case
         scoped = scoped.left_outer_joins(:reservations)
 
-        if reservation[:start_date].present?
+        # if reservation[:start_date].present?
           scoped = case reservation[:query_type]
                    when "on"
                      scoped.where.not("reservations.start_time": reservation[:start_date]..reservation[:start_date].end_of_day)
@@ -122,12 +123,11 @@ class Customers::Filter < ActiveInteraction::Base
                    when "between"
                      scoped.where.not("reservations.start_time": reservation[:start_date]..reservation[:end_date])
                    end
-        else
-          scoped = scoped.where("reservations.id is NULL")
-        end
+        # else
+        #   scoped = scoped.where("reservations.id is NULL")
+        # end
       end
     end
-
     scoped.distinct
   end
 end
