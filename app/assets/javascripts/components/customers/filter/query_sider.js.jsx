@@ -846,7 +846,12 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
               <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
               <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
-              <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
+              {
+                this.state.reservation_with_warnings ? (
+                  <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
+                ) : null
+              }
+
               {
                 this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
                   <input
