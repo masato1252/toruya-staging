@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       resources :ranks, except: [:show]
 
       namespace :working_time do
-        resources :staffs, only: [:index, :edit, :update] do
+        resources :staffs, only: [:index, :update] do
           member do
             get :working_schedules
             get :holiday_schedules
