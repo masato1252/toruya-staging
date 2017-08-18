@@ -13,17 +13,17 @@
     </ul>
     <% @staffs.each do |staff| %>
       <%
-        path = if params[:mode] == "working_schedules"
-                 working_schedules_settings_user_working_time_staff_path(super_user, staff)
-               else
-                 holiday_schedules_settings_user_working_time_staff_path(super_user, staff)
-               end
+        edit_staff_path = if params[:mode] == "working_schedules"
+                            working_schedules_settings_user_working_time_staff_path(super_user, staff)
+                          else
+                            holiday_schedules_settings_user_working_time_staff_path(super_user, staff)
+                          end
       %>
       <dl>
-        <dt><%= link_to staff.name, path %></dt>
+        <dt><%= link_to staff.name, edit_staff_path %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), path, class: "BTNtarco" %>
+          <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
         </dd>
       </dl>
     <% end %>
