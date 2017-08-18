@@ -20,13 +20,13 @@
     </ul>
     <% @menus.each do |menu| %>
       <dl>
-        <dt class="rowTTL"><%= menu.display_name, edit_settings_menu_path(menu) %></dt>
+        <dt class="rowTTL"><%= link_to menu.display_name, edit_settings_user_menu_path(super_user, menu) %></dt>
         <dd class="staff"><%= menu.staffs.active.size %></dd>
         <dd class="blocks"><%= menu.reservation_setting ? menu.reservation_setting.display_name : "未設定" %></dd>
         <dd class="updateTime"><%= menu.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_user_menu_path(super_user,menu), class: "BTNtarco" %>
-          <%= link_to t("action.delete"), settings_user_menu_path(super_user,menu), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
+          <%= link_to t("action.edit"), edit_settings_user_menu_path(super_user, menu), class: "BTNtarco" %>
+          <%= link_to t("action.delete"), settings_user_menu_path(super_user, menu), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
         </dd>
       </dl>
     <% end %>

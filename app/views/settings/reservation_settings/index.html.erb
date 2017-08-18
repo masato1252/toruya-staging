@@ -19,7 +19,7 @@
 
     <% @reservation_settings.each do |setting| %>
       <dl>
-        <dt class="rowTTL"><%= link_to setting.name, edit_settings_reservation_setting_path(setting) %></dt>
+        <dt class="rowTTL"><%= link_to setting.name, edit_settings_user_reservation_setting_path(super_user, setting) %></dt>
         <dd class="updateTime"><%= setting.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_user_reservation_setting_path(super_user, setting), class: "BTNtarco" %>

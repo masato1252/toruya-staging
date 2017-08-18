@@ -18,7 +18,7 @@
     </ul>
     <% @settings_categories.each do |settings_category| %>
       <dl>
-        <dt class="rowTTL"><%= link_to settings_category.name, edit_settings_category_path(settings_category) %></dt>
+        <dt class="rowTTL"><%= link_to settings_category.name, edit_settings_user_category_path(super_user, settings_category) %></dt>
         <dd class="updateTime"><%= settings_category.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_user_category_path(super_user, settings_category), class: "BTNtarco" %>
