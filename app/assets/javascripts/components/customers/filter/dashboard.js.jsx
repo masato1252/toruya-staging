@@ -82,7 +82,7 @@ UI.define("Customers.Filter.Dashboard", function() {
       if (this.state.current_saved_filter_id) {
         return (
           <a className="BTNtarco" href="#" onClick={this.deleteFilter} >
-            <i className="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+            <i className="fa fa-minus fa-2x" aria-hidden="true"></i>
             <span>Delete Filter</span>
           </a>
         )
