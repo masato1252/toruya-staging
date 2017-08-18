@@ -13,7 +13,7 @@
     </ul>
     <% @staffs.each do |staff| %>
       <dl>
-        <dt><%= link_to staff.name, edit_settings_working_time_staff_path(staff) %></dt>
+        <dt><%= link_to staff.name, edit_settings_user_working_time_staff_path(super_user, staff) %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <% if params[:mode] == "working_schedules" %>
