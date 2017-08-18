@@ -172,6 +172,8 @@ UI.define("Customers.Filter.QuerySider", function() {
 
     submitFilterForm: function() {
       event.preventDefault();
+      if (!this.isQueryConditionLegal()) { return; }
+
       var _this = this;
       var valuesToSubmit = $(this.filterForm).serialize();
 
@@ -267,6 +269,15 @@ UI.define("Customers.Filter.QuerySider", function() {
       else {
         return <i className="fa fa-plus-square-o" aria-hidden="true"></i>
       }
+    },
+
+    isQueryConditionLegal: function() {
+      return (
+        _.uniq([!this.state.from_dob_year, !this.state.from_dob_month, !this.state.from_dob_day]).length === 1 &&
+        _.uniq([!this.state.to_dob_year, !this.state.to_dob_month, !this.state.to_dob_day]).length === 1 &&
+        _.uniq([!this.state.from_reservation_year, !this.state.from_reservation_month, !this.state.from_reservation_day]).length === 1 &&
+        _.uniq([!this.state.to_reservation_year, !this.state.to_reservation_month, !this.state.to_reservation_day]).length === 1
+      )
     },
 
     render: function() {
@@ -895,7 +906,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
               <div className="submit">
                 <a
-                  className="BTNtarco"
+                  className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
                   onClick={this.submitFilterForm}
                   href="#"
                   >Search
