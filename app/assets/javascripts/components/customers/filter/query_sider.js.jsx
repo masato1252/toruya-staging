@@ -827,6 +827,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               id="filter-form"
               method="post"
               ref={(c) => {this.filterForm = c}}
+              onSubmit={this.submitFilterForm}
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
@@ -905,7 +906,6 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="submit">
                 <a
                   className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
-                  onClick={this.submitFilterForm}
                   href="#"
                   >Search
                 </a>
