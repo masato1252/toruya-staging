@@ -1,3 +1,7 @@
+.hidden {
+  display: none !important;
+}
+
 .busHours.shopClose {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
@@ -63,5 +67,14 @@ button[disabled], a.disabled, input[disabled] {
 #resList {
   &.contBody {
     overflow: scroll;
+  }
+}
+
+// customer filter
+.filter {
+  .filterKey {
+    .select2-container {
+      display: inline-block;
+    }
   }
 }

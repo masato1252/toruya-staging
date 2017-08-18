@@ -652,51 +652,47 @@ UI.define("Customers.Filter.QuerySider", function() {
                 ) : null
               }
             </div>
-              {
-                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
-            <div>
+
+            <div className={
+                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? null : "hidden"}>
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
                   {this.renderToggleIcon("menu_ids")}
                   Menu<span>(multiple choice)</span>
                 </h3>
-                {
-                  this.state.filterCategoryDisplaying["menu_ids"] ? (
-                    <dl>
-                      <dt>Select Menu：</dt>
-                      <dd>
-                        <ul>
-                          {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
-                          <li>
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectMenuLabel}
-                              options={this.props.menuGroupOptions}
-                              id="select2"
-                              data-name="menu_id"
-                              value={this.state.menu_id}
-                              onChange={this.onDataChange}
-                            />
-                            <a
-                              href="#"
-                              className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
-                              onClick={this.onAddItem}
-                              data-target-name="menu_id"
-                              data-name="menu_ids"
-                              >
-                              <i
-                                className="fa fa-plus"
-                                aria-hidden="true"
-                                data-target-name="menu_id"
-                                data-name="menu_ids" >
-                              </i>
-                            </a>
-                          </li>
-                        </ul>
-                      </dd>
-                    </dl>
-                  ) : null
-                }
+                <dl className={this.state.filterCategoryDisplaying["menu_ids"] ? null : "hidden"}>
+                  <dt>Select Menu：</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectMenuLabel}
+                          options={this.props.menuGroupOptions}
+                          id="select2"
+                          data-name="menu_id"
+                          value={this.state.menu_id}
+                          onChange={this.onDataChange}
+                          />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="menu_id"
+                          data-name="menu_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="menu_id"
+                            data-name="menu_ids" >
+                          </i>
+                        </a>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
               </div>
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "staff_ids")} >
@@ -816,9 +812,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                 }
               </div>
             </div>
-
-                ) : null
-              }
           </div>
             <form
               acceptCharset="UTF-8"
