@@ -8,7 +8,8 @@ UI.define("Customers.Filter.Dashboard", function() {
       return ({
         customers: [],
         filter_name: "",
-        current_saved_filter_id: ""
+        current_saved_filter_id: "",
+        customers_processing: false
       });
     },
 
@@ -28,7 +29,17 @@ UI.define("Customers.Filter.Dashboard", function() {
     },
 
     updateCustomers: function(customers) {
-      this.setState({customers: customers});
+      this.setState({customers: customers}, function() {
+        this.stopProcessing()
+      }.bind(this));
+    },
+
+    startProcessing: function() {
+      this.setState({customers_processing: true});
+    },
+
+    stopProcessing: function() {
+      this.setState({customers_processing: false});
     },
 
     saveFilter: function() {
@@ -86,10 +97,13 @@ UI.define("Customers.Filter.Dashboard", function() {
             {...this.props}
             updateCustomers={this.updateCustomers}
             updateFilter={this.updateFilter}
+            startProcessing={this.startProcessing}
           />
           <UI.Customers.Filter.CustomersList
             {...this.props}
             customers={this.state.customers}
+            processing={this.state.customers_processing}
+            processingMessage={this.props.processingMessage}
           />
 
           <div id="mainNav">

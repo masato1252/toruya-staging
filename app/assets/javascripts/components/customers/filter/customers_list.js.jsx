@@ -1,3 +1,5 @@
+//= require "components/shared/processing_bar"
+
 "use strict";
 
 UI.define("Customers.Filter.CustomersList", function() {
@@ -20,6 +22,7 @@ UI.define("Customers.Filter.CustomersList", function() {
     render: function() {
       return (
         <div id="resList" className="contBody">
+          <UI.ProcessingBar processing={this.props.processing} processingMessage={this.props.processingMessage} />
           <dl className="tableTTL">
             <dt className="status">&nbsp;</dt>
             <dt className="customer">顧客氏名</dt>

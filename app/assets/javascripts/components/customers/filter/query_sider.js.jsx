@@ -176,6 +176,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
       var _this = this;
       var valuesToSubmit = $(this.filterForm).serialize();
+      _this.props.startProcessing();
 
       $.ajax({
         type: "POST",
@@ -183,11 +184,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         data: valuesToSubmit,
         dataType: "JSON"
       }).success(function(result) {
-        // _this.props.handleCreatedCustomer(result["customer"]);
         _this.props.updateCustomers(result["customers"]);
-        // _this.props.forceStopProcessing();
       }).always(function() {
-        // _this.props.forceStopProcessing();
       });
     },
 
