@@ -4,7 +4,6 @@ module StaffAccounts
     object :owner, class: User
 
     hash :params do
-      boolean :enabled
       string :email, default: nil
       string :level, default: "staff"
     end
@@ -14,12 +13,8 @@ module StaffAccounts
       staff_account.email = params[:email]
       staff_account.level = params[:level]
 
-      if params[:enabled]
-        unless staff_account.active?
-          staff_account.state = :pending
-        end
-      else
-        staff_account.state = :disabled
+      unless staff_account.active?
+        staff_account.state = :pending
       end
 
       if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user)

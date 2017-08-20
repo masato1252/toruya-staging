@@ -34,15 +34,6 @@
     <% if can? :manage, Settings %>
       <h3><%= t("settings.staff_account.info_title") %><strong>必須項目</strong></h3>
       <div id="staffAccount" class="formRow">
-        <dl class="onoffSetting">
-          <dt><%= t("settings.staff_account.using_staff_account") %></dt>
-          <dd>
-            <input name="staff_account[enabled]" type="hidden" value="false" />
-            <%= check_box_tag "staff_account[enabled]", true, (@staff_account ? !@staff_account.disabled? : true),
-              id: "accountUse", class: "BTNonoff" %>
-            <label for="accountUse"></label>
-          </dd>
-        </dl>
         <dl>
           <dt><%= t("settings.staff_account.email") %></dt>
           <dd>
