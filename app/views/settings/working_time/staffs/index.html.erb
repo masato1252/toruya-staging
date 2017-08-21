@@ -2,7 +2,7 @@
   <h2><%= Staff.model_name.human %> − 勤務日時</h2>
 </div>
 <div id="about">
-  <p><%= t("settings.staff_working_time.info_1") %><br /><%= t("settings.staff_working_time.info_2") %></p>
+  <p><%= t("settings.staff_working_time.info_1.#{params[:mode] || @mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 
 <div id="settingForm">
@@ -11,7 +11,7 @@
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
-    <% @staffs.each do |staff| %>
+    <% staffs.each do |staff| %>
       <%
         edit_staff_path = if params[:mode] == "working_schedules"
                             working_schedules_settings_user_working_time_staff_path(super_user, staff)

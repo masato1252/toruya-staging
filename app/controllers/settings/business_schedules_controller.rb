@@ -1,5 +1,10 @@
 class Settings::BusinessSchedulesController < SettingsController
   def index
+    @shops = if can?(:manage, :all)
+               super_user.shops.order("id")
+             else
+               [shop]
+             end
   end
 
   def edit

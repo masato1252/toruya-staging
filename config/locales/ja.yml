@@ -185,7 +185,12 @@ ja:
       staff_capability: スタッフ
       manager_capability: 管理者
     staff_working_time:
-      info_1: スタッフの勤務日時です。
+      title:
+        working_schedules: 勤務日時
+        holiday_schedules: 休暇
+      info_1:
+        working_schedules: 貴方の勤務日時を設定します。
+        holiday_schedules: 貴方の休暇を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       in_out_label: 出勤／休み
       start_label: 出勤予定

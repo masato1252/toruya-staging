@@ -5,61 +5,67 @@ class Ability
   def initialize(current_user, super_user)
     @current_user, @super_user = current_user, super_user
 
-    if current_user_level
+    if admin_level
+      # manager staff permission
       can :manage, :all
-      can :manage, GoogleContact
-    end
+      # can :manage, GoogleContact
+      # can :manage, Shop
+      # can :create, Staff
+      # can :manage, Profile
 
-    if manager_level
-      can :manage, :all_shops_selector
+      if super_user.free_level? && super_user.staffs.active.exists?
+        cannot :create, Staff
+      end
+    elsif manager_level
+      # manager staff permission
       can :read, Shop
       can :manage, Settings
-      can :manage, :staff_regular_working_day_permission
-      can :update_regular_working_schedule, Shop
-      can :manage, :staff_temporary_working_day_permission
-      can :update_temoporay_working_schedule, Shop
-      can :manage, :staff_holiday_permission
 
-      if super_user.free_level?
-        if !super_user.staffs.active.exists?
-          can :create, Staff
+      can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
+        shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      end
+
+      can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
+        shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      end
+
+      can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
+        shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      end
+
+      can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
+        shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      end
+    else
+      # normal staff permission
+      if current_user_staff_account.try(:active?) && current_user_staff
+        can :read, Shop do |shop|
+          current_user_staff.shop_staffs.where(shop: shop).exists?
         end
-      elsif super_user.basic_level? || super_user.premium_level?
-        can :swith_staffs_selector, User
-        can :create, Staff
-      end
-    end
 
-    # staff schedule permission
-    if current_user_staff_account.try(:active?) && current_user_staff
-      can :read, Shop do |shop|
-        current_user_staff.shop_staffs.where(shop: shop).exists?
-      end
-
-      if current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true).exists?
-        can :manage, :staff_regular_working_day_permission
-        can :update_regular_working_schedule, Shop do |shop|
-          current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true, shop: shop).exists?
+        can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
+          current_user_staff.shop_staffs.where(staff_full_time_permission: true, shop_id: shop_staff.shop_id).exists?
         end
-      end
 
-      if current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true).exists?
-        can :manage, :staff_temporary_working_day_permission
-        can :update_temoporay_working_schedule, Shop do |shop|
-          current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop: shop).exists?
+        can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
+          current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
         end
-      end
 
-      if current_user_staff.staff_holiday_permission
-        can :manage, :staff_holiday_permission
+        can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
+          current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+        end
+
+        can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
+          current_user_staff.staff_holiday_permission
+        end
       end
     end
   end
 
   private
 
-  def current_user_level
-    @current_user_level ||= current_user == super_user
+  def admin_level
+    @shop_owner_level ||= current_user == super_user
   end
 
   def manager_level

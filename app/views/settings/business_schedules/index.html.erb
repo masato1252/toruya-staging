@@ -10,7 +10,7 @@
       <li class="rowTTL"><%= t("settings.shop.name") %></li>
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
-    <% super_user.shops.order("id").each do |shop| %>
+    <% @shops.each do |shop| %>
       <dl>
         <dt class="rowTTL"><%= link_to shop.name, edit_settings_user_shop_business_schedules_path(super_user, shop) %></dt>
         <dd class="updateTime"><%= shop.updated_at.to_s(:date) %></dd>

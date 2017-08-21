@@ -16,7 +16,7 @@
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
-    <% @staffs.each do |staff| %>
+    <% staffs.each do |staff| %>
       <dl>
         <dt class="rowTTL"><%= link_to staff.name, edit_settings_user_staff_path(super_user, staff) %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>

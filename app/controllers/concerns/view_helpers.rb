@@ -15,21 +15,24 @@ module ViewHelpers
   end
 
   def shops
-    @shops ||= if can?(:manage, :all_shops_selector)
+    @shops ||= if can?(:manage, :all)
                  super_user.shops.order("id")
                else
-                 # TODO: Need to know staff account permission.
-                 # current_user.current_staff(super_user).shops.order("id")
-                 super_user.shops.order("id")
+                 current_user.current_staff(super_user).shops.order("id")
                end
   end
 
   def shop
-    @shop ||= Shop.find_by(id: params[:shop_id])
+    session[:shop_id] = params[:shop_id] if params[:shop_id]
+    @shop ||= Shop.find_by(id: session[:shop_id])
   end
 
   def staffs
-    @staffs ||= super_user.staffs.active.order("id")
+    @staffs = if can?(:manage, :all)
+                super_user.staffs.active.order(:id)
+              else
+                super_user.staffs.active.joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+              end
   end
 
   def staff

@@ -62,7 +62,7 @@
         shop_staffs = staff.shop_staffs.to_a
         staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
 
-        staff_shop_options = @shops.map do |shop|
+        staff_shop_options = shops.map do |shop|
           shop_staff = shop_staffs.find { |shop_staff| shop_staff.shop_id == shop.id }
 
           ::Option.new(

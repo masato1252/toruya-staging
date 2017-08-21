@@ -5,7 +5,6 @@ class Settings::StaffsController < SettingsController
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = super_user.staffs.active.order(:id)
   end
 
   # GET /staffs/1
@@ -16,12 +15,10 @@ class Settings::StaffsController < SettingsController
   # GET /staffs/new
   def new
     @staff = super_user.staffs.new
-    @shops = super_user.shops
   end
 
   # GET /staffs/1/edit
   def edit
-    @shops = super_user.shops
     @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
   end
 
@@ -44,8 +41,6 @@ class Settings::StaffsController < SettingsController
         format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
-        # @staff ???
-        @shops = super_user.shops
         format.html { render :new }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
       end
@@ -76,7 +71,6 @@ class Settings::StaffsController < SettingsController
         end
         format.json { render :show, status: :ok, location: @staff }
       else
-        @shops = super_user.shops
         format.html { render :edit }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
       end
