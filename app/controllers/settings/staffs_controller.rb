@@ -35,10 +35,6 @@ class Settings::StaffsController < SettingsController
 
     StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
 
-    params.permit![:business_schedules].each do |shop_id, attrs|
-      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: staff, attrs: attrs.to_h)
-    end if params[:business_schedules]
-
     params.permit![:shop_staff].each do |shop_id, attrs|
       staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
@@ -64,10 +60,6 @@ class Settings::StaffsController < SettingsController
                                  attrs: params[:staff].permit!.to_h)
 
     StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
-
-    params.permit![:business_schedules].each do |shop_id, attrs|
-      BusinessSchedules::Create.run(shop: Shop.find(shop_id), staff: @staff, attrs: attrs.to_h)
-    end if params[:business_schedules]
 
     params.permit![:shop_staff].each do |shop_id, attrs|
       @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)

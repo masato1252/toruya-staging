@@ -53,13 +53,6 @@ UI.define("Settings.Staff.Formfields", function() {
       this.setState({staffShopOptions: this.state.staffShopOptions});
     },
 
-    handleShopFullTime: function(event) {
-      var matchedOption = this.selectedStaffShopOption(event.target.dataset.value)
-      matchedOption.is_full_time_schedule = !matchedOption.is_full_time_schedule;
-
-      this.setState({staffShopOptions: this.state.staffShopOptions});
-    },
-
     toggleStaffShopView: function(shopId) {
       if (this.state.shopInvisible[shopId]) {
         this.state.shopInvisible[shopId] = false;
@@ -91,44 +84,42 @@ UI.define("Settings.Staff.Formfields", function() {
               {
                 !this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
                   <div>
-                  <dl className="onoffSetting"><dt>{this.props.fullTimePermission}</dt>
+                  <dl className="onoffSetting">
+                    <dt>{this.props.fullTimePermission}</dt>
                     <dd>
-                    <input type="hidden" name={`business_schedules[${option.shop_id}][full_time]`} value="0" />
-                    <input type="checkbox" className="BTNonoff"
-                      id={`alwaysINshop-${option.shop_id}`}
-                      name={`business_schedules[${option.shop_id}][full_time]`}
-                      value="1"
-                      data-value={option.shop_id}
-                      checked={option.is_full_time_schedule}
-                      onChange={this.handleShopFullTime}
-                      />
+                      <input type="hidden" name={`shop_staff[${option.shop_id}][staff_full_time_permission]`} value="0" />
+                      <input type="checkbox" className="BTNonoff"
+                        id={`alwaysINshop-${option.shop_id}`}
+                        name={`shop_staff[${option.shop_id}][staff_full_time_permission]`}
+                        defaultValue="1"
+                        defaultChecked={option.full_time_permission}
+                        />
                       <label htmlFor={`alwaysINshop-${option.shop_id}`}></label>
-                      {
-                        option.full_time_schedule_id ? (
-                          <input type="hidden"
-                            name={`business_schedules[${option.shop_id}][id]`}
-                            value={option.full_time_schedule_id} />
-                        ) : null
-                      }
                     </dd>
                   </dl>
-                  <input type="hidden" name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`} value="0" />
+
                   <dl className="onoffSetting">
                     <dt>{this.props.regularWorkingTimePermission}</dt>
                     <dd>
-                      <input type="checkbox" className="BTNonoff" id={`allowWork-${option.shop_id}`} defaultValue="1"
+                      <input type="hidden" name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`} value="0" />
+                      <input type="checkbox" className="BTNonoff"
+                        id={`allowWork-${option.shop_id}`}
                         name={`shop_staff[${option.shop_id}][staff_regular_working_day_permission]`}
+                        defaultValue="1"
                         defaultChecked={option.regular_schedule_permission}
                       />
                       <label htmlFor={`allowWork-${option.shop_id}`}></label>
                     </dd>
                   </dl>
-                  <input type="hidden" name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`} value="0" />
+
                   <dl className="onoffSetting">
                     <dt>{this.props.temporaryWorkingTimePermission}</dt>
                     <dd>
-                      <input type="checkbox" className="BTNonoff" id={`allowTempWork-${option.shop_id}`} defaultValue="1"
+                      <input type="hidden" name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`} value="0" />
+                      <input type="checkbox" className="BTNonoff"
+                        id={`allowTempWork-${option.shop_id}`}
                         name={`shop_staff[${option.shop_id}][staff_temporary_working_day_permission]`}
+                        defaultValue="1"
                         defaultChecked={option.temporary_working_day_permission}
                       />
                       <label htmlFor={`allowTempWork-${option.shop_id}`}></label>
