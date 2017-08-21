@@ -183,7 +183,7 @@ ja:
       email: メールアドレス
       capability: 権限
       staff_capability: スタッフ
-      admin_capability: 管理者
+      manager_capability: 管理者
     staff_working_time:
       info_1: スタッフの勤務日時です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。

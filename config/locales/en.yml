@@ -180,7 +180,7 @@ en:
       email: Email
       capability: Capability
       staff_capability: Staff
-      admin_capability: Admin
+      manager_capability: Manager
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.

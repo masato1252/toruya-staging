@@ -1,6 +1,6 @@
 class Settings::StaffsController < SettingsController
   before_action :set_staff, only: [:show, :edit, :update, :destroy]
-  skip_before_action :admin_required, only: [:edit, :update]
+  skip_before_action :manager_required, only: [:edit, :update]
 
   # GET /staffs
   # GET /staffs.json

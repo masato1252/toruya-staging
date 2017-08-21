@@ -7,11 +7,11 @@ class SettingsController < ActionController::Base
   include Locale
   include Ssl
 
-  before_action :admin_required
+  before_action :manager_required
 
-  def admin_required
+  def manager_required
     unless current_ability.can?(:manage, Settings)
-      redirect_to root_path, alert: "Need admin permission."
+      redirect_to root_path, alert: "Need permission."
     end
   end
 end

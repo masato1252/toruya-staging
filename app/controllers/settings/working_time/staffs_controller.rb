@@ -1,6 +1,6 @@
 class Settings::WorkingTime::StaffsController < SettingsController
   before_action :set_staff, only: [:update, :working_schedules, :holiday_schedules]
-  skip_before_action :admin_required, only: [:working_schedules, :holiday_schedules, :update]
+  skip_before_action :manager_required, only: [:working_schedules, :holiday_schedules, :update]
 
   def index
     @staffs = super_user.staffs.active.order("id")

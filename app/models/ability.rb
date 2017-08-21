@@ -10,7 +10,7 @@ class Ability
       can :manage, GoogleContact
     end
 
-    if admin_level
+    if manager_level
       can :manage, :all_shops_selector
       can :read, Shop
       can :manage, Settings
@@ -62,8 +62,8 @@ class Ability
     @current_user_level ||= current_user == super_user
   end
 
-  def admin_level
-    @admin_level ||= current_user_level || current_user_staff_account.try(:admin?)
+  def manager_level
+    @manager_level ||= current_user_staff_account.try(:manager?)
   end
 
   def current_user_staff_account
