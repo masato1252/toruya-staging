@@ -12,6 +12,7 @@ class Ability
       # can :manage, Shop
       # can :create, Staff
       # can :manage, Profile
+      # can :edit, Customer
 
       if super_user.free_level? && super_user.staffs.active.exists?
         cannot :create, Staff
@@ -20,6 +21,7 @@ class Ability
       # manager staff permission
       can :read, Shop
       can :manage, Settings
+      can :edit, Customer
 
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?

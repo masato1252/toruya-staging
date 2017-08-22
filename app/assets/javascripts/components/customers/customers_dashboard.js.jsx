@@ -257,14 +257,18 @@ UI.define("Customers.Dashboard", function() {
     },
 
     removeOption: function(optionType, index) {
-      var newCustomer = this.state.customer;
+      let newCustomer = jQuery.extend(true, {}, this.state.customer);
+      let originalValue = this.state.customer[`${optionType}Original`]
+
       newCustomer[optionType].splice(index, 1)
+
+      if (!this.props.customerEditPermission && !_.isEqual(newCustomer[optionType].slice(0, originalValue.length), originalValue)) { return; }
 
       this.setState({customer: newCustomer});
     },
 
     addOption: function(optionType, index) {
-      var newCustomer = this.state.customer;
+      let newCustomer = jQuery.extend(true, {}, this.state.customer);
       var defaultValue = optionType == "emails" ? { address: ""} : "";
       if (!newCustomer[optionType]) {
         newCustomer[optionType] = [];
@@ -277,7 +281,7 @@ UI.define("Customers.Dashboard", function() {
 
     handleCustomerDataChange: function(event) {
       event.preventDefault();
-      var newCustomer = this.state.customer;
+      let newCustomer = jQuery.extend(true, {}, this.state.customer);
       var keyName = event.target.dataset.name;
 
       if (keyName == "birthday-year" || keyName == "birthday-month" || keyName == "birthday-day") {
@@ -301,7 +305,8 @@ UI.define("Customers.Dashboard", function() {
 
     handleCustomerGoogleDataChange: function(event) {
       event.preventDefault();
-      var newCustomer = this.state.customer;
+      var newCustomer = jQuery.extend(true, {}, this.state.customer);
+      let originalValue;
 
       switch (event.target.dataset.name) {
         case "primaryPhone":
@@ -319,6 +324,8 @@ UI.define("Customers.Dashboard", function() {
         case "primaryAddress-street1":
         case "primaryAddress-street2":
           var key = event.target.dataset.name.split("-");
+          if (!this.props.customerEditPermission && this.state.customer.displayAddress) { return; }
+
           newCustomer[key[0]] = newCustomer[key[0]] || {};
           newCustomer[key[0]]["value"] = newCustomer[key[0]]["value"] || {};
           newCustomer[key[0]]["value"][key[1]] = event.target.value;
@@ -329,12 +336,22 @@ UI.define("Customers.Dashboard", function() {
         case "phoneNumbers-type":
         case "phoneNumbers-value":
         case "emails-type":
+          // key[0] => emails or phoneNumbers
           var key = event.target.dataset.valueName.split("-");
           newCustomer[key[0]][parseInt(key[2])][key[1]] = event.target.value;
+
+          originalValue = this.state.customer[`${key[0]}Original`]
+          if (!this.props.customerEditPermission && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
+
+          newCustomer[`${key[0]}Original`]
+
           break;
         case "emails-value":
           var key = event.target.dataset.valueName.split("-");
           newCustomer.emails[parseInt(key[2])]["value"]["address"] = event.target.value;
+
+          originalValue = this.state.customer[`${key[0]}Original`]
+          if (!this.props.customerEditPermission && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
           break;
       }
 
