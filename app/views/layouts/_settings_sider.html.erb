@@ -1,4 +1,11 @@
 <nav id="sideNav">
+  <% if cannot? :manage, :all %>
+    <dl class="shop">
+      <dt>
+        <a href="#">Setting for <%= shop.name %></a>
+      </dt>
+    </dl>
+  <% end %>
   <% if can? :manage, Settings %>
     <dl class="shop">
       <%= active_link_to content_tag(:span, "基本情報"), "#",

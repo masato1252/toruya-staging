@@ -4,7 +4,6 @@ module ViewHelpers
   included do
     skip_before_action :verify_authenticity_token
     protect_from_forgery prepend: true, with: :exception
-    before_action :set_header_setting
     before_action :authenticate_user!
     before_action :authenticate_user_permission!
     helper_method :shops
@@ -12,6 +11,9 @@ module ViewHelpers
     helper_method :staffs
     helper_method :staff
     helper_method :super_user
+    helper_method :current_user_staff_account
+    helper_method :working_shop_options
+    helper_method :owning_shop_options
   end
 
   def shops
@@ -51,13 +53,29 @@ module ViewHelpers
     super_user == current_user
   end
 
-  def set_header_setting
-    @header_setting = true
+  def current_user_staff_account
+    current_user.current_staff_account(super_user)
   end
 
   def authenticate_user_permission!
-    if !is_owner && !current_user.current_staff_account(super_user).try(:active?)
+    if !is_owner && !current_user_staff_account.try(:active?)
       head :not_found
+    end
+  end
+
+  def working_shop_options
+    @working_shop_options ||= current_user.staff_accounts.includes(staff: :shops).map do |staff_account|
+      staff = staff_account.staff
+
+      staff_account.staff.shops.map do |shop|
+        ::Option.new(shop: shop, staff: staff) if shop.user != current_user
+      end
+    end.flatten.compact
+  end
+
+  def owning_shop_options
+    @owning_shop_options ||= current_user.shops.order("id").map do |shop|
+      ::Option.new(shop: shop)
     end
   end
 end

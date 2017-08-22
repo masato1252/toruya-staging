@@ -1,16 +1,25 @@
-<% @shop_owners.each do |shop_owner| %>
-  <div id="shopNav" class="contents">
-    <h2><%= shop_owner.name %>店舗選択</h2>
-    <nav>
-      <% shop_owner.shops.each do |shop| %>
-        <div>
-          <%= link_to shop.name, shop_reservations_path(shop), class: "BTNorange" %>
-        </div>
-      <% end %>
-      <%= link_to settings_path(shop_owner) do %>
-        <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
-        設定
-      <% end %>
-    </nav>
-  </div>
-<% end %>
+<div id="shopNav" class="contents">
+  <h2>Your 店舗選択</h2>
+  <nav>
+    <% owning_shop_options.each do |option| %>
+      <div>
+        <%= link_to option.shop.name, shop_reservations_path(option.shop), class: "BTNorange" %>
+      </div>
+    <% end %>
+    <%= link_to settings_path(current_user) do %>
+      <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
+      設定
+    <% end %>
+  </nav>
+</div>
+
+<div id="shopNav" class="contents">
+  <h2>Working For 店舗選択</h2>
+  <nav>
+    <% working_shop_options.each do |option| %>
+      <div>
+        <%= link_to option.shop.name, shop_reservations_path(option.shop), class: "BTNorange" %>
+      </div>
+    <% end %>
+  </nav>
+</div>
