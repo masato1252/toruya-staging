@@ -13,10 +13,15 @@ class HomeController < ApplicationController
   def settings
     super_user = User.find(params[:super_user_id])
 
-    if Ability.new(current_user, super_user).can?(:manage, Settings)
+    if Ability.new(current_user, super_user).can?(:manage, :all)
       redirect_to settings_user_shops_path(super_user)
+    elsif Ability.new(current_user, super_user).can?(:manage, Settings)
+      staff = current_user.current_staff(super_user)
+
+      redirect_to settings_user_staffs_path(super_user, shop_id: staff.shop_staffs.first.shop_id)
     else
-      redirect_to edit_settings_user_staff_path(super_user, current_user.current_staff(super_user))
+      staff = current_user.current_staff(super_user)
+      redirect_to edit_settings_user_staff_path(super_user, staff, shop_id: staff.shop_staffs.first.shop_id)
     end
   end
 end
