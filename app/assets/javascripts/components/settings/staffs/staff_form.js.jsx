@@ -5,8 +5,13 @@ UI.define("Settings.Staff.Formfields", function() {
     getInitialState: function() {
       return ({
         staffShopOptions: this.props.staffShopOptions,
-        shopInvisible: {}
+        shopInvisible: {},
+        staffAccountLevel: this.props.staffAccountLevel
       });
+    },
+
+    swithStaffAccountLevel: function(event) {
+      this.setState({staffAccountLevel: event.target.value});
     },
 
     renderWorkShops: function() {
@@ -137,15 +142,78 @@ UI.define("Settings.Staff.Formfields", function() {
     render: function() {
       return (
         <div>
+          <h3>{this.props.staffAccountTitle}<strong>必須項目</strong></h3>
+          <div id="staffAccount" className="formRow">
+            <dl>
+              <dt>{this.props.staffAccountEmailLabel}</dt>
+              <dd>
+                <input
+                  type="text"
+                  name="staff_account[email]"
+                  id="staff_account_email"
+                  defaultValue={this.props.staffAccountEmail}
+                  placeholder={this.props.staffAccountEmailLabel} size="40" />
+              </dd>
+            </dl>
+            <dl>
+              <dt>{this.props.staffAccountCapabilityLabel}</dt>
+              <dd>
+                <div className="BTNselect">
+                  <div>
+                    <input id="accountCapability1"
+                      className="BTNselect"
+                      type="radio"
+                      defaultValue="staff"
+                      name="staff_account[level]"
+                      checked={this.state.staffAccountLevel == "staff"}
+                      onChange={this.swithStaffAccountLevel}
+                      />
+                    <label htmlFor="accountCapability1"><span>{this.props.staffAccountStaffLevelLabel}</span></label>
+                  </div>
+                  <div>
+                    <input id="accountCapability2"
+                      className="BTNselect"
+                      type="radio"
+                      defaultValue="manager"
+                      name="staff_account[level]"
+                      checked={this.state.staffAccountLevel == "manager"}
+                      onChange={this.swithStaffAccountLevel}
+                      />
+                    <label htmlFor="accountCapability2"><span>{this.props.staffAccountManagerLevelLabel}</span></label>
+                  </div>
+                </div>
+              </dd>
+            </dl>
+          </div>
           <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
           <div id="belong" className="formRow">
             <input type="hidden" name="staff[shop_ids][]" value="" />
             {this.renderWorkShops()}
           </div>
-          <h3>{this.props.workingSettingTitle}</h3>
-          <div className="formRow">
-            {this.renderStaffSchedulePermission()}
-          </div>
+          {this.state.staffAccountLevel == "staff" ? (
+            <div>
+              <h3>{this.props.workingSettingTitle}</h3>
+              <div className="formRow">
+                {this.renderStaffSchedulePermission()}
+              </div>
+              <h3>{this.props.holidaySettingTitle}</h3>
+              <div className="formRow">
+                <dl className="onoffSetting">
+                  <dt>{this.props.holidayPermissionLabel}</dt>
+                  <dd>
+                    <input type="hidden" name="staff[staff_holiday_permission]" value="0" />
+                    <input type="checkbox" className="BTNonoff"
+                      id="allowTempOff"
+                      name="staff[staff_holiday_permission]"
+                      defaultValue="1"
+                      defaultChecked={this.props.staffHolidayPermission}
+                    />
+                    <label htmlFor="allowTempOff"></label>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          ) : null}
         </div>
       );
     }

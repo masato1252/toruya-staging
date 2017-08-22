@@ -32,32 +32,6 @@
     </div>
 
     <% if can? :manage, Settings %>
-      <h3><%= t("settings.staff_account.info_title") %><strong>必須項目</strong></h3>
-      <div id="staffAccount" class="formRow">
-        <dl>
-          <dt><%= t("settings.staff_account.email") %></dt>
-          <dd>
-            <%= text_field_tag "staff_account[email]", @staff_account.try(:email),
-              placeholder: t("settings.staff_account.email"), size: 40 %>
-          </dd>
-        </dl>
-        <dl>
-          <dt><%= t("settings.staff_account.capability") %></dt>
-          <dd>
-            <div class="BTNselect">
-              <div>
-                <%= radio_button("staff_account", "level", "staff", id: "accountCapability1", class: "BTNselect") %>
-                <label for="accountCapability1"><span><%= t("settings.staff_account.staff_capability") %></span></label>
-              </div>
-              <div>
-                <%= radio_button("staff_account", "level", "manager", id: "accountCapability2", class: "BTNselect") %>
-                <label for="accountCapability2"><span><%= t("settings.staff_account.manager_capability") %></span></label>
-              </div>
-            </div>
-          </dd>
-        </dl>
-      </div>
-
       <%
         shop_staffs = staff.shop_staffs.to_a
         staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
@@ -78,22 +52,23 @@
       <%= react_component "UI.Settings.Staff.Formfields", {
         shopLabel: t("settings.staff.shop_label"),
         staff_shop_options: staff_shop_options,
+        staff_account_title: t("settings.staff_account.info_title"),
+        staff_account_email_label: t("settings.staff_account.email"),
+        staff_account_email: @staff_account.try(:email),
+        staff_account_level: @staff_account.try(:level),
+        staff_account_email_placeholder: t("settings.staff_account.email"),
+        staff_account_capability_label: t("settings.staff_account.capability"),
+        staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
+        staff_account_manager_level_label: t("settings.staff_account.manager_capability"),
+        staff_holiday_permission: staff.staff_holiday_permission,
         working_setting_title: t("settings.staff_working_time.setting_title"),
+        holiday_setting_title: t("settings.staff_holiday_time.setting_title"),
         full_time_permission: t("settings.staff_working_time.full_time_permission"),
         regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
-        temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission")
+        temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission"),
+        holiday_permission_label: t("settings.staff_holiday_time.holiday_permission"),
       } %>
 
-      <h3><%= t("settings.staff_holiday_time.setting_title") %></h3>
-      <div class="formRow">
-        <dl class="onoffSetting">
-          <dt><%= t("settings.staff_holiday_time.holiday_permission") %></dt>
-          <dd>
-            <%= f.check_box :staff_holiday_permission, class: "BTNonoff", id: "allowTempOff" %>
-            <label for="allowTempOff"></label>
-          </dd>
-        </dl>
-      </div>
     <% end %>
 
     <div id="footerav">
