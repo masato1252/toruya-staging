@@ -437,8 +437,11 @@ UI.define("Reservation.Form", function() {
       var select_components = [];
 
       if (this.state.menu_min_staffs_number > 0) {
+        var option_values = this.state.staff_options.map(function(staff) { return staff.value })
+
         for (var i = 0; i < this.state.menu_min_staffs_number; i++) {
           var value;
+
           if (this.state.staff_ids[i]) {
             value = this.state.staff_ids[i]
           }
@@ -446,6 +449,11 @@ UI.define("Reservation.Form", function() {
             value = this.state.staff_options[i]["value"]
           }
           else {
+            value = ""
+          }
+
+          // selected value doesn't in options, e.g. deleted staff.
+          if (!_.contains(option_values, value)) {
             value = ""
           }
 

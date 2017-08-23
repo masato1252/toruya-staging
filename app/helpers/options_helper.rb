@@ -55,7 +55,7 @@ module OptionsHelper
         label: setting.name, value: setting.id, id: setting.id
       }
 
-      h.merge!(editPath: edit_settings_reservation_setting_path(setting, from_menu: true, menu_id: menu.id))
+      h.merge!(editPath: edit_settings_user_reservation_setting_path(super_user, setting, from_menu: true, menu_id: menu.id))
     end
     h
   end
@@ -80,7 +80,9 @@ module OptionsHelper
         rank: c.rank,
         birthday: (c.birthday ? { year: c.birthday.year, month: c.birthday.month, day: c.birthday.day } : ""),
         emails: c.emails || [],
+        emails_original: c.emails || [],
         phone_numbers: c.phone_numbers || [],
+        phone_numbers_original: c.phone_numbers || [],
         addresses: c.addresses,
         other_addresses: c.other_addresses.try(:present?) ? c.other_addresses.to_json : nil,
         primary_email: c.primary_email || {},
@@ -93,6 +95,8 @@ module OptionsHelper
 
   def reservation_options(reservations)
     reservations.map do |r|
+      sentences = reservation_staff_sentences(r)
+
       React.camelize_props({
         id: r.id,
         year: r.start_time.year,
@@ -105,7 +109,8 @@ module OptionsHelper
         state: r.aasm_state,
         shop_id: r.shop_id,
         customers: r.customers.map { |r| { id: r.id, name: r.name } },
-        staffs: r.staffs.map(&:name).join(", "),
+        staffs: sentences[:staffs_sentence],
+        deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
         memo: simple_format(r.memo),
         with_warnings: r.with_warnings
       })

@@ -12,6 +12,7 @@ UI.define("Customers.CustomerReservationsView", function() {
         "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
         "checked_out": [{ label: this.props.recheckInBtn, action: "check_in", btn_color: "BTNyellow" },
                         { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
+        "canceled": [{ label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }]
       };
 
       return ({
@@ -31,7 +32,7 @@ UI.define("Customers.CustomerReservationsView", function() {
           $.ajax({
             type: "GET",
             url: _this.props.customerReservationsPath,
-            data: { id: _this.props.customer.id },
+            data: { id: _this.props.customer.id, shop_id: _this.props.shop.id},
             dataType: "JSON"
           }).success(function(result) {
             _this.setState({ reservations: result["reservations"] });
@@ -80,6 +81,11 @@ UI.define("Customers.CustomerReservationsView", function() {
                     <dd className="status warning"><i className="fa fa-check-circle" aria-hidden="true"></i></dd>
                   ) : null
                 }
+                {
+                  reservation.deletedStaffs ? (
+                    <dd className="status danger"><i className="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+                  ) : null
+                }
               </dl>
             </a>
             <div className="modal fade" id={`reservationModal${reservation.id}`} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -126,6 +132,14 @@ UI.define("Customers.CustomerReservationsView", function() {
                         </div>
                       ) : null
                     }
+                    {
+                      reservation.deletedStaffs ? (
+                        <div className="danger">
+                          <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
+                          {reservation.deletedStaffs}
+                        </div>
+                      ) : null
+                    }
                     <div dangerouslySetInnerHTML={{ __html: reservation.memo }} />
                   </div>
                   <div className="modal-footer">
@@ -142,13 +156,17 @@ UI.define("Customers.CustomerReservationsView", function() {
                           </dd>
                         );
                       })}
-                      <dd>
-                      <a
-                        href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=destroy&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
-                        className="btn BTNorange"
-                        data-confirm={_this.props.deleteConfirmationMessage}
-                        >{this.props.cancelBtn}</a>
-                      </dd>
+                      {
+                        reservation.state !== "canceled" ? (
+                          <dd>
+                            <a
+                              href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=cancel&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
+                              className="btn BTNorange"
+                              data-confirm={_this.props.deleteConfirmationMessage}
+                              >{this.props.cancelBtn}</a>
+                          </dd>
+                        ) : null
+                      }
                       <dd>
                         <a
                           href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}

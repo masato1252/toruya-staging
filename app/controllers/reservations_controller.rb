@@ -7,7 +7,7 @@ class ReservationsController < DashboardController
     @body_class = "shopIndex"
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
-    @reservations = shop.reservations.visible.in_date(@date).
+    @reservations = shop.reservations.in_date(@date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
 
@@ -150,7 +150,7 @@ class ReservationsController < DashboardController
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = shop.staffs.map do |staff|
+    @staff_options = shop.staffs.active.order("id").map do |staff|
       ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
     end
   end

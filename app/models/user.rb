@@ -46,13 +46,15 @@ class User < ApplicationRecord
   has_many :categories
   has_many :ranks
   has_many :contact_groups
+  has_many :staff_accounts, foreign_key: :user_id
+  has_many :owner_staff_accounts, class_name: "StaffAccount", foreign_key: :owner_id
   has_many :customer_query_filters
   has_many :reservation_query_filters
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
 
-  after_commit :create_default_ranks
+  after_commit :create_default_ranks, on: :create
 
   def super_admin?
     ["lake.ilakela@gmail.com"].include?(email)
@@ -61,6 +63,14 @@ class User < ApplicationRecord
   # shop owner or staffs
   def member?
     true
+  end
+
+  def current_staff_account(super_user)
+    @current_staff_account ||= super_user.owner_staff_accounts.find_by(user_id: self.id)
+  end
+
+  def current_staff(super_user)
+    @current_staff ||= current_staff_account(super_user).try(:staff)
   end
 
   private

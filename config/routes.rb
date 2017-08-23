@@ -56,40 +56,52 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
-    resource :profile
-    resources :staffs, except: [:show]
-    resources :business_schedules, only: [:index]
-    resources :menus, except: [:show] do
-      get :repeating_dates, on: :collection
-    end
-    resources :reservation_settings, except: [:show]
-    resources :categories, except: [:show]
-    resources :ranks, except: [:show]
+    resources :users do
+      resource :profile
+      resources :staffs, except: [:show]
+      resources :business_schedules, only: [:index]
+      resources :menus, except: [:show] do
+        get :repeating_dates, on: :collection
+      end
+      resources :reservation_settings, except: [:show]
+      resources :categories, except: [:show]
+      resources :ranks, except: [:show]
 
-    namespace :working_time do
-      resources :staffs, only: [:index, :edit, :update]
-    end
-
-    resources :shops, except: [:show] do
-      resources :business_schedules, only: [] do
-        collection do
-          get "edit"
-          post "update", as: :update
+      namespace :working_time do
+        resources :staffs, only: [:index, :update] do
+          member do
+            get :working_schedules
+            get :holiday_schedules
+          end
         end
       end
-    end
 
-    resources :contact_groups do
-      member do
-        post "sync"
-        post "bind"
-        get "connections"
+      resources :shops, except: [:show] do
+        resources :business_schedules, only: [] do
+          collection do
+            get "edit"
+            post "update", as: :update
+          end
+        end
+      end
+
+      resources :contact_groups do
+        member do
+          post "sync"
+          post "bind"
+          get "connections"
+        end
       end
     end
   end
   resources :custom_schedules, only: [:create]
 
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions" }
+  namespace :callbacks do
+    resources :staff_accounts, only: [] do
+      get ":token", to: "staff_accounts#create", on: :collection, as: :user_from # user_from_callbacks_staff_accounts
+    end
+  end
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
   resources :calendars, only: [] do
     collection do
       get "working_schedule"
@@ -100,5 +112,6 @@ Rails.application.routes.draw do
     mount Delayed::Web::Engine, at: "/_jobs"
   end
 
+  get "settings/:super_user_id", to: "home#settings", as: :settings
   root to: "home#index"
 end

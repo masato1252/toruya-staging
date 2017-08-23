@@ -823,7 +823,10 @@ CREATE TABLE shop_staffs (
     shop_id integer,
     staff_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    staff_regular_working_day_permission boolean DEFAULT false NOT NULL,
+    staff_temporary_working_day_permission boolean DEFAULT false NOT NULL,
+    staff_full_time_permission boolean DEFAULT false NOT NULL
 );
 
 
@@ -886,6 +889,43 @@ ALTER SEQUENCE shops_id_seq OWNED BY shops.id;
 
 
 --
+-- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE staff_accounts (
+    id integer NOT NULL,
+    email character varying NOT NULL,
+    user_id integer,
+    owner_id integer NOT NULL,
+    staff_id integer NOT NULL,
+    token character varying,
+    state integer DEFAULT 0 NOT NULL,
+    level integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: staff_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE staff_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: staff_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE staff_accounts_id_seq OWNED BY staff_accounts.id;
+
+
+--
 -- Name: staff_menus; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -930,7 +970,9 @@ CREATE TABLE staffs (
     phonetic_last_name character varying,
     phonetic_first_name character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
+    staff_holiday_permission boolean DEFAULT false NOT NULL
 );
 
 
@@ -1163,6 +1205,13 @@ ALTER TABLE ONLY shops ALTER COLUMN id SET DEFAULT nextval('shops_id_seq'::regcl
 
 
 --
+-- Name: staff_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY staff_accounts ALTER COLUMN id SET DEFAULT nextval('staff_accounts_id_seq'::regclass);
+
+
+--
 -- Name: staff_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1381,6 +1430,14 @@ ALTER TABLE ONLY shop_staffs
 
 ALTER TABLE ONLY shops
     ADD CONSTRAINT shops_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY staff_accounts
+    ADD CONSTRAINT staff_accounts_pkey PRIMARY KEY (id);
 
 
 --
@@ -1611,6 +1668,27 @@ CREATE INDEX index_shops_on_user_id ON shops USING btree (user_id);
 
 
 --
+-- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_accounts_on_owner_id ON staff_accounts USING btree (owner_id);
+
+
+--
+-- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_accounts_on_staff_id ON staff_accounts USING btree (staff_id);
+
+
+--
+-- Name: index_staff_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_accounts_on_user_id ON staff_accounts USING btree (user_id);
+
+
+--
 -- Name: index_staff_menus_on_staff_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1702,6 +1780,27 @@ CREATE INDEX shop_working_time_index ON business_schedules USING btree (shop_id,
 
 
 --
+-- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, email);
+
+
+--
+-- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id);
+
+
+--
+-- Name: staff_account_token_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX staff_account_token_index ON staff_accounts USING btree (token);
+
+
+--
 -- Name: staff_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1763,9 +1862,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170117143626'),
 ('20170122022230'),
 ('20170411092212'),
+('20170509132433'),
 ('20170513074508'),
+('20170530085552'),
+('20170611060236'),
+('20170611073611'),
 ('20170627082223'),
 ('20170720142102'),
-('20170814061241');
+('20170814061241'),
+('20170821073539');
 
 

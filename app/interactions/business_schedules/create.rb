@@ -24,11 +24,10 @@ module BusinessSchedules
 
         shop.business_schedules.where(staff_id: staff.id, full_time: nil).destroy_all if staff
       else
-        if schedule.update(attrs.except(:id)) && staff
-          shop.business_schedules.where(staff_id: staff.id, full_time: true).destroy_all
-        else
-          errors.merge!(schedule.errors) if schedule.errors.present?
-        end
+        schedule.update(attrs.except(:id)) if attrs[:day_of_week] # weekly schedule
+        shop.business_schedules.where(staff_id: staff.id, full_time: true).destroy_all if staff
+
+        errors.merge!(schedule.errors) if schedule.errors.present?
       end
     end
   end

@@ -30,28 +30,50 @@
         </dd>
       </dl>
     </div>
-    <h3><%= t("settings.staff.shop_label") %><strong>必須項目</strong></h3>
-    <div id="belong" class="formRow">
-      <% shop_ids = staff.shop_staffs.pluck(:shop_id) %>
-      <input type="hidden" name="staff[shop_ids][]" value="">
-      <% @shops.each do |shop| %>
-        <dl class="checkbox">
-          <dd>
-            <input
-              type="checkbox"
-              id="shop-<%= shop.id %>"
-              name="staff[shop_ids][]"
-              value=<%= shop.id %>
-              <%= "checked" if shop_ids.include?(shop.id) %>>
-            <label for="shop-<%= shop.id %>"><%= shop.name %></label>
-          </dd>
-        </dl>
-      <% end %>
-    </div>
+
+    <% if can? :manage, Settings %>
+      <%
+        shop_staffs = staff.shop_staffs.to_a
+        staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
+
+        staff_shop_options = shops.map do |shop|
+          shop_staff = shop_staffs.find { |shop_staff| shop_staff.shop_id == shop.id }
+
+          ::Option.new(
+            shop_id: shop.id,
+            name: shop.name,
+            work_here: shop_staff.present?,
+            full_time_permission: shop_staff.try(:staff_full_time_permission),
+            regular_schedule_permission: shop_staff.try(:staff_regular_working_day_permission),
+            temporary_working_day_permission: shop_staff.try(:staff_temporary_working_day_permission),
+          )
+        end
+      %>
+      <%= react_component "UI.Settings.Staff.Formfields", {
+        shopLabel: t("settings.staff.shop_label"),
+        staff_shop_options: staff_shop_options,
+        staff_account_title: t("settings.staff_account.info_title"),
+        staff_account_email_label: t("settings.staff_account.email"),
+        staff_account_email: @staff_account.try(:email),
+        staff_account_level: @staff_account.try(:level),
+        staff_account_email_placeholder: t("settings.staff_account.email"),
+        staff_account_capability_label: t("settings.staff_account.capability"),
+        staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
+        staff_account_manager_level_label: t("settings.staff_account.manager_capability"),
+        staff_holiday_permission: staff.staff_holiday_permission,
+        working_setting_title: t("settings.staff_working_time.setting_title"),
+        holiday_setting_title: t("settings.staff_holiday_time.setting_title"),
+        full_time_permission: t("settings.staff_working_time.full_time_permission"),
+        regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
+        temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission"),
+        holiday_permission_label: t("settings.staff_holiday_time.holiday_permission"),
+      } %>
+
+    <% end %>
 
     <div id="footerav">
       <li>
-        <%= link_to t("action.cancel"), settings_shops_path, class: "BTNtarco" %>
+        <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>
       </li>
       <li>
         <%= f.submit "保存", class: "BTNyellow" %>

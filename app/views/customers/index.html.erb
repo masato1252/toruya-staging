@@ -11,6 +11,7 @@
                       year_options: year_options,
                       month_options: month_options,
                       day_options: day_options,
+                      customer_edit_permission: can?(:edit, Customer),
                       customer_detail_path: detail_shop_customers_path(shop),
                       save_customer_path: save_shop_customers_path(shop),
                       delete_customer_path: delete_shop_customers_path(shop),

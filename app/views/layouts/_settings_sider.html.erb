@@ -1,35 +1,51 @@
 <nav id="sideNav">
-  <dl class="shop">
-    <%= active_link_to content_tag(:span, "基本情報"), "#",
-      active: [["settings/shops", "settings/business_schedules", "settings/reservation_settings"]],
-      wrap_tag: :dt,
-      class_active: "here" %>
-    <dd>
-      <ul>
-        <%= active_link_to t("settings.shop.info_title"), settings_shops_path, active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to t("settings.business_hours.info_title"), settings_business_schedules_path, active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to "予約枠", settings_reservation_settings_path, active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
-      </ul>
-    </dd>
-  </dl>
-  <dl class="menu">
-    <%= active_link_to content_tag(:span, t("settings.menu.info_title")), "#",
-      active: [["settings/menus", "settings/categories"]],
-      wrap_tag: :dt,
-      class_active: "here" %>
-    <dd>
-      <ul>
-        <%= active_link_to t("settings.menu.info_title"), settings_menus_path,
-          active: [["settings/menus"]],
-          wrap_tag: :li,
-          class_active: "here" %>
-        <%= active_link_to t("settings.category.info_title"), settings_categories_path,
-          active: [["settings/categories"]],
-          wrap_tag: :li,
-          class_active: "here" %>
-      </ul>
-    </dd>
-  </dl>
+  <% if cannot? :manage, :all %>
+    <dl class="shop">
+      <dt>
+        <a href="#">Setting for <%= shop.name %></a>
+      </dt>
+    </dl>
+  <% end %>
+  <% if can? :manage, Settings %>
+    <dl class="shop">
+      <%= active_link_to content_tag(:span, "基本情報"), "#",
+        active: [["settings/shops", "settings/business_schedules", "settings/reservation_settings"]],
+        wrap_tag: :dt,
+        class_active: "here" %>
+      <dd>
+        <ul>
+          <% if can? :manage, Shop %>
+            <%= active_link_to t("settings.shop.info_title"), settings_user_shops_path(super_user), active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
+          <% end %>
+
+          <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+          <%= active_link_to "予約枠", settings_user_reservation_settings_path(super_user), active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
+        </ul>
+      </dd>
+    </dl>
+  <% end %>
+
+  <% if can? :manage, Settings %>
+    <dl class="menu">
+      <%= active_link_to content_tag(:span, t("settings.menu.info_title")), "#",
+        active: [["settings/menus", "settings/categories"]],
+        wrap_tag: :dt,
+        class_active: "here" %>
+      <dd>
+        <ul>
+          <%= active_link_to t("settings.menu.info_title"), settings_user_menus_path(super_user),
+            active: [["settings/menus"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+          <%= active_link_to t("settings.category.info_title"), settings_user_categories_path(super_user),
+            active: [["settings/categories"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+        </ul>
+      </dd>
+    </dl>
+  <% end %>
+
   <dl class="staff">
     <%= active_link_to content_tag(:span, "スタッフ"), "#",
       active: [["settings/staffs", "settings/working_time/staffs"]],
@@ -37,32 +53,66 @@
       class_active: "here" %>
     <dd>
       <ul>
-        <%= active_link_to t("settings.staff.info_title"), settings_staffs_path,
-          active: [["settings/staffs"]],
-          wrap_tag: :li,
-          class_active: "here" %>
-        <%= active_link_to "勤務日時", settings_working_time_staffs_path,
-          active: [["settings/working_time/staffs"]],
-          wrap_tag: :li,
-          class_active: "here" %>
+        <% if can? :manage, Settings %>
+          <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
+            active: [["settings/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+
+          <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+            active: /working_schedules/,
+            wrap_tag: :li,
+            class_active: "here" %>
+          <%= active_link_to t("settings.staff.holiday_time"), settings_user_working_time_staffs_path(super_user, mode: "holiday_schedules"),
+            active: /holiday_schedules/,
+            wrap_tag: :li,
+            class_active: "here" %>
+          <% else %>
+            <%
+              staff = current_user.current_staff(super_user)
+              shop_staff = ShopStaff.find_by(shop: shop, staff: staff)
+            %>
+            <%= active_link_to t("settings.staff.info_title"),
+              edit_settings_user_staff_path(super_user, current_user.current_staff(super_user)),
+              active: [["settings/staffs"]],
+              wrap_tag: :li,
+              class_active: "here" %>
+              <% if can?(:manage_staff_full_time_permission, shop_staff) ||
+                can?(:manage_staff_regular_working_day_permission, shop_staff) ||
+                can?(:manage_staff_temporary_working_day_permission, shop_staff)
+              %>
+              <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+                active: /working_schedules/,
+                wrap_tag: :li,
+                class_active: "here" %>
+            <% end %>
+            <% if can?(:manage, :staff_holiday_permission) %>
+              <%= active_link_to t("settings.staff.holiday_time"), holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
+                active: /holiday_schedules/,
+                wrap_tag: :li,
+                class_active: "here" %>
+            <% end %>
+        <% end %>
+
       </ul>
     </dd>
   </dl>
-  <dl class="contacts">
-    <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_contact_groups_path,
-      active: [["settings/contact_groups", "settings/ranks"]],
-      wrap_tag: :dt,
-      class_active: "here" %>
-  </dl>
-  <dl class="account">
-    <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_profile_path,
-      active: [["settings/profiles"]],
-      wrap_tag: :dt,
-      class_active: "here" %>
-  </dl>
-  <dl class="logout">
-    <dt>
-      <%= link_to content_tag(:span, t("action.log_out")), destroy_user_session_path, method: "delete" %>
-    </dt>
-  </dl>
+
+  <% if can? :manage, GoogleContact %>
+    <dl class="contacts">
+      <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_user_contact_groups_path(super_user),
+        active: [["settings/contact_groups", "settings/ranks"]],
+        wrap_tag: :dt,
+        class_active: "here" %>
+    </dl>
+  <% end %>
+
+  <% if can? :manage, Profile %>
+    <dl class="account">
+      <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_user_profile_path(super_user),
+        active: [["settings/profiles"]],
+        wrap_tag: :dt,
+        class_active: "here" %>
+    </dl>
+  <% end %>
 </nav>

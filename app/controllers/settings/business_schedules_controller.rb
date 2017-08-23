@@ -1,5 +1,10 @@
 class Settings::BusinessSchedulesController < SettingsController
   def index
+    @shops = if can?(:manage, :all)
+               super_user.shops.order("id")
+             else
+               [shop]
+             end
   end
 
   def edit
@@ -35,7 +40,7 @@ class Settings::BusinessSchedulesController < SettingsController
 
     flash[:alert] = update_shop.errors.full_messages.join(", ")
 
-    redirect_to settings_business_schedules_path
+    redirect_to settings_user_business_schedules_path(super_user)
   end
 
   private

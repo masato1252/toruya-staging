@@ -65,7 +65,7 @@
     </div>
     <ul id="footerav">
       <li>
-        <%= link_to t("action.cancel"), settings_profile_path, class: "BTNtarco" if profile.persisted? %>
+        <%= link_to t("action.cancel"), settings_user_profile_path(super_user), class: "BTNtarco" if profile.persisted? %>
       </li>
       <li>
         <%= f.submit t("action.save"), class: "BTNyellow" %>

@@ -109,7 +109,6 @@ class Customers::Save < ActiveInteraction::Base
 
     customer.google_contact_group_ids = google_group_ids.uniq
 
-    # TODO: test two addresses case
     if customer.valid?
       google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
       google_contact_attributes = customer.google_contact_attributes(google_groups_changes)
@@ -128,7 +127,8 @@ class Customers::Save < ActiveInteraction::Base
       # XXX: Some user use 携帯 by themselves, not system default category.
       # https://gist.github.com/ilake/cf20b88acc2c3b28021f6c234704fa33 email types migration gist.
       # home,mobile,other,work
-      customer.email_types = customer.emails.map { |email| email[:type].to_s == "携帯" ? "mobile" : email[:type].to_s }.uniq.sort.join(",")
+      customer_emails = customer.emails || []
+      customer.email_types = customer_emails.map { |email| email[:type].to_s == "携帯" ? "mobile" : email[:type].to_s }.uniq.sort.join(",")
       customer.save
     end
 
