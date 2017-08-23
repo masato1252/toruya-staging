@@ -58,8 +58,8 @@ module ViewHelpers
   end
 
   def authenticate_user_permission!
-    if !is_owner && !current_user_staff_account.try(:active?)
-      head :not_found
+    unless can?(:read, shop)
+      redirect_to root_path, alert: "No permission"
     end
   end
 

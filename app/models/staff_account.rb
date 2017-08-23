@@ -31,5 +31,6 @@ class StaffAccount < ApplicationRecord
   belongs_to :owner, class_name: "User"
 
   validates :owner_id, presence: true
-  validates :staff_id, presence: true, uniqueness: { scope: :owner_id }
+  validates :staff_id, presence: true, uniqueness: { scope: [:owner_id] }
+  validates :user_id, uniqueness: { scope: [:owner_id] }
 end

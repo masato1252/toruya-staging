@@ -11,10 +11,6 @@ class DashboardController < ActionController::Base
     redirect_to root_path, :alert => "This page does not exist."
   end
 
-  def authorize_shop
-    authorize! :read, shop
-  end
-
   def staff_requirement
     unless staff
       redirect_to settings_path(current_user)

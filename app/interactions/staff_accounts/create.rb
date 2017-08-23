@@ -21,12 +21,17 @@ module StaffAccounts
         staff_account.user = User.find_by(email: staff_account.email)
         staff_account.state = :pending unless staff_account.disabled?
         staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
-        staff_account.save
 
-        NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
+        if staff_account.save
+          NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
+        end
       end
 
-      staff_account.save
+      if staff_account.save
+        staff_account
+      else
+        errors.merge!(staff_account.errors)
+      end
     end
   end
 end

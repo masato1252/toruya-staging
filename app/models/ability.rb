@@ -18,13 +18,21 @@ class Ability
       if super_user.free_level? && super_user.staffs.active.exists?
         cannot :create, Staff
       end
+
+      cannot :read, Shop do |shop|
+        shop && !current_user.shops.where(id: shop.id).exists?
+      end
     elsif manager_level
       # manager staff permission
-      can :read, Shop
+      can :read, Shop do |shop|
+        current_user_staff.shop_staffs.where(shop: shop).exists?
+      end
+
       can :manage, Settings
       can :edit, Customer
       can :swith_staffs_selector, User
 
+      # Only handle the staffs under the shops he can manage.
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
       end
@@ -40,28 +48,26 @@ class Ability
       can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
       end
-    else
+    elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
-      if current_user_staff_account.try(:active?) && current_user_staff
-        can :read, Shop do |shop|
-          current_user_staff.shop_staffs.where(shop: shop).exists?
-        end
+      can :read, Shop do |shop|
+        current_user_staff.shop_staffs.where(shop: shop).exists?
+      end
 
-        can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
-          current_user_staff.shop_staffs.where(staff_full_time_permission: true, shop_id: shop_staff.shop_id).exists?
-        end
+      can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
+        current_user_staff.shop_staffs.where(staff_full_time_permission: true, shop_id: shop_staff.shop_id).exists?
+      end
 
-        can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
-          current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
-        end
+      can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
+        current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+      end
 
-        can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
-          current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
-        end
+      can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
+        current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+      end
 
-        can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
-          current_user_staff.staff_holiday_permission
-        end
+      can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
+        current_user_staff.staff_holiday_permission
       end
     end
   end
@@ -73,7 +79,7 @@ class Ability
   end
 
   def manager_level
-    @manager_level ||= current_user_staff_account.try(:manager?)
+    @manager_level ||= current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
   end
 
   def current_user_staff_account

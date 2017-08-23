@@ -54,26 +54,20 @@ class Settings::StaffsController < SettingsController
                                  staff: @staff,
                                  attrs: params[:staff].permit!.to_h)
 
-    StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
+    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
 
     params.permit![:shop_staff].each do |shop_id, attrs|
       @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html do
-          if can?(:manage, Settings)
-            redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
-          else
-            redirect_to edit_settings_user_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
-          end
-        end
-        format.json { render :show, status: :ok, location: @staff }
+    if outcome.valid? && staff_account_outcome.valid?
+      if can?(:manage, Settings)
+        redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else
-        format.html { render :edit }
-        format.json { render json: @staff.errors, status: :unprocessable_entity }
+        redirect_to edit_settings_user_staff_path(super_user, @staff), notice: I18n.t("common.update_successfully_message")
       end
+    else
+      redirect_to edit_settings_user_staff_path(super_user, @staff), alert: outcome.errors.full_messages.first || staff_account_outcome.errors.full_messages.first
     end
   end
 

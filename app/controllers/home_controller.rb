@@ -1,8 +1,11 @@
 class HomeController < ApplicationController
   include ViewHelpers
   layout "home"
+  skip_before_action :authenticate_user_permission!, only: [:index]
 
   def index
+    #XXX Cleanup the shop session to avoid, since we don't need it here and it caused issues that user try to get into unpermission shop.
+    session[:shop_id] = nil
     shop_owners = current_user.staff_accounts.map(&:owner).push(current_user).uniq
 
     # current_user is shop owner and doesn't work for others(staff) and only have one shop
