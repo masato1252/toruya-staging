@@ -58,7 +58,7 @@ module ViewHelpers
   end
 
   def authenticate_user_permission!
-    unless can?(:read, shop)
+    if cannot?(:read, shop)
       redirect_to root_path, alert: "No permission"
     end
   end
