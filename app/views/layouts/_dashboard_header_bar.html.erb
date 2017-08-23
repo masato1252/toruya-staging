@@ -47,7 +47,7 @@
   </dl>
   <dl>
     <dd>
-      <%= active_link_to customer_filter_index_path, active: /^\/customer\/filter/, class_active: "here" do %>
+      <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
         <i class="fa fa-database fa-4x" aria-hidden="true"></i>
         Search Data
       <% end %>
