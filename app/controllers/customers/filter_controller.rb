@@ -1,5 +1,7 @@
 class Customers::FilterController < DashboardController
   def index
+    authorize! :manage, :filter
+
     @body_class = "filter"
     menu_options = super_user.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
@@ -14,6 +16,8 @@ class Customers::FilterController < DashboardController
   end
 
   def create
+    authorize! :manage, :filter
+
     param = params.permit!.to_h
 
     query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)
