@@ -1,7 +1,7 @@
 class CustomersPrintingJob < ApplicationJob
   queue_as :default
 
-  def perform(super_user, page_size, customer_ids)
+  def perform(super_user, filter_outcome, page_size, customer_ids)
     customers = super_user.customers.where(id: customer_ids).map do |customer|
       if customer.google_contact_id
         customer.build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: customer))
@@ -33,16 +33,20 @@ class CustomersPrintingJob < ApplicationJob
       :title => title,
     )
 
+
     tempfile = Tempfile.new([title, ".pdf"], Rails.root.join('tmp'))
     tempfile.binmode
     tempfile.write pdf_string
     tempfile.close
+    filter_outcome.file = tempfile
+    # filter_outcome.file = StringIO.new(pdf_string)
 
-    # if outcome.valid?
+
+    if filter_outcome.save
       # Send Customers Printing Completed Email
       # NotificationMailer.customers_printing_finished(super_user).deliver_now
-    # else
+    else
       # What should we do
-    # end
+    end
   end
 end

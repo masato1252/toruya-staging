@@ -355,6 +355,40 @@ ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
 
 
 --
+-- Name: filter_outcomes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE filter_outcomes (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    filter_id integer,
+    query jsonb,
+    file character varying,
+    aasm_state character varying NOT NULL,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: filter_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE filter_outcomes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: filter_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE filter_outcomes_id_seq OWNED BY filter_outcomes.id;
+
+
+--
 -- Name: menu_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1100,6 +1134,13 @@ ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_
 
 
 --
+-- Name: filter_outcomes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY filter_outcomes ALTER COLUMN id SET DEFAULT nextval('filter_outcomes_id_seq'::regclass);
+
+
+--
 -- Name: menu_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1302,6 +1343,14 @@ ALTER TABLE ONLY customers
 
 ALTER TABLE ONLY delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: filter_outcomes filter_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY filter_outcomes
+    ADD CONSTRAINT filter_outcomes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1574,6 +1623,13 @@ CREATE INDEX index_customers_on_rank_id ON customers USING btree (rank_id);
 --
 
 CREATE INDEX index_customers_on_user_id ON customers USING btree (user_id);
+
+
+--
+-- Name: index_filter_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_filter_outcomes_on_user_id ON filter_outcomes USING btree (user_id);
 
 
 --
@@ -1870,6 +1926,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170627082223'),
 ('20170720142102'),
 ('20170814061241'),
-('20170821073539');
+('20170821073539'),
+('20170827131921');
 
 
