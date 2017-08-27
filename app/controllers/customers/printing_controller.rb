@@ -29,4 +29,10 @@ class Customers::PrintingController < DashboardController
       title: @customer.name,
       show_as_html: params.key?('debug')
   end
+
+  def index
+    CustomersPrintingJob.perform_later(super_user, params[:page_size], params[:customer_ids].split(","))
+
+    redirect_to customer_user_filter_index_path(super_user), notice: "Printing"
+  end
 end
