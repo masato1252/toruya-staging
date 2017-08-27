@@ -4,10 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
   include Ssl
-
-  rescue_from ActionController::RoutingError, ActiveRecord::RecordNotFound do
-    redirect_to root_path, :alert => "This page does not exist."
-  end
+  include ExceptionHandler
 
   private
   def configure_permitted_parameters

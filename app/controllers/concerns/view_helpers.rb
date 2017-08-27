@@ -2,10 +2,6 @@ module ViewHelpers
   extend ActiveSupport::Concern
 
   included do
-    skip_before_action :verify_authenticity_token
-    protect_from_forgery prepend: true, with: :exception
-    before_action :authenticate_user!
-    before_action :authenticate_user_permission!
     helper_method :shops
     helper_method :shop
     helper_method :staffs
@@ -55,12 +51,6 @@ module ViewHelpers
 
   def current_user_staff_account
     current_user.current_staff_account(super_user)
-  end
-
-  def authenticate_user_permission!
-    if cannot?(:read, shop)
-      redirect_to root_path, alert: "No permission"
-    end
   end
 
   def working_shop_options

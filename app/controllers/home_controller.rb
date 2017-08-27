@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
+  include Authorization
   include ViewHelpers
   layout "home"
-  skip_before_action :authenticate_user_permission!, only: [:index]
+  skip_before_action :authenticate_shop_permission!, only: [:index]
 
   def index
     #XXX Cleanup the shop session to avoid, since we don't need it here and it caused issues that user try to get into unpermission shop.

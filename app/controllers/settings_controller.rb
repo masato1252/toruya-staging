@@ -2,16 +2,16 @@ class SettingsController < ActionController::Base
   layout "settings"
   protect_from_forgery with: :exception, prepend: true
 
+  include Authorization
   include AccountRequirement
   include ViewHelpers
   include Locale
   include Ssl
+  include ExceptionHandler
 
-  before_action :manager_required
+  before_action :authorize_manager_level_permission
 
-  def manager_required
-    unless current_ability.can?(:manage, Settings)
-      redirect_to root_path, alert: "Need permission."
-    end
+  def authorize_manager_level_permission
+    authorize! :manage, Settings
   end
 end
