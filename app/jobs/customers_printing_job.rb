@@ -11,7 +11,7 @@ class CustomersPrintingJob < ApplicationJob
     end
 
     specified_size = Customers::PrintingController::PAGE_SIZE[page_size]
-    title = customers.first.name
+    title = "#{filter_outcome.id}_#{Date.today.iso8601}"
 
     pdf_string = WickedPdf.new.pdf_from_string(
       ActionController::Base.new.render_to_string(
@@ -33,14 +33,11 @@ class CustomersPrintingJob < ApplicationJob
       :title => title,
     )
 
-
-    tempfile = Tempfile.new([title, ".pdf"], Rails.root.join('tmp'))
-    tempfile.binmode
-    tempfile.write pdf_string
-    tempfile.close
-    filter_outcome.file = tempfile
-    # filter_outcome.file = StringIO.new(pdf_string)
-
+    pdf_path = Rails.root.join('tmp', "#{title}.pdf")
+    File.open(pdf_path, 'wb') do |file|
+      file << pdf_string
+    end
+    filter_outcome.file = File.open pdf_path
 
     if filter_outcome.save
       # Send Customers Printing Completed Email
@@ -48,5 +45,7 @@ class CustomersPrintingJob < ApplicationJob
     else
       # What should we do
     end
+
+    File.delete(pdf_path) if File.exist?(pdf_path)
   end
 end
