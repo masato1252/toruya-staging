@@ -55,6 +55,6 @@
                       withWarningsMessage: I18n.t("reservation.contain_some_warnings"),
                       per_page: Customers::Search::PER_PAGE,
                       printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),
-                      printing_page_size_options: Customers::PrintingController::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
+                      printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
                       printing_path: new_customer_printing_path(format: :pdf)
 }) %>
