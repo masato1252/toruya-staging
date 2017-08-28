@@ -21,6 +21,7 @@ else
     }
     config.fog_directory  = s3_config[:bucket_name]
     config.fog_public     = false
-    config.fog_attributes = { cache_control: "public, max-age=#{7.day.to_i}" }
+    config.fog_attributes = { cache_control: "public, max-age=#{7.days.to_i}" }
+    config.fog_authenticated_url_expiration = 7.days.to_i # seconds
   end
 end
