@@ -9,6 +9,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         customers: [],
         filter_name: "",
         current_saved_filter_id: "",
+        printing_page_size: "",
         customers_processing: false
       });
     },
@@ -78,6 +79,31 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
+    handlePrinting: function(event) {
+      event.preventDefault();
+      var _this = this;
+
+      if (!this.state.printing_page_size) { return; }
+
+      var valuesToSubmit = $(this.querySider.filterForm).serialize() + '&' + $.param({
+        page_size: this.state.printing_page_size,
+        filter_id: this.state.current_saved_filter_id,
+        customer_ids: _.map(this.state.customers, function(customer) { return customer.id; }).join(",")
+      });
+
+      $.ajax({
+        type: "POST",
+        url: _this.props.printingPath, //sumbits it to the given url of the form
+        data: valuesToSubmit,
+        dataType: "JSON"
+      }).done(function(result) {
+        _this.setState({printing_page_size: ""}); // avoid user click again.
+        // _this.props.handleCreatedCustomer(result["customer"]);
+        // _this.props.updateCustomers(result["customers"]);
+        // _this.props.forceStopProcessing();
+      })
+    },
+
     renderDeleteFilterButton: function() {
       if (this.state.current_saved_filter_id) {
         return (
@@ -114,6 +140,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <input type="text"
                        data-name="filter_name"
                        placeholder="Write Your Filter Name"
+                       className="filter-name-input"
                        value={this.state.filter_name}
                        onChange={this.onDataChange} />
                   )
@@ -128,7 +155,22 @@ UI.define("Customers.Filter.Dashboard", function() {
                 {this.renderDeleteFilterButton()}
               </dd>
               <dd id="NAVprintList"><select><option>Print List</option><option>A4</option></select><a href="#" className="BTNtarco" title="印刷"><i className="fa fa-print"></i></a></dd>
-              <dd id="NAVprintAddress"><select><option>Print Address</option><option>A4</option><option>Postcard Vert</option><option>Postcard Horiz</option><option>Envelope Cho3</option></select><a href="#" className="BTNtarco" title="印刷"><i className="fa fa-print"></i></a></dd>
+              <dd id="NAVprintAddress">
+                <UI.Select
+                  data-name="printing_page_size"
+                  options={this.props.printingPageSizeOptions}
+                  value ={this.state.printing_page_size}
+                  onChange={this.onDataChange}
+                  blankOption={this.props.printingPageSizeBlankOption}
+                  includeBlank={true}
+                  />
+                <a onClick={this.handlePrinting}
+                  href="#"
+                  className={`BTNtarco ${this.state.printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
+                  title="印刷" target="_blank">
+                  <i className="fa fa-print"></i>
+                </a>
+               </dd>
             </dl>
           </div>
 

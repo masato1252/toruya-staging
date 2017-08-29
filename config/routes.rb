@@ -45,7 +45,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :printing, only: [:new, :index]
+    resources :printing, only: [:new] do
+      collection do
+        post :index
+      end
+    end
 
     resources :users do
       resources :filter, only: [:index, :create]

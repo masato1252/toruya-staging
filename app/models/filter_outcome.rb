@@ -15,11 +15,13 @@ class FilterOutcome < ApplicationRecord
   include AASM
   mount_uploader :file, FilterOutcomeFileUploader
 
+  scope :active, -> { where.not(aasm_state: "deleted") }
+
   belongs_to :user
 
   aasm :whiny_transitions => false do
     state :processing, initial: true
-    state :completed, :failed
+    state :completed, :failed, :deleted
 
     event :process do
       transitions from: [:pending], to: :processing
@@ -31,6 +33,10 @@ class FilterOutcome < ApplicationRecord
 
     event :fail do
       transitions from: :processing, to: :failed
+    end
+
+    event :delete do
+      transitions from: :completed, to: :deleted
     end
   end
 end

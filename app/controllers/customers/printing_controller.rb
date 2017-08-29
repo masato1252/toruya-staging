@@ -14,10 +14,11 @@ class Customers::PrintingController < DashboardController
   end
 
   def index
-    filter_outcome = super_user.filter_outcomes.create
+    query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)
+    filter_outcome = super_user.filter_outcomes.create(filter_id: params[:filter_id], query: query)
 
-    CustomersPrintingJob.perform_later(super_user, filter_outcome, params[:page_size], params[:customer_ids].split(","))
+    CustomersPrintingJob.perform_later(filter_outcome, params[:page_size], params[:customer_ids].split(","))
 
-    redirect_to customer_user_filter_index_path(super_user), notice: "Printing"
+    render json: { result: super_user.filter_outcomes.active.pluck(:id) }
   end
 end

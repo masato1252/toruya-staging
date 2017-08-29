@@ -22,6 +22,9 @@
     { label: I18n.t("reservation.#{state}"), value: state }
   },
   saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
+  printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),
+  printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
+  printing_path: customer_printing_index_path(format: :pdf),
   filter_path: customer_user_filter_index_path(super_user),
   save_filter_path: customer_user_saved_filters_path(super_user),
   fetch_filter_path: fetch_customer_user_saved_filters_path(super_user),
