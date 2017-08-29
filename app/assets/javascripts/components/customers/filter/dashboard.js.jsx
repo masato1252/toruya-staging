@@ -120,22 +120,27 @@ UI.define("Customers.Filter.Dashboard", function() {
       }
     },
 
-    renderFilterOutcomes: function() {
+    renderFilteredOutcomes: function() {
       return (
-        <ul>
+        <div className="filtered-outcomes">
           {
             this.state.filtered_outcome_options.map(function(outcome) {
               return (
-                <li key={outcome.value}>
-                  <a href={outcome.fileUrl} target="_blank">
-                    {outcome.label}
-                  </a>
-                  <i className="fa fa-search fa-2x" onClick={this.loadFilteredOutcome}></i>
-                </li>
+                <div className="filtered-outcome" key={outcome.id}>
+                  <div>
+                    <a href={outcome.fileUrl} target="_blank">
+                      {outcome.name}
+                    </a>
+                  </div>
+                  <div>
+                    <span className={["filter-outcome-state", outcome.state].join(" ")}></span>
+                    <i className="fa fa-search" onClick={this.loadFilteredOutcome}></i>
+                  </div>
+                </div>
               )
             }.bind(this))
           }
-        </ul>
+        </div>
       )
     },
 
@@ -195,10 +200,8 @@ UI.define("Customers.Filter.Dashboard", function() {
                   <i className="fa fa-print"></i>
                 </a>
                </dd>
-               <dd id="NAVprintAddress">
-                 <ul>
-                   {this.renderFilterOutcomes()}
-                 </ul>
+               <dd id="NAVprintOutcome">
+                 {this.renderFilteredOutcomes()}
               </dd>
             </dl>
           </div>
