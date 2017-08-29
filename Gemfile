@@ -49,6 +49,7 @@ gem "wicked_pdf", "~> 1.1.0"
 gem "wkhtmltopdf-binary"
 gem "carrierwave", "~> 1.1.0"
 gem "fog-aws", "~> 1.4.0"
+gem "bitly", "~> 1.0.0"
 
 group :development, :test do
   gem "byebug", platform: :mri
