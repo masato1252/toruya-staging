@@ -19,7 +19,7 @@ class CustomersPrintingJob < ApplicationJob
         },
         :layout => "pdf"
       ),
-      { :title => title }.merge!(Customers::PrintingConfig.run!(page_size: page_size))
+      { :title => title, disposition: "attachment" }.merge!(Customers::PrintingConfig.run!(page_size: page_size))
     )
 
     pdf_path = Rails.root.join('tmp', "#{title}.pdf")
