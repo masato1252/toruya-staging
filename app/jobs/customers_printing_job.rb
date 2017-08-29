@@ -1,12 +1,14 @@
 class CustomersPrintingJob < ApplicationJob
   queue_as :default
 
-  def perform(super_user, filter_outcome, page_size, customer_ids)
+  def perform(filter_outcome, page_size, customer_ids)
+    super_user = filter_outcome.user
+
     customers = super_user.customers.where(id: customer_ids).map do |customer|
       customer.with_google_contact
     end
 
-    title = "#{filter_outcome.id}_#{Date.today.iso8601}"
+    title = "#{super_user.filter_outcomes.count + 1}_#{Date.today.iso8601}"
 
     pdf_string = WickedPdf.new.pdf_from_string(
       ActionController::Base.new.render_to_string(
@@ -27,12 +29,15 @@ class CustomersPrintingJob < ApplicationJob
     filter_outcome.file = File.open pdf_path
 
     if filter_outcome.save
-      # Send Customers Printing Completed Email
-      # NotificationMailer.customers_printing_finished(super_user).deliver_now
+      filter_outcome.complete!
+      NotificationMailer.customers_printing_finished(super_user).deliver_now
     else
-      # What should we do
+      filter_outcome.fail!
     end
 
     File.delete(pdf_path) if File.exist?(pdf_path)
+  rescue => e
+    filter_outcome.fail!
+    Rollbar.error(e)
   end
 end
