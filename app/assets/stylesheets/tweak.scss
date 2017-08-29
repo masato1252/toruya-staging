@@ -81,4 +81,11 @@ button[disabled], a.disabled, input[disabled] {
       display: inline-block;
     }
   }
+
+  #NAVsave {
+    .filter-name-input {
+      display: inherit;
+      margin-bottom: 15px;
+    }
+  }
 }
