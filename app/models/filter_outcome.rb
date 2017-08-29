@@ -18,6 +18,7 @@ class FilterOutcome < ApplicationRecord
   scope :active, -> { where.not(aasm_state: "deleted") }
 
   belongs_to :user
+  belongs_to :filter, class_name: "QueryFilter"
 
   aasm :whiny_transitions => false do
     state :processing, initial: true

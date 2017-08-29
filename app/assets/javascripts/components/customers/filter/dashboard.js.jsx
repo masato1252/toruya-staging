@@ -10,7 +10,8 @@ UI.define("Customers.Filter.Dashboard", function() {
         filter_name: "",
         current_saved_filter_id: "",
         printing_page_size: "",
-        customers_processing: false
+        customers_processing: false,
+        filtered_outcome_options: this.props.filteredOutcomeOptions
       });
     },
 
@@ -104,6 +105,10 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
+    loadFilteredOutcome: function() {
+
+    },
+
     renderDeleteFilterButton: function() {
       if (this.state.current_saved_filter_id) {
         return (
@@ -113,6 +118,25 @@ UI.define("Customers.Filter.Dashboard", function() {
           </a>
         )
       }
+    },
+
+    renderFilterOutcomes: function() {
+      return (
+        <ul>
+          {
+            this.state.filtered_outcome_options.map(function(outcome) {
+              return (
+                <li key={outcome.value}>
+                  <a href={outcome.fileUrl} target="_blank">
+                    {outcome.label}
+                  </a>
+                  <i className="fa fa-search fa-2x" onClick={this.loadFilteredOutcome}></i>
+                </li>
+              )
+            }.bind(this))
+          }
+        </ul>
+      )
     },
 
     render: function() {
@@ -171,6 +195,11 @@ UI.define("Customers.Filter.Dashboard", function() {
                   <i className="fa fa-print"></i>
                 </a>
                </dd>
+               <dd id="NAVprintAddress">
+                 <ul>
+                   {this.renderFilterOutcomes()}
+                 </ul>
+              </dd>
             </dl>
           </div>
 
