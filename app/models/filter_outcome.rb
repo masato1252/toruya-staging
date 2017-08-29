@@ -15,6 +15,8 @@ class FilterOutcome < ApplicationRecord
   include AASM
   mount_uploader :file, FilterOutcomeFileUploader
 
+  belongs_to :user
+
   aasm :whiny_transitions => false do
     state :processing, initial: true
     state :completed, :failed
