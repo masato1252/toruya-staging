@@ -38,6 +38,6 @@ class CustomersPrintingJob < ApplicationJob
     File.delete(pdf_path) if File.exist?(pdf_path)
   rescue => e
     filter_outcome.fail!
-    Rollbar.error(e)
+    Rollbar.error(e, filter_outcome_id: filter_outcome.id)
   end
 end
