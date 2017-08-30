@@ -26,7 +26,7 @@
     {
       id: outcome.id,
       name: "#{outcome&.filter&.name} #{outcome.created_at.to_s(:date)}",
-      file_url: outcome.file.url,
+      file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
       state: outcome.aasm_state
     } },
   printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),

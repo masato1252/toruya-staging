@@ -138,7 +138,7 @@ UI.define("Customers.Filter.Dashboard", function() {
               return (
                 <div className="filtered-outcome" key={outcome.id}>
                   <div>
-                    <a href={outcome.fileUrl} target="_blank">
+                    <a href={outcome.fileUrl}>
                       {outcome.name}
                     </a>
                   </div>
