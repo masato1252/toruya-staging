@@ -30,7 +30,7 @@ class CustomersPrintingJob < ApplicationJob
 
     if filter_outcome.save
       filter_outcome.complete!
-      NotificationMailer.customers_printing_finished(super_user).deliver_now
+      NotificationMailer.customers_printing_finished(filter_outcome).deliver_now
     else
       filter_outcome.fail!
     end
