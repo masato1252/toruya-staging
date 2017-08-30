@@ -112,6 +112,7 @@ button[disabled], a.disabled, input[disabled] {
 
           &.processing {
             background-color: yellow;
+            color: #333;
           }
 
           &.completed {
