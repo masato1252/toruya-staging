@@ -39,5 +39,6 @@ class CustomersPrintingJob < ApplicationJob
   rescue => e
     filtered_outcome.fail!
     Rollbar.error(e, filtered_outcome_id: filtered_outcome.id)
+    raise e if Rails.env.development?
   end
 end
