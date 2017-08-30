@@ -12,8 +12,9 @@
 #
 
 class FilteredOutcome < ApplicationRecord
+  EXPIRED_DAYS = 7
   include AASM
-  mount_uploader :file, FilterOutcomeFileUploader
+  mount_uploader :file, FilteredOutcomeFileUploader
 
   scope :active, -> { where.not(aasm_state: "deleted") }
 

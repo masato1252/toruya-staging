@@ -1,4 +1,4 @@
-class FilterOutcomeFileUploader < CarrierWave::Uploader::Base
+class FilteredOutcomeFileUploader < CarrierWave::Uploader::Base
   storage :fog
 
   # Override the directory where uploaded files will be stored.
