@@ -16,9 +16,9 @@ class NotificationMailer < ActionMailer::Base
          :subject => subject("顧客台帳のGoogle同期作業が完了しました。"))
   end
 
-  def customers_printing_finished(filter_outcome)
-    @filter_outcome = filter_outcome
-    @user = filter_outcome.user
+  def customers_printing_finished(filtered_outcome)
+    @filtered_outcome = filtered_outcome
+    @user = filtered_outcome.user
 
     mail(:to => @user.email,
          :subject => subject("Customers Printing is finished"))

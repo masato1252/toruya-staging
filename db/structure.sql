@@ -355,10 +355,10 @@ ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
 
 
 --
--- Name: filter_outcomes; Type: TABLE; Schema: public; Owner: -
+-- Name: filtered_outcomes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE filter_outcomes (
+CREATE TABLE filtered_outcomes (
     id integer NOT NULL,
     user_id integer NOT NULL,
     filter_id integer,
@@ -370,10 +370,10 @@ CREATE TABLE filter_outcomes (
 
 
 --
--- Name: filter_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: filtered_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE filter_outcomes_id_seq
+CREATE SEQUENCE filtered_outcomes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -382,10 +382,10 @@ CREATE SEQUENCE filter_outcomes_id_seq
 
 
 --
--- Name: filter_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: filtered_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE filter_outcomes_id_seq OWNED BY filter_outcomes.id;
+ALTER SEQUENCE filtered_outcomes_id_seq OWNED BY filtered_outcomes.id;
 
 
 --
@@ -1134,10 +1134,10 @@ ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_
 
 
 --
--- Name: filter_outcomes id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY filter_outcomes ALTER COLUMN id SET DEFAULT nextval('filter_outcomes_id_seq'::regclass);
+ALTER TABLE ONLY filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('filtered_outcomes_id_seq'::regclass);
 
 
 --
@@ -1346,11 +1346,11 @@ ALTER TABLE ONLY delayed_jobs
 
 
 --
--- Name: filter_outcomes filter_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: filtered_outcomes filtered_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY filter_outcomes
-    ADD CONSTRAINT filter_outcomes_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY filtered_outcomes
+    ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1626,10 +1626,10 @@ CREATE INDEX index_customers_on_user_id ON customers USING btree (user_id);
 
 
 --
--- Name: index_filter_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_filter_outcomes_on_user_id ON filter_outcomes USING btree (user_id);
+CREATE INDEX index_filtered_outcomes_on_user_id ON filtered_outcomes USING btree (user_id);
 
 
 --

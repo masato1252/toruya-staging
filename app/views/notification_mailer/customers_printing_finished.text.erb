@@ -3,4 +3,4 @@
 <%= @user.name || @user.email %> 様
 
 Your filtered customers printing already finished, you could go to <%= customer_user_filter_index_url(@user) %> to download,
-or download it directly <%= Bitly.client.shorten(@filter_outcome.file.url(query: {"response-content-disposition" => "attachment;"})).short_url %>
+or download it directly <%= Bitly.client.shorten(@filtered_outcome.file.url(query: {"response-content-disposition" => "attachment;"})).short_url %>

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: filter_outcomes
+# Table name: filtered_outcomes
 #
 #  id         :integer          not null, primary key
 #  user_id    :integer          not null
@@ -11,7 +11,7 @@
 #  created_at :datetime
 #
 
-class FilterOutcome < ApplicationRecord
+class FilteredOutcome < ApplicationRecord
   include AASM
   mount_uploader :file, FilterOutcomeFileUploader
 

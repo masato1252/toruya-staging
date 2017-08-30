@@ -13,7 +13,7 @@ class Customers::FilterController < DashboardController
     end
 
     @filters = super_user.customer_query_filters
-    @filtered_outcomes = super_user.filter_outcomes.active.order("created_at DESC")
+    @filtered_outcomes = super_user.filtered_outcomes.active.order("created_at DESC")
   end
 
   def create
