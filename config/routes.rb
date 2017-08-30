@@ -53,6 +53,12 @@ Rails.application.routes.draw do
 
     resources :users do
       resources :filter, only: [:index, :create]
+      resources :filtered_outcomes, only: [:index] do
+        collection do
+          get :fetch
+        end
+      end
+
       resources :saved_filters, only: [:index, :create] do
         collection do
           get :fetch

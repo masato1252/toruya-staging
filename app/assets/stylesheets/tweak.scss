@@ -105,6 +105,7 @@ button[disabled], a.disabled, input[disabled] {
           height: 20px;
           border-radius: 3px;
           margin-right: 12px;
+          cursor: pointer;
 
           &.processing {
             background-color: yellow;

@@ -57,9 +57,6 @@ UI.define("Customers.Filter.Dashboard", function() {
       }).done(function(result) {
         _this.querySider.updateFilterOption(result, false);
         _this.querySider.reset();
-        // _this.props.handleCreatedCustomer(result["customer"]);
-        // _this.props.updateCustomers(result["customers"]);
-        // _this.props.forceStopProcessing();
       })
     },
 
@@ -105,8 +102,21 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
-    loadFilteredOutcome: function() {
+    loadFilteredOutcome: function(event) {
+      event.preventDefault();
 
+      var _this = this;
+      _this.startProcessing();
+
+      $.ajax({
+        type: "GET",
+        url: _this.props.fetchFilteredOutcomePath,
+        data: { id: event.target.dataset.value },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.querySider.updateFilterOption(result);
+      }).always(function() {
+      });
     },
 
     renderDeleteFilterButton: function() {
@@ -134,7 +144,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                   </div>
                   <div>
                     <span className={["filter-outcome-state", outcome.state].join(" ")}></span>
-                    <i className="fa fa-search" onClick={this.loadFilteredOutcome}></i>
+                    <i className="fa fa-search" data-value={outcome.id} onClick={this.loadFilteredOutcome}></i>
                   </div>
                 </div>
               )
