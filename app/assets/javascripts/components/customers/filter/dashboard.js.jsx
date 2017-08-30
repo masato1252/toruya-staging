@@ -144,7 +144,9 @@ UI.define("Customers.Filter.Dashboard", function() {
                     </a>
                   </div>
                   <div>
-                    <span className={["filter-outcome-state", outcome.state].join(" ")}></span>
+                    <span className={["filter-outcome-state", outcome.state].join(" ")}>
+                      {outcome.state}
+                    </span>
                     <i className="fa fa-search" data-value={outcome.id} onClick={this.loadFilteredOutcome}></i>
                   </div>
                 </div>
