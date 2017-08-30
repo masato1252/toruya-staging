@@ -37,7 +37,7 @@ class Customers::Import < ActiveInteraction::Base
     commands = customers_without_backup_group.map do |customer|
       Expeditor::Command.new do
         google_user.update_contact(customer.google_contact_id, { add_group_ids: [contact_group.backup_google_group_id] })
-      end.tap(&:start)
+      end.tap { |command| command.start_with_retry(tries: 3, sleep: 1) }
     end
     commands.each(&:get)
   end
