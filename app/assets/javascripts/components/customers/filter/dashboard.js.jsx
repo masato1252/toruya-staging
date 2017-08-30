@@ -96,6 +96,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         dataType: "JSON"
       }).done(function(result) {
         _this.setState({printing_page_size: ""}); // avoid user click again.
+        _this.setState(result)
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
         // _this.props.forceStopProcessing();

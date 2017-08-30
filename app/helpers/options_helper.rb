@@ -125,6 +125,17 @@ module OptionsHelper
     default_options(super_user.contact_groups.connected)
   end
 
+  def filtered_outcome_options(filtered_outcomes)
+    filtered_outcomes.map{ |outcome|
+      {
+        id: outcome.id,
+        name: "#{outcome&.filter&.name} #{outcome.created_at.to_s(:date)}",
+        file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
+        state: outcome.aasm_state
+      }
+    }
+  end
+
   def regions
     JpPrefecture::Prefecture.all.map {|j| { label: j.name, value: j.name } }
   end

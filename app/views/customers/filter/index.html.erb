@@ -22,13 +22,7 @@
     { label: I18n.t("reservation.#{state}"), value: state }
   },
   saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
-  filtered_outcome_options: @filtered_outcomes.map{ |outcome|
-    {
-      id: outcome.id,
-      name: "#{outcome&.filter&.name} #{outcome.created_at.to_s(:date)}",
-      file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
-      state: outcome.aasm_state
-    } },
+  filtered_outcome_options: filtered_outcome_options(@filtered_outcomes),
   printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),
   printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
   printing_path: customer_printing_index_path(format: :pdf),

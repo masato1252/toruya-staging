@@ -99,13 +99,16 @@ button[disabled], a.disabled, input[disabled] {
           padding-left: 0;
         }
 
+        .fa-search {
+          cursor: pointer;
+        }
+
         .filter-outcome-state {
           display: inline-block;
           width: 20px;
           height: 20px;
           border-radius: 3px;
           margin-right: 12px;
-          cursor: pointer;
 
           &.processing {
             background-color: yellow;

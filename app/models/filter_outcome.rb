@@ -22,7 +22,7 @@ class FilterOutcome < ApplicationRecord
 
   aasm :whiny_transitions => false do
     state :processing, initial: true
-    state :completed, :failed, :deleted
+    state :completed, :failed, :removed
 
     event :process do
       transitions from: [:pending], to: :processing
@@ -36,8 +36,8 @@ class FilterOutcome < ApplicationRecord
       transitions from: :processing, to: :failed
     end
 
-    event :delete do
-      transitions from: :completed, to: :deleted
+    event :remove do
+      transitions from: :completed, to: :removed
     end
   end
 end
