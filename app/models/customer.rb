@@ -90,6 +90,8 @@ class Customer < ApplicationRecord
   end
 
   def primary_formatted_address
+    return unless primary_address
+
     @primary_formatted_address ||= Hashie::Mash.new(primary_address).tap do |address|
       address.value.postcode1 = address.value.postcode ? address.value.postcode.first(3) : ""
       address.value.postcode2 = address.value.postcode ? address.value.postcode[3..-1] : ""
