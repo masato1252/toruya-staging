@@ -1,8 +1,8 @@
 module Reservations
   class AddReservation < ActiveInteraction::Base
     set_callback :type_check, :before do
-      params[:staff_ids] = params[:staff_ids].present? ? params[:staff_ids].split(",") : []
-      params[:customer_ids] = params[:customer_ids].present? ? params[:customer_ids].split(",") : []
+      params[:staff_ids] = params[:staff_ids].present? ? params[:staff_ids].split(",").uniq : []
+      params[:customer_ids] = params[:customer_ids].present? ? params[:customer_ids].split(",").uniq : []
     end
 
     object :shop
