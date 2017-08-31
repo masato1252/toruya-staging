@@ -364,6 +364,8 @@ CREATE TABLE filtered_outcomes (
     filter_id integer,
     query jsonb,
     file character varying,
+    page_size character varying,
+    outcome_type character varying,
     aasm_state character varying NOT NULL,
     created_at timestamp without time zone
 );
@@ -1560,6 +1562,13 @@ CREATE UNIQUE INDEX customers_google_index ON customers USING btree (user_id, go
 --
 
 CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at);
+
+
+--
+-- Name: filtered_outcome_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX filtered_outcome_index ON filtered_outcomes USING btree (user_id, aasm_state, created_at);
 
 
 --

@@ -1,18 +1,23 @@
 class CustomersPrintingJob < ApplicationJob
   queue_as :default
 
-  def perform(filtered_outcome, page_size, customer_ids)
+  def perform(filtered_outcome, customer_ids)
     super_user = filtered_outcome.user
+    page_size = filtered_outcome.page_size
 
-    customers = super_user.customers.where(id: customer_ids).map do |customer|
-      customer.with_google_contact
-    end
+    customers = super_user.customers.where(id: customer_ids)
+    customers = case filtered_outcome.outcome_type
+                when "contacts"
+                  customers.map(&:with_google_contact)
+                when "infos"
+                  customers.includes(:contact_group)
+                end
 
     title = "#{super_user.filtered_outcomes.count + 1}_#{Date.today.iso8601}"
 
     pdf_string = WickedPdf.new.pdf_from_string(
       ActionController::Base.new.render_to_string(
-        :template => "customers/printing/index",
+        :template => "customers/printing/#{filtered_outcome.outcome_type}",
         :locals => {
           :@page_size => page_size,
           :@customers => customers,

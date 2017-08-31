@@ -1,4 +1,4 @@
-class FilterOutcomes::Remove < ActiveInteraction::Base
+class FilteredOutcomes::Remove < ActiveInteraction::Base
   object :filtered_outcome
 
   def execute

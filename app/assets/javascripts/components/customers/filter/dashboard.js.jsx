@@ -10,6 +10,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         filter_name: "",
         current_saved_filter_id: "",
         printing_page_size: "",
+        info_printing_page_size: "",
         customers_processing: false,
         filtered_outcome_options: this.props.filteredOutcomeOptions
       });
@@ -82,11 +83,14 @@ UI.define("Customers.Filter.Dashboard", function() {
       event.preventDefault();
       var _this = this;
 
-      if (!this.state.printing_page_size) { return; }
+      if (!this.state[event.target.dataset.pageSizeName]) { return; }
 
       var valuesToSubmit = $(this.querySider.filterForm).serialize() + '&' + $.param({
-        page_size: this.state.printing_page_size,
-        filter_id: this.state.current_saved_filter_id,
+        filtered_outcome: {
+          page_size: this.state[event.target.dataset.pageSizeName],
+          filter_id: this.state.current_saved_filter_id,
+          outcome_type: event.target.dataset.printingType,
+        },
         customer_ids: _.map(this.state.customers, function(customer) { return customer.id; }).join(",")
       });
 
@@ -96,7 +100,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         data: valuesToSubmit,
         dataType: "JSON"
       }).done(function(result) {
-        _this.setState({printing_page_size: ""}); // avoid user click again.
+        _this.setState({printing_page_size: "", info_printing_page_size: ""}); // avoid user click again.
         _this.setState(result)
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
@@ -197,7 +201,28 @@ UI.define("Customers.Filter.Dashboard", function() {
               <dd id="NAVdelete">
                 {this.renderDeleteFilterButton()}
               </dd>
-              <dd id="NAVprintList"><select><option>Print List</option><option>A4</option></select><a href="#" className="BTNtarco" title="印刷"><i className="fa fa-print"></i></a></dd>
+              <dd id="NAVprintList">
+                <UI.Select
+                  data-name="info_printing_page_size"
+                  options={this.props.infoPrintingPageSizeOptions}
+                  value ={this.state.info_printing_page_size}
+                  onChange={this.onDataChange}
+                  blankOption={this.props.infoPrintingPageSizeBlankOption}
+                  includeBlank={true}
+                  />
+                <a onClick={this.handlePrinting}
+                  href="#"
+                  className={`BTNtarco ${this.state.info_printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
+                  title="印刷"
+                  data-printing-type="infos"
+                  data-page-size-name="info_printing_page_size"
+                   target="_blank">
+                  <i className="fa fa-print"
+                    data-printing-type="infos"
+                    data-page-size-name="info_printing_page_size">
+                  </i>
+                </a>
+              </dd>
               <dd id="NAVprintAddress">
                 <UI.Select
                   data-name="printing_page_size"
@@ -210,8 +235,14 @@ UI.define("Customers.Filter.Dashboard", function() {
                 <a onClick={this.handlePrinting}
                   href="#"
                   className={`BTNtarco ${this.state.printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
-                  title="印刷" target="_blank">
-                  <i className="fa fa-print"></i>
+                  title="印刷"
+                  data-printing-type="contacts"
+                  data-page-size-name="printing_page_size"
+                   target="_blank">
+                  <i className="fa fa-print"
+                    data-printing-type="contacts"
+                    data-page-size-name="printing_page_size">
+                  </i>
                 </a>
                </dd>
                <dd id="NAVprintOutcome">

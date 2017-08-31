@@ -2,17 +2,20 @@
 #
 # Table name: filtered_outcomes
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  filter_id  :integer
-#  query      :jsonb
-#  file       :string
-#  aasm_state :string           not null
-#  created_at :datetime
+#  id           :integer          not null, primary key
+#  user_id      :integer          not null
+#  filter_id    :integer
+#  query        :jsonb
+#  file         :string
+#  page_size    :string
+#  outcome_type :string
+#  aasm_state   :string           not null
+#  created_at   :datetime
 #
 
 class FilteredOutcome < ApplicationRecord
   EXPIRED_DAYS = 7
+  OUTCOME_TYPES = %w(contacts infos).freeze
   include AASM
   mount_uploader :file, FilteredOutcomeFileUploader
 
@@ -20,6 +23,7 @@ class FilteredOutcome < ApplicationRecord
 
   belongs_to :user
   belongs_to :filter, class_name: "QueryFilter"
+  validates :outcome_type, presence: true, inclusion: { in: OUTCOME_TYPES }
 
   aasm :whiny_transitions => false do
     state :processing, initial: true
