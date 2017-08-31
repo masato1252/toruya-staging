@@ -56,7 +56,8 @@ UI.define("Customers.Filter.Dashboard", function() {
         dataType: "JSON"
       }).done(function(result) {
         _this.querySider.updateFilterOption(result, false);
-        _this.querySider.reset();
+        // [TODO]: Discuss the expected behavior what to do.
+        // _this.querySider.reset();
       })
     },
 
