@@ -15,7 +15,7 @@
 
 class FilteredOutcome < ApplicationRecord
   EXPIRED_DAYS = 7
-  OUTCOME_TYPES = %w(contacts infos).freeze
+  OUTCOME_TYPES = %w(addresses infos).freeze
   include AASM
   mount_uploader :file, FilteredOutcomeFileUploader
 
@@ -29,12 +29,8 @@ class FilteredOutcome < ApplicationRecord
     state :processing, initial: true
     state :completed, :failed, :removed
 
-    event :process do
-      transitions from: [:pending], to: :processing
-    end
-
     event :complete do
-      transitions from: :processing, to: :completed
+      transitions from: [:processing, :failed], to: :completed
     end
 
     event :fail do

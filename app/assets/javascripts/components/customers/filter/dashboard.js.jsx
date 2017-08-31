@@ -214,11 +214,11 @@ UI.define("Customers.Filter.Dashboard", function() {
                   href="#"
                   className={`BTNtarco ${this.state.info_printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
                   title="印刷"
-                  data-printing-type="infos"
+                  data-printing-type={this.props.infoPrintingType}
                   data-page-size-name="info_printing_page_size"
                    target="_blank">
                   <i className="fa fa-print"
-                    data-printing-type="infos"
+                    data-printing-type={this.props.infoPrintingType}
                     data-page-size-name="info_printing_page_size">
                   </i>
                 </a>
@@ -236,11 +236,11 @@ UI.define("Customers.Filter.Dashboard", function() {
                   href="#"
                   className={`BTNtarco ${this.state.printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
                   title="印刷"
-                  data-printing-type="contacts"
+                  data-printing-type={this.props.addressPrintingType}
                   data-page-size-name="printing_page_size"
                    target="_blank">
                   <i className="fa fa-print"
-                    data-printing-type="contacts"
+                    data-printing-type={this.props.addressPrintingType}
                     data-page-size-name="printing_page_size">
                   </i>
                 </a>
