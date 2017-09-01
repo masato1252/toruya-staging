@@ -87,4 +87,17 @@ Rails.application.configure do
     # Do not fallback to assets pipeline if a precompiled asset is missed.
     config.assets.compile = false
   end
+
+  config.active_record.logger = nil
+  config.lograge.enabled = true
+  config.lograge.keep_original_rails_log = false
+  config.lograge.custom_options = lambda do |event|
+    { time: event.time }
+  end
+  config.lograge.custom_payload do |controller|
+    {
+      host: controller.request.host,
+      user_id: controller.current_user.try(:id)
+    }
+  end
 end

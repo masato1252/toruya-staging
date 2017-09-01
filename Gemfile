@@ -47,6 +47,7 @@ gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf", "~> 1.1.0"
 gem "wkhtmltopdf-binary"
+gem "lograge", "~> 0.6.0"
 
 group :development, :test do
   gem "byebug", platform: :mri
