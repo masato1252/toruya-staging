@@ -29,6 +29,7 @@ en:
     cancel: Cancel
     log_out: Log out
     save: Save
+    search: Search
   common:
     processing: Processing
     date: Date
@@ -49,6 +50,8 @@ en:
     delete_successfully_message: Deleted successfully
     are_you_sure_message: Are you sure?
     send: Send
+    yes_label: YES
+    no_label: NO
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -94,6 +97,24 @@ en:
       postcard_a: PostCard A
       postcard_b: PostCard B
       envelope: Envelope
+    info: Customer Info
+    group: Customer Group
+    living_place: Living Place
+    living_state: State
+    email_types: Email type
+    reservation_records: Reservation Records
+    reservation_day: Date
+    filter:
+      menu: Menu
+      multiple_choices: multiple choices
+      staff: Staff
+      error: Error
+      reservation_status_title: Reservation status
+      reservation_status_info: Reservation status
+      check_in_status_title: Check-in status
+      check_in_status_info: Check-in status
+      printing_info: Print List
+      printing_address: Print Address
   settings:
     shop:
       info_title: Shop Info

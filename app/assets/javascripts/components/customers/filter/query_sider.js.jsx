@@ -297,11 +297,11 @@ UI.define("Customers.Filter.QuerySider", function() {
                 onChange={this.onSavedFilterChange}
                 />
             </div>
-            <h2>Customer Info</h2>
+            <h2>{this.props.customerInfoTitle}</h2>
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "group_ids")} >
                 {this.renderToggleIcon("group_ids")}
-                Customer Group
+                {this.props.customerGroupTitle}
               </h3>
               {
                 this.state.filterCategoryDisplaying["group_ids"] ? (
@@ -319,7 +319,7 @@ UI.define("Customers.Filter.QuerySider", function() {
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "living_place")} >
                 {this.renderToggleIcon("living_place")}
-                Living Place：居住地
+                {this.props.customerLivingPlaceTitle}
               </h3>
               {
                 this.state.filterCategoryDisplaying["living_place"] ? (
@@ -336,7 +336,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                       </dd>
                     </dl>
                     <dl className="state">
-                      <dt>State：都道府県</dt>
+                      <dt>{this.props.customerLivingPlaceState}</dt>
                       <dd>
                         <ul>
                           {this.renderMultipleInputs(this.state.states, "states")}
@@ -374,13 +374,13 @@ UI.define("Customers.Filter.QuerySider", function() {
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "has_email")} >
                 {this.renderToggleIcon("has_email")}
-                Email：
+                {this.props.customerEmailTitle}：
               </h3>
               {
                 this.state.filterCategoryDisplaying["has_email"] ? (
                   <div>
                     <dl>
-                      <dt>has email address?</dt>
+                      <dt>{this.props.customerEmailTypes}</dt>
                       <dd>
                         <ul>
                           <li>
@@ -392,7 +392,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                               checked={this.state.has_email === "true"}
                               onChange={this.onDataChange}
                               />
-                            <label htmlFor="hasEmail">YES：有り</label>
+                            <label htmlFor="hasEmail">{this.props.yesLabel}</label>
                           </li>
                           <li>
                             <input
@@ -403,7 +403,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                               checked={this.state.has_email === "false"}
                               onChange={this.onDataChange}
                               />
-                            <label htmlFor="hasNOemail">NO：無し</label>
+                            <label htmlFor="hasNOemail">{this.props.noLabel}</label>
                           </li>
                         </ul>
                       </dd>
@@ -427,7 +427,7 @@ UI.define("Customers.Filter.QuerySider", function() {
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "birthday")} >
                 {this.renderToggleIcon("birthday")}
-                Date of Birth：生年月日
+                {this.props.customerBirthdayTitle}
               </h3>
               {
                 this.state.filterCategoryDisplaying["birthday"] ? (
@@ -522,7 +522,7 @@ UI.define("Customers.Filter.QuerySider", function() {
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "custom_ids")} >
                 {this.renderToggleIcon("custom_ids")}
-                Customer ID：
+                {this.props.customerIdTitle}：
               </h3>
               {
                 this.state.filterCategoryDisplaying["custom_ids"] ? (
@@ -559,11 +559,11 @@ UI.define("Customers.Filter.QuerySider", function() {
                 ) : null
               }
             </div>
-            <h2>Reservation Records：</h2>
+            <h2>{this.props.customerReservationRecordsTitle}：</h2>
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation")} >
                 {this.renderToggleIcon("reservation")}
-                Date：
+                {this.props.customerReservationDateTitle}：
               </h3>
               {
                 this.state.filterCategoryDisplaying["reservation"] ? (
@@ -667,7 +667,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
                   {this.renderToggleIcon("menu_ids")}
-                  Menu<span>(multiple choice)</span>
+                  {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
                 <dl className={this.state.filterCategoryDisplaying["menu_ids"] ? null : "hidden"}>
                   <dt>Select Menu：</dt>
@@ -706,7 +706,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "staff_ids")} >
                   {this.renderToggleIcon("staff_ids")}
-                  Staff<span>(multiple choice)</span>
+                  {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
                 {
                   this.state.filterCategoryDisplaying["staff_ids"] ? (
@@ -748,7 +748,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation_with_warnings")} >
                   {this.renderToggleIcon("reservation_with_warnings")}
-                  Error：
+                  {this.props.customerReservationErrorTitle}：
                 </h3>
                 {
                   this.state.filterCategoryDisplaying["reservation_with_warnings"] ? (
@@ -765,7 +765,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                             checked={this.state.reservation_with_warnings === "true"}
                             onChange={this.onDataChange}
                             />
-                          <label htmlFor="hasANerror">YES：有り</label>
+                          <label htmlFor="hasANerror">{this.props.yesLabel}</label>
                         </li>
                         <li>
                           <input
@@ -776,7 +776,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                             checked={this.state.reservation_with_warnings === "false"}
                             onChange={this.onDataChange}
                             />
-                          <label htmlFor="hasNOrror">NO：無し</label>
+                          <label htmlFor="hasNOrror">{this.props.noLabel}</label>
                         </li>
                       </ul>
                     </dd>
@@ -787,12 +787,12 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationBeforeCheckedInStates")} >
                   {this.renderToggleIcon("reservationBeforeCheckedInStates")}
-                  Reservation status：
+                  {this.props.customerReservationStatusTitle}：
                 </h3>
                 {
                   this.state.filterCategoryDisplaying["reservationBeforeCheckedInStates"] ? (
                     <dl>
-                      <dt>Select status</dt>
+                      <dt>{this.props.customerReservationStatusInfo}</dt>
                       <dd>
                         <ul>
                           {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
@@ -805,12 +805,12 @@ UI.define("Customers.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationAfterCheckedInStates")} >
                   {this.renderToggleIcon("reservationAfterCheckedInStates")}
-                  Check-in status：
+                  {this.props.customerCheckInStatusTitle}：
                 </h3>
                 {
                   this.state.filterCategoryDisplaying["reservationAfterCheckedInStates"] ? (
                     <dl>
-                      <dt>Select status</dt>
+                      <dt>{this.props.customerCheckInStatusInfo}</dt>
                       <dd>
                         <ul>
                           {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
@@ -907,7 +907,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
                   onClick={this.submitFilterForm}
                   href="#"
-                  >Search
+                  >{this.props.searchLabel}
                 </a>
               </div>
             </form>

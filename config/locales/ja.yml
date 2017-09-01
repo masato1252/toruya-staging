@@ -29,6 +29,7 @@ ja:
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
+    search: 検索
   common:
     processing: 送信中
     date: 日付
@@ -48,6 +49,8 @@ ja:
     delete_successfully_message: 削除完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
+    yes_label: 有り
+    no_label: 無し
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -95,6 +98,24 @@ ja:
       postcard_a: ポストカード縦
       postcard_b: ポストカード横
       envelope: 封筒 長3
+    info: 顧客情報
+    group: 顧客台帳
+    living_place: 居住地
+    living_state: 都道府県
+    email_types: アドレスの種類
+    reservation_records: 利用履歴
+    reservation_day: 予約日
+    filter:
+      menu: メニュー
+      multiple_choices: 複数選択可
+      staff: スタッフ
+      error: エラー
+      reservation_status_title: 予約状況
+      reservation_status_info: ステータス選択
+      check_in_status_title: 来店ステータス
+      check_in_status_info: 来店ステータス選択
+      printing_info: リスト印刷
+      printing_address: 宛名印刷
   settings:
     shop:
       info_title:  店舗情報
