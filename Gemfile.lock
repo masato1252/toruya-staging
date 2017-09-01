@@ -202,6 +202,11 @@ GEM
     logging (2.1.0)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
+    lograge (0.6.0)
+      actionpack (>= 4, < 5.2)
+      activesupport (>= 4, < 5.2)
+      railties (>= 4, < 5.2)
+      request_store (~> 1.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -288,6 +293,7 @@ GEM
       execjs
       railties (>= 3.2)
       tilt
+    request_store (1.3.2)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
     retriable (1.4.1)
@@ -400,6 +406,7 @@ DEPENDENCIES
   kaminari (~> 1.0.1)
   letter_opener (~> 1.4.1)
   listen (~> 3.0.5)
+  lograge (~> 0.6.0)
   moment_timezone-rails (~> 0.5.0)
   momentjs-rails (~> 2.11.1)
   newrelic_rpm (~> 3.18.0)
