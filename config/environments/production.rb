@@ -92,11 +92,15 @@ Rails.application.configure do
   config.lograge.enabled = true
   config.lograge.keep_original_rails_log = false
   config.lograge.custom_options = lambda do |event|
-    { time: event.time }
+    exceptions = %w(controller action format utf8 authenticity_token)
+    {
+      time: event.time,
+      params: event.payload[:params].except(*exceptions)
+    }
   end
   config.lograge.custom_payload do |controller|
     {
-      host: controller.request.host,
+      referer: controller.request.referer,
       user_id: controller.current_user.try(:id)
     }
   end
