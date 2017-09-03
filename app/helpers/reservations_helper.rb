@@ -8,8 +8,8 @@ module ReservationsHelper
     end
 
     {
-      staffs_sentence: reservation_staffs.map(&:name).join(", "),
-      deleted_staffs_sentence: in_future_or_today ? reservation_staffs.find_all { |reservation_staff| reservation_staff.deleted_at }.map(&:name).join(", ") : nil
+      staffs_sentence: reservation_staffs.map(&:name).join(", ").presence,
+      deleted_staffs_sentence: in_future_or_today ? reservation_staffs.find_all { |reservation_staff| reservation_staff.deleted_at }.map(&:name).join(", ").presence : nil
     }
   end
 end

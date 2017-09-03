@@ -52,6 +52,11 @@ en:
     send: Send
     yes_label: YES
     no_label: NO
+  dashboard:
+    my_shop: My shops
+    shop_you_work_for: Shops you work for
+    sign_in_as: "Signed in as %{name}"
+    my_shop_setting: My shop settings
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -59,12 +64,14 @@ en:
     no_menu_message: No results found
     create_successfully_message: Save successfully.
     update_successfully_message: Save successfully.
+    canceled_successfully_message: Canceled successfully.
     delete_successfully_message: Delete successfully.
     delete_confirmation_message: Are you sure? You can't restore your reservation after you click "OK".
     check_in: Check in
     check_out: Check Out
     accept: Accept
     pend: Pend
+    accept_in_canceled: Resume
     shop_closed: Shop closed
     cancel: Cancel
     pending: Pending

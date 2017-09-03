@@ -34,13 +34,13 @@
       <% if staff_schedule_requirement_condition %>
         <div class="staffDashboard">
           <div class="edit-worktime">
-            <% if can? :update_temoporay_working_schedule, shop %>
+            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
               <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
                 出勤日を追加
               </a>
             <% end %>
 
-            <% if can? :manage, :staff_holiday_permission%>
+            <% if can?(:manage_staff_holiday_permission, shop_staff) %>
               <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
                 休暇を追加
               </a>
@@ -92,6 +92,9 @@
             <dd class="customer"><%= customer_names_sentence %></dd>
             <% if reservation.with_warnings %>
               <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+            <% end %>
+            <% if sentences[:deleted_staffs_sentence] %>
+              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
             <% end %>
             <% if sentences[:deleted_staffs_sentence] %>
               <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
@@ -157,7 +160,7 @@
 
                   <% if reservation.may_accept? %>
                     <dd>
-                      <%= link_to t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
+                      <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
                     </dd>
                   <% end %>
 
@@ -169,7 +172,7 @@
 
                   <% if reservation.may_cancel? %>
                     <dd>
-                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
+                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange" %>
                     </dd>
                   <% end %>
 

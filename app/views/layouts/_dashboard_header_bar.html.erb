@@ -14,7 +14,7 @@
       <ul class="dropdown-menu dropdown-menu-left">
         <% if owning_shop_options.present? %>
           <li>
-            <span class="dropdown-header">Your shops</span>
+            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
           </li>
           <li class="divider"></li>
 
@@ -29,7 +29,7 @@
 
         <% if working_shop_options.present? %>
           <li>
-            <span class="dropdown-header">Shops you work for</span>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
           </li>
           <li class="divider"></li>
 
@@ -64,17 +64,17 @@
       <% end %>
       <ul class="dropdown-menu dropdown-menu-right">
         <li>
-          <span class="dropdown-header">Signed in as <%= current_user.name || current_user_staff_account.try(:staff).try(:name) || current_user.email %></span>
+          <span class="dropdown-header"><%= t("dashboard.sign_in_as", name: current_user.name || current_user_staff_account.try(:staff).try(:name) || current_user.email) %></span>
         </li>
         <li class="divider"></li>
         <li>
-          <%= link_to "My shop settings", settings_path(current_user) %>
+          <%= link_to t("dashboard.my_shop_setting"), settings_path(current_user) %>
         </li>
 
         <% if working_shop_options.present? %>
           <li class="divider"></li>
           <li>
-            <span class="dropdown-header">Shops you work for</span>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
           </li>
           <li class="divider"></li>
 

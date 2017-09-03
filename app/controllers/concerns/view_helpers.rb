@@ -6,6 +6,7 @@ module ViewHelpers
     helper_method :shop
     helper_method :staffs
     helper_method :staff
+    helper_method :shop_staff
     helper_method :super_user
     helper_method :current_user_staff_account
     helper_method :working_shop_options
@@ -35,6 +36,10 @@ module ViewHelpers
 
   def staff
     @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
+  end
+
+  def shop_staff
+    @shop_staff ||= ShopStaff.find_by(shop: shop, staff: staff)
   end
 
   def super_user

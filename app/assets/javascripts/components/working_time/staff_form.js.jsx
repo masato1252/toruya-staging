@@ -247,13 +247,22 @@ UI.define("WorkingTime.StaffForm", function() {
 
     renderModeView: function() {
       if (this.props.mode == "working_schedules") {
-        return (
-          <div>
-            <h3>勤務日時<strong>必須項目</strong></h3>
-            { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
-            { this.renderParTimeAndTemporaySchedules() }
-          </div>
-        )
+        if (!this.props.fullTimePermission && this.props.fullTimeShops.length > 0) {
+          return (
+            <div>
+              You are full time employee. You don't need to set your regular/temporary working time.
+            </div>
+          )
+        }
+        else {
+          return (
+            <div>
+              <h3>勤務日時<strong>必須項目</strong></h3>
+              { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
+              { this.renderParTimeAndTemporaySchedules() }
+            </div>
+          )
+        }
       }
       else if (this.props.mode == "holiday_schedules") {
         return (
