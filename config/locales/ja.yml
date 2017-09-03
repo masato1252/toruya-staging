@@ -74,15 +74,12 @@ ja:
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
     cancel: キャンセル
-<<<<<<< HEAD
     pending: 承認待ち
     noshow: 未来店
     checked_in: チェックイン
     checked_out: チェックアウト
     reserved: 予約
     canceled: キャンセル
-=======
->>>>>>> staging
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
