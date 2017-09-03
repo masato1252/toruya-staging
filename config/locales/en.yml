@@ -49,6 +49,11 @@ en:
     delete_successfully_message: Deleted successfully
     are_you_sure_message: Are you sure?
     send: Send
+  dashboard:
+    my_shop: My shops
+    shop_you_work_for: Shops you work for
+    sign_in_as: "Signed in as %{name}"
+    my_shop_setting: My shop settings
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
