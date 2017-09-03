@@ -12,18 +12,19 @@ UI.define("Select", function() {
     render: function() {
       var _this = this;
       var optionsList = [];
+      const { includeBlank, options, prefix, blankOption, ...rest } = this.props;
 
       // [{label: ..., value: ...}, {...}]
-      if (this.props.options.length == 0 || this.props.options[0].label) {
-        optionsList = this.props.options.map(function(option, i) {
-          return <option key={`${_this.props.prefix}-${option.value}-${i}`} value={option.value}>{option.label}</option>;
+      if (options.length == 0 || options[0].label) {
+        optionsList = options.map(function(option, i) {
+          return <option key={`${prefix}-${option.value}-${i}`} value={option.value}>{option.label}</option>;
         });
       } else {
       // [ {group_label: ..., options: [{label: ..., value: ...}]}, {...}]
-        optionsList = this.props.options.map(function(group_option) {
+        optionsList = options.map(function(group_option) {
           var nested_options = group_option.options.map(function(option) {
               return (
-                <option key={`${_this.props.prefix}-${option.value}`} value={option.value}>{option.label}</option>
+                <option key={`${prefix}-${option.value}`} value={option.value}>{option.label}</option>
               );
             });
 
@@ -35,12 +36,12 @@ UI.define("Select", function() {
         });
       }
 
-      if (this.props.includeBlank) {
-        optionsList.unshift(<option value="" key="">{this.props.blankOption}</option>);
+      if (includeBlank) {
+        optionsList.unshift(<option value="" key="">{blankOption}</option>);
       }
 
       return(
-        <select {...this.props} >
+        <select {...rest} >
           {optionsList}
         </select>
       );
