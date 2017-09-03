@@ -56,12 +56,14 @@ ja:
     create_successfully_message: 予約が保存されました。
     update_successfully_message: 予約が更新されました。
     delete_successfully_message: 予約が削除されました。
+    canceled_successfully_message: 予約がキャンセルされました。
     delete_confirmation_message: 本当に削除しますか？「OK」を押すと、予約データを復活することはできません。
     recheck_in: 再チェックイン
     check_in: チェックイン
     check_out: チェックアウト
     accept: 承認
     pend: 未承認
+    accept_in_canceled: 予約復活
     shop_closed: 営業時間外
     cancel: キャンセル
     memo: メモ内容

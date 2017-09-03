@@ -413,6 +413,7 @@ UI.define("Customers.Dashboard", function() {
             checkInBtn={this.props.checkInBtn}
             checkOutBtn={this.props.checkOutBtn}
             acceptBtn={this.props.acceptBtn}
+            acceptInCanceledBtn={this.props.acceptInCanceledBtn}
             pendBtn={this.props.pendBtn}
             editBtn={this.props.editBtn}
             cancelBtn={this.props.cancelBtn}

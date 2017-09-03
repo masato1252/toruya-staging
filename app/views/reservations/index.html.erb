@@ -157,7 +157,7 @@
 
                   <% if reservation.may_accept? %>
                     <dd>
-                      <%= link_to t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
+                      <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
                     </dd>
                   <% end %>
 
@@ -169,7 +169,7 @@
 
                   <% if reservation.may_cancel? %>
                     <dd>
-                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), data: { confirm: I18n.t("reservation.delete_confirmation_message") } , class: "btn BTNorange" %>
+                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange" %>
                     </dd>
                   <% end %>
 

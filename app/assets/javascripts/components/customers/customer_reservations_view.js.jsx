@@ -12,7 +12,7 @@ UI.define("Customers.CustomerReservationsView", function() {
         "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
         "checked_out": [{ label: this.props.recheckInBtn, action: "check_in", btn_color: "BTNyellow" },
                         { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
-        "canceled": [{ label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }]
+        "canceled": [{ label: this.props.acceptInCanceledBtn, action: "accept", btn_color: "BTNtarco" }]
       };
 
       return ({
