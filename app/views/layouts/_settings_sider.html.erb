@@ -67,31 +67,29 @@
             active: /holiday_schedules/,
             wrap_tag: :li,
             class_active: "here" %>
-          <% else %>
-            <%
-              staff = current_user.current_staff(super_user)
-              shop_staff = ShopStaff.find_by(shop: shop, staff: staff)
-            %>
-            <%= active_link_to t("settings.staff.info_title"),
-              edit_settings_user_staff_path(super_user, current_user.current_staff(super_user)),
-              active: [["settings/staffs"]],
+        <% else %>
+          <%= active_link_to t("settings.staff.info_title"),
+            edit_settings_user_staff_path(super_user, staff),
+            active: [["settings/staffs"]],
+            wrap_tag: :li,
+            class_active: "here" %>
+
+          <% if can?(:manage_staff_full_time_permission, shop_staff) ||
+            can?(:manage_staff_regular_working_day_permission, shop_staff) ||
+            can?(:manage_staff_temporary_working_day_permission, shop_staff)
+          %>
+            <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff),
+              active: /working_schedules/,
               wrap_tag: :li,
               class_active: "here" %>
-              <% if can?(:manage_staff_full_time_permission, shop_staff) ||
-                can?(:manage_staff_regular_working_day_permission, shop_staff) ||
-                can?(:manage_staff_temporary_working_day_permission, shop_staff)
-              %>
-              <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
-                active: /working_schedules/,
-                wrap_tag: :li,
-                class_active: "here" %>
-            <% end %>
-            <% if can?(:manage, :staff_holiday_permission) %>
-              <%= active_link_to t("settings.staff.holiday_time"), holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)),
-                active: /holiday_schedules/,
-                wrap_tag: :li,
-                class_active: "here" %>
-            <% end %>
+          <% end %>
+
+          <% if can?(:manage_staff_holiday_permission, shop_staff) %>
+            <%= active_link_to t("settings.staff.holiday_time"), holiday_schedules_settings_user_working_time_staff_path(super_user, staff),
+              active: /holiday_schedules/,
+              wrap_tag: :li,
+              class_active: "here" %>
+          <% end %>
         <% end %>
 
       </ul>

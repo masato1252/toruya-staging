@@ -34,13 +34,13 @@
       <% if staff_schedule_requirement_condition %>
         <div class="staffDashboard">
           <div class="edit-worktime">
-            <% if can? :update_temoporay_working_schedule, shop %>
+            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
               <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
                 出勤日を追加
               </a>
             <% end %>
 
-            <% if can? :manage, :staff_holiday_permission%>
+            <% if can?(:manage_staff_holiday_permission, shop_staff) %>
               <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
                 休暇を追加
               </a>
