@@ -74,9 +74,21 @@
             wrap_tag: :li,
             class_active: "here" %>
 
+          <%#
+            full time permission or
+            (
+              part time worker and has regular/temporary working time permission
+            )
+
+            # full time worker but don't have full time permission only have regular/temporary permission would be ignored.
+          %>
           <% if can?(:manage_staff_full_time_permission, shop_staff) ||
-            can?(:manage_staff_regular_working_day_permission, shop_staff) ||
-            can?(:manage_staff_temporary_working_day_permission, shop_staff)
+            (
+              !staff.business_schedules.full_time.where(shop: shop).exists? && (
+                can?(:manage_staff_regular_working_day_permission, shop_staff) ||
+                can?(:manage_staff_temporary_working_day_permission, shop_staff)
+              )
+            )
           %>
             <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff),
               active: /working_schedules/,
