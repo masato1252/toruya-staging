@@ -20,6 +20,7 @@
                         staff_ids: reservation.staff_ids.map(&:to_s),
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
+                      shop_name: shop.display_name,
                       member_mode: current_user.member?,
                       from_customer_id: params[:from_customer_id],
                       from_shop_id: params[:from_shop_id],
