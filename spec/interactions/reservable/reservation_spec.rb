@@ -70,7 +70,7 @@ RSpec.describe Reservable::Reservation do
       # validate_interval_time
       context "when there are reservations overlap in interval time" do
         context "when the overlap happened on previous reservation" do
-          before do
+          let!(:reservation) do
             FactoryGirl.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
                                staff_ids: [staff1.id])
@@ -87,10 +87,26 @@ RSpec.describe Reservable::Reservation do
             expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
             expect(outcome.errors.details[:business_time_range]).not_to include(error: "next_reservation_interval_overlap")
           end
+
+          context "when reservation is canceled" do
+            before do
+              FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation.cancel!
+            end
+
+            it "is valid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    staff_ids: [staff1.id, staff2.id])
+
+              expect(outcome).to be_valid
+            end
+          end
         end
 
         context "when the overlap happened on next reservation" do
-          before do
+          let!(:reservation) do
             FactoryGirl.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
                                staff_ids: [staff1.id])
@@ -106,6 +122,22 @@ RSpec.describe Reservable::Reservation do
             expect(outcome.errors.details[:business_time_range]).to include(error: "next_reservation_interval_overlap")
             expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
             expect(outcome.errors.details[:business_time_range]).not_to include(error: "previous_reservation_interval_overlap")
+          end
+
+          context "when reservation is canceled" do
+            before do
+              FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation.cancel!
+            end
+
+            it "is valid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    staff_ids: [staff1.id, staff2.id])
+
+              expect(outcome).to be_valid
+            end
           end
         end
       end
@@ -232,7 +264,7 @@ RSpec.describe Reservable::Reservation do
 
       # validate_other_shop_reservation(staff)
       context "when some staffs already had reservation in other shops" do
-        before do
+        let!(:reservation) do
           FactoryGirl.create(:reservation, shop: FactoryGirl.create(:shop),
                              staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
@@ -247,13 +279,28 @@ RSpec.describe Reservable::Reservation do
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :other_shop }
           expect(other_shop_error).to eq(error: :other_shop)
         end
+
+        context "when reservation is canceled" do
+          before do
+            FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            reservation.cancel!
+          end
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
+
+            expect(outcome).to be_valid
+          end
+        end
       end
 
       # validate_same_shop_overlap_reservations(staff)
       context "when some staffs already had overlap reservation in the same shop" do
-        before do
-          FactoryGirl.create(:reservation, shop: shop,
-                             staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+        let!(:reservation) do
+          FactoryGirl.create(:reservation, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
         it "is invalid" do
@@ -265,6 +312,22 @@ RSpec.describe Reservable::Reservation do
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
           expect(other_shop_error).to eq(error: :overlap_reservations)
+        end
+
+        context "when reservation is canceled" do
+          before do
+            FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            reservation.cancel!
+          end
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+          end
         end
       end
 
