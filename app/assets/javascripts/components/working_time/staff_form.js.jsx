@@ -120,7 +120,7 @@ UI.define("WorkingTime.StaffForm", function() {
             <div key={`partTimeShops-${shop.id}`}>
               {
                 this.regularWorkingTimePermission || this.props.temporaryWorkingTimePermission ? (
-                  <h3>{shop.name} 勤務日時</h3>
+                  <h3>{shop.name} 勤務スタイル</h3>
                 ) : null
               }
               <div id="tempHoliday" className="formRow" key={`shop-${shop.id}-schedule-setting`}>
@@ -131,7 +131,7 @@ UI.define("WorkingTime.StaffForm", function() {
                         onClick={this.toggleSchedule.bind(
                           this, `business_schedules_${shop.id}`)
                         }>
-                        <dt>固定日程</dt>
+                        <dt>固定勤務</dt>
                         <dd>
                           {
                             this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
@@ -253,7 +253,7 @@ UI.define("WorkingTime.StaffForm", function() {
       if (this.props.mode == "working_schedules") {
         return (
           <div>
-            <h3>勤務日時<strong>必須項目</strong></h3>
+            <h3>勤務スタイル<strong>必須項目</strong></h3>
             { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
             { this.renderParTimeAndTemporaySchedules() }
           </div>
