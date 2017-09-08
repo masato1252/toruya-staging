@@ -62,6 +62,9 @@
         <li>
           <%= link_to t("dashboard.my_shop_setting"), settings_path(current_user) %>
         </li>
+        <li>
+          <%= link_to t("settings.account.info_title"), settings_user_profile_path(current_user) %>
+        </li>
 
         <% if working_shop_options.present? %>
           <li class="divider"></li>

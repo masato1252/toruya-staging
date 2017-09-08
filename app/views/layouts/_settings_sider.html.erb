@@ -116,13 +116,4 @@
         class_active: "here" %>
     </dl>
   <% end %>
-
-  <% if can? :manage, Profile %>
-    <dl class="account">
-      <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_user_profile_path(super_user),
-        active: [["settings/profiles"]],
-        wrap_tag: :dt,
-        class_active: "here" %>
-    </dl>
-  <% end %>
 </nav>
