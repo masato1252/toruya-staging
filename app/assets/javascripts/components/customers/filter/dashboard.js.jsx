@@ -108,23 +108,6 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
-    loadFilteredOutcome: function(event) {
-      event.preventDefault();
-
-      var _this = this;
-      _this.startProcessing();
-
-      $.ajax({
-        type: "GET",
-        url: _this.props.fetchFilteredOutcomePath,
-        data: { id: event.target.dataset.value },
-        dataType: "JSON"
-      }).success(function(result) {
-        _this.querySider.updateFilterOption(result);
-      }).always(function() {
-      });
-    },
-
     renderDeleteFilterButton: function() {
       if (this.state.current_saved_filter_id) {
         return (
