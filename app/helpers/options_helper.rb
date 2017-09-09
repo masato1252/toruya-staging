@@ -129,7 +129,7 @@ module OptionsHelper
     filtered_outcomes.map{ |outcome|
       {
         id: outcome.id,
-        name: "#{outcome&.filter&.name} #{Customers::PrintingConfig::PAGE_SIZE[outcome.page_size][:name]} #{outcome.outcome_type} #{outcome.created_at.to_s(:date)}",
+        name: "#{outcome&.filter&.name} #{outcome.created_at.to_s(:full_time_without_year)}",
         file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
         state: outcome.aasm_state
       }

@@ -142,18 +142,11 @@ UI.define("Customers.Filter.Dashboard", function() {
           {
             this.state.filtered_outcome_options.map(function(outcome) {
               return (
-                <div className="filtered-outcome" key={outcome.id}>
-                  <div>
-                    <a href={outcome.fileUrl}>
-                      {outcome.name}
-                    </a>
-                  </div>
-                  <div>
-                    <span className={["filter-outcome-state", outcome.state].join(" ")}>
-                      {outcome.state}
-                    </span>
-                    <i className="fa fa-search" data-value={outcome.id} onClick={this.loadFilteredOutcome}></i>
-                  </div>
+                <div className={["filtered-outcome", outcome.state].join(" ")} key={outcome.id}>
+                  <i className={["fa", "filter-outcome-state", outcome.state].join(" ")}></i>
+                  <a className={outcome.state} href={outcome.fileUrl}>
+                    {outcome.name}
+                  </a>
                 </div>
               )
             }.bind(this))

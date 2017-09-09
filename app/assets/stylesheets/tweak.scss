@@ -1,3 +1,5 @@
+@import "variables";
+
 .hidden {
   display: none !important;
 }
@@ -94,9 +96,33 @@ button[disabled], a.disabled, input[disabled] {
       .filtered-outcome {
         margin-bottom: 15px;
 
+        &.processing {
+          color: $warning;
+        }
+
+        &.completed {
+          color: $link;
+        }
+
+        &.failed, &.deleted {
+          color: $danger;
+        }
+
         a {
           font-size: 16px;
           padding-left: 0;
+
+          &.processing {
+            color: $warning;
+          }
+
+          &.completed {
+            color: $link;
+          }
+
+          &.failed, &.deleted {
+            color: $danger;
+          }
         }
 
         .fa-search {
@@ -104,23 +130,24 @@ button[disabled], a.disabled, input[disabled] {
         }
 
         .filter-outcome-state {
-          display: inline-block;
-          border-radius: 3px;
-          margin-right: 12px;
-          padding: 3px;
-          color: #FFF;
+          margin-right: 6px;
 
           &.processing {
-            background-color: yellow;
-            color: #333;
+            &:before {
+              content: "\f252";
+            }
           }
 
           &.completed {
-            background-color: green;
+            &:before {
+              content: "\f0ab";
+            }
           }
 
           &.failed, &.deleted {
-            background-color: red;
+            &:before {
+              content: "\f05e";
+            }
           }
         }
       }
