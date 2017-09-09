@@ -137,6 +137,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       }.bind(this));
       this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
       this.props.updateFilter("current_saved_filter_id", query["current_saved_filter_id"]);
+      this.props.updateFilter("current_saved_filter_name", query["current_saved_filter_name"]);
     },
 
     onRemoveItem: function(event) {

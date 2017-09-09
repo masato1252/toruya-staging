@@ -9,6 +9,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         customers: [],
         filter_name: "",
         current_saved_filter_id: "",
+        current_saved_filter_name: "",
         printing_page_size: "",
         info_printing_page_size: "",
         customers_processing: false,
@@ -111,10 +112,11 @@ UI.define("Customers.Filter.Dashboard", function() {
     renderDeleteFilterButton: function() {
       if (this.state.current_saved_filter_id) {
         return (
-          <a className="BTNtarco" href="#" onClick={this.deleteFilter} >
-            <i className="fa fa-minus fa-2x" aria-hidden="true"></i>
-            <span>Delete Filter</span>
-          </a>
+          <dd id="NAVdelete">
+            <a className="BTNorange" href="#" onClick={this.deleteFilter} >
+              <i className="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </dd>
         )
       }
     },
@@ -158,25 +160,20 @@ UI.define("Customers.Filter.Dashboard", function() {
           <div id="mainNav">
             <dl>
               <dd id="NAVsave">
-                {
-                  this.state.customers.length === 0 ? null : (
-                    <input type="text"
-                       data-name="filter_name"
-                       placeholder="Write Your Filter Name"
-                       className="filter-name-input"
-                       value={this.state.filter_name}
-                       onChange={this.onDataChange} />
-                  )
-                }
-                <a className={`BTNtarco ${this.state.filter_name ? null : "disabled"}`} href="#"
+                <input type="text"
+                   data-name="filter_name"
+                   placeholder="ファイル名を入力"
+                   className="filter-name-input"
+                   value={this.state.filter_name}
+                   disabled={this.state.customers.length === 0}
+                   onChange={this.onDataChange} />
+                 <a
+                    className={`BTNyellow ${this.state.filter_name && this.state.filter_name !== this.state.current_saved_filter_name? null : "disabled"}`} href="#"
                   onClick={this.saveFilter} >
-                  <i className="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
-                  <span>Save Filter</span>
+                  <i className="fa fa-floppy-o" aria-hidden="true"></i>
                 </a>
               </dd>
-              <dd id="NAVdelete">
                 {this.renderDeleteFilterButton()}
-              </dd>
               <dd id="NAVprintList">
                 <UI.Select
                   data-name="info_printing_page_size"

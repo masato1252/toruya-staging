@@ -84,14 +84,32 @@ button[disabled], a.disabled, input[disabled] {
     }
   }
 
-  #NAVsave {
-    .filter-name-input {
-      display: inherit;
-      margin-bottom: 15px;
+  #NAVsave, #NAVdelete {
+    input {
+      display: inline-block;
+      margin-right: 5px;
+      width: 123px;
+    }
+
+    a {
+      font-size: 14pt;
+      font-weight: normal;
+      padding: 0 10px;
+      line-height: 35px;
+      display: inline-block;
+      width: inherit;
+    }
+
+    i {
+      display: inline-block;
+      line-height: 21px;
+      font-size: 21px;
     }
   }
 
   #mainNav {
+    width: 275px;
+
     #NAVprintOutcome {
       .filtered-outcome {
         margin-bottom: 15px;
