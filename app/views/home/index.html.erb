@@ -3,7 +3,7 @@
   <nav>
     <% owning_shop_options.each do |option| %>
       <div>
-        <%= link_to option.shop.name, shop_reservations_path(option.shop), class: "BTNorange" %>
+        <%= link_to option.shop.display_name, shop_reservations_path(option.shop), class: "BTNorange" %>
       </div>
     <% end %>
     <%= link_to settings_path(current_user) do %>
@@ -18,7 +18,7 @@
   <nav>
     <% working_shop_options.each do |option| %>
       <div>
-        <%= link_to option.shop.name, shop_reservations_path(option.shop), class: "BTNorange" %>
+        <%= link_to option.shop.display_name, shop_reservations_path(option.shop), class: "BTNorange" %>
       </div>
     <% end %>
   </nav>

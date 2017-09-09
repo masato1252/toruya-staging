@@ -118,7 +118,11 @@ UI.define("WorkingTime.StaffForm", function() {
         this.partTimeShops().map(function(shop) {
           return (
             <div key={`partTimeShops-${shop.id}`}>
-              <h3>{shop.name} 勤務日時</h3>
+              {
+                this.regularWorkingTimePermission || this.props.temporaryWorkingTimePermission ? (
+                  <h3>{shop.name} 勤務スタイル</h3>
+                ) : null
+              }
               <div id="tempHoliday" className="formRow" key={`shop-${shop.id}-schedule-setting`}>
                 {
                   this.props.regularWorkingTimePermission ? (
@@ -127,7 +131,7 @@ UI.define("WorkingTime.StaffForm", function() {
                         onClick={this.toggleSchedule.bind(
                           this, `business_schedules_${shop.id}`)
                         }>
-                        <dt>固定日程</dt>
+                        <dt>固定勤務</dt>
                         <dd>
                           {
                             this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
@@ -247,22 +251,13 @@ UI.define("WorkingTime.StaffForm", function() {
 
     renderModeView: function() {
       if (this.props.mode == "working_schedules") {
-        if (!this.props.fullTimePermission && this.props.fullTimeShops.length > 0) {
-          return (
-            <div>
-              You are full time employee. You don't need to set your regular/temporary working time.
-            </div>
-          )
-        }
-        else {
-          return (
-            <div>
-              <h3>勤務日時<strong>必須項目</strong></h3>
-              { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
-              { this.renderParTimeAndTemporaySchedules() }
-            </div>
-          )
-        }
+        return (
+          <div>
+            <h3>勤務スタイル<strong>必須項目</strong></h3>
+            { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
+            { this.renderParTimeAndTemporaySchedules() }
+          </div>
+        )
       }
       else if (this.props.mode == "holiday_schedules") {
         return (

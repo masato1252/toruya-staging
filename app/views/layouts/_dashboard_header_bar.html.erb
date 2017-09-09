@@ -19,7 +19,7 @@
           <li class="divider"></li>
 
           <% owning_shop_options.each do |option| %>
-            <li><%= link_to option.shop.name, shop_reservations_path(option.shop) %><li>
+            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
           <% end %>
         <% end %>
 
@@ -34,7 +34,7 @@
           <li class="divider"></li>
 
           <% working_shop_options.each do |option| %>
-            <li><%= link_to option.shop.name, shop_reservations_path(option.shop) %><li>
+            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
           <% end %>
         <% end %>
       </ul>
@@ -69,6 +69,9 @@
         <li class="divider"></li>
         <li>
           <%= link_to t("dashboard.my_shop_setting"), settings_path(current_user) %>
+        </li>
+        <li>
+          <%= link_to t("settings.account.info_title"), settings_user_profile_path(current_user) %>
         </li>
 
         <% if working_shop_options.present? %>

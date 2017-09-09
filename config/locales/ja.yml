@@ -220,7 +220,7 @@ ja:
       manager_capability: 管理者
     staff_working_time:
       title:
-        working_schedules: 勤務日時
+        working_schedules: 勤務スタイル
         holiday_schedules: 休暇
       info_1:
         working_schedules: 貴方の勤務日時を設定します。
@@ -231,12 +231,12 @@ ja:
       end_label: 退勤予定
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
-      setting_title: 勤務日時設定
-      full_time_permission: 常勤
-      regular_working_time_permission: スタッフによる出勤日の基本設定を許可
-      temporary_working_time_permission: スタッフによる臨時出勤の設定を許可
+      setting_title: 勤務日時設定権限
+      full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
+      regular_working_time_permission: スタッフによる固定勤務の設定変更を許可
+      temporary_working_time_permission: スタッフによる臨時出勤の設定変更を許可
     staff_holiday_time:
-      setting_title: 休暇設定
+      setting_title: 休暇設定権限
       holiday_permission: スタッフによる休暇の設定を許可
     contact:
       info_title: Google同期設定

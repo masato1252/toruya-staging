@@ -74,9 +74,21 @@
             wrap_tag: :li,
             class_active: "here" %>
 
+          <%#
+            full time permission or
+            (
+              part time worker and has regular/temporary working time permission
+            )
+
+            # full time worker but don't have full time permission only have regular/temporary permission would be ignored.
+          %>
           <% if can?(:manage_staff_full_time_permission, shop_staff) ||
-            can?(:manage_staff_regular_working_day_permission, shop_staff) ||
-            can?(:manage_staff_temporary_working_day_permission, shop_staff)
+            (
+              !staff.business_schedules.full_time.where(shop: shop).exists? && (
+                can?(:manage_staff_regular_working_day_permission, shop_staff) ||
+                can?(:manage_staff_temporary_working_day_permission, shop_staff)
+              )
+            )
           %>
             <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff),
               active: /working_schedules/,
@@ -100,15 +112,6 @@
     <dl class="contacts">
       <%= active_link_to content_tag(:span, t("settings.contact.info_title")), settings_user_contact_groups_path(super_user),
         active: [["settings/contact_groups", "settings/ranks"]],
-        wrap_tag: :dt,
-        class_active: "here" %>
-    </dl>
-  <% end %>
-
-  <% if can? :manage, Profile %>
-    <dl class="account">
-      <%= active_link_to content_tag(:span, t("settings.account.info_title")), settings_user_profile_path(super_user),
-        active: [["settings/profiles"]],
         wrap_tag: :dt,
         class_active: "here" %>
     </dl>
