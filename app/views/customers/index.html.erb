@@ -12,6 +12,7 @@
                       month_options: (1..12).to_a.map {|year| { label: year, value: year }},
                       day_options: (1..31).to_a.map {|year| { label: year, value: year }},
                       customer_edit_permission: can?(:edit, Customer),
+                      address_edit_permission: can?(:edit, "customer_address"),
                       customer_detail_path: detail_shop_customers_path(shop),
                       save_customer_path: save_shop_customers_path(shop),
                       delete_customer_path: delete_shop_customers_path(shop),

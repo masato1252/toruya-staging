@@ -444,6 +444,7 @@ UI.define("Customers.Dashboard", function() {
             switchReservationMode={this.switchReservationMode}
             saveCustomerPath={this.props.saveCustomerPath}
             fetchCustomerDetails={this.fetchCustomerDetails}
+            addressEditPermission={this.props.addressEditPermission}
             delimiter={this.props.delimiter}
             backWithoutSaveBtn={this.props.backWithoutSaveBtn}
             selectRegionLabel={this.props.selectRegionLabel}

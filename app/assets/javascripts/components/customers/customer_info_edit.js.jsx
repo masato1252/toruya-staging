@@ -237,7 +237,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
             </li>
           </ul>
 
-          <dl className="Address">
+          <dl className={`Address ${this.props.addressEditPermission ? null : "display-hidden"}`}>
             <dt>{this.props.addressLabel}</dt>
             <dd>
               <ul className="addrzip">
