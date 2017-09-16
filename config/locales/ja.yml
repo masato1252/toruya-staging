@@ -75,7 +75,7 @@ ja:
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
   customer:
-    back_without_save: 戻る（保存）
+    back_without_save: 保存せずに戻る
     save: 上書き保存
     select_region: 都道府県
     customer_id: 顧客ID
