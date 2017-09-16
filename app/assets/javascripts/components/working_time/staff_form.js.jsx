@@ -123,85 +123,89 @@ UI.define("WorkingTime.StaffForm", function() {
                   <h3>{shop.name} 勤務スタイル</h3>
                 ) : null
               }
-              <div id="tempHoliday" className="formRow" key={`shop-${shop.id}-schedule-setting`}>
-                {
-                  this.props.regularWorkingTimePermission ? (
-                    <div>
-                      <dl className="formTTL"
-                        onClick={this.toggleSchedule.bind(
-                          this, `business_schedules_${shop.id}`)
-                        }>
-                        <dt>固定勤務</dt>
-                        <dd>
+              {
+                this.props.regularWorkingTimePermission || this.props.temporaryWorkingTimePermission ? (
+                  <div id="tempHoliday" className="formRow" key={`shop-${shop.id}-schedule-setting`}>
+                    {
+                      this.props.regularWorkingTimePermission ? (
+                        <div>
+                          <dl className="formTTL"
+                            onClick={this.toggleSchedule.bind(
+                              this, `business_schedules_${shop.id}`)
+                            }>
+                            <dt>固定勤務</dt>
+                            <dd>
+                              {
+                                this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
+                                  <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                                ) : (
+                                  <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                                )
+                              }
+                            </dd>
+                          </dl>
                           {
                             this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
-                              <i className="fa fa-minus-square-o" aria-hidden="true"></i>
-                            ) : (
-                              <i className="fa fa-plus-square-o" aria-hidden="true"></i>
-                            )
+                              <UI.WorkingTime.BusinessScheduleForm
+                                key={`schedule-${shop.id}`}
+                                timezone={this.props.timezone}
+                                shop={shop}
+                                wdays={this.props.wdays}
+                                wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}
+                                dayLabel={this.props.dayLabel}
+                                inOutLabel={this.props.inOutLabel}
+                                startLabel={this.props.startLabel}
+                                endLabel={this.props.endLabel}
+                                />
+                            ) : null
                           }
-                        </dd>
-                      </dl>
-                      {
-                        this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
-                          <UI.WorkingTime.BusinessScheduleForm
-                            key={`schedule-${shop.id}`}
-                            timezone={this.props.timezone}
-                            shop={shop}
-                            wdays={this.props.wdays}
-                            wdays_business_schedules={this.props.wdaysBusinessSchedulesByShop[`${shop.id}`]}
-                            dayLabel={this.props.dayLabel}
-                            inOutLabel={this.props.inOutLabel}
-                            startLabel={this.props.startLabel}
-                            endLabel={this.props.endLabel}
-                            />
-                        ) : null
-                      }
-                    </div>
+                        </div>
 
-                  ) : null
-                }
+                      ) : null
+                    }
 
-                {
-                  this.props.temporaryWorkingTimePermission ? (
-                    <div>
-                      <dl className="formTTL"
-                        onClick={this.toggleSchedule.bind(
-                          this, `temp_working_schedules_${shop.id}`)
-                        }>
-                        <dt>臨時出勤</dt>
-                        <dd>
+                    {
+                      this.props.temporaryWorkingTimePermission ? (
+                        <div>
+                          <dl className="formTTL"
+                            onClick={this.toggleSchedule.bind(
+                              this, `temp_working_schedules_${shop.id}`)
+                            }>
+                            <dt>臨時出勤</dt>
+                            <dd>
+                              {
+                                this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
+                                  <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                                ) : (
+                                  <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                                )
+                              }
+                            </dd>
+                          </dl>
                           {
                             this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
-                              <i className="fa fa-minus-square-o" aria-hidden="true"></i>
-                            ) : (
-                              <i className="fa fa-plus-square-o" aria-hidden="true"></i>
-                            )
+                              <UI.CustomSchedules
+                                customSchedules={this.props.openedCustomSchedulesByShop[`${shop.id}`] || []}
+                                shopId={shop.id}
+                                dateLabel={this.props.dateLabel}
+                                startTimeLabel={this.props.startTimeLabel}
+                                endTimeLabel={this.props.endTimeLabel}
+                                reasonOfClosingLabel={this.props.reasonOfClosingLabel}
+                                newClosingBtn={this.props.newClosingBtn}
+                                closingReason={this.props.closingReason}
+                                deleteBtn={this.props.deleteBtn}
+                                calendarfieldPrefix={`temp_working_schedules_${shop.id}`}
+                                fromStaff={true}
+                                open={true}
+                                />
+                            ) : null
                           }
-                        </dd>
-                      </dl>
-                      {
-                        this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
-                          <UI.CustomSchedules
-                            customSchedules={this.props.openedCustomSchedulesByShop[`${shop.id}`] || []}
-                            shopId={shop.id}
-                            dateLabel={this.props.dateLabel}
-                            startTimeLabel={this.props.startTimeLabel}
-                            endTimeLabel={this.props.endTimeLabel}
-                            reasonOfClosingLabel={this.props.reasonOfClosingLabel}
-                            newClosingBtn={this.props.newClosingBtn}
-                            closingReason={this.props.closingReason}
-                            deleteBtn={this.props.deleteBtn}
-                            calendarfieldPrefix={`temp_working_schedules_${shop.id}`}
-                            fromStaff={true}
-                            open={true}
-                            />
-                        ) : null
-                      }
-                    </div>
-                  ) : null
-                }
-              </div>
+                        </div>
+                      ) : null
+                    }
+                  </div>
+                ) : null
+              }
             </div>
           );
         }.bind(this))
