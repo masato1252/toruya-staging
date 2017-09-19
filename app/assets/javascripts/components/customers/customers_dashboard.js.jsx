@@ -19,6 +19,7 @@ UI.define("Customers.Dashboard", function() {
         selected_customer_id: (this.props.customer ? this.props.customer.id : ""),
         selectedFilterPatternNumber: "",
         customer: this.props.customer,
+        updated_customer: this.props.customer,
         edit_mode: !this.props.reservationMode,
         reservation_mode: this.props.reservationMode,
         processing: false,
@@ -37,7 +38,7 @@ UI.define("Customers.Dashboard", function() {
           data: { id: this.state.customer.id },
           dataType: "JSON"
         }).success(function(result) {
-          _this.setState({customer: result["customer"]});
+          _this.setState({customer: result["customer"], updated_customer: result["customer"]});
         }).always(function() {
           _this.forceStopProcessing()
       });
@@ -238,7 +239,7 @@ UI.define("Customers.Dashboard", function() {
       })
 
       this.state.customers.unshift(customer)
-      this.setState({customers: this.state.customers, customer: customer, selected_customer_id: customer.id});
+      this.setState({customers: this.state.customers, customer: customer, updated_customer: customer, selected_customer_id: customer.id});
     },
 
     handleCustomerCreate: function(event) {
@@ -444,6 +445,7 @@ UI.define("Customers.Dashboard", function() {
             switchReservationMode={this.switchReservationMode}
             saveCustomerPath={this.props.saveCustomerPath}
             fetchCustomerDetails={this.fetchCustomerDetails}
+            addressEditPermission={this.props.addressEditPermission}
             delimiter={this.props.delimiter}
             backWithoutSaveBtn={this.props.backWithoutSaveBtn}
             selectRegionLabel={this.props.selectRegionLabel}
@@ -469,7 +471,7 @@ UI.define("Customers.Dashboard", function() {
       else {
         return (
           <UI.Customers.CustomerInfoView
-            customer={this.state.customer}
+            customer={this.state.updated_customer}
             switchEditMode={this.switchEditMode}
             switchReservationMode={this.switchReservationMode}
             addressLabel={this.props.addressLabel}

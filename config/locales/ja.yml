@@ -84,7 +84,7 @@ ja:
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
   customer:
-    back_without_save: 戻る（保存）
+    back_without_save: 保存せずに戻る
     save: 上書き保存
     select_region: 都道府県
     customer_id: 顧客ID
@@ -231,12 +231,12 @@ ja:
       end_label: 退勤予定
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
-      setting_title: 勤務日時設定権限
+      setting_title: 勤務日時の設定権限
       full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
       regular_working_time_permission: スタッフによる固定勤務の設定変更を許可
       temporary_working_time_permission: スタッフによる臨時出勤の設定変更を許可
     staff_holiday_time:
-      setting_title: 休暇設定権限
+      setting_title: 休暇の設定権限
       holiday_permission: スタッフによる休暇の設定を許可
     contact:
       info_title: Google同期設定

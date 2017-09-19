@@ -13,6 +13,7 @@ class Ability
       # can :create, Staff
       # can :manage, Profile
       # can :edit, Customer
+      # can :edit, "customer_address"
       # can :swith_staffs_selector, User
       # can :manage, :filter
 
@@ -31,6 +32,7 @@ class Ability
 
       can :manage, Settings
       can :edit, Customer
+      can :edit, "customer_address"
       can :swith_staffs_selector, User
       can :manage, :filter
 

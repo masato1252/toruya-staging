@@ -664,13 +664,13 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
 
             <div className={
-                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? null : "hidden"}>
+                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? null : "display-hidden"}>
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
                   {this.renderToggleIcon("menu_ids")}
                   {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
-                <dl className={this.state.filterCategoryDisplaying["menu_ids"] ? null : "hidden"}>
+                <dl className={this.state.filterCategoryDisplaying["menu_ids"] ? null : "display-hidden"}>
                   <dt>Select Menu：</dt>
                   <dd>
                     <ul>
