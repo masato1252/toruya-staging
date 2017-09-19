@@ -4,7 +4,7 @@ CarrierWave::SanitizedFile.sanitize_regexp = /[^[:word:]\.\-\+]/
 s3_config_file = "aws.yml"
 
 s3_config_path = "#{Rails.root.join('config')}/#{s3_config_file}"
-s3_config = YAML.load_file(s3_config_path)[Rails.env].symbolize_keys
+s3_config = YAML.load_file(s3_config_path)[ENV["PRODUCTION_ENV"] || Rails.env].symbolize_keys
 
 if Rails.env.test?
   CarrierWave.configure do |config|
