@@ -1,4 +1,4 @@
 <%= render partial: "form", locals: {
   reservation_setting: @reservation_setting,
-  url: settings_reservation_settings_path(from_menu: params[:from_menu], menu_id: params[:menu_id]) }
+  url: settings_user_reservation_settings_path(super_user, from_menu: params[:from_menu], menu_id: params[:menu_id]) }
 %>

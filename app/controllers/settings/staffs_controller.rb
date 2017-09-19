@@ -1,10 +1,10 @@
 class Settings::StaffsController < SettingsController
   before_action :set_staff, only: [:show, :edit, :update, :destroy]
+  skip_before_action :authorize_manager_level_permission, only: [:edit, :update]
 
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = super_user.staffs.all.order(:id)
   end
 
   # GET /staffs/1
@@ -15,26 +15,32 @@ class Settings::StaffsController < SettingsController
   # GET /staffs/new
   def new
     @staff = super_user.staffs.new
-    @shops = super_user.shops
   end
 
   # GET /staffs/1/edit
   def edit
-    @shops = super_user.shops
+    @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
   end
 
   # POST /staffs
   # POST /staffs.json
   def create
-    @staff = super_user.staffs.new(staff_params)
     authorize! :create, Staff
 
+    staff_outcome = Staffs::Create.run(user: super_user, attrs: params[:staff].permit!.to_h)
+    staff = staff_outcome.result
+
+    StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
+
+    params.permit![:shop_staff].each do |shop_id, attrs|
+      staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    end if params[:shop_staff]
+
     respond_to do |format|
-      if @staff.save
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.create_successfully_message") }
+      if staff_outcome.valid?
+        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
         format.json { render :show, status: :created, location: @staff }
       else
-        @shops = super_user.shops
         format.html { render :new }
         format.json { render json: @staff.errors, status: :unprocessable_entity }
       end
@@ -44,26 +50,34 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = Staffs::Update.run(staff: @staff, attrs: staff_params.to_h)
+    outcome = Staffs::Update.run(is_manager: can?(:manage, Settings),
+                                 staff: @staff,
+                                 attrs: params[:staff].permit!.to_h)
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html { redirect_to settings_staffs_path, notice: I18n.t("common.update_successfully_message") }
-        format.json { render :show, status: :ok, location: @staff }
+    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
+
+    params.permit![:shop_staff].each do |shop_id, attrs|
+      @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+    end if params[:shop_staff]
+
+    if outcome.valid? && staff_account_outcome.valid?
+      if can?(:manage, Settings)
+        redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else
-        @shops = super_user.shops
-        format.html { render :edit }
-        format.json { render json: @staff.errors, status: :unprocessable_entity }
+        redirect_to edit_settings_user_staff_path(super_user, @staff), notice: I18n.t("common.update_successfully_message")
       end
+    else
+      redirect_to edit_settings_user_staff_path(super_user, @staff), alert: outcome.errors.full_messages.first || staff_account_outcome.errors.full_messages.first
     end
   end
 
   # DELETE /staffs/1
   # DELETE /staffs/1.json
   def destroy
-    @staff.destroy
+    Staffs::Delete.run!(staff: @staff)
+
     respond_to do |format|
-      format.html { redirect_to settings_staffs_path, notice: I18n.t("common.delete_successfully_message") }
+      format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
     end
   end
@@ -72,7 +86,7 @@ class Settings::StaffsController < SettingsController
 
   def set_staff
     @staff = super_user.staffs.find_by(id: params[:id])
-    redirect_to settings_staffs_path(shop) unless @staff
+    redirect_to settings_user_staffs_path(super_user, shop) unless @staff
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

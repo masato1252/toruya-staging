@@ -109,7 +109,6 @@ class Customers::Save < ActiveInteraction::Base
 
     customer.google_contact_group_ids = google_group_ids.uniq
 
-    # TODO: test two addresses case
     if customer.valid?
       google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
       google_contact_attributes = customer.google_contact_attributes(google_groups_changes)

@@ -1,3 +1,7 @@
+.display-hidden {
+  display: none;
+}
+
 .busHours.shopClose {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
@@ -45,7 +49,20 @@ button[disabled], a.disabled, input[disabled] {
     color: #e6a21f;
   }
 
+  .danger {
+    color: #cf0003;
+  }
+
   .modal-body .warning i.fa-check-circle {
     vertical-align: baseline;
+  }
+}
+
+.shopIndex {
+  .sidel {
+    .busHours {
+      margin-top: 0px;
+      margin-bottom: 15px;
+    }
   }
 }

@@ -1,0 +1,17 @@
+<header>
+  <dl>
+    <dt>
+      <h1>
+        <%= link_to "Toruya", root_path %>
+      </h1>
+    </dt>
+  </dl>
+  <dl>
+    <dd>
+      <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
+        <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>
+        <%= t("action.log_out") %>
+      <% end %>
+    </dd>
+  </dl>
+</header>

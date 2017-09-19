@@ -237,11 +237,11 @@ UI.define("Customers.CustomerInfoEdit", function() {
             </li>
           </ul>
 
-          <dl className="Address">
+          <dl className={`Address ${this.props.addressEditPermission ? null : "display-hidden"}`}>
             <dt>{this.props.addressLabel}</dt>
             <dd>
-              <ul classname="addrzip">
-                <li classname="zipcode">〒
+              <ul className="addrzip">
+                <li className="zipcode">〒
                   <input
                     type="hidden"
                     value={this.props.customer.primaryAddress && this.props.customer.primaryAddress.type ? this.props.customer.primaryAddress.type : "home"}
@@ -409,7 +409,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
               </dd>
             </dl>
             <dl className="customerID">
-              <dt><label for="customerID">{this.props.customerIdPlaceholder}</label></dt>
+              <dt><label htmlFor="customerID">{this.props.customerIdPlaceholder}</label></dt>
               <dd>
                 <input
                   type="text"

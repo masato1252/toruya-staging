@@ -9,6 +9,7 @@
 #  updated_at                             :datetime         not null
 #  staff_regular_working_day_permission   :boolean          default(FALSE), not null
 #  staff_temporary_working_day_permission :boolean          default(FALSE), not null
+#  staff_full_time_permission             :boolean          default(FALSE), not null
 #
 
 class ShopStaff < ApplicationRecord

@@ -159,7 +159,7 @@ UI.define("Settings.MenuForm", function() {
 
     render: function() {
       return (
-        <form className="new_menu" id="new_menu" action={this.props.saveMenuPath} accept-charset="UTF-8" method="post">
+        <form className="new_menu" id="new_menu" action={this.props.saveMenuPath} acceptCharset="UTF-8" method="post">
           <input name="utf8" type="hidden" value="✓" />
           {this.props.menu.id ? <input type="hidden" name="_method" value="PUT" /> : null}
           <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />

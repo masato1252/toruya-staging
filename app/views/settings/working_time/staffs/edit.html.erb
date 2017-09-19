@@ -1,41 +1,44 @@
 <div id="subNav">
-  <h2><%= Staff.model_name.human %> − 勤務時間</h2>
+  <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.#{@mode}") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.staff_working_time.info_1") %><br /><%= t("settings.staff_working_time.info_2") %></p>
+  <p><%= t("settings.staff_working_time.info_1.#{@mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
-
 <div id="settingForm">
   <% if @staff.shops.exists? %>
     <%= react_component("UI.WorkingTime.StaffForm", {
+      mode: @mode,
       timezone: Time.zone.tzinfo.identifier,
       staff: @staff,
-      save_staff_path: settings_working_time_staff_path(@staff),
-      cancel_path: settings_working_time_staffs_path,
-      shops: @staff.shops.order("id"),
+      save_staff_path: settings_user_working_time_staff_path(super_user, @staff),
+      cancel_path: settings_user_working_time_staffs_path(super_user),
+      shops: @shops,
+      full_time_permission: @full_time_permission,
+      regular_working_time_permission: @regular_working_time_permission,
+      temporary_working_time_permission: @temporary_working_time_permission,
+      holiday_permission: @holiday_permission,
       full_time_schedules: @full_time_schedules,
-      full_time_shops: @full_time_schedules.map(&:shop),
+      full_time_shops: (@full_time_schedules || []).map(&:shop),
       wdays: BusinessSchedule::WDAYS.map { |wday| I18n.t("date.day_names").at(wday) },
       wdays_business_schedules_by_shop: @wdays_business_schedules_by_shop,
-      form_authenticity_token: form_authenticity_token,
-      name_label: "#{Staff.model_name.human}#{I18n.t("settings.staff.name")}",
-      day_label: I18n.t("common.day"),
-      in_out_label: I18n.t("settings.staff_working_time.in_out_label"),
-      start_label: I18n.t("settings.staff_working_time.start_label"),
-      end_label: I18n.t("settings.staff_working_time.end_label"),
-      cancel_btn: I18n.t("action.cancel"),
-      closed_custom_schedules: @closed_custom_schedules.map { |schedule|
-      schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
-                                start_time_time_part: schedule.start_time_time,
-                                end_time_time_part: schedule.end_time.try(:to_s, :time))
+      closed_custom_schedules: (@closed_custom_schedules || []).map { |schedule|
+        schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
+                                  start_time_time_part: schedule.start_time_time,
+                                  end_time_time_part: schedule.end_time.try(:to_s, :time))
       },
-      opened_custom_schedules_by_shop: @opened_custom_schedules_by_shop.each_with_object({}) { |(shop_id, opened_custom_schedules), h|
+      opened_custom_schedules_by_shop: (@opened_custom_schedules_by_shop || []).each_with_object({}) { |(shop_id, opened_custom_schedules), h|
         h[shop_id] = opened_custom_schedules.map { |schedule|
           schedule.attributes.merge(start_time_date_part: schedule.start_time_date,
                                     start_time_time_part: schedule.start_time_time,
                                     end_time_time_part: schedule.end_time.try(:to_s, :time))
         }
       },
+      form_authenticity_token: form_authenticity_token,
+      day_label: I18n.t("common.day"),
+      in_out_label: I18n.t("settings.staff_working_time.in_out_label"),
+      start_label: I18n.t("settings.staff_working_time.start_label"),
+      end_label: I18n.t("settings.staff_working_time.end_label"),
+      cancel_btn: I18n.t("action.cancel"),
       date_label: I18n.t("common.date"),
       start_time_label: I18n.t("common.start_time"),
       end_time_label: I18n.t("common.end_time"),

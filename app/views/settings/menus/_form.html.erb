@@ -5,7 +5,7 @@
 <%
   staff_menus = menu.staff_menus.to_a
 
-  menu_staffs_options = super_user.staffs.order("created_at").map do |staff|
+  menu_staffs_options = super_user.staffs.active.order("created_at").map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
       Option.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
     else
@@ -15,7 +15,7 @@
 
   shop_menus = menu.shop_menus.to_a
 
-  menu_shops_options = super_user.shops.order("created_at").map do |shop|
+  menu_shops_options = @shops.map do |shop|
     if shop_menu = shop_menus.find { |shop_menu| shop_menu.shop_id == shop.id }
       Option.new(id: shop_menu.id, name: shop.display_name, shop_id: shop.id, max_seat_number: shop_menu.max_seat_number, checked: true)
     else
@@ -32,9 +32,9 @@
 <div id="settingForm">
   <%= react_component("UI.Settings.MenuForm", {
     save_menu_path: url,
-    cancel_path: settings_menus_path,
-    add_reservation_setting_path: new_settings_reservation_setting_path(from_menu: true, menu_id: menu.id),
-    repeating_dates_path: repeating_dates_settings_menus_path,
+    cancel_path: settings_user_menus_path(super_user),
+    add_reservation_setting_path: new_settings_user_reservation_setting_path(super_user, from_menu: true, menu_id: menu.id),
+    repeating_dates_path: repeating_dates_settings_user_menus_path(super_user),
     menu: menu,
     reservation_settings: reservation_setting_options(super_user.reservation_settings.order("id"), menu),
     selected_reservation_setting: reservation_setting_option(reservation_setting, menu),

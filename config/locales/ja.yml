@@ -48,6 +48,11 @@ ja:
     delete_successfully_message: 削除完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
+  dashboard:
+    my_shop: 自分の店舗
+    shop_you_work_for: 勤務している店舗
+    sign_in_as: "%{name} としてログイン中"
+    my_shop_setting: 自分の店舗の設定
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -56,18 +61,21 @@ ja:
     create_successfully_message: 予約が保存されました。
     update_successfully_message: 予約が更新されました。
     delete_successfully_message: 予約が削除されました。
+    canceled_successfully_message: 予約がキャンセルされました。
     delete_confirmation_message: 本当に削除しますか？「OK」を押すと、予約データを復活することはできません。
     recheck_in: 再チェックイン
     check_in: チェックイン
     check_out: チェックアウト
     accept: 承認
     pend: 未承認
+    accept_in_canceled: 予約復活
     shop_closed: 営業時間外
-    cancel: 予約削除
+    cancel: キャンセル
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
+    deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
   customer:
-    back_without_save: 戻る（保存）
+    back_without_save: 保存せずに戻る
     save: 上書き保存
     select_region: 都道府県
     customer_id: 顧客ID
@@ -173,14 +181,36 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
+      delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
+      work_time: 勤務時間
+      holiday_time: 休暇
+    staff_account:
+      info_title: スタッフアカウント
+      using_staff_account: スタッフアカウントを利用する
+      email: メールアドレス
+      capability: 権限
+      staff_capability: スタッフ
+      manager_capability: 管理者
     staff_working_time:
-      info_1: スタッフの勤務日時です。
+      title:
+        working_schedules: 勤務スタイル
+        holiday_schedules: 休暇
+      info_1:
+        working_schedules: 貴方の勤務日時を設定します。
+        holiday_schedules: 貴方の休暇を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       in_out_label: 出勤／休み
       start_label: 出勤予定
       end_label: 退勤予定
       reason_of_closing: 休暇理由
       closing_reason: 休暇理由（オプション）
+      setting_title: 勤務日時の設定権限
+      full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
+      regular_working_time_permission: スタッフによる固定勤務の設定変更を許可
+      temporary_working_time_permission: スタッフによる臨時出勤の設定変更を許可
+    staff_holiday_time:
+      setting_title: 休暇の設定権限
+      holiday_permission: スタッフによる休暇の設定を許可
     contact:
       info_title: Google同期設定
       new_title: 新規台帳作成

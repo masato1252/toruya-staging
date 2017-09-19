@@ -26,6 +26,6 @@ class Customers::ReservationsController < DashboardController
   private
 
   def set_customer
-    @customer = current_user.customers.find(params[:id])
+    @customer = super_user.customers.find(params[:id])
   end
 end

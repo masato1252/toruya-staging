@@ -9,7 +9,7 @@
   <%= react_component "UI.ReservationSettings.Form", {
     timezone: Time.zone.tzinfo.identifier,
     save_setting_path: url,
-    cancel_path: settings_reservation_settings_path,
+    cancel_path: settings_user_reservation_settings_path(super_user),
     form_authenticity_token: form_authenticity_token,
     setting: reservation_setting,
     day_names: I18n.t("date.abbr_day_names"),
