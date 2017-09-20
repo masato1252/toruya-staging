@@ -153,7 +153,7 @@ UI.define("Customers.Dashboard", function() {
         }
 
         this.currentPage = 0;
-        this.lastQuery = event.target.value
+        this.lastQuery = event.target.dataset.value
       }
 
       data = { pattern_number: this.lastQuery, page: this.currentPage += 1 }
