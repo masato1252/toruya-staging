@@ -2,6 +2,13 @@
   display: none;
 }
 
+input[type="date"]
+{
+  display:block;
+  -webkit-appearance: none;
+  min-height: 1.2em;
+}
+
 .busHours.shopClose {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
