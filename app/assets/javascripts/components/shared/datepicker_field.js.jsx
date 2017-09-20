@@ -9,6 +9,9 @@ UI.define("Common.DatepickerField", function() {
         dateFormat: "yy-mm-dd"
       }).datepicker( $.datepicker.regional[ "ja" ] ).
         on("change", _this.props.handleChange)
+
+      $("." + this.props.dataName + " input[type=date]").val("");
+      $("." + this.props.dataName + " input[type=date]").val(this.props.date);
     },
 
     openCalendar: function(event) {
@@ -22,7 +25,7 @@ UI.define("Common.DatepickerField", function() {
 
     render: function() {
       return(
-        <div className="datepicker-field">
+        <div className={`datepicker-field ${this.props.dataName}`}>
           <input
             type="date"
             data-name={this.props.dataName}

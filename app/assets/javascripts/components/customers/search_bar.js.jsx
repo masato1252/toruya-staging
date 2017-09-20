@@ -15,9 +15,10 @@ UI.define("Customers.SearchBar", function() {
                return (
                  <li key={symbol}
                      onClick={this.props.filterCustomers}
-                     value={i} >
+                     data-value={i}
+                     >
                    <a href="#"
-                      value={i}
+                      data-value={i}
                       className={this.props.selectedFilterPatternNumber == `${i}` ? "here" : null }>{symbol}</a>
                  </li>
                )
