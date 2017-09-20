@@ -10,7 +10,7 @@ UI.define("Common.DatepickerField", function() {
       }).datepicker( $.datepicker.regional[ "ja" ] ).
         on("change", _this.props.handleChange)
 
-      $("." + this.props.dataName + " input[date]").val(this.props.date);
+      $("." + this.props.dataName + " input[date]").trigger('change');
     },
 
     openCalendar: function(event) {

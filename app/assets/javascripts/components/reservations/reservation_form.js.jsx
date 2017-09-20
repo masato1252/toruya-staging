@@ -59,8 +59,8 @@ UI.define("Reservation.Form", function() {
       this.applySelect2();
 
       // workaround the time value doesn't be set in mobile.
-      $("#start_time_time_part").val(this.props.reservation.startTimeTimePart || "");
-      $("#end_time_time_part").val(this.props.reservation.endTimeTimePart|| "");
+      $("#start_time_time_part").trigger('change');
+      $("#end_time_time_part").trigger('change');
     },
 
     componentDidUpdate: function() {
