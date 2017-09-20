@@ -57,6 +57,10 @@ UI.define("Reservation.Form", function() {
       }
 
       this.applySelect2();
+
+      // workaround the time value doesn't be set in mobile.
+      $("#start_time_time_part").val(this.props.reservation.startTimeTimePart || "");
+      $("#end_time_time_part").val(this.props.reservation.endTimeTimePart|| "");
     },
 
     componentDidUpdate: function() {
@@ -640,6 +644,7 @@ UI.define("Reservation.Form", function() {
                   <dd className="input">
                     <input
                       type="time"
+                      id="start_time_time_part"
                       data-name="start_time_time_part"
                       value={this.state.start_time_time_part}
                       step="300"
@@ -649,6 +654,7 @@ UI.define("Reservation.Form", function() {
                     〜
                     <input
                       type="time"
+                      id="end_time_time_part"
                       data-name="end_time_time_part"
                       value={this.state.end_time_time_part}
                       step="300"
