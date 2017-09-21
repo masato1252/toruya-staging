@@ -19,8 +19,6 @@ class Customers::FilterController < DashboardController
   def create
     authorize! :manage, :filter
 
-    param = params.permit!.to_h
-
     query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)
     outcome = Customers::Filter.run(query.merge(super_user: super_user))
 

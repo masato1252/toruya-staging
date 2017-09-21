@@ -88,55 +88,68 @@ RSpec.describe Customers::Filter do
       end
     end
 
-    context "when birthday start_date exists" do
-      context "when birthday query_type is on" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: 2.years.ago) }
-
-        it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on", start_date: Date.today })
-
-          expect(result).to include(matched_customer)
-          expect(result).not_to include(unmatched_customer)
-        end
-      end
-
-      context "when birthday query_type is before" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-
-        it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "before", start_date: Date.today })
-
-          expect(result).to include(matched_customer)
-          expect(result).not_to include(unmatched_customer)
-        end
-      end
-
-      context "when birthday query_type is after" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.tomorrow) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-
-        it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "after", start_date: Date.today })
-
-          expect(result).to include(matched_customer)
-          expect(result).not_to include(unmatched_customer)
-        end
-      end
-
-      context "when birthday query_type is between" do
+    context "when birthday conditions is valid" do
+      context "when birthday day condition exists" do
         let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
         let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
 
         it "returns expected customers" do
-          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "between", start_date: Date.today, end_date: Date.today.tomorrow })
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on_day", day: Date.today.day })
 
           expect(result).to include(matched_customer)
           expect(result).not_to include(unmatched_customer)
         end
       end
 
+      context "when birthday month condition exists" do
+        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.advance(months: 1)) }
+
+        it "returns expected customers" do
+          result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on_month", month: Date.today.month })
+
+          expect(result).to include(matched_customer)
+          expect(result).not_to include(unmatched_customer)
+        end
+      end
+
+      context "when birthday start_date exists" do
+        context "when birthday query_type is before" do
+          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
+          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, birthday: { query_type: "before", start_date: Date.today })
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when birthday query_type is after" do
+          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.tomorrow) }
+          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, birthday: { query_type: "after", start_date: Date.today })
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+
+        context "when birthday query_type is between" do
+          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
+
+          it "returns expected customers" do
+            result = Customers::Filter.run!(super_user: user, birthday: { query_type: "between", start_date: Date.today, end_date: Date.today.tomorrow })
+
+            expect(result).to include(matched_customer)
+            expect(result).not_to include(unmatched_customer)
+          end
+        end
+      end
     end
 
     context "when custom_id exists" do

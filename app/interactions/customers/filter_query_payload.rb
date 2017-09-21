@@ -20,10 +20,16 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
       query[:email_types] = param[:email_types].split(",")
     end
 
-    if param[:birthday][:start_date].present?
-      query[:birthday] = param[:birthday].merge(
-        start_date: Date.parse(param[:birthday][:start_date])
-      )
+    if param[:birthday][:start_date].present? || param[:birthday][:day].present? || param[:birthday][:month].present?
+      if param[:birthday][:start_date].present?
+        query[:birthday] = param[:birthday].merge(
+          start_date: Date.parse(param[:birthday][:start_date])
+        )
+      end
+
+      if param[:birthday][:day].present? || param[:birthday][:month].present?
+        query[:birthday] = param[:birthday]
+      end
 
       if param[:birthday][:end_date].present?
         query[:birthday][:end_date] = Date.parse(param[:birthday][:end_date])

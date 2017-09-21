@@ -19,7 +19,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         state: "",
         has_email: "",
         email_types: [],
-        birthdayQueryType: "on",
+        birthdayQueryType: "on_day",
         custom_id: "",
         custom_ids: [],
         from_dob_year: "",
@@ -28,6 +28,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         to_dob_year: "",
         to_dob_month: "",
         to_dob_day: "",
+        day_of_dob: "",
+        month_of_dob: "",
         hasReservation: true,
         reservationDateQueryType: "on",
         from_reservation_year: "",
@@ -279,6 +281,147 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
+    renderBirthdayOptions: function() {
+      let birthdayOptionView;
+
+      switch (this.state.birthdayQueryType) {
+        case "on_day":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectDayLabel}
+                  options={this.props.dayOptions}
+                  data-name="day_of_dob"
+                  value={this.state.day_of_dob}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+            </ul>
+          )
+          break;
+        case "on_month":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectMonthLabel}
+                  options={this.props.monthOptions}
+                  data-name="month_of_dob"
+                  value={this.state.month_of_dob}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+            </ul>
+          )
+          break;
+        case "before":
+        case "after":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectYearLabel}
+                  options={this.props.yearOptions}
+                  data-name="from_dob_year"
+                  value={this.state.from_dob_year}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectMonthLabel}
+                  options={this.props.monthOptions}
+                  data-name="from_dob_month"
+                  value={this.state.from_dob_month}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectDayLabel}
+                  options={this.props.dayOptions}
+                  data-name="from_dob_day"
+                  value={this.state.from_dob_day}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+            </ul>
+          )
+
+          break;
+        case "between":
+          birthdayOptionView = (
+            <ul>
+            <li>
+                From
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectYearLabel}
+                  options={this.props.yearOptions}
+                  data-name="from_dob_year"
+                  value={this.state.from_dob_year}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectMonthLabel}
+                  options={this.props.monthOptions}
+                  data-name="from_dob_month"
+                  value={this.state.from_dob_month}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectDayLabel}
+                  options={this.props.dayOptions}
+                  data-name="from_dob_day"
+                  value={this.state.from_dob_day}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+              <li>
+                To
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectYearLabel}
+                  options={this.props.yearOptions}
+                  data-name="to_dob_year"
+                  value={this.state.to_dob_year}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectMonthLabel}
+                  options={this.props.monthOptions}
+                  data-name="to_dob_month"
+                  value={this.state.to_dob_month}
+                  onChange={this.onDataChange}
+                  />
+                /&nbsp;
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectDayLabel}
+                  options={this.props.dayOptions}
+                  data-name="to_dob_day"
+                  value={this.state.to_dob_day}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+            </ul>
+          )
+          break;
+      }
+
+      return birthdayOptionView;
+    },
+
     render: function() {
       return(
         <div id="searchKeys" className="sidel">
@@ -446,74 +589,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                     </dl>
                     <dl className="date">
                       <dd>
-                        <ul>
-                          <li>
-                            {
-                              this.state.birthdayQueryType === "between" ? (
-                                "From"
-                              ) : null
-                            }
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectYearLabel}
-                              options={this.props.yearOptions}
-                              data-name="from_dob_year"
-                              value={this.state.from_dob_year}
-                              onChange={this.onDataChange}
-                              />
-                            /&nbsp;
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectMonthLabel}
-                              options={this.props.monthOptions}
-                              data-name="from_dob_month"
-                              value={this.state.from_dob_month}
-                              onChange={this.onDataChange}
-                              />
-                            /&nbsp;
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectDayLabel}
-                              options={this.props.dayOptions}
-                              data-name="from_dob_day"
-                              value={this.state.from_dob_day}
-                              onChange={this.onDataChange}
-                              />
-                          </li>
-                          {
-                            this.state.birthdayQueryType === "between" ? (
-                              <li>
-                                To
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectYearLabel}
-                                  options={this.props.yearOptions}
-                                  data-name="to_dob_year"
-                                  value={this.state.to_dob_year}
-                                  onChange={this.onDataChange}
-                                  />
-                                /&nbsp;
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectMonthLabel}
-                                  options={this.props.monthOptions}
-                                  data-name="to_dob_month"
-                                  value={this.state.to_dob_month}
-                                  onChange={this.onDataChange}
-                                  />
-                                /&nbsp;
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectDayLabel}
-                                  options={this.props.dayOptions}
-                                  data-name="to_dob_day"
-                                  value={this.state.to_dob_day}
-                                  onChange={this.onDataChange}
-                                  />
-                              </li>
-                            ) : null
-                          }
-                        </ul>
+                        {this.renderBirthdayOptions()}
                       </dd>
                     </dl>
                   </div>
@@ -847,6 +923,16 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
               <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
               <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
+              {
+                this.state.day_of_dob ? (
+                  <input name="birthday[day]" type="hidden" value={this.state.day_of_dob} />
+                ) : null
+              }
+              {
+                this.state.month_of_dob ? (
+                  <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
+                ) : null
+              }
               {
                 this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day ? (
                   <input
