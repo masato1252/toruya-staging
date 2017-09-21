@@ -87,6 +87,12 @@ button[disabled], a.disabled, input[disabled] {
     .select2-container {
       display: inline-block;
     }
+
+    .date {
+      input[type="date"] {
+        width: inherit;
+      }
+    }
   }
 
   #NAVsave, #NAVdelete {

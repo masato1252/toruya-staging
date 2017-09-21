@@ -5,7 +5,13 @@
   month_options: month_options,
   day_options: day_options,
   living_place_query_type_options: [{ label: "inside of", value: true }, { label: "outside of", value: false }],
-  date_query_options: [
+  reservation_date_query_options: [
+    { label: "on", value: "on"},
+    { label: "before", value: "before"},
+    { label: "after", value: "after"},
+    { label: "between", value: "between"}
+  ],
+  dob_date_query_options: [
     { label: "on(day)", value: "on_day"},
     { label: "on(month)", value: "on_month"},
     { label: "before", value: "before"},

@@ -1,3 +1,5 @@
+//= require "components/shared/datepicker_field"
+
 "use strict";
 
 UI.define("Customers.Filter.QuerySider", function() {
@@ -22,22 +24,14 @@ UI.define("Customers.Filter.QuerySider", function() {
         birthdayQueryType: "on_day",
         custom_id: "",
         custom_ids: [],
-        from_dob_year: "",
-        from_dob_month: "",
-        from_dob_day: "",
-        to_dob_year: "",
-        to_dob_month: "",
-        to_dob_day: "",
+        start_dob_date: "",
+        end_dob_date: "",
         day_of_dob: "",
         month_of_dob: "",
         hasReservation: true,
         reservationDateQueryType: "on",
-        from_reservation_year: "",
-        from_reservation_month: "",
-        from_reservation_day: "",
-        to_reservation_year: "",
-        to_reservation_month: "",
-        to_reservation_day: "",
+        start_reservation_date: "",
+        end_reservation_date: "",
         menu_id: "",
         menu_ids: [],
         staff_id: "",
@@ -273,12 +267,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     isQueryConditionLegal: function() {
-      return (
-        _.uniq([!this.state.from_dob_year, !this.state.from_dob_month, !this.state.from_dob_day]).length === 1 &&
-        _.uniq([!this.state.to_dob_year, !this.state.to_dob_month, !this.state.to_dob_day]).length === 1 &&
-        _.uniq([!this.state.from_reservation_year, !this.state.from_reservation_month, !this.state.from_reservation_day]).length === 1 &&
-        _.uniq([!this.state.to_reservation_year, !this.state.to_reservation_month, !this.state.to_reservation_day]).length === 1
-      )
+      return true;
     },
 
     renderBirthdayOptions: function() {
@@ -322,32 +311,12 @@ UI.define("Customers.Filter.QuerySider", function() {
           birthdayOptionView = (
             <ul>
               <li>
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectYearLabel}
-                  options={this.props.yearOptions}
-                  data-name="from_dob_year"
-                  value={this.state.from_dob_year}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectMonthLabel}
-                  options={this.props.monthOptions}
-                  data-name="from_dob_month"
-                  value={this.state.from_dob_month}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectDayLabel}
-                  options={this.props.dayOptions}
-                  data-name="from_dob_day"
-                  value={this.state.from_dob_day}
-                  onChange={this.onDataChange}
-                  />
+                <UI.Common.DatepickerField
+                  date={this.state.start_dob_date}
+                  dataName="start_dob_date"
+                  calendarfieldPrefix="start_dob_date"
+                  handleChange={this.onDataChange}
+                />
               </li>
             </ul>
           )
@@ -358,61 +327,21 @@ UI.define("Customers.Filter.QuerySider", function() {
             <ul>
             <li>
                 From
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectYearLabel}
-                  options={this.props.yearOptions}
-                  data-name="from_dob_year"
-                  value={this.state.from_dob_year}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectMonthLabel}
-                  options={this.props.monthOptions}
-                  data-name="from_dob_month"
-                  value={this.state.from_dob_month}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectDayLabel}
-                  options={this.props.dayOptions}
-                  data-name="from_dob_day"
-                  value={this.state.from_dob_day}
-                  onChange={this.onDataChange}
-                  />
+                <UI.Common.DatepickerField
+                  date={this.state.start_dob_date}
+                  dataName="start_dob_date"
+                  calendarfieldPrefix="start_dob_date"
+                  handleChange={this.onDataChange}
+                />
               </li>
               <li>
                 To
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectYearLabel}
-                  options={this.props.yearOptions}
-                  data-name="to_dob_year"
-                  value={this.state.to_dob_year}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectMonthLabel}
-                  options={this.props.monthOptions}
-                  data-name="to_dob_month"
-                  value={this.state.to_dob_month}
-                  onChange={this.onDataChange}
-                  />
-                /&nbsp;
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectDayLabel}
-                  options={this.props.dayOptions}
-                  data-name="to_dob_day"
-                  value={this.state.to_dob_day}
-                  onChange={this.onDataChange}
-                  />
+                <UI.Common.DatepickerField
+                  date={this.state.end_dob_date}
+                  dataName="end_dob_date"
+                  calendarfieldPrefix="end_dob_date"
+                  handleChange={this.onDataChange}
+                />
               </li>
             </ul>
           )
@@ -580,7 +509,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                       <dd>
                         Born
                         <UI.Select
-                          options={this.props.dateQueryOptions}
+                          options={this.props.dobDateQueryOptions}
                           data-name="birthdayQueryType"
                           value={this.state.birthdayQueryType}
                           onChange={this.onDataChange}
@@ -655,7 +584,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           />
                         reservations
                         <UI.Select
-                          options={this.props.dateQueryOptions}
+                          options={this.props.reservationDateQueryOptions}
                           data-name="reservationDateQueryType"
                           value={this.state.reservationDateQueryType}
                           onChange={this.onDataChange}
@@ -671,63 +600,23 @@ UI.define("Customers.Filter.QuerySider", function() {
                                 "From"
                               ) : null
                             }
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectYearLabel}
-                              options={this.props.yearOptions}
-                              data-name="from_reservation_year"
-                              value={this.state.from_reservation_year}
-                              onChange={this.onDataChange}
-                              />
-                            /&nbsp;
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectMonthLabel}
-                              options={this.props.monthOptions}
-                              data-name="from_reservation_month"
-                              value={this.state.from_reservation_month}
-                              onChange={this.onDataChange}
-                              />
-                            /&nbsp;
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectDayLabel}
-                              options={this.props.dayOptions}
-                              data-name="from_reservation_day"
-                              value={this.state.from_reservation_day}
-                              onChange={this.onDataChange}
-                              />
+                            <UI.Common.DatepickerField
+                              date={this.state.start_reservation_date}
+                              dataName="start_reservation_date"
+                              calendarfieldPrefix="start_reservation_date"
+                              handleChange={this.onDataChange}
+                            />
                           </li>
                           {
                             this.state.reservationDateQueryType === "between" ? (
                               <li>
                                 To
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectYearLabel}
-                                  options={this.props.yearOptions}
-                                  data-name="to_reservation_year"
-                                  value={this.state.to_reservation_year}
-                                  onChange={this.onDataChange}
-                                  />
-                                /&nbsp;
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectMonthLabel}
-                                  options={this.props.monthOptions}
-                                  data-name="to_reservation_month"
-                                  value={this.state.to_reservation_month}
-                                  onChange={this.onDataChange}
-                                  />
-                                /&nbsp;
-                                <UI.Select
-                                  includeBlank="true"
-                                  blankOption={this.props.selectDayLabel}
-                                  options={this.props.dayOptions}
-                                  data-name="to_reservation_day"
-                                  value={this.state.to_reservation_day}
-                                  onChange={this.onDataChange}
-                                  />
+                                <UI.Common.DatepickerField
+                                  date={this.state.end_reservation_date}
+                                  dataName="end_reservation_date"
+                                  calendarfieldPrefix="end_reservation_date"
+                                  handleChange={this.onDataChange}
+                                />
                               </li>
                             ) : null
                           }
@@ -934,19 +823,19 @@ UI.define("Customers.Filter.QuerySider", function() {
                 ) : null
               }
               {
-                this.state.from_dob_year && this.state.from_dob_month && this.state.from_dob_day ? (
+                this.state.start_dob_date ? (
                   <input
                      name="birthday[start_date]"
                      type="hidden"
-                     value={`${this.state.from_dob_year}-${this.state.from_dob_month}-${this.state.from_dob_day}`} />
+                     value={this.state.start_dob_date} />
                  ) : null
               }
               {
-                this.state.to_dob_year && this.state.to_dob_month && this.state.to_dob_day ? (
+                this.state.end_dob_date ? (
                   <input
                      name="birthday[end_date]"
                      type="hidden"
-                     value={`${this.state.to_dob_year}-${this.state.to_dob_month}-${this.state.to_dob_day}`} />
+                     value={this.state.end_dob_date} />
                 ) : null
               }
               <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
@@ -958,19 +847,19 @@ UI.define("Customers.Filter.QuerySider", function() {
               }
 
               {
-                this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? (
+                this.state.start_reservation_date ? (
                   <input
-                     name="reservation[start_date]"
-                     type="hidden"
-                     value={`${this.state.from_reservation_year}-${this.state.from_reservation_month}-${this.state.from_reservation_day}`} />
+                    name="reservation[start_date]"
+                    type="hidden"
+                    value={this.state.start_reservation_date} />
                 ) : null
               }
               {
-                this.state.to_reservation_year && this.state.to_reservation_month && this.state.to_reservation_day ? (
+                this.state.end_reservation_date ? (
                   <input
                     name="reservation[end_date]"
                     type="hidden"
-                    value={`${this.state.to_reservation_year}-${this.state.to_reservation_month}-${this.state.to_reservation_day}`} />
+                    value={this.state.end_reservation_date} />
                 ) : null
               }
               {
