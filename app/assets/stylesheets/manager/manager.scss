@@ -1245,3 +1245,7 @@ input.BTNonoff:checked + label:after {
   clear: both;
   visibility: hidden;
 }
+input[type="submit"] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
