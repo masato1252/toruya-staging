@@ -7,10 +7,10 @@
                       add_reservation_path: @add_reservation_path,
                       contact_groups: default_options(@contact_groups),
                       ranks: rank_options(@ranks),
-                      regions: JpPrefecture::Prefecture.all.map {|j| { label: j.name, value: j.name } },
-                      year_options: (1916..2016).to_a.map {|year| { label: year, value: year }},
-                      month_options: (1..12).to_a.map {|year| { label: year, value: year }},
-                      day_options: (1..31).to_a.map {|year| { label: year, value: year }},
+                      regions: regions,
+                      year_options: year_options,
+                      month_options: month_options,
+                      day_options: day_options,
                       customer_edit_permission: can?(:edit, Customer),
                       address_edit_permission: can?(:edit, "customer_address"),
                       customer_detail_path: detail_shop_customers_path(shop),
@@ -56,6 +56,6 @@
                       withWarningsMessage: I18n.t("reservation.contain_some_warnings"),
                       per_page: Customers::Search::PER_PAGE,
                       printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),
-                      printing_page_size_options: Customers::PrintingController::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
+                      printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
                       printing_path: new_customer_printing_path(format: :pdf)
 }) %>

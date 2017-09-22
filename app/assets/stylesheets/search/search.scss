@@ -1,0 +1,120 @@
+/* CSS Document */
+
+#filterFirst {
+  width: 100%;
+}
+#filterFirst .tabBody {
+  padding: 20px;
+}
+#filterKeys .filterFor { margin-bottom: 10px; }
+#filterKeys .filterKey {
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #DFDFDF;
+}
+#filterKeys .filterKey h3 {
+  line-height: 37px;
+  background: #efefef;
+  border-bottom: 1px solid #DFDFDF;
+  padding: 0 10px;
+}
+#filterKeys .filterKey h3 span {
+  font-size: 90%;
+  font-weight: normal;
+  padding-left: 5px;
+}
+#filterKeys .filterKey h3 i { margin-right: 10px; }
+#filterKeys .filterKey dl {
+  padding: 10px;
+  display: table-row;
+}
+#filterKeys .filterKey dl dt, #filterKeys .filterKey dl dd {
+  padding: 10px;
+  display: table-cell;
+  vertical-align: top;
+}
+#filterKeys .filterKey dl dt {
+  width: 160px;
+}
+#filterKeys .filterKey dl dd ul li {
+  padding-bottom: 10px;
+}
+#filterKeys .filterKey dl dd ul li:last-child {
+  padding-bottom: 0;
+}
+#filterKeys h2 {
+  margin-bottom: 0;
+  display: table;
+  width: 100%;
+}
+#filterKeys h2:not(:first-of-type) {
+  padding-top: 10px;
+}
+#filterKeys h2:not(:first-of-type), #filterKeys .submit {
+  border-top: 1px solid #DFDFDF;
+}
+#filterKeys .submit {
+  padding-top: 20px;
+  text-align: center;
+}
+.filter .sidel .tabs a {
+  text-align: center;
+  width: 50%;
+}
+.filter .sidel {
+  font-size: 14px;
+  min-width: 263px;
+}
+.filter .sidel .filterFor {
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #b3b3b3;
+  background: #fff;
+  padding: 10px 10px 0 10px;
+}
+.filter .sidel #filterKeys {
+  padding: 10px;
+  overflow: scroll;
+  height: 75%;
+  border-top-width: 0;
+}
+.filter .sidel #filterKeys .filterKey { padding-bottom: 10px; }
+.filter .sidel #filterKeys .filterKey:last-child { border-bottom-width: 1px; }
+.filter .sidel #filterKeys .filterKey dl dt, .filter .sidel #filterKeys .filterKey dl dd {
+  display: block;
+  padding: 10px 5px 0 5px;
+  width: 100%;
+}
+.filter .sidel #filterKeys .filterKey dl dt { font-weight: bold; }
+.filter .sidel #filterKeys .filterKey dl dd { padding-left: 10px; }
+.filter .sidel #filterKeys select {
+  padding: 0 5px;
+  text-align: center;
+  margin: 0 5px;
+}
+.filter .sidel #filterKeys .filterFor select, .filter .sidel #filterKeys .date select { margin: 0; }
+.filter .sidel #filterKeys a.reservationCalendar {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+}
+.filter .sidel #filterKeys a.BTNtarco, .filter .sidel #filterKeys a.BTNyellow, .filter .sidel #filterKeys a.BTNorange {
+  width: 35px;
+  line-height: 35px;
+  height: 35px;
+  margin-left: 5px;
+}
+.filter .sidel .submit a.BTNtarco {
+  width: 100%;
+  margin: 10px 0;
+}
+.filter #resList dl dd { min-height: 34px; }
+.filter #resList dl .date {
+  width: 50px;
+  text-align: center;
+  line-height: 1.2em;
+}
+.filter #resList dl .status, .filter #resList dl .customer, .filter #resList dl .address, .filter #resList dl .group { line-height: 34px; }
+.filter #resList dl .status { width: 33px; }
+.filter #resList dl .address { width: 150px; }
+.filter #resList dl .group { width: 100px; }

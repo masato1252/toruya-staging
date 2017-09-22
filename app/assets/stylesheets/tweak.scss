@@ -1,5 +1,7 @@
+@import "variables";
+
 .display-hidden {
-  display: none;
+  display: none !important;
 }
 
 input[type="date"]
@@ -24,18 +26,20 @@ input[type="date"]
 }
 
 // customers page reservations popup modal date link
-#resList .modal-title {
-  a:link, a:visited {
-    display: inline-block;
-    color: #97bfb8;
-    border-bottom: 0;
-    padding: 0;
+.customer {
+  #resList .modal-title {
+    a:link, a:visited {
+      display: inline-block;
+      color: #97bfb8;
+      border-bottom: 0;
+      padding: 0;
+    }
   }
-}
 
-// customers page right nav
-#mainNav dl {
-  margin-bottom: 10px;
+  // customers page right nav
+  #mainNav dl {
+    margin-bottom: 10px;
+  }
 }
 
 // reservation new save button
@@ -59,23 +63,146 @@ button[disabled], a.disabled, input[disabled] {
   }
 }
 
-// reservation index and customers index
-#resList #record {
-  .status {
-    float: right;
-    margin-right: 12px;
+// reservations#index page
+.shopIndex {
+  #resList {
+    #record {
+      .error-status {
+        float: right;
+        margin-right: 12px;
+      }
+
+      .warning {
+        color: #e6a21f;
+      }
+
+      .danger {
+        color: #cf0003;
+      }
+
+      .modal-body .warning i.fa-check-circle {
+        vertical-align: baseline;
+      }
+    }
+  }
+}
+
+// customer/filter and reservations#index page
+#resList {
+  &.contBody {
+    overflow: scroll;
+  }
+}
+
+// customer filter
+.filter {
+  .filterKey {
+    .select2-container {
+      display: inline-block;
+    }
+
+    .date {
+      input[type="date"] {
+        width: inherit;
+      }
+    }
+
+    .filterForWording {
+      margin-right: 3px;
+    }
+
+    .filterForReservationWording {
+      margin-left: 3px;
+      margin-right: 3px;
+    }
   }
 
-  .warning {
-    color: #e6a21f;
+  #NAVsave, #NAVdelete {
+    input {
+      display: inline-block;
+      margin-right: 5px;
+      width: 123px;
+    }
+
+    a {
+      font-size: 14pt;
+      font-weight: normal;
+      padding: 0 10px;
+      line-height: 35px;
+      display: inline-block;
+      width: inherit;
+    }
+
+    i {
+      display: inline-block;
+      line-height: 21px;
+      font-size: 21px;
+    }
   }
 
-  .danger {
-    color: #cf0003;
-  }
+  #mainNav {
+    width: 275px;
 
-  .modal-body .warning i.fa-check-circle {
-    vertical-align: baseline;
+    #NAVprintOutcome {
+      .filtered-outcome {
+        margin-bottom: 15px;
+
+        &.processing {
+          color: $warning;
+        }
+
+        &.completed {
+          color: $link;
+        }
+
+        &.failed, &.deleted {
+          color: $danger;
+        }
+
+        a {
+          font-size: 16px;
+          padding-left: 0;
+
+          &.processing {
+            color: $warning;
+          }
+
+          &.completed {
+            color: $link;
+          }
+
+          &.failed, &.deleted {
+            color: $danger;
+          }
+        }
+
+        .fa-search {
+          cursor: pointer;
+        }
+
+        .filter-outcome-state {
+          margin-right: 6px;
+
+          &.processing {
+            &:before {
+              content: "\f252";
+            }
+          }
+
+          &.completed {
+            &:before {
+              content: "\f0ab";
+            }
+          }
+
+          &.failed, &.deleted {
+            &:before {
+              content: "\f05e";
+            }
+          }
+        }
+      }
+    }
   }
 }
 

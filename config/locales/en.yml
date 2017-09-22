@@ -29,6 +29,7 @@ en:
     cancel: Cancel
     log_out: Log out
     save: Save
+    search: Search
   common:
     processing: Processing
     date: Date
@@ -49,6 +50,8 @@ en:
     delete_successfully_message: Deleted successfully
     are_you_sure_message: Are you sure?
     send: Send
+    yes_label: YES
+    no_label: NO
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for
@@ -70,6 +73,13 @@ en:
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
+    cancel: Cancel
+    pending: Pending
+    noshow: No show
+    checked_in: Checked in
+    checked_out: Checked out
+    reserved: Reserved
+    canceled: Canceled
     memo: Memo
     contain_some_warnings: Containing some warnings
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
@@ -94,6 +104,24 @@ en:
       postcard_a: PostCard A
       postcard_b: PostCard B
       envelope: Envelope
+    info: Customer Info
+    group: Customer Group
+    living_place: Living Place
+    living_state: State
+    email_types: Email type
+    reservation_records: Reservation Records
+    reservation_day: Date
+    filter:
+      menu: Menu
+      multiple_choices: multiple choices
+      staff: Staff
+      error: Error
+      reservation_status_title: Reservation status
+      reservation_status_info: Reservation status
+      check_in_status_title: Check-in status
+      check_in_status_info: Check-in status
+      printing_info: Print List
+      printing_address: Print Address
   settings:
     shop:
       info_title: Shop Info

@@ -47,6 +47,9 @@ gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf", "~> 1.1.0"
 gem "wkhtmltopdf-binary"
+gem "carrierwave", "~> 1.1.0"
+gem "fog-aws", "~> 1.4.0"
+gem "bitly", "~> 1.0.0"
 gem "lograge", "~> 0.6.0"
 
 group :development, :test do

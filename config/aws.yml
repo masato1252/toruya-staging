@@ -1,0 +1,15 @@
+defaults: &defaults
+  bucket_name: 'toruya-development'
+  region: "ap-southeast-1"
+development:
+  <<: *defaults
+  bucket_name: 'toruya-development'
+test:
+  <<: *defaults
+  bucket_name: 'toruya-test'
+staging:
+  <<: *defaults
+  bucket_name: 'toruya-staging'
+production:
+  <<: *defaults
+  bucket_name: 'toruya'
