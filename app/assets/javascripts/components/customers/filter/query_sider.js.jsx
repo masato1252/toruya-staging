@@ -21,7 +21,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         state: "",
         has_email: "",
         email_types: [],
-        birthdayQueryType: "on_day",
+        birthdayQueryType: "on",
         custom_id: "",
         custom_ids: [],
         start_dob_date: "",
@@ -274,22 +274,6 @@ UI.define("Customers.Filter.QuerySider", function() {
       let birthdayOptionView;
 
       switch (this.state.birthdayQueryType) {
-        case "on_day":
-          birthdayOptionView = (
-            <ul>
-              <li>
-                <UI.Select
-                  includeBlank="true"
-                  blankOption={this.props.selectDayLabel}
-                  options={this.props.dayOptions}
-                  data-name="day_of_dob"
-                  value={this.state.day_of_dob}
-                  onChange={this.onDataChange}
-                  />
-              </li>
-            </ul>
-          )
-          break;
         case "on_month":
           birthdayOptionView = (
             <ul>
@@ -306,6 +290,7 @@ UI.define("Customers.Filter.QuerySider", function() {
             </ul>
           )
           break;
+        case "on":
         case "before":
         case "after":
           birthdayOptionView = (
@@ -326,7 +311,7 @@ UI.define("Customers.Filter.QuerySider", function() {
           birthdayOptionView = (
             <ul>
             <li>
-                From
+                <span className="filterForWording">From</span>
                 <UI.Common.DatepickerField
                   date={this.state.start_dob_date}
                   dataName="start_dob_date"
@@ -335,7 +320,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 />
               </li>
               <li>
-                To
+                <span className="filterForWording">To</span>
                 <UI.Common.DatepickerField
                   date={this.state.end_dob_date}
                   dataName="end_dob_date"
@@ -507,7 +492,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <div>
                     <dl className="filterFor">
                       <dd>
-                        Born
+                        <span className="filterForWording">Born</span>
                         <UI.Select
                           options={this.props.dobDateQueryOptions}
                           data-name="birthdayQueryType"
@@ -582,7 +567,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           value={this.state.hasReservation}
                           onChange={this.onDataChange}
                           />
-                        reservations
+                        <span className="filterForReservationWording">reservations</span>
                         <UI.Select
                           options={this.props.reservationDateQueryOptions}
                           data-name="reservationDateQueryType"
@@ -597,7 +582,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           <li>
                             {
                               this.state.reservationDateQueryType === "between" ? (
-                                "From"
+                                <span className="filterForWording">From</span>
                               ) : null
                             }
                             <UI.Common.DatepickerField
@@ -610,7 +595,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           {
                             this.state.reservationDateQueryType === "between" ? (
                               <li>
-                                To
+                                <span className="filterForWording">To</span>
                                 <UI.Common.DatepickerField
                                   date={this.state.end_reservation_date}
                                   dataName="end_reservation_date"

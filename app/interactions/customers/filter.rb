@@ -8,10 +8,9 @@ class Customers::Filter < ActiveInteraction::Base
   boolean :has_email, default: nil
   array :email_types, default: nil
   hash :birthday, default: nil do
-    string :query_type, default: "on_day"
+    string :query_type, default: "on"
     date :start_date, default: nil
     date :end_date, default: nil
-    integer :day, default: nil
     integer :month, default: nil
   end
 
@@ -55,10 +54,10 @@ class Customers::Filter < ActiveInteraction::Base
       end
     end
 
-    if birthday && (birthday[:start_date] || birthday[:day] || birthday[:month])
+    if birthday && (birthday[:start_date] || birthday[:month])
       scoped = case birthday[:query_type]
-               when "on_day"
-                 scoped.where("EXTRACT(DAY FROM birthday) = ?", birthday[:day])
+               when "on"
+                 scoped.where(birthday: birthday[:start_date])
                when "on_month"
                  scoped.where("EXTRACT(MONTH FROM birthday) = ?", birthday[:month])
                when "before"

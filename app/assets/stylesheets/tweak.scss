@@ -93,6 +93,15 @@ button[disabled], a.disabled, input[disabled] {
         width: inherit;
       }
     }
+
+    .filterForWording {
+      margin-right: 3px;
+    }
+
+    .filterForReservationWording {
+      margin-left: 3px;
+      margin-right: 3px;
+    }
   }
 
   #NAVsave, #NAVdelete {
