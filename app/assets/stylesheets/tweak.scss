@@ -7,6 +7,16 @@ input[type="date"]
   min-height: 35px;
 }
 
+.datepicker-field {
+  display: inline-block;
+}
+
+.dotdotdot {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .busHours.shopClose {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
@@ -22,6 +32,7 @@ input[type="date"]
     padding: 0;
   }
 }
+
 // customers page right nav
 #mainNav dl {
   margin-bottom: 10px;
@@ -40,10 +51,15 @@ button[disabled], a.disabled, input[disabled] {
   }
 }
 
-.datepicker-field {
-  display: inline-block;
+// reservation index calendar and reservation new
+.busHours {
+  .shop-name {
+    display: block;
+    width: 100px;
+  }
 }
 
+// reservation index and customers index
 #resList #record {
   .status {
     float: right;
