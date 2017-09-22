@@ -75,7 +75,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                 <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
                 <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
                 <dd className="menu">{reservation.menu}</dd>
-                <dd className="shop">{reservation.shop}</dd>
+                <dd className="shop dotdotdot">{reservation.shop}</dd>
                 {
                   reservation.withWarnings ? (
                     <dd className="status warning"><i className="fa fa-check-circle" aria-hidden="true"></i></dd>
@@ -88,7 +88,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                 }
               </dl>
             </a>
-            <div className="modal fade" id={`reservationModal${reservation.id}`} tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div className="modal fade" id={`reservationModal${reservation.id}`} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
