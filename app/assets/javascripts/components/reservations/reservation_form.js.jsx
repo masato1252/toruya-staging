@@ -626,12 +626,12 @@ UI.define("Reservation.Form", function() {
                     {
                       this.state.start_time_restriction && this.state.end_time_restriction ? (
                         <div className="busHours table">
-                          <div className="tableCell dotdotdot shop-name">{this.props.shopName}</div>
+                          <div className="tableCell shopname">{this.props.shopName}</div>
                           <div className="tableCell">{this.state.start_time_restriction}〜{this.state.end_time_restriction}</div>
                         </div>
                       ) : (
                         <div className="busHours shopClose table">
-                          <div className="tableCell dotdotdot shop-name">{this.props.shopName}</div>
+                          <div className="tableCell shopname">{this.props.shopName}</div>
                           <div className="tableCell">CLOSED</div>
                         </div>
                       )
