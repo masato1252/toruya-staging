@@ -898,6 +898,7 @@ input.BTNonoff:checked + label:after {
   padding-top: 3px;
   padding-bottom: 3px;
   color: #B3B3B3;
+  position: relative;
 }
 #resList dd.date, #resList dd.time, #resList dd.calendar, #resList dd.menu { font-size: 11pt; }
 #resList dl dt, #resList dl dd {
