@@ -122,6 +122,21 @@ en:
       check_in_status_info: Check-in status
       printing_info: Print List
       printing_address: Print Address
+      living_inside: inside of
+      living_outside: outside of
+      letter_or_number: letter of number
+      born: Born
+      from: From
+      to: To
+      have: Have
+      not_have: No
+      reservations: reservations
+      date_query:
+        on_date: "On"
+        on_month: in the month of
+        before: Before
+        after: After
+        between: Between
   settings:
     shop:
       info_title: Shop Info
