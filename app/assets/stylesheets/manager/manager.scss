@@ -869,19 +869,21 @@ input.BTNonoff:checked + label:after {
   font-size: 16px;
   color: #666;
 }
-.busHours .shopname, .workTime .shopname {
+.busHours .shopname, .workTime .shopname { font-weight: bold; }
+.busHours .shopname, .workTime .shopname, #customerInfo #resList .shop {
   font-weight: bold;
   white-space: nowrap;
-  width: 130px;
+  width: 123px;
   overflow: hidden;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
-  display: block;
+  display: inline-block;
 }
 .busHours.close, .workTime.off {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
   color: #fff;
+  position: relative;
 }
 .sidel .staffDashboard div { padding-top: 10px; }
 .sidel .staffDashboard a {

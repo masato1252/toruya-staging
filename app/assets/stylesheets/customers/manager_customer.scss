@@ -115,7 +115,11 @@
 #customerInfo .tabs a { width: 40%; }
 #customerInfo #resList #record { padding-top: 33px; }
 #customerInfo #resList .menu { width: 40%; }
-#customerInfo #resList .shop { width: 100px; }
+#customerInfo #resList .shop {
+  right: 0;
+  position: absolute;
+  line-height: 28px;
+}
 #customerInfo #resList .year, #customerInfo #detailInfoEdit dl dt, #customerInfoNew #detailInfoEdit dl dt {
   text-align: center;
   background: #d0d0d0;
