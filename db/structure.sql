@@ -355,42 +355,6 @@ ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
 
 
 --
--- Name: filtered_outcomes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE filtered_outcomes (
-    id integer NOT NULL,
-    user_id integer NOT NULL,
-    filter_id integer,
-    query jsonb,
-    file character varying,
-    page_size character varying,
-    outcome_type character varying,
-    aasm_state character varying NOT NULL,
-    created_at timestamp without time zone
-);
-
-
---
--- Name: filtered_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE filtered_outcomes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: filtered_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE filtered_outcomes_id_seq OWNED BY filtered_outcomes.id;
-
-
---
 -- Name: menu_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1136,13 +1100,6 @@ ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_
 
 
 --
--- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('filtered_outcomes_id_seq'::regclass);
-
-
---
 -- Name: menu_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1345,14 +1302,6 @@ ALTER TABLE ONLY customers
 
 ALTER TABLE ONLY delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: filtered_outcomes filtered_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY filtered_outcomes
-    ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1565,13 +1514,6 @@ CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at
 
 
 --
--- Name: filtered_outcome_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX filtered_outcome_index ON filtered_outcomes USING btree (user_id, aasm_state, created_at);
-
-
---
 -- Name: index_access_providers_on_provider_and_uid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1632,13 +1574,6 @@ CREATE INDEX index_customers_on_rank_id ON customers USING btree (rank_id);
 --
 
 CREATE INDEX index_customers_on_user_id ON customers USING btree (user_id);
-
-
---
--- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_filtered_outcomes_on_user_id ON filtered_outcomes USING btree (user_id);
 
 
 --
@@ -1935,7 +1870,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170627082223'),
 ('20170720142102'),
 ('20170814061241'),
-('20170821073539'),
-('20170827131921');
+('20170821073539');
 
 

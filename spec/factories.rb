@@ -67,6 +67,15 @@ FactoryGirl.define do
     end_date { dates.last }
   end
 
+  factory :reservation do
+    association :shop
+    association :menu
+    start_time { Time.zone.now }
+    end_time { Time.zone.now.advance(hours: 1) }
+    staff_ids { FactoryGirl.create(:staff).id }
+    customer_ids { [FactoryGirl.create(:customer).id] }
+  end
+
   factory :rank do
     association :user
     name "Regular"

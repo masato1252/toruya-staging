@@ -213,7 +213,7 @@ header {
   top: 0;
   width: 100%;
   height: 75px;
-  z-index: 99;
+  z-index: 1;
 }
 header dl { padding: 7px 0 0 0; }
 header dl:first-child {
@@ -625,7 +625,6 @@ input.BTNonoff:checked + label:after {
   color: #b3b3b3;
 }
 .tabs a.here:hover  { background: #fff; }
-.tabs a i { margin-right: 5px; }
 .tabBody {
   border: 1px solid #b3b3b3;
   background: #fff;
@@ -664,7 +663,7 @@ input.BTNonoff:checked + label:after {
 }
 .window#parttime .inOut, .window#parttime .startTime, .window#parttime .endsTime { text-align: center; }
 /* Dashboard */
-#dashboard, #customer, #resNew, #shopNav, #filter {
+#dashboard, #customer, #resNew, #shopNav {
   display: flex;
   display: -moz-flex;
   display: -o-flex;
@@ -759,17 +758,6 @@ input.BTNonoff:checked + label:after {
 #calendar .week span.different-month.reserved { background: #EAEAEA; border-color: #EAEAEA; }
 #calendar .week span.holiday { color: #E00003; }
 /* customer & reservation */
-#resNew #resInfo h2, #resNew #customers h2, #filter h2 {
-  height: 29px;
-  color: #858585;
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 21px;
-}
-#resNew #resInfo h2 i, #resNew #customers h2 i, #filter h2 i {
-  font-size: 26px;
-  margin-right: 3px;
-}
 #customer #resultList ul, #resNew #customerLevels ul {
   margin-left: 0;
   margin-bottom: 1px;
@@ -831,7 +819,7 @@ input.BTNonoff:checked + label:after {
   background-color: #60938a;
   border-color: #488479;
 }
-.checked_out.reservation-state, .checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li, .filter .customer-level-symbol.regular {
+.checked_out.reservation-state, .checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }
@@ -843,13 +831,13 @@ input.BTNonoff:checked + label:after {
   background-color: #aecfc8;
   border: 1px solid #84b3aa;
 }
+.pending.reservation-state, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip {
+  background-color: #ca4e0e;
+  border: 1px #b0450d solid;
+}
 .canceled.reservation-state {
   background-color: #da8356;
   border: 1px solid #c87d56;
-}
-.pending.reservation-state, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip, .filter .customer-level-symbol.vip {
-  background-color: #ca4e0e;
-  border: 1px #b0450d solid;
 }
 .staffs-working-schedules {
   display: table;
@@ -1005,23 +993,6 @@ input.BTNonoff:checked + label:after {
   display: block;
   margin-bottom: 5px;
   line-height: 48px;
-}
-#mainNav #NAVprint a, #mainNav #NAVprintAddress a, #mainNav #NAVprintList a {
-  font-size: 14pt;
-  font-weight: normal;
-  padding: 0 10px;
-  line-height: 35px;
-  display: inline-block;
-  width: inherit;
-}
-#mainNav #NAVprint i, #mainNav #NAVprintAddress i, #mainNav #NAVprintList i {
-  display: inline-block;
-  line-height: 21px;
-  font-size: 21px;
-}
-#mainNav #NAVprint select, #mainNav #NAVprintAddress select, #mainNav #NAVprintList select {
-  margin-right: 5px;
-  width: 123px;
 }
 .shopIndex #footer { display: none; }
 /* Search */

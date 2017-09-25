@@ -53,7 +53,7 @@ class CustomersController < DashboardController
   end
 
   def filter
-    @customers = Customers::CharFilter.run(
+    @customers = Customers::Filter.run(
       super_user: super_user,
       pattern_number: params[:pattern_number],
       page: params[:page].presence || 1

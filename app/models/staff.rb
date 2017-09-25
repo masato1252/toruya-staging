@@ -18,8 +18,6 @@ class Staff < ApplicationRecord
   include NormalizeName
   include ReservationChecking
 
-  attr_accessor :enable_staff_account
-
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, through: :staff_menus
