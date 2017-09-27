@@ -123,6 +123,21 @@ ja:
       check_in_status_info: 来店ステータス選択
       printing_info: リスト印刷
       printing_address: 宛名印刷
+      living_inside: 選択地域
+      living_outside: 選択地域外
+      letter_or_number: 英数字
+      born: 生年月日が
+      from: から
+      to: まで
+      have: ある
+      not_have: ない
+      reservations: に予約が
+      date_query:
+        on_date: "指定日"
+        on_month: 指定月
+        before: 指定日以前
+        after: 指定日以降
+        between: 期間内
   settings:
     shop:
       info_title:  店舗情報

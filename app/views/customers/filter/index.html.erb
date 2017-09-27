@@ -1,24 +1,28 @@
 <%= react_component("UI.Customers.Filter.Dashboard", {
+  locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,
   year_options: year_options,
   month_options: month_options,
   day_options: day_options,
-  living_place_query_type_options: [{ label: "inside of", value: true }, { label: "outside of", value: false }],
+  living_place_query_type_options: [
+    { label: t("customer.filter.living_inside"), value: true },
+    { label: t("customer.filter.living_outside"), value: false }
+  ],
   reservation_date_query_options: [
-    { label: "on", value: "on"},
-    { label: "before", value: "before"},
-    { label: "after", value: "after"},
-    { label: "between", value: "between"}
+    { label: t("customer.filter.date_query.on_date"), value: "on"},
+    { label: t("customer.filter.date_query.before"), value: "before"},
+    { label: t("customer.filter.date_query.after"), value: "after"},
+    { label: t("customer.filter.date_query.between"), value: "between"}
   ],
   dob_date_query_options: [
-    { label: "on", value: "on"},
-    { label: "on the month of", value: "on_month"},
-    { label: "before", value: "before"},
-    { label: "after", value: "after"},
-    { label: "between", value: "between"}
+    { label: t("customer.filter.date_query.on_date"), value: "on"},
+    { label: t("customer.filter.date_query.on_month"), value: "on_month"},
+    { label: t("customer.filter.date_query.before"), value: "before"},
+    { label: t("customer.filter.date_query.after"), value: "after"},
+    { label: t("customer.filter.date_query.between"), value: "between"}
   ],
-  yes_no_options: [ { label: "Have", value: true }, { label: "No", value: false }],
+  yes_no_options: [{ label: t("customer.filter.have"), value: true }, { label: t("customer.filter.not_have"), value: false }],
   menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
   menu_options: menu_group_options(@menu_result[:menu_options]),
   staff_options: staff_options(@staff_options, []),
@@ -72,5 +76,10 @@
   customer_check_in_status_info: I18n.t("customer.filter.check_in_status_info"),
   yes_label: I18n.t("common.yes_label"),
   no_label: I18n.t("common.no_label"),
-  search_label: I18n.t("action.search")
+  search_label: I18n.t("action.search"),
+  custom_id_placeholder: t("customer.filter.letter_or_number"),
+  born_wording: t("customer.filter.born"),
+  from_wording: t("customer.filter.from"),
+  to_wording: t("customer.filter.to"),
+  reservations_wording: t("customer.filter.reservations")
 }) %>

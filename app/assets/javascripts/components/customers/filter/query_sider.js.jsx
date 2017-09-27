@@ -311,7 +311,7 @@ UI.define("Customers.Filter.QuerySider", function() {
           birthdayOptionView = (
             <ul>
             <li>
-                <span className="filterForWording">From</span>
+                <span className="filterForWording">{this.props.fromWording}</span>
                 <UI.Common.DatepickerField
                   date={this.state.start_dob_date}
                   dataName="start_dob_date"
@@ -320,7 +320,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 />
               </li>
               <li>
-                <span className="filterForWording">To</span>
+                <span className="filterForWording">{this.props.toWording}</span>
                 <UI.Common.DatepickerField
                   date={this.state.end_dob_date}
                   dataName="end_dob_date"
@@ -364,7 +364,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               {
                 this.state.filterCategoryDisplaying["group_ids"] ? (
                   <dl className="groups">
-                    <dt>Select Groups</dt>
+                    <dt>{this.props.customerGroupTitle}</dt>
                     <dd>
                       <ul>
                         {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
@@ -384,13 +384,12 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <div>
                     <dl className="filterFor">
                       <dd>
-                        Living
                         <UI.Select
                           options={this.props.livingPlaceQueryTypeOptions}
                           data-name="livingPlaceInside"
                           value={this.state.livingPlaceInside}
                           onChange={this.onDataChange}
-                          />
+                          />に在住
                       </dd>
                     </dl>
                     <dl className="state">
@@ -492,7 +491,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <div>
                     <dl className="filterFor">
                       <dd>
-                        <span className="filterForWording">Born</span>
+                        <span className="filterForWording">{this.props.bornWording}</span>
                         <UI.Select
                           options={this.props.dobDateQueryOptions}
                           data-name="birthdayQueryType"
@@ -524,7 +523,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                         <li>
                           <input
                             type="text"
-                            placeholder="letter or number"
+                            placeholder={this.props.customIdPlaceholder}
                             value={this.state.custom_id}
                             data-name="custom_id"
                             onChange={this.onDataChange}
@@ -562,16 +561,16 @@ UI.define("Customers.Filter.QuerySider", function() {
                     <dl className="filterFor">
                       <dd>
                         <UI.Select
-                          options={this.props.yesNoOptions}
-                          data-name="hasReservation"
-                          value={this.state.hasReservation}
-                          onChange={this.onDataChange}
-                          />
-                        <span className="filterForReservationWording">reservations</span>
-                        <UI.Select
                           options={this.props.reservationDateQueryOptions}
                           data-name="reservationDateQueryType"
                           value={this.state.reservationDateQueryType}
+                          onChange={this.onDataChange}
+                          />
+                        <span className="filterForReservationWording">{this.props.reservationsWording}</span>
+                        <UI.Select
+                          options={this.props.yesNoOptions}
+                          data-name="hasReservation"
+                          value={this.state.hasReservation}
                           onChange={this.onDataChange}
                           />
                       </dd>
@@ -582,7 +581,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           <li>
                             {
                               this.state.reservationDateQueryType === "between" ? (
-                                <span className="filterForWording">From</span>
+                                <span className="filterForWording">{this.props.fromWording}</span>
                               ) : null
                             }
                             <UI.Common.DatepickerField
@@ -595,7 +594,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                           {
                             this.state.reservationDateQueryType === "between" ? (
                               <li>
-                                <span className="filterForWording">To</span>
+                                <span className="filterForWording">{this.props.toWording}</span>
                                 <UI.Common.DatepickerField
                                   date={this.state.end_reservation_date}
                                   dataName="end_reservation_date"
