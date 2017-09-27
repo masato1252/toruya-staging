@@ -22,6 +22,11 @@ html {
   position: relative;
 }
 /*end hide from IE mac*/
+/*start iOS fix*/
+input[type="submit"] {
+  -webkit-appearance: none;
+}
+/*end iOS fix*/
 body {
   background: #f2f2f2;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -843,19 +848,30 @@ input.BTNonoff:checked + label:after {
 .staffs-working-schedules .row { display: table-row; }
 .staffs-working-schedules .cell { display: table-cell; }
 .staffs-working-schedules .staff { text-align: left; }
+.busHours div { padding: 0 5px; }
 .busHours, .workTime {
-  margin-top: 15px;
+  margin-bottom: 15px;
   border: 1px solid #b3b3b3; 
   background-color: #d0d0d0;
   padding: 3px;
   font-size: 16px;
   color: #666;
 }
-.busHours div:first-child, .workTime div:first-child { font-weight: bold; }
+.busHours .shopname, .workTime .shopname { font-weight: bold; }
+.busHours .shopname, .workTime .shopname, #customerInfo #resList .shop {
+  font-weight: bold;
+  white-space: nowrap;
+  width: 123px;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
 .busHours.close, .workTime.off {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
   color: #fff;
+  position: relative;
 }
 .sidel .staffDashboard div { padding-top: 10px; }
 .sidel .staffDashboard a {
@@ -882,6 +898,7 @@ input.BTNonoff:checked + label:after {
   padding-top: 3px;
   padding-bottom: 3px;
   color: #B3B3B3;
+  position: relative;
 }
 #resList dd.date, #resList dd.time, #resList dd.calendar, #resList dd.menu { font-size: 11pt; }
 #resList dl dt, #resList dl dd {
@@ -1244,8 +1261,4 @@ input.BTNonoff:checked + label:after {
   height: 0;
   clear: both;
   visibility: hidden;
-}
-input[type="submit"] {
-  -webkit-appearance: none;
-  border-radius: 0;
 }
