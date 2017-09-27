@@ -9,6 +9,10 @@ input[type="date"]
   min-height: 35px;
 }
 
+.datepicker-field {
+  display: inline-block;
+}
+
 .busHours.shopClose {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
@@ -32,7 +36,6 @@ input[type="date"]
   }
 }
 
-
 // reservation new save button
 button[disabled], a.disabled, input[disabled] {
   opacity: .45;
@@ -46,8 +49,12 @@ button[disabled], a.disabled, input[disabled] {
   }
 }
 
-.datepicker-field {
-  display: inline-block;
+// reservation index calendar and reservation new
+.busHours {
+  .shop-name {
+    display: block;
+    width: 100px;
+  }
 }
 
 // reservations#index page
