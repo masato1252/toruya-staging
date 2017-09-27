@@ -109,7 +109,7 @@ ja:
     group: 顧客台帳
     living_place: 居住地
     living_state: 都道府県
-    email_types: アドレスの種類
+    email_types: メールの種類
     reservation_records: 利用履歴
     reservation_day: 予約日
     filter:

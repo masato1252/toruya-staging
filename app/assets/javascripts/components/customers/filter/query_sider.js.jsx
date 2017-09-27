@@ -300,6 +300,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   date={this.state.start_dob_date}
                   dataName="start_dob_date"
                   calendarfieldPrefix="start_dob_date"
+                  hiddenWeekDate={true}
                   handleChange={this.onDataChange}
                 />
               </li>
@@ -310,23 +311,35 @@ UI.define("Customers.Filter.QuerySider", function() {
         case "between":
           birthdayOptionView = (
             <ul>
-            <li>
-                <span className="filterForWording">{this.props.fromWording}</span>
+              <li>
+                {this.props.locale == "en" ? (
+                  <span className="filterForWording">{this.props.fromWording}</span>
+                ) : null}
                 <UI.Common.DatepickerField
                   date={this.state.start_dob_date}
                   dataName="start_dob_date"
                   calendarfieldPrefix="start_dob_date"
+                  hiddenWeekDate={true}
                   handleChange={this.onDataChange}
                 />
+                {this.props.locale == "ja" ? (
+                  <span className="filterForWording">{this.props.fromWording}</span>
+                ) : null}
               </li>
               <li>
-                <span className="filterForWording">{this.props.toWording}</span>
+                {this.props.locale == "en" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
                 <UI.Common.DatepickerField
                   date={this.state.end_dob_date}
                   dataName="end_dob_date"
                   calendarfieldPrefix="end_dob_date"
+                  hiddenWeekDate={true}
                   handleChange={this.onDataChange}
                 />
+                {this.props.locale == "ja" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
               </li>
             </ul>
           )
@@ -334,6 +347,51 @@ UI.define("Customers.Filter.QuerySider", function() {
       }
 
       return birthdayOptionView;
+    },
+
+    renderReservationDateOptions: function() {
+      return (
+        <ul>
+          <li>
+            {
+              this.state.reservationDateQueryType === "between" && this.props.locale === "en" ? (
+                <span className="filterForWording">{this.props.fromWording}</span>
+              ) : null
+            }
+            <UI.Common.DatepickerField
+              date={this.state.start_reservation_date}
+              dataName="start_reservation_date"
+              calendarfieldPrefix="start_reservation_date"
+              hiddenWeekDate={true}
+              handleChange={this.onDataChange}
+            />
+            {
+              this.state.reservationDateQueryType === "between" && this.props.locale === "ja" ? (
+                <span className="filterForWording">{this.props.fromWording}</span>
+              ) : null
+            }
+          </li>
+          {
+            this.state.reservationDateQueryType === "between" ? (
+              <li>
+                {this.props.locale === "en" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+                <UI.Common.DatepickerField
+                  date={this.state.end_reservation_date}
+                  dataName="end_reservation_date"
+                  calendarfieldPrefix="end_reservation_date"
+                  hiddenWeekDate={true}
+                  handleChange={this.onDataChange}
+                />
+                {this.props.locale === "ja" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+              </li>
+            ) : null
+          }
+        </ul>
+      );
     },
 
     render: function() {
@@ -560,51 +618,42 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <div>
                     <dl className="filterFor">
                       <dd>
-                        <UI.Select
-                          options={this.props.reservationDateQueryOptions}
-                          data-name="reservationDateQueryType"
-                          value={this.state.reservationDateQueryType}
-                          onChange={this.onDataChange}
+                        {this.props.locale === "ja" ? (
+                          <UI.Select
+                            options={this.props.reservationDateQueryOptions}
+                            data-name="reservationDateQueryType"
+                            value={this.state.reservationDateQueryType}
+                            onChange={this.onDataChange}
                           />
+                        ) : (
+                          <UI.Select
+                            options={this.props.yesNoOptions}
+                            data-name="hasReservation"
+                            value={this.state.hasReservation}
+                            onChange={this.onDataChange}
+                            />
+                        )}
                         <span className="filterForReservationWording">{this.props.reservationsWording}</span>
-                        <UI.Select
-                          options={this.props.yesNoOptions}
-                          data-name="hasReservation"
-                          value={this.state.hasReservation}
-                          onChange={this.onDataChange}
+                        {this.props.locale === "ja" ? (
+                          <UI.Select
+                            options={this.props.yesNoOptions}
+                            data-name="hasReservation"
+                            value={this.state.hasReservation}
+                            onChange={this.onDataChange}
+                            />
+                        ) : (
+                          <UI.Select
+                            options={this.props.reservationDateQueryOptions}
+                            data-name="reservationDateQueryType"
+                            value={this.state.reservationDateQueryType}
+                            onChange={this.onDataChange}
                           />
+                        )}
                       </dd>
                     </dl>
                     <dl className="date">
                       <dd>
-                        <ul>
-                          <li>
-                            {
-                              this.state.reservationDateQueryType === "between" ? (
-                                <span className="filterForWording">{this.props.fromWording}</span>
-                              ) : null
-                            }
-                            <UI.Common.DatepickerField
-                              date={this.state.start_reservation_date}
-                              dataName="start_reservation_date"
-                              calendarfieldPrefix="start_reservation_date"
-                              handleChange={this.onDataChange}
-                            />
-                          </li>
-                          {
-                            this.state.reservationDateQueryType === "between" ? (
-                              <li>
-                                <span className="filterForWording">{this.props.toWording}</span>
-                                <UI.Common.DatepickerField
-                                  date={this.state.end_reservation_date}
-                                  dataName="end_reservation_date"
-                                  calendarfieldPrefix="end_reservation_date"
-                                  handleChange={this.onDataChange}
-                                />
-                              </li>
-                            ) : null
-                          }
-                        </ul>
+                        {this.renderReservationDateOptions()}
                       </dd>
                     </dl>
                   </div>
