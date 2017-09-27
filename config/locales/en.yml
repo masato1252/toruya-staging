@@ -50,8 +50,8 @@ en:
     delete_successfully_message: Deleted successfully
     are_you_sure_message: Are you sure?
     send: Send
-    yes_label: YES
-    no_label: NO
+    yes_label: "YES"
+    no_label: "NO"
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for

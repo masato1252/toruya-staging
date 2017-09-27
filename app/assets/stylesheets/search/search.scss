@@ -6,7 +6,6 @@
 #filterFirst .tabBody {
   padding: 20px;
 }
-#filterKeys .filterFor { margin-bottom: 10px; }
 #filterKeys .filterKey {
   border-width: 1px 1px 0 1px;
   border-style: solid;
@@ -65,18 +64,21 @@
   font-size: 14px;
   min-width: 263px;
 }
-.filter .sidel .filterFor {
-  border-width: 1px 1px 0 1px;
-  border-style: solid;
-  border-color: #b3b3b3;
-  background: #fff;
-  padding: 10px 10px 0 10px;
-}
 .filter .sidel #filterKeys {
   padding: 10px;
   overflow: scroll;
   height: 75%;
   border-top-width: 0;
+}
+.filter .sidel #filterKeys .savedFilter {
+  margin-bottom: 10px;
+}
+.filter .sidel #filterKeys .savedFilter a {
+  margin-bottom: 10px;
+  line-height: 35px;
+  height: 35px;
+  padding: 0 15px;
+  width: 100%;
 }
 .filter .sidel #filterKeys .filterKey { padding-bottom: 10px; }
 .filter .sidel #filterKeys .filterKey:last-child { border-bottom-width: 1px; }
@@ -91,8 +93,11 @@
   padding: 0 5px;
   text-align: center;
   margin: 0 5px;
+  background-color: #fffef5;
 }
 .filter .sidel #filterKeys .filterFor select, .filter .sidel #filterKeys .date select { margin: 0; }
+.filter .sidel #filterKeys input[type="date"] { width: 120px; }
+.filter .sidel #filterKeys input[type="text"] { max-width: 160px; }
 .filter .sidel #filterKeys a.reservationCalendar {
   width: 35px;
   height: 35px;
@@ -102,7 +107,6 @@
   width: 35px;
   line-height: 35px;
   height: 35px;
-  margin-left: 5px;
 }
 .filter .sidel .submit a.BTNtarco {
   width: 100%;

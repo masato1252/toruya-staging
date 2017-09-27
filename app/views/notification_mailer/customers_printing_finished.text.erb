@@ -2,5 +2,9 @@
 
 <%= @user.name || @user.email %> 様
 
-Your filtered customers printing already finished, you could go to <%= customer_user_filter_index_url(@user) %> to download,
-or download it directly <%= Bitly.client.shorten(@filtered_outcome.file.url(query: {"response-content-disposition" => "attachment;"})).short_url %>
+予約管理システムToruyaは、顧客の宛名印刷用のファイルの生成を完了しました。
+本日より７日以内に、以下のURLよりダウンロードしてご利用ください。
+
+<%= Bitly.client.shorten(@filtered_outcome.file.url(query: {"response-content-disposition" => "attachment;"})).short_url %>
+
+※生成されたファイルは、ダウンロードの有無に関わらず、本日より８日目に削除されます。
