@@ -41,6 +41,14 @@ class Customer < ApplicationRecord
 
   scope :jp_chars_order, -> { order('phonetic_last_name COLLATE "C" ASC') }
 
+  def with_google_contact
+    if google_contact_id
+      build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: self))
+    else
+      self
+    end
+  end
+
   def build_by_google_contact(google_contact)
     self.google_uid = user.uid
     self.first_name = google_contact.first_name || first_name
