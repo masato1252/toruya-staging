@@ -161,7 +161,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <dd className="exparation">{outcome.expiredDate}</dd>
                     <dd className="function">
                       {outcome.fileUrl ? (
-                        <a href={outcome.fileUrl} target="_blank" className="BTNtarco">PRINT</a>
+                        <a href={outcome.fileUrl} className="BTNtarco">PRINT</a>
                       ) : null}
                     </dd>
                   </dl>
