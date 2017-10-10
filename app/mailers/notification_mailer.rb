@@ -21,7 +21,7 @@ class NotificationMailer < ActionMailer::Base
     @user = filtered_outcome.user
 
     mail(:to => @user.email,
-         :subject => subject("Customers Printing is finished"))
+         :subject => subject("宛名印刷用ファイルの準備ができました。"))
   end
 
   def activate_staff_account(staff_account)
