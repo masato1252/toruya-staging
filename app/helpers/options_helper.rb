@@ -127,7 +127,7 @@ module OptionsHelper
 
   def filtered_outcome_options(filtered_outcomes)
     filtered_outcomes.map{ |outcome|
-      {
+      React.camelize_props({
         id: outcome.id,
         name: outcome&.filter&.name,
         file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
@@ -135,7 +135,7 @@ module OptionsHelper
         type: outcome.outcome_type,
         created_date: outcome.created_at.to_s(:date),
         expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_s(:date)
-      }
+      })
     }
   end
 

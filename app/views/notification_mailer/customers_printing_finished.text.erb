@@ -3,8 +3,8 @@
 <%= @user.name || @user.email %> 様
 
 予約管理システムToruyaは、顧客の宛名印刷用のファイルの生成を完了しました。
-本日より７日以内に、以下のURLよりダウンロードしてご利用ください。
+本日より<%= FilteredOutcome::EXPIRED_DAYS %>日以内に、以下のURLよりダウンロードしてご利用ください。
 
 <%= Bitly.client.shorten(@filtered_outcome.file.url(query: {"response-content-disposition" => "attachment;"})).short_url %>
 
-※生成されたファイルは、ダウンロードの有無に関わらず、本日より８日目に削除されます。
+※生成されたファイルは、ダウンロードの有無に関わらず、本日より<%= FilteredOutcome::EXPIRED_DAYS + 1 %>日目に削除されます。
