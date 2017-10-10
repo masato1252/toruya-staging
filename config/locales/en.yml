@@ -52,6 +52,7 @@ en:
     send: Send
     yes_label: "YES"
     no_label: "NO"
+    close: Close
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for
@@ -131,6 +132,10 @@ en:
       have: Have
       not_have: No
       reservations: reservations
+      save_filter_title: Save Filter
+      printing_result_title: Prints Result
+      file_for_print: Files For Print
+      no_file_for_print: "No File For Print"
       date_query:
         on_date: "On"
         on_month: in the month of

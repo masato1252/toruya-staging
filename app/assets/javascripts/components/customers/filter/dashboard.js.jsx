@@ -254,11 +254,11 @@ UI.define("Customers.Filter.Dashboard", function() {
               )}
               <dd id="NAVprintFilter">
                 {this.state.filtered_outcome_options.length === 0 ? (
-                  <a href="#" className="BTNtarco disabled">No File For Print</a>
+                  <a href="#" className="BTNtarco disabled">{this.props.noFileForPrintWording}</a>
                 ) : (
                   <a href="#" data-toggle="modal" data-target="#printing-files-modal" className="BTNtarco">
-                    <i className="fa fa-file-pdf-o"></i> Files For Print
-                    </a>
+                    <i className="fa fa-file-pdf-o"></i> {this.props.filesForPrintWording}
+                  </a>
                   )}
                 </dd>
               </dl>
@@ -271,7 +271,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <span aria-hidden="true">×</span>
                   </button>
                   <h4 className="modal-title" id="myModalLabel">
-                    <i className="fa fa-database-o" aria-hidden="true"></i>Files for Print（印刷用ファイル）
+                    <i className="fa fa-database-o" aria-hidden="true"></i>{this.props.filesForPrintWording}
                     </h4>
                   </div>
                   <div className="modal-body">
@@ -279,7 +279,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                   </div>
                   <div className="modal-footer">
                     <dl>
-                      <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">Close（閉じる）</a></dd>
+                      <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">{this.props.closeButton}</a></dd>
                     </dl>
                   </div>
                 </div>
