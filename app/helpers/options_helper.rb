@@ -129,9 +129,12 @@ module OptionsHelper
     filtered_outcomes.map{ |outcome|
       {
         id: outcome.id,
-        name: "#{outcome&.filter&.name} #{outcome.created_at.to_s(:full_time_without_year)}",
+        name: outcome&.filter&.name,
         file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
-        state: outcome.aasm_state
+        state: outcome.aasm_state,
+        type: outcome.outcome_type,
+        created_date: outcome.created_at.to_s(:date),
+        expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_s(:date)
       }
     }
   end

@@ -73,7 +73,7 @@
 .filter .sidel #filterKeys .savedFilter {
   margin-bottom: 10px;
 }
-.filter .sidel #filterKeys .savedFilter a {
+.filter .sidel #filterKeys .savedFilter a, .filter #mainNav #NAVprintFilter a {
   margin-bottom: 10px;
   line-height: 35px;
   height: 35px;
@@ -122,3 +122,43 @@
 .filter #resList dl .status { width: 33px; }
 .filter #resList dl .address { width: 150px; }
 .filter #resList dl .group { width: 100px; }
+.filter #mainNav dl dt {
+  font-weight: bold;
+  color: #858585;
+  padding-bottom: 5px;
+}
+.filter #mainNav #NAVprintFilter a {
+  font-size: 12pt;
+  font-weight: normal;
+}
+.filter #mainNav #NAVprintFilter a i {
+  display: inline-block;
+  line-height: 35px;
+}
+.modal-dialog #searchPrint dl dt, .modal-dialog #searchPrint dl dd {
+  display: inline-block;
+  min-width: 22px;
+  padding-right: 5px;
+}
+.modal-dialog #searchPrint dl dt {
+  padding-bottom: 5px;
+  font-size: 90%;
+  color: #AAA;
+}
+.modal-dialog #searchPrint dl dd {
+  line-height: 47px;
+}
+.modal-dialog #searchPrint #files dl:nth-child(odd) {
+  background: #F2F2F2;
+}
+.modal-dialog #searchPrint .status { margin: 0 0 0 5px; }
+.modal-dialog #searchPrint .status i.fa-hourglass-half { color: #e6a21f; }
+.modal-dialog #searchPrint .status i.fa-print { color: #60938a; }
+.modal-dialog #searchPrint .type, .modal-dialog #searchPrint .filterName { width: 134px; }
+.modal-dialog #searchPrint .function { padding-right: 0; }
+.modal-dialog #searchPrint .function a, .modal-dialog #searchPrint .function a:link {
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 37px;
+  line-height: 37px;
+}
