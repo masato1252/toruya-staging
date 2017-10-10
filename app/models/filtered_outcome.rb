@@ -19,7 +19,7 @@ class FilteredOutcome < ApplicationRecord
   include AASM
   mount_uploader :file, FilteredOutcomeFileUploader
 
-  scope :active, -> { where.not(aasm_state: "deleted") }
+  scope :active, -> { where(aasm_state: %w(processing completed)) }
 
   belongs_to :user
   belongs_to :filter, class_name: "QueryFilter"

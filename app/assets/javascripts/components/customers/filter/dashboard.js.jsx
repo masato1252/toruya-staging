@@ -109,33 +109,64 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
-    renderDeleteFilterButton: function() {
+    isCustomersEmpty: function() {
+      return this.state.customers.length === 0
+    },
+
+    renderFilterButton: function() {
       if (this.state.current_saved_filter_id) {
         return (
-          <dd id="NAVdelete">
-            <a className="BTNorange" href="#" onClick={this.deleteFilter} >
-              <i className="fa fa-trash-o" aria-hidden="true"></i>
-            </a>
-          </dd>
+          <a className="BTNorange" href="#" onClick={this.deleteFilter} >
+            <i className="fa fa-trash-o" aria-hidden="true"></i>
+          </a>
+        )
+      }
+      else {
+        return (
+          <a
+            className={`BTNyellow ${this.state.filter_name && this.state.filter_name !== this.state.current_saved_filter_name? null : "disabled"}`} href="#"
+            onClick={this.saveFilter} >
+            <i className="fa fa-floppy-o" aria-hidden="true"></i>
+          </a>
         )
       }
     },
 
     renderFilteredOutcomes: function() {
       return (
-        <div className="filtered-outcomes">
-          {
-            this.state.filtered_outcome_options.map(function(outcome) {
-              return (
-                <div className={["filtered-outcome", outcome.state].join(" ")} key={outcome.id}>
-                  <i className={["fa", "filter-outcome-state", outcome.state].join(" ")}></i>
-                  <a className={outcome.state} href={outcome.fileUrl}>
-                    {outcome.name}
-                  </a>
-                </div>
-              )
-            }.bind(this))
-          }
+        <div id="searchPrint">
+          <dl className="tableTTL">
+            <dt className="status">&nbsp;</dt>
+            <dt className="filterName">Filter Name</dt>
+            <dt className="type">File Type</dt>
+            <dt className="create">Proceded on</dt>
+            <dt className="exparation">Expire on</dt>
+            <dt className="function"></dt>
+          </dl>
+          <div id="files">
+            {
+              this.state.filtered_outcome_options.map(function(outcome) {
+                return (
+                  <dl>
+                    <dd className="status">
+                      {outcome.state === "processing" ? (
+                        <i className="fa fa-hourglass-half"></i>
+                      ) : (
+                        <i className="fa fa-print"></i>
+                      )}
+                    </dd>
+                    <dd className="filterName">{outcome.name}</dd>
+                    <dd className="type">{outcome.type}</dd>
+                    <dd className="create">{outcome.createdDate}</dd>
+                    <dd className="exparation">{outcome.expiredDate}</dd>
+                    <dd className="function">
+                      <a href={outcome.fileUrl} target="_blank" className="BTNtarco">PRINT</a>
+                    </dd>
+                  </dl>
+                )
+              }.bind(this))
+            }
+          </div>
         </div>
       )
     },
@@ -159,71 +190,99 @@ UI.define("Customers.Filter.Dashboard", function() {
 
           <div id="mainNav">
             <dl>
-              <dd id="NAVsave">
-                <input type="text"
-                   data-name="filter_name"
-                   placeholder="ファイル名を入力"
-                   className="filter-name-input"
-                   value={this.state.filter_name}
-                   disabled={this.state.customers.length === 0}
-                   onChange={this.onDataChange} />
-                 <a
-                    className={`BTNyellow ${this.state.filter_name && this.state.filter_name !== this.state.current_saved_filter_name? null : "disabled"}`} href="#"
-                  onClick={this.saveFilter} >
-                  <i className="fa fa-floppy-o" aria-hidden="true"></i>
-                </a>
-              </dd>
-                {this.renderDeleteFilterButton()}
-              <dd id="NAVprintList">
-                <UI.Select
-                  data-name="info_printing_page_size"
-                  options={this.props.infoPrintingPageSizeOptions}
-                  value ={this.state.info_printing_page_size}
-                  onChange={this.onDataChange}
-                  blankOption={this.props.infoPrintingPageSizeBlankOption}
-                  includeBlank={true}
-                  />
-                <a onClick={this.handlePrinting}
-                  href="#"
-                  className={`BTNtarco ${this.state.info_printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
-                  title="印刷"
-                  data-printing-type={this.props.infoPrintingType}
-                  data-page-size-name="info_printing_page_size"
-                   target="_blank">
-                  <i className="fa fa-print"
-                    data-printing-type={this.props.infoPrintingType}
-                    data-page-size-name="info_printing_page_size">
-                  </i>
-                </a>
-              </dd>
-              <dd id="NAVprintAddress">
-                <UI.Select
-                  data-name="printing_page_size"
-                  options={this.props.printingPageSizeOptions}
-                  value ={this.state.printing_page_size}
-                  onChange={this.onDataChange}
-                  blankOption={this.props.printingPageSizeBlankOption}
-                  includeBlank={true}
-                  />
-                <a onClick={this.handlePrinting}
-                  href="#"
-                  className={`BTNtarco ${this.state.printing_page_size && this.state.customers.length > 0 ? null : "disabled"}`}
-                  title="印刷"
-                  data-printing-type={this.props.addressPrintingType}
-                  data-page-size-name="printing_page_size"
-                   target="_blank">
-                  <i className="fa fa-print"
-                    data-printing-type={this.props.addressPrintingType}
-                    data-page-size-name="printing_page_size">
-                  </i>
-                </a>
-               </dd>
-               <dd id="NAVprintOutcome">
-                 {this.renderFilteredOutcomes()}
-              </dd>
-            </dl>
+              {this.isCustomersEmpty() ? null : (
+                <div>
+                  <dt>Save Filter</dt>
+                  <dd id="NAVsave">
+                    <input type="text"
+                      data-name="filter_name"
+                      placeholder="ファイル名を入力"
+                      className="filter-name-input"
+                      value={this.state.filter_name}
+                      disabled={this.isCustomersEmpty()}
+                      onChange={this.onDataChange} />
+                    {this.renderFilterButton()}
+                  </dd>
+                  <dt>Print Results</dt>
+                  <dd id="NAVprintList">
+                    <UI.Select
+                      data-name="info_printing_page_size"
+                      options={this.props.infoPrintingPageSizeOptions}
+                      value ={this.state.info_printing_page_size}
+                      onChange={this.onDataChange}
+                      blankOption={this.props.infoPrintingPageSizeBlankOption}
+                      includeBlank={true}
+                      />
+                    <a onClick={this.handlePrinting}
+                      href="#"
+                      className={`BTNtarco ${this.state.info_printing_page_size && !this.isCustomersEmpty() ? null : "disabled"}`}
+                      title="印刷"
+                      data-printing-type={this.props.infoPrintingType}
+                      data-page-size-name="info_printing_page_size"
+                      target="_blank">
+                      <i className="fa fa-print"
+                        data-printing-type={this.props.infoPrintingType}
+                        data-page-size-name="info_printing_page_size">
+                      </i>
+                    </a>
+                  </dd>
+                  <dd id="NAVprintAddress">
+                    <UI.Select
+                      data-name="printing_page_size"
+                      options={this.props.printingPageSizeOptions}
+                      value ={this.state.printing_page_size}
+                      onChange={this.onDataChange}
+                      blankOption={this.props.printingPageSizeBlankOption}
+                      includeBlank={true}
+                      />
+                    <a onClick={this.handlePrinting}
+                      href="#"
+                      className={`BTNtarco ${this.state.printing_page_size && !this.isCustomersEmpty() ? null : "disabled"}`}
+                      title="印刷"
+                      data-printing-type={this.props.addressPrintingType}
+                      data-page-size-name="printing_page_size"
+                      target="_blank">
+                      <i className="fa fa-print"
+                        data-printing-type={this.props.addressPrintingType}
+                        data-page-size-name="printing_page_size">
+                      </i>
+                    </a>
+                  </dd>
+                </div>
+              )}
+              <dd id="NAVprintFilter">
+                {this.state.filtered_outcome_options.length === 0 ? (
+                  <a href="#" className="BTNtarco disabled">No File For Print</a>
+                ) : (
+                  <a href="#" data-toggle="modal" data-target="#printing-files-modal" className="BTNtarco">
+                    <i className="fa fa-file-pdf-o"></i> Files For Print
+                    </a>
+                  )}
+                </dd>
+              </dl>
           </div>
-
+          <div className="modal fade" id="printing-files-modal" tabindex="-1" role="dialog">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                  <h4 className="modal-title" id="myModalLabel">
+                    <i className="fa fa-database-o" aria-hidden="true"></i>Files for Print（印刷用ファイル）
+                    </h4>
+                  </div>
+                  <div className="modal-body">
+                    {this.renderFilteredOutcomes()}
+                  </div>
+                  <div className="modal-footer">
+                    <dl>
+                      <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">Close（閉じる）</a></dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       );
     }
