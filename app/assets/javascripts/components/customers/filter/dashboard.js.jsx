@@ -160,7 +160,9 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <dd className="create">{outcome.createdDate}</dd>
                     <dd className="exparation">{outcome.expiredDate}</dd>
                     <dd className="function">
-                      <a href={outcome.fileUrl} target="_blank" className="BTNtarco">PRINT</a>
+                      {outcome.fileUrl ? (
+                        <a href={outcome.fileUrl} target="_blank" className="BTNtarco">PRINT</a>
+                      ) : null}
                     </dd>
                   </dl>
                 )
