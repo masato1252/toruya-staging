@@ -137,6 +137,7 @@ ja:
       printing_result_title: 検索結果を印刷
       file_for_print: 印刷用ファイル
       no_file_for_print: 印刷用ファイル無し
+      printing_message: "印刷用ファイル作成中... ファイルの印刷準備ができ次第メールにてご連絡差し上げます。今しばらくお待ちください。"
       date_query:
         on_date: "指定日"
         on_month: 指定月

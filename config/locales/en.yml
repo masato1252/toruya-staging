@@ -136,6 +136,7 @@ en:
       printing_result_title: Prints Result
       file_for_print: Files For Print
       no_file_for_print: "No File For Print"
+      printing_message: "Processing a file for print... We will inform you by Email when the file is ready. Please wait."
       date_query:
         on_date: "On"
         on_month: in the month of

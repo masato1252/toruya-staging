@@ -179,7 +179,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         <div>
           <UI.MessageBar
             status={this.state.printing_status}
-            message="印刷用ファイル作成中... ファイルの印刷準備ができ次第メールにてご連絡差し上げます。今しばらくお待ちください。" />
+            message={this.props.printingMessage} />
           <div id="dashboard" className="contents">
             <UI.Customers.Filter.QuerySider
               ref={(c) => {this.querySider = c}}
