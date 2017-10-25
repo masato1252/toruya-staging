@@ -990,7 +990,10 @@ input.BTNonoff:checked + label:after {
   position: absolute;
   top: -7px;
 }
-#mainNav { padding-left: 20px; }
+#mainNav {
+  padding-left: 20px;
+  min-width: 190px;
+}
 #mainNav dl dd { padding-bottom: 10px; }
 #mainNav a, #mainNav a:link, #mainNav a:visited {
   background-repeat: no-repeat;
