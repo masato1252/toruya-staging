@@ -138,7 +138,7 @@
 .modal-dialog #searchPrint dl dt, .modal-dialog #searchPrint dl dd {
   display: inline-block;
   min-width: 22px;
-  padding-right: 5px;
+  padding: 0 6px;
 }
 .modal-dialog #searchPrint dl dt {
   padding-bottom: 5px;
@@ -154,7 +154,7 @@
 .modal-dialog #searchPrint .status { margin: 0 0 0 5px; }
 .modal-dialog #searchPrint .status i.fa-hourglass-half { color: #e6a21f; }
 .modal-dialog #searchPrint .status i.fa-print { color: #60938a; }
-.modal-dialog #searchPrint .type, .modal-dialog #searchPrint .filterName { width: 134px; }
+.modal-dialog #searchPrint .type, .modal-dialog #searchPrint .filterName { width: 126px; }
 .modal-dialog #searchPrint .function { padding-right: 0; }
 .modal-dialog #searchPrint .function a, .modal-dialog #searchPrint .function a:link {
   padding-left: 10px;

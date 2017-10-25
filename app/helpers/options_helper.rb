@@ -130,7 +130,7 @@ module OptionsHelper
       React.camelize_props({
         id: outcome.id,
         name: outcome&.filter&.name,
-        file_url: outcome.file.url(query: {"response-content-disposition" => "attachment;"}),
+        file_url: outcome.file.url,
         state: outcome.aasm_state,
         type: outcome.outcome_type,
         created_date: outcome.created_at.to_s(:date),

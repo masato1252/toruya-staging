@@ -162,7 +162,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <dd className="exparation">{outcome.expiredDate}</dd>
                     <dd className="function">
                       {outcome.fileUrl ? (
-                        <a href={outcome.fileUrl} className="BTNtarco">PRINT</a>
+                        <a href={outcome.fileUrl} className="BTNtarco" target="_blank">PRINT</a>
                       ) : null}
                     </dd>
                   </dl>
@@ -206,7 +206,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                         placeholder="ファイル名を入力"
                         className="filter-name-input"
                         value={this.state.filter_name}
-                        disabled={this.isCustomersEmpty()}
+                        disabled={this.isCustomersEmpty() || this.state.current_saved_filter_id}
                         onChange={this.onDataChange} />
                       {this.renderFilterButton()}
                     </dd>
