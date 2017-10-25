@@ -1020,9 +1020,11 @@ input.BTNonoff:checked + label:after {
   line-height: 21px;
   font-size: 21px;
 }
-#mainNav #NAVprint select, #mainNav #NAVprintAddress select, #mainNav #NAVprintList select {
+#mainNav #NAVprint select, #mainNav #NAVprintAddress select, #mainNav #NAVprintList select, .filter #mainNav #NAVsave input {
   margin-right: 5px;
   width: 123px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .shopIndex #footer { display: none; }
 /* Search */
