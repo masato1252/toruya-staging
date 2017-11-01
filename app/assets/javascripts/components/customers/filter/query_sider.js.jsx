@@ -447,7 +447,7 @@ UI.define("Customers.Filter.QuerySider", function() {
           <div id="filterKeys" className="tabBody">
             <div className="savedFilter">
               <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
-                Open Saved Filters
+                {this.props.openSavedFilterBtn}
               </a>
             </div>
             <h2>{this.props.customerInfoTitle}</h2>

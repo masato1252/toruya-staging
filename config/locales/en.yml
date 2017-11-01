@@ -114,6 +114,9 @@ en:
     reservation_day: Date
     level_label: Customer Level
     filter:
+      open_btn: Open Saved Filters
+      save_filter_title: Save Filter
+      printing_result_title: Print Results
       menu: Menu
       multiple_choices: multiple choices
       staff: Staff

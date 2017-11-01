@@ -115,6 +115,9 @@ ja:
     reservation_day: 予約日
     level_label: 顧客ランク
     filter:
+      open_btn: 保存された検索条件を開く
+      save_filter_title: 検索条件を保存
+      printing_result_title: 検索結果を印刷
       menu: メニュー
       multiple_choices: 複数選択可
       staff: スタッフ
