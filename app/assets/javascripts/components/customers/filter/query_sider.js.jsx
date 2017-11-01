@@ -468,8 +468,14 @@ UI.define("Customers.Filter.QuerySider", function() {
                   </dl>
                 ) : null
               }
+            </div>
+            <div className="filterKey">
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "rank_ids")} >
+                {this.renderToggleIcon("rank_ids")}
+                {this.props.customerLevelTitle}
+              </h3>
               {
-                this.state.filterCategoryDisplaying["group_ids"] ? (
+                this.state.filterCategoryDisplaying["rank_ids"] ? (
                   <dl className="groups">
                     <dt>{this.props.customerLevelTitle}</dt>
                     <dd>
