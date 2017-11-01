@@ -100,10 +100,10 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState({[stateName]: stateValue});
     },
 
-    onSavedFilterChange: function(event) {
+    onSavedFilterClick: function(event) {
       const _this = this;
       let stateName = event.target.dataset.name;
-      let stateValue = event.target.value;
+      let stateValue = event.target.value || event.target.dataset.value;
 
       this.setState({[stateName]: stateValue});
       // Load Filter query to option
@@ -112,6 +112,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         this.props.updateCustomers([]);
         return;
       }
+
       $.ajax({
         type: "GET",
         url: this.props.fetchFilterPath, //sumbits it to the given url of the form
@@ -119,6 +120,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         dataType: "JSON"
       }).success(function(result) {
         _this.updateFilterOption(result);
+        $("#saved-filters-modal").modal("hide");
         // _this.props.forceStopProcessing();
       }).always(function() {
         // _this.props.forceStopProcessing();
@@ -394,6 +396,34 @@ UI.define("Customers.Filter.QuerySider", function() {
       );
     },
 
+    renderSavedFilteredOutcomes: function() {
+      return (
+        <div id="savedFilters">
+          {
+            this.state.savedFilterOptions.length === 0 ? (
+              <div>
+                <p className="no-filter">There's no filter saved.<br />Please submit filter keys then save.</p>
+                <p className="no-filter">保存した検索条件はありません。<br />検索条件を設定後、データを検索してから保存してください。</p>
+              </div>
+            ) : (
+              this.state.savedFilterOptions.map(function(option) {
+                return (
+                  <a href="#"
+                    key={option.value}
+                    className="BTNtarco"
+                    data-name="current_saved_filter_id"
+                    data-value={option.value}
+                    onClick={this.onSavedFilterClick}>
+                    {option.label}
+                  </a>
+                )
+              }.bind(this))
+            )
+          }
+        </div>
+      )
+    },
+
     render: function() {
       return(
         <div id="searchKeys" className="sidel">
@@ -412,6 +442,11 @@ UI.define("Customers.Filter.QuerySider", function() {
                 value={this.state.current_saved_filter_id}
                 onChange={this.onSavedFilterChange}
                 />
+            </div>
+            <div className="savedFilter">
+              <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
+                Open Saved Filters
+              </a>
             </div>
             <h2>{this.props.customerInfoTitle}</h2>
             <div className="filterKey">
@@ -920,6 +955,29 @@ UI.define("Customers.Filter.QuerySider", function() {
                 </a>
               </div>
             </form>
+
+            <div className="modal fade" id="saved-filters-modal" tabIndex="-1" role="dialog">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 className="modal-title" id="myModalLabel">
+                      <i className="fa fa-database-o" aria-hidden="true"></i>Open Saved Filters（保存された検索条件を開く）
+                    </h4>
+                    </div>
+                    <div className="modal-body">
+                      {this.renderSavedFilteredOutcomes()}
+                    </div>
+                    <div className="modal-footer">
+                      <dl>
+                        <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">{this.props.closeButton}</a></dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
       );
     }
