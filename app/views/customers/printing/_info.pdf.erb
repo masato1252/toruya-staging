@@ -1,5 +1,8 @@
 <div class="customer-row">
   <div class="customer-cell">
+    <%= customer.rank.try(:name) %>
+  </div>
+  <div class="customer-cell">
     <%= customer.name %>
   </div>
   <div class="customer-cell">
