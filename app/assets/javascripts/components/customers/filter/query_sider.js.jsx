@@ -112,6 +112,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         this.props.updateCustomers([]);
         return;
       }
+      
+      $("#saved-filters-modal").modal("hide");
 
       $.ajax({
         type: "GET",
@@ -120,7 +122,6 @@ UI.define("Customers.Filter.QuerySider", function() {
         dataType: "JSON"
       }).success(function(result) {
         _this.updateFilterOption(result);
-        $("#saved-filters-modal").modal("hide");
         // _this.props.forceStopProcessing();
       }).always(function() {
         // _this.props.forceStopProcessing();
