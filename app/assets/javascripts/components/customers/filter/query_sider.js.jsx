@@ -97,7 +97,11 @@ UI.define("Customers.Filter.QuerySider", function() {
       let stateName = event.target.dataset.name;
       let stateValue = event.target.dataset.value || event.target.value;
 
-      this.setState({[stateName]: stateValue});
+      this.setState({[stateName]: stateValue}, function() {
+        if (stateName === "state") {
+          this.onAddItem(null, "states", "state")
+        }
+      }.bind(this));
     },
 
     onSavedFilterClick: function(event) {
@@ -152,20 +156,23 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState({[event.target.dataset.name]: newValues})
     },
 
-    onAddItem: function(event) {
-      event.preventDefault();
+    onAddItem: function(event, _collectionName, _valueName) {
+      if (event) { event.preventDefault(); }
 
-      let newValues = this.state[event.target.dataset.name];
-      let newValue = this.state[event.target.dataset.targetName]
+      let collectionName = event ? event.target.dataset.name : _collectionName;
+      let valueName = event ? event.target.dataset.targetName : _valueName;
+
+      let newValues = this.state[collectionName];
+      let newValue = this.state[valueName];
       if (!newValue) { return; }
 
       if (_.contains(newValues, newValue)) { return; }
 
-      newValues.push(this.state[event.target.dataset.targetName]);
+      newValues.push(newValue);
 
       this.setState({
-        [event.target.dataset.name]: newValues,
-        [event.target.dataset.targetName]: ""
+        [collectionName]: newValues,
+        [valueName]: ""
       });
     },
 
@@ -437,16 +444,6 @@ UI.define("Customers.Filter.QuerySider", function() {
           </div>
 
           <div id="filterKeys" className="tabBody">
-            <div className="filterKey">
-              <UI.Select
-                includeBlank="true"
-                blankOption="Select A Filter"
-                options={this.state.savedFilterOptions}
-                data-name="current_saved_filter_id"
-                value={this.state.current_saved_filter_id}
-                onChange={this.onSavedFilterChange}
-                />
-            </div>
             <div className="savedFilter">
               <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
                 Open Saved Filters
@@ -503,20 +500,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                               value={this.state.state}
                               onChange={this.onDataChange}
                               />
-                            <a
-                              href="#"
-                              className="BTNyellow"
-                              onClick={this.onAddItem}
-                              data-target-name="state"
-                              data-name="states"
-                              >
-                              <i
-                                className="fa fa-plus"
-                                aria-hidden="true"
-                                data-target-name="state"
-                                data-name="states" >
-                              </i>
-                            </a>
                           </li>
                         </ul>
                       </dd>
