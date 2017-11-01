@@ -102,10 +102,8 @@ UI.define("Customers.Filter.QuerySider", function() {
 
     onSavedFilterClick: function(event) {
       const _this = this;
-      let stateName = event.target.dataset.name;
-      let stateValue = event.target.value || event.target.dataset.value;
+      let stateValue = event.target.dataset.value;
 
-      this.setState({[stateName]: stateValue});
       // Load Filter query to option
       if (!stateValue) {
         this.reset();
@@ -178,12 +176,10 @@ UI.define("Customers.Filter.QuerySider", function() {
       var _this = this;
 
       // It would clean existing saved filter id when query conditions changes, let user save a new one.
-      if (_this.queryConditions !== $(this.filterForm).serialize().replace(/&id=\d+/,"")) {
+      if (_this.queryConditions !== $(this.filterForm).serialize()) {
         this.props.updateFilter("filter_name", "");
         this.props.updateFilter("current_saved_filter_id", "");
         this.props.updateFilter("current_saved_filter_name", "");
-
-        this.setState({current_saved_filter_id: ""})
       }
 
       this.queryConditions = $(this.filterForm).serialize();
@@ -420,7 +416,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                   <a href="#"
                     key={option.value}
                     className="BTNtarco"
-                    data-name="current_saved_filter_id"
                     data-value={option.value}
                     onClick={this.onSavedFilterClick}>
                     {option.label}
@@ -873,11 +868,6 @@ UI.define("Customers.Filter.QuerySider", function() {
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
-              {
-                this.state.current_saved_filter_id ? (
-                  <input name="id" type="hidden" value={this.state.current_saved_filter_id} />
-                ) : null
-              }
               <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
