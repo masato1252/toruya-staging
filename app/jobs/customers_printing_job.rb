@@ -10,7 +10,7 @@ class CustomersPrintingJob < ApplicationJob
                 when FilteredOutcome::OUTCOME_TYPES.first
                   customers.map(&:with_google_contact)
                 when FilteredOutcome::OUTCOME_TYPES.second
-                  customers.includes(:contact_group)
+                  customers.includes(:contact_group, :rank)
                 end
 
     title = "#{super_user.filtered_outcomes.count + 1}_#{Date.today.iso8601}"
@@ -21,6 +21,7 @@ class CustomersPrintingJob < ApplicationJob
         :locals => {
           :@page_size => page_size,
           :@customers => customers,
+          :@filter_name => filtered_outcome.filter.try(:name),
         },
         :layout => "pdf"
       ),

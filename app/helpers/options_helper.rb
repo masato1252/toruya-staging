@@ -125,6 +125,10 @@ module OptionsHelper
     default_options(super_user.contact_groups.connected)
   end
 
+  def rank_options
+    default_options(super_user.ranks)
+  end
+
   def filtered_outcome_options(filtered_outcomes)
     filtered_outcomes.map{ |outcome|
       React.camelize_props({
@@ -132,7 +136,7 @@ module OptionsHelper
         name: outcome&.filter&.name,
         file_url: outcome.file.url,
         state: outcome.aasm_state,
-        type: outcome.outcome_type,
+        type: I18n.t("customer.filter.printing_types.#{outcome.outcome_type}"),
         created_date: outcome.created_at.to_s(:date),
         expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_s(:date)
       })

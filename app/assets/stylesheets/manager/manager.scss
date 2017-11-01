@@ -184,8 +184,8 @@ input:disabled, select:disabled { background-color: #d0d0d0; }
 .BTNyellow:hover, input.BTNyellow:hover, a.BTNyellow:hover, button.BTNyellow:hover { background: #e6a21f; border-color: #d79a23; }
 .BTNtarco, input.BTNtarco, a.BTNtarco, button.BTNtarco { background: #97bfb8; border-color: #60938a; }
 .BTNtarco:hover, input.BTNtarco:hover, a.BTNtarco:hover, button.BTNtargo:hover { background: #60938a; border-color: #488479; }
-.BTNgray, input.BTNgray, a.BTNgray, button.BTNgray { background: #d0d0d0; border-color: #b3b3b3; }
-.BTNgray:hover, input.BTNgray:hover, a.BTNgray:hover, button.BTNgray:hover { background: #888; border-color: #666; }
+.BTNgray, input.BTNgray, a.BTNgray, button.BTNgray { background: #9D9D9D; border-color: #888; }
+.BTNgray:hover, input.BTNgray:hover, a.BTNgray:hover, button.BTNgray:hover { background: #d0d0d0; border-color: #b3b3b3; }
 .signup #socialLogin ul li a { background: #fff; border-color: #ccc; }
 .signup #socialLogin ul li a:hover { background: #ccc; border-color: #888; }
 h1 {
@@ -801,6 +801,7 @@ input.BTNonoff:checked + label:after {
   display: inline-block;
   vertical-align: middle;
 }
+#customer #resultList dl .customer-symbol, #resNew #customerList dl .customer-symbol { vertical-align: top; }
 #customer #resultList dl dt, #resNew #customerList dl dt {
   width: 152px;
 }
@@ -819,7 +820,7 @@ input.BTNonoff:checked + label:after {
   font-size: 14px;
   bottom: 0;
 }
-.customer-level-symbol, .reservation-state {
+.reservation-state {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -831,7 +832,7 @@ input.BTNonoff:checked + label:after {
   background-color: #60938a;
   border-color: #488479;
 }
-.checked_out.reservation-state, .checkout.reservation-state, #customer #resultList .customer-level-symbol.regular, #resNew .customer-level-symbol.regular, #customerInfo #basic dl dt li, .filter .customer-level-symbol.regular {
+.checked_out.reservation-state, .checkout.reservation-state, #customerInfo #basic dl dt li {
   background-color: #d0d0d0;
   border: 1px solid #b3b3b3;
 }
@@ -847,10 +848,17 @@ input.BTNonoff:checked + label:after {
   background-color: #da8356;
   border: 1px solid #c87d56;
 }
-.pending.reservation-state, #customer #resultList .customer-level-symbol.vip, #resNew .customer-level-symbol.vip, .filter .customer-level-symbol.vip {
+.pending.reservation-state {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
 }
+.customer-level-symbol {
+  font-size: 17px;
+  display: inline-block;
+  margin-right: 3px;
+}
+.customer-level-symbol.regular { color: #b3b3b3; }
+.customer-level-symbol.vip { color: #b0450d; }
 .staffs-working-schedules {
   display: table;
   margin-top: 10px;

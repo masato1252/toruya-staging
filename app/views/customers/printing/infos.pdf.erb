@@ -1,4 +1,19 @@
+<h1 class="center">Customer Info For <%= @filter_name %></h1>
 <div class="customers-table">
+  <div class="customer-row">
+    <div class="customer-cell title">
+      顧客ランク
+    </div>
+    <div class="customer-cell title">
+      顧客氏名
+    </div>
+    <div class="customer-cell title">
+      住所
+    </div>
+    <div class="customer-cell title">
+      顧客台帳
+    </div>
+  </div>
   <% @customers.each do |customer| %>
     <%= render "customers/printing/info", customer: customer %>
   <% end %>

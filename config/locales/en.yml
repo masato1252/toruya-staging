@@ -112,7 +112,11 @@ en:
     email_types: Email type
     reservation_records: Reservation Records
     reservation_day: Date
+    level_label: Customer Level
     filter:
+      open_btn: Open Saved Filters
+      save_filter_title: Save Filter
+      printing_result_title: Print Results
       menu: Menu
       multiple_choices: multiple choices
       staff: Staff
@@ -137,6 +141,9 @@ en:
       file_for_print: Files For Print
       no_file_for_print: "No File For Print"
       printing_message: "Processing a file for print... We will inform you by Email when the file is ready. Please wait."
+      printing_types:
+        infos: Info
+        addresses: Address
       date_query:
         on_date: "On"
         on_month: in the month of

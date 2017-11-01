@@ -9,7 +9,11 @@ UI.define("Customers.Filter.CustomersList", function() {
         this.props.customers.map(function(customer) {
           return (
             <dl key={customer.id}>
-              <dd className="status"><span className={`customer-level-symbol ${customer.rank.key}`}></span></dd>
+              <dd className="status">
+                <span className={`customer-level-symbol ${customer.rank.key}`}>
+                  <i className="fa fa-address-card"></i>
+                </span>
+              </dd>
               <dd className="customer">{customer.label}</dd>
               <dd className="address">{customer.displayAddress}</dd>
               <dd className="group">{customer.groupName}</dd>
@@ -33,8 +37,8 @@ UI.define("Customers.Filter.CustomersList", function() {
             {this.renderCustomersList()}
           </div>
           <div className="status-list">
-            <div><span className="customer-level-symbol regular"></span><span>一般</span></div>
-            <div><span className="customer-level-symbol vip"></span><span>VIP</span></div>
+            <div><span className="customer-level-symbol regular"><i className="fa fa-address-card"></i></span><span>一般</span></div>
+            <div><span className="customer-level-symbol vip"><i className="fa fa-address-card"></i></span><span>VIP</span></div>
           </div>
         </div>
       );

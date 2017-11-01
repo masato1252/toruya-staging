@@ -64,6 +64,11 @@ UI.define("Customers.Filter.Dashboard", function() {
       })
     },
 
+    reset: function() {
+      this.querySider.reset();
+      this.updateCustomers([]);
+    },
+
     deleteFilter: function() {
       event.preventDefault();
       var _this = this;
@@ -75,7 +80,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         dataType: "JSON"
       }).done(function(result) {
         _this.querySider.updateFilterOption(result, false);
-        _this.querySider.reset();
+        _this.reset();
         _this.setState({customers: []});
         // _this.props.forceStopProcessing();
       })
@@ -199,18 +204,23 @@ UI.define("Customers.Filter.Dashboard", function() {
               <dl>
                 {this.isCustomersEmpty() ? null : (
                   <div>
-                    <dt>Save Filter</dt>
+                    <dt>{this.props.saveFilterTitle}</dt>
                     <dd id="NAVsave">
                       <input type="text"
                         data-name="filter_name"
-                        placeholder="ファイル名を入力"
+                        placeholder="条件名を入力"
                         className="filter-name-input"
                         value={this.state.filter_name}
                         disabled={this.isCustomersEmpty() || this.state.current_saved_filter_id}
                         onChange={this.onDataChange} />
                       {this.renderFilterButton()}
                     </dd>
-                    <dt>Print Results</dt>
+                    <dd id="NAVrefresh">
+                      <a href="#" onClick={this.reset} className="BTNgray">
+                        <i className="fa fa-repeat"></i> 検索条件クリア
+                      </a>
+                    </dd>
+                    <dt>{this.props.printingResultTitle}</dt>
                     <dd id="NAVprintList">
                       <UI.Select
                         data-name="info_printing_page_size"

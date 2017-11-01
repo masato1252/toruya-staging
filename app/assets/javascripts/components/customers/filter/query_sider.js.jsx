@@ -16,6 +16,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         current_saved_filter_id: "",
         filterCategoryDisplaying: {},
         group_ids: [],
+        rank_ids: [],
         livingPlaceInside: true,
         states: [],
         state: "",
@@ -97,21 +98,26 @@ UI.define("Customers.Filter.QuerySider", function() {
       let stateName = event.target.dataset.name;
       let stateValue = event.target.dataset.value || event.target.value;
 
-      this.setState({[stateName]: stateValue});
+      this.setState({[stateName]: stateValue}, function() {
+        if (stateName === "state") {
+          this.onAddItem(null, "states", "state")
+        }
+      }.bind(this));
     },
 
-    onSavedFilterChange: function(event) {
+    onSavedFilterClick: function(event) {
       const _this = this;
-      let stateName = event.target.dataset.name;
-      let stateValue = event.target.value;
+      let stateValue = event.target.dataset.value;
 
-      this.setState({[stateName]: stateValue});
       // Load Filter query to option
       if (!stateValue) {
         this.reset();
         this.props.updateCustomers([]);
         return;
       }
+
+      $("#saved-filters-modal").modal("hide");
+
       $.ajax({
         type: "GET",
         url: this.props.fetchFilterPath, //sumbits it to the given url of the form
@@ -129,6 +135,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState($.extend({}, this.getInitialState(), query), function() {
         if (queryCustomers) {
           this.submitFilterForm()
+          this.queryConditions = $(this.filterForm).serialize();
         }
       }.bind(this));
       this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
@@ -150,20 +157,23 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState({[event.target.dataset.name]: newValues})
     },
 
-    onAddItem: function(event) {
-      event.preventDefault();
+    onAddItem: function(event, _collectionName, _valueName) {
+      if (event) { event.preventDefault(); }
 
-      let newValues = this.state[event.target.dataset.name];
-      let newValue = this.state[event.target.dataset.targetName]
+      let collectionName = event ? event.target.dataset.name : _collectionName;
+      let valueName = event ? event.target.dataset.targetName : _valueName;
+
+      let newValues = this.state[collectionName];
+      let newValue = this.state[valueName];
       if (!newValue) { return; }
 
       if (_.contains(newValues, newValue)) { return; }
 
-      newValues.push(this.state[event.target.dataset.targetName]);
+      newValues.push(newValue);
 
       this.setState({
-        [event.target.dataset.name]: newValues,
-        [event.target.dataset.targetName]: ""
+        [collectionName]: newValues,
+        [valueName]: ""
       });
     },
 
@@ -172,13 +182,21 @@ UI.define("Customers.Filter.QuerySider", function() {
       if (!this.isQueryConditionLegal()) { return; }
 
       var _this = this;
-      var valuesToSubmit = $(this.filterForm).serialize();
+
+      // It would clean existing saved filter id when query conditions changes, let user save a new one.
+      if (_this.queryConditions !== $(this.filterForm).serialize()) {
+        this.props.updateFilter("filter_name", "");
+        this.props.updateFilter("current_saved_filter_id", "");
+        this.props.updateFilter("current_saved_filter_name", "");
+      }
+
+      this.queryConditions = $(this.filterForm).serialize();
       _this.props.startProcessing();
 
       $.ajax({
         type: "POST",
         url: _this.props.filterPath, //sumbits it to the given url of the form
-        data: valuesToSubmit,
+        data: _this.queryConditions,
         dataType: "JSON"
       }).success(function(result) {
         _this.props.updateCustomers(result["customers"]);
@@ -394,6 +412,30 @@ UI.define("Customers.Filter.QuerySider", function() {
       );
     },
 
+    renderSavedFilteredOutcomes: function() {
+      return (
+        <div id="savedFilters">
+          {
+            this.state.savedFilterOptions.length === 0 ? (
+              <p className="no-filter">There's no filter saved.保存した検索条件はありません。<br />Please submit filter keys then save.検索条件を設定後、データを検索してから保存してください。</p>
+            ) : (
+              this.state.savedFilterOptions.map(function(option) {
+                return (
+                  <a href="#"
+                    key={option.value}
+                    className="BTNtarco"
+                    data-value={option.value}
+                    onClick={this.onSavedFilterClick}>
+                    {option.label}
+                  </a>
+                )
+              }.bind(this))
+            )
+          }
+        </div>
+      )
+    },
+
     render: function() {
       return(
         <div id="searchKeys" className="sidel">
@@ -403,15 +445,10 @@ UI.define("Customers.Filter.QuerySider", function() {
           </div>
 
           <div id="filterKeys" className="tabBody">
-            <div className="filterKey">
-              <UI.Select
-                includeBlank="true"
-                blankOption="Select A Filter"
-                options={this.state.savedFilterOptions}
-                data-name="current_saved_filter_id"
-                value={this.state.current_saved_filter_id}
-                onChange={this.onSavedFilterChange}
-                />
+            <div className="savedFilter">
+              <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
+                {this.props.openSavedFilterBtn}
+              </a>
             </div>
             <h2>{this.props.customerInfoTitle}</h2>
             <div className="filterKey">
@@ -426,6 +463,24 @@ UI.define("Customers.Filter.QuerySider", function() {
                     <dd>
                       <ul>
                         {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
+                      </ul>
+                    </dd>
+                  </dl>
+                ) : null
+              }
+            </div>
+            <div className="filterKey">
+              <h3 onClick={this.toggleCategoryDisplay.bind(this, "rank_ids")} >
+                {this.renderToggleIcon("rank_ids")}
+                {this.props.customerLevelTitle}
+              </h3>
+              {
+                this.state.filterCategoryDisplaying["rank_ids"] ? (
+                  <dl className="groups">
+                    <dt>{this.props.customerLevelTitle}</dt>
+                    <dd>
+                      <ul>
+                        {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
                       </ul>
                     </dd>
                   </dl>
@@ -464,20 +519,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                               value={this.state.state}
                               onChange={this.onDataChange}
                               />
-                            <a
-                              href="#"
-                              className="BTNyellow"
-                              onClick={this.onAddItem}
-                              data-target-name="state"
-                              data-name="states"
-                              >
-                              <i
-                                className="fa fa-plus"
-                                aria-hidden="true"
-                                data-target-name="state"
-                                data-name="states" >
-                              </i>
-                            </a>
                           </li>
                         </ul>
                       </dd>
@@ -829,12 +870,8 @@ UI.define("Customers.Filter.QuerySider", function() {
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
-              {
-                this.state.current_saved_filter_id ? (
-                  <input name="id" type="hidden" value={this.state.current_saved_filter_id} />
-                ) : null
-              }
               <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
+              <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
               <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
@@ -920,6 +957,29 @@ UI.define("Customers.Filter.QuerySider", function() {
                 </a>
               </div>
             </form>
+
+            <div className="modal fade" id="saved-filters-modal" tabIndex="-1" role="dialog">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 className="modal-title" id="myModalLabel">
+                      <i className="fa fa-database-o" aria-hidden="true"></i>Open Saved Filters（保存された検索条件を開く）
+                    </h4>
+                    </div>
+                    <div className="modal-body">
+                      {this.renderSavedFilteredOutcomes()}
+                    </div>
+                    <div className="modal-footer">
+                      <dl>
+                        <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">{this.props.closeButton}</a></dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
         </div>
       );
     }

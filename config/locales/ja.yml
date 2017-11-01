@@ -113,7 +113,11 @@ ja:
     email_types: メールの種類
     reservation_records: 利用履歴
     reservation_day: 予約日
+    level_label: 顧客ランク
     filter:
+      open_btn: 保存された検索条件を開く
+      save_filter_title: 検索条件を保存
+      printing_result_title: 検索結果を印刷
       menu: メニュー
       multiple_choices: 複数選択可
       staff: スタッフ
@@ -138,6 +142,9 @@ ja:
       file_for_print: 印刷用ファイル
       no_file_for_print: 印刷用ファイル無し
       printing_message: "印刷用ファイル作成中... ファイルの印刷準備ができ次第メールにてご連絡差し上げます。今しばらくお待ちください。"
+      printing_types:
+        infos: リスト
+        addresses: 住所
       date_query:
         on_date: "指定日"
         on_month: 指定月

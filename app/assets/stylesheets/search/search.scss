@@ -67,17 +67,18 @@
 .filter .sidel #filterKeys {
   padding: 10px;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   height: 75%;
   border-top-width: 0;
 }
 .filter .sidel #filterKeys .savedFilter {
   margin-bottom: 10px;
 }
-.filter .sidel #filterKeys .savedFilter a, .filter #mainNav #NAVprintFilter a {
+.filter .sidel #filterKeys .savedFilter a, .filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
   margin-bottom: 10px;
   line-height: 35px;
   height: 35px;
-  padding: 0 15px;
+  padding: 0;
   width: 100%;
 }
 .filter .sidel #filterKeys .filterKey { padding-bottom: 10px; }
@@ -90,7 +91,8 @@
 .filter .sidel #filterKeys .filterKey dl dt { font-weight: bold; }
 .filter .sidel #filterKeys .filterKey dl dd { padding-left: 10px; }
 .filter .sidel #filterKeys select {
-  padding: 0 5px;
+  padding-left: 5px;
+  padding-right: 14px;
   text-align: center;
   margin: 0 5px;
   background-color: #fffef5;
@@ -112,7 +114,11 @@
   width: 100%;
   margin: 10px 0;
 }
-.filter #resList dl dd { min-height: 34px; }
+.filter #resList { overflow: scroll; }
+.filter #resList dl dd:not(:first-child) { 
+  min-height: 34px;
+  padding-left: 0;
+}
 .filter #resList dl .date {
   width: 50px;
   text-align: center;
@@ -127,11 +133,11 @@
   color: #858585;
   padding-bottom: 5px;
 }
-.filter #mainNav #NAVprintFilter a {
+.filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
   font-size: 12pt;
   font-weight: normal;
 }
-.filter #mainNav #NAVprintFilter a i {
+.filter #mainNav #NAVrefresh a i, .filter #mainNav #NAVprintFilter a i {
   display: inline-block;
   line-height: 35px;
 }
@@ -156,9 +162,18 @@
 .modal-dialog #searchPrint .status i.fa-print { color: #60938a; }
 .modal-dialog #searchPrint .type, .modal-dialog #searchPrint .filterName { width: 126px; }
 .modal-dialog #searchPrint .function { padding-right: 0; }
-.modal-dialog #searchPrint .function a, .modal-dialog #searchPrint .function a:link {
+.modal-dialog a.BTNtarco, .modal-dialog a.BTNtarco:link, .modal-dialog a.BTNyellow, .modal-dialog a.BTNyellow:link, .modal-dialog a.BTNorange, .modal-dialog a.BTNorange:link,.modal-dialog a.BTNgray, .modal-dialog a.BTNgray:link {
   padding-left: 10px;
   padding-right: 10px;
   height: 37px;
   line-height: 37px;
+}
+.modal-dialog #savedFilters a {
+  width: 31.3%;
+  margin: 5px;
+}
+.modal-dialog #savedFilters a:nth-child(3n) { margin-right: 0; }
+.modal-dialog #savedFilters .no-filter {
+  text-align: center;
+  line-height: 1.5;
 }
