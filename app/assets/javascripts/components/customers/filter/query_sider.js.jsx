@@ -417,7 +417,11 @@ UI.define("Customers.Filter.QuerySider", function() {
         <div id="savedFilters">
           {
             this.state.savedFilterOptions.length === 0 ? (
-              <p className="no-filter">There's no filter saved.保存した検索条件はありません。<br />Please submit filter keys then save.検索条件を設定後、データを検索してから保存してください。</p>
+              <p className="no-filter">
+                {this.props.emptySavedFilterSentenceOne}
+                <br />
+                {this.props.emptySavedFilterSentenceTwo}
+              </p>
             ) : (
               this.state.savedFilterOptions.map(function(option) {
                 return (
@@ -966,7 +970,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                       <span aria-hidden="true">×</span>
                     </button>
                     <h4 className="modal-title" id="myModalLabel">
-                      <i className="fa fa-database-o" aria-hidden="true"></i>Open Saved Filters（保存された検索条件を開く）
+                      <i className="fa fa-database-o" aria-hidden="true"></i>{this.props.openSavedFilterBtn}
                     </h4>
                     </div>
                     <div className="modal-body">
