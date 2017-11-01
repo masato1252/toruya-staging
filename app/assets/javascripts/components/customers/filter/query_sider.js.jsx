@@ -16,6 +16,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         current_saved_filter_id: "",
         filterCategoryDisplaying: {},
         group_ids: [],
+        rank_ids: [],
         livingPlaceInside: true,
         states: [],
         state: "",
@@ -467,6 +468,18 @@ UI.define("Customers.Filter.QuerySider", function() {
                   </dl>
                 ) : null
               }
+              {
+                this.state.filterCategoryDisplaying["group_ids"] ? (
+                  <dl className="groups">
+                    <dt>{this.props.customerLevelTitle}</dt>
+                    <dd>
+                      <ul>
+                        {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
+                      </ul>
+                    </dd>
+                  </dl>
+                ) : null
+              }
             </div>
             <div className="filterKey">
               <h3 onClick={this.toggleCategoryDisplay.bind(this, "living_place")} >
@@ -852,6 +865,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
               <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
+              <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
               { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
               <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
               <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />

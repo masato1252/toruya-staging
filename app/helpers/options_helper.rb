@@ -125,6 +125,10 @@ module OptionsHelper
     default_options(super_user.contact_groups.connected)
   end
 
+  def rank_options
+    default_options(super_user.ranks)
+  end
+
   def filtered_outcome_options(filtered_outcomes)
     filtered_outcomes.map{ |outcome|
       React.camelize_props({

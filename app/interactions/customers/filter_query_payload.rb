@@ -8,6 +8,10 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
       query[:group_ids] = param[:group_ids].split(",")
     end
 
+    if param[:rank_ids].present?
+      query[:rank_ids] = param[:rank_ids].split(",")
+    end
+
     if param[:living_place][:states].present?
       query[:living_place] = param[:living_place].merge(states: param[:living_place][:states].split(","))
     end

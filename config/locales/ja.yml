@@ -113,6 +113,7 @@ ja:
     email_types: メールの種類
     reservation_records: 利用履歴
     reservation_day: 予約日
+    level_label: 顧客ランク
     filter:
       menu: メニュー
       multiple_choices: 複数選択可

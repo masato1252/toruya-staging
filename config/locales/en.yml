@@ -112,6 +112,7 @@ en:
     email_types: Email type
     reservation_records: Reservation Records
     reservation_day: Date
+    level_label: Customer Level
     filter:
       menu: Menu
       multiple_choices: multiple choices
