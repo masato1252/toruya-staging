@@ -114,6 +114,8 @@ en:
     reservation_day: Date
     level_label: Customer Level
     filter:
+      empty_saved_filter_sentence_one: "There's no filter saved."
+      empty_saved_filter_sentence_two: Please submit filter keys then save.
       open_btn: Open Saved Filters
       save_filter_title: Save Filter
       printing_result_title: Print Results
