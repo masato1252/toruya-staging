@@ -112,7 +112,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         this.props.updateCustomers([]);
         return;
       }
-      
+
       $("#saved-filters-modal").modal("hide");
 
       $.ajax({
@@ -132,6 +132,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState($.extend({}, this.getInitialState(), query), function() {
         if (queryCustomers) {
           this.submitFilterForm()
+          this.queryConditions = $(this.filterForm).serialize();
         }
       }.bind(this));
       this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
@@ -175,13 +176,23 @@ UI.define("Customers.Filter.QuerySider", function() {
       if (!this.isQueryConditionLegal()) { return; }
 
       var _this = this;
-      var valuesToSubmit = $(this.filterForm).serialize();
+
+      // It would clean existing saved filter id when query conditions changes, let user save a new one.
+      if (_this.queryConditions !== $(this.filterForm).serialize().replace(/&id=\d+/,"")) {
+        this.props.updateFilter("filter_name", "");
+        this.props.updateFilter("current_saved_filter_id", "");
+        this.props.updateFilter("current_saved_filter_name", "");
+
+        this.setState({current_saved_filter_id: ""})
+      }
+
+      this.queryConditions = $(this.filterForm).serialize();
       _this.props.startProcessing();
 
       $.ajax({
         type: "POST",
         url: _this.props.filterPath, //sumbits it to the given url of the form
-        data: valuesToSubmit,
+        data: _this.queryConditions,
         dataType: "JSON"
       }).success(function(result) {
         _this.props.updateCustomers(result["customers"]);
@@ -402,10 +413,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         <div id="savedFilters">
           {
             this.state.savedFilterOptions.length === 0 ? (
-              <div>
-                <p className="no-filter">There's no filter saved.<br />Please submit filter keys then save.</p>
-                <p className="no-filter">保存した検索条件はありません。<br />検索条件を設定後、データを検索してから保存してください。</p>
-              </div>
+              <p className="no-filter">There's no filter saved.保存した検索条件はありません。<br />Please submit filter keys then save.検索条件を設定後、データを検索してから保存してください。</p>
             ) : (
               this.state.savedFilterOptions.map(function(option) {
                 return (
