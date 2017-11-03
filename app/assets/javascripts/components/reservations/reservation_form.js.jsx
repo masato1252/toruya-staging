@@ -723,11 +723,15 @@ UI.define("Reservation.Form", function() {
              <div id="customerLevels">
                <ul>
                  <li className="regular">
-                   <span className="customer-level-symbol regular"></span>
+                   <span className="customer-level-symbol regular">
+                     <i className="fa fa-address-card"></i>
+                   </span>
                    <span>一般</span>
                  </li>
                  <li className="vip">
-                   <span className="customer-level-symbol vip"></span>
+                   <span className="customer-level-symbol vip">
+                     <i className="fa fa-address-card"></i>
+                   </span>
                    <span className="wording">VIP</span>
                  </li>
                </ul>
