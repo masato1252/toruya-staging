@@ -706,7 +706,7 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
 
             <div className={
-                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.from_reservation_year && this.state.from_reservation_month && this.state.from_reservation_day ? null : "display-hidden"}>
+                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.start_reservation_date ? null : "display-hidden"}>
               <div className="filterKey">
                 <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
                   {this.renderToggleIcon("menu_ids")}
