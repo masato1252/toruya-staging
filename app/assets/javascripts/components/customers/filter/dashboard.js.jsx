@@ -19,7 +19,10 @@ UI.define("Customers.Filter.Dashboard", function() {
     },
 
     componentDidMount: function() {
-      $(".contents").height(window.innerHeight - $("header").innerHeight() - 50);
+      let properHeight = window.innerHeight - $("header").innerHeight() - 50;
+
+      $(".contents").height(properHeight);
+      $("#searchKeys").height(properHeight);
     },
 
     onDataChange: function(event) {
