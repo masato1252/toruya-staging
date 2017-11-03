@@ -14,6 +14,7 @@ class Customers::FilterController < DashboardController
 
     @filters = super_user.customer_query_filters
     @filtered_outcomes = super_user.filtered_outcomes.active.order("created_at DESC")
+    @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
   end
 
   def create
