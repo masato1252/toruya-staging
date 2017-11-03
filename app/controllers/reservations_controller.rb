@@ -7,7 +7,7 @@ class ReservationsController < DashboardController
     @body_class = "shopIndex"
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
-    @reservations = shop.reservations.in_date(@date).
+    @reservations = shop.reservations.uncanceled.in_date(@date).
       includes(:menu, :customers, :staffs).
       order("reservations.start_time ASC")
 

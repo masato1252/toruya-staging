@@ -39,6 +39,7 @@ class Reservation < ApplicationRecord
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.zone.now) }
+  scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)) }
 
   aasm :whiny_transitions => false do
     state :pending, initial: true
