@@ -444,8 +444,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       return(
         <div id="searchKeys" className="sidel">
           <div id="tabs" className="tabs">
-            <a href="search-reservation_result.html"><i className="fa fa-calendar" aria-hidden="true"></i></a>
-            <a href="search-customer_result.html" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
+            <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
           </div>
 
           <div id="filterKeys" className="tabBody">
