@@ -543,11 +543,15 @@ UI.define("Customers.Dashboard", function() {
             <div id="resultList" className="sidel">
               <ul>
                 <li className="regular">
-                  <span className="customer-level-symbol regular"></span>
+                  <span className="customer-level-symbol regular">
+                    <i className="fa fa-address-card"></i>
+                  </span>
                   <span>一般</span>
                 </li>
                 <li className="vip">
-                  <span className="customer-level-symbol vip"></span>
+                  <span className="customer-level-symbol vip">
+                    <i className="fa fa-address-card"></i>
+                  </span>
                   <span>VIP</span>
                 </li>
               </ul>
