@@ -19,7 +19,10 @@ UI.define("Customers.Filter.Dashboard", function() {
     },
 
     componentDidMount: function() {
-      $(".contents").height(window.innerHeight - $("header").innerHeight() - 50);
+      let properHeight = window.innerHeight - $("header").innerHeight() - 50;
+
+      $(".contents").height(properHeight);
+      $("#searchKeys").height(properHeight);
     },
 
     onDataChange: function(event) {
@@ -143,10 +146,10 @@ UI.define("Customers.Filter.Dashboard", function() {
         <div id="searchPrint">
           <dl className="tableTTL">
             <dt className="status">&nbsp;</dt>
-            <dt className="filterName">Filter Name</dt>
-            <dt className="type">File Type</dt>
-            <dt className="create">Proceded on</dt>
-            <dt className="exparation">Expire on</dt>
+            <dt className="filterName">{this.props.printingHeaderFilterName}</dt>
+            <dt className="type">{this.props.printingHeaderFileType}</dt>
+            <dt className="create">{this.props.printingHeaderCreatedDate}</dt>
+            <dt className="exparation">{this.props.printingHeaderExpiredDate}</dt>
             <dt className="function"></dt>
           </dl>
           <div id="files">
@@ -167,7 +170,7 @@ UI.define("Customers.Filter.Dashboard", function() {
                     <dd className="exparation">{outcome.expiredDate}</dd>
                     <dd className="function">
                       {outcome.fileUrl ? (
-                        <a href={outcome.fileUrl} className="BTNtarco" target="_blank">PRINT</a>
+                        <a href={outcome.fileUrl} className="BTNtarco" target="_blank">{this.props.printBtn}</a>
                       ) : null}
                     </dd>
                   </dl>

@@ -52,11 +52,13 @@ ja:
     yes_label: 有り
     no_label: 無し
     close: 閉じる
+    print: 印刷
   dashboard:
     my_shop: 自分の店舗
     shop_you_work_for: 勤務している店舗
     sign_in_as: "%{name} としてログイン中"
     my_shop_setting: 自分の店舗の設定
+    search_data: 高度検索
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -144,6 +146,10 @@ ja:
       file_for_print: 印刷用ファイル
       no_file_for_print: 印刷用ファイル無し
       printing_message: "印刷用ファイル作成中... ファイルの印刷準備ができ次第メールにてご連絡差し上げます。今しばらくお待ちください。"
+      printing_header_filter_name: フィルター名
+      printing_header_file_type: 種類
+      printing_header_created_date: 作成日
+      printing_header_expired_date: 印刷期限
       printing_types:
         infos: リスト
         addresses: 住所

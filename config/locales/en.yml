@@ -53,11 +53,13 @@ en:
     yes_label: "YES"
     no_label: "NO"
     close: Close
+    print: PRINT
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for
     sign_in_as: "Signed in as %{name}"
     my_shop_setting: My shop settings
+    search_data: Search Data
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -143,6 +145,10 @@ en:
       file_for_print: Files For Print
       no_file_for_print: "No File For Print"
       printing_message: "Processing a file for print... We will inform you by Email when the file is ready. Please wait."
+      printing_header_filter_name: Filter Name
+      printing_header_file_type: File Type
+      printing_header_created_date: Created Date
+      printing_header_expired_date: Expired Date
       printing_types:
         infos: Info
         addresses: Address
