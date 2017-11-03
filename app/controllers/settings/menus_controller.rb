@@ -17,6 +17,11 @@ class Settings::MenusController < SettingsController
     @menu = super_user.menus.new
     @menu_reservation_setting_rule = @menu.menu_reservation_setting_rule || @menu.build_menu_reservation_setting_rule(start_date: Time.zone.now.to_date)
     @reservation_setting = @menu.reservation_setting || super_user.reservation_settings.find_by(id: params[:reservation_setting_id]) || super_user.reservation_settings.first
+    @shops = if can?(:manage, :all)
+               super_user.shops.order("id")
+             else
+               [shop]
+             end
   end
 
   # GET /settings/menus/1/edit
