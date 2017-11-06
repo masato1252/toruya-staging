@@ -15,11 +15,8 @@
 //= require jquery-ui/widgets/datepicker
 //= require jquery-ui/i18n/datepicker-ja
 //= require bootstrap
-//= require react
-//= require react_ujs
 //= require underscore
 //= require ui
-//= require components
 //= require moment
 //= require moment-timezone-with-data
 //= require moment/ja.js
