@@ -4,7 +4,7 @@ module Shops
     object :date_range, class: Range
 
     def execute
-      shop.reservations.where("reservations.start_time" => date_range).map{ |d| d.start_time.to_date }
+      shop.reservations.uncanceled.where("reservations.start_time" => date_range).map{ |d| d.start_time.to_date }
     end
   end
 end
