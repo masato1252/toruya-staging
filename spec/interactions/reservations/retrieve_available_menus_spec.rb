@@ -5,9 +5,9 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
     let(:now) { Time.local(2016, 11, 9, 9)}
     let(:time_range) { now..(now.advance(minutes: 60)) }
     let(:user) { shop.user }
-    let(:shop) { FactoryGirl.create(:shop) }
-    let(:staff) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop) }
-    let!(:menu) { FactoryGirl.create(:menu, :with_reservation_setting, user: user, minutes: 60, shop: shop, staffs: [staff]) }
+    let(:shop) { FactoryBot.create(:shop) }
+    let(:staff) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
+    let!(:menu) { FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 60, shop: shop, staffs: [staff]) }
 
     context "when some menus don't have categories" do
       it "returns expected result" do
@@ -28,7 +28,7 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
     end
 
     context "when all menus have categories" do
-      let!(:category) { FactoryGirl.create(:category, user: user, menus: [menu]) }
+      let!(:category) { FactoryBot.create(:category, user: user, menus: [menu]) }
 
       it "returns expected result" do
         result = Reservations::RetrieveAvailableMenus.run!(
@@ -49,7 +49,7 @@ RSpec.describe Reservations::RetrieveAvailableMenus do
     end
 
     context "when no manpower menus exists" do
-      let!(:no_manpower_menu) { FactoryGirl.create(:menu, :with_reservation_setting, :no_manpower, user: user, minutes: 60, shop: shop, staffs: [staff]) }
+      let!(:no_manpower_menu) { FactoryBot.create(:menu, :with_reservation_setting, :no_manpower, user: user, minutes: 60, shop: shop, staffs: [staff]) }
 
       it "returns expected result" do
         result = Reservations::RetrieveAvailableMenus.run!(

@@ -6,18 +6,18 @@ RSpec.describe Reservable::Time do
   end
 
   let(:user) { shop.user }
-  let(:shop) { FactoryGirl.create(:shop) }
+  let(:shop) { FactoryBot.create(:shop) }
   let(:now) { Time.zone.now }
   let(:date) { now.to_date }
 
   describe "#execute" do
     context "when shop has custom schedule" do
-      let!(:custom_schedule) { FactoryGirl.create(:custom_schedule, shop: shop, staff: nil,
+      let!(:custom_schedule) { FactoryBot.create(:custom_schedule, shop: shop, staff: nil,
                                                   start_time: now.beginning_of_day + 8.hours,
                                                   end_time: now.beginning_of_day + 16.hours) }
 
       context "when shop has business_schedule" do
-        let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
+        let!(:business_schedule) { FactoryBot.create(:business_schedule, shop: shop,
                                                       start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
                                                       end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 
@@ -28,7 +28,7 @@ RSpec.describe Reservable::Time do
         end
 
         context "when custom_schedule end time < schedule end_time" do
-          let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
+          let!(:business_schedule) { FactoryBot.create(:business_schedule, shop: shop,
                                                         start_time: (now.beginning_of_day + 7.hours).advance(weeks: 1),
                                                         end_time: (now.beginning_of_day + 18.hours).advance(weeks: 1)) }
           it "returns available time range" do
@@ -48,8 +48,8 @@ RSpec.describe Reservable::Time do
       before { Timecop.freeze(Date.new(2016, 1, 1)) }
 
       context "when shop needs to work" do
-        let(:shop) { FactoryGirl.create(:shop, holiday_working: true) }
-        let!(:business_schedule) { FactoryGirl.create(:business_schedule, shop: shop,
+        let(:shop) { FactoryBot.create(:shop, holiday_working: true) }
+        let!(:business_schedule) { FactoryBot.create(:business_schedule, shop: shop,
                                                       start_time: (now.beginning_of_day + 7.hours).advance(weeks: -1),
                                                       end_time: (now.beginning_of_day + 18.hours).advance(weeks: -1)) }
 

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CustomSchedule, type: :model do
-  let(:custom_schedule) { FactoryGirl.create(:custom_schedule,
+  let(:custom_schedule) { FactoryBot.create(:custom_schedule,
                                               start_time_date_part: "2016-01-01",
                                               start_time_time_part: "07:00",
                                               end_time_time_part: "17:00") }

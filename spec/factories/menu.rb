@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :menu do
     transient do
-      shop { FactoryGirl.create(:shop, user: user) }
+      shop { FactoryBot.create(:shop, user: user) }
       staffs []
       max_seat_number { 3 }
     end
@@ -9,7 +9,7 @@ FactoryGirl.define do
     transient do
     end
 
-    user { FactoryGirl.create(:user) }
+    user { FactoryBot.create(:user) }
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:short_name) { |n| "m-#{n}" }
     minutes 60
@@ -34,16 +34,16 @@ FactoryGirl.define do
 
     trait :with_reservation_setting do
       after(:create) do |menu|
-        FactoryGirl.create(:reservation_setting, menu: menu, user: menu.user, day_type: "business_days")
+        FactoryBot.create(:reservation_setting, menu: menu, user: menu.user, day_type: "business_days")
       end
     end
 
     after(:create) do |menu, proxy|
-      FactoryGirl.create(:shop_menu, menu: menu, shop: proxy.shop, max_seat_number: proxy.max_seat_number)
+      FactoryBot.create(:shop_menu, menu: menu, shop: proxy.shop, max_seat_number: proxy.max_seat_number)
 
       if proxy.staffs.present?
         proxy.staffs.each do |staff|
-          FactoryGirl.create(:staff_menu, menu: menu, staff: staff)
+          FactoryBot.create(:staff_menu, menu: menu, staff: staff)
         end
       end
     end
