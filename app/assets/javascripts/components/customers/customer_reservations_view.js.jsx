@@ -50,8 +50,10 @@ UI.define("Customers.CustomerReservationsView", function() {
     renderReservations: function() {
       var previousYear;
       var _this = this;
+      var divider;
+
       var reservationsView = this.state.reservations.map(function(reservation, i) {
-        var divider = null;
+        divider = null;
         if (reservation.year != previousYear) {
           previousYear = reservation.year;
           divider = (
