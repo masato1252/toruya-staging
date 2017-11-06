@@ -1,13 +1,13 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :reservation_setting do
-    user { FactoryGirl.create(:user) }
+    user { FactoryBot.create(:user) }
 
     sequence(:name) { |n| "settings-#{n}" }
     sequence(:short_name) { |n| "s-#{n}" }
     day_type "business_days"
 
     transient do
-      menu { FactoryGirl.create(:menu, user: user) }
+      menu { FactoryBot.create(:menu, user: user) }
     end
 
     trait :weekly do
@@ -27,8 +27,8 @@ FactoryGirl.define do
     end
 
     after(:create) do |setting, proxy|
-      FactoryGirl.create(:reservation_setting_menu, reservation_setting: setting, menu: proxy.menu)
-      FactoryGirl.create(:menu_reservation_setting_rule, menu: proxy.menu)
+      FactoryBot.create(:reservation_setting_menu, reservation_setting: setting, menu: proxy.menu)
+      FactoryBot.create(:menu_reservation_setting_rule, menu: proxy.menu)
     end
   end
 end

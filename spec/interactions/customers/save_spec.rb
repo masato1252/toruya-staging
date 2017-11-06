@@ -1,10 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Customers::Save do
-  let(:user) { FactoryGirl.create(:user) }
-  let(:customer) { FactoryGirl.create(:customer, user: user, contact_group: contact_group) }
-  let(:contact_group) { FactoryGirl.create(:contact_group, user: user) }
-  let(:contact_group2) { FactoryGirl.create(:contact_group, user: user) }
+  let(:user) { FactoryBot.create(:user) }
+  let(:customer) { FactoryBot.create(:customer, user: user, contact_group: contact_group) }
+  let(:contact_group) { FactoryBot.create(:contact_group, user: user) }
+  let(:contact_group2) { FactoryBot.create(:contact_group, user: user) }
   let(:rank) { user.ranks.first }
   let(:params) do
     {

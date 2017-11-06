@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Shops::StaffsWorkingSchedules do
   describe "#execute" do
-    let(:shop) { FactoryGirl.create(:shop) }
+    let(:shop) { FactoryBot.create(:shop) }
     let(:date) { Date.today }
 
     context "when date is not working day" do
@@ -12,15 +12,15 @@ RSpec.describe Shops::StaffsWorkingSchedules do
     end
 
     context "when date is a working day" do
-      before { FactoryGirl.create(:business_schedule, shop: shop, start_time: start_time, end_time: end_time) }
-      let!(:staff) { FactoryGirl.create(:staff, shop: shop) }
+      before { FactoryBot.create(:business_schedule, shop: shop, start_time: start_time, end_time: end_time) }
+      let!(:staff) { FactoryBot.create(:staff, shop: shop) }
       let(:start_time) { Time.zone.local(date.year, date.month, date.day, 9, 0, 0) }
       let(:end_time) { Time.zone.local(date.year, date.month, date.day, 17, 0, 0) }
       let(:start_time2) { Time.zone.local(date.year, date.month, date.day, 10, 0, 0) }
       let(:end_time2) { Time.zone.local(date.year, date.month, date.day, 16, 0, 0) }
 
       context "when there is full time staff working on this date" do
-        let!(:staff) { FactoryGirl.create(:staff, :full_time, shop: shop) }
+        let!(:staff) { FactoryBot.create(:staff, :full_time, shop: shop) }
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
@@ -30,7 +30,7 @@ RSpec.describe Shops::StaffsWorkingSchedules do
       end
 
       context "when there is weekly part time staff working on this date" do
-        before { FactoryGirl.create(:business_schedule, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2) }
+        before { FactoryBot.create(:business_schedule, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2) }
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
@@ -40,7 +40,7 @@ RSpec.describe Shops::StaffsWorkingSchedules do
       end
 
       context "when there is temporary part time staff working on this date" do
-        before { FactoryGirl.create(:custom_schedule, :opened, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2) }
+        before { FactoryBot.create(:custom_schedule, :opened, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2) }
 
         it "returns expect result" do
           expect(described_class.run!(shop: shop, date: date)).to eq({
@@ -50,8 +50,8 @@ RSpec.describe Shops::StaffsWorkingSchedules do
       end
 
       context "when there is staff working on this date but need to leave" do
-        let!(:staff) { FactoryGirl.create(:staff, :full_time, shop: shop) }
-        before { FactoryGirl.create(:custom_schedule, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2, reason: "foo") }
+        let!(:staff) { FactoryBot.create(:staff, :full_time, shop: shop) }
+        before { FactoryBot.create(:custom_schedule, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2, reason: "foo") }
 
         context "when leaving after working time start(like working in the morning, leaving in the afternoon)" do
           let(:start_time) { Time.zone.local(date.year, date.month, date.day, 9, 0, 0) }

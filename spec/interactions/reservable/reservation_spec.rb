@@ -6,18 +6,18 @@ RSpec.describe Reservable::Reservation do
   end
 
   let(:user) { shop.user }
-  let(:shop) { FactoryGirl.create(:shop, :holiday_working) }
+  let(:shop) { FactoryBot.create(:shop, :holiday_working) }
   let(:now) { Time.zone.now }
   let(:date) { now.to_date }
   let(:time_minutes) { 60 }
-  let(:menu1) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes) }
-  let(:menu2) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes) }
-  let(:staff1) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1, menu2]) }
-  let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1, menu2]) }
+  let(:menu1) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes) }
+  let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes) }
+  let(:staff1) { FactoryBot.create(:staff, :full_time, user: user, shop: shop, menus: [menu1, menu2]) }
+  let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop, menus: [menu1, menu2]) }
   let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
 
   def create_available_menu(_menu)
-    FactoryGirl.create(:staff_menu, menu: _menu, staff: staff)
+    FactoryBot.create(:staff_menu, menu: _menu, staff: staff)
   end
 
   describe "#execute" do
@@ -32,7 +32,7 @@ RSpec.describe Reservable::Reservation do
 
     context "When shop open on that date" do
       before do
-        FactoryGirl.create(:business_schedule, shop: shop,
+        FactoryBot.create(:business_schedule, shop: shop,
                            start_time: now.beginning_of_day.advance(weeks: -1),
                            end_time: now.end_of_day.advance(weeks: -1))
       end
@@ -52,8 +52,8 @@ RSpec.describe Reservable::Reservation do
 
       context "when reservation time is larger than menu working_time" do
         before do
-          FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
-          FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2)
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
         end
 
         let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
@@ -71,7 +71,7 @@ RSpec.describe Reservable::Reservation do
       context "when there are reservations overlap in interval time" do
         context "when the overlap happened on previous reservation" do
           let!(:reservation) do
-            FactoryGirl.create(:reservation, shop: shop, menu: menu1,
+            FactoryBot.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
                                staff_ids: [staff1.id])
           end
@@ -90,7 +90,7 @@ RSpec.describe Reservable::Reservation do
 
           context "when reservation is canceled" do
             before do
-              FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation.cancel!
             end
 
@@ -107,7 +107,7 @@ RSpec.describe Reservable::Reservation do
 
         context "when the overlap happened on next reservation" do
           let!(:reservation) do
-            FactoryGirl.create(:reservation, shop: shop, menu: menu1,
+            FactoryBot.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
                                staff_ids: [staff1.id])
           end
@@ -126,7 +126,7 @@ RSpec.describe Reservable::Reservation do
 
           context "when reservation is canceled" do
             before do
-              FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation.cancel!
             end
 
@@ -144,7 +144,7 @@ RSpec.describe Reservable::Reservation do
 
       # validate_menu_schedules
       context "when menu doesn't allow to be booked on that date" do
-        before { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+        before { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2) }
 
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -158,7 +158,7 @@ RSpec.describe Reservable::Reservation do
 
       # validate_menu_schedules
       context "when menu doesn't start yet" do
-        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+        let!(:reservation_setting) { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2) }
         before { MenuReservationSettingRule.where(menu: menu2).last.update_columns(start_date: Date.tomorrow) }
 
         it "is invalid" do
@@ -173,7 +173,7 @@ RSpec.describe Reservable::Reservation do
 
       # validate_menu_schedules
       context "when menu was over" do
-        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu2) }
+        let!(:reservation_setting) { FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2) }
 
         context "when rule had a particular end date" do
           before do
@@ -194,7 +194,7 @@ RSpec.describe Reservable::Reservation do
           let(:now) { Time.zone.now.tomorrow.tomorrow }
           before do
             menu2.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
-            FactoryGirl.create(:shop_menu_repeating_date, shop: shop, menu: menu2)
+            FactoryBot.create(:shop_menu_repeating_date, shop: shop, menu: menu2)
           end
 
           it "is invalid" do
@@ -210,8 +210,8 @@ RSpec.describe Reservable::Reservation do
 
       # validate_seats_for_customers
       context "when some menus doesn't have enough seats for customers" do
-        let(:menu1) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 4) }
-        let(:menu2) { FactoryGirl.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 3) }
+        let(:menu1) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 4) }
+        let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, max_seat_number: 3) }
 
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -227,9 +227,9 @@ RSpec.describe Reservable::Reservation do
 
       # validate_staffs_ability_for_customers(staff)
       context "when some staff doesn't have enough ability for customers" do
-        let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
+        let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
         before do
-          FactoryGirl.create(:staff_menu, menu: menu2, staff: staff2, max_customers: 1)
+          FactoryBot.create(:staff_menu, menu: menu2, staff: staff2, max_customers: 1)
         end
 
         it "is invalid" do
@@ -246,7 +246,7 @@ RSpec.describe Reservable::Reservation do
       end
 
       context "when some staffs don't work on that date" do
-        let(:staff2) { FactoryGirl.create(:staff, user: user, shop: shop) }
+        let(:staff2) { FactoryBot.create(:staff, user: user, shop: shop) }
 
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -265,7 +265,7 @@ RSpec.describe Reservable::Reservation do
       # validate_other_shop_reservation(staff)
       context "when some staffs already had reservation in other shops" do
         let!(:reservation) do
-          FactoryGirl.create(:reservation, shop: FactoryGirl.create(:shop),
+          FactoryBot.create(:reservation, shop: FactoryBot.create(:shop),
                              staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
@@ -282,7 +282,7 @@ RSpec.describe Reservable::Reservation do
 
         context "when reservation is canceled" do
           before do
-            FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             reservation.cancel!
           end
 
@@ -300,7 +300,7 @@ RSpec.describe Reservable::Reservation do
       # validate_same_shop_overlap_reservations(staff)
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
-          FactoryGirl.create(:reservation, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+          FactoryBot.create(:reservation, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
         it "is invalid" do
@@ -316,7 +316,7 @@ RSpec.describe Reservable::Reservation do
 
         context "when reservation is canceled" do
           before do
-            FactoryGirl.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             reservation.cancel!
           end
 
@@ -333,7 +333,7 @@ RSpec.describe Reservable::Reservation do
 
       # validate_staff_ability(staff)
       context "when some staffs don't have ability for some menus" do
-        let(:staff2) { FactoryGirl.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
+        let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop, menus: [menu1]) }
 
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,

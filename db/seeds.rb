@@ -1,5 +1,5 @@
 def create(*args)
-  FactoryGirl.create(*args) do |obj|
+  FactoryBot.create(*args) do |obj|
     yield obj if block_given?
   end
 end

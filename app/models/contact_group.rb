@@ -15,7 +15,7 @@
 
 class ContactGroup < ApplicationRecord
   GOOGLE_GROUP_PREFIX = "Toruya"
-  has_many :rankings, class_name: ContactGroupRanking, dependent: :destroy
+  has_many :rankings, class_name: "ContactGroupRanking", dependent: :destroy
   has_many :ranks, through: :rankings
   belongs_to :user
 

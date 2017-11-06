@@ -57,7 +57,7 @@ group :development, :test do
   gem "rspec-rails", "~> 3.5.0"
   gem "timecop", "~> 0.8.0"
   gem "database_cleaner"
-  gem "factory_girl_rails"
+  gem "factory_bot_rails"
 end
 
 group :development do

@@ -6,12 +6,12 @@ RSpec.describe Menus::RetrieveRepeatingDates do
   end
 
   describe "#repeating_dates" do
-    let(:shop) { FactoryGirl.create(:shop) }
-    let(:menu) { FactoryGirl.create(:menu, shop: shop) }
-    let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 7) }
+    let(:shop) { FactoryBot.create(:shop) }
+    let(:menu) { FactoryBot.create(:menu, shop: shop) }
+    let(:menu_rule) { FactoryBot.create(:menu_reservation_setting_rule, menu: menu, repeats: 7) }
 
     context "when reservation_setting is for all business_days" do
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, menu: menu) }
+      let!(:reservation_setting) { FactoryBot.create(:reservation_setting, menu: menu) }
 
       context "when there is no business_schedules, Monday ~ Friday is working_day" do
         it "returns expected dates" do
@@ -33,7 +33,7 @@ RSpec.describe Menus::RetrieveRepeatingDates do
       context "when shop only Monday to Friday are business_days" do
         before do
           5.times do |n|
-            FactoryGirl.create(:business_schedule, shop: shop,
+            FactoryBot.create(:business_schedule, shop: shop,
                                start_time: Time.zone.local(2016, 9, 19 + n, 8),
                                end_time: Time.zone.local(2016, 9, 19 + n , 18))
           end
@@ -57,7 +57,7 @@ RSpec.describe Menus::RetrieveRepeatingDates do
     end
 
     context "when reservation_setting is weekly repeat" do
-      let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :weekly, menu: menu, days_of_week: [1, 3, 5]) }
+      let!(:reservation_setting) { FactoryBot.create(:reservation_setting, :weekly, menu: menu, days_of_week: [1, 3, 5]) }
 
       context "when there is no business_schedules, Monday ~ Friday is working_day" do
         it "returns expected dates" do
@@ -80,11 +80,11 @@ RSpec.describe Menus::RetrieveRepeatingDates do
       context "when shop only Monday and Wednesday are business_days" do
         before do
           # Monday
-          FactoryGirl.create(:business_schedule, shop: shop,
+          FactoryBot.create(:business_schedule, shop: shop,
                              start_time: Time.zone.local(2016, 9, 19, 8),
                              end_time: Time.zone.local(2016, 9, 19, 18))
           # Wednesday
-          FactoryGirl.create(:business_schedule, shop: shop,
+          FactoryBot.create(:business_schedule, shop: shop,
                              start_time: Time.zone.local(2016, 9, 21, 8),
                              end_time: Time.zone.local(2016, 9, 21, 18))
         end
@@ -111,10 +111,10 @@ RSpec.describe Menus::RetrieveRepeatingDates do
     end
 
     context "when reservation_setting is monthly repeat" do
-      let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 3) }
+      let(:menu_rule) { FactoryBot.create(:menu_reservation_setting_rule, menu: menu, repeats: 3) }
 
       context "when reservation_setting is number_of_day_monthly repeating" do
-        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
+        let!(:reservation_setting) { FactoryBot.create(:reservation_setting, :number_of_day_monthly, menu: menu, day: 15) }
 
         context "when there is no business_schedules, Monday ~ Friday is working_day" do
           it "returns expected dates" do
@@ -133,8 +133,8 @@ RSpec.describe Menus::RetrieveRepeatingDates do
       end
 
       context "when reservation_setting is number_of_day_monthly repeating" do
-        let(:menu_rule) { FactoryGirl.create(:menu_reservation_setting_rule, menu: menu, repeats: 5) }
-        let!(:reservation_setting) { FactoryGirl.create(:reservation_setting, :day_of_week_monthly,
+        let(:menu_rule) { FactoryBot.create(:menu_reservation_setting_rule, menu: menu, repeats: 5) }
+        let!(:reservation_setting) { FactoryBot.create(:reservation_setting, :day_of_week_monthly,
                                                         menu: menu,
                                                         days_of_week: [1, 2], nth_of_week: 2) }
 

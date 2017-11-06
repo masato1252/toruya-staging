@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :shop_menu do
     association :shop
     association :menu
@@ -55,7 +55,7 @@ FactoryGirl.define do
       repeats 2
 
       after(:create) do |rule|
-        FactoryGirl.create(:shop_menu_repeating_date, shop: menu.shop, menu: menu)
+        FactoryBot.create(:shop_menu_repeating_date, shop: menu.shop, menu: menu)
       end
     end
   end
@@ -84,7 +84,7 @@ FactoryGirl.define do
     after(:create) do |category, proxy|
       if proxy.menus.present?
         proxy.menus.each do |menu|
-          FactoryGirl.create(:menu_category, category: category, menu: menu)
+          FactoryBot.create(:menu_category, category: category, menu: menu)
         end
       end
     end

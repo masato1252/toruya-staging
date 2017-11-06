@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Customers::Filter do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "#execute" do
     context "when group_ids option exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
+      let!(:matched_customer) { FactoryBot.create(:customer, user: user) }
+      let!(:unmatched_customer) { FactoryBot.create(:customer, user: user) }
 
       it "returns expected customers" do
         result = Customers::Filter.run!(super_user: user, group_ids: [matched_customer.contact_group_id])
@@ -17,10 +17,10 @@ RSpec.describe Customers::Filter do
     end
 
     context "when states option exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, address: "三重県 亀山市") }
-      let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, address: "二重県 清須市") }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, address: "四重県 桑名市") }
-      let!(:unmatched_customer2) { FactoryGirl.create(:customer, user: user, address: "五重県 桑名市") }
+      let!(:matched_customer) { FactoryBot.create(:customer, user: user, address: "三重県 亀山市") }
+      let!(:matched_customer2) { FactoryBot.create(:customer, user: user, address: "二重県 清須市") }
+      let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, address: "四重県 桑名市") }
+      let!(:unmatched_customer2) { FactoryBot.create(:customer, user: user, address: "五重県 桑名市") }
 
 
       context "when inside option is true" do
@@ -49,8 +49,8 @@ RSpec.describe Customers::Filter do
     context "when has_email exists" do
       context "When has_email is true" do
         context "when email_types doesn't exists" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, email_types: "mobile") }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, email_types: "mobile") }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user) }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, has_email: true)
@@ -61,9 +61,9 @@ RSpec.describe Customers::Filter do
         end
 
         context "when email_types exists" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, email_types: "mobile,work") }
-          let!(:matched_customer2) { FactoryGirl.create(:customer, user: user, email_types: "work") }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, email_types: "home,other") }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, email_types: "mobile,work") }
+          let!(:matched_customer2) { FactoryBot.create(:customer, user: user, email_types: "work") }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, email_types: "home,other") }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, has_email: true, email_types: ["work", "mobile"])
@@ -76,8 +76,8 @@ RSpec.describe Customers::Filter do
       end
 
       context "When has_email is false" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, email_types: "mobile") }
+        let!(:matched_customer) { FactoryBot.create(:customer, user: user) }
+        let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, email_types: "mobile") }
 
         it "returns expected customers" do
           result = Customers::Filter.run!(super_user: user, has_email: false)
@@ -90,8 +90,8 @@ RSpec.describe Customers::Filter do
 
     context "when birthday conditions is valid" do
       context "when birthday month condition exists" do
-        let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-        let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.advance(months: 1)) }
+        let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today) }
+        let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today.advance(months: 1)) }
 
         it "returns expected customers" do
           result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on_month", month: Date.today.month })
@@ -103,8 +103,8 @@ RSpec.describe Customers::Filter do
 
       context "when birthday start_date exists" do
         context "when birthday query_type is on" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today.yesterday) }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today) }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, birthday: { query_type: "on", start_date: Date.today.yesterday })
@@ -115,8 +115,8 @@ RSpec.describe Customers::Filter do
         end
 
         context "when birthday query_type is before" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today.yesterday) }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today) }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, birthday: { query_type: "before", start_date: Date.today })
@@ -127,8 +127,8 @@ RSpec.describe Customers::Filter do
         end
 
         context "when birthday query_type is after" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.tomorrow) }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today.tomorrow) }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today) }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, birthday: { query_type: "after", start_date: Date.today })
@@ -139,8 +139,8 @@ RSpec.describe Customers::Filter do
         end
 
         context "when birthday query_type is between" do
-          let!(:matched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today) }
-          let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, birthday: Date.today.yesterday) }
+          let!(:matched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today) }
+          let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, birthday: Date.today.yesterday) }
 
           it "returns expected customers" do
             result = Customers::Filter.run!(super_user: user, birthday: { query_type: "between", start_date: Date.today, end_date: Date.today.tomorrow })
@@ -153,8 +153,8 @@ RSpec.describe Customers::Filter do
     end
 
     context "when custom_id exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user, custom_id: "fooo") }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user, custom_id: "bar") }
+      let!(:matched_customer) { FactoryBot.create(:customer, user: user, custom_id: "fooo") }
+      let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, custom_id: "bar") }
 
       it "returns expected customers" do
         result = Customers::Filter.run!(super_user: user, custom_ids: ["Foo"])
@@ -165,8 +165,8 @@ RSpec.describe Customers::Filter do
     end
 
     context "when reservation conditions exists" do
-      let!(:matched_customer) { FactoryGirl.create(:customer, user: user) }
-      let!(:unmatched_customer) { FactoryGirl.create(:customer, user: user) }
+      let!(:matched_customer) { FactoryBot.create(:customer, user: user) }
+      let!(:unmatched_customer) { FactoryBot.create(:customer, user: user) }
 
       context "when has_reservation is true" do
         let(:reservation_conditions) { { has_reservation: true } }
@@ -174,8 +174,8 @@ RSpec.describe Customers::Filter do
         context "when start_date exists" do
           context "when query_type is on" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
@@ -192,8 +192,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is before" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
             end
 
             it "returns expected customers" do
@@ -210,8 +210,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is after" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.tomorrow)
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.tomorrow)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
@@ -228,8 +228,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is between" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day)
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
@@ -248,12 +248,12 @@ RSpec.describe Customers::Filter do
             let(:reservation_conditions) { { has_reservation: true, query_type: "after", start_date: 1.days.ago } }
 
             context "when menu_ids exists" do
-              let(:matched_menu) { FactoryGirl.create(:menu, user: user) }
-              let(:unmatched_menu) { FactoryGirl.create(:menu, user: user) }
+              let(:matched_menu) { FactoryBot.create(:menu, user: user) }
+              let(:unmatched_menu) { FactoryBot.create(:menu, user: user) }
 
               before do
-                FactoryGirl.create(:reservation, customers: [matched_customer], menu: matched_menu)
-                FactoryGirl.create(:reservation, customers: [unmatched_customer], menu: unmatched_menu)
+                FactoryBot.create(:reservation, customers: [matched_customer], menu: matched_menu)
+                FactoryBot.create(:reservation, customers: [unmatched_customer], menu: unmatched_menu)
               end
 
               it "returns expected customers" do
@@ -265,12 +265,12 @@ RSpec.describe Customers::Filter do
             end
 
             context "when staff_ids exists" do
-              let(:matched_staff) { FactoryGirl.create(:staff, user: user) }
-              let(:unmatched_staff) { FactoryGirl.create(:staff, user: user) }
+              let(:matched_staff) { FactoryBot.create(:staff, user: user) }
+              let(:unmatched_staff) { FactoryBot.create(:staff, user: user) }
 
               before do
-                FactoryGirl.create(:reservation, customers: [matched_customer], staffs: [matched_staff])
-                FactoryGirl.create(:reservation, customers: [unmatched_customer], staffs: [unmatched_staff])
+                FactoryBot.create(:reservation, customers: [matched_customer], staffs: [matched_staff])
+                FactoryBot.create(:reservation, customers: [unmatched_customer], staffs: [unmatched_staff])
               end
 
               it "returns expected customers" do
@@ -283,8 +283,8 @@ RSpec.describe Customers::Filter do
 
             context "when has_error exists" do
               before do
-                FactoryGirl.create(:reservation, customers: [matched_customer], with_warnings: true)
-                FactoryGirl.create(:reservation, customers: [unmatched_customer], with_warnings: false)
+                FactoryBot.create(:reservation, customers: [matched_customer], with_warnings: true)
+                FactoryBot.create(:reservation, customers: [unmatched_customer], with_warnings: false)
               end
 
               it "returns expected customers" do
@@ -297,8 +297,8 @@ RSpec.describe Customers::Filter do
 
             context "when states exists" do
               before do
-                FactoryGirl.create(:reservation, :reserved, customers: [matched_customer])
-                FactoryGirl.create(:reservation, :pending, customers: [unmatched_customer])
+                FactoryBot.create(:reservation, :reserved, customers: [matched_customer])
+                FactoryBot.create(:reservation, :pending, customers: [unmatched_customer])
               end
 
               it "returns expected customers" do
@@ -318,8 +318,8 @@ RSpec.describe Customers::Filter do
         context "when start_date exists" do
           context "when query_type is on" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
             end
 
             it "returns expected customers" do
@@ -336,8 +336,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is before" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now)
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
@@ -354,8 +354,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is after" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.tomorrow)
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.tomorrow)
             end
 
             it "returns expected customers" do
@@ -372,8 +372,8 @@ RSpec.describe Customers::Filter do
 
           context "when query_type is between" do
             before do
-              FactoryGirl.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
-              FactoryGirl.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day)
+              FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day)
             end
 
             it "returns expected customers" do
