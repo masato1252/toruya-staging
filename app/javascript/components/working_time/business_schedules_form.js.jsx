@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require('create-react-class');
+
 UI.define("WorkingTime.BusinessScheduleForm", function() {
-  var BusinessScheduleForm = React.createClass({
+  var BusinessScheduleForm = createReactClass({
     getInitialState: function() {
       return {
       }
@@ -66,3 +70,5 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
 
   return BusinessScheduleForm;
 });
+
+export default UI.WorkingTime.BusinessScheduleForm;

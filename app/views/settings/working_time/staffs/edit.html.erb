@@ -6,7 +6,7 @@
 </div>
 <div id="settingForm">
   <% if @staff.shops.exists? %>
-    <%= react_component("UI.WorkingTime.StaffForm", {
+    <%= react_component("working_time/staff_form", {
       mode: @mode,
       timezone: Time.zone.tzinfo.identifier,
       staff: @staff,

@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require('create-react-class');
+
 UI.define("Settings.Staff.Formfields", function() {
-  var StaffFormfields = React.createClass({
+  var StaffFormfields = createReactClass({
     getInitialState: function() {
       return ({
         staffShopOptions: this.props.staffShopOptions,
@@ -221,3 +225,5 @@ UI.define("Settings.Staff.Formfields", function() {
 
   return StaffFormfields;
 });
+
+export default UI.Settings.Staff.Formfields;

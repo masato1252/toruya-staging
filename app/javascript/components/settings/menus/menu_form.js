@@ -1,9 +1,13 @@
-//= require "components/settings/new_categories"
-
 "use strict";
 
+import React from "react";
+import "../../shared/select.js";
+import "../new_categories.js";
+
+var createReactClass = require('create-react-class');
+
 UI.define("Settings.MenuForm", function() {
-  var MenuForm = React.createClass({
+  var MenuForm = createReactClass({
     getInitialState: function() {
       var start_date = this.props.selectedReservationSettingRule.start_date ?  moment(this.props.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : "";
       this.props.selectedReservationSettingRule.start_date = start_date;
@@ -170,7 +174,7 @@ UI.define("Settings.MenuForm", function() {
               <dd>
                 <input
                   placeholder="メニュー名"
-                  maxlength="30"
+                  maxLength="30"
                   size="30"
                   type="text"
                   name="menu[name]"
@@ -198,7 +202,7 @@ UI.define("Settings.MenuForm", function() {
               <dt>所要時間</dt>
               <dd>
                 <input
-                  maxlength="5"
+                  maxLength="5"
                   size="5"
                   type="number"
                   name="menu[minutes]"
@@ -213,7 +217,7 @@ UI.define("Settings.MenuForm", function() {
               <dd>
                 <input
                   type="number"
-                  maxlength="3"
+                  maxLength="3"
                   size="10"
                   name="menu[interval]"
                   defaultValue={this.state.menu.interval}
@@ -225,7 +229,7 @@ UI.define("Settings.MenuForm", function() {
               <dd>
                 <input
                   placeholder="Min Staff"
-                  maxlength="10"
+                  maxLength="10"
                   size="10"
                   className="minStaff"
                   type="number"
@@ -268,7 +272,7 @@ UI.define("Settings.MenuForm", function() {
                           menuShopOption.checked ?
                             <input
                               placeholder={this.props.maxCustomersLabel}
-                              maxlength="10"
+                              maxLength="10"
                               size="10"
                               className="minStaff"
                               type="number"
@@ -375,7 +379,7 @@ UI.define("Settings.MenuForm", function() {
                       <input
                         type="number"
                         size="3"
-                        maxlength="3"
+                        maxLength="3"
                         name="menu[menu_reservation_setting_rule_attributes][repeats]"
                         value={this.state.selectedReservationSettingRule.repeats}
                         data-name="repeats"
@@ -503,3 +507,5 @@ UI.define("Settings.MenuForm", function() {
   });
   return MenuForm;
 });
+
+export default UI.Settings.MenuForm;

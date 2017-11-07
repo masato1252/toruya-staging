@@ -1,9 +1,13 @@
-//= require "components/working_time/business_schedules_form"
-
 "use strict";
 
+import React from "react";
+import "./business_schedules_form.js";
+import "../schedules/custom_schedules.js";
+
+var createReactClass = require('create-react-class');
+
 UI.define("WorkingTime.StaffForm", function() {
-  var StaffForm = React.createClass({
+  var StaffForm = createReactClass({
     getInitialState: function() {
       return {
         shops: this.props.shops,
@@ -290,3 +294,5 @@ UI.define("WorkingTime.StaffForm", function() {
 
   return StaffForm;
 });
+
+export default UI.WorkingTime.StaffForm;

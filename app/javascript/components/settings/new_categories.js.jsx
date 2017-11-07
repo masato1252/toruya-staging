@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require('create-react-class');
+
 UI.define("Settings.NewCategories", function() {
-  var NewCategories = React.createClass({
+  var NewCategories = createReactClass({
     getInitialState: function() {
       return ({
         newCategories: [],
@@ -84,3 +88,5 @@ UI.define("Settings.NewCategories", function() {
 
   return NewCategories;
 });
+
+export default UI.Settings.NewCategories;
