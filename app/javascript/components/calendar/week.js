@@ -75,4 +75,4 @@ UI.define("Week", function() {
   return Week;
 });
 
-export default Week;
+export default UI.Week;
