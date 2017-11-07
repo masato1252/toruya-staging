@@ -1,7 +1,10 @@
 "use strict";
 
+import React from "react";
+var createReactClass = require("create-react-class")
+
 UI.define("Common.DatepickerField", function() {
-  var DatepickerField = React.createClass({
+  var DatepickerField = createReactClass({
     componentDidMount: function() {
       var _this = this;
 
@@ -52,3 +55,5 @@ UI.define("Common.DatepickerField", function() {
 
   return DatepickerField;
 });
+
+export default UI.Common.DatepickerField;

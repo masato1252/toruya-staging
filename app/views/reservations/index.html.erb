@@ -227,7 +227,7 @@
         <%= form_tag custom_schedules_path do %>
           <div class="modal-body">
             <dl id="addWorkDay">
-              <%= react_component("UI.Reservation.DatetimeFields", {
+              <%= react_component("reservations/datetime_fields", {
                 staff_id: staff.id,
                 open: true,
                 start_time_date_part: @date.to_s,
@@ -271,7 +271,7 @@
         <%= form_tag custom_schedules_path do %>
           <div class="modal-body">
             <dl id="addWorkDay">
-              <%= react_component("UI.Reservation.DatetimeFields", {
+              <%= react_component("reservations/datetime_fields", {
                 staff_id: staff.id,
                 open: false,
                 start_time_date_part: @date.to_s,

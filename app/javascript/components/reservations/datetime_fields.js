@@ -1,9 +1,12 @@
-//= require "components/shared/datepicker_field"
-
 "use strict";
 
+import React from "react";
+import "../shared/datepicker_field.js";
+
+var createReactClass = require('create-react-class');
+
 UI.define("Reservation.DatetimeFields", function() {
-  var DatetimeFields = React.createClass({
+  var DatetimeFields = createReactClass({
     getInitialState: function() {
       return ({
         start_time_date_part: this.props.startTimeDatePart,
@@ -59,3 +62,5 @@ UI.define("Reservation.DatetimeFields", function() {
   });
   return DatetimeFields;
 })
+
+export default UI.Reservation.DatetimeFields;
