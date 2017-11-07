@@ -1,9 +1,13 @@
-//= require "components/schedules/custom_schedule_fields"
-
 "use strict";
 
+import React from "react";
+import "./custom_schedule_fields.js";
+import "../shared/datepicker_field.js";
+
+var createReactClass = require("create-react-class");
+
 UI.define("CustomSchedules", function() {
-  var CustomSchedules = React.createClass({
+  var CustomSchedules = createReactClass({
     getDefaultProps: function() {
       open: false
     },
@@ -89,3 +93,5 @@ UI.define("CustomSchedules", function() {
 
   return CustomSchedules;
 });
+
+export default UI.CustomSchedules;

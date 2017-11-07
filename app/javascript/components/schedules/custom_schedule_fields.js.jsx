@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require("create-react-class");
+
 UI.define("CustomScheduleFields", function() {
-  var CustomScheduleFields  = React.createClass({
+  var CustomScheduleFields  = createReactClass({
     getInitialState: function() {
       return ({
         start_time_date_part: this.props.schedule.startTimeDatePart || "",
@@ -185,3 +189,5 @@ UI.define("CustomScheduleFields", function() {
 
   return CustomScheduleFields;
 });
+
+export default UI.CustomScheduleFields;
