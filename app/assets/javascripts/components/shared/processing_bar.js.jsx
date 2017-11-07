@@ -3,7 +3,9 @@
 UI.define("ProcessingBar", function() {
   var ProcessingBar = React.createClass({
     getDefaultProps: function() {
-      processingMessage: "Processing"
+      return {
+        processingMessage: "Processing"
+      };
     },
 
     render: function() {

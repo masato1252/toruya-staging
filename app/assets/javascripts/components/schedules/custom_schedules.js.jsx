@@ -5,7 +5,9 @@
 UI.define("CustomSchedules", function() {
   var CustomSchedules = React.createClass({
     getDefaultProps: function() {
-      open: false
+      return {
+        open: false
+      };
     },
 
     getInitialState: function() {
