@@ -1,5 +1,10 @@
+"use strict";
+
+import React from "react";
+var createReactClass = require('create-react-class');
+
 UI.define("ReservationSettings.Form", function() {
-  var ReservationSettingsForm = React.createClass({
+  var ReservationSettingsForm = createReactClass({
     getInitialState: function() {
       return {
         setting: this.props.setting,
@@ -51,7 +56,7 @@ UI.define("ReservationSettings.Form", function() {
                 <input
                   type="text"
                   placeholder={this.props.nameLabel}
-                  maxlength="30"
+                  maxLength="30"
                   name="reservation_setting[name]"
                   data-name="name"
                   value={this.state.setting.name}
@@ -65,7 +70,7 @@ UI.define("ReservationSettings.Form", function() {
                 <input
                   type="text"
                   placeholder={this.props.shortName}
-                  maxlength="10"
+                  maxLength="10"
                   name="reservation_setting[short_name]"
                   data-name="short_name"
                   value={this.state.setting.short_name}
@@ -158,7 +163,7 @@ UI.define("ReservationSettings.Form", function() {
                     <input
                       type="number"
                       size="2"
-                      maxlength="2"
+                      maxLength="2"
                       name="reservation_setting[day]"
                       disabled={!this.state.number_of_day_monthly}
                       defaultValue={this.state.setting.day}
@@ -182,7 +187,7 @@ UI.define("ReservationSettings.Form", function() {
                     <input
                       type="number"
                       size="1"
-                      maxlength="1"
+                      maxLength="1"
                       name="reservation_setting[nth_of_week]"
                       disabled={this.state.number_of_day_monthly}
                       defaultValue={this.state.setting.nth_of_week}
@@ -284,3 +289,5 @@ UI.define("ReservationSettings.Form", function() {
 
   return ReservationSettingsForm;
 });
+
+export default UI.ReservationSettings.Form;
