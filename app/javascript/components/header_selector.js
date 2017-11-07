@@ -1,9 +1,12 @@
-//= require "components/shared/select"
-
 "use strict";
 
+import "./shared/select.js"
+import React from "react";
+
+var createReactClass = require('create-react-class');
+
 UI.define("HeaderSelector", function() {
-  var HeaderSelector = React.createClass({
+  var HeaderSelector = createReactClass({
     getInitialState: function() {
       return {
         selectedOption: this.props.selectedOption,
@@ -41,3 +44,5 @@ UI.define("HeaderSelector", function() {
 
   return HeaderSelector;
 });
+
+export default UI.HeaderSelector;

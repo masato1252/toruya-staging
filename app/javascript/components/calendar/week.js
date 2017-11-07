@@ -1,7 +1,10 @@
 "use strict";
 
+import React from "react";
+var createReactClass = require('create-react-class');
+
 UI.define("Week", function() {
-  var Week = React.createClass({
+  var Week = createReactClass({
     isContainedBy: function(container, date) {
       return (_.contains(container, date.date()) && date.month() === this.props.month.month())
     },
@@ -71,3 +74,5 @@ UI.define("Week", function() {
 
   return Week;
 });
+
+export default Week;

@@ -1,9 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
-import "./paper/paper.js"
 var createReactClass = require('create-react-class');
 
-var HelloWorld = createReactClass({
+var Paper = createReactClass({
   propTypes: {
     greeting: PropTypes.string
   },
@@ -11,11 +10,10 @@ var HelloWorld = createReactClass({
   render: function() {
     return (
       <div>
-      <div>Greeting: {this.props.greeting}</div>
-      <Paper />
+        <div>Paper: {this.props.greeting}</div>
       </div>
     );
   }
 });
 
-export default HelloWorld
+export default Paper;

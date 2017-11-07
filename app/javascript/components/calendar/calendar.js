@@ -1,11 +1,13 @@
-//= require "components/calendar/day_names"
-//= require "components/calendar/week"
-//= require "components/shared/select"
-
 "use strict";
 
+import "./day_names.js";
+import "./week.js";
+import "../shared/select.js";
+import React from "react";
+var createReactClass = require('create-react-class');
+
 UI.define("Calendar", function() {
-  var Calendar = React.createClass({
+  var Calendar = createReactClass({
     getInitialState: function() {
       this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
@@ -157,3 +159,5 @@ UI.define("Calendar", function() {
 
   return Calendar;
 });
+
+export default UI.Calendar;

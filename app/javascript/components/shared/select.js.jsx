@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require('create-react-class');
+
 UI.define("Select", function() {
-  var Select = React.createClass({
+  var Select = createReactClass({
     getDefaultProps: function() {
       return {
         prefix: "",
@@ -50,3 +54,5 @@ UI.define("Select", function() {
 
   return Select;
 });
+
+export default UI.Select;

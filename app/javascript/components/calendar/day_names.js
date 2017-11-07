@@ -1,7 +1,10 @@
 "use strict";
 
+import React from "react";
+var createReactClass = require('create-react-class');
+
 UI.define("DayNames", function() {
-  var DayNames = React.createClass({
+  var DayNames = createReactClass({
     render: function() {
       var days = this.props.dayNames.map(function(name) {
         return(
@@ -16,3 +19,5 @@ UI.define("DayNames", function() {
 
   return DayNames;
 });
+
+export default UI.DayNames;
