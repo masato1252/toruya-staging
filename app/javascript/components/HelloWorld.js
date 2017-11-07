@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import "./paper/paper.js"
+import Paper from "./paper/paper.js"
 var createReactClass = require('create-react-class');
 
 var HelloWorld = createReactClass({
