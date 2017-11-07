@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.CustomerInfoView", function() {
-  var CustomerInfoView = React.createClass({
+  var CustomerInfoView = createReactClass({
     getInitialState: function() {
       return ({
       });
@@ -142,3 +146,5 @@ UI.define("Customers.CustomerInfoView", function() {
 
   return CustomerInfoView;
 });
+
+export default UI.Customers.CustomerInfoView;

@@ -1,9 +1,12 @@
-//= require "components/shared/datepicker_field"
-
 "use strict";
 
+import React from "react";
+import "../../shared/datepicker_field.js";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.Filter.QuerySider", function() {
-  var CustomersFilterQuerySider = React.createClass({
+  var CustomersFilterQuerySider = createReactClass({
     getInitialState: function() {
       this.emailTypes = [
         { label: this.props.homeLabel, value: "home" },
@@ -990,3 +993,5 @@ UI.define("Customers.Filter.QuerySider", function() {
 
   return CustomersFilterQuerySider;
 });
+
+export default UI.Customers.Filter.QuerySider;

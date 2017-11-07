@@ -1,9 +1,12 @@
-//= require "components/shared/processing_bar"
-
 "use strict";
 
+import React from "react";
+import "../../shared/processing_bar.js";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.Filter.CustomersList", function() {
-  var CustomersList = React.createClass({
+  var CustomersList = createReactClass({
     renderCustomersList: function() {
       return (
         this.props.customers.map(function(customer) {
@@ -47,3 +50,5 @@ UI.define("Customers.Filter.CustomersList", function() {
 
   return CustomersList;
 });
+
+export default UI.Customers.Filter.CustomersList;

@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.SearchBar", function() {
-  var SearchBar = React.createClass({
+  var SearchBar = createReactClass({
     getInitialState: function() {
       return ({
       });
@@ -34,3 +38,5 @@ UI.define("Customers.SearchBar", function() {
   });
   return SearchBar;
 });
+
+export default UI.Customers.SearchBar;

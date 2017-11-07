@@ -1,7 +1,10 @@
 "use strict";
 
+import React from "react";
+var createReactClass = require("create-react-class");
+
 UI.define("Common.CustomerOption", function() {
-  var CustomerOption = React.createClass({
+  var CustomerOption = createReactClass({
     _handleClick: function() {
       if (this.props.handleCustomerSelect) {
         this.props.handleCustomerSelect(this.props.customer.value);
@@ -38,3 +41,5 @@ UI.define("Common.CustomerOption", function() {
 
   return CustomerOption;
 });
+
+export default UI.Common.CustomerOption

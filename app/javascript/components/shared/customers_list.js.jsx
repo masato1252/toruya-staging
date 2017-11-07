@@ -1,9 +1,11 @@
-//= require "components/shared/customer_option"
-
 "use strict";
 
+import React from "react";
+import "./customer_option.js";
+var createReactClass = require("create-react-class");
+
 UI.define("Common.CustomersList", function() {
-  var CustomersList = React.createClass({
+  var CustomersList = createReactClass({
     getInitialState: function() {
       return ({
         listHeight: "60vh"
@@ -79,3 +81,5 @@ UI.define("Common.CustomersList", function() {
 
   return CustomersList;
 });
+
+export default UI.Common.CustomersList

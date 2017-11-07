@@ -1,7 +1,10 @@
 "use strict";
 
+import React from "react";
+var createReactClass = require("create-react-class");
+
 UI.define("ProcessingBar", function() {
-  var ProcessingBar = React.createClass({
+  var ProcessingBar = createReactClass({
     getDefaultProps: function() {
       processingMessage: "Processing"
     },
@@ -23,3 +26,5 @@ UI.define("ProcessingBar", function() {
 
   return ProcessingBar;
 });
+
+export default UI.ProcessingBar;

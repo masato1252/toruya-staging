@@ -1,14 +1,16 @@
-//= require "components/shared/customers_list"
-//= require "components/customers/customer_info_view"
-//= require "components/customers/customer_info_edit"
-//= require "components/customers/customer_reservations_view"
-//= require "components/customers/search_bar"
-//= require "components/shared/processing_bar"
-
 "use strict";
 
+import React from "react";
+import "../shared/customers_list.js";
+import "../shared/processing_bar.js";
+import "./customer_info_view.js";
+import "./customer_info_edit.js";
+import "./customer_reservations_view.js";
+import "./search_bar.js";
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.Dashboard", function() {
-  var CustomersDashboard = React.createClass({
+  var CustomersDashboard = createReactClass({
     getInitialState: function() {
       this.currentCustomersType = "recent" // recent, filter, search
       this.lastQuery = ""
@@ -646,3 +648,5 @@ UI.define("Customers.Dashboard", function() {
 
   return CustomersDashboard;
 });
+
+export default UI.Customers.Dashboard;

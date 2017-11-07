@@ -1,10 +1,15 @@
-//= require "components/customers/filter/query_sider"
-//= require "components/shared/message_bar"
-
 "use strict";
 
+import React from "react";
+import "./query_sider.js";
+import "./customers_list.js";
+import "../../shared/message_bar.js";
+import "../../shared/select.js";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.Filter.Dashboard", function() {
-  var CustomersFilterDashboard = React.createClass({
+  var CustomersFilterDashboard = createReactClass({
     getInitialState: function() {
       return ({
         customers: [],
@@ -311,3 +316,5 @@ UI.define("Customers.Filter.Dashboard", function() {
 
   return CustomersFilterDashboard;
 });
+
+export default UI.Customers.Filter.Dashboard

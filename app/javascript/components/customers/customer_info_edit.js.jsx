@@ -1,10 +1,13 @@
-//= require "components/shared/select"
-//= require "components/shared/processing_bar"
-
 "use strict";
 
+import React from "react";
+import "../shared/select.js";
+import "../shared/processing_bar.js";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.CustomerInfoEdit", function() {
-  var CustomerInfoEdit = React.createClass({
+  var CustomerInfoEdit = createReactClass({
     getInitialState: function() {
       this.optionMapping = {
         home: this.props.homeLabel,
@@ -479,3 +482,5 @@ UI.define("Customers.CustomerInfoEdit", function() {
 
   return CustomerInfoEdit;
 });
+
+export default UI.Customers.CustomerInfoEdit;

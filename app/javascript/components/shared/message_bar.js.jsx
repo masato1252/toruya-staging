@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require("create-react-class");
+
 UI.define("MessageBar", function() {
-  var MessageBar = React.createClass({
+  var MessageBar = createReactClass({
     // status: 'alert-success', 'alert-danger', 'alert-warning', 'alert-info'
     render: function() {
       if (!this.props.status || !this.props.message) {
@@ -19,3 +23,5 @@ UI.define("MessageBar", function() {
 
   return MessageBar;
 });
+
+export default UI.MessageBar;

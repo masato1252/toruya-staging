@@ -1,7 +1,11 @@
 "use strict";
 
+import React from "react";
+
+var createReactClass = require("create-react-class");
+
 UI.define("Customers.CustomerReservationsView", function() {
-  var CustomerReservationsView = React.createClass({
+  var CustomerReservationsView = createReactClass({
     getInitialState: function() {
       this.reservactionBehaviors = {
         "checked_in": [{ label: this.props.checkOutBtn, action: "check_out", btn_color: "BTNyellow" }],
@@ -253,3 +257,5 @@ UI.define("Customers.CustomerReservationsView", function() {
 
   return CustomerReservationsView;
 });
+
+export default UI.Customers.CustomerReservationsView;

@@ -1,12 +1,14 @@
-//= require "components/shared/select"
-//= require "components/shared/customers_list"
-//= require "components/shared/processing_bar"
-//= require "components/shared/datepicker_field"
-
 "use strict";
 
+import React from "react";
+import "../shared/select.js"
+import "../shared/customers_list.js"
+import "../shared/processing_bar.js"
+import "../shared/datepicker_field.js"
+var createReactClass = require("create-react-class");
+
 UI.define("Reservation.Form", function() {
-  var ReservationForm = React.createClass({
+  var ReservationForm = createReactClass({
     statics: {
       errors: ["shop_closed", "unworking_staff", "time_not_enough", "start_yet", "is_over"],
       warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
@@ -795,3 +797,5 @@ UI.define("Reservation.Form", function() {
   });
   return ReservationForm;
 })
+
+export default UI.Reservation.Form;
