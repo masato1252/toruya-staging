@@ -9,7 +9,9 @@ var createReactClass = require("create-react-class");
 UI.define("CustomSchedules", function() {
   var CustomSchedules = createReactClass({
     getDefaultProps: function() {
-      open: false
+      return {
+        open: false
+      };
     },
 
     getInitialState: function() {

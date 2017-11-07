@@ -6,7 +6,9 @@ var createReactClass = require("create-react-class");
 UI.define("ProcessingBar", function() {
   var ProcessingBar = createReactClass({
     getDefaultProps: function() {
-      processingMessage: "Processing"
+      return {
+        processingMessage: "Processing"
+      };
     },
 
     render: function() {
