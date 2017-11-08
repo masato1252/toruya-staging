@@ -1,0 +1,62 @@
+# Action failed: Configure the build: it is probably synatx issue, it could be found through http://yaml-online-parser.appspot.com/
+version: 2
+jobs:
+  build:
+    working_directory: ~/kasaike
+    docker:
+      - image: circleci/ruby:2.3.3-node
+        environment:
+          RAILS_ENV: test
+          RACK_ENV: test
+          # Fixed: could not connect to server: No such file or directory
+          PGHOST: 127.0.0.1
+          PGUSER: root
+      - image: postgres:9.6.4
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle-test_test
+
+    steps:
+      - checkout
+      # Fixed: Failed to fetch http://deb.debian.org/debian/pool/main/p/postgresql-9.4/postgresql-client-9.4_9.4.10-0+deb8u1_amd64.deb  404  Not Found
+      - run: sudo apt-get update
+
+      # Restore bundle and yarn cache
+      - restore_cache:
+          keys:
+            - kasaike-bundle-{{ checksum "Gemfile.lock" }}
+            - kasaike-yarn-{{ checksum "yarn.lock" }}
+
+      # Bundle install dependencies
+      - run:
+          name: Install dependencies
+          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+
+      - run: sudo apt-get install nodejs
+      # Fixed: Please check the output above for any errors and make sure that `psql` is installed in your PATH and has proper permissions.
+      - run: sudo apt-get install postgresql-client
+
+      # Store bundle and yarn cache
+      - save_cache:
+          key: kasaike-bundle-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - save_cache:
+          key: kasaike-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.yarn-cache
+
+      - run:
+          name: Database Setup
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:structure:load --trace
+
+      - run:
+          name: Parallel RSpec
+          command: bin/rails test
+
+      # Save artifacts
+      - store_test_results:
+          path: /tmp/test-results
