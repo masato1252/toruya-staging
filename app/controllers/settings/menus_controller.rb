@@ -4,7 +4,9 @@ class Settings::MenusController < SettingsController
   # GET /settings/menus
   # GET /settings/menus.json
   def index
-    @menus = super_user.menus.includes(:staffs, :reservation_setting).all
+    # XXX: FOR FUN
+    # @menus = super_user.menus.left_outer_joins(:active_staffs, :reservation_setting).select("DISTINCT menus.*, MIN(COALESCE(NULLIF(reservation_settings.short_name, ''), reservation_settings.name)) as setting_name, COUNT(DISTINCT(staff_menus.staff_id)) as staffs_count").group("menus.id").order("id")
+    @menus = super_user.menus.includes(:active_staffs, :reservation_setting).order("id")
   end
 
   # GET /settings/menus/1
