@@ -53,6 +53,8 @@ ja:
     no_label: 無し
     close: 閉じる
     print: 印刷
+    select_a_menu: メニューを選択
+    select_a_staff: スタッフを選択
   dashboard:
     my_shop: 自分の店舗
     shop_you_work_for: 勤務している店舗

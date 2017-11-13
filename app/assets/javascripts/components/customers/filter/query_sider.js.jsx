@@ -14,7 +14,6 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.initialStates = {
         savedFilterOptions: this.props.savedFilterOptions,
         current_saved_filter_id: "",
-        filterCategoryDisplaying: {},
         group_ids: [],
         rank_ids: [],
         livingPlaceInside: true,
@@ -66,17 +65,6 @@ UI.define("Customers.Filter.QuerySider", function() {
         }
       })
       .on("change", _this.onDataChange);
-    },
-
-    toggleCategoryDisplay: function(category_type) {
-      if (this.state.filterCategoryDisplaying[category_type]) {
-        this.state.filterCategoryDisplaying[category_type] = false;
-      }
-      else {
-        this.state.filterCategoryDisplaying[category_type] = true;
-      }
-
-      this.setState({filterCategoryDisplaying: this.state.filterCategoryDisplaying});
     },
 
     onCheckboxChange: function(event) {
@@ -275,17 +263,8 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
-    renderToggleIcon: function(category_type) {
-      if (this.state.filterCategoryDisplaying[category_type]) {
-        return <i className="fa fa-minus-square-o" aria-hidden="true"></i>
-      }
-      else {
-        return <i className="fa fa-plus-square-o" aria-hidden="true"></i>
-      }
-    },
-
     isQueryConditionLegal: function() {
-      return true;
+      return this.isReservationConditionValid();
     },
 
     renderBirthdayOptions: function() {
@@ -382,6 +361,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               calendarfieldPrefix="start_reservation_date"
               hiddenWeekDate={true}
               handleChange={this.onDataChange}
+              className={this.isReservationConditionValid() ? "" : "field-error"}
             />
             {
               this.state.reservationDateQueryType === "between" && this.props.locale === "ja" ? (
@@ -401,6 +381,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   calendarfieldPrefix="end_reservation_date"
                   hiddenWeekDate={true}
                   handleChange={this.onDataChange}
+                  className={this.isReservationConditionValid() ? "" : "field-error"}
                 />
                 {this.props.locale === "ja" ? (
                   <span className="filterForWording">{this.props.toWording}</span>
@@ -440,6 +421,15 @@ UI.define("Customers.Filter.QuerySider", function() {
       )
     },
 
+    isReservationConditionValid: function() {
+      if (this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
+        return !!this.state.start_reservation_date
+      }
+      else {
+        return true
+      }
+    },
+
     render: function() {
       return(
         <div id="searchKeys" className="sidel">
@@ -455,265 +445,214 @@ UI.define("Customers.Filter.QuerySider", function() {
             </div>
             <h2>{this.props.customerInfoTitle}</h2>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "group_ids")} >
-                {this.renderToggleIcon("group_ids")}
-                {this.props.customerGroupTitle}
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["group_ids"] ? (
-                  <dl className="groups">
-                    <dt>{this.props.customerGroupTitle}</dt>
-                    <dd>
-                      <ul>
-                        {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
-                      </ul>
-                    </dd>
-                  </dl>
-                ) : null
-              }
+              <h3>{this.props.customerGroupTitle}</h3>
+              <dl className="groups">
+                <dt>{this.props.customerGroupTitle}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
+                  </ul>
+                </dd>
+              </dl>
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "rank_ids")} >
-                {this.renderToggleIcon("rank_ids")}
-                {this.props.customerLevelTitle}
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["rank_ids"] ? (
-                  <dl className="groups">
-                    <dt>{this.props.customerLevelTitle}</dt>
-                    <dd>
-                      <ul>
-                        {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
-                      </ul>
-                    </dd>
-                  </dl>
-                ) : null
-              }
+              <h3>{this.props.customerLevelTitle}</h3>
+              <dl className="groups">
+                <dt>{this.props.customerLevelTitle}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
+                  </ul>
+                </dd>
+              </dl>
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "living_place")} >
-                {this.renderToggleIcon("living_place")}
-                {this.props.customerLivingPlaceTitle}
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["living_place"] ? (
-                  <div>
-                    <dl className="filterFor">
-                      <dd>
+              <h3>{this.props.customerLivingPlaceTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    <UI.Select
+                      options={this.props.livingPlaceQueryTypeOptions}
+                      data-name="livingPlaceInside"
+                      value={this.state.livingPlaceInside}
+                      onChange={this.onDataChange}
+                      />に在住
+                  </dd>
+                </dl>
+                <dl className="state">
+                  <dt>{this.props.customerLivingPlaceState}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleInputs(this.state.states, "states")}
+                      <li>
                         <UI.Select
-                          options={this.props.livingPlaceQueryTypeOptions}
-                          data-name="livingPlaceInside"
-                          value={this.state.livingPlaceInside}
+                          includeBlank="true"
+                          blankOption={this.props.selectRegionLabel}
+                          options={this.props.regions}
+                          data-name="state"
+                          value={this.state.state}
                           onChange={this.onDataChange}
-                          />に在住
-                      </dd>
-                    </dl>
-                    <dl className="state">
-                      <dt>{this.props.customerLivingPlaceState}</dt>
-                      <dd>
-                        <ul>
-                          {this.renderMultipleInputs(this.state.states, "states")}
-                          <li>
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectRegionLabel}
-                              options={this.props.regions}
-                              data-name="state"
-                              value={this.state.state}
-                              onChange={this.onDataChange}
-                              />
-                          </li>
-                        </ul>
-                      </dd>
-                    </dl>
-                  </div>
-                ) : null
-              }
+                          />
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "has_email")} >
-                {this.renderToggleIcon("has_email")}
-                {this.props.customerEmailTitle}：
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["has_email"] ? (
-                  <div>
+              <h3>{this.props.customerEmailTitle}</h3>
+              <div>
+                <dl>
+                  <dt>{this.props.customerEmailTypes}</dt>
+                  <dd>
+                    <ul>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasEmail"
+                          data-name="has_email"
+                          data-value="true"
+                          checked={this.state.has_email === "true"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasEmail">{this.props.yesLabel}</label>
+                      </li>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasNOemail"
+                          data-name="has_email"
+                          data-value="false"
+                          checked={this.state.has_email === "false"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasNOemail">{this.props.noLabel}</label>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+                {
+                  this.state.has_email === "true" ? (
                     <dl>
-                      <dt>{this.props.customerEmailTypes}</dt>
+                      <dt>has witch email?</dt>
                       <dd>
                         <ul>
-                          <li>
-                            <input
-                              type="radio"
-                              id="hasEmail"
-                              data-name="has_email"
-                              data-value="true"
-                              checked={this.state.has_email === "true"}
-                              onChange={this.onDataChange}
-                              />
-                            <label htmlFor="hasEmail">{this.props.yesLabel}</label>
-                          </li>
-                          <li>
-                            <input
-                              type="radio"
-                              id="hasNOemail"
-                              data-name="has_email"
-                              data-value="false"
-                              checked={this.state.has_email === "false"}
-                              onChange={this.onDataChange}
-                              />
-                            <label htmlFor="hasNOemail">{this.props.noLabel}</label>
-                          </li>
+                          {this.renderCheckboxOptions(this.emailTypes, "email_types")}
                         </ul>
                       </dd>
                     </dl>
-                    {
-                      this.state.has_email === "true" ? (
-                        <dl>
-                          <dt>has witch email?</dt>
-                          <dd>
-                            <ul>
-                              {this.renderCheckboxOptions(this.emailTypes, "email_types")}
-                            </ul>
-                          </dd>
-                        </dl>
-                      ) : null
-                    }
-                  </div>
-                ) : null
-              }
+                  ) : null
+                }
+              </div>
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "birthday")} >
-                {this.renderToggleIcon("birthday")}
-                {this.props.customerBirthdayTitle}
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["birthday"] ? (
-                  <div>
-                    <dl className="filterFor">
-                      <dd>
-                        <span className="filterForWording">{this.props.bornWording}</span>
-                        <UI.Select
-                          options={this.props.dobDateQueryOptions}
-                          data-name="birthdayQueryType"
-                          value={this.state.birthdayQueryType}
-                          onChange={this.onDataChange}
-                          />
-                      </dd>
-                    </dl>
-                    <dl className="date">
-                      <dd>
-                        {this.renderBirthdayOptions()}
-                      </dd>
-                    </dl>
-                  </div>
-                ) : null
-              }
+              <h3>{this.props.customerBirthdayTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    <span className="filterForWording">{this.props.bornWording}</span>
+                    <UI.Select
+                      options={this.props.dobDateQueryOptions}
+                      data-name="birthdayQueryType"
+                      value={this.state.birthdayQueryType}
+                      onChange={this.onDataChange}
+                      />
+                  </dd>
+                </dl>
+                <dl className="date">
+                  <dd>
+                    {this.renderBirthdayOptions()}
+                  </dd>
+                </dl>
+              </div>
             </div>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "custom_ids")} >
-                {this.renderToggleIcon("custom_ids")}
-                {this.props.customerIdTitle}：
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["custom_ids"] ? (
-                  <dl className="customerID">
-                    <dd>
-                      <ul>
-                        {this.renderMultipleInputs(this.state.custom_ids, "custom_ids")}
-                        <li>
-                          <input
-                            type="text"
-                            placeholder={this.props.customIdPlaceholder}
-                            value={this.state.custom_id}
-                            data-name="custom_id"
-                            onChange={this.onDataChange}
-                            />
-                          <a
-                            href="#"
-                            className={`BTNyellow ${this.state.custom_id ? null : "disabled"}`}
-                            onClick={this.onAddItem}
-                            data-target-name="custom_id"
-                            data-name="custom_ids"
-                            >
-                            <i
-                              className="fa fa-plus"
-                              aria-hidden="true"
-                              data-target-name="custom_id"
-                              data-name="custom_ids" >
-                            </i>
-                          </a>
-                        </li>
-                      </ul>
-                    </dd>
-                  </dl>
-                ) : null
-              }
+              <h3>{this.props.customerIdTitle}</h3>
+              <dl className="customerID">
+                <dd>
+                  <ul>
+                    {this.renderMultipleInputs(this.state.custom_ids, "custom_ids")}
+                    <li>
+                      <input
+                        type="text"
+                        placeholder={this.props.customIdPlaceholder}
+                        value={this.state.custom_id}
+                        data-name="custom_id"
+                        onChange={this.onDataChange}
+                        />
+                      <a
+                        href="#"
+                        className={`BTNyellow ${this.state.custom_id ? null : "disabled"}`}
+                        onClick={this.onAddItem}
+                        data-target-name="custom_id"
+                        data-name="custom_ids"
+                        >
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          data-target-name="custom_id"
+                          data-name="custom_ids" >
+                        </i>
+                      </a>
+                    </li>
+                  </ul>
+                </dd>
+              </dl>
             </div>
-            <h2>{this.props.customerReservationRecordsTitle}：</h2>
+            <h2>{this.props.customerReservationRecordsTitle}</h2>
             <div className="filterKey">
-              <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation")} >
-                {this.renderToggleIcon("reservation")}
-                {this.props.customerReservationDateTitle}：
-              </h3>
-              {
-                this.state.filterCategoryDisplaying["reservation"] ? (
-                  <div>
-                    <dl className="filterFor">
-                      <dd>
-                        {this.props.locale === "ja" ? (
-                          <UI.Select
-                            options={this.props.reservationDateQueryOptions}
-                            data-name="reservationDateQueryType"
-                            value={this.state.reservationDateQueryType}
-                            onChange={this.onDataChange}
-                          />
-                        ) : (
-                          <UI.Select
-                            options={this.props.yesNoOptions}
-                            data-name="hasReservation"
-                            value={this.state.hasReservation}
-                            onChange={this.onDataChange}
-                            />
-                        )}
-                        <span className="filterForReservationWording">{this.props.reservationsWording}</span>
-                        {this.props.locale === "ja" ? (
-                          <UI.Select
-                            options={this.props.yesNoOptions}
-                            data-name="hasReservation"
-                            value={this.state.hasReservation}
-                            onChange={this.onDataChange}
-                            />
-                        ) : (
-                          <UI.Select
-                            options={this.props.reservationDateQueryOptions}
-                            data-name="reservationDateQueryType"
-                            value={this.state.reservationDateQueryType}
-                            onChange={this.onDataChange}
-                          />
-                        )}
-                      </dd>
-                    </dl>
-                    <dl className="date">
-                      <dd>
-                        {this.renderReservationDateOptions()}
-                      </dd>
-                    </dl>
-                  </div>
-                ) : null
-              }
+              <h3>{this.props.customerReservationDateTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    {this.props.locale === "ja" ? (
+                      <UI.Select
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
+                        onChange={this.onDataChange}
+                      />
+                    ) : (
+                      <UI.Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    )}
+                    <span className="filterForReservationWording">{this.props.reservationsWording}</span>
+                    {this.props.locale === "ja" ? (
+                      <UI.Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    ) : (
+                      <UI.Select
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
+                        onChange={this.onDataChange}
+                      />
+                    )}
+                  </dd>
+                </dl>
+                <dl className="date">
+                  <dd>
+                    {this.renderReservationDateOptions()}
+                  </dd>
+                </dl>
+              </div>
             </div>
 
-            <div className={
-                (this.state.hasReservation === "true" || this.state.hasReservation === true) && this.state.start_reservation_date ? null : "display-hidden"}>
+            <div className={(this.state.hasReservation === "true" || this.state.hasReservation === true)}>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "menu_ids")} >
-                  {this.renderToggleIcon("menu_ids")}
+                <h3>
                   {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
-                <dl className={this.state.filterCategoryDisplaying["menu_ids"] ? null : "display-hidden"}>
-                  <dt>Select Menu：</dt>
+                <dl>
+                  <dt>{this.props.selectMenuLabel}</dt>
                   <dd>
                     <ul>
                       {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
@@ -747,121 +686,95 @@ UI.define("Customers.Filter.QuerySider", function() {
                 </dl>
               </div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "staff_ids")} >
-                  {this.renderToggleIcon("staff_ids")}
+                <h3>
                   {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
-                {
-                  this.state.filterCategoryDisplaying["staff_ids"] ? (
-                    <dl>
-                      <dt>Select Staff：</dt>
-                      <dd>
-                        <ul>
-                          {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
-                          <li>
-                            <UI.Select
-                              includeBlank="true"
-                              blankOption={this.props.selectStaffLabel}
-                              options={this.props.staffOptions}
-                              data-name="staff_id"
-                              value={this.state.staff_id}
-                              onChange={this.onDataChange}
-                            />
-                            <a
-                              href="#"
-                              className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
-                              onClick={this.onAddItem}
-                              data-target-name="staff_id"
-                              data-name="staff_ids"
-                              >
-                              <i
-                                className="fa fa-plus"
-                                aria-hidden="true"
-                                data-target-name="staff_id"
-                                data-name="staff_ids" >
-                              </i>
-                            </a>
-                          </li>
-                        </ul>
-                      </dd>
-                    </dl>
-                  ) : null
-                }
+                <dl>
+                  <dt>{this.props.selectStaffLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectStaffLabel}
+                          options={this.props.staffOptions}
+                          data-name="staff_id"
+                          value={this.state.staff_id}
+                          onChange={this.onDataChange}
+                        />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="staff_id"
+                          data-name="staff_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="staff_id"
+                            data-name="staff_ids" >
+                          </i>
+                        </a>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey display-hidden">
+                <h3>{this.props.customerReservationErrorTitle}</h3>
+                <dl>
+                  <dt>has errors?</dt>
+                  <dd>
+                    <ul>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasANerror"
+                          data-name="reservation_with_warnings"
+                          data-value="true"
+                          checked={this.state.reservation_with_warnings === "true"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasANerror">{this.props.yesLabel}</label>
+                      </li>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasNOrror"
+                          data-name="reservation_with_warnings"
+                          data-value="false"
+                          checked={this.state.reservation_with_warnings === "false"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasNOrror">{this.props.noLabel}</label>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
               </div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservation_with_warnings")} >
-                  {this.renderToggleIcon("reservation_with_warnings")}
-                  {this.props.customerReservationErrorTitle}：
-                </h3>
-                {
-                  this.state.filterCategoryDisplaying["reservation_with_warnings"] ? (
-                  <dl>
-                    <dt>has errors?</dt>
-                    <dd>
-                      <ul>
-                        <li>
-                          <input
-                            type="radio"
-                            id="hasANerror"
-                            data-name="reservation_with_warnings"
-                            data-value="true"
-                            checked={this.state.reservation_with_warnings === "true"}
-                            onChange={this.onDataChange}
-                            />
-                          <label htmlFor="hasANerror">{this.props.yesLabel}</label>
-                        </li>
-                        <li>
-                          <input
-                            type="radio"
-                            id="hasNOrror"
-                            data-name="reservation_with_warnings"
-                            data-value="false"
-                            checked={this.state.reservation_with_warnings === "false"}
-                            onChange={this.onDataChange}
-                            />
-                          <label htmlFor="hasNOrror">{this.props.noLabel}</label>
-                        </li>
-                      </ul>
-                    </dd>
-                  </dl>
-                  ) : null
-                }
+                <h3>{this.props.customerReservationStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerReservationStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
               </div>
               <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationBeforeCheckedInStates")} >
-                  {this.renderToggleIcon("reservationBeforeCheckedInStates")}
-                  {this.props.customerReservationStatusTitle}：
-                </h3>
-                {
-                  this.state.filterCategoryDisplaying["reservationBeforeCheckedInStates"] ? (
-                    <dl>
-                      <dt>{this.props.customerReservationStatusInfo}</dt>
-                      <dd>
-                        <ul>
-                          {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
-                        </ul>
-                      </dd>
-                    </dl>
-                  ) : null
-                }
-              </div>
-              <div className="filterKey">
-                <h3 onClick={this.toggleCategoryDisplay.bind(this, "reservationAfterCheckedInStates")} >
-                  {this.renderToggleIcon("reservationAfterCheckedInStates")}
-                  {this.props.customerCheckInStatusTitle}：
-                </h3>
-                {
-                  this.state.filterCategoryDisplaying["reservationAfterCheckedInStates"] ? (
-                    <dl>
-                      <dt>{this.props.customerCheckInStatusInfo}</dt>
-                      <dd>
-                        <ul>
-                          {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
-                        </ul>
-                      </dd>
-                    </dl>
-                  ) : null
-                }
+                <h3>{this.props.customerCheckInStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerCheckInStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
               </div>
             </div>
           </div>
