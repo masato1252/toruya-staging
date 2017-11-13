@@ -641,7 +641,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
                 <dl>
-                  <dt>Select Menu：</dt>
+                  <dt>{this.props.selectMenuLabel}</dt>
                   <dd>
                     <ul>
                       {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
@@ -679,7 +679,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
                 <dl>
-                  <dt>Select Staff：</dt>
+                  <dt>{this.props.selectStaffLabel}</dt>
                   <dd>
                     <ul>
                       {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}

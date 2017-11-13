@@ -54,6 +54,8 @@ en:
     no_label: "NO"
     close: Close
     print: PRINT
+    select_a_menu: Please select a menu
+    select_a_staff: Please select a staff
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for
