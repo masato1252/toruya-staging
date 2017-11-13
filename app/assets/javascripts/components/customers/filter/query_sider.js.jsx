@@ -264,7 +264,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     isQueryConditionLegal: function() {
-      return true;
+      return this.isReservationConditionValid();
     },
 
     renderBirthdayOptions: function() {
@@ -361,6 +361,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               calendarfieldPrefix="start_reservation_date"
               hiddenWeekDate={true}
               handleChange={this.onDataChange}
+              className={this.isReservationConditionValid() ? "" : "field-error"}
             />
             {
               this.state.reservationDateQueryType === "between" && this.props.locale === "ja" ? (
@@ -380,6 +381,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                   calendarfieldPrefix="end_reservation_date"
                   hiddenWeekDate={true}
                   handleChange={this.onDataChange}
+                  className={this.isReservationConditionValid() ? "" : "field-error"}
                 />
                 {this.props.locale === "ja" ? (
                   <span className="filterForWording">{this.props.toWording}</span>
@@ -417,6 +419,15 @@ UI.define("Customers.Filter.QuerySider", function() {
           }
         </div>
       )
+    },
+
+    isReservationConditionValid: function() {
+      if (this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
+        return !!this.state.start_reservation_date
+      }
+      else {
+        return true
+      }
     },
 
     render: function() {
