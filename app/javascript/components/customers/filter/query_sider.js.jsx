@@ -1,0 +1,910 @@
+"use strict";
+
+import React from "react";
+import "../../shared/datepicker_field.js";
+
+var createReactClass = require("create-react-class");
+
+UI.define("Customers.Filter.QuerySider", function() {
+  var CustomersFilterQuerySider = createReactClass({
+    getInitialState: function() {
+      this.emailTypes = [
+        { label: this.props.homeLabel, value: "home" },
+        { label: this.props.mobileLabel, value: "mobile" },
+        { label: this.props.workLabel, value: "work" }
+      ]
+
+      this.initialStates = {
+        savedFilterOptions: this.props.savedFilterOptions,
+        current_saved_filter_id: "",
+        group_ids: [],
+        rank_ids: [],
+        livingPlaceInside: true,
+        states: [],
+        state: "",
+        has_email: "",
+        email_types: [],
+        birthdayQueryType: "on",
+        custom_id: "",
+        custom_ids: [],
+        start_dob_date: "",
+        end_dob_date: "",
+        day_of_dob: "",
+        month_of_dob: "",
+        hasReservation: true,
+        reservationDateQueryType: "on",
+        start_reservation_date: "",
+        end_reservation_date: "",
+        menu_id: "",
+        menu_ids: [],
+        staff_id: "",
+        staff_ids: [],
+        reservation_with_warnings: "",
+        reservation_states: []
+      }
+
+      return this.initialStates;
+    },
+
+    componentDidMount: function() {
+      this.applySelect2();
+    },
+
+    reset: function() {
+      this.setState(_.omit(this.getInitialState(), "savedFilterOptions"));
+      this.props.updateFilter("filter_name", "");
+      this.props.updateFilter("current_saved_filter_id", "");
+    },
+
+    applySelect2: function() {
+      var _this = this;
+
+      $("#select2").select2({
+        theme: "bootstrap",
+        "language": {
+          "noResults": function() {
+            return _this.props.noMenuMessage;
+          }
+        }
+      })
+      .on("change", _this.onDataChange);
+    },
+
+    onCheckboxChange: function(event) {
+      let newValues = this.state[event.target.dataset.name];
+
+      if (_.contains(newValues, event.target.dataset.value)) {
+        newValues = _.reject(newValues, function(value) {
+           return value === event.target.dataset.value
+        })
+      }
+      else {
+        newValues.push(event.target.dataset.value);
+      }
+
+      this.setState({[event.target.dataset.name]: newValues})
+    },
+
+    onDataChange: function(event) {
+      let stateName = event.target.dataset.name;
+      let stateValue = event.target.dataset.value || event.target.value;
+
+      this.setState({[stateName]: stateValue}, function() {
+        if (stateName === "state") {
+          this.onAddItem(null, "states", "state")
+        }
+      }.bind(this));
+    },
+
+    onSavedFilterClick: function(event) {
+      const _this = this;
+      let stateValue = event.target.dataset.value;
+
+      // Load Filter query to option
+      if (!stateValue) {
+        this.reset();
+        this.props.updateCustomers([]);
+        return;
+      }
+
+      $("#saved-filters-modal").modal("hide");
+
+      $.ajax({
+        type: "GET",
+        url: this.props.fetchFilterPath, //sumbits it to the given url of the form
+        data: { id: stateValue },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.updateFilterOption(result);
+        // _this.props.forceStopProcessing();
+      }).always(function() {
+        // _this.props.forceStopProcessing();
+      });
+    },
+
+    updateFilterOption: function(query, queryCustomers=true) {
+      this.setState($.extend({}, this.getInitialState(), query), function() {
+        if (queryCustomers) {
+          this.submitFilterForm()
+          this.queryConditions = $(this.filterForm).serialize();
+        }
+      }.bind(this));
+      this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
+      this.props.updateFilter("current_saved_filter_id", query["current_saved_filter_id"]);
+      this.props.updateFilter("current_saved_filter_name", query["current_saved_filter_name"]);
+    },
+
+    onRemoveItem: function(event) {
+      event.preventDefault();
+
+      let newValues = this.state[event.target.dataset.name];
+
+      if (_.contains(newValues, event.target.dataset.value)) {
+        newValues = _.reject(newValues, function(value) {
+           return value === event.target.dataset.value
+        })
+      }
+
+      this.setState({[event.target.dataset.name]: newValues})
+    },
+
+    onAddItem: function(event, _collectionName, _valueName) {
+      if (event) { event.preventDefault(); }
+
+      let collectionName = event ? event.target.dataset.name : _collectionName;
+      let valueName = event ? event.target.dataset.targetName : _valueName;
+
+      let newValues = this.state[collectionName];
+      let newValue = this.state[valueName];
+      if (!newValue) { return; }
+
+      if (_.contains(newValues, newValue)) { return; }
+
+      newValues.push(newValue);
+
+      this.setState({
+        [collectionName]: newValues,
+        [valueName]: ""
+      });
+    },
+
+    submitFilterForm: function() {
+      event.preventDefault();
+      if (!this.isQueryConditionLegal()) { return; }
+
+      var _this = this;
+
+      // It would clean existing saved filter id when query conditions changes, let user save a new one.
+      if (_this.queryConditions !== $(this.filterForm).serialize()) {
+        this.props.updateFilter("filter_name", "");
+        this.props.updateFilter("current_saved_filter_id", "");
+        this.props.updateFilter("current_saved_filter_name", "");
+      }
+
+      this.queryConditions = $(this.filterForm).serialize();
+      _this.props.startProcessing();
+
+      $.ajax({
+        type: "POST",
+        url: _this.props.filterPath, //sumbits it to the given url of the form
+        data: _this.queryConditions,
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.props.updateCustomers(result["customers"]);
+      }).always(function() {
+      });
+    },
+
+    renderCheckboxOptions: function(options, stateName) {
+      return (
+        options.map(function(option) {
+          return (
+            <li key={`${stateName}-${option.value}`}>
+              <input
+                type="checkbox"
+                id={`${stateName}-${option.value}`}
+                onChange={this.onCheckboxChange}
+                data-name={stateName}
+                data-value={option.value}
+                value={option.value}
+                checked={_.contains(this.state[stateName], `${option.value}`)}
+                />
+              <label htmlFor={`${stateName}-${option.value}`}>{option.label}</label>
+            </li>
+          )
+        }.bind(this))
+      )
+    },
+
+    renderMultipleInputs: function(items, collection_name) {
+      return (
+        items.map(function(item) {
+          return (
+            <li key={item}>
+              <input type="text" value={item} readOnly />
+              <a href="#"
+                 className="BTNorange"
+                 data-name={collection_name}
+                 data-value={item}
+                 onClick={this.onRemoveItem} >
+                 <i
+                   className="fa fa-minus"
+                   aria-hidden="true"
+                   data-name={collection_name}
+                   data-value={item}>
+                 </i>
+              </a>
+            </li>
+          )
+        }.bind(this))
+      )
+    },
+
+    renderMultipleSelectInputs: function(items, collection_name, mappingOptions) {
+      return (
+        items.map(function(item) {
+          let option = _.find(mappingOptions, function(option) { return option.value == item; }.bind(this))
+
+          return (
+            <li key={item}>
+              <input type="text" value={option.label} readOnly />
+              <a href="#"
+                 className="BTNorange"
+                 data-name={collection_name}
+                 data-value={item}
+                 onClick={this.onRemoveItem} >
+                 <i
+                   className="fa fa-minus"
+                   aria-hidden="true"
+                   data-name={collection_name}
+                   data-value={item}>
+                 </i>
+              </a>
+            </li>
+          )
+        }.bind(this))
+      )
+    },
+
+    isQueryConditionLegal: function() {
+      return this.isReservationConditionValid();
+    },
+
+    renderBirthdayOptions: function() {
+      let birthdayOptionView;
+
+      switch (this.state.birthdayQueryType) {
+        case "on_month":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                <UI.Select
+                  includeBlank="true"
+                  blankOption={this.props.selectMonthLabel}
+                  options={this.props.monthOptions}
+                  data-name="month_of_dob"
+                  value={this.state.month_of_dob}
+                  onChange={this.onDataChange}
+                  />
+              </li>
+            </ul>
+          )
+          break;
+        case "on":
+        case "before":
+        case "after":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                <UI.Common.DatepickerField
+                  date={this.state.start_dob_date}
+                  dataName="start_dob_date"
+                  calendarfieldPrefix="start_dob_date"
+                  hiddenWeekDate={true}
+                  handleChange={this.onDataChange}
+                />
+              </li>
+            </ul>
+          )
+
+          break;
+        case "between":
+          birthdayOptionView = (
+            <ul>
+              <li>
+                {this.props.locale == "en" ? (
+                  <span className="filterForWording">{this.props.fromWording}</span>
+                ) : null}
+                <UI.Common.DatepickerField
+                  date={this.state.start_dob_date}
+                  dataName="start_dob_date"
+                  calendarfieldPrefix="start_dob_date"
+                  hiddenWeekDate={true}
+                  handleChange={this.onDataChange}
+                />
+                {this.props.locale == "ja" ? (
+                  <span className="filterForWording">{this.props.fromWording}</span>
+                ) : null}
+              </li>
+              <li>
+                {this.props.locale == "en" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+                <UI.Common.DatepickerField
+                  date={this.state.end_dob_date}
+                  dataName="end_dob_date"
+                  calendarfieldPrefix="end_dob_date"
+                  hiddenWeekDate={true}
+                  handleChange={this.onDataChange}
+                />
+                {this.props.locale == "ja" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+              </li>
+            </ul>
+          )
+          break;
+      }
+
+      return birthdayOptionView;
+    },
+
+    renderReservationDateOptions: function() {
+      return (
+        <ul>
+          <li>
+            {
+              this.state.reservationDateQueryType === "between" && this.props.locale === "en" ? (
+                <span className="filterForWording">{this.props.fromWording}</span>
+              ) : null
+            }
+            <UI.Common.DatepickerField
+              date={this.state.start_reservation_date}
+              dataName="start_reservation_date"
+              calendarfieldPrefix="start_reservation_date"
+              hiddenWeekDate={true}
+              handleChange={this.onDataChange}
+              className={this.isReservationConditionValid() ? "" : "field-error"}
+            />
+            {
+              this.state.reservationDateQueryType === "between" && this.props.locale === "ja" ? (
+                <span className="filterForWording">{this.props.fromWording}</span>
+              ) : null
+            }
+          </li>
+          {
+            this.state.reservationDateQueryType === "between" ? (
+              <li>
+                {this.props.locale === "en" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+                <UI.Common.DatepickerField
+                  date={this.state.end_reservation_date}
+                  dataName="end_reservation_date"
+                  calendarfieldPrefix="end_reservation_date"
+                  hiddenWeekDate={true}
+                  handleChange={this.onDataChange}
+                  className={this.isReservationConditionValid() ? "" : "field-error"}
+                />
+                {this.props.locale === "ja" ? (
+                  <span className="filterForWording">{this.props.toWording}</span>
+                ) : null}
+              </li>
+            ) : null
+          }
+        </ul>
+      );
+    },
+
+    renderSavedFilteredOutcomes: function() {
+      return (
+        <div id="savedFilters">
+          {
+            this.state.savedFilterOptions.length === 0 ? (
+              <p className="no-filter">
+                {this.props.emptySavedFilterSentenceOne}
+                <br />
+                {this.props.emptySavedFilterSentenceTwo}
+              </p>
+            ) : (
+              this.state.savedFilterOptions.map(function(option) {
+                return (
+                  <a href="#"
+                    key={option.value}
+                    className="BTNtarco"
+                    data-value={option.value}
+                    onClick={this.onSavedFilterClick}>
+                    {option.label}
+                  </a>
+                )
+              }.bind(this))
+            )
+          }
+        </div>
+      )
+    },
+
+    isReservationConditionValid: function() {
+      if (this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
+        return !!this.state.start_reservation_date
+      }
+      else {
+        return true
+      }
+    },
+
+    render: function() {
+      return(
+        <div id="searchKeys" className="sidel">
+          <div id="tabs" className="tabs">
+            <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
+          </div>
+
+          <div id="filterKeys" className="tabBody">
+            <div className="savedFilter">
+              <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
+                {this.props.openSavedFilterBtn}
+              </a>
+            </div>
+            <h2>{this.props.customerInfoTitle}</h2>
+            <div className="filterKey">
+              <h3>{this.props.customerGroupTitle}</h3>
+              <dl className="groups">
+                <dt>{this.props.customerGroupTitle}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerLevelTitle}</h3>
+              <dl className="groups">
+                <dt>{this.props.customerLevelTitle}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerLivingPlaceTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    <UI.Select
+                      options={this.props.livingPlaceQueryTypeOptions}
+                      data-name="livingPlaceInside"
+                      value={this.state.livingPlaceInside}
+                      onChange={this.onDataChange}
+                      />に在住
+                  </dd>
+                </dl>
+                <dl className="state">
+                  <dt>{this.props.customerLivingPlaceState}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleInputs(this.state.states, "states")}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectRegionLabel}
+                          options={this.props.regions}
+                          data-name="state"
+                          value={this.state.state}
+                          onChange={this.onDataChange}
+                          />
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerEmailTitle}</h3>
+              <div>
+                <dl>
+                  <dt>{this.props.customerEmailTypes}</dt>
+                  <dd>
+                    <ul>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasEmail"
+                          data-name="has_email"
+                          data-value="true"
+                          checked={this.state.has_email === "true"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasEmail">{this.props.yesLabel}</label>
+                      </li>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasNOemail"
+                          data-name="has_email"
+                          data-value="false"
+                          checked={this.state.has_email === "false"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasNOemail">{this.props.noLabel}</label>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+                {
+                  this.state.has_email === "true" ? (
+                    <dl>
+                      <dt>has witch email?</dt>
+                      <dd>
+                        <ul>
+                          {this.renderCheckboxOptions(this.emailTypes, "email_types")}
+                        </ul>
+                      </dd>
+                    </dl>
+                  ) : null
+                }
+              </div>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerBirthdayTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    <span className="filterForWording">{this.props.bornWording}</span>
+                    <UI.Select
+                      options={this.props.dobDateQueryOptions}
+                      data-name="birthdayQueryType"
+                      value={this.state.birthdayQueryType}
+                      onChange={this.onDataChange}
+                      />
+                  </dd>
+                </dl>
+                <dl className="date">
+                  <dd>
+                    {this.renderBirthdayOptions()}
+                  </dd>
+                </dl>
+              </div>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerIdTitle}</h3>
+              <dl className="customerID">
+                <dd>
+                  <ul>
+                    {this.renderMultipleInputs(this.state.custom_ids, "custom_ids")}
+                    <li>
+                      <input
+                        type="text"
+                        placeholder={this.props.customIdPlaceholder}
+                        value={this.state.custom_id}
+                        data-name="custom_id"
+                        onChange={this.onDataChange}
+                        />
+                      <a
+                        href="#"
+                        className={`BTNyellow ${this.state.custom_id ? null : "disabled"}`}
+                        onClick={this.onAddItem}
+                        data-target-name="custom_id"
+                        data-name="custom_ids"
+                        >
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          data-target-name="custom_id"
+                          data-name="custom_ids" >
+                        </i>
+                      </a>
+                    </li>
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <h2>{this.props.customerReservationRecordsTitle}</h2>
+            <div className="filterKey">
+              <h3>{this.props.customerReservationDateTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    {this.props.locale === "ja" ? (
+                      <UI.Select
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
+                        onChange={this.onDataChange}
+                      />
+                    ) : (
+                      <UI.Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    )}
+                    <span className="filterForReservationWording">{this.props.reservationsWording}</span>
+                    {this.props.locale === "ja" ? (
+                      <UI.Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    ) : (
+                      <UI.Select
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
+                        onChange={this.onDataChange}
+                      />
+                    )}
+                  </dd>
+                </dl>
+                <dl className="date">
+                  <dd>
+                    {this.renderReservationDateOptions()}
+                  </dd>
+                </dl>
+              </div>
+            </div>
+
+            <div className={(this.state.hasReservation === "true" || this.state.hasReservation === true)}>
+              <div className="filterKey">
+                <h3>
+                  {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectMenuLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectMenuLabel}
+                          options={this.props.menuGroupOptions}
+                          id="select2"
+                          data-name="menu_id"
+                          value={this.state.menu_id}
+                          onChange={this.onDataChange}
+                          />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="menu_id"
+                          data-name="menu_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="menu_id"
+                            data-name="menu_ids" >
+                          </i>
+                        </a>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>
+                  {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectStaffLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectStaffLabel}
+                          options={this.props.staffOptions}
+                          data-name="staff_id"
+                          value={this.state.staff_id}
+                          onChange={this.onDataChange}
+                        />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="staff_id"
+                          data-name="staff_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="staff_id"
+                            data-name="staff_ids" >
+                          </i>
+                        </a>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey display-hidden">
+                <h3>{this.props.customerReservationErrorTitle}</h3>
+                <dl>
+                  <dt>has errors?</dt>
+                  <dd>
+                    <ul>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasANerror"
+                          data-name="reservation_with_warnings"
+                          data-value="true"
+                          checked={this.state.reservation_with_warnings === "true"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasANerror">{this.props.yesLabel}</label>
+                      </li>
+                      <li>
+                        <input
+                          type="radio"
+                          id="hasNOrror"
+                          data-name="reservation_with_warnings"
+                          data-value="false"
+                          checked={this.state.reservation_with_warnings === "false"}
+                          onChange={this.onDataChange}
+                          />
+                        <label htmlFor="hasNOrror">{this.props.noLabel}</label>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>{this.props.customerReservationStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerReservationStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>{this.props.customerCheckInStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerCheckInStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+            <form
+              acceptCharset="UTF-8"
+              id="filter-form"
+              method="post"
+              ref={(c) => {this.filterForm = c}}
+              >
+              <input name="utf8" type="hidden" value="✓" />
+              <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
+              <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
+              <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
+              { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
+              <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
+              <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
+              {
+                this.state.states.join(",") ? (
+                  <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+                ) : null
+              }
+              <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
+              <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
+              {
+                this.state.day_of_dob ? (
+                  <input name="birthday[day]" type="hidden" value={this.state.day_of_dob} />
+                ) : null
+              }
+              {
+                this.state.month_of_dob ? (
+                  <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
+                ) : null
+              }
+              {
+                this.state.start_dob_date ? (
+                  <input
+                     name="birthday[start_date]"
+                     type="hidden"
+                     value={this.state.start_dob_date} />
+                 ) : null
+              }
+              {
+                this.state.end_dob_date ? (
+                  <input
+                     name="birthday[end_date]"
+                     type="hidden"
+                     value={this.state.end_dob_date} />
+                ) : null
+              }
+              <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
+              <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
+              {
+                this.state.reservation_with_warnings ? (
+                  <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
+                ) : null
+              }
+
+              {
+                this.state.start_reservation_date ? (
+                  <input
+                    name="reservation[start_date]"
+                    type="hidden"
+                    value={this.state.start_reservation_date} />
+                ) : null
+              }
+              {
+                this.state.end_reservation_date ? (
+                  <input
+                    name="reservation[end_date]"
+                    type="hidden"
+                    value={this.state.end_reservation_date} />
+                ) : null
+              }
+              {
+                this.state.menu_ids.join(",") ? (
+                  <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
+                ) : null
+              }
+              {
+                this.state.staff_ids.join(",") ? (
+                  <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
+                ) : null
+              }
+              {
+                this.state.reservation_states.join(",") ? (
+                  <input name="reservation[states]" type="hidden" value={this.state.reservation_states.join(",")} />
+                ) : null
+              }
+
+              <div className="submit">
+                <a
+                  className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
+                  onClick={this.submitFilterForm}
+                  href="#"
+                  >{this.props.searchLabel}
+                </a>
+              </div>
+            </form>
+
+            <div className="modal fade" id="saved-filters-modal" tabIndex="-1" role="dialog">
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 className="modal-title" id="myModalLabel">
+                      <i className="fa fa-database-o" aria-hidden="true"></i>{this.props.openSavedFilterBtn}
+                    </h4>
+                    </div>
+                    <div className="modal-body">
+                      {this.renderSavedFilteredOutcomes()}
+                    </div>
+                    <div className="modal-footer">
+                      <dl>
+                        <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">{this.props.closeButton}</a></dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+      );
+    }
+  });
+
+  return CustomersFilterQuerySider;
+});
+
+export default UI.Customers.Filter.QuerySider;

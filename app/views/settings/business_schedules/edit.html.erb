@@ -58,7 +58,7 @@
         <li class="endsTime"><%= I18n.t("common.end_time") %></li>
         <li class="closeReason"><%= I18n.t("settings.business_hours.reason_of_closing") %></li>
       </ul>
-      <%= react_component "UI.CustomSchedules",
+      <%= react_component "schedules/custom_schedules",
         {
         shop_id: shop.id,
         custom_schedules: @custom_schedules.map { |schedule|

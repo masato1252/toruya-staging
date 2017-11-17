@@ -30,7 +30,7 @@
 %>
 
 <div id="settingForm">
-  <%= react_component("UI.Settings.MenuForm", {
+  <%= react_component("settings/menus/menu_form", {
     save_menu_path: url,
     cancel_path: settings_user_menus_path(super_user),
     add_reservation_setting_path: new_settings_user_reservation_setting_path(super_user, from_menu: true, menu_id: menu.id),
