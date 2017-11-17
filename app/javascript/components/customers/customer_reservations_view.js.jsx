@@ -61,11 +61,9 @@ UI.define("Customers.CustomerReservationsView", function() {
         if (reservation.year != previousYear) {
           previousYear = reservation.year;
           divider = (
-            <a href="#" className="year">
-              <dl>
-                <dd>{reservation.year}</dd>
-              </dl>
-            </a>
+            <dl className="year">
+              <dd>{reservation.year}</dd>
+            </dl>
           )
         }
         return (

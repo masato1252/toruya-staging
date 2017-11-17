@@ -289,6 +289,7 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 99;
 }
 #footer .content { margin: 20px; }
 /* Login Page */
@@ -871,7 +872,7 @@ input.BTNonoff:checked + label:after {
 .busHours div { padding: 0 5px; }
 .busHours, .workTime {
   margin-bottom: 15px;
-  border: 1px solid #b3b3b3; 
+  border: 1px solid #b3b3b3;
   background-color: #d0d0d0;
   padding: 3px;
   font-size: 16px;
@@ -1132,7 +1133,8 @@ input.BTNonoff:checked + label:after {
 #searchRev .footer { padding: 10px 20px; }
 .customer #resList, #customerInfo .tabBody {
   width: 100%;
-  height: 82%;
+  height: 79%;
+  position: relative;
 }
 .customer footer ul, .resNew footer ul {
   position: relative;
@@ -1192,7 +1194,7 @@ input.BTNonoff:checked + label:after {
 .customer footer ul li input:-ms-input-placeholder { color: #D8D8D8; }
 .customer footer ul li input::-moz-placeholder { color: #D8D8D8; }
 /* #customerInfo #detailInfo */
-#customerInfo .tabBody, #customerInfoNew .tabBody, #customerInfoEdit .tabBody {
+#customerInfo #detailInfo.tabBody, #customerInfoNew .tabBody, #customerInfoEdit .tabBody {
   overflow: scroll;
   margin-bottom: 20px;
 }

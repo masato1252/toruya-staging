@@ -42,10 +42,11 @@
   padding-bottom: 0;
 }
 #filterKeys h2 {
-  margin-bottom: 0;
+  margin-bottom: 10px;
   display: table;
   width: 100%;
 }
+#filterKeys h2 i { margin-right: 10px; }
 #filterKeys h2:not(:first-of-type) {
   padding-top: 10px;
 }
@@ -53,8 +54,12 @@
   border-top: 1px solid #DFDFDF;
 }
 #filterKeys .submit {
-  padding-top: 20px;
   text-align: center;
+}
+.filter .sidel #filterKeys .submit a:link {
+  width: 80%;
+  height: 45px;
+  line-height: 45px;
 }
 .filter .sidel .tabs a {
   text-align: center;
@@ -62,7 +67,8 @@
 }
 .filter .sidel {
   font-size: 14px;
-  min-width: 263px;
+  width: 284px;
+  min-width: 284px;
 }
 .filter .sidel #filterKeys {
   padding: 10px;
@@ -74,7 +80,7 @@
 .filter .sidel #filterKeys .savedFilter {
   margin-bottom: 10px;
 }
-.filter .sidel #filterKeys .savedFilter a, .filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
+.filter .sidel #filterKeys .savedFilter a, .filter .sidel #filterKeys .savedFilter a.BTNtarco, .filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
   margin-bottom: 10px;
   line-height: 35px;
   height: 35px;
@@ -115,7 +121,7 @@
   margin: 10px 0;
 }
 .filter #resList { overflow: scroll; }
-.filter #resList dl dd:not(:first-child) { 
+.filter #resList dl dd:not(:first-child) {
   min-height: 34px;
   padding-left: 0;
 }

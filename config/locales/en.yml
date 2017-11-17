@@ -120,7 +120,9 @@ en:
     filter:
       empty_saved_filter_sentence_one: "There's no filter saved."
       empty_saved_filter_sentence_two: Please submit filter keys then save.
-      open_btn: Open Saved Filters
+      customer_conditions_header: Customer Info Filter
+      reservation_conditions_header: Reservation Records Filter
+      saved_filter_header: Saved Filters
       save_filter_title: Save Filter
       printing_result_title: Print Results
       menu: Menu

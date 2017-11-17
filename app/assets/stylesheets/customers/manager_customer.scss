@@ -113,7 +113,13 @@
   width: 100%;
 }
 #customerInfo .tabs a { width: 40%; }
-#customerInfo #resList #record { padding-top: 33px; }
+#customerInfo #resList #record {
+  padding-top: 33px;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch
+}
 #customerInfo #resList .menu { width: 40%; }
 #customerInfo #resList .shop, #customerInfo #resList .status {
   right: 0;
@@ -127,9 +133,20 @@
   background: #d0d0d0;
   color: #fff;
 }
+#customerInfo #resList dl.tableTTL {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 50;
+}
 #customerInfo #resList .year {
   width: 100%;
   display: block;
+  border-bottom: 1px solid #B3B3B3;
+}
+#customerInfo #resList .year dd {
+  line-height: 33px;
 }
 .status-list div {
   margin-bottom: 3px;

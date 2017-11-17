@@ -107,8 +107,6 @@ UI.define("Customers.Filter.QuerySider", function() {
         return;
       }
 
-      $("#saved-filters-modal").modal("hide");
-
       $.ajax({
         type: "GET",
         url: this.props.fetchFilterPath, //sumbits it to the given url of the form
@@ -396,9 +394,9 @@ UI.define("Customers.Filter.QuerySider", function() {
       );
     },
 
-    renderSavedFilteredOutcomes: function() {
+    renderSavedFilters: function() {
       return (
-        <div id="savedFilters">
+        <div>
           {
             this.state.savedFilterOptions.length === 0 ? (
               <p className="no-filter">
@@ -441,12 +439,11 @@ UI.define("Customers.Filter.QuerySider", function() {
           </div>
 
           <div id="filterKeys" className="tabBody">
+            <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
-              <a href="#" data-toggle="modal" data-target="#saved-filters-modal" className="BTNgray">
-                {this.props.openSavedFilterBtn}
-              </a>
+              {this.renderSavedFilters()}
             </div>
-            <h2>{this.props.customerInfoTitle}</h2>
+            <h2>{this.props.customerConditionsHeader}</h2>
             <div className="filterKey">
               <h3>{this.props.customerGroupTitle}</h3>
               <dl className="groups">
@@ -602,7 +599,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 </dd>
               </dl>
             </div>
-            <h2>{this.props.customerReservationRecordsTitle}</h2>
+            <h2>{this.props.customerReservationConditionsHeader}</h2>
             <div className="filterKey">
               <h3>{this.props.customerReservationDateTitle}</h3>
               <div>
@@ -877,28 +874,6 @@ UI.define("Customers.Filter.QuerySider", function() {
               </div>
             </form>
 
-            <div className="modal fade" id="saved-filters-modal" tabIndex="-1" role="dialog">
-              <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 className="modal-title" id="myModalLabel">
-                      <i className="fa fa-database-o" aria-hidden="true"></i>{this.props.openSavedFilterBtn}
-                    </h4>
-                    </div>
-                    <div className="modal-body">
-                      {this.renderSavedFilteredOutcomes()}
-                    </div>
-                    <div className="modal-footer">
-                      <dl>
-                        <dd><a href="#" className="btn BTNtarco" data-dismiss="modal">{this.props.closeButton}</a></dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
         </div>
       );
     }
