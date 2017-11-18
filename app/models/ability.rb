@@ -16,9 +16,14 @@ class Ability
       # can :edit, "customer_address"
       # can :swith_staffs_selector, User
       # can :manage, :filter
+      # can :manage, :saved_filter
 
       if super_user.free_level?
         cannot :manage, :filter
+      end
+
+      if super_user.free_level? || super_user.basic_level?
+        cannot :manage, :saved_filter
       end
 
       if super_user.free_level? && super_user.staffs.active.exists?
@@ -41,6 +46,10 @@ class Ability
 
       if super_user.basic_level? || super_user.premium_level?
         can :manage, :filter
+      end
+
+      if super_user.premium_level?
+        can :manage, :saved_filter
       end
 
       # Only handle the staffs under the shops he can manage.

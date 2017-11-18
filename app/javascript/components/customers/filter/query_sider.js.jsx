@@ -122,43 +122,30 @@ UI.define("Customers.Filter.QuerySider", function() {
     },
 
     onCurrentMonthClick: function() {
-      let _this = this;
-
-      _this.setState({
+      this.updateFilterOption({
         start_dob_date: moment().startOf('month').format("YYYY-MM-DD"),
-        end_dob_date: moment().endOf('month').format("YYYY-MM-DD")
-      }, function() {
-        _this.submitFilterForm();
-        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
-        _this.props.updateFilter("current_saved_filter_name", _this.props.dobInCurrentMonth);
+        end_dob_date: moment().endOf('month').format("YYYY-MM-DD"),
+        preset_filter_name: this.props.dobInCurrentMonth
       })
     },
 
     onNextMonthClick: function() {
-      let _this = this;
       let nextMonth = moment().add(1, "M");
 
-      _this.setState({
+      this.updateFilterOption({
         start_dob_date: nextMonth.startOf('month').format("YYYY-MM-DD"),
-        end_dob_date: nextMonth.endOf('month').format("YYYY-MM-DD")
-      }, function() {
-        _this.submitFilterForm();
-        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
-        _this.props.updateFilter("current_saved_filter_name", _this.props.dobInNextMonth);
+        end_dob_date: nextMonth.endOf('month').format("YYYY-MM-DD"),
+        preset_filter_name: this.props.dobInNextMonth
       })
     },
 
     onCheckoutInAYearClick: function() {
-      let _this = this;
-
-      _this.setState({
+      this.updateFilterOption({
         start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
         end_reservation_date: moment().format("YYYY-MM-DD"),
-        reservationDateQueryType: "between"
-      }, function() {
-        _this.submitFilterForm();
-        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
-        _this.props.updateFilter("current_saved_filter_name", _this.props.checkoutInAYear);
+        // reservation_states: ["checked_out"],
+        reservationDateQueryType: "between",
+        preset_filter_name: this.props.checkoutInAYear
       })
     },
 
@@ -172,6 +159,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.props.updateFilter("filter_name", query["current_saved_filter_name"]);
       this.props.updateFilter("current_saved_filter_id", query["current_saved_filter_id"]);
       this.props.updateFilter("current_saved_filter_name", query["current_saved_filter_name"]);
+      this.props.updateFilter("preset_filter_name", query["preset_filter_name"]);
     },
 
     onRemoveItem: function(event) {
@@ -483,7 +471,7 @@ UI.define("Customers.Filter.QuerySider", function() {
           <div id="filterKeys" className="tabBody">
             <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
-              {this.renderSavedFilters()}
+              {this.props.canManageSavedFilter ? this.renderSavedFilters() : null}
               <a href="#"
                 className="BTNgray"
                 onClick={this.onCurrentMonthClick}>

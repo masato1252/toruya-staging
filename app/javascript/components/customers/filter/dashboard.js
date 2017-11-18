@@ -16,6 +16,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         filter_name: "",
         current_saved_filter_id: "",
         current_saved_filter_name: "",
+        preset_filter_name: "",
         printing_page_size: "",
         info_printing_page_size: "",
         customers_processing: false,
@@ -104,7 +105,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         filtered_outcome: {
           page_size: this.state[event.target.dataset.pageSizeName],
           filter_id: this.state.current_saved_filter_id,
-          name: this.state.current_saved_filter_name,
+          name: this.state.preset_filter_name || this.state.current_saved_filter_name,
           outcome_type: event.target.dataset.printingType,
         },
         customer_ids: _.map(this.state.customers, function(customer) { return customer.id; }).join(",")
@@ -116,7 +117,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         data: valuesToSubmit,
         dataType: "JSON"
       }).done(function(result) {
-        _this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: "alert-info"}); // avoid user click again.
+        _this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: "alert-info", preset_filter_name: ""}); // avoid user click again.
         _this.setState(result)
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
@@ -213,17 +214,25 @@ UI.define("Customers.Filter.Dashboard", function() {
               <dl>
                 {this.isCustomersEmpty() ? null : (
                   <div>
-                    <dt>{this.props.saveFilterTitle}</dt>
-                    <dd id="NAVsave">
-                      <input type="text"
-                        data-name="filter_name"
-                        placeholder="条件名を入力"
-                        className="filter-name-input"
-                        value={this.state.filter_name}
-                        disabled={this.isCustomersEmpty() || this.state.current_saved_filter_id}
-                        onChange={this.onDataChange} />
-                      {this.renderFilterButton()}
-                    </dd>
+                    {
+                      this.props.canManageSavedFilter ? (
+                        <dt>{this.props.saveFilterTitle}</dt>
+                      ) : null
+                    }
+                    {
+                      this.props.canManageSavedFilter ? (
+                        <dd id="NAVsave">
+                          <input type="text"
+                            data-name="filter_name"
+                            placeholder="条件名を入力"
+                            className="filter-name-input"
+                            value={this.state.filter_name}
+                            disabled={this.isCustomersEmpty() || this.state.current_saved_filter_id}
+                            onChange={this.onDataChange} />
+                          {this.renderFilterButton()}
+                        </dd>
+                      ) : null
+                    }
                     <dd id="NAVrefresh">
                       <a href="#" onClick={this.reset} className="BTNgray">
                         <i className="fa fa-repeat"></i> 検索条件クリア
