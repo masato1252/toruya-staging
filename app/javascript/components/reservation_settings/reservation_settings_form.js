@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+
+var moment = require('moment-timezone');
 var createReactClass = require('create-react-class');
 
 UI.define("ReservationSettings.Form", function() {

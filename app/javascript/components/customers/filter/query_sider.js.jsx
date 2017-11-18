@@ -3,6 +3,7 @@
 import React from "react";
 import "../../shared/datepicker_field.js";
 
+var moment = require('moment-timezone');
 var createReactClass = require("create-react-class");
 
 UI.define("Customers.Filter.QuerySider", function() {
