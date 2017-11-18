@@ -4,6 +4,7 @@ import React from "react";
 import "./day_names.js";
 import "./week.js";
 import "../shared/select.js";
+var moment = require('moment-timezone');
 var createReactClass = require('create-react-class');
 
 UI.define("Calendar", function() {

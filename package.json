@@ -4,6 +4,8 @@
     "babel-preset-react": "^6.24.1",
     "coffeescript": "1.12.7",
     "create-react-class": "^15.6.2",
+    "moment": "^2.19.2",
+    "moment-timezone": "^0.5.14",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",

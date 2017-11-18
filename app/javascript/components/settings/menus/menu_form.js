@@ -4,6 +4,7 @@ import React from "react";
 import "../../shared/select.js";
 import "../new_categories.js";
 
+var moment = require('moment-timezone');
 var createReactClass = require('create-react-class');
 
 UI.define("Settings.MenuForm", function() {

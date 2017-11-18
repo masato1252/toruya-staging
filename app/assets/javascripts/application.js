@@ -17,9 +17,6 @@
 //= require bootstrap
 //= require underscore
 //= require ui
-//= require moment
-//= require moment-timezone-with-data
-//= require moment/ja.js
 //= require select2
 //= require atomic_requests.js
 //= require side_nav.js
