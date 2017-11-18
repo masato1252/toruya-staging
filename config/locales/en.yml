@@ -162,6 +162,10 @@ en:
         before: Before
         after: After
         between: Between
+      preset:
+        dob_in_current_month: Birthday in this Month
+        dob_in_next_month: Birthday in Next Month
+        checkout_in_a_year: Checked-out within a Year
   settings:
     shop:
       info_title: Shop Info

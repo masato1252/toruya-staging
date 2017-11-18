@@ -163,6 +163,10 @@ ja:
         before: 指定日以前
         after: 指定日以降
         between: 期間内
+      preset:
+        dob_in_current_month: 今月お誕生日
+        dob_in_next_month: 来月お誕生日
+        checkout_in_a_year: 来店１年以内
   settings:
     shop:
       info_title:  店舗情報

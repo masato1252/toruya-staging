@@ -129,7 +129,7 @@ module OptionsHelper
     filtered_outcomes.map{ |outcome|
       React.camelize_props({
         id: outcome.id,
-        name: outcome&.filter&.name,
+        name: outcome.name,
         file_url: outcome.file.url,
         state: outcome.aasm_state,
         type: I18n.t("customer.filter.printing_types.#{outcome.outcome_type}"),

@@ -45,10 +45,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :printing, only: [:new] do
-      collection do
-        post :index
-      end
+    resources :printing, only: [:new, :create] do
     end
 
     resources :users do
@@ -115,7 +112,7 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticated :user, -> user { user.super_admin? } do
+  authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
   end
 

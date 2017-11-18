@@ -104,6 +104,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         filtered_outcome: {
           page_size: this.state[event.target.dataset.pageSizeName],
           filter_id: this.state.current_saved_filter_id,
+          name: this.state.current_saved_filter_name,
           outcome_type: event.target.dataset.printingType,
         },
         customer_ids: _.map(this.state.customers, function(customer) { return customer.id; }).join(",")

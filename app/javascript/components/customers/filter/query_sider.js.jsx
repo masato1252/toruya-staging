@@ -121,6 +121,47 @@ UI.define("Customers.Filter.QuerySider", function() {
       });
     },
 
+    onCurrentMonthClick: function() {
+      let _this = this;
+
+      _this.setState({
+        start_dob_date: moment().startOf('month').format("YYYY-MM-DD"),
+        end_dob_date: moment().endOf('month').format("YYYY-MM-DD")
+      }, function() {
+        _this.submitFilterForm();
+        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
+        _this.props.updateFilter("current_saved_filter_name", _this.props.dobInCurrentMonth);
+      })
+    },
+
+    onNextMonthClick: function() {
+      let _this = this;
+      let nextMonth = moment().add(1, "M");
+
+      _this.setState({
+        start_dob_date: nextMonth.startOf('month').format("YYYY-MM-DD"),
+        end_dob_date: nextMonth.endOf('month').format("YYYY-MM-DD")
+      }, function() {
+        _this.submitFilterForm();
+        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
+        _this.props.updateFilter("current_saved_filter_name", _this.props.dobInNextMonth);
+      })
+    },
+
+    onCheckoutInAYearClick: function() {
+      let _this = this;
+
+      _this.setState({
+        start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
+        end_reservation_date: moment().format("YYYY-MM-DD"),
+        reservationDateQueryType: "between"
+      }, function() {
+        _this.submitFilterForm();
+        //XXX: order matter submitFilterForm would cleanup current_saved_filter_name if conditions change
+        _this.props.updateFilter("current_saved_filter_name", _this.props.checkoutInAYear);
+      })
+    },
+
     updateFilterOption: function(query, queryCustomers=true) {
       this.setState($.extend({}, this.getInitialState(), query), function() {
         if (queryCustomers) {
@@ -443,6 +484,21 @@ UI.define("Customers.Filter.QuerySider", function() {
             <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
               {this.renderSavedFilters()}
+              <a href="#"
+                className="BTNgray"
+                onClick={this.onCurrentMonthClick}>
+                {this.props.dobInCurrentMonth}
+              </a>
+              <a href="#"
+                className="BTNgray"
+                onClick={this.onNextMonthClick}>
+                {this.props.dobInNextMonth}
+              </a>
+              <a href="#"
+                className="BTNgray"
+                onClick={this.onCheckoutInAYearClick}>
+                {this.props.checkoutInAYear}
+              </a>
             </div>
             <h2>{this.props.customerConditionsHeader}</h2>
             <div className="filterKey">
@@ -647,7 +703,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               </div>
             </div>
 
-            <div className={(this.state.hasReservation === "true" || this.state.hasReservation === true)}>
+            <div>
               <div className="filterKey">
                 <h3>
                   {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>

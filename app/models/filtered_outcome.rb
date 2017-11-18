@@ -11,6 +11,7 @@
 #  outcome_type :string
 #  aasm_state   :string           not null
 #  created_at   :datetime
+#  name         :string
 #
 
 class FilteredOutcome < ApplicationRecord

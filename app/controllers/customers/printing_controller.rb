@@ -12,7 +12,7 @@ class Customers::PrintingController < DashboardController
     render options
   end
 
-  def index
+  def create
     authorize! :manage, :filter
 
     query = Customers::FilterQueryPayload.run!(param: params.permit!.to_h)

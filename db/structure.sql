@@ -1,10 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 9.6.4
--- Dumped by pg_dump version 9.6.4
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -367,7 +360,8 @@ CREATE TABLE filtered_outcomes (
     page_size character varying,
     outcome_type character varying,
     aasm_state character varying NOT NULL,
-    created_at timestamp without time zone
+    created_at timestamp without time zone,
+    name character varying
 );
 
 
@@ -1936,6 +1930,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170720142102'),
 ('20170814061241'),
 ('20170821073539'),
-('20170827131921');
+('20170827131921'),
+('20171118075544');
 
 
