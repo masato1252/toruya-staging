@@ -76,6 +76,7 @@ UI.define("Customers.Filter.Dashboard", function() {
     reset: function() {
       this.querySider.reset();
       this.updateCustomers([]);
+      this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: "alert-info"}); // avoid user click again.
     },
 
     deleteFilter: function() {
@@ -105,7 +106,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         filtered_outcome: {
           page_size: this.state[event.target.dataset.pageSizeName],
           filter_id: this.state.current_saved_filter_id,
-          name: this.state.preset_filter_name || this.state.current_saved_filter_name,
+          name: this.state.current_saved_filter_name || this.state.preset_filter_name,
           outcome_type: event.target.dataset.printingType,
         },
         customer_ids: _.map(this.state.customers, function(customer) { return customer.id; }).join(",")
@@ -117,8 +118,8 @@ UI.define("Customers.Filter.Dashboard", function() {
         data: valuesToSubmit,
         dataType: "JSON"
       }).done(function(result) {
-        _this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: "alert-info", preset_filter_name: ""}); // avoid user click again.
         _this.setState(result)
+        _this.reset();
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
         // _this.props.forceStopProcessing();

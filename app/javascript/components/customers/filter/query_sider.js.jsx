@@ -55,6 +55,8 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.setState(_.omit(this.getInitialState(), "savedFilterOptions"));
       this.props.updateFilter("filter_name", "");
       this.props.updateFilter("current_saved_filter_id", "");
+      this.props.updateFilter("current_saved_filter_name", "");
+      this.props.updateFilter("preset_filter_name", "");
     },
 
     applySelect2: function() {

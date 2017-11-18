@@ -21,7 +21,7 @@ class CustomersPrintingJob < ApplicationJob
         :locals => {
           :@page_size => page_size,
           :@customers => customers,
-          :@filter_name => filtered_outcome.filter.try(:name),
+          :@filter_name => filtered_outcome.name,
         },
         :layout => "pdf"
       ),
