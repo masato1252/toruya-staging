@@ -1,5 +1,6 @@
 <%= react_component("customers/filter/dashboard", {
   can_manage_saved_filter: can?(:manage, :saved_filter),
+  can_manage_preset_filter: can?(:manage, :preset_filter),
   locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,

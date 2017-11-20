@@ -479,21 +479,25 @@ UI.define("Customers.Filter.QuerySider", function() {
             <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
               {this.props.canManageSavedFilter ? this.renderSavedFilters() : null}
-              <a href="#"
-                className="BTNgray"
-                onClick={this.onCurrentMonthClick}>
-                {this.props.dobInCurrentMonth}
-              </a>
-              <a href="#"
-                className="BTNgray"
-                onClick={this.onNextMonthClick}>
-                {this.props.dobInNextMonth}
-              </a>
-              <a href="#"
-                className="BTNgray"
-                onClick={this.onCheckoutInAYearClick}>
-                {this.props.checkoutInAYear}
-              </a>
+              {this.props.canManagePresetFilter ? (
+                <div>
+                  <a href="#"
+                    className="BTNgray"
+                    onClick={this.onCurrentMonthClick}>
+                    {this.props.dobInCurrentMonth}
+                  </a>
+                  <a href="#"
+                    className="BTNgray"
+                    onClick={this.onNextMonthClick}>
+                    {this.props.dobInNextMonth}
+                  </a>
+                  <a href="#"
+                    className="BTNgray"
+                    onClick={this.onCheckoutInAYearClick}>
+                    {this.props.checkoutInAYear}
+                  </a>
+                </div>
+              ) : null}
             </div>
             <h2>{this.props.customerConditionsHeader}</h2>
             <div className="filterKey">

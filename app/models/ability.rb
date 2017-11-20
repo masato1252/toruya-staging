@@ -19,7 +19,7 @@ class Ability
       # can :manage, :saved_filter
 
       if super_user.free_level?
-        cannot :manage, :filter
+        cannot :manage, :preset_filter
       end
 
       if super_user.free_level? || super_user.basic_level?
@@ -45,7 +45,7 @@ class Ability
       can :swith_staffs_selector, User
 
       if super_user.basic_level? || super_user.premium_level?
-        can :manage, :filter
+        can :manage, :preset_filter
       end
 
       if super_user.premium_level?
