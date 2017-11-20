@@ -125,6 +125,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
     onCurrentMonthClick: function() {
       this.updateFilterOption({
+        birthdayQueryType: "between",
         start_dob_date: moment().startOf('month').format("YYYY-MM-DD"),
         end_dob_date: moment().endOf('month').format("YYYY-MM-DD"),
         preset_filter_name: this.props.dobInCurrentMonth
@@ -135,6 +136,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       let nextMonth = moment().add(1, "M");
 
       this.updateFilterOption({
+        birthdayQueryType: "between",
         start_dob_date: nextMonth.startOf('month').format("YYYY-MM-DD"),
         end_dob_date: nextMonth.endOf('month').format("YYYY-MM-DD"),
         preset_filter_name: this.props.dobInNextMonth
@@ -143,6 +145,7 @@ UI.define("Customers.Filter.QuerySider", function() {
 
     onCheckoutInAYearClick: function() {
       this.updateFilterOption({
+        reservationDateQueryType: "between",
         start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
         end_reservation_date: moment().format("YYYY-MM-DD"),
         // reservation_states: ["checked_out"],
