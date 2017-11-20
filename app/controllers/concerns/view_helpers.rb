@@ -59,7 +59,7 @@ module ViewHelpers
   end
 
   def working_shop_options
-    @working_shop_options ||= current_user.staff_accounts.includes(staff: :shops).map do |staff_account|
+    @working_shop_options ||= current_user.staff_accounts.active.includes(staff: :shops).map do |staff_account|
       staff = staff_account.staff
 
       staff_account.staff.shops.map do |shop|
