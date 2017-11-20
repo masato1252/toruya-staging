@@ -76,7 +76,7 @@ UI.define("Customers.Filter.Dashboard", function() {
     reset: function() {
       this.querySider.reset();
       this.updateCustomers([]);
-      this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: "alert-info"}); // avoid user click again.
+      this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: ""});
     },
 
     deleteFilter: function() {
@@ -120,6 +120,7 @@ UI.define("Customers.Filter.Dashboard", function() {
       }).done(function(result) {
         _this.setState(result)
         _this.reset();
+        _this.setState({printing_status: "alert-info"}); // avoid user click again.
         // _this.props.handleCreatedCustomer(result["customer"]);
         // _this.props.updateCustomers(result["customers"]);
         // _this.props.forceStopProcessing();
@@ -195,7 +196,9 @@ UI.define("Customers.Filter.Dashboard", function() {
         <div>
           <UI.MessageBar
             status={this.state.printing_status}
-            message={this.props.printingMessage} />
+            message={this.props.printingMessage}
+            closeMessageBar={function() { this.setState({printing_status: ""}) }.bind(this)}
+            />
           <div id="dashboard" className="contents">
             <UI.Customers.Filter.QuerySider
               ref={(c) => {this.querySider = c}}

@@ -14,7 +14,7 @@ UI.define("MessageBar", function() {
 
       return (
         <div className={`alert fade in ${this.props.status}`}>
-          <button className="close" data-dismiss="alert">x</button>
+          <button className="close" data-dismiss="alert" onClick={this.props.closeMessageBar}>x</button>
           {this.props.message}
         </div>
       );

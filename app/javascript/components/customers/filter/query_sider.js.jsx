@@ -57,6 +57,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.props.updateFilter("current_saved_filter_id", "");
       this.props.updateFilter("current_saved_filter_name", "");
       this.props.updateFilter("preset_filter_name", "");
+      this.props.updateFilter("printing_status", "");
     },
 
     applySelect2: function() {
@@ -165,6 +166,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.props.updateFilter("current_saved_filter_id", query["current_saved_filter_id"]);
       this.props.updateFilter("current_saved_filter_name", query["current_saved_filter_name"]);
       this.props.updateFilter("preset_filter_name", query["preset_filter_name"]);
+      this.props.updateFilter("printing_status", "");
     },
 
     onRemoveItem: function(event) {
