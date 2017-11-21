@@ -71,4 +71,5 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem "bullet", "~> 2.0.0"
+  gem "awesome_rails_console", "~> 0.4.0"
 end
