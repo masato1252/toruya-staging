@@ -18,7 +18,6 @@ Rails.application.configure do
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
-  # config.assets.css_compressor = :sass
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
@@ -104,4 +103,6 @@ Rails.application.configure do
       user_id: controller.current_user.try(:id)
     }
   end
+  config.assets.js_compressor = :uglifier
+  config.assets.css_compressor = :sass
 end
