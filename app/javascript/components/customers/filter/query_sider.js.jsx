@@ -126,9 +126,8 @@ UI.define("Customers.Filter.QuerySider", function() {
 
     onCurrentMonthClick: function() {
       this.updateFilterOption({
-        birthdayQueryType: "between",
-        start_dob_date: moment().startOf('month').format("YYYY-MM-DD"),
-        end_dob_date: moment().endOf('month').format("YYYY-MM-DD"),
+        birthdayQueryType: "on_month",
+        month_of_dob: moment().format("M"),
         preset_filter_name: this.props.dobInCurrentMonth
       })
     },
@@ -137,9 +136,8 @@ UI.define("Customers.Filter.QuerySider", function() {
       let nextMonth = moment().add(1, "M");
 
       this.updateFilterOption({
-        birthdayQueryType: "between",
-        start_dob_date: nextMonth.startOf('month').format("YYYY-MM-DD"),
-        end_dob_date: nextMonth.endOf('month').format("YYYY-MM-DD"),
+        birthdayQueryType: "on_month",
+        month_of_dob: nextMonth.format("M"),
         preset_filter_name: this.props.dobInNextMonth
       })
     },
