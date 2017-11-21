@@ -72,5 +72,3 @@ group :development do
   gem "binding_of_caller"
   gem "bullet", "~> 2.0.0"
 end
-
-gem "rails_12factor", group: :production
