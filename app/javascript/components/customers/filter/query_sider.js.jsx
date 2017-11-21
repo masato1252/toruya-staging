@@ -442,17 +442,19 @@ UI.define("Customers.Filter.QuerySider", function() {
                 {this.props.emptySavedFilterSentenceTwo}
               </p>
             ) : (
-              this.state.savedFilterOptions.map(function(option) {
-                return (
-                  <a href="#"
-                    key={option.value}
-                    className="BTNtarco"
-                    data-value={option.value}
-                    onClick={this.onSavedFilterClick}>
-                    {option.label}
-                  </a>
-                )
-              }.bind(this))
+              this.props.canManageSavedFilter ? (
+                this.state.savedFilterOptions.map(function(option) {
+                  return (
+                    <a href="#"
+                      key={option.value}
+                      className="BTNtarco"
+                      data-value={option.value}
+                      onClick={this.onSavedFilterClick}>
+                      {option.label}
+                    </a>
+                  )
+                }.bind(this))
+              ) : null
             )
           }
         </div>
@@ -478,7 +480,7 @@ UI.define("Customers.Filter.QuerySider", function() {
           <div id="filterKeys" className="tabBody">
             <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
-              {this.props.canManageSavedFilter ? this.renderSavedFilters() : null}
+              {this.renderSavedFilters()}
               {this.props.canManagePresetFilter ? (
                 <div>
                   <a href="#"

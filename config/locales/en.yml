@@ -118,8 +118,10 @@ en:
     reservation_day: Date
     level_label: Customer Level
     filter:
-      empty_saved_filter_sentence_one: "There's no filter saved."
-      empty_saved_filter_sentence_two: Please submit filter keys then save.
+      empty_saved_filter_sentence_one: No saved filter
+      empty_saved_filter_sentence_two_for_premium_user: ""
+      empty_saved_filter_sentence_two_for_basic_user: "You can create/save custom filters by upgrading to Premium member."
+      empty_saved_filter_sentence_two_for_free_user: "You can upgrade to use preset filters. Please upgrade to Premium member to create/save custom filters."
       customer_conditions_header: Customer Info Filter
       reservation_conditions_header: Reservation Records Filter
       saved_filter_header: Saved Filters
