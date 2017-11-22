@@ -2,18 +2,14 @@
 
 import React from "react";
 
-var createReactClass = require('create-react-class');
-
 UI.define("Select", function() {
-  var Select = createReactClass({
-    getDefaultProps: function() {
-      return {
-        prefix: "",
-        blankOption: " -- select an option -- "
-      };
-    },
+  return class Select extends React.Component {
+    static defaultProps = {
+      prefix: "",
+      blankOption: " -- select an option -- "
+    };
 
-    render: function() {
+    render() {
       var _this = this;
       var optionsList = [];
       const { includeBlank, options, prefix, blankOption, ...rest } = this.props;
@@ -50,9 +46,7 @@ UI.define("Select", function() {
         </select>
       );
     }
-  });
-
-  return Select;
+  };
 });
 
 export default UI.Select;

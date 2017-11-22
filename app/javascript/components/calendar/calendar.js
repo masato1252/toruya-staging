@@ -5,14 +5,14 @@ import "./day_names.js";
 import "./week.js";
 import "../shared/select.js";
 var moment = require('moment-timezone');
-var createReactClass = require('create-react-class');
 
 UI.define("Calendar", function() {
-  var Calendar = createReactClass({
-    getInitialState: function() {
+  return class Calendar extends React.Component {
+    constructor(props) {
+      super(props);
       this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
-      return {
+      this.state = {
         month: this.startDate.clone(),
         selectedDate: this.startDate.clone(),
         holidayDays: this.props.holidayDays,
@@ -24,24 +24,22 @@ UI.define("Calendar", function() {
         offDays: this.props.offDays,
         reservationDays: this.props.reservationDays
       };
-    },
+    };
 
-    previous: function() {
-      let _this = this;
+
+    previous = () => {
       var month = this.state.month;
       month.add(-1, "M");
-      this.setState({ month: month }, _this._fetchWorkingSchedule);
-    },
+      this.setState({ month: month }, this._fetchWorkingSchedule);
+    };
 
-    next: function() {
-      let _this = this;
+    next = () => {
       var month = this.state.month;
       month.add(1, "M");
-      this.setState({ month: month }, _this._fetchWorkingSchedule);
-    },
+      this.setState({ month: month }, this._fetchWorkingSchedule);
+    };
 
-    _fetchWorkingSchedule: function() {
-      let _this = this;
+    _fetchWorkingSchedule = () => {
       var staff_id;
 
       if (location.search.length) {
@@ -53,8 +51,8 @@ UI.define("Calendar", function() {
         url: this.props.workingSchedulePath,
         data: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
         dataType: "JSON"
-      }).success(function(result) {
-        _this.setState({
+      }).success((result) => {
+        this.setState({
           holidayDays: result["holiday_days"],
           fullTime: result["full_time"],
           shopWorkingWdays: result["shop_working_wdays"],
@@ -65,19 +63,19 @@ UI.define("Calendar", function() {
           reservationDays: result["reservation_days"]
         });
       });
-    },
+    };
 
-    select: function(day) {
+    select = (day) => {
       this.setState({ month: day.date, selectedDate: day.date });
       location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
-    },
+    };
 
-    handleCalendarSelect: function(event) {
+    handleCalendarSelect = (event) => {
       event.preventDefault();
       this.setState({month: moment(event.target.value)}, this._fetchWorkingSchedule);
-    },
+    };
 
-    renderYearSelector: function() {
+    renderYearSelector = () => {
       var years = [];
 
       var yearStart = this.state.month.clone().add(-3, "Y").startOf('year')
@@ -95,9 +93,9 @@ UI.define("Calendar", function() {
           value={this.state.month.format("YYYY-MM")}
           onChange={this.handleCalendarSelect}
         />);
-    },
+    };
 
-    renderMonthSelector: function () {
+    renderMonthSelector = () => {
       var months = [];
       var yearStart = this.state.month.clone().startOf('year')
 
@@ -112,9 +110,9 @@ UI.define("Calendar", function() {
           value={this.state.month.format("YYYY-MM")}
           onChange={this.handleCalendarSelect}
         />);
-    },
+    };
 
-    render: function() {
+    render() {
       return <div>
               <div className="header">
                 <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
@@ -125,9 +123,9 @@ UI.define("Calendar", function() {
               <UI.DayNames dayNames={this.props.dayNames} />
               {this.renderWeeks()}
              </div>;
-    },
+    };
 
-    renderWeeks: function() {
+    renderWeeks = () => {
       var weeks = [],
           done = false,
           date = this.state.month.clone().startOf("month").add("w" -1).day("Sunday"),
@@ -156,9 +154,7 @@ UI.define("Calendar", function() {
 
           return weeks;
     }
-  });
-
-  return Calendar;
+  };
 });
 
 export default UI.Calendar;

@@ -1,25 +1,24 @@
 "use strict";
 
 import React from "react";
-var createReactClass = require('create-react-class');
 
 UI.define("Week", function() {
-  var Week = createReactClass({
-    isContainedBy: function(container, date) {
+  return class Week extends React.Component {
+    isContainedBy = (container, date) => {
       return (_.contains(container, date.date()) && date.month() === this.props.month.month())
-    },
+    };
 
-    isReservedDay: function(date) {
+    isReservedDay = (date) => {
       return this.isContainedBy(this.props.reservationDays, date);
-    },
+    };
 
-    isHoliday: function(date, wday) {
+    isHoliday = (date, wday) => {
       var month = this.props.month;
       var isWeekend = (wday === 0 && date.month() === month.month());
       return isWeekend || (this.isContainedBy(this.props.holidayDays, date));
-    },
+    };
 
-    isWorkingDay: function(date, wday) {
+    isWorkingDay = (date, wday) => {
       if (this.isHoliday(date) && !this.props.shopWorkingOnHoliday) { return; }
       if (this.isContainedBy(this.props.offDays, date)) { return; }
       if (date.month() !== this.props.month.month()) { return; }
@@ -30,9 +29,9 @@ UI.define("Week", function() {
       else {
         return _.contains(this.props.staffWorkingWdays, wday) || this.isContainedBy(this.props.workingDays, date);
       }
-    },
+    };
 
-    render: function() {
+    render() {
       var days = [],
           date = this.props.date,
           month = this.props.month;
@@ -69,10 +68,8 @@ UI.define("Week", function() {
       return <div className="week" key={days[0].toString()}>
               {days}
              </div>
-    }
-  });
-
-  return Week;
+    };
+  };
 });
 
 export default UI.Week;

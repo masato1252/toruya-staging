@@ -3,11 +3,10 @@
 import React from "react";
 
 var moment = require('moment-timezone');
-var createReactClass = require("create-react-class")
 
 UI.define("Common.DatepickerField", function() {
-  var DatepickerField = createReactClass({
-    componentDidMount: function() {
+  return class DatepickerField extends React.Component {
+    componentDidMount() {
       var _this = this;
 
       $("#" + _this._datepickerId()).datepicker({
@@ -17,18 +16,18 @@ UI.define("Common.DatepickerField", function() {
 
       $("." + this.props.dataName + " input[type=date]").val("");
       $("." + this.props.dataName + " input[type=date]").val(this.props.date);
-    },
+    };
 
-    openCalendar: function(event) {
+    openCalendar = (event) => {
       event.preventDefault();
       $("#" + this._datepickerId()).datepicker('show');
-    },
+    };
 
-    _datepickerId: function() {
+    _datepickerId = () => {
       return `schedule_hidden_date_${this.props.calendarfieldPrefix || "default"}`
-    },
+    };
 
-    render: function() {
+    render() {
       return(
         <div className={`datepicker-field ${this.props.dataName}`}>
           <input
@@ -53,9 +52,7 @@ UI.define("Common.DatepickerField", function() {
         </div>
       );
     }
-  });
-
-  return DatepickerField;
+  };
 });
 
 export default UI.Common.DatepickerField;

@@ -1,23 +1,22 @@
 "use strict";
 
 import React from "react";
-var createReactClass = require("create-react-class");
 
 UI.define("Common.CustomerOption", function() {
-  var CustomerOption = createReactClass({
-    _handleClick: function() {
+  return class CustomerOption extends React.Component {
+    _handleClick = () => {
       if (this.props.handleCustomerSelect) {
         this.props.handleCustomerSelect(this.props.customer.value);
       }
-    },
+    };
 
-    _handleRemove: function() {
+    _handleRemove = () => {
       if (this.props.handleCustomerRemove) {
         this.props.handleCustomerRemove(this.props.customer.value);
       }
-    },
+    };
 
-    render: function() {
+    render() {
       return(
         <dl onClick={this._handleClick} key={this.props.customer.value} className={`customer-option ${this.props.selected_customer_id && this.props.selected_customer_id == this.props.customer.value ? "here" : ""}`}>
           <dd className="customer-symbol">
@@ -37,9 +36,7 @@ UI.define("Common.CustomerOption", function() {
         </dl>
       );
     }
-  });
-
-  return CustomerOption;
+  };
 });
 
 export default UI.Common.CustomerOption

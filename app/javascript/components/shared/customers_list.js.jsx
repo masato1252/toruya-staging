@@ -2,49 +2,46 @@
 
 import React from "react";
 import "./customer_option.js";
-var createReactClass = require("create-react-class");
 
 UI.define("Common.CustomersList", function() {
-  var CustomersList = createReactClass({
-    getInitialState: function() {
-      return ({
-        listHeight: "60vh"
-      });
-    },
+  return class CustomersList extends React.Component {
+    state = {
+      listHeight: "60vh"
+    };
 
-    componentWillMount: function() {
+    componentWillMount() {
       this.handleMoreCustomers = _.debounce(this.props.handleMoreCustomers, 200, true)
-    },
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       this.setProperListHeight();
-      $(window).resize(function() {
+      $(window).resize(() => {
         this.setProperListHeight();
-      }.bind(this));
-    },
+      });
+    };
 
-    setProperListHeight: function() {
+    setProperListHeight = () => {
       this.setState({listHeight: `${$(window).innerHeight() - 300} px`})
-    },
+    };
 
-    handleCustomerSelect: function(customer_id) {
+    handleCustomerSelect = (customer_id) => {
       if (this.props.handleCustomerSelect) {
         this.props.handleCustomerSelect(customer_id);
       }
-    },
+    };
 
-    _atEnd: function() {
+    _atEnd = () => {
       // XXX: 1.5 is a magic number, I want to load data easier.
       return $(this.customerList).scrollTop() * 1.5 + $(this.customerList).innerHeight() >= $(this.customerList)[0].scrollHeight
-    },
+    };
 
-    _handleScroll: function() {
+    _handleScroll = () => {
       if (this._atEnd()) {
         this.handleMoreCustomers();
       }
-    },
+    };
 
-    render: function() {
+    render() {
       var _this = this;
       var noCustomerMessage = "";
 
@@ -77,9 +74,7 @@ UI.define("Common.CustomersList", function() {
           </div>
       );
     }
-  });
-
-  return CustomersList;
+  };
 });
 
 export default UI.Common.CustomersList

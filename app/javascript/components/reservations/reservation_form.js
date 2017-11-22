@@ -10,21 +10,25 @@ var moment = require('moment-timezone');
 var createReactClass = require("create-react-class");
 
 UI.define("Reservation.Form", function() {
-  var ReservationForm = createReactClass({
-    statics: {
-      errors: ["shop_closed", "unworking_staff", "time_not_enough", "start_yet", "is_over"],
-      warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
-                 "not_enough_seat", "not_enough_ability"],
-      menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
-      menu_danger_errors: ["start_yet", "is_over"],
-      staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
-      staff_danger_errors: ["unworking_staff"]
-    },
+  return class ReservationForm extends React.Component {
+    static errorGroups() {
+      return (
+        {
+          errors: ["shop_closed", "unworking_staff", "time_not_enough", "start_yet", "is_over"],
+          warnings: ["interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
+                     "not_enough_seat", "not_enough_ability"],
+          menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
+          menu_danger_errors: ["start_yet", "is_over"],
+          staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
+          staff_danger_errors: ["unworking_staff"]
+        }
+      )
+    };
 
-    getInitialState: function() {
-      var menu_id = "";
+    constructor(props) {
+      super(props);
 
-      return ({
+      this.state = {
         start_time_date_part: this.props.reservation.startTimeDatePart || "",
         start_time_time_part: this.props.reservation.startTimeTimePart || "",
         end_time_time_part: this.props.reservation.endTimeTimePart || "",
@@ -42,15 +46,15 @@ UI.define("Reservation.Form", function() {
         processing: false,
         submitting: false,
         rough_mode: false
-      });
-    },
+      };
+    };
 
-    componentWillMount: function() {
+    componentWillMount() {
       // this._retrieveAvailableTimes = _.debounce(this._retrieveAvailableTimes, 1000); // delay 1 second
       // this._retrieveAvailableMenus = _.debounce(this._retrieveAvailableMenus, 1000); // delay 1 second
-    },
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       var _this = this;
 
       if (this.props.memberMode) {
@@ -67,9 +71,9 @@ UI.define("Reservation.Form", function() {
       $("#start_time_time_part").val(this.props.reservation.startTimeTimePart || "");
       $("#end_time_time_part").val("");
       $("#end_time_time_part").val(this.props.reservation.endTimeTimePart|| "");
-    },
+    };
 
-    componentDidUpdate: function() {
+    componentDidUpdate() {
       if (this._menuErrors().length !== 0) {
         $(".select2-container").addClass(
           this._menuDangerErrors().length === 0 ? "field-warning" : "field-error"
@@ -78,9 +82,9 @@ UI.define("Reservation.Form", function() {
       else {
         $(".select2-container").removeClass("field-error field-warning")
       }
-    },
+    };
 
-    applySelect2: function() {
+    applySelect2 = () => {
       var _this = this;
 
       $("#select2").select2({
@@ -92,9 +96,9 @@ UI.define("Reservation.Form", function() {
         }
       })
       .on("change", _this._handleChange);
-    },
+    };
 
-    handleCustomerAdd: function(event) {
+    handleCustomerAdd = (event) => {
       event.preventDefault();
 
       if (this.state.menu_group_options.length == 0 || this._isMeetCustomerLimit()) {
@@ -114,9 +118,9 @@ UI.define("Reservation.Form", function() {
       })
 
       window.location = `${this.props.customerAddPath}?${params}`
-    },
+    };
 
-    _customerAddClass: function() {
+    _customerAddClass = () => {
       if (this.state.menu_group_options.length == 0) {
         return "disabled BTNtarco";
       }
@@ -126,18 +130,18 @@ UI.define("Reservation.Form", function() {
       else {
         return "BTNtarco"
       }
-    },
+    };
 
-    _customerWording: function() {
+    _customerWording = () => {
       if (this._isMeetCustomerLimit()) {
         return "満席"
       }
       else {
         return "追加"
       }
-    },
+    };
 
-    handleCustomerRemove: function(customer_id, event) {
+    handleCustomerRemove = (customer_id, event) => {
       var _this = this;
       var customers = _.reject(this.state.customers, function(option) {
         return option.value == customer_id;
@@ -151,9 +155,9 @@ UI.define("Reservation.Form", function() {
           _this._retrieveAvailableMenus()
         }
       })
-    },
+    };
 
-    _maxCustomerLimit: function() {
+    _maxCustomerLimit = () => {
       var _this = this;
 
       if (this.state.menu_min_staffs_number === 0) {
@@ -181,9 +185,9 @@ UI.define("Reservation.Form", function() {
 
         return _.min([minCustomersHandleable, this.state.menu_available_seat]);
       }
-    },
+    };
 
-    _isValidReservationTime: function() {
+    _isValidReservationTime = () => {
       if (this.state.start_time_restriction && this.state.end_time_restriction &&
           this.state.start_time_time_part && this.state.end_time_time_part) {
 
@@ -198,9 +202,9 @@ UI.define("Reservation.Form", function() {
       else {
         return false;
       }
-    },
+    };
 
-    _isValidCustomerNumber: function() {
+    _isValidCustomerNumber = () => {
       var customersLimit;
       if (customersLimit = this._maxCustomerLimit()) {
         return (customersLimit >= this.state.customers.length);
@@ -208,9 +212,9 @@ UI.define("Reservation.Form", function() {
       else {
         return false;
       }
-    },
+    };
 
-    _isMeetCustomerLimit: function() {
+    _isMeetCustomerLimit = () => {
       var customersLimit;
       if (customersLimit = this._maxCustomerLimit()) {
         return (customersLimit == this.state.customers.length);
@@ -218,15 +222,15 @@ UI.define("Reservation.Form", function() {
       else {
         return false;
       }
-    },
+    };
 
-    _isAnyWarning: function() {
-      return _.intersection(Object.keys(this.state.errors), ReservationForm.warnings).length !== 0 || !this._isValidReservationTime()
-    },
+    _isAnyWarning = () => {
+      return _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().warnings).length !== 0 || !this._isValidReservationTime()
+    };
 
-    _isValidToReserve: function() {
+    _isValidToReserve = () => {
       if (this.props.memberMode) {
-        let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errors)
+        let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().errors)
 
         return (
           this.state.start_time_date_part &&
@@ -248,9 +252,9 @@ UI.define("Reservation.Form", function() {
           this._isValidCustomerNumber()
         )
       }
-    },
+    };
 
-    _handleChange: function(event) {
+    _handleChange = (event) => {
       event.preventDefault();
       var eventTargetName = event.target.dataset.name;
       this.setState({[eventTargetName]: event.target.value}, function() {
@@ -274,9 +278,9 @@ UI.define("Reservation.Form", function() {
           }
         }
       }.bind(this))
-    },
+    };
 
-    _handleStaffChange: function(event) {
+    _handleStaffChange = (event) => {
       event.preventDefault();
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
@@ -285,9 +289,9 @@ UI.define("Reservation.Form", function() {
           this._validateReservation();
         }
       }.bind(this));
-    },
+    };
 
-    _retrieveAvailableTimes: function() {
+    _retrieveAvailableTimes = () => {
       var _this = this;
 
       if (!(moment(this.state.start_time_date_part).year() > 1911)) {
@@ -313,9 +317,9 @@ UI.define("Reservation.Form", function() {
       }).always(function() {
         _this.setState({ processing: false });
       });
-    },
+    };
 
-    _retrieveAvailableMenus: function() {
+    _retrieveAvailableMenus = () => {
       var _this = this;
 
       if (this.currentRequest != null) {
@@ -361,9 +365,9 @@ UI.define("Reservation.Form", function() {
       }).always(function() {
         _this.setState({ processing: false });
       });
-    },
+    };
 
-    _retrieveAvailableStaffs: function() {
+    _retrieveAvailableStaffs = () => {
       var _this = this;
 
       if (this.currentRequest != null) {
@@ -397,9 +401,9 @@ UI.define("Reservation.Form", function() {
       }).always(function() {
         _this.setState({ processing: false });
       });
-    },
+    };
 
-    _validateReservation: function() {
+    _validateReservation = () => {
       var _this = this;
 
       if (this.currentRequest != null) {
@@ -441,9 +445,9 @@ UI.define("Reservation.Form", function() {
       }).always(function() {
         _this.setState({ processing: false });
       });
-    },
+    };
 
-    renderStaffSelects: function() {
+    renderStaffSelects = () => {
       var select_components = [];
 
       if (this.state.menu_min_staffs_number > 0) {
@@ -512,9 +516,9 @@ UI.define("Reservation.Form", function() {
       }
 
       return select_components
-    },
+    };
 
-    toggleRoughMode: function() {
+    toggleRoughMode = () => {
       this.setState({rough_mode: !this.state.rough_mode}, function() {
         if (this.state.rough_mode) {
           // Set all menus and staffs
@@ -522,9 +526,9 @@ UI.define("Reservation.Form", function() {
           // Clean menus and staffs
         }
       })
-    },
+    };
 
-    _handleSubmitClick: function(event) {
+    _handleSubmitClick = (event) => {
       // Prevent double clicking.
       event.preventDefault();
 
@@ -533,13 +537,14 @@ UI.define("Reservation.Form", function() {
           this.submitForm();
         }
       }.bind(this));
-    },
+    };
 
-    _displayErrors: function(error_reasons) {
-      let error_messages = []
+    _displayErrors = (error_reasons) => {
+      let error_messages = [];
+
       error_reasons.forEach(function(error_reason) {
         if (this.state.errors[error_reason]) {
-          if (_.intersection([error_reason], ReservationForm.warnings).length != 0) {
+          if (_.intersection([error_reason], ReservationForm.errorGroups().warnings).length != 0) {
             error_messages.push(<span className="warning" key={error_reason}>{this.state.errors[error_reason]}</span>)
           }
           else {
@@ -549,36 +554,36 @@ UI.define("Reservation.Form", function() {
       }.bind(this))
 
       return _.compact(error_messages);
-    },
+    };
 
-    _dateErrors: function() {
+    _dateErrors = () => {
       return this._displayErrors(["shop_closed"]);
-    },
+    };
 
-    _timeErrors: function() {
+    _timeErrors = () => {
       return this._displayErrors(["interval_too_short"]);
-    },
+    };
 
-    _menuErrors: function() {
-      return this._displayErrors(ReservationForm.menu_errors);
-    },
+    _menuErrors = () => {
+      return this._displayErrors(ReservationForm.errorGroups().menu_errors);
+    };
 
-    _menuDangerErrors: function() {
-      return this._displayErrors(ReservationForm.menu_danger_errors);
-    },
+    _menuDangerErrors = () => {
+      return this._displayErrors(ReservationForm.errorGroups().menu_danger_errors);
+    };
 
-    _staffErrors: function(staff_id) {
+    _staffErrors = (staff_id) => {
       if (staff_id && this.state.errors[staff_id]) {
         return this._displayErrors(this.state.errors[staff_id]);
       }
       else {
         return ""
       }
-    },
+    };
 
-    _staffDangerErrors: function(staff_id) {
+    _staffDangerErrors = (staff_id) => {
       if (staff_id && this.state.errors[staff_id]) {
-        var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.staff_danger_errors)
+        var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.errorGroups().staff_danger_errors)
         if (dangerStaffErrors.length) {
           return this._displayErrors(dangerStaffErrors)
         }
@@ -589,24 +594,24 @@ UI.define("Reservation.Form", function() {
       else {
         return ""
       }
-    },
+    };
 
-    _previousReservationOverlap: function() {
+    _previousReservationOverlap = () => {
       return this._displayErrors(["previous_reservation_interval_overlap"]).length != 0;
-    },
+    };
 
-    _nextReservationOverlap: function() {
+    _nextReservationOverlap = () => {
       return this._displayErrors(["next_reservation_interval_overlap"]).length != 0;
-    },
+    };
 
-    submitForm: function() {
+    submitForm = () => {
       // Delay submission to make sure that card token, last4, and type are set in real DOM.
       setTimeout(function() {
         jQuery("#save-reservation-form").submit();
       }, 0);
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div>
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
@@ -796,8 +801,7 @@ UI.define("Reservation.Form", function() {
         </div>
       );
     }
-  });
-  return ReservationForm;
+  };
 })
 
 export default UI.Reservation.Form;

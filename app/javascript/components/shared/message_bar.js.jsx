@@ -5,9 +5,9 @@ import React from "react";
 var createReactClass = require("create-react-class");
 
 UI.define("MessageBar", function() {
-  var MessageBar = createReactClass({
+  return class MessageBar extends React.Component {
     // status: 'alert-success', 'alert-danger', 'alert-warning', 'alert-info'
-    render: function() {
+    render() {
       if (!this.props.status || !this.props.message) {
         return null;
       }
@@ -19,9 +19,7 @@ UI.define("MessageBar", function() {
         </div>
       );
     }
-  });
-
-  return MessageBar;
+  };
 });
 
 export default UI.MessageBar;
