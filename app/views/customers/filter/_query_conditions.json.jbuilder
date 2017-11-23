@@ -12,31 +12,29 @@ query.each do |key, value|
   when "birthday"
     json.set! :birthdayQueryType, value["query_type"]
 
-    start_date = Time.parse(value["start_date"])
-    json.set! :from_dob_year, start_date.year
-    json.set! :from_dob_month, start_date.month
-    json.set! :from_dob_day, start_date.day
+    if value["start_date"]
+      start_date = Time.parse(value["start_date"])
+      json.start_dob_date start_date.to_s(:date)
+    end
 
     if value["end_date"]
       end_date = Time.parse(value["end_date"])
-      json.set! :to_dob_year, end_date.year
-      json.set! :to_dob_month, end_date.month
-      json.set! :to_dob_day, end_date.day
+      json.end_dob_date end_date.to_s(:date)
+    end
+
+    if value["month"]
+      json.month_of_dob value["month"]
     end
   when "reservation"
     json.set! :reservationDateQueryType, value["query_type"]
     json.set! :hasReservation, ActiveModel::Type::Boolean.new.cast(value["has_reservation"])
 
     start_date = Time.parse(value["start_date"])
-    json.set! :from_reservation_year, start_date.year
-    json.set! :from_reservation_month, start_date.month
-    json.set! :from_reservation_day, start_date.day
+    json.set! :start_reservation_date, start_date.to_s(:date)
 
     if value["end_date"]
       end_date = Time.parse(value["end_date"])
-      json.set! :to_reservation_year, end_date.year
-      json.set! :to_reservation_month, end_date.month
-      json.set! :to_reservation_day, end_date.day
+      json.set! :end_reservation_date, end_date.to_s(:date)
     end
 
     if value["menu_ids"]

@@ -12,7 +12,7 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
       query[:rank_ids] = param[:rank_ids].split(",")
     end
 
-    if param[:living_place][:states].present?
+    if param[:living_place].present? &&  param[:living_place][:states].present?
       query[:living_place] = param[:living_place].merge(states: param[:living_place][:states].split(","))
     end
 
@@ -24,19 +24,21 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
       query[:email_types] = param[:email_types].split(",")
     end
 
-    if param[:birthday][:start_date].present? || param[:birthday][:month].present?
-      if param[:birthday][:start_date].present?
-        query[:birthday] = param[:birthday].merge(
-          start_date: Date.parse(param[:birthday][:start_date])
-        )
-      end
+    if param[:birthday].present?
+      if param[:birthday][:start_date].present? || param[:birthday][:month].present?
+        if param[:birthday][:start_date].present?
+          query[:birthday] = param[:birthday].merge(
+            start_date: Date.parse(param[:birthday][:start_date])
+          )
+        end
 
-      if param[:birthday][:month].present?
-        query[:birthday] = param[:birthday]
-      end
+        if param[:birthday][:month].present?
+          query[:birthday] = param[:birthday]
+        end
 
-      if param[:birthday][:end_date].present?
-        query[:birthday][:end_date] = Date.parse(param[:birthday][:end_date])
+        if param[:birthday][:end_date].present?
+          query[:birthday][:end_date] = Date.parse(param[:birthday][:end_date])
+        end
       end
     end
 
@@ -44,7 +46,7 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
       query[:custom_ids] = param[:custom_ids].split(",")
     end
 
-    if param[:reservation][:start_date].present?
+    if param[:reservation].present? && param[:reservation][:start_date].present?
       query[:reservation] = param[:reservation].merge(
         start_date: Date.parse(param[:reservation][:start_date]).beginning_of_day
       )

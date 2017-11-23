@@ -4,11 +4,12 @@ import React from "react";
 import "../../shared/datepicker_field.js";
 
 var moment = require('moment-timezone');
-var createReactClass = require("create-react-class");
 
 UI.define("Customers.Filter.QuerySider", function() {
-  var CustomersFilterQuerySider = createReactClass({
-    getInitialState: function() {
+  return class CustomersFilterQuerySider extends React.Component {
+    constructor(props) {
+      super(props);
+
       this.emailTypes = [
         { label: this.props.homeLabel, value: "home" },
         { label: this.props.mobileLabel, value: "mobile" },
@@ -30,7 +31,6 @@ UI.define("Customers.Filter.QuerySider", function() {
         custom_ids: [],
         start_dob_date: "",
         end_dob_date: "",
-        day_of_dob: "",
         month_of_dob: "",
         hasReservation: true,
         reservationDateQueryType: "on",
@@ -44,23 +44,27 @@ UI.define("Customers.Filter.QuerySider", function() {
         reservation_states: []
       }
 
-      return this.initialStates;
-    },
+      this.state = $.extend({}, this.initialStates)
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       this.applySelect2();
-    },
+    };
 
-    reset: function() {
+    getInitialState = () => {
+      return this.initialStates;
+    };
+
+    reset = () => {
       this.setState(_.omit(this.getInitialState(), "savedFilterOptions"));
       this.props.updateFilter("filter_name", "");
       this.props.updateFilter("current_saved_filter_id", "");
       this.props.updateFilter("current_saved_filter_name", "");
       this.props.updateFilter("preset_filter_name", "");
       this.props.updateFilter("printing_status", "");
-    },
+    };
 
-    applySelect2: function() {
+    applySelect2 = () => {
       var _this = this;
 
       $("#select2").select2({
@@ -72,9 +76,9 @@ UI.define("Customers.Filter.QuerySider", function() {
         }
       })
       .on("change", _this.onDataChange);
-    },
+    };
 
-    onCheckboxChange: function(event) {
+    onCheckboxChange = (event) => {
       let newValues = this.state[event.target.dataset.name];
 
       if (_.contains(newValues, event.target.dataset.value)) {
@@ -87,9 +91,9 @@ UI.define("Customers.Filter.QuerySider", function() {
       }
 
       this.setState({[event.target.dataset.name]: newValues})
-    },
+    };
 
-    onDataChange: function(event) {
+    onDataChange = (event) => {
       let stateName = event.target.dataset.name;
       let stateValue = event.target.dataset.value || event.target.value;
 
@@ -97,10 +101,18 @@ UI.define("Customers.Filter.QuerySider", function() {
         if (stateName === "state") {
           this.onAddItem(null, "states", "state")
         }
+        else if (stateName === "birthdayQueryType") {
+          if (stateValue === "on_month") {
+            this.setState({start_dob_date: ""})
+          }
+          else {
+            this.setState({month_of_dob: ""})
+          }
+        }
       }.bind(this));
-    },
+    };
 
-    onSavedFilterClick: function(event) {
+    onSavedFilterClick = (event) => {
       const _this = this;
       let stateValue = event.target.dataset.value;
 
@@ -122,17 +134,17 @@ UI.define("Customers.Filter.QuerySider", function() {
       }).always(function() {
         // _this.props.forceStopProcessing();
       });
-    },
+    };
 
-    onCurrentMonthClick: function() {
+    onCurrentMonthClick = () => {
       this.updateFilterOption({
         birthdayQueryType: "on_month",
         month_of_dob: moment().format("M"),
         preset_filter_name: this.props.dobInCurrentMonth
       })
-    },
+    };
 
-    onNextMonthClick: function() {
+    onNextMonthClick = () => {
       let nextMonth = moment().add(1, "M");
 
       this.updateFilterOption({
@@ -140,9 +152,9 @@ UI.define("Customers.Filter.QuerySider", function() {
         month_of_dob: nextMonth.format("M"),
         preset_filter_name: this.props.dobInNextMonth
       })
-    },
+    };
 
-    onCheckoutInAYearClick: function() {
+    onCheckoutInAYearClick = () => {
       this.updateFilterOption({
         reservationDateQueryType: "between",
         start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
@@ -151,10 +163,10 @@ UI.define("Customers.Filter.QuerySider", function() {
         reservationDateQueryType: "between",
         preset_filter_name: this.props.checkoutInAYear
       })
-    },
+    };
 
-    updateFilterOption: function(query, queryCustomers=true) {
-      this.setState($.extend({}, this.getInitialState(), query), function() {
+    updateFilterOption = (query, queryCustomers=true) => {
+      this.setState($.extend({}, _.omit(this.getInitialState(), "savedFilterOptions"), query), function() {
         if (queryCustomers) {
           this.submitFilterForm()
           this.queryConditions = $(this.filterForm).serialize();
@@ -165,9 +177,9 @@ UI.define("Customers.Filter.QuerySider", function() {
       this.props.updateFilter("current_saved_filter_name", query["current_saved_filter_name"]);
       this.props.updateFilter("preset_filter_name", query["preset_filter_name"]);
       this.props.updateFilter("printing_status", "");
-    },
+    };
 
-    onRemoveItem: function(event) {
+    onRemoveItem = (event) => {
       event.preventDefault();
 
       let newValues = this.state[event.target.dataset.name];
@@ -179,9 +191,9 @@ UI.define("Customers.Filter.QuerySider", function() {
       }
 
       this.setState({[event.target.dataset.name]: newValues})
-    },
+    };
 
-    onAddItem: function(event, _collectionName, _valueName) {
+    onAddItem = (event, _collectionName, _valueName) => {
       if (event) { event.preventDefault(); }
 
       let collectionName = event ? event.target.dataset.name : _collectionName;
@@ -199,9 +211,9 @@ UI.define("Customers.Filter.QuerySider", function() {
         [collectionName]: newValues,
         [valueName]: ""
       });
-    },
+    };
 
-    submitFilterForm: function() {
+    submitFilterForm = () => {
       event.preventDefault();
       if (!this.isQueryConditionLegal()) { return; }
 
@@ -226,9 +238,9 @@ UI.define("Customers.Filter.QuerySider", function() {
         _this.props.updateCustomers(result["customers"]);
       }).always(function() {
       });
-    },
+    };
 
-    renderCheckboxOptions: function(options, stateName) {
+    renderCheckboxOptions = (options, stateName) => {
       return (
         options.map(function(option) {
           return (
@@ -247,9 +259,9 @@ UI.define("Customers.Filter.QuerySider", function() {
           )
         }.bind(this))
       )
-    },
+    };
 
-    renderMultipleInputs: function(items, collection_name) {
+    renderMultipleInputs = (items, collection_name) => {
       return (
         items.map(function(item) {
           return (
@@ -271,9 +283,9 @@ UI.define("Customers.Filter.QuerySider", function() {
           )
         }.bind(this))
       )
-    },
+    };
 
-    renderMultipleSelectInputs: function(items, collection_name, mappingOptions) {
+    renderMultipleSelectInputs = (items, collection_name, mappingOptions) => {
       return (
         items.map(function(item) {
           let option = _.find(mappingOptions, function(option) { return option.value == item; }.bind(this))
@@ -297,13 +309,13 @@ UI.define("Customers.Filter.QuerySider", function() {
           )
         }.bind(this))
       )
-    },
+    };
 
-    isQueryConditionLegal: function() {
+    isQueryConditionLegal = () => {
       return this.isReservationConditionValid();
-    },
+    };
 
-    renderBirthdayOptions: function() {
+    renderBirthdayOptions = () => {
       let birthdayOptionView;
 
       switch (this.state.birthdayQueryType) {
@@ -380,9 +392,9 @@ UI.define("Customers.Filter.QuerySider", function() {
       }
 
       return birthdayOptionView;
-    },
+    };
 
-    renderReservationDateOptions: function() {
+    renderReservationDateOptions = () => {
       return (
         <ul>
           <li>
@@ -427,9 +439,9 @@ UI.define("Customers.Filter.QuerySider", function() {
           }
         </ul>
       );
-    },
+    };
 
-    renderSavedFilters: function() {
+    renderSavedFilters = () => {
       return (
         <div>
           {
@@ -457,18 +469,18 @@ UI.define("Customers.Filter.QuerySider", function() {
           }
         </div>
       )
-    },
+    };
 
-    isReservationConditionValid: function() {
+    isReservationConditionValid = () => {
       if (this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
         return !!this.state.start_reservation_date
       }
       else {
         return true
       }
-    },
+    };
 
-    render: function() {
+    render() {
       return(
         <div id="searchKeys" className="sidel">
           <div id="tabs" className="tabs">
@@ -842,34 +854,52 @@ UI.define("Customers.Filter.QuerySider", function() {
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
-              <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
-              <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
-              { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
-              <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
-              <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
               {
-                this.state.states.join(",") ? (
-                  <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+                this.state.group_ids.length !== 0 ? (
+                  <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
                 ) : null
               }
-              <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
-              <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
               {
-                this.state.day_of_dob ? (
-                  <input name="birthday[day]" type="hidden" value={this.state.day_of_dob} />
+                this.state.rank_ids.length !== 0 ? (
+                  <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
+                ) : null
+              }
+              { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
+              {
+                this.state.email_types.length !== 0 ? (
+                  <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
+                ) : null
+              }
+              {
+                this.state.states.join(",") ? (
+                  <div>
+                    <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
+                    <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+                  </div>
+                ) : null
+              }
+              {
+                this.state.custom_ids.length !== 0 ? (
+                  <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
                 ) : null
               }
               {
                 this.state.month_of_dob ? (
-                  <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
+                  <div>
+                    <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
+                    <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
+                  </div>
                 ) : null
               }
               {
                 this.state.start_dob_date ? (
-                  <input
-                     name="birthday[start_date]"
-                     type="hidden"
-                     value={this.state.start_dob_date} />
+                  <div>
+                    <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
+                    <input
+                       name="birthday[start_date]"
+                       type="hidden"
+                       value={this.state.start_dob_date} />
+                  </div>
                  ) : null
               }
               {
@@ -880,8 +910,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                      value={this.state.end_dob_date} />
                 ) : null
               }
-              <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
-              <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
               {
                 this.state.reservation_with_warnings ? (
                   <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
@@ -890,10 +918,14 @@ UI.define("Customers.Filter.QuerySider", function() {
 
               {
                 this.state.start_reservation_date ? (
-                  <input
-                    name="reservation[start_date]"
-                    type="hidden"
-                    value={this.state.start_reservation_date} />
+                  <div>
+                    <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
+                    <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
+                    <input
+                      name="reservation[start_date]"
+                      type="hidden"
+                      value={this.state.start_reservation_date} />
+                  </div>
                 ) : null
               }
               {
@@ -933,9 +965,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         </div>
       );
     }
-  });
-
-  return CustomersFilterQuerySider;
+  };
 });
 
 export default UI.Customers.Filter.QuerySider;
