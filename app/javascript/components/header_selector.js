@@ -3,17 +3,13 @@
 import "./shared/select.js"
 import React from "react";
 
-var createReactClass = require('create-react-class');
-
 UI.define("HeaderSelector", function() {
-  var HeaderSelector = createReactClass({
-    getInitialState: function() {
-      return {
-        selectedOption: this.props.selectedOption,
-      }
-    },
+  return class HeaderSelector extends React.Component {
+    state = {
+      selectedOption: this.props.selectedOption,
+    };
 
-    _handleChange: function(event) {
+    _handleChange = (event) => {
       this.setState({[event.target.name]: event.target.value});
       var shopPathRegexp = /shops\/([^\/]+)/;
 
@@ -27,9 +23,9 @@ UI.define("HeaderSelector", function() {
         var newLocation = `${location.protocol}//${location.hostname}${location.pathname}?staff_id=${event.target.value}`;
         location = newLocation;
       }
-    },
+    };
 
-    render: function() {
+    render() {
       if (!this.props.options) { return null }
 
       return (
@@ -40,9 +36,7 @@ UI.define("HeaderSelector", function() {
         />
       )
     }
-  });
-
-  return HeaderSelector;
+  };
 });
 
 export default UI.HeaderSelector;

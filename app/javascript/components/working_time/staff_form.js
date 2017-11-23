@@ -4,41 +4,37 @@ import React from "react";
 import "./business_schedules_form.js";
 import "../schedules/custom_schedules.js";
 
-var createReactClass = require('create-react-class');
-
 UI.define("WorkingTime.StaffForm", function() {
-  var StaffForm = createReactClass({
-    getInitialState: function() {
-      return {
-        shops: this.props.shops,
-        fullTimeShops: this.props.fullTimeShops,
-        scheduleDisplaying: {}
-      }
-    },
+  return class StaffForm extends React.Component {
+    state = {
+      shops: this.props.shops,
+      fullTimeShops: this.props.fullTimeShops,
+      scheduleDisplaying: {}
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       UI.DirtyFormHandler.init();
-    },
+    };
 
-    selectedSchedule: function(shop_id) {
+    selectedSchedule = (shop_id) => {
       return _.find(this.props.fullTimeSchedules, function(schedule) {
         return `${schedule.shop_id}` == `${shop_id}` }
       )
-    },
+    };
 
-    _isAllShopFullTime: function() {
+    _isAllShopFullTime = () => {
       var full_time_shop_ids = _.pluck(this.state.fullTimeShops, "id")
 
       return full_time_shop_ids.length == this.props.shops.length;
-    },
+    };
 
-    _isFullTimeShop: function(shop_id) {
+    _isFullTimeShop = (shop_id) => {
       var full_time_shop_ids = _.pluck(this.state.fullTimeShops, "id")
 
       return _.contains(full_time_shop_ids, parseInt(shop_id));
-    },
+    };
 
-    handleShopFullTime: function(event) {
+    handleShopFullTime = (event) => {
       var newFullTimeShops = this.state.fullTimeShops.slice(0);
       var newFullTimeShop;
 
@@ -56,17 +52,17 @@ UI.define("WorkingTime.StaffForm", function() {
       }
 
       this.setState({fullTimeShops: newFullTimeShops});
-    },
+    };
 
-    partTimeShops: function() {
+    partTimeShops = () => {
       var shops = this.props.shops.slice(0);
 
       return _.reject(shops, function(shop) {
         return this._isFullTimeShop(shop.id)
       }.bind(this))
-    },
+    };
 
-    toggleSchedule: function(scheduleId) {
+    toggleSchedule = (scheduleId) => {
       if (this.state.scheduleDisplaying[scheduleId]) {
         this.state.scheduleDisplaying[scheduleId] = false;
       }
@@ -75,9 +71,9 @@ UI.define("WorkingTime.StaffForm", function() {
       }
 
       this.setState(this.state.scheduleDisplaying);
-    },
+    };
 
-    renderFullTimeSchedules: function() {
+    renderFullTimeSchedules = () => {
       return (
         <div id="belong" className="formRow">
           {
@@ -115,9 +111,9 @@ UI.define("WorkingTime.StaffForm", function() {
           }
         </div>
       )
-    },
+    };
 
-    renderParTimeAndTemporaySchedules: function() {
+    renderParTimeAndTemporaySchedules = () => {
       return (
         this.partTimeShops().map(function(shop) {
           return (
@@ -214,9 +210,9 @@ UI.define("WorkingTime.StaffForm", function() {
           );
         }.bind(this))
       )
-    },
+    };
 
-    renderHolidaySchedules: function() {
+    renderHolidaySchedules = () => {
       return (
         <div>
           <h3>休暇</h3>
@@ -255,9 +251,9 @@ UI.define("WorkingTime.StaffForm", function() {
         </div>
 
       )
-    },
+    };
 
-    renderModeView: function() {
+    renderModeView = () => {
       if (this.props.mode == "working_schedules") {
         return (
           <div>
@@ -272,9 +268,9 @@ UI.define("WorkingTime.StaffForm", function() {
           this.props.holidayPermission ? this.renderHolidaySchedules() : null
         )
       }
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <form action={this.props.saveStaffPath} acceptCharset="UTF-8" method="post" data-behavior="dirty-form">
           <input name="utf8" type="hidden" value="✓" />
@@ -290,9 +286,7 @@ UI.define("WorkingTime.StaffForm", function() {
         </form>
       )
     }
-  });
-
-  return StaffForm;
+  };
 });
 
 export default UI.WorkingTime.StaffForm;
