@@ -6,6 +6,12 @@ var moment = require('moment-timezone');
 
 UI.define("Common.DatepickerField", function() {
   return class DatepickerField extends React.Component {
+    constructor(props) {
+      super(props);
+
+      moment.locale('ja');
+    };
+
     componentDidMount() {
       var _this = this;
 

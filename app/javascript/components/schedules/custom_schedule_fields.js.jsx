@@ -9,6 +9,8 @@ UI.define("CustomScheduleFields", function() {
     constructor(props) {
       super(props);
 
+      moment.locale('ja');
+
       this.state = {
         start_time_date_part: this.props.schedule.startTimeDatePart || "",
         start_time_time_part: this.props.schedule.startTimeTimePart || "",

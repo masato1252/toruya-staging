@@ -10,6 +10,8 @@ UI.define("Calendar", function() {
   return class Calendar extends React.Component {
     constructor(props) {
       super(props);
+      moment.locale('ja');
+
       this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
       this.state = {
