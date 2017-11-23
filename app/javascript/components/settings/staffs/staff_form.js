@@ -2,23 +2,19 @@
 
 import React from "react";
 
-var createReactClass = require('create-react-class');
-
 UI.define("Settings.Staff.Formfields", function() {
-  var StaffFormfields = createReactClass({
-    getInitialState: function() {
-      return ({
-        staffShopOptions: this.props.staffShopOptions,
-        shopInvisible: {},
-        staffAccountLevel: this.props.staffAccountLevel
-      });
-    },
+  return class StaffFormfields extends React.Component {
+    state = {
+      staffShopOptions: this.props.staffShopOptions,
+      shopInvisible: {},
+      staffAccountLevel: this.props.staffAccountLevel
+    };
 
-    swithStaffAccountLevel: function(event) {
+    swithStaffAccountLevel = (event) => {
       this.setState({staffAccountLevel: event.target.value});
-    },
+    };
 
-    renderWorkShops: function() {
+    renderWorkShops = () => {
       return (
         this.state.staffShopOptions.map(function(option) {
           return (
@@ -41,28 +37,28 @@ UI.define("Settings.Staff.Formfields", function() {
           )
         }.bind(this))
       );
-    },
+    };
 
-    selectedStaffShopOption: function(shop_id) {
+    selectedStaffShopOption = (shop_id) => {
       return _.find(this.state.staffShopOptions, function(option) {
         return option.shop_id == shop_id
       });
-    },
+    };
 
-    workingShopOptions: function() {
+    workingShopOptions = () => {
       return _.filter(this.state.staffShopOptions, function(option) {
         return option.work_here
       })
-    },
+    };
 
-    handleStaffWorkOption: function(event) {
+    handleStaffWorkOption = (event) => {
       var matchedOption = this.selectedStaffShopOption(event.target.dataset.value)
       matchedOption.work_here = !matchedOption.work_here;
 
       this.setState({staffShopOptions: this.state.staffShopOptions});
-    },
+    };
 
-    toggleStaffShopView: function(shopId) {
+    toggleStaffShopView = (shopId) => {
       if (this.state.shopInvisible[shopId]) {
         this.state.shopInvisible[shopId] = false;
       }
@@ -71,9 +67,9 @@ UI.define("Settings.Staff.Formfields", function() {
       }
 
       this.setState(this.state.shopInvisible);
-    },
+    };
 
-    renderStaffSchedulePermission: function() {
+    renderStaffSchedulePermission = () => {
       var view = this.workingShopOptions().map(function(option) {
           return (
             <div key={`working-shop-option-${option.shop_id}`}>
@@ -141,9 +137,9 @@ UI.define("Settings.Staff.Formfields", function() {
           )
       }.bind(this))
       return view;
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div>
           <h3>{this.props.staffAccountTitle}<strong>必須項目</strong></h3>
@@ -221,9 +217,7 @@ UI.define("Settings.Staff.Formfields", function() {
         </div>
       );
     }
-  });
-
-  return StaffFormfields;
+  };
 });
 
 export default UI.Settings.Staff.Formfields;

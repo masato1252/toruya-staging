@@ -2,22 +2,18 @@
 
 import React from "react";
 
-var createReactClass = require('create-react-class');
-
 UI.define("Settings.NewCategories", function() {
-  var NewCategories = createReactClass({
-    getInitialState: function() {
-      return ({
-        newCategories: [],
-        newCategoryValue: ""
-      });
-    },
+  return class NewCategories extends React.Component {
+    state = {
+      newCategories: [],
+      newCategoryValue: ""
+    }
 
-    handleCategoryValueChange: function(event) {
+    handleCategoryValueChange = (event) => {
       this.setState({newCategoryValue: event.target.value});
-    },
+    };
 
-    addNewCategory: function(event) {
+    addNewCategory = (event) => {
       event.preventDefault();
 
       if (!this.state.newCategoryValue.length) {
@@ -31,18 +27,18 @@ UI.define("Settings.NewCategories", function() {
         newCategories: newCategories,
         newCategoryValue: ""
       })
-    },
+    };
 
-    removeNewCateogry: function(index) {
+    removeNewCateogry = (index) => {
       var newCategories = this.state.newCategories;
       newCategories.splice(index, 1)
 
       this.setState({newCategories: newCategories});
 
       return;
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div id="new-categories">
           {this.state.newCategories.map(function(newCategory, i) {
@@ -84,9 +80,7 @@ UI.define("Settings.NewCategories", function() {
         </div>
       );
     }
-  });
-
-  return NewCategories;
+  };
 });
 
 export default UI.Settings.NewCategories;

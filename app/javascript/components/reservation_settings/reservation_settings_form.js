@@ -3,47 +3,48 @@
 import React from "react";
 
 var moment = require('moment-timezone');
-var createReactClass = require('create-react-class');
 
 UI.define("ReservationSettings.Form", function() {
-  var ReservationSettingsForm = createReactClass({
-    getInitialState: function() {
-      return {
+  return class ReservationSettingsForm extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         setting: this.props.setting,
         isAllBusinessHours: !this.props.setting.start_time && !this.props.setting.end_time,
         number_of_day_monthly: !!this.props.setting.day,
       }
-    },
+    };
 
-    swithDayType: function(event) {
+    swithDayType = (event) => {
       this.state.setting.day_type = event.target.dataset.value;
       this.setState({setting:  this.state.setting});
-    },
+    };
 
-    swithTimeType: function(event) {
+    swithTimeType = (event) => {
       if (event.target.dataset.value == "custom_time") {
         this.setState({isAllBusinessHours: false});
       }
       else {
         this.setState({isAllBusinessHours: true});
       }
-    },
+    };
 
-    switchMonthlyType: function(event) {
+    switchMonthlyType = (event) => {
       if (event.target.dataset.value == "number_of_day_monthly") {
         this.setState({number_of_day_monthly: true});
       }
       else {
         this.setState({number_of_day_monthly: false});
       }
-    },
+    };
 
-    handleSettingChange: function(event) {
+    handleSettingChange = (event) => {
       this.state.setting[event.target.dataset.name] = event.target.value
       this.setState({setting: this.state.setting});
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <form acceptCharset="UTF-8" action={this.props.saveSettingPath} method="post">
           <input name="utf8" type="hidden" value="✓" />
@@ -287,9 +288,7 @@ UI.define("ReservationSettings.Form", function() {
         </form>
       );
     }
-  });
-
-  return ReservationSettingsForm;
+  };
 });
 
 export default UI.ReservationSettings.Form;

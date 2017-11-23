@@ -4,35 +4,33 @@ import React from "react";
 import "./custom_schedule_fields.js";
 import "../shared/datepicker_field.js";
 
-var createReactClass = require("create-react-class");
-
 UI.define("CustomSchedules", function() {
-  var CustomSchedules = createReactClass({
-    getDefaultProps: function() {
-      return {
-        open: false
-      };
-    },
+  return class CustomSchedules extends React.Component {
+    static defaultProps = {
+      open: false
+    };
 
-    getInitialState: function() {
-      return ({
+    constructor(props) {
+      super(props);
+
+      this.state = {
         start_time_date_part: "",
         start_time_time_part: "",
         end_time_time_part: "",
         reason: "",
         customSchedules: this.props.customSchedules
-      });
-    },
+      }
+    };
 
-    _handleChange: function(event) {
+    _handleChange = (event) => {
       this.setState({[event.target.name]: event.target.value})
-    },
+    };
 
-    _isValidCustomSchedule: function() {
+    _isValidCustomSchedule = () => {
       return (this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part);
-    },
+    };
 
-    _handleAddRow: function(event) {
+    _handleAddRow = (event) => {
       event.preventDefault();
 
       if (!this._isValidCustomSchedule()) { return; }
@@ -49,9 +47,9 @@ UI.define("CustomSchedules", function() {
         end_time_time_part: "",
         reason: ""
       })
-    },
+    };
 
-    render: function() {
+    render() {
       return (
       <div id="tempWork">
         <dl>
@@ -91,9 +89,7 @@ UI.define("CustomSchedules", function() {
       </div>
       );
     }
-  });
-
-  return CustomSchedules;
+  };
 });
 
 export default UI.CustomSchedules;

@@ -3,36 +3,37 @@
 import React from "react";
 
 var moment = require('moment-timezone');
-var createReactClass = require("create-react-class");
 
 UI.define("CustomScheduleFields", function() {
-  var CustomScheduleFields  = createReactClass({
-    getInitialState: function() {
-      return ({
+  return class CustomScheduleFields extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         start_time_date_part: this.props.schedule.startTimeDatePart || "",
         start_time_time_part: this.props.schedule.startTimeTimePart || "",
         end_time_time_part: this.props.schedule.endTimeTimePart || "",
         reason: this.props.schedule.reason || "",
         delete_flag: false,
         edit_mode: false
-      });
-    },
+      }
+    };
 
-    _handleChange: function(event) {
+    _handleChange = (event) => {
       this.setState({[event.target.dataset.name]: event.target.value})
-    },
+    };
 
-    _deleteCustomRow: function(event) {
+    _deleteCustomRow = (event) => {
       event.preventDefault();
       this.setState({delete_flag: !this.state.delete_flag})
-    },
+    };
 
-    _editCustomRow: function(event) {
+    _editCustomRow = (event) => {
       event.preventDefault();
       this.setState({edit_mode: !this.state.edit_mode})
-    },
+    };
 
-    render: function() {
+    render() {
       if (this.state.delete_flag) {
         return (
           <div>
@@ -186,9 +187,7 @@ UI.define("CustomScheduleFields", function() {
         </dl>
       );
     }
-  });
-
-  return CustomScheduleFields;
+  };
 });
 
 export default UI.CustomScheduleFields;

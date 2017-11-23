@@ -3,16 +3,10 @@
 import React from "react";
 
 var moment = require('moment-timezone');
-var createReactClass = require('create-react-class');
 
 UI.define("WorkingTime.BusinessScheduleForm", function() {
-  var BusinessScheduleForm = createReactClass({
-    getInitialState: function() {
-      return {
-      }
-    },
-
-    render: function() {
+  return class BusinessScheduleForm extends React.Component {
+    render() {
       return (
         <div id="workingTime">
           {
@@ -67,9 +61,7 @@ UI.define("WorkingTime.BusinessScheduleForm", function() {
         </div>
       );
     }
-  });
-
-  return BusinessScheduleForm;
+  };
 });
 
 export default UI.WorkingTime.BusinessScheduleForm;

@@ -5,46 +5,47 @@ import "../../shared/select.js";
 import "../new_categories.js";
 
 var moment = require('moment-timezone');
-var createReactClass = require('create-react-class');
 
 UI.define("Settings.MenuForm", function() {
-  var MenuForm = createReactClass({
-    getInitialState: function() {
+  return class MenuForm extends React.Component {
+    constructor(props) {
+      super(props);
+
       var start_date = this.props.selectedReservationSettingRule.start_date ?  moment(this.props.selectedReservationSettingRule.start_date).format("YYYY-MM-DD") : "";
       this.props.selectedReservationSettingRule.start_date = start_date;
 
-      return ({
+      this.state = {
         menu: this.props.menu,
         selectedReservationSetting: this.props.selectedReservationSetting || {},
         selectedReservationSettingRule: this.props.selectedReservationSettingRule || {},
         menuShopsOptions: this.props.menuShopsOptions,
         menuStaffsOptions: this.props.menuStaffsOptions,
         repeatingDateSentence: ""
-      });
-    },
+      }
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       this._retrieveRepeatingDates()
-    },
+    };
 
-    selectedMenuStaffOption: function(staff_id) {
+    selectedMenuStaffOption = (staff_id) => {
       return _.find(this.state.menuStaffsOptions, function(menuStaffOption) {
          return `${menuStaffOption.staffId}` == `${staff_id}`
       })
-    },
+    };
 
-    selectedMenuShopOption: function(shop_id) {
+    selectedMenuShopOption = (shop_id) => {
       return _.find(this.state.menuShopsOptions, function(menuShopOption) {
          return `${menuShopOption.shopId}` == `${shop_id}`
       })
-    },
+    };
 
-    switchReservationType: function(event) {
+    switchReservationType = (event) => {
       this.state.selectedReservationSettingRule.reservation_type = event.target.dataset.value;
       this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule});
-    },
+    };
 
-    _handleReservationSettingRuleChange: function(event) {
+    _handleReservationSettingRuleChange = (event) => {
       if (event.target.dataset.name == "selectedReservationSetting") {
         var selectedReservationSetting = _.find(this.props.reservationSettings, function(reservation_setting) {
           return `${reservation_setting.id}` == event.target.value
@@ -55,18 +56,18 @@ UI.define("Settings.MenuForm", function() {
         this.state.selectedReservationSettingRule[event.target.dataset.name] = event.target.value;
         this.setState({selectedReservationSettingRule: this.state.selectedReservationSettingRule}, this._retrieveRepeatingDates);
       }
-    },
+    };
 
-    _isValidRepeatConditions: function() {
+    _isValidRepeatConditions = () => {
       return (
         this.state.selectedReservationSettingRule.reservation_type == "repeating" &&
         this.state.selectedReservationSettingRule.start_date &&
         this.state.selectedReservationSettingRule.repeats &&
         this.state.selectedReservationSetting
       )
-    },
+    };
 
-    _retrieveRepeatingDates: function() {
+    _retrieveRepeatingDates = () => {
       var _this = this;
 
       if (this.currentRequest != null) {
@@ -100,40 +101,40 @@ UI.define("Settings.MenuForm", function() {
         }).fail(function(errors){
         }).always(function() {
         });
-    },
+    };
 
-    _handleStaffCheck: function(event) {
+    _handleStaffCheck = (event) => {
       this.selectedMenuStaffOption(event.target.value).checked = !this.selectedMenuStaffOption(event.target.value).checked
 
       this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
-    },
+    };
 
-    _handleStaffMaxCustomers: function(event) {
+    _handleStaffMaxCustomers = (event) => {
       this.selectedMenuStaffOption(`${event.target.dataset.staffId}`).maxCustomers = event.target.value;
 
       this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
-    },
+    };
 
-    _handleShopCheck: function(event) {
+    _handleShopCheck = (event) => {
       this.selectedMenuShopOption(event.target.value).checked = !this.selectedMenuShopOption(event.target.value).checked
 
       this.setState({menuShopsOptions: this.state.menuShopsOptions}, this._retrieveRepeatingDates)
-    },
+    };
 
-    _handleShopMaxSeatNumber: function(event) {
+    _handleShopMaxSeatNumber = (event) => {
       this.selectedMenuShopOption(`${event.target.dataset.shopId}`).maxSeatNumber = event.target.value;
 
       this.setState({menuShopsOptions: this.state.menuShopsOptions})
-    },
+    };
 
-    _handleMenuData: function(event) {
+    _handleMenuData = (event) => {
       this.state.menu[event.target.dataset.name] = event.target.value
       this.setState({
         menu: this.state.menu
       })
-    },
+    };
 
-    _isValidMenu: function() {
+    _isValidMenu = () => {
       var checkedMenuStaffsOptions = _.filter(this.state.menuStaffsOptions, function(menuStaffOption) {
         return menuStaffOption.checked
       })
@@ -160,9 +161,9 @@ UI.define("Settings.MenuForm", function() {
         (this.state.menu.min_staffs_number === 0 ? true : this.state.menu.min_staffs_number)
       )
 
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <form className="new_menu" id="new_menu" action={this.props.saveMenuPath} acceptCharset="UTF-8" method="post">
           <input name="utf8" type="hidden" value="✓" />
@@ -505,8 +506,7 @@ UI.define("Settings.MenuForm", function() {
         </form>
       );
     }
-  });
-  return MenuForm;
+  };
 });
 
 export default UI.Settings.MenuForm;
