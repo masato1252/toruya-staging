@@ -6,12 +6,12 @@ import "./customers_list.js";
 import "../../shared/message_bar.js";
 import "../../shared/select.js";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.Filter.Dashboard", function() {
-  var CustomersFilterDashboard = createReactClass({
-    getInitialState: function() {
-      return ({
+  return class CustomersFilterDashboard extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         customers: [],
         filter_name: "",
         current_saved_filter_id: "",
@@ -21,42 +21,42 @@ UI.define("Customers.Filter.Dashboard", function() {
         info_printing_page_size: "",
         customers_processing: false,
         filtered_outcome_options: this.props.filteredOutcomeOptions
-      });
-    },
+      }
+    };
 
-    componentDidMount: function() {
+    componentDidMount() {
       let properHeight = window.innerHeight - $("header").innerHeight() - 50;
 
       $(".contents").height(properHeight);
       $("#searchKeys").height(properHeight);
-    },
+    };
 
-    onDataChange: function(event) {
+    onDataChange = (event) => {
       let stateName = event.target.dataset.name;
       let stateValue = event.target.dataset.value || event.target.value;
 
       this.setState({[stateName]: stateValue});
-    },
+    };
 
-    updateFilter: function(target, value) {
+    updateFilter = (target, value) => {
       this.setState({ [target]: value });
-    },
+    };
 
-    updateCustomers: function(customers) {
+    updateCustomers = (customers) => {
       this.setState({customers: customers}, function() {
         this.stopProcessing()
       }.bind(this));
-    },
+    };
 
-    startProcessing: function() {
+    startProcessing = () => {
       this.setState({customers_processing: true});
-    },
+    };
 
-    stopProcessing: function() {
+    stopProcessing = () => {
       this.setState({customers_processing: false});
-    },
+    };
 
-    saveFilter: function() {
+    saveFilter = () => {
       event.preventDefault();
       var _this = this;
       var valuesToSubmit = $(this.querySider.filterForm).serialize();
@@ -71,15 +71,15 @@ UI.define("Customers.Filter.Dashboard", function() {
         // [TODO]: Discuss the expected behavior what to do.
         // _this.querySider.reset();
       })
-    },
+    };
 
-    reset: function() {
+    reset = () => {
       this.querySider.reset();
       this.updateCustomers([]);
       this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: ""});
-    },
+    };
 
-    deleteFilter: function() {
+    deleteFilter = () => {
       event.preventDefault();
       var _this = this;
 
@@ -94,9 +94,9 @@ UI.define("Customers.Filter.Dashboard", function() {
         _this.setState({customers: []});
         // _this.props.forceStopProcessing();
       })
-    },
+    };
 
-    handlePrinting: function(event) {
+    handlePrinting = (event) => {
       event.preventDefault();
       var _this = this;
 
@@ -125,13 +125,13 @@ UI.define("Customers.Filter.Dashboard", function() {
         // _this.props.updateCustomers(result["customers"]);
         // _this.props.forceStopProcessing();
       })
-    },
+    };
 
-    isCustomersEmpty: function() {
+    isCustomersEmpty = () => {
       return this.state.customers.length === 0
-    },
+    };
 
-    renderFilterButton: function() {
+    renderFilterButton = () => {
       if (this.state.current_saved_filter_id) {
         return (
           <a className="BTNorange" href="#" onClick={this.deleteFilter} >
@@ -148,9 +148,9 @@ UI.define("Customers.Filter.Dashboard", function() {
           </a>
         )
       }
-    },
+    };
 
-    renderFilteredOutcomes: function() {
+    renderFilteredOutcomes = () => {
       return (
         <div id="searchPrint">
           <dl className="tableTTL">
@@ -189,9 +189,9 @@ UI.define("Customers.Filter.Dashboard", function() {
           </div>
         </div>
       )
-    },
+    };
 
-    render: function() {
+    render() {
       return(
         <div>
           <UI.MessageBar
@@ -326,9 +326,7 @@ UI.define("Customers.Filter.Dashboard", function() {
         </div>
       );
     }
-  });
-
-  return CustomersFilterDashboard;
+  };
 });
 
 export default UI.Customers.Filter.Dashboard

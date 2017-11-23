@@ -2,16 +2,9 @@
 
 import React from "react";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.CustomerInfoView", function() {
-  var CustomerInfoView = createReactClass({
-    getInitialState: function() {
-      return ({
-      });
-    },
-
-    phoneRender: function(phone) {
+  return class CustomerInfoView extends React.Component {
+    phoneRender = (phone) => {
       var icon_type;
       switch (phone.type) {
         case "home":
@@ -30,9 +23,9 @@ UI.define("Customers.CustomerInfoView", function() {
           <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
         </a>
       )
-    },
+    };
 
-    emailRender: function(email) {
+    emailRender = (email) => {
       var icon_type;
       switch (email.type) {
         case "home":
@@ -51,9 +44,9 @@ UI.define("Customers.CustomerInfoView", function() {
           <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
         </a>
       )
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div id="customerInfo" className="contBody">
           <div id="basic">
@@ -142,9 +135,7 @@ UI.define("Customers.CustomerInfoView", function() {
         </div>
       );
     }
-  });
-
-  return CustomerInfoView;
+  };
 });
 
 export default UI.Customers.CustomerInfoView;

@@ -1,17 +1,14 @@
 "use strict";
 
+import React from "react";
+
 UI.define("Reservation.SelectedOptionField", function() {
-  var SelectedOptionField = React.createClass({
-    getInitialState: function() {
-      return {
-      }
-    },
-
-    _handleChange: function(event) {
+  return class SelectedOptionField extends React.Component {
+    _handleChange = (event) => {
       this.setState({number: event.target.value})
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div className="selected-option">
           <div>
@@ -27,7 +24,7 @@ UI.define("Reservation.SelectedOptionField", function() {
         </div>
       )
     }
-  });
-
-  return SelectedOptionField;
+  };
 });
+
+export default UI.Reservation.SelectedOptionField;

@@ -3,11 +3,9 @@
 import React from "react";
 import "../../shared/processing_bar.js";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.Filter.CustomersList", function() {
-  var CustomersList = createReactClass({
-    renderCustomersList: function() {
+  return class CustomersList extends React.Component {
+    renderCustomersList = () => {
       return (
         this.props.customers.map(function(customer) {
           return (
@@ -24,9 +22,9 @@ UI.define("Customers.Filter.CustomersList", function() {
           )
         })
       );
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div id="resList" className="contBody">
           <UI.ProcessingBar processing={this.props.processing} processingMessage={this.props.processingMessage} />
@@ -46,9 +44,7 @@ UI.define("Customers.Filter.CustomersList", function() {
         </div>
       );
     }
-  });
-
-  return CustomersList;
+  };
 });
 
 export default UI.Customers.Filter.CustomersList;

@@ -7,16 +7,17 @@ import "./customer_info_view.js";
 import "./customer_info_edit.js";
 import "./customer_reservations_view.js";
 import "./search_bar.js";
-var createReactClass = require("create-react-class");
 
 UI.define("Customers.Dashboard", function() {
-  var CustomersDashboard = createReactClass({
-    getInitialState: function() {
+  return class CustomersDashboard extends React.Component {
+    constructor(props) {
+      super(props);
+
       this.currentCustomersType = "recent" // recent, filter, search
       this.lastQuery = ""
       this.currentPage = 1;
 
-      return ({
+      this.state = {
         customers: this.props.customers,
         selected_customer_id: (this.props.customer ? this.props.customer.id : ""),
         selectedFilterPatternNumber: "",
@@ -28,10 +29,10 @@ UI.define("Customers.Dashboard", function() {
         moreCustomerProcessing: false,
         no_more_customers: false,
         printing_page_size: ""
-      });
-    },
+      }
+    };
 
-    fetchCustomerDetails: function() {
+    fetchCustomerDetails = () => {
       var _this = this;
       if (this.state.customer) {
         $.ajax({
@@ -45,13 +46,13 @@ UI.define("Customers.Dashboard", function() {
           _this.forceStopProcessing()
       });
       }
-    },
+    };
 
-    newCustomerMode: function() {
+    newCustomerMode = () => {
       this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, reservation_mode: false});
-    },
+    };
 
-    handleCustomerSelect: function(customer_id, event) {
+    handleCustomerSelect = (customer_id, event) => {
       // if (this.state.processing) { return; }
       if (this.state.selected_customer_id == customer_id) {
         this.newCustomerMode()
@@ -69,20 +70,20 @@ UI.define("Customers.Dashboard", function() {
           }.bind(this)
           );
       }
-    },
+    };
 
-    handleAddCustomerToReservation: function(event) {
+    handleAddCustomerToReservation = (event) => {
       event.preventDefault();
       if (!this.state.selected_customer_id) { return; }
       window.location = this.props.addReservationPath + window.location.search + "," + (this.state.selected_customer_id || "");
-    },
+    };
 
-    handleWithoutCustomerToReservation: function() {
+    handleWithoutCustomerToReservation = () => {
       event.preventDefault();
       window.location = this.props.addReservationPath + window.location.search;
-    },
+    };
 
-    handleDeleteCustomer: function(event) {
+    handleDeleteCustomer = (event) => {
       event.preventDefault();
 
       var _this = this;
@@ -97,9 +98,9 @@ UI.define("Customers.Dashboard", function() {
         data: { _method: "delete", id: this.state.selected_customer_id },
         dataType: "json",
       })
-    },
+    };
 
-    handleMoreCustomers: function(event) {
+    handleMoreCustomers = (event) => {
       this.setState({moreCustomerProcessing: true}, function() {
         switch (this.currentCustomersType) {
           case "recent":
@@ -113,9 +114,9 @@ UI.define("Customers.Dashboard", function() {
             break;
         }
       }.bind(this));
-    },
+    };
 
-    recentCutomers: function() {
+    recentCutomers = () => {
       var originalCustomers = this.state.customers;
       var data;
       var stateChanges = {}
@@ -135,9 +136,9 @@ UI.define("Customers.Dashboard", function() {
       this.setState(stateChanges, function() {
         this.customersRequest(this.props.customersRecentPath, data, originalCustomers);
       }.bind(this))
-    },
+    };
 
-    filterCustomers: function(event) {
+    filterCustomers = (event) => {
       var data;
       var stateChanges = {}
       var originalCustomers = this.state.customers;
@@ -164,9 +165,9 @@ UI.define("Customers.Dashboard", function() {
       this.setState(stateChanges, function() {
         this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
       }.bind(this))
-    },
+    };
 
-    SearchCustomers: function(event) {
+    SearchCustomers = (event) => {
       if ((event && event.key === 'Enter') || !event) {
         // Hide the keyword
         document.activeElement.blur();
@@ -199,9 +200,9 @@ UI.define("Customers.Dashboard", function() {
           this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
         }.bind(this))
       }
-    },
+    };
 
-    customersRequest: function(path, data, originalCustomers) {
+    customersRequest = (path, data, originalCustomers) => {
       var _this = this;
 
       if (this.currentRequest != null) {
@@ -233,33 +234,33 @@ UI.define("Customers.Dashboard", function() {
       }).always(function() {
         _this.setState({moreCustomerProcessing: false, processing: false});
       });
-    },
+    };
 
-    _handleCreatedCustomer: function(customer) {
+    _handleCreatedCustomer = (customer) => {
       this.state.customers = _.reject(this.state.customers, function(c) {
         return customer.id == c.id;
       })
 
       this.state.customers.unshift(customer)
       this.setState({customers: this.state.customers, customer: customer, updated_customer: customer, selected_customer_id: customer.id});
-    },
+    };
 
-    handleCustomerCreate: function(event) {
+    handleCustomerCreate = (event) => {
       if (this.state.processing || !this._isCustomerDataValid()) { return ;}
       this.customer_info_edit.handleCreateCustomer(event);
-    },
+    };
 
-    _isCustomerDataValid: function() {
+    _isCustomerDataValid = () => {
       return (this.state.customer.lastName && this.state.customer.firstName) ||
         (this.state.customer.phoneticLastName && this.state.customer.phoneticFirstName)
-    },
+    };
 
-    handleNewReservation: function(event) {
+    handleNewReservation = (event) => {
       event.preventDefault();
       window.location = `${this.props.addReservationPath}?customer_ids=${(this.state.selected_customer_id || "")}`;
-    },
+    };
 
-    removeOption: function(optionType, index) {
+    removeOption = (optionType, index) => {
       let newCustomer = jQuery.extend(true, {}, this.state.customer);
       let originalValue = this.state.customer[`${optionType}Original`]
 
@@ -268,9 +269,9 @@ UI.define("Customers.Dashboard", function() {
       if (!this.props.customerEditPermission && !_.isEqual(newCustomer[optionType].slice(0, originalValue.length), originalValue)) { return; }
 
       this.setState({customer: newCustomer});
-    },
+    };
 
-    addOption: function(optionType, index) {
+    addOption = (optionType, index) => {
       let newCustomer = jQuery.extend(true, {}, this.state.customer);
       var defaultValue = optionType == "emails" ? { address: ""} : "";
       if (!newCustomer[optionType]) {
@@ -280,9 +281,9 @@ UI.define("Customers.Dashboard", function() {
       newCustomer[optionType].push({ type: "home", value: defaultValue });
 
       this.setState({customer: newCustomer});
-    },
+    };
 
-    handleCustomerDataChange: function(event) {
+    handleCustomerDataChange = (event) => {
       event.preventDefault();
       let newCustomer = jQuery.extend(true, {}, this.state.customer);
       var keyName = event.target.dataset.name;
@@ -304,9 +305,9 @@ UI.define("Customers.Dashboard", function() {
       }
 
       this.setState({customer: newCustomer});
-    },
+    };
 
-    handleCustomerGoogleDataChange: function(event) {
+    handleCustomerGoogleDataChange = (event) => {
       event.preventDefault();
       var newCustomer = jQuery.extend(true, {}, this.state.customer);
       let originalValue;
@@ -359,44 +360,44 @@ UI.define("Customers.Dashboard", function() {
       }
 
       this.setState({customer: newCustomer});
-    },
+    };
 
-    switchEditMode: function() {
+    switchEditMode = () => {
       if (this.state.processing) { return; }
       this.setState({ edit_mode: !this.state.edit_mode });
-    },
+    };
 
-    switchReservationMode: function(event) {
+    switchReservationMode = (event) => {
       event.preventDefault();
       if (this.state.processing) { return; }
       if (this.state.customer.id) {
         this.setState({ reservation_mode: !this.state.reservation_mode });
       }
-    },
+    };
 
-    switchProcessing: function(callback) {
+    switchProcessing = (callback) => {
       this.setState({ processing: true }, function() {
         if (callback) { callback(); }
       })
-    },
+    };
 
-    forceStopProcessing: function() {
+    forceStopProcessing = () => {
       this.setState({ processing: false });
-    },
+    };
 
-    _handlePrintingPageSizeChange: function(event) {
+    _handlePrintingPageSizeChange = (event) => {
       this.setState({[event.target.name]: event.target.value});
-    },
+    };
 
-    handlePrinting: function(event) {
+    handlePrinting = (event) => {
       event.preventDefault();
       if (!this.state.printing_page_size) { return; }
 
       var url = `${this.props.printingPath}?customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
       window.open(url, this.state.printing_page_size);
-    },
+    };
 
-    renderCustomerView: function() {
+    renderCustomerView = () => {
       var _this = this;
 
       if (this.state.reservation_mode) {
@@ -486,9 +487,9 @@ UI.define("Customers.Dashboard", function() {
         );
       }
 
-    },
+    };
 
-    renderCustomerButtons: function() {
+    renderCustomerButtons = () => {
       if (this.state.edit_mode) {
         return (
           <dl>
@@ -535,9 +536,9 @@ UI.define("Customers.Dashboard", function() {
           );
         }
       }
-    },
+    };
 
-    render: function() {
+    render = () => {
       return(
         <div>
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
@@ -644,9 +645,7 @@ UI.define("Customers.Dashboard", function() {
         </div>
       );
     }
-  });
-
-  return CustomersDashboard;
+  };
 });
 
 export default UI.Customers.Dashboard;

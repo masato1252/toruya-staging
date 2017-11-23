@@ -1,18 +1,21 @@
-//= require "components/shared/select"
-//= require "components/reservations/selected_option_field"
-
 "use strict";
 
+import React from "react";
+import "../shared/select.js"
+import "../reservations/selected_option_field.js"
+
 UI.define("Reservation.CustomerSelect", function() {
-  var CustomerSelect = React.createClass({
-    getInitialState: function() {
-      return {
+  return class CustomerSelect extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         options: this.props.options,
         selectedOptions: this.props.selectedOptions
       }
-    },
+    };
 
-    _handleOptionClick: function(event) {
+    _handleOptionClick = (event) => {
       event.preventDefault();
       var selectedOptions = this.state.selectedOptions.slice(0);
       var originalOptions = this.state.options.slice(0);
@@ -24,9 +27,9 @@ UI.define("Reservation.CustomerSelect", function() {
       this.setState({selectedOptions: selectedOptions, options: _.sortBy(result["removedOptions"], "value")}, function() {
         this.props.handleCustomerSelect(event);
       });
-    },
+    };
 
-    _handleSelectedOptionClick: function(event) {
+    _handleSelectedOptionClick = (event) => {
       event.preventDefault();
       var originalSelectedOptions = this.state.selectedOptions.slice(0);
       var options = this.state.options.slice(0);
@@ -37,16 +40,16 @@ UI.define("Reservation.CustomerSelect", function() {
       this.setState({selectedOptions: result["removedOptions"], options: _.sortBy(options, "value")}, function() {
         this.props.handleCustomerSelect(event);
       });
-    },
+    };
 
-    _toggleOptions: function(removingOptions, addingOptions, selectedValue) {
+    _toggleOptions = (removingOptions, addingOptions, selectedValue) => {
       var removedOptions = _.reject(removingOptions, function(option){ return option.value == selectedValue; });
       var newOption = _.find(removingOptions, function(option){ return option.value == selectedValue; });
 
       return {removedOptions: removedOptions, newOption: newOption}
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div>
           <UI.Select options={this.state.options}
@@ -61,9 +64,9 @@ UI.define("Reservation.CustomerSelect", function() {
           </div>
         </div>
       )
-    },
+    };
 
-    _renderSelectedOptions: function() {
+    _renderSelectedOptions = () => {
       if (this.state.selectedOptions.length) {
         return(
           this.state.selectedOptions.map(function(option) {
@@ -80,7 +83,7 @@ UI.define("Reservation.CustomerSelect", function() {
         )
       }
     }
-  });
-
-  return CustomerSelect;
+  };
 });
+
+export default UI.Reservation.CustomerSelect;

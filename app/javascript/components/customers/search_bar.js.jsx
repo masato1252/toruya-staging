@@ -2,16 +2,9 @@
 
 import React from "react";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.SearchBar", function() {
-  var SearchBar = createReactClass({
-    getInitialState: function() {
-      return ({
-      });
-    },
-
-    render: function() {
+  return class SearchBar extends React.Component {
+    render() {
       return (
         <ul>
             {
@@ -35,8 +28,7 @@ UI.define("Customers.SearchBar", function() {
          </ul>
       );
     }
-  });
-  return SearchBar;
+  };
 });
 
 export default UI.Customers.SearchBar;

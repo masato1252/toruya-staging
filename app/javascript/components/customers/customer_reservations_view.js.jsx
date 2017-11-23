@@ -2,11 +2,11 @@
 
 import React from "react";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.CustomerReservationsView", function() {
-  var CustomerReservationsView = createReactClass({
-    getInitialState: function() {
+  return class CustomerReservationsView extends React.Component {
+    constructor(props) {
+      super(props);
+
       this.reservactionBehaviors = {
         "checked_in": [{ label: this.props.checkOutBtn, action: "check_out", btn_color: "BTNyellow" }],
         "reserved": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
@@ -19,16 +19,16 @@ UI.define("Customers.CustomerReservationsView", function() {
         "canceled": [{ label: this.props.acceptInCanceledBtn, action: "accept", btn_color: "BTNtarco" }]
       };
 
-      return ({
+      this.state = {
         reservations: []
-      });
-    },
+      }
+    };
 
-    componentDidMount: function() {
+    componentDidMount = () => {
       this.fetchReservations();
-    },
+    };
 
-    fetchReservations: function() {
+    fetchReservations = () => {
       var _this = this;
 
       if (this.props.customer.id) {
@@ -45,13 +45,9 @@ UI.define("Customers.CustomerReservationsView", function() {
           });
         });
       }
-    },
+    };
 
-    handleReservationStateChange: function() {
-
-    },
-
-    renderReservations: function() {
+    renderReservations = () => {
       var previousYear;
       var _this = this;
       var divider;
@@ -187,9 +183,9 @@ UI.define("Customers.CustomerReservationsView", function() {
       }.bind(this));
 
       return reservationsView
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div id="customerInfo" className="contBody">
           <div id="basic">
@@ -251,9 +247,7 @@ UI.define("Customers.CustomerReservationsView", function() {
         </div>
       );
     }
-  });
-
-  return CustomerReservationsView;
+  };
 });
 
 export default UI.Customers.CustomerReservationsView;

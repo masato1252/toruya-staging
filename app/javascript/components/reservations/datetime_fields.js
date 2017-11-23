@@ -3,23 +3,23 @@
 import React from "react";
 import "../shared/datepicker_field.js";
 
-var createReactClass = require('create-react-class');
-
 UI.define("Reservation.DatetimeFields", function() {
-  var DatetimeFields = createReactClass({
-    getInitialState: function() {
-      return ({
+  return class DatetimeFields extends React.Component {
+    constructor(props) {
+      super(props);
+
+      this.state = {
         start_time_date_part: this.props.startTimeDatePart,
         start_time_time_part: this.props.startTimeTimePart,
         end_time_time_part: this.props.endTimeTimePart
-      });
-    },
+      }
+    };
 
-    _handleChange: function(event) {
+    _handleChange = (event) => {
       this.setState({[event.target.dataset.name]: event.target.value})
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div>
           <input type="hidden" name="staff_id" value={this.props.staffId} />
@@ -59,8 +59,7 @@ UI.define("Reservation.DatetimeFields", function() {
         </div>
       )
     }
-  });
-  return DatetimeFields;
+  };
 })
 
 export default UI.Reservation.DatetimeFields;

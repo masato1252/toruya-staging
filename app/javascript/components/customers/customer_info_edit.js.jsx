@@ -4,31 +4,28 @@ import React from "react";
 import "../shared/select.js";
 import "../shared/processing_bar.js";
 
-var createReactClass = require("create-react-class");
-
 UI.define("Customers.CustomerInfoEdit", function() {
-  var CustomerInfoEdit = createReactClass({
-    getInitialState: function() {
+  return class CustomerInfoEdit extends React.Component {
+    constructor(props) {
+      super(props);
+
       this.optionMapping = {
         home: this.props.homeLabel,
         mobile: this.props.mobileLabel,
         work: this.props.workLabel
       }
+    };
 
-      return ({
-      });
-    },
-
-    optionMappingLabel: function(type) {
+    optionMappingLabel = (type) => {
       if (this.optionMapping[type]) {
         return this.optionMapping[type];
       }
       else {
         return type;
       }
-    },
+    };
 
-    handleCreateCustomer: function(event) {
+    handleCreateCustomer = (event) => {
       event.preventDefault();
       var _this = this;
       var valuesToSubmit = $(this.customerForm).serialize();
@@ -47,9 +44,9 @@ UI.define("Customers.CustomerInfoEdit", function() {
           _this.props.forceStopProcessing();
         });
       })
-    },
+    };
 
-    itemOptions: function(items) {
+    itemOptions = (items) => {
       var defaultOptions = [
         { label: this.props.homeLabel, value: "home" },
         { label: this.props.mobileLabel, value: "mobile" },
@@ -71,17 +68,17 @@ UI.define("Customers.CustomerInfoEdit", function() {
       });
 
       return defaultOptions;
-    },
+    };
 
-    _selectedRank: function() {
+    _selectedRank = () => {
       return _.find(this.props.ranks, function(rank) { return rank.value == this.props.customer.rankId; }.bind(this))
-    },
+    };
 
-    _selectedRankClass: function() {
+    _selectedRankClass = () => {
       return this._selectedRank() ? this._selectedRank().key : 'regular'
-    },
+    };
 
-    render: function() {
+    render() {
       return (
         <div id="customerInfoEdit" className="contBody">
           <form
@@ -478,9 +475,7 @@ UI.define("Customers.CustomerInfoEdit", function() {
       </div>
       );
     }
-  });
-
-  return CustomerInfoEdit;
+  };
 });
 
 export default UI.Customers.CustomerInfoEdit;

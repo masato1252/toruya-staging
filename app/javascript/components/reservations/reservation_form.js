@@ -7,7 +7,6 @@ import "../shared/processing_bar.js"
 import "../shared/datepicker_field.js"
 
 var moment = require('moment-timezone');
-var createReactClass = require("create-react-class");
 
 UI.define("Reservation.Form", function() {
   return class ReservationForm extends React.Component {

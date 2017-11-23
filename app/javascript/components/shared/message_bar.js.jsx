@@ -2,8 +2,6 @@
 
 import React from "react";
 
-var createReactClass = require("create-react-class");
-
 UI.define("MessageBar", function() {
   return class MessageBar extends React.Component {
     // status: 'alert-success', 'alert-danger', 'alert-warning', 'alert-info'
