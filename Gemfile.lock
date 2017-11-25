@@ -291,7 +291,7 @@ GEM
     pry-rails (0.3.6)
       pry (>= 0.10.4)
     public_suffix (3.0.0)
-    puma (3.4.0)
+    puma (3.11.0)
     rack (2.0.3)
     rack-proxy (0.6.2)
       rack
@@ -462,7 +462,7 @@ DEPENDENCIES
   nokogiri (~> 1.6.8)
   omniauth-google-oauth2
   pg (~> 0.21.0)
-  puma (~> 3.4.0)
+  puma (~> 3.11.0)
   rails (~> 5.1.0)
   react-rails (~> 2.4.0)
   rollbar (~> 2.14.1)
@@ -483,7 +483,7 @@ DEPENDENCIES
   xray-rails
 
 RUBY VERSION
-   ruby 2.3.3p222
+   ruby 2.4.2p198
 
 BUNDLED WITH
-   1.15.3
+   1.16.0.pre.3

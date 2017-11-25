@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "2.3.3"
+ruby "2.4.2"
 
 gem "rails", "~> 5.1.0"
 gem "pg", "~> 0.21.0"
@@ -38,7 +38,7 @@ gem "hashie", "~> 3.4.4"
 gem "rollbar", "~> 2.14.1"
 gem "sendgrid-rails", "~> 3.1.0"
 gem "delayed-web", "~> 0.4.2"
-gem "puma", "~> 3.4.0"
+gem "puma", "~> 3.11.0"
 gem "kaminari", "~> 1.0.1"
 gem "expeditor", "~> 0.5.0"
 gem "newrelic_rpm", "~> 3.18.0"
