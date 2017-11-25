@@ -13,8 +13,18 @@ class Ability
       # can :create, Staff
       # can :manage, Profile
       # can :edit, Customer
-      # can :swith_staffs_selector, User
       # can :edit, "customer_address"
+      # can :swith_staffs_selector, User
+      # can :manage, :filter
+      # can :manage, :saved_filter
+
+      if super_user.free_level?
+        cannot :manage, :preset_filter
+      end
+
+      if super_user.free_level? || super_user.basic_level?
+        cannot :manage, :saved_filter
+      end
 
       if super_user.free_level? && super_user.staffs.active.exists?
         cannot :create, Staff
@@ -33,6 +43,14 @@ class Ability
       can :edit, Customer
       can :edit, "customer_address"
       can :swith_staffs_selector, User
+
+      if super_user.basic_level? || super_user.premium_level?
+        can :manage, :preset_filter
+      end
+
+      if super_user.premium_level?
+        can :manage, :saved_filter
+      end
 
       # Only handle the staffs under the shops he can manage.
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|

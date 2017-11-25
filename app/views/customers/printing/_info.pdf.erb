@@ -1,0 +1,14 @@
+<div class="customer-row">
+  <div class="customer-cell">
+    <%= customer.rank.try(:name) %>
+  </div>
+  <div class="customer-cell">
+    <%= customer.name %>
+  </div>
+  <div class="customer-cell">
+    <%= customer.display_address %>
+  </div>
+  <div class="customer-cell">
+    <%= customer.contact_group.try(:name) %>
+  </div>
+</div>

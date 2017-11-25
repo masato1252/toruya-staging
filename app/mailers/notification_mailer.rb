@@ -10,9 +10,18 @@ class NotificationMailer < ActionMailer::Base
 
   def customers_import_finished(contact_group)
     @contact_group = contact_group
+    @user = contact_group.user
 
-    mail(:to => contact_group.user.email,
+    mail(:to => @user.email,
          :subject => subject("顧客台帳のGoogle同期作業が完了しました。"))
+  end
+
+  def customers_printing_finished(filtered_outcome)
+    @filtered_outcome = filtered_outcome
+    @user = filtered_outcome.user
+
+    mail(:to => @user.email,
+         :subject => subject("宛名印刷用ファイルの準備ができました。"))
   end
 
   def activate_staff_account(staff_account)

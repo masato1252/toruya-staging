@@ -67,15 +67,6 @@ FactoryBot.define do
     end_date { dates.last }
   end
 
-  factory :reservation do
-    association :shop
-    association :menu
-    start_time { Time.zone.now }
-    end_time { Time.zone.now.advance(hours: 1) }
-    staff_ids { FactoryBot.create(:staff).id }
-    customer_ids { [FactoryBot.create(:customer).id] }
-  end
-
   factory :rank do
     association :user
     name "Regular"

@@ -29,6 +29,7 @@ en:
     cancel: Cancel
     log_out: Log out
     save: Save
+    search: Search
   common:
     processing: Processing
     date: Date
@@ -49,11 +50,18 @@ en:
     delete_successfully_message: Deleted successfully
     are_you_sure_message: Are you sure?
     send: Send
+    yes_label: "YES"
+    no_label: "NO"
+    close: Close
+    print: PRINT
+    select_a_menu: Please select a menu
+    select_a_staff: Please select a staff
   dashboard:
     my_shop: My shops
     shop_you_work_for: Shops you work for
     sign_in_as: "Signed in as %{name}"
     my_shop_setting: My shop settings
+    search_data: Search Data
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
@@ -70,6 +78,13 @@ en:
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
+    cancel: Cancel
+    pending: Pending
+    noshow: No show
+    checked_in: Checked in
+    checked_out: Checked out
+    reserved: Reserved
+    canceled: Canceled
     memo: Memo
     contain_some_warnings: Containing some warnings
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
@@ -94,6 +109,65 @@ en:
       postcard_a: PostCard A
       postcard_b: PostCard B
       envelope: Envelope
+    info: Customer Info
+    group: Customer Group
+    living_place: Living Place
+    living_state: State
+    email_types: Email type
+    reservation_records: Reservation Records
+    reservation_day: Date
+    level_label: Customer Level
+    filter:
+      empty_saved_filter_sentence_one: No saved filter
+      empty_saved_filter_sentence_two_for_premium_user: ""
+      empty_saved_filter_sentence_two_for_basic_user: "You can create/save custom filters by upgrading to Premium member."
+      empty_saved_filter_sentence_two_for_free_user: "You can upgrade to use preset filters. Please upgrade to Premium member to create/save custom filters."
+      customer_conditions_header: Customer Info Filter
+      reservation_conditions_header: Reservation Records Filter
+      saved_filter_header: Saved Filters
+      save_filter_title: Save Filter
+      printing_result_title: Print Results
+      menu: Menu
+      multiple_choices: multiple choices
+      staff: Staff
+      error: Error
+      reservation_status_title: Reservation status
+      reservation_status_info: Reservation status
+      check_in_status_title: Check-in status
+      check_in_status_info: Check-in status
+      printing_info: Print List
+      printing_address: Print Address
+      living_inside: inside of
+      living_outside: outside of
+      letter_or_number: letter of number
+      born: Born
+      from: From
+      to: To
+      have: Have
+      not_have: No
+      reservations: reservations
+      save_filter_title: Save Filter
+      printing_result_title: Prints Result
+      file_for_print: Files For Print
+      no_file_for_print: "No File For Print"
+      printing_message: "Processing a file for print... We will inform you by Email when the file is ready. Please wait."
+      printing_header_filter_name: Filter Name
+      printing_header_file_type: File Type
+      printing_header_created_date: Created Date
+      printing_header_expired_date: Expired Date
+      printing_types:
+        infos: Info
+        addresses: Address
+      date_query:
+        on_date: "On"
+        on_month: in the month of
+        before: Before
+        after: After
+        between: Between
+      preset:
+        dob_in_current_month: Birthday in this Month
+        dob_in_next_month: Birthday in Next Month
+        checkout_in_a_year: Checked-out within a Year
   settings:
     shop:
       info_title: Shop Info

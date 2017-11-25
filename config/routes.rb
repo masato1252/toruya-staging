@@ -45,7 +45,18 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :printing, only: [:new]
+    resources :printing, only: [:new, :create] do
+    end
+
+    resources :users do
+      resources :filter, only: [:index, :create]
+      resources :saved_filters, only: [:index, :create] do
+        collection do
+          get :fetch
+          delete :delete
+        end
+      end
+    end
   end
 
   namespace :settings do
@@ -101,7 +112,7 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticated :user, -> user { user.super_admin? } do
+  authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
   end
 

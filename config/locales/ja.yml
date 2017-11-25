@@ -29,6 +29,7 @@ ja:
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
+    search: 検索
   common:
     processing: 送信中
     date: 日付
@@ -48,11 +49,18 @@ ja:
     delete_successfully_message: 削除完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
+    yes_label: 有り
+    no_label: 無し
+    close: 閉じる
+    print: 印刷
+    select_a_menu: メニューを選択
+    select_a_staff: スタッフを選択
   dashboard:
     my_shop: 自分の店舗
     shop_you_work_for: 勤務している店舗
     sign_in_as: "%{name} としてログイン中"
     my_shop_setting: 自分の店舗の設定
+    search_data: 高度検索
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -71,6 +79,12 @@ ja:
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
     cancel: キャンセル
+    pending: 承認待ち
+    noshow: 未来店
+    checked_in: チェックイン
+    checked_out: チェックアウト
+    reserved: 予約
+    canceled: キャンセル
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
@@ -96,6 +110,65 @@ ja:
       postcard_a: ポストカード縦
       postcard_b: ポストカード横
       envelope: 封筒 長3
+    info: 顧客情報
+    group: 顧客台帳
+    living_place: 居住地
+    living_state: 都道府県
+    email_types: メールの種類
+    reservation_records: 利用履歴
+    reservation_day: 予約日
+    level_label: 顧客ランク
+    filter:
+      empty_saved_filter_sentence_one: 保存した検索条件なし
+      empty_saved_filter_sentence_two_for_premium_user: ""
+      empty_saved_filter_sentence_two_for_basic_user: "プレミアムメンバーへアップグレードすると貴方だけの検索条件を作成／保存できます。"
+      empty_saved_filter_sentence_two_for_free_user: "フィルターを使用する為にアップグレードします。プレミアムメンバーへアップグレードすると貴方だけの検索条件を作成／保存できます。"
+      saved_filter_header: 保存した条件で検索
+      customer_conditions_header: 顧客情報で検索
+      reservation_conditions_header: 利用履歴で検索
+      save_filter_title: 検索条件を保存
+      printing_result_title: 検索結果を印刷
+      menu: メニュー
+      multiple_choices: 複数選択可
+      staff: スタッフ
+      error: エラー
+      reservation_status_title: 予約状況
+      reservation_status_info: ステータス選択
+      check_in_status_title: 来店ステータス
+      check_in_status_info: 来店ステータス選択
+      printing_info: リスト印刷
+      printing_address: 宛名印刷
+      living_inside: 選択地域
+      living_outside: 選択地域外
+      letter_or_number: 英数字
+      born: 生年月日が
+      from: から
+      to: まで
+      have: ある
+      not_have: ない
+      reservations: に予約が
+      save_filter_title: 検索条件を保存
+      printing_result_title: 検索結果を印刷
+      file_for_print: 印刷用ファイル
+      no_file_for_print: 印刷用ファイル無し
+      printing_message: "印刷用ファイル作成中... ファイルの印刷準備ができ次第メールにてご連絡差し上げます。今しばらくお待ちください。"
+      printing_header_filter_name: フィルター名
+      printing_header_file_type: 種類
+      printing_header_created_date: 作成日
+      printing_header_expired_date: 印刷期限
+      printing_types:
+        infos: リスト
+        addresses: 住所
+      date_query:
+        on_date: "指定日"
+        on_month: 指定月
+        before: 指定日以前
+        after: 指定日以降
+        between: 期間内
+      preset:
+        dob_in_current_month: 今月お誕生日
+        dob_in_next_month: 来月お誕生日
+        checkout_in_a_year: 来店１年以内
   settings:
     shop:
       info_title:  店舗情報

@@ -48,6 +48,9 @@ class User < ApplicationRecord
   has_many :contact_groups
   has_many :staff_accounts, foreign_key: :user_id
   has_many :owner_staff_accounts, class_name: "StaffAccount", foreign_key: :owner_id
+  has_many :customer_query_filters
+  has_many :reservation_query_filters
+  has_many :filtered_outcomes
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

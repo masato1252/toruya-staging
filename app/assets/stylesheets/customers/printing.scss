@@ -1,4 +1,5 @@
 .customer-info {
+  page-break-before: always;
   width: 70mm;
   font-size: 10px;
 
@@ -10,5 +11,25 @@
   .street2 {
     margin-bottom: 1.2mm;
     text-align: center;
+  }
+}
+
+.customers-table {
+  display: table;
+  width: 90%;
+
+  .customer-row {
+    display: table-row;
+    page-break-inside: avoid;
+
+    .customer-cell {
+      &.title {
+        background-color: #bbc0bf;
+      }
+
+      display: table-cell;
+      padding: 10px 20px 10px 20px;
+      border: 1px solid #000;
+    }
   }
 }

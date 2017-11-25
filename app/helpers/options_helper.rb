@@ -120,4 +120,38 @@ module OptionsHelper
   def react_attributes(array)
     array.map { |a| React.camelize_props(a.attributes) }
   end
+
+  def contact_group_options
+    default_options(super_user.contact_groups.connected)
+  end
+
+  def filtered_outcome_options(filtered_outcomes)
+    filtered_outcomes.map{ |outcome|
+      React.camelize_props({
+        id: outcome.id,
+        name: outcome.name,
+        file_url: outcome.file.url,
+        state: outcome.aasm_state,
+        type: I18n.t("customer.filter.printing_types.#{outcome.outcome_type}"),
+        created_date: outcome.created_at.to_s(:date),
+        expired_date: outcome.created_at.advance(days: FilteredOutcome::EXPIRED_DAYS).to_s(:date)
+      })
+    }
+  end
+
+  def regions
+    JpPrefecture::Prefecture.all.map {|j| { label: j.name, value: j.name } }
+  end
+
+  def year_options
+    (1916..Date.today.year).to_a.map {|year| { label: year, value: year }}
+  end
+
+  def month_options
+    (1..12).to_a.map {|year| { label: year, value: year }}
+  end
+
+  def day_options
+    (1..31).to_a.map {|year| { label: year, value: year }}
+  end
 end

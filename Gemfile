@@ -19,10 +19,9 @@ gem "sass-rails", "~> 5.0.6"
 gem "dotenv-rails", "~> 2.2.1", :require => "dotenv/rails-now"
 gem "devise", "~> 4.3.0"
 gem "omniauth-google-oauth2"
-gem "react-rails", "~> 1.8.0"
+gem "react-rails", "~> 2.4.0"
+gem "webpacker", "~> 3.0.2"
 gem "underscore-rails", "~> 1.8.3"
-gem "momentjs-rails", "~> 2.11.1"
-gem "moment_timezone-rails", "~> 0.5.0"
 gem "font-awesome-rails", "~> 4.7.0"
 gem "active_link_to", "~> 1.0.3"
 gem "aasm", "~> 4.11.0"
@@ -47,6 +46,9 @@ gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 gem "cancancan", "~> 1.15.0"
 gem "wicked_pdf", "~> 1.1.0"
 gem "wkhtmltopdf-binary"
+gem "carrierwave", "~> 1.1.0"
+gem "fog-aws", "~> 1.4.0"
+gem "bitly", "~> 1.0.0"
 gem "lograge", "~> 0.6.0"
 
 group :development, :test do
@@ -69,6 +71,5 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem "bullet", "~> 2.0.0"
+  gem "awesome_rails_console", "~> 0.4.0"
 end
-
-gem "rails_12factor", group: :production

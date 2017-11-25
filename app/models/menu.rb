@@ -27,6 +27,7 @@ class Menu < ApplicationRecord
 
   has_many :staff_menus, inverse_of: :menu, dependent: :destroy
   has_many :staffs, through: :staff_menus
+  has_many :active_staffs, ->{ Staff.active.references(:staffs) }, through: :staff_menus, class_name: "Staff", source: :staff
   has_many :shop_menus, inverse_of: :menu, dependent: :destroy
   has_many :shops, through: :shop_menus
   has_many :menu_categories, dependent: :destroy

@@ -14,7 +14,7 @@
         <div class="tableCell">CLOSED</div>
       </div>
     <% end %>
-    <%= react_component("UI.Calendar",
+    <%= react_component("calendar/calendar",
                         {
                           shop_id: shop.id,
                           day_names: I18n.t("date.abbr_day_names"),
@@ -92,7 +92,10 @@
             <dd class="menu"><%= reservation.menu.display_name %></dd>
             <dd class="customer"><%= customer_names_sentence %></dd>
             <% if reservation.with_warnings %>
-              <dd class="status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+              <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+            <% end %>
+            <% if sentences[:deleted_staffs_sentence] %>
+              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
             <% end %>
             <% if sentences[:deleted_staffs_sentence] %>
               <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
@@ -224,7 +227,7 @@
         <%= form_tag custom_schedules_path do %>
           <div class="modal-body">
             <dl id="addWorkDay">
-              <%= react_component("UI.Reservation.DatetimeFields", {
+              <%= react_component("reservations/datetime_fields", {
                 staff_id: staff.id,
                 open: true,
                 start_time_date_part: @date.to_s,
@@ -268,7 +271,7 @@
         <%= form_tag custom_schedules_path do %>
           <div class="modal-body">
             <dl id="addWorkDay">
-              <%= react_component("UI.Reservation.DatetimeFields", {
+              <%= react_component("reservations/datetime_fields", {
                 staff_id: staff.id,
                 open: false,
                 start_time_date_part: @date.to_s,
