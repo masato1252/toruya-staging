@@ -571,7 +571,7 @@ UI.define("Customers.Filter.QuerySider", function() {
               <h3>{this.props.customerEmailTitle}</h3>
               <div>
                 <dl>
-                  <dt>{this.props.customerEmailTypes}</dt>
+                  <dt>{this.props.customerEmailTitle}</dt>
                   <dd>
                     <ul>
                       <li>
@@ -602,7 +602,7 @@ UI.define("Customers.Filter.QuerySider", function() {
                 {
                   this.state.has_email === "true" ? (
                     <dl>
-                      <dt>has witch email?</dt>
+                      <dt>{this.props.customerEmailTypes}</dt>
                       <dd>
                         <ul>
                           {this.renderCheckboxOptions(this.emailTypes, "email_types")}

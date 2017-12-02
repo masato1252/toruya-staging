@@ -114,7 +114,7 @@ ja:
     group: 顧客台帳
     living_place: 居住地
     living_state: 都道府県
-    email_types: メールの種類
+    email_types: アドレスの種類
     reservation_records: 利用履歴
     reservation_day: 予約日
     level_label: 顧客ランク
@@ -128,6 +128,7 @@ ja:
       reservation_conditions_header: 利用履歴で検索
       save_filter_title: 検索条件を保存
       printing_result_title: 検索結果を印刷
+      email_title: メールアドレス
       menu: メニュー
       multiple_choices: 複数選択可
       staff: スタッフ
