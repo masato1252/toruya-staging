@@ -7,9 +7,9 @@ class CustomersPrintingJob < ApplicationJob
 
     customers = super_user.customers.where(id: customer_ids)
     customers = case filtered_outcome.outcome_type
-                when FilteredOutcome::OUTCOME_TYPES.first
+                when FilteredOutcome::CUSTOMERS_OUTCOME_TYPES.first # addresses
                   customers.map(&:with_google_contact)
-                when FilteredOutcome::OUTCOME_TYPES.second
+                when FilteredOutcome::CUSTOMERS_OUTCOME_TYPES.second # infos
                   customers.includes(:contact_group, :rank)
                 end
 

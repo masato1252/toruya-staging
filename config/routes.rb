@@ -45,8 +45,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :printing, only: [:new, :create] do
-    end
+    resources :printing, only: [:new, :create]
 
     resources :users do
       resources :filter, only: [:index, :create]
@@ -56,6 +55,12 @@ Rails.application.routes.draw do
           delete :delete
         end
       end
+    end
+  end
+
+  scope module: "reservations", as: "reservation", path: "reservation" do
+    resources :users do
+      resources :filter, only: [:index, :create]
     end
   end
 
