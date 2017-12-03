@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/kasaike
     docker:
-      - image: circleci/ruby:2.3.3-node
+      - image: circleci/ruby:2.4.2-node
         environment:
           RAILS_ENV: test
           RACK_ENV: test
