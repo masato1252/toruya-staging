@@ -40,7 +40,9 @@ module OptionsHelper
 
   def shop_options(shops)
     return [] unless shops.present?
-    shops.map { |s| React.camelize_props(s.attributes) }
+    shops.map do |s|
+      { label: s.name, value: s.id.to_s }
+    end
   end
 
   def reservation_setting_options(reservation_settings, menu)

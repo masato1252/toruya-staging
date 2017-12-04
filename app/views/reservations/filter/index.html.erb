@@ -1,8 +1,8 @@
-
 <%= react_component("reservations/filter/dashboard", {
   form_auth_token: form_authenticity_token,
   saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
   filtered_outcome_options: filtered_outcome_options(@filtered_outcomes),
+  shop_options: shop_options(shops),
   reservation_date_query_options: [
     { label: t("customer.filter.date_query.on_date"), value: "on"},
     { label: t("customer.filter.date_query.before"), value: "before"},

@@ -23,6 +23,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
         reservationDateQueryType: "on",
         start_reservation_date: "",
         end_reservation_date: "",
+        shop_ids: [],
         menu_id: "",
         menu_ids: [],
         staff_id: "",
@@ -266,7 +267,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
     };
 
     isQueryConditionLegal = () => {
-      return this.isReservationConditionValid();
+      return this.isReservationConditionValid() && this.state.shop_ids.length > 0;
     };
 
     render() {
@@ -292,6 +293,18 @@ UI.define("Reservations.Filter.QuerySider", function() {
               ) : null}
             </div>
             <h2>{this.props.customerReservationConditionsHeader}</h2>
+
+            <div className="filterKey">
+            <h3>Shops</h3>
+              <dl className="groups">
+                <dt>{this.props.customerGroupTitle}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.shopOptions, "shop_ids")}
+                  </ul>
+                </dd>
+              </dl>
+            </div>
             <div className="filterKey">
               <h3>{this.props.customerReservationDateTitle}</h3>
               <div>
@@ -468,6 +481,11 @@ UI.define("Reservations.Filter.QuerySider", function() {
               >
               <input name="utf8" type="hidden" value="✓" />
               <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
+              {
+                this.state.shop_ids.join(",") ? (
+                  <input name="reservation[shop_ids]" type="hidden" value={this.state.shop_ids.join(",")} />
+                ) : null
+              }
               {
                 this.state.reservation_with_warnings ? (
                   <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />

@@ -33,6 +33,10 @@ query.each do |key, value|
       json.set! :end_reservation_date, end_date.to_s(:date)
     end
 
+    if value["shop_ids"]
+      json.set! :shop_ids, value["shop_ids"]
+    end
+
     if value["menu_ids"]
       json.set! :menu_ids, value["menu_ids"]
     end
