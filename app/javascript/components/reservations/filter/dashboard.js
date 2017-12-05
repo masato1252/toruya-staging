@@ -109,6 +109,23 @@ UI.define("Reservations.Filter.Dashboard", function() {
       })
     };
 
+    deleteFilter = () => {
+      event.preventDefault();
+      var _this = this;
+
+      $.ajax({
+        type: "POST",
+        url: _this.props.deleteFilterPath, //sumbits it to the given url of the form
+        data: { _method: "delete", id: this.state.current_saved_filter_id },
+        dataType: "JSON"
+      }).done(function(result) {
+        _this.querySider.updateFilterOption(result, false);
+        _this.reset();
+        _this.setState({reservations: []});
+        // _this.props.forceStopProcessing();
+      })
+    };
+
     isResultEmpty = () => {
       return this.state.reservations.length === 0
     };
