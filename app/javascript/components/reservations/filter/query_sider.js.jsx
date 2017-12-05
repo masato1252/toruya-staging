@@ -126,7 +126,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
       let collectionName = event ? event.target.dataset.name : _collectionName;
       let valueName = event ? event.target.dataset.targetName : _valueName;
 
-      let newValues = this.state[collectionName];
+      let newValues = this.state[collectionName].slice();
       let newValue = this.state[valueName];
       if (!newValue) { return; }
 
@@ -143,7 +143,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
     onRemoveItem = (event) => {
       event.preventDefault();
 
-      let newValues = this.state[event.target.dataset.name];
+      let newValues = this.state[event.target.dataset.name].slice();
 
       if (_.contains(newValues, event.target.dataset.value)) {
         newValues = _.reject(newValues, function(value) {
