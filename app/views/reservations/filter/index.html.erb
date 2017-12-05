@@ -1,5 +1,8 @@
 <%= react_component("reservations/filter/dashboard", {
   form_auth_token: form_authenticity_token,
+  can_manage_saved_filter: can?(:manage, :saved_filter),
+  can_manage_preset_filter: can?(:manage, :preset_filter),
+  locale: I18n.locale,
   saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
   filtered_outcome_options: filtered_outcome_options(@filtered_outcomes),
   shop_options: shop_options(shops),

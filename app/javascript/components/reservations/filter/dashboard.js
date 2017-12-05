@@ -16,7 +16,13 @@ UI.define("Reservations.Filter.Dashboard", function() {
         printing_status: "",
         query_processing: false,
         reservations: [],
-        filtered_outcome_options: this.props.filteredOutcomeOptions
+        filtered_outcome_options: this.props.filteredOutcomeOptions,
+        filter_name: "",
+        current_saved_filter_id: "",
+        current_saved_filter_name: "",
+        preset_filter_name: "",
+        printing_page_size: "",
+        info_printing_page_size: "",
       }
     };
 
@@ -25,6 +31,13 @@ UI.define("Reservations.Filter.Dashboard", function() {
 
       $(".contents").height(properHeight);
       $("#searchKeys").height(properHeight);
+    };
+
+    onDataChange = (event) => {
+      let stateName = event.target.dataset.name;
+      let stateValue = event.target.dataset.value || event.target.value;
+
+      this.setState({[stateName]: stateValue});
     };
 
     updateFilter = (hash) => {

@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
 
   scope module: "reservations", as: "reservation", path: "reservation" do
-    resources :printing, only: [:new, :create]
+    resources :printing, only: [:create]
 
     resources :users do
       resources :filter, only: [:index, :create]

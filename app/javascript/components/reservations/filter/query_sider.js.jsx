@@ -196,6 +196,30 @@ UI.define("Reservations.Filter.QuerySider", function() {
       });
     };
 
+    onSavedFilterClick = (event) => {
+      const _this = this;
+      let stateValue = event.target.dataset.value;
+
+      // Load Filter query to option
+      if (!stateValue) {
+        this.reset();
+        this.props.updateResult([]);
+        return;
+      }
+
+      $.ajax({
+        type: "GET",
+        url: this.props.fetchFilterPath, //sumbits it to the given url of the form
+        data: { id: stateValue },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.updateFilterOption(result);
+        // _this.props.forceStopProcessing();
+      }).always(function() {
+        // _this.props.forceStopProcessing();
+      });
+    };
+
     renderReservationDateOptions = () => {
       return (
         <ul>
@@ -310,15 +334,6 @@ UI.define("Reservations.Filter.QuerySider", function() {
             <h2>{this.props.savedFilterHeader}</h2>
             <div className="savedFilter">
               {this.renderSavedFilters()}
-              {this.props.canManagePresetFilter ? (
-                <div>
-                  <a href="#"
-                    className="BTNgray"
-                    onClick={this.onCheckoutInAYearClick}>
-                    {this.props.checkoutInAYear}
-                  </a>
-                </div>
-              ) : null}
             </div>
             <h2>{this.props.customerReservationConditionsHeader}</h2>
 
