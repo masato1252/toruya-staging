@@ -23,7 +23,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
         reservationDateQueryType: "on",
         start_reservation_date: "",
         end_reservation_date: "",
-        shop_ids: [],
+        shop_ids: this.props.shopOptions.map((option) => { return option.value }),
         menu_id: "",
         menu_ids: [],
         staff_id: "",
