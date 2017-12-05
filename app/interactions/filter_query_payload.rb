@@ -4,10 +4,6 @@ class FilterQueryPayload < ActiveInteraction::Base
   def execute
     query = {}
 
-    if param[:shop_ids].present?
-      query[:shop_ids] = param[:shop_ids].split(",")
-    end
-
     if param[:group_ids].present?
       query[:group_ids] = param[:group_ids].split(",")
     end

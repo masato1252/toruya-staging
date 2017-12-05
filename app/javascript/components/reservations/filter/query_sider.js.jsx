@@ -57,6 +57,17 @@ UI.define("Reservations.Filter.QuerySider", function() {
       return this.initialStates;
     };
 
+    reset = () => {
+      this.setState(_.omit(this.getInitialState(), "savedFilterOptions"));
+      this.props.updateFilter({
+        "filter_name": "",
+        "current_saved_filter_id": "",
+        "current_saved_filter_name": "",
+        "preset_filter_name": "",
+        "printing_status": ""
+      });
+    };
+
     renderSavedFilters = () => {
       return (
         <div>
@@ -95,7 +106,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
     };
 
     onCheckboxChange = (event) => {
-      let newValues = this.state[event.target.dataset.name];
+      let newValues = this.state[event.target.dataset.name].slice();
 
       if (_.contains(newValues, event.target.dataset.value)) {
         newValues = _.reject(newValues, function(value) {
@@ -143,6 +154,23 @@ UI.define("Reservations.Filter.QuerySider", function() {
       this.setState({[event.target.dataset.name]: newValues})
     };
 
+    updateFilterOption = (query, queryReservations = true) => {
+      this.setState($.extend({}, _.omit(this.getInitialState(), "savedFilterOptions"), query), function() {
+        if (queryReservations) {
+          this.submitFilterForm()
+          this.queryConditions = $(this.filterForm).serialize();
+        }
+      }.bind(this));
+
+      this.props.updateFilter({
+        "filter_name": query["current_saved_filter_name"],
+        "current_saved_filter_id": query["current_saved_filter_id"],
+        "current_saved_filter_name": query["current_saved_filter_name"],
+        "preset_filter_name": query["preset_filter_name"],
+        "printing_status": ""
+      })
+    };
+
     submitFilterForm = () => {
       event.preventDefault();
       if (!this.isQueryConditionLegal()) { return; }
@@ -163,7 +191,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
         data: _this.queryConditions,
         dataType: "JSON"
       }).success(function(result) {
-        //_this.props.updateResult(result["reservations"]);
+        _this.props.updateResult(result["reservations"]);
       }).always(function() {
       });
     };
