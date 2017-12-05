@@ -79,7 +79,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     };
 
     onCheckboxChange = (event) => {
-      let newValues = this.state[event.target.dataset.name];
+      let newValues = this.state[event.target.dataset.name].slice();
 
       if (_.contains(newValues, event.target.dataset.value)) {
         newValues = _.reject(newValues, function(value) {
@@ -182,7 +182,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     onRemoveItem = (event) => {
       event.preventDefault();
 
-      let newValues = this.state[event.target.dataset.name];
+      let newValues = this.state[event.target.dataset.name].slice();
 
       if (_.contains(newValues, event.target.dataset.value)) {
         newValues = _.reject(newValues, function(value) {
