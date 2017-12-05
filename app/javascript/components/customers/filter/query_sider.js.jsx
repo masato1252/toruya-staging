@@ -199,7 +199,7 @@ UI.define("Customers.Filter.QuerySider", function() {
       let collectionName = event ? event.target.dataset.name : _collectionName;
       let valueName = event ? event.target.dataset.targetName : _valueName;
 
-      let newValues = this.state[collectionName];
+      let newValues = this.state[collectionName].slice();
       let newValue = this.state[valueName];
       if (!newValue) { return; }
 
