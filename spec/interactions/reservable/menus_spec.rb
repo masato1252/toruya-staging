@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Reservable::Menus do
   before do
-    Timecop.freeze(Time.local(2016, 12, 22, 10))
+    Timecop.freeze(Time.local(2016, 12, 22, 8))
   end
 
   let(:user) { shop.user }

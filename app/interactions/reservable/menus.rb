@@ -122,12 +122,14 @@ module Reservable
         where("business_schedules.full_time = ?", true).
       or(
         @workable_menus_scoped.
-        where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
-        where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, end_time)
+          where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
+          where("(business_schedules.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
+                 (business_schedules.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?",
+                 start_time.to_s(:time), end_time.to_s(:time))
       ).
       or(
         @workable_menus_scoped.
-        where("opened_custom_schedules.start_time <= ? and opened_custom_schedules.end_time >= ?", start_time, end_time)
+          where("opened_custom_schedules.start_time <= ? and opened_custom_schedules.end_time >= ?", start_time, end_time)
       )
 
       # Menu need reservation setting to be reserved
@@ -142,27 +144,22 @@ module Reservable
         )
 
       @workable_menus_scoped = @workable_menus_scoped.
-        where("reservation_settings.day_type = ?", "business_days").
         where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time).
+               ((reservation_settings.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
+                (reservation_settings.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?)",
+                start_time.to_s(:time), end_time.to_s(:time))
+
+      @workable_menus_scoped = @workable_menus_scoped.where("reservation_settings.day_type = ?", "business_days").
       or(
         @workable_menus_scoped.
-        where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}").
-        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+        where("reservation_settings.day_type = ? and ? = ANY(reservation_settings.days_of_week)", "weekly", "#{start_time.wday}")
       ).
       or(
-        @workable_menus_scoped.
-        where("reservation_settings.day_type = ? and reservation_settings.day = ?", "monthly", start_time.day).
-        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+        @workable_menus_scoped.where("reservation_settings.day_type = ? and reservation_settings.day = ?", "monthly", start_time.day)
       ).
       or(
-        @workable_menus_scoped.
-        where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
-               ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}").
-        where("(reservation_settings.start_time is NULL and reservation_settings.end_time is NULL) or
-               (reservation_settings.start_time::time <= ? and reservation_settings.end_time::time >= ?)", start_time, end_time)
+        @workable_menus_scoped.where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
+               ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}")
       )
     end
 

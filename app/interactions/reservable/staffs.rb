@@ -28,10 +28,12 @@ module Reservable
 
       scoped = scoped.
         where("business_schedules.full_time = ?", true).
-        or(
-          scoped.
-          where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
-          where("business_schedules.start_time::time <= ? and business_schedules.end_time::time >= ?", start_time, ready_time)
+      or(
+        scoped.
+        where("business_schedules.business_state = ? and business_schedules.day_of_week = ?", "opened", start_time.wday).
+        where("(business_schedules.start_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time <= ? and
+               (business_schedules.end_time + '#{::Time.zone.now.utc_offset} seconds'::INTERVAL)::time >= ?",
+               start_time.to_s(:time), ready_time.to_s(:time))
       ).
       or(
         scoped.

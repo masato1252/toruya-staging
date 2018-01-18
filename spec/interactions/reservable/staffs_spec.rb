@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Reservable::Staffs do
+  before do
+    Timecop.freeze(Time.local(2016, 12, 22, 10))
+  end
+
   let(:user) { shop.user }
   let(:shop) { FactoryBot.create(:shop) }
   let(:now) { Time.zone.now }
