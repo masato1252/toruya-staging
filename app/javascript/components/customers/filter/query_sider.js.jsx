@@ -665,6 +665,14 @@ UI.define("Customers.Filter.QuerySider", function() {
                         </i>
                       </a>
                     </li>
+                    {
+                      (this.state.custom_id && !_.contains(this.state.custom_ids, this.state.custom_id)) ?
+                        (
+                          <li className="warning">
+                            {this.props.customIdConfirmWarning}
+                          </li>
+                        ) : null
+                    }
                   </ul>
                 </dd>
               </dl>
@@ -789,6 +797,14 @@ UI.define("Customers.Filter.QuerySider", function() {
                           </i>
                         </a>
                       </li>
+                      {
+                        (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.menuConfirmWarning}
+                            </li>
+                          ) : null
+                      }
                     </ul>
                   </dd>
                 </dl>
@@ -826,6 +842,14 @@ UI.define("Customers.Filter.QuerySider", function() {
                           </i>
                         </a>
                       </li>
+                      {
+                        (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.staffConfirmWarning}
+                            </li>
+                          ) : null
+                      }
                     </ul>
                   </dd>
                 </dl>

@@ -4,6 +4,10 @@
   border: 2px solid #CF0003;
 }
 
+.warning {
+  color: $warning;
+}
+
 .display-hidden {
   display: none !important;
 }
@@ -84,7 +88,7 @@ button[disabled], a.disabled, input[disabled] {
       }
 
       .warning {
-        color: #e6a21f;
+        color: $warning;
       }
 
       .danger {
