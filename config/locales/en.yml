@@ -54,6 +54,7 @@ en:
     no_label: "NO"
     close: Close
     print: PRINT
+    select_a_menu: Please select a shop
     select_a_menu: Please select a menu
     select_a_staff: Please select a staff
   dashboard:
@@ -128,6 +129,7 @@ en:
       save_filter_title: Save Filter
       printing_result_title: Print Results
       email_title: Has Email
+      shop: Shop
       menu: Menu
       multiple_choices: multiple choices
       staff: Staff

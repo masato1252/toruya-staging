@@ -21,6 +21,7 @@ class Customers::Filter < ActiveInteraction::Base
     string :query_type, default: "on"
     time :start_date, default: nil
     time :end_date, default: nil
+    array :shop_ids, default: nil
     array :menu_ids, default: nil
     array :staff_ids, default: nil
     boolean :with_warnings, default: nil
@@ -96,6 +97,9 @@ class Customers::Filter < ActiveInteraction::Base
         # else
         #   scoped = scoped.where("reservations.id is not NULL")
         # end
+        if reservation[:shop_ids].present?
+          scoped = scoped.where("reservations.shop_id": reservation[:shop_ids])
+        end
 
         if reservation[:menu_ids].present?
           scoped = scoped.where("reservations.menu_id": reservation[:menu_ids])

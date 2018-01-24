@@ -247,6 +247,23 @@ RSpec.describe Customers::Filter do
           context "when other conditions exist" do
             let(:reservation_conditions) { { has_reservation: true, query_type: "after", start_date: 1.days.ago } }
 
+            context "when shop_ids exists" do
+              let(:matched_shop) { FactoryBot.create(:shop, user: user) }
+              let(:unmatched_shop) { FactoryBot.create(:shop, user: user) }
+
+              before do
+                FactoryBot.create(:reservation, customers: [matched_customer], shop: matched_shop)
+                FactoryBot.create(:reservation, customers: [unmatched_customer], shop: unmatched_shop)
+              end
+
+              it "returns expected customers" do
+                result = Customers::Filter.run!(super_user: user, reservation: reservation_conditions.merge(shop_ids: [matched_shop.id]))
+
+                expect(result).to include(matched_customer)
+                expect(result).not_to include(unmatched_customer)
+              end
+            end
+
             context "when menu_ids exists" do
               let(:matched_menu) { FactoryBot.create(:menu, user: user) }
               let(:unmatched_menu) { FactoryBot.create(:menu, user: user) }

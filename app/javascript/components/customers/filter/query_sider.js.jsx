@@ -36,6 +36,8 @@ UI.define("Customers.Filter.QuerySider", function() {
         reservationDateQueryType: "on",
         start_reservation_date: "",
         end_reservation_date: "",
+        shop_id: "",
+        shop_ids: [],
         menu_id: "",
         menu_ids: [],
         staff_id: "",
@@ -472,7 +474,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     };
 
     isReservationConditionValid = () => {
-      if (this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
+      if (this.state.shop_ids.length || this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
         return !!this.state.start_reservation_date
       }
       else {
@@ -717,6 +719,44 @@ UI.define("Customers.Filter.QuerySider", function() {
             <div>
               <div className="filterKey">
                 <h3>
+                  {this.props.customerReservationShopTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectShopLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.shop_ids, "shop_ids", this.props.shopOptions)}
+                      <li>
+                        <UI.Select
+                          includeBlank="true"
+                          blankOption={this.props.selectShopLabel}
+                          options={this.props.shopOptions}
+                          id="select2"
+                          data-name="shop_id"
+                          value={this.state.shop_id}
+                          onChange={this.onDataChange}
+                          />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.shop_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="shop_id"
+                          data-name="shop_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="shop_id"
+                            data-name="shop_ids" >
+                          </i>
+                        </a>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>
                   {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
                 </h3>
                 <dl>
@@ -934,6 +974,11 @@ UI.define("Customers.Filter.QuerySider", function() {
                     name="reservation[end_date]"
                     type="hidden"
                     value={this.state.end_reservation_date} />
+                ) : null
+              }
+              {
+                this.state.shop_ids.join(",") ? (
+                  <input name="reservation[shop_ids]" type="hidden" value={this.state.shop_ids.join(",")} />
                 ) : null
               }
               {

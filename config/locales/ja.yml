@@ -53,6 +53,7 @@ ja:
     no_label: 無し
     close: 閉じる
     print: 印刷
+    select_a_shop: 店鋪選択
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
   dashboard:
@@ -129,6 +130,7 @@ ja:
       save_filter_title: 検索条件を保存
       printing_result_title: 検索結果を印刷
       email_title: メールアドレス
+      shop: 店鋪
       menu: メニュー
       multiple_choices: 複数選択可
       staff: スタッフ

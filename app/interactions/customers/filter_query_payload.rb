@@ -53,6 +53,10 @@ class Customers::FilterQueryPayload < ActiveInteraction::Base
         query[:reservation][:end_date] = Date.parse(param[:reservation][:end_date]).end_of_day
       end
 
+      if param[:reservation][:shop_ids].present?
+        query[:reservation][:shop_ids] = param[:reservation][:shop_ids].split(",")
+      end
+
       if param[:reservation][:menu_ids].present?
         query[:reservation][:menu_ids] = param[:reservation][:menu_ids].split(",")
       end

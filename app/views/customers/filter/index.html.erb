@@ -26,6 +26,7 @@
     { label: t("customer.filter.date_query.between"), value: "between"}
   ],
   yes_no_options: [{ label: t("customer.filter.have"), value: true }, { label: t("customer.filter.not_have"), value: false }],
+  shop_options: shops.map { |s| { label: s.display_name, value: s.id.to_s }},
   menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
   menu_options: menu_group_options(@menu_result[:menu_options]),
   staff_options: staff_options(@staff_options, []),
@@ -56,6 +57,7 @@
   select_year_label: I18n.t("customer.select_year"),
   select_month_label: I18n.t("customer.select_month"),
   select_day_label: I18n.t("customer.select_day"),
+  select_shop_label: I18n.t("common.select_a_shop"),
   select_menu_label: I18n.t("common.select_a_menu"),
   select_staff_label: I18n.t("common.select_a_staff"),
   processing_message: I18n.t("common.processing"),
@@ -70,6 +72,7 @@
   customer_id_title: I18n.t("customer.customer_id"),
   customer_reservation_conditions_header: I18n.t("customer.filter.reservation_conditions_header"),
   customer_reservation_date_title: I18n.t("customer.reservation_day"),
+  customer_reservation_shop_title: I18n.t("customer.filter.shop"),
   customer_reservation_menu_title: I18n.t("customer.filter.menu"),
   customer_reservation_staff_title: I18n.t("customer.filter.staff"),
   customer_reservation_error_title: I18n.t("customer.filter.error"),
