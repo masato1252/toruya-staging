@@ -759,6 +759,14 @@ UI.define("Customers.Filter.QuerySider", function() {
                           </i>
                         </a>
                       </li>
+                      {
+                        (this.state.shop_id && !_.contains(this.state.shop_ids, this.state.shop_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.shopConfirmWarning}
+                            </li>
+                          ) : null
+                      }
                     </ul>
                   </dd>
                 </dl>
