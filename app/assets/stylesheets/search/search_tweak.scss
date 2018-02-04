@@ -1,0 +1,16 @@
+.filter #resList {
+  a {
+    display: block;
+    padding: 5px 0;
+    color: #444444;
+  }
+
+  dl {
+    height: 45px;
+
+    .date {
+      width: 70px;
+    }
+  }
+}
+

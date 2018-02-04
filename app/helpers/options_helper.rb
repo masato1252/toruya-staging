@@ -99,6 +99,13 @@ module OptionsHelper
     reservations.map do |r|
       sentences = reservation_staff_sentences(r)
 
+      customer_names = r.customers.map(&:name)
+      customer_names_sentence = if customer_names.count > 1
+                                  "#{customer_names.first} +#{customer_names.count - 1}"
+                                else
+                                  customer_names.first
+                                end
+
       React.camelize_props({
         id: r.id,
         year: r.start_time.year,
@@ -111,6 +118,7 @@ module OptionsHelper
         state: r.aasm_state,
         shop_id: r.shop_id,
         customers: r.customers.map { |r| { id: r.id, name: r.name } },
+        customers_sentence: customer_names_sentence,
         staffs: sentences[:staffs_sentence],
         deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
         memo: simple_format(r.memo),

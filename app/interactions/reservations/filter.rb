@@ -42,6 +42,6 @@ class Reservations::Filter < ActiveInteraction::Base
       scoped = scoped.where("aasm_state": reservation[:states])
     end
 
-    scoped.distinct
+    scoped.order("start_time DESC").distinct
   end
 end
