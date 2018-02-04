@@ -3,9 +3,7 @@
 import React from "react";
 import "./query_sider.js";
 import "./reservations_list.js";
-import "../../shared/message_bar.js";
 import "../../shared/select.js";
-import "../../shared/printing_modal.js";
 
 UI.define("Reservations.Filter.Dashboard", function() {
   return class ReservationsFilterDashboard extends React.Component {
@@ -13,16 +11,13 @@ UI.define("Reservations.Filter.Dashboard", function() {
       super(props);
 
       this.state = {
-        printing_status: "",
         query_processing: false,
         reservations: [],
         filtered_outcome_options: this.props.filteredOutcomeOptions,
         filter_name: "",
         current_saved_filter_id: "",
         current_saved_filter_name: "",
-        preset_filter_name: "",
-        printing_page_size: "",
-        info_printing_page_size: "",
+        preset_filter_name: ""
       }
     };
 
@@ -61,35 +56,6 @@ UI.define("Reservations.Filter.Dashboard", function() {
     reset = () => {
       this.querySider.reset();
       this.updateResult([]);
-      this.setState({printing_page_size: "", info_printing_page_size: "", printing_status: ""});
-    };
-
-    handlePrinting = (event) => {
-      event.preventDefault();
-      var _this = this;
-
-      if (!this.state[event.target.dataset.pageSizeName]) { return; }
-
-      var valuesToSubmit = $(this.querySider.filterForm).serialize() + '&' + $.param({
-        filtered_outcome: {
-          page_size: this.state[event.target.dataset.pageSizeName],
-          filter_id: this.state.current_saved_filter_id,
-          name: this.state.current_saved_filter_name || this.state.preset_filter_name,
-          outcome_type: event.target.dataset.printingType,
-        },
-        reservation_ids: _.map(this.state.reservations, function(reservation) { return reservation.id; }).join(",")
-      });
-
-      $.ajax({
-        type: "POST",
-        url: _this.props.printingPath, //sumbits it to the given url of the form
-        data: valuesToSubmit,
-        dataType: "JSON"
-      }).done(function(result) {
-        _this.setState(result)
-        _this.reset();
-        _this.setState({printing_status: "alert-info"}); // avoid user click again.
-      })
     };
 
     saveFilter = () => {
@@ -152,17 +118,13 @@ UI.define("Reservations.Filter.Dashboard", function() {
     render() {
       return(
         <div>
-          <UI.MessageBar
-            status={this.state.printing_status}
-            message={this.props.printingMessage}
-            closeMessageBar={function() { this.setState({printing_status: ""}) }.bind(this)}
-            />
           <div id="dashboard" className="contents">
             <UI.Reservations.Filter.QuerySider
               ref={(c) => {this.querySider = c}}
               {...this.props}
               updateResult={this.updateResult}
               updateFilter={this.updateFilter}
+              customerFilterPath={this.props.customerFilterPath}
               startProcessing={this.startProcessing}
             />
             <UI.Reservations.Filter.ReservationsList
@@ -200,46 +162,10 @@ UI.define("Reservations.Filter.Dashboard", function() {
                         <i className="fa fa-repeat"></i> 検索条件クリア
                       </a>
                     </dd>
-                    <dt>{this.props.printingResultTitle}</dt>
-                    <dd id="NAVprintList">
-                      <UI.Select
-                        data-name="info_printing_page_size"
-                        options={this.props.infoPrintingPageSizeOptions}
-                        value ={this.state.info_printing_page_size}
-                        onChange={this.onDataChange}
-                        blankOption={this.props.infoPrintingPageSizeBlankOption}
-                        includeBlank={true}
-                        />
-                      <a onClick={this.handlePrinting}
-                        href="#"
-                        className={`BTNtarco ${this.state.info_printing_page_size && !this.isResultEmpty() ? null : "disabled"}`}
-                        title="印刷"
-                        data-printing-type={this.props.infoPrintingType}
-                        data-page-size-name="info_printing_page_size"
-                        target="_blank">
-                        <i className="fa fa-print"
-                          data-printing-type={this.props.infoPrintingType}
-                          data-page-size-name="info_printing_page_size">
-                        </i>
-                      </a>
-                    </dd>
                   </div>
                 )}
-                <dd id="NAVprintFilter">
-                  {this.state.filtered_outcome_options.length === 0 ? (
-                    <a href="#" className="BTNtarco disabled">{this.props.noFileForPrintWording}</a>
-                  ) : (
-                    <a href="#" data-toggle="modal" data-target="#printing-files-modal" className="BTNtarco">
-                      <i className="fa fa-file-pdf-o"></i> {this.props.filesForPrintWording}
-                    </a>
-                    )}
-                  </dd>
                 </dl>
             </div>
-            <UI.PrintingModal
-              {...this.props}
-              filtered_outcome_options={this.state.filtered_outcome_options}
-            />
           </div>
         </div>
       )

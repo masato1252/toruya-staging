@@ -165,6 +165,7 @@ UI.define("Customers.Filter.Dashboard", function() {
               {...this.props}
               updateCustomers={this.updateCustomers}
               updateFilter={this.updateFilter}
+              reservationFilterPath={this.props.reservationFilterPath}
               startProcessing={this.startProcessing}
             />
             <UI.Customers.Filter.CustomersList

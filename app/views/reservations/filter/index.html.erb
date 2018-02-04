@@ -1,5 +1,6 @@
 <%= react_component("reservations/filter/dashboard", {
   form_auth_token: form_authenticity_token,
+  customer_filter_path: customer_user_filter_index_path,
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
   locale: I18n.locale,
@@ -23,7 +24,6 @@
     { label: I18n.t("reservation.#{state}"), value: state }
   },
   filter_path: reservation_user_filter_index_path(super_user),
-  filter_path: reservation_user_filter_index_path(super_user),
   save_filter_path: reservation_user_saved_filters_path(super_user),
   fetch_filter_path: fetch_reservation_user_saved_filters_path(super_user),
   delete_filter_path: delete_reservation_user_saved_filters_path(super_user),
@@ -41,16 +41,5 @@
   yes_label: I18n.t("common.yes_label"),
   no_label: I18n.t("common.no_label"),
   empty_saved_filter_sentence_one: t("customer.filter.empty_saved_filter_sentence_one"),
-  empty_saved_filter_sentence_two: t("customer.filter.empty_saved_filter_sentence_two_for_#{super_user.level}_user"),
-  printing_header_filter_name: t("customer.filter.printing_header_filter_name"),
-  printing_header_file_type: t("customer.filter.printing_header_file_type"),
-  printing_header_created_date: t("customer.filter.printing_header_created_date"),
-  printing_header_expired_date: t("customer.filter.printing_header_expired_date"),
-  files_for_print_wording: t("customer.filter.file_for_print"),
-  no_file_for_print_wording: t("customer.filter.no_file_for_print"),
-  print_btn: t("common.print"),
-  close_button: t("common.close"),
-  info_printing_page_size_blank_option: I18n.t("customer.filter.printing_info"),
-  info_printing_page_size_options: [{ label: "A4", value: "a4"}],
-  info_printing_type: FilteredOutcome::OUTCOME_TYPES.second,
+  empty_saved_filter_sentence_two: t("customer.filter.empty_saved_filter_sentence_two_for_#{super_user.level}_user")
 }) %>

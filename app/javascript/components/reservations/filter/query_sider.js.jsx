@@ -64,7 +64,6 @@ UI.define("Reservations.Filter.QuerySider", function() {
         "current_saved_filter_id": "",
         "current_saved_filter_name": "",
         "preset_filter_name": "",
-        "printing_status": ""
       });
     };
 
@@ -167,7 +166,6 @@ UI.define("Reservations.Filter.QuerySider", function() {
         "current_saved_filter_id": query["current_saved_filter_id"],
         "current_saved_filter_name": query["current_saved_filter_name"],
         "preset_filter_name": query["preset_filter_name"],
-        "printing_status": ""
       })
     };
 
@@ -326,8 +324,8 @@ UI.define("Reservations.Filter.QuerySider", function() {
       return(
         <div id="searchKeys" className="sidel">
           <div id="tabs" className="tabs">
-            <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
-            <a href="#"><i className="fa fa-calendar" aria-hidden="true"></i></a>
+            <a href={this.props.customerFilterPath}><i className="fa fa-users" aria-hidden="true"></i></a>
+            <a href="#" className="here"><i className="fa fa-calendar" aria-hidden="true"></i></a>
           </div>
 
           <div id="filterKeys" className="tabBody">
@@ -463,7 +461,7 @@ UI.define("Reservations.Filter.QuerySider", function() {
               <div className="filterKey">
                 <h3>{this.props.customerReservationErrorTitle}</h3>
                 <dl>
-                  <dt>has errors?</dt>
+                  <dt>{this.props.customerReservationErrorTitle}</dt>
                   <dd>
                     <ul>
                       <li>

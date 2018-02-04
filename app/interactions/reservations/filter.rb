@@ -12,7 +12,7 @@ class Reservations::Filter < ActiveInteraction::Base
   end
 
   def execute
-    scoped = Reservation.where(shop_id: reservation[:shop_ids]).includes(:menu, :customers)
+    scoped = Reservation.where(shop_id: reservation[:shop_ids]).includes(:shop, :menu, :customers, :staffs)
 
     scoped = case reservation[:query_type]
              when "on"
