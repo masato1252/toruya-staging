@@ -11,11 +11,6 @@ module GoogleOauth
       access.access_token = auth.credentials.token
       access.refresh_token = auth.credentials.refresh_token
 
-      if access.save
-        Customer.where(user: user).delete_all
-        ContactGroup.where(user: user).delete_all
-      end
-
       access
     end
   end
