@@ -119,6 +119,7 @@ en:
     reservation_day: Date
     level_label: Customer Level
     filter:
+      confirm_message: You're about to leave the filter page to view customer information.
       empty_saved_filter_sentence_one: No saved filter
       empty_saved_filter_sentence_two_for_premium_user: ""
       empty_saved_filter_sentence_two_for_basic_user: "You can create/save custom filters by upgrading to Premium member."
