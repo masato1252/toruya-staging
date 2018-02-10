@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/ilake/google_contacts_api.git
-  revision: 58a775050ca9157856e436d501dc75005e6052c2
+  revision: 9984cab9cc42164d5bd92499f0b9b858570f1ff9
   specs:
-    google_contacts_api (0.2.2)
+    google_contacts_api (0.2.3)
       google-api-client (~> 0.8.6)
       hashie (~> 3.4.4)
       nokogiri (~> 1.6.8)
@@ -192,7 +192,7 @@ GEM
       multi_json (~> 1.10)
       retriable (~> 1.4)
       signet (~> 0.6)
-    googleauth (0.6.1)
+    googleauth (0.6.2)
       faraday (~> 0.12)
       jwt (>= 1.4, < 3.0)
       logging (~> 2.0)
@@ -447,7 +447,7 @@ DEPENDENCIES
   factory_bot_rails
   fog-aws (~> 1.4.0)
   font-awesome-rails (~> 4.7.0)
-  google_contacts_api (~> 0.2.2)!
+  google_contacts_api (~> 0.2.3)!
   hashie (~> 3.4.4)
   holidays (~> 4.5.0)
   jbuilder (~> 2.5)
