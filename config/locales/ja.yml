@@ -120,6 +120,7 @@ ja:
     reservation_day: 予約日
     level_label: 顧客ランク
     filter:
+      empty_content: "該当する予約データが見つかりません。"
       empty_saved_filter_sentence_one: 保存した検索条件なし
       empty_saved_filter_sentence_two_for_premium_user: ""
       empty_saved_filter_sentence_two_for_basic_user: "プレミアムメンバーへアップグレードすると貴方だけの検索条件を作成／保存できます。"

@@ -119,6 +119,7 @@ en:
     reservation_day: Date
     level_label: Customer Level
     filter:
+      empty_content: "No reservation found for the filter."
       empty_saved_filter_sentence_one: No saved filter
       empty_saved_filter_sentence_two_for_premium_user: ""
       empty_saved_filter_sentence_two_for_basic_user: "You can create/save custom filters by upgrading to Premium member."
