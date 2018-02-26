@@ -12,7 +12,7 @@ UI.define("Reservations.Filter.Dashboard", function() {
 
       this.state = {
         query_processing: false,
-        reservations: [],
+        reservations: null,
         filtered_outcome_options: this.props.filteredOutcomeOptions,
         filter_name: "",
         current_saved_filter_id: "",
@@ -93,7 +93,7 @@ UI.define("Reservations.Filter.Dashboard", function() {
     };
 
     isResultEmpty = () => {
-      return this.state.reservations.length === 0
+      return this.state.reservations === null || this.state.reservations.length === 0
     };
 
     renderFilterButton = () => {

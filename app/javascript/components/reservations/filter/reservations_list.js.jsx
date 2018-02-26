@@ -8,7 +8,7 @@ UI.define("Reservations.Filter.ReservationsList", function() {
     renderReservationModals = () => {
       var _this = this;
 
-      var reservationModalsView = this.props.reservations.map(function(reservation, i) {
+      var reservationModalsView = (this.props.reservations || []).map(function(reservation, i) {
         return (
           <div key={`reservation-modal-${reservation.id}`} id={`reservation-modal-${reservation.id}`}>
             <div className="modal fade" id={`reservationModal${reservation.id}`} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -76,30 +76,38 @@ UI.define("Reservations.Filter.ReservationsList", function() {
     };
 
     renderReservationsList = () => {
-      return (
-        this.props.reservations.map(function(reservation) {
-          return (
-            <a href="#"
-              className={reservation.state}
-              data-toggle="modal"
-              data-target={`#reservationModal${reservation.id}`}
-              key={`reservation-${reservation.id}`}
-              >
-              <dl key={reservation.id}>
-                <dd className="date">
-                  {reservation.year} <br />
-                  {reservation.monthDate}
-                </dd>
-                <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
-                <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
-                <dd className="menu">{reservation.menu}</dd>
-                <dd className="customer">{reservation.customersSentence}</dd>
-                <dd className="shop">{reservation.shop}</dd>
-              </dl>
-            </a>
-          )
-        })
-      );
+      if (!this.props.reservations) {
+        return <div></div>
+      }
+      else if (this.props.reservations.length === 0) {
+        return <div className="empty-content">{this.props.emptyContent}</div>
+      }
+      else {
+        return (
+          this.props.reservations.map(function(reservation) {
+            return (
+              <a href="#"
+                className={reservation.state}
+                data-toggle="modal"
+                data-target={`#reservationModal${reservation.id}`}
+                key={`reservation-${reservation.id}`}
+                >
+                <dl key={reservation.id}>
+                  <dd className="date">
+                    {reservation.year} <br />
+                    {reservation.monthDate}
+                  </dd>
+                  <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
+                  <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
+                  <dd className="menu">{reservation.menu}</dd>
+                  <dd className="customer">{reservation.customersSentence}</dd>
+                  <dd className="shop">{reservation.shop}</dd>
+                </dl>
+              </a>
+            )
+          })
+        );
+      }
     };
 
     render() {
