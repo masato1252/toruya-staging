@@ -417,6 +417,14 @@ UI.define("Reservations.Filter.QuerySider", function() {
                           </i>
                         </a>
                       </li>
+                      {
+                        (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.menuConfirmWarning}
+                            </li>
+                          ) : null
+                      }
                     </ul>
                   </dd>
                 </dl>
@@ -454,6 +462,14 @@ UI.define("Reservations.Filter.QuerySider", function() {
                           </i>
                         </a>
                       </li>
+                      {
+                        (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.staffConfirmWarning}
+                            </li>
+                          ) : null
+                      }
                     </ul>
                   </dd>
                 </dl>
