@@ -103,10 +103,8 @@ button[disabled], a.disabled, input[disabled] {
 }
 
 // customer/filter and reservations#index page
-#resList {
-  &.contBody {
-    overflow: scroll;
-  }
+.contBody {
+  overflow: scroll;
 }
 
 // customer filter
