@@ -1562,7 +1562,7 @@ CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at
 -- Name: filtered_outcome_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX filtered_outcome_index ON filtered_outcomes USING btree (user_id, aasm_state, created_at);
+CREATE INDEX filtered_outcome_index ON filtered_outcomes USING btree (user_id, aasm_state, outcome_type, created_at);
 
 
 --
@@ -1931,6 +1931,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170814061241'),
 ('20170821073539'),
 ('20170827131921'),
-('20171118075544');
+('20171118075544'),
+('20171127134653');
 
 

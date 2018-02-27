@@ -16,11 +16,15 @@
 
 class FilteredOutcome < ApplicationRecord
   EXPIRED_DAYS = 7
-  OUTCOME_TYPES = %w(addresses infos).freeze
+  CUSTOMERS_OUTCOME_TYPES = %w(addresses infos).freeze
+  RESERVATIONS_OUTCOME_TYPES = %w(reservation_infos).freeze
+  OUTCOME_TYPES = CUSTOMERS_OUTCOME_TYPES + RESERVATIONS_OUTCOME_TYPES
   include AASM
   mount_uploader :file, FilteredOutcomeFileUploader
 
   scope :active, -> { where(aasm_state: %w(processing completed)) }
+  scope :customers, -> { where(outcome_type: CUSTOMERS_OUTCOME_TYPES) }
+  scope :reservations, -> { where(outcome_type: RESERVATIONS_OUTCOME_TYPES) }
 
   belongs_to :user
   belongs_to :filter, class_name: "QueryFilter"

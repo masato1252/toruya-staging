@@ -1,4 +1,4 @@
-class Customers::FilterQueryPayload < ActiveInteraction::Base
+class FilterQueryPayload < ActiveInteraction::Base
   hash :param, strip: false
 
   def execute

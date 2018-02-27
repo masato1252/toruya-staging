@@ -42,7 +42,6 @@ UI.define("Customers.Filter.QuerySider", function() {
         menu_ids: [],
         staff_id: "",
         staff_ids: [],
-        reservation_with_warnings: "",
         reservation_states: []
       }
 
@@ -474,7 +473,7 @@ UI.define("Customers.Filter.QuerySider", function() {
     };
 
     isReservationConditionValid = () => {
-      if (this.state.shop_ids.length || this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_with_warnings || this.state.reservation_states.length) {
+      if (this.state.shop_ids.length || this.state.menu_ids.length || this.state.staff_ids.length || this.state.reservation_states.length) {
         return !!this.state.start_reservation_date
       }
       else {
@@ -487,6 +486,7 @@ UI.define("Customers.Filter.QuerySider", function() {
         <div id="searchKeys" className="sidel">
           <div id="tabs" className="tabs">
             <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
+            <a href={this.props.reservationFilterPath}><i className="fa fa-calendar" aria-hidden="true"></i></a>
           </div>
 
           <div id="filterKeys" className="tabBody">
@@ -862,38 +862,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                   </dd>
                 </dl>
               </div>
-              <div className="filterKey display-hidden">
-                <h3>{this.props.customerReservationErrorTitle}</h3>
-                <dl>
-                  <dt>has errors?</dt>
-                  <dd>
-                    <ul>
-                      <li>
-                        <input
-                          type="radio"
-                          id="hasANerror"
-                          data-name="reservation_with_warnings"
-                          data-value="true"
-                          checked={this.state.reservation_with_warnings === "true"}
-                          onChange={this.onDataChange}
-                          />
-                        <label htmlFor="hasANerror">{this.props.yesLabel}</label>
-                      </li>
-                      <li>
-                        <input
-                          type="radio"
-                          id="hasNOrror"
-                          data-name="reservation_with_warnings"
-                          data-value="false"
-                          checked={this.state.reservation_with_warnings === "false"}
-                          onChange={this.onDataChange}
-                          />
-                        <label htmlFor="hasNOrror">{this.props.noLabel}</label>
-                      </li>
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
               <div className="filterKey">
                 <h3>{this.props.customerReservationStatusTitle}</h3>
                 <dl>
@@ -982,12 +950,6 @@ UI.define("Customers.Filter.QuerySider", function() {
                      value={this.state.end_dob_date} />
                 ) : null
               }
-              {
-                this.state.reservation_with_warnings ? (
-                  <input name="reservation[with_warnings]" type="hidden" value={this.state.reservation_with_warnings} />
-                ) : null
-              }
-
               {
                 this.state.start_reservation_date ? (
                   <div>

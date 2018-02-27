@@ -1,4 +1,4 @@
-class Customers::FilterController < DashboardController
+class Reservations::FilterController < DashboardController
   def index
     @body_class = "filter"
     menu_options = super_user.menus.map do |menu|
@@ -10,17 +10,16 @@ class Customers::FilterController < DashboardController
       ::Options::StaffOption.new(id: staff.id, name: staff.name)
     end
 
-    @filters = super_user.customer_query_filters
-    @filtered_outcomes = super_user.filtered_outcomes.customers.active.order("created_at DESC")
-    @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
+    @filters = super_user.reservation_query_filters
+    @filtered_outcomes = super_user.filtered_outcomes.reservations.active.order("created_at DESC")
   end
 
   def create
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
-    outcome = Customers::Filter.run(query.merge(super_user: super_user))
+    outcome = Reservations::Filter.run(query.merge(super_user: super_user))
 
     if outcome.valid?
-      @customers = outcome.result
+      @reservations = outcome.result
     else
       # render "api/v1/sessions/invalid_client", status: :unprocessable_entity
       head :unprocessable_entity

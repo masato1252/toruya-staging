@@ -1,8 +1,4 @@
-filterCategoryDisplaying = {}
-
 query.each do |key, value|
-  filterCategoryDisplaying[key] = true
-
   case key
   when "has_email"
     json.set! :has_email, value
@@ -37,29 +33,26 @@ query.each do |key, value|
       json.set! :end_reservation_date, end_date.to_s(:date)
     end
 
+    if value["shop_ids"]
+      json.set! :shop_ids, value["shop_ids"]
+    end
+
     if value["menu_ids"]
-      filterCategoryDisplaying["menu_ids"] = true
       json.set! :menu_ids, value["menu_ids"]
     end
 
     if value["staff_ids"]
-      filterCategoryDisplaying["staff_ids"] = true
       json.set! :staff_ids, value["staff_ids"]
     end
 
     if value["states"]
-      filterCategoryDisplaying["reservationBeforeCheckedInStates"] = true if (Reservation::BEFORE_CHECKED_IN_STATES && value["states"]).present?
-      filterCategoryDisplaying["reservationAfterCheckedInStates"] = true if (Reservation::AFTER_CHECKED_IN_STATES && value["states"]).present?
       json.set! :reservation_states, value["states"]
     end
 
     if !value["with_warnings"].nil?
-      filterCategoryDisplaying["reservation_with_warnings"] = true
       json.set! :reservation_with_warnings, value["with_warnings"]
     end
   else
     json.set! key, value
   end
 end
-
-json.filterCategoryDisplaying filterCategoryDisplaying

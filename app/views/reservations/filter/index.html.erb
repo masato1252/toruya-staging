@@ -1,0 +1,48 @@
+<%= react_component("reservations/filter/dashboard", {
+  form_auth_token: form_authenticity_token,
+  customer_filter_path: customer_user_filter_index_path,
+  can_manage_saved_filter: can?(:manage, :saved_filter),
+  can_manage_preset_filter: can?(:manage, :preset_filter),
+  locale: I18n.locale,
+  saved_filter_options: @filters.map{ |filter| { label: filter.name, value: filter.id } },
+  filtered_outcome_options: filtered_outcome_options(@filtered_outcomes),
+  shop_options: shop_options(shops),
+  reservation_date_query_options: [
+    { label: t("customer.filter.date_query.on_date"), value: "on"},
+    { label: t("customer.filter.date_query.before"), value: "before"},
+    { label: t("customer.filter.date_query.after"), value: "after"},
+    { label: t("customer.filter.date_query.between"), value: "between"}
+  ],
+  yes_no_options: [{ label: t("customer.filter.have"), value: true }, { label: t("customer.filter.not_have"), value: false }],
+  menu_group_options: menu_group_options(@menu_result[:category_with_menu_options]),
+  menu_options: menu_group_options(@menu_result[:menu_options]),
+  staff_options: staff_options(@staff_options, []),
+  reservation_before_checked_in_state_options: Reservation::BEFORE_CHECKED_IN_STATES.map{ |state|
+    { label: I18n.t("reservation.#{state}"), value: state }
+  },
+  reservation_after_checked_in_state_options: Reservation::AFTER_CHECKED_IN_STATES.map{ |state|
+    { label: I18n.t("reservation.#{state}"), value: state }
+  },
+  filter_path: reservation_user_filter_index_path(super_user),
+  save_filter_path: reservation_user_saved_filters_path(super_user),
+  fetch_filter_path: fetch_reservation_user_saved_filters_path(super_user),
+  delete_filter_path: delete_reservation_user_saved_filters_path(super_user),
+  search_label: I18n.t("action.search"),
+  customer_reservation_conditions_header: I18n.t("customer.filter.reservation_conditions_header"),
+  customer_reservation_date_title: I18n.t("customer.reservation_day"),
+  customer_reservation_menu_title: I18n.t("customer.filter.menu"),
+  customer_reservation_staff_title: I18n.t("customer.filter.staff"),
+  customer_reservation_error_title: I18n.t("customer.filter.error"),
+  customer_reservation_multiple_choices: I18n.t("customer.filter.multiple_choices"),
+  customer_reservation_status_title: I18n.t("customer.filter.reservation_status_title"),
+  customer_reservation_status_info: I18n.t("customer.filter.reservation_status_info"),
+  customer_check_in_status_title: I18n.t("customer.filter.check_in_status_title"),
+  customer_check_in_status_info: I18n.t("customer.filter.check_in_status_info"),
+  yes_label: I18n.t("common.yes_label"),
+  no_label: I18n.t("common.no_label"),
+  empty_saved_filter_sentence_one: t("customer.filter.empty_saved_filter_sentence_one"),
+  empty_saved_filter_sentence_two: t("customer.filter.empty_saved_filter_sentence_two_for_#{super_user.level}_user"),
+  menu_confirm_warning: t("customer.filter.menu_confirm_warning"),
+  staff_confirm_warning: t("customer.filter.staff_confirm_warning"),
+  empty_content: t("customer.filter.empty_content")
+}) %>
