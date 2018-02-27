@@ -5,11 +5,17 @@ import "../../shared/processing_bar.js";
 
 UI.define("Customers.Filter.CustomersList", function() {
   return class CustomersList extends React.Component {
+    onCustomerClick = (customer) => {
+      if (window.confirm(this.props.customerInfoConfirmMessage + customer.label)) {
+         window.location = `${this.props.customerPath}?customer_id=${customer.id}`;
+      }
+    }
+
     renderCustomersList = () => {
       return (
         this.props.customers.map(function(customer) {
           return (
-            <dl key={customer.id}>
+            <dl key={customer.id} onClick={this.onCustomerClick.bind(this, customer)}>
               <dd className="status">
                 <span className={`customer-level-symbol ${customer.rank.key}`}>
                   <i className="fa fa-address-card"></i>
@@ -20,7 +26,7 @@ UI.define("Customers.Filter.CustomersList", function() {
               <dd className="group">{customer.groupName}</dd>
             </dl>
           )
-        })
+        }.bind(this))
       );
     };
 

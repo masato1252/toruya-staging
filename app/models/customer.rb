@@ -63,6 +63,8 @@ class Customer < ApplicationRecord
     self.address = primary_part_address(google_contact.addresses)
     self.emails = google_contact.emails
     self.phone_numbers = google_contact.phone_numbers
+    # google_contact.primary_email format:
+    # <Hashie::Mash type=:other value=#<Hashie::Mash address="awakeningyouedu@gmail.com" primary=true>>
     self.primary_email = google_contact.primary_email
     self.primary_phone = primary_value(google_contact.phone_numbers)
     self
