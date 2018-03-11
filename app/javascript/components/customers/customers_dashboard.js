@@ -28,7 +28,8 @@ UI.define("Customers.Dashboard", function() {
         processing: false,
         moreCustomerProcessing: false,
         no_more_customers: false,
-        printing_page_size: ""
+        printing_page_size: "",
+        didSearch: false
       }
     };
 
@@ -174,7 +175,7 @@ UI.define("Customers.Dashboard", function() {
 
         var data, originalCustomers;
         var originalCustomers = this.state.customers;
-        var stateChanges = {}
+        var stateChanges = { didSearch: true };
 
         if (event) {
           $(event.target).blur();
@@ -400,7 +401,16 @@ UI.define("Customers.Dashboard", function() {
     renderCustomerView = () => {
       var _this = this;
 
-      if (this.state.reservation_mode) {
+      if (!this.state.didSearch) {
+        return (
+          <div className="checking-search-bar">
+            <i className="fa fa-search fa-2x search-symbol" aria-hidden="true"></i>
+            <input type="text" id="search" placeholder="名前で検索" onKeyPress={this.SearchCustomers} />
+            Before you add a new customer, better make sure them don't exist.
+          </div>
+        );
+      }
+      else if (this.state.reservation_mode) {
         return (
           <UI.Customers.CustomerReservationsView
             ref={(c) => this.CustomerReservationsView = c }
@@ -490,7 +500,10 @@ UI.define("Customers.Dashboard", function() {
     };
 
     renderCustomerButtons = () => {
-      if (this.state.edit_mode) {
+      if (!this.state.didSearch) {
+        return <div></div>
+      }
+      else if (this.state.edit_mode) {
         return (
           <dl>
             <a href="#"
