@@ -3,7 +3,6 @@ class DashboardController < ActionController::Base
   include Authorization
   include ViewHelpers
   include Locale
-  include Ssl
   include ExceptionHandler
 
   before_action :staff_requirement

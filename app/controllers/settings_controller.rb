@@ -5,7 +5,6 @@ class SettingsController < ActionController::Base
   include AccountRequirement
   include ViewHelpers
   include Locale
-  include Ssl
   include ExceptionHandler
 
   before_action :authorize_manager_level_permission
