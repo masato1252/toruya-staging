@@ -118,6 +118,7 @@ en:
     reservation_records: Reservation Records
     reservation_day: Date
     level_label: Customer Level
+    tip_before_new_customer: Search existing data before adding a new customer.
     filter:
       empty_content: "No reservation found for the filter."
       confirm_message: You're about to leave the filter page to view customer information.
