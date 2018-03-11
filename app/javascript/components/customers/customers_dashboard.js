@@ -407,7 +407,7 @@ UI.define("Customers.Dashboard", function() {
             <i className="fa fa-search fa-2x search-symbol" aria-hidden="true"></i>
             <input type="text" id="search" placeholder="名前で検索" onKeyPress={this.SearchCustomers} />
             <span className="info">
-              Before you add a new customer, make sure them don't exist.
+              Before you add a new customer, make sure they don't exist.
             </span>
           </div>
         );
