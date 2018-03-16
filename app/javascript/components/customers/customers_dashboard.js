@@ -49,8 +49,19 @@ UI.define("Customers.Dashboard", function() {
       }
     };
 
-    newCustomerMode = () => {
-      this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, reservation_mode: false, didSearch: false});
+    newCustomerMode = (mode="") => {
+      let didSearch = false;
+
+      if (mode !== "manual" && (this.currentCustomersType === "search" || this.currentCustomersType === "filter")) {
+        didSearch = true;
+      }
+
+      this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, reservation_mode: false, didSearch: didSearch});
+
+      if (mode === "manual") {
+        // From select user get into new customer mode
+        this.recentCutomers()
+      }
     };
 
     handleCustomerSelect = (customer_id, event) => {
@@ -121,7 +132,7 @@ UI.define("Customers.Dashboard", function() {
     recentCutomers = () => {
       var originalCustomers = this.state.customers;
       var data;
-      var stateChanges = {}
+      var stateChanges = { selectedFilterPatternNumber: "" };
 
       if (this.currentCustomersType != "recent") {
         $("body").scrollTop(0)
@@ -144,6 +155,7 @@ UI.define("Customers.Dashboard", function() {
       var data;
       var stateChanges = {}
       var originalCustomers = this.state.customers;
+      var stateChanges = { didSearch: true };
 
       if (event) {
         event.preventDefault();
@@ -594,7 +606,7 @@ UI.define("Customers.Dashboard", function() {
                   <button
                     id="new-customer-btn"
                     className="BTNtarco"
-                    onClick={this.newCustomerMode}
+                    onClick={this.newCustomerMode.bind(null, 'manual')}
                     disabled={this.state.processing} >
                     新規データ作成
                   </button>
