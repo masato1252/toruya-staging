@@ -119,6 +119,7 @@ ja:
     reservation_records: 利用履歴
     reservation_day: 予約日
     level_label: 顧客ランク
+    tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     filter:
       empty_content: "該当する予約データが見つかりません。"
       confirm_message: 顧客情報を表示するために検索結果ページを離れようとしています。
