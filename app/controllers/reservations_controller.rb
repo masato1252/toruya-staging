@@ -22,6 +22,13 @@ class ReservationsController < DashboardController
     @staffs_selector_displaying = true
   end
 
+  def all
+    @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+    @reservations = Reservation.where(shop_id: super_user.shop_ids).uncanceled.in_date(@date).
+      includes(:menu, :customers, :staffs).
+      order("reservations.start_time ASC")
+  end
+
   # GET /reservations/new
   def new
     @body_class = "resNew"
