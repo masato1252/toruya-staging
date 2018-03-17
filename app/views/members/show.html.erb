@@ -1,0 +1,286 @@
+<%
+  staff_schedule_requirement_condition = staff && @working_time_range
+%>
+<div id="dashboard" class="contents">
+  <div id="calendar" class="sidel">
+    <%= react_component("calendar/calendar",
+                        {
+                          shop_id: shop.id,
+                          day_names: I18n.t("date.abbr_day_names"),
+                          month_names: I18n.t("date.abbr_month_names").compact,
+                          reservations_path: all_shop_reservations_path(shop),
+                          working_schedule_path: working_schedule_calendars_path,
+                          selected_date: params[:reservation_date],
+                          holiday_days: @working_dates[:holidays].map(&:day),
+                          full_time: @working_dates[:full_time],
+                          shop_working_wdays: @working_dates[:shop_working_wdays],
+                          shop_working_on_holiday: @working_dates[:shop_working_on_holiday],
+                          staff_working_wdays: @working_dates[:staff_working_wdays],
+                          working_days: @working_dates[:working_dates].map(&:day),
+                          off_days: @working_dates[:off_dates].map(&:day),
+                          reservation_days: @reservation_dates.map(&:day)
+                        },
+                          { id: "custom-calendar", class: "clearfix" }) %>
+      <% if staff_schedule_requirement_condition %>
+        <div class="staffDashboard">
+          <div class="edit-worktime">
+            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
+              <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+                出勤日を追加
+              </a>
+            <% end %>
+
+            <% if can?(:manage_staff_holiday_permission, shop_staff) %>
+              <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+                休暇を追加
+              </a>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+     <div class="staffs-working-schedules table">
+       <% @staffs_working_schedules.each do |staff, working_schedule| %>
+         <div class="row">
+           <div class="staff cell">
+             <%= staff.name %>
+           </div>
+           <div class="time cell">
+             <% if working_schedule[:time] %>
+               <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
+             <% else %>
+               臨時休暇
+             <% end %>
+           </div>
+         </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="resList" class="contBody">
+    <dl class="tableTTL">
+      <dt class="time">開始<br />終了</dt>
+      <dt class="reservation-states"></dt>
+      <dt class="menu">メニュー</dt>
+      <dt class="customer">顧客氏名</dt>
+    </dl>
+    <div id="record">
+      <% @reservations.each do |reservation| %>
+        <%
+          customer_names = reservation.customers.map(&:name)
+          customer_names_sentence = if customer_names.count > 1
+                                      "#{customer_names.first} +#{customer_names.count - 1}"
+                                    else
+                                      customer_names.first
+                                    end
+
+          sentences = reservation_staff_sentences(reservation)
+        %>
+        <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
+          <dl>
+            <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
+            <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
+            <dd class="menu"><%= reservation.menu.display_name %></dd>
+            <dd class="customer"><%= customer_names_sentence %></dd>
+            <% if reservation.with_warnings %>
+              <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+            <% end %>
+            <% if sentences[:deleted_staffs_sentence] %>
+              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+            <% end %>
+            <% if sentences[:deleted_staffs_sentence] %>
+              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+            <% end %>
+          </dl>
+        </a>
+        <div class="modal fade" id="reservationModal<%= reservation.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                  <%= l(reservation.start_time, format: :date) %>
+                  <%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %>
+                </h4>
+              </div>
+              <div class="modal-body">
+                <div>
+                  <% reservation.customers.each do |customer| %>
+                    <%= link_to customer.name, shop_customers_path(customer_id: customer.id), class: "customer-link" %>
+                  <% end %>
+                </div>
+                <div class="reservation-menu">
+                  <%= reservation.menu.name %>
+                </div>
+                <div>
+                  <%= sentences[:staffs_sentence] %>
+                </div>
+                <% if reservation.with_warnings %>
+                  <div class="warning">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
+                  </div>
+                <% end %>
+                <% if sentences[:deleted_staffs_sentence] %>
+                  <div class="danger">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                    <%= t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) %>
+                  </div>
+                <% end %>
+                <div>
+                  <%= simple_format(reservation.memo) %>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <dl>
+                  <% if reservation.may_check_out? %>
+                    <dd>
+                      <%= link_to t("reservation.check_out"), check_out_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.reserved? || reservation.noshow? %>
+                    <dd>
+                      <%= link_to t("reservation.check_in"), check_in_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.checked_out? %>
+                    <dd>
+                      <%= link_to t("reservation.recheck_in"), check_in_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.may_accept? %>
+                    <dd>
+                      <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.may_pend? %>
+                    <dd>
+                      <%= link_to t("reservation.pend"), pend_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray" %>
+                    </dd>
+                  <% end %>
+
+                  <% if reservation.may_cancel? %>
+                    <dd>
+                      <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange" %>
+                    </dd>
+                  <% end %>
+
+                  <dd>
+                    <%= link_to t("action.edit"), edit_shop_reservation_path(shop, reservation), class: "btn BTNtarco" %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="status-list">
+      <div><span class="reservation-state reserved"></span>予約</div>
+      <div><span class="reservation-state checkin"></span>チェックイン</div>
+      <div><span class="reservation-state checkout"></span>チェックアウト</div>
+      <div><span class="reservation-state noshow"></span>未来店</div>
+      <div><span class="reservation-state pending"></span>承認待ち</div>
+    </div>
+  </div>
+  <div id="mainNav">
+    <dl>
+      <dd id="NAVnewResv">
+        <%= link_to new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNtarco" do %>
+          <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
+          <span>新規予約</span>
+        <% end %>
+      </dd>
+      <dd id="NAVcustomers">
+        <%= link_to shop_customers_path(shop), class: "BTNtarco" do %>
+          <i class="fa fa-users fa-2x" aria-hidden="true"></i>
+          <span>顧客台帳</span>
+        <% end %>
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<% if staff_schedule_requirement_condition %>
+  <div class="modal fade" id="working-date-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title">
+            <%= staff.name %>の出勤日を追加
+          </h4>
+        </div>
+
+        <%= form_tag custom_schedules_path do %>
+          <div class="modal-body">
+            <dl id="addWorkDay">
+              <%= react_component("reservations/datetime_fields", {
+                staff_id: staff.id,
+                open: true,
+                start_time_date_part: @date.to_s,
+                start_time_time_part: @working_time_range.first.to_s(:time),
+                end_time_time_part: @working_time_range.last.to_s(:time),
+                calendarfield_prefix: "temp_working_schedules_#{shop.id}"
+              }) %>
+              <div class="shops-list">
+                <% staff.shops.each do |s| %>
+                  <div class="shop-cell">
+                    <%= check_box_tag "shop_ids[]", s.id, s.id == shop.id, id: "shop-#{s.id}-schedule" %>
+                    <%= label_tag "shop-#{s.id}-schedule", s.name %>
+                  </div>
+                <% end %>
+              </div>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <dl>
+              <dd></dd>
+              <dd>
+                <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+              </dd>
+              <dd></dd>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="off-date-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          <h4 class="modal-title" id="myModalLabel">
+            <%= staff.name %>の休暇を追加
+          </h4>
+        </div>
+        <%= form_tag custom_schedules_path do %>
+          <div class="modal-body">
+            <dl id="addWorkDay">
+              <%= react_component("reservations/datetime_fields", {
+                staff_id: staff.id,
+                open: false,
+                start_time_date_part: @date.to_s,
+                start_time_time_part: "00:00",
+                end_time_time_part: "23:59",
+                calendarfield_prefix: "temp_leaving_schedule"
+              }) %>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <dl>
+              <dd></dd>
+              <dd>
+                <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+              </dd>
+              <dd></dd>
+            </dl>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
