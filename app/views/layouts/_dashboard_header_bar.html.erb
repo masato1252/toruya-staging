@@ -46,14 +46,12 @@
     <% end %>
   </dl>
   <dl>
-    <% if shop.try(:persisted?) %>
-      <dd>
-        <%= active_link_to shop_customers_path(shop), active: /^\/shops\/\d+\/customer/, class_active: "here" do %>
-          <i class="fa fa-users fa-4x" aria-hidden="true"></i>
-            顧客台帳
-        <% end %>
-      </dd>
-    <% end %>
+    <dd>
+      <%= active_link_to user_customers_path(super_user), active: /^\/users\/\d+\/customer/, class_active: "here" do %>
+        <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+          顧客台帳
+      <% end %>
+    </dd>
     <dd>
       <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
         <i class="fa fa-database fa-4x" aria-hidden="true"></i>
