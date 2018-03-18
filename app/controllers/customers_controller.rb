@@ -7,6 +7,7 @@ class CustomersController < DashboardController
     @customers = super_user.customers.includes(:rank, :contact_group, :updated_by_user).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
     @customer = super_user.customers.includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
+    shop ||= super_user.shops.first
     @add_reservation_path = if params[:reservation_id].present?
                               edit_shop_reservation_path(shop, id: params[:reservation_id])
                             else
