@@ -1,5 +1,6 @@
 class MembersController < DashboardController
   def show
+    @staffs_selector_displaying = true
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
     # working time in depend on shop
@@ -39,7 +40,7 @@ class MembersController < DashboardController
 
     @reservation_dates = []
     super_user.shops.each do |shop|
-      @reservation_dates += Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+      @reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
     end
   end
 end

@@ -3,7 +3,7 @@ class CalendarsController < DashboardController
     date = Time.zone.parse(params[:date]).to_date
 
     @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: date.beginning_of_month..date.end_of_month)
   end
 
   def personal_working_schedule
@@ -33,7 +33,7 @@ class CalendarsController < DashboardController
 
     @reservation_dates = []
     super_user.shops.each do |shop|
-      @reservation_dates += Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+      @reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: date.beginning_of_month..date.end_of_month)
     end
 
     render action: :working_schedule

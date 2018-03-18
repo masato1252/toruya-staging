@@ -18,7 +18,7 @@ class ReservationsController < DashboardController
     @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
 
     @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
     @staffs_selector_displaying = true
   end
 
