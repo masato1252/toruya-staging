@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  resources :members, only: [:show]
+  resource :member, only: [:show] do
+    get "/:reservation_date", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+  end
+
   resources :shops do
     resources :customers, only: [:index] do
       collection do
@@ -122,6 +125,7 @@ Rails.application.routes.draw do
   resources :calendars, only: [] do
     collection do
       get "working_schedule"
+      get "personal_working_schedule"
     end
   end
 
