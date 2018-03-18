@@ -40,11 +40,7 @@ class MembersController < DashboardController
 
     @reservation_dates = []
     super_user.shops.each do |shop|
-<<<<<<< HEAD
-      @reservation_dates += Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
-=======
       @reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
->>>>>>> personal-dashboard
     end
   end
 end
