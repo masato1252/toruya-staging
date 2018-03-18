@@ -12,7 +12,7 @@ class MembersController < DashboardController
     # Don't need shops in these
     @reservations = Reservation.where(shop_id: super_user.shop_ids).
       uncanceled.in_date(@date).
-      includes(:menu, :customers, :staffs).
+      includes(:menu, :customers, :staffs, :shop).
       order("reservations.start_time ASC")
 
     @working_dates = {
@@ -39,7 +39,7 @@ class MembersController < DashboardController
 
     @reservation_dates = []
     super_user.shops.each do |shop|
-     @reservation_dates += Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+      @reservation_dates += Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
     end
   end
 end
