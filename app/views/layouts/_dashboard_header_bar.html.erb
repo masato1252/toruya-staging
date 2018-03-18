@@ -52,20 +52,52 @@
         Dashboard
       <% end %>
     </dd>
-    <% if shop.try(:persisted?) %>
-      <dd>
-        <%= active_link_to shop_customers_path(shop), active: /^\/shops\/\d+\/customer/, class_active: "here" do %>
+    <dd class="dropdown">
+      <%= active_link_to user_customers_path(super_user),
+        active: /^\/users\/\d+\/customer/,
+        class_active: "here",
+        data: { toggle: "dropdown", target: "#" } do %>
           <i class="fa fa-users fa-4x" aria-hidden="true"></i>
-            顧客台帳
+        顧客台帳
+      <% end %>
+      <ul class="dropdown-menu dropdown-menu-right">
+        <% if current_user.shops.exists? %>
+          <li>
+            <span class="dropdown-header">
+              <%= t("dashboard.my_shop") %>
+            </span>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <%= link_to t("dashboard.my_shop"), user_customers_path(current_user) %>
+          </li>
+          <% if working_shop_owners.present? %>
+            <li class="divider"></li>
+          <% end %>
         <% end %>
-      </dd>
-    <% end %>
+
+        <% if working_shop_owners.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+          </li>
+          <li class="divider"></li>
+
+          <% working_shop_owners.each do |owner| %>
+            <li>
+              <%= link_to t("dashboard.someone_shop", name: owner.name), user_customers_path(owner) %>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    </dd>
+
     <dd>
       <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
         <i class="fa fa-database fa-4x" aria-hidden="true"></i>
         <%= t("dashboard.search_data") %>
       <% end %>
     </dd>
+
     <dd class="dropdown">
       <%= active_link_to settings_path(super_user),
         active: /^\/settings/,
@@ -101,6 +133,7 @@
         <% end %>
       </ul>
     </dd>
+
     <dd>
       <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
         <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>

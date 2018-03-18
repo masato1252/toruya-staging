@@ -10,6 +10,7 @@ module ViewHelpers
     helper_method :super_user
     helper_method :current_user_staff_account
     helper_method :working_shop_options
+    helper_method :working_shop_owners
     helper_method :owning_shop_options
   end
 
@@ -56,6 +57,10 @@ module ViewHelpers
 
   def current_user_staff_account
     current_user.current_staff_account(super_user)
+  end
+
+  def working_shop_owners
+    @working_shop_owners ||= current_user.staff_accounts.active.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
   end
 
   def working_shop_options
