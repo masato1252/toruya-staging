@@ -108,7 +108,7 @@
               <div class="modal-body">
                 <div>
                   <% reservation.customers.each do |customer| %>
-                    <%= link_to customer.name, shop_customers_path(shop_id: reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+                    <%= link_to customer.name, user_customers_path(customer.user, shop_id: reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
                   <% end %>
                 </div>
                 <div class="reservation-menu">
