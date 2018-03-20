@@ -63,7 +63,7 @@
           </li>
           <li class="divider"></li>
           <li>
-            <%= link_to t("dashboard.my_shop"), user_customers_path(current_user) %>
+            <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
           </li>
           <% if working_shop_owners.present? %>
             <li class="divider"></li>
