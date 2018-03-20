@@ -291,7 +291,22 @@ footer {
   width: 100%;
   z-index: 99;
 }
-#footer .content { margin: 20px; }
+.login footer, .signup footer {
+  font-size: 13px;
+  padding: 20px;
+}
+.login footer .content, .signup footer .content {
+  width: 970px;
+  margin: 0 auto;
+} 
+.login footer a, .signup footer a {
+  color: #666;
+}
+.login footer ul, .signup footer ul { margin-bottom: 15px; }
+.login footer ul li, .signup footer ul li {
+  display: inline;
+  padding-right: 15px;
+}
 /* Login Page */
 .login, .shopSelect { padding-bottom: 0; }
 .login header h1 a, .signup header h1 a, .firstSetting header h1 a, .shopSelect header h1 a, .setting header h1 a {
@@ -306,9 +321,6 @@ footer {
 #login h2 {
   text-align: center;
 }
-#login input { width: 100%; }
-#login input[type="text"], #login input[type="email"], #login input[type="password"] { padding: 10px; }
-#login input:focus { border-color: #60938a; }
 #login div { padding-bottom: 15px; }
 #login #forgotPass {
   text-align: right;
@@ -322,34 +334,39 @@ footer {
   margin-top: 20px;
   margin-bottom: 20px;
 }
-#login aside {
+#login main {
   text-align: center;
 }
-#login #socialLogin a {
-  margin: 0 10px;
+#login #SLgoogle {
+  width: 100%;
+  width: -webkit-fill-available;
+}
+#login #SLgoogle i {
+  float: left;
+  border-right: 1px solid #b0450d;
+  padding: 0 20px;
+  font-size: 20px;
+  line-height: 50px;
+  height: 49px;
+}
+#login aside {
+  font-size: 13px;
+  text-align: center;
+}
+#login main p {
+  text-align: left;
+  margin-bottom: 10px;
 }
 /* Signup Pages */
-.signup #login aside p {
+#login main p {
   text-align: left;
   margin-bottom: 10px;
 }
-.signup #login aside ul li {
-  text-align: left;
-  margin-bottom: 10px;
-}
-.signup #login #socialLogin a {
+#login a #socialLogin {
   margin: 0;
   text-align: center;
 }
-.signup #login #socialLogin { border-bottom: none; }
-.signup #login aside a i {
-  float: left;
-  line-height: 50px;
-}
-.signup #login main input[type="password"]:first-child { margin-bottom: 5px; }
-.signup #login #SLgoogle, .firstSetting #contactsGsync #Gsync { background: #de4b39; border-color: #92483b; }
-.signup #login #SLfacebook { background: #3b5999; border-color: #304972; }
-.signup #login #SLtwitter { background: #54adf1; border-color: #4d89ad; }
+#login #SLgoogle, .firstSetting #contactsGsync #Gsync { background: #de4b39; border-color: #92483b; }
 /* Shop Select */
 .shopSelect #shopNav h2 { text-align: center; }
 .shopSelect nav {

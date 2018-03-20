@@ -1,3 +1,15 @@
 <div id="login">
-  <%= link_to "Sign in with Google", user_google_oauth2_omniauth_authorize_path, class: "BTNorange google-btn" %>
+  <h2>ログイン</h2>
+  <main id="socialLogin">
+    <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
+
+    <p>
+      <%= link_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleでログイン" do %>
+        <i class="fa fa-google" aria-hidden="true"></i>Googleでログイン
+      <% end %>
+    </p>
+  </main>
+  <aside id="signup">
+    <p>初めての方は<%= link_to "ユーザー登録", new_user_registration_path %>してください。</p>
+  </aside>
 </div>

@@ -9,12 +9,22 @@
     <%= javascript_pack_tag "application" %>
   </head>
 
-  <body class="shopSelect">
+  <body class="login">
     <%= render "layouts/header_bar" %>
     <div class="container">
       <%= flash_messages %>
       <%= yield %>
     </div>
-    <div id="footer"><div class="content">&copy; Kasai, Inc.</div></div>
+    <footer>
+      <div class="content">
+        <ul>
+          <li><a href="https://toruya.com/terms/">利用規約</a></li>
+          <li><a href="https://toruya.com/privacy/">プライバシーポリシー</a></li>
+          <li><a href="https://toruya.com/contacts/">お問い合わせ</a></li>
+          <li><a href="https://toruya.com/legal_notice/">特定商取引法に基づく表示</a></li>
+        </ul>
+        <p>© Kasai, Inc.</p>
+      </div>
+    </footer>
   </body>
 </html>
