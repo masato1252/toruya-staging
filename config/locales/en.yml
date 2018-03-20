@@ -58,6 +58,7 @@ en:
     select_a_menu: Please select a menu
     select_a_staff: Please select a staff
   dashboard:
+    shops: Shops
     my_shop: My shops
     shop_you_work_for: Shops you work for
     sign_in_as: "Signed in as %{name}"

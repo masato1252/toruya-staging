@@ -5,11 +5,24 @@
         <%= link_to "Toruya", root_path %>
       </h1>
     </dt>
-
-    <dd id="NAVtoday" class="dropdown">
-      <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+    <dd>
+      <%= active_link_to member_path, active: /^\/member/, class_active: "here" do %>
         <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
+      <% end %>
+    </dd>
+
+    <% if can?(:swith_staffs_selector, User) && @staffs_selector_displaying %>
+      <dd id="NAVshopSelect">
+        <%= staffs_select_component %>
+      </dd>
+    <% end %>
+  </dl>
+  <dl>
+    <dd id="NAVtoday" class="dropdown">
+      <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        <%= t("dashboard.shops") %>
       <% end %>
       <ul class="dropdown-menu dropdown-menu-left">
         <% if owning_shop_options.present? %>
@@ -38,19 +51,6 @@
           <% end %>
         <% end %>
       </ul>
-    </dd>
-    <% if can?(:swith_staffs_selector, User) && @staffs_selector_displaying %>
-      <dd id="NAVshopSelect">
-        <%= staffs_select_component %>
-      </dd>
-    <% end %>
-  </dl>
-  <dl>
-    <dd>
-      <%= active_link_to member_path, active: /^\/member/, class_active: "here" do %>
-        <i class="fa fa-table fa-4x" aria-hidden="true"></i>
-        Dashboard
-      <% end %>
     </dd>
 
     <dd class="dropdown">

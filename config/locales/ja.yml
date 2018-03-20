@@ -57,6 +57,7 @@ ja:
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
   dashboard:
+    shops: 店舗
     my_shop: 自分の店舗
     shop_you_work_for: 勤務している店舗
     sign_in_as: "%{name} としてログイン中"
