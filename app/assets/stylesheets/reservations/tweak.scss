@@ -1,4 +1,17 @@
-#working-date-modal, #off-date-modal {
+#working-date-modal, .off-date-modal {
+  .datetime-field {
+    a.reservationCalendar {
+      display: inline-block !important; 
+      padding: 0 !important;
+      color: white !important;
+    }
+
+    .date {
+      text-align: left !important;
+      width: initial !important;
+    }
+  }
+
   #addWorkDay {
     display: table;
     margin: 30px auto;
@@ -28,10 +41,14 @@
     margin: 0 10px 0 5px;
   }
 
-  .modal-footer .btn {
+  .modal-footer {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
-    width: 120px;
+
+    .btn {
+      width: 120px;
+      display: inline-block;
+    }
   }
 }

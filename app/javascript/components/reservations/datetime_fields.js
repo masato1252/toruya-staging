@@ -21,7 +21,7 @@ UI.define("Reservation.DatetimeFields", function() {
 
     render() {
       return (
-        <div>
+        <div className="datetime-field">
           <input type="hidden" name="staff_id" value={this.props.staffId} />
           <input
             type="hidden"

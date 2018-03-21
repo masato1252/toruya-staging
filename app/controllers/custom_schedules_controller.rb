@@ -18,7 +18,7 @@ class CustomSchedulesController < DashboardController
   private
 
   def custom_schedules_params
-    params.permit(custom_schedules: [:open, :start_time_date_part, :start_time_time_part, :end_time_time_part])
+    params.permit(custom_schedules: [:id, :shop_id, :open, :start_time_date_part, :start_time_time_part, :end_time_time_part, :reason, :_destroy])
   end
 
 end

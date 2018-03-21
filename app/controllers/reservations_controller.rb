@@ -20,6 +20,21 @@ class ReservationsController < DashboardController
     @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
     @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
     @staffs_selector_displaying = true
+
+    @staffs_off_schedules = CustomSchedule.where(staff_id: @staffs_working_schedules.keys.map(&:id)).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
+
+    @schedules = (@reservations + @staffs_off_schedules).map do |reservation_and_off_schedule|
+      if reservation_and_off_schedule.is_a?(Reservation)
+        Option.new(type: :reservation,
+                   source: reservation_and_off_schedule,
+                   time: reservation_and_off_schedule.start_time)
+      else
+        Option.new(type: :off_schedule,
+                   source: reservation_and_off_schedule, # custom_schedules
+                   time: reservation_and_off_schedule.start_time,
+                   reason: reservation_and_off_schedule.reason.presence || "臨時休暇")
+      end
+    end.sort_by { |option| option.time }
   end
 
   # GET /reservations/new
