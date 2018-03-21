@@ -18,12 +18,12 @@ class ReservationsController < DashboardController
     @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
 
     @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
     @staffs_selector_displaying = true
 
-    @staffs_off_schedules = CustomSchedule.where(staff_id: @staffs_working_schedules.keys.map(&:id)).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
+    staffs_off_schedules = CustomSchedule.where(staff_id: @staffs_working_schedules.keys.map(&:id)).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
 
-    @schedules = (@reservations + @staffs_off_schedules).map do |reservation_and_off_schedule|
+    @schedules = (@reservations + staffs_off_schedules).map do |reservation_and_off_schedule|
       if reservation_and_off_schedule.is_a?(Reservation)
         Option.new(type: :reservation,
                    source: reservation_and_off_schedule,
@@ -35,6 +35,13 @@ class ReservationsController < DashboardController
                    reason: reservation_and_off_schedule.reason.presence || "臨時休暇")
       end
     end.sort_by { |option| option.time }
+  end
+
+  def all
+    @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+    @reservations = Reservation.where(shop_id: super_user.shop_ids).uncanceled.in_date(@date).
+      includes(:menu, :customers, :staffs).
+      order("reservations.start_time ASC")
   end
 
   # GET /reservations/new
@@ -97,7 +104,7 @@ class ReservationsController < DashboardController
       if outcome.valid?
         format.html do
           if params[:from_customer_id]
-            redirect_to shop_customers_path(shop_id: params[:shop_id], customer_id: params[:from_customer_id])
+            redirect_to user_customers_path(shop_id: params[:shop_id], customer_id: params[:from_customer_id])
           else
             redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
           end

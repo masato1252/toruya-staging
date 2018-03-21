@@ -40,8 +40,8 @@ module Staffs
       {
         full_time: is_staff_full_time,
         shop_working_on_holiday: shop.holiday_working,
-        shop_working_wdays: shop_working_wdays,
-        staff_working_wdays: staff_working_wdays,
+        shop_working_wdays: shop_working_wdays || [],
+        staff_working_wdays: staff_working_wdays || [],
         working_dates: working_dates.flatten,
         off_dates: off_dates.flatten,
         holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }

@@ -13,7 +13,7 @@
             <input
               type="hidden"
               name="custom_schedules[][id]"
-              value=<%= local_assigns[:custom_schedule_id] %>
+              value="<%= local_assigns[:custom_schedule_id] %>"
             />
             <%= react_component("reservations/datetime_fields", {
               custom_schedule_id: local_assigns[:custom_schedule_id],
@@ -37,8 +37,8 @@
         </div>
         <div class="modal-footer">
           <div>
+            <%= button_tag t("action.delete"), class: "btn BTNorange", name: "custom_schedules[][_destroy]", value: "1", data: { confirm: I18n.t("common.are_you_sure_message") } if local_assigns[:custom_schedule_id] %>
             <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
-            <%= button_tag t("action.delete"), class: "btn BTNyellow", name: "custom_schedules[][_destroy]", value: "1", data: { confirm: I18n.t("common.are_you_sure_message") } if local_assigns[:custom_schedule_id] %>
           </div>
         </div>
       <% end %>

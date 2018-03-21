@@ -1,11 +1,16 @@
 class CallbacksController < Devise::OmniauthCallbacksController
+  include Devise::Controllers::Rememberable
+
   def google_oauth2
-    outcome = GoogleOauth::Create.run(user: current_user, auth: request.env["omniauth.auth"])
+    outcome = ::Users::FromOmniauth.run(auth: request.env["omniauth.auth"])
 
     if outcome.valid?
-      redirect_to settings_user_contact_groups_path(current_user)
+      user = outcome.result
+      remember_me(user)
+      sign_in(user)
+      redirect_to root_path
     else
-      redirect_to settings_user_contact_groups_path(current_user), notice: 'Access Denied.'
+      redirect_to new_user_registration_url
     end
   end
 end

@@ -1,3 +1,14 @@
+#dashboard {
+  #resList {
+    .tableTTL {
+      // reservation header menu column
+      .menu {
+        margin-left: 44px;
+      }
+    }
+  }
+}
+
 #working-date-modal, .off-date-modal {
   .datetime-field {
     a.reservationCalendar {
@@ -39,6 +50,10 @@
 
   #addWorkDay dt a {
     margin: 0 10px 0 5px;
+  }
+
+  .closeReason {
+    margin-top: 12px;
   }
 
   .modal-footer {

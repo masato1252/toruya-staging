@@ -3,25 +3,14 @@
 %>
 <div id="dashboard" class="contents">
   <div id="calendar" class="sidel">
-    <% if @working_time_range %>
-      <div class="busHours table">
-        <div class="tableCell shopname"><%= shop.display_name %></div>
-        <div class="tableCell"><%= @working_time_range.first.to_s(:time) %>〜<%= @working_time_range.last.to_s(:time) %></div>
-      </div>
-    <% else %>
-      <div class="busHours shopClose table">
-        <div class="tableCell shopname"><%= shop.display_name %></div>
-        <div class="tableCell">CLOSED</div>
-      </div>
-    <% end %>
     <%= react_component("calendar/calendar",
                         {
                           shop_id: shop.id,
                           day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
-                          reservations_path: shop_reservations_path(shop),
+                          reservations_path: member_path,
+                          working_schedule_path: personal_working_schedule_calendars_path,
                           selected_date: params[:reservation_date],
-                          working_schedule_path: working_schedule_calendars_path,
                           holiday_days: @working_dates[:holidays].map(&:day),
                           full_time: @working_dates[:full_time],
                           shop_working_wdays: @working_dates[:shop_working_wdays],
@@ -31,7 +20,7 @@
                           off_days: @working_dates[:off_dates].map(&:day),
                           reservation_days: @reservation_dates.map(&:day)
                         },
-                          { id: "custom-calendar", class: "clearfix" }) %>
+                        { id: "custom-calendar", class: "clearfix" }) %>
       <% if staff_schedule_requirement_condition %>
         <div class="staffDashboard">
           <div class="edit-worktime">
@@ -51,18 +40,20 @@
       <% end %>
      <div class="staffs-working-schedules table">
        <% @staffs_working_schedules.each do |staff, working_schedule| %>
-         <div class="row">
-           <div class="staff cell">
-             <%= staff.name %>
+         <% unless working_schedule[:time] %>
+           <div class="row">
+             <div class="staff cell">
+               <%= staff.name %>
+             </div>
+             <div class="time cell">
+               <% if working_schedule[:time] %>
+                 <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
+               <% else %>
+                 臨時休暇
+               <% end %>
+             </div>
            </div>
-           <div class="time cell">
-             <% if working_schedule[:time] %>
-               <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
-             <% else %>
-               臨時休暇
-             <% end %>
-           </div>
-         </div>
+         <% end %>
       <% end %>
     </div>
   </div>
@@ -72,9 +63,9 @@
       <dt class="reservation-states"></dt>
       <dt class="menu">メニュー</dt>
       <dt class="customer">顧客氏名</dt>
+      <dt class="shop">Shop</dt>
     </dl>
-    <%= render "reservations/schedules", schedules: @schedules %>
-
+    <%= render "reservations/schedules", schedules: @schedules, personal_schedule: true %>
     <div class="status-list">
       <div><span class="reservation-state reserved"></span>予約</div>
       <div><span class="reservation-state checkin"></span>チェックイン</div>
@@ -82,22 +73,6 @@
       <div><span class="reservation-state noshow"></span>未来店</div>
       <div><span class="reservation-state pending"></span>承認待ち</div>
     </div>
-  </div>
-  <div id="mainNav">
-    <dl>
-      <dd id="NAVnewResv">
-        <%= link_to new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNtarco" do %>
-          <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-          <span>新規予約</span>
-        <% end %>
-      </dd>
-      <dd id="NAVcustomers">
-        <%= link_to user_customers_path(super_user), class: "BTNtarco" do %>
-          <i class="fa fa-users fa-2x" aria-hidden="true"></i>
-          <span>顧客台帳</span>
-        <% end %>
-      </dd>
-    </dl>
   </div>
 </div>
 
