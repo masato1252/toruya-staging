@@ -43,7 +43,7 @@ class MembersController < DashboardController
     end
     @staffs_selector_displaying = true
 
-    staffs_off_schedules = CustomSchedule.where(staff_id: @staffs_working_schedules.keys.map(&:id)).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
+    staffs_off_schedules = CustomSchedule.where(staff_id: super_user.staff_ids).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
     @schedules = (@reservations + staffs_off_schedules).map do |reservation_and_off_schedule|
       if reservation_and_off_schedule.is_a?(Reservation)
         Option.new(type: :reservation,
