@@ -9,7 +9,7 @@
         <%= link_to "Toruya", member_path %>
       </h1>
     </dt>
-    <dd>
+    <dd id="NAVtoday">
       <%= active_link_to member_path, active: /^\/member/, class_active: "here" do %>
         <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
@@ -24,40 +24,50 @@
   </dl>
 
   <dl>
-    <dd id="NAVtoday" class="dropdown">
-      <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
-        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
-        <%= t("dashboard.shops") %>
-      <% end %>
+    <% if (owning_shop_options.size + working_shop_options.size) == 1 %>
+      <% single_shop = owning_shop_options.first.try(:shop) || working_shop_options.first.try(:shop) %>
+      <dd>
+        <%= active_link_to shop_reservations_path(single_shop), active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+          <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.shops") %>
+        <% end %>
+      </dd>
+    <% else %>
+      <dd class="dropdown">
+        <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+          <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.shops") %>
+        <% end %>
 
-      <ul class="dropdown-menu dropdown-menu-left">
-        <% if owning_shop_options.present? %>
-          <li>
-            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
-          </li>
-          <li class="divider"></li>
+        <ul class="dropdown-menu dropdown-menu-left">
+          <% if owning_shop_options.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
+            </li>
+            <li class="divider"></li>
 
-          <% owning_shop_options.each do |option| %>
-            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+            <% owning_shop_options.each do |option| %>
+              <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+            <% end %>
           <% end %>
-        <% end %>
 
-        <% if owning_shop_options.present? && working_shop_options.present? %>
-          <li class="divider"></li>
-        <% end %>
-
-        <% if working_shop_options.present? %>
-          <li>
-            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
-          </li>
-          <li class="divider"></li>
-
-          <% working_shop_options.each do |option| %>
-            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+          <% if owning_shop_options.present? && working_shop_options.present? %>
+            <li class="divider"></li>
           <% end %>
-        <% end %>
-      </ul>
-    </dd>
+
+          <% if working_shop_options.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+            </li>
+            <li class="divider"></li>
+
+            <% working_shop_options.each do |option| %>
+              <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+            <% end %>
+          <% end %>
+        </ul>
+      </dd>
+    <% end %>
 
     <% if single_shop_owner || single_owner_employee %>
       <dd>
