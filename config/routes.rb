@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
-  resources :shops do
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
+
+  resource :member, only: [:show] do
+    get "/:reservation_date", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+  end
+
+  resources :users do
     resources :customers, only: [:index] do
       collection do
         get :filter
@@ -10,11 +16,25 @@ Rails.application.routes.draw do
         post :save
       end
     end
+  end
+
+  resources :shops do
+    # resources :customers, only: [:index] do
+    #   collection do
+    #     get :filter
+    #     get :search
+    #     get :recent
+    #     get :detail
+    #     delete :delete
+    #     post :save
+    #   end
+    # end
 
     resources :reservations, except: [:show] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
       collection do
         get :validate
+        get :all
       end
 
       scope module: "reservations" do
@@ -116,10 +136,11 @@ Rails.application.routes.draw do
       get ":token", to: "staff_accounts#create", on: :collection, as: :user_from # user_from_callbacks_staff_accounts
     end
   end
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
+
   resources :calendars, only: [] do
     collection do
       get "working_schedule"
+      get "personal_working_schedule"
     end
   end
 

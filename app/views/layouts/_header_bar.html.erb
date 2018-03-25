@@ -6,12 +6,14 @@
       </h1>
     </dt>
   </dl>
-  <dl>
-    <dd>
-      <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
-        <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>
-        <%= t("action.log_out") %>
-      <% end %>
-    </dd>
-  </dl>
+    <dl>
+      <dd>
+        <% if signed_in? %>
+          <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
+            <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>
+            <%= t("action.log_out") %>
+          <% end %>
+        <% end %>
+      </dd>
+    </dl>
 </header>

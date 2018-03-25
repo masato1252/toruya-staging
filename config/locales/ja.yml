@@ -57,11 +57,13 @@ ja:
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
   dashboard:
+    shops: 店舗
     my_shop: 自分の店舗
     shop_you_work_for: 勤務している店舗
     sign_in_as: "%{name} としてログイン中"
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
+    someone_shop: "%{name}の店舗"
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"

@@ -11,14 +11,6 @@
 </div>
 
 <div id="settingForm">
-  <div class="caution">
-    <% if current_user.uid %>
-      <%= link_to t("settings.contact.reconnect_google", email: current_user.access_provider.email), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary", data: { confirm: t("settings.contact.reconnect_google_confirmation_message") }  %>
-    <% else %>
-      <%= link_to t("settings.contact.connect_google"), user_google_oauth2_omniauth_authorize_path, class: "btn btn-primary" %>
-    <% end %>
-  </div>
-
   <div id="contactList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.contact.info_title") %></li>

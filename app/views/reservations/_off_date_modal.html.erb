@@ -1,0 +1,47 @@
+<div class="modal fade off-date-modal" id=<%= local_assigns[:modal_id] || "off-date-modal" %> tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">
+          <%= staff.name %>の休暇を追加
+        </h4>
+      </div>
+      <%= form_tag custom_schedules_path do %>
+        <div class="modal-body">
+          <dl id="addWorkDay">
+            <input
+              type="hidden"
+              name="custom_schedules[][id]"
+              value="<%= local_assigns[:custom_schedule_id] %>"
+            />
+            <%= react_component("reservations/datetime_fields", {
+              custom_schedule_id: local_assigns[:custom_schedule_id],
+              staff_id: staff.id,
+              open: false,
+              start_time_date_part: date.to_s,
+              start_time_time_part: local_assigns[:start_time_time_part] || "00:00",
+              end_time_time_part: local_assigns[:end_time_time_part] || "23:59",
+              calendarfield_prefix: "temp_leaving_schedule"
+            }) %>
+            <div class="closeReason">
+              <input
+                type="text"
+                name="custom_schedules[][reason]"
+                placeholder=<%= t("settings.staff_working_time.closing_reason") %>
+                size="20"
+                value="<%= local_assigns[:reason] %>"
+               />
+            </div>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <div>
+            <%= button_tag t("action.delete"), class: "btn BTNorange", name: "custom_schedules[][_destroy]", value: "1", data: { confirm: I18n.t("common.are_you_sure_message") } if local_assigns[:custom_schedule_id] %>
+            <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

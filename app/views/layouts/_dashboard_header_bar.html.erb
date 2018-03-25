@@ -1,65 +1,171 @@
+<%
+    single_shop_owner = current_user.shops.exists? && working_shop_owners.blank?
+    single_owner_employee = !current_user.shops.exists? && working_shop_owners.count == 1
+%>
 <header>
   <dl>
     <dt>
       <h1>
-        <%= link_to "Toruya", root_path %>
+        <%= link_to "Toruya", member_path %>
       </h1>
     </dt>
-
-    <dd id="NAVtoday" class="dropdown">
-      <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+    <dd id="NAVtoday">
+      <%= active_link_to member_path, active: /^\/member/, class_active: "here" do %>
         <i class="fa fa-calendar fa-4x" aria-hidden="true"></i>
         今日
       <% end %>
-      <ul class="dropdown-menu dropdown-menu-left">
-        <% if owning_shop_options.present? %>
-          <li>
-            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
-          </li>
-          <li class="divider"></li>
-
-          <% owning_shop_options.each do |option| %>
-            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
-          <% end %>
-        <% end %>
-
-        <% if owning_shop_options.present? && working_shop_options.present? %>
-          <li class="divider"></li>
-        <% end %>
-
-        <% if working_shop_options.present? %>
-          <li>
-            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
-          </li>
-          <li class="divider"></li>
-
-          <% working_shop_options.each do |option| %>
-            <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
-          <% end %>
-        <% end %>
-      </ul>
     </dd>
+
     <% if can?(:swith_staffs_selector, User) && @staffs_selector_displaying %>
       <dd id="NAVshopSelect">
         <%= staffs_select_component %>
       </dd>
     <% end %>
   </dl>
+
   <dl>
-    <% if shop.try(:persisted?) %>
+    <% if (owning_shop_options.size + working_shop_options.size) == 1 %>
+      <% single_shop = owning_shop_options.first.try(:shop) || working_shop_options.first.try(:shop) %>
+
       <dd>
-        <%= active_link_to shop_customers_path(shop), active: /^\/shops\/\d+\/customer/, class_active: "here" do %>
-          <i class="fa fa-users fa-4x" aria-hidden="true"></i>
-            顧客台帳
+        <%= active_link_to shop_reservations_path(single_shop), active: [["reservations"], []], class_active: "here" do %>
+          <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.shops") %>
         <% end %>
       </dd>
+    <% else %>
+      <dd class="dropdown">
+        <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+          <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.shops") %>
+        <% end %>
+
+        <ul class="dropdown-menu dropdown-menu-left">
+          <% if owning_shop_options.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
+            </li>
+            <li class="divider"></li>
+
+            <% owning_shop_options.each do |option| %>
+              <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+            <% end %>
+          <% end %>
+
+          <% if owning_shop_options.present? && working_shop_options.present? %>
+            <li class="divider"></li>
+          <% end %>
+
+          <% if working_shop_options.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+            </li>
+            <li class="divider"></li>
+
+            <% working_shop_options.each do |option| %>
+              <li><%= link_to option.shop.display_name, shop_reservations_path(option.shop) %><li>
+            <% end %>
+          <% end %>
+        </ul>
+      </dd>
     <% end %>
-    <dd>
-      <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
-        <i class="fa fa-database fa-4x" aria-hidden="true"></i>
-        <%= t("dashboard.search_data") %>
-      <% end %>
-    </dd>
+
+    <% if single_shop_owner || single_owner_employee %>
+      <dd>
+        <%= active_link_to user_customers_path(super_user), active: /^\/users\/\d+\/customer/, class_active: "here" do %>
+          <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+          顧客台帳
+        <% end %>
+      </dd>
+
+      <dd>
+        <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
+          <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.search_data") %>
+        <% end %>
+      </dd>
+    <% else %>
+      <dd class="dropdown">
+        <%= active_link_to user_customers_path(super_user),
+          active: /^\/users\/\d+\/customer/,
+          class_active: "here",
+          data: { toggle: "dropdown", target: "#" } do %>
+            <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+          顧客台帳
+        <% end %>
+
+        <ul class="dropdown-menu dropdown-menu-right">
+          <% if current_user.shops.exists? %>
+            <li>
+              <span class="dropdown-header">
+                <%= t("dashboard.my_shop") %>
+              </span>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
+            </li>
+            <% if working_shop_owners.present? %>
+              <li class="divider"></li>
+            <% end %>
+          <% end %>
+
+          <% if working_shop_owners.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+            </li>
+            <li class="divider"></li>
+
+            <% working_shop_owners.each do |owner| %>
+              <li>
+                <%= link_to t("dashboard.someone_shop", name: owner.name), user_customers_path(owner) %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </dd>
+
+      <dd class="dropdown">
+        <%= active_link_to customer_user_filter_index_path(super_user),
+          active: /^\/customer\/users\/\d+\/filter/,
+          class_active: "here",
+          data: { toggle: "dropdown", target: "#" } do %>
+            <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.search_data") %>
+        <% end %>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <% if current_user.shops.exists? %>
+            <li>
+              <span class="dropdown-header">
+                <%= t("dashboard.my_shop") %>
+              </span>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
+            </li>
+            <% if working_shop_owners.present? %>
+              <li class="divider"></li>
+            <% end %>
+          <% end %>
+
+          <% if working_shop_owners.present? %>
+            <li>
+              <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+            </li>
+            <li class="divider"></li>
+
+            <% working_shop_owners.each do |owner| %>
+              <li>
+                <%= link_to t("dashboard.someone_shop", name: owner.name), customer_user_filter_index_path(owner) %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      </dd>
+    <% end %>
+
+
     <dd class="dropdown">
       <%= active_link_to settings_path(super_user),
         active: /^\/settings/,
@@ -95,6 +201,7 @@
         <% end %>
       </ul>
     </dd>
+
     <dd>
       <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
         <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>
