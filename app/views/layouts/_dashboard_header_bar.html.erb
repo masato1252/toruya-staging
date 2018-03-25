@@ -26,8 +26,9 @@
   <dl>
     <% if (owning_shop_options.size + working_shop_options.size) == 1 %>
       <% single_shop = owning_shop_options.first.try(:shop) || working_shop_options.first.try(:shop) %>
+
       <dd>
-        <%= active_link_to shop_reservations_path(single_shop), active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+        <%= active_link_to shop_reservations_path(single_shop), active: [["reservations"], []], class_active: "here" do %>
           <i class="fa fa-home fa-4x" aria-hidden="true"></i>
           <%= t("dashboard.shops") %>
         <% end %>
