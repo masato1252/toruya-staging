@@ -11,7 +11,7 @@ class Customers::ReservationsController < DashboardController
     reservation = @customer.reservations.find(params[:reservation_id])
     reservation.public_send("#{params[:reservation_action]}!")
 
-    redirect_to user_customers_path(shop_id: params[:shop_id], customer_id: params[:id])
+    redirect_to user_customers_path(super_user, shop_id: params[:shop_id], customer_id: params[:id])
   end
 
   def edit
