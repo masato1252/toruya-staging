@@ -1,16 +1,11 @@
 class MembersController < DashboardController
   def show
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+    all_shop_options = working_shop_options(include_user_own: true)
+    @all_shops = all_shop_options.map(&:shop)
+    all_staff_ids = all_shop_options.map(&:staff).map(&:id).uniq
 
-    # working time in depend on shop
-    staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: @date)
-    @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
-
-    time_range_outcome = Reservable::Time.run(shop: shop, date: @date)
-    @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
-
-    # Don't need shops in these
-    @reservations = Reservation.where(shop_id: super_user.shop_ids).
+    @reservations = Reservation.where(shop_id: @all_shops.map(&:id).uniq).
       uncanceled.in_date(@date).
       includes(:menu, :customers, :staffs, :shop).
       order("reservations.start_time ASC")
@@ -25,7 +20,10 @@ class MembersController < DashboardController
       holidays: []
     }
 
-    super_user.shops.each do |shop|
+    all_shop_options.each do |option|
+      shop = option.shop
+      staff = option.staff
+
       working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
 
       @working_dates[:full_time] = @working_dates[:full_time] || working_dates[:full_time]
@@ -38,12 +36,11 @@ class MembersController < DashboardController
     end
 
     @reservation_dates = []
-    super_user.shops.each do |shop|
+    @all_shops.each do |shop|
       @reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
     end
-    @staffs_selector_displaying = true
 
-    staffs_off_schedules = CustomSchedule.where(staff_id: super_user.staff_ids).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
+    staffs_off_schedules = CustomSchedule.where(staff_id: all_staff_ids).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
     @schedules = (@reservations + staffs_off_schedules).map do |reservation_and_off_schedule|
       if reservation_and_off_schedule.is_a?(Reservation)
         Option.new(type: :reservation,
