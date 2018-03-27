@@ -23,8 +23,8 @@ module ViewHelpers
   end
 
   def shop
-    cookies[:shop_id] = params[:shop_id] if params[:shop_id]
-    @shop ||= Shop.find_by(id: cookies[:shop_id])
+    session[:shop_id] = params[:shop_id] if params[:shop_id]
+    @shop ||= Shop.find_by(id: session[:shop_id])
   end
 
   def staffs
