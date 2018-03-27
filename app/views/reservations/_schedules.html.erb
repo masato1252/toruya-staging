@@ -21,7 +21,7 @@
             <dd class="menu"><%= reservation.menu.display_name %></dd>
             <dd class="customer"><%= customer_names_sentence %></dd>
             <% if local_assigns[:personal_schedule] %>
-              <dd class="shop"><%= reservation.shop.name %></dd>
+              <dd class="shop"><%= reservation.shop.display_name %></dd>
             <% end %>
             <% if reservation.with_warnings %>
               <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
