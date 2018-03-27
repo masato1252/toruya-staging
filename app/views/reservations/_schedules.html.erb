@@ -110,7 +110,7 @@
                 <% end %>
 
                 <dd>
-                  <%= link_to t("action.edit"), edit_shop_reservation_path(reservation.shop, reservation, from_member: true), class: "btn BTNtarco" %>
+                  <%= link_to t("action.edit"), edit_shop_reservation_path(reservation.shop, reservation, from_member: local_assigns[:personal_schedule]), class: "btn BTNtarco" %>
                 </dd>
               </dl>
             </div>
