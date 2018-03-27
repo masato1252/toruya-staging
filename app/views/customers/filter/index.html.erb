@@ -3,7 +3,7 @@
   reservation_filter_path: reservation_user_filter_index_path,
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
-  customer_path: user_customers_path(shop_id: shop.id),
+  customer_path: user_customers_path(super_user),
   locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,

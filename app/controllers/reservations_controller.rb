@@ -23,18 +23,9 @@ class ReservationsController < DashboardController
 
     staffs_off_schedules = CustomSchedule.where(staff_id: super_user.staff_ids).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
 
-    @schedules = (@reservations + staffs_off_schedules).map do |reservation_and_off_schedule|
-      if reservation_and_off_schedule.is_a?(Reservation)
-        Option.new(type: :reservation,
-                   source: reservation_and_off_schedule,
-                   time: reservation_and_off_schedule.start_time)
-      else
-        Option.new(type: :off_schedule,
-                   source: reservation_and_off_schedule, # custom_schedules
-                   time: reservation_and_off_schedule.start_time,
-                   reason: reservation_and_off_schedule.reason.presence || "臨時休暇")
-      end
-    end.sort_by { |option| option.time }
+    @schedules = @reservations.map do |reservation|
+      Option.new(type: :reservation, source: reservation)
+    end
   end
 
   def all
@@ -103,7 +94,9 @@ class ReservationsController < DashboardController
     respond_to do |format|
       if outcome.valid?
         format.html do
-          if params[:from_customer_id]
+          if params[:from_member]
+            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
+          elsif params[:from_customer_id]
             redirect_to user_customers_path(shop_id: params[:shop_id], customer_id: params[:from_customer_id])
           else
             redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")

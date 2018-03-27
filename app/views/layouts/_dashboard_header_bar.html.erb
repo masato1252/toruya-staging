@@ -1,7 +1,7 @@
 <%
     single_shop_owner = current_user.shops.exists? && working_shop_owners.blank?
     single_employer = !current_user.shops.exists? && working_shop_owners.count == 1
-    single_employer = working_shop_owners.first.owner if single_employer
+    single_employer = working_shop_owners.first if single_employer
   %>
 
 <header>

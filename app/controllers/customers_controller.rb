@@ -7,11 +7,11 @@ class CustomersController < DashboardController
     @customers = super_user.customers.includes(:rank, :contact_group, :updated_by_user).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
     @customer = super_user.customers.includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
-    current_shop = shop || super_user.shops.first
+    from_shop = shop || super_user.shops.first # avoid users don't come in from shop dashboard
     @add_reservation_path = if params[:reservation_id].present?
-                              edit_shop_reservation_path(current_shop, id: params[:reservation_id])
+                              edit_shop_reservation_path(from_shop, id: params[:reservation_id])
                             else
-                              new_shop_reservation_path(current_shop)
+                              new_shop_reservation_path(from_shop)
                             end
     @contact_groups = super_user.contact_groups.connected
     @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
