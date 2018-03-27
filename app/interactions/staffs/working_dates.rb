@@ -5,7 +5,9 @@ module Staffs
     object :date_range, class: Range
 
     def execute
-      is_staff_full_time = shop.business_schedules.full_time.where(staff_id: staff.id).exists?
+      staff_id = staff.id
+
+      is_staff_full_time = shop.business_schedules.full_time.where(staff_id: staff_id).exists?
       custom_schedules_scope = shop.custom_schedules.where(start_time: date_range).select("start_time").order("start_time")
       off_dates = working_dates = []
 
@@ -13,8 +15,8 @@ module Staffs
       if is_staff_full_time
         shop_working_wdays = shop.business_schedules.for_shop.opened.map(&:day_of_week)
       else
-        staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff.id).map(&:day_of_week)
-        staff_on_dates = custom_schedules_scope.opened.where(staff_id: staff.id).map{|d| d.start_time.to_date }
+        staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff_id).map(&:day_of_week)
+        staff_on_dates = custom_schedules_scope.opened.where(staff_id: staff_id).map{|d| d.start_time.to_date }
         working_dates = staff_on_dates
       end
 

@@ -7,12 +7,12 @@ class Callbacks::StaffAccountsController < ActionController::Base
         sign_out
         reset_session
         session[:super_user_id_from_staff_account] = outcome.result[:owner].id
-        redirect_to edit_password_path(outcome.result[:user], reset_password_token: outcome.result[:reset_password_token])
+        redirect_to sign_in_path
       else
-        redirect_to root_path, notice: "Connected your staff account."
+        redirect_to member_path, notice: "Connected your staff account."
       end
     else
-      redirect_to root_path, alert: outcome.errors.full_messages.first
+      redirect_to member_path, alert: outcome.errors.full_messages.first
     end
   end
 end
