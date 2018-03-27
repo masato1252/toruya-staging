@@ -52,23 +52,30 @@ module ViewHelpers
   end
 
   def is_owner
-    super_user == current_user
+    return @is_owner if defined?(@is_owner)
+    @is_owner = (super_user == current_user)
   end
 
   def current_user_staff_account
-    current_user.current_staff_account(super_user)
+    @current_user_staff_account ||= current_user.current_staff_account(super_user)
   end
 
   def working_shop_owners
     @working_shop_owners ||= current_user.staff_accounts.active.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
   end
 
-  def working_shop_options
-    @working_shop_options ||= current_user.staff_accounts.active.includes(staff: :shops).map do |staff_account|
+  def working_shop_options(include_user_own: false)
+    @working_shop_options ||= {}
+
+    return @working_shop_options[include_user_own] if @working_shop_options[include_user_own]
+
+    @working_shop_options[include_user_own] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
-      staff_account.staff.shops.map do |shop|
-        ::Option.new(shop: shop, staff: staff) if shop.user != current_user
+      staff.shop_staffs.includes(:shop).map do |shop_staff|
+        if include_user_own || shop_staff.shop.user != current_user
+          ::Option.new(shop: shop_staff.shop, staff: staff, shop_staff: shop_staff)
+        end
       end
     end.flatten.compact
   end

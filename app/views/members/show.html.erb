@@ -1,6 +1,3 @@
-<%
-  staff_schedule_requirement_condition = staff && @working_time_range
-%>
 <div id="dashboard" class="contents">
   <div id="calendar" class="sidel">
     <%= react_component("calendar/calendar",
@@ -20,40 +17,16 @@
                           reservation_days: @reservation_dates.map(&:day)
                         },
                         { id: "custom-calendar", class: "clearfix" }) %>
-      <% if staff_schedule_requirement_condition %>
-        <div class="staffDashboard">
-          <div class="edit-worktime">
-            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
-              <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
-                出勤日を追加
-              </a>
-            <% end %>
+    <div class="staffDashboard">
+      <div class="edit-worktime">
+        <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+          出勤日を追加
+        </a>
 
-            <% if can?(:manage_staff_holiday_permission, shop_staff) %>
-              <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
-                休暇を追加
-              </a>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-     <div class="staffs-working-schedules table">
-       <% @staffs_working_schedules.each do |staff, working_schedule| %>
-         <% unless working_schedule[:time] %>
-           <div class="row">
-             <div class="staff cell">
-               <%= staff.name %>
-             </div>
-             <div class="time cell">
-               <% if working_schedule[:time] %>
-                 <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
-               <% else %>
-                 臨時休暇
-               <% end %>
-             </div>
-           </div>
-         <% end %>
-      <% end %>
+        <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+          休暇を追加
+        </a>
+      </div>
     </div>
   </div>
   <div id="resList" class="contBody">
@@ -75,51 +48,49 @@
   </div>
 </div>
 
-<% if staff_schedule_requirement_condition %>
-  <div class="modal fade" id="working-date-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-          <h4 class="modal-title">
-            <%= staff.name %>の出勤日を追加
-          </h4>
-        </div>
-
-        <%= form_tag custom_schedules_path do %>
-          <div class="modal-body">
-            <dl id="addWorkDay">
-              <%= react_component("reservations/datetime_fields", {
-                staff_id: staff.id,
-                open: true,
-                start_time_date_part: @date.to_s,
-                start_time_time_part: @working_time_range.first.to_s(:time),
-                end_time_time_part: @working_time_range.last.to_s(:time),
-                calendarfield_prefix: "temp_working_schedules_#{shop.id}"
-              }) %>
-              <div class="shops-list">
-                <% staff.shops.each do |s| %>
-                  <div class="shop-cell">
-                    <%= check_box_tag "shop_ids[]", s.id, s.id == shop.id, id: "shop-#{s.id}-schedule" %>
-                    <%= label_tag "shop-#{s.id}-schedule", s.name %>
-                  </div>
-                <% end %>
-              </div>
-            </dl>
-          </div>
-          <div class="modal-footer">
-            <dl>
-              <dd></dd>
-              <dd>
-                <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
-              </dd>
-              <dd></dd>
-            </dl>
-          </div>
-        <% end %>
+<div class="modal fade" id="working-date-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">
+          出勤日を追加
+        </h4>
       </div>
+
+      <%= form_tag custom_schedules_path do %>
+        <div class="modal-body">
+          <dl id="addWorkDay">
+            <%= react_component("reservations/datetime_fields", {
+              staff_id: staff.id,
+              open: true,
+              start_time_date_part: @date.to_s,
+              start_time_time_part: "00:00",
+              end_time_time_part: "23:59",
+              calendarfield_prefix: "temp_working_schedules_#{shop.id}"
+            }) %>
+            <div class="shops-list">
+              <% @all_shops.each do |s| %>
+                <div class="shop-cell">
+                  <%= check_box_tag "shop_ids[]", s.id, s.id == shop.id, id: "shop-#{s.id}-schedule" %>
+                  <%= label_tag "shop-#{s.id}-schedule", s.name %>
+                </div>
+              <% end %>
+            </div>
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <dl>
+            <dd></dd>
+            <dd>
+              <%= submit_tag t("action.save"), class: "btn BTNyellow" %>
+            </dd>
+            <dd></dd>
+          </dl>
+        </div>
+      <% end %>
     </div>
   </div>
+</div>
 
-  <%= render "reservations/off_date_modal", staff: staff, date: @date %>
-<% end %>
+<%#= render "reservations/off_date_modal", staff: staff, date: @date %>
