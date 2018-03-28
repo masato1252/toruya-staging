@@ -23,7 +23,7 @@ module ViewHelpers
   end
 
   def shop
-    @shop ||= Shop.find_by(id: params[:shop_id])
+    @shop ||= Shop.find_by(id: session[:current_shop_id])
   end
 
   def staffs
@@ -43,7 +43,7 @@ module ViewHelpers
   end
 
   def super_user
-    @super_user ||= User.find_by(id: params[:user_id]) || shop.try(:user) || current_user
+    @super_user ||= User.find_by(id: session[:current_super_user_id])
   end
 
   def current_ability
