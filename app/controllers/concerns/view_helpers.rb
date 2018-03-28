@@ -73,7 +73,9 @@ module ViewHelpers
 
       staff.shop_staffs.includes(:shop).map do |shop_staff|
         if include_user_own || shop_staff.shop.user != current_user
-          ::Option.new(shop: shop_staff.shop, staff: staff, shop_staff: shop_staff)
+          ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
+                       staff: staff, staff_id: shop_staff.staff_id,
+                       shop_staff: shop_staff)
         end
       end
     end.flatten.compact
