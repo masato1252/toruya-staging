@@ -5,34 +5,30 @@ class ReservationsController < DashboardController
   # GET /reservations.json
   def index
     @body_class = "shopIndex"
+    @staffs_selector_displaying = true
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
-    @reservations = shop.reservations.uncanceled.in_date(@date).
-      includes(:menu, :customers, :staffs).
-      order("reservations.start_time ASC")
+    # Calendar START
+    # The calendar green cirlce is Working Date is for some staffs
+    # The calendar gray cirlce area is Reservations is for this Shop
+    @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
+    # Calendar END
 
+    # Staff schedules on date START
     staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: @date)
     @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
 
     time_range_outcome = Reservable::Time.run(shop: shop, date: @date)
     @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
+    # Staff schedules on date END
 
-    @working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
-    @staffs_selector_displaying = true
-
-    staffs_off_schedules = CustomSchedule.where(staff_id: super_user.staff_ids).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
-
-    @schedules = @reservations.map do |reservation|
+    # Reservations START
+    reservations = shop.reservations.uncanceled.in_date(@date).includes(:menu, :customers, :staffs).order("reservations.start_time ASC")
+    @schedules = reservations.map do |reservation|
       Option.new(type: :reservation, source: reservation)
     end
-  end
-
-  def all
-    @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
-    @reservations = Reservation.where(shop_id: super_user.shop_ids).uncanceled.in_date(@date).
-      includes(:menu, :customers, :staffs).
-      order("reservations.start_time ASC")
+    # Reservations END
   end
 
   # GET /reservations/new
