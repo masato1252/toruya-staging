@@ -12,5 +12,4 @@ module Authorization
       redirect_to member_path, alert: "No permission"
     end
   end
-  end
 end
