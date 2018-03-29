@@ -125,7 +125,7 @@
         </dl>
       </a>
       <%= render "reservations/off_date_modal",
-        staff: staff,
+        staff: schedule.source.staff,
         date: @date,
         modal_id: "off-date-modal-#{schedule.source.id}",
         custom_schedule_id: schedule.source.id,

@@ -35,7 +35,7 @@ module ViewHelpers
   end
 
   def staff
-    @staff ||= super_user.staffs.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
+    @staff ||= Staff.find_by(id: params[:staff_id]) || current_user.current_staff(super_user) || super_user.staffs.active.first
   end
 
   def shop_staff
