@@ -17,7 +17,7 @@ module Authorization
   def where_user_are
     if params[:user_id] && params[:shop_id]
       session[:current_super_user_id] = params[:user_id]
-      session[:current_shop_id] = params[:user_id]
+      session[:current_shop_id] = params[:shop_id]
     elsif params[:shop_id]
       session[:current_shop_id] = params[:shop_id]
       session[:current_super_user_id] = shop.user_id
