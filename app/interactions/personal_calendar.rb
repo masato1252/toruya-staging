@@ -17,7 +17,7 @@ class PersonalCalendar < ActiveInteraction::Base
       shop = option.shop
       staff = option.staff
 
-      staff_working_dates = Staffs::WorkingDates.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+      staff_working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
 
       working_dates[:full_time] = working_dates[:full_time] || staff_working_dates[:full_time]
       working_dates[:holiday_working] = working_dates[:holiday_working] || staff_working_dates[:holiday_working]

@@ -1,5 +1,5 @@
 module Staffs
-  class WorkingDates < ActiveInteraction::Base
+  class WorkingDateRules < ActiveInteraction::Base
     object :shop
     object :staff
     object :date_range, class: Range
@@ -16,8 +16,7 @@ module Staffs
         shop_working_wdays = shop.business_schedules.for_shop.opened.map(&:day_of_week)
       else
         staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff_id).map(&:day_of_week)
-        staff_on_dates = custom_schedules_scope.opened.where(staff_id: staff_id).map{|d| d.start_time.to_date }
-        working_dates = staff_on_dates
+        working_dates = custom_schedules_scope.opened.where(staff_id: staff_id).map{|d| d.start_time.to_date }
       end
 
       # off dates
@@ -41,7 +40,7 @@ module Staffs
 
       {
         full_time: is_staff_full_time,
-        shop_working_on_holiday: shop.holiday_working,
+        shop_working_on_holiday: !!shop.holiday_working,
         shop_working_wdays: shop_working_wdays || [],
         staff_working_wdays: staff_working_wdays || [],
         working_dates: working_dates.flatten, # for staff

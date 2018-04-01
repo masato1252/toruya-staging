@@ -18,6 +18,7 @@ FactoryBot.define do
     phone_number "123456789"
     sequence(:email) { |n| "foo#{n}@gmail.com" }
     sequence(:address) { |n| "address#{n}" }
+    holiday_working { false }
 
     trait :holiday_working do
       holiday_working true
@@ -32,6 +33,14 @@ FactoryBot.define do
     trait :opened do
       open true
     end
+
+    trait :closed do
+      open false
+    end
+
+    trait :for_shop do
+      staff nil
+    end
   end
 
   factory :business_schedule do
@@ -40,6 +49,14 @@ FactoryBot.define do
     business_state "opened"
     start_time { Time.zone.local(2016, 8, 22, 8, 0, 0) }
     end_time { Time.zone.local(2016, 8, 22, 19, 0, 0) }
+
+    trait :full_time do
+      full_time true
+    end
+
+    trait :opened do
+      business_state "opened"
+    end
   end
 
   factory :reservation_setting_menu do
