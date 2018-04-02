@@ -385,6 +385,7 @@ UI.define("Customers.Dashboard", function() {
       event.preventDefault();
       if (this.state.processing) { return; }
       if (this.state.customer.id) {
+        if (this.state.customer.googleDown) { alert("Google is temporary down"); return; }
         this.setState({ reservation_mode: !this.state.reservation_mode });
       }
     };

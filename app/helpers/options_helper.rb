@@ -90,7 +90,8 @@ module OptionsHelper
         primary_email: c.primary_email || {},
         primary_phone: c.primary_phone || {},
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
-        display_address: c.display_address
+        display_address: c.display_address,
+        google_down: c.google_down
       ))
     end
   end

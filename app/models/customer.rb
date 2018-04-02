@@ -26,7 +26,7 @@
 class Customer < ApplicationRecord
   include NormalizeName
 
-  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses
+  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down
 
   has_many :reservation_customers, dependent: :destroy
   has_many :reservations, through: :reservation_customers
@@ -52,6 +52,12 @@ class Customer < ApplicationRecord
   end
 
   def build_by_google_contact(google_contact)
+    # Fetch from google fail
+    if google_contact.is_a?(Customer)
+      self.google_down = true
+      return self
+    end
+
     self.google_uid = user.uid
     self.first_name = google_contact.first_name || first_name
     self.last_name = google_contact.last_name || last_name
