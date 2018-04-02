@@ -11,6 +11,7 @@ module GoogleOauth
       access.access_token = auth.credentials.token
       access.refresh_token = auth.credentials.refresh_token
 
+      access.save
       access
     end
   end
