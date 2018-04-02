@@ -464,6 +464,7 @@ DEPENDENCIES
   pg (~> 0.21.0)
   puma (~> 3.11.0)
   rails (~> 5.1.0)
+  rake (= 12.3.1)
   react-rails (~> 2.4.0)
   rollbar (~> 2.15.5)
   rspec-rails (~> 3.5.0)
