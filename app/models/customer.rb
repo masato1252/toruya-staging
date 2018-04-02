@@ -47,6 +47,8 @@ class Customer < ApplicationRecord
     else
       self
     end
+  rescue => e
+    self
   end
 
   def build_by_google_contact(google_contact)
