@@ -336,7 +336,7 @@ GEM
       railties (>= 4.2.0, < 5.3)
     retriable (1.4.1)
     retryable (2.0.4)
-    rollbar (2.14.1)
+    rollbar (2.15.5)
       multi_json
     rspec-core (3.5.4)
       rspec-support (~> 3.5.0)
@@ -465,7 +465,7 @@ DEPENDENCIES
   puma (~> 3.11.0)
   rails (~> 5.1.0)
   react-rails (~> 2.4.0)
-  rollbar (~> 2.14.1)
+  rollbar (~> 2.15.5)
   rspec-rails (~> 3.5.0)
   sass-rails (~> 5.0.6)
   select2-rails (~> 4.0.3)
