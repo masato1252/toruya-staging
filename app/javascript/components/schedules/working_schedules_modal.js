@@ -26,6 +26,7 @@ UI.define("WorkingSchedulesModal", function() {
                 id="customer-edit-form"
                 acceptCharset="UTF-8"
                 action={this.props.customSchedulesPath}
+                data-remote={this.props.remote}
                 method="post">
                 <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
                 <div className="modal-body">

@@ -704,7 +704,10 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
-                    </dd>
+                    <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNyellow">
+                      出勤日を追加
+                    </a>
+                  </dd>
                 </dl>
               </div>
               <div id="resMemo" className="formRow">
@@ -808,14 +811,14 @@ UI.define("Reservation.Form", function() {
               open={true}
               staff={this._selected_staffs()[this.state.staff_ids.length - 1]}
               shop={this.props.shop}
-              shops={[]}
-              start_time_date_part={this.state.start_time_date_part}
-              start_time_time_part={this.state.start_time_time_part}
-              end_time_time_part={this.state.end_time_time_part}
+              shops={[this.props.shop]}
+              startTimeDatePart={this.state.start_time_date_part}
+              startTimeTimePart={this.state.start_time_time_part}
+              endTimeTimePart={this.state.end_time_time_part}
               customSchedulesPath={this.props.customSchedulesPath}
+              remote="true"
             />
-          )
-                    : null}
+          ) : null}
         </div>
       );
     }
