@@ -47,17 +47,11 @@ class Customer < ApplicationRecord
     else
       self
     end
-  rescue => e
-    Rollbar.error(e, customer_id: id)
-    self.google_down = true
-    self
   end
 
   def build_by_google_contact(google_contact)
     # Fetch from google fail
     if google_contact.is_a?(Customer)
-      Rollbar.error(e, customer_id: id)
-      self.google_down = true
       return self
     end
 
