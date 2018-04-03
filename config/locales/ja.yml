@@ -1,7 +1,6 @@
 ja:
   requirement:
-    contact_redirect_message: 顧客台帳に同期する%{link}を設定してください。
-    contact_redirect_link_title: Gmail連絡先
+    contact_redirect_message: 顧客台帳に同期するGmail連絡先を設定してください。
     contact_warning_message: 顧客台帳設定ページにて%{link}をしてください。
     contact_warning_link_title: Google同期設定
     business_schedule_redirect_message: 営業日時を設定します
@@ -260,7 +259,7 @@ ja:
       info_title: 基本情報
       new_title: スタッフの新規作成
       new_button: スタッフを新規作成
-      info_label: 基本情報
+      info_label: 表示名
       info_1: 設定されたスタッフ一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       new_info_1: スタッフを設定します。
