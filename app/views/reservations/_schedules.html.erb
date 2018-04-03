@@ -121,7 +121,7 @@
       <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule.source.id}" %>>
         <dl>
           <dd class="time"><%= schedule.source.start_time.to_s(:time) %><br /><%= schedule.source.end_time.to_s(:time) %></dd>
-          <dd class="menu"><%= schedule.source.staff.name %><%= schedule.reason %></dd>
+          <dd class="menu"><%= schedule.reason %></dd>
         </dl>
       </a>
       <%= render "reservations/off_date_modal",
