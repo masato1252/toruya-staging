@@ -475,7 +475,7 @@ UI.define("Reservation.Form", function() {
           }
 
           select_components.push(
-            <div key={`${i}-${value}`}>
+            <div key={`${i}-${value}`} className="staff-input-area">
               <UI.Select options={this.state.staff_options}
                 prefix={`option-${i}`}
                 value={value}
@@ -499,7 +499,7 @@ UI.define("Reservation.Form", function() {
         var value = this.state.staff_ids[0];
 
         select_components.push(
-          <div key="no-power">
+          <div key="no-power" className="staff-input-area">
             <UI.Select options={this.state.staff_options}
               value={value}
               data-name="staff_id"
@@ -704,9 +704,13 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
-                    <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNyellow">
-                      出勤日を追加
-                    </a>
+                    {
+                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
+                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNyellow">
+                          出勤日を追加
+                        </a>
+                      ) : null
+                    }
                   </dd>
                 </dl>
               </div>
