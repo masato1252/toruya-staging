@@ -29,6 +29,9 @@
           <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
         </dd>
       </dl>
+      <div>
+          ※以下の店舗で別名を使用する場合は変更してください。
+      </div>
     </div>
 
     <% if can? :manage, Settings %>
