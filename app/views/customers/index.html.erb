@@ -58,5 +58,6 @@
                       printing_page_size_blank_option: I18n.t("customer.printing_page_size.paper_size"),
                       tip_before_new_customer: t("customer.tip_before_new_customer"),
                       printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
-                      printing_path: new_customer_printing_path(format: :pdf)
+                      printing_path: new_customer_printing_path(format: :pdf),
+                      google_down_message: I18n.t("common.google_down")
 }) %>

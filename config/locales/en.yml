@@ -57,6 +57,7 @@ en:
     select_a_menu: Please select a shop
     select_a_menu: Please select a menu
     select_a_staff: Please select a staff
+    google_down: We can't connect with Google currently. Please try again later. Re-login might fix the problem immediately.
   dashboard:
     shops: Shops
     my_shop: My shops
