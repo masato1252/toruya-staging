@@ -5,6 +5,7 @@ import "../shared/select.js"
 import "../shared/customers_list.js"
 import "../shared/processing_bar.js"
 import "../shared/datepicker_field.js"
+import "../schedules/working_schedules_modal.js"
 
 var moment = require('moment-timezone');
 
@@ -164,18 +165,14 @@ UI.define("Reservation.Form", function() {
         return this.state.menu_available_seat
       }
       else if (this.state.menu_min_staffs_number == 1) {
-        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
-           return _.contains(_this.state.staff_ids, `${staff.value}`)
-        })
+        var selected_staffs = this._selected_staffs();
 
         if (selected_staffs[0]) {
           return _.min([selected_staffs[0].handableCustomers, this.state.menu_available_seat]);
         }
       }
       else if (this.state.menu_min_staffs_number > 1) {
-        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
-           return _.contains(_this.state.staff_ids, `${staff.value}`)
-        })
+        var selected_staffs = this._selected_staffs();
 
         var handableCustomers = selected_staffs.map(function(staff) {
           return staff.handableCustomers;
@@ -185,6 +182,12 @@ UI.define("Reservation.Form", function() {
 
         return _.min([minCustomersHandleable, this.state.menu_available_seat]);
       }
+    };
+
+    _selected_staffs = () => {
+      return _.filter(this.state.staff_options, (staff) => {
+        return _.contains(this.state.staff_ids, `${staff.value}`)
+      })
     };
 
     _isValidReservationTime = () => {
@@ -701,7 +704,7 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
-                  </dd>
+                    </dd>
                 </dl>
               </div>
               <div id="resMemo" className="formRow">
@@ -799,6 +802,20 @@ UI.define("Reservation.Form", function() {
               </li>
             </ul>
           </footer>
+          {this.state.staff_ids[this.state.staff_ids.length - 1] ? (
+            <UI.WorkingSchedulesModal
+              formAuthenticityToken={this.props.formAuthenticityToken}
+              open={true}
+              staff={this._selected_staffs()[this.state.staff_ids.length - 1]}
+              shop={this.props.shop}
+              shops={[]}
+              start_time_date_part={this.state.start_time_date_part}
+              start_time_time_part={this.state.start_time_time_part}
+              end_time_time_part={this.state.end_time_time_part}
+              customSchedulesPath={this.props.customSchedulesPath}
+            />
+          )
+                    : null}
         </div>
       );
     }

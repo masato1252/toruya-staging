@@ -107,10 +107,10 @@
     staff: react_attribute(staff.attributes.merge!(name: staff.name)),
     open: true,
     shop: react_attribute(shop.attributes),
+    shops: react_attributes(staff.shops),
     start_time_date_part: @date.to_s,
     start_time_time_part: @working_time_range.first.to_s(:time),
     end_time_time_part: @working_time_range.last.to_s(:time),
-    shops: react_attributes(staff.shops),
     custom_schedules_path: custom_schedules_path
   }) %>
 

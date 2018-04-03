@@ -18,7 +18,7 @@ UI.define("WorkingSchedulesModal", function() {
               <div className="modal-header">
                 <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h4 className="modal-title">
-                  {this.props.staff.name}の出勤日を追加
+                  {this.props.staff.name || this.props.staff.label}の出勤日を追加
                 </h4>
               </div>
 
@@ -31,7 +31,7 @@ UI.define("WorkingSchedulesModal", function() {
                 <div className="modal-body">
                   <dl id="addWorkDay">
                     <UI.Reservation.DatetimeFields
-                      staffId={this.props.staff.id}
+                      staffId={this.props.staff.id || this.props.staff.value}
                       open={this.props.open}
                       startTimeDatePart={this.props.startTimeDatePart}
                       startTimeTimePart={this.props.startTimeTimePart}
