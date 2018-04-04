@@ -10,6 +10,30 @@ UI.define("WorkingSchedulesModal", function() {
       super(props);
     };
 
+    handleSubmit = (event) => {
+      if (this.props.remote) {
+        let _this = this;
+
+        event.preventDefault();
+        var valuesToSubmit = $(this.working_schedules_form).serialize();
+
+        $.ajax({
+          type: "POST",
+          url: this.props.customSchedulesPath, //sumbits it to the given url of the form
+          data: valuesToSubmit,
+          dataType: "JSON"
+        }).success(function() {
+          _this.props.callback();
+        }).always(function() {
+          $("#working-date-modal").modal("hide");
+        });
+      } else {
+        setTimeout(function() {
+          $(this.working_schedules_form).submit();
+        }, 0);
+      }
+    }
+
     render() {
       return (
         <div className="modal fade" id="working-date-modal" tabIndex="-1" role="dialog">
@@ -23,11 +47,10 @@ UI.define("WorkingSchedulesModal", function() {
               </div>
 
               <form
-                id="customer-edit-form"
                 acceptCharset="UTF-8"
-                action={this.props.customSchedulesPath}
-                data-remote={this.props.remote}
-                method="post">
+                method="post"
+                ref={(c) => this.working_schedules_form = c}
+                >
                 <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
                 <div className="modal-body">
                   <dl id="addWorkDay">
@@ -61,9 +84,10 @@ UI.define("WorkingSchedulesModal", function() {
                   <dl>
                     <dd></dd>
                     <dd>
-                      <input type="submit" name="commit" value="保存" className="btn BTNyellow" data-disable-with="保存" />
+                      <button type="submit" id="BTNsave" className="btn BTNyellow" onClick={this.handleSubmit}>
+                        保存
+                      </button>
                     </dd>
-                    <dd></dd>
                   </dl>
                 </div>
               </form>

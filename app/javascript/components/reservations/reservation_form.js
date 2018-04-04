@@ -284,7 +284,8 @@ UI.define("Reservation.Form", function() {
     };
 
     _handleStaffChange = (event) => {
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
+
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
       this.setState({ staff_ids: selected_staff_ids }, function() {
@@ -706,7 +707,7 @@ UI.define("Reservation.Form", function() {
                     {this.renderStaffSelects()}
                     {
                       this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
-                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNyellow">
+                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
                           出勤日を追加
                         </a>
                       ) : null
@@ -817,9 +818,10 @@ UI.define("Reservation.Form", function() {
               shop={this.props.shop}
               shops={[this.props.shop]}
               startTimeDatePart={this.state.start_time_date_part}
-              startTimeTimePart={this.state.start_time_time_part}
-              endTimeTimePart={this.state.end_time_time_part}
+              startTimeTimePart={this.state.start_time_restriction}
+              endTimeTimePart={this.state.end_time_restriction}
               customSchedulesPath={this.props.customSchedulesPath}
+              callback={this._handleStaffChange}
               remote="true"
             />
           ) : null}
