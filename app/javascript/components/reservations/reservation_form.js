@@ -708,7 +708,7 @@ UI.define("Reservation.Form", function() {
                     {
                       this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
                         <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
-                          出勤日を追加
+                          この時間を出勤にする
                         </a>
                       ) : null
                     }
@@ -818,8 +818,8 @@ UI.define("Reservation.Form", function() {
               shop={this.props.shop}
               shops={[this.props.shop]}
               startTimeDatePart={this.state.start_time_date_part}
-              startTimeTimePart={this.state.start_time_restriction}
-              endTimeTimePart={this.state.end_time_restriction}
+              startTimeTimePart={this.state.start_time_time_part}
+              endTimeTimePart={this.state.end_time_time_part}
               customSchedulesPath={this.props.customSchedulesPath}
               callback={this._handleStaffChange}
               remote="true"
