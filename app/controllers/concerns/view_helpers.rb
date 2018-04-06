@@ -110,5 +110,6 @@ module ViewHelpers
         @staffs_have_holiday_permission << current_user.current_staff(owner)
       end
     end
+    @staffs_have_holiday_permission
   end
 end

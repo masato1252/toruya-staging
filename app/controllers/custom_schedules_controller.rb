@@ -13,8 +13,8 @@ class CustomSchedulesController < DashboardController
     else
       # Used in member dashboard, we won't set custom_schedules for particular staff, for all the staffs, users have permission.
       custom_schedules_params[:custom_schedules].each do |attrs|
-        staffs_have_holiday_permission.each do |represent_staff|
-          CustomSchedules::Create.run(staff: represent_staff, attrs: attrs.to_h)
+        staffs_have_holiday_permission.each do |user_represent_staff|
+          CustomSchedules::Create.run(staff: user_represent_staff, attrs: attrs.to_h)
         end
       end
     end
