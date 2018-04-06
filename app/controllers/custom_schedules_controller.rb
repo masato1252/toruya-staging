@@ -6,9 +6,16 @@ class CustomSchedulesController < DashboardController
           CustomSchedules::Create.run(staff: staff, attrs: attrs.to_h.merge(shop_id: shop_id))
         end
       end
-    else
+    elsif params[:staff_id].present?
       custom_schedules_params[:custom_schedules].each do |attrs|
         CustomSchedules::Create.run(staff: staff, attrs: attrs.to_h)
+      end
+    else
+      # Used in member dashboard, we won't set custom_schedules for particular staff, for all the staffs, users have permission.
+      custom_schedules_params[:custom_schedules].each do |attrs|
+        staffs_have_holiday_permission.each do |represent_staff|
+          CustomSchedules::Create.run(staff: represent_staff, attrs: attrs.to_h)
+        end
       end
     end
 

@@ -23,11 +23,11 @@
             予約を追加
           </a>
 
-        <%# if can?(:manage_staff_holiday_permission, shop_staff) %>
+        <% if staffs_have_holiday_permission.present? %>
           <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
             休暇を追加
           </a>
-        <%# end %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -50,4 +50,5 @@
   </div>
 
   <%= render "reservations/new_modal", date: @date %>
+  <%= render "reservations/off_date_modal", staff: nil, date: @date %>
 </div>
