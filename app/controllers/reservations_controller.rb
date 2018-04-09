@@ -75,7 +75,13 @@ class ReservationsController < DashboardController
 
     respond_to do |format|
       if outcome.valid?
-        format.html { redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message") }
+        format.html do
+          if params[:from_member]
+            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
+          else
+            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
+          end
+        end
       else
         format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
       end

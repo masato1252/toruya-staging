@@ -33,7 +33,8 @@ module Reservations
       unless _reservation.save
         errors.merge!(_reservation.errors)
       end
-      reservation
+
+      _reservation
     end
   end
 end
