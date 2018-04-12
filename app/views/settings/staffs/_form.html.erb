@@ -29,6 +29,9 @@
           <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
         </dd>
       </dl>
+      <div>
+          ※以下の店舗で別名を使用する場合は変更してください。
+      </div>
     </div>
 
     <% if can? :manage, Settings %>
@@ -42,7 +45,7 @@
           ::Option.new(
             shop_id: shop.id,
             name: shop.name,
-            work_here: shop_staff.present?,
+            work_here: @first_staff ? true : shop_staff.present?,
             full_time_permission: shop_staff.try(:staff_full_time_permission),
             regular_schedule_permission: shop_staff.try(:staff_regular_working_day_permission),
             temporary_working_day_permission: shop_staff.try(:staff_temporary_working_day_permission),
@@ -54,8 +57,8 @@
         staff_shop_options: staff_shop_options,
         staff_account_title: t("settings.staff_account.info_title"),
         staff_account_email_label: t("settings.staff_account.email"),
-        staff_account_email: @staff_account.try(:email),
-        staff_account_level: @staff_account.try(:level),
+        staff_account_email: @staff_account.try(:email) || (@first_staff ? super_user.email : nil),
+        staff_account_level: @staff_account.try(:level) || (@first_staff ? "manager" : nil),
         staff_account_email_placeholder: t("settings.staff_account.email"),
         staff_account_capability_label: t("settings.staff_account.capability"),
         staff_account_staff_level_label: t("settings.staff_account.staff_capability"),

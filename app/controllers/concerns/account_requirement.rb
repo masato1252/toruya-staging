@@ -25,7 +25,7 @@ module AccountRequirement
       elsif !session[:contact_checking]
         # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(2))
-          flash[:alert] = I18n.t("requirement.contact_redirect_message", link: view_context.link_to(I18n.t("requirement.contact_redirect_link_title"), user_google_oauth2_omniauth_authorize_path)).html_safe
+          flash[:alert] = I18n.t("requirement.contact_redirect_message").html_safe
 
           redirect_to settings_user_contact_groups_path(super_user)
         # If user doesn't go to restriction path, go to previous restriction path, just display waring message to remind him.
@@ -60,9 +60,9 @@ module AccountRequirement
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(6))
           flash[:alert] = I18n.t("requirement.staff_working_schedule_redirect_message")
 
-          redirect_to settings_user_working_time_staffs_path(super_user)
+          redirect_to settings_user_working_time_staffs_path(super_user, mode: "working_schedules")
         elsif except_path("settings/working_time/staffs")
-          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_user_working_time_staffs_path(super_user))).html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"))).html_safe
         end
       elsif !session[:reservation_settings_checking]
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(7))
