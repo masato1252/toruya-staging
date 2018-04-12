@@ -128,8 +128,12 @@ module OptionsHelper
     end
   end
 
+  def react_attribute(attributes)
+    React.camelize_props(attributes)
+  end
+
   def react_attributes(array)
-    array.map { |a| React.camelize_props(a.attributes) }
+    array.map { |a| react_attribute(a) }
   end
 
   def contact_group_options

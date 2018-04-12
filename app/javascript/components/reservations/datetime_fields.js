@@ -9,11 +9,26 @@ UI.define("Reservation.DatetimeFields", function() {
       super(props);
 
       this.state = {
-        start_time_date_part: this.props.startTimeDatePart,
-        start_time_time_part: this.props.startTimeTimePart,
-        end_time_time_part: this.props.endTimeTimePart
+        startTimeDatePart: this.props.startTimeDatePart,
+        startTimeTimePart: this.props.startTimeTimePart,
+        endTimeTimePart: this.props.endTimeTimePart
       }
     };
+
+    componentWillReceiveProps(nextProps) {
+      // You don't have to do this check first, but it can help prevent an unneeded render
+      if (
+            nextProps.startTimeDatePart !== this.state.startTimeDatePart ||
+            nextProps.startTimeTimePart !== this.state.startTimeTimePart ||
+            nextProps.endTimeTimePart !== this.state.endTimeTimePart
+         ) {
+       this.setState({
+         startTimeDatePart: nextProps.startTimeDatePart,
+         startTimeTimePart: nextProps.startTimeTimePart,
+         endTimeTimePart: nextProps.endTimeTimePart
+       });
+      }
+    }
 
     _handleChange = (event) => {
       this.setState({[event.target.dataset.name]: event.target.value})
@@ -30,9 +45,9 @@ UI.define("Reservation.DatetimeFields", function() {
             />
           <dt className="date">
             <UI.Common.DatepickerField
-              date={this.state.start_time_date_part}
+              date={this.state.startTimeDatePart}
               name="custom_schedules[][start_time_date_part]"
-              dataName="start_time_date_part"
+              dataName="startTimeDatePart"
               handleChange={this._handleChange}
               calendarfieldPrefix={this.props.calendarfieldPrefix}
             />
@@ -41,8 +56,8 @@ UI.define("Reservation.DatetimeFields", function() {
             <input
               type="time"
               name="custom_schedules[][start_time_time_part]"
-              data-name="start_time_time_part"
-              value={this.state.start_time_time_part}
+              data-name="startTimeTimePart"
+              value={this.state.startTimeTimePart}
               size="20"
               onChange={this._handleChange} />
           </dd>
@@ -51,8 +66,8 @@ UI.define("Reservation.DatetimeFields", function() {
             <input
               type="time"
               name="custom_schedules[][end_time_time_part]"
-              data-name="end_time_time_part"
-              value={this.state.end_time_time_part}
+              data-name="endTimeTimePart"
+              value={this.state.endTimeTimePart}
               size="20"
               onChange={this._handleChange} />
           </dd>

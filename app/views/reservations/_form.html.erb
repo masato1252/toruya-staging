@@ -20,12 +20,13 @@
                         staff_ids: reservation.staff_ids.map(&:to_s),
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
+                      shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
+                      shop_id: shop.id,
                       shop_name: shop.display_name,
                       member_mode: current_user.member?,
                       from_customer_id: params[:from_customer_id],
                       from_member: params[:from_member],
                       from_shop_id: params[:from_shop_id],
-                      shop_id: shop.id,
                       menu_id: menu_id,
                       min_staffs_number: min_staffs_number,
                       available_seat: @result.try(:[], :selected_menu_option).try(:available_seat),
@@ -45,5 +46,6 @@
                       no_menu_message: I18n.t("reservation.no_menu_message"),
                       processing_message: I18n.t("common.processing"),
                       delete_confirmation_message: I18n.t("reservation.delete_confirmation_message"),
-                      memo_placeholder: I18n.t("reservation.memo")
+                      memo_placeholder: I18n.t("reservation.memo"),
+                      custom_schedules_path: custom_schedules_path
 } ) %>

@@ -5,6 +5,7 @@ import "../shared/select.js"
 import "../shared/customers_list.js"
 import "../shared/processing_bar.js"
 import "../shared/datepicker_field.js"
+import "../schedules/working_schedules_modal.js"
 
 var moment = require('moment-timezone');
 
@@ -164,18 +165,14 @@ UI.define("Reservation.Form", function() {
         return this.state.menu_available_seat
       }
       else if (this.state.menu_min_staffs_number == 1) {
-        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
-           return _.contains(_this.state.staff_ids, `${staff.value}`)
-        })
+        var selected_staffs = this._selected_staffs();
 
         if (selected_staffs[0]) {
           return _.min([selected_staffs[0].handableCustomers, this.state.menu_available_seat]);
         }
       }
       else if (this.state.menu_min_staffs_number > 1) {
-        var selected_staffs = _.filter(_this.state.staff_options, function(staff) {
-           return _.contains(_this.state.staff_ids, `${staff.value}`)
-        })
+        var selected_staffs = this._selected_staffs();
 
         var handableCustomers = selected_staffs.map(function(staff) {
           return staff.handableCustomers;
@@ -185,6 +182,12 @@ UI.define("Reservation.Form", function() {
 
         return _.min([minCustomersHandleable, this.state.menu_available_seat]);
       }
+    };
+
+    _selected_staffs = () => {
+      return _.filter(this.state.staff_options, (staff) => {
+        return _.contains(this.state.staff_ids, `${staff.value}`)
+      })
     };
 
     _isValidReservationTime = () => {
@@ -281,7 +284,8 @@ UI.define("Reservation.Form", function() {
     };
 
     _handleStaffChange = (event) => {
-      event.preventDefault();
+      if (event) { event.preventDefault(); }
+
       var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
 
       this.setState({ staff_ids: selected_staff_ids }, function() {
@@ -472,7 +476,7 @@ UI.define("Reservation.Form", function() {
           }
 
           select_components.push(
-            <div key={`${i}-${value}`}>
+            <div key={`${i}-${value}`} className="staff-input-area">
               <UI.Select options={this.state.staff_options}
                 prefix={`option-${i}`}
                 value={value}
@@ -496,7 +500,7 @@ UI.define("Reservation.Form", function() {
         var value = this.state.staff_ids[0];
 
         select_components.push(
-          <div key="no-power">
+          <div key="no-power" className="staff-input-area">
             <UI.Select options={this.state.staff_options}
               value={value}
               data-name="staff_id"
@@ -701,6 +705,13 @@ UI.define("Reservation.Form", function() {
                   <dt>担当者</dt>
                   <dd className="input">
                     {this.renderStaffSelects()}
+                    {
+                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
+                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
+                          この時間を出勤にする
+                        </a>
+                      ) : null
+                    }
                   </dd>
                 </dl>
               </div>
@@ -799,6 +810,21 @@ UI.define("Reservation.Form", function() {
               </li>
             </ul>
           </footer>
+          {this.state.staff_ids[this.state.staff_ids.length - 1] ? (
+            <UI.WorkingSchedulesModal
+              formAuthenticityToken={this.props.formAuthenticityToken}
+              open={true}
+              staff={this._selected_staffs()[this.state.staff_ids.length - 1]}
+              shop={this.props.shop}
+              shops={[this.props.shop]}
+              startTimeDatePart={this.state.start_time_date_part}
+              startTimeTimePart={this.state.start_time_time_part}
+              endTimeTimePart={this.state.end_time_time_part}
+              customSchedulesPath={this.props.customSchedulesPath}
+              callback={this._handleStaffChange}
+              remote="true"
+            />
+          ) : null}
         </div>
       );
     }

@@ -12,7 +12,10 @@ class CustomSchedulesController < DashboardController
       end
     end
 
-    redirect_back(fallback_location: member_path)
+    respond_to do |format|
+      format.json { render json: {}, status: :ok }
+      format.html { redirect_back(fallback_location: member_path) }
+    end
   end
 
   private
