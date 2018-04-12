@@ -19,10 +19,10 @@ class Settings::StaffsController < SettingsController
     else
       @first_staff = true
       @staff = super_user.staffs.new(
-        last_name: super_user.profile.last_name,
-        first_name: super_user.profile.first_name,
-        phonetic_last_name: super_user.profile.phonetic_last_name,
-        phonetic_first_name: super_user.profile.phonetic_first_name
+        last_name: super_user.profile.try(:last_name),
+        first_name: super_user.profile.try(:first_name),
+        phonetic_last_name: super_user.profile.try(:phonetic_last_name),
+        phonetic_first_name: super_user.profile.try(:phonetic_first_name)
       )
     end
   end
