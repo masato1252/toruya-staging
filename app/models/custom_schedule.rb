@@ -2,15 +2,16 @@
 #
 # Table name: custom_schedules
 #
-#  id         :integer          not null, primary key
-#  shop_id    :integer
-#  staff_id   :integer
-#  start_time :datetime
-#  end_time   :datetime
-#  reason     :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  open       :boolean          default(FALSE), not null
+#  id           :integer          not null, primary key
+#  shop_id      :integer
+#  staff_id     :integer
+#  start_time   :datetime
+#  end_time     :datetime
+#  reason       :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  open         :boolean          default(FALSE), not null
+#  reference_id :string
 #
 
 class CustomSchedule < ApplicationRecord

@@ -15,6 +15,11 @@
               name="custom_schedules[][id]"
               value="<%= local_assigns[:custom_schedule_id] %>"
             />
+            <input
+              type="hidden"
+              name="custom_schedules[][reference_id]"
+              value="<%= SecureRandom.hex(16) %>"
+            />
             <%= react_component("reservations/datetime_fields", {
               custom_schedule_id: local_assigns[:custom_schedule_id],
               staff_id: staff.try(:id),
