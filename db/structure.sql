@@ -3,6 +3,7 @@ SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -35,8 +36,6 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
-SET search_path = public, pg_catalog;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -45,7 +44,7 @@ SET default_with_oids = false;
 -- Name: access_providers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE access_providers (
+CREATE TABLE public.access_providers (
     id integer NOT NULL,
     access_token character varying,
     refresh_token character varying,
@@ -62,7 +61,7 @@ CREATE TABLE access_providers (
 -- Name: access_providers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE access_providers_id_seq
+CREATE SEQUENCE public.access_providers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -74,14 +73,14 @@ CREATE SEQUENCE access_providers_id_seq
 -- Name: access_providers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE access_providers_id_seq OWNED BY access_providers.id;
+ALTER SEQUENCE public.access_providers_id_seq OWNED BY public.access_providers.id;
 
 
 --
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ar_internal_metadata (
+CREATE TABLE public.ar_internal_metadata (
     key character varying NOT NULL,
     value character varying,
     created_at timestamp without time zone NOT NULL,
@@ -93,7 +92,7 @@ CREATE TABLE ar_internal_metadata (
 -- Name: business_schedules; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE business_schedules (
+CREATE TABLE public.business_schedules (
     id integer NOT NULL,
     shop_id integer,
     staff_id integer,
@@ -111,7 +110,7 @@ CREATE TABLE business_schedules (
 -- Name: business_schedules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE business_schedules_id_seq
+CREATE SEQUENCE public.business_schedules_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -123,14 +122,14 @@ CREATE SEQUENCE business_schedules_id_seq
 -- Name: business_schedules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE business_schedules_id_seq OWNED BY business_schedules.id;
+ALTER SEQUENCE public.business_schedules_id_seq OWNED BY public.business_schedules.id;
 
 
 --
 -- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE categories (
+CREATE TABLE public.categories (
     id integer NOT NULL,
     user_id integer,
     name character varying,
@@ -143,7 +142,7 @@ CREATE TABLE categories (
 -- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE categories_id_seq
+CREATE SEQUENCE public.categories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -155,14 +154,14 @@ CREATE SEQUENCE categories_id_seq
 -- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE categories_id_seq OWNED BY categories.id;
+ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
 -- Name: contact_group_rankings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contact_group_rankings (
+CREATE TABLE public.contact_group_rankings (
     id integer NOT NULL,
     contact_group_id integer,
     rank_id integer,
@@ -175,7 +174,7 @@ CREATE TABLE contact_group_rankings (
 -- Name: contact_group_rankings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE contact_group_rankings_id_seq
+CREATE SEQUENCE public.contact_group_rankings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -187,14 +186,14 @@ CREATE SEQUENCE contact_group_rankings_id_seq
 -- Name: contact_group_rankings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE contact_group_rankings_id_seq OWNED BY contact_group_rankings.id;
+ALTER SEQUENCE public.contact_group_rankings_id_seq OWNED BY public.contact_group_rankings.id;
 
 
 --
 -- Name: contact_groups; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE contact_groups (
+CREATE TABLE public.contact_groups (
     id integer NOT NULL,
     user_id integer NOT NULL,
     google_uid character varying,
@@ -211,7 +210,7 @@ CREATE TABLE contact_groups (
 -- Name: contact_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE contact_groups_id_seq
+CREATE SEQUENCE public.contact_groups_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -223,14 +222,14 @@ CREATE SEQUENCE contact_groups_id_seq
 -- Name: contact_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE contact_groups_id_seq OWNED BY contact_groups.id;
+ALTER SEQUENCE public.contact_groups_id_seq OWNED BY public.contact_groups.id;
 
 
 --
 -- Name: custom_schedules; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE custom_schedules (
+CREATE TABLE public.custom_schedules (
     id integer NOT NULL,
     shop_id integer,
     staff_id integer,
@@ -239,7 +238,8 @@ CREATE TABLE custom_schedules (
     reason text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    open boolean DEFAULT false NOT NULL
+    open boolean DEFAULT false NOT NULL,
+    reference_id character varying
 );
 
 
@@ -247,7 +247,7 @@ CREATE TABLE custom_schedules (
 -- Name: custom_schedules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE custom_schedules_id_seq
+CREATE SEQUENCE public.custom_schedules_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -259,14 +259,14 @@ CREATE SEQUENCE custom_schedules_id_seq
 -- Name: custom_schedules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE custom_schedules_id_seq OWNED BY custom_schedules.id;
+ALTER SEQUENCE public.custom_schedules_id_seq OWNED BY public.custom_schedules.id;
 
 
 --
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE customers (
+CREATE TABLE public.customers (
     id integer NOT NULL,
     user_id integer NOT NULL,
     contact_group_id integer,
@@ -293,7 +293,7 @@ CREATE TABLE customers (
 -- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE customers_id_seq
+CREATE SEQUENCE public.customers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -305,14 +305,14 @@ CREATE SEQUENCE customers_id_seq
 -- Name: customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE customers_id_seq OWNED BY customers.id;
+ALTER SEQUENCE public.customers_id_seq OWNED BY public.customers.id;
 
 
 --
 -- Name: delayed_jobs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE delayed_jobs (
+CREATE TABLE public.delayed_jobs (
     id integer NOT NULL,
     priority integer DEFAULT 0 NOT NULL,
     attempts integer DEFAULT 0 NOT NULL,
@@ -332,7 +332,7 @@ CREATE TABLE delayed_jobs (
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE delayed_jobs_id_seq
+CREATE SEQUENCE public.delayed_jobs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -344,14 +344,14 @@ CREATE SEQUENCE delayed_jobs_id_seq
 -- Name: delayed_jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE delayed_jobs_id_seq OWNED BY delayed_jobs.id;
+ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
 
 
 --
 -- Name: filtered_outcomes; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE filtered_outcomes (
+CREATE TABLE public.filtered_outcomes (
     id integer NOT NULL,
     user_id integer NOT NULL,
     filter_id integer,
@@ -369,7 +369,7 @@ CREATE TABLE filtered_outcomes (
 -- Name: filtered_outcomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE filtered_outcomes_id_seq
+CREATE SEQUENCE public.filtered_outcomes_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -381,14 +381,14 @@ CREATE SEQUENCE filtered_outcomes_id_seq
 -- Name: filtered_outcomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE filtered_outcomes_id_seq OWNED BY filtered_outcomes.id;
+ALTER SEQUENCE public.filtered_outcomes_id_seq OWNED BY public.filtered_outcomes.id;
 
 
 --
 -- Name: menu_categories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE menu_categories (
+CREATE TABLE public.menu_categories (
     id integer NOT NULL,
     menu_id integer,
     category_id integer,
@@ -401,7 +401,7 @@ CREATE TABLE menu_categories (
 -- Name: menu_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE menu_categories_id_seq
+CREATE SEQUENCE public.menu_categories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -413,14 +413,14 @@ CREATE SEQUENCE menu_categories_id_seq
 -- Name: menu_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE menu_categories_id_seq OWNED BY menu_categories.id;
+ALTER SEQUENCE public.menu_categories_id_seq OWNED BY public.menu_categories.id;
 
 
 --
 -- Name: menu_reservation_setting_rules; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE menu_reservation_setting_rules (
+CREATE TABLE public.menu_reservation_setting_rules (
     id integer NOT NULL,
     menu_id integer,
     reservation_type character varying,
@@ -436,7 +436,7 @@ CREATE TABLE menu_reservation_setting_rules (
 -- Name: menu_reservation_setting_rules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE menu_reservation_setting_rules_id_seq
+CREATE SEQUENCE public.menu_reservation_setting_rules_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -448,14 +448,14 @@ CREATE SEQUENCE menu_reservation_setting_rules_id_seq
 -- Name: menu_reservation_setting_rules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE menu_reservation_setting_rules_id_seq OWNED BY menu_reservation_setting_rules.id;
+ALTER SEQUENCE public.menu_reservation_setting_rules_id_seq OWNED BY public.menu_reservation_setting_rules.id;
 
 
 --
 -- Name: menus; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE menus (
+CREATE TABLE public.menus (
     id integer NOT NULL,
     user_id integer NOT NULL,
     name character varying NOT NULL,
@@ -472,7 +472,7 @@ CREATE TABLE menus (
 -- Name: menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE menus_id_seq
+CREATE SEQUENCE public.menus_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -484,14 +484,14 @@ CREATE SEQUENCE menus_id_seq
 -- Name: menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE menus_id_seq OWNED BY menus.id;
+ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
 
 
 --
 -- Name: profiles; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE profiles (
+CREATE TABLE public.profiles (
     id integer NOT NULL,
     user_id integer,
     first_name character varying,
@@ -504,7 +504,10 @@ CREATE TABLE profiles (
     phone_number character varying,
     website character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    company_zip_code character varying,
+    company_address character varying,
+    company_phone_number character varying
 );
 
 
@@ -512,7 +515,7 @@ CREATE TABLE profiles (
 -- Name: profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE profiles_id_seq
+CREATE SEQUENCE public.profiles_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -524,14 +527,14 @@ CREATE SEQUENCE profiles_id_seq
 -- Name: profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE profiles_id_seq OWNED BY profiles.id;
+ALTER SEQUENCE public.profiles_id_seq OWNED BY public.profiles.id;
 
 
 --
 -- Name: query_filters; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE query_filters (
+CREATE TABLE public.query_filters (
     id integer NOT NULL,
     user_id integer NOT NULL,
     name character varying NOT NULL,
@@ -546,7 +549,7 @@ CREATE TABLE query_filters (
 -- Name: query_filters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE query_filters_id_seq
+CREATE SEQUENCE public.query_filters_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -558,14 +561,14 @@ CREATE SEQUENCE query_filters_id_seq
 -- Name: query_filters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE query_filters_id_seq OWNED BY query_filters.id;
+ALTER SEQUENCE public.query_filters_id_seq OWNED BY public.query_filters.id;
 
 
 --
 -- Name: ranks; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE ranks (
+CREATE TABLE public.ranks (
     id integer NOT NULL,
     user_id integer,
     name character varying NOT NULL,
@@ -579,7 +582,7 @@ CREATE TABLE ranks (
 -- Name: ranks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE ranks_id_seq
+CREATE SEQUENCE public.ranks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -591,14 +594,14 @@ CREATE SEQUENCE ranks_id_seq
 -- Name: ranks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE ranks_id_seq OWNED BY ranks.id;
+ALTER SEQUENCE public.ranks_id_seq OWNED BY public.ranks.id;
 
 
 --
 -- Name: reservation_customers; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE reservation_customers (
+CREATE TABLE public.reservation_customers (
     id integer NOT NULL,
     reservation_id integer NOT NULL,
     customer_id integer NOT NULL,
@@ -611,7 +614,7 @@ CREATE TABLE reservation_customers (
 -- Name: reservation_customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE reservation_customers_id_seq
+CREATE SEQUENCE public.reservation_customers_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -623,14 +626,14 @@ CREATE SEQUENCE reservation_customers_id_seq
 -- Name: reservation_customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE reservation_customers_id_seq OWNED BY reservation_customers.id;
+ALTER SEQUENCE public.reservation_customers_id_seq OWNED BY public.reservation_customers.id;
 
 
 --
 -- Name: reservation_setting_menus; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE reservation_setting_menus (
+CREATE TABLE public.reservation_setting_menus (
     id integer NOT NULL,
     reservation_setting_id integer,
     menu_id integer,
@@ -643,7 +646,7 @@ CREATE TABLE reservation_setting_menus (
 -- Name: reservation_setting_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE reservation_setting_menus_id_seq
+CREATE SEQUENCE public.reservation_setting_menus_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -655,14 +658,14 @@ CREATE SEQUENCE reservation_setting_menus_id_seq
 -- Name: reservation_setting_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE reservation_setting_menus_id_seq OWNED BY reservation_setting_menus.id;
+ALTER SEQUENCE public.reservation_setting_menus_id_seq OWNED BY public.reservation_setting_menus.id;
 
 
 --
 -- Name: reservation_settings; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE reservation_settings (
+CREATE TABLE public.reservation_settings (
     id integer NOT NULL,
     user_id integer,
     name character varying,
@@ -682,7 +685,7 @@ CREATE TABLE reservation_settings (
 -- Name: reservation_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE reservation_settings_id_seq
+CREATE SEQUENCE public.reservation_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -694,14 +697,14 @@ CREATE SEQUENCE reservation_settings_id_seq
 -- Name: reservation_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE reservation_settings_id_seq OWNED BY reservation_settings.id;
+ALTER SEQUENCE public.reservation_settings_id_seq OWNED BY public.reservation_settings.id;
 
 
 --
 -- Name: reservation_staffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE reservation_staffs (
+CREATE TABLE public.reservation_staffs (
     id integer NOT NULL,
     reservation_id integer NOT NULL,
     staff_id integer NOT NULL,
@@ -714,7 +717,7 @@ CREATE TABLE reservation_staffs (
 -- Name: reservation_staffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE reservation_staffs_id_seq
+CREATE SEQUENCE public.reservation_staffs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -726,14 +729,14 @@ CREATE SEQUENCE reservation_staffs_id_seq
 -- Name: reservation_staffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE reservation_staffs_id_seq OWNED BY reservation_staffs.id;
+ALTER SEQUENCE public.reservation_staffs_id_seq OWNED BY public.reservation_staffs.id;
 
 
 --
 -- Name: reservations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE reservations (
+CREATE TABLE public.reservations (
     id integer NOT NULL,
     shop_id integer NOT NULL,
     menu_id integer NOT NULL,
@@ -753,7 +756,7 @@ CREATE TABLE reservations (
 -- Name: reservations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE reservations_id_seq
+CREATE SEQUENCE public.reservations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -765,14 +768,14 @@ CREATE SEQUENCE reservations_id_seq
 -- Name: reservations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE reservations_id_seq OWNED BY reservations.id;
+ALTER SEQUENCE public.reservations_id_seq OWNED BY public.reservations.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
 
@@ -781,7 +784,7 @@ CREATE TABLE schema_migrations (
 -- Name: shop_menu_repeating_dates; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE shop_menu_repeating_dates (
+CREATE TABLE public.shop_menu_repeating_dates (
     id integer NOT NULL,
     shop_id integer NOT NULL,
     menu_id integer NOT NULL,
@@ -796,7 +799,7 @@ CREATE TABLE shop_menu_repeating_dates (
 -- Name: shop_menu_repeating_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE shop_menu_repeating_dates_id_seq
+CREATE SEQUENCE public.shop_menu_repeating_dates_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -808,14 +811,14 @@ CREATE SEQUENCE shop_menu_repeating_dates_id_seq
 -- Name: shop_menu_repeating_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE shop_menu_repeating_dates_id_seq OWNED BY shop_menu_repeating_dates.id;
+ALTER SEQUENCE public.shop_menu_repeating_dates_id_seq OWNED BY public.shop_menu_repeating_dates.id;
 
 
 --
 -- Name: shop_menus; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE shop_menus (
+CREATE TABLE public.shop_menus (
     id integer NOT NULL,
     shop_id integer,
     menu_id integer,
@@ -829,7 +832,7 @@ CREATE TABLE shop_menus (
 -- Name: shop_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE shop_menus_id_seq
+CREATE SEQUENCE public.shop_menus_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -841,14 +844,14 @@ CREATE SEQUENCE shop_menus_id_seq
 -- Name: shop_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE shop_menus_id_seq OWNED BY shop_menus.id;
+ALTER SEQUENCE public.shop_menus_id_seq OWNED BY public.shop_menus.id;
 
 
 --
 -- Name: shop_staffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE shop_staffs (
+CREATE TABLE public.shop_staffs (
     id integer NOT NULL,
     shop_id integer,
     staff_id integer,
@@ -864,7 +867,7 @@ CREATE TABLE shop_staffs (
 -- Name: shop_staffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE shop_staffs_id_seq
+CREATE SEQUENCE public.shop_staffs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -876,14 +879,14 @@ CREATE SEQUENCE shop_staffs_id_seq
 -- Name: shop_staffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE shop_staffs_id_seq OWNED BY shop_staffs.id;
+ALTER SEQUENCE public.shop_staffs_id_seq OWNED BY public.shop_staffs.id;
 
 
 --
 -- Name: shops; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE shops (
+CREATE TABLE public.shops (
     id integer NOT NULL,
     user_id integer,
     name character varying NOT NULL,
@@ -903,7 +906,7 @@ CREATE TABLE shops (
 -- Name: shops_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE shops_id_seq
+CREATE SEQUENCE public.shops_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -915,14 +918,14 @@ CREATE SEQUENCE shops_id_seq
 -- Name: shops_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE shops_id_seq OWNED BY shops.id;
+ALTER SEQUENCE public.shops_id_seq OWNED BY public.shops.id;
 
 
 --
 -- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE staff_accounts (
+CREATE TABLE public.staff_accounts (
     id integer NOT NULL,
     email character varying NOT NULL,
     user_id integer,
@@ -940,7 +943,7 @@ CREATE TABLE staff_accounts (
 -- Name: staff_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE staff_accounts_id_seq
+CREATE SEQUENCE public.staff_accounts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -952,14 +955,14 @@ CREATE SEQUENCE staff_accounts_id_seq
 -- Name: staff_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE staff_accounts_id_seq OWNED BY staff_accounts.id;
+ALTER SEQUENCE public.staff_accounts_id_seq OWNED BY public.staff_accounts.id;
 
 
 --
 -- Name: staff_menus; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE staff_menus (
+CREATE TABLE public.staff_menus (
     id integer NOT NULL,
     staff_id integer NOT NULL,
     menu_id integer NOT NULL,
@@ -973,7 +976,7 @@ CREATE TABLE staff_menus (
 -- Name: staff_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE staff_menus_id_seq
+CREATE SEQUENCE public.staff_menus_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -985,14 +988,14 @@ CREATE SEQUENCE staff_menus_id_seq
 -- Name: staff_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE staff_menus_id_seq OWNED BY staff_menus.id;
+ALTER SEQUENCE public.staff_menus_id_seq OWNED BY public.staff_menus.id;
 
 
 --
 -- Name: staffs; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE staffs (
+CREATE TABLE public.staffs (
     id integer NOT NULL,
     user_id integer NOT NULL,
     last_name character varying,
@@ -1010,7 +1013,7 @@ CREATE TABLE staffs (
 -- Name: staffs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE staffs_id_seq
+CREATE SEQUENCE public.staffs_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1022,14 +1025,14 @@ CREATE SEQUENCE staffs_id_seq
 -- Name: staffs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE staffs_id_seq OWNED BY staffs.id;
+ALTER SEQUENCE public.staffs_id_seq OWNED BY public.staffs.id;
 
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE users (
+CREATE TABLE public.users (
     id integer NOT NULL,
     email character varying DEFAULT ''::character varying NOT NULL,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
@@ -1050,7 +1053,8 @@ CREATE TABLE users (
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    level integer DEFAULT 0 NOT NULL
+    level integer DEFAULT 0 NOT NULL,
+    authentication_token character varying(30)
 );
 
 
@@ -1058,7 +1062,7 @@ CREATE TABLE users (
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE users_id_seq
+CREATE SEQUENCE public.users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1070,210 +1074,210 @@ CREATE SEQUENCE users_id_seq
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE users_id_seq OWNED BY users.id;
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
 -- Name: access_providers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY access_providers ALTER COLUMN id SET DEFAULT nextval('access_providers_id_seq'::regclass);
+ALTER TABLE ONLY public.access_providers ALTER COLUMN id SET DEFAULT nextval('public.access_providers_id_seq'::regclass);
 
 
 --
 -- Name: business_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY business_schedules ALTER COLUMN id SET DEFAULT nextval('business_schedules_id_seq'::regclass);
+ALTER TABLE ONLY public.business_schedules ALTER COLUMN id SET DEFAULT nextval('public.business_schedules_id_seq'::regclass);
 
 
 --
 -- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY categories ALTER COLUMN id SET DEFAULT nextval('categories_id_seq'::regclass);
+ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
 
 
 --
 -- Name: contact_group_rankings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contact_group_rankings ALTER COLUMN id SET DEFAULT nextval('contact_group_rankings_id_seq'::regclass);
+ALTER TABLE ONLY public.contact_group_rankings ALTER COLUMN id SET DEFAULT nextval('public.contact_group_rankings_id_seq'::regclass);
 
 
 --
 -- Name: contact_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contact_groups ALTER COLUMN id SET DEFAULT nextval('contact_groups_id_seq'::regclass);
+ALTER TABLE ONLY public.contact_groups ALTER COLUMN id SET DEFAULT nextval('public.contact_groups_id_seq'::regclass);
 
 
 --
 -- Name: custom_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_schedules ALTER COLUMN id SET DEFAULT nextval('custom_schedules_id_seq'::regclass);
+ALTER TABLE ONLY public.custom_schedules ALTER COLUMN id SET DEFAULT nextval('public.custom_schedules_id_seq'::regclass);
 
 
 --
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customers ALTER COLUMN id SET DEFAULT nextval('customers_id_seq'::regclass);
+ALTER TABLE ONLY public.customers ALTER COLUMN id SET DEFAULT nextval('public.customers_id_seq'::regclass);
 
 
 --
 -- Name: delayed_jobs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs ALTER COLUMN id SET DEFAULT nextval('delayed_jobs_id_seq'::regclass);
+ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public.delayed_jobs_id_seq'::regclass);
 
 
 --
 -- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('filtered_outcomes_id_seq'::regclass);
+ALTER TABLE ONLY public.filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('public.filtered_outcomes_id_seq'::regclass);
 
 
 --
 -- Name: menu_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menu_categories ALTER COLUMN id SET DEFAULT nextval('menu_categories_id_seq'::regclass);
+ALTER TABLE ONLY public.menu_categories ALTER COLUMN id SET DEFAULT nextval('public.menu_categories_id_seq'::regclass);
 
 
 --
 -- Name: menu_reservation_setting_rules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menu_reservation_setting_rules ALTER COLUMN id SET DEFAULT nextval('menu_reservation_setting_rules_id_seq'::regclass);
+ALTER TABLE ONLY public.menu_reservation_setting_rules ALTER COLUMN id SET DEFAULT nextval('public.menu_reservation_setting_rules_id_seq'::regclass);
 
 
 --
 -- Name: menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menus ALTER COLUMN id SET DEFAULT nextval('menus_id_seq'::regclass);
+ALTER TABLE ONLY public.menus ALTER COLUMN id SET DEFAULT nextval('public.menus_id_seq'::regclass);
 
 
 --
 -- Name: profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles ALTER COLUMN id SET DEFAULT nextval('profiles_id_seq'::regclass);
+ALTER TABLE ONLY public.profiles ALTER COLUMN id SET DEFAULT nextval('public.profiles_id_seq'::regclass);
 
 
 --
 -- Name: query_filters id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY query_filters ALTER COLUMN id SET DEFAULT nextval('query_filters_id_seq'::regclass);
+ALTER TABLE ONLY public.query_filters ALTER COLUMN id SET DEFAULT nextval('public.query_filters_id_seq'::regclass);
 
 
 --
 -- Name: ranks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ranks ALTER COLUMN id SET DEFAULT nextval('ranks_id_seq'::regclass);
+ALTER TABLE ONLY public.ranks ALTER COLUMN id SET DEFAULT nextval('public.ranks_id_seq'::regclass);
 
 
 --
 -- Name: reservation_customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_customers ALTER COLUMN id SET DEFAULT nextval('reservation_customers_id_seq'::regclass);
+ALTER TABLE ONLY public.reservation_customers ALTER COLUMN id SET DEFAULT nextval('public.reservation_customers_id_seq'::regclass);
 
 
 --
 -- Name: reservation_setting_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_setting_menus ALTER COLUMN id SET DEFAULT nextval('reservation_setting_menus_id_seq'::regclass);
+ALTER TABLE ONLY public.reservation_setting_menus ALTER COLUMN id SET DEFAULT nextval('public.reservation_setting_menus_id_seq'::regclass);
 
 
 --
 -- Name: reservation_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_settings ALTER COLUMN id SET DEFAULT nextval('reservation_settings_id_seq'::regclass);
+ALTER TABLE ONLY public.reservation_settings ALTER COLUMN id SET DEFAULT nextval('public.reservation_settings_id_seq'::regclass);
 
 
 --
 -- Name: reservation_staffs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_staffs ALTER COLUMN id SET DEFAULT nextval('reservation_staffs_id_seq'::regclass);
+ALTER TABLE ONLY public.reservation_staffs ALTER COLUMN id SET DEFAULT nextval('public.reservation_staffs_id_seq'::regclass);
 
 
 --
 -- Name: reservations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservations ALTER COLUMN id SET DEFAULT nextval('reservations_id_seq'::regclass);
+ALTER TABLE ONLY public.reservations ALTER COLUMN id SET DEFAULT nextval('public.reservations_id_seq'::regclass);
 
 
 --
 -- Name: shop_menu_repeating_dates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_menu_repeating_dates ALTER COLUMN id SET DEFAULT nextval('shop_menu_repeating_dates_id_seq'::regclass);
+ALTER TABLE ONLY public.shop_menu_repeating_dates ALTER COLUMN id SET DEFAULT nextval('public.shop_menu_repeating_dates_id_seq'::regclass);
 
 
 --
 -- Name: shop_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_menus ALTER COLUMN id SET DEFAULT nextval('shop_menus_id_seq'::regclass);
+ALTER TABLE ONLY public.shop_menus ALTER COLUMN id SET DEFAULT nextval('public.shop_menus_id_seq'::regclass);
 
 
 --
 -- Name: shop_staffs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_staffs ALTER COLUMN id SET DEFAULT nextval('shop_staffs_id_seq'::regclass);
+ALTER TABLE ONLY public.shop_staffs ALTER COLUMN id SET DEFAULT nextval('public.shop_staffs_id_seq'::regclass);
 
 
 --
 -- Name: shops id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shops ALTER COLUMN id SET DEFAULT nextval('shops_id_seq'::regclass);
+ALTER TABLE ONLY public.shops ALTER COLUMN id SET DEFAULT nextval('public.shops_id_seq'::regclass);
 
 
 --
 -- Name: staff_accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staff_accounts ALTER COLUMN id SET DEFAULT nextval('staff_accounts_id_seq'::regclass);
+ALTER TABLE ONLY public.staff_accounts ALTER COLUMN id SET DEFAULT nextval('public.staff_accounts_id_seq'::regclass);
 
 
 --
 -- Name: staff_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staff_menus ALTER COLUMN id SET DEFAULT nextval('staff_menus_id_seq'::regclass);
+ALTER TABLE ONLY public.staff_menus ALTER COLUMN id SET DEFAULT nextval('public.staff_menus_id_seq'::regclass);
 
 
 --
 -- Name: staffs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staffs ALTER COLUMN id SET DEFAULT nextval('staffs_id_seq'::regclass);
+ALTER TABLE ONLY public.staffs ALTER COLUMN id SET DEFAULT nextval('public.staffs_id_seq'::regclass);
 
 
 --
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
 -- Name: access_providers access_providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY access_providers
+ALTER TABLE ONLY public.access_providers
     ADD CONSTRAINT access_providers_pkey PRIMARY KEY (id);
 
 
@@ -1281,7 +1285,7 @@ ALTER TABLE ONLY access_providers
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ar_internal_metadata
+ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
 
 
@@ -1289,7 +1293,7 @@ ALTER TABLE ONLY ar_internal_metadata
 -- Name: business_schedules business_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY business_schedules
+ALTER TABLE ONLY public.business_schedules
     ADD CONSTRAINT business_schedules_pkey PRIMARY KEY (id);
 
 
@@ -1297,7 +1301,7 @@ ALTER TABLE ONLY business_schedules
 -- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY categories
+ALTER TABLE ONLY public.categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
 
 
@@ -1305,7 +1309,7 @@ ALTER TABLE ONLY categories
 -- Name: contact_group_rankings contact_group_rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contact_group_rankings
+ALTER TABLE ONLY public.contact_group_rankings
     ADD CONSTRAINT contact_group_rankings_pkey PRIMARY KEY (id);
 
 
@@ -1313,7 +1317,7 @@ ALTER TABLE ONLY contact_group_rankings
 -- Name: contact_groups contact_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contact_groups
+ALTER TABLE ONLY public.contact_groups
     ADD CONSTRAINT contact_groups_pkey PRIMARY KEY (id);
 
 
@@ -1321,7 +1325,7 @@ ALTER TABLE ONLY contact_groups
 -- Name: custom_schedules custom_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY custom_schedules
+ALTER TABLE ONLY public.custom_schedules
     ADD CONSTRAINT custom_schedules_pkey PRIMARY KEY (id);
 
 
@@ -1329,7 +1333,7 @@ ALTER TABLE ONLY custom_schedules
 -- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY customers
+ALTER TABLE ONLY public.customers
     ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
 
 
@@ -1337,7 +1341,7 @@ ALTER TABLE ONLY customers
 -- Name: delayed_jobs delayed_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY delayed_jobs
+ALTER TABLE ONLY public.delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
 
 
@@ -1345,7 +1349,7 @@ ALTER TABLE ONLY delayed_jobs
 -- Name: filtered_outcomes filtered_outcomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY filtered_outcomes
+ALTER TABLE ONLY public.filtered_outcomes
     ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
 
 
@@ -1353,7 +1357,7 @@ ALTER TABLE ONLY filtered_outcomes
 -- Name: menu_categories menu_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menu_categories
+ALTER TABLE ONLY public.menu_categories
     ADD CONSTRAINT menu_categories_pkey PRIMARY KEY (id);
 
 
@@ -1361,7 +1365,7 @@ ALTER TABLE ONLY menu_categories
 -- Name: menu_reservation_setting_rules menu_reservation_setting_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menu_reservation_setting_rules
+ALTER TABLE ONLY public.menu_reservation_setting_rules
     ADD CONSTRAINT menu_reservation_setting_rules_pkey PRIMARY KEY (id);
 
 
@@ -1369,7 +1373,7 @@ ALTER TABLE ONLY menu_reservation_setting_rules
 -- Name: menus menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY menus
+ALTER TABLE ONLY public.menus
     ADD CONSTRAINT menus_pkey PRIMARY KEY (id);
 
 
@@ -1377,7 +1381,7 @@ ALTER TABLE ONLY menus
 -- Name: profiles profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles
+ALTER TABLE ONLY public.profiles
     ADD CONSTRAINT profiles_pkey PRIMARY KEY (id);
 
 
@@ -1385,7 +1389,7 @@ ALTER TABLE ONLY profiles
 -- Name: query_filters query_filters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY query_filters
+ALTER TABLE ONLY public.query_filters
     ADD CONSTRAINT query_filters_pkey PRIMARY KEY (id);
 
 
@@ -1393,7 +1397,7 @@ ALTER TABLE ONLY query_filters
 -- Name: ranks ranks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY ranks
+ALTER TABLE ONLY public.ranks
     ADD CONSTRAINT ranks_pkey PRIMARY KEY (id);
 
 
@@ -1401,7 +1405,7 @@ ALTER TABLE ONLY ranks
 -- Name: reservation_customers reservation_customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_customers
+ALTER TABLE ONLY public.reservation_customers
     ADD CONSTRAINT reservation_customers_pkey PRIMARY KEY (id);
 
 
@@ -1409,7 +1413,7 @@ ALTER TABLE ONLY reservation_customers
 -- Name: reservation_setting_menus reservation_setting_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_setting_menus
+ALTER TABLE ONLY public.reservation_setting_menus
     ADD CONSTRAINT reservation_setting_menus_pkey PRIMARY KEY (id);
 
 
@@ -1417,7 +1421,7 @@ ALTER TABLE ONLY reservation_setting_menus
 -- Name: reservation_settings reservation_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_settings
+ALTER TABLE ONLY public.reservation_settings
     ADD CONSTRAINT reservation_settings_pkey PRIMARY KEY (id);
 
 
@@ -1425,7 +1429,7 @@ ALTER TABLE ONLY reservation_settings
 -- Name: reservation_staffs reservation_staffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservation_staffs
+ALTER TABLE ONLY public.reservation_staffs
     ADD CONSTRAINT reservation_staffs_pkey PRIMARY KEY (id);
 
 
@@ -1433,7 +1437,7 @@ ALTER TABLE ONLY reservation_staffs
 -- Name: reservations reservations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY reservations
+ALTER TABLE ONLY public.reservations
     ADD CONSTRAINT reservations_pkey PRIMARY KEY (id);
 
 
@@ -1441,7 +1445,7 @@ ALTER TABLE ONLY reservations
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY schema_migrations
+ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
 
 
@@ -1449,7 +1453,7 @@ ALTER TABLE ONLY schema_migrations
 -- Name: shop_menu_repeating_dates shop_menu_repeating_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_menu_repeating_dates
+ALTER TABLE ONLY public.shop_menu_repeating_dates
     ADD CONSTRAINT shop_menu_repeating_dates_pkey PRIMARY KEY (id);
 
 
@@ -1457,7 +1461,7 @@ ALTER TABLE ONLY shop_menu_repeating_dates
 -- Name: shop_menus shop_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_menus
+ALTER TABLE ONLY public.shop_menus
     ADD CONSTRAINT shop_menus_pkey PRIMARY KEY (id);
 
 
@@ -1465,7 +1469,7 @@ ALTER TABLE ONLY shop_menus
 -- Name: shop_staffs shop_staffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shop_staffs
+ALTER TABLE ONLY public.shop_staffs
     ADD CONSTRAINT shop_staffs_pkey PRIMARY KEY (id);
 
 
@@ -1473,7 +1477,7 @@ ALTER TABLE ONLY shop_staffs
 -- Name: shops shops_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY shops
+ALTER TABLE ONLY public.shops
     ADD CONSTRAINT shops_pkey PRIMARY KEY (id);
 
 
@@ -1481,7 +1485,7 @@ ALTER TABLE ONLY shops
 -- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staff_accounts
+ALTER TABLE ONLY public.staff_accounts
     ADD CONSTRAINT staff_accounts_pkey PRIMARY KEY (id);
 
 
@@ -1489,7 +1493,7 @@ ALTER TABLE ONLY staff_accounts
 -- Name: staff_menus staff_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staff_menus
+ALTER TABLE ONLY public.staff_menus
     ADD CONSTRAINT staff_menus_pkey PRIMARY KEY (id);
 
 
@@ -1497,7 +1501,7 @@ ALTER TABLE ONLY staff_menus
 -- Name: staffs staffs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY staffs
+ALTER TABLE ONLY public.staffs
     ADD CONSTRAINT staffs_pkey PRIMARY KEY (id);
 
 
@@ -1505,7 +1509,7 @@ ALTER TABLE ONLY staffs
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY users
+ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
@@ -1513,372 +1517,386 @@ ALTER TABLE ONLY users
 -- Name: contact_groups_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX contact_groups_google_index ON contact_groups USING btree (user_id, google_uid, google_group_id, backup_google_group_id);
+CREATE UNIQUE INDEX contact_groups_google_index ON public.contact_groups USING btree (user_id, google_uid, google_group_id, backup_google_group_id);
 
 
 --
 -- Name: customer_names_on_first_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX customer_names_on_first_name_idx ON customers USING gin (first_name gin_trgm_ops);
+CREATE INDEX customer_names_on_first_name_idx ON public.customers USING gin (first_name public.gin_trgm_ops);
 
 
 --
 -- Name: customer_names_on_last_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX customer_names_on_last_name_idx ON customers USING gin (last_name gin_trgm_ops);
+CREATE INDEX customer_names_on_last_name_idx ON public.customers USING gin (last_name public.gin_trgm_ops);
 
 
 --
 -- Name: customer_names_on_phonetic_first_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX customer_names_on_phonetic_first_name_idx ON customers USING gin (phonetic_first_name gin_trgm_ops);
+CREATE INDEX customer_names_on_phonetic_first_name_idx ON public.customers USING gin (phonetic_first_name public.gin_trgm_ops);
 
 
 --
 -- Name: customer_names_on_phonetic_last_name_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX customer_names_on_phonetic_last_name_idx ON customers USING gin (phonetic_last_name gin_trgm_ops);
+CREATE INDEX customer_names_on_phonetic_last_name_idx ON public.customers USING gin (phonetic_last_name public.gin_trgm_ops);
 
 
 --
 -- Name: customers_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX customers_google_index ON customers USING btree (user_id, google_uid, google_contact_id);
+CREATE UNIQUE INDEX customers_google_index ON public.customers USING btree (user_id, google_uid, google_contact_id);
 
 
 --
 -- Name: delayed_jobs_priority; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX delayed_jobs_priority ON delayed_jobs USING btree (priority, run_at);
+CREATE INDEX delayed_jobs_priority ON public.delayed_jobs USING btree (priority, run_at);
 
 
 --
 -- Name: filtered_outcome_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX filtered_outcome_index ON filtered_outcomes USING btree (user_id, aasm_state, outcome_type, created_at);
+CREATE INDEX filtered_outcome_index ON public.filtered_outcomes USING btree (user_id, aasm_state, outcome_type, created_at);
 
 
 --
 -- Name: index_access_providers_on_provider_and_uid; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_access_providers_on_provider_and_uid ON access_providers USING btree (provider, uid);
+CREATE INDEX index_access_providers_on_provider_and_uid ON public.access_providers USING btree (provider, uid);
 
 
 --
 -- Name: index_categories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_categories_on_user_id ON categories USING btree (user_id);
+CREATE INDEX index_categories_on_user_id ON public.categories USING btree (user_id);
 
 
 --
 -- Name: index_contact_group_rankings_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contact_group_rankings_on_contact_group_id ON contact_group_rankings USING btree (contact_group_id);
+CREATE INDEX index_contact_group_rankings_on_contact_group_id ON public.contact_group_rankings USING btree (contact_group_id);
 
 
 --
 -- Name: index_contact_group_rankings_on_rank_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contact_group_rankings_on_rank_id ON contact_group_rankings USING btree (rank_id);
+CREATE INDEX index_contact_group_rankings_on_rank_id ON public.contact_group_rankings USING btree (rank_id);
 
 
 --
 -- Name: index_contact_groups_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_contact_groups_on_user_id ON contact_groups USING btree (user_id);
+CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btree (user_id);
+
+
+--
+-- Name: index_custom_schedules_on_reference_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_custom_schedules_on_reference_id ON public.custom_schedules USING btree (reference_id);
 
 
 --
 -- Name: index_custom_schedules_on_staff_id_and_open; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_custom_schedules_on_staff_id_and_open ON custom_schedules USING btree (staff_id, open);
+CREATE INDEX index_custom_schedules_on_staff_id_and_open ON public.custom_schedules USING btree (staff_id, open);
 
 
 --
 -- Name: index_customers_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_customers_on_contact_group_id ON customers USING btree (contact_group_id);
+CREATE INDEX index_customers_on_contact_group_id ON public.customers USING btree (contact_group_id);
 
 
 --
 -- Name: index_customers_on_rank_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_customers_on_rank_id ON customers USING btree (rank_id);
+CREATE INDEX index_customers_on_rank_id ON public.customers USING btree (rank_id);
 
 
 --
 -- Name: index_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_customers_on_user_id ON customers USING btree (user_id);
+CREATE INDEX index_customers_on_user_id ON public.customers USING btree (user_id);
 
 
 --
 -- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_filtered_outcomes_on_user_id ON filtered_outcomes USING btree (user_id);
+CREATE INDEX index_filtered_outcomes_on_user_id ON public.filtered_outcomes USING btree (user_id);
 
 
 --
 -- Name: index_menu_categories_on_menu_id_and_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_menu_categories_on_menu_id_and_category_id ON menu_categories USING btree (menu_id, category_id);
+CREATE INDEX index_menu_categories_on_menu_id_and_category_id ON public.menu_categories USING btree (menu_id, category_id);
 
 
 --
 -- Name: index_menus_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_menus_on_user_id ON menus USING btree (user_id);
+CREATE INDEX index_menus_on_user_id ON public.menus USING btree (user_id);
 
 
 --
 -- Name: index_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_profiles_on_user_id ON profiles USING btree (user_id);
+CREATE INDEX index_profiles_on_user_id ON public.profiles USING btree (user_id);
 
 
 --
 -- Name: index_query_filters_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_query_filters_on_user_id ON query_filters USING btree (user_id);
+CREATE INDEX index_query_filters_on_user_id ON public.query_filters USING btree (user_id);
 
 
 --
 -- Name: index_ranks_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_ranks_on_user_id ON ranks USING btree (user_id);
+CREATE INDEX index_ranks_on_user_id ON public.ranks USING btree (user_id);
 
 
 --
 -- Name: index_reservation_customers_on_reservation_id_and_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_id ON reservation_customers USING btree (reservation_id, customer_id);
+CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_id ON public.reservation_customers USING btree (reservation_id, customer_id);
 
 
 --
 -- Name: index_reservation_staffs_on_reservation_id_and_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_reservation_staffs_on_reservation_id_and_staff_id ON reservation_staffs USING btree (reservation_id, staff_id);
+CREATE UNIQUE INDEX index_reservation_staffs_on_reservation_id_and_staff_id ON public.reservation_staffs USING btree (reservation_id, staff_id);
 
 
 --
 -- Name: index_shop_menu_repeating_dates_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_shop_menu_repeating_dates_on_menu_id ON shop_menu_repeating_dates USING btree (menu_id);
+CREATE INDEX index_shop_menu_repeating_dates_on_menu_id ON public.shop_menu_repeating_dates USING btree (menu_id);
 
 
 --
 -- Name: index_shop_menu_repeating_dates_on_shop_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_shop_menu_repeating_dates_on_shop_id ON shop_menu_repeating_dates USING btree (shop_id);
+CREATE INDEX index_shop_menu_repeating_dates_on_shop_id ON public.shop_menu_repeating_dates USING btree (shop_id);
 
 
 --
 -- Name: index_shop_menu_repeating_dates_on_shop_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_shop_menu_repeating_dates_on_shop_id_and_menu_id ON shop_menu_repeating_dates USING btree (shop_id, menu_id);
+CREATE UNIQUE INDEX index_shop_menu_repeating_dates_on_shop_id_and_menu_id ON public.shop_menu_repeating_dates USING btree (shop_id, menu_id);
 
 
 --
 -- Name: index_shop_menus_on_shop_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_shop_menus_on_shop_id_and_menu_id ON shop_menus USING btree (shop_id, menu_id);
+CREATE UNIQUE INDEX index_shop_menus_on_shop_id_and_menu_id ON public.shop_menus USING btree (shop_id, menu_id);
 
 
 --
 -- Name: index_shop_staffs_on_shop_id_and_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_shop_staffs_on_shop_id_and_staff_id ON shop_staffs USING btree (shop_id, staff_id);
+CREATE UNIQUE INDEX index_shop_staffs_on_shop_id_and_staff_id ON public.shop_staffs USING btree (shop_id, staff_id);
 
 
 --
 -- Name: index_shops_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_shops_on_user_id ON shops USING btree (user_id);
+CREATE INDEX index_shops_on_user_id ON public.shops USING btree (user_id);
 
 
 --
 -- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_staff_accounts_on_owner_id ON staff_accounts USING btree (owner_id);
+CREATE INDEX index_staff_accounts_on_owner_id ON public.staff_accounts USING btree (owner_id);
 
 
 --
 -- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_staff_accounts_on_staff_id ON staff_accounts USING btree (staff_id);
+CREATE INDEX index_staff_accounts_on_staff_id ON public.staff_accounts USING btree (staff_id);
 
 
 --
 -- Name: index_staff_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_staff_accounts_on_user_id ON staff_accounts USING btree (user_id);
+CREATE INDEX index_staff_accounts_on_user_id ON public.staff_accounts USING btree (user_id);
 
 
 --
 -- Name: index_staff_menus_on_staff_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON staff_menus USING btree (staff_id, menu_id);
+CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON public.staff_menus USING btree (staff_id, menu_id);
 
 
 --
 -- Name: index_staffs_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_staffs_on_user_id ON staffs USING btree (user_id);
+CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
+
+
+--
+-- Name: index_users_on_authentication_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_authentication_token ON public.users USING btree (authentication_token);
 
 
 --
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_confirmation_token ON users USING btree (confirmation_token);
+CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btree (confirmation_token);
 
 
 --
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
 -- Name: index_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_reset_password_token ON users USING btree (reset_password_token);
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
 
 
 --
 -- Name: index_users_on_unlock_token; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_unlock_token ON users USING btree (unlock_token);
+CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
 
 
 --
 -- Name: jp_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX jp_name_index ON customers USING btree (user_id, phonetic_last_name, phonetic_first_name);
+CREATE INDEX jp_name_index ON public.customers USING btree (user_id, phonetic_last_name, phonetic_first_name);
 
 
 --
 -- Name: menu_reservation_setting_rules_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX menu_reservation_setting_rules_index ON menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
+CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
 
 
 --
 -- Name: reservation_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reservation_index ON reservations USING btree (shop_id, aasm_state, menu_id, start_time, ready_time);
+CREATE INDEX reservation_index ON public.reservations USING btree (shop_id, aasm_state, menu_id, start_time, ready_time);
 
 
 --
 -- Name: reservation_setting_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reservation_setting_index ON reservation_settings USING btree (user_id, start_time, end_time, day_type, days_of_week, day, nth_of_week);
+CREATE INDEX reservation_setting_index ON public.reservation_settings USING btree (user_id, start_time, end_time, day_type, days_of_week, day, nth_of_week);
 
 
 --
 -- Name: reservation_setting_menus_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX reservation_setting_menus_index ON reservation_setting_menus USING btree (reservation_setting_id, menu_id);
+CREATE INDEX reservation_setting_menus_index ON public.reservation_setting_menus USING btree (reservation_setting_id, menu_id);
 
 
 --
 -- Name: shop_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX shop_custom_schedules_index ON custom_schedules USING btree (shop_id, start_time, end_time);
+CREATE INDEX shop_custom_schedules_index ON public.custom_schedules USING btree (shop_id, start_time, end_time);
 
 
 --
 -- Name: shop_working_time_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX shop_working_time_index ON business_schedules USING btree (shop_id, business_state, day_of_week, start_time, end_time);
+CREATE INDEX shop_working_time_index ON public.business_schedules USING btree (shop_id, business_state, day_of_week, start_time, end_time);
 
 
 --
 -- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_account_email_index ON staff_accounts USING btree (owner_id, email);
+CREATE INDEX staff_account_email_index ON public.staff_accounts USING btree (owner_id, email);
 
 
 --
 -- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_account_index ON staff_accounts USING btree (owner_id, user_id);
+CREATE INDEX staff_account_index ON public.staff_accounts USING btree (owner_id, user_id);
 
 
 --
 -- Name: staff_account_token_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_account_token_index ON staff_accounts USING btree (token);
+CREATE INDEX staff_account_token_index ON public.staff_accounts USING btree (token);
 
 
 --
 -- Name: staff_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_custom_schedules_index ON custom_schedules USING btree (staff_id, start_time, end_time);
+CREATE INDEX staff_custom_schedules_index ON public.custom_schedules USING btree (staff_id, start_time, end_time);
 
 
 --
 -- Name: staff_working_time_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_working_time_index ON business_schedules USING btree (shop_id, staff_id, full_time, business_state, day_of_week, start_time, end_time);
+CREATE INDEX staff_working_time_index ON public.business_schedules USING btree (shop_id, staff_id, full_time, business_state, day_of_week, start_time, end_time);
 
 
 --
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY profiles
-    ADD CONSTRAINT fk_rails_e424190865 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE ONLY public.profiles
+    ADD CONSTRAINT fk_rails_e424190865 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1932,6 +1950,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170821073539'),
 ('20170827131921'),
 ('20171118075544'),
-('20171127134653');
+('20171127134653'),
+('20180120080732'),
+('20180413110627'),
+('20180413153332');
 
 

@@ -49,6 +49,6 @@ class Settings::ProfilesController < SettingsController
   end
 
   def profile_params
-    params.require(:profile).permit(:last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :company_name, :zip_code, :address, :website, :phone_number)
+    params.require(:profile).permit(:last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :company_name, :zip_code, :address, :website, :phone_number, :company_zip_code, :company_address, :company_phone_number)
   end
 end
