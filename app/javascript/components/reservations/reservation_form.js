@@ -634,7 +634,7 @@ UI.define("Reservation.Form", function() {
                       dataName="start_time_date_part"
                       name="start_time_date_part"
                       handleChange={this._handleChange}
-                      className={this._dateErrors().length == 0 ? "" : "field-error"}
+                      className={this._dateErrors().length == 0 ? "" : "field-warning"}
                     />
                     {
                       this.state.start_time_restriction && this.state.end_time_restriction ? (
