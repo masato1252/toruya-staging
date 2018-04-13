@@ -12,6 +12,18 @@
       <dt><%= t("common.name") %></dt>
       <dd><%= @profile.name %></dd>
     </dl>
+    <dl>
+      <dt><%= Profile.human_attribute_name(:zip_code) %></dt>
+      <dd><%= @profile.zip_code %></dd>
+    </dl>
+    <dl>
+      <dt><%= Profile.human_attribute_name(:address) %></dt>
+      <dd><%= @profile.address %></dd>
+    </dl>
+    <dl>
+      <dt><%= Profile.human_attribute_name(:phone_number) %></dt>
+      <dd><%= @profile.phone_number %></dd>
+    </dl>
   </div>
 
   <h3>企業情報</h3>
@@ -22,15 +34,15 @@
     </dl>
     <dl>
       <dt><%= Profile.human_attribute_name(:zip_code) %></dt>
-      <dd><%= @profile.zip_code %></dd>
+      <dd><%= @profile.company_zip_code %></dd>
     </dl>
     <dl>
-      <dt><%= Profile.human_attribute_name(:adtress) %></dt>
-      <dd><%= @profile.address %></dd>
+      <dt><%= Profile.human_attribute_name(:address) %></dt>
+      <dd><%= @profile.company_address %></dd>
     </dl>
     <dl>
       <dt><%= Profile.human_attribute_name(:phone_number) %></dt>
-      <dd><%= @profile.phone_number %></dd>
+      <dd><%= @profile.company_phone_number %></dd>
     </dl>
     <dl>
       <dt>Website</dt>
