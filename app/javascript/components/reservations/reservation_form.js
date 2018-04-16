@@ -108,6 +108,7 @@ UI.define("Reservation.Form", function() {
       var params = $.param({
         shop_id: this.props.shopId,
         from_reservation: true,
+        from_member: this.props.fromMember,
         reservation_id: this.props.reservation.id,
         menu_id: this.state.menu_id,
         memo: this.state.memo,
