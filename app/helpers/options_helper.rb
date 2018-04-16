@@ -118,7 +118,7 @@ module OptionsHelper
         shop: r.shop.display_name,
         state: r.aasm_state,
         shop_id: r.shop_id,
-        customers: r.customers.map { |r| { id: r.id, name: r.name } },
+        customers: r.customers.map { |c| { id: c.id, name: c.name, user_id: c.user_id } },
         customers_sentence: customer_names_sentence,
         staffs: sentences[:staffs_sentence],
         deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,

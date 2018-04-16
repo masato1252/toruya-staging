@@ -76,7 +76,7 @@ UI.define("Customers.CustomerReservationsView", function() {
                         <a
                           key={customer.id}
                           className="customer-link"
-                          href={`/shops/${reservation.shopId}/customers?customer_id=${customer.id}`}>
+                          href={`/users/${customer.userId}/customers?customer_id=${customer.id}`}>
                           {customer.name}
                         </a>
                       )
