@@ -23,6 +23,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  level                  :integer          default("free"), not null
+#  authentication_token   :string(30)
 #
 
 class User < ApplicationRecord
