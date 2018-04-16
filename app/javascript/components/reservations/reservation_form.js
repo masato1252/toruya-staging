@@ -185,8 +185,10 @@ UI.define("Reservation.Form", function() {
     };
 
     _selected_staffs = () => {
-      return _.filter(this.state.staff_options, (staff) => {
-        return _.contains(this.state.staff_ids, `${staff.value}`)
+      return this.state.staff_ids.map((staff_id) => {
+        return _.filter(this.state.staff_options, (staff) => {
+          return staff_id === `${staff.value}`
+        })
       })
     };
 
@@ -286,7 +288,7 @@ UI.define("Reservation.Form", function() {
     _handleStaffChange = (event) => {
       if (event) { event.preventDefault(); }
 
-      var selected_staff_ids = $("[data-name='staff_id']").map(function() { return `${$(this).val()}` })
+      var selected_staff_ids = Array.prototype.slice.call($("[data-name='staff_id']").map(function() { return `${$(this).val()}` }))
 
       this.setState({ staff_ids: selected_staff_ids }, function() {
         if (this.props.memberMode) {
