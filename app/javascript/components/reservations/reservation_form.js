@@ -186,11 +186,13 @@ UI.define("Reservation.Form", function() {
     };
 
     _selected_staffs = () => {
-      return this.state.staff_ids.map((staff_id) => {
+      let selected_staffs = this.state.staff_ids.map((staff_id) => {
         return _.filter(this.state.staff_options, (staff) => {
           return staff_id === `${staff.value}`
         })
       })
+
+      return _.flatten(selected_staffs)
     };
 
     _isValidReservationTime = () => {
