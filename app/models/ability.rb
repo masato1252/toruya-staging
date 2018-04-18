@@ -17,6 +17,7 @@ class Ability
       # can :swith_staffs_selector, User
       # can :manage, :filter
       # can :manage, :saved_filter
+      # can :manage_userself_holiday_permission
 
       if super_user.free_level?
         cannot :manage, :preset_filter
@@ -68,6 +69,8 @@ class Ability
       can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
       end
+
+      can :manage, "userself_holiday_permission"
     elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
       can :read, Shop do |shop|
@@ -86,7 +89,7 @@ class Ability
         current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
       end
 
-      can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
+      can :manage, "userself_holiday_permission" do
         current_user_staff.staff_holiday_permission
       end
     end
@@ -95,11 +98,15 @@ class Ability
   private
 
   def admin_level
-    @shop_owner_level ||= current_user == super_user
+    @shop_owner_level = current_user == super_user
   end
 
   def manager_level
-    @manager_level ||= current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
+    @manager_levels ||= {}
+
+    return @manager_levels[super_user] if @manager_levels[super_user]
+
+    @manager_levels[super_user] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
   end
 
   def current_user_staff_account

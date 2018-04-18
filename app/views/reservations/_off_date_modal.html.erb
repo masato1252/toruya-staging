@@ -4,7 +4,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h4 class="modal-title" id="myModalLabel">
-          <%= staff.name %>の休暇を追加
+          休暇/予定を追加
         </h4>
       </div>
       <%= form_tag custom_schedules_path do %>
@@ -15,14 +15,19 @@
               name="custom_schedules[][id]"
               value="<%= local_assigns[:custom_schedule_id] %>"
             />
+            <input
+              type="hidden"
+              name="custom_schedules[][reference_id]"
+              value="<%= SecureRandom.hex(16) %>"
+            />
             <%= react_component("reservations/datetime_fields", {
               custom_schedule_id: local_assigns[:custom_schedule_id],
-              staff_id: staff.id,
+              staff_id: staff.try(:id),
               open: false,
               start_time_date_part: date.to_s,
               start_time_time_part: local_assigns[:start_time_time_part] || "00:00",
               end_time_time_part: local_assigns[:end_time_time_part] || "23:59",
-              calendarfield_prefix: "temp_leaving_schedule"
+              calendarfield_prefix: local_assigns[:calendarfield_prefix] || "temp_leaving_schedule"
             }) %>
             <div class="closeReason">
               <input

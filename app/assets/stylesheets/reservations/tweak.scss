@@ -77,3 +77,11 @@
     display: inline-block;
   }
 }
+
+#new-reservations-modal {
+  .shops-list {
+    .shop-cell {
+      margin: 12px 0;
+    }
+  }
+}

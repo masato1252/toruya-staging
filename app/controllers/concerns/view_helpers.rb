@@ -12,6 +12,7 @@ module ViewHelpers
     helper_method :working_shop_options
     helper_method :working_shop_owners
     helper_method :owning_shop_options
+    helper_method :staffs_have_holiday_permission
   end
 
   def shops
@@ -59,8 +60,18 @@ module ViewHelpers
     @current_user_staff_account ||= current_user.current_staff_account(super_user)
   end
 
-  def working_shop_owners
-    @working_shop_owners ||= current_user.staff_accounts.active.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
+  def working_shop_owners(include_user_own: false)
+    @working_shop_owners ||= {}
+
+    return @working_shop_owners[include_user_own] if @working_shop_owners[include_user_own]
+
+    staff_account_scope = current_user.staff_accounts.active
+
+    if include_user_own
+      @working_shop_owners[include_user_own] = staff_account_scope.includes(:owner).map(&:owner)
+    else
+      @working_shop_owners[include_user_own] = staff_account_scope.where.not(owner_id: current_user.id).includes(:owner).map(&:owner)
+    end
   end
 
   def working_shop_options(include_user_own: false)
@@ -85,5 +96,20 @@ module ViewHelpers
     @owning_shop_options ||= current_user.shops.order("id").map do |shop|
       ::Option.new(shop: shop)
     end
+  end
+
+  # the shop options allow "user" to add holidays
+  def staffs_have_holiday_permission
+    return @staffs_have_holiday_permission if defined?(@staffs_have_holiday_permission)
+
+    @staffs_have_holiday_permission = []
+    owners = working_shop_owners(include_user_own: true)
+
+    owners.each do |owner|
+      if Ability.new(current_user, owner).can?(:manage, "userself_holiday_permission")
+        @staffs_have_holiday_permission << current_user.current_staff(owner)
+      end
+    end
+    @staffs_have_holiday_permission
   end
 end

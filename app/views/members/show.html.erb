@@ -17,6 +17,19 @@
                           reservation_days: @reservation_dates.map(&:day)
                         },
                         { id: "custom-calendar", class: "clearfix" }) %>
+    <div class="staffDashboard">
+      <div class="edit-worktime">
+          <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="BTNyellow">
+            予約を追加
+          </a>
+
+        <% if staffs_have_holiday_permission.present? %>
+          <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+            休暇/予定を追加
+          </a>
+        <% end %>
+      </div>
+    </div>
   </div>
   <div id="resList" class="contBody">
     <dl class="tableTTL">
@@ -35,4 +48,7 @@
       <div><span class="reservation-state pending"></span>承認待ち</div>
     </div>
   </div>
+
+  <%= render "reservations/new_modal", date: @date %>
+  <%= render "reservations/off_date_modal", staff: nil, date: @date %>
 </div>

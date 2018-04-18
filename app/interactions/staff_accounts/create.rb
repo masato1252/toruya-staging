@@ -17,7 +17,7 @@ module StaffAccounts
         staff_account.state = :pending
       end
 
-      if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user)
+      if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user) || (staff_account.user && staff_account.pending?)
         staff_account.user = User.find_by(email: staff_account.email)
         staff_account.state = :pending unless staff_account.disabled?
         staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")

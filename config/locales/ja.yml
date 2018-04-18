@@ -288,7 +288,7 @@ ja:
       start_label: 出勤予定
       end_label: 退勤予定
       reason_of_closing: 休暇理由
-      closing_reason: 休暇理由（オプション）
+      closing_reason: 休暇理由/予定内容
       setting_title: 勤務日時の設定権限
       full_time_permission: スタッフによる常勤／非常勤の設定変更を許可
       regular_working_time_permission: スタッフによる固定勤務の設定変更を許可

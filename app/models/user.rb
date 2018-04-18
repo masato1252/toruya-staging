@@ -68,11 +68,19 @@ class User < ApplicationRecord
   end
 
   def current_staff_account(super_user)
-    @current_staff_account ||= super_user.owner_staff_accounts.find_by(user_id: self.id)
+    @current_staff_accounts ||= {}
+
+    return @current_staff_accounts[super_user] if @current_staff_accounts[super_user]
+
+    @current_staff_accounts[super_user] = super_user.owner_staff_accounts.find_by(user_id: self.id)
   end
 
   def current_staff(super_user)
-    @current_staff ||= current_staff_account(super_user).try(:staff)
+    @current_staffs ||= {}
+
+    return @current_staffs[super_user] if @current_staffs[super_user]
+
+    @current_staffs[super_user] = current_staff_account(super_user).try(:staff)
   end
 
   private

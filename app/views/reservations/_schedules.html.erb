@@ -131,6 +131,7 @@
         custom_schedule_id: schedule.source.id,
         start_time_time_part: schedule.source.start_time.to_s(:time),
         end_time_time_part: schedule.source.end_time.to_s(:time),
+        calendarfield_prefix: "temp_leaving_schedule_#{schedule.source.id}",
         reason: schedule.reason
       %>
     <% end %>
