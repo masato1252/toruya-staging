@@ -27,7 +27,7 @@
               start_time_date_part: date.to_s,
               start_time_time_part: local_assigns[:start_time_time_part] || "00:00",
               end_time_time_part: local_assigns[:end_time_time_part] || "23:59",
-              calendarfield_prefix: "temp_leaving_schedule"
+              calendarfield_prefix: local_assigns[:calendarfield_prefix] || "temp_leaving_schedule"
             }) %>
             <div class="closeReason">
               <input
