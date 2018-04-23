@@ -18,7 +18,11 @@ class Settings::ProfilesController < SettingsController
     @profile = super_user.build_profile(profile_params)
 
     if @profile.save
-      redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.create_successfully_message")
+      if params[:from_staff_account].present?
+        redirect_to member_path
+      else
+        redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.create_successfully_message")
+      end
     else
       render :new
     end
