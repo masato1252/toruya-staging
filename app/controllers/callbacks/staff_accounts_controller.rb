@@ -10,6 +10,7 @@ class Callbacks::StaffAccountsController < ActionController::Base
       owner = result[:owner]
 
       if outcome.result[:reset_password_token]
+        # New User
         remember_me(user)
         sign_in(user)
 
@@ -18,7 +19,8 @@ class Callbacks::StaffAccountsController < ActionController::Base
 
         redirect_to new_settings_user_profile_path(user, from_staff_account: true), notice: "Set up your account"
       else
-        redirect_back(fallback_location: settings_path(outcome.result[:user]), notice: "Connected your staff account.")
+        # existing user
+        redirect_back(fallback_location: member_path), notice: "Connected your staff account.")
       end
     else
       redirect_to member_path, alert: outcome.errors.full_messages.first
