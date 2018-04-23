@@ -133,7 +133,7 @@ module OptionsHelper
   end
 
   def react_attributes(array)
-    array.map { |a| react_attribute(a) }
+    array.map { |a| react_attribute(a.attributes) }
   end
 
   def contact_group_options
