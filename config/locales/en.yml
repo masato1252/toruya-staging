@@ -260,8 +260,8 @@ en:
       info_label: Display Name
       info_1: This is the list of existing staffs.
       info_2: Toruya allows you to make reservation based on these settings.
-      new_info_1: Please enter staffs informations here.
-      new_info_2: Toruya will accept reservation based on this setting.
+      new_info_1: Please set up staff account here..
+      new_info_2: You can allow your staff to manage both your shop reservation and personal schedule on Toruya all by own.
       name: Name
       shop_label: Belonging Shop
       delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
@@ -274,6 +274,8 @@ en:
       capability: Capability
       staff_capability: Staff
       manager_capability: Manager
+      gmail_hint: Staff account needs to use a gmail account.
+
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.
