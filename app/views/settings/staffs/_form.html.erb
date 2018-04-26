@@ -2,7 +2,7 @@
   <h2><%= Staff.model_name.human %> − <%= t("settings.staff.new_title") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
+  <p><%= t("settings.staff.new_info_1") %><%= t("settings.staff.new_info_2") %></p>
 </div>
 
 <div id="settingForm">
@@ -10,6 +10,7 @@
     <%= render "settings/form_errors", object: staff %>
 
     <h3><%= t("settings.staff.info_label") %><strong>必須項目</strong></h3>
+    <div>※以下の店舗で別名を使用する場合は変更してください。</div>
     <div id="staffInfo" class="formRow">
       <dl>
         <dt>氏名</dt>
@@ -29,9 +30,6 @@
           <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
         </dd>
       </dl>
-      <div>
-          ※以下の店舗で別名を使用する場合は変更してください。
-      </div>
     </div>
 
     <% if can? :manage, Settings %>
