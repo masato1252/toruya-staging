@@ -142,7 +142,7 @@ UI.define("Settings.Staff.Formfields", function() {
     render() {
       return (
         <div>
-          <h3>{this.props.staffAccountTitle}<strong>必須項目</strong></h3>
+          <h3>{this.props.staffAccountTitle}</h3>
           <div>
             {this.props.staffAccountGmailHint}
           </div>

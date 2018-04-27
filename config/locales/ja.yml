@@ -262,8 +262,8 @@ ja:
       info_label: 表示名
       info_1: 設定されたスタッフ一覧です。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
-      new_info_1: スタッフを設定することで、
-      new_info_2: あなたの店舗とスタッフ自身のスケジュールをスタッフ本人が管理できるようになります。
+      new_info_1: スタッフを設定します。
+      new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
@@ -276,7 +276,7 @@ ja:
       capability: 権限
       staff_capability: スタッフ
       manager_capability: 管理者
-      gmail_hint: スタッフアカウントにはGメールアカウントを使用してください。
+      gmail_hint: Ｇメールでスタッフアカウントを設定することで、あなたの店舗とスタッフ自身のスケジュールをスタッフ本人が管理できるようになります。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
