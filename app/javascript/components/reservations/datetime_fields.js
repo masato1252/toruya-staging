@@ -37,7 +37,7 @@ UI.define("Reservation.DatetimeFields", function() {
     render() {
       return (
         <div className="datetime-field">
-          <input type="hidden" name="staff_id" value={this.props.staffId} />
+          <input type="hidden" name="staff_id" value={this.props.staffId || ""} />
           <input
             type="hidden"
             name="custom_schedules[][open]"
@@ -57,7 +57,7 @@ UI.define("Reservation.DatetimeFields", function() {
               type="time"
               name="custom_schedules[][start_time_time_part]"
               data-name="startTimeTimePart"
-              value={this.state.startTimeTimePart}
+              value={this.state.startTimeTimePart || ""}
               size="20"
               onChange={this._handleChange} />
           </dd>
@@ -67,7 +67,7 @@ UI.define("Reservation.DatetimeFields", function() {
               type="time"
               name="custom_schedules[][end_time_time_part]"
               data-name="endTimeTimePart"
-              value={this.state.endTimeTimePart}
+              value={this.state.endTimeTimePart || ""}
               size="20"
               onChange={this._handleChange} />
           </dd>
