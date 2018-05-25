@@ -7,7 +7,7 @@ class Callbacks::StaffAccountsController < ActionController::Base
         sign_out
         reset_session
         session[:super_user_id_from_staff_account] = outcome.result[:owner].id
-        redirect_to sign_in_path
+        redirect_to new_user_session_path
       else
         redirect_back(fallback_location: settings_path(current_user), notice: "Connected your staff account.")
       end
