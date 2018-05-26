@@ -20,6 +20,7 @@
                         staff_ids: reservation.staff_ids.map(&:to_s),
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
+                      current_user_staff_id: current_user.current_staff(super_user).try(:id),
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
                       shop_id: shop.id,
                       shop_name: shop.display_name,

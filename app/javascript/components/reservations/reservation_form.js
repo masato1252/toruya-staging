@@ -711,11 +711,11 @@ UI.define("Reservation.Form", function() {
                   <dd className="input">
                     {this.renderStaffSelects()}
                     {
-                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
+                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 && _.contains(this.state.staff_ids, this.props.currentUserStaffId) && (
                         <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
                           この時間を出勤にする
                         </a>
-                      ) : null
+                      )
                     }
                   </dd>
                 </dl>
@@ -815,7 +815,7 @@ UI.define("Reservation.Form", function() {
               </li>
             </ul>
           </footer>
-          {this.state.staff_ids[this.state.staff_ids.length - 1] ? (
+          {this.state.staff_ids[this.state.staff_ids.length - 1] && _.contains(this.state.staff_ids, this.props.currentUserStaffId) && (
             <UI.WorkingSchedulesModal
               formAuthenticityToken={this.props.formAuthenticityToken}
               open={true}
@@ -829,7 +829,7 @@ UI.define("Reservation.Form", function() {
               callback={this._handleStaffChange}
               remote="true"
             />
-          ) : null}
+          )}
         </div>
       );
     }
