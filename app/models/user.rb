@@ -52,6 +52,12 @@ class User < ApplicationRecord
   has_many :customer_query_filters
   has_many :reservation_query_filters
   has_many :filtered_outcomes
+  has_one :subscription
+  has_many :subscription_charges do
+    def last_completed
+      where(state: :completed).order("updated_at").last
+    end
+  end
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

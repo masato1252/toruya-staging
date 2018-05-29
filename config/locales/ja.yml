@@ -598,6 +598,10 @@ ja:
   active_interaction:
     errors:
       models:
+        plans/subscribe:
+          attributes:
+            plan:
+              already_subscribe_the_same_plan: "^You already subscribe this plan."
         shops/staffs_working_schedules:
           attributes:
             date:

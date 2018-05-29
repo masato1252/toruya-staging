@@ -1,0 +1,89 @@
+# == Schema Information
+#
+# Table name: subscriptions
+#
+#  id           :integer          not null, primary key
+#  plan_id      :integer
+#  user_id      :integer
+#  status       :integer
+#  billing_date :date
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+class Subscription < ApplicationRecord
+  END_OF_MONTH_CHARGE_DAY = 28
+
+  belongs_to :plan, required: false
+  belongs_to :user
+
+  enum status: {
+    pending: 0,
+    active: 1,
+    pastdue: 2
+  }
+
+  scope :recurring_chargeable_at, ->(date) {
+    return none if date < today
+
+    # Exclude when creation and query date are the same date
+    scope = with_state(:active).where("DATE(created_at) != ?", date)
+
+    if date == date.end_of_month
+      scope.where("recurring_day >= ?", date.day)
+    else
+      scope.where(recurring_day: date.day)
+    end
+  }
+
+  def self.today
+    # Use default time zone(Tokyo) currently
+    Time.now.in_time_zone(Rails.configuration.time_zone).to_date
+  end
+
+  def self.calculate_recurring_day(start_date)
+    [start_date.day, END_OF_MONTH_CHARGE_DAY].min
+  end
+
+  def set_recurring_day
+    self.recurring_day = self.class.calculate_recurring_day(self.class.today)
+    self.save!
+  end
+
+  def chargeable?(options = {})
+    if options[:manual]
+      MANUAL_CHARGEABLE_STATES.include?(state)
+    else
+      CHARGEABLE_STATES.include?(state) && self.class.today >= next_charge_date
+    end
+  end
+
+  def next_charge_date
+    if charges.last_completed
+      if (count = retries_count) && count < RENEWAL_RETRY_DAYS.count
+        scheduled_recurring_date.advance(days: RENEWAL_RETRY_DAYS[count])
+      else
+        scheduled_recurring_date
+      end
+    else
+      self.class.today
+    end
+  end
+
+  # Find charge date for a given month
+  def recurring_date(year, month)
+    Date.new(year, month, recurring_day)
+  end
+
+  def scheduled_recurring_date
+    date = user.subscription_charges.last_completed.charge_date.next_month
+    recurring_date(date.year, date.month)
+  end
+
+  # Manual retry charging subscription
+  def manual_retry_charge!(params)
+    create_charge!(charge_date: scheduled_recurring_date, manual: true) do |charge|
+      charge.manual_charge!(params)
+    end
+  end
+end
