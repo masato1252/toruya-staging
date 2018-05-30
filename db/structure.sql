@@ -494,9 +494,7 @@ ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
 CREATE TABLE public.plans (
     id bigint NOT NULL,
     "position" integer,
-    level integer,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    level integer
 );
 
 

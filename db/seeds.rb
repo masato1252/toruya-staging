@@ -1,3 +1,5 @@
+require "seeders/plan"
+
 def create(*args)
   FactoryBot.create(*args) do |obj|
     yield obj if block_given?
@@ -37,3 +39,5 @@ create(:user, email: "superadmin@email.com", password: "password123", confirmed_
     end
   end
 end
+
+Seeders::Plan.seed!
