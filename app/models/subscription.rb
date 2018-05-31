@@ -2,25 +2,31 @@
 #
 # Table name: subscriptions
 #
-#  id           :integer          not null, primary key
-#  plan_id      :integer
-#  user_id      :integer
-#  status       :integer
-#  billing_date :date
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
+#  id                 :integer          not null, primary key
+#  plan_id            :integer
+#  next_plan_id       :integer
+#  user_id            :integer
+#  stripe_customer_id :string
+#  recurring_day      :integer
+#  expired_date       :date
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
 #
 
 class Subscription < ApplicationRecord
+  CHARGEABLE_STATES = %w(pending active past_due)
+  MANUAL_CHARGEABLE_STATES = %w(pending past_due)
   END_OF_MONTH_CHARGE_DAY = 28
+  FREE_PLAN_ID = 1
 
   belongs_to :plan, required: false
+  belongs_to :next_plan, class_name: "Plan"
   belongs_to :user
 
   enum status: {
     pending: 0,
     active: 1,
-    pastdue: 2
+    past_due: 2
   }
 
   scope :recurring_chargeable_at, ->(date) {
@@ -36,6 +42,9 @@ class Subscription < ApplicationRecord
     end
   }
 
+  # scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
+  # scope :charge_free, -> { where(plan_id: FREE_PLAN_ID) }
+  #
   def self.today
     # Use default time zone(Tokyo) currently
     Time.now.in_time_zone(Rails.configuration.time_zone).to_date
@@ -47,24 +56,17 @@ class Subscription < ApplicationRecord
 
   def set_recurring_day
     self.recurring_day = self.class.calculate_recurring_day(self.class.today)
-    self.save!
+    save!
   end
 
-  def chargeable?(options = {})
-    if options[:manual]
-      MANUAL_CHARGEABLE_STATES.include?(state)
-    else
-      CHARGEABLE_STATES.include?(state) && self.class.today >= next_charge_date
-    end
+  def set_expire_date
+    self.expired_date = next_charge_date.next_day
+    save!
   end
 
   def next_charge_date
-    if charges.last_completed
-      if (count = retries_count) && count < RENEWAL_RETRY_DAYS.count
-        scheduled_recurring_date.advance(days: RENEWAL_RETRY_DAYS[count])
-      else
-        scheduled_recurring_date
-      end
+    if user.subscription_charges.last_completed
+      scheduled_recurring_date
     else
       self.class.today
     end
@@ -78,6 +80,10 @@ class Subscription < ApplicationRecord
   def scheduled_recurring_date
     date = user.subscription_charges.last_completed.charge_date.next_month
     recurring_date(date.year, date.month)
+  end
+
+  def chargeable?(options = {})
+    self.class.today >= next_charge_date
   end
 
   # Manual retry charging subscription

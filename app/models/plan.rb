@@ -2,11 +2,9 @@
 #
 # Table name: plans
 #
-#  id         :integer          not null, primary key
-#  position   :integer
-#  level      :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id       :integer          not null, primary key
+#  position :integer
+#  level    :integer
 #
 
 class Plan < ApplicationRecord
@@ -26,5 +24,12 @@ class Plan < ApplicationRecord
 
   def cost
     COST[Money.default_currency.id][level]
+  end
+
+  # -1: upgrade
+  #  0: same level
+  #  1: downgrade
+  def become(plan)
+    Plan.levels[level] <=> Plan.levels[plan.level]
   end
 end

@@ -1102,10 +1102,11 @@ ALTER SEQUENCE public.subscription_charges_id_seq OWNED BY public.subscription_c
 CREATE TABLE public.subscriptions (
     id bigint NOT NULL,
     plan_id bigint,
+    next_plan_id integer,
     user_id bigint,
     stripe_customer_id character varying,
-    status integer,
     recurring_day integer,
+    expired_date date,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

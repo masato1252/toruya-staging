@@ -8,6 +8,8 @@
 #  amount_cents    :decimal(, )
 #  amount_currency :string
 #  state           :integer
+#  charge_date     :date
+#  manual          :boolean          default(FALSE), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
