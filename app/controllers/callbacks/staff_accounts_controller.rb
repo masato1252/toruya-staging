@@ -11,8 +11,8 @@ class Callbacks::StaffAccountsController < ActionController::Base
 
       if outcome.result[:reset_password_token]
         # New User
-        remember_me(user)
-        sign_in(user)
+        sign_out
+        reset_session
 
         # uncomment this if we need to take password page back
         # session[:super_user_id_from_staff_account] = owner.id
