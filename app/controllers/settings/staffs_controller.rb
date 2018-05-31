@@ -70,7 +70,7 @@ class Settings::StaffsController < SettingsController
       @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
-    if outcome.valid? && staff_account_outcome.valid?
+    if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
       if can?(:manage, Settings)
         redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else
