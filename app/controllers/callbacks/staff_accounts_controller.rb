@@ -11,6 +11,7 @@ class Callbacks::StaffAccountsController < ActionController::Base
 
       if outcome.result[:reset_password_token]
         # New User
+        # Don't sign in for new user we need users walkthrough google login flow.
         sign_out
         reset_session
 
