@@ -16,11 +16,12 @@
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
-    <% staffs.each do |staff| %>
+    <% @staffs.each do |staff| %>
       <dl>
         <dt class="rowTTL"><%= link_to staff.name, edit_settings_user_staff_path(super_user, staff) %></dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
+          <%= "pending" unless staff.active? %>
           <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
           <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>
         </dd>

@@ -36,6 +36,11 @@ class Staff < ApplicationRecord
   validates :last_name, presence: true
   validates :first_name, presence: true
 
-  scope :active, -> { where(deleted_at: nil) }
+  scope :active, -> { where(deleted_at: nil).joins(:staff_account) }
   scope :deleted, -> { where.not(deleted_at: nil) }
+  scope :undeleted, -> { where(deleted_at: nil) }
+
+  def active?
+    !deleted_at && staff_account
+  end
 end

@@ -5,6 +5,11 @@ class Settings::StaffsController < SettingsController
   # GET /staffs
   # GET /staffs.json
   def index
+    @staffs = if can?(:manage, :all)
+                super_user.staffs.undeleted.includes(:staff_account).order(:id)
+              else
+                super_user.staffs.undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+              end
   end
 
   # GET /staffs/1
