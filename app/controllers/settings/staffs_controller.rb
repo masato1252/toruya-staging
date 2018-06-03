@@ -19,17 +19,8 @@ class Settings::StaffsController < SettingsController
 
   # GET /staffs/new
   def new
-    if super_user.staffs.exists?
-      @staff = super_user.staffs.new
-    else
-      @first_staff = true
-      @staff = super_user.staffs.new(
-        last_name: super_user.profile.try(:last_name),
-        first_name: super_user.profile.try(:first_name),
-        phonetic_last_name: super_user.profile.try(:phonetic_last_name),
-        phonetic_first_name: super_user.profile.try(:phonetic_first_name)
-      )
-    end
+    @staff = super_user.staffs.new
+    @staff_account = staff.build_staff_account(owner: super_user, level: :staff)
   end
 
   # GET /staffs/1/edit

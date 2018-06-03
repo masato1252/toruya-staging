@@ -51,13 +51,16 @@
             )
           end
         %>
+
         <%= react_component "settings/staffs/staff_form", {
           shopLabel: t("settings.staff.shop_label"),
+          is_staff_persisted: !staff.new_record?,
           staff_shop_options: staff_shop_options,
           staff_account_title: t("settings.staff_account.info_title"),
           staff_account_email_label: t("settings.staff_account.email"),
-          staff_account_email: @staff_account.try(:email) || (@first_staff ? super_user.email : nil),
-          staff_account_level: @staff_account.try(:level) || (@first_staff ? "manager" : nil),
+          staff_account_email: @staff_account&.email,
+          staff_account_level: @staff_account&.level || "staff",
+          staff_account_state: staff.active?,
           staff_account_email_placeholder: t("settings.staff_account.email"),
           staff_account_capability_label: t("settings.staff_account.capability"),
           staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
