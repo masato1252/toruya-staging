@@ -276,6 +276,7 @@ ja:
       capability: 権限
       staff_capability: スタッフ
       manager_capability: 管理者
+      gmail_hint: Ｇメールでスタッフアカウントを設定することで、あなたの店舗とスタッフ自身のスケジュールをスタッフ本人が管理できるようになります。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル

@@ -274,6 +274,8 @@ en:
       capability: Capability
       staff_capability: Staff
       manager_capability: Manager
+      gmail_hint: By setting a gmail account as a staff account, you can allow your staff to manage both your shop reservation and personal schedule on Toruya all by own.
+
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.

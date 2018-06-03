@@ -143,6 +143,9 @@ UI.define("Settings.Staff.Formfields", function() {
       return (
         <div>
           <h3>{this.props.staffAccountTitle}<strong>必須項目</strong></h3>
+          <div>
+            {this.props.staffAccountGmailHint}
+          </div>
           <div id="staffAccount" className="formRow">
             <dl>
               <dt>{this.props.staffAccountEmailLabel}</dt>
@@ -153,6 +156,12 @@ UI.define("Settings.Staff.Formfields", function() {
                   id="staff_account_email"
                   defaultValue={this.props.staffAccountEmail}
                   placeholder={this.props.staffAccountEmailLabel} size="40" />
+                  {
+                    this.props.isStaffPersisted && (
+                      this.props.staffAccountState ? <span class="label label-success">Active</span> :
+                        <span class="label label-warning">Pending</span>
+                    )
+                  }
               </dd>
             </dl>
             <dl>

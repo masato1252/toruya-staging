@@ -5,6 +5,11 @@ class Settings::StaffsController < SettingsController
   # GET /staffs
   # GET /staffs.json
   def index
+    @staffs = if can?(:manage, :all)
+                super_user.staffs.undeleted.includes(:staff_account).order(:id)
+              else
+                super_user.staffs.undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+              end
   end
 
   # GET /staffs/1
@@ -14,17 +19,8 @@ class Settings::StaffsController < SettingsController
 
   # GET /staffs/new
   def new
-    if super_user.staffs.exists?
-      @staff = super_user.staffs.new
-    else
-      @first_staff = true
-      @staff = super_user.staffs.new(
-        last_name: super_user.profile.try(:last_name),
-        first_name: super_user.profile.try(:first_name),
-        phonetic_last_name: super_user.profile.try(:phonetic_last_name),
-        phonetic_first_name: super_user.profile.try(:phonetic_first_name)
-      )
-    end
+    @staff = super_user.staffs.new
+    @staff_account = staff.build_staff_account(owner: super_user, level: :staff)
   end
 
   # GET /staffs/1/edit
@@ -70,7 +66,7 @@ class Settings::StaffsController < SettingsController
       @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
-    if outcome.valid? && staff_account_outcome.valid?
+    if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
       if can?(:manage, Settings)
         redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else

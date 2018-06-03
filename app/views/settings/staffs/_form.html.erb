@@ -10,6 +10,7 @@
     <%= render "settings/form_errors", object: staff %>
 
     <h3><%= t("settings.staff.info_label") %><strong>必須項目</strong></h3>
+    <div>※以下の店舗で別名を使用する場合は変更してください。</div>
     <div id="staffInfo" class="formRow">
       <dl>
         <dt>氏名</dt>
@@ -29,49 +30,51 @@
           <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
         </dd>
       </dl>
-      <div>
-          ※以下の店舗で別名を使用する場合は変更してください。
-      </div>
     </div>
 
-    <% if can? :manage, Settings %>
-      <%
-        shop_staffs = staff.shop_staffs.to_a
-        staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
+    <% if !staff.staff_account.try(:owner?) %>
+      <% if can? :manage, Settings %>
+        <%
+          shop_staffs = staff.shop_staffs.to_a
+          staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
 
-        staff_shop_options = shops.map do |shop|
-          shop_staff = shop_staffs.find { |shop_staff| shop_staff.shop_id == shop.id }
+          staff_shop_options = shops.map do |shop|
+            shop_staff = shop_staffs.find { |shop_staff| shop_staff.shop_id == shop.id }
 
-          ::Option.new(
-            shop_id: shop.id,
-            name: shop.name,
-            work_here: @first_staff ? true : shop_staff.present?,
-            full_time_permission: shop_staff.try(:staff_full_time_permission),
-            regular_schedule_permission: shop_staff.try(:staff_regular_working_day_permission),
-            temporary_working_day_permission: shop_staff.try(:staff_temporary_working_day_permission),
-          )
-        end
-      %>
-      <%= react_component "settings/staffs/staff_form", {
-        shopLabel: t("settings.staff.shop_label"),
-        staff_shop_options: staff_shop_options,
-        staff_account_title: t("settings.staff_account.info_title"),
-        staff_account_email_label: t("settings.staff_account.email"),
-        staff_account_email: @staff_account.try(:email) || (@first_staff ? super_user.email : nil),
-        staff_account_level: @staff_account.try(:level) || (@first_staff ? "manager" : nil),
-        staff_account_email_placeholder: t("settings.staff_account.email"),
-        staff_account_capability_label: t("settings.staff_account.capability"),
-        staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
-        staff_account_manager_level_label: t("settings.staff_account.manager_capability"),
-        staff_holiday_permission: staff.staff_holiday_permission,
-        working_setting_title: t("settings.staff_working_time.setting_title"),
-        holiday_setting_title: t("settings.staff_holiday_time.setting_title"),
-        full_time_permission: t("settings.staff_working_time.full_time_permission"),
-        regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
-        temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission"),
-        holiday_permission_label: t("settings.staff_holiday_time.holiday_permission"),
-      } %>
+            ::Option.new(
+              shop_id: shop.id,
+              name: shop.name,
+              work_here: shop_staff.present?,
+              full_time_permission: shop_staff.try(:staff_full_time_permission),
+              regular_schedule_permission: shop_staff.try(:staff_regular_working_day_permission),
+              temporary_working_day_permission: shop_staff.try(:staff_temporary_working_day_permission),
+            )
+          end
+        %>
 
+        <%= react_component "settings/staffs/staff_form", {
+          shopLabel: t("settings.staff.shop_label"),
+          is_staff_persisted: !staff.new_record?,
+          staff_shop_options: staff_shop_options,
+          staff_account_title: t("settings.staff_account.info_title"),
+          staff_account_email_label: t("settings.staff_account.email"),
+          staff_account_email: @staff_account&.email,
+          staff_account_level: @staff_account&.level || "staff",
+          staff_account_state: staff.active?,
+          staff_account_email_placeholder: t("settings.staff_account.email"),
+          staff_account_capability_label: t("settings.staff_account.capability"),
+          staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
+          staff_account_manager_level_label: t("settings.staff_account.manager_capability"),
+          staff_holiday_permission: staff.staff_holiday_permission,
+          working_setting_title: t("settings.staff_working_time.setting_title"),
+          holiday_setting_title: t("settings.staff_holiday_time.setting_title"),
+          full_time_permission: t("settings.staff_working_time.full_time_permission"),
+          regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
+          temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission"),
+          holiday_permission_label: t("settings.staff_holiday_time.holiday_permission"),
+          staff_account_gmail_hint: t("settings.staff_account.gmail_hint")
+        } %>
+      <% end %>
     <% end %>
 
     <div id="footerav">
