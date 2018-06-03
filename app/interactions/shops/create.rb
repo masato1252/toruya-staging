@@ -12,6 +12,11 @@ module Shops
         else
           outcome = Staffs::CreateOwner.run(user: user)
 
+          staff = outcome.result.staff
+
+          # Owner staff manage the same shops with User
+          staff.shop_ids = Shop.where(user: user).pluck(:id)
+
           if outcome.errors.present?
             errors.merge!(outcome.errors)
 
