@@ -26,10 +26,10 @@ class Plan < ApplicationRecord
     COST[Money.default_currency.id][level]
   end
 
-  # -1: upgrade
+  # -1: downgrade
   #  0: same level
-  #  1: downgrade
+  #  1: upgrade
   def become(plan)
-    Plan.levels[level] <=> Plan.levels[plan.level]
+    Plan.levels[plan.level] <=> Plan.levels[level]
   end
 end

@@ -14,8 +14,8 @@
 #
 
 class Subscription < ApplicationRecord
-  CHARGEABLE_STATES = %w(pending active past_due)
-  MANUAL_CHARGEABLE_STATES = %w(pending past_due)
+  # CHARGEABLE_STATES = %w(pending active past_due)
+  # MANUAL_CHARGEABLE_STATES = %w(pending past_due)
   END_OF_MONTH_CHARGE_DAY = 28
   FREE_PLAN_ID = 1
 
@@ -23,17 +23,17 @@ class Subscription < ApplicationRecord
   belongs_to :next_plan, class_name: "Plan"
   belongs_to :user
 
-  enum status: {
-    pending: 0,
-    active: 1,
-    past_due: 2
-  }
+  # enum status: {
+  #   pending: 0,
+  #   active: 1,
+  #   past_due: 2
+  # }
 
   scope :recurring_chargeable_at, ->(date) {
     return none if date < today
 
     # Exclude when creation and query date are the same date
-    scope = with_state(:active).where("DATE(created_at) != ?", date)
+    scope = where("DATE(created_at) != ?", date)
 
     if date == date.end_of_month
       scope.where("recurring_day >= ?", date.day)
@@ -44,7 +44,10 @@ class Subscription < ApplicationRecord
 
   # scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
   # scope :charge_free, -> { where(plan_id: FREE_PLAN_ID) }
-  #
+  def active?
+    expired_date > Subscription.today
+  end
+
   def self.today
     # Use default time zone(Tokyo) currently
     Time.now.in_time_zone(Rails.configuration.time_zone).to_date
@@ -55,13 +58,12 @@ class Subscription < ApplicationRecord
   end
 
   def set_recurring_day
-    self.recurring_day = self.class.calculate_recurring_day(self.class.today)
-    save!
+    self.recurring_day = Subscription.calculate_recurring_day(self.class.today)
   end
 
   def set_expire_date
+    # XXX: I want to charge in the morning, don't expire in the middle of the day.
     self.expired_date = next_charge_date.next_day
-    save!
   end
 
   def next_charge_date

@@ -7,11 +7,21 @@ module Subscriptions
     object :subscription
 
     def execute
-      if subscription.next_plan
-        if subscription.next_plan.cost.zero?
-        else
-        end
+      user = subscription.user
+
+      charging_plan = subscription.next_plan || subscription.plan
+
+      if charging_plan.cost.zero?
+        subscription.update(plan: charging_plan, next_plan: nil)
       else
+        subscription.transaction do
+          compose(Subscriptions::Charge, user: user, plan: charging_plan, stripe_customer_id: subscription.stripe_customer_id, manual: false)
+
+          subscription.plan = charging_plan
+          subscription.next_plan = nil
+          subscription.set_expire_date
+          subscription.save!
+        end
       end
     end
   end

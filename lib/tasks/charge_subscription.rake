@@ -7,7 +7,7 @@ namespace :subscriptions do
     end
   end
 
-  task :downgrade => :environment do
+  task :expired_ard_notification => :environment do
     today = Subscription.today
 
     Subscription.charge_free.recurring_chargeable_at(today).find_each do |subscription|

@@ -5,28 +5,17 @@ module Subscriptions
     string :authorize_token
 
     def execute
+      user = subscription.user
+
       subscription.transaction do
-        subscription.plan = plan
-        user = subscription.user
-
-        charge = user.subscription_charges.create!(
-          user: user,
-          plan: plan,
-          amount: Money.new(plan.cost, Money.default_currency.id),
-          charge_date: Subscription.today,
-          manual: true
-        )
         stripe_customer_id = compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
+        compose(Subscriptions::Charge, user: user, plan: plan, stripe_customer_id: stripe_customer_id, manual: true)
 
-        Stripe::Charge.create({
-          amount: plan.cost,
-          currency: Money.default_currency.iso_code,
-          customer: stripe_customer_id,
-        })
-
-        charge.completed!
+        subscription.plan = plan
+        subscription.next_plan = nil
         subscription.set_recurring_day
         subscription.set_expire_date
+        subscription.save!
       end
     end
   end

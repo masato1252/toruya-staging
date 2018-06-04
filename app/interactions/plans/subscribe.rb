@@ -6,8 +6,10 @@ module Plans
 
     def execute
       if subscription = user.subscription
-        errors.add(:plan, :already_subscribe_the_same_plan) if subscription.active? && subscription.plan.become(plan).zero?
-        return
+        if subscription.active? && subscription.plan.become(plan).zero?
+          errors.add(:plan, :already_subscribe_the_same_plan)
+          return
+        end
       else
         subscription = user.build_subscription
       end
@@ -16,6 +18,7 @@ module Plans
         if plan.cost.zero?
           subscription.update(plan: plan)
         else
+          # new plan require charge
           compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
         end
       else
