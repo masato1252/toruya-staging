@@ -137,5 +137,5 @@ Rails.application.routes.draw do
   end
 
   get "settings/:super_user_id", to: "home#settings", as: :settings
-  root to: "home#index"
+  root to: "members#show"
 end
