@@ -54,4 +54,7 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { :host => "kasaike.dev" }
   config.action_mailer.delivery_method = :letter_opener
+
+  # yarn integrity check to ensure that all local JavaScript packages are up-to-date.
+  config.webpacker.check_yarn_integrity = true
 end
