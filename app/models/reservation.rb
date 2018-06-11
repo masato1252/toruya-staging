@@ -96,6 +96,19 @@ class Reservation < ApplicationRecord
     end_time.try(:to_s, :time)
   end
 
+  ACTIONS = {
+    "checked_in" => ["check_out", "cancel", "edit"],
+    "reserved" => ["check_in", "pend", "cancel", "edit"],
+    "noshow" => ["check_in", "pend"],
+    "pending" => ["accept", "cancel", "edit"],
+    "checked_out" => ["recheck_in", "pend", "cancel", "edit"],
+    "canceled" => ["accept", "edit"]
+  }.freeze
+
+  def actions
+    ACTIONS[aasm_state]
+  end
+
   private
 
   def end_time_larger_than_start_time
