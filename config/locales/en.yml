@@ -322,6 +322,7 @@ en:
       only_use_toruya_group_confirmation: "Are you sure?"
     account:
       info_title: Account
+      info_title2: Account Info
     profile:
       info_title: Let's Setup Your Account and Shop'
       info_1: This is your Toruya Account setting.
