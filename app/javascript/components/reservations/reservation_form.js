@@ -804,6 +804,7 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
                   <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
+                  <input name="reservation[by_staff_id]" type="hidden" value={this.props.currentUserStaffId} />
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }

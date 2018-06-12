@@ -148,7 +148,7 @@ class ReservationsController < DashboardController
   # Never trust parameters from the scary internet, only allow the white list through.
   def reservation_params
     params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                        :customer_ids, :staff_ids, :memo, :with_warnings)
+                                        :customer_ids, :staff_ids, :memo, :with_warnings, :by_staff_id)
   end
 
   def start_time
