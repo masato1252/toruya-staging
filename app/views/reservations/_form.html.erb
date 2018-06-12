@@ -17,10 +17,10 @@
                         start_time_date_part: date,
                         start_time_time_part: start_time,
                         end_time_time_part: end_time,
-                        staff_ids: reservation.staff_ids.map(&:to_s),
+                        staff_ids: reservation.staff_ids.map(&:to_s).presence || [current_user.current_staff(super_user).id.to_s],
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
-                      current_user_staff_id: current_user.current_staff(super_user).try(:id),
+                      current_user_staff_id: current_user.current_staff(super_user).id.to_s,
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
                       shop_id: shop.id,
                       shop_name: shop.display_name,

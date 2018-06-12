@@ -441,14 +441,11 @@ UI.define("Reservation.Form", function() {
       })
       .done(
       function(result) {
-        var staff_ids = _this.state.staff_ids.length ? _this.state.staff_ids : _.map(_this.state.staff_options, function(o) { return o.value }).slice(0, result["min_staffs_number"] || 1)
-
         _this.setState({
           start_time_restriction: result["start_time_restriction"],
           end_time_restriction: result["end_time_restriction"],
           errors: result["errors"],
-          menu_min_staffs_number: result["menu_min_staffs_number"],
-          staff_ids: staff_ids
+          menu_min_staffs_number: result["menu_min_staffs_number"]
         });
       }).fail(function(errors){
       }).always(function() {
