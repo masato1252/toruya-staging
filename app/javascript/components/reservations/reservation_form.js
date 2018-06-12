@@ -185,6 +185,10 @@ UI.define("Reservation.Form", function() {
       }
     };
 
+    _currentUserStaff = () => {
+      return this.state.staff_options.find(staff => this.props.currentUserStaffId === staff.value)
+    };
+
     _selected_staffs = () => {
       let selected_staffs = this.state.staff_ids.map((staff_id) => {
         return _.filter(this.state.staff_options, (staff) => {
@@ -193,6 +197,10 @@ UI.define("Reservation.Form", function() {
       })
 
       return _.flatten(selected_staffs)
+    };
+
+    _isCurrentUserStaffWorkForThis = () => {
+      return this.state.staff_ids.includes(this.props.currentUserStaffId);
     };
 
     _isValidReservationTime = () => {
@@ -708,12 +716,9 @@ UI.define("Reservation.Form", function() {
                   <dd className="input">
                     {this.renderStaffSelects()}
                     {
-                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 && _.contains(this.state.staff_ids, this.props.currentUserStaffId) && (
-                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
-                          この時間を出勤にする
-                        </a>
-                      )
-                    }
+                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 && this._isCurrentUserStaffWorkForThis() && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
+                   この時間を出勤にする
+                 </a>)}
                   </dd>
                 </dl>
               </div>
@@ -812,11 +817,11 @@ UI.define("Reservation.Form", function() {
               </li>
             </ul>
           </footer>
-          {this.state.staff_ids[this.state.staff_ids.length - 1] && _.contains(this.state.staff_ids, this.props.currentUserStaffId) && (
+          {this._isCurrentUserStaffWorkForThis() && (
             <UI.WorkingSchedulesModal
               formAuthenticityToken={this.props.formAuthenticityToken}
               open={true}
-              staff={this._selected_staffs()[this.state.staff_ids.length - 1]}
+              staff={this._currentUserStaff()}
               shop={this.props.shop}
               shops={[this.props.shop]}
               startTimeDatePart={this.state.start_time_date_part}
