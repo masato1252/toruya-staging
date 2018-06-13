@@ -618,6 +618,24 @@ UI.define("Reservation.Form", function() {
       return this._displayErrors(["next_reservation_interval_overlap"]).length != 0;
     };
 
+    otherStaffsResponsibleThisReservation = () => {
+      return this.state.staff_ids.some(staff_id => staff_id !== this.props.currentUserStaffId);
+    };
+
+    renderSubmitButton = () => {
+      if (this.state.submitting) {
+        return this.props.processingMessage;
+      }
+      else {
+        if (this.otherStaffsResponsibleThisReservation()) {
+          return "未承認で保存";
+        }
+        else {
+          return "保存";
+        }
+      }
+    };
+
     submitForm = () => {
       // Delay submission to make sure that card token, last4, and type are set in real DOM.
       setTimeout(function() {
@@ -808,11 +826,11 @@ UI.define("Reservation.Form", function() {
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
-                  <button type="submit" id="BTNsave" className="BTNyellow"
+                  <button type="submit" id="BTNsave" className={this.otherStaffsResponsibleThisReservation() ? "BTNorange" : "BTNyellow"}
                     disabled={!this._isValidToReserve() || this.state.submitting}
                     onClick={this._handleSubmitClick}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>
-                    {this.state.submitting ? this.props.processingMessage : "保存"}
+                    {this.renderSubmitButton()}
                   </button>
                 </form>
               </li>
