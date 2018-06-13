@@ -1,4 +1,6 @@
 class SettingsController < ActionController::Base
+  abstract!
+
   layout "settings"
 
   include Authorization
