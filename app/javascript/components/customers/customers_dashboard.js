@@ -441,7 +441,7 @@ UI.define("Customers.Dashboard", function() {
         )
       }
       else if (this.state.edit_mode) {
-        if (!this.state.didSearch) {
+        if (!this.state.selected_customer_id && !this.state.didSearch) {
           return (
             <div className="checking-search-bar">
               <div className="info">
@@ -569,7 +569,7 @@ UI.define("Customers.Dashboard", function() {
       }
     };
 
-    render = () => {
+    render() {
       return(
         <div>
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
