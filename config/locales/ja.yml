@@ -589,10 +589,10 @@ ja:
   time:
     am: 午前
     formats:
-      default: "%Y/%m/%d %H:%M:%S"
+      default: "%Y/%m/%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"
-      date: "%Y年%m月%d日(%a)"
+      date: "%Y/%m/%d(%a)"
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
     pm: 午後

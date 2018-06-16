@@ -68,10 +68,8 @@ class ReservationsController < DashboardController
     @time_ranges = outcome.valid? ? outcome.result : nil
   end
 
-  # POST /reservations
-  # POST /reservations.json
   def create
-    outcome = Reservations::AddReservation.run(shop: shop, user: current_user, params: reservation_params.to_h)
+    outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
@@ -88,10 +86,8 @@ class ReservationsController < DashboardController
     end
   end
 
-  # PATCH/PUT /reservations/1
-  # PATCH/PUT /reservations/1.json
   def update
-    outcome = Reservations::AddReservation.run(shop: shop, user: current_user, reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::Create.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
