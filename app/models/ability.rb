@@ -12,6 +12,7 @@ class Ability
       # can :manage, Shop
       # can :create, Staff
       # can :manage, Profile
+      # can :manage, Reservation
       # can :edit, Customer
       # can :edit, "customer_address"
       # can :swith_staffs_selector, User
@@ -44,6 +45,7 @@ class Ability
       can :edit, Customer
       can :edit, "customer_address"
       can :swith_staffs_selector, User
+      can :manage, Reservation
 
       if super_user.basic_level? || super_user.premium_level?
         can :manage, :preset_filter

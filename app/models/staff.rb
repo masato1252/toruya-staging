@@ -43,4 +43,8 @@ class Staff < ApplicationRecord
   def active?
     !deleted_at && staff_account&.active?
   end
+
+  def can?(*args)
+    Ability.new(staff_account.user, user).can?(*args)
+  end
 end
