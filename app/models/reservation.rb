@@ -98,6 +98,15 @@ class Reservation < ApplicationRecord
     end_time.try(:to_s, :time)
   end
 
+  def for_staff(staff)
+    reservation_staffs.find_by(staff: staff)
+  end
+
+  def accepted_by_all_staffs?
+    !reservation_staffs.where(state: ReservationStaff.states[:pending]).exists?
+  end
+
+
   ACTIONS = {
     "checked_in" => ["check_out", "cancel", "edit"],
     "reserved" => ["check_in", "pend", "cancel", "edit"],

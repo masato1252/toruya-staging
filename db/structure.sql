@@ -709,7 +709,8 @@ CREATE TABLE public.reservation_staffs (
     reservation_id integer NOT NULL,
     staff_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    state integer DEFAULT 0
 );
 
 
@@ -1893,6 +1894,13 @@ CREATE INDEX staff_working_time_index ON public.business_schedules USING btree (
 
 
 --
+-- Name: state_by_state_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX state_by_state_index ON public.reservation_staffs USING btree (staff_id, state);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1955,6 +1963,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180120080732'),
 ('20180413110627'),
 ('20180413153332'),
-('20180612021000');
+('20180612021000'),
+('20180617004311');
 
 

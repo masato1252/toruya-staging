@@ -87,7 +87,7 @@ class ReservationsController < DashboardController
   end
 
   def update
-    outcome = Reservations::Create.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
