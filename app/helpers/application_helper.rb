@@ -22,6 +22,16 @@ module ApplicationHelper
     nil
   end
 
+  def notification_messages
+    (@notification_messages || []).each do |message|
+      concat(content_tag(:div, message, :class => "notification alert alert-info fade in") do
+        concat content_tag(:button, 'x', :class => "close", :data => { :dismiss => 'alert' })
+        concat message.html_safe
+      end)
+    end
+    nil
+  end
+
   def body_class
     @body_class
   end

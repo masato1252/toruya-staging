@@ -45,7 +45,9 @@ class Ability
       can :edit, Customer
       can :edit, "customer_address"
       can :swith_staffs_selector, User
-      can :manage, Reservation
+      can :manage, Reservation do |reservation|
+        reservation.shop.user_id == super_user.id
+      end
 
       if super_user.basic_level? || super_user.premium_level?
         can :manage, :preset_filter

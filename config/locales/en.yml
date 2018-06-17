@@ -65,6 +65,9 @@ en:
     my_shop_setting: My shop settings
     search_data: Search Data
     someone_shop: "%{name}'s shop"
+  notifications:
+    pending_reservation_need_confirm: You have a reservation need to be confirm.
+    pending_reservation_confirm: Check here
   reservation:
     valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"

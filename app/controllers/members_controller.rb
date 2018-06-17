@@ -27,5 +27,7 @@ class MembersController < DashboardController
                                 reason: reservation_and_off_schedule.reason.presence || "臨時休暇")
       end
     end.sort_by { |option| option.time }
+
+    @notification_messages = NotificationsPresenter.new(view_context, current_user).data
   end
 end

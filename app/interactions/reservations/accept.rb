@@ -18,14 +18,16 @@ module Reservations
           if reservation.accepted_by_all_staffs?
             reservation.accept
           else
-            # if current_staff.can?(:manage, Reservation)
+            # if current_staff.can?(:manage, reservation)
               # reservation.accept
               # reservation.reservation_staffs.where(state: Reservation.states[:pending]).update_all(state: Reservation.states[:accepted])
             # end
           end
-        # elsif current_staff.can?(:manage, Reservation)
+        elsif current_staff.can?(:manage, reservation)
           # reservation.accept
           # reservation.reservation_staffs.where(state: Reservation.states[:pending]).update_all(state: Reservation.states[:accepted])
+        else
+          errors.add(:base, :who_r_u)
         end
 
         reservation
