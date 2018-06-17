@@ -1894,10 +1894,10 @@ CREATE INDEX staff_working_time_index ON public.business_schedules USING btree (
 
 
 --
--- Name: state_by_state_index; Type: INDEX; Schema: public; Owner: -
+-- Name: state_by_staff_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX state_by_state_index ON public.reservation_staffs USING btree (staff_id, state);
+CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (staff_id, state);
 
 
 --
