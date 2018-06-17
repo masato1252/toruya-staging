@@ -1,11 +1,13 @@
 class Reservations::StatesController < DashboardController
   def pend
-    reservation.pend!
+    outcome = Reservations::Pend.run!(reservation: reservation, current_staff: current_user_staff)
+
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.update_successfully_message")
   end
 
   def accept
-    reservation.accept!
+    outcome = Reservations::Accept.run!(reservation: reservation, current_staff: current_user_staff)
+
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.update_successfully_message")
   end
 

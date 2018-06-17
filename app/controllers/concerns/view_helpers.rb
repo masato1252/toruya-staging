@@ -9,6 +9,7 @@ module ViewHelpers
     helper_method :shop_staff
     helper_method :super_user
     helper_method :current_user_staff_account
+    helper_method :current_user_staff
     helper_method :working_shop_options
     helper_method :working_shop_owners
     helper_method :owning_shop_options
@@ -58,6 +59,10 @@ module ViewHelpers
 
   def current_user_staff_account
     @current_user_staff_account ||= current_user.current_staff_account(super_user)
+  end
+
+  def current_user_staff
+    @current_user_staff ||= current_user.current_staff(super_user)
   end
 
   def working_shop_owners(include_user_own: false)
