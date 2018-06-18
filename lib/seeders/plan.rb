@@ -3,9 +3,9 @@ module Seeders
     PLANS_FILE = Rails.root.join("db/data/plans.json")
 
     def initialize(plans)
-      Plan.transaction do
+      ::Plan.transaction do
         plans.each do |plan_attrs|
-          Plan.create!(plan_attrs)
+          ::Plan.create!(plan_attrs)
         end
       end
     end
