@@ -3,35 +3,31 @@ module Reservations
     object :current_staff, class: Staff
     object :reservation
 
-    def execute
-      unless reservation.may_accept?
-        errors.add(:reservation, :not_acceptable)
-        return
-      end
+    validate :validate_reservation
+    validate :validate_staff
 
+    def execute
       reservation.transaction do
         reservation.by_staff = current_staff
-
-        if reservation.for_staff(current_staff)
-          reservation.for_staff(current_staff).accepted!
-
-          if reservation.accepted_by_all_staffs?
-            reservation.accept
-          else
-            # if current_staff.can?(:manage, reservation)
-              # reservation.accept
-              # reservation.reservation_staffs.where(state: Reservation.states[:pending]).update_all(state: Reservation.states[:accepted])
-            # end
-          end
-        elsif current_staff.can?(:manage, reservation)
-          # reservation.accept
-          # reservation.reservation_staffs.where(state: Reservation.states[:pending]).update_all(state: Reservation.states[:accepted])
-        else
-          errors.add(:base, :who_r_u)
-        end
-
+        reservation_for_staff.accepted!
+        reservation.accept if reservation.accepted_by_all_staffs?
+        reservation.save
         reservation
       end
+    end
+
+    private
+
+    def validate_reservation
+      errors.add(:reservation, :not_acceptable) unless reservation.may_accept?
+    end
+
+    def validate_staff
+      errors.add(:current_staff, :who_r_u) unless reservation_for_staff
+    end
+
+    def reservation_for_staff
+      @reservation_for_staff ||= reservation.for_staff(current_staff)
     end
   end
 end
