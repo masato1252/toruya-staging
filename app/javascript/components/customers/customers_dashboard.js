@@ -33,6 +33,10 @@ UI.define("Customers.Dashboard", function() {
       }
     };
 
+    componentDidMount() {
+      this.fetchCustomerDetails()
+    };
+
     fetchCustomerDetails = () => {
       var _this = this;
       if (this.state.customer) {
