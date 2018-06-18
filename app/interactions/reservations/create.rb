@@ -40,13 +40,7 @@ module Reservations
           reservation_staff.state = ReservationStaff.states[:accepted]
         end
 
-        if reservation.save
-          if reservation.pending?
-            shop.user.staffs.where(id: other_staff_ids_changes).each do |staff|
-              ReservationMailer.pending(reservation, staff).deliver_later
-            end
-          end
-        else
+        unless reservation.save
           errors.merge!(reservation.errors)
           raise ActiveRecord::Rollback
         end

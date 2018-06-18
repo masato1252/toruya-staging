@@ -29,13 +29,5 @@ RSpec.describe Reservations::Pend do
       expect(result.by_staff).to eq(current_staff)
       expect(result.reservation_staffs.first).to be_pending
     end
-
-    it "notify all the reservation's staffs except the current_staff" do
-      reservation.staffs << new_staff
-      expect(ReservationMailer).to receive(:pending).with(reservation, new_staff).and_return(double(deliver_later: true)).once
-      expect(ReservationMailer).not_to receive(:pending).with(reservation, current_staff)
-
-      outcome
-    end
   end
 end

@@ -52,7 +52,6 @@ RSpec.describe Reservations::Create do
 
         it "notifies the reservation's staffs except the current user staff" do
           allow(shop.reservations).to receive(:new).with(params).and_return(new_reseravtion)
-          expect(ReservationMailer).to receive(:pending).with(new_reseravtion, staff).and_return(double(deliver_later: true))
 
           outcome
         end

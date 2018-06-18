@@ -21,15 +21,9 @@ module Reservations
     end
 
     def execute
-      other_staff_ids_changes = []
-
       reservation.transaction do
-        staff_ids = params.delete(:staff_ids)
-        staff_ids_changes = staff_ids - reservation.staff_ids
-        other_staff_ids_changes = staff_ids_changes.find_all { |staff_id| staff_id != params[:by_staff_id] }
-
         # Build new correct assoications
-        reservation.staff_ids = staff_ids
+        reservation.attributes = params
 
         # If the new staff ids includes current user staff, the staff accepted the reservation automatically
         if reservation_staff = reservation.reservation_staffs.find_by(staff_id: params[:by_staff_id])
@@ -39,15 +33,8 @@ module Reservations
         # If all staffs accepted the reservation, the reservation be accepted automatically
         reservation.aasm_state = "reserved" if reservation.accepted_by_all_staffs?
 
-        reservation.attributes = params
 
-        if reservation.save
-          if reservation.pending?
-            shop.user.staffs.where(id: other_staff_ids_changes).each do |staff|
-              ReservationMailer.pending(reservation, staff).deliver_later
-            end
-          end
-        else
+        unless reservation.save
           errors.merge!(reservation.errors)
           raise ActiveRecord::Rollback
         end

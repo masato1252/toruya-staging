@@ -35,9 +35,7 @@ RSpec.describe Reservations::Update do
           context "when the modified staff is not the current user staff" do
             let(:by_staff) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
 
-            it "notifies the reservation's staffs except the current user staff" do
-              expect(ReservationMailer).to receive(:pending).with(reservation, staff).and_return(double(deliver_later: true))
-
+            it "the reservation is still pending and reservation's staff's state is pending" do
               result = outcome.result
 
               expect(result).to be_pending
@@ -49,9 +47,7 @@ RSpec.describe Reservations::Update do
           end
 
           context "when the modified staff is the current user staff" do
-            it "doesn't notifies the reservation's staffs but reservation was accepted" do
-              expect(ReservationMailer).not_to receive(:pending)
-
+            it "the reservation is reserved and staff accepted the reservation automatically" do
               outcome
 
               result = outcome.result
@@ -61,14 +57,6 @@ RSpec.describe Reservations::Update do
 
               reservation_staff = result.reservation_staffs.reload.first
               expect(reservation_staff).to be_accepted
-            end
-          end
-
-          context "when some of staffs already accept the reservation" do
-            xit "only notifies the reservation's staffs except the current user staff and did accepted one" do
-              expect(ReservationMailer).to receive(:pending).with(reservation, staff).and_return(double(deliver_later: true))
-
-              outcome
             end
           end
         end
