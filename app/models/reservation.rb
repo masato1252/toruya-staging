@@ -102,6 +102,12 @@ class Reservation < ApplicationRecord
     reservation_staffs.find_by(staff: staff)
   end
 
+  def acceptable_by_staff?(staff)
+    may_accept? && (
+      reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id }&.pending? : for_staff(staff)&.pending?
+    )
+  end
+
   def accepted_by_all_staffs?
     !reservation_staffs.where(state: ReservationStaff.states[:pending]).exists?
   end
