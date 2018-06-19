@@ -109,7 +109,7 @@ class Reservation < ApplicationRecord
   end
 
   def accepted_by_all_staffs?
-    !reservation_staffs.where(state: ReservationStaff.states[:pending]).exists?
+    !reservation_staffs.pending.exists?
   end
 
 
