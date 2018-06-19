@@ -39,11 +39,11 @@ UI.define("Customers.Dashboard", function() {
 
     fetchCustomerDetails = () => {
       var _this = this;
-      if (this.state.customer) {
+      if (this.state.selected_customer_id) {
         $.ajax({
           type: "GET",
           url: this.props.customerDetailPath,
-          data: { id: this.state.customer.id },
+          data: { id: this.state.selected_customer_id },
           dataType: "JSON"
         }).success(function(result) {
           _this.setState({customer: result["customer"], updated_customer: result["customer"]});
