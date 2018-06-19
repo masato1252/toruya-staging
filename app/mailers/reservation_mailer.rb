@@ -8,16 +8,11 @@ class ReservationMailer < ActionMailer::Base
 
   layout 'mailer'
 
-  def pending(reservation, staff)
-    @reservation = reservation
-    @staff = staff
-    @user = staff.staff_account.user
-    @by_staff = reservation.by_staff
+  def pending_summary(reservations, user)
+    @reservations = reservations
+    @user = user
 
     mail(:to => @user.email,
          :subject => subject("確認が必要な予約があります"))
-  end
-
-  def summary_pending(reservations, user)
   end
 end

@@ -18,6 +18,8 @@ class ReservationStaff < ApplicationRecord
 
   belongs_to :reservation
   belongs_to :staff
+  scope :pending, -> { where(state: ReservationStaff.states[:pending]) }
+  scope :accepted, -> { where(state: ReservationStaff.states[:accepted]) }
 
   def self.overlap_reservations(staff_ids: [], reservation_id: nil, start_time: , end_time:)
     ReservationStaff.joins(:reservation).
