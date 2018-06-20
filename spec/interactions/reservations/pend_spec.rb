@@ -26,7 +26,6 @@ RSpec.describe Reservations::Pend do
       result = outcome.result
 
       expect(result).to be_pending
-      expect(result.by_staff).to eq(current_staff)
       expect(result.reservation_staffs.first).to be_pending
     end
   end

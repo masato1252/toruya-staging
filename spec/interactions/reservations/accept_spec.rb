@@ -33,7 +33,6 @@ RSpec.describe Reservations::Accept do
         result = outcome.result.reload
 
         expect(result).to be_reserved
-        expect(result.by_staff).to eq(current_staff)
         expect(result.for_staff(current_staff)).to be_accepted
       end
     end
@@ -48,7 +47,6 @@ RSpec.describe Reservations::Accept do
         result = outcome.result.reload
 
         expect(result).to be_pending
-        expect(result.by_staff).to eq(current_staff)
         expect(result.for_staff(current_staff)).to be_accepted
         expect(result.for_staff(new_staff)).to be_pending
       end

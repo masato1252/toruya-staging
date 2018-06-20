@@ -10,7 +10,6 @@ module Reservations
       end
 
       reservation.transaction do
-        reservation.by_staff = current_staff
         reservation.reservation_staffs.update_all(state: ReservationStaff.states[:pending])
         reservation.pend!
         reservation

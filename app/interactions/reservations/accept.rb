@@ -8,7 +8,6 @@ module Reservations
 
     def execute
       reservation.transaction do
-        reservation.by_staff = current_staff
         reservation_for_staff.accepted!
         reservation.accept if reservation.accepted_by_all_staffs?
         reservation.save
