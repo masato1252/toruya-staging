@@ -50,6 +50,7 @@ gem "carrierwave", "~> 1.1.0"
 gem "fog-aws", "~> 1.4.0"
 gem "bitly", "~> 1.0.0"
 gem "lograge", "~> 0.6.0"
+gem "paper_trail", "~> 9.2.0"
 
 group :development, :test do
   gem "byebug", platform: :mri

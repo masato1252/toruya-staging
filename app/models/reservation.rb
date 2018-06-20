@@ -19,6 +19,8 @@
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
+  has_paper_trail on: [:update]
+
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
