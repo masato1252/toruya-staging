@@ -9,7 +9,15 @@ class Customers::ReservationsController < DashboardController
 
   def state
     reservation = @customer.reservations.find(params[:reservation_id])
-    reservation.public_send("#{params[:reservation_action]}!")
+
+    case params[:reservation_action]
+    when "accept"
+      Reservations::Accept.run!(reservation: reservation, current_staff: current_user_staff)
+    when "pend"
+      Reservations::Pend.run!(reservation: reservation, current_staff: current_user_staff)
+    else
+      reservation.public_send("#{params[:reservation_action]}!")
+    end
 
     redirect_to user_customers_path(super_user, shop_id: params[:shop_id], customer_id: params[:id])
   end
