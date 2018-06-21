@@ -524,7 +524,7 @@ UI.define("Customers.Dashboard", function() {
 
     renderCustomerButtons = () => {
       if (this.state.edit_mode) {
-        if (!this.state.didSearch) {
+        if (!this.state.didSearch && !this.state.selected_customer_id) {
           return <div></div>
         }
         return (
