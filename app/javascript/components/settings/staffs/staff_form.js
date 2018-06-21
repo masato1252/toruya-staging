@@ -199,22 +199,6 @@ UI.define("Settings.Staff.Formfields", function() {
               <div className="formRow">
                 {this.renderStaffSchedulePermission()}
               </div>
-              <h3>{this.props.holidaySettingTitle}</h3>
-              <div className="formRow">
-                <dl className="onoffSetting">
-                  <dt>{this.props.holidayPermissionLabel}</dt>
-                  <dd>
-                    <input type="hidden" name="staff[staff_holiday_permission]" value="0" />
-                    <input type="checkbox" className="BTNonoff"
-                      id="allowTempOff"
-                      name="staff[staff_holiday_permission]"
-                      defaultValue="1"
-                      defaultChecked={this.props.staffHolidayPermission}
-                    />
-                    <label htmlFor="allowTempOff"></label>
-                  </dd>
-                </dl>
-              </div>
             </div>
           ) : null}
         </div>
