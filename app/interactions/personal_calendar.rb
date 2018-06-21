@@ -13,11 +13,13 @@ class PersonalCalendar < ActiveInteraction::Base
       holidays: []
     }
 
+    date_range = date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day
+
     working_shop_options.each do |option|
       shop = option.shop
       staff = option.staff
 
-      staff_working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: date.beginning_of_month..date.end_of_month)
+      staff_working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: date_range)
 
       working_dates[:full_time] = working_dates[:full_time] || staff_working_dates[:full_time]
       working_dates[:holiday_working] = working_dates[:holiday_working] || staff_working_dates[:holiday_working]
@@ -30,7 +32,7 @@ class PersonalCalendar < ActiveInteraction::Base
 
     reservation_dates = []
     working_shop_options.map(&:shop).each do |shop|
-      reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: date.beginning_of_month..date.end_of_month)
+      reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: date_range)
     end
 
     return [working_dates, reservation_dates]
