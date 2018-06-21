@@ -1,4 +1,9 @@
 @import "variables";
+
+.notification.alert.alert-info {
+  margin-bottom: 0;
+}
+
 .field-error {
   border: 2px solid #CF0003;
 }

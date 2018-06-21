@@ -2,7 +2,7 @@ module Staffs
   class Create < ActiveInteraction::Base
     object :user
 
-    hash :attrs do
+    hash :attrs, default: nil do
       string :first_name, default: nil
       string :last_name, default: nil
       string :phonetic_first_name, default: nil
@@ -12,7 +12,7 @@ module Staffs
     end
 
     def execute
-      staff = user.staffs.new(attrs)
+      staff = user.staffs.new(attrs || {})
 
       if staff.save
         staff

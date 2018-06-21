@@ -9,15 +9,8 @@ module Staffs
       end
 
       if staff_account = user.current_staff_account(user)
-        if staff_account.owner?
-          staff = staff_account.staff
-
-          # Owner staff could manage the same shops with User
-          staff.shop_ids = Shop.where(user: user).pluck(:id)
-          return
-        else
-          staff_account.owner!
-        end
+        staff_account.owner! unless staff_account.owner?
+        staff_account
       else
         profile = user.profile
 

@@ -4,7 +4,7 @@ module Staffs
     object :staff
     boolean :holiday_working, default: false
 
-    hash :attrs do
+    hash :attrs, default: nil do
       string :first_name, default: nil
       string :last_name, default: nil
       string :phonetic_first_name, default: nil
@@ -19,7 +19,7 @@ module Staffs
       attrs_allow_to_change = if staff.staff_account.try(:owner?) || !is_manager
                                 attrs.slice(:first_name, :last_name, :phonetic_first_name, :phonetic_last_name)
                               else
-                                attrs
+                                attrs || {}
                               end
 
       if staff.update(attrs_allow_to_change)

@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import "whatwg-fetch";
 import "../shared/customers_list.js";
 import "../shared/processing_bar.js";
 import "./customer_info_view.js";
