@@ -7,7 +7,7 @@ class NotificationsPresenter
   end
 
   def data
-    new_pending_reservations
+    new_pending_reservations + new_staff_accounts
   end
 
   private
@@ -17,6 +17,12 @@ class NotificationsPresenter
 
     reservation_staffs = ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending).map do |reservation_staff|
       "#{I18n.t("notifications.pending_reservation_need_confirm")} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.accept_shop_reservation_states_path(reservation_staff.reservation.shop, reservation_staff.reservation))}"
+    end
+  end
+
+  def new_staff_accounts
+    current_user.staffs.active.where(first_name: "").includes(:staff_account).map do |staff|
+      "#{I18n.t("settings.staff_account.new_staff_active")} #{view_context.link_to(I18n.t("settings.staff_account.staff_setting"), view_context.edit_settings_user_staff_path(current_user, staff))}"
     end
   end
 end
