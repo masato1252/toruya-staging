@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import "whatwg-fetch";
 import "../shared/customers_list.js";
 import "../shared/processing_bar.js";
 import "./customer_info_view.js";
@@ -33,13 +34,17 @@ UI.define("Customers.Dashboard", function() {
       }
     };
 
+    componentDidMount() {
+      this.fetchCustomerDetails()
+    };
+
     fetchCustomerDetails = () => {
       var _this = this;
-      if (this.state.customer) {
+      if (this.state.selected_customer_id) {
         $.ajax({
           type: "GET",
           url: this.props.customerDetailPath,
-          data: { id: this.state.customer.id },
+          data: { id: this.state.selected_customer_id },
           dataType: "JSON"
         }).success(function(result) {
           _this.setState({customer: result["customer"], updated_customer: result["customer"]});
@@ -441,7 +446,7 @@ UI.define("Customers.Dashboard", function() {
         )
       }
       else if (this.state.edit_mode) {
-        if (!this.state.didSearch) {
+        if (!this.state.selected_customer_id && !this.state.didSearch) {
           return (
             <div className="checking-search-bar">
               <div className="info">
@@ -519,7 +524,7 @@ UI.define("Customers.Dashboard", function() {
 
     renderCustomerButtons = () => {
       if (this.state.edit_mode) {
-        if (!this.state.didSearch) {
+        if (!this.state.didSearch && !this.state.selected_customer_id) {
           return <div></div>
         }
         return (
@@ -569,7 +574,7 @@ UI.define("Customers.Dashboard", function() {
       }
     };
 
-    render = () => {
+    render() {
       return(
         <div>
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />

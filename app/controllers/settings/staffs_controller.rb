@@ -1,5 +1,5 @@
 class Settings::StaffsController < SettingsController
-  before_action :set_staff, only: [:show, :edit, :update, :destroy]
+  before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation_email]
   skip_before_action :authorize_manager_level_permission, only: [:edit, :update]
 
   # GET /staffs
@@ -33,7 +33,7 @@ class Settings::StaffsController < SettingsController
   def create
     authorize! :create, Staff
 
-    staff_outcome = Staffs::Create.run(user: super_user, attrs: params[:staff].permit!.to_h)
+    staff_outcome = Staffs::Create.run(user: super_user, attrs: params[:staff]&.permit!&.to_h)
     staff = staff_outcome.result
 
     StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
@@ -42,14 +42,10 @@ class Settings::StaffsController < SettingsController
       staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
-    respond_to do |format|
-      if staff_outcome.valid?
-        format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.create_successfully_message") }
-        format.json { render :show, status: :created, location: @staff }
-      else
-        format.html { render :new }
-        format.json { render json: @staff.errors, status: :unprocessable_entity }
-      end
+    if staff_outcome.valid?
+      redirect_to settings_user_staffs_path(super_user), notice: I18n.t("settings.staff_account.sent_message")
+    else
+      render :new
     end
   end
 
@@ -58,7 +54,7 @@ class Settings::StaffsController < SettingsController
   def update
     outcome = Staffs::Update.run(is_manager: can?(:manage, Settings),
                                  staff: @staff,
-                                 attrs: params[:staff].permit!.to_h)
+                                 attrs: params[:staff]&.permit!&.to_h)
 
     staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
 
@@ -85,6 +81,17 @@ class Settings::StaffsController < SettingsController
     respond_to do |format|
       format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
       format.json { head :no_content }
+    end
+  end
+
+  def resend_activation_email
+    outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, resend: true, params: { email: params[:email], level: params[:level] })
+
+    if outcome.valid?
+      flash[:notice] = I18n.t("settings.staff_account.sent_message")
+      head :ok
+    else
+      render json: { message: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
   end
 

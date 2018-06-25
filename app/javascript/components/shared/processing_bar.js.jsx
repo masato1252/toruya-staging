@@ -4,7 +4,7 @@ import React from "react";
 
 UI.define("ProcessingBar", function() {
   return class ProcessingBar extends React.Component {
-    static defaultProps = { processingMessage: "Processing" };
+    static defaultProps = { processingMessage: "送信中" };
 
     render() {
       if (!this.props.processing) {

@@ -1,17 +1,25 @@
 "use strict";
 
 import React from "react";
+import "whatwg-fetch";
+import 'url-search-params-polyfill';
+import "../../shared/processing_bar.js";
 
 UI.define("Settings.Staff.Formfields", function() {
   return class StaffFormfields extends React.Component {
     state = {
       staffShopOptions: this.props.staffShopOptions,
       shopInvisible: {},
-      staffAccountLevel: this.props.staffAccountLevel
+      staffAccountLevel: this.props.staffAccountLevel,
+      staffAccountEmail: this.props.staffAccountEmail
     };
 
     swithStaffAccountLevel = (event) => {
       this.setState({staffAccountLevel: event.target.value});
+    };
+
+    onHandleStaffChange = (event) => {
+      this.setState({staffAccountEmail: event.target.value});
     };
 
     renderWorkShops = () => {
@@ -139,9 +147,44 @@ UI.define("Settings.Staff.Formfields", function() {
       return view;
     };
 
+    resendStaffAccountEmail = async () => {
+      if (!this.state.staffAccountEmail) return;
+
+      try {
+        this.setState({ processing: true });
+
+        const url = new URL(this.props.resendStaffActivationEmailUrl);
+        url.search = new URLSearchParams({
+          id: this.props.staffId,
+          email: this.state.staffAccountEmail,
+          level: this.state.staffAccountLevel,
+        });
+
+        const response = await fetch(url, {
+          credentials: "same-origin"
+        })
+
+        if (response.ok) {
+          location.reload()
+        } else if (response.status === 422) {
+          const err = await response.json();
+          throw new Error(err.message);
+        } else {
+          throw new Error(response.statusText);
+        }
+
+        this.setState({ processing: false });
+      }
+      catch (err) {
+        this.setState({ processing: false });
+        alert(err.message)
+      }
+    };
+
     render() {
       return (
         <div>
+          <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <h3>{this.props.staffAccountTitle}<strong>必須項目</strong></h3>
           <div>
             {this.props.staffAccountGmailHint}
@@ -154,13 +197,18 @@ UI.define("Settings.Staff.Formfields", function() {
                   type="text"
                   name="staff_account[email]"
                   id="staff_account_email"
-                  defaultValue={this.props.staffAccountEmail}
+                  value={this.state.staffAccountEmail || ""}
+                  onChange={this.onHandleStaffChange}
                   placeholder={this.props.staffAccountEmailLabel} size="40" />
+                  {this.props.isStaffPersisted && (
+                    <div
+                      className={`resend btn btn-tarco ${this.state.staffAccountEmail ? "" : "disabled"}`}
+                      onClick={this.resendStaffAccountEmail}>
+                      {this.props.resendActivationEmailBtnLabel}
+                    </div>
+                  )}
                   {
-                    this.props.isStaffPersisted && (
-                      this.props.staffAccountState ? <span class="label label-success">Active</span> :
-                        <span class="label label-warning">Pending</span>
-                    )
+                    this.props.isStaffPersisted && this.props.staffAccountIsPending && <span className="label label-warning">{this.props.pendingState}</span>
                   }
               </dd>
             </dl>
@@ -194,35 +242,25 @@ UI.define("Settings.Staff.Formfields", function() {
               </dd>
             </dl>
           </div>
-          <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
-          <div id="belong" className="formRow">
-            <input type="hidden" name="staff[shop_ids][]" value="" />
-            {this.renderWorkShops()}
-          </div>
-          {this.state.staffAccountLevel == "staff" ? (
+          {!this.props.staffAccountIsPending && (
             <div>
-              <h3>{this.props.workingSettingTitle}</h3>
-              <div className="formRow">
-                {this.renderStaffSchedulePermission()}
+              <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
+              <div id="belong" className="formRow">
+                <input type="hidden" name="staff[shop_ids][]" value="" />
+                {this.renderWorkShops()}
               </div>
-              <h3>{this.props.holidaySettingTitle}</h3>
-              <div className="formRow">
-                <dl className="onoffSetting">
-                  <dt>{this.props.holidayPermissionLabel}</dt>
-                  <dd>
-                    <input type="hidden" name="staff[staff_holiday_permission]" value="0" />
-                    <input type="checkbox" className="BTNonoff"
-                      id="allowTempOff"
-                      name="staff[staff_holiday_permission]"
-                      defaultValue="1"
-                      defaultChecked={this.props.staffHolidayPermission}
-                    />
-                    <label htmlFor="allowTempOff"></label>
-                  </dd>
-                </dl>
-              </div>
+              {this.state.staffAccountLevel == "staff" && (
+                <div>
+                  {this.workingShopOptions().length ? <h3>{this.props.workingSettingTitle}</h3> : null}
+                  {this.workingShopOptions().length ? (
+                    <div className="formRow">
+                      {this.renderStaffSchedulePermission()}
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
-          ) : null}
+          )}
         </div>
       );
     }

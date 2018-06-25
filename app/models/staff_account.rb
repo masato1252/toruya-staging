@@ -28,12 +28,10 @@ class StaffAccount < ApplicationRecord
   }
 
   belongs_to :staff
-  belongs_to :user
+  belongs_to :user, required: false # before staff account active, it won't connect with a user.
   belongs_to :owner, class_name: "User"
 
   validates :owner_id, presence: true
   validates :staff_id, presence: true, uniqueness: { scope: [:owner_id] }
-  validates :user_id, uniqueness: { scope: [:owner_id] }
-
-  scope :active, -> { where(state: StaffAccount.states[:active]) }
+  validates :user_id, uniqueness: { scope: [:owner_id] }, allow_nil: true,  if: -> { state == "active" }
 end

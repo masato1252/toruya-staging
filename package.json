@@ -9,7 +9,9 @@
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react_ujs": "^2.4.1"
+    "react_ujs": "^2.4.1",
+    "url-search-params-polyfill": "^4.0.0",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "webpack-dev-server": "^2.9.4"

@@ -276,6 +276,8 @@ UI.define("Reservation.Form", function() {
       this.setState({[eventTargetName]: event.target.value}, function() {
         if (this.props.memberMode) {
           this._validateReservation();
+          // clean staffs when the menu changes
+          if (eventTargetName === "menu_id") this.setState({staff_ids: []})
           // send rough validation request and set the errors
         }
         else {

@@ -56,6 +56,7 @@ ja:
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
+    pending: 承認待ち
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -280,6 +281,10 @@ ja:
       staff_capability: スタッフ
       manager_capability: 管理者
       gmail_hint: Ｇメールでスタッフアカウントを設定することで、あなたの店舗とスタッフ自身のスケジュールをスタッフ本人が管理できるようになります。
+      resend_email: 認証メールを再送する
+      sent_message: 設定されたスタッフのGメールに、スタッフアカウント認証手続きのお願いをお送りしました。スタッフ自身に届いたメールから認証をしてもらってください。
+      new_staff_active: 新たに承認されたスタッフアカウントがあります。スタッフの詳しい権限を設定できます。
+      staff_setting: スタッフ設定
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
@@ -332,6 +337,7 @@ ja:
       only_use_toruya_group_confirmation: "Google連絡先からインポートせずに同期設定を完了します。"
     account:
       info_title: アカウント
+      info_title2: アカウント情報
     profile:
       info_title: まずはアカウント設定
       info_1: Toruyaアカウントの登録情報です。
@@ -372,12 +378,17 @@ ja:
         restrict_dependent_destroy:
           has_one: "%{record}が存在しているので削除できません"
           has_many: "%{record}が存在しているので削除できません"
+      models:
+        staff_account:
+          attributes:
+            user_id:
+              taken:  "^ユーザーはすでに存在します"
     models:
-      user: "User"
+      user: ユーザー
       staff: スタッフ
     attributes:
       user:
-        password: "Password"
+        password: "パスワード"
         email: "E-mail"
         password: "パスワード"
         password_confirmation: "input password again"
@@ -409,6 +420,10 @@ ja:
         zip_code: 郵便番号
         address: 住所
         phone_number: 電話番号
+      staff_account:
+        user: ユーザー
+        user_id: ユーザー
+        owner_id: ユーザー
   date:
     abbr_day_names:
     - 日

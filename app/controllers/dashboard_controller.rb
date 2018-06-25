@@ -1,4 +1,6 @@
 class DashboardController < ActionController::Base
+  abstract!
+
   layout "application"
   include Authorization
   include ViewHelpers

@@ -11,8 +11,9 @@ class ReservationsController < DashboardController
     # Calendar START
     # The calendar green cirlce is Working Date is for some staffs
     # The calendar gray cirlce area is Reservations is for this Shop
-    @working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: @date.beginning_of_month..@date.end_of_month)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: @date.beginning_of_month..@date.end_of_month)
+    date_range = @date.beginning_of_month.beginning_of_day..@date.end_of_month.end_of_day
+    @working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: date_range)
+    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: date_range)
     # Calendar END
 
     # Staff schedules on date START

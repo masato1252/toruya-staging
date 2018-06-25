@@ -33,6 +33,6 @@ module ApplicationHelper
   end
 
   def body_class
-    @body_class
+    "#{controller_name}-container #{@body_class}"
   end
 end

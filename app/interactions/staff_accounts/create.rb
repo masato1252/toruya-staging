@@ -2,6 +2,7 @@ module StaffAccounts
   class Create < ActiveInteraction::Base
     object :staff
     object :owner, class: User
+    boolean :resend, default: false
 
     hash :params do
       string :email, default: nil
@@ -26,7 +27,7 @@ module StaffAccounts
         staff_account.state = :pending
       end
 
-      if staff_account.email_changed? || (staff_account.email.present? && !staff_account.user) || (staff_account.user && staff_account.pending?)
+      if resend || staff_account.email_changed?
         staff_account.user = User.find_by(email: staff_account.email)
 
         if staff_account.owner?
