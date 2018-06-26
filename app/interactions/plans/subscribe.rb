@@ -3,6 +3,7 @@ module Plans
     object :user
     object :plan
     string :authorize_token, default: nil # free plan don't need this.
+    boolean :upgrade_immediately, default: true
 
     def execute
       if subscription = user.subscription
@@ -22,11 +23,11 @@ module Plans
           compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
         end
       else
-        if subscription.plan.become(plan).positive?
-          # upgrade
+        if subscription.plan.become(plan).positive? && upgrade_immediately
+          # upgrade immediately
           compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
         else
-          # downgrade
+          # downgrade/upgrade later
           subscription.update(next_plan: plan)
         end
       end
