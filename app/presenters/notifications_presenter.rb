@@ -21,7 +21,7 @@ class NotificationsPresenter
   end
 
   def new_staff_accounts
-    current_user.staffs.active.where(first_name: "").includes(:staff_account).map do |staff|
+    current_user.staffs.active_without_data.includes(:staff_account).map do |staff|
       "#{I18n.t("settings.staff_account.new_staff_active")} #{view_context.link_to(I18n.t("settings.staff_account.staff_setting"), view_context.edit_settings_user_staff_path(current_user, staff))}"
     end
   end
