@@ -27,5 +27,10 @@ class MembersController < DashboardController
                                 reason: reservation_and_off_schedule.reason.presence || "臨時休暇")
       end
     end.sort_by { |option| option.time }
+
+
+    @notification_messages = current_user.staffs.active.where(first_name: "").includes(:staff_account).map do |staff|
+      "#{I18n.t("settings.staff_account.new_staff_active")} #{view_context.link_to(I18n.t("settings.staff_account.staff_setting"), edit_settings_user_staff_path(current_user, staff))}"
+    end
   end
 end

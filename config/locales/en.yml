@@ -57,6 +57,7 @@ en:
     select_a_menu: Please select a menu
     select_a_staff: Please select a staff
     google_down: We can't connect with Google currently. Please try again later. Re-login might fix the problem immediately.
+    pending: Pending
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -274,6 +275,11 @@ en:
       capability: Capability
       staff_capability: Staff
       manager_capability: Manager
+      gmail_hint: By setting a gmail account as a staff account, you can allow your staff to manage both your shop reservation and personal schedule on Toruya all by own.
+      resend_email: Resend Activation Email
+      sent_message: We sent activation email to staff's Gmail. Please ask your staff to accept staff account from email we send.
+      new_staff_active: You have a new staff account just activated. You can set staff detailed capabilities now.
+      staff_setting: Staff setting
     staff_working_time:
       info_1: Here is the list of staff you set.
       info_2: Toruya will accept reservation based on this setting.
@@ -320,6 +326,7 @@ en:
       only_use_toruya_group_confirmation: "Are you sure?"
     account:
       info_title: Account
+      info_title2: Account Info
     profile:
       info_title: Let's Setup Your Account and Shop'
       info_1: This is your Toruya Account setting.

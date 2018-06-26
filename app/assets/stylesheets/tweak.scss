@@ -1,4 +1,9 @@
 @import "variables";
+
+.notification.alert.alert-info {
+  margin-bottom: 0;
+}
+
 .field-error {
   border: 2px solid #CF0003;
 }
@@ -220,3 +225,17 @@ button[disabled], a.disabled, input[disabled] {
     }
   }
 }
+
+#error_explanation {
+  color: #f00;
+
+  ul {
+    list-style: none;
+    margin: 0 0 18px 0;
+
+    li.error-list {
+      display: list-item;
+    }
+  }
+}
+

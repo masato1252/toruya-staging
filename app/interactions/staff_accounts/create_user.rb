@@ -30,7 +30,7 @@ module StaffAccounts
         staff_account.state = :active
         staff_account.save
 
-        { user: user, owner: staff_account.owner }
+        { user: staff_account.user, owner: staff_account.owner }
       else
         errors.add(:base, "token was invalid")
       end

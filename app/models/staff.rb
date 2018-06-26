@@ -29,13 +29,15 @@ class Staff < ApplicationRecord
   has_many :custom_schedules, dependent: :destroy
   has_many :reservation_staffs
   has_many :reservations, through: :reservation_staffs
-  has_one :staff_account
+  has_one :staff_account, dependent: :destroy
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 
-  validates :last_name, presence: true
-  validates :first_name, presence: true
-
-  scope :active, -> { where(deleted_at: nil) }
+  scope :active, -> { where(deleted_at: nil).where.not(first_name: "").joins(:staff_account).where("staff_accounts.state": StaffAccount.states[:active]) }
   scope :deleted, -> { where.not(deleted_at: nil) }
+  scope :undeleted, -> { where(deleted_at: nil) }
+
+  def active?
+    !deleted_at && staff_account&.active?
+  end
 end

@@ -25,16 +25,15 @@ class Settings::ShopsController < SettingsController
   # POST /shops
   # POST /shops.json
   def create
-    @shop = super_user.shops.new(shop_params)
+    outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h)
 
-    respond_to do |format|
-      if @shop.save
-        format.html { redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message") }
-        format.json { render :show, status: :created, location: @shop }
-      else
-        format.html { render :new }
-        format.json { render json: @shop.errors, status: :unprocessable_entity }
-      end
+    if outcome.valid?
+      redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message")
+    else
+      @shop = super_user.shops.new(shop_params)
+      @shop.valid?
+
+      render :new
     end
   end
 

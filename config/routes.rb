@@ -83,7 +83,11 @@ Rails.application.routes.draw do
 
     resources :users do
       resource :profile
-      resources :staffs, except: [:show]
+      resources :staffs, except: [:show] do
+        collection do
+          get :resend_activation_email
+        end
+      end
       resources :business_schedules, only: [:index]
       resources :menus, except: [:show] do
         get :repeating_dates, on: :collection
@@ -139,5 +143,5 @@ Rails.application.routes.draw do
   end
 
   get "settings/:super_user_id", to: "home#settings", as: :settings
-  root to: "home#index"
+  root to: "members#show"
 end

@@ -6,7 +6,7 @@ UI.define("Select", function() {
   return class Select extends React.Component {
     static defaultProps = {
       prefix: "",
-      blankOption: " -- select an option -- "
+      blankOption: "オプションを選択"
     };
 
     render() {

@@ -6,7 +6,7 @@ class Customers::FilterController < DashboardController
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = super_user.staffs.map do |staff|
+    @staff_options = super_user.staffs.active.map do |staff|
       ::Options::StaffOption.new(id: staff.id, name: staff.name)
     end
 

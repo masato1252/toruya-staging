@@ -3,17 +3,6 @@ class HomeController < ApplicationController
   include ViewHelpers
   layout "home"
 
-  def index
-    #XXX Cleanup the shop session to avoid, since we don't need it here and it caused issues that user try to get into unpermission shop.
-    session[:shop_id] = nil
-    shop_owners = current_user.staff_accounts.map(&:owner).push(current_user).uniq
-
-    # current_user is shop owner and doesn't work for others(staff) and only have one shop
-    if (shop_owners.count == 1 && shop_owners.first == current_user) && current_user.shops.count == 1
-      redirect_to shop_reservations_path(current_user.shops.first)
-    end
-  end
-
   def settings
     super_user = User.find(params[:super_user_id])
 

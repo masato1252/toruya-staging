@@ -90,7 +90,7 @@ class Ability
       end
 
       can :manage, "userself_holiday_permission" do
-        current_user_staff.staff_holiday_permission
+        true
       end
     end
   end
