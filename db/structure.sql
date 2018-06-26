@@ -739,7 +739,8 @@ CREATE TABLE public.reservation_staffs (
     reservation_id integer NOT NULL,
     staff_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    state integer DEFAULT 0
 );
 
 
@@ -778,7 +779,8 @@ CREATE TABLE public.reservations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     count_of_customers integer DEFAULT 0,
-    with_warnings boolean DEFAULT false NOT NULL
+    with_warnings boolean DEFAULT false NOT NULL,
+    by_staff_id integer
 );
 
 
@@ -1156,8 +1158,7 @@ CREATE TABLE public.users (
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    level integer DEFAULT 0 NOT NULL,
-    authentication_token character varying(30)
+    level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1178,6 +1179,40 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: versions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.versions (
+    id bigint NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object text,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.versions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
@@ -1395,6 +1430,13 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
@@ -1659,6 +1701,14 @@ ALTER TABLE ONLY public.subscriptions
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.versions
+    ADD CONSTRAINT versions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1949,13 +1999,6 @@ CREATE INDEX index_subscriptions_on_user_id ON public.subscriptions USING btree 
 
 
 --
--- Name: index_users_on_authentication_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_authentication_token ON public.users USING btree (authentication_token);
-
-
---
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1981,6 +2024,13 @@ CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING bt
 --
 
 CREATE UNIQUE INDEX index_users_on_unlock_token ON public.users USING btree (unlock_token);
+
+
+--
+-- Name: index_versions_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING btree (item_type, item_id);
 
 
 --
@@ -2068,6 +2118,13 @@ CREATE INDEX staff_working_time_index ON public.business_schedules USING btree (
 
 
 --
+-- Name: state_by_staff_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (staff_id, state);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2127,11 +2184,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170827131921'),
 ('20171118075544'),
 ('20171127134653'),
-('20180120080732'),
 ('20180413110627'),
 ('20180413153332'),
 ('20180524222348'),
 ('20180524222614'),
-('20180524223443');
+('20180524223443'),
+('20180612021000'),
+('20180617004311'),
+('20180620074249');
 
 
