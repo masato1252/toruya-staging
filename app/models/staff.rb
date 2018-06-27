@@ -33,11 +33,18 @@ class Staff < ApplicationRecord
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
 
-  scope :active, -> { where(deleted_at: nil).where.not(first_name: "").joins(:staff_account).where("staff_accounts.state": StaffAccount.states[:active]) }
+  scope :active, -> { undeleted.where.not(first_name: "").joins(:staff_account).where("staff_accounts.state": StaffAccount.states[:active]) }
+  scope :active_without_data, -> { undeleted.where(first_name: "").joins(:staff_account).where("staff_accounts.state": StaffAccount.states[:active]) }
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :undeleted, -> { where(deleted_at: nil) }
 
+  delegate :user_id, to: :staff_account
+
   def active?
     !deleted_at && staff_account&.active?
+  end
+
+  def can?(*args)
+    Ability.new(staff_account.user, user).can?(*args)
   end
 end

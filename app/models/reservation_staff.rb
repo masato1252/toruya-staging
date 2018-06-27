@@ -7,9 +7,15 @@
 #  staff_id       :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  state          :integer          default("pending")
 #
 
 class ReservationStaff < ApplicationRecord
+  enum state: {
+    pending: 0,
+    accepted: 1
+  }
+
   belongs_to :reservation
   belongs_to :staff
 

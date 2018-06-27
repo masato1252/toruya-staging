@@ -1,0 +1,15 @@
+■確認が必要な予約があります■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+誰かが、<%= @user.name %>さんによる確認が必要な予約を作成しました。
+
+以下のご予約について、速やかにご確認をお願いします。
+
+
+<% @reservations.each do |reservation| %>
+  <%= l(reservation.start_time, format: :date) %> <%= l(reservation.start_time, format: :hour_minute) %>〜<%= l(reservation.end_time, format: :hour_minute) %> <%= member_url %>
+  <%= reservation.by_staff.name %>が<%= l(reservation.created_at) %>に作成
+<% end %>

@@ -99,6 +99,8 @@ module OptionsHelper
                                   customer_names.first
                                 end
 
+      acceptable = r.acceptable_by_staff?(current_user.current_staff(r.shop.user))
+
       React.camelize_props({
         id: r.id,
         year: r.start_time.year,
@@ -115,7 +117,8 @@ module OptionsHelper
         staffs: sentences[:staffs_sentence],
         deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
         memo: simple_format(r.memo),
-        with_warnings: r.with_warnings
+        with_warnings: r.with_warnings,
+        acceptable: acceptable
       })
     end
   end

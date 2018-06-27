@@ -111,18 +111,24 @@ UI.define("Customers.CustomerReservationsView", function() {
                   </div>
                   <div className="modal-footer">
                     <dl>
-                      {this.reservactionBehaviors[reservation.state].map(function(behavior) {
-                        return (
-                          <dd key={`reseravtion-${reservation.id}-action-${behavior["action"]}`}>
-                            <a
-                              href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=${behavior["action"]}&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
-                              className={`btn ${behavior["btn_color"]}`}
-                              >
-                              {behavior["label"]}
-                            </a>
-                          </dd>
-                        );
-                      })}
+                    {this.reservactionBehaviors[reservation.state].map(function(behavior) {
+                        if (behavior["action"] === "accept" && !reservation.acceptable) {
+                          return;
+                        }
+                        else {
+                          return (
+                            <dd key={`reseravtion-${reservation.id}-action-${behavior["action"]}`}>
+                              <a
+                                href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=${behavior["action"]}&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
+                                className={`btn ${behavior["btn_color"]}`}
+                                >
+                                {behavior["label"]}
+                              </a>
+                            </dd>
+                          );
+                        }
+                        })
+                      }
                       {
                         reservation.state !== "canceled" ? (
                           <dd>

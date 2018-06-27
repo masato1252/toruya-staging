@@ -14,10 +14,13 @@
 #  updated_at         :datetime         not null
 #  count_of_customers :integer          default(0)
 #  with_warnings      :boolean          default(FALSE), not null
+#  by_staff_id        :integer
 #
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
+  has_paper_trail on: [:update]
+
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
@@ -32,6 +35,7 @@ class Reservation < ApplicationRecord
 
   belongs_to :shop
   belongs_to :menu
+  belongs_to :by_staff, class_name: "Staff"
   has_many :reservation_staffs, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
   has_many :reservation_customers, dependent: :destroy
@@ -94,6 +98,34 @@ class Reservation < ApplicationRecord
 
   def end_time_time
     end_time.try(:to_s, :time)
+  end
+
+  def for_staff(staff)
+    reservation_staffs.find_by(staff: staff)
+  end
+
+  def acceptable_by_staff?(staff)
+    may_accept? && (
+      reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id }&.pending? : for_staff(staff)&.pending?
+    )
+  end
+
+  def accepted_by_all_staffs?
+    !reservation_staffs.pending.exists?
+  end
+
+
+  ACTIONS = {
+    "checked_in" => ["check_out", "cancel", "edit"],
+    "reserved" => ["check_in", "pend", "cancel", "edit"],
+    "noshow" => ["check_in", "pend"],
+    "pending" => ["accept", "cancel", "edit"],
+    "checked_out" => ["recheck_in", "pend", "cancel", "edit"],
+    "canceled" => ["accept", "edit"]
+  }.freeze
+
+  def actions
+    ACTIONS[aasm_state]
   end
 
   private
