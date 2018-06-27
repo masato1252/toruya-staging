@@ -31,7 +31,6 @@ class Subscription < ApplicationRecord
   belongs_to :user
 
   scope :recurring_chargeable_at, ->(date) {
-    #??
     return none if date < today
 
     # Exclude when creation and query date are the same date
@@ -44,13 +43,17 @@ class Subscription < ApplicationRecord
     end
   }
 
-  def active?
-    expired_date > Subscription.today
-  end
-
   def self.today
     # Use default time zone(Tokyo) currently
     Time.now.in_time_zone(Rails.configuration.time_zone).to_date
+  end
+
+  def active?
+    expired_date >= self.class.today
+  end
+
+  def chargeable?
+    expired_date <= self.class.today
   end
 
   def set_recurring_day
@@ -58,12 +61,7 @@ class Subscription < ApplicationRecord
   end
 
   def set_expire_date
-    # XXX: I want to charge in the morning, don't expire in the middle of the day.
-    self.expired_date = next_charge_date.next_day
-  end
-
-  def chargeable?(options = {})
-    self.class.today >= next_charge_date
+    self.expired_date = next_charge_date
   end
 
   private
@@ -76,7 +74,6 @@ class Subscription < ApplicationRecord
     end
   end
 
-  # Find charge date for a given month
   def recurring_date(year, month)
     end_day_of_month = Date.new(year, month).end_of_month.day
 
@@ -87,11 +84,4 @@ class Subscription < ApplicationRecord
     date = user.subscription_charges.last_completed.charge_date.next_month
     recurring_date(date.year, date.month)
   end
-
-  # Manual retry charging subscription
-  # def manual_retry_charge!(params)
-  #   create_charge!(charge_date: scheduled_recurring_date, manual: true) do |charge|
-  #     charge.manual_charge!(params)
-  #   end
-  # end
 end
