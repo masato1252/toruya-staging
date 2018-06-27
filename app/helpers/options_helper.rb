@@ -99,7 +99,7 @@ module OptionsHelper
                                   customer_names.first
                                 end
 
-      acceptable = r.acceptable_by_staff?(current_user_staff)
+      acceptable = r.acceptable_by_staff?(current_user.current_staff(r.shop.user))
 
       React.camelize_props({
         id: r.id,

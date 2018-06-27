@@ -91,7 +91,7 @@
                   </dd>
                 <% end %>
 
-                <% if reservation.acceptable_by_staff?(current_user_staff) %>
+                <% if reservation.acceptable_by_staff?(current_user.current_staff(reservation.shop.user)) %>
                   <dd>
                     <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
                   </dd>

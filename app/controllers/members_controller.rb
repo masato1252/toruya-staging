@@ -7,7 +7,7 @@ class MembersController < DashboardController
 
     @reservations = Reservation.where(shop_id: all_shop_options.map(&:shop_id).uniq).
       uncanceled.in_date(@date).
-      includes(:menu, :customers, :staffs, :shop).
+      includes(:menu, :customers, :staffs, shop: :user).
       order("reservations.start_time ASC")
 
     staffs_off_schedules = CustomSchedule.where(staff_id: all_shop_options.map(&:staff_id).uniq).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
