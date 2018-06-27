@@ -8,7 +8,6 @@ module Subscriptions
     def execute
       SubscriptionCharge.transaction do
         charge = user.subscription_charges.create!(
-          user: user,
           plan: plan,
           amount: Money.new(plan.cost, Money.default_currency.id),
           charge_date: Subscription.today,
@@ -16,7 +15,7 @@ module Subscriptions
         )
 
         begin
-          oo = Stripe::Charge.create({
+          Stripe::Charge.create({
             amount: plan.cost,
             currency: Money.default_currency.iso_code,
             customer: stripe_customer_id,

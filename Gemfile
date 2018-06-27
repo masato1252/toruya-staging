@@ -75,3 +75,7 @@ group :development do
   gem "bullet", "~> 2.0.0"
   gem "awesome_rails_console", "~> 0.4.0"
 end
+
+group :test do
+  gem "stripe-ruby-mock", "~> 2.5.4", require: "stripe_mock"
+end
