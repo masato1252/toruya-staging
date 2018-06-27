@@ -26,6 +26,12 @@ class Settings::StaffsController < SettingsController
   # GET /staffs/1/edit
   def edit
     @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
+    if @staff.active? && (profile = @staff_account.user.profile)
+      @staff.first_name = @staff.first_name.presence || profile.first_name
+      @staff.last_name = @staff.last_name.presence || profile.last_name
+      @staff.phonetic_first_name = @staff.phonetic_first_name.presence || profile.phonetic_first_name
+      @staff.phonetic_last_name = @staff.phonetic_last_name.presence || profile.phonetic_last_name
+    end
   end
 
   # POST /staffs
