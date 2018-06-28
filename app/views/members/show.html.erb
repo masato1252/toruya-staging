@@ -1,5 +1,5 @@
 <%= notification_messages %>
-<div id="dashboard" class="contents">
+<%= dashboard_tag do %>
   <div id="calendar" class="sidel">
     <%= react_component("calendar/calendar",
                         {
@@ -52,4 +52,4 @@
 
   <%= render "reservations/new_modal", date: @date %>
   <%= render "reservations/off_date_modal", staff: nil, date: @date %>
-</div>
+<% end %>
