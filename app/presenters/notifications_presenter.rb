@@ -16,7 +16,8 @@ class NotificationsPresenter
     staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
 
     reservation_staffs = ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending).map do |reservation_staff|
-      "#{I18n.t("notifications.pending_reservation_need_confirm")} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.accept_shop_reservation_states_path(reservation_staff.reservation.shop, reservation_staff.reservation))}"
+      res = reservation_staff.reservation
+      "#{I18n.t("notifications.pending_reservation_need_confirm")} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.date_member_path(res.start_time.to_s(:date), res.id))}"
     end
   end
 
