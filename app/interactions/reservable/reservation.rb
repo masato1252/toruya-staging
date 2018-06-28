@@ -194,7 +194,7 @@ module Reservable
           where.not("reservations.aasm_state": "canceled").
           where("reservation_staffs.staff_id": staff.id).
           where("reservations.shop_id = ?", shop.id).
-          where("reservations.start_time < ? and reservations.ready_time > ?", end_time + menu.interval.minutes, start_time).exists?
+          where("reservations.start_time < ? and reservations.end_time > ?", end_time, start_time).exists?
       end
 
       if overlap_reservations_exist
