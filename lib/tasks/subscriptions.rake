@@ -2,7 +2,7 @@ namespace :subscriptions do
   task :charge => :environment do
     today = Subscription.today
 
-    Subscription.charge_required.recurring_chargeable_at(today).find_each do |subscription|
+    Subscription.charge_required.recurring_chargeable_at(today).chargeable(today).find_each do |subscription|
       SubscriptionChargeJob.perform_later(subscription)
     end
   end

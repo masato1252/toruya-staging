@@ -21,7 +21,6 @@ class Subscription < ApplicationRecord
   #   active: 1,
   #   past_due: 2
   # }
-  # scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
   # scope :charge_free, -> { where(plan_id: FREE_PLAN_ID) }
 
   FREE_PLAN_ID = 1
@@ -42,6 +41,12 @@ class Subscription < ApplicationRecord
       scope.where(recurring_day: date.day)
     end
   }
+
+  scope :chargeable, -> (date) {
+    where("expired_date <= ?", date)
+  }
+
+  scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
 
   def self.today
     # Use default time zone(Tokyo) currently
