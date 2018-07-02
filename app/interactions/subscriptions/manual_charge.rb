@@ -16,6 +16,8 @@ module Subscriptions
         subscription.set_recurring_day
         subscription.set_expire_date
         subscription.save!
+
+        SubscriptionMailer.charge_successfully(subscription).deliver_now
       end
     end
   end

@@ -29,10 +29,12 @@ RSpec.describe Subscriptions::ManualCharge do
   describe "#execute" do
     it "charges subscription" do
       allow(Payments::StoreStripeCustomer).to receive(:run).and_return(spy(valid?: true, result: stripe_customer_id))
+      allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
       outcome
 
       subscription.reload
       expect(Payments::StoreStripeCustomer).to have_received(:run).with(user: subscription.user, authorize_token: authorize_token)
+      expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
       expect(subscription.plan).to eq(plan)
       expect(subscription.next_plan).to be_nil
       expect(subscription.recurring_day).to eq(Subscription.today.day)

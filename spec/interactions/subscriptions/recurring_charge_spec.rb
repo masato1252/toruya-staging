@@ -41,12 +41,14 @@ RSpec.describe Subscriptions::RecurringCharge do
       let(:subscription) { FactoryBot.create(:subscription, :premium) }
 
       it "charges user" do
+        allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
         outcome
 
         subscription.reload
         expect(subscription.plan).to eq(Plan.premium_level.take)
         expect(subscription.next_plan).to be_nil
         expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
+        expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
       end
 
       context "when charging users failed" do
@@ -57,6 +59,8 @@ RSpec.describe Subscriptions::RecurringCharge do
 
         # [TODO]: notify users?
         it "doesn't change subscription" do
+          expect(SubscriptionMailer).not_to receive(:charge_successfully)
+
           outcome
 
           subscription.reload

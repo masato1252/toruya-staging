@@ -21,6 +21,8 @@ module Subscriptions
           subscription.next_plan = nil
           subscription.set_expire_date
           subscription.save!
+
+          SubscriptionMailer.charge_successfully(subscription).deliver_now
         end
       end
     end
