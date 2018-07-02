@@ -66,6 +66,11 @@ en:
     my_shop_setting: My shop settings
     search_data: Search Data
     someone_shop: "%{name}'s shop"
+  plan:
+    level:
+      free: Free
+      basic: Basic
+      premium: Premium
   notifications:
     pending_reservation_need_confirm: You have a reservation need to be confirm.
     pending_reservation_confirm: Check here

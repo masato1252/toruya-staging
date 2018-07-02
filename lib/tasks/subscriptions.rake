@@ -7,13 +7,11 @@ namespace :subscriptions do
     end
   end
 
-  task :expired_ard_notification => :environment do
-    today = Subscription.today
+  task :charge_reminder => :environment do
+    seven_days_later = Subscription.today.advance(days: 7)
 
-    Subscription.charge_free.recurring_chargeable_at(today).find_each do |subscription|
-      next unless subscription.chargeable?
-
-      # Delayer.enqueue(CreditSubscriptionChargeJob, subscription.id, today)
+    Subscription.charge_required.recurring_chargeable_at(seven_days_later).chargeable(seven_days_later).find_each do |subscription|
+      SubscriptionMailer.charge_reminder(subscription).deliver_later
     end
   end
 end

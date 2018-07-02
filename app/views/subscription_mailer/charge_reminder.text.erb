@@ -1,0 +1,18 @@
+■ご請求のご連絡■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。
+
+以下の通り、お客様のクレジットカードにToruyaご利用料金のご請求をさせていただきます。
+
+ご利用プラン：<%= @charging_plan.name %>
+請求年月日：<%= l(@next_period.first, format: :year_month_date) %>
+ご利用期間：<%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+請求金額：<%= @cost %>（税込）
+
+お支払いの履歴はhttps://manager.toruya.com/account/paymentにてご確認いただけます。
+
+※請求年月日にお支払いが完了しない場合、自動的にフリーメンバーに切り替えとなりますのでご了承ください。

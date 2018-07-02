@@ -49,4 +49,17 @@ RSpec.describe Subscription do
       end
     end
   end
+
+  describe "#next_period" do
+    it "returns expected period" do
+      [
+        [Date.new(2018, 1, 1), Date.new(2018, 2, 1)],
+        [Date.new(2018, 1, 31), Date.new(2018, 2, 28)],
+      ].each do |expired_date, expected_next_end_date|
+        subscription = FactoryBot.create(:subscription, expired_date: expired_date, recurring_day: expired_date.day)
+
+        expect(subscription.next_period).to eq(expired_date..expected_next_end_date)
+      end
+    end
+  end
 end

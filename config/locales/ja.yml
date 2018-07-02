@@ -65,6 +65,11 @@ ja:
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
+  plan:
+    level:
+      free: 無料
+      basic: ベーシック
+      premium: プレミアム
   notifications:
     pending_reservation_need_confirm: 確認が必要な予約があります。
     pending_reservation_confirm: 予約を確認
@@ -478,6 +483,16 @@ ja:
     - :year
     - :month
     - :day
+  time:
+    am: 午前
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
+      short: "%y/%m/%d %H:%M"
+      date: "%Y/%m/%d(%a)"
+      hour_minute: "%H:%M"
+      month_day_wday: "%m/%d(%a)"
+    pm: 午後
   datetime:
     distance_in_words:
       about_x_hours:
@@ -604,16 +619,11 @@ ja:
       last_word_connector: と
       two_words_connector: と
       words_connector: と
-  time:
-    am: 午前
+  date:
     formats:
-      default: "%Y/%m/%d %H:%M"
-      long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
+      default: "%Y/%m/%d"
       short: "%y/%m/%d %H:%M"
       date: "%Y/%m/%d(%a)"
-      hour_minute: "%H:%M"
-      month_day_wday: "%m/%d(%a)"
-    pm: 午後
   active_interaction:
     errors:
       models:

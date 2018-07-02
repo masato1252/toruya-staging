@@ -26,6 +26,14 @@ class Plan < ApplicationRecord
     COST[Money.default_currency.id][level]
   end
 
+  def cost_with_currency
+    Money.new(cost, Money.default_currency.id)
+  end
+
+  def name
+    I18n.t("plan.level.#{level}")
+  end
+
   # -1: downgrade
   #  0: same level
   #  1: upgrade
