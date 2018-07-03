@@ -619,11 +619,6 @@ ja:
       last_word_connector: と
       two_words_connector: と
       words_connector: と
-  date:
-    formats:
-      default: "%Y/%m/%d"
-      short: "%y/%m/%d %H:%M"
-      date: "%Y/%m/%d(%a)"
   active_interaction:
     errors:
       models:
