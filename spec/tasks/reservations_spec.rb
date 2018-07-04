@@ -38,9 +38,9 @@ RSpec.describe "rake reservations:pending_notifications" do
 
       it "sends the jobs to the active staff_account's users" do
         expect(PendingReservationSummaryJob).to receive(:perform_later).
-          with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first, time_range.last).once
+          with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
         expect(PendingReservationSummaryJob).to receive(:perform_later).
-          with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first, time_range.last).once
+          with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
 
         task.execute
       end
@@ -62,9 +62,9 @@ RSpec.describe "rake reservations:pending_notifications" do
 
       it "sends the jobs to the users" do
         expect(PendingReservationSummaryJob).to receive(:perform_later).
-          with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first, time_range.last).once
+          with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
         expect(PendingReservationSummaryJob).to receive(:perform_later).
-          with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first, time_range.last).once
+          with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
 
         task.execute
       end

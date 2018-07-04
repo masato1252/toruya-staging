@@ -23,7 +23,7 @@ RSpec.describe PendingReservationSummaryJob do
       # Pending reservations between today 8:00AM ~ today 7:59PM summary email
       expect(ReservationMailer).to receive(:pending_summary).with([matched_pending_reservation1, matched_pending_reservation2], user).and_return(double(deliver_now: true))
 
-      described_class.perform_now(user.id, time_range.first, time_range.last)
+      described_class.perform_now(user.id, time_range.first.to_s, time_range.last.to_s)
     end
   end
 end
