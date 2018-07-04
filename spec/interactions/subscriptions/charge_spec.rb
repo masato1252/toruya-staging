@@ -10,12 +10,13 @@ RSpec.describe Subscriptions::Charge do
       source: stripe_helper.generate_card_token
     })
   end
+  let(:manual) { true }
   let(:args) do
     {
       user: user,
       plan: plan,
       stripe_customer_id: stripe_customer.id,
-      manual: true
+      manual: manual
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -55,6 +56,17 @@ RSpec.describe Subscriptions::Charge do
         ).last
 
         expect(charge).to be_charge_failed
+      end
+
+      context "when charge is automatically" do
+        let(:manual) { false }
+
+        it "notfiy users" do
+          StripeMock.prepare_card_error(:card_declined)
+          expect(SubscriptionMailer).to receive(:charge_failed).with(user.subscription).and_return(double(deliver_now: true))
+
+          outcome
+        end
       end
     end
   end

@@ -619,6 +619,13 @@ ja:
       last_word_connector: と
       two_words_connector: と
       words_connector: と
+  subscription_mailer:
+    charge_successfully:
+      title: Toruyaご請求完了のご連絡
+    charge_failed:
+      title: Toruyaクレジットカードの利用承認が得られませんでした
+    charge_reminder:
+      title: Toruyaご請求のご連絡
   active_interaction:
     errors:
       models:

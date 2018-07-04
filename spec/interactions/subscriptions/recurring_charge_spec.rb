@@ -57,9 +57,9 @@ RSpec.describe Subscriptions::RecurringCharge do
           StripeMock.prepare_card_error(:card_declined)
         end
 
-        # [TODO]: notify users?
         it "doesn't change subscription" do
           expect(SubscriptionMailer).not_to receive(:charge_successfully)
+          expect(SubscriptionMailer).to receive(:charge_failed).with(subscription).and_return(double(deliver_now: true))
 
           outcome
 

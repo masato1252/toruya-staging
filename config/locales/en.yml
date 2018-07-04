@@ -405,6 +405,16 @@ en:
     - :month
     - :day
     - :year
+  time:
+    am: am
+    formats:
+      default: "%a, %d %b %Y %I:%M:%S %p %Z"
+      long: "%B %d, %Y %I:%M %p"
+      short: "%d %b %I:%M %p"
+      date: "%B %d, %Y"
+      hour_minute: "%H:%M"
+      month_day_wday: "%m/%d(%a)"
+    pm: pm
   datetime:
     distance_in_words:
       about_x_hours:
@@ -546,16 +556,13 @@ en:
       last_word_connector: ", and "
       two_words_connector: " and "
       words_connector: ", "
-  time:
-    am: am
-    formats:
-      default: "%a, %d %b %Y %I:%M:%S %p %Z"
-      long: "%B %d, %Y %I:%M %p"
-      short: "%d %b %I:%M %p"
-      date: "%B %d, %Y"
-      hour_minute: "%H:%M"
-      month_day_wday: "%m/%d(%a)"
-    pm: pm
+  subscription_mailer:
+    charge_successfully:
+      title: Toruya Payment Notification
+    charge_failed:
+      title: Toruya Payment Failure Notification
+    charge_reminder:
+      title: Toruya Billing Notification
   active_interaction:
     errors:
       models:

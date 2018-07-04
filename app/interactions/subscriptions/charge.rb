@@ -27,6 +27,7 @@ module Subscriptions
           Rollbar.error(error, charge: charge.id)
 
           charge.charge_failed!
+          SubscriptionMailer.charge_failed(user.subscription).deliver_now unless manual
           errors.add(:plan, :charge_failed)
         end
 
