@@ -12,7 +12,9 @@ class SubscriptionMailer < ApplicationMailer
     @charging_plan = subscription.next_plan || subscription.plan
     @cost = @charging_plan.cost_with_currency.format
 
-    mail(:to => @user.email,
-         :subject => subject("Toruyaご請求のご連絡"))
+    mail(to: @user.email,
+         subject: subject("Toruyaご請求のご連絡"),
+         locale: I18n.default_locale
+        )
   end
 end
