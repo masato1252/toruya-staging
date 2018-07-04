@@ -15,11 +15,12 @@ module Subscriptions
         )
 
         begin
-          Stripe::Charge.create({
+          stripe_charge = Stripe::Charge.create({
             amount: plan.cost,
             currency: Money.default_currency.iso_code,
             customer: stripe_customer_id,
           })
+          charge.stripe_charge_details = stripe_charge.as_json
           charge.completed!
         rescue Stripe::CardError, Stripe::StripeError => error
           Rollbar.error(error, charge: charge.id)

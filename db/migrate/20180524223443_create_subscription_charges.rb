@@ -8,6 +8,7 @@ class CreateSubscriptionCharges < ActiveRecord::Migration[5.1]
       t.integer :state
       t.date :charge_date
       t.boolean :manual, default: false, null: false
+      t.jsonb :stripe_charge_details
       t.timestamps
     end
   end

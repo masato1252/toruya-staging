@@ -1073,6 +1073,7 @@ CREATE TABLE public.subscription_charges (
     state integer,
     charge_date date,
     manual boolean DEFAULT false NOT NULL,
+    stripe_charge_details jsonb,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

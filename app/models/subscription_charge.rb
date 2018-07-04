@@ -2,16 +2,17 @@
 #
 # Table name: subscription_charges
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  plan_id         :integer
-#  amount_cents    :decimal(, )
-#  amount_currency :string
-#  state           :integer
-#  charge_date     :date
-#  manual          :boolean          default(FALSE), not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                    :integer          not null, primary key
+#  user_id               :integer
+#  plan_id               :integer
+#  amount_cents          :decimal(, )
+#  amount_currency       :string
+#  state                 :integer
+#  charge_date           :date
+#  manual                :boolean          default(FALSE), not null
+#  stripe_charge_details :jsonb
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
 #
 
 class SubscriptionCharge < ApplicationRecord
