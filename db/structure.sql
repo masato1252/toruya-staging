@@ -2134,6 +2134,13 @@ CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (s
 
 
 --
+-- Name: user_state_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_id, state);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 

@@ -14,5 +14,6 @@ class CreateSubscriptionCharges < ActiveRecord::Migration[5.1]
     end
 
     add_index :subscription_charges, :order_id, name: :order_id_index
+    add_index :subscription_charges, [:user_id, :state], name: :user_state_index
   end
 end
