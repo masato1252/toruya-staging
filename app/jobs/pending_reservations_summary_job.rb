@@ -1,4 +1,4 @@
-class PendingReservationSummaryJob < ApplicationJob
+class PendingReservationsSummaryJob < ApplicationJob
   queue_as :default
 
   def perform(user_id, start_time, end_time)
