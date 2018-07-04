@@ -1074,6 +1074,7 @@ CREATE TABLE public.subscription_charges (
     charge_date date,
     manual boolean DEFAULT false NOT NULL,
     stripe_charge_details jsonb,
+    order_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2046,6 +2047,13 @@ CREATE INDEX jp_name_index ON public.customers USING btree (user_id, phonetic_la
 --
 
 CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
+
+
+--
+-- Name: order_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_id_index ON public.subscription_charges USING btree (order_id);
 
 
 --

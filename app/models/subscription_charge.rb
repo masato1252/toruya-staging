@@ -11,6 +11,7 @@
 #  charge_date           :date
 #  manual                :boolean          default(FALSE), not null
 #  stripe_charge_details :jsonb
+#  order_id              :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #
@@ -27,4 +28,5 @@ class SubscriptionCharge < ApplicationRecord
   }
 
   monetize :amount_cents
+  validates :order_id, uniqueness: true
 end

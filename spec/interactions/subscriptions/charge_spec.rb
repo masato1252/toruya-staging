@@ -37,6 +37,7 @@ RSpec.describe Subscriptions::Charge do
       charge.reload
       expect(charge).to be_completed
       expect(charge.stripe_charge_details).to be_a(Hash)
+      expect(charge.order_id).to be_present
     end
 
     context "when charges failed" do

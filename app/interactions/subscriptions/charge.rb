@@ -21,6 +21,7 @@ module Subscriptions
             customer: stripe_customer_id,
           })
           charge.stripe_charge_details = stripe_charge.as_json
+          charge.order_id = SecureRandom.hex(6).upcase
           charge.completed!
         rescue Stripe::CardError, Stripe::StripeError => error
           Rollbar.error(error, charge: charge.id)
