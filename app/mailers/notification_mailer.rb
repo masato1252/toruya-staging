@@ -1,13 +1,4 @@
-require 'mailer_methods'
-
-class NotificationMailer < ActionMailer::Base
-  helper MailHelper
-  default from: ENV["MAIL_FROM"]
-
-  include MailerMethods
-
-  layout 'mailer'
-
+class NotificationMailer < ApplicationMailer
   def customers_import_finished(contact_group)
     @contact_group = contact_group
     @user = contact_group.user

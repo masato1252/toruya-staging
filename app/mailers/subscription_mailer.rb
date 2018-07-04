@@ -1,5 +1,3 @@
-require 'mailer_methods'
-
 class SubscriptionMailer < ApplicationMailer
   def charge_successfully(subscription)
     @user = subscription.user

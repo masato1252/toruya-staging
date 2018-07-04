@@ -1,5 +1,3 @@
-require 'mailer_methods'
-
 class ReservationMailer < ApplicationMailer
   def pending_summary(reservations, user)
     @reservations = reservations
