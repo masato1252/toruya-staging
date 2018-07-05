@@ -5,8 +5,16 @@ FactoryBot.define do
     amount { plan.cost }
     charge_date { Subscription.today }
 
+    trait :manual do
+      manual true
+    end
+
     trait :completed do
       state SubscriptionCharge.states[:completed]
+    end
+
+    trait :refunded do
+      state SubscriptionCharge.states[:refunded]
     end
   end
 end

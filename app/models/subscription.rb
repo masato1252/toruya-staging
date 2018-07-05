@@ -69,6 +69,10 @@ class Subscription < ApplicationRecord
     self.expired_date = next_charge_date
   end
 
+  def expire
+    self.expired_date = self.class.today.yesterday
+  end
+
   def next_period
     expired_date..recurring_date(expired_date.year, expired_date.next_month.month)
   end
