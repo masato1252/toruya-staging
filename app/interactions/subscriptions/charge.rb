@@ -2,7 +2,6 @@ module Subscriptions
   class Charge < ActiveInteraction::Base
     object :user
     object :plan
-    string :stripe_customer_id
     boolean :manual
 
     def execute
@@ -18,7 +17,14 @@ module Subscriptions
           stripe_charge = Stripe::Charge.create({
             amount: plan.cost,
             currency: Money.default_currency.iso_code,
-            customer: stripe_customer_id,
+            customer: user.subscription.stripe_customer_id,
+            description: plan.level,
+            statement_descriptor: plan.level,
+            metadata: {
+              charge_id: charge.id,
+              level: plan.level,
+              user_id: user.id
+            }
           })
           charge.stripe_charge_details = stripe_charge.as_json
           charge.order_id = SecureRandom.hex(6).upcase

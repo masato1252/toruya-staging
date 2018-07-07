@@ -8,8 +8,8 @@ module Subscriptions
       user = subscription.user
 
       subscription.transaction do
-        stripe_customer_id = compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
-        compose(Subscriptions::Charge, user: user, plan: plan, stripe_customer_id: stripe_customer_id, manual: true)
+        compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
+        compose(Subscriptions::Charge, user: user, plan: plan, manual: true)
 
         subscription.plan = plan
         subscription.next_plan = nil

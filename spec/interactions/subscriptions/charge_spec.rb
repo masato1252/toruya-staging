@@ -1,8 +1,11 @@
 require "rails_helper"
 
 RSpec.describe Subscriptions::Charge do
+  before { StripeMock.start }
+  after { StripeMock.stop }
   let(:user) { FactoryBot.create(:user) }
   let(:plan) { Plan.premium_level.take }
+  let!(:subscription) { FactoryBot.create(:subscription, user: user, stripe_customer_id: stripe_customer.id) }
   let(:stripe_helper) { StripeMock.create_test_helper }
   let(:stripe_customer) do
     Stripe::Customer.create({
@@ -15,13 +18,10 @@ RSpec.describe Subscriptions::Charge do
     {
       user: user,
       plan: plan,
-      stripe_customer_id: stripe_customer.id,
       manual: manual
     }
   end
   let(:outcome) { described_class.run(args) }
-  before { StripeMock.start }
-  after { StripeMock.stop }
 
   describe "#execute" do
     it "create a completed subscription charges record" do

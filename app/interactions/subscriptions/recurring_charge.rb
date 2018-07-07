@@ -15,7 +15,7 @@ module Subscriptions
         subscription.update(plan: charging_plan, next_plan: nil)
       else
         subscription.transaction do
-          compose(Subscriptions::Charge, user: user, plan: charging_plan, stripe_customer_id: subscription.stripe_customer_id, manual: false)
+          compose(Subscriptions::Charge, user: user, plan: charging_plan, manual: false)
 
           subscription.plan = charging_plan
           subscription.next_plan = nil
