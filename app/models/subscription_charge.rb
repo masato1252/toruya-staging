@@ -23,9 +23,10 @@ class SubscriptionCharge < ApplicationRecord
   enum state: {
     active: 0,
     completed: 1,
-    charge_failed: 2,
-    refunded: 3,
-    refund_failed: 4
+    refunded: 2,
+    auth_failed: 3,
+    processor_failed: 4,
+    refund_failed: 5
   }
 
   monetize :amount_cents

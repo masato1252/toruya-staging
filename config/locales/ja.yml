@@ -632,7 +632,9 @@ ja:
         plans/subscribe:
           attributes:
             plan:
-              already_subscribe_the_same_plan: "^You already subscribe this plan."
+              already_subscribe_the_same_plan: "^You already subscribed this plan."
+              auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+              processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
         shops/staffs_working_schedules:
           attributes:
             date:
@@ -641,6 +643,11 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
+        subscriptions/charge:
+          attributes:
+            plan:
+              auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+              processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
         reservable/reservation:
           attributes:
             date:

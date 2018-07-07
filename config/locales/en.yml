@@ -569,11 +569,18 @@ en:
         plans/subscribe:
           attributes:
             plan:
-              already_subscribe_the_same_plan: "^You already subscribe this plan."
+              already_subscribe_the_same_plan: "^You already subscribed this plan."
+              auth_failed: "^The reason why your payment failed can be your credit card is invalid."
+              processor_failed: "^The reason why your payment failed can be your credit card is invalid."
         reservable/time:
           attributes:
             date:
               shop_closed: "^Shop closed"
+        subscriptions/charge:
+          attributes:
+            plan:
+              auth_failed: "^The reason why your payment failed can be your credit card is invalid."
+              processor_failed: "^The reason why your payment failed can be your credit card is invalid."
         reservable/reservation:
           attributes:
             business_time_range:

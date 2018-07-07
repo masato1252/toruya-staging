@@ -41,8 +41,8 @@ RSpec.describe Subscriptions::Charge do
       expect(charge.order_id).to be_present
     end
 
-    context "when charges failed" do
-      it "create a charge_failed subscription charges record" do
+    context "when charge failed" do
+      it "create a auth_failed subscription charges record" do
         StripeMock.prepare_card_error(:card_declined)
 
         outcome
@@ -55,7 +55,7 @@ RSpec.describe Subscriptions::Charge do
           manual: true
         ).last
 
-        expect(charge).to be_charge_failed
+        expect(charge).to be_auth_failed
       end
 
       context "when charge is automatically" do

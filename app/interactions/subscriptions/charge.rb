@@ -10,7 +10,8 @@ module Subscriptions
           plan: plan,
           amount: Money.new(plan.cost, Money.default_currency.id),
           charge_date: Subscription.today,
-          manual: manual
+          manual: manual,
+          order_id: SecureRandom.hex(6).upcase
         )
 
         begin
@@ -27,14 +28,21 @@ module Subscriptions
             }
           })
           charge.stripe_charge_details = stripe_charge.as_json
-          charge.order_id = SecureRandom.hex(6).upcase
           charge.completed!
-        rescue Stripe::CardError, Stripe::StripeError => error
-          Rollbar.error(error, charge: charge.id)
+        rescue Stripe::CardError => error
+          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error][:charge])
 
-          charge.charge_failed!
+          charge.auth_failed!
+          errors.add(:plan, :auth_failed)
+
           SubscriptionMailer.charge_failed(user.subscription).deliver_now unless manual
-          errors.add(:plan, :charge_failed)
+        rescue Stripe::StripeError => error
+          Rollbar.error(error, toruya_charge: charge.id)
+
+          charge.processor_failed!
+          errors.add(:plan, :processor_failed)
+
+          SubscriptionMailer.charge_failed(user.subscription).deliver_now unless manual
         end
 
         charge
