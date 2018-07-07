@@ -8,9 +8,9 @@ module Payments
 
       if stripe_customer_id
         # update customer a new card
-        stripe_customer = Stripe::Customer.retrieve(stripe_customer_id)
-        stripe_customer.source = authorize_token
-        stripe_customer.save
+        Stripe::Customer.update(stripe_customer_id, {
+          source: authorize_token,
+        })
         stripe_customer_id
       else
         stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email)
