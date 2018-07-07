@@ -3,5 +3,6 @@
   paymentPath: settings_plans_path,
   stripeKey: Rails.application.secrets.stripe_publishable_key,
   email: current_user.email,
-  processing_message: I18n.t("common.processing")
+  processing_message: I18n.t("common.processing"),
+  locale: I18n.default_locale
 }) %>

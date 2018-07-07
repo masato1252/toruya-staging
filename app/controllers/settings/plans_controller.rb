@@ -3,7 +3,7 @@ class Settings::PlansController < SettingsController
   end
 
   def create
-    outcome = Plans::Subscribe.run(user: current_user, plan: Plan.find_by(level: :basic), authorize_token: params[:token])
+    outcome = Plans::Subscribe.run(user: current_user, plan: Plan.find_by(level: :basic), authorize_token: params[:token], manually: true)
 
     if outcome.valid?
       head(:ok)

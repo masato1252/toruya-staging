@@ -57,7 +57,10 @@ UI.define("PaymentCheckout", function() {
           currency="JPY"
           email={this.props.email}
           panelLabel="Pay"
-          allowRememberMe
+          allowRememberMe={false}
+          locale={this.props.locale}
+          name="Toruya"
+          description="Premium Plan"
         >
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           <button className="BTNorange" rel="nofollow">
