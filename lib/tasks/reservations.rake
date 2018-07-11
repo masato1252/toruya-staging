@@ -8,7 +8,7 @@ namespace :reservations do
 
       staff_ids = ReservationStaff.pending.joins(:reservation).where("reservations.aasm_state": :pending, "reservations.created_at": time_range).pluck("reservation_staffs.staff_id").uniq
       StaffAccount.active.where(staff_id: staff_ids).distinct.pluck(:user_id).each do |user_id|
-        PendingReservationSummaryJob.perform_later(user_id, time_range.first, time_range.last)
+        PendingReservationsSummaryJob.perform_later(user_id, time_range.first.to_s, time_range.last.to_s)
       end
     end
   end
