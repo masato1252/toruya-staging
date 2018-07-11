@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react";
-import "../payment_checkout";
 import "./subscription_modal";
 
 UI.define("Plans", function() {
@@ -104,30 +103,28 @@ UI.define("Plans", function() {
                 <td>
                   {
                     this.props.currentPlanLevel !== "basic" && (
-                      <UI.PaymentCheckout
-                        formAuthenticityToken={this.props.formAuthenticityToken}
-                        paymentPath={this.props.paymentPath}
-                        stripeKey={this.props.stripeKey}
-                        email={this.props.email}
-                        processingMessage={this.props.processingMessage}
-                        locale={this.props.locale}
-                        plan={this.props.plans["basic"]}
-                        />
+                      <button
+                        className="btn btn-orange"
+                        rel="nofollow"
+                        data-plan-level="basic"
+                        onClick={this.onSubscribe}
+                        >
+                        Subscribe
+                      </button>
                     )
                   }
                 </td>
                 <td>
                   {
                     this.props.currentPlanLevel !== "premium" && (
-                      <UI.PaymentCheckout
-                        formAuthenticityToken={this.props.formAuthenticityToken}
-                        paymentPath={this.props.paymentPath}
-                        stripeKey={this.props.stripeKey}
-                        email={this.props.email}
-                        processingMessage={this.props.processingMessage}
-                        locale={this.props.locale}
-                        plan={this.props.plans["premium"]}
-                        />
+                      <button
+                        className="btn btn-orange"
+                        rel="nofollow"
+                        data-plan-level="premium"
+                        onClick={this.onSubscribe}
+                        >
+                        Subscribe
+                      </button>
                     )
                   }
                 </td>
@@ -137,9 +134,8 @@ UI.define("Plans", function() {
           {
             this.state.subscriptionPlanLevel && (
               <UI.SubscriptionModal
-                currentPlanLevel={this.props.currentPlanLevel}
+                {...this.props}
                 subscriptionPlanLevel={this.state.subscriptionPlanLevel}
-                plans={this.props.plans}
                 />
             )
           }

@@ -79,7 +79,8 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
-    resources :plans, only: [:index, :create]
+    resources :plans, only: [:index]
+    resources :payments, only: [:index, :create]
 
     resources :users do
       resource :profile

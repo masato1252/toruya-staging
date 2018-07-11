@@ -2,7 +2,7 @@ module Plans
   class Subscribe < ActiveInteraction::Base
     object :user
     object :plan
-    string :authorize_token, default: nil # free plan don't need this.
+    string :authorize_token, default: nil # free plan and upgrade later don't need this.
     boolean :upgrade_immediately, default: true
 
     def execute

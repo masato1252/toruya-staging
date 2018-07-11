@@ -1,0 +1,1 @@
+json.redirect_path settings_payments_path

@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+import "../payment_checkout";
+import "./charge";
 
 UI.define("SubscriptionModal", function() {
   return class SubscriptionModal extends React.Component {
@@ -11,6 +13,10 @@ UI.define("SubscriptionModal", function() {
 
       this.subscriptionPlan = this.props.plans[this.props.subscriptionPlanLevel];
       this.currentPlan = this.props.plans[this.props.currentPlanLevel];
+
+      this.state = {
+        upgradeImmediately: true
+      };
     }
 
     renderTitle = () => {
@@ -27,32 +33,55 @@ UI.define("SubscriptionModal", function() {
             <div>
               Cost: {this.subscriptionPlan.costFormat}
             </div>
+            <UI.PlanCharge
+              formAuthenticityToken={this.props.formAuthenticityToken}
+              paymentPath={this.props.paymentPath}
+              stripeKey={this.props.stripeKey}
+              email={this.props.email}
+              processingMessage={this.props.processingMessage}
+              locale={this.props.locale}
+              plan={this.subscriptionPlan}
+              />
           </div>
         );
       }
       else if (this.isUpgrade()) {
-        <div>
-          Subscribe Plan: {this.subscriptionPlan.details.title}
-          You want to upgrade immediatelly or in next turn.
+        return (
           <div>
-            <input id="immediately"
-              className="BTNselect"
-              type="radio"
-              defaultValue={true}
-              name="immediately"
+            Subscribe Plan: {this.subscriptionPlan.details.title}
+            You want to upgrade immediatelly or in next turn.
+            <div>
+              <input id="immediately"
+                className="BTNselect"
+                type="radio"
+                checked={this.state.upgradeImmediately}
+                name="immediately"
+                onChange={this.onChangeUpgradePolicy}
+                />
+              <label htmlFor="immediately"><span>Immediately</span></label>
+            </div>
+            <div>
+              <input id="later"
+                className="BTNselect"
+                type="radio"
+                checked={!this.state.upgradeImmediately}
+                name="later"
+                onChange={this.onChangeUpgradePolicy}
+                />
+              <label htmlFor="later"><span>Later</span></label>
+            </div>
+            <UI.PlanCharge
+              formAuthenticityToken={this.props.formAuthenticityToken}
+              paymentPath={this.props.paymentPath}
+              stripeKey={this.props.stripeKey}
+              email={this.props.email}
+              processingMessage={this.props.processingMessage}
+              locale={this.props.locale}
+              plan={this.subscriptionPlan}
+              chargeImmediately={this.state.upgradeImmediately}
               />
-            <label htmlFor="immediately"><span>{this.props.staffAccountStaffLevelLabel}</span></label>
           </div>
-          <div>
-            <input id="later"
-              className="BTNselect"
-              type="radio"
-              defaultValue={false}
-              name="immediately"
-              />
-            <label htmlFor="later"><span>{this.props.staffAccountManagerLevelLabel}</span></label>
-          </div>
-        </div>
+        );
       }
       else {
 
@@ -60,10 +89,14 @@ UI.define("SubscriptionModal", function() {
     };
 
     isUpgrade = () => {
-      const subscriptionPlanIndex = planOrder.indexOf(this.props.subscriptionPlanLevel);
-      const currentPlanIndex = planOrder.indexOf(this.props.currentPlanLevel);
+      const subscriptionPlanIndex = SubscriptionModal.planOrder.indexOf(this.props.subscriptionPlanLevel);
+      const currentPlanIndex = SubscriptionModal.planOrder.indexOf(this.props.currentPlanLevel);
 
       return subscriptionPlanIndex > currentPlanIndex;
+    };
+
+    onChangeUpgradePolicy = () => {
+      this.setState(prevState => ({ upgradeImmediately: !prevState.upgradeImmediately }));
     };
 
     render() {
@@ -80,6 +113,7 @@ UI.define("SubscriptionModal", function() {
                 </h4>
                 </div>
                 <div className="modal-body">
+                  {this.renderContent()}
                 </div>
                 <div className="modal-footer">
                   {this.props.actions}
