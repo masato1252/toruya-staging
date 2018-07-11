@@ -1,1 +1,7 @@
-payments index
+<div id="subNav">
+  <h2><%= Staff.model_name.human %> − <%= t("settings.staff.new_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
+  <%= humanized_money_with_symbol(Plan.last.cost_with_currency) %>
+</div>

@@ -3,7 +3,6 @@ class Settings::PaymentsController < SettingsController
   end
 
   def create
-    debugger
     outcome = Plans::Subscribe.run(
       user: current_user,
       plan: Plan.find_by(level: params[:plan]),

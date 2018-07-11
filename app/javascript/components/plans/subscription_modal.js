@@ -84,7 +84,22 @@ UI.define("SubscriptionModal", function() {
         );
       }
       else {
-
+        return (
+          <div>
+            Subscribe Plan: {this.subscriptionPlan.details.title}
+            You will downupgrade in next turn.
+            <UI.PlanCharge
+              formAuthenticityToken={this.props.formAuthenticityToken}
+              paymentPath={this.props.paymentPath}
+              stripeKey={this.props.stripeKey}
+              email={this.props.email}
+              processingMessage={this.props.processingMessage}
+              locale={this.props.locale}
+              plan={this.subscriptionPlan}
+              chargeImmediately={false}
+              />
+          </div>
+        );
       }
     };
 
