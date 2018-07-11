@@ -8,6 +8,8 @@
 #
 
 class Plan < ApplicationRecord
+  DEFAULT_PLAN = "free".freeze
+
   enum level: {
     free: 0,
     basic: 1,

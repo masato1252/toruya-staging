@@ -349,6 +349,54 @@ ja:
       info_2: Toruyaをしようするにはこの設定を完了する必要があります。
       new_info_1: まずは管理人情報を登録します。
       new_info_2: 各種設定や利用料金の支払いなど、Toruyaの登録情報を管理する個人や法人を設定してください。
+    plans:
+      labels:
+        shop_can_set: 設定可能な店舗数
+        staff_in_charge: 担当者の設定
+        max_customer_per_reservation: 予約可能な人数（定員）
+        reservation_restriction: 予約件数
+        private_schedule: 個人の予定を追加・編集
+        customer_info: 顧客情報の入力・編集
+        customer_group_limit: 設定可能な顧客台帳数
+        customer_filter: 顧客データ検索
+        print_address: 宛名印刷
+        add_staff: スタッフ追加
+      free:
+        title: フリー
+        shop_can_set: "１店舗"
+        staff_in_charge: "１人"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: １日１０件(累計1,200件)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 1つ
+        customer_filter: 名前検索
+        print_address: 個別
+        add_staff: ✕
+      basic:
+        title: ベーシック
+        shop_can_set: "１店舗"
+        staff_in_charge: "１人"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: １日１０件(累計3,600件)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2つ
+        customer_filter: プリセット条件検索
+        print_address: 個別
+        add_staff: ✕
+      premium:
+        title: プレミアム
+        shop_can_set: "無制限(追加料金)"
+        staff_in_charge: "無制限"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無制限
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無制限
+        customer_filter: 条件検索を保存可能
+        print_address: 一斉
+        add_staff: ⃝
   constants:
     rank:
       regular: "一般"

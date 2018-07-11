@@ -1,8 +1,30 @@
-<%= react_component("payment_checkout", {
+<%#= react_component("payment_checkout", {
   formAuthenticityToken: form_authenticity_token,
   paymentPath: settings_plans_path,
   stripeKey: Rails.application.secrets.stripe_publishable_key,
   email: current_user.email,
   processing_message: I18n.t("common.processing"),
-  locale: I18n.default_locale
+  locale: I18n.default_locale,
+  plan: @plans_properties["premium"]
 }) %>
+<div id="subNav">
+  <h2><%= Staff.model_name.human %> − <%= t("settings.staff.new_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
+  <%= humanized_money_with_symbol(Plan.last.cost_with_currency) %>
+</div>
+
+<div class="plans">
+  <%= react_component("plans/plans", {
+    formAuthenticityToken: form_authenticity_token,
+    paymentPath: settings_plans_path,
+    stripeKey: Rails.application.secrets.stripe_publishable_key,
+    email: current_user.email,
+    processing_message: I18n.t("common.processing"),
+    locale: I18n.default_locale,
+    currentPlanLevel: current_user.subscription&.plan&.level || Plan::DEFAULT_PLAN,
+    plans: @plans_properties,
+    planLabels: @plan_labels
+    }) %>
+</div>

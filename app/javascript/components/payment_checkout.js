@@ -53,17 +53,17 @@ UI.define("PaymentCheckout", function() {
         <StripeCheckout
           token={this.onToken}
           stripeKey={this.props.stripeKey}
-          amount={1000}
+          amount={this.props.plan.cost}
           currency="JPY"
           email={this.props.email}
           panelLabel="Pay"
           allowRememberMe={false}
           locale={this.props.locale}
           name="Toruya"
-          description="Premium Plan"
+          description={this.props.plan.name}
         >
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
-          <button className="BTNorange" rel="nofollow">
+          <button className="btn btn-orange" rel="nofollow">
             Pay this plan
           </button>
         </StripeCheckout>

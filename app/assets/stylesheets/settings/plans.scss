@@ -1,0 +1,109 @@
+@import "variables";
+
+.plans {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-bottom: 50px;
+
+  table {
+    text-align: center;
+    border-spacing: 0;
+    border-collapse: separate;
+    width: 100%;
+    max-width: 100%;
+
+    .invisible {
+      visibility: hidden;
+
+      &.current {
+        visibility: visible;
+        border-color: #333333;
+        background-color: #fcf8df;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+    }
+
+    & > thead > tr > th,
+    & > tbody > tr > th,
+    & > tfoot > tr > th,
+    & > thead > tr > td,
+    & > tbody > tr > td,
+    & > tfoot > tr > td {
+      padding: 8px;
+      border-right: 1px solid #dddddd;
+      border-left: 1px solid #dddddd;
+      // line-height: 1.42857143;
+      // vertical-align: top;
+    }
+
+    & > thead {
+      th,
+      td {
+        border-top: 1px solid #dddddd;
+      }
+
+      th {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+        &.current {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+      }
+
+      .free {
+        background-color: $palette-color3;
+        border-color: $palette-color3-1;
+        color: #ffffff;
+      }
+
+      .basic {
+        background-color: $palette-color2;
+        border-color: $palette-color2-1;
+        color: #ffffff;
+      }
+
+      .premium {
+        background-color: $palette-color1;
+        border-color: $palette-color1-1;
+        color: #ffffff;
+      }
+    }
+
+    & > tbody {
+      border-top: 1px solid #dddddd;
+
+      & > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      & > tr:first-child {
+        & > th {
+          border-top: 1px solid #dddddd;
+          border-top-left-radius: 10px;
+        }
+
+        & > td {
+          border-top: 1px solid #dddddd;
+        }
+      }
+
+      & > tr:last-child {
+        & > th {
+          border-bottom: 1px solid #dddddd;
+          border-bottom-left-radius: 10px;
+        }
+
+        & > td {
+          border-bottom: 1px solid #dddddd;
+
+          &:last-child {
+            border-bottom-right-radius: 10px;
+          }
+        }
+      }
+    }
+  }
+}
