@@ -13,40 +13,39 @@ UI.define("PaymentCheckout", function() {
       this.setState(prevState => ({ processing: !prevState.processing }));
     }
 
-    onToken = (token) => {
-      this.toggleProcessing()
+    onToken = async (token) => {
+      try {
+        this.toggleProcessing()
 
-      // modal popup processing
-      fetch(this.props.paymentPath, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: "same-origin",
-        body: JSON.stringify({
-          token: token.id,
-          authenticity_token: this.props.formAuthenticityToken
-        }),
-      }).then((response) => {
+        // modal popup processing
+        const response = await fetch(this.props.paymentPath, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            token: token.id,
+            authenticity_token: this.props.formAuthenticityToken
+          }),
+        })
+
         if (response.ok) {
+          const result = await response.json()
           this.toggleProcessing()
-          alert(`We are in business`);
-          return;
-        // this.props.paymentSuccessHandler()
-        }
+          window.location = result["redirect_path"];
 
-        if (response.status == 422) {
-          return response.json().then(err => { throw err });
+        } else if (response.status === 422) {
+          response.json().then(err => { throw err });
+        } else {
+          throw Error("Payment failed");
         }
-
-        throw Error("Payment failed");
-      }).catch((err) => {
+      }
+      catch (err) {
         this.toggleProcessing()
         alert(err.message);
-        // call failure handler, like show some error message
-        // this.props.paymentFailedHandler()
-      });
-    }
+      }
+    };
 
     render() {
       return (
