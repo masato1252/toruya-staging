@@ -15,6 +15,7 @@
 
 class Subscription < ApplicationRecord
   FREE_PLAN_ID = 1
+  REFUNDABLE_DAYS = 8
 
   belongs_to :plan, required: false
   belongs_to :next_plan, class_name: "Plan"
@@ -53,6 +54,9 @@ class Subscription < ApplicationRecord
   end
 
   def refundable?
+    first_charge = user.subscription_charges.manual.first
+
+    !first_charge.refunded? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
   end
 
   def set_recurring_day

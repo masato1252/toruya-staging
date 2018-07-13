@@ -14,7 +14,7 @@ RSpec.describe Subscriptions::Refund do
   after { StripeMock.stop }
 
   let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :manual) }
-  let!(:subscription) { FactoryBot.create(:subscription, user: user, stripe_customer_id: stripe_customer_id) }
+  let!(:subscription) { FactoryBot.create(:subscription, :basic, user: user, stripe_customer_id: stripe_customer_id) }
   let(:stripe_customer_id) do
     Stripe::Customer.create({
       email: user.email,
@@ -34,7 +34,7 @@ RSpec.describe Subscriptions::Refund do
       let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :manual, :refunded) }
 
       it "adds error" do
-        expect(outcome.errors.details[:user]).to include(error: :charge_refunded)
+        expect(outcome.errors.details[:user]).to include(error: :subscription_is_not_refundable)
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Subscriptions::Refund do
       let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :manual, created_at: 8.days.ago) }
 
       it "adds error" do
-        expect(outcome.errors.details[:user]).to include(error: :over_refundable_time)
+        expect(outcome.errors.details[:user]).to include(error: :subscription_is_not_refundable)
       end
     end
 

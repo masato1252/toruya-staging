@@ -2,8 +2,7 @@ module Subscriptions
   class Refund < ActiveInteraction::Base
     object :user
 
-    validate :validate_refunded_state
-    validate :validate_charge_date
+    validate :validate_refundable
 
     def execute
       first_charge.transaction do
@@ -32,14 +31,8 @@ module Subscriptions
       @first_charge ||= user.subscription_charges.manual.first
     end
 
-    def validate_refunded_state
-      errors.add(:user, :charge_refunded) if first_charge.refunded?
-    end
-
-    def validate_charge_date
-      if first_charge.created_at < 8.days.ago
-        errors.add(:user, :over_refundable_time)
-      end
+    def validate_refundable
+      errors.add(:user, :subscription_is_not_refundable) unless user.subscription.refundable?
     end
   end
 end
