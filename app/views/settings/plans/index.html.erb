@@ -3,7 +3,6 @@
 </div>
 <div id="about">
   <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
-  <%= humanized_money_with_symbol(Plan.last.cost_with_currency) %>
 </div>
 
 <div class="plans">
@@ -14,7 +13,7 @@
     email: current_user.email,
     processing_message: I18n.t("common.processing"),
     locale: I18n.default_locale,
-    currentPlanLevel: current_user.subscription&.plan&.level || Plan::DEFAULT_PLAN,
+    currentPlanLevel: current_user.subscription.plan.level,
     plans: @plans_properties,
     planLabels: @plan_labels,
     isFirstTimeSubscribe: @is_first_time_subscribe

@@ -62,6 +62,7 @@ class User < ApplicationRecord
   delegate :name, to: :profile, allow_nil: true
 
   after_commit :create_default_ranks, on: :create
+  after_commit :create_default_subscription, on: :create
 
   def super_admin?
     ["lake.ilakela@gmail.com"].include?(email)
@@ -93,5 +94,9 @@ class User < ApplicationRecord
   def create_default_ranks
     ranks.create(name: "VIP", key: Rank::VIP_KEY)
     ranks.create(name: I18n.t("constants.rank.regular"), key: Rank::REGULAR_KEY)
+  end
+
+  def create_default_subscription
+    create_subscription(plan: Plan.free_level.take)
   end
 end

@@ -14,15 +14,6 @@
 #
 
 class Subscription < ApplicationRecord
-  # CHARGEABLE_STATES = %w(pending active past_due)
-  # MANUAL_CHARGEABLE_STATES = %w(pending past_due)
-  # enum status: {
-  #   pending: 0,
-  #   active: 1,
-  #   past_due: 2
-  # }
-  # scope :charge_free, -> { where(plan_id: FREE_PLAN_ID) }
-
   FREE_PLAN_ID = 1
 
   belongs_to :plan, required: false
@@ -54,11 +45,14 @@ class Subscription < ApplicationRecord
   end
 
   def active?
-    expired_date >= self.class.today
+    plan_id == FREE_PLAN_ID || expired_date >= self.class.today
   end
 
   def chargeable?
     expired_date <= self.class.today
+  end
+
+  def refundable?
   end
 
   def set_recurring_day

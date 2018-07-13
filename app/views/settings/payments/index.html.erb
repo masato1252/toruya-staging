@@ -3,5 +3,53 @@
 </div>
 <div id="about">
   <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
-  <%= humanized_money_with_symbol(Plan.last.cost_with_currency) %>
+</div>
+
+<div class="payments">
+  <table class="subscription">
+    <caption>Plan Information</caption>
+    <tbody>
+      <tr>
+        <th>Current Plan</th>
+        <td>
+          <%= @subscription.plan.name %>
+          <%= link_to "Change plan", settings_plans_path, class: "btn btn-yellow" %>
+        </td>
+      </tr>
+      <tr>
+        <th>Join Date</th>
+        <td><%= l(current_user.created_at.to_date)%></td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td><%= subscription_status(@subscription) %></td>
+      </tr>
+      <tr>
+        <th>Next Billing Date</th>
+        <td><%= @subscription.expired_date && l(@subscription.expired_date) %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="history">
+    <caption>Payment history and receipts</caption>
+    <thead>
+      <tr>
+        <th class="charge-date">Date</th>
+        <th class="charge-amount">Amount</th>
+        <th class="charge-plan">Plan</th>
+        <th class="charge-receipt">Receipt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @charges.each do |charge| %>
+      <tr>
+        <td><%= l(charge.created_at.to_date) %></td>
+        <td><%= charge.amount.format %></td>
+        <td><%= charge.plan.name %></td>
+        <td>Receipt</td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

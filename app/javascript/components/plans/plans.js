@@ -36,9 +36,15 @@ UI.define("Plans", function() {
             <thead>
               <tr>
                 <th className="invisible"></th>
-                <th className={`invisible ${this.isCurrentPlan("free") && "current"}`}>Current</th>
-                <th className={`invisible ${this.isCurrentPlan("basic") && "current"}`}>Current</th>
-                <th className={`invisible ${this.isCurrentPlan("premium") && "current"}`}>Current</th>
+                <th className={`invisible ${this.isCurrentPlan("free") && "current"}`}>
+                  Current Plan
+                </th>
+                <th className={`invisible ${this.isCurrentPlan("basic") && "current"}`}>
+                  Current Plan
+                </th>
+                <th className={`invisible ${this.isCurrentPlan("premium") && "current"}`}>
+                  Current Plan
+                </th>
               </tr>
               <tr>
                 <th className="invisible"></th>

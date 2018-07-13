@@ -119,7 +119,7 @@
 
   <% if current_user == super_user %>
     <dl>
-      <%= active_link_to settings_user_profile_path(current_user), active: [["settings/profiles"]], wrap_tag: :dt, class_active: "here" do %>
+      <%= active_link_to settings_user_profile_path(current_user), active: [["settings/profiles", "settings/payments", "settings/plans"]], wrap_tag: :dt, class_active: "here" do %>
         <span><i class="fa fa-wrench fa-2x"></i>&nbsp;<%= t("settings.account.info_title") %></span>
       <% end %>
       <dd>
@@ -127,6 +127,11 @@
           <%= active_link_to settings_user_profile_path(current_user),
             active: [["settings/profiles"]], wrap_tag: :li, class_active: "here" do %>
             <span><%= t("settings.account.info_title2") %></span>
+          <% end %>
+
+          <%= active_link_to settings_payments_path,
+            active: [["settings/payments", "settings/plans"]], wrap_tag: :li, class_active: "here" do %>
+            <span>Plan</span>
           <% end %>
         </ul>
       </dd>
