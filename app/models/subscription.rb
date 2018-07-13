@@ -54,9 +54,11 @@ class Subscription < ApplicationRecord
   end
 
   def refundable?
-    first_charge = user.subscription_charges.manual.first
-
     !first_charge.refunded? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
+  end
+
+  def first_charge
+    @first_charge ||= user.subscription_charges.manual.first
   end
 
   def set_recurring_day

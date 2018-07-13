@@ -47,7 +47,10 @@
         <td><%= l(charge.created_at.to_date) %></td>
         <td><%= charge.amount.format %></td>
         <td><%= charge.plan.name %></td>
-        <td>Receipt</td>
+        <td>
+          Receipt
+          <%= link_to "Refund", "#", class: "btn btn-orange" if @refundable && @subscription.first_charge.id == charge.id %>
+        </td>
       </tr>
       <% end %>
     </tbody>

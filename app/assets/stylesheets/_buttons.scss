@@ -3,24 +3,24 @@
 .btn-tarco {
   background: $palette-color2;
   border-color: $palette-color2-1;
-  color: #ffffff;
+  color: #ffffff !important;
 
   &:hover {
     background: $palette-color2-1;
     border-color: $palette-color2-2;
-    color: #ffffff;
+    color: #ffffff !important;
   }
 }
 
 .btn-orange {
   background: $palette-color4;
   border-color: $palette-color4-1;
-  color: #ffffff;
+  color: #ffffff !important;
 
   &:hover {
     background: $palette-color4-1;
     border-color: $palette-color4-2;
-    color: #ffffff;
+    color: #ffffff !important;
     opacity: 0.7;
   }
 }
@@ -33,7 +33,7 @@
   &:hover {
     background: $palette-color1-1;
     border-color: $palette-color1-2;
-    color: #ffffff;
+    color: #ffffff !important;
     opacity: 0.7;
   }
 }

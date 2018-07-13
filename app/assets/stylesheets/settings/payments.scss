@@ -15,13 +15,13 @@
 
       tr {
         & > th {
-          padding: 8px;
+          padding: 10px 20px;
           border-left: 1px solid #dddddd;
           width: 300px;
         }
 
         & > td {
-          padding: 8px;
+          padding: 10px 20px;
           border-right: 1px solid #dddddd;
         }
       }
@@ -70,7 +70,7 @@
     & > thead {
       & > tr {
         & > th {
-          padding: 8px;
+          padding: 10px 20px;
           border: 1px solid #dddddd;
           background-color: #dddddd;
 
@@ -100,7 +100,7 @@
 
       tr {
         & > td {
-          padding: 8px;
+          padding: 10px 20px;
 
           &:first-child {
             border-left: 1px solid #dddddd;

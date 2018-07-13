@@ -2,7 +2,8 @@ class Settings::PaymentsController < SettingsController
   def index
     @subscription = current_user.subscription
     charges = current_user.subscription_charges
-    @charges = charges.completed.or(charges.refunded)
+    @charges = charges.completed.or(charges.refunded).order("created_at DESC")
+    @refundable = @subscription.refundable?
   end
 
   def create
