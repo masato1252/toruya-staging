@@ -29,10 +29,8 @@ module Subscriptions
           })
 
           # credit card charge is synchronous request, it would return final status immediately
-          if stripe_charge.status == "succeeded"
-            charge.stripe_charge_details = stripe_charge.as_json
-            charge.completed!
-          end
+          charge.stripe_charge_details = stripe_charge.as_json
+          charge.completed!
         rescue Stripe::CardError => error
           Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error][:charge])
 

@@ -17,10 +17,10 @@ module Subscriptions
             subscription.expire
             subscription.save!
           else
-            # [TODO] What should we do?
+            errors.add(:user, :refund_failed)
           end
         rescue Stripe::CardError, Stripe::StripeError => error
-          # [TODO] What should we do?
+          errors.add(:user, :refund_failed)
         end
       end
     end

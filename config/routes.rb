@@ -80,7 +80,11 @@ Rails.application.routes.draw do
 
   namespace :settings do
     resources :plans, only: [:index]
-    resources :payments, only: [:index, :create]
+    resources :payments, only: [:index, :create] do
+      collection do
+        get :refund
+      end
+    end
 
     resources :users do
       resource :profile
