@@ -30,4 +30,24 @@ class Settings::PaymentsController < SettingsController
 
     redirect_to settings_payments_path
   end
+
+  def receipt
+    @charge = current_user.subscription_charges.find(params[:id])
+
+    options = {
+      pdf: "subscription_receipt",
+      title: @charge.created_at.to_date.to_s,
+      show_as_html: params.key?('debug'),
+      page_width: 210,
+      page_height: 297,
+      margin: {
+        top: 22,
+        left: 20,
+        right: 20,
+        bottom: 0
+      }
+    }
+
+    render options
+  end
 end

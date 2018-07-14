@@ -84,6 +84,10 @@ Rails.application.routes.draw do
       collection do
         get :refund
       end
+
+      member do
+        get :receipt
+      end
     end
 
     resources :users do

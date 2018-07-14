@@ -45,6 +45,10 @@ class Subscription < ApplicationRecord
     Time.now.in_time_zone(Rails.configuration.time_zone).to_date
   end
 
+  def charge_required
+    plan_id != FREE_PLAN_ID
+  end
+
   def current_plan
     active? ? plan : Plan.free_level.take
   end
@@ -58,7 +62,7 @@ class Subscription < ApplicationRecord
   end
 
   def refundable?
-    !first_charge.refunded? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
+    first_charge && !first_charge.refunded? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
   end
 
   def first_charge

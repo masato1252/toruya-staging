@@ -1,3 +1,7 @@
+<% content_for :style do %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("customers/printing") %>
+<% end %>
+
 <h1><%= @filter_name %></h1>
 <div class="customers-table">
   <div class="customer-row">

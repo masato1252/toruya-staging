@@ -1,0 +1,41 @@
+<% content_for :style do %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("payments/printing") %>
+<% end %>
+
+<div class="receipt">
+  <div class="company">
+    <div class="logo">
+      <%= image_tag wicked_pdf_asset_base64("toruya_logo.png") %>
+    </div>
+    We received payment for your Toruya subscription, Thanks for your business!
+    Questions? Please contact <%= mail_to "info@toruya.com" %>
+  </div>
+  <table>
+    <tbody>
+      <tr>
+        <td>Date</td>
+        <td><%= l(@charge.charge_date) %></td>
+      </tr>
+      <tr>
+        <td>Account billed</td>
+        <td><%= @charge.user.email %></td>
+      </tr>
+      <tr>
+        <td>Plan</td>
+        <td><%= @charge.plan.name %></td>
+      </tr>
+      <tr>
+        <td>Total</td>
+        <td><%= @charge.amount.format %></td>
+      </tr>
+      <tr>
+        <td>Transaction ID</td>
+        <td><%= @charge.order_id %></td>
+      </tr>
+      <tr>
+        <td>For Service through</td>
+        <td><%= l(@charge.expired_date) %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

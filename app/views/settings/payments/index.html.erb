@@ -26,7 +26,7 @@
       </tr>
       <tr>
         <th>Next Billing Date</th>
-        <td><%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? %></td>
+        <td><%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %></td>
       </tr>
     </tbody>
   </table>
@@ -48,7 +48,7 @@
         <td><%= charge.amount.format %></td>
         <td><%= charge.plan.name %> <%= "(refunded)" if charge.refunded? %></td>
         <td>
-          Receipt
+          <%= link_to "Receipt", receipt_settings_payment_path(charge, format: :pdf), target: "_blank" %>
           <%= link_to "Refund", "#", class: "btn btn-orange", data: { toggle: "modal", target: "#refund-modal" } if @refundable && @subscription.first_charge.id == charge.id %>
         </td>
       </tr>
