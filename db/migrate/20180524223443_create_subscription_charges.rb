@@ -7,6 +7,7 @@ class CreateSubscriptionCharges < ActiveRecord::Migration[5.1]
       t.string :amount_currency
       t.integer :state
       t.date :charge_date
+      t.date :expired_date
       t.boolean :manual, default: false, null: false
       t.jsonb :stripe_charge_details
       t.string :order_id

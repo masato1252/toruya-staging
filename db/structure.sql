@@ -1072,6 +1072,7 @@ CREATE TABLE public.subscription_charges (
     amount_currency character varying,
     state integer,
     charge_date date,
+    expired_date date,
     manual boolean DEFAULT false NOT NULL,
     stripe_charge_details jsonb,
     order_id character varying,
