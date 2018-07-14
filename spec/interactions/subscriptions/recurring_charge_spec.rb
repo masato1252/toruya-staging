@@ -48,6 +48,7 @@ RSpec.describe Subscriptions::RecurringCharge do
         expect(subscription.plan).to eq(Plan.premium_level.take)
         expect(subscription.next_plan).to be_nil
         expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
+        expect(subscription.user.subscription_charges.last.expired_date).to eq(Date.new(2018, 2, 28))
         expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
       end
 

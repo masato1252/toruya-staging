@@ -9,6 +9,7 @@
 #  amount_currency       :string
 #  state                 :integer
 #  charge_date           :date
+#  expired_date          :date
 #  manual                :boolean          default(FALSE), not null
 #  stripe_charge_details :jsonb
 #  order_id              :string

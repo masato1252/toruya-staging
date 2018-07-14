@@ -39,6 +39,7 @@ RSpec.describe Subscriptions::ManualCharge do
       expect(subscription.next_plan).to be_nil
       expect(subscription.recurring_day).to eq(Subscription.today.day)
       expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
+      expect(subscription.user.subscription_charges.last.expired_date).to eq(Date.new(2018, 2, 28))
     end
   end
 end
