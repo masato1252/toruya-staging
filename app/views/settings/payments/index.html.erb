@@ -12,7 +12,7 @@
       <tr>
         <th>Current Plan</th>
         <td>
-          <%= @subscription.plan.name %>
+          <%= @subscription.current_plan.name %>
           <%= link_to "Change plan", settings_plans_path, class: "btn btn-yellow" %>
         </td>
       </tr>

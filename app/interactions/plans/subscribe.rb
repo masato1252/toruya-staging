@@ -7,7 +7,7 @@ module Plans
 
     def execute
       if subscription = user.subscription
-        if subscription.active? && subscription.plan.become(plan).zero?
+        if subscription.active? && subscription.current_plan.become(plan).zero?
           errors.add(:plan, :already_subscribe_the_same_plan)
           return
         end
@@ -23,7 +23,7 @@ module Plans
           compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
         end
       else
-        if subscription.plan.become(plan).positive? && upgrade_immediately
+        if subscription.current_plan.become(plan).positive? && upgrade_immediately
           # upgrade immediately
           compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
         else

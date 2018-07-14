@@ -45,6 +45,10 @@ class Subscription < ApplicationRecord
     Time.now.in_time_zone(Rails.configuration.time_zone).to_date
   end
 
+  def current_plan
+    active? ? plan : Plan.free_level.take
+  end
+
   def active?
     plan_id == FREE_PLAN_ID || expired_date >= self.class.today
   end

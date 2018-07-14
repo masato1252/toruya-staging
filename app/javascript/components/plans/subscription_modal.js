@@ -24,7 +24,7 @@ UI.define("SubscriptionModal", function() {
     };
 
     renderContent = () => {
-      if (this.props.isFirstTimeSubscribe) {
+      if (this.props.currentPlanLevel === "free") {
         return (
           <div>
             <div>
