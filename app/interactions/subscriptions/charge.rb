@@ -6,12 +6,14 @@ module Subscriptions
 
     def execute
       SubscriptionCharge.transaction do
+        order_id = Digest::SHA1.hexdigest("#{Time.now.to_i}:#{user.id}:#{user.subscription_charges.count}:#{SecureRandom.hex(16)}").first(16).upcase
+
         charge = user.subscription_charges.create!(
           plan: plan,
           amount: Money.new(plan.cost, Money.default_currency.id),
           charge_date: Subscription.today,
           manual: manual,
-          order_id: SecureRandom.hex(6).upcase
+          order_id: order_id
         )
 
         begin
@@ -24,7 +26,8 @@ module Subscriptions
             metadata: {
               charge_id: charge.id,
               level: plan.level,
-              user_id: user.id
+              user_id: user.id,
+              order_id: order_id
             }
           })
 
