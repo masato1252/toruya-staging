@@ -8,7 +8,7 @@ Next billing date : <%= l(@next_period.first, format: :year_month_date) %>
 Billing term : <%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
 Ammont : <%= @cost %>(tax included)
 
-Please visit https://manager.toruya.com/account/payment and review your billing information anytime.
+Please visit <%= settings_payments_url %> and review your billing information anytime.
 
 ※ You will be downgraded to free member automatically if we fail this billing.
 

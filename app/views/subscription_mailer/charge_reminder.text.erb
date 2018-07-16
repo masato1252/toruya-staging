@@ -13,6 +13,6 @@
 ご利用期間：<%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
 請求金額：<%= @cost %>（税込）
 
-お支払いの履歴はhttps://manager.toruya.com/account/paymentにてご確認いただけます。
+お支払いの履歴は <%= settings_payments_url %> にてご確認いただけます。
 
 ※請求年月日にお支払いが完了しない場合、自動的にフリーメンバーに切り替えとなりますのでご了承ください。
