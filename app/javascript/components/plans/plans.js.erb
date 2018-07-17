@@ -116,6 +116,7 @@ UI.define("Plans", function() {
                         onClick={this.onSubscribe}
                         >
                         Subscribe
+                        { this.props.isFirstTimeSubscribe && "We will accept refund within 8 days from charged day"}
                       </button>
                     )
                   }
@@ -130,6 +131,7 @@ UI.define("Plans", function() {
                         onClick={this.onSubscribe}
                         >
                         Subscribe
+                        { this.props.isFirstTimeSubscribe && "We will accept refund within 8 days from charged day"}
                       </button>
                     )
                   }
