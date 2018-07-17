@@ -58,7 +58,7 @@ UI.define("SubscriptionModal", function() {
                 name="immediately"
                 onChange={this.onChangeUpgradePolicy}
                 />
-              <label htmlFor="immediately"><span>Immediately</span></label>
+              <label htmlFor="immediately"><span>Immediately - 今すぐプランを変更する（今期分の返金不可）</span></label>
             </div>
             <div>
               <input id="later"
@@ -68,7 +68,7 @@ UI.define("SubscriptionModal", function() {
                 name="later"
                 onChange={this.onChangeUpgradePolicy}
                 />
-              <label htmlFor="later"><span>Later</span></label>
+              <label htmlFor="later"><span>Later - 次の更新分からプランを変更する</span></label>
             </div>
             <UI.PlanCharge
               formAuthenticityToken={this.props.formAuthenticityToken}
