@@ -6,16 +6,20 @@
 </div>
 
 <div class="plans">
-  <%= react_component("plans/plans", {
-    formAuthenticityToken: form_authenticity_token,
-    paymentPath: settings_payments_path,
-    stripeKey: Rails.application.secrets.stripe_publishable_key,
-    email: current_user.email,
-    processing_message: I18n.t("common.processing"),
-    locale: I18n.default_locale,
-    currentPlanLevel: current_user.subscription.current_plan.level,
-    plans: @plans_properties,
-    planLabels: @plan_labels,
-    isFirstTimeSubscribe: @is_first_time_subscribe
-    }) %>
+  <%= content_tag :div,
+    id: "plans",
+    data: {
+      formAuthenticityToken: form_authenticity_token,
+      paymentPath: settings_payments_path,
+      stripeKey: Rails.application.secrets.stripe_publishable_key,
+      email: current_user.email,
+      processing_message: I18n.t("common.processing"),
+      locale: I18n.default_locale,
+      currentPlanLevel: current_user.subscription.current_plan.level,
+      plans: @plans_properties,
+      planLabels: @plan_labels,
+      isFirstTimeSubscribe: @is_first_time_subscribe
+    }.to_json do %>
+  <% end %>
 </div>
+<%= javascript_pack_tag 'plans_component' %>
