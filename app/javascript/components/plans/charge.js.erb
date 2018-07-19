@@ -75,7 +75,7 @@ UI.define("PlanCharge", function() {
             >
             <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
             <button className="btn btn-orange" rel="nofollow">
-              Pay this plan immediately
+              Pay
             </button>
           </StripeCheckout>
         )
@@ -84,7 +84,7 @@ UI.define("PlanCharge", function() {
       return (
         <div className="btn btn-orange" onClick={this.onCharge}>
           <UI.ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
-          Charge in next turn
+          Change in next term
         </div>
       )
     }

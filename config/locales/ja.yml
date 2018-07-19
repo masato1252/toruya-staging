@@ -350,6 +350,9 @@ ja:
       new_info_1: まずは管理人情報を登録します。
       new_info_2: 各種設定や利用料金の支払いなど、Toruyaの登録情報を管理する個人や法人を設定してください。
     plans:
+      upgrade:
+        immediately: 今すぐプランを変更する（今期分の返金不可）
+        later: 次の更新分からプランを変更する
       labels:
         shop_can_set: 設定可能な店舗数
         staff_in_charge: 担当者の設定

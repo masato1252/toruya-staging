@@ -1,0 +1,157 @@
+"use strict";
+
+import React from "react";
+import "../payment_checkout";
+import "./charge.js";
+
+UI.define("SubscriptionModal", function() {
+  return class SubscriptionModal extends React.Component {
+    static planOrder = ["free", "basic", "premium"];
+
+    constructor(props) {
+      super(props);
+
+      this.subscriptionPlan = this.props.plans[this.props.subscriptionPlanLevel];
+      this.currentPlan = this.props.plans[this.props.currentPlanLevel];
+
+      this.state = {
+        upgradeImmediately: true
+      };
+    }
+
+    renderTitle = () => {
+      return this.subscriptionPlan.details.title;
+    };
+
+    renderContent = () => {
+      if (this.props.currentPlanLevel === "free") {
+        return (
+          <div>
+            <div className="modal-body">
+              <div>
+                Subscribe Plan: {this.subscriptionPlan.details.title}
+              </div>
+              <div>
+                Cost: {this.subscriptionPlan.costFormat}
+              </div>
+            </div>
+            <div className="modal-footer">
+              <UI.PlanCharge
+                formAuthenticityToken={this.props.formAuthenticityToken}
+                paymentPath={this.props.paymentPath}
+                stripeKey={this.props.stripeKey}
+                email={this.props.email}
+                processingMessage={this.props.processingMessage}
+                locale={this.props.locale}
+                plan={this.subscriptionPlan}
+                />
+            </div>
+          </div>
+        );
+      }
+      else if (this.isUpgrade()) {
+        return (
+          <div>
+            <div className="modal-body">
+              Subscribe Plan: {this.subscriptionPlan.details.title}
+              <div>
+                <input id="immediately"
+                  className="BTNselect"
+                  type="radio"
+                  checked={this.state.upgradeImmediately}
+                  name="immediately"
+                  onChange={this.onChangeUpgradePolicy}
+                  />
+                <label htmlFor="immediately">
+                  <span><%= I18n.t("settings.plans.upgrade.immediately") %></span>
+                </label>
+              </div>
+              <div>
+                <input id="later"
+                  className="BTNselect"
+                  type="radio"
+                  checked={!this.state.upgradeImmediately}
+                  name="later"
+                  onChange={this.onChangeUpgradePolicy}
+                  />
+                <label htmlFor="later">
+                  <span><%= I18n.t("settings.plans.upgrade.later") %></span>
+                </label>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <UI.PlanCharge
+                formAuthenticityToken={this.props.formAuthenticityToken}
+                paymentPath={this.props.paymentPath}
+                stripeKey={this.props.stripeKey}
+                email={this.props.email}
+                processingMessage={this.props.processingMessage}
+                locale={this.props.locale}
+                plan={this.subscriptionPlan}
+                chargeImmediately={this.state.upgradeImmediately}
+                />
+            </div>
+          </div>
+        );
+      }
+      else {
+        return (
+          <div>
+            <div className="modal-body">
+              Subscribe Plan: {this.subscriptionPlan.details.title}
+              <div>
+                You will not be downgraded immedately,
+                the {this.currentPlan.details.title} will be active until next term.
+              </div>
+            </div>
+            <div className="modal-footer">
+              <UI.PlanCharge
+                formAuthenticityToken={this.props.formAuthenticityToken}
+                paymentPath={this.props.paymentPath}
+                stripeKey={this.props.stripeKey}
+                email={this.props.email}
+                processingMessage={this.props.processingMessage}
+                locale={this.props.locale}
+                plan={this.subscriptionPlan}
+                chargeImmediately={false}
+                />
+            </div>
+          </div>
+        );
+      }
+    };
+
+    isUpgrade = () => {
+      const subscriptionPlanIndex = SubscriptionModal.planOrder.indexOf(this.props.subscriptionPlanLevel);
+      const currentPlanIndex = SubscriptionModal.planOrder.indexOf(this.props.currentPlanLevel);
+
+      return subscriptionPlanIndex > currentPlanIndex;
+    };
+
+    onChangeUpgradePolicy = () => {
+      this.setState(prevState => ({ upgradeImmediately: !prevState.upgradeImmediately }));
+    };
+
+    render() {
+      return (
+        <div className="modal fade" id="subscription-modal" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+                <h4 className="modal-title" id="myModalLabel">
+                  {this.renderTitle()} Plan
+                </h4>
+                </div>
+                  {this.renderContent()}
+              </div>
+            </div>
+          </div>
+      );
+    }
+  };
+});
+
+export default UI.SubscriptionModal;

@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import "./subscription_modal";
+import "./subscription_modal.js";
 
 UI.define("Plans", function() {
   return class Plans extends React.Component {
@@ -109,30 +109,38 @@ UI.define("Plans", function() {
                 <td>
                   {
                     this.props.currentPlanLevel !== "basic" && (
-                      <button
-                        className="btn btn-orange"
-                        rel="nofollow"
-                        data-plan-level="basic"
-                        onClick={this.onSubscribe}
-                        >
-                        Subscribe
-                        { this.props.isFirstTimeSubscribe && "We will accept refund within 8 days from charged day"}
-                      </button>
+                      <div>
+                        <button
+                          className="btn btn-orange"
+                          rel="nofollow"
+                          data-plan-level="basic"
+                          onClick={this.onSubscribe}
+                          >
+                          Subscribe
+                        </button>
+                        <div>
+                          {this.props.isFirstTimeSubscribe && "We accept refund within 8 days"}
+                        </div>
+                      </div>
                     )
                   }
                 </td>
                 <td>
                   {
                     this.props.currentPlanLevel !== "premium" && (
-                      <button
-                        className="btn btn-orange"
-                        rel="nofollow"
-                        data-plan-level="premium"
-                        onClick={this.onSubscribe}
-                        >
-                        Subscribe
-                        { this.props.isFirstTimeSubscribe && "We will accept refund within 8 days from charged day"}
-                      </button>
+                      <div>
+                        <button
+                          className="btn btn-orange"
+                          rel="nofollow"
+                          data-plan-level="premium"
+                          onClick={this.onSubscribe}
+                          >
+                          Subscribe
+                        </button>
+                        <div>
+                          {this.props.isFirstTimeSubscribe && "We accept refund within 8 days"}
+                        </div>
+                      </div>
                     )
                   }
                 </td>

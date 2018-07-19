@@ -341,6 +341,57 @@ en:
       info_2: You need to complete this setting in order to use Toruya.
       new_info_1: Please enter Toruya account admin informations here.
       new_info_2: You need to complete this setting in order to use Toruya.
+    plans:
+      upgrade:
+        immediately: Change your plan right away(no refund of current term)
+        later: Change your plan on the next term
+      labels:
+        shop_can_set: Shop you can set
+        staff_in_charge: Set staff in charge
+        max_customer_per_reservation: Max customer per reservation
+        reservation_restriction: Reservation you can make
+        private_schedule: Add/Edit private schedule
+        customer_info: Add/Edit Customer Information
+        customer_group_limit: Customer groups you can make
+        customer_filter: Customer filter
+        print_address: Print address
+        add_staff: Add staff
+      free:
+        title: Free
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff/reservation"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 1,200)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 1
+        customer_filter: filter by name
+        print_address: 1 at a time
+        add_staff: ✕
+      basic:
+        title: Basic
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff/reservation"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 3,600)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2
+        customer_filter: preset filters
+        print_address: 1 at a time
+        add_staff: ✕
+      premium:
+        title: Premium
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
   constants:
     rank:
       regular: "Regular"
