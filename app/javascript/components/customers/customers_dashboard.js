@@ -3,7 +3,7 @@
 import React from "react";
 import "whatwg-fetch";
 import "../shared/customers_list.js";
-import "../shared/processing_bar.js";
+import "../shared/processing_bar";
 import "./customer_info_view.js";
 import "./customer_info_edit.js";
 import "./customer_reservations_view.js";

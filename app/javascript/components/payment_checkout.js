@@ -1,7 +1,7 @@
 "use strict";
 import React from "react";
 import StripeCheckout from 'react-stripe-checkout';
-import "./shared/processing_bar.js";
+import "./shared/processing_bar";
 
 UI.define("PaymentCheckout", function() {
   return class PaymentCheckout extends React.Component {

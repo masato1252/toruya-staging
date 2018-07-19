@@ -3,7 +3,7 @@
 import React from "react";
 import "../shared/select.js"
 import "../shared/customers_list.js"
-import "../shared/processing_bar.js"
+import "../shared/processing_bar"
 import "../shared/datepicker_field.js"
 import "../schedules/working_schedules_modal.js"
 

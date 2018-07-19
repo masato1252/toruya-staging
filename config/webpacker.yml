@@ -29,6 +29,7 @@ default: &default
     - .jpeg
     - .jpg
     - .js.erb
+    - .js.jsx
 
 development:
   <<: *default

@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import "../../shared/processing_bar.js";
+import "../../shared/processing_bar";
 
 UI.define("Customers.Filter.CustomersList", function() {
   return class CustomersList extends React.Component {

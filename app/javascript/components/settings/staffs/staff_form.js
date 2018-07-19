@@ -3,7 +3,7 @@
 import React from "react";
 import "whatwg-fetch";
 import 'url-search-params-polyfill';
-import "../../shared/processing_bar.js";
+import "../../shared/processing_bar";
 
 UI.define("Settings.Staff.Formfields", function() {
   return class StaffFormfields extends React.Component {

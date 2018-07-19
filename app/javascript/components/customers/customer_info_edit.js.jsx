@@ -2,7 +2,7 @@
 
 import React from "react";
 import "../shared/select.js";
-import "../shared/processing_bar.js";
+import "../shared/processing_bar";
 
 UI.define("Customers.CustomerInfoEdit", function() {
   return class CustomerInfoEdit extends React.Component {
