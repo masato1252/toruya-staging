@@ -31,7 +31,7 @@ class NotificationMailer < ApplicationMailer
                       end
 
     mail(:to => staff_account.email,
-         :subject => subject("#{@shops_sentence}にスタッフとして設定されました。"))
+         :subject => subject("#{@owner.name} の店舗にスタッフとして設定されました。"))
   end
 
   def staff_deleted(staff)

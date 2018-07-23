@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   include Authorization
   include ViewHelpers
+  include Sentry
   layout "home"
 
   def settings

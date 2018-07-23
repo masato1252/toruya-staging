@@ -110,13 +110,12 @@ class ReservationsController < DashboardController
     end
   end
 
-  # DELETE /reservations/1
-  # DELETE /reservations/1.json
   def destroy
     @reservation.destroy
-    respond_to do |format|
-      format.html { redirect_to shop_reservations_path(shop), notice: I18n.t("reservation.delete_successfully_message") }
-      format.json { head :no_content }
+    if params[:from_member]
+      redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
+    else
+      redirect_to shop_reservations_path(shop), notice: I18n.t("reservation.delete_successfully_message")
     end
   end
 
