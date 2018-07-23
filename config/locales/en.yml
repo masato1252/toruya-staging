@@ -342,6 +342,23 @@ en:
       new_info_1: Please enter Toruya account admin informations here.
       new_info_2: You need to complete this setting in order to use Toruya.
     plans:
+      info_title: Plans
+      info_title1: Plans and Payments
+      info_1: This is your selected plan and payment info for Toruya.
+      info_2: Functions on Toruya will be available based on your plan.
+      plan_info:
+        caption: Plan information
+        current_plan: Your Current Plan
+        plan_member: "%{plan_name} Member"
+        change_plan: Change My Plan
+        join_date: Join Date
+        status: Status
+        next_billing_date: Next Billing Date
+      payment:
+        date: Date
+        amount: Amount
+        plan: Plan
+        receipt: Receipt
       upgrade:
         immediately: Change your plan right away(no refund of current term)
         later: Change your plan on the next term

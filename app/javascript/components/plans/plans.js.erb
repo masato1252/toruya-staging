@@ -37,13 +37,13 @@ UI.define("Plans", function() {
               <tr>
                 <th className="invisible"></th>
                 <th className={`invisible ${this.isCurrentPlan("free") && "current"}`}>
-                  Current Plan
+                  {this.props.i18n.currentPlan}
                 </th>
                 <th className={`invisible ${this.isCurrentPlan("basic") && "current"}`}>
-                  Current Plan
+                  {this.props.i18n.currentPlan}
                 </th>
                 <th className={`invisible ${this.isCurrentPlan("premium") && "current"}`}>
-                  Current Plan
+                  {this.props.i18n.currentPlan}
                 </th>
               </tr>
               <tr>

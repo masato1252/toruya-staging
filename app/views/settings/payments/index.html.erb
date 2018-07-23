@@ -1,44 +1,44 @@
 <div id="subNav">
-  <h2><%= Staff.model_name.human %> − <%= t("settings.staff.new_title") %></h2>
+  <h2><%= t("settings.account.info_title") %> − <%= t("settings.plans.info_title1") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.staff.new_info_1") %><br /><%= t("settings.staff.new_info_2") %></p>
+  <p><%= t("settings.plans.info_1") %><br /><%= t("settings.plans.info_2") %></p>
 </div>
 
 <div class="payments">
   <table class="subscription">
-    <caption>Plan Information</caption>
+    <caption><%= t("settings.plans.plan_info.caption") %></caption>
     <tbody>
       <tr>
-        <th>Current Plan</th>
+        <th><%= t("settings.plans.plan_info.current_plan") %></th>
         <td>
-          <%= @subscription.current_plan.name %>
-          <%= link_to "Change plan", settings_plans_path, class: "btn btn-yellow" %>
+          <%= t("settings.plans.plan_info.plan_member", plan_name: @subscription.current_plan.name) %>
+          <%= link_to t("settings.plans.plan_info.change_plan"), settings_plans_path, class: "btn btn-yellow" %>
         </td>
       </tr>
       <tr>
-        <th>Join Date</th>
+        <th><%= t("settings.plans.plan_info.join_date") %></th>
         <td><%= l(current_user.created_at.to_date)%></td>
       </tr>
       <tr>
-        <th>Status</th>
+        <th><%= t("settings.plans.plan_info.status") %></th>
         <td><%= subscription_status(@subscription) %></td>
       </tr>
       <tr>
-        <th>Next Billing Date</th>
+        <th><%= t("settings.plans.plan_info.next_billing_date") %></th>
         <td><%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %></td>
       </tr>
     </tbody>
   </table>
 
   <table class="history">
-    <caption>Payment history and receipts</caption>
+    <caption><%= t("settings.plans.info_title1") %></caption>
     <thead>
       <tr>
-        <th class="charge-date">Date</th>
-        <th class="charge-amount">Amount</th>
-        <th class="charge-plan">Plan</th>
-        <th class="charge-receipt">Receipt</th>
+        <th class="charge-date"><%= t("settings.plans.payment.date") %></th>
+        <th class="charge-amount"><%= t("settings.plans.payment.amount") %></th>
+        <th class="charge-plan"><%= t("settings.plans.payment.plan") %></th>
+        <th class="charge-receipt"><%= t("settings.plans.payment.receipt") %></th>
       </tr>
     </thead>
     <tbody>
@@ -48,7 +48,7 @@
         <td><%= charge.amount.format %></td>
         <td><%= charge.plan.name %> <%= "(refunded)" if charge.refunded? %></td>
         <td>
-          <%= link_to "Receipt", receipt_settings_payment_path(charge, format: :pdf), target: "_blank" %>
+          <%= link_to t("settings.plans.payment.receipt"), receipt_settings_payment_path(charge, format: :pdf), target: "_blank" %>
           <%= link_to "Refund", "#", class: "btn btn-orange", data: { toggle: "modal", target: "#refund-modal" } if @refundable && @subscription.first_charge.id == charge.id %>
         </td>
       </tr>

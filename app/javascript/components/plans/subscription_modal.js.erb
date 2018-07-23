@@ -63,7 +63,7 @@ UI.define("SubscriptionModal", function() {
                   onChange={this.onChangeUpgradePolicy}
                   />
                 <label htmlFor="immediately">
-                  <span><%= I18n.t("settings.plans.upgrade.immediately") %></span>
+                  <span>{this.props.i18n.upgradeImmediately}</span>
                 </label>
               </div>
               <div>
@@ -75,7 +75,7 @@ UI.define("SubscriptionModal", function() {
                   onChange={this.onChangeUpgradePolicy}
                   />
                 <label htmlFor="later">
-                  <span><%= I18n.t("settings.plans.upgrade.later") %></span>
+                  <span>{this.props.i18n.upgradeLater}</span>
                 </label>
               </div>
             </div>
