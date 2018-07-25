@@ -15,6 +15,10 @@
 #
 
 class BusinessSchedule < ApplicationRecord
+  # shop's business_schedules: Only shop_id exists
+  # staff's business schedules: Both shop_id, staff_id exist
+  # NO only staff_id exists case
+
   WDAYS = [1, 2, 3, 4, 5, 6, 0].freeze
   BUSINESS_STATE = %w(opened closed).freeze
 

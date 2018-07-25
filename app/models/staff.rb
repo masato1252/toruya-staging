@@ -47,4 +47,9 @@ class Staff < ApplicationRecord
   def can?(*args)
     Ability.new(staff_account.user, user).can?(*args)
   end
+
+  # no any business schedule exists
+  def freelancer?(shop)
+    !business_schedules.where(shop: shop).exists?
+  end
 end

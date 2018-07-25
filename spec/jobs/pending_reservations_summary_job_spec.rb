@@ -1,7 +1,7 @@
 require "rails_helper"
 require "pending_reservations_summary_job"
 
-RSpec.describe PendingReservationSummaryJob do
+RSpec.describe PendingReservationsSummaryJob do
   let(:current_time) { Time.zone.local(2018, 6, 19, 20, 59, 59) }
   let(:time_range) { current_time.beginning_of_hour.advance(hours: -12)..current_time.beginning_of_hour.advance(seconds: -1) }
   before do

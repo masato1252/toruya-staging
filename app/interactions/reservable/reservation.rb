@@ -28,8 +28,13 @@ module Reservable
       working_day_staff_ids = working_day_staffs.map(&:id)
       staffs.includes(:staff_menus).each do |staff|
         if working_day_staff_ids.exclude?(staff.id)
-          errors.add(:staff_ids, :unworking_staff)
-          errors.add(:unworking_staff, staff.id.to_s)
+          if staff.freelancer?(shop)
+            errors.add(:staff_ids, :freelancer)
+            errors.add(:freelancer, staff.id.to_s)
+          else
+            errors.add(:staff_ids, :unworking_staff)
+            errors.add(:unworking_staff, staff.id.to_s)
+          end
         end
 
         validate_staffs_ability_for_customers(staff)

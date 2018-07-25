@@ -10,15 +10,22 @@ class NotificationsPresenter
     new_pending_reservations + new_staff_accounts
   end
 
+  def recent_pending_reservations
+    @recent_pending_reservations ||= begin
+      staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
+
+      ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending).order("reservations.start_time ASC")
+    end
+  end
+
   private
 
   def new_pending_reservations
-    staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
+    oldest_res = recent_pending_reservations.first&.reservation
 
-    reservation_staffs = ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending).map do |reservation_staff|
-      res = reservation_staff.reservation
-      "#{I18n.t("notifications.pending_reservation_need_confirm")} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.date_member_path(res.start_time.to_s(:date), res.id))}"
-    end
+    oldest_res ? [
+      "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
+    ] : []
   end
 
   def new_staff_accounts

@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         resource :states, only: [] do
           get :pend
           get :accept
+          get :accept_in_group
           get :check_in
           get :check_out
           get :cancel

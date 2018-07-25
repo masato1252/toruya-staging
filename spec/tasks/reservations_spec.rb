@@ -17,7 +17,7 @@ RSpec.describe "rake reservations:pending_notifications" do
     let(:current_time) { Time.use_zone("Tokyo") { Time.zone.local(2018, 6, 19, 8, 0, 1) } }
 
     it "do nothing" do
-      expect(PendingReservationSummaryJob).not_to receive(:perform_later)
+      expect(PendingReservationsSummaryJob).not_to receive(:perform_later)
 
       task.execute
     end
@@ -37,9 +37,9 @@ RSpec.describe "rake reservations:pending_notifications" do
       let!(:unmatched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
 
       it "sends the jobs to the active staff_account's users" do
-        expect(PendingReservationSummaryJob).to receive(:perform_later).
+        expect(PendingReservationsSummaryJob).to receive(:perform_later).
           with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
-        expect(PendingReservationSummaryJob).to receive(:perform_later).
+        expect(PendingReservationsSummaryJob).to receive(:perform_later).
           with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
 
         task.execute
@@ -61,9 +61,9 @@ RSpec.describe "rake reservations:pending_notifications" do
       let!(:unmatched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 20, 0, 0)) }
 
       it "sends the jobs to the users" do
-        expect(PendingReservationSummaryJob).to receive(:perform_later).
+        expect(PendingReservationsSummaryJob).to receive(:perform_later).
           with(matched_pending_reservation1.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
-        expect(PendingReservationSummaryJob).to receive(:perform_later).
+        expect(PendingReservationsSummaryJob).to receive(:perform_later).
           with(matched_pending_reservation2.staffs.first.staff_account.user_id, time_range.first.to_s, time_range.last.to_s).once
 
         task.execute

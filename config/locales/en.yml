@@ -72,7 +72,7 @@ en:
       basic: Basic
       premium: Premium
   notifications:
-    pending_reservation_need_confirm: You have a reservation need to be confirm.
+    pending_reservation_need_confirm: You have %{number} reservation need to be confirm.
     pending_reservation_confirm: Check here
   reservation:
     valid_time_tip_message: Need a valid reservation time
@@ -656,6 +656,7 @@ en:
               too_short: "^Not enough time"
             staff_ids:
               unworking_staff: "^%{staff_name} Off-day"
+              freelancer: "^working schedule required"
               other_shop: "^%{staff_name} In another shop"
               overlap_reservations: "^%{staff_name} Busy"
               incapacity_menu: "^Incompatible menu %{menu_name} %{staff_name}"

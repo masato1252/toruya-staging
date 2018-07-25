@@ -10,6 +10,9 @@
 
 
 <% @reservations.each do |reservation| %>
-  <%= l(reservation.start_time, format: :date) %> <%= l(reservation.start_time, format: :hour_minute) %>〜<%= l(reservation.end_time, format: :hour_minute) %> <%= member_url %>
+  <%= l(reservation.start_time, format: :date) %> <%= l(reservation.start_time, format: :hour_minute) %>〜<%= l(reservation.end_time, format: :hour_minute) %>
+  <%= reservation.shop.display_name %>
+  <%= date_member_url(reservation.start_time.to_s(:date), reservation.id) %>
   <%= reservation.by_staff.name %>が<%= l(reservation.created_at) %>に作成
+
 <% end %>

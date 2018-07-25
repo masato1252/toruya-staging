@@ -15,9 +15,9 @@
 #
 
 class CustomSchedule < ApplicationRecord
-  # Only shop_id exists: shop's custom_schedules.
-  # Only staff_id exists: staff's closed custom_schedules.
-  # Both shop_id, staff_id exist: staff's open custom_schedules.
+  # shop's custom_schedules: Only shop_id exists
+  # staff's closed custom_schedules: Only staff_id exists
+  # staff's open custom_schedules: Both shop_id, staff_id exist
 
   attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
