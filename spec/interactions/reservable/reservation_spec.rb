@@ -246,19 +246,41 @@ RSpec.describe Reservable::Reservation do
       end
 
       context "when some staffs don't work on that date" do
-        let(:staff2) { FactoryBot.create(:staff, user: user, shop: shop) }
+        context "when staff is a freelancer" do
+          let(:staff2) { FactoryBot.create(:staff, user: user, shop: shop) }
 
-        it "is invalid" do
-          outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                menu_ids: [menu1.id],
-                                                business_time_range: time_range,
-                                                staff_ids: [staff1.id, staff2.id])
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
 
-          expect(outcome).to be_invalid
-          unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :unworking_staff }
+            expect(outcome).to be_invalid
+            unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :freelancer }
 
-          expect(unworking_staff_error).to eq(error: :unworking_staff)
-          expect(outcome.errors.details[:unworking_staff]).to include(error: staff2.id.to_s)
+            expect(unworking_staff_error).to eq(error: :freelancer)
+            expect(outcome.errors.details[:freelancer]).to include(error: staff2.id.to_s)
+          end
+        end
+
+        context "when staff is a normal staff" do
+          let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
+          before do
+            FactoryBot.create(:custom_schedule, :closed, staff: staff2, start_time: time_range.first, end_time: time_range.last)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
+
+            expect(outcome).to be_invalid
+            unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :unworking_staff }
+
+            expect(unworking_staff_error).to eq(error: :unworking_staff)
+            expect(outcome.errors.details[:unworking_staff]).to include(error: staff2.id.to_s)
+          end
         end
       end
 

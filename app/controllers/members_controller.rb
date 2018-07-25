@@ -7,7 +7,7 @@ class MembersController < DashboardController
 
     @reservations = Reservation.where(shop_id: all_shop_options.map(&:shop_id).uniq).
       uncanceled.in_date(@date).
-      includes(:menu, :customers, :staffs, :shop).
+      includes(:menu, :customers, :staffs, shop: :user).
       order("reservations.start_time ASC")
 
     staffs_off_schedules = CustomSchedule.where(staff_id: all_shop_options.map(&:staff_id).uniq).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
@@ -28,9 +28,6 @@ class MembersController < DashboardController
       end
     end.sort_by { |option| option.time }
 
-
-    @notification_messages = current_user.staffs.active.where(first_name: "").includes(:staff_account).map do |staff|
-      "#{I18n.t("settings.staff_account.new_staff_active")} #{view_context.link_to(I18n.t("settings.staff_account.staff_setting"), edit_settings_user_staff_path(current_user, staff))}"
-    end
+    @notification_messages = NotificationsPresenter.new(view_context, current_user).data
   end
 end

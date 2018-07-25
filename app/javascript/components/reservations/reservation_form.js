@@ -14,13 +14,13 @@ UI.define("Reservation.Form", function() {
     static errorGroups() {
       return (
         {
-          errors: ["unworking_staff", "time_not_enough", "start_yet", "is_over"],
-          warnings: ["shop_closed", "interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
+          errors: ["time_not_enough", "start_yet", "is_over"],
+          warnings: ["freelancer", "unworking_staff", "shop_closed", "interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
                      "not_enough_seat", "not_enough_ability"],
           menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
           menu_danger_errors: ["start_yet", "is_over"],
           staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
-          staff_danger_errors: ["unworking_staff"]
+          staff_danger_errors: []
         }
       )
     };
@@ -185,6 +185,10 @@ UI.define("Reservation.Form", function() {
       }
     };
 
+    _currentUserStaff = () => {
+      return this.state.staff_options.find(staff => this.props.currentUserStaffId === staff.value)
+    };
+
     _selected_staffs = () => {
       let selected_staffs = this.state.staff_ids.map((staff_id) => {
         return _.filter(this.state.staff_options, (staff) => {
@@ -193,6 +197,10 @@ UI.define("Reservation.Form", function() {
       })
 
       return _.flatten(selected_staffs)
+    };
+
+    _isCurrentUserStaffWorkForThis = () => {
+      return this.state.staff_ids.includes(this.props.currentUserStaffId);
     };
 
     _isValidReservationTime = () => {
@@ -443,14 +451,11 @@ UI.define("Reservation.Form", function() {
       })
       .done(
       function(result) {
-        var staff_ids = _this.state.staff_ids.length ? _this.state.staff_ids : _.map(_this.state.staff_options, function(o) { return o.value }).slice(0, result["min_staffs_number"] || 1)
-
         _this.setState({
           start_time_restriction: result["start_time_restriction"],
           end_time_restriction: result["end_time_restriction"],
           errors: result["errors"],
-          menu_min_staffs_number: result["menu_min_staffs_number"],
-          staff_ids: staff_ids
+          menu_min_staffs_number: result["menu_min_staffs_number"]
         });
       }).fail(function(errors){
       }).always(function() {
@@ -615,6 +620,24 @@ UI.define("Reservation.Form", function() {
       return this._displayErrors(["next_reservation_interval_overlap"]).length != 0;
     };
 
+    otherStaffsResponsibleThisReservation = () => {
+      return this.state.staff_ids.some(staff_id => staff_id !== this.props.currentUserStaffId);
+    };
+
+    renderSubmitButton = () => {
+      if (this.state.submitting) {
+        return this.props.processingMessage;
+      }
+      else {
+        if (this.otherStaffsResponsibleThisReservation()) {
+          return "未承認で保存";
+        }
+        else {
+          return "保存";
+        }
+      }
+    };
+
     submitForm = () => {
       // Delay submission to make sure that card token, last4, and type are set in real DOM.
       setTimeout(function() {
@@ -713,12 +736,9 @@ UI.define("Reservation.Form", function() {
                   <dd className="input">
                     {this.renderStaffSelects()}
                     {
-                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 ? (
-                        <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
-                          この時間を出勤にする
-                        </a>
-                      ) : null
-                    }
+                      this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 && this._isCurrentUserStaffWorkForThis() && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
+                   この時間を出勤にする
+                 </a>)}
                   </dd>
                 </dl>
               </div>
@@ -805,24 +825,25 @@ UI.define("Reservation.Form", function() {
                   <input name="reservation[staff_ids]" type="hidden" value={Array.prototype.slice.call(this.state.staff_ids).join(",")} />
                   <input name="reservation[memo]" type="hidden" value={this.state.memo} />
                   <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
+                  <input name="reservation[by_staff_id]" type="hidden" value={this.props.currentUserStaffId} />
                   { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
                   { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
-                  <button type="submit" id="BTNsave" className="BTNyellow"
+                  <button type="submit" id="BTNsave" className={this.otherStaffsResponsibleThisReservation() ? "BTNorange" : "BTNyellow"}
                     disabled={!this._isValidToReserve() || this.state.submitting}
                     onClick={this._handleSubmitClick}>
                     <i className="fa fa-folder-o" aria-hidden="true"></i>
-                    {this.state.submitting ? this.props.processingMessage : "保存"}
+                    {this.renderSubmitButton()}
                   </button>
                 </form>
               </li>
             </ul>
           </footer>
-          {this.state.staff_ids[this.state.staff_ids.length - 1] ? (
+          {this._isCurrentUserStaffWorkForThis() && (
             <UI.WorkingSchedulesModal
               formAuthenticityToken={this.props.formAuthenticityToken}
               open={true}
-              staff={this._selected_staffs()[this.state.staff_ids.length - 1]}
+              staff={this._currentUserStaff()}
               shop={this.props.shop}
               shops={[this.props.shop]}
               startTimeDatePart={this.state.start_time_date_part}
@@ -832,7 +853,7 @@ UI.define("Reservation.Form", function() {
               callback={this._handleStaffChange}
               remote="true"
             />
-          ) : null}
+          )}
         </div>
       );
     }

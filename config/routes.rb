@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
 
   resource :member, only: [:show] do
-    get "/:reservation_date", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+    get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
   end
 
   resources :users do
@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         resource :states, only: [] do
           get :pend
           get :accept
+          get :accept_in_group
           get :check_in
           get :check_out
           get :cancel
