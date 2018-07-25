@@ -39,8 +39,6 @@ module Reservations
     def reservation_for_staff
       @reservation_for_staff ||= reservation.for_staff(current_staff)
     end
-<<<<<<< HEAD
-=======
 
     def shop
       @shop ||= reservation.shop
@@ -72,6 +70,5 @@ module Reservations
           where("opened_custom_schedules.start_time <= ? and opened_custom_schedules.end_time >= ?", start_time, ready_time)
         ).to_a.present?
     end
->>>>>>> master
   end
 end
