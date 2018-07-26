@@ -8,7 +8,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
       user = outcome.result
       remember_me(user)
       sign_in(user)
-      redirect_back(fallback_location: member_path)
+
+      redirect_to member_path
     else
       redirect_to new_user_registration_url
     end
