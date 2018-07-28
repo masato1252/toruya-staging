@@ -272,7 +272,7 @@ UI.define("WorkingTime.StaffForm", function() {
 
     render() {
       return (
-        <form action={this.props.saveStaffPath} acceptCharset="UTF-8" method="post" data-behavior="dirty-form">
+        <form action={this.props.saveStaffPath} acceptCharset="UTF-8" method="post">
           <input name="utf8" type="hidden" value="✓" />
           <input type="hidden" name="_method" value="patch" />
           <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
