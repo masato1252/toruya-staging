@@ -16,9 +16,5 @@
 //= require jquery-ui/i18n/datepicker-ja
 //= require bootstrap
 //= require underscore
-//= require ui
 //= require select2
-//= require atomic_requests.js
-//= require side_nav.js
-//= require dirty_form.js
 //= require_tree .
