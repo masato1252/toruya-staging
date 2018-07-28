@@ -19,6 +19,5 @@
 //= require ui
 //= require select2
 //= require atomic_requests.js
-//= require side_nav.js
 //= require dirty_form.js
 //= require_tree .
