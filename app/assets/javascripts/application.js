@@ -18,5 +18,4 @@
 //= require underscore
 //= require ui
 //= require select2
-//= require atomic_requests.js
 //= require_tree .
