@@ -8,29 +8,29 @@ export default class AtomicRequestsController extends Controller {
 
   connect() {
     $(document).on("click", AtomicRequestsController.linkSelector, (event) => {
-      const link = $(this)
+      const link = $(event.target)
 
       if (this.notRemoteRequest(link) && !this.canMakeAtomicRequest(link)) {
         event.preventDefault()
       }
     })
 
-    $(document).on("submit", AtomicRequestsController.formSelector, () => {
-      const form = $(this)
+    $(document).on("submit", AtomicRequestsController.formSelector, (event) => {
+      const form = $(event.target)
 
       if (this.notRemoteRequest(form)) {
         return this.canMakeAtomicRequest(form)
       }
     })
 
-    $(document).on("ajax:beforeSend", AtomicRequestsController.remoteSelector, () => {
-      const element = $(this)
+    $(document).on("ajax:beforeSend", AtomicRequestsController.remoteSelector, (event) => {
+      const element = $(event.target)
 
       return this.canMakeAtomicRequest(element)
     })
 
-    $(document).on("ajax:complete", AtomicRequestsController.remoteSelector, () => {
-      const element = $(this)
+    $(document).on("ajax:complete", AtomicRequestsController.remoteSelector, (event) => {
+      const element = $(event.target)
 
       return this.setAtomicLock(element, false)
     })
