@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import "whatwg-fetch";
 import 'url-search-params-polyfill';
 import ProcessingBar from "../../shared/processing_bar.js";

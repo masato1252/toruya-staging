@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import Select from "../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
 

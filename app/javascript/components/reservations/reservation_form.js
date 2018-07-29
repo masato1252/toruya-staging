@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import Select from "../shared/select.js"
 import CommonCustomersList from "../shared/customers_list.js"
 import ProcessingBar from "../shared/processing_bar.js"

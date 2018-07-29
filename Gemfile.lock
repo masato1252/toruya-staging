@@ -403,7 +403,6 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.8)
       execjs (>= 0.3.0, < 3)
-    underscore-rails (1.8.3)
     uniform_notifier (1.0.2)
     warden (1.2.7)
       rack (>= 1.0)
@@ -483,7 +482,6 @@ DEPENDENCIES
   spring-watcher-listen (~> 2.0.0)
   timecop (~> 0.8.0)
   uglifier (>= 1.3.0)
-  underscore-rails (~> 1.8.3)
   web-console
   webpacker (~> 3.5.3)
   week_of_month
