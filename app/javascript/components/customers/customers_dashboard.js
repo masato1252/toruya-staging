@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import "whatwg-fetch";
 import CommonCustomersList from "../shared/customers_list.js";
 import ProcessingBar from "../shared/processing_bar.js";

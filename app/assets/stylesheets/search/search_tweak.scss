@@ -1,4 +1,10 @@
+.filter .contBody {
+  background-color: #FFFFFF;
+}
+
 .filter #resList {
+  overflow: auto;
+
   a {
     display: block;
     padding: 5px 0;
@@ -14,7 +20,7 @@
   }
 
   .customer {
-    width: 40%;
+    width: 30%;
   }
 
   .shop {

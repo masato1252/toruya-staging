@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import WorkingTimeBusinessScheduleForm from "./business_schedules_form.js";
 import CustomSchedules from "../schedules/custom_schedules.js";
 

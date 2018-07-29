@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import CommonCustomerOption from "./customer_option.js";
 
 class CommonCustomersList extends React.Component {

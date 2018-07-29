@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import CustomersFilterQuerySider from "./query_sider.js";
 import FilterCustomersList from "./customers_list.js";
 import MessageBar from "../../shared/message_bar.js";

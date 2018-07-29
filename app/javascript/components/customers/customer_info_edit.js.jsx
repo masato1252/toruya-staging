@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import Select from "../shared/select.js";
 
 class CustomerInfoEdit extends React.Component {

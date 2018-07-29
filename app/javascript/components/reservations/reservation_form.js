@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import _ from "underscore";
 import Select from "../shared/select.js"
 import CommonCustomersList from "../shared/customers_list.js"
 import ProcessingBar from "../shared/processing_bar.js"
@@ -19,7 +20,8 @@ class ReservationForm extends React.Component {
         menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
         menu_danger_errors: ["start_yet", "is_over"],
         staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
-        staff_danger_errors: []
+        staff_danger_errors: [],
+        staff_time_warnings: ["freelancer", "unworking_staff"]
       }
     )
   };
@@ -496,7 +498,7 @@ class ReservationForm extends React.Component {
               onChange={this._handleStaffChange}
               className={
                 this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
-                  this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                  this._staffDangerErrors(value).length !== 0 ? "field-error" : "field-warning"
                 ) : ""
               }
             />
@@ -519,7 +521,7 @@ class ReservationForm extends React.Component {
             onChange={this._handleStaffChange}
             className={
               this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
-                this._staffDangerErrors(value).length === 0 ? "field-warning" : "field-error"
+                this._staffDangerErrors(value).length !== 0 ? "field-error" : "field-warning"
               ) : ""
             }
           />
@@ -601,6 +603,21 @@ class ReservationForm extends React.Component {
       var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.errorGroups().staff_danger_errors)
       if (dangerStaffErrors.length) {
         return this._displayErrors(dangerStaffErrors)
+      }
+      else {
+        return ""
+      }
+    }
+    else {
+      return ""
+    }
+  };
+
+  _staffTimeWarnings = (staff_id) => {
+    if (staff_id && this.state.errors[staff_id]) {
+      const staffTimeWarnings = _.intersection(this.state.errors[staff_id], ReservationForm.errorGroups().staff_time_warnings)
+      if (staffTimeWarnings.length) {
+        return this._displayErrors(staffTimeWarnings)
       }
       else {
         return ""
@@ -735,7 +752,7 @@ class ReservationForm extends React.Component {
                 <dd className="input">
                   {this.renderStaffSelects()}
                   {
-                    this._staffDangerErrors(this.state.staff_ids[this.state.staff_ids.length - 1]).length > 0 && this._isCurrentUserStaffWorkForThis() && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
+                    this._staffTimeWarnings(this.props.currentUserStaffId).length > 0 && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
                  この時間を出勤にする
                </a>)}
                 </dd>
