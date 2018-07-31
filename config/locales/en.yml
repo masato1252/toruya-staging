@@ -564,11 +564,13 @@ en:
               interval_too_short: "^Not enough interval time"
               too_short: "^Not enough time"
             staff_ids:
-              unworking_staff: "^%{staff_name} Off-day"
+              unworking_staff: "^Off-day"
+              ask_for_leave: "^Off-day"
               freelancer: "^working schedule required"
-              other_shop: "^%{staff_name} In another shop"
+              other_shop: "^In another shop"
               overlap_reservations: "^%{staff_name} Busy"
               incapacity_menu: "^Incompatible menu %{menu_name} %{staff_name}"
+              not_enough_ability: "^too much customer"
             menu_ids:
               not_enough_seat: "^%{menu_name} not enough seat"
               not_enough_ability: "^%{staff_name} %{menu_name} too many customers"
