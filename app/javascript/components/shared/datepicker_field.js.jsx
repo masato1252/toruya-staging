@@ -1,57 +1,50 @@
 "use strict";
 
 import React from "react";
-
-var moment = require('moment-timezone');
+import moment from "moment-timezone";
+import DayPickerInput from 'react-day-picker//DayPickerInput';
+import MomentLocaleUtils from 'react-day-picker/moment';
+import 'moment/locale/ja';
 
 class CommonDatepickerField extends React.Component {
   constructor(props) {
     super(props);
-
-    moment.locale('ja');
   };
 
-  componentDidMount() {
-    var _this = this;
-
-    $("#" + _this._datepickerId()).datepicker({
-      dateFormat: "yy-mm-dd"
-    }).datepicker( $.datepicker.regional[ "ja" ] ).
-      on("change", _this.props.handleChange)
-
-    $("." + this.props.dataName + " input[type=date]").val("");
-    $("." + this.props.dataName + " input[type=date]").val(this.props.date);
-  };
-
-  openCalendar = (event) => {
+  openDayPickerCalendar = (event) => {
     event.preventDefault();
-    $("#" + this._datepickerId()).datepicker('show');
+    this.dayPickerInput.input.focus();
   };
 
-  _datepickerId = () => {
-    return `schedule_hidden_date_${this.props.calendarfieldPrefix || "default"}`
-  };
+  handleDateChange = (date) => {
+    this.props.handleChange({ [this.props.dataName]: moment(date).format("YYYY-MM-DD") });
+  }
 
   render() {
     return(
       <div className={`datepicker-field ${this.props.dataName}`}>
-        <input
-          type="date"
+        <DayPickerInput
+          ref={(c) => this.dayPickerInput = c }
           data-name={this.props.dataName}
-          id={this.props.dataName}
           name={this.props.dataName}
-          value={this.props.date}
-          onChange={this.props.handleChange}
-          className={this.props.className}
-          />
-          { this.props.date && !this.props.hiddenWeekDate ? <span>({moment(this.props.date).format("dd")})</span> : null }
-        <a href="#" onClick={this.openCalendar} className="BTNtarco reservationCalendar">
-        <input type="hidden"
-          id={this._datepickerId()}
-          data-name={this.props.dataName}
+          onDayChange={this.handleDateChange}
+          dayPickerProps={{
+            month: this.props.date && moment(this.props.date).toDate(),
+            selectedDays: this.props.date && moment(this.props.date).toDate(),
+            localeUtils: MomentLocaleUtils,
+            locale: "ja"
+          }}
+          placeholder="dd/mm/yyyy"
+          value={this.props.date && moment(this.props.date, [ "DD/MM/YYYY", "YYYY-MM-DD" ]).format("DD/MM/YYYY")}
+        />
+        <input
+          type="hidden"
+          id={this.props.dataName}
           name={this.props.name || this.props.dataName}
           value={this.props.date}
-          />
+        />
+        { this.props.date && !this.props.hiddenWeekDate ? <span>({moment(this.props.date).format("dd")})</span> : null }
+        <a href="#" onClick={this.openDayPickerCalendar} className="BTNtarco reservationCalendar">
           <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
         </a>
       </div>

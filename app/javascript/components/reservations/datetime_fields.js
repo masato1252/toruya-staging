@@ -33,6 +33,10 @@ class ReservationDatetimeFields extends React.Component {
     this.setState({[event.target.dataset.name]: event.target.value})
   };
 
+  _handleDateChange = (dateChange) => {
+    this.setState(dateChange)
+  };
+
   render() {
     return (
       <div className="datetime-field">
@@ -47,7 +51,7 @@ class ReservationDatetimeFields extends React.Component {
             date={this.state.startTimeDatePart}
             name="custom_schedules[][start_time_date_part]"
             dataName="startTimeDatePart"
-            handleChange={this._handleChange}
+            handleChange={this._handleDateChange}
             calendarfieldPrefix={this.props.calendarfieldPrefix}
           />
         </dt>

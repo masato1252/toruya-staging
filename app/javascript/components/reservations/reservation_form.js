@@ -299,6 +299,10 @@ class ReservationForm extends React.Component {
     }.bind(this))
   };
 
+  _handleDateChange = (dateChange) => {
+    this.setState(dateChange, this._retrieveAvailableTimes)
+  };
+
   _handleStaffChange = (event) => {
     if (event) { event.preventDefault(); }
 
@@ -679,7 +683,7 @@ class ReservationForm extends React.Component {
                     date={this.state.start_time_date_part}
                     dataName="start_time_date_part"
                     name="start_time_date_part"
-                    handleChange={this._handleChange}
+                    handleChange={this._handleDateChange}
                     className={this._dateErrors().length == 0 ? "" : "field-warning"}
                   />
                   {

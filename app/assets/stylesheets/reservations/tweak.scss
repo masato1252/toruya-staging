@@ -36,10 +36,6 @@
     display: table-cell;
   }
 
-  #addWorkDay dt input[type="date"] {
-    width: 120px;
-  }
-
   #addWorkDay dd input[type="time"] {
     width: 150px;
   }
@@ -84,4 +80,9 @@
       margin: 12px 0;
     }
   }
+}
+
+// overwrite manager_reservation.scss#L8
+#resNew #resInfo .formRow {
+  opacity: unset !important;
 }

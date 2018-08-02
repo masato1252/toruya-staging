@@ -2,10 +2,10 @@
 
 import React from "react";
 import _ from "underscore";
+import moment from "moment-timezone";
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
 
-var moment = require('moment-timezone');
 
 class CustomersFilterQuerySider extends React.Component {
   constructor(props) {
@@ -112,6 +112,10 @@ class CustomersFilterQuerySider extends React.Component {
         }
       }
     }.bind(this));
+  };
+
+  onDateChange = (dateChange) => {
+    this.setState(dateChange)
   };
 
   onSavedFilterClick = (event) => {
@@ -348,7 +352,7 @@ class CustomersFilterQuerySider extends React.Component {
                 dataName="start_dob_date"
                 calendarfieldPrefix="start_dob_date"
                 hiddenWeekDate={true}
-                handleChange={this.onDataChange}
+                handleChange={this.onDateChange}
               />
             </li>
           </ul>
@@ -367,7 +371,7 @@ class CustomersFilterQuerySider extends React.Component {
                 dataName="start_dob_date"
                 calendarfieldPrefix="start_dob_date"
                 hiddenWeekDate={true}
-                handleChange={this.onDataChange}
+                handleChange={this.onDateChange}
               />
               {this.props.locale == "ja" ? (
                 <span className="filterForWording">{this.props.fromWording}</span>
@@ -382,7 +386,7 @@ class CustomersFilterQuerySider extends React.Component {
                 dataName="end_dob_date"
                 calendarfieldPrefix="end_dob_date"
                 hiddenWeekDate={true}
-                handleChange={this.onDataChange}
+                handleChange={this.onDateChange}
               />
               {this.props.locale == "ja" ? (
                 <span className="filterForWording">{this.props.toWording}</span>
@@ -410,7 +414,7 @@ class CustomersFilterQuerySider extends React.Component {
             dataName="start_reservation_date"
             calendarfieldPrefix="start_reservation_date"
             hiddenWeekDate={true}
-            handleChange={this.onDataChange}
+            handleChange={this.onDateChange}
             className={this.isReservationConditionValid() ? "" : "field-error"}
           />
           {
@@ -430,7 +434,7 @@ class CustomersFilterQuerySider extends React.Component {
                 dataName="end_reservation_date"
                 calendarfieldPrefix="end_reservation_date"
                 hiddenWeekDate={true}
-                handleChange={this.onDataChange}
+                handleChange={this.onDateChange}
                 className={this.isReservationConditionValid() ? "" : "field-error"}
               />
               {this.props.locale === "ja" ? (
