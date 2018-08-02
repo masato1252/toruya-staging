@@ -3,7 +3,7 @@
 import React from "react";
 import moment from "moment-timezone";
 import DayPickerInput from 'react-day-picker//DayPickerInput';
-import MomentLocaleUtils from 'react-day-picker/moment';
+import MomentLocaleUtils, { parseDate } from 'react-day-picker/moment';
 import 'moment/locale/ja';
 
 class CommonDatepickerField extends React.Component {
@@ -17,7 +17,9 @@ class CommonDatepickerField extends React.Component {
   };
 
   handleDateChange = (date) => {
-    this.props.handleChange({ [this.props.dataName]: moment(date).format("YYYY-MM-DD") });
+    if (moment(date, [ "D/M/YYYY", "YYYY-M-D" ]).isValid()) {
+      this.props.handleChange({ [this.props.dataName]: moment(date).format("YYYY-MM-DD") });
+    }
   }
 
   render() {
@@ -28,6 +30,8 @@ class CommonDatepickerField extends React.Component {
           data-name={this.props.dataName}
           name={this.props.dataName}
           onDayChange={this.handleDateChange}
+          parseDate={parseDate}
+          format={[ "D/M/YYYY", "YYYY-M-D" ]}
           dayPickerProps={{
             month: this.props.date && moment(this.props.date).toDate(),
             selectedDays: this.props.date && moment(this.props.date).toDate(),
@@ -35,7 +39,7 @@ class CommonDatepickerField extends React.Component {
             locale: "ja"
           }}
           placeholder="dd/mm/yyyy"
-          value={this.props.date && moment(this.props.date, [ "DD/MM/YYYY", "YYYY-MM-DD" ]).format("DD/MM/YYYY")}
+          value={this.props.date && moment(this.props.date, [ "D/M/YYYY", "YYYY-M-D" ]).format("D/M/YYYY")}
         />
         <input
           type="hidden"
