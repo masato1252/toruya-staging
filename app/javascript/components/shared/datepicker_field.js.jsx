@@ -17,7 +17,7 @@ class CommonDatepickerField extends React.Component {
   };
 
   handleDateChange = (date) => {
-    if (moment(date, [ "D/M/YYYY", "YYYY-M-D" ]).isValid()) {
+    if (moment(date, [ "YYYY/M/D", "YYYY-M-D" ]).isValid()) {
       this.props.handleChange({ [this.props.dataName]: moment(date).format("YYYY-MM-DD") });
     }
   }
@@ -31,15 +31,15 @@ class CommonDatepickerField extends React.Component {
           name={this.props.dataName}
           onDayChange={this.handleDateChange}
           parseDate={parseDate}
-          format={[ "D/M/YYYY", "YYYY-M-D" ]}
+          format={[ "YYYY/M/D", "YYYY-M-D" ]}
           dayPickerProps={{
             month: this.props.date && moment(this.props.date).toDate(),
             selectedDays: this.props.date && moment(this.props.date).toDate(),
             localeUtils: MomentLocaleUtils,
             locale: "ja"
           }}
-          placeholder="dd/mm/yyyy"
-          value={this.props.date && moment(this.props.date, [ "D/M/YYYY", "YYYY-M-D" ]).format("D/M/YYYY")}
+          placeholder="yyyy/mm/dd"
+          value={this.props.date && moment(this.props.date, [ "YYYY/M/D", "YYYY-M-D" ]).format("YYYY/M/D")}
         />
         <input
           type="hidden"
