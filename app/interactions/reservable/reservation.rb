@@ -28,7 +28,10 @@ module Reservable
       working_day_staff_ids = working_day_staffs.map(&:id)
       staffs.includes(:staff_menus).each do |staff|
         if working_day_staff_ids.exclude?(staff.id)
-          if staff.freelancer?(shop)
+          if closed_custom_schedules_staff_ids.include?(staff.id)
+            errors.add(:staff_ids, :ask_for_leave)
+            errors.add(:ask_for_leave, staff.id.to_s)
+          elsif staff.freelancer?(shop)
             errors.add(:staff_ids, :freelancer)
             errors.add(:freelancer, staff.id.to_s)
           else

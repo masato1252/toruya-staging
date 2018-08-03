@@ -25,6 +25,10 @@ class CustomSchedules extends React.Component {
     this.setState({[event.target.name]: event.target.value})
   };
 
+  _handleDateChange = (dateChange) => {
+    this.setState(dateChange)
+  };
+
   _isValidCustomSchedule = () => {
     return (this.state.start_time_date_part && this.state.start_time_time_part && this.state.end_time_time_part);
   };
@@ -56,7 +60,7 @@ class CustomSchedules extends React.Component {
           <CommonDatepickerField
             date={this.state.start_time_date_part}
             dataName="start_time_date_part"
-            handleChange={this._handleChange}
+            handleChange={this._handleDateChange}
             calendarfieldPrefix={this.props.calendarfieldPrefix}
           />
         </dt>

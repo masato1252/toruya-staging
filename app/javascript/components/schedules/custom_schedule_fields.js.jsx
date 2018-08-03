@@ -1,9 +1,8 @@
 "use strict";
 
 import React from "react";
+import moment from "moment-timezone";
 import CommonDatepickerField from "../shared/datepicker_field.js";
-
-var moment = require('moment-timezone');
 
 class CustomScheduleFields extends React.Component {
   constructor(props) {
@@ -23,6 +22,10 @@ class CustomScheduleFields extends React.Component {
 
   _handleChange = (event) => {
     this.setState({[event.target.dataset.name]: event.target.value})
+  };
+
+  _handleDateChange = (dateChange) => {
+    this.setState(dateChange)
   };
 
   _deleteCustomRow = (event) => {
@@ -78,7 +81,7 @@ class CustomScheduleFields extends React.Component {
                   date={this.state.start_time_date_part}
                   name="custom_schedules[][start_time_date_part]"
                   dataName="start_time_date_part"
-                  handleChange={this._handleChange}
+                  handleChange={this._handleDateChange}
                   calendarfieldPrefix={this.props.calendarfieldPrefix}
                 />
               </span>

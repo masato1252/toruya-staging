@@ -1,7 +1,6 @@
 //= require_self
 //= require select2
 //= require select2-bootstrap
-//= require jquery-ui/datepicker
 //= require dashboard_dropdown
 //= require_directory ./customers
 //= require_directory ./dashboard
@@ -10,6 +9,7 @@
 //= require_directory ./settings
 //= require_directory ./search
 //= require tweak
+//= require day_picker
 
 @import "font-awesome";
 @import "bootstrap_custom";

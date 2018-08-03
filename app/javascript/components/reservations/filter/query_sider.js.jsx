@@ -105,6 +105,11 @@ class ReservationsFilterQuerySider extends React.Component {
     this.setState({[stateName]: stateValue});
   };
 
+  onDateChange = (dateChange) => {
+    this.setState(dateChange)
+  };
+
+
   onCheckboxChange = (event) => {
     let newValues = this.state[event.target.dataset.name].slice();
 
@@ -233,7 +238,7 @@ class ReservationsFilterQuerySider extends React.Component {
             dataName="start_reservation_date"
             calendarfieldPrefix="start_reservation_date"
             hiddenWeekDate={true}
-            handleChange={this.onDataChange}
+            handleChange={this.onDateChange}
             className={this.isReservationConditionValid() ? "" : "field-error"}
           />
           {
@@ -253,7 +258,7 @@ class ReservationsFilterQuerySider extends React.Component {
                 dataName="end_reservation_date"
                 calendarfieldPrefix="end_reservation_date"
                 hiddenWeekDate={true}
-                handleChange={this.onDataChange}
+                handleChange={this.onDateChange}
                 className={this.isReservationConditionValid() ? "" : "field-error"}
               />
               {this.props.locale === "ja" ? (

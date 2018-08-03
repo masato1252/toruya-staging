@@ -15,7 +15,7 @@ class ReservationForm extends React.Component {
     return (
       {
         errors: ["time_not_enough", "start_yet", "is_over"],
-        warnings: ["freelancer", "unworking_staff", "shop_closed", "interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
+        warnings: ["freelancer", "unworking_staff", "ask_for_leave", "shop_closed", "interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
                    "not_enough_seat", "not_enough_ability"],
         menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
         menu_danger_errors: ["start_yet", "is_over"],
@@ -297,6 +297,10 @@ class ReservationForm extends React.Component {
         }
       }
     }.bind(this))
+  };
+
+  _handleDateChange = (dateChange) => {
+    this.setState(dateChange, this._retrieveAvailableTimes)
   };
 
   _handleStaffChange = (event) => {
@@ -679,7 +683,7 @@ class ReservationForm extends React.Component {
                     date={this.state.start_time_date_part}
                     dataName="start_time_date_part"
                     name="start_time_date_part"
-                    handleChange={this._handleChange}
+                    handleChange={this._handleDateChange}
                     className={this._dateErrors().length == 0 ? "" : "field-warning"}
                   />
                   {
