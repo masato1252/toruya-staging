@@ -12,12 +12,24 @@ class Plans extends React.Component {
     this.premiumPlan = this.props.plans["premium"];
 
     this.state = {
-      subscriptionPlanLevel: null
+      subscriptionPlanLevel: null,
+      selectedPlan: null
     }
   };
 
   isCurrentPlan = (planLevel) => {
     return this.props.currentPlanLevel === planLevel;
+  };
+
+  isSelectedPlan = (planLevel) => {
+    return this.state.selectedPlan === planLevel;
+  };
+
+  onDataChange = (event) => {
+    let stateName = event.target.dataset.name;
+    let stateValue = event.target.dataset.value || event.target.value;
+
+    this.setState({[stateName]: stateValue})
   };
 
   onSubscribe = (event) => {
@@ -35,33 +47,74 @@ class Plans extends React.Component {
           <thead>
             <tr>
               <th className="invisible"></th>
-              <th className={`invisible ${this.isCurrentPlan("free") && "current"}`}>
-                {this.props.i18n.currentPlan}
-              </th>
-              <th className={`invisible ${this.isCurrentPlan("basic") && "current"}`}>
-                {this.props.i18n.currentPlan}
-              </th>
-              <th className={`invisible ${this.isCurrentPlan("premium") && "current"}`}>
-                {this.props.i18n.currentPlan}
-              </th>
-            </tr>
-            <tr>
-              <th className="invisible"></th>
-              <th className={`free ${this.isCurrentPlan("free") && "current"}`}>
+              <th className={`free ${this.isCurrentPlan("free") && "current"} plan-column ${this.isCurrentPlan("free") && "current"}`}>
                 {this.freePlan.details.title}
               </th>
-              <th className={`basic ${this.isCurrentPlan("basic") && "current"}`}>
+              <th className={`basic ${this.isCurrentPlan("basic") && "current"} plan-column ${this.isCurrentPlan("basic") && "current"}`}>
                 {this.basicPlan.details.title}
               </th>
               <th className={`premium ${this.isCurrentPlan("premium") && "current"}`}>
                 {this.premiumPlan.details.title}
               </th>
             </tr>
-            <tr>
+            <tr className="price-row">
               <th className="invisible"></th>
-              <td>無料</td>
-              <td>{this.basicPlan.costFormat}／月</td>
-              <td>{this.premiumPlan.costFormat}／月</td>
+              <td className={`${this.isSelectedPlan("free") && "selected-plan"}`}>
+                <label>
+                  <div className="price-amount">無料</div>
+                  <div className={`plan-column ${this.isCurrentPlan("free") && "current"}`}>
+                    <i className="fa fa-check-circle" aria-hidden="true" />
+                    {this.props.i18n.currentPlan}
+                  </div>
+                  <input
+                    type="radio"
+                    className={`select-plan ${this.isCurrentPlan("free") && "current-plan"}`}
+                    data-name="selectedPlan"
+                    data-value="free"
+                    checked={this.state.selectedPlan === "free"}
+                    onChange={this.onDataChange}
+                    disabled={this.isCurrentPlan("free")}
+                    />
+                </label>
+              </td>
+              <td className={`${this.isSelectedPlan("basic") && "selected-plan"}`}>
+                <label>
+                  <div>月額</div>
+                  <div className="price-amount">{this.basicPlan.costFormat}</div>
+                  <div className={`plan-column ${this.isCurrentPlan("basic") && "current"}`}>
+                    <i className="fa fa-check-circle" aria-hidden="true" />
+                    <span>{this.props.i18n.currentPlan}</span>
+                  </div>
+                  <input
+                    type="radio"
+                    className={`select-plan ${this.isCurrentPlan("basic") && "current-plan"}`}
+                    data-name="selectedPlan"
+                    data-value="basic"
+                    checked={this.state.selectedPlan === "basic"}
+                    onChange={this.onDataChange}
+                    disabled={this.isCurrentPlan("basic")}
+                    />
+                </label>
+              </td>
+              <td className={`${this.isSelectedPlan("premium") && "selected-plan"}`}>
+                <label>
+                  <div>月額</div>
+                  <div className="price-amount">{this.premiumPlan.costFormat}</div>
+                  <div className={`plan-column ${this.isCurrentPlan("premium") && "current"}`}>
+                    <i className="fa fa-check-circle" aria-hidden="true" />
+                    <span>{this.props.i18n.currentPlan}</span>
+                  </div>
+                  <input
+                    type="radio"
+                    className={`select-plan ${this.isCurrentPlan("premium") && "current-plan"}`}
+                    data-name="selectedPlan"
+                    data-value="premium"
+                    checked={this.state.selectedPlan === "premium"}
+                    disabled={this.isCurrentPlan("premium")}
+                    onChange={this.onDataChange}
+                    />
+                </label>
+              </td>
             </tr>
           </thead>
           <tbody>
@@ -81,9 +134,15 @@ class Plans extends React.Component {
                 return (
                   <tr key={labelName}>
                     <th>{this.props.planLabels[labelName]}</th>
-                    <td>{this.freePlan.details[labelName]}</td>
-                    <td>{this.basicPlan.details[labelName]}</td>
-                    <td>{this.premiumPlan.details[labelName]}</td>
+                    <td className={`${this.isSelectedPlan("free") && "selected-plan"}`}>
+                      {this.freePlan.details[labelName]}
+                    </td>
+                    <td className={`${this.isSelectedPlan("basic") && "selected-plan"}`}>
+                      {this.basicPlan.details[labelName]}
+                    </td>
+                    <td className={`${this.isSelectedPlan("premium") && "selected-plan"}`}>
+                    {this.premiumPlan.details[labelName]}
+                    </td>
                   </tr>
                 )
               })

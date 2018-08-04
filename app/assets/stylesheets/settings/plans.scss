@@ -19,14 +19,6 @@
 
     .invisible {
       visibility: hidden;
-
-      &.current {
-        visibility: visible;
-        border-color: #333333;
-        background-color: #fcf8df;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-      }
     }
 
     & > thead > tr > th,
@@ -40,6 +32,10 @@
       border-left: 1px solid #dddddd;
       // line-height: 1.42857143;
       // vertical-align: top;
+
+      &.selected-plan {
+        background-color: #fcf8df;
+      }
     }
 
     & > thead {
@@ -51,11 +47,6 @@
       th {
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-
-        &.current {
-          border-top-left-radius: 0;
-          border-top-right-radius: 0;
-        }
       }
 
       .free {
@@ -74,6 +65,28 @@
         background-color: $palette-color1;
         border-color: $palette-color1-1;
         color: #ffffff;
+      }
+
+      .price-row {
+        .price-amount {
+          font-size: 32px;
+          font-weight: bold;
+        }
+
+        .select-plan {
+          &.current-plan {
+            display: none;
+          }
+        }
+
+        .plan-column {
+          display: none;
+
+          &.current {
+            display: block;
+            color: $danger;
+          }
+        }
       }
     }
 
