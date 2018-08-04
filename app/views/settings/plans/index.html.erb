@@ -18,12 +18,16 @@
       currentPlanLevel: current_user.subscription.current_plan.level,
       plans: @plans_properties,
       planLabels: @plan_labels,
-      isFirstTimeSubscribe: @is_first_time_subscribe
+      isFirstTimeSubscribe: @is_first_time_subscribe,
+      paymentsPath: settings_payments_path
     }.to_json,
     i18n: {
       currentPlan: t("settings.plans.plan_info.current_plan"),
       upgradeImmediately: t("settings.plans.upgrade.immediately"),
       upgradeLater: t("settings.plans.upgrade.later"),
+      cancel: t("action.cancel"),
+      save: t("action.save"),
+      saveAndPay: t("action.save_and_pay"),
     }.to_json do %>
   <% end %>
 </div>

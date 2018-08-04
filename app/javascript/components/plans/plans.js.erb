@@ -42,8 +42,8 @@ class Plans extends React.Component {
 
   render() {
     return (
-      <div>
-        <table className="plans">
+      <div class="plans">
+        <table>
           <thead>
             <tr>
               <th className="invisible"></th>
@@ -205,6 +205,24 @@ class Plans extends React.Component {
             </tr>
           </tbody>
         </table>
+        <div className="privacy-and-term">
+          全てのプランにおいて、Toruyaの
+            <a href='https://toruya.com/privacy/' target='_blank'>プライバシーポリシー</a>
+            と
+            <a href='https://toruya.com/terms/' target='_blank'>利用規約</a>
+            が適応されます。
+        </div>
+        <div className="actions">
+          <a href={this.props.paymentsPath}
+            className={`resend btn btn-tarco`} >
+            {this.props.i18n.cancel}
+          </a>
+          <div
+            className={`resend btn btn-yellow ${!this.state.selectedPlan && 'disabled'}`}
+            onClick={this.resendStaffAccountEmail}>
+            {this.props.i18n.saveAndPay}
+          </div>
+        </div>
         {
           this.state.subscriptionPlanLevel && (
             <SubscriptionModal

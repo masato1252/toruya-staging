@@ -3,11 +3,26 @@
 .plans {
   padding-left: 40px;
   padding-right: 40px;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 
   input.BTNselect {
     display: inline-block;
     margin-right: 6px;
+  }
+
+  .privacy-and-term {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .actions {
+    margin-top: 32px;
+    text-align: center;
+
+    .btn {
+      margin-left: 12px;
+      margin-right: 12px;
+    }
   }
 
   table {
