@@ -376,6 +376,15 @@ ja:
         immediately_desc: 今すぐプレミアム/ベーシックメンバー限定の機能が使えます。
         later: 次の更新からアップグレード
         later_desc: "%{expired_date}からプレミアム/ベーシックメンバー限定の機能が使えます。"
+      downgrade:
+        modal_title: ダウングレードされます!!
+        desc: 選択されたプランは、現在ご利用中のプランからダウングレードになります。
+        label1: 次の更新からダウングレードされます。
+        desc1: "次の更新からダウングレードされます。%{expired_date}まではプレミアム/ベーシックメンバー限定の機能を使い続けられます。"
+        label2: 無効になる機能があります
+        desc2: "%{after_expired_date}から幾つかの機能が使えなくなります。ダウングレード後は、新規の予約を作成できなくなる可能性があります。"
+        cancel_btn: ダウングレードしない
+        confirm_btn: ダウングレードする
       labels:
         shop_can_set: 設定可能な店舗数
         staff_in_charge: 担当者の設定

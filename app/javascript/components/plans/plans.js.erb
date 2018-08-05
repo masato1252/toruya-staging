@@ -48,9 +48,7 @@ class Plans extends React.Component {
   onSubscribe = (event) => {
     event.preventDefault();
 
-    this.setState({subscriptionPlanLevel: event.target.dataset.planLevel}, () => {
-      $("#subscription-modal").modal("show");
-    })
+    $("#subscription-modal").modal("show");
   };
 
   isUpgrade = () => {
@@ -98,8 +96,6 @@ class Plans extends React.Component {
           </label>
         </div>
       )
-    } else {
-      return <div>Downgrade</div>
     }
   };
 
@@ -112,14 +108,25 @@ class Plans extends React.Component {
         </div>
       )
     }
-    
-    return (
-      <PlanCharge
-        {...this.props}
-        chargeImmediately={this.state.upgradeImmediately}
-        plan={this.selectedPlan()}
-      />
-    )
+
+    if (this.isUpgrade()) {
+      return (
+        <PlanCharge
+          {...this.props}
+          chargeImmediately={this.state.upgradeImmediately}
+          plan={this.selectedPlan()}
+        />
+      )
+    } else if (!this.isUpgrade()) {
+      // downgrade
+      return (
+        <div
+          className={`btn btn-yellow`}
+          onClick={this.onSubscribe} >
+          {this.props.i18n.save}
+        </div>
+      )
+    }
   };
 
   render() {
@@ -229,62 +236,6 @@ class Plans extends React.Component {
                 )
               })
             }
-            <tr>
-              <th>
-              </th>
-              <td>
-                {
-                  this.props.currentPlanLevel !== "free" && (
-                    <button
-                      className="btn btn-orange"
-                      rel="nofollow"
-                      data-plan-level="free"
-                      onClick={this.onSubscribe}
-                      >
-                      Downgrade
-                    </button>
-                  )
-                }
-              </td>
-              <td>
-                {
-                  this.props.currentPlanLevel !== "basic" && (
-                    <div>
-                      <button
-                        className="btn btn-orange"
-                        rel="nofollow"
-                        data-plan-level="basic"
-                        onClick={this.onSubscribe}
-                        >
-                        Subscribe
-                      </button>
-                      <div>
-                        {this.props.isFirstTimeSubscribe && "We accept refund within 8 days"}
-                      </div>
-                    </div>
-                  )
-                }
-              </td>
-              <td>
-                {
-                  this.props.currentPlanLevel !== "premium" && (
-                    <div>
-                      <button
-                        className="btn btn-orange"
-                        rel="nofollow"
-                        data-plan-level="premium"
-                        onClick={this.onSubscribe}
-                        >
-                        Subscribe
-                      </button>
-                      <div>
-                        {this.props.isFirstTimeSubscribe && "We accept refund within 8 days"}
-                      </div>
-                    </div>
-                  )
-                }
-              </td>
-            </tr>
           </tbody>
         </table>
         {this.renderUpgradeOptions()}
@@ -303,10 +254,10 @@ class Plans extends React.Component {
           {this.renderSaveOrPayButton()}
         </div>
         {
-          this.state.subscriptionPlanLevel && (
+          this.state.selectedPlanLevel && (
             <SubscriptionModal
               {...this.props}
-              subscriptionPlanLevel={this.state.subscriptionPlanLevel}
+              selectedPlan={this.selectedPlan()}
               />
           )
         }

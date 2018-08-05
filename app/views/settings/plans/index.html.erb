@@ -32,6 +32,14 @@
       cancel: t("action.cancel"),
       save: t("settings.plans.save"),
       saveAndPay: t("settings.plans.save_and_pay"),
+      downgradeTitle: t("settings.plans.downgrade.modal_title"),
+      downgradeDesc: t("settings.plans.downgrade.desc"),
+      downgradeLabel1: t("settings.plans.downgrade.label1"),
+      downgradeDesc1: t("settings.plans.downgrade.desc1", expired_date: l(current_user.subscription&.expired_date || Date.today)),
+      downgradeLabel2: t("settings.plans.downgrade.label2"),
+      downgradeDesc2: t("settings.plans.downgrade.desc2", after_expired_date: l(current_user.subscription&.expired_date&.tomorrow || Date.today)),
+      downgradeCancelBtn: t("settings.plans.downgrade.cancel_btn"),
+      downgradeConfirmBtn: t("settings.plans.downgrade.confirm_btn"),
     }.to_json do %>
   <% end %>
 </div>

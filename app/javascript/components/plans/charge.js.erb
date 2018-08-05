@@ -83,6 +83,15 @@ class PlanCharge extends React.Component {
       )
     }
 
+    if (this.props.downgrade) {
+      return (
+        <div className="btn btn-orange" onClick={this.onCharge}>
+          <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
+          {this.props.i18n.downgradeConfirmBtn}
+        </div>
+      )
+    }
+
     return (
       <div className="btn btn-yellow" onClick={this.onCharge}>
         <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
