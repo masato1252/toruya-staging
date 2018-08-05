@@ -10,7 +10,7 @@ class Money
         super
       else
         if currency.iso_code == "JPY" && I18n.locale == :ja
-          rules[:symbol] = "¥"
+          rules[:symbol] = "¥" unless rules[:symbol] == false
           rules[:symbol_position] = :before
           rules[:symbol_before_without_space] = true
         end
