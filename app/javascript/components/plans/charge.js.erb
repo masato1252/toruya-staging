@@ -72,18 +72,21 @@ class PlanCharge extends React.Component {
           name="Toruya"
           description={this.props.plan.name}
           >
-          <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
-          <button className="btn btn-orange" rel="nofollow">
-            Pay
-          </button>
+          <ProcessingBar
+            processing={this.state.processing}
+            processingMessage={this.props.processingMessage} />
+          <div
+            className={`btn btn-yellow`} rel="nofollow">
+            {this.props.i18n.saveAndPay}
+          </div>
         </StripeCheckout>
       )
     }
 
     return (
-      <div className="btn btn-orange" onClick={this.onCharge}>
+      <div className="btn btn-yellow" onClick={this.onCharge}>
         <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
-        Change in next term
+        {this.props.i18n.save}
       </div>
     )
   }

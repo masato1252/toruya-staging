@@ -24,10 +24,14 @@
     i18n: {
       currentPlan: t("settings.plans.plan_info.current_plan"),
       upgradeImmediately: t("settings.plans.upgrade.immediately"),
+      upgradeImmediatelyDesc: t("settings.plans.upgrade.immediately_desc"),
       upgradeLater: t("settings.plans.upgrade.later"),
+      upgradeCaptionTitle: t("settings.plans.upgrade.caption_title"),
+      upgradeCaptionDesc: t("settings.plans.upgrade.caption_desc"),
+      upgradeLaterDesc: t("settings.plans.upgrade.later_desc", expired_date: l(current_user.subscription&.expired_date || Date.today)),
       cancel: t("action.cancel"),
-      save: t("action.save"),
-      saveAndPay: t("action.save_and_pay"),
+      save: t("settings.plans.save"),
+      saveAndPay: t("settings.plans.save_and_pay"),
     }.to_json do %>
   <% end %>
 </div>

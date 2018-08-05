@@ -2,8 +2,11 @@
 
 import React from "react";
 import SubscriptionModal from "./subscription_modal";
+import PlanCharge from "./charge";
 
 class Plans extends React.Component {
+  static planOrder = ["free", "basic", "premium"];
+
   constructor(props) {
     super(props);
 
@@ -13,16 +16,22 @@ class Plans extends React.Component {
 
     this.state = {
       subscriptionPlanLevel: null,
-      selectedPlan: null
+      selectedPlanLevel: null,
+      upgradeImmediately: true
     }
   };
+
 
   isCurrentPlan = (planLevel) => {
     return this.props.currentPlanLevel === planLevel;
   };
 
   isSelectedPlan = (planLevel) => {
-    return this.state.selectedPlan === planLevel;
+    return this.state.selectedPlanLevel === planLevel;
+  };
+
+  selectedPlan = () => {
+    return this.props.plans[this.state.selectedPlanLevel]
   };
 
   onDataChange = (event) => {
@@ -30,6 +39,10 @@ class Plans extends React.Component {
     let stateValue = event.target.dataset.value || event.target.value;
 
     this.setState({[stateName]: stateValue})
+  };
+
+  onChangeUpgradePolicy = () => {
+    this.setState(prevState => ({ upgradeImmediately: !prevState.upgradeImmediately }));
   };
 
   onSubscribe = (event) => {
@@ -40,9 +53,78 @@ class Plans extends React.Component {
     })
   };
 
+  isUpgrade = () => {
+    const subscriptionPlanIndex = Plans.planOrder.indexOf(this.state.selectedPlanLevel);
+    const currentPlanIndex = Plans.planOrder.indexOf(this.props.currentPlanLevel);
+
+    return subscriptionPlanIndex > currentPlanIndex;
+  };
+
+  renderUpgradeOptions = () => {
+    if (!this.state.selectedPlanLevel) { return; }
+
+    if (this.props.isFirstTimeSubscribe) {
+      return;
+    } else if (this.isUpgrade()) {
+      return (
+        <div className="upgrade-area">
+          <div className="caption">
+            <div className="upgrade-label">{this.props.i18n.upgradeCaptionTitle}</div>
+            <div className="detial">{this.props.i18n.upgradeCaptionDesc}</div>
+          </div>
+          <label className="upgrade-options">
+            <div className="upgrade-label">
+              <input id="immediately"
+                type="radio"
+                checked={this.state.upgradeImmediately}
+                name="immediately"
+                onChange={this.onChangeUpgradePolicy}
+                />
+              <span>{this.props.i18n.upgradeImmediately}</span>
+            </div>
+            <div className="desc">{this.props.i18n.upgradeImmediatelyDesc}</div>
+          </label>
+          <label className="upgrade-options">
+            <div className="upgrade-label">
+              <input id="later"
+                type="radio"
+                checked={!this.state.upgradeImmediately}
+                name="immediately"
+                onChange={this.onChangeUpgradePolicy}
+                />
+              <span>{this.props.i18n.upgradeLater}</span>
+            </div>
+            <div className="desc">{this.props.i18n.upgradeLaterDesc}</div>
+          </label>
+        </div>
+      )
+    } else {
+      return <div>Downgrade</div>
+    }
+  };
+
+  renderSaveOrPayButton = () => {
+    if (!this.state.selectedPlanLevel) {
+      return (
+        <div
+          className={`btn btn-yellow disabled`}>
+          {this.props.i18n.saveAndPay}
+        </div>
+      )
+    }
+    
+    return (
+      <PlanCharge
+        {...this.props}
+        chargeImmediately={this.state.upgradeImmediately}
+        plan={this.selectedPlan()}
+      />
+    )
+  };
+
   render() {
     return (
-      <div class="plans">
+      <div className="plans">
         <table>
           <thead>
             <tr>
@@ -69,9 +151,9 @@ class Plans extends React.Component {
                   <input
                     type="radio"
                     className={`select-plan ${this.isCurrentPlan("free") && "current-plan"}`}
-                    data-name="selectedPlan"
+                    data-name="selectedPlanLevel"
                     data-value="free"
-                    checked={this.state.selectedPlan === "free"}
+                    checked={this.state.selectedPlanLevel === "free"}
                     onChange={this.onDataChange}
                     disabled={this.isCurrentPlan("free")}
                     />
@@ -88,9 +170,9 @@ class Plans extends React.Component {
                   <input
                     type="radio"
                     className={`select-plan ${this.isCurrentPlan("basic") && "current-plan"}`}
-                    data-name="selectedPlan"
+                    data-name="selectedPlanLevel"
                     data-value="basic"
-                    checked={this.state.selectedPlan === "basic"}
+                    checked={this.state.selectedPlanLevel === "basic"}
                     onChange={this.onDataChange}
                     disabled={this.isCurrentPlan("basic")}
                     />
@@ -107,9 +189,9 @@ class Plans extends React.Component {
                   <input
                     type="radio"
                     className={`select-plan ${this.isCurrentPlan("premium") && "current-plan"}`}
-                    data-name="selectedPlan"
+                    data-name="selectedPlanLevel"
                     data-value="premium"
-                    checked={this.state.selectedPlan === "premium"}
+                    checked={this.state.selectedPlanLevel === "premium"}
                     disabled={this.isCurrentPlan("premium")}
                     onChange={this.onDataChange}
                     />
@@ -205,6 +287,7 @@ class Plans extends React.Component {
             </tr>
           </tbody>
         </table>
+        {this.renderUpgradeOptions()}
         <div className="privacy-and-term">
           全てのプランにおいて、Toruyaの
             <a href='https://toruya.com/privacy/' target='_blank'>プライバシーポリシー</a>
@@ -214,14 +297,10 @@ class Plans extends React.Component {
         </div>
         <div className="actions">
           <a href={this.props.paymentsPath}
-            className={`resend btn btn-tarco`} >
+            className={`btn btn-tarco`} >
             {this.props.i18n.cancel}
           </a>
-          <div
-            className={`resend btn btn-yellow ${!this.state.selectedPlan && 'disabled'}`}
-            onClick={this.resendStaffAccountEmail}>
-            {this.props.i18n.saveAndPay}
-          </div>
+          {this.renderSaveOrPayButton()}
         </div>
         {
           this.state.subscriptionPlanLevel && (

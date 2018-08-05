@@ -139,4 +139,27 @@
       }
     }
   }
+
+  div.upgrade-area {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 24px;
+
+    .caption {
+      margin-bottom: 12px;
+    }
+
+    .upgrade-label {
+      & > input[type="radio"] {
+        margin-right: 8px;
+      }
+
+      font-weight: bold;
+    }
+
+    .desc {
+      margin-bottom: 8px;
+    }
+  }
 }

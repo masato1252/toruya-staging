@@ -10,7 +10,8 @@ module Subscriptions
 
         charge = user.subscription_charges.create!(
           plan: plan,
-          amount: Money.new(plan.cost, Money.default_currency.id),
+          amount_cents: plan.cost,
+          amount_currency: Money.default_currency.iso_code,
           charge_date: Subscription.today,
           manual: manual,
           order_id: order_id

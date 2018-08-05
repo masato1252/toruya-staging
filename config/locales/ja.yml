@@ -29,7 +29,6 @@ ja:
     log_out: ログアウト
     save: 保存
     search: 検索
-    save_and_pay: 変更を保存して支払う
   common:
     processing: 送信中
     date: 日付
@@ -371,8 +370,12 @@ ja:
         plan: プラン
         receipt: レシート
       upgrade:
-        immediately: 今すぐプランを変更する（今期分の返金不可）
-        later: 次の更新分からプランを変更する
+        caption_title: アップグレードのオプション
+        caption_desc: アップグレードには２通りの選択肢があります。
+        immediately: 今すぐアップグレード
+        immediately_desc: 今すぐプレミアム/ベーシックメンバー限定の機能が使えます。
+        later: 次の更新からアップグレード
+        later_desc: "%{expired_date}からプレミアム/ベーシックメンバー限定の機能が使えます。"
       labels:
         shop_can_set: 設定可能な店舗数
         staff_in_charge: 担当者の設定
