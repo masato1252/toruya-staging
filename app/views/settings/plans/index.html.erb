@@ -40,6 +40,9 @@
       downgradeDesc2: t("settings.plans.downgrade.desc2", after_expired_date: l(current_user.subscription&.expired_date&.tomorrow || Date.today)),
       downgradeCancelBtn: t("settings.plans.downgrade.cancel_btn"),
       downgradeConfirmBtn: t("settings.plans.downgrade.confirm_btn"),
+      chargeFailedTitle: t("settings.plans.payment.failed_title"),
+      chargeFailedDesc1: t("settings.plans.payment.failed_desc1"),
+      chargeFailedDesc2: t("settings.plans.payment.failed_desc2"),
     }.to_json do %>
   <% end %>
 </div>

@@ -44,16 +44,16 @@ class PlanCharge extends React.Component {
         const result = await response.json()
         this.toggleProcessing()
         window.location = result["redirect_path"];
-
       } else if (response.status === 422) {
-        response.json().then(err => { throw err });
+        const err = await response.json()
+        throw err
       } else {
         throw Error("Payment failed");
       }
     }
     catch (err) {
       this.toggleProcessing()
-      alert(err.message);
+      $("#charge-failed-modal").modal("show");
     }
   };
 
@@ -86,7 +86,6 @@ class PlanCharge extends React.Component {
     if (this.props.downgrade) {
       return (
         <div className="btn btn-orange" onClick={this.onCharge}>
-          <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
           {this.props.i18n.downgradeConfirmBtn}
         </div>
       )
@@ -94,7 +93,6 @@ class PlanCharge extends React.Component {
 
     return (
       <div className="btn btn-yellow" onClick={this.onCharge}>
-        <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
         {this.props.i18n.save}
       </div>
     )

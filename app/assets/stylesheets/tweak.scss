@@ -226,6 +226,10 @@ button[disabled], a.disabled, input[disabled] {
   }
 }
 
+.hover_alert {
+  position: fixed;
+}
+
 #error_explanation {
   color: #f00;
 

@@ -369,6 +369,9 @@ ja:
         amount: 合計金額
         plan: プラン
         receipt: レシート
+        failed_title: 支払い失敗!!
+        failed_desc1: 支払いが完了できませんでしたので、ご利用プランを変更することができませんでした。
+        failed_desc2: もう一度やり直してください。
       upgrade:
         caption_title: アップグレードのオプション
         caption_desc: アップグレードには２通りの選択肢があります。
