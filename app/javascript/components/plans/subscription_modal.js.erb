@@ -4,14 +4,6 @@ import React from "react";
 import PlanCharge from "./charge";
 
 class SubscriptionModal extends React.Component {
-  static planOrder = ["free", "basic", "premium"];
-
-  constructor(props) {
-    super(props);
-
-    this.currentPlan = this.props.plans[this.props.currentPlanLevel];
-  }
-
   renderContent = () => {
     return (
       <div className="downgrade-area">
