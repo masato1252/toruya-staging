@@ -10,6 +10,7 @@ class Settings::PlansController < SettingsController
       }
     end
     @plan_labels = I18n.t("settings.plans")[:labels]
-    @is_first_time_subscribe = !current_user.subscription_charges.completed.manual.exists?
+
+    @charge_directly = current_user.subscription.current_plan.free_level?
   end
 end
