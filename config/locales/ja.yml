@@ -349,8 +349,11 @@ ja:
       info_2: Toruyaをしようするにはこの設定を完了する必要があります。
       new_info_1: まずは管理人情報を登録します。
       new_info_2: 各種設定や利用料金の支払いなど、Toruyaの登録情報を管理する個人や法人を設定してください。
+    subscription:
+      status:
+        active: アクティブ
     plans:
-      info_title: プラン
+      info_title: ご利用プラン
       info_title1: ご利用プランとお支払い情報
       info_1: Toruyaアカウントのご利用プランとお支払い情報です。
       info_2: ご利用プランによってToruyaの様々な機能が利用可能になります。

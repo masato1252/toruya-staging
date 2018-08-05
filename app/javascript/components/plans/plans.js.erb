@@ -61,7 +61,7 @@ class Plans extends React.Component {
   renderUpgradeOptions = () => {
     if (!this.state.selectedPlanLevel) { return; }
 
-    if (this.props.isFirstTimeSubscribe) {
+    if (this.props.chargeDirectly) {
       return;
     } else if (this.isUpgrade()) {
       return (

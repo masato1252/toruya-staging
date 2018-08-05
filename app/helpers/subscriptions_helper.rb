@@ -1,14 +1,15 @@
 module SubscriptionsHelper
   def subscription_status(subscription)
     sentence = if subscription.active?
-      "Active"
+      t("settings.subscription.status.active")
+
+      if subscription.next_plan
+        sentence << " (#{subscription.next_plan.name} from #{l(subscription.expired_date.tomorrow)})"
+      end
     else
       "#{subscription.plan.name} expired"
     end
 
-    if subscription.next_plan
-      sentence << " (#{subscription.next_plan.name} from #{l(subscription.expired_date.tomorrow)})"
-    end
 
     sentence
   end

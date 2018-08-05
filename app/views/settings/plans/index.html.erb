@@ -18,7 +18,7 @@
       currentPlanLevel: current_user.subscription.current_plan.level,
       plans: @plans_properties,
       planLabels: @plan_labels,
-      isFirstTimeSubscribe: @is_first_time_subscribe,
+      chargeDirectly: @is_first_time_subscribe || !current_user.subscription.active?,
       paymentsPath: settings_payments_path
     }.to_json,
     i18n: {
