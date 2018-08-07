@@ -8,10 +8,9 @@
       <div class="logo">
         <%= image_tag wicked_pdf_asset_base64("toruya_logo.png") %>
       </div>
-      <div class="receipt-type"><%= @charge.completed? ? "Receipt" : "Refund Receipt" %></div>
+      <div class="receipt-type"><%= @charge.completed? ? I18n.t("settings.subscription.receipt.label") : "Refund Receipt" %></div>
       <% if @charge.completed? %>
-      We received payment for your Toruya subscription, Thanks for your business!
-      Questions? Please contact <%= mail_to "info@toruya.com" %>
+        <%= I18n.t("settings.subscription.receipt.desc") %>
       <% else %>
         Any Questions please contact <%= mail_to "info@toruya.com" %>
       <% end %>
@@ -20,29 +19,29 @@
     <table>
       <tbody>
         <tr>
-          <td>Date</td>
+          <td><%= I18n.t("settings.subscription.receipt.date") %></td>
           <td><%= l(@charge.charge_date) %></td>
         </tr>
         <tr>
-          <td>Transaction ID</td>
+          <td><%= I18n.t("settings.subscription.receipt.transaction_id") %></td>
           <td><%= @charge.order_id %></td>
         </tr>
         <tr>
-          <td>Account billed</td>
+          <td><%= I18n.t("settings.subscription.receipt.account") %></td>
           <td><%= @charge.user.email %></td>
         </tr>
         <% if @charge.completed? %>
           <tr>
-            <td>Plan</td>
+            <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
             <td><%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)</td>
           </tr>
           <tr>
-            <td>Total</td>
+            <td><%= I18n.t("settings.subscription.receipt.total") %></td>
             <td><%= @charge.amount.format %></td>
           </tr>
         <% else %>
           <tr>
-            <td>Plan</td>
+            <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
             <td>
               <%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)
               <%= @charge.amount.format %>
@@ -53,8 +52,8 @@
             <td><%= @charge.plan.name %> クーリングオフ返金  -<%= @charge.amount.format %></td>
           </tr>
           <tr>
-            <td>Total</td>
-            <td>0 円</td>
+            <td><%= I18n.t("settings.subscription.receipt.total") %></td>
+            <td>¥0</td>
           </tr>
         <% end %>
       </tbody>

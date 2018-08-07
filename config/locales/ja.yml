@@ -352,6 +352,14 @@ ja:
     subscription:
       status:
         active: アクティブ
+      receipt:
+        label: 領収書
+        desc: ご利用ありがとうございます。ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
+        date: お支払日
+        transaction_id: 取引ID
+        account: ご利用アカウント
+        plan: ご利用プラン
+        total: お支払合計
     plans:
       info_title: ご利用プラン
       info_title1: ご利用プランとお支払い情報
@@ -375,6 +383,7 @@ ja:
         failed_title: 支払い失敗!!
         failed_desc1: 支払いが完了できませんでしたので、ご利用プランを変更することができませんでした。
         failed_desc2: もう一度やり直してください。
+        refund: 払戻し
       upgrade:
         caption_title: アップグレードのオプション
         caption_desc: アップグレードには２通りの選択肢があります。
