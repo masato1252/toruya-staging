@@ -1,7 +1,7 @@
 class Settings::PaymentsController < SettingsController
   def index
     @subscription = current_user.subscription
-    charges = current_user.subscription_charges
+    charges = current_user.subscription_charges.includes(:plan)
     @charges = charges.completed.or(charges.refunded).where("created_at >= ?", 1.year.ago).order("created_at DESC")
     @refundable = @subscription.refundable?
   end

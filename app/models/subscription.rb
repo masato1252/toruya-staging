@@ -50,7 +50,7 @@ class Subscription < ApplicationRecord
   end
 
   def current_plan
-    active? ? plan : Plan.free_level.take
+    @current_plan ||= active? ? plan : Plan.free_level.take
   end
 
   def active?
