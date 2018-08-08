@@ -352,6 +352,7 @@ ja:
     subscription:
       status:
         active: アクティブ
+        expired: 期限切れ
       receipt:
         label: 領収書
         desc: ご利用ありがとうございます。ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。

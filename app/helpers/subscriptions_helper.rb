@@ -3,7 +3,7 @@ module SubscriptionsHelper
     if subscription.active?
       t("settings.subscription.status.active")
     else
-      "#{subscription.plan.name} expired"
+      "#{subscription.plan.name} #{t("settings.subscription.status.expired")}"
     end
   end
 end
