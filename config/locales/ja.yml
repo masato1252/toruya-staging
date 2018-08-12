@@ -361,6 +361,9 @@ ja:
         account: ご利用アカウント
         plan: ご利用プラン
         total: お支払合計
+        refund:
+          label: 返金明細書
+          plan: 返金プラン
     plans:
       info_title: ご利用プラン
       info_title1: ご利用プランとお支払い情報
