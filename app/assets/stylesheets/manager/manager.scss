@@ -402,8 +402,6 @@ footer {
 }
 .checkbox input[type="radio"], .checkbox input[type="checkbox"], .termsCheck input[type="checkbox"] { display: none; }
 #content #settingForm .checkbox dd input[type="checkbox"] + label, #content #settingForm .checkbox dd input[type="radio"] + label, #content #settingForm .termsCheck input[type="checkbox"] + label, .resNew .checkbox input[type="checkbox"] + label {
-  width: 100%;
-  display: block;
   line-height: 35px;
 }
 .checkbox input[type="radio"]:checked + label:before, .checkbox input[type="checkbox"]:checked + label:before, .termsCheck input[type="checkbox"]:checked + label:before {
