@@ -19,7 +19,7 @@ class Select extends React.Component {
         return <option key={`${prefix}-${option.value}-${i}`} value={option.value}>{option.label}</option>;
       });
     } else {
-    // [ {group_label: ..., options: [{label: ..., value: ...}]}, {...}]
+    // [ {label: ..., options: [{label: ..., value: ...}]}, {...}]
       optionsList = options.map(function(group_option) {
         var nested_options = group_option.options.map(function(option) {
             return (
@@ -28,7 +28,7 @@ class Select extends React.Component {
           });
 
         return (
-            <optgroup key={group_option.group_label || group_option.groupLabel } label={group_option.group_label || group_option.groupLabel}>
+            <optgroup key={group_option.label} label={group_option.label}>
               {nested_options}
             </optgroup>
           )

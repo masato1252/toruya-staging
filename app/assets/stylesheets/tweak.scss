@@ -67,13 +67,6 @@ button[disabled], a.disabled, input[disabled] {
   cursor: not-allowed !important;
 }
 
-// reservation new menu select2
-#resNew #resInfo {
-  span.select2, span.select2-selection, span.selection, span.dropdown-wrapper {
-    display: block;
-  }
-}
-
 // reservation index calendar and reservation new
 .busHours {
   .shop-name {
@@ -116,10 +109,6 @@ button[disabled], a.disabled, input[disabled] {
 // customer filter
 .filter {
   .filterKey {
-    .select2-container {
-      display: inline-block;
-    }
-
     .date {
       input[type="date"] {
         width: inherit;

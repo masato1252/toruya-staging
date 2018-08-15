@@ -49,8 +49,8 @@
 }
 #resNew #resInfo .errors .danger:before { content: "\f06a"; }
 #resNew #resInfo .errors .warning:before { content: "\f058"; }
-#resNew #resInfo .field-warning { border: 2px solid #e6a21f; }
-#resNew #resInfo .field-error { border: 2px solid #CF0003; }
+#resNew #resInfo .field-warning { border: 2px solid #e6a21f; border-radius: 6px; }
+#resNew #resInfo .field-error { border: 2px solid #CF0003; border-radius: 6px; }
 #resNew #resInfo #resMemo, #resNew #customerList dl:last-child, #resNew #customerList dl a, #resNew #customerList dl a:link, #resNew #customerList dl a:visited { border-bottom: none; }
 #resNew #resInfo #resMemo .input {
   height:100px;

@@ -269,7 +269,9 @@ class SettingsMenuForm extends React.Component {
                       checked={menuShopOption.checked}
                       onChange={this._handleShopCheck}
                     />
-                    <label htmlFor={`shop-${menuShopOption.shopId}`}>{menuShopOption.name}
+                    <label htmlFor={`shop-${menuShopOption.shopId}`}>
+                      {menuShopOption.name}
+                    </label>
                       {
                         menuShopOption.checked ?
                           <input
@@ -287,7 +289,6 @@ class SettingsMenuForm extends React.Component {
                       {
                         menuShopOption.checked ? "人" : null
                       }
-                    </label>
                   </dd>
                 </dl>
               );

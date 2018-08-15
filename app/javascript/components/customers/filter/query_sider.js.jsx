@@ -3,6 +3,7 @@
 import React from "react";
 import _ from "underscore";
 import moment from "moment-timezone";
+import ReactSelect from "react-select";
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
 
@@ -49,10 +50,6 @@ class CustomersFilterQuerySider extends React.Component {
     this.state = $.extend({}, this.initialStates)
   };
 
-  componentDidMount() {
-    this.applySelect2();
-  };
-
   getInitialState = () => {
     return this.initialStates;
   };
@@ -64,20 +61,6 @@ class CustomersFilterQuerySider extends React.Component {
     this.props.updateFilter("current_saved_filter_name", "");
     this.props.updateFilter("preset_filter_name", "");
     this.props.updateFilter("printing_status", "");
-  };
-
-  applySelect2 = () => {
-    var _this = this;
-
-    $("#select2").select2({
-      theme: "bootstrap",
-      "language": {
-        "noResults": function() {
-          return _this.props.noMenuMessage;
-        }
-      }
-    })
-    .on("change", _this.onDataChange);
   };
 
   onCheckboxChange = (event) => {
@@ -112,6 +95,12 @@ class CustomersFilterQuerySider extends React.Component {
         }
       }
     }.bind(this));
+  };
+
+  onMenuChange = (data) => {
+    if (data) {
+      this.setState({ menu_id: `${data.value}` })
+    }
   };
 
   onDateChange = (dateChange) => {
@@ -217,6 +206,7 @@ class CustomersFilterQuerySider extends React.Component {
       [collectionName]: newValues,
       [valueName]: ""
     });
+    this.menuSelector.select.clearValue();
   };
 
   submitFilterForm = () => {
@@ -744,7 +734,6 @@ class CustomersFilterQuerySider extends React.Component {
                         includeBlank="true"
                         blankOption={this.props.selectShopLabel}
                         options={this.props.shopOptions}
-                        id="select2"
                         data-name="shop_id"
                         value={this.state.shop_id}
                         onChange={this.onDataChange}
@@ -786,14 +775,12 @@ class CustomersFilterQuerySider extends React.Component {
                   <ul>
                     {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
                     <li>
-                      <Select
-                        includeBlank="true"
-                        blankOption={this.props.selectMenuLabel}
+                      <ReactSelect
+                        ref={(c) => this.menuSelector = c}
+                        className="menu-select-container"
+                        placeholder={this.props.selectMenuLabel}
                         options={this.props.menuGroupOptions}
-                        id="select2"
-                        data-name="menu_id"
-                        value={this.state.menu_id}
-                        onChange={this.onDataChange}
+                        onChange={this.onMenuChange}
                         />
                       <a
                         href="#"

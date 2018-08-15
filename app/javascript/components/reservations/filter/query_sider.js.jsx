@@ -2,6 +2,7 @@
 
 import React from "react";
 import _ from "underscore";
+import ReactSelect from "react-select";
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
 
@@ -34,24 +35,6 @@ class ReservationsFilterQuerySider extends React.Component {
     }
 
     this.state = $.extend({}, this.initialStates)
-  };
-
-  componentDidMount() {
-    this.applySelect2();
-  };
-
-  applySelect2 = () => {
-    var _this = this;
-
-    $("#select2").select2({
-      theme: "bootstrap",
-      "language": {
-        "noResults": function() {
-          return _this.props.noMenuMessage;
-        }
-      }
-    })
-    .on("change", _this.onDataChange);
   };
 
   getInitialState = () => {
@@ -98,6 +81,12 @@ class ReservationsFilterQuerySider extends React.Component {
     )
   };
 
+  onMenuChange = (data) => {
+    if (data) {
+      this.setState({ menu_id: `${data.value}` })
+    }
+  };
+
   onDataChange = (event) => {
     let stateName = event.target.dataset.name;
     let stateValue = event.target.dataset.value || event.target.value;
@@ -108,7 +97,6 @@ class ReservationsFilterQuerySider extends React.Component {
   onDateChange = (dateChange) => {
     this.setState(dateChange)
   };
-
 
   onCheckboxChange = (event) => {
     let newValues = this.state[event.target.dataset.name].slice();
@@ -143,6 +131,7 @@ class ReservationsFilterQuerySider extends React.Component {
       [collectionName]: newValues,
       [valueName]: ""
     });
+    this.menuSelector.select.clearValue();
   };
 
   onRemoveItem = (event) => {
@@ -399,14 +388,12 @@ class ReservationsFilterQuerySider extends React.Component {
                   <ul>
                     {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
                     <li>
-                      <Select
-                        includeBlank="true"
-                        blankOption={this.props.selectMenuLabel}
+                      <ReactSelect
+                        ref={(c) => this.menuSelector = c}
+                        className="menu-select-container"
+                        placeholder={this.props.selectMenuLabel}
                         options={this.props.menuGroupOptions}
-                        id="select2"
-                        data-name="menu_id"
-                        value={this.state.menu_id}
-                        onChange={this.onDataChange}
+                        onChange={this.onMenuChange}
                         />
                       <a
                         href="#"
