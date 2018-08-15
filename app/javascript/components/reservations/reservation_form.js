@@ -2,13 +2,13 @@
 
 import React from "react";
 import _ from "underscore";
+import moment from "moment-timezone";
 import Select from "../shared/select.js"
+import ReactSelect from "react-select";
 import CommonCustomersList from "../shared/customers_list.js"
 import ProcessingBar from "../shared/processing_bar.js"
 import CommonDatepickerField from "../shared/datepicker_field.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
-
-var moment = require('moment-timezone');
 
 class ReservationForm extends React.Component {
   static errorGroups() {
@@ -65,8 +65,6 @@ class ReservationForm extends React.Component {
       this._retrieveAvailableTimes()
     }
 
-    this.applySelect2();
-
     // workaround the default time value doesn't display in mobile.
     $("#start_time_time_part").val("");
     $("#start_time_time_part").val(this.props.reservation.startTimeTimePart || "");
@@ -76,27 +74,13 @@ class ReservationForm extends React.Component {
 
   componentDidUpdate() {
     if (this._menuErrors().length !== 0) {
-      $(".select2-container").addClass(
+      $(".menu-select-container").addClass(
         this._menuDangerErrors().length === 0 ? "field-warning" : "field-error"
       )
     }
     else {
-      $(".select2-container").removeClass("field-error field-warning")
+      $(".menu-select-container").removeClass("field-error field-warning")
     }
-  };
-
-  applySelect2 = () => {
-    var _this = this;
-
-    $("#select2").select2({
-      theme: "bootstrap",
-      "language": {
-        "noResults": function() {
-          return _this.props.noMenuMessage;
-        }
-      }
-    })
-    .on("change", _this._handleChange);
   };
 
   handleCustomerAdd = (event) => {
@@ -271,6 +255,22 @@ class ReservationForm extends React.Component {
     }
   };
 
+  // data: {label: "m1", value: 1, availableSeat: 2}
+  onMenuChange = (data) => {
+    this.setState({ menu_id: data.value }, function() {
+      if (this.props.memberMode) {
+        // send rough validation request and set the errors
+        this._validateReservation();
+        // clean staffs when the menu changes
+        this.setState({staff_ids: []})
+      }
+      else {
+        // normal custmoer model
+        this._retrieveAvailableStaffs()
+      }
+    })
+  };
+
   _handleChange = (event) => {
     event.preventDefault();
     var eventTargetName = event.target.dataset.name;
@@ -278,8 +278,6 @@ class ReservationForm extends React.Component {
       if (this.props.memberMode) {
         this._validateReservation();
         // clean staffs when the menu changes
-        if (eventTargetName === "menu_id") this.setState({staff_ids: []})
-        // send rough validation request and set the errors
       }
       else {
         // normal custmoer model
@@ -290,9 +288,6 @@ class ReservationForm extends React.Component {
           case "start_time_time_part":
           case "end_time_time_part":
             this._retrieveAvailableMenus();
-            break;
-          case "menu_id":
-            this._retrieveAvailableStaffs();
             break;
         }
       }
@@ -381,10 +376,6 @@ class ReservationForm extends React.Component {
       if (result["menu"]["group_options"].length == 0) {
         alert(_this.props.noValidMenuAlert);
       }
-
-      setTimeout(function() {
-        _this.applySelect2();
-      }, 0);
     }).fail(function(errors){
     }).always(function() {
       _this.setState({ processing: false });
@@ -737,14 +728,12 @@ class ReservationForm extends React.Component {
               <dl className="form" id="resMenu">
                 <dt>メニュー</dt>
                 <dd className="input">
-                  <label htmlFor="select2">
-                    <Select options={this.state.menu_group_options}
-                      id="select2"
-                      value={this.state.menu_id}
-                      data-name="menu_id"
-                      onChange={this._handleChange}
+                  <ReactSelect
+                    className="menu-select-container"
+                    defaultValue={this.props.menuDefaultOption}
+                    options={this.state.menu_group_options}
+                    onChange={this.onMenuChange}
                     />
-                  </label>
                   <span className="errors">
                     {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
                     {this._menuErrors()}

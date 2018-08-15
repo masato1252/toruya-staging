@@ -6,7 +6,12 @@ module OptionsHelper
 
   def menu_options(menus)
     return unless menus
-    menus.map { |m| { label: m.name, value: m.id, availableSeat: m.available_seat } }
+    menus.map { |m| menu_option(m) }
+  end
+
+  def menu_option(menu)
+    return unless menu
+    { label: menu.name, value: menu.id, availableSeat: menu.available_seat }
   end
 
   def rank_options(ranks)
@@ -21,7 +26,7 @@ module OptionsHelper
       # When it indeed is category of menus
       category_menus.map do |category_menu|
         {
-          group_label: category_menu[:category].name,
+          label: category_menu[:category].name,
           options: menu_options(category_menu[:menu_options])
         }
       end
