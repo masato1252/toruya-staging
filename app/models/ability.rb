@@ -18,14 +18,8 @@ class Ability
       # can :manage, :filter
       # can :manage, :saved_filter
       # can :manage_userself_holiday_permission
-
-      if super_user.free_level?
-        cannot :manage, :preset_filter
-      end
-
-      if super_user.free_level? || super_user.basic_level?
-        cannot :manage, :saved_filter
-      end
+      member_ability
+      admin_only_member_ability
 
       if super_user.free_level? && super_user.staffs.active.exists?
         cannot :create, Staff
@@ -45,13 +39,7 @@ class Ability
       can :edit, "customer_address"
       can :swith_staffs_selector, User
 
-      if super_user.basic_level? || super_user.premium_level?
-        can :manage, :preset_filter
-      end
-
-      if super_user.premium_level?
-        can :manage, :saved_filter
-      end
+      member_ability
 
       # Only handle the staffs under the shops he can manage.
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
@@ -115,5 +103,36 @@ class Ability
 
   def current_user_staff
     current_user.current_staff(super_user)
+  end
+
+  def admin_only_member_ability
+    case super_user.member_level
+    when "premium"
+      # can :create, Staff
+    when "basic"
+      cannot :create, Staff
+    when "trial"
+      cannot :create, Staff
+    when "free"
+      cannot :create, Staff
+    end
+  end
+
+  # manager and admin ability
+  def member_ability
+    case super_user.member_level
+    when "premium"
+      # can :manage, :preset_filter
+      # can :manage, :saved_filter
+    when "basic"
+      # can :manage, :preset_filter
+      cannot :manage, :saved_filter
+    when "trial"
+      # can :manage, :saved_filter
+      # can :manage, :preset_filter
+    when "free"
+      cannot :manage, :preset_filter
+      cannot :manage, :saved_filter
+    end
   end
 end

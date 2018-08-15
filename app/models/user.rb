@@ -73,6 +73,14 @@ class User < ApplicationRecord
     true
   end
 
+  def member_level
+    if free_level? && 3.months.ago > created_at
+      "trial"
+    else
+      level
+    end
+  end
+
   def current_staff_account(super_user)
     @current_staff_accounts ||= {}
 
