@@ -8,9 +8,9 @@
 
 以下の通り、お客様のクレジットカードにToruyaご利用料金のご請求をさせていただきましたが、お支払いにご指定いただいたカードの利用承認が得られませんでしたのでお知らせします。
 
-ご利用プラン：<%= @charging_plan.name %>
-請求年月日：<%= l(@next_period.first, format: :year_month_date) %>
-ご利用期間：<%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+ご利用プラン：<%= @charging_plan.name %><%= line_break %>
+請求年月日：<%= l(@next_period.first, format: :year_month_date) %><%= line_break %>
+ご利用期間：<%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %><%= line_break %>
 請求金額：<%= @cost %>（税込）
 
 決済が完了するまで、フリーメンバーに切り替えさせていただきます。
