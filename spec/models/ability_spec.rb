@@ -189,5 +189,11 @@ RSpec.describe Ability do
         end
       end
     end
+
+    context "manager level" do
+    end
+
+    context "staff level" do
+    end
   end
 end

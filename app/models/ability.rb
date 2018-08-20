@@ -13,7 +13,7 @@ class Ability
     @current_user, @super_user = current_user, super_user
 
     if admin_level
-      # manager staff permission
+      # admin permission
       can :manage, :all
       # can :manage, GoogleContact
       # can :manage, Shop
@@ -25,9 +25,7 @@ class Ability
       # can :manage, :filter
       # can :manage, :saved_filter
       # can :manage_userself_holiday_permission
-      member_ability
-      manager_member_ability
-      admin_only_member_ability
+      admin_member_ability
     elsif manager_level
       # manager staff permission
       can :read, Shop do |shop|
@@ -39,7 +37,6 @@ class Ability
       can :edit, "customer_address"
       can :swith_staffs_selector, User
 
-      member_ability
       manager_member_ability
 
       # Only handle the staffs under the shops he can manage.
@@ -62,7 +59,7 @@ class Ability
       can :manage, "userself_holiday_permission"
     elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
-      member_ability
+      staff_member_ability
 
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
@@ -108,27 +105,24 @@ class Ability
     current_user.current_staff(super_user)
   end
 
-  def admin_only_member_ability
+  def admin_member_ability
     case super_user.member_level
     when "premium"
       # can :create, Staff
       # can :create, Shop # TODO 2 (3+ ¥500/month)
-    when "basic"
+    when "basic", "trial", "free"
       cannot :create, Staff
-      cannot :create, Shop if current_user.shops.exists?
-    when "trial"
-      cannot :create, Staff
-      cannot :create, Shop if current_user.shops.exists?
-    when "free"
-      cannot :create, Staff
-      cannot :create, Shop if current_user.shops.exists?
+      shop_permission
     end
+
+    manager_member_ability
+    staff_member_ability
   end
 
   # manager and admin ability
   def manager_member_ability
     case super_user.member_level
-    when "premium"
+    when "premium", "trial"
       can :read, :filter
       can :manage, :preset_filter
       can :manage, :saved_filter
@@ -136,38 +130,35 @@ class Ability
       can :read, :filter
       can :manage, :preset_filter
       cannot :manage, :saved_filter
-    when "trial"
-      can :read, :filter
-      can :manage, :saved_filter
-      can :manage, :preset_filter
     when "free"
       cannot :read, :filter
       cannot :manage, :preset_filter
       cannot :manage, :saved_filter
     end
+
+    staff_member_ability
   end
 
-  def member_ability
+  def staff_member_ability
     case super_user.member_level
     when "premium"
       can :read, :shop_dashboard
       can :create, Reservation
-    when "basic"
-      cannot :read, :shop_dashboard
-      can :create, Reservation
-      reservation_daily_permission
-      reservation_total_permission
     when "trial"
       can :read, :shop_dashboard
       can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
-    when "free"
+    when "free", "basic"
       cannot :read, :shop_dashboard
       can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
     end
+  end
+
+  def shop_permission
+    cannot :create, Shop if super_user.shops.exists?
   end
 
   def reservation_daily_permission
