@@ -62,7 +62,7 @@ class Subscription < ApplicationRecord
   end
 
   def refundable?
-    first_charge && !first_charge.refunded? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
+    first_charge && first_charge.completed? && first_charge.created_at >= REFUNDABLE_DAYS.days.ago
   end
 
   def first_charge

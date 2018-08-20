@@ -28,7 +28,7 @@ module Subscriptions
     private
 
     def first_charge
-      @first_charge ||= user.subscription_charges.manual.first
+      @first_charge ||= user.subscription.first_charge
     end
 
     def validate_refundable
