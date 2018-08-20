@@ -66,7 +66,7 @@ class Subscription < ApplicationRecord
   end
 
   def first_charge
-    @first_charge ||= user.subscription_charges.manual.first
+    @first_charge ||= user.subscription_charges.finished.manual.first
   end
 
   def set_recurring_day
