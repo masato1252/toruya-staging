@@ -2,6 +2,13 @@ class Ability
   include CanCan::Ability
   attr_accessor :current_user, :super_user
 
+  RESERVATION_DAILY_LIMIT = 10
+  TOTAL_RESERVATIONS_LIMITS = {
+    "free"  => 1200,
+    "trial" => 1200,
+    "basic" => 3600
+  }.freeze
+
   def initialize(current_user, super_user)
     @current_user, @super_user = current_user, super_user
 
@@ -19,15 +26,8 @@ class Ability
       # can :manage, :saved_filter
       # can :manage_userself_holiday_permission
       member_ability
+      manager_member_ability
       admin_only_member_ability
-
-      if super_user.free_level? && super_user.staffs.active.exists?
-        cannot :create, Staff
-      end
-
-      cannot :read, Shop do |shop|
-        shop && !current_user.shops.where(id: shop.id).exists?
-      end
     elsif manager_level
       # manager staff permission
       can :read, Shop do |shop|
@@ -40,6 +40,7 @@ class Ability
       can :swith_staffs_selector, User
 
       member_ability
+      manager_member_ability
 
       # Only handle the staffs under the shops he can manage.
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
@@ -61,6 +62,8 @@ class Ability
       can :manage, "userself_holiday_permission"
     elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
+      member_ability
+
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
       end
@@ -109,30 +112,81 @@ class Ability
     case super_user.member_level
     when "premium"
       # can :create, Staff
+      # can :create, Shop # TODO 2 (3+ ¥500/month)
     when "basic"
       cannot :create, Staff
+      cannot :create, Shop if current_user.shops.exists?
     when "trial"
       cannot :create, Staff
+      cannot :create, Shop if current_user.shops.exists?
     when "free"
       cannot :create, Staff
+      cannot :create, Shop if current_user.shops.exists?
     end
   end
 
   # manager and admin ability
-  def member_ability
+  def manager_member_ability
     case super_user.member_level
     when "premium"
-      # can :manage, :preset_filter
-      # can :manage, :saved_filter
+      can :read, :filter
+      can :manage, :preset_filter
+      can :manage, :saved_filter
     when "basic"
-      # can :manage, :preset_filter
+      can :read, :filter
+      can :manage, :preset_filter
       cannot :manage, :saved_filter
     when "trial"
-      # can :manage, :saved_filter
-      # can :manage, :preset_filter
+      can :read, :filter
+      can :manage, :saved_filter
+      can :manage, :preset_filter
     when "free"
+      cannot :read, :filter
       cannot :manage, :preset_filter
       cannot :manage, :saved_filter
     end
+  end
+
+  def member_ability
+    case super_user.member_level
+    when "premium"
+      can :read, :shop_dashboard
+      can :create, Reservation
+    when "basic"
+      cannot :read, :shop_dashboard
+      can :create, Reservation
+      reservation_daily_permission
+      reservation_total_permission
+    when "trial"
+      can :read, :shop_dashboard
+      can :create, Reservation
+      reservation_daily_permission
+      reservation_total_permission
+    when "free"
+      cannot :read, :shop_dashboard
+      can :create, Reservation
+      reservation_daily_permission
+      reservation_total_permission
+    end
+  end
+
+  def reservation_daily_permission
+    if today_reservation_counts >= RESERVATION_DAILY_LIMIT
+      cannot :create, Reservation
+    end
+  end
+
+  def reservation_total_permission
+    if total_reservation_count >= TOTAL_RESERVATIONS_LIMITS[super_user.member_level]
+      cannot :create, Reservation
+    end
+  end
+
+  def today_reservation_counts
+    @today_reservation_counts ||= Reservation.where(shop_id: super_user.shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).count
+  end
+
+  def total_reservation_count
+    @total_reservation_count ||= Reservation.where(shop_id: super_user.shop_ids).count
   end
 end
