@@ -46,6 +46,7 @@ ja:
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
     delete_successfully_message: 削除完了
+    refund_successfully_message: 返金手続き完了
     are_you_sure_message: 完全に削除されますがよろしいですか？
     send: 送信
     yes_label: 有り

@@ -22,7 +22,7 @@ class Settings::PaymentsController < SettingsController
     outcome = Subscriptions::Refund.run(user: current_user)
 
     if outcome.valid?
-      flash[:notice] = "Refund successfully"
+      flash[:notice] = I18n.t("common.refund_successfully_message")
     else
       flash[:alert] =  "Refund failed, please try again or try to contact with us info@toruya.com"
     end
