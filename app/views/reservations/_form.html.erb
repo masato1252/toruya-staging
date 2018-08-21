@@ -34,7 +34,6 @@
                       menu_id: menu_id,
                       menuDefaultOption: menu_default_option,
                       min_staffs_number: min_staffs_number,
-                      available_seat: @result.try(:[], :selected_menu_option).try(:available_seat),
                       menu_group_options: menu_group_options,
                       staff_options: staff_options,
                       start_time_restriction: @time_ranges.try(:first).try(:to_s, :time),
