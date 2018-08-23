@@ -74,10 +74,14 @@ class User < ApplicationRecord
   end
 
   def member_level
-    if free_level? && 3.months.ago > created_at
-      "trial"
+    return @level if defined?(@level)
+
+    @level = subscription.current_plan.level
+
+    if @level == "free" && created_at >= 3.months.ago
+      Plan::TRIAL_LEVEL
     else
-      level
+      @level
     end
   end
 
