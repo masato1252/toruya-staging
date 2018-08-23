@@ -1,8 +1,7 @@
 class Settings::PaymentsController < SettingsController
   def index
     @subscription = current_user.subscription
-    charges = current_user.subscription_charges.includes(:plan)
-    @charges = charges.completed.or(charges.refunded).where("created_at >= ?", 1.year.ago).order("created_at DESC")
+    @charges = current_user.subscription_charges.finished.includes(:plan).where("created_at >= ?", 1.year.ago).order("created_at DESC")
     @refundable = @subscription.refundable?
   end
 
@@ -23,9 +22,9 @@ class Settings::PaymentsController < SettingsController
     outcome = Subscriptions::Refund.run(user: current_user)
 
     if outcome.valid?
-      flash[:notice] = "Refund successfully"
+      flash[:notice] = I18n.t("settings.plans.payment.refund_successfully_message")
     else
-      flash[:alert] =  "Refund failed, please try again or try to contact with us info@toruya.com"
+      flash[:alert] =  I18n.t("settings.plans.payment.refund_failed_message")
     end
 
     redirect_to settings_payments_path

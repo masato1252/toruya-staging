@@ -7,10 +7,11 @@ module Subscriptions
     def execute
       SubscriptionCharge.transaction do
         order_id = Digest::SHA1.hexdigest("#{Time.now.to_i}:#{user.id}:#{user.subscription_charges.count}:#{SecureRandom.hex(16)}").first(16).upcase
+        charge_amount = Plans::Price.run!(user: user, plan: plan)
 
         charge = user.subscription_charges.create!(
           plan: plan,
-          amount: plan.cost_with_currency,
+          amount: charge_amount,
           charge_date: Subscription.today,
           manual: manual,
           order_id: order_id
@@ -18,7 +19,7 @@ module Subscriptions
 
         begin
           stripe_charge = Stripe::Charge.create({
-            amount: plan.cost,
+            amount: charge_amount.fractional,
             currency: Money.default_currency.iso_code,
             customer: user.subscription.stripe_customer_id,
             description: plan.level,
@@ -40,14 +41,14 @@ module Subscriptions
           charge.auth_failed!
           errors.add(:plan, :auth_failed)
 
-          SubscriptionMailer.charge_failed(user.subscription).deliver_now unless manual
+          SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
         rescue Stripe::StripeError => error
           Rollbar.error(error, toruya_charge: charge.id)
 
           charge.processor_failed!
           errors.add(:plan, :processor_failed)
 
-          SubscriptionMailer.charge_failed(user.subscription).deliver_now unless manual
+          SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
         end
 
         charge

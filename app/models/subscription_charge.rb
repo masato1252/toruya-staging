@@ -34,4 +34,5 @@ class SubscriptionCharge < ApplicationRecord
   validates :order_id, uniqueness: true
 
   scope :manual, -> { where(manual: true) }
+  scope :finished, -> { where(state: [:completed, :refunded]) }
 end

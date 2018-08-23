@@ -3,7 +3,7 @@ class SubscriptionChargeJob < ApplicationJob
   after_perform :notify_admin
 
   def perform(subscription)
-    Subscriptions::RecurringCharge.run!(subscription: subscription)
+    Subscriptions::RecurringCharge.run(subscription: subscription)
   end
 
   private
