@@ -30,12 +30,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
-  enum level: {
-    free: 0,
-    basic: 1,
-    premium: 2
-  }, _suffix: true
-
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
   has_many :shops
