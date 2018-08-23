@@ -203,6 +203,14 @@ ja:
       create_successfully_message: 店舗情報を保存しました。
       update_successfully_message: 店舗情報を更新しました。
       delete_successfully_message: 店舗情報を削除しました。
+      modal:
+        upgrade_title: アカウントをアップグレード
+        upgrade_content: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_button: プレミアムにアップグレードする
+        premium:
+          upgrade_content: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
+          cancel_button: いいえ、結構です
+          upgrade_button: "%{per_shop_fee_price}円払って１店舗追加する"
     business_hours:
       info_title: 営業時間
       info_1: 営業時間を設定してください。

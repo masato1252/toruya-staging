@@ -15,6 +15,7 @@ class Settings::ShopsController < SettingsController
 
   # GET /shops/new
   def new
+    authorize! :create, Shop
     @shop = super_user.shops.new
   end
 
@@ -25,6 +26,7 @@ class Settings::ShopsController < SettingsController
   # POST /shops
   # POST /shops.json
   def create
+    authorize! :create, Shop
     outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h)
 
     if outcome.valid?
