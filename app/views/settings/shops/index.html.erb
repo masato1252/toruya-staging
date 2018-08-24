@@ -42,30 +42,32 @@
   </div>
 </div>
 
-<div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">
-          <%= t("settings.shop.modal.upgrade_title")%>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <% if fit_shop_charge_threshold %>
-          <%= t("settings.shop.modal.premium.upgrade_content", shop_number: Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE).html_safe %>
-        <% else %>
-          <%= t("settings.shop.modal.upgrade_content", premium_price: Plans::Price.run!(user: current_user, plan: Plan.premium_level.take).format(ja_default_format: true)).html_safe %>
-        <% end %>
-      </div>
-      <div class="modal-footer centerize">
-        <% if fit_shop_charge_threshold %>
-          <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
-          <%= link_to t("settings.shop.modal.premium.upgrade_button", per_shop_fee_price: Plans::Fee::PER_SHOP_FEE), new_settings_user_shop_path(super_user), class: "btn BTNtarco" %>
-        <% else %>
-          <%= link_to t("settings.shop.modal.upgrade_button"), settings_plans_path, class: "btn BTNyellow" %>
-        <% end %>
+<% admin_only do %>
+  <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("settings.shop.modal.upgrade_title")%>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <% if fit_shop_charge_threshold %>
+            <%= t("settings.shop.modal.premium.upgrade_content", shop_number: Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE).html_safe %>
+          <% else %>
+            <%= t("settings.shop.modal.upgrade_content", premium_price: Plans::Price.run!(user: current_user, plan: Plan.premium_level.take).format(ja_default_format: true)).html_safe %>
+          <% end %>
+        </div>
+        <div class="modal-footer centerize">
+          <% if fit_shop_charge_threshold %>
+            <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+            <%= link_to t("settings.shop.modal.premium.upgrade_button", per_shop_fee_price: Plans::Fee::PER_SHOP_FEE), new_settings_user_shop_path(super_user), class: "btn BTNtarco" %>
+          <% else %>
+            <%= link_to t("settings.shop.modal.upgrade_button"), settings_plans_path, class: "btn BTNyellow" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>
