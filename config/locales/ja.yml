@@ -65,6 +65,15 @@ ja:
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
+    modal:
+      admin:
+        upgrade_title: アカウントをアップグレード
+        upgrade_content: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_button: プレミアムにアップグレードする
+      staff:
+        upgrade_title: 店舗ダッシュボードは利用できません
+        upgrade_content: 店舗ダッシュボードを利用できません。
+        cancel_button: キェンセル
   plan:
     level:
       free: 無料

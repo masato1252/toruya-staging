@@ -1,0 +1,32 @@
+<% unless can?(:read, :shop_dashboard) %>
+  <div class="modal fade" id="upgradeShopDashboardModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <% if admin? %>
+              <%= t("dashboard.modal.admin.upgrade_title") %>
+            <% else %>
+              <%= t("dashboard.modal.staff.upgrade_title") %>
+            <% end %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <% if admin? %>
+            <%= t("dashboard.modal.admin.upgrade_content", premium_price: Plans::Price.run!(user: current_user, plan: Plan.premium_level.take).format(ja_default_format: true)).html_safe %>
+          <% else %>
+              <%= t("dashboard.modal.staff.upgrade_content") %>
+          <% end %>
+        </div>
+        <div class="modal-footer centerize">
+          <% if admin? %>
+            <%= link_to t("dashboard.modal.admin.upgrade_button"), settings_plans_path, class: "btn BTNyellow" %>
+          <% else %>
+            <%= link_to t("dashboard.modal.staff.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

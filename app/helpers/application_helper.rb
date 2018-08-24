@@ -37,8 +37,12 @@ module ApplicationHelper
   end
 
   def admin_only(&block)
-    if can?(:manage, :all)
+    if admin?
       block.call
     end
+  end
+
+  def admin?
+    can?(:manage, :all)
   end
 end
