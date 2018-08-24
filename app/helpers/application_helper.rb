@@ -35,4 +35,10 @@ module ApplicationHelper
   def body_class
     "#{controller_name}-container #{@body_class}"
   end
+
+  def admin_only(&block)
+    if can?(:manage, :all)
+      block.call
+    end
+  end
 end

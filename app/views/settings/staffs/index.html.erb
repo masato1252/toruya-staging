@@ -1,9 +1,13 @@
 <%= render "info" %>
 <div id="about">
   <ul class="function">
-    <% if can? :create, Staff %>
+    <% admin_only do %>
       <li>
-        <%= link_to t("settings.staff.new_button"), new_settings_user_staff_path(super_user), class: "BTNyellow addNew" %>
+        <% if can? :create, Staff %>
+          <%= link_to t("settings.staff.new_button"), new_settings_user_staff_path(super_user), class: "BTNyellow addNew" %>
+        <% else %>
+          <%= link_to t("settings.staff.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
+        <% end %>
       </li>
     <% end %>
   </ul>
@@ -31,5 +35,24 @@
         </dd>
       </dl>
     <% end %>
+  </div>
+</div>
+
+<div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("settings.staff.modal.upgrade_title")%>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <%= t("settings.staff.modal.upgrade_content", premium_price: Plans::Price.run!(user: current_user, plan: Plan.premium_level.take).format(ja_default_format: true)).html_safe %>
+      </div>
+      <div class="modal-footer centerize">
+        <%= link_to t("settings.staff.modal.upgrade_button"), settings_plans_path, class: "btn BTNyellow" %>
+      </div>
+    </div>
   </div>
 </div>

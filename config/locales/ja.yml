@@ -286,6 +286,10 @@ ja:
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務時間
       holiday_time: 休暇
+      modal:
+        upgrade_title: アカウントをアップグレード
+        upgrade_content: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_button: プレミアムにアップグレードする
     staff_account:
       info_title: スタッフアカウント
       using_staff_account: スタッフアカウントを利用する

@@ -4,17 +4,19 @@
 <%= render "info" %>
 <div id="about">
   <ul class="function">
-    <li>
-      <% if can? :create, Shop %>
-        <% if fit_shop_charge_threshold %>
-          <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
+    <% admin_only do %>
+      <li>
+        <% if can? :create, Shop %>
+          <% if fit_shop_charge_threshold %>
+            <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
+          <% else %>
+            <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
+          <% end %>
         <% else %>
-          <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
+          <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
         <% end %>
-      <% else %>
-        <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
-      <% end %>
-    </li>
+      </li>
+    <% end %>
   </ul>
   <p><%= t("settings.shop.info_1") %><br /><%= t("settings.shop.info_2") %></p>
 </div>
