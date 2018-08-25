@@ -1,0 +1,53 @@
+<% unless can?(:create, Reservation) %>
+  <%
+      role = admin? ? "admin" : "staff"
+      current_plan_level = current_user.current_plan.level
+  %>
+  <div class="modal fade" id="upgradeReservationLimitModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <% if cannot?(:create, :daily_reservations) %>
+              <%= t("reservation.modal.#{role}.daily_reservations_limit.upgrade_title") %>
+            <% else %>
+              <%= t("reservation.modal.#{role}.total_reservations_limit.upgrade_title") %>
+            <% end %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <% if admin? %>
+            <% if cannot?(:create, :daily_reservations) %>
+              <%= t("reservation.modal.admin.daily_reservations_limit.upgrade_content", reservations_daily_limit: Ability::RESERVATION_DAILY_LIMIT, premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
+            <% else %>
+              <%= t("reservation.modal.admin.total_reservations_limit.#{current_plan_level}_upgrade_content",
+                    free_plan_reservations_total_limit: number_with_delimiter(Ability::TOTAL_RESERVATIONS_LIMITS[Plan::FREE_LEVEL]),
+                    basic_plan_price: plan_price(Plan::BASIC_LEVEL),
+                    basic_plan_reservations_total_limit: number_with_delimiter(Ability::TOTAL_RESERVATIONS_LIMITS[Plan::BASIC_LEVEL]),
+                    premium_plan_price: plan_price(Plan::PREMIUM_LEVEL),
+                   ).html_safe %>
+            <% end %>
+          <% else %>
+            <% if cannot?(:create, :daily_reservations) %>
+              <%= t("reservation.modal.staff.daily_reservations_limit.upgrade_content").html_safe %>
+            <% else %>
+              <%= t("reservation.modal.staff.total_reservations_limit.upgrade_content").html_safe %>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="modal-footer centerize">
+          <% if admin? %>
+            <% if cannot?(:create, :total_reservations) && current_plan_level == Plan::FREE_LEVEL %>
+              <%= link_to t("action.upgrade_to_basic"), settings_plans_path, class: "btn BTNtarco" %>
+            <% end %>
+
+            <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
+          <% else %>
+            <%= link_to t("action.cancel_upgrade"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

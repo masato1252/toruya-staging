@@ -29,6 +29,8 @@ ja:
     log_out: ログアウト
     save: 保存
     search: 検索
+    upgrade: プレミアムにアップグレードする
+    cancel_upgrade: キェンセル
   common:
     processing: 送信中
     date: 日付
@@ -68,7 +70,7 @@ ja:
     modal:
       admin:
         upgrade_title: アカウントをアップグレード
-        upgrade_content: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_content: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
         upgrade_button: プレミアムにアップグレードする
       staff:
         upgrade_title: 店舗ダッシュボードは利用できません
@@ -109,6 +111,22 @@ ja:
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
+    modal:
+      admin:
+        daily_reservations_limit:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content: 今日既に合計%{reservations_daily_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        total_reservations_limit:
+          upgrade_title: アカウントをアップグレード
+          free_upgrade_content: 既に合計%{free_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{basic_plan_price}でベーシックにアップグレードすることで、さらに%{basic_plan_reservations_total_limit}の予約を作成することができます。<br /><br />月額%{premium_plan_price}でプレミアムにアップグレードすと、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+          basic_upgrade_content: 既に合計%{basic_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+      staff:
+        daily_reservations_limit:
+          upgrade_title: 予約を追加できません
+          upgrade_content: 今日の予約上限数を超えました。
+        total_reservations_limit:
+          upgrade_title: 予約を追加できません
+          upgrade_content: 予約上限数を超えました。
   customer:
     back_without_save: 保存せずに戻る
     save: 上書き保存
@@ -214,7 +232,7 @@ ja:
       delete_successfully_message: 店舗情報を削除しました。
       modal:
         upgrade_title: アカウントをアップグレード
-        upgrade_content: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_content: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
         upgrade_button: プレミアムにアップグレードする
         premium:
           upgrade_content: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
@@ -297,7 +315,7 @@ ja:
       holiday_time: 休暇
       modal:
         upgrade_title: アカウントをアップグレード
-        upgrade_content: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_content: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
         upgrade_button: プレミアムにアップグレードする
     staff_account:
       info_title: スタッフアカウント

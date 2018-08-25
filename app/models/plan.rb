@@ -8,8 +8,10 @@
 #
 
 class Plan < ApplicationRecord
-  DEFAULT_PLAN = "free".freeze
+  FREE_LEVEL = DEFAULT_PLAN = "free".freeze
   TRIAL_LEVEL = "trial".freeze
+  BASIC_LEVEL = "basic".freeze
+  PREMIUM_LEVEL = "premium".freeze
 
   enum level: {
     free: 0,

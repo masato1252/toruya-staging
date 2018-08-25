@@ -56,7 +56,7 @@
           <% if fit_shop_charge_threshold %>
             <%= t("settings.shop.modal.premium.upgrade_content", shop_number: Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE).html_safe %>
           <% else %>
-            <%= t("settings.shop.modal.upgrade_content", premium_price: Plans::Price.run!(user: current_user, plan: Plan.premium_level.take).format(ja_default_format: true)).html_safe %>
+            <%= t("settings.shop.modal.upgrade_content", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
           <% end %>
         </div>
         <div class="modal-footer centerize">

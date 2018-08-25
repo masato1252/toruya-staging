@@ -54,6 +54,7 @@ class User < ApplicationRecord
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
+  delegate :current_plan, to: :subscription
 
   after_commit :create_default_ranks, on: :create
   after_commit :create_default_subscription, on: :create

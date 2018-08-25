@@ -4,9 +4,9 @@ class Ability
 
   RESERVATION_DAILY_LIMIT = 10
   TOTAL_RESERVATIONS_LIMITS = {
-    "free"  => 1200,
-    "trial" => 1200,
-    "basic" => 3600
+    "free"  => 1_200,
+    "trial" => 1_200,
+    "basic" => 3_600
   }.freeze
 
   def initialize(current_user, super_user)
@@ -144,6 +144,8 @@ class Ability
     when "premium"
       can :read, :shop_dashboard
       can :create, Reservation
+      can :create, :daily_reservations
+      can :create, :total_reservations
     when "trial"
       can :read, :shop_dashboard
       can :create, Reservation
@@ -164,12 +166,14 @@ class Ability
   def reservation_daily_permission
     if today_reservation_counts >= RESERVATION_DAILY_LIMIT
       cannot :create, Reservation
+      cannot :create, :daily_reservations
     end
   end
 
   def reservation_total_permission
     if total_reservation_count >= TOTAL_RESERVATIONS_LIMITS[super_user.member_level]
       cannot :create, Reservation
+      cannot :create, :total_reservations
     end
   end
 
