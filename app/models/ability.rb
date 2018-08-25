@@ -92,9 +92,9 @@ class Ability
   def manager_level
     @manager_levels ||= {}
 
-    return @manager_levels[super_user] if @manager_levels[super_user]
+    return @manager_levels[super_user.id] unless @manager_levels[super_user.id].nil?
 
-    @manager_levels[super_user] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
+    @manager_levels[super_user.id] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
   end
 
   def current_user_staff_account
