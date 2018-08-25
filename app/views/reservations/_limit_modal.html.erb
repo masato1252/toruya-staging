@@ -1,7 +1,7 @@
 <% unless can?(:create, Reservation) %>
   <%
       role = admin? ? "admin" : "staff"
-      current_plan_level = current_user.current_plan.level
+      current_plan_level = super_user.current_plan.level
   %>
   <div class="modal fade" id="upgradeReservationLimitModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
