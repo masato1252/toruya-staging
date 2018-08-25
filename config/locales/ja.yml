@@ -29,7 +29,8 @@ ja:
     log_out: ログアウト
     save: 保存
     search: 検索
-    upgrade: プレミアムにアップグレードする
+    upgrade_to_premium: プレミアムにアップグレードする
+    upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キェンセル
   common:
     processing: 送信中
@@ -71,7 +72,6 @@ ja:
       admin:
         upgrade_title: アカウントをアップグレード
         upgrade_content: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
-        upgrade_button: プレミアムにアップグレードする
       staff:
         upgrade_title: 店舗ダッシュボードは利用できません
         upgrade_content: 店舗ダッシュボードを利用できません。
@@ -233,7 +233,6 @@ ja:
       modal:
         upgrade_title: アカウントをアップグレード
         upgrade_content: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
-        upgrade_button: プレミアムにアップグレードする
         premium:
           upgrade_content: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
           cancel_button: いいえ、結構です
@@ -316,7 +315,6 @@ ja:
       modal:
         upgrade_title: アカウントをアップグレード
         upgrade_content: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
-        upgrade_button: プレミアムにアップグレードする
     staff_account:
       info_title: スタッフアカウント
       using_staff_account: スタッフアカウントを利用する

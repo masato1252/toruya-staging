@@ -17,7 +17,7 @@
         </div>
         <div class="modal-footer centerize">
           <% if admin? %>
-            <%= link_to t("dashboard.modal.admin.upgrade_button"), settings_plans_path, class: "btn BTNyellow" %>
+            <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
           <% else %>
             <%= link_to t("action.cancel_upgrade"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
           <% end %>
