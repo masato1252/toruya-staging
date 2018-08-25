@@ -19,6 +19,8 @@ class Settings::StaffsController < SettingsController
 
   # GET /staffs/new
   def new
+    authorize! :create, Staff
+
     @staff = super_user.staffs.new
     @staff_account = staff.build_staff_account(owner: super_user, level: :staff)
   end

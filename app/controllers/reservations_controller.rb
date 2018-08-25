@@ -4,6 +4,7 @@ class ReservationsController < DashboardController
   # GET /reservations
   # GET /reservations.json
   def index
+    authorize! :read, :shop_dashboard
     @body_class = "shopIndex"
     @staffs_selector_displaying = true
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
@@ -34,6 +35,7 @@ class ReservationsController < DashboardController
 
   # GET /reservations/new
   def new
+    authorize! :create, Reservation
     @body_class = "resNew"
 
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
@@ -70,6 +72,7 @@ class ReservationsController < DashboardController
   end
 
   def create
+    authorize! :create, Reservation
     outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
