@@ -1,0 +1,37 @@
+<% manager_only do %>
+  <% if cannot?(:read, :filter) %>
+  <%
+      role = admin? ? "admin" : "staff"
+      current_plan_level = super_user.current_plan.level
+  %>
+    <div class="modal fade" id="upgradeFilterModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <%= t("dashboard.modal.filter.#{role}.upgrade_title") %>
+            </h4>
+          </div>
+          <div class="modal-body">
+            <% if admin? %>
+              <%= t("dashboard.modal.filter.admin.upgrade_content",
+                    basic_plan_price: plan_price(Plan::BASIC_LEVEL),
+                    premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
+            <% else %>
+              <%= t("dashboard.modal.filter.staff.upgrade_content") %>
+            <% end %>
+          </div>
+          <div class="modal-footer centerize">
+            <% if admin? %>
+              <%= link_to t("action.upgrade_to_basic"), settings_plans_path, class: "btn BTNtarco" if current_plan_level == Plan::FREE_LEVEL %>
+              <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
+            <% else %>
+              <%= link_to t("action.cancel_upgrade"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

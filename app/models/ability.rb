@@ -27,6 +27,7 @@ class Ability
       # can :manage_userself_holiday_permission
       admin_member_ability
     elsif manager_level
+      can :manage, :management_stuffs
       # manager staff permission
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?

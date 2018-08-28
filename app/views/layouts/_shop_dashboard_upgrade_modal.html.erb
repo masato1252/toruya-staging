@@ -1,18 +1,18 @@
-<% unless can?(:read, :shop_dashboard) %>
+<% if cannot?(:read, :shop_dashboard) %>
   <div class="modal fade" id="upgradeShopDashboardModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
-            <%= t("dashboard.modal.#{admin? ? "admin" : "staff"}.upgrade_title") %>
+            <%= t("dashboard.modal.shop_dashboard.#{admin? ? "admin" : "staff"}.upgrade_title") %>
           </h4>
         </div>
         <div class="modal-body">
           <% if admin? %>
-            <%= t("dashboard.modal.admin.upgrade_content", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
+            <%= t("dashboard.modal.shop_dashboard.admin.upgrade_content", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
           <% else %>
-              <%= t("dashboard.modal.staff.upgrade_content") %>
+              <%= t("dashboard.modal.shop_dashboard.staff.upgrade_content") %>
           <% end %>
         </div>
         <div class="modal-footer centerize">

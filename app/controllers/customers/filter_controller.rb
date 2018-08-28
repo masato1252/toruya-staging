@@ -1,5 +1,6 @@
 class Customers::FilterController < DashboardController
   def index
+    authorize! :read, :filter
     @body_class = "filter"
     menu_options = super_user.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name)

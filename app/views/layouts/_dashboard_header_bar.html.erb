@@ -94,12 +94,21 @@
         <% end %>
       </dd>
 
-      <dd>
-        <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
-          <i class="fa fa-database fa-4x" aria-hidden="true"></i>
-          <%= t("dashboard.search_data") %>
-        <% end %>
-      </dd>
+      <% manager_only do %>
+        <dd>
+          <% if can?(:read, :filter) %>
+            <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
+              <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+              <%= t("dashboard.search_data") %>
+            <% end %>
+          <% else %>
+            <%= link_to "#", data: { toggle: "modal", target: "#upgradeFilterModal" } do %>
+              <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+              <%= t("dashboard.search_data") %>
+            <% end %>
+          <% end %>
+        </dd>
+      <% end %>
     <% elsif single_employer %>
       <dd>
         <%= active_link_to user_customers_path(single_employer), active: /^\/users\/\d+\/customer/, class_active: "here" do %>

@@ -14,6 +14,7 @@ module ViewHelpers
     helper_method :working_shop_owners
     helper_method :owning_shop_options
     helper_method :staffs_have_holiday_permission
+    helper_method :ability
   end
 
   def shops
@@ -50,6 +51,10 @@ module ViewHelpers
 
   def current_ability
     @current_ability ||= Ability.new(current_user, super_user)
+  end
+
+  def ability(user)
+    Ability.new(current_user, user)
   end
 
   def is_owner
