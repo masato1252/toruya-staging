@@ -1,6 +1,7 @@
 <%= react_component("customers/filter/dashboard", {
   form_auth_token: form_authenticity_token,
   reservation_filter_path: reservation_user_filter_index_path,
+  isAdmin: admin?,
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
   customer_path: user_customers_path(super_user),
@@ -113,3 +114,6 @@
   staff_confirm_warning: t("customer.filter.staff_confirm_warning"),
   customer_info_confirm_message: t("customer.filter.confirm_message")
 }) %>
+
+<%= render "filters/admin_saved_filter_upgrade_modal" %>
+<%= render "filters/staff_saved_filter_upgrade_modal" %>

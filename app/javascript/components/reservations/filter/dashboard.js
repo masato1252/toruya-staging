@@ -61,16 +61,29 @@ class ReservationsFilterDashboard extends React.Component {
     var _this = this;
     var valuesToSubmit = $(this.querySider.filterForm).serialize();
 
-    $.ajax({
-      type: "POST",
-      url: _this.props.saveFilterPath, //sumbits it to the given url of the form
-      data: `${valuesToSubmit}&name=${this.state.filter_name}`,
-      dataType: "JSON"
-    }).done(function(result) {
-      _this.querySider.updateFilterOption(result, false);
-      // [TODO]: Discuss the expected behavior what to do.
-      // _this.querySider.reset();
-    })
+    if (this.props.canManageSavedFilter) {
+      $.ajax({
+        type: "POST",
+        url: _this.props.saveFilterPath, //sumbits it to the given url of the form
+        data: `${valuesToSubmit}&name=${this.state.filter_name}`,
+        dataType: "JSON"
+      }).done(function(result) {
+        _this.querySider.updateFilterOption(result, false);
+        // [TODO]: Discuss the expected behavior what to do.
+        // _this.querySider.reset();
+      })
+    } else {
+      // Show popup for admin/staff
+      let upgradeModal;
+
+      if (this.props.isAdmin) {
+        upgradeModal = $("#adminUpgradeSavedFilterModal");
+      } else {
+        upgradeModal = $("#staffUpgradeSavedFilterModal");
+      }
+
+      upgradeModal.modal("show");
+    }
   };
 
   deleteFilter = () => {
@@ -136,25 +149,17 @@ class ReservationsFilterDashboard extends React.Component {
             <dl>
               {this.isResultEmpty() ? null : (
                 <div>
-                  {
-                    this.props.canManageSavedFilter ? (
-                      <dt>{this.props.saveFilterTitle}</dt>
-                    ) : null
-                  }
-                  {
-                    this.props.canManageSavedFilter ? (
-                      <dd id="NAVsave">
-                        <input type="text"
-                          data-name="filter_name"
-                          placeholder="条件名を入力"
-                          className="filter-name-input"
-                          value={this.state.filter_name}
-                          disabled={this.isResultEmpty() || this.state.current_saved_filter_id}
-                          onChange={this.onDataChange} />
-                        {this.renderFilterButton()}
-                      </dd>
-                    ) : null
-                  }
+                  <dt>{this.props.saveFilterTitle}</dt>
+                  <dd id="NAVsave">
+                    <input type="text"
+                      data-name="filter_name"
+                      placeholder="条件名を入力"
+                      className="filter-name-input"
+                      value={this.state.filter_name}
+                      disabled={this.isResultEmpty() || this.state.current_saved_filter_id}
+                      onChange={this.onDataChange} />
+                    {this.renderFilterButton()}
+                  </dd>
                   <dd id="NAVrefresh">
                     <a href="#" onClick={this.reset} className="BTNgray">
                       <i className="fa fa-repeat"></i> 検索条件クリア

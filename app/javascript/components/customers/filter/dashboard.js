@@ -75,6 +75,15 @@ class CustomersFilterDashboard extends React.Component {
       })
     } else {
       // Show popup for admin/staff
+      let upgradeModal;
+
+      if (this.props.isAdmin) {
+        upgradeModal = $("#adminUpgradeSavedFilterModal");
+      } else {
+        upgradeModal = $("#staffUpgradeSavedFilterModal");
+      }
+
+      upgradeModal.modal("show");
     }
   };
 

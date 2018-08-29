@@ -91,6 +91,16 @@ ja:
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
+  filter:
+    modal:
+      saved_filter:
+        admin:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content: 検索条件を保存するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で自分の検索条件を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        staff:
+          upgrade_title: 高度検索は利用できません
+          upgrade_content: 高度検索を利用できません。店舗管理者にご連絡ください。
+
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
