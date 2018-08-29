@@ -1,0 +1,26 @@
+<% if ability(current_user).cannot?(:read, :filter) %>
+<%
+    current_plan_level = current_user.current_plan.level
+%>
+  <div class="modal fade" id="adminUpgradeFilterModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("dashboard.modal.filter.admin.upgrade_title") %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <%= t("dashboard.modal.filter.admin.upgrade_content",
+                basic_plan_price: plan_price(Plan::BASIC_LEVEL),
+                premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
+        </div>
+        <div class="modal-footer centerize">
+          <%= link_to t("action.upgrade_to_basic"), settings_plans_path, class: "btn BTNtarco" if current_plan_level == Plan::FREE_LEVEL %>
+          <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
