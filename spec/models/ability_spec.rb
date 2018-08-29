@@ -5,7 +5,7 @@ RSpec.describe Ability do
   let(:super_user) { current_user }
   let(:ability) { described_class.new(current_user, super_user) }
 
-  RSpec.shared_examples "admin management" do |member_level, action, ability_name, permission|
+  RSpec.shared_examples "permission management" do |member_level, action, ability_name, permission|
     it "#{member_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
       allow(super_user).to receive(:member_level).and_return(member_level)
 
@@ -126,34 +126,42 @@ RSpec.describe Ability do
         ],
       }.each do |member_level, permissions|
         permissions.each do |permission|
-          it_behaves_like "admin management", member_level, permission[:action], permission[:ability_name], permission[:permission]
+          it_behaves_like "permission management", member_level, permission[:action], permission[:ability_name], permission[:permission]
         end
       end
 
       context "create Shop" do
         context "when users don't have any shop" do
-          it_behaves_like "admin management", "free", :create, Shop, true
-          it_behaves_like "admin management", "trial", :create, Shop, true
-          it_behaves_like "admin management", "basic", :create, Shop, true
-          it_behaves_like "admin management", "premium", :create, Shop, true
+          it_behaves_like "permission management", "free", :create, Shop, true
+          it_behaves_like "permission management", "trial", :create, Shop, true
+          it_behaves_like "permission management", "basic", :create, Shop, true
+          it_behaves_like "permission management", "premium", :create, Shop, true
         end
 
         context "when users already have shop" do
           before { FactoryBot.create(:shop, user: current_user) }
 
-          it_behaves_like "admin management", "free", :create, Shop, false
-          it_behaves_like "admin management", "trial", :create, Shop, false
-          it_behaves_like "admin management", "basic", :create, Shop, false
-          it_behaves_like "admin management", "premium", :create, Shop, true
+          it_behaves_like "permission management", "free", :create, Shop, false
+          it_behaves_like "permission management", "trial", :create, Shop, false
+          it_behaves_like "permission management", "basic", :create, Shop, false
+          it_behaves_like "permission management", "premium", :create, Shop, true
         end
       end
 
       context "create Reservation" do
         context "when users don't have any reservation" do
-          it_behaves_like "admin management", "free", :create, Reservation, true
-          it_behaves_like "admin management", "trial", :create, Reservation, true
-          it_behaves_like "admin management", "basic", :create, Reservation, true
-          it_behaves_like "admin management", "premium", :create, Reservation, true
+          it_behaves_like "permission management", "free", :create, Reservation, true
+          it_behaves_like "permission management", "trial", :create, Reservation, true
+          it_behaves_like "permission management", "basic", :create, Reservation, true
+          it_behaves_like "permission management", "premium", :create, Reservation, true
+          it_behaves_like "permission management", "free", :create, :daily_reservations, true
+          it_behaves_like "permission management", "trial", :create, :daily_reservations, true
+          it_behaves_like "permission management", "basic", :create, :daily_reservations, true
+          it_behaves_like "permission management", "premium", :create, :daily_reservations, true
+          it_behaves_like "permission management", "free", :create, :total_reservations, true
+          it_behaves_like "permission management", "trial", :create, :total_reservations, true
+          it_behaves_like "permission management", "basic", :create, :total_reservations, true
+          it_behaves_like "permission management", "premium", :create, :total_reservations, true
         end
 
         context "when users already have shop" do
@@ -164,10 +172,10 @@ RSpec.describe Ability do
               FactoryBot.create(:reservation, shop: shop)
             end
 
-            it_behaves_like "admin management", "free", :create, Reservation, false
-            it_behaves_like "admin management", "trial", :create, Reservation, false
-            it_behaves_like "admin management", "basic", :create, Reservation, false
-            it_behaves_like "admin management", "premium", :create, Reservation, true
+            it_behaves_like "permission management", "free", :create, Reservation, false
+            it_behaves_like "permission management", "trial", :create, Reservation, false
+            it_behaves_like "permission management", "basic", :create, Reservation, false
+            it_behaves_like "permission management", "premium", :create, Reservation, true
           end
 
           context "when over total reservation limit" do
@@ -181,10 +189,10 @@ RSpec.describe Ability do
               FactoryBot.create(:reservation, shop: shop)
             end
 
-            it_behaves_like "admin management", "free", :create, Reservation, false
-            it_behaves_like "admin management", "trial", :create, Reservation, false
-            it_behaves_like "admin management", "basic", :create, Reservation, false
-            it_behaves_like "admin management", "premium", :create, Reservation, true
+            it_behaves_like "permission management", "free", :create, Reservation, false
+            it_behaves_like "permission management", "trial", :create, Reservation, false
+            it_behaves_like "permission management", "basic", :create, Reservation, false
+            it_behaves_like "permission management", "premium", :create, Reservation, true
           end
         end
       end
@@ -194,6 +202,26 @@ RSpec.describe Ability do
     end
 
     context "staff level" do
+      let(:staff_account) { FactoryBot.create(:staff_account) }
+      let(:current_user) { staff_account.user }
+      let(:super_user) { staff_account.owner }
+
+      context "create Reservation" do
+        context "when users don't have any reservation" do
+          it_behaves_like "permission management", "free", :create, Reservation, true
+          it_behaves_like "permission management", "trial", :create, Reservation, true
+          it_behaves_like "permission management", "basic", :create, Reservation, true
+          it_behaves_like "permission management", "premium", :create, Reservation, true
+          it_behaves_like "permission management", "free", :create, :daily_reservations, true
+          it_behaves_like "permission management", "trial", :create, :daily_reservations, true
+          it_behaves_like "permission management", "basic", :create, :daily_reservations, true
+          it_behaves_like "permission management", "premium", :create, :daily_reservations, true
+          it_behaves_like "permission management", "free", :create, :total_reservations, true
+          it_behaves_like "permission management", "trial", :create, :total_reservations, true
+          it_behaves_like "permission management", "basic", :create, :total_reservations, true
+          it_behaves_like "permission management", "premium", :create, :total_reservations, true
+        end
+      end
     end
   end
 end

@@ -130,10 +130,10 @@ ja:
       staff:
         daily_reservations_limit:
           upgrade_title: 予約を追加できません
-          upgrade_content: 今日の予約上限数を超えました。
+          upgrade_content: 今日の予約上限数を超えました。店舗管理者にご連絡ください。
         total_reservations_limit:
           upgrade_title: 予約を追加できません
-          upgrade_content: 予約上限数を超えました。
+          upgrade_content: 予約上限数を超えました。店舗管理者にご連絡ください。
   customer:
     back_without_save: 保存せずに戻る
     save: 上書き保存

@@ -92,11 +92,16 @@
             <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
             <span>新規予約</span>
           <% end %>
-        <% else %>
-          <a href="#" data-toggle="modal" data-target="#upgradeReservationLimitModal" class="BTNtarco">
+        <% elsif admin? %>
+          <%= link_to "#", data: { toggle: "modal", target: cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
             <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
             <span>新規予約</span>
-          </a>
+          <% end %>
+        <% else %>
+          <%= link_to "#", data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
+            <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
+            <span>新規予約</span>
+          <% end %>
         <% end %>
       </dd>
       <dd id="NAVcustomers">
@@ -124,4 +129,9 @@
 
   <%= render "reservations/off_date_modal", staff: staff, date: @date %>
 <% end %>
-<%= render "reservations/limit_modal" %>
+<% if cannot?(:create, Reservation) %>
+  <%= render "reservations/upgrade_modals/admin_daily_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/admin_total_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/staff_daily_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/staff_total_reservations_limit_modal" %>
+<% end %>

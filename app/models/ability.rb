@@ -141,20 +141,25 @@ class Ability
   end
 
   def staff_member_ability
+    can :create, Reservation
+    can :create, :daily_reservations
+    can :create, :total_reservations
+    can :read, :shop_dashboard
+
     case super_user.member_level
     when "premium"
-      can :read, :shop_dashboard
-      can :create, Reservation
-      can :create, :daily_reservations
-      can :create, :total_reservations
+      # can :create, Reservation
+      # can :create, :daily_reservations
+      # can :create, :total_reservations
+      # can :read, :shop_dashboard
     when "trial"
-      can :read, :shop_dashboard
-      can :create, Reservation
+      # can :read, :shop_dashboard
+      # can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
     when "free", "basic"
+      # can :create, Reservation
       cannot :read, :shop_dashboard
-      can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
     end

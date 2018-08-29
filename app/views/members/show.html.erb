@@ -20,15 +20,9 @@
                         { id: "custom-calendar", class: "clearfix" }) %>
     <div class="staffDashboard">
       <div class="edit-worktime">
-        <% if can?(:create, Reservation) %>
-          <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="BTNyellow">
-            予約を追加
-          </a>
-        <% else %>
-          <a href="#" data-toggle="modal" data-target="#upgradeReservationLimitModal" class="BTNyellow">
-            予約を追加
-          </a>
-        <% end %>
+        <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="BTNyellow">
+          予約を追加
+        </a>
 
         <% if staffs_have_holiday_permission.present? %>
           <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
@@ -58,5 +52,8 @@
 
   <%= render "reservations/new_modal", date: @date %>
   <%= render "reservations/off_date_modal", staff: nil, date: @date %>
-  <%= render "reservations/limit_modal" %>
+  <%= render "reservations/upgrade_modals/admin_daily_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/admin_total_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/staff_daily_reservations_limit_modal" %>
+  <%= render "reservations/upgrade_modals/staff_total_reservations_limit_modal" %>
 <% end %>
