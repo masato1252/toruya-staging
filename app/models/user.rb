@@ -71,13 +71,17 @@ class User < ApplicationRecord
   def member_level
     return @level if defined?(@level)
 
-    @level = subscription.current_plan.level
+    @level = current_plan.level
 
     if @level == "free" && created_at >= 3.months.ago
-      Plan::TRIAL_LEVEL
+      @level = Plan::TRIAL_LEVEL
     else
       @level
     end
+  end
+
+  def member_level_name
+    I18n.t("plan.level.#{member_level}")
   end
 
   def current_staff_account(super_user)
