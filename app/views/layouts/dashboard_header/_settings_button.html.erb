@@ -1,0 +1,35 @@
+<dd class="dropdown">
+  <%= active_link_to settings_path(super_user),
+    active: /^\/settings/,
+    class_active: "here",
+    data: { toggle: "dropdown", target: "#" } do %>
+      <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
+    設定
+  <% end %>
+  <ul class="dropdown-menu dropdown-menu-right">
+    <li>
+      <span class="dropdown-header"><%= t("dashboard.sign_in_as", name: current_user.name || current_user_staff_account.try(:staff).try(:name) || current_user.email) %></span>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <%= link_to t("dashboard.my_shop_setting"), settings_path(current_user) %>
+    </li>
+    <li>
+      <%= link_to t("settings.account.info_title"), settings_user_profile_path(current_user) %>
+    </li>
+
+    <% if working_shop_options.present? %>
+      <li class="divider"></li>
+      <li>
+        <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+      </li>
+      <li class="divider"></li>
+
+      <% working_shop_options.each do |option| %>
+        <li>
+          <%= link_to option.shop.name, edit_settings_user_staff_path(option.shop.user, option.staff, shop_id: option.shop.id) %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</dd>

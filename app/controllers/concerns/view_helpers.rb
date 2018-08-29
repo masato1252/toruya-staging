@@ -96,6 +96,7 @@ module ViewHelpers
         if include_user_own || shop_staff.shop.user != current_user
           ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
                        staff: staff, staff_id: shop_staff.staff_id,
+                       owner: shop_staff.shop.user,
                        shop_staff: shop_staff)
         end
       end
@@ -104,7 +105,7 @@ module ViewHelpers
 
   def owning_shop_options
     @owning_shop_options ||= current_user.shops.order("id").map do |shop|
-      ::Option.new(shop: shop)
+      ::Option.new(shop: shop, owner: shop.user)
     end
   end
 

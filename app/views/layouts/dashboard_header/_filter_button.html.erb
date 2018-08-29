@@ -1,0 +1,64 @@
+<% if single_shop_owner %>
+  <% manager_only do %>
+    <dd>
+      <% if can?(:read, :filter) %>
+        <%= active_link_to customer_user_filter_index_path(super_user), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
+          <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.search_data") %>
+        <% end %>
+      <% else %>
+        <%= link_to "#", data: { toggle: "modal", target: "#upgradeFilterModal" } do %>
+          <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+          <%= t("dashboard.search_data") %>
+        <% end %>
+      <% end %>
+    </dd>
+  <% end %>
+<% elsif single_employer %>
+  <dd>
+    <%= active_link_to customer_user_filter_index_path(single_employer), active: /^\/customer\/users\/\d+\/filter/, class_active: "here" do %>
+      <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+      <%= t("dashboard.search_data") %>
+    <% end %>
+  </dd>
+<% else %>
+  <dd class="dropdown">
+    <%= active_link_to customer_user_filter_index_path(super_user),
+      active: /^\/customer\/users\/\d+\/filter/,
+      class_active: "here",
+      data: { toggle: "dropdown", target: "#" } do %>
+      <i class="fa fa-database fa-4x" aria-hidden="true"></i>
+      <%= t("dashboard.search_data") %>
+    <% end %>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <% if current_user.shops.exists? %>
+        <li>
+          <span class="dropdown-header">
+            <%= t("dashboard.my_shop") %>
+          </span>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
+        </li>
+        <% if working_shop_owners.present? %>
+          <li class="divider"></li>
+        <% end %>
+      <% end %>
+
+      <% if working_shop_owners.present? %>
+        <li>
+          <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+        </li>
+        <li class="divider"></li>
+
+        <% working_shop_owners.each do |owner| %>
+          <li>
+            <%= link_to t("dashboard.someone_shop", name: owner.name), customer_user_filter_index_path(owner) %>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </dd>
+<% end %>
+
