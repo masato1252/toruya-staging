@@ -22,7 +22,6 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  level                  :integer          default("free"), not null
 #
 
 class User < ApplicationRecord
@@ -98,6 +97,10 @@ class User < ApplicationRecord
     return @current_staffs[super_user] if @current_staffs[super_user]
 
     @current_staffs[super_user] = current_staff_account(super_user).try(:staff)
+  end
+
+  def trial_member?
+    member_level == Plan::TRIAL_LEVEL
   end
 
   private
