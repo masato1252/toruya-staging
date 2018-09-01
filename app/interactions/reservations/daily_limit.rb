@@ -5,7 +5,7 @@ module Reservations
     object :user
 
     def execute
-      if user.member_level != Plan::PREMIUM_LEVEL && Reservation.today_counts_in_user(user) >= RESERVATION_DAILY_LIMIT
+      if user.member_level != Plan::PREMIUM_LEVEL && user.today_reservations_count >= RESERVATION_DAILY_LIMIT
         errors.add(:user, :exceed_reservations_daily_limit)
       end
     end

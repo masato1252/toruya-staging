@@ -34,7 +34,7 @@ class ReminderMailer < ApplicationMailer
     @user = user
     @plan_name = I18n.t("plan.level.#{user.member_level}")
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.member_level]
-    @total_reservations_count = Reservation.total_in_user(user)
+    @total_reservations_count = user.total_reservations_count
 
     mail(to: @user.email,
          subject: subject(I18n.t("reminder_mailer.daily_reservations_limit_by_admin_reminder.title")),
@@ -45,7 +45,7 @@ class ReminderMailer < ApplicationMailer
     @user = user
     @plan_name = I18n.t("plan.level.#{user.member_level}")
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.member_level]
-    @total_reservations_count = Reservation.total_in_user(user)
+    @total_reservations_count = user.total_reservations_count
     @shop_name = reservation.shop.display_name
 
     mail(to: @user.email,
@@ -56,9 +56,9 @@ class ReminderMailer < ApplicationMailer
   def total_reservations_limit_by_admin_reminder(user)
     @user = user
     @plan_name = I18n.t("plan.level.#{user.member_level}")
-    @today_reservations_count = Reservation.today_counts_in_user(user)
+    @today_reservations_count = user.today_reservations_count
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.member_level]
-    @total_reservations_count = Reservation.total_in_user(user)
+    @total_reservations_count = user.total_reservations_count
 
     mail(to: @user.email,
          subject: subject(I18n.t("reminder_mailer.total_reservations_limit_by_admin_reminder.title")),
@@ -68,9 +68,9 @@ class ReminderMailer < ApplicationMailer
   def total_reservations_limit_by_staff_reminder(user, reservation)
     @user = user
     @plan_name = I18n.t("plan.level.#{user.member_level}")
-    @today_reservations_count = Reservation.today_counts_in_user(user)
+    @today_reservations_count = user.today_reservations_count
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.member_level]
-    @total_reservations_count = Reservation.total_in_user(user)
+    @total_reservations_count = user.total_reservations_count
     @shop_name = reservation.shop.display_name
 
     mail(to: @user.email,

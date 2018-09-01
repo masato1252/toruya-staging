@@ -72,14 +72,6 @@ class Reservation < ApplicationRecord
     end
   end
 
-  def self.today_counts_in_user(user)
-    @today_reservations_counts ||= Reservation.where(shop_id: user.shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).count
-  end
-
-  def self.total_in_user(user)
-    @total_reservations_count ||= Reservation.where(shop_id: user.shop_ids).count
-  end
-
   def set_start_time
     if start_time_date_part && start_time_time_part
       self.start_time = Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")

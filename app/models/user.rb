@@ -107,6 +107,14 @@ class User < ApplicationRecord
     @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
   end
 
+  def today_reservations_count
+    @today_reservations_count ||= today_reservations.count
+  end
+
+  def total_reservations_count
+    @total_reservations_count ||= total_reservations.count
+  end
+
   private
 
   def create_default_ranks
@@ -116,5 +124,13 @@ class User < ApplicationRecord
 
   def create_default_subscription
     create_subscription(plan: Plan.free_level.take)
+  end
+
+  def today_reservations
+    Reservation.where(shop_id: shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+  end
+
+  def total_reservations
+    Reservation.where(shop_id: shop_ids)
   end
 end
