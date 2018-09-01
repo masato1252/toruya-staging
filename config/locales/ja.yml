@@ -795,6 +795,13 @@ ja:
       title: Toruyaクレジットカードの利用承認が得られませんでした
     charge_reminder:
       title: Toruyaご請求のご連絡
+  reminder_mailer:
+    trial_member_months_ago_reminder:
+      title: 試用期間終了予定日のご連絡
+    trial_member_week_ago_reminder:
+      title: 試用期間の終了間近のご連絡
+    trial_member_day_ago_reminder:
+      title: 試用期間終了のご連絡
   active_interaction:
     errors:
       models:

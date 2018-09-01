@@ -1,0 +1,9 @@
+Dear <%= @user.name %>,
+
+This is a billing notification from Toruya.
+You will be downgraded to free member automatically within 7 days.
+
+Sign-up : <%= l(@signup_date, format: :year_month_date) %>
+Trial Ends : <%= l(@trial_expired_date, format: :year_month_date) %>
+
+Please visit https://manager.toruya.com/account/payment and select your membership in order to keep using Toruya after Trial ends.

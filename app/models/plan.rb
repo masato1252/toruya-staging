@@ -12,6 +12,7 @@ class Plan < ApplicationRecord
   TRIAL_LEVEL = "trial".freeze
   BASIC_LEVEL = "basic".freeze
   PREMIUM_LEVEL = "premium".freeze
+  TRIAL_PLAN_THRESHOLD_MONTHS = 3
 
   enum level: {
     free: 0,

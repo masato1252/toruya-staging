@@ -72,7 +72,7 @@ class User < ApplicationRecord
 
     @level = current_plan.level
 
-    if @level == "free" && created_at >= 3.months.ago
+    if @level == Plan::FREE_LEVEL && Subscription.today < trial_expired_date
       @level = Plan::TRIAL_LEVEL
     else
       @level
@@ -101,6 +101,10 @@ class User < ApplicationRecord
 
   def trial_member?
     member_level == Plan::TRIAL_LEVEL
+  end
+
+  def trial_expired_date
+    @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
   end
 
   private

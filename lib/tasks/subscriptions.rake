@@ -26,4 +26,26 @@ namespace :subscriptions do
       end
     end
   end
+
+  task :trial_member_reminder => :environment do
+    today = Subscription.today
+
+    scope = User.joins(:subscription).where("users.created_at >= ?", Plan::TRIAL_PLAN_THRESHOLD_MONTHS.months.ago)
+    scope.where("subscriptions.plan_id = ?", Subscription::FREE_PLAN_ID).or(
+      scope.where("subscriptions.expired_date < ?", today)
+    ).find_each do |user|
+      after_signup_days = (today - user.created_at.to_date).to_i
+      before_trial_expired_days = (user.trial_expired_date - today).to_i
+
+      if after_signup_days == 30
+        ReminderMailer.trial_member_months_ago_reminder(user, 2).deliver_later
+      elsif after_signup_days == 60
+        ReminderMailer.trial_member_months_ago_reminder(user, 1).deliver_later
+      elsif before_trial_expired_days == 7
+        ReminderMailer.trial_member_week_ago_reminder(user).deliver_later
+      elsif before_trial_expired_days == 1
+        ReminderMailer.trial_member_day_ago_reminder(user).deliver_later
+      end
+    end
+  end
 end
