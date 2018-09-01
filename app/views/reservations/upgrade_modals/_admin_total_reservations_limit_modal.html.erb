@@ -12,12 +12,12 @@ k       <div class="modal-header">
           </h4>
         </div>
         <div class="modal-body">
-          <%= t("reservation.modal.admin.total_reservations_limit.#{current_plan_level}_upgrade_content",
+          <%= t("reservation.modal.admin.total_reservations_limit.#{current_plan_level}_upgrade_content_html",
                 free_plan_reservations_total_limit: number_with_delimiter(Ability::TOTAL_RESERVATIONS_LIMITS[Plan::FREE_LEVEL]),
                 basic_plan_price: plan_price(Plan::BASIC_LEVEL),
                 basic_plan_reservations_total_limit: number_with_delimiter(Ability::TOTAL_RESERVATIONS_LIMITS[Plan::BASIC_LEVEL]),
                 premium_plan_price: plan_price(Plan::PREMIUM_LEVEL),
-               ).html_safe %>
+               ) %>
         </div>
         <div class="modal-footer centerize">
           <% if current_plan_level == Plan::FREE_LEVEL %>

@@ -50,7 +50,7 @@
             </h4>
           </div>
           <div class="modal-body">
-            <%= t("settings.staff.modal.upgrade_content", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)).html_safe %>
+            <%= t("settings.staff.modal.upgrade_content_html", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
           </div>
           <div class="modal-footer centerize">
             <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
