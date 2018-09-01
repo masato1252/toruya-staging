@@ -2,13 +2,6 @@ class Ability
   include CanCan::Ability
   attr_accessor :current_user, :super_user
 
-  RESERVATION_DAILY_LIMIT = 10
-  TOTAL_RESERVATIONS_LIMITS = {
-    "free"  => 1_200,
-    "trial" => 1_200,
-    "basic" => 3_600
-  }.freeze
-
   def initialize(current_user, super_user)
     @current_user, @super_user = current_user, super_user
 
@@ -170,24 +163,16 @@ class Ability
   end
 
   def reservation_daily_permission
-    if today_reservation_counts >= RESERVATION_DAILY_LIMIT
+    if Reservations::DailyLimit.run(user: super_user).invalid?
       cannot :create, Reservation
       cannot :create, :daily_reservations
     end
   end
 
   def reservation_total_permission
-    if total_reservation_count >= TOTAL_RESERVATIONS_LIMITS[super_user.member_level]
+    if Reservations::TotalLimit.run(user: super_user).invalid?
       cannot :create, Reservation
       cannot :create, :total_reservations
     end
-  end
-
-  def today_reservation_counts
-    @today_reservation_counts ||= Reservation.where(shop_id: super_user.shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).count
-  end
-
-  def total_reservation_count
-    @total_reservation_count ||= Reservation.where(shop_id: super_user.shop_ids).count
   end
 end

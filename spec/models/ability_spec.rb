@@ -167,7 +167,7 @@ RSpec.describe Ability do
         context "when users already have shop" do
           context "when over daily reservation limit" do
             before do
-              stub_const("Ability::RESERVATION_DAILY_LIMIT", 1)
+              stub_const("Reservations::DailyLimit::RESERVATION_DAILY_LIMIT", 1)
               shop = FactoryBot.create(:shop, user: current_user)
               FactoryBot.create(:reservation, shop: shop)
             end
@@ -180,7 +180,7 @@ RSpec.describe Ability do
 
           context "when over total reservation limit" do
             before do
-              stub_const("Ability::TOTAL_RESERVATIONS_LIMITS", {
+              stub_const("Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS", {
                 "free"  => 1,
                 "trial" => 1,
                 "basic" => 1
