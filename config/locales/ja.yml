@@ -130,6 +130,8 @@ ja:
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
     modal:
+      invalid_shops_exist_message: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
+      disable_edit_when_shop_is_invalid: ※あなた/店舗オーナーのご利用プランに基づき、この予約は編集できません。
       admin:
         daily_reservations_limit:
           upgrade_title: アカウントをアップグレード

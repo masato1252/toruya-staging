@@ -100,7 +100,7 @@ module ViewHelpers
                        shop_staff: shop_staff)
         end
       end
-    end.flatten.compact
+    end.flatten.compact.sort_by { |option| option.shop_id }
   end
 
   def owning_shop_options

@@ -36,6 +36,7 @@ class ReservationsController < DashboardController
   # GET /reservations/new
   def new
     authorize! :create, Reservation
+    authorize! :manage_shop_reservations, shop
     @body_class = "resNew"
 
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
@@ -60,6 +61,8 @@ class ReservationsController < DashboardController
 
   # GET /reservations/1/edit
   def edit
+    authorize! :manage_shop_reservations, shop
+
     @body_class = "resNew"
     @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
 
@@ -73,6 +76,7 @@ class ReservationsController < DashboardController
 
   def create
     authorize! :create, Reservation
+    authorize! :manage_shop_reservations, shop
     outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
@@ -91,6 +95,7 @@ class ReservationsController < DashboardController
   end
 
   def update
+    authorize! :manage_shop_reservations, shop
     outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|

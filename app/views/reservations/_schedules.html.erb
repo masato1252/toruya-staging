@@ -70,6 +70,11 @@
               <div>
                 <%= simple_format(reservation.memo) %>
               </div>
+              <% if ability(reservation.shop.user).cannot?(:manage_shop_reservations, reservation.shop) %>
+                <div>
+                  <%= t("reservation.modal.disable_edit_when_shop_is_invalid") %>
+                </div>
+              <% end %>
             </div>
             <div class="modal-footer">
               <dl>
@@ -114,7 +119,11 @@
                 <% end %>
 
                 <dd>
-                  <%= link_to t("action.edit"), edit_shop_reservation_path(reservation.shop, reservation, from_member: local_assigns[:personal_schedule]), class: "btn BTNtarco" %>
+                  <% if ability(reservation.shop.user).can?(:manage_shop_reservations, reservation.shop) %>
+                    <%= link_to t("action.edit"), edit_shop_reservation_path(reservation.shop, reservation, from_member: local_assigns[:personal_schedule]), class: "btn BTNtarco" %>
+                  <% else %>
+                    <%= link_to t("action.edit"), "#", class: "btn BTNtarco disabled" %>
+                  <% end %>
                 </dd>
               </dl>
             </div>

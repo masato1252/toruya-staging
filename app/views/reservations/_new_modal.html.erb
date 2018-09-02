@@ -1,3 +1,6 @@
+<%
+    has_invalid_shops = false
+%>
 <div class="modal fade" id="new-reservations-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -13,9 +16,17 @@
               <% user_ability = ability(option.owner)%>
               <div class="shop-cell">
                 <% if user_ability.can?(:create, Reservation) %>
-                  <%= link_to new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), class: "BTNtarco" do %>
-                    <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-                    <span><%= option.shop.display_name %></span>
+                  <% if user_ability.can?(:manage_shop_reservations, option.shop) %>
+                    <%= link_to new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), class: "BTNtarco" do %>
+                      <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
+                      <span><%= option.shop.display_name %></span>
+                    <% end %>
+                  <% else %>
+                    <% has_invalid_shops = true %>
+                    <%= link_to "#", class: "BTNtarco disabled" do %>
+                      <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
+                      <span><%= option.shop.display_name %></span>
+                    <% end %>
                   <% end %>
                 <% elsif option.owner == current_user %>
                   <%= link_to "#", data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
@@ -31,6 +42,11 @@
               </div>
             <% end %>
           </div>
+          <% if has_invalid_shops %>
+            <div>
+              <%= t("reservation.modal.invalid_shops_exist_message") %>
+            </div>
+          <% end %>
         </div>
     </div>
   </div>

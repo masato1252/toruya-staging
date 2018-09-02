@@ -138,6 +138,10 @@ class Ability
     can :create, :daily_reservations
     can :create, :total_reservations
     can :read, :shop_dashboard
+    # manage_shop_dashboard only use to check add/edit reservation currently
+    can :manage_shop_reservations, Shop do |shop|
+      super_user.valid_shop_ids.include?(shop.id)
+    end
 
     case super_user.member_level
     when "premium"

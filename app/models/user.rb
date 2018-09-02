@@ -107,6 +107,18 @@ class User < ApplicationRecord
     @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
   end
 
+  def valid_shop_ids
+    @valid_shop_ids ||= if member_level == Plan::PREMIUM_LEVEL
+                          shop_ids
+                        else
+                          shop_ids.sort.slice(0, 1)
+                        end
+  end
+
+  def has_invalid_shops?
+    valid_shop_ids != shop_ids
+  end
+
   def today_reservations_count
     @today_reservations_count ||= today_reservations.count
   end

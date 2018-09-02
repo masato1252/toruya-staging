@@ -222,6 +222,33 @@ RSpec.describe Ability do
           it_behaves_like "permission management", "premium", :create, :total_reservations, true
         end
       end
+
+      context "manage shop_reservations" do
+        let!(:shop1) { FactoryBot.create(:shop, user: super_user) }
+        let!(:shop2) { FactoryBot.create(:shop, user: super_user) }
+
+        context "when super_user is premium member" do
+          before { allow(super_user).to receive(:member_level).and_return("premium") }
+
+          it "can manage all shop reservations" do
+            expect(ability.can?(:manage_shop_reservations, shop1)).to eq(true)
+            expect(ability.can?(:manage_shop_reservations, shop2)).to eq(true)
+          end
+        end
+
+        [
+          "basic", "trial", "free"
+        ].each do |member_level|
+          context "when super_user is #{member_level} member" do
+            before { allow(super_user).to receive(:member_level).and_return(member_level) }
+
+            it "can manage only one shop reservations" do
+              expect(ability.can?(:manage_shop_reservations, shop1)).to eq(true)
+              expect(ability.can?(:manage_shop_reservations, shop2)).to eq(false)
+            end
+          end
+        end
+      end
     end
   end
 end
