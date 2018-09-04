@@ -1077,7 +1077,8 @@ CREATE TABLE public.subscription_charges (
     stripe_charge_details jsonb,
     order_id character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    details jsonb
 );
 
 
@@ -2208,6 +2209,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180612021000'),
 ('20180617004311'),
 ('20180620074249'),
-('20180823153730');
+('20180823153730'),
+('20180904141857');
 
 

@@ -15,9 +15,11 @@
 #  order_id              :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  details               :jsonb
 #
 
 class SubscriptionCharge < ApplicationRecord
+  SHOP_FEE_TYPE = "shop_fee".freeze
   belongs_to :user
   belongs_to :plan
 
@@ -35,4 +37,8 @@ class SubscriptionCharge < ApplicationRecord
 
   scope :manual, -> { where(manual: true) }
   scope :finished, -> { where(state: [:completed, :refunded]) }
+
+  def shop_fee?
+    details && details["type"] == SHOP_FEE_TYPE
+  end
 end

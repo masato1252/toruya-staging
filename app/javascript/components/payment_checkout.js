@@ -13,6 +13,7 @@ class PaymentCheckout extends React.Component {
   }
 
   onToken = (token) => {
+    this.toggleProcessing()
     $("#stripe-token").val(token.id);
     $(`#${this.props.formlId}`).submit();
   };

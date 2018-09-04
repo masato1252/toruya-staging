@@ -27,10 +27,18 @@
           <td><%= @charge.user.email %></td>
         </tr>
         <% if @charge.completed? %>
-          <tr>
-            <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
-            <td><%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)</td>
-          </tr>
+          <% if @charge.shop_fee? %>
+            <tr>
+              <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
+              <td>1<%= I18n.t("settings.subscription.receipt.shop") %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
+              <td><%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)</td>
+            </tr>
+          <% end %>
+
           <tr>
             <td><%= I18n.t("settings.subscription.receipt.total") %></td>
             <td><%= @charge.amount.format %></td>

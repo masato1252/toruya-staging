@@ -9,11 +9,11 @@ module Subscriptions
                        user: user,
                        plan: Plan.premium_level.take,
                        charge_amount: Money.new(Plans::Fee::PER_SHOP_FEE, Money.default_currency.id),
-                       charge_description: "Shop fee",
+                       charge_description: SubscriptionCharge::SHOP_FEE_TYPE,
                        manual: true)
 
-      # change to shop fee mail
-      # SubscriptionMailer.charge_successfully(subscription).deliver_now
+      SubscriptionMailer.charge_shop_fee(user.subscription, charge).deliver_later
+      charge
     end
   end
 end

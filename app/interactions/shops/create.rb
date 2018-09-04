@@ -10,10 +10,17 @@ module Shops
 
         if shop.valid?
           if authorize_token
-            compose(Subscriptions::ShopFeeCharge, user: user, authorize_token: authorize_token)
+            charge = compose(Subscriptions::ShopFeeCharge, user: user, authorize_token: authorize_token)
           end
 
           shop.save
+          if charge
+            charge.details = {
+              shop_id: shop.id,
+              type: SubscriptionCharge::SHOP_FEE_TYPE
+            }
+            charge.save!
+          end
         end
 
         if shop.new_record?

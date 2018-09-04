@@ -11,10 +11,22 @@ class SubscriptionMailer < ApplicationMailer
     @user = subscription.user
     @next_period = subscription.next_period
     @charging_plan = subscription.next_plan || subscription.plan
-    @cost = @charge.amount.format
+    @cost = charge.amount.format
 
     mail(to: @user.email,
          subject: subject(I18n.t("subscription_mailer.charge_failed.title")),
+         locale: I18n.default_locale)
+  end
+
+  def charge_shop_fee(subscription, charge)
+    @user = subscription.user
+    @charge = charge
+    @next_period = subscription.next_period
+    @charging_plan = subscription.next_plan || subscription.plan
+    @cost = Plans::Price.run!(user: @user, plan: @charging_plan).format
+
+    mail(to: @user.email,
+         subject: subject(I18n.t("subscription_mailer.charge_shop_fee.title")),
          locale: I18n.default_locale)
   end
 

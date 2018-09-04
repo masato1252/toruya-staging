@@ -419,6 +419,7 @@ ja:
         account: ご利用アカウント
         plan: ご利用プラン
         total: お支払合計
+        shop: 店舗
         refund:
           label: 返金明細書
           plan: 返金プラン
@@ -448,6 +449,7 @@ ja:
         refund: 払戻し
         refund_successfully_message: 返金手続き完了
         refund_failed_message: 返金手続き失敗。もう一度手続きしてください。
+        extra_shop: 追加店舗
       upgrade:
         caption_title: アップグレードのオプション
         caption_desc: アップグレードには２通りの選択肢があります。
@@ -792,11 +794,13 @@ ja:
       words_connector: と
   subscription_mailer:
     charge_successfully:
-      title: Toruyaご請求完了のご連絡
+      title: ご請求完了のご連絡
     charge_failed:
-      title: Toruyaクレジットカードの利用承認が得られませんでした
+      title: クレジットカードの利用承認が得られませんでした
+    charge_shop_fee:
+      title: 有料での店舗追加のご連絡
     charge_reminder:
-      title: Toruyaご請求のご連絡
+      title: ご請求のご連絡
   reminder_mailer:
     trial_member_months_ago_reminder:
       title: 試用期間終了予定日のご連絡
