@@ -15,10 +15,11 @@ module Shops
 
           shop.save
           if charge
-            charge.details = {
-              shop_id: shop.id,
-              type: SubscriptionCharge::SHOP_FEE_TYPE
-            }
+            charge.details ||= {}
+            charge.details.merge!({
+              shop_ids: shop.id,
+              type: SubscriptionCharge::TYPES[:shop_fee]
+            })
             charge.save!
           end
         end

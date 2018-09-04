@@ -9,7 +9,7 @@ module Subscriptions
     def execute
       SubscriptionCharge.transaction do
         order_id = Digest::SHA1.hexdigest("#{Time.now.to_i}:#{user.id}:#{user.subscription_charges.count}:#{SecureRandom.hex(16)}").first(16).upcase
-        amount = charge_amount || Plans::Price.run!(user: user, plan: plan)
+        amount = charge_amount || compose(Plans::Price, user: user, plan: plan)
         description = charge_description || plan.level
 
         charge = user.subscription_charges.create!(

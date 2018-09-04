@@ -19,7 +19,10 @@
 #
 
 class SubscriptionCharge < ApplicationRecord
-  SHOP_FEE_TYPE = "shop_fee".freeze
+  TYPES = {
+    shop_fee: "shop_fee",
+    plan_subscruption: "plan_subscruption"
+  }.freeze
   belongs_to :user
   belongs_to :plan
 
@@ -39,6 +42,10 @@ class SubscriptionCharge < ApplicationRecord
   scope :finished, -> { where(state: [:completed, :refunded]) }
 
   def shop_fee?
-    details && details["type"] == SHOP_FEE_TYPE
+    details && details["type"] == TYPES[:shop_fee]
+  end
+
+  def with_shop_fee?
+    details && details["shop_fee"] != 0
   end
 end

@@ -37,6 +37,12 @@
               <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
               <td><%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)</td>
             </tr>
+            <% if @charge.with_shop_fee? %>
+              <tr>
+                <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
+                <td><%= @charge.details["shop_ids"].length - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD %><%= I18n.t("settings.subscription.receipt.shop") %></td>
+              </tr>
+            <% end %>
           <% end %>
 
           <tr>

@@ -18,7 +18,8 @@ class Plans extends React.Component {
     this.state = {
       subscriptionPlanLevel: null,
       selectedPlanLevel: this.props.defaultUpgradePlan,
-      upgradeImmediately: true
+      upgradeImmediately: true,
+      shopFeeConfirmation: false
     }
   };
 
@@ -43,6 +44,10 @@ class Plans extends React.Component {
 
   onChangeUpgradePolicy = () => {
     this.setState(prevState => ({ upgradeImmediately: !prevState.upgradeImmediately }));
+  };
+
+  toggleShopFeeConfirmation = () => {
+    this.setState(prevState => ({ shopFeeConfirmation: !prevState.shopFeeConfirmation }));
   };
 
   onSubscribe = (event) => {
@@ -99,8 +104,35 @@ class Plans extends React.Component {
     }
   };
 
+  renderPremiumUpgradeReminder = () => {
+    if (this.isSelectedPlan("premium") && this.props.hasInvalidShops) {
+      return (
+        <div className="shop-fee-confirmation-area">
+          <div className="caption">
+            <div className="upgrade-label">{this.props.i18n.shopFeeCaptionTitle}</div>
+            <div className="detial">{this.props.i18n.shopFeeCaptionDesc}</div>
+          </div>
+          <label className="confirmation-option">
+            <div className="shop-fee-label">
+              <input
+                type="checkbox"
+                checked={this.state.shopFeeConfirmation}
+                onChange={this.toggleShopFeeConfirmation}
+                />
+              <span>{this.props.i18n.shopFeeConfirmation}</span>
+            </div>
+          </label>
+        </div>
+      )
+    }
+  };
+
+  isUserConfirmShopFee = () => {
+    return !this.isSelectedPlan("premium") || !this.props.hasInvalidShops || this.state.shopFeeConfirmation;
+  };
+
   renderSaveOrPayButton = () => {
-    if (!this.state.selectedPlanLevel) {
+    if (!this.state.selectedPlanLevel || !this.isUserConfirmShopFee()) {
       return (
         <div
           className={`btn btn-yellow disabled`}>
@@ -239,6 +271,7 @@ class Plans extends React.Component {
           </tbody>
         </table>
         {this.renderUpgradeOptions()}
+        {this.renderPremiumUpgradeReminder()}
         <div className="privacy-and-term">
           全てのプランにおいて、Toruyaの
             <a href='https://toruya.com/privacy/' target='_blank'>プライバシーポリシー</a>

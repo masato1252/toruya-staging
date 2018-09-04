@@ -457,6 +457,10 @@ ja:
         immediately_desc: 今すぐプレミアム/ベーシックメンバー限定の機能が使えます。
         later: 次の更新からアップグレード
         later_desc: "%{expired_date}からプレミアム/ベーシックメンバー限定の機能が使えます。"
+      shop_fee:
+        caption_title: "%{shop_number}つの追加店舗も利用が再開されます"
+        caption_desc: 追加店舗の予約を追加/編集することができるようになります。追加店舗が不要でしたら、事前に店舗設定ページから削除してください。削除されなければ、一店舗につき%{per_shop_fee_price}円の月額利用料が追加請求されます。
+        confirmation: はい、追加店舗の利用も再開します
       downgrade:
         modal_title: ダウングレードされます!!
         desc: 選択されたプランは、現在ご利用中のプランからダウングレードになります。

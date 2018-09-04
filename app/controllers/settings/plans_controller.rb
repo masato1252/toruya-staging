@@ -1,10 +1,12 @@
 class Settings::PlansController < SettingsController
   def index
     @plans_properties = Plan.all.each_with_object({}) do |plan, h|
+      cost = Plans::Price.run!(user: current_user, plan: plan)
+
       h[plan.level] = {
         level: plan.level,
-        cost: plan.cost,
-        costFormat: Plans::Price.run!(user: current_user, plan: plan).format,
+        cost: cost.fractional,
+        costFormat: cost.format,
         name: plan.name,
         details: I18n.t("settings.plans")[plan.level.to_sym]
       }

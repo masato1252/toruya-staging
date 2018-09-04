@@ -140,7 +140,7 @@
     }
   }
 
-  div.upgrade-area {
+  div.upgrade-area, div.shop-fee-confirmation-area {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -150,8 +150,8 @@
       margin-bottom: 12px;
     }
 
-    .upgrade-label {
-      & > input[type="radio"] {
+    .upgrade-label, .shop-fee-label {
+      & > input[type="radio"], & > input[type="checkbox"] {
         margin-right: 8px;
       }
 

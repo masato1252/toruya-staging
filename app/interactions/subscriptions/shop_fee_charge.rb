@@ -9,7 +9,7 @@ module Subscriptions
                        user: user,
                        plan: Plan.premium_level.take,
                        charge_amount: Money.new(Plans::Fee::PER_SHOP_FEE, Money.default_currency.id),
-                       charge_description: SubscriptionCharge::SHOP_FEE_TYPE,
+                       charge_description: SubscriptionCharge::TYPES[:shop_fee],
                        manual: true)
 
       SubscriptionMailer.charge_shop_fee(user.subscription, charge).deliver_later

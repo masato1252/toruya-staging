@@ -23,7 +23,16 @@ module Subscriptions
           subscription.save!
 
           charge.expired_date = subscription.expired_date
+          charge.details ||= {}
+          fee = compose(Plans::Fee, user: user, plan: plan)
+          charge.details.merge!({
+            shop_ids: user.shop_ids,
+            shop_fee: fee.fractional,
+            shop_fee_format: fee.format,
+            type: SubscriptionCharge::TYPES[:plan_subscruption]
+          })
           charge.save!
+
           SubscriptionMailer.charge_successfully(subscription).deliver_now
         end
       end
