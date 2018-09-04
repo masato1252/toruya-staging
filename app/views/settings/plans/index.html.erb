@@ -19,7 +19,9 @@
       plans: @plans_properties,
       planLabels: @plan_labels,
       chargeDirectly: @charge_directly,
-      paymentsPath: settings_payments_path
+      paymentsPath: settings_payments_path,
+      defaultUpgradePlan: @default_upgrade_plan,
+      hasInvalidShops: current_user.has_invalid_shops?
     }.to_json,
     i18n: {
       currentPlan: t("settings.plans.plan_info.current_plan"),

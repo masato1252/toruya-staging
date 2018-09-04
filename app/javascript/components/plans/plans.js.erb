@@ -17,7 +17,7 @@ class Plans extends React.Component {
 
     this.state = {
       subscriptionPlanLevel: null,
-      selectedPlanLevel: null,
+      selectedPlanLevel: this.props.defaultUpgradePlan,
       upgradeImmediately: true
     }
   };

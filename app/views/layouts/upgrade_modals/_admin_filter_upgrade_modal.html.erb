@@ -17,8 +17,8 @@
                 premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
         </div>
         <div class="modal-footer centerize">
-          <%= link_to t("action.upgrade_to_basic"), settings_plans_path, class: "btn BTNtarco" if current_plan_level == Plan::FREE_LEVEL %>
-          <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
+          <%= link_to t("action.upgrade_to_basic"), settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn BTNtarco" if current_plan_level == Plan::FREE_LEVEL %>
+          <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn BTNyellow" %>
         </div>
       </div>
     </div>
