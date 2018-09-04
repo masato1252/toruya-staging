@@ -34,7 +34,8 @@ class PlanCharge extends React.Component {
       const response = await fetch(this.props.paymentPath, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "X-Requested-With": "XMLHttpRequest",
         },
         credentials: "same-origin",
         body: JSON.stringify(data),

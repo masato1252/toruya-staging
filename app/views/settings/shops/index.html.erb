@@ -1,17 +1,10 @@
-<%
-  fit_shop_charge_threshold = super_user.shops.count == Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD
-%>
 <%= render "info" %>
 <div id="about">
   <ul class="function">
     <% admin_only do %>
       <li>
         <% if can? :create, Shop %>
-          <% if fit_shop_charge_threshold %>
-            <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
-          <% else %>
-            <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
-          <% end %>
+          <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
         <% else %>
           <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
         <% end %>
@@ -53,19 +46,10 @@
           </h4>
         </div>
         <div class="modal-body">
-          <% if fit_shop_charge_threshold %>
-            <%= t("settings.shop.modal.premium.upgrade_content_html", shop_number: Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE) %>
-          <% else %>
-            <%= t("settings.shop.modal.upgrade_content_html", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
-          <% end %>
+          <%= t("settings.shop.modal.upgrade_content_html", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
         </div>
         <div class="modal-footer centerize">
-          <% if fit_shop_charge_threshold %>
-            <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
-            <%= link_to t("settings.shop.modal.premium.upgrade_button", per_shop_fee_price: Plans::Fee::PER_SHOP_FEE), new_settings_user_shop_path(super_user), class: "btn BTNtarco" %>
-          <% else %>
-            <%= link_to t("action.upgrade_to_premium"), settings_plans_path, class: "btn BTNyellow" %>
-          <% end %>
+          <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn BTNyellow" %>
         </div>
       </div>
     </div>

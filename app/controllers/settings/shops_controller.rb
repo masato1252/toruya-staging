@@ -27,7 +27,7 @@ class Settings::ShopsController < SettingsController
   # POST /shops.json
   def create
     authorize! :create, Shop
-    outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h)
+    outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h, authorize_token: params[:token])
 
     if outcome.valid?
       redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message")
@@ -42,14 +42,10 @@ class Settings::ShopsController < SettingsController
   # PATCH/PUT /shops/1
   # PATCH/PUT /shops/1.json
   def update
-    respond_to do |format|
-      if @shop.update(shop_params)
-        format.html { redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message") }
-        format.json { render :show, status: :ok, location: @shop }
-      else
-        format.html { render :edit }
-        format.json { render json: @shop.errors, status: :unprocessable_entity }
-      end
+    if @shop.update(shop_params)
+      redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message")
+    else
+      render :edit
     end
   end
 
@@ -57,10 +53,7 @@ class Settings::ShopsController < SettingsController
   # DELETE /shops/1.json
   def destroy
     @shop.destroy
-    respond_to do |format|
-      format.html { redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.delete_successfully_message") }
-      format.json { head :no_content }
-    end
+    redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.delete_successfully_message")
   end
 
   private
@@ -71,6 +64,6 @@ class Settings::ShopsController < SettingsController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def shop_params
-    params.require(:shop).permit(:user_id, :name, :short_name, :zip_code, :phone_number, :email, :website, :address)
+    params.require(:shop).permit(:name, :short_name, :zip_code, :phone_number, :email, :website, :address)
   end
 end

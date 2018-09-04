@@ -3,15 +3,18 @@ module Subscriptions
     object :user
     object :plan
     boolean :manual
+    object :charge_amount, class: Money, default: nil
+    string :charge_description, default: nil
 
     def execute
       SubscriptionCharge.transaction do
         order_id = Digest::SHA1.hexdigest("#{Time.now.to_i}:#{user.id}:#{user.subscription_charges.count}:#{SecureRandom.hex(16)}").first(16).upcase
-        charge_amount = Plans::Price.run!(user: user, plan: plan)
+        amount = charge_amount || Plans::Price.run!(user: user, plan: plan)
+        description = charge_description || plan.level
 
         charge = user.subscription_charges.create!(
           plan: plan,
-          amount: charge_amount,
+          amount: amount,
           charge_date: Subscription.today,
           manual: manual,
           order_id: order_id
@@ -19,10 +22,10 @@ module Subscriptions
 
         begin
           stripe_charge = Stripe::Charge.create({
-            amount: charge_amount.fractional,
+            amount: amount.fractional,
             currency: Money.default_currency.iso_code,
             customer: user.subscription.stripe_customer_id,
-            description: plan.level,
+            description: description,
             statement_descriptor: plan.level,
             metadata: {
               charge_id: charge.id,

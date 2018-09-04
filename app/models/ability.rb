@@ -103,7 +103,7 @@ class Ability
     case super_user.member_level
     when "premium"
       # can :create, Staff
-      # can :create, Shop # TODO 2 (3+ ¥500/month)
+      # can :create, Shop
     when "basic", "trial", "free"
       cannot :create, Staff
       shop_permission
