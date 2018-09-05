@@ -33,7 +33,7 @@ class PaymentCheckout extends React.Component {
         description={this.props.description}
       >
         <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
-        <button className="btn btn-tarco" rel="nofollow">
+        <button className="btn btn-yellow" rel="nofollow">
           {this.props.i18n.payBtnText}
         </button>
       </StripeCheckout>

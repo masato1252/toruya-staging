@@ -9,7 +9,7 @@ module Shops
         shop = user.shops.new(params)
 
         if shop.valid?
-          if authorize_token
+          if authorize_token.present?
             charge = compose(Subscriptions::ShopFeeCharge, user: user, authorize_token: authorize_token)
           end
 

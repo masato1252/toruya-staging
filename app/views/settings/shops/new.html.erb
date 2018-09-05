@@ -18,7 +18,7 @@
             </h4>
           </div>
           <div class="modal-body">
-            <%= t("settings.shop.modal.premium.upgrade_content_html", shop_number: Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE) %>
+            <%= t("settings.shop.modal.premium.upgrade_content_html", shop_number: current_user.shops.count, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE) %>
           </div>
           <div class="modal-footer centerize">
             <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
