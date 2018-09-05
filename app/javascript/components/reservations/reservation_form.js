@@ -40,7 +40,7 @@ class ReservationForm extends React.Component {
       staff_ids: this.props.reservation.staffIds || [],
       memo: this.props.reservation.memo || "",
       menu_min_staffs_number: this.props.minStaffsNumber || 0,
-      menu_available_seat: this.props.availableSeat,
+      menu_available_seat: this.props.menuDefaultOption.availableSeat,
       menu_group_options: this.props.menuGroupOptions || [],
       staff_options: this.props.staffOptions || [],
       errors: {},

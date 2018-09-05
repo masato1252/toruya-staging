@@ -64,10 +64,12 @@ class ReservationsController < DashboardController
     authorize! :manage_shop_reservations, shop
 
     @body_class = "resNew"
-    @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
 
     if current_user.member?
       all_options
+      @reservation = Reservations::Edit.run!(reservation: @reservation, params: params.permit!.to_h)
+    else
+      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
     end
 
     outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
