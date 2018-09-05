@@ -1,7 +1,3 @@
-# Fail: mail
-# Success
-#  charge current plan, set expire date
-#  charge next plan cost(handle free plan), change to next plan, set expire date
 module Subscriptions
   class RecurringCharge < ActiveInteraction::Base
     object :subscription
