@@ -24,7 +24,7 @@ module Subscriptions
 
           charge.expired_date = subscription.expired_date
           charge.details ||= {}
-          fee = compose(Plans::Fee, user: user, plan: plan)
+          fee = compose(Plans::Fee, user: user, plan: charging_plan)
           charge.details.merge!({
             shop_ids: user.shop_ids,
             shop_fee: fee.fractional,
