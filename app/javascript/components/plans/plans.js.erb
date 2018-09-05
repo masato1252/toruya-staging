@@ -105,7 +105,7 @@ class Plans extends React.Component {
   };
 
   renderPremiumUpgradeReminder = () => {
-    if (this.isSelectedPlan("premium") && this.props.hasInvalidShops) {
+    if (this.isSelectedPlan("premium") && this.props.isExceededPremiumBaseShops) {
       return (
         <div className="shop-fee-confirmation-area">
           <div className="caption">
@@ -128,7 +128,7 @@ class Plans extends React.Component {
   };
 
   isUserConfirmShopFee = () => {
-    return !this.isSelectedPlan("premium") || !this.props.hasInvalidShops || this.state.shopFeeConfirmation;
+    return !this.isSelectedPlan("premium") || !this.props.isExceededPremiumBaseShops || this.state.shopFeeConfirmation;
   };
 
   renderSaveOrPayButton = () => {
