@@ -49,6 +49,7 @@ class WorkingSchedulesModal extends React.Component {
               acceptCharset="UTF-8"
               method="post"
               ref={(c) => this.working_schedules_form = c}
+              action={this.props.customSchedulesPath}
               >
               <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
               <div className="modal-body">
