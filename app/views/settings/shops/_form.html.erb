@@ -65,7 +65,7 @@
         <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>
       </li>
       <li>
-        <% if fit_shop_charge_threshold %>
+        <% if local_assigns[:fit_shop_charge_threshold] %>
           <%= link_to "保存", "#", class: "BTNyellow", data: { toggle: "modal", target: "#upgradeModal" } %>
         <% else %>
           <%= f.submit "保存", class: "BTNyellow" %>
