@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/AaronLasseigne/active_interaction.git
+  revision: d46f1a1e60b7991003ae0e9df40ede869d4d1c32
+  branch: v4.0.0
+  specs:
+    active_interaction (3.6.1)
+      activemodel (>= 4, < 6)
+
+GIT
   remote: git://github.com/ilake/google_contacts_api.git
   revision: cc921b8218e74b0c04dc7af3eaae1d85d47903e3
   specs:
@@ -46,8 +54,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_interaction (3.2.1)
-      activemodel (>= 4, < 6)
     active_link_to (1.0.5)
       actionpack
       addressable
@@ -441,7 +447,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm (~> 4.11.0)
-  active_interaction (~> 3.2.0)
+  active_interaction!
   active_link_to (~> 1.0.3)
   annotate
   awesome_rails_console (~> 0.4.0)
