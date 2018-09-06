@@ -40,7 +40,7 @@ class ReservationForm extends React.Component {
       staff_ids: this.props.reservation.staffIds || [],
       memo: this.props.reservation.memo || "",
       menu_min_staffs_number: this.props.minStaffsNumber || 0,
-      menu_available_seat: this.props.menuDefaultOption.availableSeat,
+      menu_available_seat: this.props.menuDefaultOption && this.props.menuDefaultOption.availableSeat || 0,
       menu_group_options: this.props.menuGroupOptions || [],
       staff_options: this.props.staffOptions || [],
       errors: {},
@@ -733,6 +733,8 @@ class ReservationForm extends React.Component {
                     defaultValue={this.props.menuDefaultOption}
                     options={this.state.menu_group_options}
                     onChange={this.onMenuChange}
+                    placeholder={this.props.selectMenuLabel}
+                    noOptionsMessage={() => this.props.noMenuMessage}
                     />
                   <span className="errors">
                     {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
