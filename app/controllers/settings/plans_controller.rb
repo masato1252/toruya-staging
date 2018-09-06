@@ -1,7 +1,7 @@
 class Settings::PlansController < SettingsController
   def index
     @plans_properties = Plan.all.each_with_object({}) do |plan, h|
-      cost = Plans::Price.run!(user: current_user, plan: plan)
+      cost = Plans::Price.run!(user: current_user, plan: plan, ignore_fee: true)
 
       h[plan.level] = {
         level: plan.level,
