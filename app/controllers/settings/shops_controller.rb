@@ -27,13 +27,12 @@ class Settings::ShopsController < SettingsController
   # POST /shops.json
   def create
     authorize! :create, Shop
-    outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h, authorize_token: params[:token])
+    @outcome = Shops::Create.run(user: super_user, params: shop_params.permit!.to_h, authorize_token: params[:token])
 
-    if outcome.valid?
+    if @outcome.valid?
       redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message")
     else
       @shop = super_user.shops.new(shop_params)
-      @shop.valid?
 
       render :new
     end

@@ -7,7 +7,7 @@
 
 <div id="settingForm">
   <%= form_for(shop, url: url) do |f| %>
-    <%= render "settings/form_errors", object: shop %>
+    <%= render "settings/form_errors", object: @outcome %>
 
     <%= hidden_field_tag :token, nil, id: "stripe-token" %>
     <h3>店名</h3>
