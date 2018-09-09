@@ -26,7 +26,6 @@ RSpec.describe Reservable::Reservation do
         outcome = Reservable::Reservation.run(shop: shop, date: date)
 
         expect(outcome).to be_invalid
-        expect(outcome.errors.details[:date].first[:error]).to eq(:shop_closed)
       end
     end
 
