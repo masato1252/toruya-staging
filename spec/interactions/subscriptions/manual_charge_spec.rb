@@ -64,8 +64,6 @@ RSpec.describe Subscriptions::ManualCharge do
 
         expect(subscription.expired_date).to eq(old_expired_date)
         expect(charge).to be_auth_failed
-
-        # expect(Payments::StoreStripeCustomer).to have_received(:run).with(user: user, authorize_token: authorize_token)
       end
     end
   end
