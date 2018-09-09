@@ -10,26 +10,31 @@ module Subscriptions
       if charging_plan.cost.zero?
         subscription.update(plan: charging_plan, next_plan: nil)
       else
-        subscription.transaction do
-          charge = compose(Subscriptions::Charge, user: user, plan: charging_plan, manual: false)
 
-          subscription.plan = charging_plan
-          subscription.next_plan = nil
-          subscription.set_expire_date
-          subscription.save!
+        subscription.with_lock do
+          charge_outcome = Subscriptions::Charge.run(user: user, plan: charging_plan, manual: false)
 
-          charge.expired_date = subscription.expired_date
-          charge.details ||= {}
-          fee = compose(Plans::Fee, user: user, plan: charging_plan)
-          charge.details.merge!({
-            shop_ids: user.shop_ids,
-            shop_fee: fee.fractional,
-            shop_fee_format: fee.format,
-            type: SubscriptionCharge::TYPES[:plan_subscruption]
-          })
-          charge.save!
+          if charge_outcome.valid?
+            charge = charge_outcome.result
+            subscription.plan = charging_plan
+            subscription.next_plan = nil
+            subscription.set_expire_date
+            subscription.save!
 
-          SubscriptionMailer.charge_successfully(subscription).deliver_now
+            charge.expired_date = subscription.expired_date
+            fee = compose(Plans::Fee, user: user, plan: charging_plan)
+            charge.details = {
+              shop_ids: user.shop_ids,
+              shop_fee: fee.fractional,
+              shop_fee_format: fee.format,
+              type: SubscriptionCharge::TYPES[:plan_subscruption]
+            }
+            charge.save!
+
+            SubscriptionMailer.charge_successfully(subscription).deliver_now
+          else
+            errors.merge!(charge_outcome.errors)
+          end
         end
       end
     end

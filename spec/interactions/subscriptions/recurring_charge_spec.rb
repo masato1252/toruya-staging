@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Subscriptions::RecurringCharge do
   let(:subscription) { FactoryBot.create(:subscription) }
+  let(:user) { subscription.user }
   let(:args) do
     {
       subscription: subscription
@@ -45,11 +46,21 @@ RSpec.describe Subscriptions::RecurringCharge do
         outcome
 
         subscription.reload
+        charge = user.subscription_charges.last
+
         expect(subscription.plan).to eq(Plan.premium_level.take)
         expect(subscription.next_plan).to be_nil
         expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
         expect(subscription.user.subscription_charges.last.expired_date).to eq(Date.new(2018, 2, 28))
         expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
+
+        fee = Plans::Fee.run!(user: user, plan: Plan.premium_level.take)
+        expect(charge.details).to eq({
+          "shop_ids" => user.shop_ids,
+          "shop_fee" => fee.fractional,
+          "shop_fee_format" => fee.format,
+          "type" => SubscriptionCharge::TYPES[:plan_subscruption]
+        })
       end
 
       context "when charging users failed" do
@@ -58,16 +69,19 @@ RSpec.describe Subscriptions::RecurringCharge do
           StripeMock.prepare_card_error(:card_declined)
         end
 
-        it "doesn't change subscription" do
+        it "doesn't change subscription and create failed charge" do
           expect(SubscriptionMailer).not_to receive(:charge_successfully)
           expect(SubscriptionMailer).to receive(:charge_failed).and_return(double(deliver_now: true))
 
-          outcome
+          expect(outcome).to be_invalid
 
           subscription.reload
+          charge = subscription.user.subscription_charges.last
+
           expect(subscription.plan).to eq(Plan.basic_level.take)
           expect(subscription.next_plan).to eq(Plan.premium_level.take)
           expect(subscription.expired_date).to eq(subscription.expired_date)
+          expect(charge).to be_auth_failed
         end
       end
     end
