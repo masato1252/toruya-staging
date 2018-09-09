@@ -13,7 +13,7 @@ class Ability
       # can :create, Staff
       # can :manage, Profile
       # can :edit, Customer
-      # can :edit, "customer_address"
+      # can :edit, :customer_contact_info
       # can :swith_staffs_selector, User
       # can :manage, :filter
       # can :manage, :saved_filter
@@ -25,11 +25,6 @@ class Ability
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
       end
-
-      can :manage, Settings
-      can :edit, Customer
-      can :edit, "customer_address"
-      can :swith_staffs_selector, User
 
       manager_member_ability
 
@@ -115,6 +110,11 @@ class Ability
 
   # manager and admin ability
   def manager_member_ability
+    can :manage, Settings
+    can :edit, Customer
+    can :edit, :customer_contact_info
+    can :swith_staffs_selector, User
+
     case super_user.member_level
     when "premium", "trial"
       can :read, :filter

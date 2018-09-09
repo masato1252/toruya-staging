@@ -482,7 +482,7 @@ class CustomersDashboard extends React.Component {
           switchReservationMode={this.switchReservationMode}
           saveCustomerPath={this.props.saveCustomerPath}
           fetchCustomerDetails={this.fetchCustomerDetails}
-          addressEditPermission={this.props.addressEditPermission}
+          contactInfoEditPermission={this.props.contactInfoEditPermission}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
           selectRegionLabel={this.props.selectRegionLabel}
