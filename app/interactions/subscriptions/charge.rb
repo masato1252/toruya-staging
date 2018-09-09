@@ -26,7 +26,7 @@ module Subscriptions
             currency: Money.default_currency.iso_code,
             customer: user.subscription.stripe_customer_id,
             description: description,
-            statement_descriptor: plan.level,
+            statement_descriptor: "Toruya charge #{description}",
             metadata: {
               charge_id: charge.id,
               level: plan.level,
