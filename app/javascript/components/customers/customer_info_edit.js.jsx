@@ -236,7 +236,7 @@ class CustomerInfoEdit extends React.Component {
           </li>
         </ul>
 
-        <dl className={`Address ${this.props.contactInfoEditPermission ? null : "display-hidden"}`}>
+        <dl className="Address">
           <dt>{this.props.addressLabel}</dt>
           <dd>
             <ul className="addrzip">
@@ -320,7 +320,7 @@ class CustomerInfoEdit extends React.Component {
             </ul>
           </dd>
         </dl>
-        <dl className={`phone ${this.props.contactInfoEditPermission ? null : "display-hidden"}`}>
+        <dl className="phone">
           <dt>
             {this.props.phoneLabel}
             <a onClick={this.props.addOption.bind(null, "phoneNumbers")}
@@ -364,7 +364,7 @@ class CustomerInfoEdit extends React.Component {
               </ul>
             </dd>
           </dl>
-          <dl className={`email ${this.props.contactInfoEditPermission ? null : "display-hidden"}`}>
+          <dl className="email">
             <dt>
               {this.props.emailLabel}
               <a onClick={this.props.addOption.bind(null, "emails")}
