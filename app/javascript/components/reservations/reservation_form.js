@@ -510,7 +510,7 @@ class ReservationForm extends React.Component {
       select_components.push(
         <div key="no-power" className="staff-input-area">
           <Select options={this.state.staff_options}
-            value={value}
+            value={value || ""}
             data-name="staff_id"
             includeBlank={true}
             onChange={this._handleStaffChange}
