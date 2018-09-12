@@ -6,16 +6,22 @@ namespace :db do
     heroku_app_flag = " --app #{ENV["HEROKU_APP_NAME"]}"
 
     Bundler.with_clean_env do
-      puts "[1/5] Capturing backup on Heroku"
+      puts "[1/6] Capturing backup on Heroku"
       `heroku pg:backups capture DATABASE_URL#{heroku_app_flag}`
-      puts "[2/5] Downloading backup onto disk"
+      puts "[2/6] Downloading backup onto disk"
       `curl -o tmp/latest.dump \`heroku pg:backups public-url #{heroku_app_flag} | cat\``
-      puts "[3/5] Mounting backup on local database"
+      puts "[3/6] Mounting backup on local database"
       `pg_restore --clean --verbose --no-acl --no-owner -h localhost -d #{c["database"]} tmp/latest.dump`
-      puts "[4/5] Removing local backup"
+      puts "[4/6] Removing local backup"
       `rm tmp/latest.dump`
-      puts "[5/5] Migrating local migrations"
+      puts "[5/6] Migrating local migrations"
       Rake::Task["db:migrate"].invoke
+      puts "[6/6] Update all users password"
+      User.all.find_each do |user|
+        user.password = "password123"
+        user.password_confirmation = "password123"
+        user.save!
+      end
       puts "Done."
     end
   end
