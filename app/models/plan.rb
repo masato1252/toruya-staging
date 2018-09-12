@@ -28,12 +28,28 @@ class Plan < ApplicationRecord
     },
   }.freeze
 
+  def self.cost(plan_level)
+    @costs ||= Hash.new do |h, key|
+      h[key] = COST[Money.default_currency.id][key]
+    end
+
+    @costs[plan_level.to_s]
+  end
+
+  def self.cost_with_currency(plan_level)
+    @cost_with_currency ||= Hash.new do |h, key|
+      h[key] = Money.new(cost(key), Money.default_currency.id)
+    end
+
+    @cost_with_currency[plan_level.to_s]
+  end
+
   def cost
-    COST[Money.default_currency.id][level]
+    self.class.cost(level)
   end
 
   def cost_with_currency
-    Money.new(cost, Money.default_currency.id)
+    self.class.cost_with_currency(level)
   end
 
   def name
