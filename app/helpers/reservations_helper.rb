@@ -23,4 +23,11 @@ module ReservationsHelper
       deleted_staffs_sentence: in_future_or_today ? reservation_staffs.find_all { |reservation_staff| reservation_staff.deleted_at }.map(&:name).join(", ").presence : nil
     }
   end
+
+  def link_to_new_reservation(path, shop, options = { class: "BTNtarco" })
+    link_to(path, options) do
+      content_tag(:i, nil, class: "fa fa-calendar-plus-o fa-2x") +
+      content_tag(:span, shop.display_name, class: "new-shop-reservation")
+    end
+  end
 end

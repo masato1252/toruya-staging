@@ -16,28 +16,19 @@
               <% user_ability = ability(option.owner)%>
               <div class="shop-cell">
                 <% if user_ability.can?(:create, Reservation) %>
-                  <% if user_ability.can?(:manage_shop_reservations, option.shop) %>
-                    <%= link_to new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), class: "BTNtarco" do %>
-                      <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-                      <span><%= option.shop.display_name %></span>
-                    <% end %>
+                  <% if user_ability.can?(:manage_shop_reservations, option.shop) &&
+                      user_ability.can?(:create, :reservation_with_settings) &&
+                      user_ability.can?(:create_shop_reservations_with_menu, option.shop)
+                  %>
+                    <%= link_to_new_reservation(new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), option.shop)%>
                   <% else %>
                     <% has_invalid_shops = true %>
-                    <%= link_to "#", class: "BTNtarco disabled" do %>
-                      <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-                      <span><%= option.shop.display_name %></span>
-                    <% end %>
+                    <%= link_to_new_reservation("#", option.shop, class: "BTNtarco disabled") %>
                   <% end %>
                 <% elsif option.owner == current_user %>
-                  <%= link_to "#", data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
-                    <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-                    <span><%= option.shop.display_name %></span>
-                  <% end %>
+                  <%= link_to_new_reservation("#", option.shop, data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco") %>
                 <% else %>
-                  <%= link_to "#", data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
-                    <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-                    <span><%= option.shop.display_name %></span>
-                  <% end %>
+                  <%= link_to_new_reservation("#", option.shop, data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" }, class: "BTNtarco") %>
                 <% end %>
               </div>
             <% end %>

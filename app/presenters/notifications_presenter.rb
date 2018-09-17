@@ -1,13 +1,14 @@
 class NotificationsPresenter
-  attr_reader :current_user, :view_context
+  attr_reader :current_user, :h
+  delegate :link_to, to: :h
 
-  def initialize(view_context, current_user)
-    @view_context = view_context
+  def initialize(h, current_user)
+    @h = h
     @current_user = current_user
   end
 
   def data
-    new_pending_reservations + new_staff_accounts
+    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users
   end
 
   def recent_pending_reservations
@@ -24,13 +25,24 @@ class NotificationsPresenter
     oldest_res = recent_pending_reservations.first&.reservation
 
     oldest_res ? [
-      "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{view_context.link_to(I18n.t("notifications.pending_reservation_confirm"), view_context.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
+      "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{link_to(I18n.t("notifications.pending_reservation_confirm"), h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
     ] : []
   end
 
   def new_staff_accounts
     current_user.staffs.active_without_data.includes(:staff_account).map do |staff|
-      "#{I18n.t("settings.staff_account.new_staff_active")} #{view_context.link_to(I18n.t("settings.staff_account.staff_setting"), view_context.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}"
+      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), h.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}"
+    end
+  end
+
+  def empty_reservation_setting_users
+    current_user.staff_accounts.includes(:user, :owner).each_with_object([]) do |staff_account, array|
+      owner = staff_account.owner
+
+      if Ability.new(staff_account.user, owner).can?(:manage, Settings) && !owner.reservation_settings.exists?
+        array << I18n.t("settings.reservation_setting.notification_message_html", url: h.new_settings_user_reservation_setting_path(owner, shop_id: staff_account.staff.shop_ids.first))
+      end
+      array
     end
   end
 end

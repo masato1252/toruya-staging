@@ -289,6 +289,7 @@ ja:
       number_of_week: 週数
       all_business_hours: 全営業時間
       custom_time: 個別設定
+      notification_message_html: "店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     menu:
       info_title: メニュー
       info_label: メニュー基本設定
