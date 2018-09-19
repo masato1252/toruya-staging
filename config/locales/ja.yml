@@ -130,7 +130,10 @@ ja:
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
     modal:
-      invalid_shops_exist_message: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
+      invalid_shops_exist_message:
+        manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
+        create_reservation_with_settings_no_permission: ※予約枠が未設定のため無効な店舗があります。予約枠を設定するか、店舗管理者にご連絡ください。
+        create_reservations_with_menu_no_permission: ※メニューが未設定のため無効な店舗があります。メニューを設定するか、店舗管理者にご連絡ください。
       disable_edit_when_shop_is_invalid: ※あなた/店舗オーナーのご利用プランに基づき、この予約は編集できません。
       admin:
         daily_reservations_limit:
@@ -289,7 +292,7 @@ ja:
       number_of_week: 週数
       all_business_hours: 全営業時間
       custom_time: 個別設定
-      notification_message_html: "店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+      notification_message_html: "%{user_name}の店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     menu:
       info_title: メニュー
       info_label: メニュー基本設定
@@ -310,6 +313,7 @@ ja:
       reservation_ending_rule_end_date_setting: 終了日
       category_label: カテゴリー
       new_category_btn: カテゴリーを追加
+      notification_message_html: "%{shop_name}でメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     category:
       info_title: メニューカテゴリー
       info_label: 基本設定

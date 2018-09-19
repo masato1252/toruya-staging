@@ -7,17 +7,6 @@ class Ability
 
     if admin_level
       # admin permission
-      can :manage, :all
-      # can :manage, GoogleContact
-      # can :manage, Shop
-      # can :create, Staff
-      # can :manage, Profile
-      # can :edit, Customer
-      # can :edit, :customer_contact_info
-      # can :swith_staffs_selector, User
-      # can :manage, :filter
-      # can :manage, :saved_filter
-      # can :manage_userself_holiday_permission
       admin_member_ability
     elsif manager_level
       can :manage, :management_stuffs
@@ -95,17 +84,25 @@ class Ability
   end
 
   def admin_member_ability
+    can :manage, GoogleContact
+    can :create, Shop
+    can :create, Staff
+    can :manage, Profile
+    can :edit, Customer
+    can :edit, :customer_contact_info
+    can :swith_staffs_selector, User
+    can :manage, :filter
+    can :manage, :saved_filter
+    can :manage_userself_holiday_permission
+
     case super_user.member_level
     when "premium"
-      # can :create, Staff
-      # can :create, Shop
     when "basic", "trial", "free"
       cannot :create, Staff
       shop_permission
     end
 
     manager_member_ability
-    staff_member_ability
   end
 
   # manager and admin ability
@@ -139,32 +136,33 @@ class Ability
     can :create, :daily_reservations
     can :create, :total_reservations
     can :read, :shop_dashboard
+
     # manage_shop_dashboard only use to check add/edit reservation currently
     can :manage_shop_reservations, Shop do |shop|
       super_user.valid_shop_ids.include?(shop.id)
     end
 
-    if !super_user.reservation_settings.exists
+    if !super_user.reservation_settings.exists?
       cannot :create, :reservation_with_settings
     end
 
     can :create_shop_reservations_with_menu, Shop do |shop|
-      shop.menus.exists
+      shop.menus.exists?
     end
 
     case super_user.member_level
     when "premium"
-      # can :create, Reservation
-      # can :create, :daily_reservations
-      # can :create, :total_reservations
-      # can :read, :shop_dashboard
+      can :create, Reservation
+      can :create, :daily_reservations
+      can :create, :total_reservations
+      can :read, :shop_dashboard
     when "trial"
-      # can :read, :shop_dashboard
-      # can :create, Reservation
+      can :read, :shop_dashboard
+      can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
     when "free", "basic"
-      # can :create, Reservation
+      can :create, Reservation
       cannot :read, :shop_dashboard
       reservation_daily_permission
       reservation_total_permission

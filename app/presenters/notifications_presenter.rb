@@ -8,7 +8,7 @@ class NotificationsPresenter
   end
 
   def data
-    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users
+    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops
   end
 
   def recent_pending_reservations
@@ -40,7 +40,19 @@ class NotificationsPresenter
       owner = staff_account.owner
 
       if Ability.new(staff_account.user, owner).can?(:manage, Settings) && !owner.reservation_settings.exists?
-        array << I18n.t("settings.reservation_setting.notification_message_html", url: h.new_settings_user_reservation_setting_path(owner, shop_id: staff_account.staff.shop_ids.first))
+        array << I18n.t("settings.reservation_setting.notification_message_html", user_name: owner.name, url: h.new_settings_user_reservation_setting_path(owner, shop_id: staff_account.staff.shop_ids.first))
+      end
+      array
+    end
+  end
+
+  def empty_menu_shops
+    h.working_shop_options(include_user_own: true).each_with_object([]) do |shop_option, array|
+      owner = shop_option.owner
+      shop = shop_option.shop
+
+      if Ability.new(current_user, owner).can?(:manage, Settings) && !shop.menus.exists?
+        array << I18n.t("settings.menu.notification_message_html", shop_name: shop.display_name, url: h.settings_user_menus_path(owner, shop_id: shop_option.shop_id))
       end
       array
     end

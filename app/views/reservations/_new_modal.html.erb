@@ -1,5 +1,8 @@
 <%
-    has_invalid_shops = false
+  has_invalid_shops = false
+  manage_shop_reservations_no_permission = false
+  create_reservation_with_settings_no_permission = false
+  create_reservations_with_menu_no_permission = false
 %>
 <div class="modal fade" id="new-reservations-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -22,7 +25,16 @@
                   %>
                     <%= link_to_new_reservation(new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), option.shop)%>
                   <% else %>
-                    <% has_invalid_shops = true %>
+                    <%
+                        if !user_ability.can?(:manage_shop_reservations, option.shop)
+                          manage_shop_reservations_no_permission = true
+                        elsif !user_ability.can?(:create, :reservation_with_settings)
+                          create_reservation_with_settings_no_permission = true
+                        elsif !user_ability.can?(:create_shop_reservations_with_menu, option.shop)
+                          create_reservations_with_menu_no_permission = true
+                        end
+                        has_invalid_shops = true
+                    %>
                     <%= link_to_new_reservation("#", option.shop, class: "BTNtarco disabled") %>
                   <% end %>
                 <% elsif option.owner == current_user %>
@@ -35,7 +47,15 @@
           </div>
           <% if has_invalid_shops %>
             <div>
-              <%= t("reservation.modal.invalid_shops_exist_message") %>
+              <%=
+                 if manage_shop_reservations_no_permission
+                   t("reservation.modal.invalid_shops_exist_message.manage_shop_reservations_no_permission")
+                 elsif create_reservation_with_settings_no_permission
+                   t("reservation.modal.invalid_shops_exist_message.create_reservation_with_settings_no_permission")
+                 elsif create_reservations_with_menu_no_permission
+                   t("reservation.modal.invalid_shops_exist_message.create_reservations_with_menu_no_permission")
+                 end
+              %>
             </div>
           <% end %>
         </div>
