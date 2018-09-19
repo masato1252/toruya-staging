@@ -54,7 +54,11 @@ module ViewHelpers
   end
 
   def ability(user)
-    Ability.new(current_user, user)
+    @abilities ||= {}
+
+    return @abilities[user.id] if @abilities[user.id]
+
+    @abilities[user.id] = Ability.new(current_user, user)
   end
 
   def is_owner
