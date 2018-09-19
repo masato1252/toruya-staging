@@ -39,7 +39,10 @@ class NotificationsPresenter
     current_user.staff_accounts.includes(:user, :owner).each_with_object([]) do |staff_account, array|
       owner = staff_account.owner
 
-      if Ability.new(staff_account.user, owner).can?(:manage, Settings) && !owner.reservation_settings.exists?
+      ability = Ability.new(staff_account.user, owner)
+
+      # manager reqruied
+      if ability.can?(:manage, Settings) && ability.cannot?(:create, :reservation_with_settings)
         array << I18n.t("settings.reservation_setting.notification_message_html", user_name: owner.name, url: h.new_settings_user_reservation_setting_path(owner, shop_id: staff_account.staff.shop_ids.first))
       end
       array
@@ -51,7 +54,10 @@ class NotificationsPresenter
       owner = shop_option.owner
       shop = shop_option.shop
 
-      if Ability.new(current_user, owner).can?(:manage, Settings) && !shop.menus.exists?
+      ability = Ability.new(current_user, owner)
+
+      # manager reqruied
+      if ability.can?(:manage, Settings) && ability.cannot?(:create_shop_reservations_with_menu, shop)
         array << I18n.t("settings.menu.notification_message_html", shop_name: shop.display_name, url: h.settings_user_menus_path(owner, shop_id: shop_option.shop_id))
       end
       array
