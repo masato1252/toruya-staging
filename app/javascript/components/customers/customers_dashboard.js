@@ -348,7 +348,7 @@ class CustomersDashboard extends React.Component {
       case "primaryAddress-street1":
       case "primaryAddress-street2":
         var key = event.target.dataset.name.split("-");
-        if (!this.props.customerEditPermission && this.state.customer.displayAddress) { return; }
+        if (!this.addressEditPermission()) { return; }
 
         newCustomer[key[0]] = newCustomer[key[0]] || {};
         newCustomer[key[0]]["value"] = newCustomer[key[0]]["value"] || {};
@@ -380,6 +380,10 @@ class CustomersDashboard extends React.Component {
     }
 
     this.setState({customer: newCustomer});
+  };
+
+  addressEditPermission = () => {
+    return (this.props.customerEditPermission || !this.state.customer.displayAddress);
   };
 
   switchEditMode = () => {
@@ -475,6 +479,7 @@ class CustomersDashboard extends React.Component {
           formAuthenticityToken={this.props.formAuthenticityToken}
           handleCustomerDataChange={this.handleCustomerDataChange}
           handleCustomerGoogleDataChange={this.handleCustomerGoogleDataChange}
+          addressEditPermission={this.addressEditPermission()}
           handleCreatedCustomer={this._handleCreatedCustomer}
           switchEditMode={this.switchEditMode}
           switchProcessing={this.switchProcessing}
@@ -482,7 +487,7 @@ class CustomersDashboard extends React.Component {
           switchReservationMode={this.switchReservationMode}
           saveCustomerPath={this.props.saveCustomerPath}
           fetchCustomerDetails={this.fetchCustomerDetails}
-          contactInfoEditPermission={this.props.contactInfoEditPermission}
+          customerEditPermission={this.props.customerEditPermission}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
           selectRegionLabel={this.props.selectRegionLabel}
