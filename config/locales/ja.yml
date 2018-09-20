@@ -32,6 +32,7 @@ ja:
     upgrade_to_premium: プレミアムにアップグレードする
     upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キャンセル
+    new_reservation: 新規予約
   common:
     processing: 送信中
     date: 日付
@@ -143,6 +144,14 @@ ja:
           upgrade_title: アカウントをアップグレード
           free_upgrade_content_html: 既に合計%{free_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{basic_plan_price}でベーシックにアップグレードすることで、さらに%{basic_plan_reservations_total_limit}の予約を作成することができます。<br /><br />月額%{premium_plan_price}でプレミアムにアップグレードすと、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
           basic_upgrade_content_html: 既に合計%{basic_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        empty_reservation_setting_user:
+          title: 予約枠が見つかりません
+          content: この店舗は予約枠が未設定です。まず予約枠を設定してください。
+          button_text: 予約枠を設定する
+        empty_menu_shop:
+          title: メニューが見つかりません
+          content: この店舗はメニューが未設定です。まずメニューを設定してください。
+          button_text: メニューを設定する
       staff:
         daily_reservations_limit:
           upgrade_title: 予約を追加できません
@@ -150,6 +159,12 @@ ja:
         total_reservations_limit:
           upgrade_title: 予約を追加できません
           upgrade_content: 予約上限数を超えました。店舗管理者にご連絡ください。
+        empty_reservation_setting_user:
+          title: 予約枠が見つかりません
+          content: この店舗は予約枠が未設定です。店舗管理者にご連絡ください。
+        empty_menu_shop:
+          title: メニューが見つかりません
+          content: この店舗はメニューが未設定です。店舗管理者にご連絡ください。
   customer:
     back_without_save: 保存せずに戻る
     save: 上書き保存

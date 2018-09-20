@@ -24,10 +24,10 @@ module ReservationsHelper
     }
   end
 
-  def link_to_new_reservation(path, shop, options = { class: "BTNtarco" })
+  def link_to_new_reservation(path, text, options = { class: "BTNtarco" })
     link_to(path, options) do
       content_tag(:i, nil, class: "fa fa-calendar-plus-o fa-2x") +
-      content_tag(:span, shop.display_name, class: "new-shop-reservation")
+      content_tag(:span, text, class: "new-shop-reservation")
     end
   end
 end

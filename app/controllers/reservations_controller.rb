@@ -33,9 +33,9 @@ class ReservationsController < DashboardController
     # Reservations END
 
     # Notifications START
-    empty_reservation_setting_user_message = Notifications::EmptyReservationSettingUserPresenter.new(view_context, current_user).data(staff_account: current_user_staff_account)
-    empty_menu_shop_message = Notifications::EmptyMenuShopPresenter.new(view_context, current_user).data(owner: super_user, shop: shop)
-    @notification_messages = [empty_reservation_setting_user_message, empty_menu_shop_message].compact
+    @empty_reservation_setting_user_message = Notifications::EmptyReservationSettingUserPresenter.new(view_context, current_user).data(staff_account: current_user_staff_account)
+    @empty_menu_shop_message = Notifications::EmptyMenuShopPresenter.new(view_context, current_user).data(owner: super_user, shop: shop)
+    @notification_messages = [@empty_reservation_setting_user_message, @empty_menu_shop_message].compact
     # Notifications END
   end
 

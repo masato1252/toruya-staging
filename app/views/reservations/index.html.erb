@@ -89,20 +89,27 @@
     <dl>
       <dd id="NAVnewResv">
         <% if can?(:create, Reservation) %>
-          <%= link_to new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNtarco" do %>
-            <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-            <span>新規予約</span>
+          <% if cannot?(:create, :reservation_with_settings) %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"),
+                                        data: { toggle: "modal", target: "#emptyReservationSettingUserModal" },
+                                        class: "BTNtarco") %>
+          <% elsif cannot?(:create_shop_reservations_with_menu, shop) %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"),
+                                        data: { toggle: "modal", target: "#emptyMenuShopModal" },
+                                        class: "BTNtarco") %>
+          <% else %>
+            <%= link_to_new_reservation(new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]),
+                                        t("action.new_reservation"),
+                                        class: "BTNtarco") %>
           <% end %>
         <% elsif admin? %>
-          <%= link_to "#", data: { toggle: "modal", target: cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
-            <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-            <span>新規予約</span>
-          <% end %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"),
+                                        data: { toggle: "modal", target: cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" },
+                                        class: "BTNtarco") %>
         <% else %>
-          <%= link_to "#", data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" }, class: "BTNtarco" do %>
-            <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-            <span>新規予約</span>
-          <% end %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"),
+                                        data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" },
+                                        class: "BTNtarco") %>
         <% end %>
       </dd>
       <dd id="NAVcustomers">
@@ -136,3 +143,6 @@
   <%= render "reservations/upgrade_modals/staff_daily_reservations_limit_modal" %>
   <%= render "reservations/upgrade_modals/staff_total_reservations_limit_modal" %>
 <% end %>
+
+<%= render "reservations/notification_modals/empty_reservation_settings_modal" %>
+<%= render "reservations/notification_modals/empty_menu_shop_modal" %>
