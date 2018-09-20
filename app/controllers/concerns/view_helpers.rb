@@ -15,10 +15,12 @@ module ViewHelpers
     helper_method :owning_shop_options
     helper_method :staffs_have_holiday_permission
     helper_method :ability
+    helper_method :admin?
+    helper_method :manager?
   end
 
   def shops
-    @shops ||= if can?(:manage, :all)
+    @shops ||= if admin?
                  super_user.shops.order("id")
                else
                  current_user.current_staff(super_user).shops.order("id")
@@ -30,7 +32,7 @@ module ViewHelpers
   end
 
   def staffs
-    @staffs = if can?(:manage, :all)
+    @staffs = if admin?
                 super_user.staffs.active.order(:id)
               else
                 super_user.staffs.active.joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
@@ -126,5 +128,14 @@ module ViewHelpers
       end
     end
     @staffs_have_holiday_permission
+  end
+
+  def admin?
+    can?(:manage, :everything)
+  end
+
+  # manage or admin
+  def manager?
+    can?(:manage, :management_stuffs)
   end
 end

@@ -9,7 +9,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @mode = "working_schedules"
     @staff = super_user.staffs.find_by(id: params[:id])
 
-    if can?(:manage, :all)
+    if admin?
       @full_time_permission = @regular_working_time_permission = @temporary_working_time_permission = true
 
       @shops = @staff.shops.order("id")
@@ -38,7 +38,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @mode = "holiday_schedules"
     @closed_custom_schedules = @staff.custom_schedules.future.closed.order(:start_time)
 
-    @holiday_permission = if can?(:manage, :all)
+    @holiday_permission = if admin?
                             true
                           else
                             shop_staff = ShopStaff.find_by(shop: shop, staff: @staff)

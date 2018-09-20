@@ -7,7 +7,7 @@ class HomeController < ApplicationController
   def settings
     super_user = User.find(params[:super_user_id])
 
-    if Ability.new(current_user, super_user).can?(:manage, :all)
+    if Ability.new(current_user, super_user).can?(:manage, :everything)
       redirect_to settings_user_shops_path(super_user)
     elsif Ability.new(current_user, super_user).can?(:manage, Settings)
       staff = current_user.current_staff(super_user)

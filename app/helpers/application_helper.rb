@@ -42,18 +42,9 @@ module ApplicationHelper
     end
   end
 
-  def admin?
-    can?(:manage, :all)
-  end
-
   def manager_only(&block)
     if manager?
       block.call
     end
-  end
-
-  # manage or admin
-  def manager?
-    can?(:manage, :management_stuffs)
   end
 end

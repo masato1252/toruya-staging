@@ -5,7 +5,7 @@ class Settings::StaffsController < SettingsController
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = if can?(:manage, :all)
+    @staffs = if admin?
                 super_user.staffs.undeleted.includes(:staff_account).order(:id)
               else
                 super_user.staffs.undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
@@ -60,7 +60,7 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = Staffs::Update.run(is_manager: can?(:manage, Settings),
+    outcome = Staffs::Update.run(is_manager: manager?,
                                  staff: @staff,
                                  attrs: params[:staff]&.permit!&.to_h)
 

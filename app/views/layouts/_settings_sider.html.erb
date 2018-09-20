@@ -1,5 +1,5 @@
 <nav id="sideNav">
-  <% if cannot? :manage, :all %>
+  <% unless admin? %>
     <dl class="shop">
       <dt>
         <a href="#"><%= shop.name %>の設定</a>

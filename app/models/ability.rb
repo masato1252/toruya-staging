@@ -9,7 +9,6 @@ class Ability
       # admin permission
       admin_member_ability
     elsif manager_level
-      can :manage, :management_stuffs
       # manager staff permission
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
@@ -84,6 +83,7 @@ class Ability
   end
 
   def admin_member_ability
+    can :manage, :everything
     can :manage, GoogleContact
     can :create, Shop
     can :create, Staff
@@ -105,12 +105,13 @@ class Ability
     manager_member_ability
   end
 
-  # manager and admin ability
+  # manager ability
   def manager_member_ability
     can :manage, Settings
     can :edit, Customer
     can :edit, :customer_contact_info
     can :swith_staffs_selector, User
+    can :manage, :management_stuffs
 
     case super_user.member_level
     when "premium", "trial"

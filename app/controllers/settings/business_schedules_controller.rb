@@ -1,6 +1,6 @@
 class Settings::BusinessSchedulesController < SettingsController
   def index
-    @shops = if can?(:manage, :all)
+    @shops = if admin?
                super_user.shops.order("id")
              else
                [shop]
