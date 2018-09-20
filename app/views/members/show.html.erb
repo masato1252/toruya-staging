@@ -20,15 +20,15 @@
                         { id: "custom-calendar", class: "clearfix" }) %>
     <div class="staffDashboard">
       <div class="edit-worktime">
-        <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="BTNyellow">
-          予約を追加
-        </a>
-
-        <% if staffs_have_holiday_permission.present? %>
-          <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
-            休暇/予定を追加
+        <% if working_shop_options(include_user_own: true).present? %>
+          <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="BTNyellow">
+            予約を追加
           </a>
         <% end %>
+
+        <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+          休暇/予定を追加
+        </a>
       </div>
     </div>
   </div>
