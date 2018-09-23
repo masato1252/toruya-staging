@@ -82,7 +82,7 @@ class CustomerInfoEdit extends React.Component {
   };
 
   displayFuzzyPhone = (phone) => {
-    return phone.replace(/\w+(\w\w\w\w)/, '***$1');
+    return phone.replace(/.+(....)/, '***$1');
   };
 
   render() {
