@@ -368,6 +368,7 @@ ja:
       sent_message: 設定されたスタッフのGメールに、スタッフアカウント認証手続きのお願いをお送りしました。スタッフ自身に届いたメールから認証をしてもらってください。
       new_staff_active: 新たに承認されたスタッフアカウントがあります。スタッフの詳しい権限を設定できます。
       staff_setting: スタッフ設定
+      connected_your_account: スタッフアカウントの設定が完了しました。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
