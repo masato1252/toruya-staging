@@ -36,41 +36,50 @@
       <%= t("dashboard.search_data") %>
     <% end %>
     <ul class="dropdown-menu dropdown-menu-right">
-      <% if current_user.shops.exists? %>
-        <li>
-          <span class="dropdown-header">
-            <%= t("dashboard.my_shop") %>
-          </span>
-        </li>
-        <li class="divider"></li>
-        <li>
-          <% if ability(current_user).can?(:read, :filter) %>
-            <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
-          <% else %>
-            <%= link_to t("dashboard.someone_shop", name: current_user.name), "#", data: { toggle: "modal", target: "#adminUpgradeFilterModal" } %>
-          <% end %>
-        </li>
-        <% if working_shop_owners.present? %>
-          <li class="divider"></li>
-        <% end %>
-      <% end %>
-
-      <% if working_shop_owners.present? %>
-        <li>
-          <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
-        </li>
-        <li class="divider"></li>
-
-        <% working_shop_owners.each do |owner| %>
+      <% if current_user.shops.exists? || working_shop_owners.present? %>
+        <% if current_user.shops.exists? %>
           <li>
-            <% if ability(owner).can?(:read, :filter) %>
-              <%= link_to t("dashboard.someone_shop", name: owner.name), customer_user_filter_index_path(owner) %>
+            <span class="dropdown-header">
+              <%= t("dashboard.my_shop") %>
+            </span>
+          </li>
+          <li class="divider"></li>
+          <li>
+            <% if ability(current_user).can?(:read, :filter) %>
+              <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
             <% else %>
-              <%= link_to t("dashboard.someone_shop", name: owner.name), "#", data: { toggle: "modal", target: "#staffUpgradeFilterModal" } %>
+              <%= link_to t("dashboard.someone_shop", name: current_user.name), "#", data: { toggle: "modal", target: "#adminUpgradeFilterModal" } %>
             <% end %>
           </li>
+          <% if working_shop_owners.present? %>
+            <li class="divider"></li>
+          <% end %>
         <% end %>
-      <% end %>
+
+        <% if working_shop_owners.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+          </li>
+          <li class="divider"></li>
+
+          <% working_shop_owners.each do |owner| %>
+            <li>
+              <% if ability(owner).can?(:read, :filter) %>
+                <%= link_to t("dashboard.someone_shop", name: owner.name), customer_user_filter_index_path(owner) %>
+              <% else %>
+                <%= link_to t("dashboard.someone_shop", name: owner.name), "#", data: { toggle: "modal", target: "#staffUpgradeFilterModal" } %>
+              <% end %>
+            </li>
+          <% end %>
+        <% end %>
+      <% else %>
+        <li>
+          <span class="dropdown-header">
+            Don’t have any shop,
+            please set up your shop in <%= link_to("settings page", settings_path(current_user)) %>
+        </span>
+      </li>
+    <% end %>
     </ul>
   </dd>
 <% end %>

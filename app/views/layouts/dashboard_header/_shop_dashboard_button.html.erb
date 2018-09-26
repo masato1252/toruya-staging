@@ -19,43 +19,52 @@
       <%= t("dashboard.shops") %>
     <% end %>
 
-    <ul class="dropdown-menu dropdown-menu-left">
-      <% if owning_shop_options.present? %>
-        <li>
-          <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
-        </li>
-        <li class="divider"></li>
-
-        <% owning_shop_options.each do |option| %>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <% if owning_shop_options.present? || working_shop_options.present? %>
+        <% if owning_shop_options.present? %>
           <li>
-            <% if ability(option.owner).can?(:read, :shop_dashboard) %>
-              <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
-            <% else %>
-              <%= link_to option.shop.display_name, "#", data: { toggle: "modal", target: "#adminUpgradeShopDashboardModal" } %>
-            <% end %>
+            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
           </li>
+          <li class="divider"></li>
+
+          <% owning_shop_options.each do |option| %>
+            <li>
+              <% if ability(option.owner).can?(:read, :shop_dashboard) %>
+                <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
+              <% else %>
+                <%= link_to option.shop.display_name, "#", data: { toggle: "modal", target: "#adminUpgradeShopDashboardModal" } %>
+              <% end %>
+            </li>
+          <% end %>
         <% end %>
-      <% end %>
 
-      <% if owning_shop_options.present? && working_shop_options.present? %>
-        <li class="divider"></li>
-      <% end %>
+        <% if owning_shop_options.present? && working_shop_options.present? %>
+          <li class="divider"></li>
+        <% end %>
 
-      <% if working_shop_options.present? %>
-        <li>
-          <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
-        </li>
-        <li class="divider"></li>
-
-        <% working_shop_options.each do |option| %>
+        <% if working_shop_options.present? %>
           <li>
-            <% if ability(option.owner).can?(:read, :shop_dashboard) %>
-              <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
-            <% else %>
-              <%= link_to option.shop.display_name, "#", data: { toggle: "modal", target: "#staffUpgradeShopDashboardModal" } %>
-            <% end %>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
           </li>
+          <li class="divider"></li>
+
+          <% working_shop_options.each do |option| %>
+            <li>
+              <% if ability(option.owner).can?(:read, :shop_dashboard) %>
+                <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
+              <% else %>
+                <%= link_to option.shop.display_name, "#", data: { toggle: "modal", target: "#staffUpgradeShopDashboardModal" } %>
+              <% end %>
+            </li>
+          <% end %>
         <% end %>
+      <% else %>
+        <li>
+          <span class="dropdown-header">
+            Don’t have any shop,
+            please set up your shop in <%= link_to("settings page", settings_path(current_user)) %>
+          </span>
+        </li>
       <% end %>
     </ul>
   </dd>
