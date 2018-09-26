@@ -61,6 +61,7 @@ ja:
     select_a_staff: スタッフを選択
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
+    no_permission: 権限がありません
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗

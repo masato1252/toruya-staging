@@ -16,7 +16,7 @@ class HomeController < ApplicationController
     elsif staff = current_user.current_staff(super_user)
       redirect_to edit_settings_user_staff_path(super_user, staff, shop_id: staff.shop_staffs.first.shop_id)
     else
-      redirect_to member_path, alert: "No permission"
+      redirect_to member_path, alert: I18n.t("common.no_permission")
     end
   end
 end

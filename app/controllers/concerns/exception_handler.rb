@@ -11,7 +11,7 @@ module ExceptionHandler
     end
 
     rescue_from CanCan::AccessDenied do |exception|
-      redirect_to main_app.member_url, alert: "No permission"
+      redirect_to main_app.member_url, alert: I18n.t("common.no_permission")
     end
   end
 end
