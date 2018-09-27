@@ -70,6 +70,8 @@ ja:
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
+    no_shop_reminder:
+      shop_dashboard_html: 店舗ダッシュボードを利用するために、<br /><a href=%{url}>こちら</a>から店舗を作成してください。
     modal:
       shop_dashboard:
         admin:

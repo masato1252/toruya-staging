@@ -60,9 +60,8 @@
         <% end %>
       <% else %>
         <li>
-          <span class="dropdown-header">
-            Don’t have any shop,
-            please set up your shop in <%= link_to("settings page", settings_path(current_user)) %>
+          <span class="dropdown-header no-shop-reminder">
+            <%= t("dashboard.no_shop_reminder.shop_dashboard_html", url: settings_path(current_user)) %>
           </span>
         </li>
       <% end %>
