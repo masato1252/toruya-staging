@@ -26,12 +26,6 @@
       <% if current_user.shops.exists? || working_shop_owners.present? %>
         <% if current_user.shops.exists? %>
           <li>
-            <span class="dropdown-header">
-              <%= t("dashboard.my_shop") %>
-            </span>
-          </li>
-          <li class="divider"></li>
-          <li>
             <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
           </li>
           <% if working_shop_owners.present? %>
@@ -40,11 +34,6 @@
         <% end %>
 
         <% if working_shop_owners.present? %>
-          <li>
-            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
-          </li>
-          <li class="divider"></li>
-
           <% working_shop_owners.each do |owner| %>
             <li>
               <%= link_to t("dashboard.someone_shop", name: owner.name), user_customers_path(owner) %>
