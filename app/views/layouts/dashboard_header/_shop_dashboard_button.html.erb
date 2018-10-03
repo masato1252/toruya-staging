@@ -22,6 +22,11 @@
     <ul class="dropdown-menu dropdown-menu-right">
       <% if owning_shop_options.present? || working_shop_options.present? %>
         <% if owning_shop_options.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
+          </li>
+          <li class="divider"></li>
+
           <% owning_shop_options.each do |option| %>
             <li>
               <% if ability(option.owner).can?(:read, :shop_dashboard) %>
@@ -38,6 +43,11 @@
         <% end %>
 
         <% if working_shop_options.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+          </li>
+          <li class="divider"></li>
+
           <% working_shop_options.each do |option| %>
             <li>
               <% if ability(option.owner).can?(:read, :shop_dashboard) %>
