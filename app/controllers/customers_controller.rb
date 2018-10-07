@@ -1,4 +1,6 @@
 class CustomersController < DashboardController
+  before_action :contact_group_required
+
   # GET /customers
   # GET /customers.json
   def index
@@ -8,11 +10,13 @@ class CustomersController < DashboardController
     @customer = super_user.customers.includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
     @from_shop = shop || super_user.shops.first # avoid users don't come in from shop dashboard
-    @add_reservation_path = if params[:reservation_id].present?
-                              edit_shop_reservation_path(@from_shop, id: params[:reservation_id])
-                            else
-                              new_shop_reservation_path(@from_shop)
-                            end
+    if @from_shop
+      @add_reservation_path = if params[:reservation_id].present?
+                                edit_shop_reservation_path(@from_shop, id: params[:reservation_id])
+                              else
+                                new_shop_reservation_path(@from_shop)
+                              end
+    end
     @contact_groups = super_user.contact_groups.connected
     @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
   end

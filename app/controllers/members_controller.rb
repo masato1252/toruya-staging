@@ -1,4 +1,6 @@
 class MembersController < DashboardController
+  before_action :profile_required
+
   def show
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
     all_shop_options = working_shop_options(include_user_own: true)

@@ -1,7 +1,5 @@
 <%
-    single_shop_owner = current_user.shops.exists? && working_shop_owners.blank?
-    single_employer = !current_user.shops.exists? && working_shop_owners.count == 1
-    single_employer = working_shop_owners.first if single_employer
+    single_shop_owner = working_shop_owners.blank?
     single_shop = working_shop_options(include_user_own: true).size == 1 ? working_shop_options(include_user_own: true).first : nil
 %>
 
@@ -27,12 +25,9 @@
   </dl>
 
   <dl>
-    <%= render "layouts/dashboard_header/shop_dashboard_button",
-      single_shop_owner: single_shop_owner, single_employer: single_employer, single_shop: single_shop %>
-    <%= render "layouts/dashboard_header/customers_button",
-      single_shop_owner: single_shop_owner, single_employer: single_employer %>
-    <%= render "layouts/dashboard_header/filter_button",
-      single_shop_owner: single_shop_owner, single_employer: single_employer %>
+    <%= render "layouts/dashboard_header/shop_dashboard_button", single_shop_owner: single_shop_owner, single_shop: single_shop %>
+    <%= render "layouts/dashboard_header/customers_button", single_shop_owner: single_shop_owner %>
+    <%= render "layouts/dashboard_header/filter_button", single_shop_owner: single_shop_owner %>
     <%= render "layouts/dashboard_header/settings_button" %>
 
     <dd>

@@ -5,13 +5,6 @@
       顧客台帳
     <% end %>
   </dd>
-<% elsif single_employer %>
-  <dd>
-    <%= active_link_to user_customers_path(single_employer), active: /^\/users\/\d+\/customer/, class_active: "here" do %>
-      <i class="fa fa-users fa-4x" aria-hidden="true"></i>
-      顧客台帳
-    <% end %>
-  </dd>
 <% else %>
   <dd class="dropdown">
     <%= active_link_to user_customers_path(super_user),
@@ -23,29 +16,16 @@
     <% end %>
 
     <ul class="dropdown-menu dropdown-menu-right">
-      <% if current_user.shops.exists? || working_shop_owners.present? %>
-        <% if current_user.shops.exists? %>
-          <li>
-            <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
-          </li>
-          <% if working_shop_owners.present? %>
-            <li class="divider"></li>
-          <% end %>
-        <% end %>
+      <li>
+        <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
+      </li>
+      <% if working_shop_owners.present? %>
+        <li class="divider"></li>
+      <% end %>
 
-        <% if working_shop_owners.present? %>
-          <% working_shop_owners.each do |owner| %>
-            <li>
-              <%= link_to t("dashboard.someone_shop", name: owner.name), user_customers_path(owner) %>
-            </li>
-          <% end %>
-        <% end %>
-      <% else %>
+      <% working_shop_owners.each do |owner| %>
         <li>
-          <span class="dropdown-header">
-            Don’t have any shop,
-            please set up your shop in <%= link_to("settings page", settings_path(current_user)) %>
-          </span>
+          <%= link_to t("dashboard.someone_shop", name: owner.name), user_customers_path(owner) %>
         </li>
       <% end %>
     </ul>
