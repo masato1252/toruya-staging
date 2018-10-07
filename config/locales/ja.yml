@@ -106,7 +106,9 @@ ja:
         staff:
           upgrade_title: 高度検索は利用できません
           upgrade_content: 高度検索を利用できません。店舗管理者にご連絡ください。
-
+      no_shop:
+        title: 店舗を設定してください
+        content: 利用履歴で顧客を高度検索するには、店舗を設定する必要があります。
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"

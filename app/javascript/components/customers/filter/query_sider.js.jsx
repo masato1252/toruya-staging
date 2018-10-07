@@ -483,7 +483,15 @@ class CustomersFilterQuerySider extends React.Component {
       <div id="searchKeys" className="sidel">
         <div id="tabs" className="tabs">
           <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
-          <a href={this.props.reservationFilterPath}><i className="fa fa-calendar" aria-hidden="true"></i></a>
+          { this.props.hasShop ? (
+            <a href={this.props.reservationFilterPath}>
+              <i className="fa fa-calendar" aria-hidden="true"></i>
+            </a>
+          ) : (
+            <a href="#" data-toggle="modal" data-target="#no-shop-modal">
+              <i className="fa fa-calendar" aria-hidden="true"></i>
+            </a>
+          )}
         </div>
 
         <div id="filterKeys" className="tabBody">
