@@ -2,9 +2,11 @@
   form_auth_token: form_authenticity_token,
   reservation_filter_path: reservation_user_filter_index_path,
   isAdmin: admin?,
+  hasShop: @has_shop,
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
   customer_path: user_customers_path(super_user),
+  settings_path: settings_path(super_user),
   locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,
@@ -98,6 +100,7 @@
   no_file_for_print_wording: t("customer.filter.no_file_for_print"),
   printing_message: t("customer.filter.printing_message"),
   close_button: t("common.close"),
+  createAShopButton: t("action.create_a_shop"),
   empty_saved_filter_sentence_one: t("customer.filter.empty_saved_filter_sentence_one"),
   empty_saved_filter_sentence_two: t("customer.filter.empty_saved_filter_sentence_two_for_#{super_user.member_level}_user"),
   printing_header_filter_name: t("customer.filter.printing_header_filter_name"),
@@ -112,7 +115,8 @@
   shop_confirm_warning: t("customer.filter.shop_confirm_warning"),
   menu_confirm_warning: t("customer.filter.menu_confirm_warning"),
   staff_confirm_warning: t("customer.filter.staff_confirm_warning"),
-  customer_info_confirm_message: t("customer.filter.confirm_message")
+  customer_info_confirm_message: t("customer.filter.confirm_message"),
+  noShopWarning: t("customer.filter.no_shop_warning")
 }) %>
 
 <%= render "filters/admin_saved_filter_upgrade_modal" %>

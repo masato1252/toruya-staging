@@ -150,6 +150,8 @@ class CustomersFilterQuerySider extends React.Component {
   };
 
   onCheckoutInAYearClick = () => {
+    if (!this.props.hasShop) return;
+
     this.updateFilterOption({
       reservationDateQueryType: "between",
       start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
@@ -501,7 +503,7 @@ class CustomersFilterQuerySider extends React.Component {
                   {this.props.dobInNextMonth}
                 </a>
                 <a href="#"
-                  className="BTNgray"
+                  className={`BTNgray ${!this.props.hasShop && "disabled"}`}
                   onClick={this.onCheckoutInAYearClick}>
                   {this.props.checkoutInAYear}
                 </a>
@@ -984,6 +986,17 @@ class CustomersFilterQuerySider extends React.Component {
             }
 
             <div className="submit">
+              { !this.props.hasShop && (
+                <div>
+                  <p class="warning">{this.props.noShopWarning}</p>
+                  <a
+                    className="BTNtarco"
+                    href={this.props.settingsPath}
+                    >{this.props.createAShopButton}
+                  </a>
+                </div>
+              )}
+
               <a
                 className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
                 onClick={this.submitFilterForm}

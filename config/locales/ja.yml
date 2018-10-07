@@ -33,6 +33,7 @@ ja:
     upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キャンセル
     new_reservation: 新規予約
+    create_a_shop: 店舗を設定する
   common:
     processing: 送信中
     date: 日付
@@ -200,6 +201,7 @@ ja:
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     filter:
+      no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"
       confirm_message: 顧客情報を表示するために検索結果ページを離れようとしています。
       empty_saved_filter_sentence_one: 保存した検索条件なし
