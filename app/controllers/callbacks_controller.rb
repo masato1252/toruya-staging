@@ -9,7 +9,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       remember_me(user)
       sign_in(user)
 
-      redirect_to member_path
+      redirect_to user.profile ? member_path : new_profile_path
     else
       redirect_to new_user_registration_url
     end

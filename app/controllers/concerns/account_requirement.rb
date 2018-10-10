@@ -21,7 +21,7 @@ module AccountRequirement
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last)
           flash[:alert] = I18n.t("requirement.profile_redirect_message")
 
-          redirect_to new_settings_user_profile_path(super_user)
+          redirect_to new_profile_path
         end
       elsif !session["contact_checking_#{super_user.id}"]
         # Allow user goes to the path that he already fit the restriction. Otherwise redirect to the proper restriction path.

@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     end
   end
 
+  scope module: :users do
+    resource :profile, only: %i[new create]
+  end
+
   resources :shops do
     resources :reservations, except: [:show] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
@@ -92,7 +96,7 @@ Rails.application.routes.draw do
     end
 
     resources :users do
-      resource :profile
+      resource :profile, only: %i[show edit update]
       resources :staffs, except: [:show] do
         collection do
           get :resend_activation_email

@@ -18,7 +18,7 @@ class Callbacks::StaffAccountsController < ActionController::Base
         # uncomment this if we need to take password page back
         # session[:super_user_id_from_staff_account] = owner.id
 
-        redirect_to new_settings_user_profile_path(user, from_staff_account: true), notice: "Set up your account"
+        redirect_to new_profile_path, notice: "Set up your account"
       else
         # existing user
         redirect_back(fallback_location: member_path, notice: I18n.t("settings.staff_account.connected_your_account"))

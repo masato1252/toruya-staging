@@ -8,15 +8,16 @@ class DashboardController < ActionController::Base
   include ExceptionHandler
   include Sentry
 
+  before_action :profile_required
   before_action :set_paper_trail_whodunnit
 
   private
 
   def profile_required
-    redirect_to settings_path(current_user) unless super_user.profile
+    redirect_to new_profile_path unless current_user.profile
   end
 
   def contact_group_required
-    redirect_to settings_path(current_user) unless super_user.contact_groups.connected.exists?
+    redirect_to settings_path(super_user) unless super_user.contact_groups.connected.exists?
   end
 end
