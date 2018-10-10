@@ -348,7 +348,8 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: カテゴリー名
     staff:
-      info_title: 基本情報
+      sider_label: スタッフ管理
+      info_title: スタッフアカウント
       new_title: スタッフの新規作成
       new_button: スタッフを新規作成
       info_label: 表示名
@@ -398,7 +399,7 @@ ja:
       setting_title: 休暇の設定権限
       holiday_permission: スタッフによる休暇の設定を許可
     contact:
-      info_title: Google同期設定
+      info_title: 顧客管理
       new_title: 新規台帳作成
       new_button: 新規グループを作成
       info_1: こちらではToruyaと同期するGmail連絡先グループを設定してください。
