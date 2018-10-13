@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
+    get :dashboard, to: "dashboards#index", as: :dashboard
     resources :plans, only: [:index]
     resources :payments, only: [:index, :create] do
       collection do

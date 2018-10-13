@@ -63,6 +63,7 @@ ja:
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
     no_permission: 権限がありません
+    done: 完了
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -264,6 +265,27 @@ ja:
         dob_in_next_month: 来月お誕生日
         checkout_in_a_year: 来店１年以内
   settings:
+    dashboard:
+      info_title: 自分の店舗の設定
+      info_desc_html: あなたの店舗に関する設定をします。<br />Toruyaはこの設定に基づいて予約を受け付けます。
+      current_plan_is: 現在ご利用中のプランは
+      check_plan: プランを確認する
+      today_had_created: あなたは今日
+      total_had_created: あなたは既に
+      reservations_created: 予約を作成しました
+      basic_tour:
+        title: 基本設定
+        start_btn: 設定ツアー開始
+        private_schedule_management: "プライベート予定の管理"
+        account_info_settings: アカウント情報を設定する
+        customers_management: 顧客の管理
+        customers_settings: 顧客の管理
+        reservations_management: 予約の管理
+        shops_settings: 店舗を設定する
+        business_hours_settings: 営業日時を設定する
+        working_time_settings: 勤務日時を設定する
+        reservations_blocks_settings: 予約枠を設定する
+        menus_settings: メニューを設定する
     shop:
       info_title:  店舗情報
       new_title: 店舗情報の新規作成

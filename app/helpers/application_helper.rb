@@ -47,4 +47,8 @@ module ApplicationHelper
       block.call
     end
   end
+
+  def present(klass, *args)
+    yield klass.new(*args)
+  end
 end
