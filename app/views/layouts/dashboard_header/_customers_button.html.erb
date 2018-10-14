@@ -17,7 +17,13 @@
 
     <ul class="dropdown-menu dropdown-menu-right">
       <li>
-        <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
+        <% if basic_setting_presenter.customers_settings_completed? %>
+          <%= link_to t("dashboard.someone_shop", name: current_user.name), user_customers_path(current_user) %>
+        <% else %>
+          <span class="dropdown-header">
+            <%= t("dashboard.no_contact_group.customer_btn_html", settings_path: settings_dashboard_path) %>
+          </span>
+        <% end %>
       </li>
       <% if working_shop_owners.present? %>
         <li class="divider"></li>

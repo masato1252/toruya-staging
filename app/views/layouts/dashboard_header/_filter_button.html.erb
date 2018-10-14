@@ -24,7 +24,13 @@
     <ul class="dropdown-menu dropdown-menu-right">
       <li>
         <% if ability(current_user).can?(:read, :filter) %>
-          <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
+          <% if basic_setting_presenter.customers_settings_completed? %>
+            <%= link_to t("dashboard.someone_shop", name: current_user.name), customer_user_filter_index_path(current_user) %>
+          <% else %>
+            <span class="dropdown-header">
+              <%= t("dashboard.no_contact_group.filter_btn_html", settings_path: settings_dashboard_path) %>
+            </span>
+          <% end %>
         <% else %>
           <%= link_to t("dashboard.someone_shop", name: current_user.name), "#", data: { toggle: "modal", target: "#adminUpgradeFilterModal" } %>
         <% end %>

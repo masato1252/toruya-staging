@@ -74,6 +74,9 @@ ja:
     someone_shop: "%{name}の店舗"
     no_shop_reminder:
       shop_dashboard_html: 店舗ダッシュボードを利用するために、<br /><a href=%{url}>こちら</a>から店舗を作成してください。
+    no_contact_group:
+      customer_btn_html: 顧客管理を始めるために、<a href=%{settings_path}>こちら</a>から<br />顧客台帳を作成してください。
+      filter_btn_html: 高度検索を利用するために、<a href=%{settings_path}>こちら</a>から<br />顧客台帳を作成してください。
     modal:
       shop_dashboard:
         admin:

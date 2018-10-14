@@ -17,6 +17,7 @@ module ViewHelpers
     helper_method :ability
     helper_method :admin?
     helper_method :manager?
+    helper_method :basic_setting_presenter
   end
 
   def shops
@@ -128,6 +129,10 @@ module ViewHelpers
       end
     end
     @staffs_have_holiday_permission
+  end
+
+  def basic_setting_presenter
+    @basic_setting_presenter ||= BasicSettingsPresenter.new(current_user)
   end
 
   def admin?
