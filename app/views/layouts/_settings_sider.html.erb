@@ -17,10 +17,9 @@
 
 
   <%
+      # because settings_user_working_time_staffs_path are available in two group, so need to know which group menu users stay
       if is_active_link?(request.original_fullpath, [["settings/working_time/staffs"]])
         working_time_under_shop_menu = Rails.application.routes.recognize_path(request.referrer || "")[:controller] != "settings/staffs"
-        working_time_under_shop_menu = false if Addressable::URI::parse(request.referrer).query_values.try(:[], "mode") == "holiday_schedules"
-        working_time_under_shop_menu = false if Addressable::URI::parse(request.original_fullpath).query_values.try(:[], "mode") == "holiday_schedules"
       end
   %>
   <% if can? :manage, Settings %>
@@ -84,10 +83,6 @@
             active: /working_schedules/,
             wrap_tag: :li,
             class_active: "here" %>
-          <%= active_link_to t("settings.staff.holiday_time"), settings_user_working_time_staffs_path(super_user, mode: "holiday_schedules"),
-            active: /holiday_schedules/,
-            wrap_tag: :li,
-            class_active: "here" %>
         <% else %>
           <%= active_link_to t("settings.staff.info_title"),
             edit_settings_user_staff_path(super_user, staff),
@@ -113,13 +108,6 @@
           %>
             <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff),
               active: /working_schedules/,
-              wrap_tag: :li,
-              class_active: "here" %>
-          <% end %>
-
-          <% if can?(:manage_staff_holiday_permission, shop_staff) %>
-            <%= active_link_to t("settings.staff.holiday_time"), holiday_schedules_settings_user_working_time_staff_path(super_user, staff),
-              active: /holiday_schedules/,
               wrap_tag: :li,
               class_active: "here" %>
           <% end %>
