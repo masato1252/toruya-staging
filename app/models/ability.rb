@@ -32,8 +32,6 @@ class Ability
       can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
       end
-
-      can :manage, "userself_holiday_permission"
     elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
       staff_member_ability
@@ -54,9 +52,6 @@ class Ability
         current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
       end
 
-      can :manage, "userself_holiday_permission" do
-        true
-      end
     end
   end
 
@@ -93,7 +88,6 @@ class Ability
     can :swith_staffs_selector, User
     can :manage, :filter
     can :manage, :saved_filter
-    can :manage_userself_holiday_permission
 
     case super_user.member_level
     when "premium"
@@ -137,6 +131,7 @@ class Ability
     can :create, :daily_reservations
     can :create, :total_reservations
     can :read, :shop_dashboard
+    can :manage, :userself_holiday_permission
 
     # manage_shop_dashboard only use to check add/edit reservation currently
     can :manage_shop_reservations, Shop do |shop|

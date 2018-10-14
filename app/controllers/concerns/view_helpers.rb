@@ -123,7 +123,7 @@ module ViewHelpers
     owners = working_shop_owners(include_user_own: true)
 
     owners.each do |owner|
-      if Ability.new(current_user, owner).can?(:manage, "userself_holiday_permission")
+      if Ability.new(current_user, owner).can?(:manage, :userself_holiday_permission)
         @staffs_have_holiday_permission << current_user.current_staff(owner)
       end
     end

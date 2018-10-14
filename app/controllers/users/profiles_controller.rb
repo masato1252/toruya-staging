@@ -8,15 +8,17 @@ class Users::ProfilesController < DashboardController
   end
 
   def create
-    @profile = current_user.build_profile(profile_params)
+    outcome = Profiles::Create.run(user: current_user, params: profile_params)
 
-    if @profile.save
+    if outcome.valid?
       if params[:from_staff_account].present?
         redirect_to member_path
       else
         redirect_to settings_dashboard_path, notice: I18n.t("common.create_successfully_message")
       end
     else
+      @profile = current_user.build_profile(profile_params)
+      @profile.valid?
       render :new
     end
   end
@@ -24,7 +26,7 @@ class Users::ProfilesController < DashboardController
   private
 
   def profile_params
-    params.require(:profile).permit(:last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :company_name, :zip_code, :address, :website, :phone_number, :company_zip_code, :company_address, :company_phone_number)
+    params.require(:profile).permit(:last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :address, :phone_number, :zip_code)
   end
 
   def profile_checking
