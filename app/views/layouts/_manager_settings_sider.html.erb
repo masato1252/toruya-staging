@@ -1,0 +1,69 @@
+<%
+  # because settings_user_working_time_staffs_path are available in two group, so need to know which group menu users stay
+  if is_active_link?(request.original_fullpath, [["settings/working_time/staffs"]])
+    working_time_under_shop_menu = Rails.application.routes.recognize_path(request.referrer || "")[:controller] != "settings/staffs"
+  end
+%>
+<nav id="sideNav">
+  <dl class="shop">
+    <dt>
+      <a href="#"><%= shop.name %>の設定</a>
+    </dt>
+  </dl>
+
+  <dl class="shop">
+    <%= active_link_to content_tag(:span, "<i class='fa fa-calendar fa-2x'></i>&nbsp;予約管理".html_safe), settings_user_shops_path(super_user),
+      active: [["settings/shops", "settings/business_schedules", "settings/reservation_settings", working_time_under_shop_menu && "settings/working_time/staffs"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
+    <dd>
+      <ul>
+        <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+          active: /working_schedules/,
+          wrap_tag: :li,
+          class_active: "here" %>
+        <%= active_link_to "予約枠", settings_user_reservation_settings_path(super_user), active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
+      </ul>
+    </dd>
+  </dl>
+
+  <dl class="menu">
+    <%= active_link_to content_tag(:span, t("settings.menu.info_title")), settings_user_menus_path(super_user),
+      active: [["settings/menus", "settings/categories"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
+    <dd>
+      <ul>
+        <%= active_link_to t("settings.menu.info_title"), settings_user_menus_path(super_user),
+          active: [["settings/menus"]],
+          wrap_tag: :li,
+          class_active: "here" %>
+        <%= active_link_to t("settings.category.info_title"), settings_user_categories_path(super_user),
+          active: [["settings/categories"]],
+          wrap_tag: :li,
+          class_active: "here" %>
+      </ul>
+    </dd>
+  </dl>
+
+  <dl class="staff">
+    <%= active_link_to content_tag(:span, t("settings.staff.sider_label")), settings_user_staffs_path(super_user),
+      active: [["settings/staffs", !working_time_under_shop_menu && "settings/working_time/staffs"]],
+      wrap_tag: :dt,
+      class_active: "here" %>
+    <dd>
+      <ul>
+        <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
+          active: [["settings/staffs"]],
+          wrap_tag: :li,
+          class_active: "here" %>
+
+        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+          active: /working_schedules/,
+          wrap_tag: :li,
+          class_active: "here" %>
+      </ul>
+    </dd>
+  </dl>
+</nav>

@@ -1,7 +1,7 @@
 module AccountRequirement
   extend ActiveSupport::Concern
   ALLOWED_ACCESS_CONTROLLERS = ["settings/menus", "settings/reservation_settings", "settings/working_time/staffs", "settings/business_schedules", "settings/shops", "settings/contact_groups"].freeze
-  IGNORE_CONTROLLERS = ["settings/plans", "settings/payments"].freeze
+  IGNORE_CONTROLLERS = ["settings/profiles", "settings/plans", "settings/payments"].freeze
 
   included do
     before_action :require_contacts
