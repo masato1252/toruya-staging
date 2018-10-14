@@ -103,12 +103,16 @@ class User < ApplicationRecord
     member_level == Plan::TRIAL_LEVEL
   end
 
+  def premium_member?
+    member_level == Plan::PREMIUM_LEVEL
+  end
+
   def trial_expired_date
     @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
   end
 
   def valid_shop_ids
-    @valid_shop_ids ||= if member_level == Plan::PREMIUM_LEVEL
+    @valid_shop_ids ||= if premium_member?
                           shop_ids
                         else
                           shop_ids.sort.slice(0, 1)

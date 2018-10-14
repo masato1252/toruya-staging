@@ -23,7 +23,7 @@
         <%= t("settings.dashboard.today_had_created") %>
       </div>
       <div>
-        <strong><span class="big"><%= @today_reservations_count %></span><span> /<%= Reservations::DailyLimit::RESERVATION_DAILY_LIMIT %></span></strong>
+        <strong><span class="big"><%= @today_reservations_count %></span><span> / <%= current_user.premium_member? ? t("settings.dashboard.no_limit") : Reservations::DailyLimit::RESERVATION_DAILY_LIMIT %></span></strong>
       </div>
       <div>
         <%= t("settings.dashboard.reservations_created") %>
@@ -34,7 +34,7 @@
         <%= t("settings.dashboard.total_had_created") %>
       </div>
       <div>
-        <strong><span class="big"><%= @total_reservations_count %></span><span> /<%= @total_reservations_limit %></span></strong>
+        <strong><span class="big"><%= @total_reservations_count %></span><span> / <%= @total_reservations_limit || t("settings.dashboard.no_limit") %></span></strong>
       </div>
       <div>
         <%= t("settings.dashboard.reservations_created") %>
