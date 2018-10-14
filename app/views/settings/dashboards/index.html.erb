@@ -42,97 +42,95 @@
     </div>
   </div>
 
-  <% present(BasicSettingsPresenter, current_user) do |presenter| %>
-    <% unless presenter.completed? %>
-      <div class="tour">
-        <h3>基本設定 <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_user_menus_path(current_user), class: "btn btn-tarco" %></h3>
-        <div class="formRow">
-          <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-            <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-              <dt>
-                <% if presenter.personal_scheduled_enabled? %>
-                  <span class="label label-done"><%= t("common.done") %></span>
-                <% else %>
-                  <span class="label label-warning">0%</span>
-                <% end %>
-                <span>Step1: <%= t("settings.dashboard.basic_tour.private_schedule_management") %></span>
-              </dt>
-              <dd>
-                <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-                <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-              </dd>
-            <% end %>
-            <div data-target="collapse.content">
-              <dl class="task">
-                <%= check_setting_icon(presenter.profile_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.account_info_settings") %>
-              </dl>
-            </div>
+  <% unless basic_setting_presenter.completed? %>
+    <div class="tour">
+      <h3>基本設定 <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_user_menus_path(current_user), class: "btn btn-tarco" %></h3>
+      <div class="formRow">
+        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
+          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
+            <dt>
+              <% if basic_setting_presenter.personal_scheduled_enabled? %>
+                <span class="label label-done"><%= t("common.done") %></span>
+              <% else %>
+                <span class="label label-warning">0%</span>
+              <% end %>
+              <span>Step1: <%= t("settings.dashboard.basic_tour.private_schedule_management") %></span>
+            </dt>
+            <dd>
+              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
+              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
+            </dd>
           <% end %>
+          <div data-target="collapse.content">
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.profile_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.account_info_settings") %>
+            </dl>
+          </div>
+        <% end %>
 
-          <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-            <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-              <dt>
-                <% if presenter.customers_management_enabled? %>
-                  <span class="label label-done"><%= t("common.done") %></span>
-                <% else %>
-                  <span class="label label-warning">0%</span>
-                <% end %>
-                <span>Step2: <%= t("settings.dashboard.basic_tour.customers_management") %></span>
-              </dt>
-              <dd>
-                <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-                <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-              </dd>
-            <% end %>
-            <div data-target="collapse.content">
-              <dl class="task">
-                <%= check_setting_icon(presenter.customers_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.customers_settings") %>
-              </dl>
-            </div>
+        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
+          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
+            <dt>
+              <% if basic_setting_presenter.customers_management_enabled? %>
+                <span class="label label-done"><%= t("common.done") %></span>
+              <% else %>
+                <span class="label label-warning">0%</span>
+              <% end %>
+              <span>Step2: <%= t("settings.dashboard.basic_tour.customers_management") %></span>
+            </dt>
+            <dd>
+              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
+              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
+            </dd>
           <% end %>
+          <div data-target="collapse.content">
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.customers_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.customers_settings") %>
+            </dl>
+          </div>
+        <% end %>
 
-          <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-            <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-              <dt>
-                <% if presenter.reservation_management_enabled? %>
-                  <span class="label label-done"><%= t("common.done") %></span>
-                <% else %>
-                  <span class="label label-warning"><%= number_to_percentage(presenter.reservation_settings_completed_percentage * 100, precision: 0) %></span>
-                <% end %>
-                <span>Step3: <%= t("settings.dashboard.basic_tour.reservations_management") %></span>
-              </dt>
-              <dd>
-                <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-                <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-              </dd>
-            <% end %>
-            <div data-target="collapse.content">
-              <dl class="task">
-                <%= check_setting_icon(presenter.shops_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.shops_settings") %>
-              </dl>
-              <dl class="task">
-                <%= check_setting_icon(presenter.business_hours_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.business_hours_settings") %>
-              </dl>
-              <dl class="task">
-                <%= check_setting_icon(presenter.working_time_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.working_time_settings") %>
-              </dl>
-              <dl class="task">
-                <%= check_setting_icon(presenter.reservation_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.reservations_blocks_settings") %>
-              </dl>
-              <dl class="task">
-                <%= check_setting_icon(presenter.menu_settings_completed?) %>
-                <%= t("settings.dashboard.basic_tour.menus_settings") %>
-                </dl>
-            </div>
+        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
+          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
+            <dt>
+              <% if basic_setting_presenter.reservation_management_enabled? %>
+                <span class="label label-done"><%= t("common.done") %></span>
+              <% else %>
+                <span class="label label-warning"><%= number_to_percentage(basic_setting_presenter.reservation_settings_completed_percentage * 100, precision: 0) %></span>
+              <% end %>
+              <span>Step3: <%= t("settings.dashboard.basic_tour.reservations_management") %></span>
+            </dt>
+            <dd>
+              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
+              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
+            </dd>
           <% end %>
-        </div>
+          <div data-target="collapse.content">
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.shops_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.shops_settings") %>
+            </dl>
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.business_hours_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.business_hours_settings") %>
+            </dl>
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.working_time_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.working_time_settings") %>
+            </dl>
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.reservation_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.reservations_blocks_settings") %>
+            </dl>
+            <dl class="task">
+              <%= check_setting_icon(basic_setting_presenter.menu_settings_completed?) %>
+              <%= t("settings.dashboard.basic_tour.menus_settings") %>
+              </dl>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+    </div>
   <% end %>
 </div>
