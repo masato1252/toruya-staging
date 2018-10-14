@@ -203,6 +203,14 @@ ja:
     reservation_day: 予約日
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
+    dashboard:
+      modal:
+        no_shop_to_create_reservation:
+          title: 店舗を設定してください
+          content: 予約を作成するには、店舗を設定する必要があります。
+        no_shop_to_manage_reservation:
+          title: 店舗を設定してください
+          content: 予約を管理するには、店舗を設定する必要があります。
     filter:
       no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"

@@ -60,3 +60,6 @@
                       printing_path: new_customer_printing_path(format: :pdf),
                       google_down_message: I18n.t("common.google_down")
 }) %>
+
+<%= render "no_shop_to_create_reservation", shop: @from_shop %>
+<%= render "no_shop_to_manage_reservation", shop: @from_shop %>
