@@ -66,9 +66,6 @@
               <dl class="task">
                 <%= check_setting_icon(presenter.profile_settings_completed?) %>
                 <%= t("settings.dashboard.basic_tour.account_info_settings") %>
-                <% if presenter.profile_settings_completed? %>
-                  <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-                <% end %>
               </dl>
             </div>
           <% end %>
@@ -92,9 +89,6 @@
               <dl class="task">
                 <%= check_setting_icon(presenter.customers_settings_completed?) %>
                 <%= t("settings.dashboard.basic_tour.customers_settings") %>
-                <% if presenter.customers_settings_completed? %>
-                  <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-                <% end %>
               </dl>
             </div>
           <% end %>
