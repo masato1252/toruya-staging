@@ -77,7 +77,7 @@ class Settings::ContactGroupsController < SettingsController
 
   def require_shop_owner
     if cannot?(:manage, GoogleContact)
-      redirect_to settings_path(super_user), alert: "Only allow shop owner to do this."
+      redirect_to settings_dashboard_path, alert: "Only allow shop owner to do this."
     end
   end
 end

@@ -6,7 +6,7 @@
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
   customer_path: user_customers_path(super_user),
-  settings_path: settings_path(super_user),
+  settings_path: settings_dashboard_path,
   locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,

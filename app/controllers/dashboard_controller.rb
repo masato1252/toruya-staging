@@ -18,6 +18,6 @@ class DashboardController < ActionController::Base
   end
 
   def contact_group_required
-    redirect_to settings_path(super_user) unless super_user.contact_groups.connected.exists?
+    redirect_to settings_dashboard_path unless super_user.contact_groups.connected.exists?
   end
 end
