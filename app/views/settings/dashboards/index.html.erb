@@ -5,7 +5,7 @@
   <p><%= t("settings.dashboard.info_desc_html") %></p>
 </div>
 
-<div id="settingForm">
+<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#welcomeTourModal" }) do %>
   <div class="dashboard">
     <div class="cell">
       <div>
@@ -44,7 +44,7 @@
 
   <% unless basic_setting_presenter.completed? %>
     <div class="tour">
-      <h3>基本設定 <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_user_menus_path(current_user), class: "btn btn-tarco" %></h3>
+      <h3>基本設定 <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>
       <div class="formRow">
         <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
           <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
@@ -65,6 +65,9 @@
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.profile_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.account_info_settings") %>
+              <%= link_to settings_user_profile_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end %>
             </dl>
           </div>
         <% end %>
@@ -88,6 +91,9 @@
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.customers_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.customers_settings") %>
+              <%= link_to settings_user_contact_groups_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end %>
             </dl>
           </div>
         <% end %>
@@ -111,26 +117,43 @@
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.shops_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.shops_settings") %>
+              <%= link_to settings_user_shops_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if basic_setting_presenter.shops_settings_completed? || basic_setting_presenter.customers_settings_completed? %>
             </dl>
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.business_hours_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.business_hours_settings") %>
+              <%= link_to settings_user_business_schedules_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if basic_setting_presenter.shops_settings_completed? || basic_setting_presenter.business_hours_settings_completed? %>
             </dl>
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.working_time_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.working_time_settings") %>
+              <%= link_to settings_user_working_time_staffs_path(current_user, mode: "working_schedules") do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if basic_setting_presenter.working_time_settings_completed? || basic_setting_presenter.business_hours_settings_completed? %>
             </dl>
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.reservation_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.reservations_blocks_settings") %>
+              <%= link_to settings_user_reservation_settings_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if basic_setting_presenter.working_time_settings_completed? || basic_setting_presenter.reservation_settings_completed? %>
             </dl>
             <dl class="task">
               <%= check_setting_icon(basic_setting_presenter.menu_settings_completed?) %>
               <%= t("settings.dashboard.basic_tour.menus_settings") %>
+              <%= link_to settings_user_menus_path(current_user) do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if basic_setting_presenter.menu_settings_completed? || basic_setting_presenter.reservation_settings_completed? %>
               </dl>
           </div>
         <% end %>
       </div>
     </div>
   <% end %>
-</div>
+
+  <%= render "settings/tour/welcome_modal" %>
+<% end %>

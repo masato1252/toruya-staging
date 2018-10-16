@@ -19,9 +19,12 @@ class Settings::ReservationSettingsController < SettingsController
           redirect_to new_settings_user_menu_path(super_user,reservation_setting_id: @reservation_setting.id), notice: I18n.t("common.create_successfully_message")
         end
       else
-        redirect_to settings_user_reservation_settings_path(super_user), notice: I18n.t("common.create_successfully_message")
+        if session[:settings_tour]
+          redirect_to settings_user_menus_path(super_user)
+        else
+          redirect_to settings_user_reservation_settings_path(super_user), notice: I18n.t("common.create_successfully_message")
+        end
       end
-    else
     end
   end
 

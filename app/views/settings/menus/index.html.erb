@@ -10,7 +10,7 @@
   <p><%= t("settings.menu.info_1") %><br /><%= t("settings.menu.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#menuTourModal" }) do %>
   <div id="menuList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.menu.name") %></li>
@@ -31,4 +31,6 @@
       </dl>
     <% end %>
   </div>
-</div>
+
+  <%= render "settings/tour/menu_modal" %>
+<% end %>

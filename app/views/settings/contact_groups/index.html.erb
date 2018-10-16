@@ -10,7 +10,7 @@
   <p><%= t("settings.contact.info_1") %><br /><%= t("settings.contact.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#contactGroupTourModal" }) do %>
   <div id="contactList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.contact.info_title") %></li>
@@ -42,4 +42,6 @@
       </dl>
     <% end %>
   </div>
-</div>
+
+  <%= render "settings/tour/contact_group_modal" %>
+<% end %>

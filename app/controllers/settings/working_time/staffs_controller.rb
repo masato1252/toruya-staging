@@ -72,7 +72,11 @@ class Settings::WorkingTime::StaffsController < SettingsController
     end
 
     if can?(:manage, Settings)
-      redirect_to settings_user_working_time_staffs_path(super_user, mode: params[:mode]), notice: I18n.t("common.update_successfully_message")
+      if session[:settings_tour]
+        redirect_to settings_user_reservation_settings_path(super_user)
+      else
+        redirect_to settings_user_working_time_staffs_path(super_user, mode: params[:mode]), notice: I18n.t("common.update_successfully_message")
+      end
     elsif params[:mode] == "working_schedules"
       redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     else

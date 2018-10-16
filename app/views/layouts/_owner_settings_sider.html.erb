@@ -1,7 +1,7 @@
 <%
   # because settings_user_working_time_staffs_path are available in two group, so need to know which group menu users stay
   if is_active_link?(request.original_fullpath, [["settings/working_time/staffs"]])
-    working_time_under_shop_menu = Rails.application.routes.recognize_path(request.referrer || "")[:controller] != "settings/staffs"
+    working_time_under_shop_menu = previous_controller_is("settings/staffs")
   end
 %>
 

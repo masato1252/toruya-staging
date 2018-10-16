@@ -298,6 +298,25 @@ ja:
         working_time_settings: 勤務日時を設定する
         reservations_blocks_settings: 予約枠を設定する
         menus_settings: メニューを設定する
+    modal:
+      tour:
+        welcome_title: Toruyaにご登録ありがとうございます！
+        by_myself: 自分で設定します
+        basic_setting_start: 基本設定ツアーを始めまる
+        end_tour: ツアーを終了
+        setup_contact_group: 顧客台帳を設定します
+        contact_group_title: 顧客台帳の設定(Google連絡先の同期)
+        shop_title: あなた自身の店舗を管理
+        no_need: 必要ない
+        setup_shop: 店舗を設定します
+        business_schedule_title: 営業日時の設定
+        setup_business_schedule: 営業日時を設定します
+        working_time_title: 勤務時間の設定
+        setup_working_time: 勤務時間を設定します
+        reservation_setting_title: 予約枠の設定
+        setup_reservation_setting: 予約枠を設定します
+        menu_title: メニューの設定
+        setup_menu: メニューを設定します
     shop:
       info_title:  店舗情報
       new_title: 店舗情報の新規作成

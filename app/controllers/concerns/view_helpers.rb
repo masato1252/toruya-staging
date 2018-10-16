@@ -18,6 +18,7 @@ module ViewHelpers
     helper_method :admin?
     helper_method :manager?
     helper_method :basic_setting_presenter
+    helper_method :previous_controller_is
   end
 
   def shops
@@ -142,5 +143,9 @@ module ViewHelpers
   # manage or admin
   def manager?
     can?(:manage, :management_stuffs)
+  end
+
+  def previous_controller_is(controller_name)
+    Rails.application.routes.recognize_path(request.referrer || "")[:controller] == controller_name
   end
 end

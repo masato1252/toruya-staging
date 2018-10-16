@@ -5,7 +5,7 @@
   <p><%= t("settings.staff_working_time.info_1.#{params[:mode] || @mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#workingTimeTourModal" }) do %>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
@@ -28,4 +28,6 @@
       </dl>
     <% end %>
   </div>
-</div>
+
+  <%= render "settings/tour/working_time_modal" %>
+<% end %>

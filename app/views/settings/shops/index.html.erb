@@ -14,7 +14,7 @@
   <p><%= t("settings.shop.info_1") %><br /><%= t("settings.shop.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#shopTourModal" }) do %>
   <div id="shopList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.shop.name") %></li>
@@ -33,7 +33,9 @@
       </dl>
     <% end %>
   </div>
-</div>
+
+  <%= render "settings/tour/shop_modal" %>
+<% end %>
 
 <% admin_only do %>
   <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">

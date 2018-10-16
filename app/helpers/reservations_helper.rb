@@ -3,8 +3,8 @@ module ReservationsHelper
     data = { }
 
     if params[:reservation_id]
-      data[:controller] = "member-reservation-modal"
-      data[:member_reservation_modal_target] = "#reservationModal#{params[:reservation_id]}"
+      data[:controller] = "popup-modal"
+      data[:popup_modal_target] = "#reservationModal#{params[:reservation_id]}"
     end
 
     content_tag(:div, capture(&block), data: data, class: "contents", id: "dashboard")

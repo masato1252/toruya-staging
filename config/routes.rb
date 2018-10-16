@@ -85,6 +85,8 @@ Rails.application.routes.draw do
 
   namespace :settings do
     get :dashboard, to: "dashboards#index", as: :dashboard
+    get :tour, to: "dashboards#tour", as: :tour
+    get :end_tour, to: "dashboards#end_tour", as: :end_tour
     resources :plans, only: [:index]
     resources :payments, only: [:index, :create] do
       collection do

@@ -43,22 +43,23 @@ class Settings::MenusController < SettingsController
   def create
     @menu = super_user.menus.new
 
-    respond_to do |format|
-      outcome = Menus::Update.run(menu: @menu,
-                                  attrs: menu_params.to_h.except(:reservation_setting_id,
-                                                                 :menu_reservation_setting_rule_attributes,
-                                                                 :new_categories),
-                                  new_categories: menu_params[:new_categories],
-                                  reservation_setting_id: menu_params[:reservation_setting_id],
-                                  menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+    outcome = Menus::Update.run(menu: @menu,
+                                attrs: menu_params.to_h.except(:reservation_setting_id,
+                                                               :menu_reservation_setting_rule_attributes,
+                                                               :new_categories),
+                                                               new_categories: menu_params[:new_categories],
+                                                               reservation_setting_id: menu_params[:reservation_setting_id],
+                                                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
-      if outcome.valid?
-        format.html { redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.create_successfully_message") }
-        format.json { render :show, status: :ok, location: @menu }
+    if outcome.valid?
+      if session[:settings_tour]
+        session.delete(:settings_tour)
+        redirect_to member_path
       else
-        format.html { render :edit }
-        format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
+        redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.create_successfully_message")
       end
+    else
+      render :edit
     end
   end
 
