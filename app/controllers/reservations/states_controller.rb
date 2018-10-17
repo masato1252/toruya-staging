@@ -1,4 +1,6 @@
 class Reservations::StatesController < DashboardController
+  before_action :authorize_reservation
+
   def pend
     outcome = Reservations::Pend.run!(reservation: reservation, current_staff: current_user_staff)
 
@@ -40,7 +42,12 @@ class Reservations::StatesController < DashboardController
   end
 
   private
+
   def reservation
     @reservation ||= shop.reservations.find(params[:reservation_id])
+  end
+
+  def authorize_reservation
+    authorize! :edit, reservation
   end
 end

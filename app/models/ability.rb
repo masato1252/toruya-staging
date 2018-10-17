@@ -106,9 +106,6 @@ class Ability
     can :edit, :customer_contact_info
     can :swith_staffs_selector, User
     can :manage, :management_stuffs
-    can :edit, Staff do |staff|
-      super_user.premium_member? || current_user_staff == staff
-    end
 
     case super_user.member_level
     when "premium", "trial"
@@ -135,6 +132,12 @@ class Ability
     can :create, :total_reservations
     can :read, :shop_dashboard
     can :manage, :userself_holiday_permission
+    can :edit, Staff do |staff|
+      super_user.premium_member? || (current_user_staff == staff && admin_level)
+    end
+    can :edit, Reservation do |reservation|
+      super_user.premium_member? || (reservation.staff_ids == [current_user_staff.id] && admin_level)
+    end
 
     # manage_shop_dashboard only use to check add/edit reservation currently
     can :manage_shop_reservations, Shop do |shop|
