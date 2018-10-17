@@ -683,210 +683,225 @@ class CustomersFilterQuerySider extends React.Component {
             </dl>
           </div>
           <h2>{this.props.customerReservationConditionsHeader}</h2>
-          <div className="filterKey">
-            <h3>{this.props.customerReservationDateTitle}</h3>
-            <div>
-              <dl className="filterFor">
-                <dd>
-                  {this.props.locale === "ja" ? (
-                    <Select
-                      options={this.props.reservationDateQueryOptions}
-                      data-name="reservationDateQueryType"
-                      value={this.state.reservationDateQueryType}
-                      onChange={this.onDataChange}
-                    />
-                  ) : (
-                    <Select
-                      options={this.props.yesNoOptions}
-                      data-name="hasReservation"
-                      value={this.state.hasReservation}
-                      onChange={this.onDataChange}
-                      />
-                  )}
-                  <span className="filterForReservationWording">{this.props.reservationsWording}</span>
-                  {this.props.locale === "ja" ? (
-                    <Select
-                      options={this.props.yesNoOptions}
-                      data-name="hasReservation"
-                      value={this.state.hasReservation}
-                      onChange={this.onDataChange}
-                      />
-                  ) : (
-                    <Select
-                      options={this.props.reservationDateQueryOptions}
-                      data-name="reservationDateQueryType"
-                      value={this.state.reservationDateQueryType}
-                      onChange={this.onDataChange}
-                    />
-                  )}
-                </dd>
-              </dl>
-              <dl className="date">
-                <dd>
-                  {this.renderReservationDateOptions()}
-                </dd>
-              </dl>
+          { !this.props.hasShop && (
+            <div class="no-shop-warning">
+              <div class="caution">{this.props.noShopWarning}</div>
+              <a
+                className="btn btn-tarco"
+                href={this.props.settingsPath}
+                >{this.props.createAShopButton}
+              </a>
             </div>
-          </div>
+          )}
 
-          <div>
+          {this.props.hasShop && (
             <div className="filterKey">
-              <h3>
-                {this.props.customerReservationShopTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-              </h3>
-              <dl>
-                <dt>{this.props.selectShopLabel}</dt>
-                <dd>
-                  <ul>
-                    {this.renderMultipleSelectInputs(this.state.shop_ids, "shop_ids", this.props.shopOptions)}
-                    <li>
+              <h3>{this.props.customerReservationDateTitle}</h3>
+              <div>
+                <dl className="filterFor">
+                  <dd>
+                    {this.props.locale === "ja" ? (
                       <Select
-                        includeBlank="true"
-                        blankOption={this.props.selectShopLabel}
-                        options={this.props.shopOptions}
-                        data-name="shop_id"
-                        value={this.state.shop_id}
-                        onChange={this.onDataChange}
-                        />
-                      <a
-                        href="#"
-                        className={`BTNyellow ${this.state.shop_id ? null : "disabled"}`}
-                        onClick={this.onAddItem}
-                        data-target-name="shop_id"
-                        data-name="shop_ids"
-                        >
-                        <i
-                          className="fa fa-plus"
-                          aria-hidden="true"
-                          data-target-name="shop_id"
-                          data-name="shop_ids" >
-                        </i>
-                      </a>
-                    </li>
-                    {
-                      (this.state.shop_id && !_.contains(this.state.shop_ids, this.state.shop_id)) ?
-                        (
-                          <li className="warning">
-                            {this.props.shopConfirmWarning}
-                          </li>
-                        ) : null
-                    }
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3>
-                {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-              </h3>
-              <dl>
-                <dt>{this.props.selectMenuLabel}</dt>
-                <dd>
-                  <ul>
-                    {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
-                    <li>
-                      <ReactSelect
-                        ref={(c) => this.menuSelector = c}
-                        className="menu-select-container"
-                        placeholder={this.props.selectMenuLabel}
-                        options={this.props.menuGroupOptions}
-                        onChange={this.onMenuChange}
-                        />
-                      <a
-                        href="#"
-                        className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
-                        onClick={this.onAddItem}
-                        data-target-name="menu_id"
-                        data-name="menu_ids"
-                        >
-                        <i
-                          className="fa fa-plus"
-                          aria-hidden="true"
-                          data-target-name="menu_id"
-                          data-name="menu_ids" >
-                        </i>
-                      </a>
-                    </li>
-                    {
-                      (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
-                        (
-                          <li className="warning">
-                            {this.props.menuConfirmWarning}
-                          </li>
-                        ) : null
-                    }
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3>
-                {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-              </h3>
-              <dl>
-                <dt>{this.props.selectStaffLabel}</dt>
-                <dd>
-                  <ul>
-                    {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
-                    <li>
-                      <Select
-                        includeBlank="true"
-                        blankOption={this.props.selectStaffLabel}
-                        options={this.props.staffOptions}
-                        data-name="staff_id"
-                        value={this.state.staff_id}
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
                         onChange={this.onDataChange}
                       />
-                      <a
-                        href="#"
-                        className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
-                        onClick={this.onAddItem}
-                        data-target-name="staff_id"
-                        data-name="staff_ids"
-                        >
-                        <i
-                          className="fa fa-plus"
-                          aria-hidden="true"
+                    ) : (
+                      <Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    )}
+                    <span className="filterForReservationWording">{this.props.reservationsWording}</span>
+                    {this.props.locale === "ja" ? (
+                      <Select
+                        options={this.props.yesNoOptions}
+                        data-name="hasReservation"
+                        value={this.state.hasReservation}
+                        onChange={this.onDataChange}
+                        />
+                    ) : (
+                      <Select
+                        options={this.props.reservationDateQueryOptions}
+                        data-name="reservationDateQueryType"
+                        value={this.state.reservationDateQueryType}
+                        onChange={this.onDataChange}
+                      />
+                    )}
+                  </dd>
+                </dl>
+                <dl className="date">
+                  <dd>
+                    {this.renderReservationDateOptions()}
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          )}
+
+          {this.props.hasShop && (
+            <div>
+              <div className="filterKey">
+                <h3>
+                  {this.props.customerReservationShopTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectShopLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.shop_ids, "shop_ids", this.props.shopOptions)}
+                      <li>
+                        <Select
+                          includeBlank="true"
+                          blankOption={this.props.selectShopLabel}
+                          options={this.props.shopOptions}
+                          data-name="shop_id"
+                          value={this.state.shop_id}
+                          onChange={this.onDataChange}
+                          />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.shop_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="shop_id"
+                          data-name="shop_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="shop_id"
+                            data-name="shop_ids" >
+                          </i>
+                        </a>
+                      </li>
+                      {
+                        (this.state.shop_id && !_.contains(this.state.shop_ids, this.state.shop_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.shopConfirmWarning}
+                            </li>
+                          ) : null
+                      }
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>
+                  {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectMenuLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
+                      <li>
+                        <ReactSelect
+                          ref={(c) => this.menuSelector = c}
+                          className="menu-select-container"
+                          placeholder={this.props.selectMenuLabel}
+                          options={this.props.menuGroupOptions}
+                          onChange={this.onMenuChange}
+                          />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
+                          data-target-name="menu_id"
+                          data-name="menu_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="menu_id"
+                            data-name="menu_ids" >
+                          </i>
+                        </a>
+                      </li>
+                      {
+                        (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.menuConfirmWarning}
+                            </li>
+                          ) : null
+                      }
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>
+                  {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+                </h3>
+                <dl>
+                  <dt>{this.props.selectStaffLabel}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
+                      <li>
+                        <Select
+                          includeBlank="true"
+                          blankOption={this.props.selectStaffLabel}
+                          options={this.props.staffOptions}
+                          data-name="staff_id"
+                          value={this.state.staff_id}
+                          onChange={this.onDataChange}
+                        />
+                        <a
+                          href="#"
+                          className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
+                          onClick={this.onAddItem}
                           data-target-name="staff_id"
-                          data-name="staff_ids" >
-                        </i>
-                      </a>
-                    </li>
-                    {
-                      (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
-                        (
-                          <li className="warning">
-                            {this.props.staffConfirmWarning}
-                          </li>
-                        ) : null
-                    }
-                  </ul>
-                </dd>
-              </dl>
+                          data-name="staff_ids"
+                          >
+                          <i
+                            className="fa fa-plus"
+                            aria-hidden="true"
+                            data-target-name="staff_id"
+                            data-name="staff_ids" >
+                          </i>
+                        </a>
+                      </li>
+                      {
+                        (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
+                          (
+                            <li className="warning">
+                              {this.props.staffConfirmWarning}
+                            </li>
+                          ) : null
+                      }
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>{this.props.customerReservationStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerReservationStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+              <div className="filterKey">
+                <h3>{this.props.customerCheckInStatusTitle}</h3>
+                <dl>
+                  <dt>{this.props.customerCheckInStatusInfo}</dt>
+                  <dd>
+                    <ul>
+                      {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
             </div>
-            <div className="filterKey">
-              <h3>{this.props.customerReservationStatusTitle}</h3>
-              <dl>
-                <dt>{this.props.customerReservationStatusInfo}</dt>
-                <dd>
-                  <ul>
-                    {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-            <div className="filterKey">
-              <h3>{this.props.customerCheckInStatusTitle}</h3>
-              <dl>
-                <dt>{this.props.customerCheckInStatusInfo}</dt>
-                <dd>
-                  <ul>
-                    {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
-                  </ul>
-                </dd>
-              </dl>
-            </div>
-          </div>
+          )}
         </div>
           <form
             acceptCharset="UTF-8"
@@ -994,17 +1009,6 @@ class CustomersFilterQuerySider extends React.Component {
             }
 
             <div className="submit">
-              { !this.props.hasShop && (
-                <div>
-                  <p class="warning">{this.props.noShopWarning}</p>
-                  <a
-                    className="BTNtarco"
-                    href={this.props.settingsPath}
-                    >{this.props.createAShopButton}
-                  </a>
-                </div>
-              )}
-
               <a
                 className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
                 onClick={this.submitFilterForm}
