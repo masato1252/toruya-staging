@@ -28,6 +28,6 @@ class Settings::DashboardsController < ActionController::Base
 
   def end_tour
     session.delete(:settings_tour)
-    redirect_to settings_dashboard_path
+    redirect_to member_path
   end
 end

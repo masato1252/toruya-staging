@@ -44,7 +44,7 @@
 
   <% unless basic_setting_presenter.completed? %>
     <div class="tour">
-      <h3>基本設定 <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>
+      <h3><span class="title">基本設定</span> <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>
       <div class="formRow">
         <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
           <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
