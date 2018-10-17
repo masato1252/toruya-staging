@@ -749,7 +749,15 @@ class ReservationForm extends React.Component {
                   {
                     this._staffTimeWarnings(this.props.currentUserStaffId).length > 0 && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
                  この時間を出勤にする
-               </a>)}
+                 </a>)}
+                 {
+                   this.props.downgradeFromPremium && (
+
+                     <a href="https://toruya.com/faq/48/" target="_blank">
+                       <i className="fa fa-question-circle" aria-hidden="true"></i>自分以外のスタッフが選択できなくなった場合
+                     </a>
+                   )
+                 }
                 </dd>
               </dl>
             </div>

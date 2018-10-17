@@ -24,6 +24,7 @@
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
                       current_user_staff_id: current_user.current_staff(super_user).id.to_s,
+                      downgradeFromPremium: shop.staffs.active.count > @staff_options.length,
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
                       shop_id: shop.id,
                       shop_name: shop.display_name,
