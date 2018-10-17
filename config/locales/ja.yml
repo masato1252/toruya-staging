@@ -72,6 +72,7 @@ ja:
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
+    someone_customer: "%{name}の顧客"
     no_shop_reminder:
       shop_dashboard_html: 店舗ダッシュボードを利用するために、<br /><a href=%{url}>こちら</a>から店舗を作成してください。
     no_contact_group:
@@ -453,6 +454,7 @@ ja:
       holiday_permission: スタッフによる休暇の設定を許可
     contact:
       info_title: 顧客管理
+      info_sub_title: 顧客台帳
       new_title: 新規台帳作成
       new_button: 新規グループを作成
       info_1: こちらではToruyaと同期するGmail連絡先グループを設定してください。

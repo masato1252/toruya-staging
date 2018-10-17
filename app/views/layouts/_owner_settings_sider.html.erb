@@ -10,6 +10,15 @@
     <%= active_link_to settings_user_contact_groups_path(super_user), active: [["settings/contact_groups", "settings/ranks"]], wrap_tag: :dt, class_active: "here" do %>
       <span><i class="fa fa-users fa-2x"></i>&nbsp;<%= t("settings.contact.info_title") %></span>
     <% end %>
+    <dd>
+      <ul>
+        <%= active_link_to settings_user_contact_groups_path(super_user),
+          active: [["settings/contact_groups"]], wrap_tag: :li, class_active: "here" do %>
+          <span><%= t("settings.contact.info_sub_title") %></span>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
   </dl>
 
   <% if basic_setting_presenter.customers_management_enabled? %>
