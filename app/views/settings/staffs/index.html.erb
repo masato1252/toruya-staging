@@ -23,14 +23,24 @@
     <% @staffs.each do |staff| %>
       <dl>
         <dt class="rowTTL">
-          <%= link_to staff.name.presence || staff.staff_account.email ||"スタッフ #{staff.id}", edit_settings_user_staff_path(super_user, staff) %>
+          <% if can?(:edit, staff) %>
+            <%= link_to staff.name.presence || staff.staff_account.email ||"スタッフ #{staff.id}", edit_settings_user_staff_path(super_user, staff) %>
+          <% else %>
+            <%= link_to staff.name.presence || staff.staff_account.email ||"スタッフ #{staff.id}", "#", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+          <% end %>
+
           <% if !staff.active? %>
             <span class="label label-warning"><%= t("common.pending") %></span>
           <% end %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% if can?(:edit, staff) %>
+            <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% else %>
+            <%= link_to t("action.edit"), "#", class: "BTNtarco", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+          <% end %>
+
           <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>
         </dd>
       </dl>
@@ -60,3 +70,4 @@
     </div>
   <% end %>
 <% end %>
+<%= render "settings/staffs/upgrade_edit_modal" %>

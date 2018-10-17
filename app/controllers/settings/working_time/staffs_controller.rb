@@ -6,8 +6,9 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def working_schedules
+    authorize! :edit, @staff
+
     @mode = "working_schedules"
-    @staff = super_user.staffs.find_by(id: params[:id])
 
     if admin?
       @full_time_permission = @regular_working_time_permission = @temporary_working_time_permission = true
@@ -35,6 +36,8 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def holiday_schedules
+    authorize! :edit, @staff
+
     @mode = "holiday_schedules"
     @closed_custom_schedules = @staff.custom_schedules.future.closed.order(:start_time)
 
@@ -50,6 +53,8 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def update
+    authorize! :edit, @staff
+
     if params[:business_schedules]
       params.permit![:business_schedules].each do |shop_id, attrs|
         if attrs[:full_time]

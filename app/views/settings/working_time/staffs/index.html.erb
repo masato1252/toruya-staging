@@ -20,14 +20,25 @@
                           end
       %>
       <dl>
-        <dt><%= link_to staff.name, edit_staff_path %></dt>
+        <dt>
+          <% if can?(:edit, staff) %>
+            <%= link_to staff.name, edit_staff_path %>
+          <% else %>
+            <%= link_to staff.name, "#", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+          <% end %>
+        </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
+          <% if can?(:edit, staff) %>
+            <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
+          <% else %>
+            <%= link_to t("action.edit"), "#", class: "BTNtarco", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+          <% end %>
         </dd>
       </dl>
     <% end %>
   </div>
 
   <%= render "settings/tour/working_time_modal" %>
+  <%= render "settings/staffs/upgrade_edit_modal" %>
 <% end %>

@@ -27,6 +27,8 @@ class Settings::StaffsController < SettingsController
 
   # GET /staffs/1/edit
   def edit
+    authorize! :edit, @staff
+
     @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
     if @staff.active? && (profile = @staff_account.user.profile)
       @staff.first_name = @staff.first_name.presence || profile.first_name
@@ -60,6 +62,8 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
+    authorize! :edit, @staff
+
     outcome = Staffs::Update.run(is_manager: manager?,
                                  staff: @staff,
                                  attrs: params[:staff]&.permit!&.to_h)

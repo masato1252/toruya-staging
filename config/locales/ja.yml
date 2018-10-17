@@ -419,6 +419,7 @@ ja:
       modal:
         upgrade_title: アカウントをアップグレード
         upgrade_content_html: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_edit_content_html: スタッフアカウントを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
     staff_account:
       info_title: スタッフアカウント
       using_staff_account: スタッフアカウントを利用する

@@ -106,6 +106,9 @@ class Ability
     can :edit, :customer_contact_info
     can :swith_staffs_selector, User
     can :manage, :management_stuffs
+    can :edit, Staff do |staff|
+      super_user.premium_member? || current_user_staff == staff
+    end
 
     case super_user.member_level
     when "premium", "trial"
