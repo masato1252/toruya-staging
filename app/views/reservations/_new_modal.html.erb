@@ -1,5 +1,6 @@
 <%
-  manage_shop_reservations_no_permission = false
+  manage_self_shop_reservations_no_permission = false
+  manage_boss_shop_reservations_no_permission = false
   create_reservation_with_settings_no_permission = false
   create_reservations_with_menu_no_permission = false
 %>
@@ -26,7 +27,11 @@
                   <% else %>
                     <%
                       if user_ability.cannot?(:manage_shop_reservations, option.shop)
-                        manage_shop_reservations_no_permission = true
+                        if option.owner == current_user
+                          manage_self_shop_reservations_no_permission = true
+                        else
+                          manage_boss_shop_reservations_no_permission = true
+                        end
                       end
 
                       if user_ability.cannot?(:create, :reservation_with_settings)
@@ -47,7 +52,15 @@
               </div>
             <% end %>
           </div>
-          <%= content_tag(:div, t("reservation.modal.invalid_shops_exist_message.manage_shop_reservations_no_permission")) if manage_shop_reservations_no_permission %>
+          <%=
+              if manage_self_shop_reservations_no_permission && manage_boss_shop_reservations_no_permission
+                content_tag(:div, t("reservation.modal.invalid_shops_exist_message.manage_shop_reservations_no_permission"))
+              elsif manage_self_shop_reservations_no_permission
+                content_tag(:div, t("reservation.modal.invalid_shops_exist_message.manage_self_shop_reservations_no_permission"))
+              elsif manage_boss_shop_reservations_no_permission
+                content_tag(:div, t("reservation.modal.invalid_shops_exist_message.manage_boss_shop_reservations_no_permission"))
+              end
+          %>
           <%= content_tag(:div, t("reservation.modal.invalid_shops_exist_message.create_reservation_with_settings_no_permission")) if create_reservation_with_settings_no_permission %>
           <%= content_tag(:div, t("reservation.modal.invalid_shops_exist_message.create_reservations_with_menu_no_permission")) if create_reservations_with_menu_no_permission %>
         </div>
