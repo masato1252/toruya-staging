@@ -51,4 +51,13 @@ module ApplicationHelper
   def present(klass, *args)
     yield klass.new(*args)
   end
+
+  def warning_link(text, path)
+    link_to text, "#", data: {
+      controller: "warning-modal",
+      warning_modal_target: "#warningModal",
+      action: "click->warning-modal#popup",
+      warning_modal_warning_path: path
+    }
+  end
 end
