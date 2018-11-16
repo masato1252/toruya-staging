@@ -85,7 +85,7 @@ ja:
           upgrade_content_html: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
         staff:
           upgrade_title: 店舗ダッシュボードは利用できません
-          upgrade_content: 店舗ダッシュボードを利用できません。店舗管理者にご連絡ください。
+          upgrade_content: "%{shop_name}は店舗ダッシュボードを利用できません。店舗管理者にご連絡ください。"
       filter:
         admin:
           upgrade_title: アカウントをアップグレード

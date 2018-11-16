@@ -53,7 +53,7 @@
               <% if ability(option.owner).can?(:read, :shop_dashboard) %>
                 <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
               <% else %>
-                <%= link_to option.shop.display_name, "#", data: { toggle: "modal", target: "#staffUpgradeShopDashboardModal" } %>
+                <%= link_to option.shop.display_name, "#", data: { controller: "warning-modal", warning_modal_target: "#warningModal", action: "click->warning-modal#popup", warning_modal_warning_path: shop_dashboard_for_staff_warnings_path(warning_shop_id: option.shop) } %>
               <% end %>
             </li>
           <% end %>

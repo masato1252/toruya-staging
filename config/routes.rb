@@ -155,6 +155,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :warnings, only: [], constraints: ::XhrConstraint do
+    collection do
+      get "shop_dashboard_for_staff"
+    end
+  end
+
   authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
   end
