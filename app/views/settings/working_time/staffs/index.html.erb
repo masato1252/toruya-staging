@@ -24,7 +24,7 @@
           <% if can?(:edit, staff) %>
             <%= link_to staff.name, edit_staff_path %>
           <% else %>
-            <%= link_to staff.name, "#", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+            <%= modal_link_to(staff.name, edit_staff_for_admin_warnings_path) %>
           <% end %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
@@ -32,7 +32,7 @@
           <% if can?(:edit, staff) %>
             <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
           <% else %>
-            <%= link_to t("action.edit"), "#", class: "BTNtarco", data: { toggle: "modal", target: "#upgradeEditModal" } %>
+            <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
           <% end %>
         </dd>
       </dl>
@@ -40,5 +40,4 @@
   </div>
 
   <%= render "settings/tour/working_time_modal" %>
-  <%= render "settings/staffs/upgrade_edit_modal" %>
 <% end %>

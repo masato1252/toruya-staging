@@ -52,12 +52,26 @@ module ApplicationHelper
     yield klass.new(*args)
   end
 
-  def warning_link(text, path, options = {})
-    link_to text, "#", options.reverse_merge(data: {
-      controller: "warning-modal",
-      warning_modal_target: "#warningModal",
-      action: "click->warning-modal#popup",
-      warning_modal_warning_path: path
-    })
+  def modal_link_to(*args, &block)
+    default_options = {
+      data: {
+        controller: "modal",
+        modal_target: "#dummyModal",
+        action: "click->modal#popup",
+      }
+    }
+
+    if block_given?
+      path = args.first
+      options = args[1] || {}
+
+      link_to capture(&block),"#", options.reverse_merge(default_options.merge("data-modal-path": path))
+    else
+      text = args.first
+      path = args.second
+      options = args[2] || {}
+
+      link_to text,"#", options.reverse_merge(default_options.merge("data-modal-path": path))
+    end
   end
 end

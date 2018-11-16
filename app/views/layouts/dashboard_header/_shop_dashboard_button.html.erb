@@ -5,8 +5,13 @@
         <i class="fa fa-home fa-4x" aria-hidden="true"></i>
         <%= t("dashboard.shops") %>
       <% end %>
+    <% elsif single_shop_owner %>
+      <%= modal_link_to(shop_dashboard_for_admin_warnings_path(warning_shop_id: single_shop.shop)) do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        <%= t("dashboard.shops") %>
+      <% end %>
     <% else %>
-      <%= link_to "#", data: { toggle: "modal", target: "##{single_shop_owner ? "admin" : "staff"}UpgradeShopDashboardModal" } do %>
+      <%= modal_link_to(shop_dashboard_for_staff_warnings_path(warning_shop_id: single_shop.shop)) do %>
         <i class="fa fa-home fa-4x" aria-hidden="true"></i>
         <%= t("dashboard.shops") %>
       <% end %>
@@ -32,7 +37,7 @@
               <% if ability(option.owner).can?(:read, :shop_dashboard) %>
                 <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
               <% else %>
-                <%= warning_link(option.shop.display_name, shop_dashboard_for_admin_warnings_path(warning_shop_id: option.shop)) %>
+                <%= modal_link_to(option.shop.display_name, shop_dashboard_for_admin_warnings_path(warning_shop_id: option.shop)) %>
               <% end %>
             </li>
           <% end %>
@@ -53,7 +58,7 @@
               <% if ability(option.owner).can?(:read, :shop_dashboard) %>
                 <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
               <% else %>
-                <%= warning_link(option.shop.display_name, shop_dashboard_for_staff_warnings_path(warning_shop_id: option.shop)) %>
+                <%= modal_link_to(option.shop.display_name, shop_dashboard_for_staff_warnings_path(warning_shop_id: option.shop)) %>
               <% end %>
             </li>
           <% end %>

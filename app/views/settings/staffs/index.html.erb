@@ -6,7 +6,7 @@
         <% if can? :create, Staff %>
           <%= link_to t("settings.staff.new_button"), new_settings_user_staff_path(super_user), class: "BTNyellow addNew" %>
         <% else %>
-          <%= warning_link(t("settings.staff.new_button"), new_staff_for_admin_warnings_path, class: "BTNyellow addNew") %>
+          <%= modal_link_to(t("settings.staff.new_button"), new_staff_for_admin_warnings_path, class: "BTNyellow addNew") %>
         <% end %>
       </li>
     <% end %>
@@ -27,7 +27,7 @@
           <% if can?(:edit, staff) %>
             <%= link_to staff_name, edit_settings_user_staff_path(super_user, staff) %>
           <% else %>
-            <%= warning_link(staff_name, edit_staff_for_admin_warnings_path) %>
+            <%= modal_link_to(staff_name, edit_staff_for_admin_warnings_path) %>
           <% end %>
 
           <% if !staff.active? %>
@@ -39,7 +39,7 @@
           <% if can?(:edit, staff) %>
             <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
           <% else %>
-            <%= warning_link(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
+            <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
           <% end %>
 
           <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>

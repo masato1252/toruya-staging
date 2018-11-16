@@ -1,9 +1,10 @@
 import "whatwg-fetch";
 import { Controller } from "stimulus"
 
-export default class WarningModal extends Controller {
+export default class Modal extends Controller {
   connect() {
     this.popupModal = $(`${this.modalTarget}`);
+    this.popupModal.on("hidden.bs.modal", this.modalHideHandler);
   }
 
   popup() {
@@ -23,11 +24,16 @@ export default class WarningModal extends Controller {
       });
   }
 
+  modalHideHandler = () => {
+    this.popupModal.html("");
+  }
+
   get path(): string {
-    return this.data.get("warningPath");
+    return this.data.get("path");
   }
 
   get modalTarget(): string {
     return this.data.get("target");
   }
+
 }
