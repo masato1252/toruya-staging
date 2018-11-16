@@ -8,6 +8,10 @@ class WarningsController < ApplicationController
 
   def shop_dashboard_for_admin; end
 
+  def edit_staff_for_admin; end
+
+  def new_staff_for_admin; end
+
   private
 
   def set_warning_shop

@@ -157,8 +157,10 @@ Rails.application.routes.draw do
 
   resources :warnings, only: [], constraints: ::XhrConstraint do
     collection do
-      get "shop_dashboard_for_staff"
-      get "shop_dashboard_for_admin"
+      get :shop_dashboard_for_staff
+      get :shop_dashboard_for_admin
+      get :edit_staff_for_admin
+      get :new_staff_for_admin
     end
   end
 
