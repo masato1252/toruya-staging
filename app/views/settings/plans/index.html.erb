@@ -7,6 +7,7 @@
 
 <%
     shop_number_over_charge_threshold = current_user.shops.count - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD
+    exceeded_staff_number = current_user.staffs.count - 1
 %>
 
 <div class="plans">
@@ -25,7 +26,8 @@
       chargeDirectly: @charge_directly,
       paymentsPath: settings_payments_path,
       defaultUpgradePlan: @default_upgrade_plan,
-      isExceededPremiumBaseShops: shop_number_over_charge_threshold.positive?
+      isExceededPremiumBaseShops: shop_number_over_charge_threshold.positive?,
+      isExceededStaff: exceeded_staff_number.positive?
     }.to_json,
     i18n: {
       currentPlan: t("settings.plans.plan_info.current_plan"),
@@ -38,6 +40,8 @@
       shopFeeCaptionTitle: t("settings.plans.shop_fee.caption_title", shop_number: shop_number_over_charge_threshold),
       shopFeeCaptionDesc: t("settings.plans.shop_fee.caption_desc", per_shop_fee_price: Plans::Fee::PER_SHOP_FEE),
       shopFeeConfirmation: t("settings.plans.shop_fee.confirmation"),
+      extraStaffCaptionTitle: t("settings.plans.extra_staff.caption_title", staff_number: exceeded_staff_number),
+      extraStaffCaptionDesc: t("settings.plans.extra_staff.caption_desc"),
       cancel: t("action.cancel"),
       save: t("settings.plans.save"),
       saveAndPay: t("settings.plans.save_and_pay"),
