@@ -23,8 +23,8 @@ Rails.application.routes.draw do
   end
 
   resources :shops do
-    resources :reservations, except: [:show] do
-      get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+    resources :reservations do
+      get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
         get :validate
       end

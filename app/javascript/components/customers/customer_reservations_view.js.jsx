@@ -6,18 +6,6 @@ class CustomerReservationsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.reservactionBehaviors = {
-      "checked_in": [{ label: this.props.checkOutBtn, action: "check_out", btn_color: "BTNyellow" }],
-      "reserved": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
-                   { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
-      "noshow": [{ label: this.props.checkInBtn, action: "check_in", btn_color: "BTNyellow" },
-                 { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
-      "pending": [{ label: this.props.acceptBtn, action: "accept", btn_color: "BTNtarco" }],
-      "checked_out": [{ label: this.props.recheckInBtn, action: "check_in", btn_color: "BTNyellow" },
-                      { label: this.props.pendBtn, action: "pend", btn_color: "BTNgray" }],
-      "canceled": [{ label: this.props.acceptInCanceledBtn, action: "accept", btn_color: "BTNtarco" }]
-    };
-
     this.state = {
       reservations: []
     }
@@ -46,117 +34,6 @@ class CustomerReservationsView extends React.Component {
     }
   };
 
-  renderReservationModals = () => {
-    var _this = this;
-
-    var reservationModalsView = this.state.reservations.map(function(reservation, i) {
-      return (
-        <div key={`reservation-modal-${reservation.id}`} id={`reservation-modal-${reservation.id}`}>
-          <div className="modal fade" id={`reservationModal${reservation.id}`} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 className="modal-title" id="myModalLabel">
-                    <a href={`/shops/${reservation.shopId}/reservations/${reservation.date}`}>
-                      {reservation.monthDate}
-                    </a>
-                    <span>
-                      {reservation.startTime} 〜 {reservation.endTime}
-                    </span>
-                  </h4>
-                </div>
-                <div className="modal-body">
-                <div>
-                  {reservation.customers.map(function(customer) {
-                    return (
-                      <a
-                        key={customer.id}
-                        className="customer-link"
-                        href={`/users/${customer.userId}/customers?customer_id=${customer.id}`}
-                        data-path-method="user_customers_path"
-                        >
-                        {customer.name}
-                      </a>
-                    )
-                  })
-                  }
-                  </div>
-                  <div className="reservation-menu">
-                    {reservation.menu}
-                  </div>
-                  <div>
-                    {reservation.staffs}
-                  </div>
-                  {
-                    reservation.withWarnings ? (
-                      <div className="warning">
-                        <i className="fa fa-check-circle" aria-hidden="true"></i>
-                        {this.props.withWarningsMessage}
-                      </div>
-                    ) : null
-                  }
-                  {
-                    reservation.deletedStaffs ? (
-                      <div className="danger">
-                        <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
-                        {reservation.deletedStaffs}
-                      </div>
-                    ) : null
-                  }
-                  <div dangerouslySetInnerHTML={{ __html: reservation.memo }} />
-                </div>
-                <div className="modal-footer">
-                  <dl>
-                  {this.reservactionBehaviors[reservation.state].map(function(behavior) {
-                      if (behavior["action"] === "accept" && !reservation.acceptable) {
-                        return;
-                      }
-                      else {
-                        return (
-                          <dd key={`reseravtion-${reservation.id}-action-${behavior["action"]}`}>
-                            <a
-                              href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=${behavior["action"]}&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
-                              className={`btn ${behavior["btn_color"]}`}
-                              >
-                              {behavior["label"]}
-                            </a>
-                          </dd>
-                        );
-                      }
-                      })
-                    }
-                    {
-                      reservation.state !== "canceled" ? (
-                        <dd>
-                          <a
-                            href={`${_this.props.stateCustomerReservationsPath}?reservation_id=${reservation.id}&reservation_action=cancel&shop_id=${_this.props.shop.id}&id=${_this.props.customer.id}`}
-                            className="btn BTNorange"
-                            >{this.props.cancelBtn}</a>
-                        </dd>
-                      ) : null
-                    }
-                    <dd>
-                      <a
-                        href={`${_this.props.editCustomerReservationsPath}?shop_id=${reservation.shopId}&from_shop_id=${_this.props.shop.id}&from_customer_id=${_this.props.customer.id}&reservation_id=${reservation.id}`}
-                        className="btn BTNtarco">
-                        {this.props.editBtn}
-                      </a>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }.bind(this));
-
-    return reservationModalsView
-  };
-
   renderReservations = () => {
     var previousYear;
     var _this = this;
@@ -175,10 +52,13 @@ class CustomerReservationsView extends React.Component {
       return (
         <div key={`reservation-${reservation.id}`} id={`reservation-${reservation.id}`}>
           {divider}
-          <a href="#"
+          <a
+            href="#"
+            data-controller="modal"
+            data-modal-target="#dummyModal"
+            data-action="click->modal#popup"
+            data-modal-path={`/shops/${reservation.shopId}/reservations/${reservation.id}?from_customer='true'`}
             className={reservation.state}
-            data-toggle="modal"
-            data-target={`#reservationModal${reservation.id}`}
             >
             <dl>
               <dd className="date">{reservation.monthDate}</dd>
@@ -266,7 +146,6 @@ class CustomerReservationsView extends React.Component {
             </div>
           </div>
         </div>
-        {this.renderReservationModals()}
       </div>
     );
   }

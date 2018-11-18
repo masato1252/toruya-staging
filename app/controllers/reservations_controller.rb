@@ -1,6 +1,11 @@
 class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
 
+  def show
+    @sentences = view_context.reservation_staff_sentences(@reservation)
+    render layout: false
+  end
+
   # GET /reservations
   # GET /reservations.json
   def index
