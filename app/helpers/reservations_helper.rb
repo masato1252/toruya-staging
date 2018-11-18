@@ -1,15 +1,4 @@
 module ReservationsHelper
-  def dashboard_tag(&block)
-    data = { }
-
-    if params[:reservation_id]
-      data[:controller] = "popup-modal"
-      data[:popup_modal_target] = "#reservationModal#{params[:reservation_id]}"
-    end
-
-    content_tag(:div, capture(&block), data: data, class: "contents", id: "dashboard")
-  end
-
   def reservation_staff_sentences(reservation)
     in_future_or_today = reservation.start_time.to_date >= Date.today
     reservation_staffs = reservation.staffs.to_a

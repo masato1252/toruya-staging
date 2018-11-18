@@ -10,6 +10,8 @@ class MembersController < DashboardController
       includes(:menu, :customers, :staffs, shop: :user).
       order("reservations.start_time ASC")
 
+    @reservation = @reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
+
     staffs_off_schedules = CustomSchedule.where(staff_id: all_shop_options.map(&:staff_id).uniq).closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).includes(:staff).to_a
     existing_reference_ids = []
     @schedules = (@reservations + staffs_off_schedules).each_with_object([]) do |reservation_and_off_schedule, schedules|

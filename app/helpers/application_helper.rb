@@ -74,4 +74,14 @@ module ApplicationHelper
       link_to text,"#", options.reverse_merge(default_options.merge("data-modal-path": path))
     end
   end
+
+  def jump_out_modal(path)
+    data = {}
+    data[:controller] = "modal"
+    data[:modal_target] = "#dummyModal"
+    data[:modal_jump_out] = true
+    data[:modal_path] = path
+
+    content_tag(:template, nil, data: data)
+  end
 end

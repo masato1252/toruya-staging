@@ -5,6 +5,10 @@ export default class Modal extends Controller {
   connect() {
     this.popupModal = $(`${this.modalTarget}`);
     this.popupModal.on("hidden.bs.modal", this.modalHideHandler);
+
+    if (this.jumpOut) {
+      this.popup();
+    }
   }
 
   popup() {
@@ -36,4 +40,7 @@ export default class Modal extends Controller {
     return this.data.get("target");
   }
 
+  get jumpOut(): string {
+    return this.data.get("jumpOut");
+  }
 }

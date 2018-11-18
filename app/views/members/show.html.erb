@@ -1,5 +1,7 @@
 <%= notification_messages %>
-<%= dashboard_tag do %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation %>
+
+<div class="contents" id="dashboard">
   <div id="calendar" class="sidel">
     <%= react_component("calendar/calendar",
                         {
@@ -56,4 +58,4 @@
   <%= render "reservations/upgrade_modals/admin_total_reservations_limit_modal" %>
   <%= render "reservations/upgrade_modals/staff_daily_reservations_limit_modal" %>
   <%= render "reservations/upgrade_modals/staff_total_reservations_limit_modal" %>
-<% end %>
+<div>
