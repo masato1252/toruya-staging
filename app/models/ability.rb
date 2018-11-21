@@ -60,6 +60,7 @@ class Ability
   def admin_level
     @shop_owner_level = current_user == super_user
   end
+  alias_method :admin?, :admin_level
 
   def manager_level
     @manager_levels ||= {}
@@ -135,8 +136,38 @@ class Ability
     can :edit, Staff do |staff|
       super_user.premium_member? || (current_user_staff == staff && admin_level)
     end
+
     can :edit, Reservation do |reservation|
-      super_user.premium_member? || (reservation.staff_ids == [current_user_staff.id] && admin_level)
+      super_user.premium_member? || (
+        admin? &&
+        super_user.valid_shop_ids.include?(reservation.shop_id) &&
+        reservation.staff_ids.length == 1
+      )
+    end
+
+    can :operate, Reservation do |reservation|
+      super_user.premium_member? || (
+        admin? &&
+        super_user.valid_shop_ids.include?(reservation.shop_id) &&
+        (
+          reservation.start_time.to_date < Subscription.today ||
+          reservation.staff_ids.length == 1
+        )
+      )
+    end
+
+    can :read_edit_view, Reservation do |reservation|
+      super_user.premium_member? || (
+        admin? &&
+        super_user.valid_shop_ids.include?(reservation.shop_id)
+      )
+    end
+
+    can :cancel, Reservation do |reservation|
+      super_user.premium_member? || (
+        admin? &&
+        super_user.valid_shop_ids.include?(reservation.shop_id)
+      )
     end
 
     # manage_shop_dashboard only use to check add/edit reservation currently

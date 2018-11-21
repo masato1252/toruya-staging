@@ -114,6 +114,9 @@ class ReservationForm extends React.Component {
     else if (this._isMeetCustomerLimit()) {
       return "disabled BTNorange"
     }
+    else if (!this.props.isEditable) {
+      return "disabled BTNtarco";
+    }
     else {
       return "BTNtarco"
     }
@@ -234,6 +237,7 @@ class ReservationForm extends React.Component {
       let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().errors)
 
       return (
+        this.props.isEditable &&
         this.state.start_time_date_part &&
         this.state.start_time_time_part &&
         this.state.end_time_time_part &&
@@ -496,6 +500,7 @@ class ReservationForm extends React.Component {
                   this._staffDangerErrors(value).length !== 0 ? "field-error" : "field-warning"
                 ) : ""
               }
+              disabled={!this.props.isEditable}
             />
             <span className="errors">
               {this._staffErrors(value)}
@@ -676,6 +681,7 @@ class ReservationForm extends React.Component {
                     name="start_time_date_part"
                     handleChange={this._handleDateChange}
                     className={this._dateErrors().length == 0 ? "" : "field-warning"}
+                    isDisabled={!this.props.isEditable}
                   />
                   {
                     this.state.start_time_restriction && this.state.end_time_restriction ? (
@@ -706,6 +712,7 @@ class ReservationForm extends React.Component {
                     step="300"
                     onChange={this._handleChange}
                     className={this._previousReservationOverlap() ? "field-warning" : ""}
+                    disabled={!this.props.isEditable}
                    />
                   〜
                   <input
@@ -716,6 +723,7 @@ class ReservationForm extends React.Component {
                     step="300"
                     onChange={this._handleChange}
                     className={this._nextReservationOverlap() ? "field-warning" : ""}
+                    disabled={!this.props.isEditable}
                     />
                     <span className="errors">
                       {this._isValidReservationTime() ? null : <span className="warning">{this.props.validTimeTipMessage}</span>}
@@ -735,6 +743,7 @@ class ReservationForm extends React.Component {
                     onChange={this.onMenuChange}
                     placeholder={this.props.selectMenuLabel}
                     noOptionsMessage={() => this.props.noMenuMessage}
+                    isDisabled={!this.props.isEditable}
                     />
                   <span className="errors">
                     {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
@@ -767,6 +776,7 @@ class ReservationForm extends React.Component {
                 <dd className="input">
                   <textarea
                     id="memo" placeholder={this.props.memoPlaceholder} data-name="memo" cols="40" rows="4"
+                    disabled={!this.props.isEditable}
                     value={this.state.memo} onChange={this._handleChange} />
                 </dd>
               </dl>
@@ -784,6 +794,7 @@ class ReservationForm extends React.Component {
            </h2>
 
            <CommonCustomersList
+             isDisabled={!this.props.isEditable}
              customers={this.state.customers}
              handleCustomerRemove={this.handleCustomerRemove} />
            <div id="customerLevels">

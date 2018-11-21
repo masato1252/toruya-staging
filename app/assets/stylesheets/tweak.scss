@@ -62,9 +62,13 @@ input[type="date"]
 }
 
 // reservation new save button
-button[disabled], a.disabled, input[disabled] {
-  opacity: .45;
-  cursor: not-allowed !important;
+button[disabled], a.disabled, input[disabled], textarea[disabled], select[disabled], .input div.disabled, .checkbox .disabled, span.disabled {
+ opacity: .45;
+ cursor: not-allowed !important;
+}
+
+input:disabled, select:disabled, textarea[disabled], .input div.disabled {
+ background-color: #d0d0d0;
 }
 
 // reservation index calendar and reservation new

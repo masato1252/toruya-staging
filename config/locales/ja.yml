@@ -149,6 +149,8 @@ ja:
         create_reservation_with_settings_no_permission: ※予約枠が未設定のため無効な店舗があります。予約枠を設定するか、店舗管理者にご連絡ください。
         create_reservations_with_menu_no_permission: ※メニューが未設定のため無効な店舗があります。メニューを設定するか、店舗管理者にご連絡ください。
       disable_edit_when_shop_is_invalid: ※あなた/店舗オーナーのご利用プランに基づき、この予約は編集できません。
+      disable_edit_when_user_membership_no_permission: ※店舗オーナーのご利用プランに基づき、この予約は編集できません。
+      disable_operate_when_user_membership_no_permission: ※ご利用プランに基づき、この予約はステータスを変更できません。
       admin:
         daily_reservations_limit:
           upgrade_title: アカウントをアップグレード

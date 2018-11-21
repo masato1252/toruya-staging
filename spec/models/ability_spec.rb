@@ -250,5 +250,188 @@ RSpec.describe Ability do
         end
       end
     end
+
+    # operate = check in, check out, accept and pend
+    context "read edit view, edit, operate, cancel reservation" do
+      before { allow(super_user).to receive(:premium_member?).and_return(is_premium_member) }
+      let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids, start_time: reservation_time) }
+      let(:shop) { FactoryBot.create(:shop, user: super_user) }
+      let(:staff_ids) { [FactoryBot.create(:staff).id]  }
+      let(:reservation_time) { Time.now  }
+
+      context "when user is an owner" do
+        context "when user is premium member" do
+          let(:is_premium_member) { true }
+
+          it "returns true" do
+            expect(ability.can?(:edit, reservation)).to eq(true)
+            expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+            expect(ability.can?(:operate, reservation)).to eq(true)
+            expect(ability.can?(:cancel, reservation)).to eq(true)
+          end
+        end
+
+        context "when user is NOT premium member" do
+          let(:is_premium_member) { false }
+
+          context "when reservation is not under valid shop" do
+            before { allow(super_user).to receive(:valid_shop_ids).and_return([]) }
+
+            it "returns false" do
+              expect(ability.can?(:edit, reservation)).to eq(false)
+              expect(ability.can?(:read_edit_view, reservation)).to eq(false)
+              expect(ability.can?(:operate, reservation)).to eq(false)
+              expect(ability.can?(:cancel, reservation)).to eq(false)
+            end
+          end
+
+          context "when reservation is under valid shop" do
+            context "when reservation date is in the past" do
+              let(:reservation_time) { 1.day.ago }
+
+              context "when reservation ony require one staff" do
+                let(:staff_ids) { FactoryBot.create(:staff).id  }
+
+                context "when action is read_edit_view" do
+                  it "returns true" do
+                    expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is edit" do
+                  it "returns true" do
+                    expect(ability.can?(:edit, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is operate" do
+                  it "returns true" do
+                    expect(ability.can?(:operate, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is cancel" do
+                  it "returns true" do
+                    expect(ability.can?(:cancel, reservation)).to eq(true)
+                  end
+                end
+              end
+
+              context "when reservation require multiple staffs" do
+                let(:staff_ids) { [FactoryBot.create(:staff).id, FactoryBot.create(:staff).id]  }
+
+                context "when action is read_edit_view" do
+                  it "returns true" do
+                    expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is edit" do
+                  it "returns false" do
+                    expect(ability.can?(:edit, reservation)).to eq(false)
+                  end
+                end
+
+                context "when action is operate" do
+                  it "returns true" do
+                    expect(ability.can?(:operate, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is cancel" do
+                  it "returns true" do
+                    expect(ability.can?(:cancel, reservation)).to eq(true)
+                  end
+                end
+              end
+            end
+
+            context "when reservation date is in the future" do
+              context "when reservation ony require one staff" do
+                context "when action is read_edit_view" do
+                  it "returns true" do
+                    expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is edit" do
+                  it "returns true" do
+                    expect(ability.can?(:edit, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is operate" do
+                  it "returns false" do
+                    expect(ability.can?(:operate, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is cancel" do
+                  it "returns true" do
+                    expect(ability.can?(:cancel, reservation)).to eq(true)
+                  end
+                end
+              end
+
+              context "when reservation require multiple staffs" do
+                let(:staff_ids) { [FactoryBot.create(:staff).id, FactoryBot.create(:staff).id]  }
+
+                context "when action is read_edit_view" do
+                  it "returns true" do
+                    expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+                  end
+                end
+
+                context "when action is edit" do
+                  it "returns true" do
+                    expect(ability.can?(:edit, reservation)).to eq(false)
+                  end
+                end
+
+                context "when action is operate" do
+                  it "returns false" do
+                    expect(ability.can?(:operate, reservation)).to eq(false)
+                  end
+                end
+
+                context "when action is cancel" do
+                  it "returns true" do
+                    expect(ability.can?(:cancel, reservation)).to eq(true)
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+
+      context "when user is NOT owner" do
+        let(:staff_account) { FactoryBot.create(:staff_account) }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        context "when super user is premium member" do
+          let(:is_premium_member) { true }
+
+          it "returns true" do
+            expect(ability.can?(:edit, reservation)).to eq(true)
+            expect(ability.can?(:read_edit_view, reservation)).to eq(true)
+            expect(ability.can?(:operate, reservation)).to eq(true)
+            expect(ability.can?(:cancel, reservation)).to eq(true)
+          end
+        end
+
+        context "when user is NOT premium member" do
+          let(:is_premium_member) { false }
+
+          it "returns false" do
+            expect(ability.can?(:edit, reservation)).to eq(false)
+            expect(ability.can?(:read_edit_view, reservation)).to eq(false)
+            expect(ability.can?(:operate, reservation)).to eq(false)
+            expect(ability.can?(:cancel, reservation)).to eq(false)
+          end
+        end
+      end
+    end
   end
 end

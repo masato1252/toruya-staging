@@ -73,7 +73,7 @@ class ReservationsController < DashboardController
   # GET /reservations/1/edit
   def edit
     authorize! :manage_shop_reservations, shop
-    authorize! :edit, @reservation
+    authorize! :read_edit_view, @reservation
 
     @body_class = "resNew"
 
@@ -110,6 +110,7 @@ class ReservationsController < DashboardController
 
   def update
     authorize! :manage_shop_reservations, shop
+    authorize! :edit, @reservation
     outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
@@ -133,6 +134,8 @@ class ReservationsController < DashboardController
   end
 
   def destroy
+    authorize! :read_edit_view, @reservation
+
     @reservation.destroy
     if params[:from_member]
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
