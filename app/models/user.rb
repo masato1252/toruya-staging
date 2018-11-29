@@ -22,6 +22,7 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  accessed_at            :datetime
 #
 
 class User < ApplicationRecord

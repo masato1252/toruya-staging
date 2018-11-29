@@ -10,6 +10,7 @@ class DashboardController < ActionController::Base
 
   before_action :profile_required
   before_action :set_paper_trail_whodunnit
+  before_action :checkin_user
 
   private
 
@@ -19,5 +20,9 @@ class DashboardController < ActionController::Base
 
   def contact_group_required
     redirect_to settings_dashboard_path unless BasicSettingsPresenter.new(super_user).customers_settings_completed?
+  end
+
+  def checkin_user
+    Users::Access.run!(user: current_user) if current_user
   end
 end
