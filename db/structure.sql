@@ -1056,7 +1056,7 @@ CREATE TABLE public.users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     level integer DEFAULT 0 NOT NULL,
-    authentication_token character varying(30)
+    accessed_at timestamp without time zone
 );
 
 
@@ -1824,13 +1824,6 @@ CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
 
 
 --
--- Name: index_users_on_authentication_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_authentication_token ON public.users USING btree (authentication_token);
-
-
---
 -- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2016,11 +2009,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170827131921'),
 ('20171118075544'),
 ('20171127134653'),
-('20180120080732'),
 ('20180413110627'),
 ('20180413153332'),
 ('20180612021000'),
 ('20180617004311'),
-('20180620074249');
+('20180620074249'),
+('20181129015015');
 
 

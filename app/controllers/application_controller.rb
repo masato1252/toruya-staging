@@ -3,9 +3,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
+
   include ExceptionHandler
 
   private
+
   def configure_permitted_parameters
     # Or use this syntax
     # devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
