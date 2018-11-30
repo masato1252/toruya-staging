@@ -1,14 +1,14 @@
 module Users
-  class Access < ActiveInteraction::Base
+  class ContactsSync < ActiveInteraction::Base
     object :user
 
     def execute
       now = Time.zone.now
-      accessed_at = user.accessed_at
+      sync_at = user.contacts_sync_at
 
       # update once a day
-      if (accessed_at && accessed_at.to_date != now.to_date) || !accessed_at
-        user.update_columns(accessed_at: now)
+      if (sync_at && sync_at.to_date != now.to_date) || !sync_at
+        user.update_columns(contacts_sync_at: now)
 
         import_all_contacts_groups
       end

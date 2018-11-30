@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Users::Access do
+RSpec.describe Users::ContactsSync do
   let(:user) { FactoryBot.create(:user) }
   let(:args) do
     {
@@ -16,11 +16,11 @@ RSpec.describe Users::Access do
 
   describe "#execute" do
     context "when user doesn't access Toruya today" do
-      it "updates the accessed_at" do
+      it "updates the contacts_sync_at" do
         expect {
           outcome
         }.to change {
-          user.accessed_at
+          user.contacts_sync_at
         }
       end
 
@@ -32,13 +32,13 @@ RSpec.describe Users::Access do
     end
 
     context "when user already accessed today" do
-      it "won't change accessed_at" do
+      it "won't change contacts_sync_at" do
         outcome
 
         expect {
           outcome
         }.not_to change {
-          user.accessed_at
+          user.contacts_sync_at
         }
       end
     end
