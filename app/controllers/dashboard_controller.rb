@@ -9,11 +9,11 @@ class DashboardController < ActionController::Base
   include Sentry
 
   before_action :set_paper_trail_whodunnit
-  before_action :checkin_user
+  before_action :sync_user
 
   private
 
-  def checkin_user
-    Users::Access.run!(user: current_user) if current_user
+  def sync_user
+    Users::ContactsSync.run!(user: super_user) if super_user
   end
 end
