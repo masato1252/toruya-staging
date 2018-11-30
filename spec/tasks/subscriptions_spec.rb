@@ -194,14 +194,13 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
 
   context "when users are 1 week ago before trial plan expired" do
     before do
-      created_date = today.advance(days: 7, months: -Plan::TRIAL_PLAN_THRESHOLD_MONTHS)
-      Timecop.travel(created_date) { user }
+      Timecop.travel(user.trial_expired_date.advance(days: -7))
     end
 
     context "when user is under free plan" do
       it "send trial_member_months_ago_reminder email" do
         expect(ReminderMailer).to receive(:trial_member_week_ago_reminder).with(user).and_return(double(deliver_later: true))
-        expect(today).to eq(user.trial_expired_date.advance(days: -7))
+        expect(Subscription.today).to eq(user.trial_expired_date.advance(days: -7))
 
         task.execute
       end
@@ -210,14 +209,13 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
 
   context "when users are 1 day ago before trial plan expired" do
     before do
-      created_date = today.advance(days: 1, months: -Plan::TRIAL_PLAN_THRESHOLD_MONTHS)
-      Timecop.travel(created_date) { user }
+      Timecop.travel(user.trial_expired_date.yesterday)
     end
 
     context "when user is under free plan" do
       it "send trial_member_months_ago_reminder email" do
         expect(ReminderMailer).to receive(:trial_member_day_ago_reminder).with(user).and_return(double(deliver_later: true))
-        expect(today).to eq(user.trial_expired_date.yesterday)
+        expect(Subscription.today).to eq(user.trial_expired_date.yesterday)
 
         task.execute
       end
