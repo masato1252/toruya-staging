@@ -49,4 +49,10 @@ class Settings::PaymentsController < SettingsController
 
     render options
   end
+
+  def downgrade
+    current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID)
+
+    redirect_to settings_plans_path
+  end
 end

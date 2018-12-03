@@ -91,6 +91,7 @@ Rails.application.routes.draw do
     resources :payments, only: [:index, :create] do
       collection do
         get :refund
+        get :downgrade
       end
 
       member do
