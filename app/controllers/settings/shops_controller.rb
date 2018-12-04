@@ -55,8 +55,11 @@ class Settings::ShopsController < SettingsController
   # DELETE /shops/1
   # DELETE /shops/1.json
   def destroy
-    @shop.destroy
-    redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.delete_successfully_message")
+    if @shop.destroy
+      redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.delete_successfully_message")
+    else
+      redirect_to settings_user_shops_path(super_user), alert: @shop.errors.full_messages.join(",")
+    end
   end
 
   private
