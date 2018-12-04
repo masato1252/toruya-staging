@@ -63,7 +63,7 @@ a img:hover, #header .logo a:hover, #header #phone a:hover, #footerLogo a:hover,
 .floatL {
   float: left;
 }
-div.error, div.caution, div.alert {
+div.error, div.caution {
   border: 1px solid;
   padding: 10px 20px;
   margin-bottom: 20px;
@@ -75,10 +75,6 @@ div.error {
 div.caution {
   background: #fffeeb;
   border-color: #fff100;
-}
-div.alert {
-  background: #def5ff;
-  border-color: #7dd2f9;
 }
 #content div.error h3, #content div.caution h3 { text-indent: 0; }
 p.caution, span.caution {
