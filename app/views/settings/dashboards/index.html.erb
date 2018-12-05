@@ -5,7 +5,7 @@
   <p><%= t("settings.dashboard.info_desc_html") %></p>
 </div>
 
-<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#welcomeTourModal" }) do %>
+<%= content_tag(:div, id: "settingForm") do %>
   <div class="dashboard">
     <div class="cell">
       <div>
@@ -43,6 +43,8 @@
   </div>
 
   <% unless basic_setting_presenter.completed? %>
+    <%= jump_out_modal(settings_tours_current_step_path) if session[:settings_tour] %>
+
     <div class="tour">
       <h3><span class="title">基本設定</span> <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>
       <div class="formRow">
@@ -154,6 +156,4 @@
       </div>
     </div>
   <% end %>
-
-  <%= render "settings/tour/welcome_modal" %>
 <% end %>

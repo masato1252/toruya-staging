@@ -10,7 +10,9 @@
   <p><%= t("settings.contact.info_1") %><br /><%= t("settings.contact.info_2") %></p>
 </div>
 
-<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#contactGroupTourModal" }) do %>
+<%= jump_out_modal(settings_tours_contact_group_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
+<%= content_tag(:div, id: "settingForm") do %>
   <div id="contactList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.contact.info_title") %></li>
@@ -42,6 +44,4 @@
       </dl>
     <% end %>
   </div>
-
-  <%= render "settings/tour/contact_group_modal" %>
 <% end %>

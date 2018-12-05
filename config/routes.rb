@@ -87,6 +87,17 @@ Rails.application.routes.draw do
     get :dashboard, to: "dashboards#index", as: :dashboard
     get :tour, to: "dashboards#tour", as: :tour
     get :end_tour, to: "dashboards#end_tour", as: :end_tour
+
+    namespace :tours, constraints: ::XhrConstraint do
+      get :current_step
+      get :business_schedule
+      get :contact_group
+      get :menu
+      get :reservation_setting
+      get :working_time
+      get :shop
+    end
+
     resources :plans, only: [:index]
     resources :payments, only: [:index, :create] do
       collection do

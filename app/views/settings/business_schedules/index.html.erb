@@ -5,7 +5,9 @@
   <p><%= t("settings.business_hours.info_1") %><br /><%= t("settings.business_hours.info_2") %></p>
 </div>
 
-<%= content_tag(:div, id: "settingForm", data: { controller: "popup-modal", popup_modal_target: "#businessScheduleTourModal" }) do %>
+<%= jump_out_modal(settings_tours_business_schedule_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
+<%= content_tag(:div, id: "settingForm") do %>
   <div id="shopList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.shop.name") %></li>
@@ -21,6 +23,4 @@
       </dl>
     <% end %>
   </div>
-
-  <%= render "settings/tour/business_schedule_modal" %>
 <% end %>

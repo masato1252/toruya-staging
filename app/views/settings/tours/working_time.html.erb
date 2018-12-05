@@ -1,0 +1,21 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("settings.modal.tour.working_time_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <iframe width="560" height="300" src="https://www.youtube.com/embed/XkclcJOHXuU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="modal-footer centerize">
+      <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
+
+      <% if @from_settings_tour_root %>
+        <%= link_to t("settings.modal.tour.setup_working_time"), settings_user_working_time_staffs_path(current_user, mode: "working_schedules", from_settings_tour_root: true), class: "btn BTNtarco" %>
+      <% else %>
+        <%= link_to t("settings.modal.tour.setup_working_time"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+      <% end %>
+    </div>
+  </div>
+</div>

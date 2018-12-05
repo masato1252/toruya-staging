@@ -5,6 +5,22 @@ class BasicSettingsPresenter
     @user = user
   end
 
+  def current_step
+    if !customers_settings_completed?
+      "welcome"
+    elsif !shops_settings_completed?
+      "shop"
+    elsif !business_hours_settings_completed?
+      "business_schedule"
+    elsif !working_time_settings_completed?
+      "working_time"
+    elsif !reservation_settings_completed?
+      "reservation_setting"
+    elsif !menu_settings_completed?
+      "menu"
+    end
+  end
+
   def completed?
     personal_scheduled_enabled? && customers_management_enabled? && reservation_management_enabled?
   end
@@ -16,7 +32,7 @@ class BasicSettingsPresenter
   def profile_settings_completed?
     return @profile_settings_completed if defined?(@profile_settings_completed)
 
-    @profile_settings_completed = !!user.profile
+    @profile_settings_completed = user.profile
   end
 
   def customers_management_enabled?
@@ -26,7 +42,7 @@ class BasicSettingsPresenter
   def customers_settings_completed?
     return @customers_settings_completed if defined?(@customers_settings_completed)
 
-    @customers_settings_completed = user.uid && user.contact_groups.connected.exists?
+    @customers_settings_completed = !user.uid && user.contact_groups.connected.exists?
   end
 
   def reservation_management_enabled?

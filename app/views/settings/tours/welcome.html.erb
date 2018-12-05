@@ -1,0 +1,16 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("settings.modal.tour.welcome_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <iframe width="560" height="300" src="https://www.youtube.com/embed/XkclcJOHXuU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="modal-footer centerize">
+      <%= link_to t("settings.modal.tour.by_myself"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+      <%= link_to t("settings.modal.tour.basic_setting_start"), settings_user_contact_groups_path(current_user, from_settings_tour_root: true), class: "btn BTNtarco" %>
+    </div>
+  </div>
+</div>
