@@ -141,7 +141,7 @@ class Ability
       super_user.premium_member? || (
         admin? &&
         super_user.valid_shop_ids.include?(reservation.shop_id) &&
-        reservation.staff_ids.length == 1
+        reservation.staff_ids.length <= 1
       )
     end
 
@@ -151,7 +151,7 @@ class Ability
         super_user.valid_shop_ids.include?(reservation.shop_id) &&
         (
           reservation.start_time.to_date < Subscription.today ||
-          reservation.staff_ids.length == 1
+          reservation.staff_ids.length <= 1
         )
       )
     end
