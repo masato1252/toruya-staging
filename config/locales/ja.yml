@@ -314,7 +314,7 @@ ja:
       tour:
         welcome_title: Toruyaにご登録ありがとうございます！
         by_myself: 自分で設定します
-        basic_setting_start: 基本設定ツアーを始めまる
+        basic_setting_start: 基本設定ツアーを始めます
         end_tour: ツアーを終了
         setup_contact_group: 顧客台帳を設定します
         contact_group_title: 顧客台帳の設定(Google連絡先の同期)
