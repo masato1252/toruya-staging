@@ -9,11 +9,11 @@
       <iframe width="560" height="300" src="https://www.youtube.com/embed/XkclcJOHXuU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
     <div class="modal-footer centerize">
-      <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
-
       <% if @from_settings_tour_root %>
+        <%= link_to t("settings.modal.tour.no_need"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
         <%= link_to t("settings.modal.tour.setup_business_schedule"), settings_user_business_schedules_path(current_user, from_settings_tour_root: true), class: "btn BTNtarco" %>
       <% else %>
+        <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
         <%= link_to t("settings.modal.tour.setup_business_schedule"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
       <% end %>
     </div>
