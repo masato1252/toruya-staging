@@ -570,7 +570,7 @@ class CustomersDashboard extends React.Component {
           </dl>
         );
       }
-      else {
+      else if (this.props.reservationCreatePermission) {
         return (
           <dl>
             <a
@@ -578,6 +578,20 @@ class CustomersDashboard extends React.Component {
               onClick={this.handleNewReservation}
               className="BTNtarco"
               >
+              <dd id="NAVnewResv">
+                <i className="fa fa-calendar-plus-o fa-2x"></i>
+                <span>新規予約</span>
+              </dd>
+            </a>
+          </dl>
+        );
+      }
+      else {
+        return (
+          <dl>
+            <a data-controller="modal" data-modal-target="#dummyModal"
+              data-action="click->modal#popup" data-modal-path={this.props.reservationCreateWarningPath}
+              className="BTNtarco" href="#">
               <dd id="NAVnewResv">
                 <i className="fa fa-calendar-plus-o fa-2x"></i>
                 <span>新規予約</span>

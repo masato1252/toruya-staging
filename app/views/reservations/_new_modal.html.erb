@@ -44,10 +44,11 @@
                     %>
                     <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
                   <% end %>
-                <% elsif option.owner == current_user %>
-                  <%= link_to_new_reservation("#", option.shop.display_name, data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#adminUpgradeDailyReservationsLimitModal" : "#adminUpgradeTotalReservationsLimitModal" }, class: "BTNtarco") %>
                 <% else %>
-                  <%= link_to_new_reservation("#", option.shop.display_name, data: { toggle: "modal", target: user_ability.cannot?(:create, :daily_reservations) ? "#staffUpgradeDailyReservationsLimitModal" : "#staffUpgradeTotalReservationsLimitModal" }, class: "BTNtarco") %>
+                  <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id), class: "BTNtarco") do %>
+                    <i class="fa fa-calendar-plus-o fa-2x"></i>
+                    <span class="new-shop-reservation"><%= option.shop.display_name %></span>
+                  <% end %>
                 <% end %>
               </div>
             <% end %>

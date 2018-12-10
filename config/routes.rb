@@ -173,6 +173,7 @@ Rails.application.routes.draw do
       get :shop_dashboard_for_admin
       get :edit_staff_for_admin
       get :new_staff_for_admin
+      get :create_reservation
     end
   end
 

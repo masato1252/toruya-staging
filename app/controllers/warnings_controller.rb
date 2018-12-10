@@ -12,6 +12,29 @@ class WarningsController < ApplicationController
 
   def new_staff_for_admin; end
 
+  def create_reservation
+    @owner = User.find(params[:owner_id])
+    @shop = Shop.find_by(id: params[:shop_id])
+
+    user_ability = ability(@owner)
+
+    view = if user_ability.can?(:create, Reservation)
+             if user_ability.cannot?(:create, :reservation_with_settings)
+               "empty_reservation_setting_user_modal"
+             elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
+               "empty_menu_shop_modal"
+             end
+           else
+             if @owner == current_user
+               user_ability.cannot?(:create, :daily_reservations) ? "admin_upgrade_daily_reservations_limit_modal" : "admin_upgrade_total_reservations_limit_modal"
+             else
+               user_ability.cannot?(:create, :daily_reservations) ? "staff_upgrade_daily_reservations_limit_modal" : "staff_upgrade_total_reservations_limit_modal"
+             end
+           end
+
+    render view
+  end
+
   private
 
   def set_warning_shop
