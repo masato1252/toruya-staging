@@ -1,23 +1,67 @@
 class BasicSettingsPresenter
-  attr_reader :user
+  STEPS = {
+    customer: {
+      warning_view: "welcome"
+    },
+    shop: {
+      warning_view: "shop"
+    },
+    business_schedule: {
+      warning_view: "business_schedule"
+    },
+    working_time: {
+      warning_view: "working_time"
+    },
+    reservation_setting: {
+      warning_view: "reservation_setting"
+    },
+    menu: {
+      warning_view: "menu"
+    }
+  }
+  attr_reader :user, :h
 
-  def initialize(user)
+  def initialize(view_context, user)
+    @h = view_context
     @user = user
   end
 
   def current_step
-    if !customers_settings_completed?
-      "welcome"
-    elsif !shops_settings_completed?
-      "shop"
-    elsif !business_hours_settings_completed?
-      "business_schedule"
-    elsif !working_time_settings_completed?
-      "working_time"
-    elsif !reservation_settings_completed?
-      "reservation_setting"
-    elsif !menu_settings_completed?
-      "menu"
+    return @current_step if defined?(@current_step)
+
+    @current_step = if !customers_settings_completed?
+                      :customer
+                    elsif !shops_settings_completed?
+                      :shop
+                    elsif !business_hours_settings_completed?
+                      :business_schedule
+                    elsif !working_time_settings_completed?
+                      :working_time
+                    elsif !reservation_settings_completed?
+                      :reservation_setting
+                    elsif !menu_settings_completed?
+                      :menu
+                    end
+  end
+
+  def current_step_warning
+    STEPS[current_step][:warning_view]
+  end
+
+  def current_step_setting_path
+    case current_step
+    when :customer
+      h.settings_user_business_schedules_path(user)
+    when :shop
+      h.new_settings_user_shop_path(user)
+    when :business_schedule
+      h.settings_user_business_schedules_path(user)
+    when :working_time
+      h.settings_user_working_time_staffs_path(user, mode: "working_schedules")
+    when :reservation_setting
+      h.new_settings_user_reservation_setting_path(user)
+    when :menu
+      h.new_settings_user_menu_path(user)
     end
   end
 
@@ -42,7 +86,7 @@ class BasicSettingsPresenter
   def customers_settings_completed?
     return @customers_settings_completed if defined?(@customers_settings_completed)
 
-    @customers_settings_completed = !user.uid && user.contact_groups.connected.exists?
+    @customers_settings_completed = user.uid && user.contact_groups.connected.exists?
   end
 
   def reservation_management_enabled?

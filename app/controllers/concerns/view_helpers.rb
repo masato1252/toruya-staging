@@ -133,7 +133,7 @@ module ViewHelpers
   end
 
   def basic_setting_presenter
-    @basic_setting_presenter ||= BasicSettingsPresenter.new(current_user)
+    @basic_setting_presenter ||= BasicSettingsPresenter.new(view_context, current_user)
   end
 
   def admin?

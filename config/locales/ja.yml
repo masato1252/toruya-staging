@@ -303,6 +303,13 @@ ja:
         working_time_settings: 勤務日時を設定する
         reservations_blocks_settings: 予約枠を設定する
         menus_settings: メニューを設定する
+        notifications:
+          customer_html: "※顧客管理を始めるために、<a href='%{url}'>こちら</a>から顧客台帳を作成してください。"
+          shop_html: "※予約管理を始めるために、<a href='%{url}'>こちら</a>から店舗を作成してください。"
+          business_schedule_html: "※%{user_name}さんの店舗で営業日時が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          working_time_html: "※%{user_name}さんの店舗で勤務日時が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          reservation_setting_html: "※%{user_name}さんの店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          menu_html: "※%{user_name}さんの店舗でメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     modal:
       tour:
         welcome_title: Toruyaにご登録ありがとうございます！

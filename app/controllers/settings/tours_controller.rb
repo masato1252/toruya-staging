@@ -9,9 +9,9 @@ class Settings::ToursController < ActionController::Base
   include ExceptionHandler
   include Sentry
 
-  def current_step
+  def current_step_warning
     @from_settings_tour_root = true
-    render basic_setting_presenter.current_step
+    render basic_setting_presenter.current_step_warning
   end
 
   def welcome; end

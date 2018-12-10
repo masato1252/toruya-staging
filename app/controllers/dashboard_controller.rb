@@ -19,7 +19,7 @@ class DashboardController < ActionController::Base
   end
 
   def contact_group_required
-    redirect_to settings_dashboard_path unless BasicSettingsPresenter.new(super_user).customers_settings_completed?
+    redirect_to settings_dashboard_path unless BasicSettingsPresenter.new(view_context, super_user).customers_settings_completed?
   end
 
   def sync_user

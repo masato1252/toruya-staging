@@ -43,7 +43,7 @@
   </div>
 
   <% unless basic_setting_presenter.completed? %>
-    <%= jump_out_modal(settings_tours_current_step_path) if session[:settings_tour] %>
+    <%= jump_out_modal(settings_tours_current_step_warning_path) if session[:settings_tour] %>
 
     <div class="tour">
       <h3><span class="title">基本設定</span> <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>

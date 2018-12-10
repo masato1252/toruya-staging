@@ -89,7 +89,7 @@ Rails.application.routes.draw do
     get :end_tour, to: "dashboards#end_tour", as: :end_tour
 
     namespace :tours, constraints: ::XhrConstraint do
-      get :current_step
+      get :current_step_warning
       get :business_schedule
       get :contact_group
       get :menu

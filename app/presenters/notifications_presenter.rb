@@ -8,7 +8,7 @@ class NotificationsPresenter
   end
 
   def data
-    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops
+    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + basic_settings_tour
   end
 
   def recent_pending_reservations
@@ -53,5 +53,10 @@ class NotificationsPresenter
 
       array << data if data
     end
+  end
+
+  def basic_settings_tour
+    data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
+    data ? [data] : []
   end
 end
