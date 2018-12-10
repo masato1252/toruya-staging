@@ -1,5 +1,9 @@
 @import "variables";
 
+.btn {
+  text-indent: 0;
+}
+
 .btn-tarco {
   background: $palette-color2;
   border-color: $palette-color2-1;
