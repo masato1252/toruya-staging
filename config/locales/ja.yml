@@ -149,9 +149,9 @@ ja:
         create_reservation_with_settings_no_permission: ※予約枠が未設定のため無効な店舗があります。予約枠を設定するか、店舗管理者にご連絡ください。
         create_reservations_with_menu_no_permission: ※メニューが未設定のため無効な店舗があります。メニューを設定するか、店舗管理者にご連絡ください。
       disable_edit_when_shop_is_invalid: ※あなた/店舗オーナーのご利用プランに基づき、この予約は編集できません。
-      disable_edit_when_user_membership_no_permission: ※店舗オーナーのご利用プランに基づき、この予約は編集できません。
-      disable_operate_when_user_membership_no_permission: ※ご利用プランに基づき、この予約はステータスを変更できません。
       admin:
+        disable_edit_when_user_membership_no_permission: ※ご利用プランに基づき、この予約は編集できません。
+        disable_operate_when_user_membership_no_permission: ※ご利用プランに基づき、この予約はステータスを変更できません。
         daily_reservations_limit:
           upgrade_title: アカウントをアップグレード
           upgrade_content_html: 今日既に合計%{reservations_daily_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
@@ -168,6 +168,8 @@ ja:
           content: この店舗はメニューが未設定です。まずメニューを設定してください。
           button_text: メニューを設定する
       staff:
+        disable_edit_when_user_membership_no_permission: ※店舗オーナーのご利用プランに基づき、この予約は編集できません。
+        disable_operate_when_user_membership_no_permission: ※店舗オーナーのご利用プランに基づき、この予約はステータスを変更できません。
         daily_reservations_limit:
           upgrade_title: 予約を追加できません
           upgrade_content: 今日の予約上限数を超えました。店舗管理者にご連絡ください。

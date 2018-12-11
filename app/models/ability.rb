@@ -55,12 +55,12 @@ class Ability
     end
   end
 
-  private
-
   def admin_level
     @shop_owner_level = current_user == super_user
   end
   alias_method :admin?, :admin_level
+
+  private
 
   def manager_level
     @manager_levels ||= {}

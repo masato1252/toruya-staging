@@ -48,9 +48,13 @@
     <% end %>
 
     <% if user_ability.cannot?(:operate, @reservation) && user_ability.cannot?(:cancel, @reservation) && user_ability.cannot?(:read_edit_view, @reservation) %>
-      <div><%= t("reservation.modal.disable_edit_when_user_membership_no_permission") %></div>
+      <div>
+        <%= t("reservation.modal.#{user_ability.admin? ? "admin" : "staff"}.disable_edit_when_user_membership_no_permission") %>
+      </div>
     <% elsif user_ability.cannot?(:operate, @reservation) %>
-      <div><%= t("reservation.modal.disable_operate_when_user_membership_no_permission") %></div>
+      <div>
+        <%= t("reservation.modal.#{user_ability.admin? ? "admin" : "staff"}.disable_operate_when_user_membership_no_permission") %>
+      </div>
     <% end %>
   </div>
   <div class="modal-footer">
