@@ -133,5 +133,8 @@ class Customers::Save < ActiveInteraction::Base
     end
 
     customer
+  rescue => e
+    Rollbar.error(e)
+    error.add(:base, :google_down)
   end
 end

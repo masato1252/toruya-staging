@@ -39,6 +39,8 @@ class CustomerInfoEdit extends React.Component {
         _this.props.handleCreatedCustomer(result["customer"]);
         _this.props.forceStopProcessing();
         _this.props.switchEditMode();
+      }).error(function() {
+        alert(_this.props.googleDownMessage);
       }).always(function() {
         _this.props.forceStopProcessing();
       });

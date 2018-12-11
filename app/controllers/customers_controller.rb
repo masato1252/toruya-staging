@@ -35,9 +35,14 @@ class CustomersController < DashboardController
   # POST /customers.json
   def save
     outcome = Customers::Save.run(user: super_user, current_user: current_user, params: params[:customer].permit!.to_h)
-    @customer = outcome.result
 
-    render action: :show
+    if outcome.valid?
+      @customer = outcome.result
+
+      render action: :show
+    else
+      head :unprocessable_entity
+    end
   end
 
   def delete

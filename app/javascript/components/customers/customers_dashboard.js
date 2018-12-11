@@ -516,6 +516,7 @@ class CustomersDashboard extends React.Component {
           birthdayLabel={this.props.birthdayLabel}
           memoLabel={this.props.memoLabel}
           saveBtn={this.props.saveBtn}
+          googleDownMessage={this.props.googleDownMessage}
           />
       )
     }
