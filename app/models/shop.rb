@@ -14,6 +14,7 @@
 #  holiday_working :boolean
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  deleted_at      :datetime
 #
 
 class Shop < ApplicationRecord
@@ -35,4 +36,6 @@ class Shop < ApplicationRecord
   has_many :custom_schedules
   has_many :reservations
   belongs_to :user
+
+  scope :active, -> { where(deleted_at: nil) }
 end

@@ -22,7 +22,7 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  accessed_at            :datetime
+#  contacts_sync_at       :datetime
 #
 
 class User < ApplicationRecord
@@ -32,7 +32,7 @@ class User < ApplicationRecord
 
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
-  has_many :shops
+  has_many :shops, -> { active }
   has_many :menus
   has_many :staffs
   has_many :customers

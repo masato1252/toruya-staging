@@ -4,15 +4,17 @@ module Shops
     object :shop
 
     def execute
-      if shop.destroy
+      if shop.update(deleted_at: Time.current)
         if (staff_account = user.current_staff_account(user)) && staff_account.owner?
           staff = staff_account.staff
 
           # Owner staff could manage the same shops with User
-          staff.shop_ids = Shop.where(user: user).pluck(:id)
+          staff.shop_ids = user.shop_ids
           staff.save
           return
         end
+      else
+        errors.add(:shop, :delete_failed)
       end
     end
   end
