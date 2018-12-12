@@ -141,32 +141,7 @@ class Ability
       super_user.premium_member? || (
         admin? &&
         super_user.valid_shop_ids.include?(reservation.shop_id) &&
-        reservation.staff_ids.length <= 1
-      )
-    end
-
-    can :operate, Reservation do |reservation|
-      super_user.premium_member? || (
-        admin? &&
-        super_user.valid_shop_ids.include?(reservation.shop_id) &&
-        (
-          reservation.start_time.to_date < Subscription.today ||
-          reservation.staff_ids.length <= 1
-        )
-      )
-    end
-
-    can :read_edit_view, Reservation do |reservation|
-      super_user.premium_member? || (
-        admin? &&
-        super_user.valid_shop_ids.include?(reservation.shop_id)
-      )
-    end
-
-    can :cancel, Reservation do |reservation|
-      super_user.premium_member? || (
-        admin? &&
-        super_user.valid_shop_ids.include?(reservation.shop_id)
+        reservation.staff_ids.length == 0 || (reservation.staff_ids.length == 1 && reservation.staff_ids.first == current_user_staff.try(:id))
       )
     end
 

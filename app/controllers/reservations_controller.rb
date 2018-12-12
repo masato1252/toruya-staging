@@ -73,7 +73,7 @@ class ReservationsController < DashboardController
   # GET /reservations/1/edit
   def edit
     authorize! :manage_shop_reservations, shop
-    authorize! :read_edit_view, @reservation
+    authorize! :edit, @reservation
 
     @body_class = "resNew"
 
@@ -134,7 +134,7 @@ class ReservationsController < DashboardController
   end
 
   def destroy
-    authorize! :read_edit_view, @reservation
+    authorize! :edit, @reservation
 
     @reservation.destroy
     if params[:from_member]

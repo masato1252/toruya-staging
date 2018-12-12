@@ -28,7 +28,6 @@ class Reservation < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
-  validates :reservation_staffs, presence: true
   validate :end_time_larger_than_start_time
   # validate :duplicate_staff_or_customer
   # validate :enough_staffs_for_customers

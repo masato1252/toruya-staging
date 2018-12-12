@@ -48,6 +48,6 @@ class Reservations::StatesController < DashboardController
   end
 
   def authorize_reservation
-    authorize! :operate, reservation
+    authorize! :edit, reservation
   end
 end
