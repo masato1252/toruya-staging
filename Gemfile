@@ -50,6 +50,7 @@ gem "bitly", "~> 1.0.0"
 gem "lograge", "~> 0.6.0"
 gem "paper_trail", "~> 9.2.0"
 gem "sentry-raven"
+gem "slack-ruby-client", "~> 0.13.1"
 
 group :development, :test do
   gem "byebug", platform: :mri
