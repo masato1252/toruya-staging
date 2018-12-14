@@ -52,6 +52,7 @@ gem "stripe", "~> 3.15.0"
 gem "money-rails", "~> 1.11.0"
 gem "paper_trail", "~> 9.2.0"
 gem "sentry-raven"
+gem "slack-ruby-client", "~> 0.13.1"
 
 group :development, :test do
   gem "byebug", platform: :mri
