@@ -20,10 +20,16 @@ class Callbacks::StaffAccountsController < ActionController::Base
 
         redirect_to new_profile_path, notice: "Set up your account"
       else
+        sign_out
+        reset_session
+
         # existing user
         redirect_back(fallback_location: member_path, notice: I18n.t("settings.staff_account.connected_your_account"))
       end
     else
+      sign_out
+      reset_session
+
       redirect_to member_path, alert: outcome.errors.full_messages.first
     end
   end
