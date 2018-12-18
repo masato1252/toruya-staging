@@ -3,34 +3,13 @@ class Callbacks::StaffAccountsController < ActionController::Base
 
   def create
     outcome = StaffAccounts::CreateUser.run(token: params[:token])
+    sign_out
+    reset_session
 
-    result = outcome.result
     if outcome.valid?
-      user = result[:user]
-      owner = result[:owner]
-
-      if outcome.result[:reset_password_token]
-        # New User
-        # Don't sign in for new user we need users walkthrough google login flow.
-        sign_out
-        reset_session
-
-        # uncomment this if we need to take password page back
-        # session[:super_user_id_from_staff_account] = owner.id
-
-        redirect_to new_profile_path, notice: "Set up your account"
-      else
-        sign_out
-        reset_session
-
-        # existing user
-        redirect_back(fallback_location: member_path, notice: I18n.t("settings.staff_account.connected_your_account"))
-      end
+      redirect_to new_user_session_path, notice: I18n.t("settings.staff_account.connected_your_account"))
     else
-      sign_out
-      reset_session
-
-      redirect_to member_path, alert: outcome.errors.full_messages.first
+      redirect_to new_user_session_path, alert: outcome.errors.full_messages.first
     end
   end
 end
