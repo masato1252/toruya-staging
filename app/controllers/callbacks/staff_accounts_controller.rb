@@ -7,7 +7,7 @@ class Callbacks::StaffAccountsController < ActionController::Base
     reset_session
 
     if outcome.valid?
-      redirect_to new_user_session_path, notice: I18n.t("settings.staff_account.connected_your_account"))
+      redirect_to new_user_session_path, notice: I18n.t("settings.staff_account.connected_your_account")
     else
       redirect_to new_user_session_path, alert: outcome.errors.full_messages.first
     end
