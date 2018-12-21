@@ -139,6 +139,8 @@ class ReservationsController < DashboardController
     @reservation.destroy
     if params[:from_member]
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
+    elsif params[:from_customer_id]
+      redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
     else
       redirect_to shop_reservations_path(shop), notice: I18n.t("reservation.delete_successfully_message")
     end

@@ -14,7 +14,7 @@
       end
     %>
     <% if reservation %>
-      <%= modal_link_to shop_reservation_path(reservation.shop, reservation) do %>
+      <%= modal_link_to shop_reservation_path(reservation.shop, reservation, from_member: true) do %>
         <dl>
           <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
           <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>

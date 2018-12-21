@@ -57,7 +57,7 @@ class CustomerReservationsView extends React.Component {
             data-controller="modal"
             data-modal-target="#dummyModal"
             data-action="click->modal#popup"
-            data-modal-path={`/shops/${reservation.shopId}/reservations/${reservation.id}?from_customer='true'`}
+            data-modal-path={`/shops/${reservation.shopId}/reservations/${reservation.id}?from_customer_id=${_this.props.customer.id}`}
             className={reservation.state}
             >
             <dl>

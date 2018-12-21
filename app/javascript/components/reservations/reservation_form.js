@@ -835,7 +835,8 @@ class ReservationForm extends React.Component {
                 <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
                   <input name="_method" type="hidden" value="DELETE" />
                   <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                  { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                  { this.props.fromMember ? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                  { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   <button id="BTNdel" className="BTNorange" rel="nofollow" data-confirm={this.props.deleteConfirmationMessage}>
                     <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
                   </button>
@@ -857,7 +858,7 @@ class ReservationForm extends React.Component {
                 <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
                 <input name="reservation[by_staff_id]" type="hidden" value={this.props.currentUserStaffId} />
                 { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
-                { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                { this.props.fromMember ? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
                 { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
                 <button type="submit" id="BTNsave" className={this.otherStaffsResponsibleThisReservation() ? "BTNorange" : "BTNyellow"}
                   disabled={!this._isValidToReserve() || this.state.submitting}
