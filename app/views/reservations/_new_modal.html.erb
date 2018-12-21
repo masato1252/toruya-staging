@@ -18,22 +18,13 @@
             <% working_shop_options(include_user_own: true).each do |option| %>
               <% user_ability = ability(option.owner)%>
               <div class="shop-cell">
-                <% if user_ability.can?(:create, Reservation) %>
-                  <% if user_ability.can?(:manage_shop_reservations, option.shop) &&
-                      user_ability.can?(:create, :reservation_with_settings) &&
+                <% if user_ability.can?(:create_reservation, option.shop) %>
+                  <% if user_ability.can?(:create, :reservation_with_settings) &&
                       user_ability.can?(:create_shop_reservations_with_menu, option.shop)
                   %>
                     <%= link_to_new_reservation(new_shop_reservation_path(option.shop, start_time_date_part: @date, from_member: true), option.shop.display_name)%>
                   <% else %>
                     <%
-                      if user_ability.cannot?(:manage_shop_reservations, option.shop)
-                        if option.owner == current_user
-                          manage_self_shop_reservations_no_permission = true
-                        else
-                          manage_boss_shop_reservations_no_permission = true
-                        end
-                      end
-
                       if user_ability.cannot?(:create, :reservation_with_settings)
                         create_reservation_with_settings_no_permission = true
                       end
@@ -45,9 +36,23 @@
                     <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
                   <% end %>
                 <% else %>
-                  <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id), class: "BTNtarco") do %>
-                    <i class="fa fa-calendar-plus-o fa-2x"></i>
-                    <span class="new-shop-reservation"><%= option.shop.display_name %></span>
+                  <%
+                    if user_ability.cannot?(:manage_shop_reservations, option.shop)
+                      if option.owner == current_user
+                        manage_self_shop_reservations_no_permission = true
+                      else
+                        manage_boss_shop_reservations_no_permission = true
+                      end
+                    end
+                  %>
+
+                  <% if option.owner == current_user %>
+                    <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: "BTNtarco") do %>
+                      <i class="fa fa-calendar-plus-o fa-2x"></i>
+                      <span class="new-shop-reservation"><%= option.shop.display_name %></span>
+                    <% end %>
+                  <% else %>
+                    <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
                   <% end %>
                 <% end %>
               </div>

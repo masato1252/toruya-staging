@@ -150,10 +150,10 @@ RSpec.describe Ability do
 
       context "create Reservation" do
         context "when users don't have any reservation" do
-          it_behaves_like "permission management", "free", :create, Reservation, true
-          it_behaves_like "permission management", "trial", :create, Reservation, true
-          it_behaves_like "permission management", "basic", :create, Reservation, true
-          it_behaves_like "permission management", "premium", :create, Reservation, true
+          # it_behaves_like "permission management", "free", :create, Reservation, true
+          # it_behaves_like "permission management", "trial", :create, Reservation, true
+          # it_behaves_like "permission management", "basic", :create, Reservation, true
+          # it_behaves_like "permission management", "premium", :create, Reservation, true
           it_behaves_like "permission management", "free", :create, :daily_reservations, true
           it_behaves_like "permission management", "trial", :create, :daily_reservations, true
           it_behaves_like "permission management", "basic", :create, :daily_reservations, true
@@ -172,10 +172,10 @@ RSpec.describe Ability do
               FactoryBot.create(:reservation, shop: shop)
             end
 
-            it_behaves_like "permission management", "free", :create, Reservation, false
-            it_behaves_like "permission management", "trial", :create, Reservation, false
-            it_behaves_like "permission management", "basic", :create, Reservation, false
-            it_behaves_like "permission management", "premium", :create, Reservation, true
+            # it_behaves_like "permission management", "free", :create, Reservation, false
+            # it_behaves_like "permission management", "trial", :create, Reservation, false
+            # it_behaves_like "permission management", "basic", :create, Reservation, false
+            # it_behaves_like "permission management", "premium", :create, Reservation, true
           end
 
           context "when over total reservation limit" do
@@ -189,10 +189,10 @@ RSpec.describe Ability do
               FactoryBot.create(:reservation, shop: shop)
             end
 
-            it_behaves_like "permission management", "free", :create, Reservation, false
-            it_behaves_like "permission management", "trial", :create, Reservation, false
-            it_behaves_like "permission management", "basic", :create, Reservation, false
-            it_behaves_like "permission management", "premium", :create, Reservation, true
+            # it_behaves_like "permission management", "free", :create, Reservation, false
+            # it_behaves_like "permission management", "trial", :create, Reservation, false
+            # it_behaves_like "permission management", "basic", :create, Reservation, false
+            # it_behaves_like "permission management", "premium", :create, Reservation, true
           end
         end
       end
@@ -208,10 +208,10 @@ RSpec.describe Ability do
 
       context "create Reservation" do
         context "when users don't have any reservation" do
-          it_behaves_like "permission management", "free", :create, Reservation, true
-          it_behaves_like "permission management", "trial", :create, Reservation, true
-          it_behaves_like "permission management", "basic", :create, Reservation, true
-          it_behaves_like "permission management", "premium", :create, Reservation, true
+          # it_behaves_like "permission management", "free", :create, Reservation, true
+          # it_behaves_like "permission management", "trial", :create, Reservation, true
+          # it_behaves_like "permission management", "basic", :create, Reservation, true
+          # it_behaves_like "permission management", "premium", :create, Reservation, true
           it_behaves_like "permission management", "free", :create, :daily_reservations, true
           it_behaves_like "permission management", "trial", :create, :daily_reservations, true
           it_behaves_like "permission management", "basic", :create, :daily_reservations, true

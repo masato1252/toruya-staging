@@ -46,7 +46,7 @@ class ReservationsController < DashboardController
 
   # GET /reservations/new
   def new
-    authorize! :create, Reservation
+    authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
     @body_class = "resNew"
 
@@ -89,7 +89,7 @@ class ReservationsController < DashboardController
   end
 
   def create
-    authorize! :create, Reservation
+    authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
     outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 

@@ -127,7 +127,14 @@ class Ability
   end
 
   def staff_member_ability
-    can :create, Reservation
+    can :create_reservation, Shop do |shop|
+      shop &&
+        super_user.valid_shop_ids.include?(shop.id) &&
+        (super_user.premium_member? || admin?) &&
+        Reservations::DailyLimit.run(user: super_user).valid? &&
+        Reservations::TotalLimit.run(user: super_user).valid?
+    end
+
     can :create, :reservation_with_settings
     can :create, :daily_reservations
     can :create, :total_reservations
@@ -161,17 +168,14 @@ class Ability
 
     case super_user.member_level
     when "premium"
-      can :create, Reservation
       can :create, :daily_reservations
       can :create, :total_reservations
       can :read, :shop_dashboard
     when "trial"
       can :read, :shop_dashboard
-      can :create, Reservation
       reservation_daily_permission
       reservation_total_permission
     when "free", "basic"
-      can :create, Reservation
       cannot :read, :shop_dashboard
       reservation_daily_permission
       reservation_total_permission
@@ -184,14 +188,12 @@ class Ability
 
   def reservation_daily_permission
     if Reservations::DailyLimit.run(user: super_user).invalid?
-      cannot :create, Reservation
       cannot :create, :daily_reservations
     end
   end
 
   def reservation_total_permission
     if Reservations::TotalLimit.run(user: super_user).invalid?
-      cannot :create, Reservation
       cannot :create, :total_reservations
     end
   end

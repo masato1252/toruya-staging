@@ -18,7 +18,7 @@ class WarningsController < ApplicationController
 
     user_ability = ability(@owner)
 
-    view = if user_ability.can?(:create, Reservation)
+    view = if user_ability.can?(:create_reservation, @shop)
              if user_ability.cannot?(:create, :reservation_with_settings)
                "empty_reservation_setting_user_modal"
              elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
