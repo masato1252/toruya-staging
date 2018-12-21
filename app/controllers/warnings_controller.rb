@@ -2,11 +2,21 @@ class WarningsController < ApplicationController
   include Authorization
   include ViewHelpers
   layout false
-  before_action :set_warning_shop, only: [:shop_dashboard_for_staff, :shop_dashboard_for_admin]
+  before_action :set_warning_shop, only: [:shop_dashboard_for_staff, :shop_dashboard_for_admin, :read_settings_dashboard_for_staff]
 
   def shop_dashboard_for_staff; end
 
   def shop_dashboard_for_admin; end
+
+  def customer_dashboard_for_staff
+    @owner = User.find(params[:owner_id])
+  end
+
+  def filter_dashboard_for_staff
+    @owner = User.find(params[:owner_id])
+  end
+
+  def read_settings_dashboard_for_staff; end
 
   def edit_staff_for_admin; end
 

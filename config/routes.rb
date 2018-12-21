@@ -171,6 +171,9 @@ Rails.application.routes.draw do
     collection do
       get :shop_dashboard_for_staff
       get :shop_dashboard_for_admin
+      get :customer_dashboard_for_staff
+      get :filter_dashboard_for_staff
+      get :read_settings_dashboard_for_staff
       get :edit_staff_for_admin
       get :new_staff_for_admin
       get :create_reservation

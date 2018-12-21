@@ -135,6 +135,11 @@ class Ability
         Reservations::TotalLimit.run(user: super_user).valid?
     end
 
+    if super_user.premium_member? || admin?
+      can :manage_customers, User
+      can :read_settings_dashboard, User
+    end
+
     can :create, :reservation_with_settings
     can :create, :daily_reservations
     can :create, :total_reservations

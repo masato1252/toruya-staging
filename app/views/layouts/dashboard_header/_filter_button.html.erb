@@ -44,7 +44,7 @@
           <% if ability(owner).can?(:read, :filter) %>
             <%= link_to t("dashboard.someone_shop", name: owner.name), customer_user_filter_index_path(owner) %>
           <% else %>
-            <%= link_to t("dashboard.someone_shop", name: owner.name), "#", data: { toggle: "modal", target: "#staffUpgradeFilterModal" } %>
+            <%= modal_link_to(t("dashboard.someone_shop", name: owner.name), filter_dashboard_for_staff_warnings_path(owner_id: owner.id)) %>
           <% end %>
         </li>
       <% end %>

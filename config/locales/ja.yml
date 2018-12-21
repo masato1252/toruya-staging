@@ -86,13 +86,21 @@ ja:
         staff:
           upgrade_title: 店舗ダッシュボードは利用できません
           upgrade_content: "%{shop_name}は店舗ダッシュボードを利用できません。店舗管理者にご連絡ください。"
+      customer_dashboard:
+        staff:
+          upgrade_title: 顧客台帳は利用できません
+          upgrade_content: "%{owner_name}は顧客台帳を利用できません。店舗管理者にご連絡ください。"
       filter:
         admin:
           upgrade_title: アカウントをアップグレード
           upgrade_content_html: 高度検索を利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{basic_plan_price}でベーシックにアップグレードすることで、プリセットの検索条件で高度検索を使用することができます。<br /><br />月額%{premium_plan_price}でプレミアムにアップグレードすと、無制限で自分の検索条件を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
         staff:
           upgrade_title: 高度検索は利用できません
-          upgrade_content: 高度検索を利用できません。店舗管理者にご連絡ください。
+          upgrade_content: "%{owner_name}の高度検索を利用できません。店舗管理者にご連絡ください。"
+      settings:
+        staff:
+          upgrade_title: 設定は利用できません
+          upgrade_content: "%{shop_name}は設定を利用できません。店舗管理者にご連絡ください。"
   plan:
     level:
       free: 無料
