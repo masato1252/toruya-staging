@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Shops::StaffsWorkingSchedules do
   describe "#execute" do
     let(:shop) { FactoryBot.create(:shop) }
-    let(:date) { Date.today }
+    let(:date) { Date.new(2018, 12, 21) }
 
     context "when date is not working day" do
       it "is invalid" do
