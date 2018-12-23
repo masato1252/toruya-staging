@@ -639,6 +639,7 @@ ja:
               overlap_reservations: "^重複予約あり"
               incapacity_menu: "^非対応メニュー"
               not_enough_ability: "^対応人数超"
+              lack_overlap_staffs: "^無効なスタッフ"
             menu_ids:
               time_not_enough: "^所要時間不足"
               not_enough_seat: "^席数不足"
