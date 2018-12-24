@@ -11,7 +11,9 @@ module Reservable
     integer :number_of_customer, default: 1
 
     def execute
-      compose(Reservable::Time, shop: shop, date: date)
+      time_outcome = Reservable::Time.run(shop: shop, date: date)
+
+      errors.merge!(time_outcome.errors) if time_outcome.invalid?
 
       return if menu_ids.blank? || business_time_range.blank?
 
@@ -44,6 +46,10 @@ module Reservable
         validate_other_shop_reservation(staff)
         validate_same_shop_overlap_reservations(staff)
         validate_staff_ability(staff)
+      end
+
+      menus.sum(:min_staffs_number).times do |i|
+        validate_lack_overlap_staff(staff_ids[i], i)
       end
     end
 
@@ -219,6 +225,15 @@ module Reservable
           errors.add(:staff_ids, :incapacity_menu)
           errors.add(:incapacity_menu, staff.id.to_s)
         end
+      end
+    end
+
+    def validate_lack_overlap_staff(staff_id, index)
+      first_staff_index = staff_ids.index { |_staff_id| _staff_id == staff_id }
+
+      if first_staff_index != index
+        errors.add(:staff_ids, :lack_overlap_staffs)
+        errors.add(:lack_overlap_staffs, "staff-position-#{index}")
       end
     end
   end

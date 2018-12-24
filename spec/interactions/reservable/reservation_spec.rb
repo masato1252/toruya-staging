@@ -50,12 +50,12 @@ RSpec.describe Reservable::Reservation do
       end
 
       context "when reservation time is larger than menu working_time" do
+        let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
+
         before do
           FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
           FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
         end
-
-        let(:time_range) { now..now.advance(minutes: time_minutes * 2) }
 
         it "is valid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -385,6 +385,52 @@ RSpec.describe Reservable::Reservation do
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :incapacity_menu }
           expect(other_shop_error).to eq(error: :incapacity_menu)
+        end
+      end
+
+      # validate_lack_overlap_staff(staff, index)
+      context "when multiple staff required menu lack staff or had overlap staffs" do
+        before do
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
+        end
+
+        context "selected staffs number are equal menus required" do
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
+
+            expect(outcome).to be_valid
+          end
+
+          context "selected staffs are overlap" do
+            it "is invalid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id, menu2.id],
+                                                    business_time_range: time_range,
+                                                    staff_ids: [staff1.id, staff1.id])
+
+              expect(outcome).to be_invalid
+              other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :lack_overlap_staffs }
+              expect(other_shop_error).to eq(error: :lack_overlap_staffs)
+            end
+          end
+        end
+
+        context "selected staffs number are less than menus required" do
+          it "is invalid" do
+            # all menus required 2 staffs but we only assign one
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id])
+
+            expect(outcome).to be_invalid
+            other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :lack_overlap_staffs }
+            expect(other_shop_error).to eq(error: :lack_overlap_staffs)
+          end
         end
       end
     end

@@ -14,13 +14,13 @@ class ReservationForm extends React.Component {
   static errorGroups() {
     return (
       {
-        errors: ["time_not_enough", "start_yet", "is_over"],
+        errors: ["time_not_enough", "start_yet", "is_over", "lack_overlap_staffs"],
         warnings: ["freelancer", "unworking_staff", "ask_for_leave", "shop_closed", "interval_too_short", "overlap_reservations", "other_shop", "incapacity_menu", "unschedule_menu",
                    "not_enough_seat", "not_enough_ability"],
         menu_errors: ["time_not_enough", "not_enough_seat", "unschedule_menu", "start_yet", "is_over"],
         menu_danger_errors: ["start_yet", "is_over"],
         staff_errors: ["unworking_staff", "other_shop", "overlap_reservations", "incapacity_menu", "not_enough_ability"],
-        staff_danger_errors: [],
+        staff_danger_errors: ["lack_overlap_staffs"],
         staff_time_warnings: ["freelancer", "unworking_staff"]
       }
     )
@@ -264,9 +264,8 @@ class ReservationForm extends React.Component {
     this.setState({ menu_id: data.value }, function() {
       if (this.props.memberMode) {
         // send rough validation request and set the errors
-        this._validateReservation();
         // clean staffs when the menu changes
-        this.setState({staff_ids: []})
+        this.setState({staff_ids: []}, this._validateReservation);
       }
       else {
         // normal custmoer model
@@ -493,17 +492,17 @@ class ReservationForm extends React.Component {
               prefix={`option-${i}`}
               value={value}
               data-name="staff_id"
-              includeBlank={value.length == 0}
+              includeBlank={true}
               onChange={this._handleStaffChange}
               className={
-                this._staffErrors(value) && this._staffErrors(value).length !== 0 ? (
-                  this._staffDangerErrors(value).length !== 0 ? "field-error" : "field-warning"
+                this._staffErrors(value, i) && this._staffErrors(value, i).length !== 0 ? (
+                  this._staffDangerErrors(value, i).length !== 0 ? "field-error" : "field-warning"
                 ) : ""
               }
               disabled={!this.props.isEditable}
             />
             <span className="errors">
-              {this._staffErrors(value)}
+              {this._staffErrors(value, i)}
             </span>
           </div>
         )
@@ -589,18 +588,31 @@ class ReservationForm extends React.Component {
     return this._displayErrors(ReservationForm.errorGroups().menu_danger_errors);
   };
 
-  _staffErrors = (staff_id) => {
-    if (staff_id && this.state.errors[staff_id]) {
-      return this._displayErrors(this.state.errors[staff_id]);
+  _staffErrors = (staff_id, staff_order_index = 0) => {
+    let errors = [];
+
+    // error on staff
+    if (this.state.errors[staff_id]) {
+      errors = errors.concat(this._displayErrors(this.state.errors[staff_id]));
     }
-    else {
-      return ""
+
+    // error on staff field position
+    if (this.state.errors[`staff-position-${staff_order_index}`]) {
+      errors = errors.concat(this._displayErrors(this.state.errors[`staff-position-${staff_order_index}`]));
+    }
+
+    if (errors.length) {
+      return errors;
+    } else {
+      return "";
     }
   };
 
-  _staffDangerErrors = (staff_id) => {
-    if (staff_id && this.state.errors[staff_id]) {
-      var dangerStaffErrors = _.intersection(this.state.errors[staff_id], ReservationForm.errorGroups().staff_danger_errors)
+  _staffDangerErrors = (staff_id, staff_order_index = 0) => {
+    if (this.state.errors[staff_id] || this.state.errors[`staff-position-${staff_order_index}`]) {
+      let staffErrors = _.compact(_.flatten(Array(this.state.errors[staff_id], this.state.errors[`staff-position-${staff_order_index}`])));
+      let dangerStaffErrors = _.intersection(staffErrors, ReservationForm.errorGroups().staff_danger_errors);
+
       if (dangerStaffErrors.length) {
         return this._displayErrors(dangerStaffErrors)
       }
