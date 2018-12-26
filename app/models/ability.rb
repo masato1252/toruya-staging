@@ -129,10 +129,12 @@ class Ability
   def staff_member_ability
     can :create_reservation, Shop do |shop|
       shop &&
-        super_user.valid_shop_ids.include?(shop.id) &&
-        (super_user.premium_member? || admin?) &&
-        Reservations::DailyLimit.run(user: super_user).valid? &&
-        Reservations::TotalLimit.run(user: super_user).valid?
+      super_user.valid_shop_ids.include?(shop.id) &&
+      (super_user.premium_member? || admin?) &&
+      Reservations::DailyLimit.run(user: super_user).valid? &&
+      Reservations::TotalLimit.run(user: super_user).valid? &&
+      super_user.reservation_settings.exists? &&
+      shop.menus.exists?
     end
 
     if super_user.premium_member? || admin?

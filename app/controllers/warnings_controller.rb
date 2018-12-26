@@ -28,12 +28,10 @@ class WarningsController < ApplicationController
 
     user_ability = ability(@owner)
 
-    view = if user_ability.can?(:create_reservation, @shop)
-             if user_ability.cannot?(:create, :reservation_with_settings)
-               "empty_reservation_setting_user_modal"
-             elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
-               "empty_menu_shop_modal"
-             end
+    view = if user_ability.cannot?(:create, :reservation_with_settings)
+             "empty_reservation_setting_user_modal"
+           elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
+             "empty_menu_shop_modal"
            elsif user_ability.cannot?(:create, :daily_reservations)
              @owner == current_user ? "admin_upgrade_daily_reservations_limit_modal" : "staff_upgrade_daily_reservations_limit_modal"
            elsif user_ability.cannot?(:create, :total_reservations)
