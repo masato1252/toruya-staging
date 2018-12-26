@@ -43,9 +43,6 @@
     <div>
       <%= simple_format(@reservation.memo) %>
     </div>
-    <% if user_ability.cannot?(:manage_shop_reservations, @reservation.shop) || user_ability.cannot?(:edit, @reservation) %>
-      <div><%= t("reservation.modal.disable_edit_when_shop_is_invalid") %></div>
-    <% end %>
 
     <% if user_ability.cannot?(:edit, @reservation) %>
       <div>
