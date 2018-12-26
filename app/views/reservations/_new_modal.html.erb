@@ -46,14 +46,7 @@
                     end
                   %>
 
-                  <% if option.owner == current_user %>
-                    <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: "BTNtarco") do %>
-                      <i class="fa fa-calendar-plus-o fa-2x"></i>
-                      <span class="new-shop-reservation"><%= option.shop.display_name %></span>
-                    <% end %>
-                  <% else %>
-                    <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
-                  <% end %>
+                  <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
                 <% end %>
               </div>
             <% end %>
