@@ -31,7 +31,7 @@ class Shop < ApplicationRecord
   has_many :shop_staffs, dependent: :destroy
   has_many :staffs, through: :shop_staffs
   has_many :shop_menus, dependent: :destroy
-  has_many :menus, through: :shop_menus
+  has_many :menus, -> { active }, through: :shop_menus
   has_many :business_schedules
   has_many :custom_schedules
   has_many :reservations

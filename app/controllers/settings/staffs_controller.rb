@@ -88,11 +88,13 @@ class Settings::StaffsController < SettingsController
   # DELETE /staffs/1
   # DELETE /staffs/1.json
   def destroy
-    Staffs::Delete.run!(staff: @staff)
+    authorize! :delete, Staff
+    outcome = Staffs::Delete.run(staff: @staff)
 
-    respond_to do |format|
-      format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
-      format.json { head :no_content }
+    if outcome.valid?
+      redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to settings_user_staffs_path(super_user)
     end
   end
 

@@ -11,6 +11,7 @@
 #  min_staffs_number :integer
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  deleted_at        :datetime
 #
 
 class Menu < ApplicationRecord
@@ -29,7 +30,7 @@ class Menu < ApplicationRecord
   has_many :staffs, through: :staff_menus
   has_many :active_staffs, ->{ Staff.active.references(:staffs) }, through: :staff_menus, class_name: "Staff", source: :staff
   has_many :shop_menus, inverse_of: :menu, dependent: :destroy
-  has_many :shops, through: :shop_menus
+  has_many :shops, -> { active }, through: :shop_menus
   has_many :menu_categories, dependent: :destroy
   has_many :categories, through: :menu_categories
   has_many :reservations
@@ -41,6 +42,8 @@ class Menu < ApplicationRecord
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
   accepts_nested_attributes_for :shop_menus, allow_destroy: true, reject_if: :reject_shops
+
+  scope :active, -> { where(deleted_at: nil) }
 
   def self.workable_scoped(shop: , start_time:, end_time: )
     today = ::Time.zone.now.to_s(:date)

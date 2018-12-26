@@ -464,7 +464,8 @@ CREATE TABLE public.menus (
     "interval" integer,
     min_staffs_number integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -2215,6 +2216,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180904141857'),
 ('20181129015015'),
 ('20181130012847'),
-('20181212223445');
+('20181212223445'),
+('20181226150238');
 
 

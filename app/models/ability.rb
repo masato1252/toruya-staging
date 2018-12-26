@@ -82,7 +82,10 @@ class Ability
     can :manage, :everything
     can :manage, GoogleContact
     can :create, Shop
+    can :edit, Shop
+    can :delete, Shop
     can :create, Staff
+    can :delete, Staff
     can :manage, Profile
     can :edit, Customer
     can :edit, :customer_contact_info

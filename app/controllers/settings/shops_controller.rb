@@ -21,6 +21,7 @@ class Settings::ShopsController < SettingsController
 
   # GET /shops/1/edit
   def edit
+    authorize! :edit, Shop
   end
 
   # POST /shops
@@ -45,6 +46,8 @@ class Settings::ShopsController < SettingsController
   # PATCH/PUT /shops/1
   # PATCH/PUT /shops/1.json
   def update
+    authorize! :edit, Shop
+
     if @shop.update(shop_params)
       redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message")
     else
@@ -55,6 +58,8 @@ class Settings::ShopsController < SettingsController
   # DELETE /shops/1
   # DELETE /shops/1.json
   def destroy
+    authorize! :delete, Shop
+
     outcome = Shops::Delete.run(shop: @shop, user: super_user)
 
     if outcome.valid?

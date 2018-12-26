@@ -33,8 +33,8 @@ class User < ApplicationRecord
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
   has_many :shops, -> { active }
-  has_many :menus
-  has_many :staffs
+  has_many :menus, -> { active }
+  has_many :staffs, -> { active }
   has_many :customers
   has_many :reservation_settings
   has_many :categories

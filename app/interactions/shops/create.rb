@@ -18,7 +18,7 @@ module Shops
           staff = compose(Staffs::CreateOwner, user: user).staff
 
           # Owner staff manage the same shops with User
-          staff.shop_ids = Shop.where(user: user).pluck(:id)
+          staff.shop_ids = Shop.where(user: user).active.pluck(:id)
         end
 
         shop
