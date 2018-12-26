@@ -34,12 +34,10 @@ class WarningsController < ApplicationController
              elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
                "empty_menu_shop_modal"
              end
-           else
-             if @owner == current_user
-               user_ability.cannot?(:create, :daily_reservations) ? "admin_upgrade_daily_reservations_limit_modal" : "admin_upgrade_total_reservations_limit_modal"
-             else
-               user_ability.cannot?(:create, :daily_reservations) ? "staff_upgrade_daily_reservations_limit_modal" : "staff_upgrade_total_reservations_limit_modal"
-             end
+           elsif user_ability.cannot?(:create, :daily_reservations)
+             @owner == current_user ? "admin_upgrade_daily_reservations_limit_modal" : "staff_upgrade_daily_reservations_limit_modal"
+           elsif user_ability.cannot?(:create, :total_reservations)
+             @owner == current_user ? "admin_upgrade_total_reservations_limit_modal" : "staff_upgrade_total_reservations_limit_modal"
            end
 
     render view

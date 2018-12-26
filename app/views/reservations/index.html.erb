@@ -88,14 +88,23 @@
   <div id="mainNav">
     <dl>
       <dd id="NAVnewResv">
-        <% if can?(:create, Reservation) && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop) %>
-          <%= link_to_new_reservation(new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]),
-                                      t("action.new_reservation"),
-                                      class: "BTNtarco") %>
+        <% if can?(:create_reservation, shop) %>
+          <% if can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop) %>
+            <%= link_to_new_reservation(new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), t("action.new_reservation"), class: "BTNtarco") %>
+          <% else %>
+            <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
+              <i class="fa fa-calendar-plus-o fa-2x"></i>
+              <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>
+            <% end %>
+          <% end %>
         <% else %>
-          <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
-            <i class="fa fa-calendar-plus-o fa-2x"></i>
-            <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>
+          <% if current_user == shop.user && (cannot?(:create, :daily_reservations) || cannot?(:create, :total_reservations)) %>
+            <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
+              <i class="fa fa-calendar-plus-o fa-2x"></i>
+              <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>
+            <% end %>
+          <% else %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"), class: "BTNtarco disabled") %>
           <% end %>
         <% end %>
       </dd>
