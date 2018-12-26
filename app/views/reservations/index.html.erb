@@ -98,7 +98,7 @@
             <% end %>
           <% end %>
         <% else %>
-          <% if current_user == shop.user && (cannot?(:create, :daily_reservations) || cannot?(:create, :total_reservations)) %>
+          <% if current_user == shop.user && can?(:manage_shop_reservations, shop) && (cannot?(:create, :daily_reservations) || cannot?(:create, :total_reservations)) %>
             <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
               <i class="fa fa-calendar-plus-o fa-2x"></i>
               <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>

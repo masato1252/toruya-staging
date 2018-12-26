@@ -43,7 +43,7 @@
                     end
                   %>
 
-                  <% if option.owner == current_user &&
+                  <% if option.owner == current_user && user_ability.can?(:manage_shop_reservations, option.shop) &&
                       (user_ability.cannot?(:create, :daily_reservations) || user_ability.cannot?(:create, :total_reservations)) %>
                     <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: "BTNtarco") do %>
                       <i class="fa fa-calendar-plus-o fa-2x"></i>
