@@ -781,7 +781,8 @@ CREATE TABLE public.reservations (
     updated_at timestamp without time zone NOT NULL,
     count_of_customers integer DEFAULT 0,
     with_warnings boolean DEFAULT false NOT NULL,
-    by_staff_id integer
+    by_staff_id integer,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1865,6 +1866,13 @@ CREATE INDEX index_menus_on_user_id ON public.menus USING btree (user_id);
 
 
 --
+-- Name: index_menus_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (user_id, deleted_at);
+
+
+--
 -- Name: index_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1897,6 +1905,13 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 --
 
 CREATE UNIQUE INDEX index_reservation_staffs_on_reservation_id_and_staff_id ON public.reservation_staffs USING btree (reservation_id, staff_id);
+
+
+--
+-- Name: index_reservations_on_shop_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservations_on_shop_id_and_deleted_at ON public.reservations USING btree (shop_id, deleted_at);
 
 
 --
@@ -1942,6 +1957,13 @@ CREATE INDEX index_shops_on_user_id ON public.shops USING btree (user_id);
 
 
 --
+-- Name: index_shops_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (user_id, deleted_at);
+
+
+--
 -- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1974,6 +1996,13 @@ CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON public.staff_me
 --
 
 CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
+
+
+--
+-- Name: index_staffs_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staffs_on_user_id_and_deleted_at ON public.staffs USING btree (user_id, deleted_at);
 
 
 --
@@ -2217,6 +2246,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181129015015'),
 ('20181130012847'),
 ('20181212223445'),
-('20181226150238');
+('20181226150238'),
+('20181227064220');
 
 
