@@ -19,6 +19,10 @@
 #  company_address      :string
 #  company_phone_number :string
 #
+# Indexes
+#
+#  index_profiles_on_user_id  (user_id)
+#
 
 class Profile < ApplicationRecord
   include NormalizeName

@@ -9,6 +9,10 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #
+# Indexes
+#
+#  index_staff_menus_on_staff_id_and_menu_id  (staff_id,menu_id) UNIQUE
+#
 
 class StaffMenu < ApplicationRecord
   default_value_for :max_customers, 1

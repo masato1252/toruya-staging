@@ -11,6 +11,10 @@
 #  staff_temporary_working_day_permission :boolean          default(FALSE), not null
 #  staff_full_time_permission             :boolean          default(FALSE), not null
 #
+# Indexes
+#
+#  index_shop_staffs_on_shop_id_and_staff_id  (shop_id,staff_id) UNIQUE
+#
 
 class ShopStaff < ApplicationRecord
   belongs_to :shop

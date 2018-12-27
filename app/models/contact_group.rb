@@ -12,6 +12,11 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
+# Indexes
+#
+#  contact_groups_google_index      (user_id,google_uid,google_group_id,backup_google_group_id) UNIQUE
+#  index_contact_groups_on_user_id  (user_id)
+#
 
 class ContactGroup < ApplicationRecord
   GOOGLE_GROUP_PREFIX = "Toruya"

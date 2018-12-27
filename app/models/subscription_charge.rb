@@ -17,6 +17,13 @@
 #  updated_at            :datetime         not null
 #  details               :jsonb
 #
+# Indexes
+#
+#  index_subscription_charges_on_plan_id  (plan_id)
+#  index_subscription_charges_on_user_id  (user_id)
+#  order_id_index                         (order_id)
+#  user_state_index                       (user_id,state)
+#
 
 class SubscriptionCharge < ApplicationRecord
   TYPES = {

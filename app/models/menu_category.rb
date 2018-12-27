@@ -8,6 +8,10 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+# Indexes
+#
+#  index_menu_categories_on_menu_id_and_category_id  (menu_id,category_id)
+#
 
 class MenuCategory < ApplicationRecord
   belongs_to :menu

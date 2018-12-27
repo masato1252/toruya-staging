@@ -13,6 +13,11 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
+# Indexes
+#
+#  shop_working_time_index   (shop_id,business_state,day_of_week,start_time,end_time)
+#  staff_working_time_index  (shop_id,staff_id,full_time,business_state,day_of_week,start_time,end_time)
+#
 
 class BusinessSchedule < ApplicationRecord
   # shop's business_schedules: Only shop_id exists

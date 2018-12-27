@@ -16,6 +16,11 @@
 #  updated_at      :datetime         not null
 #  deleted_at      :datetime
 #
+# Indexes
+#
+#  index_shops_on_user_id                 (user_id)
+#  index_shops_on_user_id_and_deleted_at  (user_id,deleted_at)
+#
 
 class Shop < ApplicationRecord
   include ReservationChecking

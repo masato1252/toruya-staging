@@ -15,6 +15,12 @@
 #  count_of_customers :integer          default(0)
 #  with_warnings      :boolean          default(FALSE), not null
 #  by_staff_id        :integer
+#  deleted_at         :datetime
+#
+# Indexes
+#
+#  index_reservations_on_shop_id_and_deleted_at  (shop_id,deleted_at)
+#  reservation_index                             (shop_id,aasm_state,menu_id,start_time,ready_time)
 #
 
 # ready_time is end_time + menu.interval

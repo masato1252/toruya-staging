@@ -13,6 +13,13 @@
 #  open         :boolean          default(FALSE), not null
 #  reference_id :string
 #
+# Indexes
+#
+#  index_custom_schedules_on_reference_id       (reference_id)
+#  index_custom_schedules_on_staff_id_and_open  (staff_id,open)
+#  shop_custom_schedules_index                  (shop_id,start_time,end_time)
+#  staff_custom_schedules_index                 (staff_id,start_time,end_time)
+#
 
 class CustomSchedule < ApplicationRecord
   # shop's custom_schedules: Only shop_id exists

@@ -9,6 +9,11 @@
 #  updated_at     :datetime         not null
 #  state          :integer          default("pending")
 #
+# Indexes
+#
+#  index_reservation_staffs_on_reservation_id_and_staff_id  (reservation_id,staff_id) UNIQUE
+#  state_by_staff_id_index                                  (staff_id,state)
+#
 
 class ReservationStaff < ApplicationRecord
   enum state: {

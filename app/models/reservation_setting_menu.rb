@@ -8,6 +8,10 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
+# Indexes
+#
+#  reservation_setting_menus_index  (reservation_setting_id,menu_id)
+#
 
 class ReservationSettingMenu < ApplicationRecord
   belongs_to :reservation_setting

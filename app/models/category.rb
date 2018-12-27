@@ -8,6 +8,10 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
+# Indexes
+#
+#  index_categories_on_user_id  (user_id)
+#
 
 class Category < ApplicationRecord
   has_many :menu_categories, dependent: :destroy

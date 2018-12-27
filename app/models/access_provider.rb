@@ -12,6 +12,10 @@
 #  updated_at    :datetime         not null
 #  email         :string
 #
+# Indexes
+#
+#  index_access_providers_on_provider_and_uid  (provider,uid)
+#
 
 class AccessProvider < ApplicationRecord
   belongs_to :user
