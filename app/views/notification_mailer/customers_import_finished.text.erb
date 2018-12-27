@@ -7,6 +7,7 @@
 予約管理システムToruyaは以下の通り、Toruya顧客台帳をGoogle連絡先グループとの同期作業を完了いたしました。
 
 Toruya顧客台帳：<%= @contact_group.name %>
+
 Google連絡先グループ：<%= @contact_group.google_group_name.presence || @contact_group.google_backup_group_name %>
 
 ※本同期作業につきましては、完了後の作業キャンセルはできません。
