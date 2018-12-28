@@ -39,7 +39,7 @@ class Shop < ApplicationRecord
   has_many :menus, -> { active }, through: :shop_menus
   has_many :business_schedules
   has_many :custom_schedules
-  has_many :reservations
+  has_many :reservations, -> { active }
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }

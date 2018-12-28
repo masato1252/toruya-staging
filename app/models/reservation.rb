@@ -50,7 +50,8 @@ class Reservation < ApplicationRecord
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.zone.now) }
-  scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)) }
+  scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)).active }
+  scope :active, -> { where(deleted_at: nil) }
 
   aasm :whiny_transitions => false do
     state :pending, initial: true
@@ -142,7 +143,7 @@ class Reservation < ApplicationRecord
   end
 
   def duplicate_staff_or_customer
-    scoped = Reservation.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
+    scoped = Reservation.active.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
       where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
 
     if scoped.where("reservation_staffs.staff_id in (?)", staff_ids)

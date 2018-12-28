@@ -15,7 +15,7 @@ class NotificationsPresenter
     @recent_pending_reservations ||= begin
       staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
 
-      ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending).order("reservations.start_time ASC")
+      ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC")
     end
   end
 

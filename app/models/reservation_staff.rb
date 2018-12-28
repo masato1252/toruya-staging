@@ -28,6 +28,7 @@ class ReservationStaff < ApplicationRecord
     ReservationStaff.joins(:reservation).
       where.not(reservation_id: reservation_id.presence).
       where("reservation_staffs.staff_id": staff_ids).
+      where("reservations.deleted_at": nil).
       where("reservations.start_time < ? and reservations.ready_time > ?", end_time, start_time)
   end
 end

@@ -155,6 +155,6 @@ class User < ApplicationRecord
   end
 
   def total_reservations
-    Reservation.where(shop_id: shop_ids)
+    Reservation.where(shop_id: shop_ids).active
   end
 end

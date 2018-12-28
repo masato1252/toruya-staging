@@ -38,7 +38,7 @@ class NotificationMailer < ApplicationMailer
     @admin = staff.user
     @staff = staff
 
-    @reservations = Reservation.future.includes(:customers).joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).order("reservations.start_time")
+    @reservations = Reservation.future.active.includes(:customers).joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).order("reservations.start_time")
 
     mail(:to => @admin.email,
          :subject => subject("スタッフが削除されました。"))

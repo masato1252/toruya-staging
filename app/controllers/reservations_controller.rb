@@ -136,7 +136,8 @@ class ReservationsController < DashboardController
   def destroy
     authorize! :edit, @reservation
 
-    @reservation.destroy
+    Reservations::Delete.run!(reservation: @reservation)
+
     if params[:from_member]
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
     elsif params[:from_customer_id]

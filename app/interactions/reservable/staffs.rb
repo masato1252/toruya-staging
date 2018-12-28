@@ -57,7 +57,7 @@ module Reservable
       reservation_staffs = []
       if menu.min_staffs_number == 0
         # Other reservation(menu1, menu2) staffs still could do this menu0 too.
-        all_overlap_reservations = overlap_reservations(reservation_id)
+        all_overlap_reservations = overlap_reservations
         all_overlap_staffs = all_overlap_reservations.map {|reservation| reservation.staffs}.flatten
         reservation_staffs = all_overlap_staffs.find_all { |staff| staff.staff_menus.where(menu: menu).exists? }
 
