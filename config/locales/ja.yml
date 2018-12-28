@@ -294,8 +294,9 @@ ja:
       current_plan_is: 現在ご利用中のプランは
       check_plan: プランを確認する
       today_had_created: あなたは今日
-      total_had_created: あなたは既に
-      reservations_created: 予約を作成しました
+      total_had_created: あなたは現在
+      do_reservations_created: 回、予約を作成しました
+      reservations_created: 件の予約があります
       no_limit: 無制限
       basic_tour:
         title: 基本設定
