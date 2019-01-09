@@ -16,6 +16,10 @@ module Shops
             user.reservation_settings.destroy_all
             BusinessSchedule.where(staff_id: user.staff_ids).destroy_all
             user.categories.destroy_all
+
+            user.menus.each do |menu|
+              compose(Menus::Delete, menu: menu)
+            end
           end
 
           # The business schedules for that shop
