@@ -14,6 +14,7 @@ var componentRequireContext = require.context("components", true)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(componentRequireContext)
 
+import "@stimulus/polyfills"
 import { Application } from "stimulus"
 import { definitionsFromContext } from "stimulus/webpack-helpers"
 
