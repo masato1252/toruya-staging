@@ -12,6 +12,8 @@ module Shops
             compose(Menus::Delete, menu: menu) if menu.shop_ids.blank?
           end
 
+          shop.shop_staffs.destroy_all
+
           unless user.shops.exists?
             user.reservation_settings.destroy_all
             BusinessSchedule.where(staff_id: user.staff_ids).destroy_all
