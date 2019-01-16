@@ -50,14 +50,22 @@ class NotificationsPresenter
       owner = shop_option.owner
       shop = shop_option.shop
 
-      data = Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
+      data = if current_user == owner
+               if basic_settings_tour.blank? # basic_settings_tour finished
+                 Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
+               end
+             else
+               Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
+             end
 
       array << data if data
     end
   end
 
   def basic_settings_tour
-    data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
-    data ? [data] : []
+    @basic_settings_tour_data ||= begin
+                                    data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
+                                    data ? [data] : []
+                                  end
   end
 end
