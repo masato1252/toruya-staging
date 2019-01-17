@@ -8,7 +8,7 @@ end
 
 create(:user, email: "superadmin@email.com", password: "password123", confirmed_at: Time.now) do |user|
   create(:shop, user: user) do |shop|
-    menu = create(:menu, user: user, max_seat_number: nil, shop: shop) do |menu|
+    menu = create(:menu, user: user, max_seat_number: 0, shop: shop) do |menu|
       create(:reservation_setting, user: user, menu: menu)
     end
 
