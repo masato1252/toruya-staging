@@ -15,7 +15,7 @@ namespace :validations do
       customer = Customers::Save.run!(user: user, current_user: user, params: params.merge!("id": outcome.result.id))
 
       # destroy
-      customer.destroy
+      customer.reload.destroy!
       puts "Done. validations:google_contact_api"
 
       client.chat_postMessage(channel: 'development', text: "[OK] Google Contact Api Test successfully")
