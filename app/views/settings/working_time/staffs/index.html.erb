@@ -5,7 +5,9 @@
   <p><%= t("settings.staff_working_time.info_1.#{params[:mode] || @mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= jump_out_modal(settings_tours_working_time_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
+<%= content_tag(:div, id: "settingForm") do %>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
@@ -20,12 +22,22 @@
                           end
       %>
       <dl>
-        <dt><%= link_to staff.name, edit_staff_path %></dt>
+        <dt>
+          <% if can?(:edit, staff) %>
+            <%= link_to staff.name, edit_staff_path %>
+          <% else %>
+            <%= modal_link_to(staff.name, edit_staff_for_admin_warnings_path) %>
+          <% end %>
+        </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
+          <% if can?(:edit, staff) %>
+            <%= link_to t("action.edit"), edit_staff_path, class: "BTNtarco" %>
+          <% else %>
+            <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
+          <% end %>
         </dd>
       </dl>
     <% end %>
   </div>
-</div>
+<% end %>

@@ -3,17 +3,39 @@ module Shops
     object :user
     object :shop
 
-    def execute
-      if shop.destroy
-        if (staff_account = user.current_staff_account(user)) && staff_account.owner?
-          staff = staff_account.staff
+    validate :validate_owner
 
-          # Owner staff could manage the same shops with User
-          staff.shop_ids = Shop.where(user: user).pluck(:id)
-          staff.save
-          return
+    def execute
+      shop.transaction do
+        if shop.update(deleted_at: Time.current)
+          shop.menus.each do |menu|
+            compose(Menus::Delete, menu: menu) if menu.shop_ids.blank?
+          end
+
+          shop.shop_staffs.destroy_all
+
+          unless user.shops.exists?
+            user.reservation_settings.destroy_all
+            BusinessSchedule.where(staff_id: user.staff_ids).destroy_all
+            user.categories.destroy_all
+
+            user.menus.each do |menu|
+              compose(Menus::Delete, menu: menu)
+            end
+          end
+
+          # The business schedules for that shop
+          shop.business_schedules.destroy_all
+        else
+          errors.add(:shop, :delete_failed)
         end
       end
+    end
+
+    private
+
+    def validate_owner
+      errors.add(:owner, :invalid) if shop.user != user
     end
   end
 end

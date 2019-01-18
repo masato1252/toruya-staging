@@ -13,6 +13,11 @@
 #  deleted_at               :datetime
 #  staff_holiday_permission :boolean          default(FALSE), not null
 #
+# Indexes
+#
+#  index_staffs_on_user_id                 (user_id)
+#  index_staffs_on_user_id_and_deleted_at  (user_id,deleted_at)
+#
 
 class Staff < ApplicationRecord
   include NormalizeName
@@ -22,9 +27,9 @@ class Staff < ApplicationRecord
 
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
-  has_many :menus, through: :staff_menus
+  has_many :menus, -> { active }, through: :staff_menus
   has_many :shop_staffs, dependent: :destroy
-  has_many :shops, through: :shop_staffs
+  has_many :shops, -> { active }, through: :shop_staffs
   has_many :business_schedules, dependent: :destroy
   has_many :custom_schedules, dependent: :destroy
   has_many :reservation_staffs
@@ -38,7 +43,7 @@ class Staff < ApplicationRecord
   scope :deleted, -> { where.not(deleted_at: nil) }
   scope :undeleted, -> { where(deleted_at: nil) }
 
-  delegate :user_id, to: :staff_account
+  delegate :user_id, to: :staff_account, allow_nil: true
 
   def active?
     !deleted_at && staff_account&.active?

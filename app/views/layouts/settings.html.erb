@@ -12,10 +12,19 @@
   <body class="setting firstSetting <%= body_class %>" data-controller="atomic-requests">
     <%= render "layouts/dashboard_header_bar" %>
     <div class="contents">
-      <%= render "layouts/settings_sider" %>
+      <%=
+        if admin?
+          render "layouts/owner_settings_sider"
+        elsif manager?
+          render "layouts/manager_settings_sider"
+        else
+          render "layouts/settings_sider"
+        end
+      %>
       <div id="content">
         <%= flash_messages %>
         <%= yield %>
+        <%= render "layouts/upgrade_modals" %>
       </div>
     </div>
   </body>

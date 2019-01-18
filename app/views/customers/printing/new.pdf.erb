@@ -1,3 +1,7 @@
+<% content_for :style do %>
+  <%= stylesheet_link_tag wicked_pdf_asset_base64("customers/printing") %>
+<% end %>
+
 <% address = @customer.primary_formatted_address %>
 
 <div class="customer-info <%= @page_size %>">

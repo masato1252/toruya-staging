@@ -1,0 +1,14 @@
+Dear <%= @user.name %>,
+
+This is a payment notification from the additional shop on Toruya.
+We have charge your credit card as listed bellow.
+
+Your plan : Additional shop
+Next billing date : <%= l(@charge.charge_date, format: :year_month_date) %>
+Amount : <%= @charge.amount.format %>(tax included)
+
+Please be aware that the billing for the next and recurring will be changed as following.
+
+Next billing date : <%= l(@next_period.first, format: :year_month_date) %>
+Billing term : <%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+Ammont : <%= @cost %>(tax included)

@@ -46,16 +46,18 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def bind
-    respond_to do |format|
-      outcome = Groups::CreateGroup.run(contact_group: @contact_group,
-                                        google_group_id: params[:google_group_id],
-                                        google_group_name: params[:google_group_name])
-      if outcome.valid?
-        format.html { redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.bind_successfully_message") }
+    outcome = Groups::CreateGroup.run(contact_group: @contact_group,
+                                      google_group_id: params[:google_group_id],
+                                      google_group_name: params[:google_group_name])
+    if outcome.valid?
+      if session[:settings_tour]
+        redirect_to settings_user_shops_path(super_user)
       else
-        @contact_group = outcome.result
-        format.html { render :edit }
+        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.bind_successfully_message")
       end
+    else
+      @contact_group = outcome.result
+      render :edit
     end
   end
 
@@ -77,7 +79,7 @@ class Settings::ContactGroupsController < SettingsController
 
   def require_shop_owner
     if cannot?(:manage, GoogleContact)
-      redirect_to settings_path(super_user), alert: "Only allow shop owner to do this."
+      redirect_to settings_dashboard_path, alert: "Only allow shop owner to do this."
     end
   end
 end

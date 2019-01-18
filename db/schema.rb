@@ -10,315 +10,429 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170101060554) do
+ActiveRecord::Schema.define(version: 20181130012847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "pg_trgm"
 
-  create_table "access_providers", force: :cascade do |t|
-    t.string   "access_token"
-    t.string   "refresh_token"
-    t.string   "provider"
-    t.string   "uid"
-    t.integer  "user_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid", using: :btree
-  end
-
-  create_table "business_schedules", force: :cascade do |t|
-    t.integer  "shop_id"
-    t.integer  "staff_id"
-    t.boolean  "full_time"
-    t.string   "business_state"
-    t.integer  "day_of_week"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_working_time_index", using: :btree
-    t.index ["shop_id", "staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index", using: :btree
-  end
-
-  create_table "categories", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name"
+  create_table "access_providers", id: :serial, force: :cascade do |t|
+    t.string "access_token"
+    t.string "refresh_token"
+    t.string "provider"
+    t.string "uid"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_categories_on_user_id", using: :btree
+    t.string "email"
+    t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
-  create_table "contact_group_rankings", force: :cascade do |t|
-    t.integer  "contact_group_id"
-    t.integer  "rank_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["contact_group_id"], name: "index_contact_group_rankings_on_contact_group_id", using: :btree
-    t.index ["rank_id"], name: "index_contact_group_rankings_on_rank_id", using: :btree
-  end
-
-  create_table "contact_groups", force: :cascade do |t|
-    t.integer  "user_id",                null: false
-    t.string   "google_uid"
-    t.string   "google_group_name"
-    t.string   "google_group_id"
-    t.string   "backup_google_group_id"
-    t.string   "name",                   null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true, using: :btree
-    t.index ["user_id"], name: "index_contact_groups_on_user_id", using: :btree
-  end
-
-  create_table "custom_schedules", force: :cascade do |t|
-    t.integer  "shop_id"
-    t.integer  "staff_id"
+  create_table "business_schedules", id: :serial, force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "staff_id"
+    t.boolean "full_time"
+    t.string "business_state"
+    t.integer "day_of_week"
     t.datetime "start_time"
     t.datetime "end_time"
-    t.text     "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "start_time", "end_time"], name: "shop_custom_schedules_index", using: :btree
-    t.index ["staff_id", "start_time", "end_time"], name: "staff_custom_schedules_index", using: :btree
+    t.index ["shop_id", "business_state", "day_of_week", "start_time", "end_time"], name: "shop_working_time_index"
+    t.index ["shop_id", "staff_id", "full_time", "business_state", "day_of_week", "start_time", "end_time"], name: "staff_working_time_index"
   end
 
-  create_table "customers", force: :cascade do |t|
-    t.integer  "user_id",                               null: false
-    t.integer  "contact_group_id"
-    t.integer  "rank_id"
-    t.string   "last_name"
-    t.string   "first_name"
-    t.string   "phonetic_last_name"
-    t.string   "phonetic_first_name"
-    t.string   "custom_id"
-    t.text     "memo"
-    t.string   "address"
-    t.string   "google_uid"
-    t.string   "google_contact_id"
-    t.string   "google_contact_group_ids", default: [],              array: true
-    t.date     "birthday"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.index ["contact_group_id"], name: "index_customers_on_contact_group_id", using: :btree
-    t.index ["rank_id"], name: "index_customers_on_rank_id", using: :btree
-    t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true, using: :btree
-    t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index", using: :btree
-    t.index ["user_id"], name: "index_customers_on_user_id", using: :btree
+  create_table "categories", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_categories_on_user_id"
   end
 
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
-    t.text     "last_error"
+  create_table "contact_group_rankings", id: :serial, force: :cascade do |t|
+    t.integer "contact_group_id"
+    t.integer "rank_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_group_id"], name: "index_contact_group_rankings_on_contact_group_id"
+    t.index ["rank_id"], name: "index_contact_group_rankings_on_rank_id"
+  end
+
+  create_table "contact_groups", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "google_uid"
+    t.string "google_group_name"
+    t.string "google_group_id"
+    t.string "backup_google_group_id"
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true
+    t.index ["user_id"], name: "index_contact_groups_on_user_id"
+  end
+
+  create_table "custom_schedules", id: :serial, force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "staff_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.text "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "open", default: false, null: false
+    t.string "reference_id"
+    t.index ["reference_id"], name: "index_custom_schedules_on_reference_id"
+    t.index ["shop_id", "start_time", "end_time"], name: "shop_custom_schedules_index"
+    t.index ["staff_id", "open"], name: "index_custom_schedules_on_staff_id_and_open"
+    t.index ["staff_id", "start_time", "end_time"], name: "staff_custom_schedules_index"
+  end
+
+  create_table "customers", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "contact_group_id"
+    t.integer "rank_id"
+    t.string "last_name"
+    t.string "first_name"
+    t.string "phonetic_last_name"
+    t.string "phonetic_first_name"
+    t.string "custom_id"
+    t.text "memo"
+    t.string "address"
+    t.string "google_uid"
+    t.string "google_contact_id"
+    t.string "google_contact_group_ids", default: [], array: true
+    t.date "birthday"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "updated_by_user_id"
+    t.string "email_types"
+    t.index "first_name gin_trgm_ops", name: "customer_names_on_first_name_idx", using: :gin
+    t.index "last_name gin_trgm_ops", name: "customer_names_on_last_name_idx", using: :gin
+    t.index "phonetic_first_name gin_trgm_ops", name: "customer_names_on_phonetic_first_name_idx", using: :gin
+    t.index "phonetic_last_name gin_trgm_ops", name: "customer_names_on_phonetic_last_name_idx", using: :gin
+    t.index ["contact_group_id"], name: "index_customers_on_contact_group_id"
+    t.index ["rank_id"], name: "index_customers_on_rank_id"
+    t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true
+    t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index"
+    t.index ["user_id"], name: "index_customers_on_user_id"
+  end
+
+  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
     t.datetime "run_at"
     t.datetime "locked_at"
     t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
+    t.string "locked_by"
+    t.string "queue"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  create_table "menu_categories", force: :cascade do |t|
-    t.integer  "menu_id"
-    t.integer  "category_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["menu_id", "category_id"], name: "index_menu_categories_on_menu_id_and_category_id", using: :btree
+  create_table "filtered_outcomes", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "filter_id"
+    t.jsonb "query"
+    t.string "file"
+    t.string "page_size"
+    t.string "outcome_type"
+    t.string "aasm_state", null: false
+    t.datetime "created_at"
+    t.string "name"
+    t.index ["user_id", "aasm_state", "outcome_type", "created_at"], name: "filtered_outcome_index"
+    t.index ["user_id"], name: "index_filtered_outcomes_on_user_id"
   end
 
-  create_table "menu_reservation_setting_rules", force: :cascade do |t|
-    t.integer  "menu_id"
-    t.string   "reservation_type"
-    t.date     "start_date"
-    t.date     "end_date"
-    t.integer  "repeats"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.index ["menu_id", "reservation_type", "start_date", "end_date"], name: "menu_reservation_setting_rules_index", using: :btree
-  end
-
-  create_table "menus", force: :cascade do |t|
-    t.integer  "user_id",           null: false
-    t.string   "name",              null: false
-    t.string   "short_name"
-    t.integer  "minutes"
-    t.integer  "interval"
-    t.integer  "min_staffs_number"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["user_id"], name: "index_menus_on_user_id", using: :btree
-  end
-
-  create_table "profiles", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phonetic_first_name"
-    t.string   "phonetic_last_name"
-    t.string   "company_name"
-    t.string   "zip_code"
-    t.string   "address"
-    t.string   "phone_number"
-    t.string   "website"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.index ["user_id"], name: "index_profiles_on_user_id", using: :btree
-  end
-
-  create_table "ranks", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name",       null: false
-    t.string   "key"
+  create_table "menu_categories", id: :serial, force: :cascade do |t|
+    t.integer "menu_id"
+    t.integer "category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_ranks_on_user_id", using: :btree
+    t.index ["menu_id", "category_id"], name: "index_menu_categories_on_menu_id_and_category_id"
   end
 
-  create_table "reservation_customers", force: :cascade do |t|
-    t.integer  "reservation_id", null: false
-    t.integer  "customer_id",    null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true, using: :btree
+  create_table "menu_reservation_setting_rules", id: :serial, force: :cascade do |t|
+    t.integer "menu_id"
+    t.string "reservation_type"
+    t.date "start_date"
+    t.date "end_date"
+    t.integer "repeats"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id", "reservation_type", "start_date", "end_date"], name: "menu_reservation_setting_rules_index"
   end
 
-  create_table "reservation_setting_menus", force: :cascade do |t|
-    t.integer  "reservation_setting_id"
-    t.integer  "menu_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.index ["reservation_setting_id", "menu_id"], name: "reservation_setting_menus_index", using: :btree
+  create_table "menus", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.string "short_name"
+    t.integer "minutes"
+    t.integer "interval"
+    t.integer "min_staffs_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
-  create_table "reservation_settings", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name"
-    t.string   "short_name"
-    t.string   "day_type"
-    t.integer  "day"
-    t.integer  "nth_of_week"
-    t.string   "days_of_week", default: [],              array: true
+  create_table "plans", force: :cascade do |t|
+    t.integer "position"
+    t.integer "level"
+  end
+
+  create_table "profiles", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phonetic_first_name"
+    t.string "phonetic_last_name"
+    t.string "company_name"
+    t.string "zip_code"
+    t.string "address"
+    t.string "phone_number"
+    t.string "website"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "company_zip_code"
+    t.string "company_address"
+    t.string "company_phone_number"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "query_filters", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.string "type", null: false
+    t.jsonb "query"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_query_filters_on_user_id"
+  end
+
+  create_table "ranks", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name", null: false
+    t.string "key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ranks_on_user_id"
+  end
+
+  create_table "reservation_customers", id: :serial, force: :cascade do |t|
+    t.integer "reservation_id", null: false
+    t.integer "customer_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true
+  end
+
+  create_table "reservation_setting_menus", id: :serial, force: :cascade do |t|
+    t.integer "reservation_setting_id"
+    t.integer "menu_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_setting_id", "menu_id"], name: "reservation_setting_menus_index"
+  end
+
+  create_table "reservation_settings", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name"
+    t.string "short_name"
+    t.string "day_type"
+    t.integer "day"
+    t.integer "nth_of_week"
+    t.string "days_of_week", default: [], array: true
     t.datetime "start_time"
     t.datetime "end_time"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-    t.index ["user_id", "start_time", "end_time", "day_type", "days_of_week", "day", "nth_of_week"], name: "reservation_setting_index", using: :btree
-  end
-
-  create_table "reservation_staffs", force: :cascade do |t|
-    t.integer  "reservation_id", null: false
-    t.integer  "staff_id",       null: false
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["reservation_id", "staff_id"], name: "index_reservation_staffs_on_reservation_id_and_staff_id", unique: true, using: :btree
-  end
-
-  create_table "reservations", force: :cascade do |t|
-    t.integer  "shop_id",                        null: false
-    t.integer  "menu_id",                        null: false
-    t.datetime "start_time",                     null: false
-    t.datetime "end_time",                       null: false
-    t.datetime "ready_time",                     null: false
-    t.string   "aasm_state",                     null: false
-    t.text     "memo"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.integer  "count_of_customers", default: 0
-    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index", using: :btree
-  end
-
-  create_table "shop_menu_repeating_dates", force: :cascade do |t|
-    t.integer  "shop_id",                 null: false
-    t.integer  "menu_id",                 null: false
-    t.string   "dates",      default: [],              array: true
-    t.date     "end_date"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.index ["menu_id"], name: "index_shop_menu_repeating_dates_on_menu_id", using: :btree
-    t.index ["shop_id", "menu_id"], name: "index_shop_menu_repeating_dates_on_shop_id_and_menu_id", unique: true, using: :btree
-    t.index ["shop_id"], name: "index_shop_menu_repeating_dates_on_shop_id", using: :btree
-  end
-
-  create_table "shop_menus", force: :cascade do |t|
-    t.integer  "shop_id"
-    t.integer  "menu_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "max_seat_number"
-    t.index ["shop_id", "menu_id"], name: "index_shop_menus_on_shop_id_and_menu_id", unique: true, using: :btree
-  end
-
-  create_table "shop_staffs", force: :cascade do |t|
-    t.integer  "shop_id"
-    t.integer  "staff_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", unique: true, using: :btree
+    t.index ["user_id", "start_time", "end_time", "day_type", "days_of_week", "day", "nth_of_week"], name: "reservation_setting_index"
   end
 
-  create_table "shops", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "name",            null: false
-    t.string   "short_name",      null: false
-    t.string   "zip_code",        null: false
-    t.string   "phone_number",    null: false
-    t.string   "email",           null: false
-    t.string   "address",         null: false
-    t.string   "website"
-    t.boolean  "holiday_working"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.index ["user_id"], name: "index_shops_on_user_id", using: :btree
+  create_table "reservation_staffs", id: :serial, force: :cascade do |t|
+    t.integer "reservation_id", null: false
+    t.integer "staff_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "state", default: 0
+    t.index ["reservation_id", "staff_id"], name: "index_reservation_staffs_on_reservation_id_and_staff_id", unique: true
+    t.index ["staff_id", "state"], name: "state_by_staff_id_index"
   end
 
-  create_table "staff_menus", force: :cascade do |t|
-    t.integer  "staff_id",      null: false
-    t.integer  "menu_id",       null: false
-    t.integer  "max_customers"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["staff_id", "menu_id"], name: "index_staff_menus_on_staff_id_and_menu_id", unique: true, using: :btree
+  create_table "reservations", id: :serial, force: :cascade do |t|
+    t.integer "shop_id", null: false
+    t.integer "menu_id", null: false
+    t.datetime "start_time", null: false
+    t.datetime "end_time", null: false
+    t.datetime "ready_time", null: false
+    t.string "aasm_state", null: false
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "count_of_customers", default: 0
+    t.boolean "with_warnings", default: false, null: false
+    t.integer "by_staff_id"
+    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index"
   end
 
-  create_table "staffs", force: :cascade do |t|
-    t.integer  "user_id",             null: false
-    t.string   "last_name"
-    t.string   "first_name"
-    t.string   "phonetic_last_name"
-    t.string   "phonetic_first_name"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.index ["user_id"], name: "index_staffs_on_user_id", using: :btree
+  create_table "shop_menu_repeating_dates", id: :serial, force: :cascade do |t|
+    t.integer "shop_id", null: false
+    t.integer "menu_id", null: false
+    t.string "dates", default: [], array: true
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["menu_id"], name: "index_shop_menu_repeating_dates_on_menu_id"
+    t.index ["shop_id", "menu_id"], name: "index_shop_menu_repeating_dates_on_shop_id_and_menu_id", unique: true
+    t.index ["shop_id"], name: "index_shop_menu_repeating_dates_on_shop_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
+  create_table "shop_menus", id: :serial, force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "menu_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "max_seat_number"
+    t.index ["shop_id", "menu_id"], name: "index_shop_menus_on_shop_id_and_menu_id", unique: true
+  end
+
+  create_table "shop_staffs", id: :serial, force: :cascade do |t|
+    t.integer "shop_id"
+    t.integer "staff_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "staff_regular_working_day_permission", default: false, null: false
+    t.boolean "staff_temporary_working_day_permission", default: false, null: false
+    t.boolean "staff_full_time_permission", default: false, null: false
+    t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", unique: true
+  end
+
+  create_table "shops", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name", null: false
+    t.string "short_name", null: false
+    t.string "zip_code", null: false
+    t.string "phone_number", null: false
+    t.string "email", null: false
+    t.string "address", null: false
+    t.string "website"
+    t.boolean "holiday_working"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_shops_on_user_id"
+  end
+
+  create_table "staff_accounts", id: :serial, force: :cascade do |t|
+    t.string "email", null: false
+    t.integer "user_id"
+    t.integer "owner_id", null: false
+    t.integer "staff_id", null: false
+    t.string "token"
+    t.integer "state", default: 0, null: false
+    t.integer "level", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id", "email"], name: "staff_account_email_index"
+    t.index ["owner_id", "user_id"], name: "staff_account_index"
+    t.index ["owner_id"], name: "index_staff_accounts_on_owner_id"
+    t.index ["staff_id"], name: "index_staff_accounts_on_staff_id"
+    t.index ["token"], name: "staff_account_token_index"
+    t.index ["user_id"], name: "index_staff_accounts_on_user_id"
+  end
+
+  create_table "staff_menus", id: :serial, force: :cascade do |t|
+    t.integer "staff_id", null: false
+    t.integer "menu_id", null: false
+    t.integer "max_customers"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_id", "menu_id"], name: "index_staff_menus_on_staff_id_and_menu_id", unique: true
+  end
+
+  create_table "staffs", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "last_name"
+    t.string "first_name"
+    t.string "phonetic_last_name"
+    t.string "phonetic_first_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.boolean "staff_holiday_permission", default: false, null: false
+    t.index ["user_id"], name: "index_staffs_on_user_id"
+  end
+
+  create_table "subscription_charges", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "plan_id"
+    t.decimal "amount_cents"
+    t.string "amount_currency"
+    t.integer "state"
+    t.date "charge_date"
+    t.date "expired_date"
+    t.boolean "manual", default: false, null: false
+    t.jsonb "stripe_charge_details"
+    t.string "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "details"
+    t.index ["order_id"], name: "order_id_index"
+    t.index ["plan_id"], name: "index_subscription_charges_on_plan_id"
+    t.index ["user_id", "state"], name: "user_state_index"
+    t.index ["user_id"], name: "index_subscription_charges_on_user_id"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.bigint "plan_id"
+    t.integer "next_plan_id"
+    t.bigint "user_id"
+    t.string "stripe_customer_id"
+    t.integer "recurring_day"
+    t.date "expired_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
-    t.string   "confirmation_token"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
+    t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,  null: false
-    t.string   "unlock_token"
+    t.string "unconfirmed_email"
+    t.integer "failed_attempts", default: 0, null: false
+    t.string "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
-    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "contacts_sync_at"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.integer "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
   add_foreign_key "profiles", "users"

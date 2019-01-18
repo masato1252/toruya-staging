@@ -13,6 +13,11 @@
 #  created_at   :datetime
 #  name         :string
 #
+# Indexes
+#
+#  filtered_outcome_index              (user_id,aasm_state,outcome_type,created_at)
+#  index_filtered_outcomes_on_user_id  (user_id)
+#
 
 class FilteredOutcome < ApplicationRecord
   EXPIRED_DAYS = 7

@@ -15,6 +15,10 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
+# Indexes
+#
+#  reservation_setting_index  (user_id,start_time,end_time,day_type,days_of_week,day,nth_of_week)
+#
 
 class ReservationSetting < ApplicationRecord
   include Helpers

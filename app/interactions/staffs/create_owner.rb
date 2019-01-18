@@ -22,7 +22,7 @@ module Staffs
                           phonetic_first_name: profile.phonetic_first_name,
                           phonetic_last_name: profile.phonetic_last_name,
                           staff_holiday_permission: true,
-                          shop_ids: Shop.where(user: user).pluck(:id)
+                          shop_ids: Shop.where(user: user).active.pluck(:id)
                         })
 
         compose(StaffAccounts::Create,

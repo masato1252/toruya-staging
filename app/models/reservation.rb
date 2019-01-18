@@ -15,6 +15,12 @@
 #  count_of_customers :integer          default(0)
 #  with_warnings      :boolean          default(FALSE), not null
 #  by_staff_id        :integer
+#  deleted_at         :datetime
+#
+# Indexes
+#
+#  index_reservations_on_shop_id_and_deleted_at  (shop_id,deleted_at)
+#  reservation_index                             (shop_id,aasm_state,menu_id,start_time,ready_time)
 #
 
 # ready_time is end_time + menu.interval
@@ -28,7 +34,6 @@ class Reservation < ApplicationRecord
 
   validates :start_time, presence: true
   validates :end_time, presence: true
-  validates :reservation_staffs, presence: true
   validate :end_time_larger_than_start_time
   # validate :duplicate_staff_or_customer
   # validate :enough_staffs_for_customers
@@ -45,7 +50,8 @@ class Reservation < ApplicationRecord
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.zone.now) }
-  scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)) }
+  scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)).active }
+  scope :active, -> { where(deleted_at: nil) }
 
   aasm :whiny_transitions => false do
     state :pending, initial: true
@@ -137,7 +143,7 @@ class Reservation < ApplicationRecord
   end
 
   def duplicate_staff_or_customer
-    scoped = Reservation.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
+    scoped = Reservation.active.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
       where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
 
     if scoped.where("reservation_staffs.staff_id in (?)", staff_ids)

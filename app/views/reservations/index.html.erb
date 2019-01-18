@@ -1,3 +1,4 @@
+<%= notification_messages %>
 <%
   staff_schedule_requirement_condition = staff && @working_time_range
 %>
@@ -87,9 +88,23 @@
   <div id="mainNav">
     <dl>
       <dd id="NAVnewResv">
-        <%= link_to new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNtarco" do %>
-          <i class="fa fa-calendar-plus-o fa-2x" aria-hidden="true"></i>
-          <span>新規予約</span>
+        <% if can?(:create_reservation, shop) %>
+          <%= link_to_new_reservation(new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), t("action.new_reservation"), class: "BTNtarco") %>
+        <% else %>
+          <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
+              (
+                cannot?(:create, :daily_reservations) ||
+                cannot?(:create, :total_reservations) ||
+                cannot?(:create, :reservation_with_settings) ||
+                cannot?(:create_shop_reservations_with_menu, shop)
+              ) %>
+            <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
+              <i class="fa fa-calendar-plus-o fa-2x"></i>
+              <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>
+            <% end %>
+          <% else %>
+            <%= link_to_new_reservation("#", t("action.new_reservation"), class: "BTNtarco disabled") %>
+          <% end %>
         <% end %>
       </dd>
       <dd id="NAVcustomers">

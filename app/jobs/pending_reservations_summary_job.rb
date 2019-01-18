@@ -7,7 +7,7 @@ class PendingReservationsSummaryJob < ApplicationJob
     user = User.find(user_id)
 
     staff_ids = user.staff_accounts.active.pluck(:staff_id)
-    reservations = Reservation.where(aasm_state: :pending, created_at: start_time..end_time).joins(:reservation_staffs).where("reservation_staffs.staff_id": staff_ids, "reservation_staffs.state": ReservationStaff.states[:pending]).to_a
+    reservations = Reservation.active.where(aasm_state: :pending, created_at: start_time..end_time).joins(:reservation_staffs).where("reservation_staffs.staff_id": staff_ids, "reservation_staffs.state": ReservationStaff.states[:pending]).to_a
 
     ReservationMailer.pending_summary(reservations, user).deliver_now
   end

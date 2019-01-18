@@ -45,8 +45,16 @@ module Reservations
           raise ActiveRecord::Rollback
         end
 
+        compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
+        compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
         reservation
       end
+    end
+
+    private
+
+    def user
+      @user ||= shop.user
     end
   end
 end

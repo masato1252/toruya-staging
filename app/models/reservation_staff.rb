@@ -9,6 +9,11 @@
 #  updated_at     :datetime         not null
 #  state          :integer          default("pending")
 #
+# Indexes
+#
+#  index_reservation_staffs_on_reservation_id_and_staff_id  (reservation_id,staff_id) UNIQUE
+#  state_by_staff_id_index                                  (staff_id,state)
+#
 
 class ReservationStaff < ApplicationRecord
   enum state: {
@@ -23,6 +28,7 @@ class ReservationStaff < ApplicationRecord
     ReservationStaff.joins(:reservation).
       where.not(reservation_id: reservation_id.presence).
       where("reservation_staffs.staff_id": staff_ids).
+      where("reservations.deleted_at": nil).
       where("reservations.start_time < ? and reservations.ready_time > ?", end_time, start_time)
   end
 end

@@ -1,0 +1,20 @@
+<% unless shop %>
+  <div class="modal fade" id="reservationCreationNoShopModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("customer.dashboard.modal.no_shop_to_create_reservation.title") %>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <%= t("customer.dashboard.modal.no_shop_to_create_reservation.content") %>
+        </div>
+        <div class="modal-footer centerize">
+          <%= link_to t("action.create_a_shop"), settings_dashboard_path, class: "btn BTNtarco" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

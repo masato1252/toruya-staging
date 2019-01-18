@@ -86,3 +86,15 @@
 #resNew #resInfo .formRow {
   opacity: unset !important;
 }
+
+.toruya-modal {
+  .modal-footer {
+    dl dd {
+      line-height: 22px;
+      padding-right: 5px;
+      padding-left: 5px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+}

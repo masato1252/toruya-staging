@@ -14,10 +14,15 @@ module ViewHelpers
     helper_method :working_shop_owners
     helper_method :owning_shop_options
     helper_method :staffs_have_holiday_permission
+    helper_method :ability
+    helper_method :admin?
+    helper_method :manager?
+    helper_method :basic_setting_presenter
+    helper_method :previous_controller_is
   end
 
   def shops
-    @shops ||= if can?(:manage, :all)
+    @shops ||= if admin?
                  super_user.shops.order("id")
                else
                  current_user.current_staff(super_user).shops.order("id")
@@ -29,7 +34,7 @@ module ViewHelpers
   end
 
   def staffs
-    @staffs = if can?(:manage, :all)
+    @staffs = if admin?
                 super_user.staffs.active.order(:id)
               else
                 super_user.staffs.active.joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
@@ -50,6 +55,14 @@ module ViewHelpers
 
   def current_ability
     @current_ability ||= Ability.new(current_user, super_user)
+  end
+
+  def ability(user)
+    @abilities ||= {}
+
+    return @abilities[user.id] if @abilities[user.id]
+
+    @abilities[user.id] = Ability.new(current_user, user)
   end
 
   def is_owner
@@ -91,15 +104,16 @@ module ViewHelpers
         if include_user_own || shop_staff.shop.user != current_user
           ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
                        staff: staff, staff_id: shop_staff.staff_id,
+                       owner: shop_staff.shop.user,
                        shop_staff: shop_staff)
         end
       end
-    end.flatten.compact
+    end.flatten.compact.sort_by { |option| option.shop_id }
   end
 
   def owning_shop_options
     @owning_shop_options ||= current_user.shops.order("id").map do |shop|
-      ::Option.new(shop: shop)
+      ::Option.new(shop: shop, owner: shop.user)
     end
   end
 
@@ -111,10 +125,27 @@ module ViewHelpers
     owners = working_shop_owners(include_user_own: true)
 
     owners.each do |owner|
-      if Ability.new(current_user, owner).can?(:manage, "userself_holiday_permission")
+      if Ability.new(current_user, owner).can?(:manage, :userself_holiday_permission)
         @staffs_have_holiday_permission << current_user.current_staff(owner)
       end
     end
     @staffs_have_holiday_permission
+  end
+
+  def basic_setting_presenter
+    @basic_setting_presenter ||= BasicSettingsPresenter.new(view_context, current_user)
+  end
+
+  def admin?
+    can?(:manage, :everything)
+  end
+
+  # manage or admin
+  def manager?
+    can?(:manage, :management_stuffs)
+  end
+
+  def previous_controller_is(controller_name)
+    Rails.application.routes.recognize_path(request.referrer || "")[:controller] == controller_name
   end
 end

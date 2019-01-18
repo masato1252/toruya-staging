@@ -7,7 +7,7 @@ class ProcessingBar extends React.Component {
 
   render() {
     if (!this.props.processing) {
-      return <div />
+      return <span />
     }
 
     return (

@@ -1,0 +1,17 @@
+# This file is auto-generated from the current state of plans types in the
+# database. Instead of editing this file, please use migrations to make changes
+# to current badges.
+[
+  {
+    "position": 0,
+    "level": "free"
+  },
+  {
+    "position": 1,
+    "level": "basic"
+  },
+  {
+    "position": 2,
+    "level": "premium"
+  }
+]

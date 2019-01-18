@@ -1,1 +1,42 @@
-<%= render 'form', shop: @shop, url: settings_user_shops_path(super_user) %>
+<%
+  fit_shop_charge_threshold = super_user.shops.count >= Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD
+%>
+<%= render 'form',
+  shop: @shop,
+  url: settings_user_shops_path(super_user),
+  fit_shop_charge_threshold: fit_shop_charge_threshold %>
+
+<% admin_only do %>
+  <% if fit_shop_charge_threshold %>
+    <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <%= t("settings.shop.modal.upgrade_title")%>
+            </h4>
+          </div>
+          <div class="modal-body">
+            <%= t("settings.shop.modal.premium.upgrade_content_html", shop_number: current_user.shops.count, per_shop_fee_price: Plans::Fee::PER_SHOP_FEE) %>
+          </div>
+          <div class="modal-footer centerize">
+            <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+            <%= react_component("payment_checkout", {
+              stripeKey: Rails.application.secrets.stripe_publishable_key,
+              formlId: "new_shop",
+              paymentPath: settings_user_shops_path(super_user),
+              email: current_user.email,
+              locale: I18n.default_locale,
+              cost: Plans::Fee::PER_SHOP_FEE,
+              description: t("settings.plans.payment.extra_shop"),
+              i18n: {
+                payBtnText: t("settings.shop.modal.premium.upgrade_button", per_shop_fee_price: Plans::Fee::PER_SHOP_FEE)
+              }
+            }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

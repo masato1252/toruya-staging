@@ -5,7 +5,7 @@ class Settings::StaffsController < SettingsController
   # GET /staffs
   # GET /staffs.json
   def index
-    @staffs = if can?(:manage, :all)
+    @staffs = if admin?
                 super_user.staffs.undeleted.includes(:staff_account).order(:id)
               else
                 super_user.staffs.undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
@@ -19,12 +19,16 @@ class Settings::StaffsController < SettingsController
 
   # GET /staffs/new
   def new
+    authorize! :create, Staff
+
     @staff = super_user.staffs.new
     @staff_account = staff.build_staff_account(owner: super_user, level: :staff)
   end
 
   # GET /staffs/1/edit
   def edit
+    authorize! :edit, @staff
+
     @staff_account = super_user.owner_staff_accounts.find_by(staff: @staff)
     if @staff.active? && (profile = @staff_account.user.profile)
       @staff.first_name = @staff.first_name.presence || profile.first_name
@@ -58,7 +62,9 @@ class Settings::StaffsController < SettingsController
   # PATCH/PUT /staffs/1
   # PATCH/PUT /staffs/1.json
   def update
-    outcome = Staffs::Update.run(is_manager: can?(:manage, Settings),
+    authorize! :edit, @staff
+
+    outcome = Staffs::Update.run(is_manager: manager?,
                                  staff: @staff,
                                  attrs: params[:staff]&.permit!&.to_h)
 
@@ -82,11 +88,13 @@ class Settings::StaffsController < SettingsController
   # DELETE /staffs/1
   # DELETE /staffs/1.json
   def destroy
-    Staffs::Delete.run!(staff: @staff)
+    authorize! :delete, Staff
+    outcome = Staffs::Delete.run(staff: @staff)
 
-    respond_to do |format|
-      format.html { redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message") }
-      format.json { head :no_content }
+    if outcome.valid?
+      redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to settings_user_staffs_path(super_user)
     end
   end
 

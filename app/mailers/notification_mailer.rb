@@ -1,13 +1,4 @@
-require 'mailer_methods'
-
-class NotificationMailer < ActionMailer::Base
-  helper MailHelper
-  default from: ENV["MAIL_FROM"]
-
-  include MailerMethods
-
-  layout 'mailer'
-
+class NotificationMailer < ApplicationMailer
   def customers_import_finished(contact_group)
     @contact_group = contact_group
     @user = contact_group.user
@@ -47,7 +38,7 @@ class NotificationMailer < ActionMailer::Base
     @admin = staff.user
     @staff = staff
 
-    @reservations = Reservation.future.includes(:customers).joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).order("reservations.start_time")
+    @reservations = Reservation.future.active.includes(:customers).joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).order("reservations.start_time")
 
     mail(:to => @admin.email,
          :subject => subject("スタッフが削除されました。"))

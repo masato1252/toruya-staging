@@ -1,14 +1,22 @@
 <%= render "info" %>
 <div id="about">
   <ul class="function">
-    <li>
-      <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
-    </li>
+    <% admin_only do %>
+      <li>
+        <% if can? :create, Shop %>
+          <%= link_to t("settings.shop.new_button"), new_settings_user_shop_path(super_user), class: "BTNyellow addNew" %>
+        <% else %>
+          <%= link_to t("settings.shop.new_button"), "#", class: "BTNyellow addNew", data: { toggle: "modal", target: "#upgradeModal" } %>
+        <% end %>
+      </li>
+    <% end %>
   </ul>
   <p><%= t("settings.shop.info_1") %><br /><%= t("settings.shop.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= jump_out_modal(settings_tours_shop_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
+<%= content_tag(:div, id: "settingForm") do %>
   <div id="shopList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.shop.name") %></li>
@@ -27,5 +35,25 @@
       </dl>
     <% end %>
   </div>
-</div>
+<% end %>
 
+<% admin_only do %>
+  <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <%= t("settings.shop.modal.upgrade_title")%>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <%= t("settings.shop.modal.upgrade_content_html", premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
+        </div>
+        <div class="modal-footer centerize">
+          <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn BTNyellow" %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

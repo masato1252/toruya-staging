@@ -8,8 +8,8 @@ module ReservationChecking
   private
 
   def check_reservations
-    if reservations.exists?
-      errors.add(:base, "There are reservations exists belongs to this staff.")
+    if reservations.active.exists?
+      errors.add(:base, "Undeleteable. There are reservations exists belongs to it.")
       throw(:abort)
     end
   end

@@ -13,114 +13,27 @@
         sentences = reservation_staff_sentences(reservation)
       end
     %>
-      <% if reservation %>
-        <a href="#" class=<%= reservation.aasm_state %> data-toggle="modal" data-target="#reservationModal<%= reservation.id %>">
-          <dl>
-            <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
-            <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
-            <dd class="menu"><%= reservation.menu.display_name %></dd>
-            <dd class="customer"><%= customer_names_sentence %></dd>
-            <% if local_assigns[:personal_schedule] %>
-              <dd class="shop"><%= reservation.shop.display_name %></dd>
-            <% end %>
-            <% if reservation.with_warnings %>
-              <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
-            <% end %>
-            <% if sentences[:deleted_staffs_sentence] %>
-              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
-            <% end %>
-            <% if sentences[:deleted_staffs_sentence] %>
-              <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
-            <% end %>
-          </dl>
-        </a>
-        <div class="modal fade" id="reservationModal<%= reservation.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">
-                  <%= l(reservation.start_time, format: :date) %>
-                  <%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %>
-                </h4>
-              </div>
-              <div class="modal-body">
-                <div>
-                  <% reservation.customers.includes(:user).each do |customer| %>
-                    <%= link_to customer.name, user_customers_path(customer.user, shop_id: reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
-                  <% end %>
-                </div>
-                <div class="reservation-menu">
-                  <%= reservation.menu.name %>
-                </div>
-                <div>
-                  <%= sentences[:staffs_sentence] %>
-                </div>
-                <% if reservation.with_warnings %>
-                  <div class="warning">
-                    <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
-                </div>
-              <% end %>
-              <% if sentences[:deleted_staffs_sentence] %>
-                <div class="danger">
-                  <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                  <%= t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) %>
-                </div>
-              <% end %>
-              <div>
-                <%= simple_format(reservation.memo) %>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <dl>
-                <% if reservation.may_check_out? %>
-                  <dd>
-                    <%= link_to t("reservation.check_out"), check_out_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
-                  </dd>
-                <% end %>
-
-                <% if reservation.reserved? || reservation.noshow? %>
-                  <dd>
-                    <%= link_to t("reservation.check_in"), check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
-                  </dd>
-                <% end %>
-
-                <% if reservation.checked_out? %>
-                  <dd>
-                    <%= link_to t("reservation.recheck_in"), check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
-                  </dd>
-                <% end %>
-
-                <% if reservation.acceptable_by_staff?(current_user.current_staff(reservation.shop.user)) %>
-                  <dd>
-                    <% if local_assigns[:personal_schedule] %>
-                      <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_in_group_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
-                    <% else %>
-                      <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
-                    <% end %>
-                  </dd>
-                <% end %>
-
-                <% if reservation.may_pend? %>
-                  <dd>
-                    <%= link_to t("reservation.pend"), pend_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray" %>
-                  </dd>
-                <% end %>
-
-                <% if reservation.may_cancel? %>
-                  <dd>
-                    <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange" %>
-                  </dd>
-                <% end %>
-
-                <dd>
-                  <%= link_to t("action.edit"), edit_shop_reservation_path(reservation.shop, reservation, from_member: local_assigns[:personal_schedule]), class: "btn BTNtarco" %>
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </div>
-      </div>
+    <% if reservation %>
+      <%= modal_link_to shop_reservation_path(reservation.shop, reservation, from_member: true) do %>
+        <dl>
+          <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
+          <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
+          <dd class="menu"><%= reservation.menu.display_name %></dd>
+          <dd class="customer"><%= customer_names_sentence %></dd>
+          <% if local_assigns[:personal_schedule] %>
+            <dd class="shop"><%= reservation.shop.display_name %></dd>
+          <% end %>
+          <% if reservation.with_warnings %>
+            <dd class="error-status warning"><i class="fa fa-check-circle" aria-hidden="true"></i></dd>
+          <% end %>
+          <% if sentences[:deleted_staffs_sentence] %>
+            <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+          <% end %>
+          <% if sentences[:deleted_staffs_sentence] %>
+            <dd class="status danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i></dd>
+          <% end %>
+        </dl>
+      <% end %>
     <% else %>
       <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule.source.id}" %>>
         <dl>

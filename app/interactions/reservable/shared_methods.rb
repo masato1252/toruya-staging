@@ -8,6 +8,7 @@ module Reservable
       scoped = ReservationStaff.joins(reservation: :menu).
         where.not(reservation_id: reservation_id.presence).
         where("reservation_staffs.staff_id": shop.staff_ids).
+        where("reservations.deleted_at": nil).
         where.not("menus.min_staffs_number" => 0)
 
       overlap_scoped = if menu

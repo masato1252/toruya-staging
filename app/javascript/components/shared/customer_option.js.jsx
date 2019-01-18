@@ -28,7 +28,7 @@ class CommonCustomerOption extends React.Component {
           <p className="place">{this.props.customer.address}</p>
         </dt>
         {this.props.handleCustomerRemove ? <dd onClick={this._handleRemove}>
-          <span className="BTNyellow customer-remove-symbol glyphicon glyphicon-remove">
+          <span className={`BTNyellow customer-remove-symbol glyphicon glyphicon-remove ${this.props.isDisabled && "disabled"}`}>
             <i className="fa fa-times" aria-hidden="true"></i>
           </span>
         </dd> : null}

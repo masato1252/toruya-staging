@@ -1,13 +1,4 @@
-require 'mailer_methods'
-
-class ReservationMailer < ActionMailer::Base
-  helper MailHelper
-  default from: ENV["MAIL_FROM"]
-
-  include MailerMethods
-
-  layout 'mailer'
-
+class ReservationMailer < ApplicationMailer
   def pending_summary(reservations, user)
     @reservations = reservations
     @user = user

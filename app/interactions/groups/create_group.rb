@@ -13,6 +13,11 @@ class Groups::CreateGroup < ActiveInteraction::Base
     contact_group.google_group_id = google_group_id
     contact_group.google_uid = user.uid
     contact_group.backup_google_group_id = backup_google_group.id
-    contact_group.save
+
+    if contact_group.save
+      CustomersImporterJob.perform_later(contact_group)
+    end
+
+    contact_group
   end
 end

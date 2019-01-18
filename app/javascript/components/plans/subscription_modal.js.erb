@@ -1,0 +1,66 @@
+"use strict";
+
+import React from "react";
+import PlanCharge from "./charge";
+
+class SubscriptionModal extends React.Component {
+  renderContent = () => {
+    return (
+      <div className="downgrade-area">
+        <div className="modal-body">
+          <div>
+            {this.props.i18n.downgradeDesc}
+          </div>
+          <div className="downgrade-label">
+            {this.props.i18n.downgradeLabel1}
+          </div>
+          <div>
+            {this.props.i18n.downgradeDesc1}
+          </div>
+          <div className="downgrade-label">
+            {this.props.i18n.downgradeLabel1}
+          </div>
+          <div>
+            {this.props.i18n.downgradeDesc2}
+          </div>
+        </div>
+        <div className="modal-footer">
+          <div
+           className={`btn btn-tarco`}
+           onClick={() => { $("#subscription-modal").modal("hide"); }}
+           >
+            {this.props.i18n.downgradeCancelBtn}
+          </div>
+          <PlanCharge
+            {...this.props}
+            plan={this.props.selectedPlan}
+            chargeImmediately={false}
+            downgrade={true}
+            />
+        </div>
+      </div>
+    );
+  };
+
+  render() {
+    return (
+      <div className="modal fade" id="subscription-modal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+              <h4 className="modal-title" id="myModalLabel">
+                {this.props.i18n.downgradeTitle}
+              </h4>
+            </div>
+            {this.renderContent()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+};
+
+export default SubscriptionModal;

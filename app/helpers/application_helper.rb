@@ -35,4 +35,53 @@ module ApplicationHelper
   def body_class
     "#{controller_name}-container #{@body_class}"
   end
+
+  def admin_only(&block)
+    if admin?
+      block.call
+    end
+  end
+
+  def manager_only(&block)
+    if manager?
+      block.call
+    end
+  end
+
+  def present(klass, *args)
+    yield klass.new(*args)
+  end
+
+  def modal_link_to(*args, &block)
+    default_options = {
+      data: {
+        controller: "modal",
+        modal_target: "#dummyModal",
+        action: "click->modal#popup",
+      }
+    }
+
+    if block_given?
+      path = args.first
+      options = args[1] || {}
+
+      link_to capture(&block),"#", options.reverse_merge(default_options.merge("data-modal-path": path))
+    else
+      text = args.first
+      path = args.second
+      options = args[2] || {}
+
+      link_to text,"#", options.reverse_merge(default_options.merge("data-modal-path": path))
+    end
+  end
+
+  def jump_out_modal(path)
+    data = {}
+    data[:controller] = "modal"
+    data[:modal_target] = "#dummyModal"
+    data[:modal_jump_out] = true
+    data[:modal_path] = path
+
+    content_tag(:template, nil, data: data)
+  end
 end

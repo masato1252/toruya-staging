@@ -1,0 +1,16 @@
+Dear <%= @user.name %>,
+
+This is a billing notification from Toruya.
+You just exceeded the reservation total limit based on your plan.
+
+Current Plan：<%= @plan_name %>
+
+Daily limit：<%= Reservations::DailyLimit::RESERVATION_DAILY_LIMIT %>
+
+Today's reservation created：<%= @today_reservations_count %>
+
+Total limit：<%= @total_reservations_limit %>
+
+Total reservation created：<%= @total_reservations_count %>
+
+Please visit https://manager.toruya.com/account/payment and upgrade to Premium member in order to create unlimited reservation daily and totally.

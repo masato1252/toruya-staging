@@ -1,9 +1,13 @@
 <%= render "info" %>
 <div id="about">
   <ul class="function">
-    <% if can? :create, Staff %>
+    <% admin_only do %>
       <li>
-        <%= link_to t("settings.staff.new_button"), new_settings_user_staff_path(super_user), class: "BTNyellow addNew" %>
+        <% if can? :create, Staff %>
+          <%= link_to t("settings.staff.new_button"), new_settings_user_staff_path(super_user), class: "BTNyellow addNew" %>
+        <% else %>
+          <%= modal_link_to(t("settings.staff.new_button"), new_staff_for_admin_warnings_path, class: "BTNyellow addNew") %>
+        <% end %>
       </li>
     <% end %>
   </ul>
@@ -19,14 +23,25 @@
     <% @staffs.each do |staff| %>
       <dl>
         <dt class="rowTTL">
-          <%= link_to staff.name.presence || staff.staff_account.email ||"スタッフ #{staff.id}", edit_settings_user_staff_path(super_user, staff) %>
+          <% staff_name = staff.name.presence || staff.staff_account.email || "スタッフ #{staff.id}" %>
+          <% if can?(:edit, staff) %>
+            <%= link_to staff_name, edit_settings_user_staff_path(super_user, staff) %>
+          <% else %>
+            <%= modal_link_to(staff_name, edit_staff_for_admin_warnings_path) %>
+          <% end %>
+
           <% if !staff.active? %>
             <span class="label label-warning"><%= t("common.pending") %></span>
           <% end %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
-          <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% if can?(:edit, staff) %>
+            <%= link_to t("action.edit"), edit_settings_user_staff_path(super_user, staff), class: "BTNtarco" %>
+          <% else %>
+            <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
+          <% end %>
+
           <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>
         </dd>
       </dl>

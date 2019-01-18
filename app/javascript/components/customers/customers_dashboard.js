@@ -277,6 +277,11 @@ class CustomersDashboard extends React.Component {
 
   handleNewReservation = (event) => {
     event.preventDefault();
+    if (!this.props.shop) {
+      $("#reservationCreationNoShopModal").modal("show");
+      return;
+    }
+
     window.location = `${this.props.addReservationPath}?customer_ids=${(this.state.selected_customer_id || "")}`;
   };
 
@@ -348,7 +353,7 @@ class CustomersDashboard extends React.Component {
       case "primaryAddress-street1":
       case "primaryAddress-street2":
         var key = event.target.dataset.name.split("-");
-        if (!this.props.customerEditPermission && this.state.customer.displayAddress) { return; }
+        if (!this.addressEditPermission()) { return; }
 
         newCustomer[key[0]] = newCustomer[key[0]] || {};
         newCustomer[key[0]]["value"] = newCustomer[key[0]]["value"] || {};
@@ -382,6 +387,10 @@ class CustomersDashboard extends React.Component {
     this.setState({customer: newCustomer});
   };
 
+  addressEditPermission = () => {
+    return (this.props.customerEditPermission || !this.state.customer.displayAddress);
+  };
+
   switchEditMode = () => {
     if (this.state.processing) { return; }
     this.setState({ edit_mode: !this.state.edit_mode });
@@ -390,6 +399,10 @@ class CustomersDashboard extends React.Component {
   switchReservationMode = (event) => {
     event.preventDefault();
     if (this.state.processing) { return; }
+    if (!this.props.shop) {
+      $("#reservationManagementNoShopModal").modal("show");
+      return;
+    }
     if (this.state.customer.id) {
       if (this.state.customer.googleDown) { alert(this.props.googleDownMessage); return; }
       this.setState({ reservation_mode: !this.state.reservation_mode });
@@ -421,7 +434,7 @@ class CustomersDashboard extends React.Component {
   renderCustomerView = () => {
     var _this = this;
 
-    if (this.state.reservation_mode) {
+    if (this.state.reservation_mode && this.props.shop) {
       return (
         <CustomerReservationsView
           ref={(c) => this.CustomerReservationsView = c }
@@ -475,6 +488,7 @@ class CustomersDashboard extends React.Component {
           formAuthenticityToken={this.props.formAuthenticityToken}
           handleCustomerDataChange={this.handleCustomerDataChange}
           handleCustomerGoogleDataChange={this.handleCustomerGoogleDataChange}
+          addressEditPermission={this.addressEditPermission()}
           handleCreatedCustomer={this._handleCreatedCustomer}
           switchEditMode={this.switchEditMode}
           switchProcessing={this.switchProcessing}
@@ -482,7 +496,7 @@ class CustomersDashboard extends React.Component {
           switchReservationMode={this.switchReservationMode}
           saveCustomerPath={this.props.saveCustomerPath}
           fetchCustomerDetails={this.fetchCustomerDetails}
-          addressEditPermission={this.props.addressEditPermission}
+          customerEditPermission={this.props.customerEditPermission}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
           selectRegionLabel={this.props.selectRegionLabel}
@@ -557,7 +571,7 @@ class CustomersDashboard extends React.Component {
           </dl>
         );
       }
-      else {
+      else if (this.props.reservationCreatePermission) {
         return (
           <dl>
             <a
@@ -565,6 +579,20 @@ class CustomersDashboard extends React.Component {
               onClick={this.handleNewReservation}
               className="BTNtarco"
               >
+              <dd id="NAVnewResv">
+                <i className="fa fa-calendar-plus-o fa-2x"></i>
+                <span>新規予約</span>
+              </dd>
+            </a>
+          </dl>
+        );
+      }
+      else {
+        return (
+          <dl>
+            <a data-controller="modal" data-modal-target="#dummyModal"
+              data-action="click->modal#popup" data-modal-path={this.props.reservationCreateWarningPath}
+              className="BTNtarco" href="#">
               <dd id="NAVnewResv">
                 <i className="fa fa-calendar-plus-o fa-2x"></i>
                 <span>新規予約</span>

@@ -1,0 +1,17 @@
+■試用期間終了予定日のご連絡■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。
+
+以下の通り、試用期間の終了日まで<%= @the_rest_of_months %>ヶ月となりました。
+
+登録日：<%= l(@signup_date, format: :year_month_date) %>
+
+試用期間終了予定日：<%= l(@trial_expired_date, format: :year_month_date) %>
+
+試用期間終了予定日までに有料プランへご変更が完了しない場合、自動的にフリーメンバーに切り替えとなります。
+
+試用期間終了後にも引き続きご利用いただくためにも、お早めにhttps://manager.toruya.com/account/paymentにてご利用プランをお選びいただき、料金のお支払い手続きをお済ませください。

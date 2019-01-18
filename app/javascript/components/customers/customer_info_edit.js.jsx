@@ -79,6 +79,14 @@ class CustomerInfoEdit extends React.Component {
     return this._selectedRank() ? this._selectedRank().key : 'regular'
   };
 
+  displayFuzzyEmail = (email) => {
+    return email.replace(/(.).*(@.*)/, '$1***$2');
+  };
+
+  displayFuzzyPhone = (phone) => {
+    return phone.replace(/.+(....)/, '***$1');
+  };
+
   render() {
     return (
       <div id="customerInfoEdit" className="contBody">
@@ -182,9 +190,15 @@ class CustomerInfoEdit extends React.Component {
 
                   <Select
                     prefix="primaryPhone"
-                    options={(this.props.customer.phoneNumbers || []).map(function(phoneNumber) {
+                    options={(this.props.customer.phoneNumbers || []).map(function(phoneNumber, i) {
+                      let fuzzyMode = (!this.props.customerEditPermission && i < this.props.customer.phoneNumbersOriginal.length)
+
                       return({
-                        label: `${this.optionMappingLabel(phoneNumber.type)} ${phoneNumber.value}`,
+                        label: (
+                          fuzzyMode ? `${this.optionMappingLabel(phoneNumber.type)} ${this.displayFuzzyPhone(phoneNumber.value)}`
+                          :
+                          `${this.optionMappingLabel(phoneNumber.type)} ${phoneNumber.value}`
+                        ),
                         value: `${phoneNumber.type}${this.props.delimiter}${phoneNumber.value}`
                       })
                     }.bind(this))}
@@ -200,9 +214,11 @@ class CustomerInfoEdit extends React.Component {
                   <i className="fa fa-envelope" aria-hidden="true" title="mail"></i>
                   <Select
                     prefix="primaryEmail"
-                    options={(this.props.customer.emails || []).map(function(email) {
+                    options={(this.props.customer.emails || []).map(function(email, i) {
+                      let fuzzyMode = (!this.props.customerEditPermission && i < this.props.customer.emailsOriginal.length)
+
                       return({
-                        label: `${this.optionMappingLabel(email.type)} ${email.value.address}`,
+                        label: fuzzyMode ? `${this.optionMappingLabel(email.type)} ${this.displayFuzzyEmail(email.value.address)}` : `${this.optionMappingLabel(email.type)} ${email.value.address}`,
                         value: `${email.type}${this.props.delimiter}${email.value.address}`
                       })
                     }.bind(this))}
@@ -238,9 +254,9 @@ class CustomerInfoEdit extends React.Component {
           </li>
         </ul>
 
-        <dl className={`Address ${this.props.addressEditPermission ? null : "display-hidden"}`}>
+        <dl className="Address">
           <dt>{this.props.addressLabel}</dt>
-          <dd>
+          <dd className={this.props.addressEditPermission ? "" : "display-hidden"}>
             <ul className="addrzip">
               <li className="zipcode">〒
                 <input
@@ -321,6 +337,9 @@ class CustomerInfoEdit extends React.Component {
               </li>
             </ul>
           </dd>
+          <dd className={!this.props.addressEditPermission ? "" : "display-hidden"}>
+            {this.props.customer.address}
+          </dd>
         </dl>
         <dl className="phone">
           <dt>
@@ -334,6 +353,8 @@ class CustomerInfoEdit extends React.Component {
               <ul>
                 {
                   (this.props.customer.phoneNumbers || []).map(function(phoneNumber, i) {
+                    let fuzzyMode = (!this.props.customerEditPermission && i < this.props.customer.phoneNumbersOriginal.length)
+
                     return (
                       <li key={`phoneNumber-${i}`}>
                         <Select
@@ -344,18 +365,32 @@ class CustomerInfoEdit extends React.Component {
                           data-name="phoneNumbers-type"
                           data-value-name={`phoneNumbers-type-${i}`}
                           onChange={this.props.handleCustomerGoogleDataChange}
+                          disabled={fuzzyMode}
+                          />
+                        <input
+                          type="hidden"
+                          value={phoneNumber.type}
+                          name="customer[phone_numbers][][type]"
+                          disabled={!fuzzyMode}
                           />
                         <input
                           type="tel"
-                          value={phoneNumber.value}
+                          value={fuzzyMode ? this.displayFuzzyPhone(phoneNumber.value) : phoneNumber.value}
                           data-name={`phoneNumbers-value-${i}`}
                           name="customer[phone_numbers][][value]"
                           data-name="phoneNumbers-value"
                           data-value-name={`phoneNumbers-value-${i}`}
                           onChange={this.props.handleCustomerGoogleDataChange}
+                          disabled={fuzzyMode}
+                          />
+                        <input
+                          type="hidden"
+                          value={phoneNumber.value}
+                          name="customer[phone_numbers][][value]"
+                          disabled={!fuzzyMode}
                           />
                         <a onClick={this.props.removeOption.bind(null, "phoneNumbers", i)}
-                          className="BTNyellow"
+                          className={`BTNyellow ${fuzzyMode && "disabled"}`}
                           title="DELETE">
                           <i className="fa fa-minus" aria-hidden="true" title="DELETE"></i>
                         </a>
@@ -378,6 +413,8 @@ class CustomerInfoEdit extends React.Component {
             <ul>
                 {
                   (this.props.customer.emails || []).map(function(email, i) {
+                    let fuzzyMode = (!this.props.customerEditPermission && i < this.props.customer.emailsOriginal.length)
+
                     return (
                       <li key={`email-${i}`}>
                         <Select
@@ -388,17 +425,32 @@ class CustomerInfoEdit extends React.Component {
                           data-name="emails-type"
                           data-value-name={`emails-type-${i}`}
                           onChange={this.props.handleCustomerGoogleDataChange}
+                          disabled={fuzzyMode}
+                          />
+                        <input
+                          type="hidden"
+                          value={email.type}
+                          name="customer[emails][][type]"
+                          disabled={!fuzzyMode}
                           />
                         <input
                           type="email"
-                          value={email.value.address}
+                          value={fuzzyMode ? this.displayFuzzyEmail(email.value.address) : email.value.address}
                           name="customer[emails][][value][address]"
                           data-name="emails-value"
                           data-value-name={`emails-value-${i}`}
                           onChange={this.props.handleCustomerGoogleDataChange}
+                          className={`${fuzzyMode && "disabled"}`}
+                          disabled={fuzzyMode}
+                          />
+                        <input
+                          type="hidden"
+                          value={email.value.address}
+                          name="customer[emails][][value][address]"
+                          disabled={!fuzzyMode}
                           />
                         <a onClick={this.props.removeOption.bind(null, "emails", i)}
-                          className="BTNyellow"
+                          className={`BTNyellow ${fuzzyMode && "disabled"}`}
                           title="DELETE">
                           <i className="fa fa-minus" aria-hidden="true" title="DELETE"></i>
                         </a>

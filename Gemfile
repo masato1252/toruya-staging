@@ -24,7 +24,7 @@ gem "webpacker", "~> 3.5.3"
 gem "font-awesome-rails", "~> 4.7.0"
 gem "active_link_to", "~> 1.0.3"
 gem "aasm", "~> 4.11.0"
-gem "active_interaction", "~> 3.2.0"
+gem "active_interaction", github: "AaronLasseigne/active_interaction", branch: "v4.0.0"
 gem "holidays", "~> 4.5.0"
 gem "default_value_for", "~> 3.0.0"
 gem "week_of_month"
@@ -48,6 +48,8 @@ gem "carrierwave", "~> 1.1.0"
 gem "fog-aws", "~> 1.4.0"
 gem "bitly", "~> 1.0.0"
 gem "lograge", "~> 0.6.0"
+gem "stripe", "~> 3.15.0"
+gem "money-rails", "~> 1.11.0"
 gem "paper_trail", "~> 9.2.0"
 gem "sentry-raven"
 gem "slack-ruby-client", "~> 0.13.1"
@@ -73,4 +75,8 @@ group :development do
   gem "binding_of_caller"
   gem "bullet", "~> 2.0.0"
   gem "awesome_rails_console", "~> 0.4.0"
+end
+
+group :test do
+  gem "stripe-ruby-mock", "~> 2.5.4", require: "stripe_mock"
 end

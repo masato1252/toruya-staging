@@ -1,0 +1,75 @@
+<% if single_shop %>
+  <dd>
+    <% if ability(single_shop.owner).can?(:read, :shop_dashboard) %>
+      <%= active_link_to shop_reservations_path(single_shop.shop), active: [["reservations"], []], class_active: "here" do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        <%= t("dashboard.shops") %>
+      <% end %>
+    <% elsif single_shop_owner %>
+      <%= modal_link_to(shop_dashboard_for_admin_warnings_path(warning_shop_id: single_shop.shop)) do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        <%= t("dashboard.shops") %>
+      <% end %>
+    <% else %>
+      <%= modal_link_to(shop_dashboard_for_staff_warnings_path(warning_shop_id: single_shop.shop)) do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        <%= t("dashboard.shops") %>
+      <% end %>
+    <% end %>
+  </dd>
+<% else %>
+  <dd class="dropdown">
+    <%= active_link_to "#", active: [["reservations"], []], class_active: "here", data: { toggle: "dropdown", target: "#" } do %>
+      <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+      <%= t("dashboard.shops") %>
+    <% end %>
+
+    <ul class="dropdown-menu dropdown-menu-right">
+      <% if owning_shop_options.present? || working_shop_options.present? %>
+        <% if owning_shop_options.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.my_shop") %></span>
+          </li>
+          <li class="divider"></li>
+
+          <% owning_shop_options.each do |option| %>
+            <li>
+              <% if ability(option.owner).can?(:read, :shop_dashboard) %>
+                <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
+              <% else %>
+                <%= modal_link_to(option.shop.display_name, shop_dashboard_for_admin_warnings_path(warning_shop_id: option.shop)) %>
+              <% end %>
+            </li>
+          <% end %>
+        <% end %>
+
+        <% if owning_shop_options.present? && working_shop_options.present? %>
+          <li class="divider"></li>
+        <% end %>
+
+        <% if working_shop_options.present? %>
+          <li>
+            <span class="dropdown-header"><%= t("dashboard.shop_you_work_for") %></span>
+          </li>
+          <li class="divider"></li>
+
+          <% working_shop_options.each do |option| %>
+            <li>
+              <% if ability(option.owner).can?(:read, :shop_dashboard) %>
+                <%= link_to option.shop.display_name, shop_reservations_path(option.shop) %>
+              <% else %>
+                <%= modal_link_to(option.shop.display_name, shop_dashboard_for_staff_warnings_path(warning_shop_id: option.shop)) %>
+              <% end %>
+            </li>
+          <% end %>
+        <% end %>
+      <% else %>
+        <li>
+          <span class="dropdown-header no-shop-reminder">
+            <%= t("dashboard.no_shop_reminder.shop_dashboard_html", url: settings_dashboard_path) %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  </dd>
+<% end %>

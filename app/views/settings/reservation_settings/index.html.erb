@@ -10,7 +10,9 @@
   <p><%= t("settings.reservation_setting.info_1") %><br /><%= t("settings.reservation_setting.info_2") %></p>
 </div>
 
-<div id="settingForm">
+<%= jump_out_modal(settings_tours_reservation_setting_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
+<%= content_tag(:div, id: "settingForm") do %>
   <div id="resframeList" class="formRow">
     <ul class="tableTTL">
       <li class="rowTTL"><%= t("settings.reservation_setting.name") %></li>
@@ -28,4 +30,4 @@
       </dl>
     <% end %>
   </div>
-</div>
+<% end %>

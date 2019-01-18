@@ -63,7 +63,7 @@ a img:hover, #header .logo a:hover, #header #phone a:hover, #footerLogo a:hover,
 .floatL {
   float: left;
 }
-div.error, div.caution, div.alert {
+div.error, div.caution {
   border: 1px solid;
   padding: 10px 20px;
   margin-bottom: 20px;
@@ -75,10 +75,6 @@ div.error {
 div.caution {
   background: #fffeeb;
   border-color: #fff100;
-}
-div.alert {
-  background: #def5ff;
-  border-color: #7dd2f9;
 }
 #content div.error h3, #content div.caution h3 { text-indent: 0; }
 p.caution, span.caution {
@@ -199,10 +195,6 @@ h2 {
   margin-bottom: 20px;
 }
 a:hover, a img:hover { opacity: 0.7; }
-input[type="submit"][disabled].BTNorange, input[type="reset"][disabled].BTNorange, input[type="button"][disabled].BTNorange, input.BTNorange.disabled, a.BTNorange.disabled, a.BTNorange.disabled:hover { background: #edc1ab; border-color: #e4beab; opacity: 1; cursor: default; }
-input[type="submit"][disabled].BTNyellow, input[type="reset"][disabled].BTNyellow, input[type="button"][disabled].BTNyellow, input.BTNyellow.disabled, a.BTNyellow.disabled, a.BTNyellow.disabled:hover { background: #fedfa3; border-color: #f3d18f; opacity: 1; cursor: default; }
-input[type="submit"][disabled].BTNtarco, input[type="reset"][disabled].BTNtarco, input[type="button"][disabled].BTNtarco, input.BTNtarco.disabled, a.BTNtarco.disabled, a.BTNtarco.disabled:hover { background: #cbdfdc; border-color: #b0c9c5; opacity: 1; cursor: default; }
-input[type="submit"][disabled].BTNgray, input[type="reset"][disabled].BTNgray, input[type="button"][disabled].BTNgray, input.BTNgray.disabled, a.BTNgray.disabled, a.BTNgray.disabled:hover { background: #e8e8e8; border-color: #dadada; opacity: 1; cursor: default; }
 /*----------------*/
 /* Toruya Manager */
 /*----------------*/

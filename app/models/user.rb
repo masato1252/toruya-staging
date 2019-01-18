@@ -22,8 +22,14 @@
 #  locked_at              :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  level                  :integer          default("free"), not null
-#  accessed_at            :datetime
+#  contacts_sync_at       :datetime
+#
+# Indexes
+#
+#  index_users_on_confirmation_token    (confirmation_token) UNIQUE
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
 class User < ApplicationRecord
@@ -31,17 +37,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
-  enum level: {
-    free: 0,
-    basic: 1,
-    premium: 2
-  }, _suffix: true
-
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
-  has_many :shops
-  has_many :menus
-  has_many :staffs
+  has_many :shops, -> { active }
+  has_many :menus, -> { active }
+  has_many :staffs, -> { active }
   has_many :customers
   has_many :reservation_settings
   has_many :categories
@@ -52,11 +52,19 @@ class User < ApplicationRecord
   has_many :customer_query_filters
   has_many :reservation_query_filters
   has_many :filtered_outcomes
+  has_one :subscription
+  has_many :subscription_charges do
+    def last_completed
+      where(state: :completed).order("updated_at").last
+    end
+  end
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
+  delegate :current_plan, to: :subscription
 
   after_commit :create_default_ranks, on: :create
+  after_commit :create_default_subscription, on: :create
 
   def super_admin?
     ["lake.ilakela@gmail.com"].include?(email)
@@ -65,6 +73,22 @@ class User < ApplicationRecord
   # shop owner or staffs
   def member?
     true
+  end
+
+  def member_level
+    return @level if defined?(@level)
+
+    @level = current_plan.level
+
+    if @level == Plan::FREE_LEVEL && Subscription.today < trial_expired_date
+      @level = Plan::TRIAL_LEVEL
+    else
+      @level
+    end
+  end
+
+  def member_level_name
+    I18n.t("plan.level.#{member_level}")
   end
 
   def current_staff_account(super_user)
@@ -83,10 +107,54 @@ class User < ApplicationRecord
     @current_staffs[super_user] = current_staff_account(super_user).try(:staff)
   end
 
+  def trial_member?
+    member_level == Plan::TRIAL_LEVEL
+  end
+
+  def premium_member?
+    member_level == Plan::PREMIUM_LEVEL
+  end
+
+  def trial_expired_date
+    @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
+  end
+
+  def valid_shop_ids
+    @valid_shop_ids ||= if premium_member?
+                          shop_ids
+                        else
+                          shop_ids.sort.slice(0, 1)
+                        end
+  end
+
+  def has_invalid_shops?
+    valid_shop_ids != shop_ids
+  end
+
+  def today_reservations_count
+    @today_reservations_count ||= today_reservations.count
+  end
+
+  def total_reservations_count
+    @total_reservations_count ||= total_reservations.count
+  end
+
   private
 
   def create_default_ranks
     ranks.create(name: "VIP", key: Rank::VIP_KEY)
     ranks.create(name: I18n.t("constants.rank.regular"), key: Rank::REGULAR_KEY)
+  end
+
+  def create_default_subscription
+    create_subscription(plan: Plan.free_level.take)
+  end
+
+  def today_reservations
+    Reservation.where(shop_id: shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+  end
+
+  def total_reservations
+    Reservation.where(shop_id: shop_ids).active
   end
 end

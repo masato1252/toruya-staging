@@ -9,6 +9,10 @@
 #  updated_at      :datetime         not null
 #  max_seat_number :integer
 #
+# Indexes
+#
+#  index_shop_menus_on_shop_id_and_menu_id  (shop_id,menu_id) UNIQUE
+#
 
 class ShopMenu < ApplicationRecord
   belongs_to :shop

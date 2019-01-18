@@ -24,6 +24,8 @@
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
                       current_user_staff_id: current_user.current_staff(super_user).id.to_s,
+                      downgradeFromPremium: shop.staffs.active.count > @staff_options.length,
+                      isEditable: ability(reservation.shop.user).can?(:edit, reservation),
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
                       shop_id: shop.id,
                       shop_name: shop.display_name,
@@ -48,6 +50,7 @@
                       valid_time_tip_message: I18n.t("reservation.valid_time_tip_message"),
                       no_valid_menu_alert: I18n.t("reservation.no_valid_menu_alert"),
                       no_menu_message: I18n.t("reservation.no_menu_message"),
+                      select_menu_label: I18n.t("common.select_a_menu"),
                       processing_message: I18n.t("common.processing"),
                       delete_confirmation_message: I18n.t("reservation.delete_confirmation_message"),
                       memo_placeholder: I18n.t("reservation.memo"),

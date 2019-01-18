@@ -11,6 +11,10 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
+# Indexes
+#
+#  menu_reservation_setting_rules_index  (menu_id,reservation_type,start_date,end_date)
+#
 
 class MenuReservationSettingRule < ApplicationRecord
   TYPES = %w(date repeating)

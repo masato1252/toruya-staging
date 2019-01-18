@@ -1,0 +1,63 @@
+<div class="contents">
+  <div id="content" class="new-profile">
+    <div id="subNav">
+      <h2><%= t("settings.profile.info_title") %></h2>
+    </div>
+    <div id="about">
+      <p><%= t("settings.profile.new_info_1") %><br /><%= t("settings.profile.new_info_2") %></p>
+    </div>
+
+    <div id="settingForm">
+      <%= form_for(@profile, url: profile_path) do |f| %>
+        <%= hidden_field_tag :from_staff_account, params[:from_staff_account] %>
+
+        <%= render "settings/form_errors", object: @profile %>
+
+        <h3>管理者情報<strong>必須項目</strong></h3>
+        <div id="adminInfo" class="formRow">
+          <dl>
+            <dt>氏名</dt>
+            <dd class="familyName">
+              <%= f.text_field :last_name, placeholder: Profile.human_attribute_name(:last_name) %>
+            </dd>
+            <dd class="firstName">
+              <%= f.text_field :first_name, placeholder: Profile.human_attribute_name(:first_name) %>
+            </dd>
+          </dl>
+          <dl>
+            <dt>しめい</dt>
+            <dd class="familyName">
+              <%= f.text_field :phonetic_last_name, placeholder: Profile.human_attribute_name(:phonetic_last_name) %>
+            </dd>
+            <dd class="firstName">
+              <%= f.text_field :phonetic_first_name, placeholder: Profile.human_attribute_name(:phonetic_first_name) %>
+            </dd>
+          </dl>
+          <dl>
+            <dt><%= Profile.human_attribute_name(:zip_code) %></dt>
+            <dd>
+              <%= f.text_field :zip_code, placeholder: "1234567", max_length: 7 %>
+            </dd>
+          </dl>
+          <dl>
+            <dt><%= Profile.human_attribute_name(:address) %></dt>
+            <dd>
+              <%= f.text_field :address, placeholder: Profile.human_attribute_name(:address), class: "address" %>
+            </dd>
+          </dl>
+          <dl>
+            <dt><%= Profile.human_attribute_name(:phone_number) %></dt>
+            <dd>
+              <%= f.phone_field :phone_number, placeholder: "01201234567", max_length: 11 %>
+            </dd>
+          </dl>
+        </div>
+        <ul id="footerav">
+          <li>
+            <%= f.submit t("action.save"), class: "BTNyellow" %>
+          </li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</div>

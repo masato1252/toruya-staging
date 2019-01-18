@@ -88,6 +88,7 @@ module Reservable
                                             start_time: previous_reservation_validation_start_time,
                                             end_time: previous_reservation_validation_end_time).
                                             where.not("reservations.aasm_state": "canceled").
+                                            where("reservations.deleted_at": nil).
                                             where("reservations.shop_id = ?", shop.id).exists?
         errors.add(:business_time_range, "previous_reservation_interval_overlap")
       end
@@ -101,6 +102,7 @@ module Reservable
                                             start_time: next_reservation_validation_start_time,
                                             end_time: next_reservation_validation_end_time).
                                             where.not("reservations.aasm_state": "canceled").
+                                            where("reservations.deleted_at": nil).
                                             where("reservations.shop_id = ?", shop.id).exists?
         errors.add(:business_time_range, "next_reservation_interval_overlap")
       end
@@ -191,6 +193,7 @@ module Reservable
       other_shop_reservation_exist = ReservationStaff.joins(reservation: :menu).
         where.not(reservation_id: reservation_id.presence).
         where.not("reservations.aasm_state": "canceled").
+        where("reservations.deleted_at": nil).
         where("reservation_staffs.staff_id": staff.id).
         where("reservations.shop_id != ?", shop.id).
         where("reservations.start_time > ? and reservations.end_time <= ?", beginning_of_day, end_of_day).exists?
@@ -206,6 +209,7 @@ module Reservable
         ReservationStaff.joins(reservation: :menu).
           where.not(reservation_id: reservation_id.presence).
           where.not("reservations.aasm_state": "canceled").
+          where("reservations.deleted_at": nil).
           where("reservation_staffs.staff_id": staff.id).
           where("reservations.shop_id = ?", shop.id).
           where("reservations.start_time < ? and reservations.end_time > ?", end_time, start_time).exists?

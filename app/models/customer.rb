@@ -22,6 +22,18 @@
 #  updated_by_user_id       :integer
 #  email_types              :string
 #
+# Indexes
+#
+#  customer_names_on_first_name_idx           (first_name gin_trgm_ops)
+#  customer_names_on_last_name_idx            (last_name gin_trgm_ops)
+#  customer_names_on_phonetic_first_name_idx  (phonetic_first_name gin_trgm_ops)
+#  customer_names_on_phonetic_last_name_idx   (phonetic_last_name gin_trgm_ops)
+#  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
+#  index_customers_on_contact_group_id        (contact_group_id)
+#  index_customers_on_rank_id                 (rank_id)
+#  index_customers_on_user_id                 (user_id)
+#  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
+#
 
 class Customer < ApplicationRecord
   include NormalizeName
@@ -29,7 +41,7 @@ class Customer < ApplicationRecord
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down
 
   has_many :reservation_customers, dependent: :destroy
-  has_many :reservations, through: :reservation_customers
+  has_many :reservations, -> { active }, through: :reservation_customers
   belongs_to :user
   belongs_to :updated_by_user, class_name: "User"
   belongs_to :contact_group

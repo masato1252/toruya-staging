@@ -1,5 +1,6 @@
 class Customers::FilterController < DashboardController
   def index
+    authorize! :read, :filter
     @body_class = "filter"
     menu_options = super_user.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
@@ -13,9 +14,11 @@ class Customers::FilterController < DashboardController
     @filters = super_user.customer_query_filters
     @filtered_outcomes = super_user.filtered_outcomes.customers.active.order("created_at DESC")
     @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
+    @has_shop = super_user.shops.exists?
   end
 
   def create
+    authorize! :read, :filter
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
     outcome = Customers::Filter.run(query.merge(super_user: super_user))
 

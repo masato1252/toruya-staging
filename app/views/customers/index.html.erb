@@ -4,6 +4,8 @@
                       customer: customer_options([ @customer || super_user.customers.new]).first,
                       reservation_mode: !!@customer,
                       from_reservation: params[:from_reservation],
+                      reservationCreatePermission: @from_shop && can?(:create_reservation, @from_shop) && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, @from_shop),
+                      reservationCreateWarningPath: create_reservation_warnings_path(owner_id: super_user.id, shop_id: @from_shop),
                       add_reservation_path: @add_reservation_path,
                       contact_groups: default_options(@contact_groups),
                       ranks: rank_options(@ranks),
@@ -12,7 +14,6 @@
                       month_options: month_options,
                       day_options: day_options,
                       customer_edit_permission: can?(:edit, Customer),
-                      address_edit_permission: can?(:edit, "customer_address"),
                       customer_detail_path: detail_user_customers_path(super_user),
                       save_customer_path: save_user_customers_path(super_user),
                       delete_customer_path: delete_user_customers_path(super_user),
@@ -61,3 +62,6 @@
                       printing_path: new_customer_printing_path(format: :pdf),
                       google_down_message: I18n.t("common.google_down")
 }) %>
+
+<%= render "no_shop_to_create_reservation", shop: @from_shop %>
+<%= render "no_shop_to_manage_reservation", shop: @from_shop %>

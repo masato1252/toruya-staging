@@ -6,10 +6,11 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def working_schedules
-    @mode = "working_schedules"
-    @staff = super_user.staffs.find_by(id: params[:id])
+    authorize! :edit, @staff
 
-    if can?(:manage, :all)
+    @mode = "working_schedules"
+
+    if admin?
       @full_time_permission = @regular_working_time_permission = @temporary_working_time_permission = true
 
       @shops = @staff.shops.order("id")
@@ -35,10 +36,12 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def holiday_schedules
+    authorize! :edit, @staff
+
     @mode = "holiday_schedules"
     @closed_custom_schedules = @staff.custom_schedules.future.closed.order(:start_time)
 
-    @holiday_permission = if can?(:manage, :all)
+    @holiday_permission = if admin?
                             true
                           else
                             shop_staff = ShopStaff.find_by(shop: shop, staff: @staff)
@@ -50,6 +53,8 @@ class Settings::WorkingTime::StaffsController < SettingsController
   end
 
   def update
+    authorize! :edit, @staff
+
     if params[:business_schedules]
       params.permit![:business_schedules].each do |shop_id, attrs|
         if attrs[:full_time]
@@ -72,7 +77,11 @@ class Settings::WorkingTime::StaffsController < SettingsController
     end
 
     if can?(:manage, Settings)
-      redirect_to settings_user_working_time_staffs_path(super_user, mode: params[:mode]), notice: I18n.t("common.update_successfully_message")
+      if session[:settings_tour]
+        redirect_to settings_user_reservation_settings_path(super_user)
+      else
+        redirect_to settings_user_working_time_staffs_path(super_user, mode: params[:mode]), notice: I18n.t("common.update_successfully_message")
+      end
     elsif params[:mode] == "working_schedules"
       redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     else

@@ -1,0 +1,15 @@
+Dear <%= @user.name %>,
+
+This is a payment failure notification from Toruya.
+We tried to charge your credit card as listed bellow, but it failed.
+
+Your plan : <%= @charging_plan.name %>
+Next billing date : <%= l(@next_period.first, format: :year_month_date) %>
+Billing term : <%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+Ammont : <%= @cost %>(tax included)
+
+You're automatically downgraded to free member until your payment will be done successfully.
+
+Please visit <%= settings_payments_url %> and renew your payment information or change to the valid credit card information.
+
+※ The reason why your payment failed can be your credit card is invalid.

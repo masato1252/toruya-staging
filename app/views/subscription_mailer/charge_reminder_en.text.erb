@@ -1,0 +1,17 @@
+Dear <%= @user.name %>,
+
+This is a billing notification from Toruya.
+We will charge your credit card as listed bellow.
+
+Your plan : <%= @charging_plan.name %>
+Next billing date : <%= l(@next_period.first, format: :year_month_date) %>
+Billing term : <%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+Ammont : <%= @cost %>(tax included)
+
+Please visit <%= settings_payments_url %> and review your billing information anytime.
+
+※ You will be downgraded to free member automatically if we fail this billing.
+
+If you have any questions about this notification, please contact info@toruya.com .
+
+Thank you for choosing us.

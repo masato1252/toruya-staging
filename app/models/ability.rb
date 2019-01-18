@@ -6,52 +6,15 @@ class Ability
     @current_user, @super_user = current_user, super_user
 
     if admin_level
-      # manager staff permission
-      can :manage, :all
-      # can :manage, GoogleContact
-      # can :manage, Shop
-      # can :create, Staff
-      # can :manage, Profile
-      # can :edit, Customer
-      # can :edit, "customer_address"
-      # can :swith_staffs_selector, User
-      # can :manage, :filter
-      # can :manage, :saved_filter
-      # can :manage_userself_holiday_permission
-
-      if super_user.free_level?
-        cannot :manage, :preset_filter
-      end
-
-      if super_user.free_level? || super_user.basic_level?
-        cannot :manage, :saved_filter
-      end
-
-      if super_user.free_level? && super_user.staffs.active.exists?
-        cannot :create, Staff
-      end
-
-      cannot :read, Shop do |shop|
-        shop && !current_user.shops.where(id: shop.id).exists?
-      end
+      # admin permission
+      admin_member_ability
     elsif manager_level
       # manager staff permission
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
       end
 
-      can :manage, Settings
-      can :edit, Customer
-      can :edit, "customer_address"
-      can :swith_staffs_selector, User
-
-      if super_user.basic_level? || super_user.premium_level?
-        can :manage, :preset_filter
-      end
-
-      if super_user.premium_level?
-        can :manage, :saved_filter
-      end
+      manager_member_ability
 
       # Only handle the staffs under the shops he can manage.
       can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
@@ -69,10 +32,10 @@ class Ability
       can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
         shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
       end
-
-      can :manage, "userself_holiday_permission"
     elsif current_user_staff_account.try(:active?) && current_user_staff
       # normal staff permission
+      staff_member_ability
+
       can :read, Shop do |shop|
         current_user_staff.shop_staffs.where(shop: shop).exists?
       end
@@ -89,24 +52,22 @@ class Ability
         current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
       end
 
-      can :manage, "userself_holiday_permission" do
-        true
-      end
     end
   end
-
-  private
 
   def admin_level
     @shop_owner_level = current_user == super_user
   end
+  alias_method :admin?, :admin_level
+
+  private
 
   def manager_level
     @manager_levels ||= {}
 
-    return @manager_levels[super_user] if @manager_levels[super_user]
+    return @manager_levels[super_user.id] unless @manager_levels[super_user.id].nil?
 
-    @manager_levels[super_user] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
+    @manager_levels[super_user.id] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
   end
 
   def current_user_staff_account
@@ -115,5 +76,135 @@ class Ability
 
   def current_user_staff
     current_user.current_staff(super_user)
+  end
+
+  def admin_member_ability
+    can :manage, :everything
+    can :manage, GoogleContact
+    can :create, Shop
+    can :edit, Shop
+    can :delete, Shop
+    can :create, Staff
+    can :delete, Staff
+    can :manage, Profile
+    can :edit, Customer
+    can :edit, :customer_contact_info
+    can :swith_staffs_selector, User
+    can :manage, :filter
+    can :manage, :saved_filter
+
+    case super_user.member_level
+    when "premium"
+    when "basic", "trial", "free"
+      cannot :create, Staff
+      shop_permission
+    end
+
+    manager_member_ability
+  end
+
+  # manager ability
+  def manager_member_ability
+    can :manage, Settings
+    can :edit, Customer
+    can :edit, :customer_contact_info
+    can :swith_staffs_selector, User
+    can :manage, :management_stuffs
+
+    case super_user.member_level
+    when "premium", "trial"
+      can :read, :filter
+      can :manage, :preset_filter
+      can :manage, :saved_filter
+    when "basic"
+      can :read, :filter
+      can :manage, :preset_filter
+      cannot :manage, :saved_filter
+    when "free"
+      cannot :read, :filter
+      cannot :manage, :preset_filter
+      cannot :manage, :saved_filter
+    end
+
+    staff_member_ability
+  end
+
+  def staff_member_ability
+    can :create_reservation, Shop do |shop|
+      shop &&
+      super_user.valid_shop_ids.include?(shop.id) &&
+      (super_user.premium_member? || admin?) &&
+      Reservations::DailyLimit.run(user: super_user).valid? &&
+      Reservations::TotalLimit.run(user: super_user).valid? &&
+      super_user.reservation_settings.exists? &&
+      shop.menus.exists?
+    end
+
+    if super_user.premium_member? || admin?
+      can :manage_customers, User
+      can :read_settings_dashboard, User
+    end
+
+    can :create, :reservation_with_settings
+    can :create, :daily_reservations
+    can :create, :total_reservations
+    can :read, :shop_dashboard
+    can :manage, :userself_holiday_permission
+    can :edit, Staff do |staff|
+      super_user.premium_member? || (current_user_staff == staff && admin_level)
+    end
+
+    can :edit, Reservation do |reservation|
+      super_user.valid_shop_ids.include?(reservation.shop_id) && (
+        super_user.premium_member? || (
+          admin? &&
+          (reservation.staff_ids.length == 0 || (reservation.staff_ids.length == 1 && reservation.staff_ids.first == current_user_staff.try(:id)))
+        )
+      )
+    end
+
+    # manage_shop_dashboard only use to check add/edit reservation currently
+    can :manage_shop_reservations, Shop do |shop|
+      super_user.valid_shop_ids.include?(shop.id)
+    end
+
+    if !super_user.reservation_settings.exists?
+      cannot :create, :reservation_with_settings
+    end
+
+    can :create_shop_reservations_with_menu, Shop do |shop|
+      shop.menus.exists?
+    end
+
+    case super_user.member_level
+    when "premium"
+      can :create, :daily_reservations
+      can :create, :total_reservations
+      can :read, :shop_dashboard
+    when "trial"
+      can :read, :shop_dashboard
+      reservation_daily_permission
+      reservation_total_permission
+    when "free", "basic"
+      cannot :read, :shop_dashboard
+      reservation_daily_permission
+      reservation_total_permission
+    end
+  end
+
+  def shop_permission
+    cannot :create, Shop if super_user.shops.exists?
+  end
+
+  def reservation_daily_permission
+    if Reservations::DailyLimit.run(user: super_user).invalid?
+      cannot :create, :daily_reservations
+    end
+  end
+
+  def reservation_total_permission
+    if Reservations::TotalLimit.run(user: super_user).invalid?
+      cannot :create, :total_reservations
+    end
   end
 end

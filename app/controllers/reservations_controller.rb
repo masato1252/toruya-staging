@@ -1,9 +1,15 @@
 class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
 
+  def show
+    @sentences = view_context.reservation_staff_sentences(@reservation)
+    render layout: false
+  end
+
   # GET /reservations
   # GET /reservations.json
   def index
+    authorize! :read, :shop_dashboard
     @body_class = "shopIndex"
     @staffs_selector_displaying = true
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
@@ -30,10 +36,18 @@ class ReservationsController < DashboardController
       Option.new(type: :reservation, source: reservation)
     end
     # Reservations END
+
+    # Notifications START
+    @empty_reservation_setting_user_message = Notifications::EmptyReservationSettingUserPresenter.new(view_context, current_user).data(staff_account: current_user_staff_account)
+    @empty_menu_shop_message = Notifications::EmptyMenuShopPresenter.new(view_context, current_user).data(owner: super_user, shop: shop, in_shop_dashboard: true)
+    @notification_messages = [@empty_reservation_setting_user_message, @empty_menu_shop_message].compact
+    # Notifications END
   end
 
   # GET /reservations/new
   def new
+    authorize! :create_reservation, shop
+    authorize! :manage_shop_reservations, shop
     @body_class = "resNew"
 
     @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
@@ -58,6 +72,9 @@ class ReservationsController < DashboardController
 
   # GET /reservations/1/edit
   def edit
+    authorize! :manage_shop_reservations, shop
+    authorize! :edit, @reservation
+
     @body_class = "resNew"
 
     if current_user.member?
@@ -72,6 +89,8 @@ class ReservationsController < DashboardController
   end
 
   def create
+    authorize! :create_reservation, shop
+    authorize! :manage_shop_reservations, shop
     outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 
     respond_to do |format|
@@ -90,6 +109,8 @@ class ReservationsController < DashboardController
   end
 
   def update
+    authorize! :manage_shop_reservations, shop
+    authorize! :edit, @reservation
     outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
@@ -113,9 +134,14 @@ class ReservationsController < DashboardController
   end
 
   def destroy
-    @reservation.destroy
+    authorize! :edit, @reservation
+
+    Reservations::Delete.run!(reservation: @reservation)
+
     if params[:from_member]
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
+    elsif params[:from_customer_id]
+      redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
     else
       redirect_to shop_reservations_path(shop), notice: I18n.t("reservation.delete_successfully_message")
     end
@@ -165,8 +191,14 @@ class ReservationsController < DashboardController
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = shop.staffs.active.order("id").map do |staff|
-      ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    @staff_options = if super_user.premium_member?
+      shop.staffs.active.order("id").map do |staff|
+        ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+      end
+    else
+      [
+        ::Options::StaffOption.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
+      ]
     end
   end
 

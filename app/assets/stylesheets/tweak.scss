@@ -62,9 +62,13 @@ input[type="date"]
 }
 
 // reservation new save button
-button[disabled], a.disabled, input[disabled] {
-  opacity: .45;
-  cursor: not-allowed !important;
+button[disabled], a.disabled, input[disabled], textarea[disabled], select[disabled], .input div.disabled, .checkbox .disabled, span.disabled {
+ opacity: .45;
+ cursor: not-allowed !important;
+}
+
+input:disabled, select:disabled, textarea[disabled], .input div.disabled {
+ background-color: #d0d0d0;
 }
 
 // reservation index calendar and reservation new
@@ -215,6 +219,10 @@ button[disabled], a.disabled, input[disabled] {
   }
 }
 
+.hover_alert {
+  position: fixed;
+}
+
 #error_explanation {
   color: #f00;
 
@@ -226,4 +234,23 @@ button[disabled], a.disabled, input[disabled] {
       display: list-item;
     }
   }
+}
+
+caption {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #777;
+  text-align: left;
+}
+
+div.modal-footer > div {
+  display: inline-block
+}
+
+.no-shop-reminder a {
+  display: inline-block !important;
+}
+
+#content.new-profile {
+  padding-left: 0;
 }

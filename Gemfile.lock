@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/AaronLasseigne/active_interaction.git
+  revision: d46f1a1e60b7991003ae0e9df40ede869d4d1c32
+  branch: v4.0.0
+  specs:
+    active_interaction (3.6.1)
+      activemodel (>= 4, < 6)
+
+GIT
   remote: git://github.com/ilake/google_contacts_api.git
   revision: 7b2c8cad4db576805b1a141f5031ddc95530411b
   specs:
@@ -46,8 +54,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_interaction (3.2.1)
-      activemodel (>= 4, < 6)
     active_link_to (1.0.5)
       actionpack
       addressable
@@ -123,6 +129,7 @@ GEM
       concurrent-ruby (= 1.0.5)
     connection_pool (2.2.1)
     crass (1.0.3)
+    dante (0.2.0)
     database_cleaner (1.6.2)
     debug_inspector (0.0.3)
     default_value_for (3.0.5)
@@ -254,6 +261,15 @@ GEM
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     minitest (5.11.3)
+    monetize (1.7.0)
+      money (~> 6.9)
+    money (6.11.3)
+      i18n (>= 0.6.4, < 1.1)
+    money-rails (1.11.0)
+      activesupport (>= 3.0)
+      monetize (~> 1.7.0)
+      money (~> 6.11.0)
+      railties (>= 3.0)
     multi_json (1.13.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
@@ -396,6 +412,12 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    stripe (3.15.0)
+      faraday (~> 0.10)
+    stripe-ruby-mock (2.5.4)
+      dante (>= 0.2.0)
+      multi_json (~> 1.0)
+      stripe (>= 2.0.3)
     thor (0.20.0)
     thread_safe (0.3.6)
     tilt (2.0.8)
@@ -430,7 +452,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm (~> 4.11.0)
-  active_interaction (~> 3.2.0)
+  active_interaction!
   active_link_to (~> 1.0.3)
   annotate
   awesome_rails_console (~> 0.4.0)
@@ -464,6 +486,7 @@ DEPENDENCIES
   letter_opener (~> 1.4.1)
   listen (~> 3.0.5)
   lograge (~> 0.6.0)
+  money-rails (~> 1.11.0)
   newrelic_rpm (~> 3.18.0)
   nokogiri (~> 1.8.1)
   omniauth-google-oauth2
@@ -481,6 +504,8 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (>= 3.7.2)
+  stripe (~> 3.15.0)
+  stripe-ruby-mock (~> 2.5.4)
   timecop (~> 0.8.0)
   uglifier (>= 1.3.0)
   web-console

@@ -1,0 +1,23 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("settings.modal.tour.working_time_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <h4 style="margin-bottom: 10px;">勤務時間を設定して、スタッフ管理や 外部スタッフの予約調整も簡単！</h4>
+      <p style="margin-bottom: 10px;">Toruya内で設定する勤務時間とは、実際にあなたが働く時間ではなく、オンラインで予約を受け付ける時間のことです。あなたがひとりオーナーさんなら、常勤設定にするだけでお店の営業時間があなたの勤務時間となります。</p>
+      <p>勤務時間の設定は、オーナーさん以外のスタッフが働く場合や、外部のフリーランスの人と協力する場合に便利です。非常勤スタッフの場合は、曜日毎の勤務時間だけでなく、勤務可能な日時をひとつずつ設定することも可能。勤務時間外に予約を作成しようとすると「この時間を出勤にする」ボタンが表示されますので、ボタンをタップするだけで自動的に予約の時間帯だけが勤務可能となります。</p>
+    </div>
+    <div class="modal-footer centerize">
+      <% if @from_settings_tour_root %>
+        <%= link_to t("settings.modal.tour.no_need"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+        <%= link_to t("settings.modal.tour.setup_working_time"), settings_user_working_time_staffs_path(current_user, mode: "working_schedules", from_settings_tour_root: true), class: "btn BTNtarco" %>
+      <% else %>
+        <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
+        <%= link_to t("settings.modal.tour.setup_working_time"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+      <% end %>
+    </div>
+  </div>
+</div>

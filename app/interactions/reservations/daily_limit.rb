@@ -1,0 +1,13 @@
+module Reservations
+  class DailyLimit < ActiveInteraction::Base
+    RESERVATION_DAILY_LIMIT = 10
+
+    object :user
+
+    def execute
+      if user.member_level != Plan::PREMIUM_LEVEL && user.today_reservations_count >= RESERVATION_DAILY_LIMIT
+        errors.add(:user, :exceed_reservations_daily_limit)
+      end
+    end
+  end
+end

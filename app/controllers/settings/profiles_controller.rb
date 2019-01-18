@@ -3,29 +3,11 @@ class Settings::ProfilesController < SettingsController
 
   def show
     unless @profile
-      redirect_to new_settings_user_profile_path(super_user)
+      redirect_to new_profile_path
     end
-  end
-
-  def new
-    @profile = super_user.build_profile
   end
 
   def edit
-  end
-
-  def create
-    @profile = super_user.build_profile(profile_params)
-
-    if @profile.save
-      if params[:from_staff_account].present?
-        redirect_to member_path
-      else
-        redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.create_successfully_message")
-      end
-    else
-      render :new
-    end
   end
 
   def update
@@ -35,14 +17,6 @@ class Settings::ProfilesController < SettingsController
       else
         format.html { render :edit }
       end
-    end
-  end
-
-  def destroy
-    @category.destroy
-    respond_to do |format|
-      format.html { redirect_to settings_profile_url, notice: I18n.t("common.delete_successfully_message") }
-      format.json { head :no_content }
     end
   end
 

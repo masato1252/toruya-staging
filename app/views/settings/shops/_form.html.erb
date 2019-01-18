@@ -7,8 +7,9 @@
 
 <div id="settingForm">
   <%= form_for(shop, url: url) do |f| %>
-    <%= render "settings/form_errors", object: shop %>
+    <%= render "settings/form_errors", object: @outcome if @outcome %>
 
+    <%= hidden_field_tag :token, nil, id: "stripe-token" %>
     <h3>店名</h3>
     <div id="shopNames" class="formRow">
       <dl>
@@ -64,7 +65,11 @@
         <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>
       </li>
       <li>
-        <%= f.submit "保存", class: "BTNyellow" %>
+        <% if local_assigns[:fit_shop_charge_threshold] %>
+          <%= link_to "保存", "#", class: "BTNyellow", data: { toggle: "modal", target: "#upgradeModal" } %>
+        <% else %>
+          <%= f.submit "保存", class: "BTNyellow" %>
+        <% end %>
       </li>
     </ul>
   <% end %>

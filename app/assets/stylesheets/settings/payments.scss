@@ -1,0 +1,140 @@
+.payments {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-bottom: 50px;
+
+  table.subscription {
+    border-spacing: 0;
+    border-collapse: separate;
+    width: 100%;
+    max-width: 100%;
+
+    & > tbody {
+      border-top: 1px solid #dddddd;
+      text-align: left;
+
+      tr {
+        & > th {
+          padding: 10px 20px;
+          border-left: 1px solid #dddddd;
+          width: 300px;
+        }
+
+        & > td {
+          padding: 10px 20px;
+          border-right: 1px solid #dddddd;
+        }
+      }
+
+      & > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      & > tr:first-child {
+        & > th {
+          border-top: 1px solid #dddddd;
+          border-top-left-radius: 10px;
+        }
+
+        & > td {
+          border-top: 1px solid #dddddd;
+          border-top-right-radius: 10px;
+        }
+      }
+
+      & > tr:last-child {
+        & > th {
+          border-bottom: 1px solid #dddddd;
+          border-bottom-left-radius: 10px;
+        }
+
+        & > td {
+          border-bottom: 1px solid #dddddd;
+
+          &:last-child {
+            border-bottom-right-radius: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  table.history {
+    text-align: left;
+    border-spacing: 0;
+    border-collapse: separate;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 30px;
+
+    & > thead {
+      & > tr {
+        & > th {
+          padding: 10px 20px;
+          border: 1px solid #dddddd;
+          background-color: #dddddd;
+
+          &:first-child {
+            border-top-left-radius: 10px;
+          }
+
+          &:last-child {
+            border-top-right-radius: 10px;
+          }
+
+          &.charge-date,
+          &.charge-amount {
+            width: 120px;
+          }
+
+          &.charge-plan {
+            width: 200px;
+          }
+        }
+      }
+    }
+
+    & > tbody {
+      border-top: 1px solid #dddddd;
+      text-align: left;
+
+      tr {
+        & > td {
+          padding: 10px 20px;
+
+          &:first-child {
+            border-left: 1px solid #dddddd;
+          }
+
+          &:last-child {
+            border-right: 1px solid #dddddd;
+          }
+        }
+      }
+
+      & > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      & > tr:last-child {
+        & > td {
+          border-bottom: 1px solid #dddddd;
+
+          &:first-child {
+            border-bottom-left-radius: 10px;
+          }
+          &:last-child {
+            border-bottom-right-radius: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  div.refund-area {
+    .refund-label {
+      font-weight: bold;
+      margin-top: 12px;
+    }
+  }
+}

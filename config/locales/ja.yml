@@ -29,6 +29,11 @@ ja:
     log_out: ログアウト
     save: 保存
     search: 検索
+    upgrade_to_premium: プレミアムにアップグレードする
+    upgrade_to_basic: ベーシックにアップグレードする
+    cancel_upgrade: キャンセル
+    new_reservation: 新規予約
+    create_a_shop: 店舗を設定する
   common:
     processing: 送信中
     date: 日付
@@ -57,6 +62,8 @@ ja:
     select_a_staff: スタッフを選択
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
+    no_permission: 権限がありません
+    done: 完了
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -65,9 +72,56 @@ ja:
     my_shop_setting: 自分の店舗の設定
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
+    someone_customer: "%{name}の顧客"
+    no_shop_reminder:
+      shop_dashboard_html: 店舗ダッシュボードを利用するために、<br /><a href=%{url}>こちら</a>から店舗を作成してください。
+    no_contact_group:
+      customer_btn_html: 顧客管理を始めるために、<a href=%{settings_path}>こちら</a>から<br />顧客台帳を作成してください。
+      filter_btn_html: 高度検索を利用するために、<a href=%{settings_path}>こちら</a>から<br />顧客台帳を作成してください。
+    modal:
+      shop_dashboard:
+        admin:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content_html: 店舗ダッシュボードを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で店舗ダッシュボードを使用することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        staff:
+          upgrade_title: 店舗ダッシュボードは利用できません
+          upgrade_content: "%{shop_name}は店舗ダッシュボードを利用できません。店舗管理者にご連絡ください。"
+      customer_dashboard:
+        staff:
+          upgrade_title: 顧客台帳は利用できません
+          upgrade_content: "%{owner_name}さんの店舗は顧客台帳を利用できません。店舗管理者にご連絡ください。"
+      filter:
+        admin:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content_html: 高度検索を利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{basic_plan_price}でベーシックにアップグレードすることで、プリセットの検索条件で高度検索を使用することができます。<br /><br />月額%{premium_plan_price}でプレミアムにアップグレードすと、無制限で自分の検索条件を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        staff:
+          upgrade_title: 高度検索は利用できません
+          upgrade_content: "%{owner_name}さんの店舗は高度検索を利用できません。店舗管理者にご連絡ください。"
+      settings:
+        staff:
+          upgrade_title: 設定は利用できません
+          upgrade_content: "%{shop_name}は設定を利用できません。店舗管理者にご連絡ください。"
+  plan:
+    level:
+      free: 無料
+      basic: ベーシック
+      premium: プレミアム
+      trial: 試用期間
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
+  filter:
+    modal:
+      saved_filter:
+        admin:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content_html: 検索条件を保存するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で自分の検索条件を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        staff:
+          upgrade_title: 高度検索は利用できません
+          upgrade_content: 高度検索を利用できません。店舗管理者にご連絡ください。
+      no_shop:
+        title: 店舗を設定してください
+        content: 利用履歴で顧客を高度検索するには、店舗を設定する必要があります。
   reservation:
     valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
@@ -95,6 +149,44 @@ ja:
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
+    modal:
+      invalid_shops_exist_message:
+        manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
+        manage_self_shop_reservations_no_permission: ※あなたのご利用プランに基づき、新規予約を作成できない店舗があります。
+        manage_boss_shop_reservations_no_permission: ※店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
+        create_reservation_with_settings_no_permission: ※予約枠が未設定のため無効な店舗があります。予約枠を設定するか、店舗管理者にご連絡ください。
+        create_reservations_with_menu_no_permission: ※メニューが未設定のため無効な店舗があります。メニューを設定するか、店舗管理者にご連絡ください。
+      admin:
+        disable_edit_when_user_membership_no_permission: ※ご利用プランに基づき、この予約はステータスを変更できません。
+        daily_reservations_limit:
+          upgrade_title: アカウントをアップグレード
+          upgrade_content_html: 今日既に合計%{reservations_daily_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        total_reservations_limit:
+          upgrade_title: アカウントをアップグレード
+          free_upgrade_content_html: 既に合計%{free_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{basic_plan_price}でベーシックにアップグレードすることで、さらに%{basic_plan_reservations_total_limit}の予約を作成することができます。<br /><br />月額%{premium_plan_price}でプレミアムにアップグレードすと、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+          basic_upgrade_content_html: 既に合計%{basic_plan_reservations_total_limit}の予約を作成しました。<br /><br />さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}でベーシックにアップグレードすることで、無制限で予約を作成することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        empty_reservation_setting_user:
+          title: 予約枠が見つかりません
+          content: この店舗は予約枠が未設定です。まず予約枠を設定してください。
+          button_text: 予約枠を設定する
+        empty_menu_shop:
+          title: メニューが見つかりません
+          content: この店舗はメニューが未設定です。まずメニューを設定してください。
+          button_text: メニューを設定する
+      staff:
+        disable_edit_when_user_membership_no_permission: ※店舗オーナーのご利用プランに基づき、この予約は編集できません。
+        daily_reservations_limit:
+          upgrade_title: 予約を追加できません
+          upgrade_content: 今日の予約上限数を超えました。店舗管理者にご連絡ください。
+        total_reservations_limit:
+          upgrade_title: 予約を追加できません
+          upgrade_content: 予約上限数を超えました。店舗管理者にご連絡ください。
+        empty_reservation_setting_user:
+          title: 予約枠が見つかりません
+          content: この店舗は予約枠が未設定です。店舗管理者にご連絡ください。
+        empty_menu_shop:
+          title: メニューが見つかりません
+          content: この店舗はメニューが未設定です。店舗管理者にご連絡ください。
   customer:
     back_without_save: 保存せずに戻る
     save: 上書き保存
@@ -126,11 +218,21 @@ ja:
     reservation_day: 予約日
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
+    dashboard:
+      modal:
+        no_shop_to_create_reservation:
+          title: 店舗を設定してください
+          content: 予約を作成するには、店舗を設定する必要があります。
+        no_shop_to_manage_reservation:
+          title: 店舗を設定してください
+          content: 予約を管理するには、店舗を設定する必要があります。
     filter:
+      no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"
       confirm_message: 顧客情報を表示するために検索結果ページを離れようとしています。
       empty_saved_filter_sentence_one: 保存した検索条件なし
       empty_saved_filter_sentence_two_for_premium_user: ""
+      empty_saved_filter_sentence_two_for_trial_user: ""
       empty_saved_filter_sentence_two_for_basic_user: "プレミアムメンバーへアップグレードすると貴方だけの検索条件を作成／保存できます。"
       empty_saved_filter_sentence_two_for_free_user: "フィルターを使用する為にアップグレードします。プレミアムメンバーへアップグレードすると貴方だけの検索条件を作成／保存できます。"
       custom_id_confirm_warning: ※顧客IDを入力したら黄色のプラスボタンをタップ
@@ -186,6 +288,55 @@ ja:
         dob_in_next_month: 来月お誕生日
         checkout_in_a_year: 来店１年以内
   settings:
+    dashboard:
+      info_title: 自分の店舗の設定
+      info_desc_html: あなたの店舗に関する設定をします。<br />Toruyaはこの設定に基づいて予約を受け付けます。
+      current_plan_is: 現在ご利用中のプランは
+      check_plan: プランを確認する
+      today_had_created: あなたは今日
+      total_had_created: あなたは現在
+      do_reservations_created: 回、予約を作成しました
+      reservations_created: 件の予約があります
+      no_limit: 無制限
+      basic_tour:
+        title: 基本設定
+        start_btn: 設定ツアー開始
+        private_schedule_management: "プライベート予定の管理"
+        account_info_settings: アカウント情報を設定する
+        customers_management: 顧客の管理
+        customers_settings: 顧客台帳を設定する
+        reservations_management: 予約の管理
+        shops_settings: 店舗を設定する
+        business_hours_settings: 営業日時を設定する
+        working_time_settings: 勤務日時を設定する
+        reservations_blocks_settings: 予約枠を設定する
+        menus_settings: メニューを設定する
+        notifications:
+          customer_html: "顧客管理を始めるために、<a href='%{url}'>こちら</a>から顧客台帳を作成してください。"
+          shop_html: "予約管理を始めるために、<a href='%{url}'>こちら</a>から店舗を作成してください。"
+          business_schedule_html: "%{user_name}さんの店舗で営業日時が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          working_time_html: "%{user_name}さんの店舗で勤務日時が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          reservation_setting_html: "%{user_name}さんの店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+          menu_html: "%{user_name}さんの店舗でメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+    modal:
+      tour:
+        welcome_title: Toruyaにご登録ありがとうございます！
+        by_myself: 自分で設定します
+        basic_setting_start: 基本設定ツアーを始めます
+        end_tour: ツアーを終了
+        setup_contact_group: 顧客台帳を設定します
+        contact_group_title: 顧客台帳の設定(Google連絡先の同期)
+        shop_title: あなた自身の店舗を管理
+        no_need: 必要ない
+        setup_shop: 店舗を設定します
+        business_schedule_title: 営業日時の設定
+        setup_business_schedule: 営業日時を設定します
+        working_time_title: 勤務時間の設定
+        setup_working_time: 勤務時間を設定します
+        reservation_setting_title: 予約枠の設定
+        setup_reservation_setting: 予約枠を設定します
+        menu_title: メニューの設定
+        setup_menu: メニューを設定します
     shop:
       info_title:  店舗情報
       new_title: 店舗情報の新規作成
@@ -198,6 +349,13 @@ ja:
       create_successfully_message: 店舗情報を保存しました。
       update_successfully_message: 店舗情報を更新しました。
       delete_successfully_message: 店舗情報を削除しました。
+      modal:
+        upgrade_title: アカウントをアップグレード
+        upgrade_content_html: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        premium:
+          upgrade_content_html: 既に%{shop_number}店舗を作成しています。<br />さらに店舗を追加するには追加料金が必要です。<br /><br />月額%{per_shop_fee_price}円でもう１店舗を追加することができます。<br /><br />店舗はいつでも削除することができます。
+          cancel_button: いいえ、結構です
+          upgrade_button: "%{per_shop_fee_price}円払って１店舗追加する"
     business_hours:
       info_title: 営業時間
       info_1: 営業時間を設定してください。
@@ -229,6 +387,7 @@ ja:
       number_of_week: 週数
       all_business_hours: 全営業時間
       custom_time: 個別設定
+      notification_message_html: "%{user_name}さんの店舗で予約枠が未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     menu:
       info_title: メニュー
       info_label: メニュー基本設定
@@ -249,6 +408,8 @@ ja:
       reservation_ending_rule_end_date_setting: 終了日
       category_label: カテゴリー
       new_category_btn: カテゴリーを追加
+      notification_message_html: "%{shop_name}でメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
+      in_shop_dashboard_notification_message_html: "この店舗はメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     category:
       info_title: メニューカテゴリー
       info_label: 基本設定
@@ -260,7 +421,8 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: カテゴリー名
     staff:
-      info_title: 基本情報
+      sider_label: スタッフ管理
+      info_title: スタッフアカウント
       new_title: スタッフの新規作成
       new_button: スタッフを新規作成
       info_label: 表示名
@@ -273,6 +435,10 @@ ja:
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務時間
       holiday_time: 休暇
+      modal:
+        upgrade_title: アカウントをアップグレード
+        upgrade_content_html: スタッフを追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
+        upgrade_edit_content_html: スタッフアカウントを利用するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数のスタッフを追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。
     staff_account:
       info_title: スタッフアカウント
       using_staff_account: スタッフアカウントを利用する
@@ -285,6 +451,7 @@ ja:
       sent_message: 設定されたスタッフのGメールに、スタッフアカウント認証手続きのお願いをお送りしました。スタッフ自身に届いたメールから認証をしてもらってください。
       new_staff_active: 新たに承認されたスタッフアカウントがあります。スタッフの詳しい権限を設定できます。
       staff_setting: スタッフ設定
+      connected_your_account: スタッフアカウントの設定が完了しました。
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
@@ -306,7 +473,8 @@ ja:
       setting_title: 休暇の設定権限
       holiday_permission: スタッフによる休暇の設定を許可
     contact:
-      info_title: Google同期設定
+      info_title: 顧客管理
+      info_sub_title: 顧客台帳
       new_title: 新規台帳作成
       new_button: 新規グループを作成
       info_1: こちらではToruyaと同期するGmail連絡先グループを設定してください。
@@ -344,6 +512,128 @@ ja:
       info_2: Toruyaをしようするにはこの設定を完了する必要があります。
       new_info_1: まずは管理人情報を登録します。
       new_info_2: 各種設定や利用料金の支払いなど、Toruyaの登録情報を管理する個人や法人を設定してください。
+    subscription:
+      status:
+        active: アクティブ
+        expired: 期限切れ
+      receipt:
+        label: 領収書
+        desc: ご利用ありがとうございます。ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
+        date: お支払日
+        transaction_id: 取引ID
+        account: ご利用アカウント
+        plan: ご利用プラン
+        total: お支払合計
+        shop: 店舗
+        refund:
+          label: 返金明細書
+          plan: 返金プラン
+    plans:
+      info_title: ご利用プラン
+      info_title1: ご利用プランとお支払い情報
+      info_1: Toruyaアカウントのご利用プランとお支払い情報です。
+      info_2: ご利用プランによってToruyaの様々な機能が利用可能になります。
+      save: 変更を保存
+      save_and_pay: 変更を保存して支払う
+      plan_info:
+        caption: ご利用プラン
+        current_plan: ご利用中プラン
+        plan_member: "%{plan_name} メンバー"
+        change_plan: プラン変更
+        join_date: 登録日
+        status: ステータス
+        next_billing_date: 次のお支払い期限
+      payment:
+        date: ご清算日
+        amount: 合計金額
+        plan: プラン
+        receipt: レシート
+        failed_title: 支払い失敗!!
+        failed_desc1: 支払いが完了できませんでしたので、ご利用プランを変更することができませんでした。
+        failed_desc2: もう一度やり直してください。
+        refund: 払戻し
+        refund_successfully_message: 返金手続き完了
+        refund_failed_message: 返金手続き失敗。もう一度手続きしてください。
+        extra_shop: 追加店舗
+      upgrade:
+        caption_title: アップグレードのオプション
+        caption_desc: アップグレードには２通りの選択肢があります。
+        immediately: 今すぐアップグレード
+        immediately_desc: 今すぐプレミアム/ベーシックメンバー限定の機能が使えます。
+        later: 次の更新からアップグレード
+        later_desc: "%{expired_date}からプレミアム/ベーシックメンバー限定の機能が使えます。"
+      extra_staff:
+        caption_title: "%{staff_number}つの追加スタッフも利用が再開されます"
+        caption_desc: 追加スタッフが担当の予約を追加/編集することができるようになります。自分以外のスタッフが不要でしたら、事前に店舗設定ページから削除してください。
+      shop_fee:
+        caption_title: "%{shop_number}つの追加店舗も利用が再開されます"
+        caption_desc: 追加店舗の予約を追加/編集することができるようになります。追加店舗が不要でしたら、事前に店舗設定ページから削除してください。削除されなければ、一店舗につき%{per_shop_fee_price}円の月額利用料が追加請求されます。
+        confirmation: はい、追加店舗の利用も再開します
+      downgrade:
+        modal_title: ダウングレードされます!!
+        desc: 選択されたプランは、現在ご利用中のプランからダウングレードになります。
+        label1: 次の更新からダウングレードされます。
+        desc1: "次の更新からダウングレードされます。%{expired_date}まではプレミアム/ベーシックメンバー限定の機能を使い続けられます。"
+        label2: 無効になる機能があります
+        desc2: "%{after_expired_date}から幾つかの機能が使えなくなります。ダウングレード後は、新規の予約を作成できなくなる可能性があります。"
+        cancel_btn: ダウングレードしない
+        confirm_btn: ダウングレードする
+      refund:
+        modal_title: ダウングレードされます!!
+        desc: 返金しようとしているのは、現在ご利用中のメンバーシップです。
+        label1: フリーメンバーにダウングレードされます
+        desc1: 返金をご希望しただいているのは現在ご利用中のメンバーシップの為、返金後すぐにフリーメンバーへダウングレードされます。
+        label2: 無効になる機能があります
+        desc2: フリーメンバーへダウングレードされる為、返金後は新規の予約を作成できなくなる可能性があります。
+        cancel_btn: 返金しない
+        confirm_btn: 返金する
+      labels:
+        shop_can_set: 設定可能な店舗数
+        staff_in_charge: 担当者の設定
+        max_customer_per_reservation: 予約可能な人数（定員）
+        reservation_restriction: 予約件数
+        private_schedule: 個人の予定を追加・編集
+        customer_info: 顧客情報の入力・編集
+        customer_group_limit: 設定可能な顧客台帳数
+        customer_filter: 顧客データ検索
+        print_address: 宛名印刷
+        add_staff: スタッフ追加
+      free:
+        title: フリー
+        shop_can_set: "１店舗"
+        staff_in_charge: "１人"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: １日１０件(累計1,200件)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 1つ
+        customer_filter: 名前検索
+        print_address: 個別
+        add_staff: ✕
+      basic:
+        title: ベーシック
+        shop_can_set: "１店舗"
+        staff_in_charge: "１人"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: １日１０件(累計3,600件)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2つ
+        customer_filter: プリセット条件検索
+        print_address: 個別
+        add_staff: ✕
+      premium:
+        title: プレミアム
+        shop_can_set: "無制限(追加料金)"
+        staff_in_charge: "無制限"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無制限
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無制限
+        customer_filter: 条件検索を保存可能
+        print_address: 一斉
+        add_staff: ⃝
   constants:
     rank:
       regular: "一般"
@@ -478,6 +768,16 @@ ja:
     - :year
     - :month
     - :day
+  time:
+    am: 午前
+    formats:
+      default: "%Y/%m/%d %H:%M"
+      long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
+      short: "%y/%m/%d %H:%M"
+      date: "%Y/%m/%d(%a)"
+      hour_minute: "%H:%M"
+      month_day_wday: "%m/%d(%a)"
+    pm: 午後
   datetime:
     distance_in_words:
       about_x_hours:
@@ -604,19 +904,39 @@ ja:
       last_word_connector: と
       two_words_connector: と
       words_connector: と
-  time:
-    am: 午前
-    formats:
-      default: "%Y/%m/%d %H:%M"
-      long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
-      short: "%y/%m/%d %H:%M"
-      date: "%Y/%m/%d(%a)"
-      hour_minute: "%H:%M"
-      month_day_wday: "%m/%d(%a)"
-    pm: 午後
+  subscription_mailer:
+    charge_successfully:
+      title: ご請求完了のご連絡
+    charge_failed:
+      title: クレジットカードの利用承認が得られませんでした
+    charge_shop_fee:
+      title: 有料での店舗追加のご連絡
+    charge_reminder:
+      title: ご請求のご連絡
+  reminder_mailer:
+    trial_member_months_ago_reminder:
+      title: 試用期間終了予定日のご連絡
+    trial_member_week_ago_reminder:
+      title: 試用期間の終了間近のご連絡
+    trial_member_day_ago_reminder:
+      title: 試用期間終了のご連絡
+    daily_reservations_limit_by_admin_reminder:
+      title: 今日の予約上限数満了のご連絡
+    daily_reservations_limit_by_staff_reminder:
+      title: 今日の予約上限を超えた予約作成のご連絡
+    total_reservations_limit_by_admin_reminder:
+      title: 累計の予約上限数満了のご連絡
+    total_reservations_limit_by_staff_reminder:
+      title: 累計の予約上限を超えた予約作成のご連絡
   active_interaction:
     errors:
       models:
+        plans/subscribe:
+          attributes:
+            plan:
+              already_subscribe_the_same_plan: "^You already subscribed this plan."
+              auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+              processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
         shops/staffs_working_schedules:
           attributes:
             date:
@@ -625,6 +945,11 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
+        subscriptions/charge:
+          attributes:
+            plan:
+              auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+              processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
         reservable/reservation:
           attributes:
             date:

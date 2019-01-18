@@ -1,0 +1,23 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("settings.modal.tour.business_schedule_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <h4 style="margin-bottom: 10px;">Toruyaで営業日時を設定して、予約間違いやダブルブッキングを防止！</h4>
+      <p style="margin-bottom: 10px;">Toruya内で設定する営業日時とは、実際のお店の営業日時ではなく、オンラインで予約を受け付ける日時のことです。営業日時を設定しておけば、その日時ならお客様が自由に予約を入れることも可能。ひとりオーナーさんに多い「自由予約制」に対応しながら、オンラインからの 一元さんが予約できる時間を 制限することができます。</p>
+      <p>でも、オーナーさんであるあなた自身ならダッシュボードからなら時間外や休業日にも予約作成が可能。常連さんやリピーターさんなど、あなたの裁量でとる例外予約にも対応できます！</p>
+    </div>
+    <div class="modal-footer centerize">
+      <% if @from_settings_tour_root %>
+        <%= link_to t("settings.modal.tour.no_need"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+        <%= link_to t("settings.modal.tour.setup_business_schedule"), settings_user_business_schedules_path(current_user, from_settings_tour_root: true), class: "btn BTNtarco" %>
+      <% else %>
+        <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
+        <%= link_to t("settings.modal.tour.setup_business_schedule"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+      <% end %>
+    </div>
+  </div>
+</div>

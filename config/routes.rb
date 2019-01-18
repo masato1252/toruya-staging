@@ -18,9 +18,13 @@ Rails.application.routes.draw do
     end
   end
 
+  scope module: :users do
+    resource :profile, only: %i[new create]
+  end
+
   resources :shops do
-    resources :reservations, except: [:show] do
-      get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }
+    resources :reservations do
+      get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
         get :validate
       end
@@ -80,8 +84,34 @@ Rails.application.routes.draw do
   end
 
   namespace :settings do
+    get :dashboard, to: "dashboards#index", as: :dashboard
+    get :tour, to: "dashboards#tour", as: :tour
+    get :end_tour, to: "dashboards#end_tour", as: :end_tour
+
+    namespace :tours, constraints: ::XhrConstraint do
+      get :current_step_warning
+      get :business_schedule
+      get :contact_group
+      get :menu
+      get :reservation_setting
+      get :working_time
+      get :shop
+    end
+
+    resources :plans, only: [:index]
+    resources :payments, only: [:index, :create] do
+      collection do
+        get :refund
+        get :downgrade
+      end
+
+      member do
+        get :receipt
+      end
+    end
+
     resources :users do
-      resource :profile
+      resource :profile, only: %i[show edit update]
       resources :staffs, except: [:show] do
         collection do
           get :resend_activation_email
@@ -134,6 +164,19 @@ Rails.application.routes.draw do
     collection do
       get "working_schedule"
       get "personal_working_schedule"
+    end
+  end
+
+  resources :warnings, only: [], constraints: ::XhrConstraint do
+    collection do
+      get :shop_dashboard_for_staff
+      get :shop_dashboard_for_admin
+      get :customer_dashboard_for_staff
+      get :filter_dashboard_for_staff
+      get :read_settings_dashboard_for_staff
+      get :edit_staff_for_admin
+      get :new_staff_for_admin
+      get :create_reservation
     end
   end
 

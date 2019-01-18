@@ -464,7 +464,8 @@ CREATE TABLE public.menus (
     "interval" integer,
     min_staffs_number integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -485,6 +486,36 @@ CREATE SEQUENCE public.menus_id_seq
 --
 
 ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
+
+
+--
+-- Name: plans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.plans (
+    id bigint NOT NULL,
+    "position" integer,
+    level integer
+);
+
+
+--
+-- Name: plans_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.plans_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.plans_id_seq OWNED BY public.plans.id;
 
 
 --
@@ -750,7 +781,8 @@ CREATE TABLE public.reservations (
     updated_at timestamp without time zone NOT NULL,
     count_of_customers integer DEFAULT 0,
     with_warnings boolean DEFAULT false NOT NULL,
-    by_staff_id integer
+    by_staff_id integer,
+    deleted_at timestamp without time zone
 );
 
 
@@ -900,7 +932,8 @@ CREATE TABLE public.shops (
     website character varying,
     holiday_working boolean,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1031,6 +1064,83 @@ ALTER SEQUENCE public.staffs_id_seq OWNED BY public.staffs.id;
 
 
 --
+-- Name: subscription_charges; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subscription_charges (
+    id bigint NOT NULL,
+    user_id bigint,
+    plan_id bigint,
+    amount_cents numeric,
+    amount_currency character varying,
+    state integer,
+    charge_date date,
+    expired_date date,
+    manual boolean DEFAULT false NOT NULL,
+    stripe_charge_details jsonb,
+    order_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    details jsonb
+);
+
+
+--
+-- Name: subscription_charges_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subscription_charges_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subscription_charges_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subscription_charges_id_seq OWNED BY public.subscription_charges.id;
+
+
+--
+-- Name: subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subscriptions (
+    id bigint NOT NULL,
+    plan_id bigint,
+    next_plan_id integer,
+    user_id bigint,
+    stripe_customer_id character varying,
+    recurring_day integer,
+    expired_date date,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subscriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1055,7 +1165,6 @@ CREATE TABLE public.users (
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    level integer DEFAULT 0 NOT NULL,
     contacts_sync_at timestamp without time zone
 );
 
@@ -1198,6 +1307,13 @@ ALTER TABLE ONLY public.menus ALTER COLUMN id SET DEFAULT nextval('public.menus_
 
 
 --
+-- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.plans ALTER COLUMN id SET DEFAULT nextval('public.plans_id_seq'::regclass);
+
+
+--
 -- Name: profiles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1300,6 +1416,20 @@ ALTER TABLE ONLY public.staff_menus ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.staffs ALTER COLUMN id SET DEFAULT nextval('public.staffs_id_seq'::regclass);
+
+
+--
+-- Name: subscription_charges id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscription_charges ALTER COLUMN id SET DEFAULT nextval('public.subscription_charges_id_seq'::regclass);
+
+
+--
+-- Name: subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('public.subscriptions_id_seq'::regclass);
 
 
 --
@@ -1418,6 +1548,14 @@ ALTER TABLE ONLY public.menu_reservation_setting_rules
 
 ALTER TABLE ONLY public.menus
     ADD CONSTRAINT menus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plans plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.plans
+    ADD CONSTRAINT plans_pkey PRIMARY KEY (id);
 
 
 --
@@ -1546,6 +1684,22 @@ ALTER TABLE ONLY public.staff_menus
 
 ALTER TABLE ONLY public.staffs
     ADD CONSTRAINT staffs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subscription_charges subscription_charges_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscription_charges
+    ADD CONSTRAINT subscription_charges_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subscriptions subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subscriptions
+    ADD CONSTRAINT subscriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1712,6 +1866,13 @@ CREATE INDEX index_menus_on_user_id ON public.menus USING btree (user_id);
 
 
 --
+-- Name: index_menus_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (user_id, deleted_at);
+
+
+--
 -- Name: index_profiles_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1744,6 +1905,13 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 --
 
 CREATE UNIQUE INDEX index_reservation_staffs_on_reservation_id_and_staff_id ON public.reservation_staffs USING btree (reservation_id, staff_id);
+
+
+--
+-- Name: index_reservations_on_shop_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservations_on_shop_id_and_deleted_at ON public.reservations USING btree (shop_id, deleted_at);
 
 
 --
@@ -1789,6 +1957,13 @@ CREATE INDEX index_shops_on_user_id ON public.shops USING btree (user_id);
 
 
 --
+-- Name: index_shops_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (user_id, deleted_at);
+
+
+--
 -- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1821,6 +1996,41 @@ CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON public.staff_me
 --
 
 CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
+
+
+--
+-- Name: index_staffs_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staffs_on_user_id_and_deleted_at ON public.staffs USING btree (user_id, deleted_at);
+
+
+--
+-- Name: index_subscription_charges_on_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_subscription_charges_on_plan_id ON public.subscription_charges USING btree (plan_id);
+
+
+--
+-- Name: index_subscription_charges_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_subscription_charges_on_user_id ON public.subscription_charges USING btree (user_id);
+
+
+--
+-- Name: index_subscriptions_on_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_subscriptions_on_plan_id ON public.subscriptions USING btree (plan_id);
+
+
+--
+-- Name: index_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_subscriptions_on_user_id ON public.subscriptions USING btree (user_id);
 
 
 --
@@ -1870,6 +2080,13 @@ CREATE INDEX jp_name_index ON public.customers USING btree (user_id, phonetic_la
 --
 
 CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
+
+
+--
+-- Name: order_id_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_id_index ON public.subscription_charges USING btree (order_id);
 
 
 --
@@ -1950,6 +2167,13 @@ CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (s
 
 
 --
+-- Name: user_state_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_id, state);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2011,10 +2235,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20171127134653'),
 ('20180413110627'),
 ('20180413153332'),
+('20180524222348'),
+('20180524222614'),
+('20180524223443'),
 ('20180612021000'),
 ('20180617004311'),
 ('20180620074249'),
+('20180823153730'),
+('20180904141857'),
 ('20181129015015'),
-('20181130012847');
+('20181130012847'),
+('20181212223445'),
+('20181226150238'),
+('20181227064220');
 
 

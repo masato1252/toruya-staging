@@ -5,6 +5,14 @@
 .filter .sidel {
   width: 324px;
   min-width: 324px;
+
+  .no-shop-warning {
+    text-align: center;
+
+    .caution {
+      text-align: left;
+    }
+  }
 }
 
 .filter #resList {

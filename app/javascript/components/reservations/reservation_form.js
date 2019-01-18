@@ -40,7 +40,7 @@ class ReservationForm extends React.Component {
       staff_ids: this.props.reservation.staffIds || [],
       memo: this.props.reservation.memo || "",
       menu_min_staffs_number: this.props.minStaffsNumber || 0,
-      menu_available_seat: this.props.menuDefaultOption.availableSeat,
+      menu_available_seat: this.props.menuDefaultOption && this.props.menuDefaultOption.availableSeat || 0,
       menu_group_options: this.props.menuGroupOptions || [],
       staff_options: this.props.staffOptions || [],
       errors: {},
@@ -113,6 +113,9 @@ class ReservationForm extends React.Component {
     }
     else if (this._isMeetCustomerLimit()) {
       return "disabled BTNorange"
+    }
+    else if (!this.props.isEditable) {
+      return "disabled BTNtarco";
     }
     else {
       return "BTNtarco"
@@ -234,6 +237,7 @@ class ReservationForm extends React.Component {
       let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().errors)
 
       return (
+        this.props.isEditable &&
         this.state.start_time_date_part &&
         this.state.start_time_time_part &&
         this.state.end_time_time_part &&
@@ -495,6 +499,7 @@ class ReservationForm extends React.Component {
                   this._staffDangerErrors(value, i).length !== 0 ? "field-error" : "field-warning"
                 ) : ""
               }
+              disabled={!this.props.isEditable}
             />
             <span className="errors">
               {this._staffErrors(value, i)}
@@ -688,6 +693,7 @@ class ReservationForm extends React.Component {
                     name="start_time_date_part"
                     handleChange={this._handleDateChange}
                     className={this._dateErrors().length == 0 ? "" : "field-warning"}
+                    isDisabled={!this.props.isEditable}
                   />
                   {
                     this.state.start_time_restriction && this.state.end_time_restriction ? (
@@ -718,6 +724,7 @@ class ReservationForm extends React.Component {
                     step="300"
                     onChange={this._handleChange}
                     className={this._previousReservationOverlap() ? "field-warning" : ""}
+                    disabled={!this.props.isEditable}
                    />
                   〜
                   <input
@@ -728,6 +735,7 @@ class ReservationForm extends React.Component {
                     step="300"
                     onChange={this._handleChange}
                     className={this._nextReservationOverlap() ? "field-warning" : ""}
+                    disabled={!this.props.isEditable}
                     />
                     <span className="errors">
                       {this._isValidReservationTime() ? null : <span className="warning">{this.props.validTimeTipMessage}</span>}
@@ -745,6 +753,9 @@ class ReservationForm extends React.Component {
                     defaultValue={this.props.menuDefaultOption}
                     options={this.state.menu_group_options}
                     onChange={this.onMenuChange}
+                    placeholder={this.props.selectMenuLabel}
+                    noOptionsMessage={() => this.props.noMenuMessage}
+                    isDisabled={!this.props.isEditable}
                     />
                   <span className="errors">
                     {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}
@@ -759,7 +770,15 @@ class ReservationForm extends React.Component {
                   {
                     this._staffTimeWarnings(this.props.currentUserStaffId).length > 0 && ( <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
                  この時間を出勤にする
-               </a>)}
+                 </a>)}
+                 {
+                   this.props.downgradeFromPremium && (
+
+                     <a href="https://toruya.com/faq/48/" target="_blank">
+                       <i className="fa fa-question-circle" aria-hidden="true"></i>自分以外のスタッフが選択できなくなった場合
+                     </a>
+                   )
+                 }
                 </dd>
               </dl>
             </div>
@@ -769,6 +788,7 @@ class ReservationForm extends React.Component {
                 <dd className="input">
                   <textarea
                     id="memo" placeholder={this.props.memoPlaceholder} data-name="memo" cols="40" rows="4"
+                    disabled={!this.props.isEditable}
                     value={this.state.memo} onChange={this._handleChange} />
                 </dd>
               </dl>
@@ -786,6 +806,7 @@ class ReservationForm extends React.Component {
            </h2>
 
            <CommonCustomersList
+             isDisabled={!this.props.isEditable}
              customers={this.state.customers}
              handleCustomerRemove={this.handleCustomerRemove} />
            <div id="customerLevels">
@@ -826,7 +847,8 @@ class ReservationForm extends React.Component {
                 <form acceptCharset="UTF-8" action={this.props.reservationPath} method="post">
                   <input name="_method" type="hidden" value="DELETE" />
                   <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
-                  { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                  { this.props.fromMember ? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                  { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
                   <button id="BTNdel" className="BTNorange" rel="nofollow" data-confirm={this.props.deleteConfirmationMessage}>
                     <i className="fa fa-trash-o" aria-hidden="true"></i>予約を削除
                   </button>
@@ -848,7 +870,7 @@ class ReservationForm extends React.Component {
                 <input name="reservation[with_warnings]" type="hidden" value={this._isAnyWarning() ? "1" : "0"} />
                 <input name="reservation[by_staff_id]" type="hidden" value={this.props.currentUserStaffId} />
                 { this.props.fromCustomerId ? <input name="from_customer_id" type="hidden" value={this.props.fromCustomerId} /> : null }
-                { this.props.fromMember? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
+                { this.props.fromMember ? <input name="from_member" type="hidden" value={this.props.fromMember} /> : null }
                 { this.props.fromShopId ? <input name="from_shop_id" type="hidden" value={this.props.fromShopId} /> : null }
                 <button type="submit" id="BTNsave" className={this.otherStaffsResponsibleThisReservation() ? "BTNorange" : "BTNyellow"}
                   disabled={!this._isValidToReserve() || this.state.submitting}

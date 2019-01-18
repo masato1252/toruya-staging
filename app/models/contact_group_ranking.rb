@@ -8,6 +8,11 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
+# Indexes
+#
+#  index_contact_group_rankings_on_contact_group_id  (contact_group_id)
+#  index_contact_group_rankings_on_rank_id           (rank_id)
+#
 
 class ContactGroupRanking < ApplicationRecord
   belongs_to :contact_group

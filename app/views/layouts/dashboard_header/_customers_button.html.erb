@@ -1,0 +1,43 @@
+<% if single_shop_owner %>
+  <dd>
+    <%= active_link_to user_customers_path(super_user), active: /^\/users\/\d+\/customer/, class_active: "here" do %>
+      <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+      顧客台帳
+    <% end %>
+  </dd>
+<% else %>
+  <dd class="dropdown">
+    <%= active_link_to user_customers_path(super_user),
+      active: /^\/users\/\d+\/customer/,
+      class_active: "here",
+      data: { toggle: "dropdown", target: "#" } do %>
+      <i class="fa fa-users fa-4x" aria-hidden="true"></i>
+      顧客台帳
+    <% end %>
+
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li>
+        <% if basic_setting_presenter.customers_settings_completed? %>
+          <%= link_to t("dashboard.someone_customer", name: current_user.name), user_customers_path(current_user) %>
+        <% else %>
+          <span class="dropdown-header">
+            <%= t("dashboard.no_contact_group.customer_btn_html", settings_path: settings_dashboard_path) %>
+          </span>
+        <% end %>
+      </li>
+      <% if working_shop_owners.present? %>
+        <li class="divider"></li>
+      <% end %>
+
+      <% working_shop_owners.each do |owner| %>
+        <li>
+          <% if ability(owner).can?(:manage_customers, User) %>
+            <%= link_to t("dashboard.someone_customer", name: owner.name), user_customers_path(owner) %>
+          <% else %>
+            <%= modal_link_to(t("dashboard.someone_customer", name: owner.name), customer_dashboard_for_staff_warnings_path(owner_id: owner.id)) %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </dd>
+<% end %>

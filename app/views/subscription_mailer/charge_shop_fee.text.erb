@@ -1,0 +1,23 @@
+■有料での店舗追加のご連絡■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。
+
+以下の通り、お客様のクレジットカードに追加店舗分のご利用料金をご請求をさせていただきました。
+
+ご利用プラン：追加店舗
+
+請求年月日：<%= l(@charge.charge_date, format: :year_month_date) %>
+
+請求金額：<%= @charge.amount.format %>（税込）
+
+つきましては、次回以降のToruyaご利用料金のご請求は以下の通り変更されます。
+
+請求年月日：<%= l(@next_period.first, format: :year_month_date) %>
+
+ご利用期間：<%= l(@next_period.first, format: :year_month_date) %>〜<%= l(@next_period.last, format: :year_month_date) %>
+
+請求金額：<%= @cost %>（税込）

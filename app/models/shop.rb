@@ -14,14 +14,20 @@
 #  holiday_working :boolean
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  deleted_at      :datetime
+#
+# Indexes
+#
+#  index_shops_on_user_id                 (user_id)
+#  index_shops_on_user_id_and_deleted_at  (user_id,deleted_at)
 #
 
 class Shop < ApplicationRecord
   include ReservationChecking
   include Helpers
 
-  validates :name, presence: true, uniqueness: { scope: :user_id }, format: { without: /\// }
-  validates :short_name, presence: true, uniqueness: { scope: :user_id }
+  validates :name, presence: true, format: { without: /\// }
+  validates :short_name, presence: true
   validates :zip_code, presence: true
   validates :phone_number, presence: true
   validates :email, presence: true
@@ -30,10 +36,11 @@ class Shop < ApplicationRecord
   has_many :shop_staffs, dependent: :destroy
   has_many :staffs, through: :shop_staffs
   has_many :shop_menus, dependent: :destroy
-  has_many :menus, through: :shop_menus
+  has_many :menus, -> { active }, through: :shop_menus
   has_many :business_schedules
   has_many :custom_schedules
-  has_many :customers
-  has_many :reservations
+  has_many :reservations, -> { active }
   belongs_to :user
+
+  scope :active, -> { where(deleted_at: nil) }
 end

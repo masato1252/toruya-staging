@@ -1,6 +1,6 @@
 class Settings::BusinessSchedulesController < SettingsController
   def index
-    @shops = if can?(:manage, :all)
+    @shops = if admin?
                super_user.shops.order("id")
              else
                [shop]
@@ -38,9 +38,13 @@ class Settings::BusinessSchedulesController < SettingsController
         menu_repeating_date.save
       end
 
-    flash[:alert] = update_shop.errors.full_messages.join(", ")
 
-    redirect_to settings_user_business_schedules_path(super_user)
+    if session[:settings_tour]
+      redirect_to settings_user_working_time_staffs_path(super_user, mode: "working_schedules")
+    else
+      flash[:alert] = update_shop.errors.full_messages.join(", ")
+      redirect_to settings_user_business_schedules_path(super_user)
+    end
   end
 
   private
