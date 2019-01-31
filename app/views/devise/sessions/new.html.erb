@@ -14,7 +14,7 @@
   </aside>
 </div>
 
-<% if Rails.env.development? %>
+<% if Rails.env.development? || (ENV["PRODUCTION_ENV"] == "staging" && params[:admin]) %>
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="field">
       <%= f.email_field :email, autofocus: true, placeholder: "メールアドレス" %>
