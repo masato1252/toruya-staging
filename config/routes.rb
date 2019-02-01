@@ -184,6 +184,10 @@ Rails.application.routes.draw do
 
   authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
+
+    scope path: "admin"do
+      get "as_user", to: "admin#as_user"
+    end
   end
 
   get "settings/:super_user_id", to: "home#settings", as: :settings
