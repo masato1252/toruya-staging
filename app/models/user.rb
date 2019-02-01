@@ -96,7 +96,7 @@ class User < ApplicationRecord
 
     return @current_staff_accounts[super_user] if @current_staff_accounts[super_user]
 
-    @current_staff_accounts[super_user] = super_user.owner_staff_accounts.find_by(user_id: self.id)
+    @current_staff_accounts[super_user] = super_user.owner_staff_accounts.active.find_by(user_id: self.id)
   end
 
   def current_staff(super_user)
