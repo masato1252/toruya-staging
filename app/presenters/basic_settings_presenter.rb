@@ -51,7 +51,7 @@ class BasicSettingsPresenter
   def current_step_setting_path
     case current_step
     when :customer
-      h.settings_user_business_schedules_path(user)
+      h.settings_user_contact_groups_path(user)
     when :shop
       h.new_settings_user_shop_path(user)
     when :business_schedule
