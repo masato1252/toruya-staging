@@ -97,6 +97,7 @@ class Ability
     can :swith_staffs_selector, User
     can :manage, :filter
     can :manage, :saved_filter
+    can :contact, Customer
 
     case super_user.member_level
     when "premium"
@@ -115,6 +116,7 @@ class Ability
     can :edit, :customer_contact_info
     can :swith_staffs_selector, User
     can :manage, :management_stuffs
+    can :contact, Customer
 
     case super_user.member_level
     when "premium", "trial"

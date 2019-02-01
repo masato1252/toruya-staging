@@ -14,6 +14,7 @@
                       month_options: month_options,
                       day_options: day_options,
                       customer_edit_permission: can?(:edit, Customer),
+                      customerContactPermission: can?(:contact, Customer),
                       customer_detail_path: detail_user_customers_path(super_user),
                       save_customer_path: save_user_customers_path(super_user),
                       delete_customer_path: delete_user_customers_path(super_user),

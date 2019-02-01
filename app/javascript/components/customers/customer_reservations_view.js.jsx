@@ -110,14 +110,16 @@ class CustomerReservationsView extends React.Component {
               </dd>
               <dd>
                 {
-                  this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
+                  this.props.customer.primaryPhone && this.props.customer.primaryPhone.value &&
+                    this.props.customerContactPermission ? (
                     <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
                       <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
                     </a>
                   ) : null
                 }
                 {
-                  this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? (
+                  this.props.customer.primaryEmail && this.props.customer.primaryEmail.value &&
+                    this.props.customerContactPermission ? (
                     <a href={`mail:${this.props.customer.primaryEmail.value.address}`} className="BTNtarco">
                       <i className="fa fa-envelope fa-2x" aria-hidden="true" title="mail"></i>
                     </a>
@@ -129,7 +131,7 @@ class CustomerReservationsView extends React.Component {
 
           <div id="tabs" className="tabs">
             <a href="#" className="here">利用履歴</a>
-            <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>
+            {this.props.customerContactPermission && <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>}
           </div>
 
           <div id="resList" className="tabBody" style={{height: "425px"}}>

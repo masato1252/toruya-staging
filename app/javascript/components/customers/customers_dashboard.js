@@ -456,6 +456,7 @@ class CustomersDashboard extends React.Component {
           editBtn={this.props.editBtn}
           cancelBtn={this.props.cancelBtn}
           withWarningsMessage={this.props.withWarningsMessage}
+          customerContactPermission={this.props.customerContactPermission}
           />
       )
     }
