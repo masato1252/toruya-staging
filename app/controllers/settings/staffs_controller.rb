@@ -6,9 +6,9 @@ class Settings::StaffsController < SettingsController
   # GET /staffs.json
   def index
     @staffs = if admin?
-                super_user.staffs.undeleted.includes(:staff_account).order(:id)
+                Staff.where(user: super_user).undeleted.order(:id)
               else
-                super_user.staffs.undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
               end
   end
 
@@ -112,7 +112,7 @@ class Settings::StaffsController < SettingsController
   private
 
   def set_staff
-    @staff = super_user.staffs.find_by(id: params[:id])
+    @staff = Staff.find_by(id: params[:id], user_id: super_user.id)
     redirect_to settings_user_staffs_path(super_user, shop) unless @staff
   end
 
