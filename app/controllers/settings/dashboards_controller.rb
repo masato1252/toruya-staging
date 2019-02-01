@@ -30,4 +30,9 @@ class Settings::DashboardsController < ActionController::Base
     session.delete(:settings_tour)
     redirect_to member_path
   end
+
+  def hide_tour_warning
+    cookies[:basic_settings_tour_warning_hidden] = { value: true, expires: Time.current.advance(months: 1) }
+    redirect_to member_path
+  end
 end

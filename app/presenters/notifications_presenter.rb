@@ -8,7 +8,7 @@ class NotificationsPresenter
   end
 
   def data
-    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + basic_settings_tour
+    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
   end
 
   def recent_pending_reservations
@@ -51,7 +51,7 @@ class NotificationsPresenter
       shop = shop_option.shop
 
       data = if current_user == owner
-               if basic_settings_tour.blank? # basic_settings_tour finished
+               if basic_settings_tour&.empty? # basic_settings_tour finished
                  Notifications::EmptyMenuShopPresenter.new(h, current_user).data(owner: owner, shop: shop)
                end
              else
@@ -63,9 +63,21 @@ class NotificationsPresenter
   end
 
   def basic_settings_tour
-    @basic_settings_tour_data ||= begin
-                                    data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
-                                    data ? [data] : []
-                                  end
+    return @basic_settings_tour_data if defined?(@basic_settings_tour_data)
+
+    @basic_settings_tour_data =
+      begin
+        data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
+
+        if data
+          if h.cookies[:basic_settings_tour_warning_hidden]
+            nil # basic_settings_tour doesn't finish but don't show it
+          else
+            [data]
+          end
+        else
+          []
+        end
+      end
   end
 end
