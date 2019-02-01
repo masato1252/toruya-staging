@@ -15,7 +15,11 @@ class SettingsController < ActionController::Base
   before_action :enable_tour_warning
 
   def profile_required
-    redirect_to new_profile_path unless current_user.profile
+    unless current_user.profile
+      # default is stay in personal dashboard
+      cookies[:dashboard_mode] = "user"
+      redirect_to new_profile_path
+    end
   end
 
   def authorize_manager_level_permission
