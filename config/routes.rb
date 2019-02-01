@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resource :member, only: [:show] do
     get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
   end
+  post "member", to: "members#show"
 
   resources :users do
     resources :customers, only: [:index] do

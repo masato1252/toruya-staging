@@ -1,6 +1,8 @@
 class PersonalCalendar < ActiveInteraction::Base
   array :working_shop_options
+  array :all_shop_ids
   date :date
+  object :user
 
   def execute
     working_dates = {
@@ -35,6 +37,8 @@ class PersonalCalendar < ActiveInteraction::Base
       reservation_dates += Shops::ReservationDates.run!(shop: shop, date_range: date_range)
     end
 
-    return [working_dates, reservation_dates]
+    reservation_dates += Users::ReservationDates.run!(user: user, all_shop_ids: all_shop_ids, date_range: date_range)
+
+    return [working_dates, reservation_dates.uniq]
   end
 end

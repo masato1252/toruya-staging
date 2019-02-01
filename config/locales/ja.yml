@@ -73,6 +73,7 @@ ja:
     search_data: 高度検索
     someone_shop: "%{name}の店舗"
     someone_customer: "%{name}の顧客"
+    show_all_reservations: "全ての予約を表示"
     no_shop_reminder:
       shop_dashboard_html: 店舗ダッシュボードを利用するために、<br /><a href=%{url}>こちら</a>から店舗を作成してください。
     no_contact_group:

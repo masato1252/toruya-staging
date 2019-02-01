@@ -13,6 +13,9 @@ module ViewHelpers
     helper_method :working_shop_options
     helper_method :working_shop_owners
     helper_method :owning_shop_options
+    helper_method :manage_shop_options
+    helper_method :member_shops_options
+    helper_method :member_shop_ids
     helper_method :staffs_have_holiday_permission
     helper_method :ability
     helper_method :admin?
@@ -111,10 +114,44 @@ module ViewHelpers
     end.flatten.compact.sort_by { |option| option.shop_id }
   end
 
+  def manage_shop_options(include_user_own: false)
+    @manage_shop_options ||= {}
+
+    return @manage_shop_options[include_user_own] if @manage_shop_options[include_user_own]
+
+    levels = %i(manager)
+    levels.push(:owner) if include_user_own
+
+    @manage_shop_options[include_user_own] = current_user.staff_accounts.active.where(level: levels).includes(:staff).map do |staff_account|
+      staff = staff_account.staff
+
+      staff.shop_staffs.includes(:shop).map do |shop_staff|
+        ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
+                     staff: staff, staff_id: shop_staff.staff_id,
+                     owner: shop_staff.shop.user,
+                     shop_staff: shop_staff)
+      end
+    end.flatten.compact.sort_by { |option| option.shop_id }
+  end
+
   def owning_shop_options
     @owning_shop_options ||= current_user.shops.order("id").map do |shop|
       ::Option.new(shop: shop, owner: shop.user)
     end
+  end
+
+  def member_shop_ids
+    @member_shop_ids ||= begin
+      if cookies[:member_shops].nil?
+        cookies[:member_shops] = manage_shop_options(include_user_own: true).map(&:shop_id).join(",")
+      end
+
+      @member_shop_ids ||= cookies[:member_shops].split(",") & manage_shop_options(include_user_own: true).map { |o| o.shop_id.to_s }
+    end
+  end
+
+  def member_shops_options
+    @member_shops_options ||= working_shop_options(include_user_own: true).find_all { |s| member_shop_ids.include?(s.shop_id.to_s) }
   end
 
   # the shop options allow "user" to add holidays

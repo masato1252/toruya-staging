@@ -33,6 +33,21 @@
         </a>
       </div>
     </div>
+
+    <div class="shops-list">
+      <h3><%= t("dashboard.show_all_reservations") %></h3>
+      <%= form_with url: member_path, local: true, data: { controller: "member-shops", target: "member-shops.form" } do |form| %>
+        <%= hidden_field_tag :reservation_date, params[:reservation_date] %>
+        <% manage_shop_options(include_user_own: true).each do |option| %>
+          <div>
+            <label>
+              <%= check_box_tag "member_shops[]", option.shop_id, member_shop_ids.include?(option.shop_id.to_s), data: { action: "member-shops#change"} %>
+              <%= option.shop.display_name %>
+            <label>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
   </div>
   <div id="resList" class="contBody">
     <dl class="tableTTL">

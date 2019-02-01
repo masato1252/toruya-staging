@@ -6,5 +6,9 @@ FactoryBot.define do
     staff { FactoryBot.create(:staff) }
     state { StaffAccount.states[:active] }
     level { :staff }
+
+    trait :manager do
+      level :manager
+    end
   end
 end

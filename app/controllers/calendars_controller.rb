@@ -7,8 +7,10 @@ class CalendarsController < DashboardController
   end
 
   def personal_working_schedule
-    @working_dates, @reservation_dates = PersonalCalendar.run!(working_shop_options: working_shop_options(include_user_own: true),
-                                                                date: Time.zone.parse(params[:date]).to_date)
+    @working_dates, @reservation_dates = PersonalCalendar.run!(user: current_user,
+                                                               all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
+                                                               working_shop_options: member_shops_options,
+                                                               date: Time.zone.parse(params[:date]).to_date)
     render action: :working_schedule
   end
 end

@@ -60,6 +60,10 @@ class Ability
   end
   alias_method :admin?, :admin_level
 
+  def responsible_for_reservation(reservation)
+    reservation.staff_ids.include?(current_user_staff.id)
+  end
+
   private
 
   def manager_level
@@ -69,6 +73,7 @@ class Ability
 
     @manager_levels[super_user.id] = current_user_staff_account.try(:manager?) && current_user_staff_account.try(:active?)
   end
+  alias_method :manager?, :manager_level
 
   def current_user_staff_account
     current_user.current_staff_account(super_user)
@@ -161,6 +166,10 @@ class Ability
           (reservation.staff_ids.length == 0 || (reservation.staff_ids.length == 1 && reservation.staff_ids.first == current_user_staff.try(:id)))
         )
       )
+    end
+
+    can :see, Reservation do |reservation|
+      admin? || manager? || responsible_for_reservation(reservation)
     end
 
     # manage_shop_dashboard only use to check add/edit reservation currently

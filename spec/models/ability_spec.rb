@@ -346,5 +346,52 @@ RSpec.describe Ability do
         end
       end
     end
+
+    context "see reservation" do
+      context "when user is owner in reservation's shop" do
+        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let!(:reservation) { FactoryBot.create(:reservation, shop: shop) }
+
+        it "returns true" do
+          expect(ability.can?(:see, reservation)).to eq(true)
+        end
+      end
+
+      context "when user is manager in reservation's shop" do
+        let(:staff_account) { FactoryBot.create(:staff_account, :manager) }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let!(:reservation) { FactoryBot.create(:reservation, shop: shop) }
+
+        it "returns true" do
+          expect(ability.can?(:see, reservation)).to eq(true)
+        end
+      end
+
+      context "when user is staff in reservation's shop" do
+        let(:staff_account) { FactoryBot.create(:staff_account) }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids) }
+
+        context "when staff is responsible for this reservation" do
+          let(:staff_ids) { staff_account.staff_id }
+
+          it "returns true" do
+            expect(ability.can?(:see, reservation)).to eq(true)
+          end
+        end
+
+        context "when staff is not responsible for this reservation" do
+          let(:staff_ids) { FactoryBot.create(:staff).id }
+
+          it "returns false" do
+            expect(ability.can?(:see, reservation)).to eq(false)
+          end
+        end
+      end
+    end
   end
 end
