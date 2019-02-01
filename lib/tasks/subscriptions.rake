@@ -6,7 +6,7 @@ namespace :subscriptions do
       SubscriptionChargeJob.perform_later(subscription)
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge") if Rails.env.production? && ENV["PRODUCTION_ENV"] != "staging"
+    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge task") if Rails.configuration.x.env.production?
   end
 
   task :charge_reminder => :environment do
@@ -16,7 +16,7 @@ namespace :subscriptions do
       SubscriptionMailer.charge_reminder(subscription).deliver_later
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge reminder") if Rails.env.production? && ENV["PRODUCTION_ENV"] != "staging"
+    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge reminder task") if Rails.configuration.x.env.production?
   end
 
   task :trial_member_reminder => :environment do
@@ -40,6 +40,6 @@ namespace :subscriptions do
       end
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription trial_member_reminder") if Rails.env.production? && ENV["PRODUCTION_ENV"] != "staging"
+    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
   end
 end

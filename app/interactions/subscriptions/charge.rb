@@ -38,6 +38,10 @@ module Subscriptions
           # credit card charge is synchronous request, it would return final status immediately
           charge.stripe_charge_details = stripe_charge.as_json
           charge.completed!
+
+          if Rails.configuration.x.env.production?
+            Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] Subscription Stripe charge🎉💰")
+          end
         rescue Stripe::CardError => error
           Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error][:charge])
 
