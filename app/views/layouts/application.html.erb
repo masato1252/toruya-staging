@@ -12,9 +12,12 @@
   <body id="manager" class='<%= body_class %>' data-controller="atomic-requests">
     <% if in_personal_dashboard? %>
       <%= render "layouts/dashboard_header_bar" %>
-    <% else %>
+    <% elsif shop %>
       <%= render "layouts/shop_dashboard_header_bar" %>
+    <% else %>
+      <%= render "layouts/dashboard_header_bar" %>
     <% end %>
+
     <%= flash_messages %>
     <%= yield %>
     <%= render "layouts/upgrade_modals" %>

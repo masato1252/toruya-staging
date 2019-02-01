@@ -15,7 +15,11 @@ class DashboardController < ActionController::Base
   private
 
   def profile_required
-    redirect_to new_profile_path unless current_user.profile
+    unless current_user.profile
+      # default is stay in personal dashboard
+      cookies[:dashboard_mode] = "user"
+      redirect_to new_profile_path
+    end
   end
 
   def contact_group_required
