@@ -42,10 +42,12 @@ module StaffAccounts
         end
       end
 
-      if staff_account.save
-        staff_account
-      else
-        errors.merge!(staff_account.errors)
+      if staff_account.changes.present?
+        if staff_account.save
+          staff_account
+        else
+          errors.merge!(staff_account.errors)
+        end
       end
     end
   end
