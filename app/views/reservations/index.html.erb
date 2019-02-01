@@ -1,20 +1,9 @@
 <%= notification_messages %>
 <%
-  staff_schedule_requirement_condition = staff && @working_time_range
+  staff_schedule_requirement_condition = staff && working_time_range
 %>
 <div id="dashboard" class="contents">
   <div id="calendar" class="sidel">
-    <% if @working_time_range %>
-      <div class="busHours table">
-        <div class="tableCell shopname"><%= shop.display_name %></div>
-        <div class="tableCell"><%= @working_time_range.first.to_s(:time) %>〜<%= @working_time_range.last.to_s(:time) %></div>
-      </div>
-    <% else %>
-      <div class="busHours shopClose table">
-        <div class="tableCell shopname"><%= shop.display_name %></div>
-        <div class="tableCell">CLOSED</div>
-      </div>
-    <% end %>
     <%= react_component("calendar/calendar",
                         {
                           shop_id: shop.id,
@@ -32,24 +21,43 @@
                           off_days: @working_dates[:off_dates].map(&:day),
                           reservation_days: @reservation_dates.map(&:day)
                         },
-                          { id: "custom-calendar", class: "clearfix" }) %>
-      <% if staff_schedule_requirement_condition %>
-        <div class="staffDashboard">
-          <div class="edit-worktime">
-            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
-              <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
-                出勤日を追加
-              </a>
-            <% end %>
+                        { id: "custom-calendar", class: "clearfix" }) %>
 
-            <% if can?(:manage_staff_holiday_permission, shop_staff) %>
-              <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
-                休暇を追加
-              </a>
+      <div class="staffDashboard">
+        <div class="edit-worktime">
+          <% if can?(:create_reservation, shop) %>
+            <%= link_to t("action.new_reservation"), new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
+          <% else %>
+            <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
+                    (
+                      cannot?(:create, :daily_reservations) ||
+                      cannot?(:create, :total_reservations) ||
+                      cannot?(:create, :reservation_with_settings) ||
+                      cannot?(:create_shop_reservations_with_menu, shop)
+                ) %>
+              <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNyellow") do %>
+                <%= t("action.new_reservation") %>
+              <% end %>
+            <% else %>
+              <%= link_to(t("action.new_reservation"), "#", class: "BTNyellow disabled") %>
             <% end %>
-          </div>
+          <% end %>
+
+          <% if staff_schedule_requirement_condition %>
+              <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
+                <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+                  出勤日を追加
+                </a>
+              <% end %>
+
+              <% if can?(:manage_staff_holiday_permission, shop_staff) %>
+                <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
+                  休暇を追加
+                </a>
+              <% end %>
+          <% end %>
         </div>
-      <% end %>
+      </div>
 
      <div class="staffs-working-schedules table">
        <% @staffs_working_schedules.each do |staff, working_schedule| %>
@@ -87,30 +95,16 @@
   </div>
   <div id="mainNav">
     <dl>
-      <dd id="NAVnewResv">
-        <% if can?(:create_reservation, shop) %>
-          <%= link_to_new_reservation(new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), t("action.new_reservation"), class: "BTNtarco") %>
-        <% else %>
-          <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
-              (
-                cannot?(:create, :daily_reservations) ||
-                cannot?(:create, :total_reservations) ||
-                cannot?(:create, :reservation_with_settings) ||
-                cannot?(:create_shop_reservations_with_menu, shop)
-              ) %>
-            <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNtarco") do %>
-              <i class="fa fa-calendar-plus-o fa-2x"></i>
-              <span class="new-shop-reservation"><%= t("action.new_reservation") %></span>
-            <% end %>
-          <% else %>
-            <%= link_to_new_reservation("#", t("action.new_reservation"), class: "BTNtarco disabled") %>
-          <% end %>
-        <% end %>
-      </dd>
       <dd id="NAVcustomers">
         <%= link_to user_customers_path(super_user), class: "BTNtarco" do %>
           <i class="fa fa-users fa-2x" aria-hidden="true"></i>
           <span>顧客台帳</span>
+        <% end %>
+      </dd>
+      <dd>
+        <%= link_to customer_user_filter_index_path(super_user), class: "BTNtarco" do %>
+          <i class="fa fa-database fa-2x" aria-hidden="true"></i>
+          <span><%= t("dashboard.search_data") %></span>
         <% end %>
       </dd>
     </dl>
@@ -125,8 +119,8 @@
     shop: react_attribute(shop.attributes),
     shops: react_attributes(staff.shops),
     start_time_date_part: @date.to_s,
-    start_time_time_part: @working_time_range.first.to_s(:time),
-    end_time_time_part: @working_time_range.last.to_s(:time),
+    start_time_time_part: working_time_range.first.to_s(:time),
+    end_time_time_part: working_time_range.last.to_s(:time),
     custom_schedules_path: custom_schedules_path
   }) %>
 

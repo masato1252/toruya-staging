@@ -32,7 +32,7 @@ ja:
     upgrade_to_premium: プレミアムにアップグレードする
     upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キャンセル
-    new_reservation: 新規予約
+    new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
   common:
     processing: 送信中

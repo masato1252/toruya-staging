@@ -123,14 +123,17 @@ class Ability
       can :read, :filter
       can :manage, :preset_filter
       can :manage, :saved_filter
+      can :read, :shop_dashboard
     when "basic"
       can :read, :filter
       can :manage, :preset_filter
       cannot :manage, :saved_filter
+      cannot :read, :shop_dashboard
     when "free"
       cannot :read, :filter
       cannot :manage, :preset_filter
       cannot :manage, :saved_filter
+      cannot :read, :shop_dashboard
     end
 
     staff_member_ability
@@ -155,7 +158,6 @@ class Ability
     can :create, :reservation_with_settings
     can :create, :daily_reservations
     can :create, :total_reservations
-    can :read, :shop_dashboard
     can :manage, :userself_holiday_permission
     can :edit, Staff do |staff|
       super_user.premium_member? || (current_user_staff == staff && admin_level)
@@ -191,13 +193,10 @@ class Ability
     when "premium"
       can :create, :daily_reservations
       can :create, :total_reservations
-      can :read, :shop_dashboard
     when "trial"
-      can :read, :shop_dashboard
       reservation_daily_permission
       reservation_total_permission
     when "free", "basic"
-      cannot :read, :shop_dashboard
       reservation_daily_permission
       reservation_total_permission
     end

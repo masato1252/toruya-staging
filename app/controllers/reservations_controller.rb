@@ -1,5 +1,6 @@
 class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
+  before_action :set_current_dashboard_mode, only: %i(index)
 
   def show
     @sentences = view_context.reservation_staff_sentences(@reservation)
@@ -25,9 +26,6 @@ class ReservationsController < DashboardController
     # Staff schedules on date START
     staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: @date)
     @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
-
-    time_range_outcome = Reservable::Time.run(shop: shop, date: @date)
-    @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
     # Staff schedules on date END
 
     # Reservations START
@@ -228,5 +226,11 @@ class ReservationsController < DashboardController
         end
       end
     end
+  end
+
+  private
+
+  def set_current_dashboard_mode
+    cookies[:dashboard_mode] = shop.id
   end
 end

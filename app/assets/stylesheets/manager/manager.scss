@@ -878,12 +878,12 @@ input.BTNonoff:checked + label:after {
 .staffs-working-schedules .staff { text-align: left; }
 .busHours div { padding: 0 5px; }
 .busHours, .workTime {
-  margin-bottom: 15px;
   border: 1px solid #b3b3b3;
   background-color: #d0d0d0;
   padding: 3px;
   font-size: 16px;
   color: #666;
+  line-height: 35px;
 }
 .busHours .shopname, .workTime .shopname { font-weight: bold; }
 .busHours .shopname, .workTime .shopname, #customerInfo #resList .shop {

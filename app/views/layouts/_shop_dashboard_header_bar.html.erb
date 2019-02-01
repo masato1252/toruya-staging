@@ -1,0 +1,41 @@
+<header>
+  <dl>
+    <dt>
+      <h1>
+        <%= link_to "Toruya", member_path %>
+      </h1>
+    </dt>
+    <dd id="NAVtoday">
+      <%= active_link_to shop_reservations_path(shop), active: [["reservations"], []], class_active: "here" do %>
+        <i class="fa fa-home fa-4x" aria-hidden="true"></i>
+        TOP
+      <% end %>
+    </dd>
+
+    <dd id="NAVtoday">
+      <%= render "layouts/shop_schedule" %>
+    </dd>
+
+    <% if can?(:swith_staffs_selector, User) && @staffs_selector_displaying %>
+      <dd id="NAVshopSelect">
+        <%= staffs_select_component %>
+      </dd>
+    <% end %>
+  </dl>
+
+  <dl>
+    <dd>
+      <%= active_link_to edit_settings_user_staff_path(super_user, current_user_staff, shop_id: shop.id), active: /^\/member/, class_active: "here" do %>
+        <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
+        設定
+      <% end %>
+    </dd>
+
+    <dd>
+      <%= link_to destroy_user_session_path, method: "delete", class: "setting" do %>
+        <i class="fa fa-power-off fa-4x" aria-hidden="true"></i>
+        <%= t("action.log_out") %>
+      <% end %>
+    </dd>
+  </dl>
+</header>

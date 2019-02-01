@@ -20,8 +20,11 @@ module ViewHelpers
     helper_method :ability
     helper_method :admin?
     helper_method :manager?
+    helper_method :in_personal_dashboard?
+    helper_method :shop_dashboard_id
     helper_method :basic_setting_presenter
     helper_method :previous_controller_is
+    helper_method :working_time_range
   end
 
   def shops
@@ -184,5 +187,22 @@ module ViewHelpers
 
   def previous_controller_is(controller_name)
     Rails.application.routes.recognize_path(request.referrer || "")[:controller] == controller_name
+  end
+
+  def in_personal_dashboard?
+    cookies[:dashboard_mode] == "user"
+  end
+
+  def shop_dashboard_id
+    cookies[:dashboard_mode]
+  end
+
+  def working_time_range
+    return @working_time_range if defined?(@working_time_range)
+
+    date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
+
+    time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+    @working_time_range = time_range_outcome.valid? ? time_range_outcome.result : nil
   end
 end

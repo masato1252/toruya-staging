@@ -1,4 +1,6 @@
 class MembersController < DashboardController
+  before_action :set_current_dashboard_mode
+
   def show
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
@@ -59,5 +61,11 @@ class MembersController < DashboardController
     end.sort_by { |option| option.time }
 
     @notification_messages = NotificationsPresenter.new(view_context, current_user).data
+  end
+
+  private
+
+  def set_current_dashboard_mode
+    cookies[:dashboard_mode] = "user"
   end
 end
