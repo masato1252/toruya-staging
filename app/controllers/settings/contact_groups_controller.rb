@@ -62,7 +62,7 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def sync
-    CustomersImporterJob.perform_later(@contact_group)
+    CustomersImporterJob.perform_later(@contact_group, true)
 
     redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.importing_message")
   end

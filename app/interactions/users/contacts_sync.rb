@@ -18,7 +18,7 @@ module Users
 
     def import_all_contacts_groups
       user.contact_groups.connected.find_each do |contact_group|
-        CustomersImporterJob.perform_later(contact_group, false)
+        CustomersImporterJob.perform_later(contact_group)
       end
     end
   end
