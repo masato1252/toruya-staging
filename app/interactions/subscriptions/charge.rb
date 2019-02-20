@@ -40,22 +40,25 @@ module Subscriptions
           charge.completed!
 
           if Rails.configuration.x.env.production?
-            Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] Subscription Stripe charge🎉💰")
+            Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] 🎉Subscription Stripe charge💰")
           end
         rescue Stripe::CardError => error
-          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error][:charge])
-
           charge.auth_failed!
           errors.add(:plan, :auth_failed)
 
           SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
-        rescue Stripe::StripeError => error
-          Rollbar.error(error, toruya_charge: charge.id)
 
+          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+        rescue Stripe::StripeError => error
           charge.processor_failed!
           errors.add(:plan, :processor_failed)
 
           SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
+
+          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+        rescue => e
+          Rollbar.error(e)
+          errors.add(:plan, :something_wrong)
         end
 
         charge
