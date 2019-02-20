@@ -437,13 +437,13 @@ class SettingsMenuForm extends React.Component {
             />
         </div>
 
+        <h3>対応従業員</h3>
         <div id="customize-table" className="formRow menu-staffs-table table">
-          <h3>対応従業員</h3>
-            <dl className="header">
-              <dt>対応従業員</dt>
-              <dd>対応</dd>
-              <dd>対応可能人数</dd>
-            </dl>
+            <ul className="tableTTL">
+              <li className="staff-name">対応従業員</li>
+              <li className="match">対応</li>
+              <li>対応可能人数</li>
+            </ul>
             {this.state.menuStaffsOptions.map(function(menuStaffOption) {
               return(
                 <dl className="body" key={`staff-${menuStaffOption.staffId}`}>
