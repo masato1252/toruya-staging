@@ -43,6 +43,7 @@ module Subscriptions
             Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] 🎉Subscription Stripe charge💰")
           end
         rescue Stripe::CardError => error
+          charge.stripe_charge_details = error.json_body[:error]
           charge.auth_failed!
           errors.add(:plan, :auth_failed)
 
@@ -50,6 +51,7 @@ module Subscriptions
 
           Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
         rescue Stripe::StripeError => error
+          charge.stripe_charge_details = error.json_body[:error]
           charge.processor_failed!
           errors.add(:plan, :processor_failed)
 
