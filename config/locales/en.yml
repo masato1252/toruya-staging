@@ -90,7 +90,8 @@ en:
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
-    cancel: Cancel
+    cancel: Cancel Reservation
+    cancel_confirmation_message: You can view the canceled reservation on the customer page.
     pending: Pending
     noshow: No show
     checked_in: Checked in

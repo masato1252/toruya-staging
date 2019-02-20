@@ -109,7 +109,7 @@
       <% if @reservation.may_cancel? %>
         <dd>
           <% if user_ability.can?(:edit, @reservation) %>
-            <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(@reservation.shop, @reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange", data: { confirm: I18n.t("common.are_you_sure_message") } %>
+            <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(@reservation.shop, @reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
           <% else %>
             <%= link_to t("reservation.cancel"), "#", class: "btn BTNorange disabled" %>
           <% end %>
