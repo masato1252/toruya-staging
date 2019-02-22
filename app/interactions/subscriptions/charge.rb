@@ -49,7 +49,7 @@ module Subscriptions
 
           SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
 
-          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
         rescue Stripe::StripeError => error
           charge.stripe_charge_details = error.json_body[:error]
           charge.processor_failed!
@@ -57,7 +57,7 @@ module Subscriptions
 
           SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
 
-          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
         rescue => e
           Rollbar.error(e)
           errors.add(:plan, :something_wrong)
