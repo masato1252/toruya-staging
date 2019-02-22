@@ -88,7 +88,8 @@ module OptionsHelper
         primary_phone: c.primary_phone || {},
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
         display_address: c.display_address,
-        google_down: c.google_down
+        google_down: c.google_down,
+        googleContactMissing: c.google_contact_missing
       ))
     end
   end

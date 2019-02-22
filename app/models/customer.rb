@@ -38,7 +38,7 @@
 class Customer < ApplicationRecord
   include NormalizeName
 
-  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down
+  attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
   has_many :reservation_customers, dependent: :destroy
   has_many :reservations, -> { active }, through: :reservation_customers
@@ -65,6 +65,11 @@ class Customer < ApplicationRecord
     # Fetch from google fail
     if google_contact.is_a?(Customer)
       return self
+    end
+
+    # XXX: Below means contact was deleted in google contacts
+    if google_contact.first_name.nil? && google_contact.last_name.nil? && google_contact.phonetic_first_name.nil? && google_contact.phonetic_last_name.nil?
+      self.google_contact_missing = true
     end
 
     self.google_uid = user.uid

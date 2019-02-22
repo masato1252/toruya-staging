@@ -10,9 +10,9 @@ class MessageBar extends React.Component {
     }
 
     return (
-      <div className={`alert fade in ${this.props.status}`}>
+      <div className={`alert fade in message-bar ${this.props.status}`}>
         <button className="close" data-dismiss="alert" onClick={this.props.closeMessageBar}>x</button>
-        {this.props.message}
+        <div dangerouslySetInnerHTML={{ __html: this.props.message }} />
       </div>
     );
   }

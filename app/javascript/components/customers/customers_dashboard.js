@@ -10,6 +10,7 @@ import CustomerInfoEdit from "./customer_info_edit.js";
 import CustomerReservationsView from "./customer_reservations_view.js";
 import CustomersSearchBar from "./search_bar.js";
 import Select from "../shared/select.js";
+import MessageBar from "../shared/message_bar.js";
 
 class CustomersDashboard extends React.Component {
   constructor(props) {
@@ -406,7 +407,10 @@ class CustomersDashboard extends React.Component {
       return;
     }
     if (this.state.customer.id) {
-      if (this.state.customer.googleDown) { alert(this.props.googleDownMessage); return; }
+      if (this.state.customer.googleDown) {
+        alert(this.props.googleDownMessage);
+        return;
+      }
       this.setState({ reservation_mode: !this.state.reservation_mode });
     }
   };
@@ -432,6 +436,15 @@ class CustomersDashboard extends React.Component {
     var url = `${this.props.printingPath}?customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
     window.open(url, this.state.printing_page_size);
   };
+
+  renderMessageBar = () => {
+    return (
+      <MessageBar
+        status={this.state.customer.googleContactMissing ? "alert-info" : ""}
+        message={this.props.googleContactMissingMessage}
+      />
+    );
+  }
 
   renderCustomerView = () => {
     var _this = this;
@@ -611,6 +624,7 @@ class CustomersDashboard extends React.Component {
     return(
       <div>
         <ProcessingBar processing={this.state.processing} processingMessage={this.props.processingMessage} />
+        {this.renderMessageBar()}
         <div id="customer" className="contents">
           <div id="resultList" className="sidel">
             <ul>

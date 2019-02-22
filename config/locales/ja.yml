@@ -220,6 +220,7 @@ ja:
     reservation_day: 予約日
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
+    google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
     dashboard:
       modal:
         no_shop_to_create_reservation:
