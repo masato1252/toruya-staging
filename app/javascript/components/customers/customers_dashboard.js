@@ -183,6 +183,7 @@ class CustomersDashboard extends React.Component {
     stateChanges["selectedFilterPatternNumber"] = this.lastQuery
 
     this.setState(stateChanges, function() {
+      this.newCustomerMode();
       this.customersRequest(this.props.customersFilterPath, data, originalCustomers);
     }.bind(this))
   };
@@ -217,6 +218,7 @@ class CustomersDashboard extends React.Component {
 
       data = { keyword: this.lastQuery, page: this.currentPage += 1 }
       this.setState(stateChanges, function() {
+        this.newCustomerMode();
         this.customersRequest(this.props.customersSearchPath, data, originalCustomers);
       }.bind(this))
     }
