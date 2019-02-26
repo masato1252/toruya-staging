@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import CustomerBasicInfo from "./basic_info.js";
+
 class CustomerReservationsView extends React.Component {
   constructor(props) {
     super(props);
@@ -89,45 +91,10 @@ class CustomerReservationsView extends React.Component {
     return (
       <div className="contBody">
         <div id="customerInfo">
-          <div id="basic">
-            <dl>
-              <dt>
-                <ul>
-                  {this.props.customer.groupName ?
-                    <li>{this.props.customer.groupName}</li> : null
-                  }
-                  {
-                    this.props.customer.rank ?
-                      <li className={this.props.customer.rank.key}>{this.props.customer.rank.name}</li> : null
-                  }
-                </ul>
-              </dt>
-              <dd>
-                <ul className="kana">
-                  <li>{this.props.customer.phoneticLastName} {this.props.customer.phoneticFirstName}</li>
-                </ul>
-                <ul><li>{this.props.customer.lastName} {this.props.customer.firstName}</li></ul>
-              </dd>
-              <dd>
-                {
-                  this.props.customer.primaryPhone && this.props.customer.primaryPhone.value &&
-                    this.props.customerContactPermission ? (
-                    <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
-                      <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
-                    </a>
-                  ) : null
-                }
-                {
-                  this.props.customer.primaryEmail && this.props.customer.primaryEmail.value &&
-                    this.props.customerContactPermission ? (
-                    <a href={`mail:${this.props.customer.primaryEmail.value.address}`} className="BTNtarco">
-                      <i className="fa fa-envelope fa-2x" aria-hidden="true" title="mail"></i>
-                    </a>
-                  ) : null
-                }
-              </dd>
-            </dl>
-          </div>
+          <CustomerBasicInfo
+            customer={this.props.customer}
+            groupBlankOption={this.props.groupBlankOption}
+          />
 
           <div id="tabs" className="tabs">
             <a href="#" className="here">利用履歴</a>

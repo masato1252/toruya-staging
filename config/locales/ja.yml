@@ -205,6 +205,7 @@ ja:
     address2: 建物名／部屋番号
     no_customer: 該当データなし
     no_more_customer: 該当データ終了
+    group_blank_option: 台帳なし
     printing_page_size:
       paper_size: 用紙サイズ
       a4: A4
@@ -504,6 +505,7 @@ ja:
       bind_btn: インポート
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
       bind_successfully_message: Google連絡先データは正常にインポートされました。
+      delete_confirmation_message: 顧客台帳を削除すると、Google連絡先から同期しているグループ（タグ）も削除されます。よろしいですか？
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
       dont_want_connect_google: インポートしたいGoogleグループが無い場合は
       only_use_toruya_group: インポートせずに同期設定を完了する

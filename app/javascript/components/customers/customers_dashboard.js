@@ -274,8 +274,8 @@ class CustomersDashboard extends React.Component {
   };
 
   _isCustomerDataValid = () => {
-    return (this.state.customer.lastName && this.state.customer.firstName) ||
-      (this.state.customer.phoneticLastName && this.state.customer.phoneticFirstName)
+    return this.state.customer.contactGroupId && ((this.state.customer.lastName && this.state.customer.firstName) ||
+      (this.state.customer.phoneticLastName && this.state.customer.phoneticFirstName))
   };
 
   handleNewReservation = (event) => {
@@ -472,6 +472,7 @@ class CustomersDashboard extends React.Component {
           cancelBtn={this.props.cancelBtn}
           withWarningsMessage={this.props.withWarningsMessage}
           customerContactPermission={this.props.customerContactPermission}
+          groupBlankOption={this.props.groupBlankOption}
           />
       )
     }
@@ -533,6 +534,7 @@ class CustomersDashboard extends React.Component {
           memoLabel={this.props.memoLabel}
           saveBtn={this.props.saveBtn}
           googleDownMessage={this.props.googleDownMessage}
+          groupBlankOption={this.props.groupBlankOption}
           />
       )
     }
@@ -548,6 +550,7 @@ class CustomersDashboard extends React.Component {
           birthdayLabel={this.props.birthdayLabel}
           memoLabel={this.props.memoLabel}
           editBtn={this.props.editBtn}
+          groupBlankOption={this.props.groupBlankOption}
           />
       );
     }

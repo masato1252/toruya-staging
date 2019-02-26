@@ -24,6 +24,7 @@ class ContactGroup < ApplicationRecord
   GOOGLE_GROUP_PREFIX = "Toruya"
   has_many :rankings, class_name: "ContactGroupRanking", dependent: :destroy
   has_many :ranks, through: :rankings
+  has_many :customers
   belongs_to :user
 
   validates :google_group_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true

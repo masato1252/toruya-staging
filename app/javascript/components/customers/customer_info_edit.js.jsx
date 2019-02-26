@@ -118,6 +118,9 @@ class CustomerInfoEdit extends React.Component {
                     name="customer[contact_group_id]"
                     data-name="contactGroupId"
                     onChange={this.props.handleCustomerDataChange}
+                    includeBlank={true}
+                    blankOption={this.props.groupBlankOption}
+                    className={this.props.customer.contactGroupId ? "" : "field-error"}
                   />
                 </li>
                 <li>

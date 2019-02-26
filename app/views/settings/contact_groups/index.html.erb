@@ -37,9 +37,10 @@
           <% end %>
           <%= link_to t("settings.contact.sync"), sync_settings_user_contact_group_path(super_user, contact_group), method: :post, class: "BTNyellow", data: { disable_with: t("common.processing") } if contact_group.backup_google_group_id %>
           <%= link_to t("action.edit"), edit_settings_user_contact_group_path(super_user, contact_group), class: "BTNtarco", data: { disable_with: t("common.processing") } %>
-          <%= link_to settings_user_contact_group_path(super_user, contact_group), method: :delete, class: "BTNorange", data: { disable_with: t("common.processing") } do %>
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          <% end unless contact_group.backup_google_group_id %>
+          <%= link_to settings_user_contact_group_path(super_user, contact_group), method: :delete, class: "BTNorange",
+            data: { disable_with: t("common.processing"), confirm: t("settings.contact.delete_confirmation_message") } do %>
+            <%= t("action.delete") %>
+          <% end if (@contact_groups.count != 1 || !Rails.configuration.x.env.production?) %>
         </dd>
       </dl>
     <% end %>
