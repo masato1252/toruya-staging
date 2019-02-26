@@ -360,7 +360,7 @@ ja:
           cancel_button: いいえ、結構です
           upgrade_button: "%{per_shop_fee_price}円払って１店舗追加する"
     business_hours:
-      info_title: 営業時間
+      info_title: 営業日時
       info_1: 営業時間を設定してください。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       japan_holidays: 日本の祝日
@@ -436,7 +436,7 @@ ja:
       name: 氏名
       shop_label: 勤務店舗
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
-      work_time: 勤務時間
+      work_time: 勤務日時
       holiday_time: 休暇
       modal:
         upgrade_title: アカウントをアップグレード

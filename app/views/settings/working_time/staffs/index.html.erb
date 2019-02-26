@@ -1,5 +1,5 @@
 <div id="subNav">
-  <h2><%= Staff.model_name.human %> − 勤務日時</h2>
+  <h2><%= "#{Staff.model_name.human} −" unless working_time_under_shop_menu %>  勤務日時</h2>
 </div>
 <div id="about">
   <p><%= t("settings.staff_working_time.info_1.#{params[:mode] || @mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
