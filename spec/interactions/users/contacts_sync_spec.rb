@@ -25,7 +25,7 @@ RSpec.describe Users::ContactsSync do
       end
 
       it "imports user all connected groups" do
-        expect(CustomersImporterJob).to receive(:perform_later).with(contact_group).once
+        expect(CustomersImporterJob).to receive(:perform_later).with(contact_group.id).once
 
         outcome
       end

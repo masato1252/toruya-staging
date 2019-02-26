@@ -491,17 +491,19 @@ ja:
       reconnect_google: "%{email} Googleアカウントを再設定"
       reconnect_google_confirmation_message: "【！注意！】すでに同期しているGmail連絡先が存在しますので、「OK」ボタンを押した時点で既存のToruya顧客データが削除されます。本当に再設定しますか？"
       connected_google_group_title: Google連絡先グループ
-      synchronization_title: 同期状態
       connect: 同期設定する
-      sync: 同期
+      sync: 再同期
       google_account_synchronization: 顧客台帳の同期
       google_account_synchronization_instructions1: インポートするGoogle連絡先グループを選択するか
       google_account_synchronization_instructions2: 『インポートせずに同期設定を完了する』ボタンを押してください。
       connection_binding_desc: 既存Google連絡先グループからインポートする。
       google_group_name: 既存Google連絡先グループ
+      import_all_titile: 全ての連絡先をGoogleからインポートする
+      bind_all_btn: 全データをインポート
+      import_all_warning_message: "* Toruyaでの重複を避けるために、一番最初の顧客台帳についてのみ全ての連絡先をインポートできます。"
       bind_btn: インポート
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
-      bind_successfully_message: Google連絡先データのインポート準備が完了しました。
+      bind_successfully_message: Google連絡先データは正常にインポートされました。
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
       dont_want_connect_google: インポートしたいGoogleグループが無い場合は
       only_use_toruya_group: インポートせずに同期設定を完了する
@@ -676,6 +678,10 @@ ja:
           attributes:
             user_id:
               taken:  "^ユーザーはすでに存在します"
+        contact_group:
+          attributes:
+            bind_all:
+              taken: "^You could only have one group to import all the contact groups"
     models:
       user: ユーザー
       staff: スタッフ

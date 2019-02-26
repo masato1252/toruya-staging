@@ -9,30 +9,48 @@
   </div>
 
   <div id="settingForm">
-    <div class="caution"><strong>顧客台帳: <%= @contact_group.name %></strong>を同期設定します。</div>
-    <h3><%= t("settings.contact.connection_binding_desc") %></h3>
-    <div id="contactList" class="formRow">
-      <ul class="tableTTL">
-        <li class="rowTTL"><%= t("settings.contact.google_group_name") %></li>
-        <li class="function"><%= t("settings.contact.synchronization_title") %></li>
-      </ul>
-      <% @google_groups.each do |google_group| %>
-        <dl>
-          <dd class="rowTTL"><%= google_group.title %></dd>
-          <dd class="syncContacts">
-            <%= link_to t("settings.contact.bind_btn"),
-              bind_settings_user_contact_group_path(super_user, @contact_group,
-                                               google_group_id: google_group.id,
-                                               google_group_name: google_group.title), method: :post, class: "BTNyellow",
-                                               data: { confirm: t("settings.contact.binding_confirmation_message",
-                                                                  google_group_name: google_group.title,
-                                                                  contact_group_name: @contact_group.name),
-                                                                  disable_with: t("common.processing") } %>
-          </dd>
-        </dl>
-      <% end %>
-    </div>
-    <hr />
+    <div class="caution"><strong>顧客台帳: <%= @contact_group.name %></strong><span>を同期設定します。</span></div>
+    <% unless @group_exist %>
+      <h3><%= t("settings.contact.import_all_titile") %></h3>
+      <div id="syncContactsNew">
+        <%= link_to t("settings.contact.bind_all_btn"),
+          bind_settings_user_contact_group_path(super_user, @contact_group, bind_all: true),
+          method: :post,
+          class: "BTNyellow"
+        %>
+      </div>
+      <p class="caution">
+        <%= t("settings.contact.import_all_warning_message") %>
+      </p>
+    <% end %>
+
+
+    <% unless @import_all_group_exist %>
+      <h3><%= t("settings.contact.connection_binding_desc") %></h3>
+      <div id="contactList" class="formRow">
+        <ul class="tableTTL">
+          <li class="rowTTL"><%= t("settings.contact.google_group_name") %></li>
+          <li class="function"><%= t("settings.contact.synchronization_title") %></li>
+        </ul>
+        <% @google_groups.each do |google_group| %>
+          <dl>
+            <dd class="rowTTL"><%= google_group.title %></dd>
+            <dd class="syncContacts">
+              <%= link_to t("settings.contact.bind_btn"),
+                bind_settings_user_contact_group_path(super_user, @contact_group,
+                                                 google_group_id: google_group.id,
+                                                 google_group_name: google_group.title), method: :post, class: "BTNyellow",
+                                                 data: { confirm: t("settings.contact.binding_confirmation_message",
+                                                                    google_group_name: google_group.title,
+                                                                    contact_group_name: @contact_group.name),
+                                                                    disable_with: t("common.processing") } %>
+            </dd>
+          </dl>
+        <% end %>
+      </div>
+      <hr />
+    <% end %>
+
     <% if @google_groups.present? %>
       <h3><%= t("settings.contact.dont_want_connect_google") %></h3>
     <% end %>

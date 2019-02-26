@@ -11,11 +11,13 @@
 #  name                   :string           not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  bind_all               :boolean
 #
 # Indexes
 #
-#  contact_groups_google_index      (user_id,google_uid,google_group_id,backup_google_group_id) UNIQUE
-#  index_contact_groups_on_user_id  (user_id)
+#  contact_groups_google_index                   (user_id,google_uid,google_group_id,backup_google_group_id) UNIQUE
+#  index_contact_groups_on_user_id               (user_id)
+#  index_contact_groups_on_user_id_and_bind_all  (user_id,bind_all) UNIQUE
 #
 
 class ContactGroup < ApplicationRecord
@@ -26,6 +28,8 @@ class ContactGroup < ApplicationRecord
 
   validates :google_group_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
   validates :name, uniqueness: { scope: [:user_id] }, presence: true
+  validates :bind_all, uniqueness: { scope: [:user_id] }, allow_nil: true
+  scope :import_all, -> { where(bind_all: true) }
 
   before_destroy do
     if google_group_id.present?

@@ -127,6 +127,10 @@ FactoryBot.define do
     association :user
     sequence(:name) { |n| "group-#{n}" }
     sequence(:backup_google_group_id) { |n| "backup_google_group_id-#{n}" }
+
+    trait :bind_all do
+      bind_all true
+    end
   end
 
   factory :customer do

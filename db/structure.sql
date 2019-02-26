@@ -202,7 +202,8 @@ CREATE TABLE public.contact_groups (
     backup_google_group_id character varying,
     name character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    bind_all boolean
 );
 
 
@@ -1810,6 +1811,13 @@ CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btre
 
 
 --
+-- Name: index_contact_groups_on_user_id_and_bind_all; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
+
+
+--
 -- Name: index_custom_schedules_on_reference_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2248,6 +2256,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181212223445'),
 ('20181226150238'),
 ('20181227064220'),
-('20190117090106');
+('20190117090106'),
+('20190214062710');
 
 

@@ -139,6 +139,10 @@ class User < ApplicationRecord
     @total_reservations_count ||= total_reservations.count
   end
 
+  def google_user
+    @google_user ||= GoogleContactsApi::User.new(access_token, refresh_token)
+  end
+
   private
 
   def create_default_ranks

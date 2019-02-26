@@ -11,10 +11,20 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def create
-    @contact_group = super_user.contact_groups.new(contact_group_params)
+    contact_group = super_user.contact_groups.new(contact_group_params)
 
-    if @contact_group.save
-      redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("common.create_successfully_message")
+    if contact_group.save
+      # had import-all group or (first group and without google contacts) or no google groups
+      if super_user.contact_groups.import_all.exists? ||
+          (super_user.contact_groups.count == 1 && super_user.google_user.contacts.empty?) ||
+          Groups::RetrieveGroups.run!(user: super_user).empty?
+        Groups::CreateGroup.run!(contact_group: contact_group)
+
+        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("common.create_successfully_message")
+        return
+      end
+
+      redirect_to connections_settings_user_contact_group_path(super_user, contact_group), notice: I18n.t("common.create_successfully_message")
     else
       render :new
     end
@@ -43,12 +53,17 @@ class Settings::ContactGroupsController < SettingsController
 
   def connections
     @google_groups = Groups::RetrieveGroups.run!(user: super_user)
+    @group_exist = super_user.contact_groups.count >= 2
+    @import_all_group_exist = super_user.contact_groups.import_all.exists?
   end
 
   def bind
     outcome = Groups::CreateGroup.run(contact_group: @contact_group,
                                       google_group_id: params[:google_group_id],
-                                      google_group_name: params[:google_group_name])
+                                      google_group_name: params[:google_group_name],
+                                      bind_all: params[:bind_all])
+
+    # TODO: Test settings_tour flow
     if outcome.valid?
       if session[:settings_tour]
         redirect_to settings_user_shops_path(super_user)
@@ -56,13 +71,12 @@ class Settings::ContactGroupsController < SettingsController
         redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.bind_successfully_message")
       end
     else
-      @contact_group = outcome.result
-      render :edit
+      redirect_to settings_user_contact_groups_path(super_user), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
   def sync
-    CustomersImporterJob.perform_later(@contact_group, true)
+    CustomersImporterJob.perform_later(@contact_group.id, true)
 
     redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.importing_message")
   end
