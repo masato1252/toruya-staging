@@ -281,7 +281,7 @@
 #content .formRow .menuLength input[type="number"] { width: 100px; }
 #content .formRow .customerPrice input[type="number"] { width: 110px; }
 #content #settingForm input[type="date"], #content #settingForm input[type="time"] {
-  border: none;
+  border: 1px solid #dfdfdf;
   background-color: #fffef5;
 }
 #content #footerav a, #content #footerav a:link, #content #footerav a:visited, #content #footerav input[type="submit"] {
