@@ -129,6 +129,9 @@ class CustomScheduleFields extends React.Component {
             )
           }
         </dd>
+        <dd>
+         ~
+        </dd>
         <dd className="endTime">
           {
             this.state.edit_mode ? (

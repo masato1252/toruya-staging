@@ -47,6 +47,9 @@ class WorkingTimeBusinessScheduleForm extends React.Component {
                   defaultValue={schedule ? moment(schedule.start_time).tz(this.props.timezone).format("HH:mm") : ""}
                    />
               </dd>
+              <dd>
+               ~
+              </dd>
               <dd className="endsTime">
                 <input
                   type="time"
