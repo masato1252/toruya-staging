@@ -6,9 +6,7 @@ class Groups::CreateGroup < ActiveInteraction::Base
 
   def execute
     user = contact_group.user
-    google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
-
-    backup_google_group = google_user.create_group(contact_group.google_backup_group_name)
+    backup_google_group = user.google_user.create_group(contact_group.google_backup_group_name)
 
     contact_group.google_group_name = google_group_name
     contact_group.google_group_id = google_group_id

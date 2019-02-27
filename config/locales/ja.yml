@@ -192,6 +192,8 @@ ja:
   customer:
     back_without_save: 保存せずに戻る
     save: 上書き保存
+    delete: 顧客情報を削除
+    delete_confirmation_message: 顧客情報を削除すると、Googleに同期している連絡先も削除されます。よろしいですか？
     select_region: 都道府県
     customer_id: 顧客ID
     select_year: 年
@@ -942,6 +944,10 @@ ja:
   active_interaction:
     errors:
       models:
+        customers/delete:
+          attributes:
+            customer:
+              delete_google_contact_failed: "Google連絡先を削除できませんでした。しばらく経ってからもう一度お試しください。"
         plans/subscribe:
           attributes:
             plan:

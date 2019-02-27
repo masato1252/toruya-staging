@@ -105,18 +105,26 @@ class CustomersDashboard extends React.Component {
 
   handleDeleteCustomer = (event) => {
     event.preventDefault();
-
     var _this = this;
 
-    this.setState({customers: _.reject(this.state.customers, function(customer) {
-      return customer.id == _this.state.selected_customer_id;
-    }), customer: {}, selected_customer_id: ""})
-
-    jQuery.ajax({
-      type: "POST",
-      url: this.props.deleteCustomerPath,
-      data: { _method: "delete", id: this.state.selected_customer_id },
-      dataType: "json",
+    this.switchProcessing(function(){
+      $.ajax({
+        type: "POST",
+        url: _this.props.deleteCustomerPath,
+        data: { _method: "delete", id: _this.state.selected_customer_id },
+        dataType: "JSON"
+      }).success(function(result) {
+        _this.setState({
+          customers: _.reject(_this.state.customers, function(customer) {
+            return customer.id == _this.state.selected_customer_id;
+          })
+        })
+        _this.newCustomerMode();
+      }).error(function(jqXhr) {
+        alert(jqXhr.responseJSON.error);
+      }).always(function() {
+        _this.forceStopProcessing();
+      });
     })
   };
 
@@ -460,7 +468,6 @@ class CustomersDashboard extends React.Component {
           forceStopProcessing={this.forceStopProcessing}
           stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
           editCustomerReservationsPath={this.props.editCustomerReservationsPath}
-          deleteConfirmationMessage={this.props.deleteConfirmationMessage}
           shop={this.props.shop}
           recheckInBtn={this.props.recheckInBtn}
           checkInBtn={this.props.checkInBtn}
@@ -563,17 +570,33 @@ class CustomersDashboard extends React.Component {
         return <div></div>
       }
       return (
-        <dl>
-          <a href="#"
-            onClick={this.handleCustomerCreate}
-            className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : null}`}
-            >
-            <dd id="NAVnewResv">
-              <i className="fa fa-folder-o fa-2x"></i>
-              <span>{this.props.saveBtn}</span>
-            </dd>
-          </a>
-        </dl>
+        <div>
+          <dl>
+            <a href="#"
+              onClick={this.handleCustomerCreate}
+              className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : ""}`}
+              >
+              <dd id="NAVnewResv">
+                <i className="fa fa-folder-o fa-2x"></i>
+                <span>{this.props.saveBtn}</span>
+              </dd>
+              </a>
+          </dl>
+          <dl>
+            {
+              this.state.selected_customer_id && (
+                <a href="#"
+                  onClick={this.handleDeleteCustomer}
+                  className={`btn btn-orange ${this.state.processing ? "disabled" : ""}`}
+                  data-confirm={this.props.customerDeleteConfirmMessage}
+                  >
+                    <i className="fa fa-trash-o"></i>
+                    <span>{this.props.deleteCustomerBtn}</span>
+                </a>
+              )
+            }
+           </dl>
+         </div>
       );
     }
     else if (this.state.selected_customer_id) {
@@ -686,7 +709,7 @@ class CustomersDashboard extends React.Component {
             ) : null}
             {
 
-              this.state.selected_customer_id ? (
+              this.state.selected_customer_id && !this.state.edit_mode ? (
                 <dl>
                   <dd id="NAVprint">
                     <Select

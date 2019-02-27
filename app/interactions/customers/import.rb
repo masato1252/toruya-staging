@@ -7,7 +7,7 @@ class Customers::Import < ActiveInteraction::Base
 
   def execute
     @user = contact_group.user
-    google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
+    google_user = user.google_user
 
     import_google_contacts = if contact_group.google_group_id
                                # XXX: Some groups don't connect with user original google groups.

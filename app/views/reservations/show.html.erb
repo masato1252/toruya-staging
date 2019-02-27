@@ -20,7 +20,11 @@
     <div class="modal-body">
       <div>
         <% @reservation.customers.includes(:user).each do |customer| %>
-          <%= link_to customer.name, user_customers_path(customer.user, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+          <% if customer.deleted_at  %>
+            <span><%= customer.name %></span>
+          <% else %>
+            <%= link_to customer.name, user_customers_path(customer.user, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+          <% end %>
         <% end %>
       </div>
       <div class="reservation-menu">

@@ -21,6 +21,7 @@
 #  updated_at               :datetime         not null
 #  updated_by_user_id       :integer
 #  email_types              :string
+#  deleted_at               :datetime
 #
 # Indexes
 #
@@ -32,6 +33,7 @@
 #  index_customers_on_contact_group_id        (contact_group_id)
 #  index_customers_on_rank_id                 (rank_id)
 #  index_customers_on_user_id                 (user_id)
+#  index_customers_on_user_id_and_deleted_at  (user_id,deleted_at)
 #  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
 #
 
@@ -40,7 +42,7 @@ class Customer < ApplicationRecord
 
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
-  has_many :reservation_customers, dependent: :destroy
+  has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
   belongs_to :user
   belongs_to :updated_by_user, class_name: "User"
@@ -52,6 +54,7 @@ class Customer < ApplicationRecord
   before_validation :assign_default_rank
 
   scope :jp_chars_order, -> { order('phonetic_last_name COLLATE "C" ASC') }
+  scope :active, -> { where(deleted_at: nil) }
 
   def with_google_contact
     if google_contact_id

@@ -46,11 +46,13 @@ class CustomersController < DashboardController
   end
 
   def delete
-    @customer = super_user.customers.find(params[:id])
-    @customer.destroy
+    customer = super_user.customers.find(params[:id])
+    outcome = Customers::Delete.run(customer: customer)
 
-    respond_to do |format|
-      format.json { head :no_content }
+    if outcome.valid?
+      head :no_content
+    else
+      render json: { error: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
   end
 

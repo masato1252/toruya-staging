@@ -42,7 +42,7 @@ class User < ApplicationRecord
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
-  has_many :customers
+  has_many :customers, -> { active }
   has_many :reservation_settings
   has_many :categories
   has_many :ranks

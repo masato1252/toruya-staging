@@ -29,3 +29,17 @@
       }
     }
 }
+
+#mainNav {
+  a.btn:link {
+    padding: 6px 12px;
+    font-size: 16px;
+
+    i {
+      font-size: 24px;
+      display: inline-block;
+      margin-right: 6px;
+      line-height: initial;
+    }
+  }
+}

@@ -8,7 +8,7 @@ class Groups::Delete < ActiveInteraction::Base
     end
 
     user = contact_group.user
-    google_user = GoogleContactsApi::User.new(user.access_token, user.refresh_token)
+    google_user = user.google_user
 
     # delete toruya backup google group and binding original google group
     if google_user.delete_group(contact_group.backup_google_group_id) && google_user.delete_group(contact_group.google_group_id)

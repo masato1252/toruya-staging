@@ -17,7 +17,7 @@
                       customerContactPermission: can?(:contact, Customer),
                       customer_detail_path: detail_user_customers_path(super_user),
                       save_customer_path: save_user_customers_path(super_user),
-                      delete_customer_path: delete_user_customers_path(super_user),
+                      deleteCustomerPath: delete_user_customers_path(super_user),
                       customers_filter_path: filter_user_customers_path(super_user),
                       customers_search_path: search_user_customers_path(super_user),
                       customers_recent_path: recent_user_customers_path(super_user),
@@ -48,6 +48,7 @@
                       no_more_customer_message: I18n.t("customer.no_more_customer"),
                       edit_btn: I18n.t("action.edit"),
                       save_btn: I18n.t("customer.save"),
+                      deleteCustomerBtn: I18n.t("customer.delete"),
                       recheck_in_btn: I18n.t("reservation.recheck_in"),
                       check_in_btn: I18n.t("reservation.check_in"),
                       check_out_btn: I18n.t("reservation.check_out"),
@@ -62,6 +63,7 @@
                       printing_page_size_options: Customers::PrintingConfig::PAGE_SIZE.map { |key, page_size| { label: page_size[:name], value: key} },
                       printing_path: new_customer_printing_path(format: :pdf),
                       google_down_message: I18n.t("common.google_down"),
+                      customerDeleteConfirmMessage: I18n.t("customer.delete_confirmation_message"),
                       groupBlankOption: I18n.t("customer.group_blank_option"),
                       googleContactMissingMessage: I18n.t("customer.google_contact_missing_message_html")
 }) %>

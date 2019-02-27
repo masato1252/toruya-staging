@@ -286,7 +286,8 @@ CREATE TABLE public.customers (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     updated_by_user_id integer,
-    email_types character varying
+    email_types character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1853,6 +1854,13 @@ CREATE INDEX index_customers_on_user_id ON public.customers USING btree (user_id
 
 
 --
+-- Name: index_customers_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customers_on_user_id_and_deleted_at ON public.customers USING btree (user_id, deleted_at);
+
+
+--
 -- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2257,6 +2265,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181226150238'),
 ('20181227064220'),
 ('20190117090106'),
-('20190214062710');
+('20190214062710'),
+('20190225080604');
 
 
