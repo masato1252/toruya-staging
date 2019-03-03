@@ -1,6 +1,6 @@
 module ReservationsHelper
   def reservation_staff_sentences(reservation)
-    in_future_or_today = reservation.start_time.to_date >= Date.today
+    in_future_or_today = reservation.start_time.to_date >= Date.current
     reservation_staffs = reservation.staffs.to_a
 
     if in_future_or_today

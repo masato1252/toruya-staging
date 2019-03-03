@@ -49,7 +49,7 @@ class Reservation < ApplicationRecord
   before_validation :set_start_time, :set_end_time, :set_ready_time
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
-  scope :future, -> { where("start_time > ?", Time.zone.now) }
+  scope :future, -> { where("start_time > ?", Time.current) }
   scope :uncanceled, -> { where(aasm_state: %w(pending reserved noshow checked_in checked_out)).active }
   scope :active, -> { where(deleted_at: nil) }
 

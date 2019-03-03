@@ -19,7 +19,7 @@ class Customers::Save < ActiveInteraction::Base
     # end
 
     if params[:dob] && params[:dob][:year].present? && params[:dob][:month].present? && params[:dob][:day].present?
-      params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.today.year,
+      params[:birthday] = Date.new(params[:dob][:year].try(:to_i) || Date.current.year,
                                    params[:dob][:month].try(:to_i) || 1,
                                    params[:dob][:day].try(:to_i) || 1)
     else

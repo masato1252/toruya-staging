@@ -160,7 +160,7 @@ module OptionsHelper
   end
 
   def year_options
-    (1916..Date.today.year).to_a.map {|year| { label: year, value: year }}
+    (1916..Date.current.year).to_a.map {|year| { label: year, value: year }}
   end
 
   def month_options
