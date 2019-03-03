@@ -55,7 +55,7 @@ class WorkingSchedulesModal extends React.Component {
               <div className="modal-body">
                 <dl id="addWorkDay">
                   <ReservationDatetimeFields
-                    staffId={this.props.staffId && (this.props.staff.id || this.props.staff.value)}
+                    staffId={this.props.staffId || this.props.staff.id || this.props.staff.value}
                     open={this.props.open}
                     startTimeDatePart={this.props.startTimeDatePart}
                     startTimeTimePart={this.props.startTimeTimePart}
