@@ -279,7 +279,9 @@ class ReservationForm extends React.Component {
     var eventTargetName = event.target.dataset.name;
     this.setState({[eventTargetName]: event.target.value}, function() {
       if (this.props.memberMode) {
-        this._validateReservation();
+        if (eventTargetName != "memo") {
+          this._validateReservation();
+        }
         // clean staffs when the menu changes
       }
       else {
