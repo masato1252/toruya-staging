@@ -298,7 +298,10 @@ class ReservationForm extends React.Component {
   };
 
   _handleDateChange = (dateChange) => {
-    this.setState(dateChange, this._retrieveAvailableTimes)
+    this.setState(dateChange, () => {
+      this._retrieveAvailableTimes();
+      this._validateReservation();
+    })
   };
 
   _handleStaffChange = (event) => {
