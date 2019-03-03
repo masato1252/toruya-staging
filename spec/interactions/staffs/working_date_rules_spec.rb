@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Staffs::WorkingDateRules do
   let(:shop) { FactoryBot.create(:shop) }
   let(:staff) { FactoryBot.create(:staff) }
-  let(:date_range) { Date.today.beginning_of_month..Date.today.end_of_month }
+  let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month }
   let(:args) do
     {
       shop: shop,
@@ -85,7 +85,7 @@ RSpec.describe Staffs::WorkingDateRules do
       end
 
       context "when staff only work on particular one day" do
-        let(:particular_date) { Date.today.beginning_of_month.tomorrow }
+        let(:particular_date) { Date.current.beginning_of_month.tomorrow }
         before do
           FactoryBot.create(:custom_schedule, :opened, shop: shop, staff: staff, start_time: particular_date.beginning_of_day)
         end
@@ -105,7 +105,7 @@ RSpec.describe Staffs::WorkingDateRules do
     end
 
     context "when shop is off on particular date" do
-      let(:particular_date) { Date.today.beginning_of_month.tomorrow }
+      let(:particular_date) { Date.current.beginning_of_month.tomorrow }
       before do
         FactoryBot.create(:custom_schedule, :closed, :for_shop, shop: shop, start_time: particular_date.beginning_of_day)
       end
@@ -124,7 +124,7 @@ RSpec.describe Staffs::WorkingDateRules do
     end
 
     context "when staff is off on particular date and that date shop is reservable" do
-      let(:particular_date) { Date.today.beginning_of_month.tomorrow }
+      let(:particular_date) { Date.current.beginning_of_month.tomorrow }
       before do
         FactoryBot.create(:custom_schedule, :closed, shop: shop, staff: staff,
                           start_time: particular_date.beginning_of_day,

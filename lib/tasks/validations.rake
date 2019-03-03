@@ -6,7 +6,7 @@ namespace :validations do
       contact_group_id = user.contact_groups.connected.first.id
       rank_id = user.ranks.first.id
 
-      params = {"contact_group_id"=>contact_group_id, "rank_id"=>rank_id, "phonetic_last_name"=> Date.today.to_s, "phonetic_first_name"=>"555555", "last_name"=>"666666", "first_name"=>"77777777", "primary_phone"=>"home-=-22222222", "primary_email"=>"home-=-3333333333", "primary_address"=>{"type"=>"home", "postcode1"=>"888", "postcode2"=>"888", "region"=>"北海道", "city"=>"999999", "street1"=>"000000", "street2"=>"111111"}, "phone_numbers"=>[{"type"=>"home", "value"=>"22222222"}], "emails"=>[{"type"=>"home", "value"=>{"address"=>"3333333333"}}], "custom_id"=>"4444444", "dob"=>{"year"=>"1916", "month"=>"1", "day"=>"1"}, "memo"=>"555555555"}.with_indifferent_access
+      params = {"contact_group_id"=>contact_group_id, "rank_id"=>rank_id, "phonetic_last_name"=> Date.current.to_s, "phonetic_first_name"=>"555555", "last_name"=>"666666", "first_name"=>"77777777", "primary_phone"=>"home-=-22222222", "primary_email"=>"home-=-3333333333", "primary_address"=>{"type"=>"home", "postcode1"=>"888", "postcode2"=>"888", "region"=>"北海道", "city"=>"999999", "street1"=>"000000", "street2"=>"111111"}, "phone_numbers"=>[{"type"=>"home", "value"=>"22222222"}], "emails"=>[{"type"=>"home", "value"=>{"address"=>"3333333333"}}], "custom_id"=>"4444444", "dob"=>{"year"=>"1916", "month"=>"1", "day"=>"1"}, "memo"=>"555555555"}.with_indifferent_access
 
       # create
       new_customer = Customers::Save.run!(user: user, current_user: user, params: params.dup)

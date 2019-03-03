@@ -13,7 +13,7 @@ class CustomersPrintingJob < ApplicationJob
                   customers.includes(:contact_group, :rank)
                 end
 
-    title = "#{super_user.filtered_outcomes.count + 1}_#{Date.today.iso8601}"
+    title = "#{super_user.filtered_outcomes.count + 1}_#{Date.current.iso8601}"
 
     pdf_string = WickedPdf.new.pdf_from_string(
       ActionController::Base.new.render_to_string(
