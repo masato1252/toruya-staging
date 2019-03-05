@@ -9,7 +9,7 @@ module Staffs
         staff.staff_account.disabled!
       end
 
-      staff.update_columns(deleted_at: Time.zone.now)
+      staff.update_columns(deleted_at: Time.current)
 
       if Reservation.future.active.joins(:reservation_staffs).where("reservation_staffs.staff_id = ?", staff.id).exists?
         NotificationMailer.staff_deleted(staff).deliver_later

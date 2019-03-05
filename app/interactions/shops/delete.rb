@@ -7,7 +7,7 @@ module Shops
 
     def execute
       shop.transaction do
-        if shop.update(deleted_at: Time.current)
+        if shop.update_columns(deleted_at: Time.current)
           shop.menus.each do |menu|
             compose(Menus::Delete, menu: menu) if menu.shop_ids.blank?
           end

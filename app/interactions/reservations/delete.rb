@@ -3,7 +3,7 @@ module Reservations
     object :reservation
 
     def execute
-      reservation.update(deleted_at: Time.current)
+      reservation.update_columns(deleted_at: Time.current)
     end
   end
 end
