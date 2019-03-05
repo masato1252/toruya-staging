@@ -57,7 +57,7 @@ class CustomersController < DashboardController
   end
 
   def recent
-    @customers = super_user.customers.includes(:rank, :contact_group, :updated_by_user).
+    @customers = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile).
       order("updated_at DESC").
       page(params[:page].presence || 1).
       per(Customers::Search::PER_PAGE)

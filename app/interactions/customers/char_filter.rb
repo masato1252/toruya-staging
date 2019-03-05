@@ -19,7 +19,7 @@ class Customers::CharFilter < ActiveInteraction::Base
   integer :pre_page, default: Customers::Search::PER_PAGE
 
   def execute
-    scoped = super_user.customers.jp_chars_order.includes(:rank, :contact_group, :updated_by_user).page(page).per(pre_page)
+    scoped = super_user.customers.jp_chars_order.includes(:rank, :contact_group, updated_by_user: :profile).page(page).per(pre_page)
 
     scoped.where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$")
   end

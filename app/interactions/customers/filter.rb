@@ -29,7 +29,7 @@ class Customers::Filter < ActiveInteraction::Base
   end
 
   def execute
-    scoped = super_user.customers.includes(:rank, :contact_group, :updated_by_user)
+    scoped = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile)
 
     scoped = scoped.where(contact_group_id: group_ids) if group_ids.present?
     scoped = scoped.where(rank_id: rank_ids) if rank_ids.present?
