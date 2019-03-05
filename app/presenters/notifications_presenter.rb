@@ -31,8 +31,8 @@ class NotificationsPresenter
 
   def new_staff_accounts
     Staff.where(user: current_user).active_without_data.includes(:staff_account).map do |staff|
-      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), h.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}"
-    end
+      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), h.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}" if h.ability(staff.user).can?(:edit, staff)
+    end.compact
   end
 
   def empty_reservation_setting_users
