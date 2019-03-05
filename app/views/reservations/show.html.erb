@@ -89,7 +89,7 @@
       <% if @reservation.acceptable_by_staff?(current_user.current_staff(@reservation.shop.user)) %>
         <dd>
           <% if user_ability.can?(:edit, @reservation) %>
-            <% if local_assigns[:personal_schedule] || params[:from_member] %>
+            <% if in_personal_dashboard? %>
               <%= link_to @reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_in_group_shop_reservation_states_path(@reservation.shop, @reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
             <% else %>
               <%= link_to @reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(@reservation.shop, @reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
@@ -122,7 +122,7 @@
 
       <dd>
         <% if user_ability.can?(:manage_shop_reservations, @reservation.shop) && user_ability.can?(:edit, @reservation) %>
-          <%= link_to t("action.edit"), edit_shop_reservation_path(@reservation.shop, @reservation, from_member: local_assigns[:personal_schedule] || params[:from_member], from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
+          <%= link_to t("action.edit"), edit_shop_reservation_path(@reservation.shop, @reservation, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
         <% else %>
           <%= link_to t("action.edit"), "#", class: "btn BTNtarco disabled" %>
         <% end %>

@@ -14,13 +14,13 @@
       end
     %>
     <% if reservation %>
-      <%= modal_link_to shop_reservation_path(reservation.shop, reservation, from_member: true) do %>
+      <%= modal_link_to shop_reservation_path(reservation.shop, reservation) do %>
         <dl>
           <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
           <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
           <dd class="menu"><%= reservation.menu.display_name %></dd>
           <dd class="customer"><%= customer_names_sentence %></dd>
-          <% if local_assigns[:personal_schedule] %>
+          <% if in_personal_dashboard? %>
             <dd class="shop"><%= reservation.shop.display_name %></dd>
           <% end %>
           <% if reservation.with_warnings %>
