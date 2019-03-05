@@ -106,7 +106,7 @@ module ViewHelpers
     @working_shop_options[include_user_own] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
-      staff.shop_staffs.includes(:shop).map do |shop_staff|
+      staff.shop_staffs.includes(shop: :user).map do |shop_staff|
         if include_user_own || shop_staff.shop.user != current_user
           ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
                        staff: staff, staff_id: shop_staff.staff_id,

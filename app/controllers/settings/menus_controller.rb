@@ -6,7 +6,7 @@ class Settings::MenusController < SettingsController
   def index
     # XXX: FOR FUN
     # @menus = super_user.menus.left_outer_joins(:active_staffs, :reservation_setting).select("DISTINCT menus.*, MIN(COALESCE(NULLIF(reservation_settings.short_name, ''), reservation_settings.name)) as setting_name, COUNT(DISTINCT(staff_menus.staff_id)) as staffs_count").group("menus.id").order("id")
-    @menus = super_user.menus.includes(:active_staffs, :reservation_setting).order("id")
+    @menus = super_user.menus.includes(:reservation_setting).order("id")
   end
 
   # GET /settings/menus/1

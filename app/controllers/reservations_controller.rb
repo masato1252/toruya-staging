@@ -29,7 +29,7 @@ class ReservationsController < DashboardController
     # Staff schedules on date END
 
     # Reservations START
-    reservations = shop.reservations.uncanceled.in_date(@date).includes(:menu, :customers, :staffs).order("reservations.start_time ASC")
+    reservations = shop.reservations.uncanceled.in_date(@date).includes(:shop, :menu, :customers, :staffs).order("reservations.start_time ASC")
     @schedules = reservations.map do |reservation|
       Option.new(type: :reservation, source: reservation)
     end

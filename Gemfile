@@ -73,7 +73,7 @@ group :development do
   gem "letter_opener", "~> 1.4.1"
   gem "better_errors"
   gem "binding_of_caller"
-  gem "bullet", "~> 2.0.0"
+  gem "bullet", "~> 5.7.0"
   gem "awesome_rails_console", "~> 0.4.0"
 end
 

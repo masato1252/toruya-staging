@@ -36,7 +36,7 @@ class NotificationsPresenter
   end
 
   def empty_reservation_setting_users
-    current_user.staff_accounts.includes(:user, :owner).each_with_object([]) do |staff_account, array|
+    current_user.staff_accounts.each_with_object([]) do |staff_account, array|
       next if staff_account.owner?
 
       data = Notifications::EmptyReservationSettingUserPresenter.new(h, current_user).data(staff_account: staff_account)

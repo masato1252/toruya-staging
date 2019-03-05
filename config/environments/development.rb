@@ -58,4 +58,9 @@ Rails.application.configure do
   # [TDOD]: open this setting when we upgrade webpacker
   # yarn integrity check to ensure that all local JavaScript packages are up-to-date.
   # config.webpacker.check_yarn_integrity = true
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.rails_logger = true
+  end
 end
