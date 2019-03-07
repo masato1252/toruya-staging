@@ -2,37 +2,38 @@
 #
 # Table name: custom_schedules
 #
-#  id           :integer          not null, primary key
-#  shop_id      :integer
-#  staff_id     :integer
-#  start_time   :datetime
-#  end_time     :datetime
-#  reason       :text
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  open         :boolean          default(FALSE), not null
-#  reference_id :string
+#  id         :integer          not null, primary key
+#  shop_id    :integer
+#  staff_id   :integer
+#  start_time :datetime
+#  end_time   :datetime
+#  reason     :text
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  open       :boolean          default(FALSE), not null
+#  user_id    :integer
 #
 # Indexes
 #
-#  index_custom_schedules_on_reference_id       (reference_id)
-#  index_custom_schedules_on_staff_id_and_open  (staff_id,open)
-#  shop_custom_schedules_index                  (shop_id,start_time,end_time)
-#  staff_custom_schedules_index                 (staff_id,start_time,end_time)
+#  personal_schedule_index       (user_id,open,start_time,end_time)
+#  shop_custom_schedules_index   (shop_id,open,start_time,end_time)
+#  staff_custom_schedules_index  (staff_id,open,start_time,end_time)
 #
 
 class CustomSchedule < ApplicationRecord
+  # user's custom_schedules: Only user_id exists, create from personal schedule
   # shop's custom_schedules: Only shop_id exists
-  # staff's closed custom_schedules: Only staff_id exists
   # staff's open custom_schedules: Both shop_id, staff_id exist
+  # staff's closed custom_schedules: Only staff_id exists, won't be created after https://github.com/ilake/kasaike/pull/457
 
   attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
+  belongs_to :user, optional: true
   belongs_to :shop, optional: true
   belongs_to :staff, optional: true
 
-  scope :for_shop, -> { where(staff_id: nil) }
-  scope :for_staff, -> { where.not(staff_id: nil) }
+  scope :for_shop, -> { where(staff_id: nil, user_id: nil) }
+  scope :for_staff, -> { where.not(staff_id: nil).where(user_id: nil) }
   scope :future, -> { where("start_time > ?", Time.now.yesterday.at_beginning_of_day) }
   scope :opened, -> { where(open: true) }
   scope :closed, -> { where(open: false) }

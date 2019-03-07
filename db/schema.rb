@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181130012847) do
+ActiveRecord::Schema.define(version: 20190304143150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,8 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "bind_all"
+    t.index ["user_id", "bind_all"], name: "index_contact_groups_on_user_id_and_bind_all", unique: true
     t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true
     t.index ["user_id"], name: "index_contact_groups_on_user_id"
   end
@@ -81,11 +83,10 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "open", default: false, null: false
-    t.string "reference_id"
-    t.index ["reference_id"], name: "index_custom_schedules_on_reference_id"
-    t.index ["shop_id", "start_time", "end_time"], name: "shop_custom_schedules_index"
-    t.index ["staff_id", "open"], name: "index_custom_schedules_on_staff_id_and_open"
-    t.index ["staff_id", "start_time", "end_time"], name: "staff_custom_schedules_index"
+    t.integer "user_id"
+    t.index ["shop_id", "open", "start_time", "end_time"], name: "shop_custom_schedules_index"
+    t.index ["staff_id", "open", "start_time", "end_time"], name: "staff_custom_schedules_index"
+    t.index ["user_id", "open", "start_time", "end_time"], name: "personal_schedule_index"
   end
 
   create_table "customers", id: :serial, force: :cascade do |t|
@@ -107,12 +108,14 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.datetime "updated_at", null: false
     t.integer "updated_by_user_id"
     t.string "email_types"
+    t.datetime "deleted_at"
     t.index "first_name gin_trgm_ops", name: "customer_names_on_first_name_idx", using: :gin
     t.index "last_name gin_trgm_ops", name: "customer_names_on_last_name_idx", using: :gin
     t.index "phonetic_first_name gin_trgm_ops", name: "customer_names_on_phonetic_first_name_idx", using: :gin
     t.index "phonetic_last_name gin_trgm_ops", name: "customer_names_on_phonetic_last_name_idx", using: :gin
     t.index ["contact_group_id"], name: "index_customers_on_contact_group_id"
     t.index ["rank_id"], name: "index_customers_on_rank_id"
+    t.index ["user_id", "deleted_at"], name: "index_customers_on_user_id_and_deleted_at"
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index"
     t.index ["user_id"], name: "index_customers_on_user_id"
@@ -175,6 +178,8 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.integer "min_staffs_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["user_id", "deleted_at"], name: "index_menus_on_user_id_and_deleted_at"
     t.index ["user_id"], name: "index_menus_on_user_id"
   end
 
@@ -275,7 +280,9 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.integer "count_of_customers", default: 0
     t.boolean "with_warnings", default: false, null: false
     t.integer "by_staff_id"
+    t.datetime "deleted_at"
     t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index"
+    t.index ["shop_id", "deleted_at"], name: "index_reservations_on_shop_id_and_deleted_at"
   end
 
   create_table "shop_menu_repeating_dates", id: :serial, force: :cascade do |t|
@@ -322,6 +329,8 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.boolean "holiday_working"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+    t.index ["user_id", "deleted_at"], name: "index_shops_on_user_id_and_deleted_at"
     t.index ["user_id"], name: "index_shops_on_user_id"
   end
 
@@ -362,6 +371,7 @@ ActiveRecord::Schema.define(version: 20181130012847) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.boolean "staff_holiday_permission", default: false, null: false
+    t.index ["user_id", "deleted_at"], name: "index_staffs_on_user_id_and_deleted_at"
     t.index ["user_id"], name: "index_staffs_on_user_id"
   end
 

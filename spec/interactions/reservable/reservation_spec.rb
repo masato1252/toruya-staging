@@ -262,7 +262,7 @@ RSpec.describe Reservable::Reservation do
           end
         end
 
-        context "when staff is a full time staff, ask for leave during the period" do
+        context "when staff is a full time staff, ask for leave during(off schedule) the period" do
           let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
           before do
             FactoryBot.create(:custom_schedule, :closed, staff: staff2, start_time: time_range.first, end_time: time_range.last)
@@ -279,6 +279,27 @@ RSpec.describe Reservable::Reservation do
 
             expect(unworking_staff_error).to eq(error: :ask_for_leave)
             expect(outcome.errors.details[:ask_for_leave]).to include(error: staff2.id.to_s)
+          end
+        end
+
+        context "when staff is a full time staff, had a personal schedule(off schedule) during the period" do
+          let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
+          before do
+            FactoryBot.create(:custom_schedule, :closed, user: staff2.staff_account.user, start_time: time_range.first, end_time: time_range.last)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
+
+            expect(outcome).to be_invalid
+            unworking_staff_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :ask_for_leave }
+
+            expect(unworking_staff_error).to eq(error: :ask_for_leave)
+            expect(outcome.errors.details[:ask_for_leave]).to include(error: staff2.id.to_s)
+            expect(outcome.errors.details[:ask_for_leave]).not_to include(error: staff1.id.to_s)
           end
         end
 

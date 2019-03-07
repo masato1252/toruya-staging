@@ -51,7 +51,45 @@ RSpec.describe Shops::StaffsWorkingSchedules do
 
       context "when there is staff working on this date but need to leave" do
         let!(:staff) { FactoryBot.create(:staff, :full_time, shop: shop) }
-        before { FactoryBot.create(:custom_schedule, shop: shop, staff: staff, start_time: start_time2, end_time: end_time2, reason: "foo") }
+        before { FactoryBot.create(:custom_schedule, :closed, staff: staff, start_time: start_time2, end_time: end_time2, reason: "foo") }
+
+        context "when leaving after working time start(like working in the morning, leaving in the afternoon)" do
+          let(:start_time) { Time.zone.local(date.year, date.month, date.day, 9, 0, 0) }
+          let(:start_time2) { Time.zone.local(date.year, date.month, date.day, 11, 0, 0) }
+
+          it "returns expect result" do
+            expect(described_class.run!(shop: shop, date: date)).to eq({
+              staff => { time: start_time..start_time2, reason: "foo" }
+            })
+          end
+        end
+
+        context "when coming back before working time end(like OOO in the morning, working in the afternoon)" do
+          let(:start_time2) { Time.zone.local(date.year, date.month, date.day, 8, 0, 0) }
+          let(:end_time2) { Time.zone.local(date.year, date.month, date.day, 11, 0, 0) }
+
+          it "returns expect result" do
+            expect(described_class.run!(shop: shop, date: date)).to eq({
+              staff => { time: end_time2..end_time, reason: "foo" }
+            })
+          end
+        end
+
+        context "when leaving all day" do
+          let(:start_time2) { Time.zone.local(date.year, date.month, date.day, 0, 0, 0) }
+          let(:end_time2) { Time.zone.local(date.year, date.month, date.day, 23, 0, 0) }
+
+          it "returns expect result" do
+            expect(described_class.run!(shop: shop, date: date)).to eq({
+              staff => { time: nil, reason: "foo" }
+            })
+          end
+        end
+      end
+
+      context "when there is staff working on this date but the user had a personal schedule" do
+        let!(:staff) { FactoryBot.create(:staff, :full_time, shop: shop) }
+        before { FactoryBot.create(:custom_schedule, :closed, :personal, user: staff.staff_account.user, start_time: start_time2, end_time: end_time2, reason: "foo") }
 
         context "when leaving after working time start(like working in the morning, leaving in the afternoon)" do
           let(:start_time) { Time.zone.local(date.year, date.month, date.day, 9, 0, 0) }

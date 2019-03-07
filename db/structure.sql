@@ -240,7 +240,7 @@ CREATE TABLE public.custom_schedules (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     open boolean DEFAULT false NOT NULL,
-    reference_id character varying
+    user_id integer
 );
 
 
@@ -1819,20 +1819,6 @@ CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.conta
 
 
 --
--- Name: index_custom_schedules_on_reference_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_schedules_on_reference_id ON public.custom_schedules USING btree (reference_id);
-
-
---
--- Name: index_custom_schedules_on_staff_id_and_open; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_schedules_on_staff_id_and_open ON public.custom_schedules USING btree (staff_id, open);
-
-
---
 -- Name: index_customers_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2106,6 +2092,13 @@ CREATE INDEX order_id_index ON public.subscription_charges USING btree (order_id
 
 
 --
+-- Name: personal_schedule_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX personal_schedule_index ON public.custom_schedules USING btree (user_id, open, start_time, end_time);
+
+
+--
 -- Name: reservation_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2130,7 +2123,7 @@ CREATE INDEX reservation_setting_menus_index ON public.reservation_setting_menus
 -- Name: shop_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX shop_custom_schedules_index ON public.custom_schedules USING btree (shop_id, start_time, end_time);
+CREATE INDEX shop_custom_schedules_index ON public.custom_schedules USING btree (shop_id, open, start_time, end_time);
 
 
 --
@@ -2165,7 +2158,7 @@ CREATE INDEX staff_account_token_index ON public.staff_accounts USING btree (tok
 -- Name: staff_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX staff_custom_schedules_index ON public.custom_schedules USING btree (staff_id, start_time, end_time);
+CREATE INDEX staff_custom_schedules_index ON public.custom_schedules USING btree (staff_id, open, start_time, end_time);
 
 
 --
@@ -2266,6 +2259,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181227064220'),
 ('20190117090106'),
 ('20190214062710'),
-('20190225080604');
+('20190225080604'),
+('20190227040922'),
+('20190304143150');
 
 

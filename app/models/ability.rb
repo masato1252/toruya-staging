@@ -98,6 +98,8 @@ class Ability
     can :manage, :filter
     can :manage, :saved_filter
     can :contact, Customer
+    can :manage_staff_temporary_working_day_permission, ShopStaff
+    can :manage_staff_holiday_permission, ShopStaff
 
     case super_user.member_level
     when "premium"

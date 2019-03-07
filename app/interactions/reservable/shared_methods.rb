@@ -25,12 +25,28 @@ module Reservable
         pluck("DISTINCT staff_id")
     end
 
-    def closed_custom_schedules_staff_ids
+    def closed_custom_schedules
       CustomSchedule.
-        where(staff_id: shop.staff_ids).
         closed.
-        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time).
-        pluck("DISTINCT staff_id")
+        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time).includes(:staff)
+    end
+
+    # TODO: [Personal schedule legacy] Remove staff custom off schedule query when it indeed doesn't be used
+    def closed_custom_schedules_staff_ids
+      @closed_custom_schedules_staff_ids ||= closed_custom_schedules.
+        where(staff_id: shop.staff_ids).
+        pluck("DISTINCT custom_schedules.staff_id") +
+      closed_personal_custom_schedules_staff_ids
+    end
+
+    def closed_personal_custom_schedules_staff_ids
+      active_staff_accounts = shop.user.owner_staff_accounts.active.to_a
+
+      closed_schedule_user_ids = closed_custom_schedules.
+        where(user_id: active_staff_accounts.map(&:user_id)).
+        pluck("DISTINCT custom_schedules.user_id")
+
+      active_staff_accounts.find_all {|staff_account| closed_schedule_user_ids.include?(staff_account.user_id) }.map(&:staff_id)
     end
 
     def overlap_reservations(menu_id=nil)

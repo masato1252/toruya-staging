@@ -23,18 +23,27 @@ module Shops
 
         working_staffs = h.keys
         # custom leaving, if staff don't working on that date then we don't care about his/her OOO.
-        CustomSchedule.where(staff_id: working_staffs.map(&:id)).closed.where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).includes(:staff).each do |schedule|
+        working_staff_ids = working_staffs.map(&:id)
+        active_staff_accounts = shop.user.owner_staff_accounts.active.where(staff_id: working_staff_ids).to_a
 
-          working_schedule_time = h[schedule.staff][:time]
+        # TODO: [Personal schedule legacy] Remove staff custom off schedule query when it indeed doesn't be used
+        custom_schedules_scope = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).includes(:staff)
+        custom_schedules_scope.where(staff_id: working_staff_ids).or(
+          custom_schedules_scope.where(user_id: active_staff_accounts.map(&:user_id))
+        ).each do |schedule|
+
+          schedule_staff = schedule.staff || active_staff_accounts.find { |staff_account| staff_account.user_id == schedule.user_id }.staff
+
+          working_schedule_time = h[schedule_staff][:time]
 
           if working_schedule_time && schedule.start_time > working_schedule_time.first
             # working time -> leaving time
-            h[schedule.staff] = { time: working_schedule_time.first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
+            h[schedule_staff] = { time: working_schedule_time.first..schedule.start_time, reason: schedule.reason.presence || "臨時休暇" }
           elsif working_schedule_time && schedule.end_time < working_schedule_time.last
             # leaving time -> working time
-            h[schedule.staff] = { time: schedule.end_time..working_schedule_time.last, reason: schedule.reason.presence || "臨時休暇" }
+            h[schedule_staff] = { time: schedule.end_time..working_schedule_time.last, reason: schedule.reason.presence || "臨時休暇" }
           else
-            h[schedule.staff] = { time: nil, reason: schedule.reason.presence || "臨時休暇" }
+            h[schedule_staff] = { time: nil, reason: schedule.reason.presence || "臨時休暇" }
           end
         end
 

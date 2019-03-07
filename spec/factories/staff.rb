@@ -19,7 +19,7 @@ FactoryBot.define do
     after(:create) do |staff, proxy|
       FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop)
       FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
-      proxy.menus.each do |menu|
+      Array(proxy.menus).each do |menu|
         FactoryBot.create(:staff_menu, menu: menu, staff: staff)
       end
     end

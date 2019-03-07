@@ -37,22 +37,18 @@ class MembersController < DashboardController
     end
 
     # Mix off custom schedules and reservations
-    staffs_off_schedules = CustomSchedule
-      .where(staff_id: working_shop_options(include_user_own: true).map(&:staff_id).uniq)
-      .closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day)
-      .includes(:staff).to_a
+    close_schedule_scope = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day)
+    off_schedules =
+      close_schedule_scope.where(staff_id: working_shop_options(include_user_own: true).map(&:staff_id).uniq).or(
+        close_schedule_scope.where(user_id: current_user.id)
+    ).to_a
 
-    existing_reference_ids = []
-
-    @schedules = (reservations + staffs_off_schedules).each_with_object([]) do |reservation_and_off_schedule, schedules|
+    @schedules = (reservations + off_schedules).each_with_object([]) do |reservation_and_off_schedule, schedules|
       if reservation_and_off_schedule.is_a?(Reservation)
         schedules << Option.new(type: :reservation,
                                 source: reservation_and_off_schedule,
                                 time: reservation_and_off_schedule.start_time)
       else
-        next if existing_reference_ids.include?(reservation_and_off_schedule.reference_id)
-        existing_reference_ids << reservation_and_off_schedule.reference_id if reservation_and_off_schedule.reference_id
-
         schedules << Option.new(type: :off_schedule,
                                 source: reservation_and_off_schedule, # custom_schedules
                                 time: reservation_and_off_schedule.start_time,

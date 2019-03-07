@@ -18,7 +18,7 @@ class Settings::BusinessSchedulesController < SettingsController
     end
 
     custom_schedules_params[:custom_schedules].each do |attrs|
-      CustomSchedules::Create.run(shop: shop, attrs: attrs.to_h)
+      CustomSchedules::Change.run(owner: shop, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
     update_shop = Shops::Update.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))

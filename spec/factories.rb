@@ -25,24 +25,6 @@ FactoryBot.define do
     end
   end
 
-  factory :custom_schedule do
-    association :shop
-    association :staff
-    open false
-
-    trait :opened do
-      open true
-    end
-
-    trait :closed do
-      open false
-    end
-
-    trait :for_shop do
-      staff nil
-    end
-  end
-
   factory :business_schedule do
     association :shop
     day_of_week { start_time.wday }

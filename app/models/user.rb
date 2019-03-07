@@ -58,6 +58,7 @@ class User < ApplicationRecord
       where(state: :completed).order("updated_at").last
     end
   end
+  has_many :custom_schedules, dependent: :destroy
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

@@ -154,7 +154,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :custom_schedules, only: [:create]
+  resources :custom_schedules, only: [:create, :update, :destroy]
 
   namespace :callbacks do
     resources :staff_accounts, only: [] do

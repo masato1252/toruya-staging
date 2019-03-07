@@ -72,7 +72,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
 
     if custom_schedules_params[:custom_schedules]
       custom_schedules_params[:custom_schedules].each do |attrs|
-        CustomSchedules::Create.run(staff: @staff, attrs: attrs.to_h)
+        CustomSchedules::Change.run(owner: @staff, attrs: attrs.to_h)
       end
     end
 

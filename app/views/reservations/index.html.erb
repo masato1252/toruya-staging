@@ -44,35 +44,27 @@
           <% end %>
 
           <% if staff_schedule_requirement_condition %>
-              <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
-                <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
-                  出勤日を追加
-                </a>
-              <% end %>
-
-              <% if can?(:manage_staff_holiday_permission, shop_staff) %>
-                <a href="#" data-toggle="modal" data-target="#off-date-modal" class="BTNyellow">
-                  休暇を追加
-                </a>
-              <% end %>
+            <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>
+              <a href="#" data-toggle="modal" data-target="#working-date-modal" class="BTNyellow">
+                出勤日を追加
+              </a>
+            <% end %>
           <% end %>
         </div>
       </div>
 
      <div class="staffs-working-schedules table">
        <% @staffs_working_schedules.each do |staff, working_schedule| %>
-         <div class="row">
-           <div class="staff cell">
-             <%= staff.name %>
-           </div>
-           <div class="time cell">
-             <% if working_schedule[:time] %>
+         <% if working_schedule[:time] %>
+           <div class="row">
+             <div class="staff cell">
+               <%= staff.name %>
+             </div>
+             <div class="time cell">
                <%= "#{working_schedule[:time].first.to_s(:time)} ～ #{working_schedule[:time].last.to_s(:time)}" %>
-             <% else %>
-               臨時休暇
-             <% end %>
+             </div>
            </div>
-         </div>
+         <% end %>
       <% end %>
     </div>
   </div>
@@ -123,6 +115,4 @@
     end_time_time_part: working_time_range.last.to_s(:time),
     custom_schedules_path: custom_schedules_path
   }) %>
-
-  <%= render "reservations/off_date_modal", staff: staff, date: @date %>
 <% end %>
