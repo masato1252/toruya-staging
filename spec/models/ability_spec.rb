@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Ability do
   let(:current_user) { FactoryBot.create(:user) }
   let(:super_user) { current_user }
-  let(:ability) { described_class.new(current_user, super_user) }
+  let(:shop) { nil }
+  let(:ability) { described_class.new(current_user, super_user, shop) }
 
   RSpec.shared_examples "permission management" do |member_level, action, ability_name, permission|
     it "#{member_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
@@ -198,13 +199,12 @@ RSpec.describe Ability do
       end
     end
 
-    context "manager level" do
-    end
-
     context "staff level" do
-      let(:staff_account) { FactoryBot.create(:staff_account) }
+      let(:staff) { FactoryBot.create(:staff, level: :staff) }
+      let(:staff_account) { staff.staff_account }
       let(:current_user) { staff_account.user }
       let(:super_user) { staff_account.owner }
+      let(:shop) { staff.shops.first }
 
       context "create Reservation" do
         context "when users don't have any reservation" do
@@ -243,7 +243,8 @@ RSpec.describe Ability do
             before { allow(super_user).to receive(:member_level).and_return(member_level) }
 
             it "can manage only one shop reservations" do
-              expect(ability.can?(:manage_shop_reservations, shop1)).to eq(true)
+              expect(ability.can?(:manage_shop_reservations, shop)).to eq(true)
+              expect(ability.can?(:manage_shop_reservations, shop1)).to eq(false)
               expect(ability.can?(:manage_shop_reservations, shop2)).to eq(false)
             end
           end
@@ -252,11 +253,14 @@ RSpec.describe Ability do
     end
 
     context "edit reservation" do
+      let(:super_user) { FactoryBot.create(:user) }
+      let(:current_user) { super_user }
       before { allow(super_user).to receive(:premium_member?).and_return(is_premium_member) }
       let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids, start_time: reservation_time) }
       let(:shop) { FactoryBot.create(:shop, user: super_user) }
-      let(:staff_ids) { [FactoryBot.create(:staff).id]  }
-      let(:reservation_time) { Time.now  }
+      let(:staff) { FactoryBot.create(:staff, user: super_user) }
+      let(:staff_ids) { [staff.id] }
+      let(:reservation_time) { Time.now }
 
       context "when user is an owner" do
         context "when user is premium member" do
@@ -325,9 +329,9 @@ RSpec.describe Ability do
       end
 
       context "when user is NOT owner" do
-        let(:staff_account) { FactoryBot.create(:staff_account) }
+        let(:staff_account) { staff.staff_account }
         let(:current_user) { staff_account.user }
-        let(:super_user) { staff_account.owner }
+        let(:shop) { staff.shops.first }
 
         context "when super user is premium member" do
           let(:is_premium_member) { true }
@@ -358,10 +362,11 @@ RSpec.describe Ability do
       end
 
       context "when user is manager in reservation's shop" do
-        let(:staff_account) { FactoryBot.create(:staff_account, :manager) }
+        let(:staff) { FactoryBot.create(:staff, :manager) }
+        let(:staff_account) { staff.staff_account }
         let(:current_user) { staff_account.user }
         let(:super_user) { staff_account.owner }
-        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let(:shop) { staff.shops.first }
         let!(:reservation) { FactoryBot.create(:reservation, shop: shop) }
 
         it "returns true" do
@@ -373,7 +378,7 @@ RSpec.describe Ability do
         let(:staff_account) { FactoryBot.create(:staff_account) }
         let(:current_user) { staff_account.user }
         let(:super_user) { staff_account.owner }
-        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let(:shop) { staff_account.staff.shops.first }
         let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids) }
 
         context "when staff is responsible for this reservation" do

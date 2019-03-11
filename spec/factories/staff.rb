@@ -4,6 +4,7 @@ FactoryBot.define do
       shop { FactoryBot.create(:shop, user: user) }
       menus []
       mapping_user { FactoryBot.create(:user) }
+      level { :staff }
     end
 
     user { FactoryBot.create(:user) }
@@ -16,8 +17,12 @@ FactoryBot.define do
       end
     end
 
+    trait :manager do
+      level :manager
+    end
+
     after(:create) do |staff, proxy|
-      FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop)
+      FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop, level: proxy.level)
       FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
       Array(proxy.menus).each do |menu|
         FactoryBot.create(:staff_menu, menu: menu, staff: staff)

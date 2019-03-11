@@ -100,11 +100,6 @@ FactoryBot.define do
     max_customers 2
   end
 
-  factory :shop_staff do
-    association :shop
-    association :staff
-  end
-
   factory :contact_group do
     association :user
     sequence(:name) { |n| "group-#{n}" }

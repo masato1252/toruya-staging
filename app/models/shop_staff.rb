@@ -26,5 +26,5 @@ class ShopStaff < ApplicationRecord
   enum level: {
     staff: 0,
     manager: 1
-  }
+  }, _suffix: true
 end

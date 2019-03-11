@@ -5,10 +5,10 @@ FactoryBot.define do
     owner { FactoryBot.create(:user) }
     staff { FactoryBot.create(:staff) }
     state { StaffAccount.states[:active] }
-    level { :staff }
+    level { :employee }
 
-    trait :manager do
-      level :manager
+    trait :employee do
+      level :employee
     end
   end
 end
