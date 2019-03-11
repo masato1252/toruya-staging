@@ -895,7 +895,8 @@ CREATE TABLE public.shop_staffs (
     updated_at timestamp without time zone NOT NULL,
     staff_regular_working_day_permission boolean DEFAULT false NOT NULL,
     staff_temporary_working_day_permission boolean DEFAULT false NOT NULL,
-    staff_full_time_permission boolean DEFAULT false NOT NULL
+    staff_full_time_permission boolean DEFAULT false NOT NULL,
+    level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2259,8 +2260,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181227064220'),
 ('20190117090106'),
 ('20190214062710'),
+('20190224032620'),
 ('20190225080604'),
 ('20190227040922'),
-('20190304143150');
+('20190304143150'),
+('20190307123116');
 
 
