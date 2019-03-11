@@ -138,7 +138,13 @@ class Ability
     can :create, :total_reservations
     can :manage, :userself_holiday_permission
     can :edit, Staff do |staff|
-      super_user.premium_member? || (current_user_staff == staff && admin_level)
+      if staff.user == super_user
+        if super_user.premium_member?
+          admin_level || manager_level || current_user_staff == staff
+        elsif admin_level
+          current_user_staff == staff
+        end
+      end
     end
 
     can :edit, Reservation do |reservation|

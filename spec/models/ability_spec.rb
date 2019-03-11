@@ -398,5 +398,142 @@ RSpec.describe Ability do
         end
       end
     end
+
+    context "edit Staff" do
+      let(:staff) { FactoryBot.create(:staff) }
+      let(:staff_account) { staff.staff_account }
+      let(:super_user) { staff_account.owner }
+      let(:current_user) { staff_account.user }
+      let(:shop) { staff.shops.first }
+
+      context "when super user is premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+        context "user is admin level" do
+          let(:current_user) { staff_account.owner }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(true)
+            end
+          end
+
+          context "when staff is owned by other user" do
+            let(:other_staff) { FactoryBot.create(:staff) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, other_staff)).to eq(false)
+            end
+          end
+        end
+
+        context "user is manager level" do
+          let(:staff) { FactoryBot.create(:staff, :manager) }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(true)
+            end
+          end
+        end
+
+        context "user is staff level" do
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+      end
+
+      context "when super user is NOT premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(false) }
+
+        context "user is admin level" do
+          let(:staff) { FactoryBot.create(:staff, :owner) }
+          let(:current_user) { staff_account.owner }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+
+          context "when staff is owned by other user" do
+            let(:other_staff) { FactoryBot.create(:staff) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, other_staff)).to eq(false)
+            end
+          end
+        end
+
+        context "user is manager level" do
+          let(:staff) { FactoryBot.create(:staff, :manager) }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(false)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+
+        context "user is staff level" do
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(false)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+      end
+    end
   end
 end

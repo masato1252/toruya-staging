@@ -21,6 +21,10 @@ FactoryBot.define do
       level :manager
     end
 
+    trait :owner do
+      mapping_user { user }
+    end
+
     after(:create) do |staff, proxy|
       FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop, level: proxy.level)
       FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
