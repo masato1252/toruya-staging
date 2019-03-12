@@ -99,19 +99,24 @@ module ViewHelpers
     end
   end
 
-  def working_shop_options(include_user_own: false)
+  def working_shop_options(include_user_own: false, manager_above_level_required: false)
     @working_shop_options ||= {}
+    cache_key = "user-own-#{include_user_own}-manager-level-#{manager_above_level_required}"
 
-    return @working_shop_options[include_user_own] if @working_shop_options[include_user_own]
+    return @working_shop_options[cache_key] if @working_shop_options[cache_key]
 
-    @working_shop_options[include_user_own] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
+    @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
       staff.shop_staffs.includes(shop: :user).map do |shop_staff|
-        if include_user_own || shop_staff.shop.user != current_user
-          ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
+        shop = shop_staff.shop
+
+        if include_user_own || shop.user != current_user
+          next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
+
+          ::Option.new(shop: shop, shop_id: shop.id,
                        staff: staff, staff_id: shop_staff.staff_id,
-                       owner: shop_staff.shop.user,
+                       owner: shop.user,
                        shop_staff: shop_staff)
         end
       end
@@ -119,23 +124,7 @@ module ViewHelpers
   end
 
   def manage_shop_options(include_user_own: false)
-    @manage_shop_options ||= {}
-
-    return @manage_shop_options[include_user_own] if @manage_shop_options[include_user_own]
-
-    levels = %i(manager)
-    levels.push(:owner) if include_user_own
-
-    @manage_shop_options[include_user_own] = current_user.staff_accounts.active.where(level: levels).includes(:staff).map do |staff_account|
-      staff = staff_account.staff
-
-      staff.shop_staffs.includes(:shop).map do |shop_staff|
-        ::Option.new(shop: shop_staff.shop, shop_id: shop_staff.shop_id,
-                     staff: staff, staff_id: shop_staff.staff_id,
-                     owner: shop_staff.shop.user,
-                     shop_staff: shop_staff)
-      end
-    end.flatten.compact.sort_by { |option| option.shop_id }
+    working_shop_options(include_user_own: include_user_own, manager_above_level_required: true)
   end
 
   def owning_shop_options
