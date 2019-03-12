@@ -70,12 +70,6 @@ class Ability
     can :create, Staff
     can :delete, Staff
     can :manage, Profile
-    can :edit, Customer
-    can :edit, :customer_contact_info
-    can :swith_staffs_selector, User
-    can :manage, :filter
-    can :manage, :saved_filter
-    can :contact, Customer
     can :manage_staff_temporary_working_day_permission, ShopStaff
     can :manage_staff_holiday_permission, ShopStaff
 
@@ -83,7 +77,7 @@ class Ability
     when "premium"
     when "basic", "trial", "free"
       cannot :create, Staff
-      shop_permission
+      cannot :create, Shop if super_user.shops.exists?
     end
 
     manager_member_ability
@@ -226,10 +220,6 @@ class Ability
         can :read, :customers_dashboard
       end
     end
-  end
-
-  def shop_permission
-    cannot :create, Shop if super_user.shops.exists?
   end
 
   def reservation_daily_permission
