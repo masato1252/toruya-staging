@@ -179,6 +179,7 @@ Rails.application.routes.draw do
       get :edit_staff_for_admin
       get :new_staff_for_admin
       get :create_reservation
+      get :admin_upgrade_filter_modal
     end
   end
 

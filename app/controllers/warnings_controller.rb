@@ -22,11 +22,13 @@ class WarningsController < ApplicationController
 
   def new_staff_for_admin; end
 
+  def admin_upgrade_filter_modal;end
+
   def create_reservation
     @owner = User.find(params[:owner_id])
     @shop = Shop.find_by(id: params[:shop_id])
 
-    user_ability = ability(@owner)
+    user_ability = ability(@owner, @shop)
 
     view = if user_ability.cannot?(:create, :reservation_with_settings)
              "empty_reservation_setting_user_modal"
