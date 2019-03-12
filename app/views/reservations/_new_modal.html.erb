@@ -16,7 +16,7 @@
         <div class="modal-body">
           <div class="shops-list">
             <% working_shop_options(include_user_own: true).each do |option| %>
-              <% user_ability = ability(option.owner) %>
+              <% user_ability = ability(option.owner, option.shop) %>
               <div class="shop-cell">
                 <% if user_ability.can?(:create_reservation, option.shop) %>
                   <%= link_to_new_reservation(new_shop_reservation_path(option.shop, start_time_date_part: @date), option.shop.display_name)%>

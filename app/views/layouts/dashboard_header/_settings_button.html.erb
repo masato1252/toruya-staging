@@ -27,7 +27,7 @@
 
       <% working_shop_options.each do |option| %>
         <li>
-          <% if ability(option.owner).can?(:read_settings_dashboard, User) %>
+          <% if ability(option.owner, option.shop).can?(:read_settings_dashboard, User) %>
             <%= link_to option.shop.name, edit_settings_user_staff_path(option.owner, option.staff, shop_id: option.shop.id) %>
           <% else %>
             <%= modal_link_to(option.shop.name, read_settings_dashboard_for_staff_warnings_path(warning_shop_id: option.shop.id)) %>

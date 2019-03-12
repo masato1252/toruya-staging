@@ -60,15 +60,16 @@ module ViewHelpers
   end
 
   def current_ability
-    @current_ability ||= Ability.new(current_user, super_user)
+    @current_ability ||= Ability.new(current_user, super_user, shop)
   end
 
-  def ability(user)
+  def ability(user, at_shop)
     @abilities ||= {}
 
-    return @abilities[user.id] if @abilities[user.id]
+    cache_key = "user-#{user.id}-shop-#{at_shop&.id}"
+    return @abilities[cache_key] if @abilities[cache_key]
 
-    @abilities[user.id] = Ability.new(current_user, user)
+    @abilities[cache_key] = Ability.new(current_user, user, at_shop)
   end
 
   def is_owner

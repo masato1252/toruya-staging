@@ -13,8 +13,6 @@ class Customers::PrintingController < DashboardController
   end
 
   def create
-    authorize! :manage, :filter
-
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
     filtered_outcome = super_user.filtered_outcomes.create(params[:filtered_outcome].merge(query: query))
 
