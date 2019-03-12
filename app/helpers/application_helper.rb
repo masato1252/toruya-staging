@@ -42,12 +42,6 @@ module ApplicationHelper
     end
   end
 
-  def manager_only(&block)
-    if manager?
-      block.call
-    end
-  end
-
   def present(klass, *args)
     yield klass.new(*args)
   end
