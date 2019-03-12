@@ -535,5 +535,34 @@ RSpec.describe Ability do
         end
       end
     end
+
+    context "read customers_dashboard" do
+      context "user is admin level" do
+        it "returns true" do
+          expect(ability.can?(:read, :customers_dashboard)).to eq(true)
+        end
+      end
+
+      context "when super_user is premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+        let(:staff) { FactoryBot.create(:staff) }
+        let(:staff_account) { staff.staff_account }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        it "returns false" do
+          expect(ability.can?(:read, :customers_dashboard)).to eq(false)
+        end
+
+        context "when staff had contact groups" do
+          let(:staff) { FactoryBot.create(:staff, :with_contact_groups) }
+
+          it "returns true" do
+            expect(ability.can?(:read, :customers_dashboard)).to eq(true)
+          end
+        end
+      end
+    end
   end
 end

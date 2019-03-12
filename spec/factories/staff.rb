@@ -4,6 +4,7 @@ FactoryBot.define do
       shop { FactoryBot.create(:shop, user: user) }
       menus []
       mapping_user { FactoryBot.create(:user) }
+      mapping_contact_group { }
       level { :staff }
     end
 
@@ -25,11 +26,19 @@ FactoryBot.define do
       mapping_user { user }
     end
 
+    trait :with_contact_groups do
+      mapping_contact_group { FactoryBot.create(:contact_group, user: user) }
+    end
+
     after(:create) do |staff, proxy|
       FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop, level: proxy.level)
       FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
       Array(proxy.menus).each do |menu|
         FactoryBot.create(:staff_menu, menu: menu, staff: staff)
+      end
+
+      if proxy.mapping_contact_group
+        FactoryBot.create(:staff_contact_group_relation, staff: staff, contact_group: proxy.mapping_contact_group)
       end
     end
   end

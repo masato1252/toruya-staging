@@ -16,6 +16,8 @@ class Ability
       staff_member_ability
       staff_only_ability
     end
+
+    user_ability
   end
 
   def admin_level
@@ -128,17 +130,12 @@ class Ability
       shop.menus.exists?
     end
 
-    if super_user.premium_member? || admin?
-      can :manage_customers, User
-      can :read_settings_dashboard, User
-    end
-
     can :create, :reservation_with_settings
     can :create, :daily_reservations
     can :create, :total_reservations
     can :manage, :userself_holiday_permission
     can :edit, Staff do |staff|
-      if staff.user == super_user
+      if staff.user_id == super_user.id
         if super_user.premium_member?
           admin_level || manager_level || current_user_staff == staff
         elsif admin_level
@@ -216,6 +213,18 @@ class Ability
 
     can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
       current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+    end
+  end
+
+  # Not under a shop, could not determine user is manager/staff
+  def user_ability
+    if super_user.premium_member? || admin?
+      can :manage_customers, User
+      can :read_settings_dashboard, User
+
+      if admin? || current_user_staff.contact_groups.exists?
+        can :read, :customers_dashboard
+      end
     end
   end
 
