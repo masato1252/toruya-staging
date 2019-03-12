@@ -127,7 +127,6 @@ class Ability
     can :create, :reservation_with_settings
     can :create, :daily_reservations
     can :create, :total_reservations
-    can :manage, :userself_holiday_permission
     can :edit, Staff do |staff|
       if staff.user_id == super_user.id
         if super_user.premium_member?

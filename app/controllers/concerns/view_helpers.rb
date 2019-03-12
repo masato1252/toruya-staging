@@ -158,21 +158,6 @@ module ViewHelpers
     @member_shops_options ||= working_shop_options(include_user_own: true).find_all { |s| member_shop_ids.include?(s.shop_id.to_s) }
   end
 
-  # the shop options allow "user" to add holidays
-  def staffs_have_holiday_permission
-    return @staffs_have_holiday_permission if defined?(@staffs_have_holiday_permission)
-
-    @staffs_have_holiday_permission = []
-    owners = working_shop_owners(include_user_own: true)
-
-    owners.each do |owner|
-      if Ability.new(current_user, owner).can?(:manage, :userself_holiday_permission)
-        @staffs_have_holiday_permission << current_user.current_staff(owner)
-      end
-    end
-    @staffs_have_holiday_permission
-  end
-
   def basic_setting_presenter
     @basic_setting_presenter ||= BasicSettingsPresenter.new(view_context, current_user)
   end
