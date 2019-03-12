@@ -63,7 +63,7 @@ module ViewHelpers
     @current_ability ||= Ability.new(current_user, super_user, shop)
   end
 
-  def ability(user, at_shop)
+  def ability(user, at_shop = nil)
     @abilities ||= {}
 
     cache_key = "user-#{user.id}-shop-#{at_shop&.id}"

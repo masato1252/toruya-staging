@@ -1,7 +1,7 @@
 module Notifications
   class EmptyMenuShopPresenter < ::NotificationsPresenter
     def data(owner:, shop:, in_shop_dashboard: false)
-      ability = Ability.new(current_user, owner)
+      ability = Ability.new(current_user, owner, shop)
 
       # manager reqruied
       if ability.can?(:manage, Settings) && ability.cannot?(:create_shop_reservations_with_menu, shop)
