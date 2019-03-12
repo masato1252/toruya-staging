@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Staffs::Delete do
-  let(:staff) { FactoryBot.create(:staff, menus: FactoryBot.create(:menu)) }
+  let(:staff) { FactoryBot.create(:staff, :with_contact_groups, menus: FactoryBot.create(:menu)) }
   let(:args) do
     {
       staff: staff
@@ -36,6 +36,14 @@ RSpec.describe Staffs::Delete do
       outcome
 
       expect(staff.staff_menus).to be_empty
+    end
+
+    it "delete the relationships between staff and contact_groups" do
+      expect(staff.contact_groups).to be_present
+
+      outcome
+
+      expect(staff.contact_groups).to be_empty
     end
 
     it "sends the remind email to notify owner" do
