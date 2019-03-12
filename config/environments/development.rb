@@ -60,7 +60,7 @@ Rails.application.configure do
   # config.webpacker.check_yarn_integrity = true
   config.after_initialize do
     Bullet.enable = true
-    Bullet.alert = true
+    Bullet.add_footer = true
     Bullet.rails_logger = true
   end
 end
