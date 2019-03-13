@@ -37,7 +37,7 @@
     <% if !staff.staff_account.try(:owner?) %>
       <% if can? :manage, Settings %>
         <%
-          shop_staffs = staff.shop_staffs.to_a
+          shop_staffs = staff.shop_relations.to_a
           staff_full_time_busincess_schedules = staff.business_schedules.where(full_time: true).to_a
 
           staff_shop_options = shops.map do |shop|

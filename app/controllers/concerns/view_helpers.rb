@@ -43,7 +43,7 @@ module ViewHelpers
     @staffs = if admin?
                 super_user.staffs.active.order(:id)
               else
-                super_user.staffs.active.joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+                super_user.staffs.active.joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
               end
   end
 
@@ -108,16 +108,16 @@ module ViewHelpers
     @working_shop_options[cache_key] = current_user.staff_accounts.active.includes(:staff).map do |staff_account|
       staff = staff_account.staff
 
-      staff.shop_staffs.includes(shop: :user).map do |shop_staff|
-        shop = shop_staff.shop
+      staff.shop_relations.includes(shop: :user).map do |shop_relation|
+        shop = shop_relation.shop
 
         if include_user_own || shop.user != current_user
           next if manager_above_level_required && ability(shop.user, shop).cannot?(:manage, :management_stuffs)
 
           ::Option.new(shop: shop, shop_id: shop.id,
-                       staff: staff, staff_id: shop_staff.staff_id,
+                       staff: staff, staff_id: shop_relation.staff_id,
                        owner: shop.user,
-                       shop_staff: shop_staff)
+                       shop_staff: shop_relation)
         end
       end
     end.flatten.compact.sort_by { |option| option.shop_id }

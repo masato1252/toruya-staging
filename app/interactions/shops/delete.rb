@@ -12,7 +12,7 @@ module Shops
             compose(Menus::Delete, menu: menu) if menu.shop_ids.blank?
           end
 
-          shop.shop_staffs.destroy_all
+          shop.staff_relations.destroy_all
 
           unless user.shops.exists?
             user.reservation_settings.destroy_all

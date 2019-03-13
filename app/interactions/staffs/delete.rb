@@ -16,7 +16,7 @@ module Staffs
           NotificationMailer.staff_deleted(staff).deliver_later
         end
 
-        staff.shop_staffs.destroy_all
+        staff.shop_relations.destroy_all
         staff.staff_menus.destroy_all
         staff.contact_group_relations.destroy_all
       end

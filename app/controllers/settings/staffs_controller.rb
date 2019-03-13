@@ -8,7 +8,7 @@ class Settings::StaffsController < SettingsController
     @staffs = if admin?
                 Staff.where(user: super_user).undeleted.order(:id)
               else
-                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_staffs).where("shop_staffs.shop_id": shop.id)
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
               end
   end
 
@@ -49,7 +49,7 @@ class Settings::StaffsController < SettingsController
     StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
 
     params.permit![:shop_staff].each do |shop_id, attrs|
-      staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+      staff.shop_relations.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
     if staff_outcome.valid?
@@ -71,7 +71,7 @@ class Settings::StaffsController < SettingsController
     staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
 
     params.permit![:shop_staff].each do |shop_id, attrs|
-      @staff.shop_staffs.where(shop_id: shop_id).update(attrs.to_h)
+      @staff.shop_relations.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
     if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)

@@ -23,11 +23,11 @@ RSpec.describe Staffs::Delete do
     end
 
     it "delete the relationships between staff and shops" do
-      expect(staff.shop_staffs).to be_present
+      expect(staff.shop_relations).to be_present
 
       outcome
 
-      expect(staff.shop_staffs).to be_empty
+      expect(staff.shop_relations).to be_empty
     end
 
     it "delete the relationships between staff and menus" do

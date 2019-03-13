@@ -26,6 +26,7 @@ class Staff < ApplicationRecord
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, -> { active }, through: :staff_menus
+  has_many :shop_relations, class_name: "ShopStaff", dependent: :destroy
   has_many :shop_staffs, dependent: :destroy
   has_many :shops, -> { active }, through: :shop_staffs
   has_many :business_schedules, dependent: :destroy

@@ -174,33 +174,33 @@ class Ability
   def manager_only_ability
     # Only handle the staffs under the shops he can manage.
     can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
-      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_relations.where(shop_id: shop_staff.shop_id).exists?
     end
 
     can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
-      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_relations.where(shop_id: shop_staff.shop_id).exists?
     end
 
     can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
-      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_relations.where(shop_id: shop_staff.shop_id).exists?
     end
 
     can :manage_staff_holiday_permission, ShopStaff do |shop_staff|
-      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_staffs.where(shop_id: shop_staff.shop_id).exists?
+      shop_staff.staff_id == current_user_staff.id || current_user_staff.shop_relations.where(shop_id: shop_staff.shop_id).exists?
     end
   end
 
   def staff_only_ability
     can :manage_staff_full_time_permission, ShopStaff do |shop_staff|
-      current_user_staff.shop_staffs.where(staff_full_time_permission: true, shop_id: shop_staff.shop_id).exists?
+      current_user_staff.shop_relations.where(staff_full_time_permission: true, shop_id: shop_staff.shop_id).exists?
     end
 
     can :manage_staff_regular_working_day_permission, ShopStaff do |shop_staff|
-      current_user_staff.shop_staffs.where(staff_regular_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+      current_user_staff.shop_relations.where(staff_regular_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
     end
 
     can :manage_staff_temporary_working_day_permission, ShopStaff do |shop_staff|
-      current_user_staff.shop_staffs.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
+      current_user_staff.shop_relations.where(staff_temporary_working_day_permission: true, shop_id: shop_staff.shop_id).exists?
     end
   end
 

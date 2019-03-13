@@ -30,7 +30,7 @@ RSpec.describe FakesController do
           staff: staff,
           staff_id: staff.id,
           owner: super_user,
-          shop_staff: staff.shop_staffs.first
+          shop_staff: staff.shop_relations.first
         ).attrs
       )
     end
@@ -63,7 +63,7 @@ RSpec.describe FakesController do
             staff: current_user_staff_in_self_own_shop,
             staff_id: current_user_staff_in_self_own_shop.id,
             owner: current_user,
-            shop_staff: current_user_staff_in_self_own_shop.shop_staffs.first
+            shop_staff: current_user_staff_in_self_own_shop.shop_relations.first
           ).attrs
         )
       end
