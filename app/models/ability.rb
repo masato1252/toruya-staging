@@ -156,18 +156,6 @@ class Ability
     can :create_shop_reservations_with_menu, Shop do |shop|
       shop.menus.exists?
     end
-
-    case super_user.member_level
-    when "premium"
-      can :create, :daily_reservations
-      can :create, :total_reservations
-    when "trial"
-      reservation_daily_permission
-      reservation_total_permission
-    when "free", "basic"
-      reservation_daily_permission
-      reservation_total_permission
-    end
   end
 
   def manager_only_ability
@@ -228,6 +216,18 @@ class Ability
 
     if super_user.reservation_settings.exists?
       can :create, :reservation_with_settings
+    end
+
+    case super_user.member_level
+    when "premium"
+      can :create, :daily_reservations
+      can :create, :total_reservations
+    when "trial"
+      reservation_daily_permission
+      reservation_total_permission
+    when "free", "basic"
+      reservation_daily_permission
+      reservation_total_permission
     end
   end
 
