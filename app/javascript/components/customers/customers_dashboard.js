@@ -613,7 +613,7 @@ class CustomersDashboard extends React.Component {
           </dl>
         );
       }
-      else if (this.props.reservationCreatePermission) {
+      else if (this.props.reservationCreatePermission && this.props.shop) {
         return (
           <dl>
             <a
@@ -629,7 +629,7 @@ class CustomersDashboard extends React.Component {
           </dl>
         );
       }
-      else {
+      else if (this.props.shop) {
         return (
           <dl>
             <a data-controller="modal" data-modal-target="#dummyModal"

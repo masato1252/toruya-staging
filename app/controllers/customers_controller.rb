@@ -20,12 +20,11 @@ class CustomersController < DashboardController
       .contact_groups_scope(current_user_staff)
       .includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
-    @from_shop = shop || super_user.shops.first # avoid users don't come in from shop dashboard
-    if @from_shop
+    if shop
       @add_reservation_path = if params[:reservation_id].present?
-                                edit_shop_reservation_path(@from_shop, id: params[:reservation_id])
+                                edit_shop_reservation_path(shop, id: params[:reservation_id])
                               else
-                                new_shop_reservation_path(@from_shop)
+                                new_shop_reservation_path(shop)
                               end
     end
   end

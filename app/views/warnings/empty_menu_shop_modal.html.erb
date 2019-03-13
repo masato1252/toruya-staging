@@ -18,7 +18,7 @@
       <% end %>
     </div>
     <div class="modal-footer centerize">
-      <% if can?(:manage, Settings) %>
+      <% if can?(:manage, Settings) && @shop %>
         <%= link_to t("reservation.modal.admin.empty_menu_shop.button_text"),
           settings_user_menus_path(super_user, shop_id: @shop.id), class: "btn BTNyellow" %>
       <% else %>
