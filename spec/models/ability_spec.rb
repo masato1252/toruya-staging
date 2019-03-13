@@ -564,5 +564,65 @@ RSpec.describe Ability do
         end
       end
     end
+
+    context "read Customer" do
+      context "user is admin level" do
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+          it "returns true" do
+            expect(ability.can?(:read, customer)).to eq(true)
+          end
+        end
+
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer) }
+
+          it "returns false" do
+            expect(ability.can?(:read, customer)).to eq(false)
+          end
+        end
+      end
+
+      context "when user is staff/manager level" do
+        let(:staff) { FactoryBot.create(:staff, :with_contact_groups, level: :staff) }
+        let(:staff_account) { staff.staff_account }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        context "when super_user is premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+          context "when the user could read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+
+            it "returns true" do
+              expect(ability.can?(:read, customer)).to eq(true)
+            end
+          end
+
+          context "when the user could NOT read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+            it "returns false" do
+              expect(ability.can?(:read, customer)).to eq(false)
+            end
+          end
+        end
+
+        context "when super_user is NOT premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(false) }
+          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+
+          context "when the user could read the customer's group" do
+            it "returns false" do
+              customer = FactoryBot.create(:customer, user: current_user)
+
+              expect(ability.can?(:read, customer)).to eq(false)
+            end
+          end
+        end
+      end
+    end
   end
 end

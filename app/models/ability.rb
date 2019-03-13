@@ -90,7 +90,6 @@ class Ability
     can :edit, :customer_contact_info
     can :swith_staffs_selector, User
     can :manage, :management_stuffs
-    can :contact, Customer
 
     case super_user.member_level
     when "premium", "trial"
@@ -212,6 +211,12 @@ class Ability
 
       if admin? || current_user_staff.contact_group_relations.exists?
         can :read, :customers_dashboard
+      end
+
+      can :read, Customer do |customer|
+        if customer.user_id == super_user.id
+          admin? || current_user_staff.contact_group_relations.pluck(:contact_group_id).include?(customer.contact_group_id)
+        end
       end
     end
 

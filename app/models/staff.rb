@@ -34,6 +34,7 @@ class Staff < ApplicationRecord
   has_many :reservation_staffs
   has_many :reservations, through: :reservation_staffs
   has_many :contact_group_relations, class_name: "StaffContactGroupRelation", dependent: :destroy
+  has_many :contact_groups, through: :contact_group_relations
   has_one :staff_account, dependent: :destroy
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true

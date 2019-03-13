@@ -4,6 +4,7 @@ class CustomersController < DashboardController
   # GET /customers
   # GET /customers.json
   def index
+    authorize! :read, :customers_dashboard
     @body_class = "customer"
 
     @customers = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
@@ -23,6 +24,8 @@ class CustomersController < DashboardController
 
   def detail
     customer = super_user.customers.find(params[:id])
+    authorize! :read, customer
+
     @customer = if customer.google_contact_id
                   customer.build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: customer))
                 else
@@ -46,6 +49,8 @@ class CustomersController < DashboardController
   end
 
   def delete
+    authorize! :edit, Customer
+
     customer = super_user.customers.find(params[:id])
     outcome = Customers::Delete.run(customer: customer)
 
