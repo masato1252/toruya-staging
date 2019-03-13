@@ -34,7 +34,9 @@ RSpec.describe Subscriptions::ShopFeeCharge do
       expect(result.amount).to eq(Money.new(Plans::Fee::PER_SHOP_FEE, Money.default_currency.id))
       expect(result.details).to eq({
         "shop_ids" => shop.id,
-        "type" => SubscriptionCharge::TYPES[:shop_fee]
+        "type" => SubscriptionCharge::TYPES[:shop_fee],
+        "user_name" => user.name,
+        "user_email" => user.email,
       })
       expect(Payments::StoreStripeCustomer).to have_received(:run).with(user: subscription.user, authorize_token: authorize_token)
       expect(SubscriptionMailer).to have_received(:charge_shop_fee)

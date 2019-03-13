@@ -27,7 +27,11 @@ module Subscriptions
               shop_ids: user.shop_ids,
               shop_fee: fee.fractional,
               shop_fee_format: fee.format,
-              type: SubscriptionCharge::TYPES[:plan_subscruption]
+              type: SubscriptionCharge::TYPES[:plan_subscruption],
+              user_name: user.name,
+              user_email: user.email,
+              plan_amount: charging_plan.cost_with_currency.format,
+              plan_name: charging_plan.name
             }
             charge.save!
 

@@ -47,7 +47,11 @@ RSpec.describe Subscriptions::ManualCharge do
         "shop_ids" => user.shop_ids,
         "shop_fee" => fee.fractional,
         "shop_fee_format" => fee.format,
-        "type" => SubscriptionCharge::TYPES[:plan_subscruption]
+        "type" => SubscriptionCharge::TYPES[:plan_subscruption],
+        "user_name" => user.name,
+        "user_email" => user.email,
+        "plan_amount" => plan.cost_with_currency.format,
+        "plan_name" => plan.name
       })
     end
 

@@ -8,16 +8,21 @@ module Payments
 
       if stripe_customer_id
         # update customer a new card
-        Stripe::Customer.update(stripe_customer_id, {
-          source: authorize_token,
-        })
-        stripe_customer_id
-      else
-        stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email)
-        user.subscription.stripe_customer_id = stripe_customer.id
-        user.subscription.save
-        stripe_customer.id
+        begin
+          Stripe::Customer.update(stripe_customer_id, {
+            source: authorize_token,
+          })
+          return stripe_customer_id
+        rescue => e
+          Rollbar.error(e)
+          raise e if e.code != "resource_missing"
+        end
       end
+
+      stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email)
+      user.subscription.stripe_customer_id = stripe_customer.id
+      user.subscription.save
+      stripe_customer.id
     end
   end
 end
