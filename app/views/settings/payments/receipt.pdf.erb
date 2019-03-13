@@ -9,71 +9,87 @@
         <%= image_tag wicked_pdf_asset_base64("toruya_logo.png") %>
       </div>
       <div class="receipt-type"><%= @charge.completed? ? I18n.t("settings.subscription.receipt.label") : I18n.t("settings.subscription.receipt.refund.label") %></div>
-      <%= I18n.t("settings.subscription.receipt.desc") %>
+    </div>
+
+    <div class="charge-date"><%= I18n.t("settings.subscription.receipt.date") %> <%= l(@charge.charge_date) %></div>
+    <div class="transaction-id"><%= I18n.t("settings.subscription.receipt.transaction_id") %> <%= @charge.order_id %></div>
+    <div class="user-name"><%= @charge.details["user_name"] %> 様</div>
+
+    <div class="center">
+    <div class="plan-amount">
+      <% if @charge.refunded?%>
+        <span class="refund-amount-tip"><%= I18n.t("settings.subscription.receipt.refund.amount_tip") %> </span>
+      <% end %>
+        <%= @charge.amount.format %>
+      </div>
+      <div>
+        <%= raw I18n.t("settings.subscription.receipt.desc2_html") %>
+      </div>
+    </div>
+
+    <div class="company-info">
+      <div>株式会社KASAI　代表取締役 加藤るみ子</div>
+      <div>〒510-0069 三重県四日市市幸町９番４号</div>
+      <div>Tel 059-351-1385　FAX 052-400-2529</div>
+      <div>http://www.kasainc.co.jp　info@kasainc.co.jp</div>
     </div>
 
     <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            <%= I18n.t("settings.subscription.receipt.content") %>
+          </th>
+          <th class="price">
+            <%= I18n.t("settings.subscription.receipt.price") %>
+          </th>
+        </tr>
+      </thead>
       <tbody>
-        <tr>
-          <td><%= I18n.t("settings.subscription.receipt.date") %></td>
-          <td><%= l(@charge.charge_date) %></td>
-        </tr>
-        <tr>
-          <td><%= I18n.t("settings.subscription.receipt.transaction_id") %></td>
-          <td><%= @charge.order_id %></td>
-        </tr>
-        <tr>
-          <td><%= I18n.t("settings.subscription.receipt.account") %></td>
-          <td><%= @charge.user.email %></td>
-        </tr>
         <% if @charge.completed? %>
           <% if @charge.shop_fee? %>
             <tr>
               <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
               <td>1<%= I18n.t("settings.subscription.receipt.shop") %></td>
+              <td><%= @charge.amount.format %></td>
             </tr>
           <% else %>
             <tr>
               <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
-              <td><%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)</td>
+              <td>
+                <%= @charge.details["plan_name"] %>(<%= l(@charge.charge_date, format: :year_month_date) %> ~ <%= l(@charge.expired_date, format: :year_month_date) %>)
+              </td>
+              <td><%= @charge.details["plan_amount"] %></td>
             </tr>
             <% if @charge.with_shop_fee? %>
               <tr>
                 <td><%= I18n.t("settings.plans.payment.extra_shop") %></td>
                 <td><%= @charge.details["shop_ids"].length - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD %><%= I18n.t("settings.subscription.receipt.shop") %></td>
+                <td><%= @charge.details["shop_fee_format"] %></td>
               </tr>
             <% end %>
           <% end %>
-
-          <tr>
-            <td><%= I18n.t("settings.subscription.receipt.total") %></td>
-            <td><%= @charge.amount.format %></td>
-          </tr>
-        <% else %>
+        <% elsif @charge.refunded? %>
           <tr>
             <td><%= I18n.t("settings.subscription.receipt.plan") %></td>
             <td>
-              <%= @charge.plan.name %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)
+              <%= @charge.details["plan_name"] %>(<%= l(@charge.charge_date) %> ~ <%= l(@charge.expired_date) %>)
+            </td>
+            <td>
               <%= @charge.amount.format %>
             </td>
           </tr>
           <tr>
             <td><%= I18n.t("settings.subscription.receipt.refund.plan") %>: </td>
-            <td><%= @charge.plan.name %> クーリングオフ返金  -<%= @charge.amount.format %></td>
-          </tr>
-          <tr>
-            <td><%= I18n.t("settings.subscription.receipt.total") %></td>
-            <td>¥0</td>
+            <td><%= @charge.details["plan_name"] %> クーリングオフ返金</td>
+            <td><%= @charge.amount.format %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 
-  <div class="company-info">
-    <div>株式会社KASAI　代表取締役 加藤るみ子</div>
-    <div>〒510-0069 三重県四日市市幸町９番４号</div>
-    <div>Tel 059-351-1385　FAX 052-400-2529</div>
-    <div>http://www.kasainc.co.jp　info@kasainc.co.jp</div>
+  <div class="contact">
+    <%= raw I18n.t("settings.subscription.receipt.desc_html") %>
   </div>
 </div>

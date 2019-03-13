@@ -1,3 +1,4 @@
+# TODO: What is this receipt look like?
 module Subscriptions
   class ShopFeeCharge < ActiveInteraction::Base
     object :user
@@ -15,7 +16,9 @@ module Subscriptions
 
       charge.details = {
         shop_ids: shop.id,
-        type: SubscriptionCharge::TYPES[:shop_fee]
+        type: SubscriptionCharge::TYPES[:shop_fee],
+        user_name: user.name,
+        user_email: user.email
       }
       charge.save!
 

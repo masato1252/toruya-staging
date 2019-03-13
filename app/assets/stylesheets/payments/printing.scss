@@ -15,12 +15,69 @@
       font-size: 32px;
     }
 
+    .charge-date,
+    .transaction-id {
+      text-align: right;
+      padding: 3px;
+      font-size: 14px;
+    }
+
+    .center {
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+
+      .plan-amount {
+        margin: 24px;
+        padding: 24px;
+        font-size: 32px;
+        font-weight: bold;
+        background-color: #dddddd;
+        border: 1px solid #333333;
+        text-align: center;
+
+        .refund-amount-tip {
+          font-size: 12px;
+        }
+      }
+    }
+
+    .company-info {
+      float: right;
+      margin: 48px 0;
+      font-size: 14px;
+    }
+
     table {
       border-spacing: 0;
       border-collapse: collapse;
       width: 100%;
       max-width: 100%;
-      margin-top: 30px;
+
+      thead {
+        background-color: #dddddd;
+
+        th {
+          padding: 10px 0;
+        }
+
+        .price {
+          width: 60px;
+        }
+      }
+
+      tbody {
+        tr {
+          td:first-child {
+            width: 150px;
+          }
+
+          td:last-child {
+            text-align: right;
+          }
+        }
+      }
 
       td {
         padding: 10px 0;
@@ -29,7 +86,8 @@
     }
   }
 
-  .company-info {
-    margin-top: 168px;
+  .contact {
+    margin-top: 32px;
+    text-align: center;
   }
 }

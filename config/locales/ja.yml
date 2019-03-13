@@ -527,16 +527,20 @@ ja:
         expired: 期限切れ
       receipt:
         label: 領収書
-        desc: ご利用ありがとうございます。ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
+        desc_html: ご利用ありがとうございます。<br>ご質問・お問合せは、Toruyaマネージャーのお問合せフォームよりご連絡ください。
+        desc2_html: 但し　インターネットサービスToruya利用料として<br>上記正に領収いたしました 
         date: お支払日
         transaction_id: 取引ID
         account: ご利用アカウント
         plan: ご利用プラン
         total: お支払合計
         shop: 店舗
+        content: 内容
+        price: 金額
         refund:
           label: 返金明細書
           plan: 返金プラン
+          amount_tip: 返金合計
     plans:
       info_title: ご利用プラン
       info_title1: ご利用プランとお支払い情報

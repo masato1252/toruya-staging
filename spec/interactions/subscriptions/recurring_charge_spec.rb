@@ -54,12 +54,17 @@ RSpec.describe Subscriptions::RecurringCharge do
         expect(subscription.user.subscription_charges.last.expired_date).to eq(Date.new(2018, 2, 28))
         expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
 
-        fee = Plans::Fee.run!(user: user, plan: Plan.premium_level.take)
+        plan = Plan.premium_level.take
+        fee = Plans::Fee.run!(user: user, plan: plan)
         expect(charge.details).to eq({
           "shop_ids" => user.shop_ids,
           "shop_fee" => fee.fractional,
           "shop_fee_format" => fee.format,
-          "type" => SubscriptionCharge::TYPES[:plan_subscruption]
+          "type" => SubscriptionCharge::TYPES[:plan_subscruption],
+          "user_name" => user.name,
+          "user_email" => user.email,
+          "plan_amount" => plan.cost_with_currency.format,
+          "plan_name" => plan.name
         })
       end
 
