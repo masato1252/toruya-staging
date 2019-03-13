@@ -1,1 +1,1 @@
-json.customer customer_options([@customer])[0]
+json.customer customer_options([@customer], true)[0]

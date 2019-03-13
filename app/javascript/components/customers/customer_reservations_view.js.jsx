@@ -29,6 +29,8 @@ class CustomerReservationsView extends React.Component {
           dataType: "JSON"
         }).success(function(result) {
           _this.setState({ reservations: result["reservations"] });
+        }).fail(function() {
+          _this.setState({ reservations: [] });
         }).always(function() {
           _this.props.forceStopProcessing();
         });
@@ -98,7 +100,7 @@ class CustomerReservationsView extends React.Component {
 
           <div id="tabs" className="tabs">
             <a href="#" className="here">利用履歴</a>
-            {this.props.customerContactPermission && <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>}
+            {this.props.customerDetailsReadable && <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>}
           </div>
 
           <div id="resList" className="tabBody" style={{height: "425px"}}>

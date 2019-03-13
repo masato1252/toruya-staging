@@ -2,12 +2,16 @@ class Customers::ReservationsController < DashboardController
   before_action :set_customer, only: [:index, :state]
 
   def index
+    head :unprocessable_entity if cannot?(:read, @customer)
+
     @reservations = @customer.reservations
     .includes(:menu, :customers, :staffs, shop: :user)
     .order("reservations.start_time DESC")
   end
 
   def state
+    head :unprocessable_entity if cannot?(:read, @customer)
+
     reservation = @customer.reservations.find(params[:reservation_id])
 
     case params[:reservation_action]

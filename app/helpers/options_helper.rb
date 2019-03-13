@@ -67,7 +67,7 @@ module OptionsHelper
     h
   end
 
-  def customer_options(customers)
+  def customer_options(customers, details_permission_checking_required = false)
     return [] unless customers.present?
     customers.map do |c|
       React.camelize_props(c.attributes.merge(
@@ -89,7 +89,8 @@ module OptionsHelper
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
         display_address: c.display_address,
         google_down: c.google_down,
-        googleContactMissing: c.google_contact_missing
+        googleContactMissing: c.google_contact_missing,
+        details_readable: details_permission_checking_required && can?(:read_details, c)
       ))
     end
   end

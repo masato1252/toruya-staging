@@ -215,7 +215,13 @@ class Ability
 
       can :read, Customer do |customer|
         if customer.user_id == super_user.id
-          admin? || current_user_staff.contact_group_relations.pluck(:contact_group_id).include?(customer.contact_group_id)
+          admin? || current_user_staff.contact_group_relations.where(contact_group_id: customer.contact_group_id).exists?
+        end
+      end
+
+      can :read_details, Customer do |customer|
+        if customer.user_id == super_user.id
+          admin? || current_user_staff.contact_group_relations.find_by(contact_group_id: customer.contact_group_id)&.details_readable?
         end
       end
     end
