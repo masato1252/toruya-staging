@@ -25,7 +25,7 @@
           </span>
         <% end %>
       </li>
-      <% if working_shop_owners.present? %>
+      <% if working_shop_owners.present? && working_shop_owners.any? { |owner| ability(owner).can?(:read, :customers_dashboard) } %>
         <li class="divider"></li>
       <% end %>
 
