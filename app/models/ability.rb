@@ -210,7 +210,7 @@ class Ability
       can :manage_customers, User
       can :read_settings_dashboard, User
 
-      if admin? || current_user_staff.contact_groups.exists?
+      if admin? || current_user_staff.contact_group_relations.exists?
         can :read, :customers_dashboard
       end
     end

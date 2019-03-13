@@ -39,11 +39,11 @@ RSpec.describe Staffs::Delete do
     end
 
     it "delete the relationships between staff and contact_groups" do
-      expect(staff.contact_groups).to be_present
+      expect(staff.contact_group_relations).to be_present
 
       outcome
 
-      expect(staff.contact_groups).to be_empty
+      expect(staff.contact_group_relations).to be_empty
     end
 
     it "sends the remind email to notify owner" do
