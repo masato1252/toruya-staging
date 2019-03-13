@@ -38,6 +38,6 @@ class Customers::ReservationsController < DashboardController
   private
 
   def set_customer
-    @customer = super_user.customers.find(params[:id])
+    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
   end
 end

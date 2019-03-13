@@ -9,7 +9,7 @@
 #  staff_id   :integer          not null
 #  token      :string
 #  state      :integer          default("pending"), not null
-#  level      :integer          default("staff"), not null
+#  level      :integer          default("employee"), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

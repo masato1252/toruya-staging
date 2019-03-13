@@ -1805,6 +1805,13 @@ CREATE INDEX customer_names_on_phonetic_last_name_idx ON public.customers USING 
 
 
 --
+-- Name: customers_basic_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX customers_basic_index ON public.customers USING btree (user_id, contact_group_id, deleted_at);
+
+
+--
 -- Name: customers_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1865,34 +1872,6 @@ CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btre
 --
 
 CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
-
-
---
--- Name: index_customers_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_contact_group_id ON public.customers USING btree (contact_group_id);
-
-
---
--- Name: index_customers_on_rank_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_rank_id ON public.customers USING btree (rank_id);
-
-
---
--- Name: index_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_user_id ON public.customers USING btree (user_id);
-
-
---
--- Name: index_customers_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_user_id_and_deleted_at ON public.customers USING btree (user_id, deleted_at);
 
 
 --
@@ -2335,4 +2314,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190304143150'),
 ('20190307123116'),
 ('20190311165617'),
-('20190312140721');
+('20190312140721'),
+('20190313140955');
+
+

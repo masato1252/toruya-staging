@@ -29,11 +29,8 @@
 #  customer_names_on_last_name_idx            (last_name gin_trgm_ops)
 #  customer_names_on_phonetic_first_name_idx  (phonetic_first_name gin_trgm_ops)
 #  customer_names_on_phonetic_last_name_idx   (phonetic_last_name gin_trgm_ops)
+#  customers_basic_index                      (user_id,contact_group_id,deleted_at)
 #  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
-#  index_customers_on_contact_group_id        (contact_group_id)
-#  index_customers_on_rank_id                 (rank_id)
-#  index_customers_on_user_id                 (user_id)
-#  index_customers_on_user_id_and_deleted_at  (user_id,deleted_at)
 #  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
 #
 
@@ -55,6 +52,7 @@ class Customer < ApplicationRecord
 
   scope :jp_chars_order, -> { order('phonetic_last_name COLLATE "C" ASC') }
   scope :active, -> { where(deleted_at: nil) }
+  scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
 
   def with_google_contact
     if google_contact_id

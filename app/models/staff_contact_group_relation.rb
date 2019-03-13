@@ -5,7 +5,7 @@
 #  id                            :integer          not null, primary key
 #  staff_id                      :integer          not null
 #  contact_group_id              :integer          not null
-#  contact_group_read_permission :integer          default("reservation_only"), not null
+#  contact_group_read_permission :integer          default("reservations_only_readable"), not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #
