@@ -14,9 +14,8 @@ module OptionsHelper
     { label: menu.name, value: menu.id, availableSeat: menu.available_seat }
   end
 
-  def rank_options(ranks)
-    return unless ranks
-    ranks.map { |r| { label: r.name, value: r.id, key: r.key } }
+  def rank_options
+    super_user.ranks.order("id DESC").map { |r| { label: r.name, value: r.id, key: r.key } }
   end
 
   def menu_group_options(category_menus)

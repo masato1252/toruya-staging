@@ -28,8 +28,6 @@ class CustomersController < DashboardController
                                 new_shop_reservation_path(@from_shop)
                               end
     end
-    @contact_groups = super_user.contact_groups.connected
-    @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
   end
 
   def detail
