@@ -18,8 +18,8 @@
 
 class StaffContactGroupRelation < ApplicationRecord
   enum contact_group_read_permission: {
-    reservation_only: 0,
-    detail: 1
+    reservations_only_readable: 0,
+    details_readable: 1
   }
 
   belongs_to :staff
