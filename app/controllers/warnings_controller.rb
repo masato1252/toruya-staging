@@ -32,12 +32,15 @@ class WarningsController < ApplicationController
 
     view = if user_ability.cannot?(:create, :reservation_with_settings)
              "empty_reservation_setting_user_modal"
-           elsif user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
+           elsif @shop && user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
              "empty_menu_shop_modal"
            elsif user_ability.cannot?(:create, :daily_reservations)
              @owner == current_user ? "admin_upgrade_daily_reservations_limit_modal" : "staff_upgrade_daily_reservations_limit_modal"
            elsif user_ability.cannot?(:create, :total_reservations)
              @owner == current_user ? "admin_upgrade_total_reservations_limit_modal" : "staff_upgrade_total_reservations_limit_modal"
+           else
+             Rollbar.warning('Unexpected input', request: request, parameters: params)
+             "default_creation_reservation_warning"
            end
 
     render view
