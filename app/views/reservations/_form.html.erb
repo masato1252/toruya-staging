@@ -26,6 +26,7 @@
                       current_user_staff_id: current_user.current_staff(super_user).id.to_s,
                       downgradeFromPremium: shop.staffs.active.count > @staff_options.length,
                       isEditable: ability(reservation.shop.user, reservation.shop).can?(:edit, reservation),
+                      isCustomersReadable: ability(reservation.shop.user, reservation.shop).can?(:read, :customers_dashboard),
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),
                       shop_id: shop.id,
                       shop_name: shop.display_name,

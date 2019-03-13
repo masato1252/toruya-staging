@@ -803,10 +803,13 @@ class ReservationForm extends React.Component {
            <h2>
              <i className="fa fa-user-plus" aria-hidden="true"></i>
              顧客
-             <a onClick={this.handleCustomerAdd}
-               className={this._customerAddClass()}
-               id="addCustomer">{this._customerWording()}
-             </a>
+             {
+               this.props.isCustomersReadable &&
+                 <a onClick={this.handleCustomerAdd}
+                   className={this._customerAddClass()}
+                   id="addCustomer">{this._customerWording()}
+                 </a>
+             }
            </h2>
 
            <CommonCustomersList
