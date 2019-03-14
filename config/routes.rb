@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     resources :reservations, only: [:index]
     resources :printing, only: [:new, :create]
 
-    resources :users do
+    resources :users, only: [] do
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
@@ -67,7 +67,7 @@ Rails.application.routes.draw do
   end
 
   scope module: "reservations", as: "reservation", path: "reservation" do
-    resources :users do
+    resources :users, only: [] do
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
@@ -105,10 +105,10 @@ Rails.application.routes.draw do
         get :receipt
       end
     end
+    resource :profile, only: %i[show edit update]
 
     resources :users do
       get :dashboard, to: "dashboards#index", as: :dashboard
-      resource :profile, only: %i[show edit update]
       resources :staffs, except: [:show] do
         collection do
           get :resend_activation_email
