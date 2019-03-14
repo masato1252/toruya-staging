@@ -1,5 +1,5 @@
 <div id="subNav">
-  <h2><%= "#{Staff.model_name.human} −" unless working_time_under_shop_menu %>  勤務日時</h2>
+  <h2><%= "#{Staff.model_name.human} −" if params[:working_time_menu_scope] == "staff" %>  勤務日時</h2>
 </div>
 <div id="about">
   <p><%= t("settings.staff_working_time.info_1.working_schedules") %><br /><%= t("settings.staff_working_time.info_2") %></p>
@@ -13,19 +13,20 @@
       <li class="rowTTL"><%= t("settings.staff.name") %></li>
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
-    <% staffs.each do |staff| %>
+    <% @staffs.each do |staff| %>
       <dl>
         <dt>
+          <% staff_name = staff.name.presence || staff.staff_account.email || "スタッフ #{staff.id}" %>
           <% if can?(:edit, staff) %>
-            <%= link_to staff.name, working_schedules_settings_user_working_time_staff_path(super_user, staff) %>
+            <%= link_to staff_name, working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: params[:working_time_menu_scope]) %>
           <% else %>
-            <%= modal_link_to(staff.name, edit_staff_for_admin_warnings_path) %>
+            <%= modal_link_to(staff_name, edit_staff_for_admin_warnings_path) %>
           <% end %>
         </dt>
         <dd class="updateTime"><%= staff.updated_at.to_s(:date) %></dd>
         <dd class="function">
           <% if can?(:edit, staff) %>
-            <%= link_to t("action.edit"), working_schedules_settings_user_working_time_staff_path(super_user, staff), class: "BTNtarco" %>
+            <%= link_to t("action.edit"), working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: params[:working_time_menu_scope]), class: "BTNtarco" %>
           <% else %>
             <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
           <% end %>

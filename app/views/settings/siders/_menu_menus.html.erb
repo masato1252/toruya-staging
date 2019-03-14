@@ -1,0 +1,18 @@
+<dl class="menu">
+  <%= active_link_to content_tag(:span, t("settings.menu.info_title")), settings_user_menus_path(super_user),
+    active: [["settings/menus", "settings/categories"]],
+    wrap_tag: :dt,
+    class_active: "here" %>
+  <dd>
+    <ul>
+      <%= active_link_to t("settings.menu.info_title"), settings_user_menus_path(super_user),
+        active: [["settings/menus"]],
+        wrap_tag: :li,
+        class_active: "here" %>
+      <%= active_link_to t("settings.category.info_title"), settings_user_categories_path(super_user),
+        active: [["settings/categories"]],
+        wrap_tag: :li,
+        class_active: "here" %>
+    </ul>
+  </dd>
+</dl>

@@ -21,11 +21,11 @@
     <div class="contents">
       <%=
         if admin?
-          render "layouts/owner_settings_sider"
+          render "settings/siders/owner_settings_sider"
         elsif manager?
-          render "layouts/manager_settings_sider"
+          render "settings/siders/manager_settings_sider"
         else
-          render "layouts/settings_sider"
+          render "settings/siders/staff_sider"
         end
       %>
       <div id="content">

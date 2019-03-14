@@ -12,7 +12,7 @@ module ApplicationHelper
 
   def flash_messages(opts = {})
     flash.each do |msg_type, message|
-      if message.present?
+      if message.present? && BOOTSTRAP_FLASH_MSG.keys.include?(msg_type)
         concat(content_tag(:div, message, :class => "alert #{bootstrap_class_for(msg_type)} fade in") do
           concat content_tag(:button, 'x', :class => "close", :data => { :dismiss => 'alert' })
           concat message.html_safe

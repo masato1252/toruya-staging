@@ -3,10 +3,16 @@ class Settings::WorkingTime::StaffsController < SettingsController
   skip_before_action :authorize_manager_level_permission, only: [:working_schedules, :update]
 
   def index
+    @staffs = if admin?
+                Staff.where(user: super_user).undeleted.order(:id)
+              else
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
+              end
   end
 
   def working_schedules
     authorize! :edit, @staff
+    flash[:working_time_menu_scope] = params[:working_time_menu_scope]
 
     if admin?
       @full_time_permission = @regular_working_time_permission = @temporary_working_time_permission = true
@@ -61,7 +67,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
       if session[:settings_tour]
         redirect_to settings_user_reservation_settings_path(super_user)
       else
-        redirect_to settings_user_working_time_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
+        redirect_to settings_user_working_time_staffs_path(super_user, working_time_menu_scope: flash[:working_time_menu_scope]), notice: I18n.t("common.update_successfully_message")
       end
     else
       redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")

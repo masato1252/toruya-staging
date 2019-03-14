@@ -17,7 +17,11 @@
   <% if basic_setting_presenter.customers_management_enabled? %>
     <dl class="shop">
       <%= active_link_to content_tag(:span, "<i class='fa fa-calendar fa-2x'></i>&nbsp;予約管理".html_safe), settings_user_shops_path(super_user),
-        active: [["settings/shops", "settings/business_schedules", "settings/reservation_settings", working_time_under_shop_menu && "settings/working_time/staffs"]],
+        active: [[
+          "settings/shops",
+          "settings/business_schedules",
+          "settings/reservation_settings",
+          params[:working_time_menu_scope] == "shop" && "settings/working_time/staffs"]],
         wrap_tag: :dt,
         class_active: "here" %>
       <dd>
@@ -29,8 +33,8 @@
           <% end %>
 
           <% if basic_setting_presenter.business_hours_settings_completed? %>
-            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
-              active: /working_schedules/,
+            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, working_time_menu_scope: :shop),
+              active: /working_time_menu_scope=shop/,
               wrap_tag: :li,
               class_active: "here" %>
           <% end %>
@@ -43,47 +47,12 @@
     </dl>
 
     <% if basic_setting_presenter.reservation_settings_completed? %>
-      <dl class="menu">
-        <%= active_link_to content_tag(:span, t("settings.menu.info_title")), settings_user_menus_path(super_user),
-          active: [["settings/menus", "settings/categories"]],
-          wrap_tag: :dt,
-          class_active: "here" %>
-        <dd>
-          <ul>
-            <%= active_link_to t("settings.menu.info_title"), settings_user_menus_path(super_user),
-              active: [["settings/menus"]],
-              wrap_tag: :li,
-              class_active: "here" %>
-            <%= active_link_to t("settings.category.info_title"), settings_user_categories_path(super_user),
-              active: [["settings/categories"]],
-              wrap_tag: :li,
-              class_active: "here" %>
-          </ul>
-        </dd>
-      </dl>
+      <%= render "settings/siders/menu_menus" %>
     <% end %>
 
     <% if basic_setting_presenter.reservation_management_enabled? %>
-      <dl class="staff">
-        <%= active_link_to content_tag(:span, t("settings.staff.sider_label")), settings_user_staffs_path(super_user),
-          active: [["settings/staffs", !working_time_under_shop_menu && "settings/working_time/staffs"]],
-          wrap_tag: :dt,
-          class_active: "here" %>
-        <dd>
-          <ul>
-            <%= active_link_to t("settings.staff.info_title"), settings_user_staffs_path(super_user),
-              active: [["settings/staffs"]],
-              wrap_tag: :li,
-              class_active: "here" %>
-
-            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
-              active: /working_schedules/,
-              wrap_tag: :li,
-              class_active: "here" %>
-          </ul>
-         </dd>
-        </dl>
-      <% end %>
+      <%= render "settings/siders/staff_menus" %>
+    <% end %>
   <% end %>
 
   <dl>
