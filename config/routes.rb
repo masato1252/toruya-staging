@@ -107,7 +107,7 @@ Rails.application.routes.draw do
     end
     resource :profile, only: %i[show edit update]
 
-    resources :users do
+    resources :users, only: [] do
       get :dashboard, to: "dashboards#index", as: :dashboard
       resources :staffs, except: [:show] do
         collection do
