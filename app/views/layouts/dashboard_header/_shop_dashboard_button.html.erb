@@ -1,6 +1,6 @@
 <% if single_shop_option %>
   <dd>
-    <% if ability(single_shop.owner, single_shop_option.shop).can?(:read, :shop_dashboard) %>
+    <% if ability(single_shop_option.owner, single_shop_option.shop).can?(:read, :shop_dashboard) %>
       <%= active_link_to shop_reservations_path(single_shop_option.shop), active: [["reservations"], []], class_active: "here" do %>
         <i class="fa fa-home fa-4x" aria-hidden="true"></i>
         <% if in_personal_dashboard? %>

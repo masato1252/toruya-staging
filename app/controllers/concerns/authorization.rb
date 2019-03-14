@@ -25,7 +25,7 @@ module Authorization
       session[:current_super_user_id] = params[:user_id]
       session[:current_shop_id] = nil if super_user.shop_ids.exclude?(session[:current_shop_id].to_i)
     else
-      session[:current_super_user_id] = super_user&.id || current_user.id
+      session[:current_super_user_id] = current_user.id
       session[:current_shop_id] = nil if super_user.shop_ids.exclude?(session[:current_shop_id].to_i)
     end
   end
