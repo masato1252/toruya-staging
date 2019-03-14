@@ -250,20 +250,13 @@ class WorkingTimeStaffForm extends React.Component {
   };
 
   renderModeView = () => {
-    if (this.props.mode == "working_schedules") {
-      return (
-        <div>
-          <h3>勤務スタイル<strong>必須項目</strong></h3>
-          { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
-          { this.renderParTimeAndTemporaySchedules() }
-        </div>
-      )
-    }
-    else if (this.props.mode == "holiday_schedules") {
-      return (
-        this.props.holidayPermission ? this.renderHolidaySchedules() : null
-      )
-    }
+    return (
+      <div>
+        <h3>勤務スタイル<strong>必須項目</strong></h3>
+        { this.props.fullTimePermission ? this.renderFullTimeSchedules() : null }
+        { this.renderParTimeAndTemporaySchedules() }
+      </div>
+    )
   };
 
   render() {
@@ -272,7 +265,6 @@ class WorkingTimeStaffForm extends React.Component {
         <input name="utf8" type="hidden" value="✓" />
         <input type="hidden" name="_method" value="patch" />
         <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
-        <input type="hidden" name="mode" value={this.props.mode} />
         {this.renderModeView()}
 
         <ul id="footerav">

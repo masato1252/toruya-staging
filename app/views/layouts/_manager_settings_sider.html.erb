@@ -13,7 +13,7 @@
     <dd>
       <ul>
         <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
           active: /working_schedules/,
           wrap_tag: :li,
           class_active: "here" %>
@@ -53,7 +53,7 @@
           wrap_tag: :li,
           class_active: "here" %>
 
-        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
           active: /working_schedules/,
           wrap_tag: :li,
           class_active: "here" %>

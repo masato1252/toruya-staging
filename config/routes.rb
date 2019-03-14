@@ -130,7 +130,6 @@ Rails.application.routes.draw do
         resources :staffs, only: [:index, :update] do
           member do
             get :working_schedules
-            get :holiday_schedules
           end
         end
       end

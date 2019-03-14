@@ -29,7 +29,7 @@
           <% end %>
 
           <% if basic_setting_presenter.business_hours_settings_completed? %>
-            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
               active: /working_schedules/,
               wrap_tag: :li,
               class_active: "here" %>
@@ -76,7 +76,7 @@
               wrap_tag: :li,
               class_active: "here" %>
 
-            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, mode: "working_schedules"),
+            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user),
               active: /working_schedules/,
               wrap_tag: :li,
               class_active: "here" %>

@@ -453,10 +453,8 @@ ja:
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
-        holiday_schedules: 休暇
       info_1:
         working_schedules: 貴方の勤務日時を設定します。
-        holiday_schedules: 貴方の休暇を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       in_out_label: 出勤／休み
       start_label: 出勤予定

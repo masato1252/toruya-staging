@@ -1,13 +1,13 @@
 <div id="subNav">
-  <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.#{@mode}") %></h2>
+  <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.working_schedules") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.staff_working_time.info_1.#{@mode}") %><br /><%= t("settings.staff_working_time.info_2") %></p>
+  <p><%= t("settings.staff_working_time.info_1.working_schedules") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 <div id="settingForm">
   <% if @staff.shops.exists? %>
     <%= react_component("working_time/staff_form", {
-      mode: @mode,
+      mode: "working_schedules",
       timezone: Time.zone.tzinfo.identifier,
       staff: @staff,
       save_staff_path: settings_user_working_time_staff_path(super_user, @staff),
