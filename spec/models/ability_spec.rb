@@ -594,7 +594,7 @@ RSpec.describe Ability do
           before { allow(super_user).to receive(:premium_member?).and_return(true) }
 
           context "when the user could read the customer's group" do
-            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
 
             it "returns true" do
               expect(ability.can?(:read, customer)).to eq(true)
@@ -612,7 +612,7 @@ RSpec.describe Ability do
 
         context "when super_user is NOT premium member" do
           before { allow(super_user).to receive(:premium_member?).and_return(false) }
-          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
 
           context "when the user could read the customer's group" do
             it "returns false" do
@@ -654,7 +654,7 @@ RSpec.describe Ability do
           before { allow(super_user).to receive(:premium_member?).and_return(true) }
 
           context "when the user could read the customer's group" do
-            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
 
             context "when the read permission is reservations_only_readable" do
               it "returns false" do
@@ -684,7 +684,7 @@ RSpec.describe Ability do
 
         context "when super_user is NOT premium member" do
           before { allow(super_user).to receive(:premium_member?).and_return(false) }
-          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.contact_groups.first) }
+          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
 
           context "when the user could read the customer's group" do
             it "returns false" do

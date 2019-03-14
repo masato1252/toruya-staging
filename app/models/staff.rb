@@ -54,10 +54,10 @@ class Staff < ApplicationRecord
   end
 
   def readable_contact_groups
-    @contact_groups ||= staff_account.owner? ? super_user.contact_groups : contact_groups
+    @readable_contact_groups ||= staff_account.owner? ? user.contact_groups : contact_groups
   end
 
   def readable_contact_group_ids
-    @readable_contact_group_ids ||= staff_account.owner? ? user.contact_group_ids : contact_group_relations.pluck(:contact_group_id)
+    @readable_contact_group_ids ||= staff_account.owner? ? user.contact_group_ids.push(nil) : contact_group_relations.pluck(:contact_group_id)
   end
 end

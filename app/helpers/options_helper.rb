@@ -138,7 +138,7 @@ module OptionsHelper
   end
 
   def contact_group_options
-    default_options(current_user_staff.contact_groups.connected)
+    default_options(current_user_staff.readable_contact_groups.connected)
   end
 
   def filtered_outcome_options(filtered_outcomes)
