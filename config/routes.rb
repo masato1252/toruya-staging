@@ -113,6 +113,10 @@ Rails.application.routes.draw do
         collection do
           get :resend_activation_email
         end
+
+        member do
+          get "shop/:shop_id/edit", to: "staffs#edit", as: :edit_at_shop
+        end
       end
       resources :business_schedules, only: [:index]
       resources :menus, except: [:show] do
