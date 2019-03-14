@@ -6,11 +6,13 @@ module StaffAccounts
 
     hash :params do
       string :email, default: nil
+      string :level, default: "employee"
     end
 
     def execute
       staff_account = owner.owner_staff_accounts.find_or_initialize_by(staff: staff)
       staff_account.email = params[:email]
+      staff_account.level = params[:level]
 
       if staff_account.persisted?
         # owner level could not change
