@@ -458,8 +458,6 @@ class CustomersDashboard extends React.Component {
           customerReservationsPath={this.props.customerReservationsPath}
           switchProcessing={this.switchProcessing}
           forceStopProcessing={this.forceStopProcessing}
-          stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
-          editCustomerReservationsPath={this.props.editCustomerReservationsPath}
           recheckInBtn={this.props.recheckInBtn}
           checkInBtn={this.props.checkInBtn}
           checkOutBtn={this.props.checkOutBtn}

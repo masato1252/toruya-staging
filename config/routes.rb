@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   end
   post "member", to: "members#show"
 
-  resources :users do
+  resources :users, only: [] do
     resources :customers, only: [:index] do
       collection do
         get :filter
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resource :profile, only: %i[new create]
   end
 
-  resources :shops do
+  resources :shops, only: [] do
     resources :reservations do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
@@ -52,13 +52,7 @@ Rails.application.routes.draw do
   end
 
   scope module: "customers", as: "customer", path: "customer" do
-    resources :reservations, only: [:index] do
-      collection do
-        get :state
-        get :edit
-      end
-    end
-
+    resources :reservations, only: [:index]
     resources :printing, only: [:new, :create]
 
     resources :users do
@@ -113,6 +107,7 @@ Rails.application.routes.draw do
     end
 
     resources :users do
+      get :dashboard, to: "dashboards#index", as: :dashboard
       resource :profile, only: %i[show edit update]
       resources :staffs, except: [:show] do
         collection do
