@@ -288,10 +288,6 @@ class CustomersDashboard extends React.Component {
 
   handleNewReservation = (event) => {
     event.preventDefault();
-    if (!this.props.shop) {
-      $("#reservationCreationNoShopModal").modal("show");
-      return;
-    }
 
     window.location = `${this.props.addReservationPath}?customer_ids=${(this.state.selected_customer_id || "")}`;
   };
@@ -410,10 +406,6 @@ class CustomersDashboard extends React.Component {
   switchReservationMode = (event) => {
     event.preventDefault();
     if (this.state.processing) { return; }
-    if (!this.props.shop) {
-      $("#reservationManagementNoShopModal").modal("show");
-      return;
-    }
     if (this.state.customer.id) {
       if (this.state.customer.googleDown) {
         alert(this.props.googleDownMessage);
@@ -457,7 +449,7 @@ class CustomersDashboard extends React.Component {
   renderCustomerView = () => {
     var _this = this;
 
-    if (this.state.reservation_mode && this.props.shop) {
+    if (this.state.reservation_mode) {
       return (
         <CustomerReservationsView
           ref={(c) => this.CustomerReservationsView = c }
@@ -468,7 +460,6 @@ class CustomersDashboard extends React.Component {
           forceStopProcessing={this.forceStopProcessing}
           stateCustomerReservationsPath={this.props.stateCustomerReservationsPath}
           editCustomerReservationsPath={this.props.editCustomerReservationsPath}
-          shop={this.props.shop}
           recheckInBtn={this.props.recheckInBtn}
           checkInBtn={this.props.checkInBtn}
           checkOutBtn={this.props.checkOutBtn}

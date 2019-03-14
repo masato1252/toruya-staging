@@ -25,7 +25,7 @@ class CustomerReservationsView extends React.Component {
         $.ajax({
           type: "GET",
           url: _this.props.customerReservationsPath,
-          data: { id: _this.props.customer.id, shop_id: _this.props.shop.id},
+          data: { id: _this.props.customer.id, user_id: _this.props.customer.userId },
           dataType: "JSON"
         }).success(function(result) {
           _this.setState({ reservations: result["reservations"] });
