@@ -47,9 +47,13 @@ class Settings::ContactGroupsController < SettingsController
   end
 
   def destroy
-    Groups::Delete.run!(contact_group: @contact_group)
+    outcome = Groups::Delete.run(contact_group: @contact_group)
 
-    redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    if outcome.valid?
+      redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to settings_user_contact_groups_path(super_user)
+    end
   end
 
   def connections
