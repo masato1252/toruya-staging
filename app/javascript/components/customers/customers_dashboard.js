@@ -433,7 +433,7 @@ class CustomersDashboard extends React.Component {
     event.preventDefault();
     if (!this.state.printing_page_size) { return; }
 
-    var url = `${this.props.printingPath}?customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
+    var url = `${this.props.printingPath}?user_id=${this.state.customer.userId}&customer_id=${this.state.selected_customer_id}&page_size=${this.state.printing_page_size}`
     window.open(url, this.state.printing_page_size);
   };
 
