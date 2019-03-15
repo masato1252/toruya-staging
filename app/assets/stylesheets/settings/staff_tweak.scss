@@ -3,4 +3,14 @@
     margin-left: 6px;
     margin-right: 6px;
   }
+
+  dl.shop-permission {
+    dd {
+      display: inline-block !important;
+
+      &:first-child {
+        width: 20%;
+      }
+    }
+  }
 }

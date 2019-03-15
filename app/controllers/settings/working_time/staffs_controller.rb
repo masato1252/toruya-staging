@@ -6,7 +6,7 @@ class Settings::WorkingTime::StaffsController < SettingsController
     @staffs = if admin?
                 Staff.where(user: super_user).undeleted.order(:id)
               else
-                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id).order(:id)
               end
   end
 

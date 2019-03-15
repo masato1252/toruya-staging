@@ -8,7 +8,7 @@ class Settings::StaffsController < SettingsController
     @staffs = if admin?
                 Staff.where(user: super_user).undeleted.order(:id)
               else
-                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id)
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id).order("id")
               end
   end
 
@@ -75,13 +75,13 @@ class Settings::StaffsController < SettingsController
     end if params[:shop_staff]
 
     if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
-      if session[:empty_shop_before_setup_working_time] = true
+      if session[:empty_shop_before_setup_working_time]
         session[:empty_shop_before_setup_working_time] = nil
         redirect_to working_schedules_settings_user_working_time_staff_path(super_user, @staff)
         return
       end
 
-      if can?(:manage, Settings)
+      if ability(super_user, shop).can?(:manage, Settings)
         redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else
         redirect_to edit_settings_user_staff_path(super_user, @staff), notice: I18n.t("common.update_successfully_message")

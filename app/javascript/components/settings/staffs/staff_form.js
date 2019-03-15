@@ -10,12 +10,7 @@ class SettingsStaffFormfields extends React.Component {
   state = {
     staffShopOptions: this.props.staffShopOptions,
     shopInvisible: {},
-    staffAccountLevel: this.props.staffAccountLevel,
     staffAccountEmail: this.props.staffAccountEmail
-  };
-
-  swithStaffAccountLevel = (event) => {
-    this.setState({staffAccountLevel: event.target.value});
   };
 
   onHandleStaffChange = (event) => {
@@ -26,7 +21,7 @@ class SettingsStaffFormfields extends React.Component {
     return (
       this.state.staffShopOptions.map(function(option) {
         return (
-          <dl className="checkbox" key={`shop-${option.shop_id}`}>
+          <dl className="checkbox shop-permission" key={`shop-${option.shop_id}`}>
             <dd>
               <input
                 type="checkbox"
@@ -35,12 +30,44 @@ class SettingsStaffFormfields extends React.Component {
                 value={option.shop_id}
                 data-value={option.shop_id}
                 checked={option.work_here}
-                onChange={this.handleStaffWorkOption}
+                onChange={this.handleStaffWorkOption.bind(this, "shop")}
                 />
               <label htmlFor={`shop-${option.shop_id}`}>
                 {option.name}
               </label>
-            </dd>
+              </dd>
+              {
+                option.work_here && (
+                  <dd>
+                    <div className="BTNselect">
+                      <div>
+                        <input id={`accountCapability-shop-${option.shop_id}-1`}
+                          className="BTNselect"
+                          type="radio"
+                          defaultValue="staff"
+                          data-value={option.shop_id}
+                          checked={this.selectedStaffShopOption(option.shop_id)["level"] == "staff"}
+                          onChange={this.handleStaffWorkOption.bind(this, "staff")}
+                          name={`shop_staff[${option.shop_id}][level]`}
+                          />
+                        <label htmlFor={`accountCapability-shop-${option.shop_id}-1`}><span>{this.props.staffAccountStaffLevelLabel}</span></label>
+                      </div>
+                      <div>
+                        <input id={`accountCapability-shop-${option.shop_id}-2`}
+                          className="BTNselect"
+                          type="radio"
+                          defaultValue="manager"
+                          data-value={option.shop_id}
+                          checked={this.selectedStaffShopOption(option.shop_id)["level"] == "manager"}
+                          onChange={this.handleStaffWorkOption.bind(this, "manager")}
+                          name={`shop_staff[${option.shop_id}][level]`}
+                          />
+                        <label htmlFor={`accountCapability-shop-${option.shop_id}-2`}><span>{this.props.staffAccountManagerLevelLabel}</span></label>
+                      </div>
+                    </div>
+                  </dd>
+                )
+              }
           </dl>
         )
       }.bind(this))
@@ -59,11 +86,19 @@ class SettingsStaffFormfields extends React.Component {
     })
   };
 
-  handleStaffWorkOption = (event) => {
-    var matchedOption = this.selectedStaffShopOption(event.target.dataset.value)
-    matchedOption.work_here = !matchedOption.work_here;
+  handleStaffWorkOption = (type, event) => {
+    let _this = this;
+    let matchedOption = this.selectedStaffShopOption(event.target.dataset.value);
 
-    this.setState({staffShopOptions: this.state.staffShopOptions});
+    switch(type) {
+      case "shop":
+        matchedOption.work_here = !matchedOption.work_here;
+        break;
+      default :
+        matchedOption.level = type;
+    }
+
+    this.setState({staffShopOptions: this.state.staffShopOptions.slice(0)});
   };
 
   toggleStaffShopView = (shopId) => {
@@ -79,6 +114,8 @@ class SettingsStaffFormfields extends React.Component {
 
   renderStaffSchedulePermission = () => {
     var view = this.workingShopOptions().map(function(option) {
+        if (option.level == "manager") { return; }
+
         return (
           <div key={`working-shop-option-${option.shop_id}`}>
             <dl className="formTTL" onClick={this.toggleStaffShopView.bind(this, `staff_shop_settings_${option.shop_id}`)}>
@@ -157,7 +194,7 @@ class SettingsStaffFormfields extends React.Component {
       url.search = new URLSearchParams({
         id: this.props.staffId,
         email: this.state.staffAccountEmail,
-        level: this.state.staffAccountLevel,
+        level: this.props.staffAccountLevel,
       });
 
       const response = await fetch(url, {
@@ -212,35 +249,6 @@ class SettingsStaffFormfields extends React.Component {
                 }
             </dd>
           </dl>
-          <dl>
-            <dt>{this.props.staffAccountCapabilityLabel}</dt>
-            <dd>
-              <div className="BTNselect">
-                <div>
-                  <input id="accountCapability1"
-                    className="BTNselect"
-                    type="radio"
-                    defaultValue="staff"
-                    name="staff_account[level]"
-                    checked={this.state.staffAccountLevel == "staff"}
-                    onChange={this.swithStaffAccountLevel}
-                    />
-                  <label htmlFor="accountCapability1"><span>{this.props.staffAccountStaffLevelLabel}</span></label>
-                </div>
-                <div>
-                  <input id="accountCapability2"
-                    className="BTNselect"
-                    type="radio"
-                    defaultValue="manager"
-                    name="staff_account[level]"
-                    checked={this.state.staffAccountLevel == "manager"}
-                    onChange={this.swithStaffAccountLevel}
-                    />
-                  <label htmlFor="accountCapability2"><span>{this.props.staffAccountManagerLevelLabel}</span></label>
-                </div>
-              </div>
-            </dd>
-          </dl>
         </div>
         {!this.props.staffAccountIsPending && (
           <div>
@@ -249,16 +257,18 @@ class SettingsStaffFormfields extends React.Component {
               <input type="hidden" name="staff[shop_ids][]" value="" />
               {this.renderWorkShops()}
             </div>
-            {this.state.staffAccountLevel == "staff" && (
-              <div>
-                {this.workingShopOptions().length ? <h3>{this.props.workingSettingTitle}</h3> : null}
-                {this.workingShopOptions().length ? (
+            <div>
+              {
+                _.any(this.workingShopOptions().map((option) => option.level == "staff" )) && <h3>{this.props.workingSettingTitle}</h3>
+              }
+              {
+                _.any(this.workingShopOptions().map((option) => option.level == "staff" )) && (
                   <div className="formRow">
                     {this.renderStaffSchedulePermission()}
                   </div>
-                ) : null}
-              </div>
-            )}
+                )
+              }
+            </div>
           </div>
         )}
       </div>
