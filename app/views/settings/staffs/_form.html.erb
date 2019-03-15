@@ -59,6 +59,17 @@
               )
             )
           end
+
+          group_options = super_user.contact_groups.connected.map do |contact_group|
+            contact_group_relation = staff.contact_group_relations.find { |contact_group_relation| contact_group_relation.contact_group_id == contact_group.id }
+
+            Option.new(
+              contact_group_id: contact_group.id,
+              name: contact_group.name,
+              readable: contact_group_relation.present?,
+              permission: contact_group_relation ? contact_group_relation.contact_group_read_permission : "reservations_only_readable"
+            )
+          end
         %>
 
         <%= react_component "settings/staffs/staff_form", {
@@ -66,6 +77,7 @@
           is_staff_persisted: !staff.new_record?,
           staffId: staff.id,
           staff_shop_options: staff_shop_options,
+          contact_group_options: group_options,
           resendStaffActivationEmailUrl: resend_activation_email_settings_user_staffs_url(super_user),
           staff_account_title: t("settings.staff_account.info_title"),
           staff_account_email_label: t("settings.staff_account.email"),

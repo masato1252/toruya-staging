@@ -11,6 +11,7 @@ module Staffs
       string :phonetic_last_name, default: nil
       boolean :staff_holiday_permission, default: false
       array :shop_ids, default: nil
+      array :contact_group_ids, default: nil
     end
 
     def execute

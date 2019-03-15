@@ -9,6 +9,7 @@ import ProcessingBar from "../../shared/processing_bar.js";
 class SettingsStaffFormfields extends React.Component {
   state = {
     staffShopOptions: this.props.staffShopOptions,
+    contactGroupOptions: this.props.contactGroupOptions,
     shopInvisible: {},
     staffAccountEmail: this.props.staffAccountEmail
   };
@@ -218,6 +219,84 @@ class SettingsStaffFormfields extends React.Component {
     }
   };
 
+  renderContactGroups = () => {
+    return (
+      this.state.contactGroupOptions.map(function(option) {
+        return (
+          <dl className="checkbox contact-group-permission" key={`group-${option.contact_group_id}`}>
+            <dd>
+              <input
+                type="checkbox"
+                id={`group-${option.contact_group_id}`}
+                name="staff[contact_group_ids][]"
+                value={option.contact_group_id}
+                data-value={option.contact_group_id}
+                checked={option.readable}
+                onChange={this.handleGroupReadableOption.bind(this, "group")}
+                />
+              <label htmlFor={`group-${option.contact_group_id}`}>
+                {option.name}
+              </label>
+              </dd>
+              {
+                option.readable && (
+                  <dd>
+                    <div className="BTNselect">
+                      <div>
+                        <input id={`accountCapability-group-${option.contact_group_id}-1`}
+                          className="BTNselect"
+                          type="radio"
+                          defaultValue="reservations_only_readable"
+                          data-value={option.contact_group_id}
+                          checked={this.selectedContactGroupOption(option.contact_group_id)["permission"] == "reservations_only_readable"}
+                          onChange={this.handleGroupReadableOption.bind(this, "reservations_only_readable")}
+                          name={`contact_groups[${option.contact_group_id}][contact_group_read_permission]`}
+                          />
+                        <label htmlFor={`accountCapability-group-${option.contact_group_id}-1`}><span>{this.props.staffAccountStaffLevelLabel}利用履歴のみ</span></label>
+                      </div>
+                      <div>
+                        <input id={`accountCapability-group-${option.contact_group_id}-2`}
+                          className="BTNselect"
+                          type="radio"
+                          defaultValue="details_readable"
+                          data-value={option.contact_group_id}
+                          checked={this.selectedContactGroupOption(option.contact_group_id)["permission"] == "details_readable"}
+                          onChange={this.handleGroupReadableOption.bind(this, "details_readable")}
+                          name={`contact_groups[${option.contact_group_id}][contact_group_read_permission]`}
+                          />
+                        <label htmlFor={`accountCapability-group-${option.contact_group_id}-2`}><span>{this.props.staffAccountStaffLevelLabel}全情報</span></label>
+                      </div>
+                    </div>
+                  </dd>
+                )
+              }
+          </dl>
+        )
+      }.bind(this))
+    );
+  };
+
+  handleGroupReadableOption = (type, event) => {
+    let _this = this;
+    let matchedOption = this.selectedContactGroupOption(event.target.dataset.value);
+
+    switch(type) {
+      case "group":
+        matchedOption.readable = !matchedOption.readable;
+        break;
+      default :
+        matchedOption.permission = type;
+    }
+
+    this.setState({contactGroupOptions: this.state.contactGroupOptions.slice(0)});
+  };
+
+  selectedContactGroupOption = (group_id) => {
+    return _.find(this.state.contactGroupOptions, function(option) {
+      return option.contact_group_id == group_id
+    });
+  };
+
   render() {
     return (
       <div>
@@ -250,6 +329,7 @@ class SettingsStaffFormfields extends React.Component {
             </dd>
           </dl>
         </div>
+
         {!this.props.staffAccountIsPending && (
           <div>
             <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
@@ -268,6 +348,16 @@ class SettingsStaffFormfields extends React.Component {
                   </div>
                 )
               }
+            </div>
+          </div>
+        )}
+
+        {!this.props.staffAccountIsPending && (
+          <div>
+            <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
+            <div id="belong" className="formRow">
+              <input type="hidden" name="staff[contact_group_ids][]" value="" />
+              {this.renderContactGroups()}
             </div>
           </div>
         )}

@@ -74,6 +74,10 @@ class Settings::StaffsController < SettingsController
       @staff.shop_relations.where(shop_id: shop_id).update(attrs.to_h)
     end if params[:shop_staff]
 
+    params.permit![:contact_groups].each do |group_id, attrs|
+      @staff.contact_group_relations.where(contact_group_id: group_id).update(attrs.to_h)
+    end if params[:contact_groups]
+
     if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
       if session[:empty_shop_before_setup_working_time]
         session[:empty_shop_before_setup_working_time] = nil
