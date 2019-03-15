@@ -75,6 +75,12 @@ class Settings::StaffsController < SettingsController
     end if params[:shop_staff]
 
     if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
+      if session[:empty_shop_before_setup_working_time] = true
+        session[:empty_shop_before_setup_working_time] = nil
+        redirect_to working_schedules_settings_user_working_time_staff_path(super_user, @staff)
+        return
+      end
+
       if can?(:manage, Settings)
         redirect_to settings_user_staffs_path(super_user), notice: I18n.t("common.update_successfully_message")
       else

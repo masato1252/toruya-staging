@@ -19,6 +19,12 @@ class Settings::WorkingTime::StaffsController < SettingsController
 
       @shops = @staff.shops.order("id")
 
+      if @shops.empty?
+        session[:empty_shop_before_setup_working_time] = true
+        redirect_to edit_settings_user_staff_path(super_user, @staff)
+        return
+      end
+
       @full_time_schedules = @staff.business_schedules.full_time
       @wdays_business_schedules_by_shop = @staff.business_schedules.part_time.order(:day_of_week).group_by(&:shop_id)
       @opened_custom_schedules_by_shop = @staff.custom_schedules.future.opened.order(:start_time).group_by(&:shop_id)
