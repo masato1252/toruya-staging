@@ -276,7 +276,7 @@ GEM
     multipart-post (2.0.0)
     newrelic_rpm (3.18.1.330)
     nio4r (2.3.0)
-    nokogiri (1.8.2)
+    nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     oauth2 (1.4.1)
       faraday (>= 0.8, < 0.16.0)
@@ -492,7 +492,7 @@ DEPENDENCIES
   lograge (~> 0.6.0)
   money-rails (~> 1.11.0)
   newrelic_rpm (~> 3.18.0)
-  nokogiri (~> 1.8.1)
+  nokogiri (>= 1.8.5)
   omniauth-google-oauth2
   paper_trail (~> 9.2.0)
   pg (~> 0.21.0)
