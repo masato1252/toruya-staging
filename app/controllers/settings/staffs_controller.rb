@@ -22,7 +22,7 @@ class Settings::StaffsController < SettingsController
     authorize! :create, Staff
 
     @staff = super_user.staffs.new
-    @staff_account = staff.build_staff_account(owner: super_user, level: :staff)
+    @staff_account = staff.build_staff_account(owner: super_user, level: :employee)
   end
 
   # GET /staffs/1/edit

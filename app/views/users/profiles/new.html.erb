@@ -9,8 +9,6 @@
 
     <div id="settingForm">
       <%= form_for(@profile, url: profile_path) do |f| %>
-        <%= hidden_field_tag :from_staff_account, params[:from_staff_account] %>
-
         <%= render "settings/form_errors", object: @profile %>
 
         <h3>管理者情報<strong>必須項目</strong></h3>
