@@ -50,7 +50,7 @@
   info_printing_page_size_options: [{ label: "A4", value: "a4"}],
   address_printing_type: FilteredOutcome::OUTCOME_TYPES.first,
   info_printing_type: FilteredOutcome::OUTCOME_TYPES.second,
-  printing_path: customer_printing_index_path(format: :pdf),
+  printing_path: customer_user_printing_index_path(super_user, format: :pdf),
   filter_path: customer_user_filter_index_path(super_user),
   save_filter_path: customer_user_saved_filters_path(super_user),
   fetch_filter_path: fetch_customer_user_saved_filters_path(super_user),

@@ -52,10 +52,9 @@ Rails.application.routes.draw do
   end
 
   scope module: "customers", as: "customer", path: "customer" do
-    resources :reservations, only: [:index]
-    resources :printing, only: [:new, :create]
-
     resources :users, only: [] do
+      resources :printing, only: [:new, :create]
+      resources :reservations, only: [:index]
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
