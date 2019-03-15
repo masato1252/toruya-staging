@@ -6,7 +6,7 @@ class Settings::StaffsController < SettingsController
   # GET /staffs.json
   def index
     @staffs = if admin?
-                Staff.where(user: super_user).undeleted.order(:id)
+                Staff.where(user: super_user).undeleted.includes(:staff_account).order(:id)
               else
                 Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id).order("id")
               end
@@ -64,21 +64,22 @@ class Settings::StaffsController < SettingsController
   def update
     authorize! :edit, @staff
 
-    outcome = Staffs::Update.run(is_manager: manager?,
-                                 staff: @staff,
-                                 attrs: params[:staff]&.permit!&.to_h)
+    manager_level = if admin?
+      "admin"
+    elsif manager?
+      "manager"
+    end
 
-    staff_account_outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, params: params[:staff_account].permit!.to_h) if params[:staff_account]
+    outcome = Staffs::Update.run(
+      manager_level: manager_level,
+      staff: @staff,
+      attrs: params[:staff]&.permit!&.to_h,
+      staff_account_attributes: params[:staff_account]&.permit!&.to_h,
+      shop_staff_attributes: params[:shop_staff]&.permit!&.to_h,
+      contact_group_attributes: params[:contact_groups]&.permit!&.to_h,
+    )
 
-    params.permit![:shop_staff].each do |shop_id, attrs|
-      @staff.shop_relations.where(shop_id: shop_id).update(attrs.to_h)
-    end if params[:shop_staff]
-
-    params.permit![:contact_groups].each do |group_id, attrs|
-      @staff.contact_group_relations.where(contact_group_id: group_id).update(attrs.to_h)
-    end if params[:contact_groups]
-
-    if outcome.valid? && (staff_account_outcome ? staff_account_outcome.valid? : true)
+    if outcome.valid?
       if session[:empty_shop_before_setup_working_time]
         session[:empty_shop_before_setup_working_time] = nil
         redirect_to working_schedules_settings_user_working_time_staff_path(super_user, @staff)
@@ -91,7 +92,7 @@ class Settings::StaffsController < SettingsController
         redirect_to edit_settings_user_staff_path(super_user, @staff), notice: I18n.t("common.update_successfully_message")
       end
     else
-      redirect_to edit_settings_user_staff_path(super_user, @staff), alert: outcome.errors.full_messages.first || staff_account_outcome.errors.full_messages.first
+      redirect_to edit_settings_user_staff_path(super_user, @staff), alert: outcome.errors.full_messages.first
     end
   end
 

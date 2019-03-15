@@ -60,21 +60,23 @@
             )
           end
 
-          group_options = super_user.contact_groups.connected.map do |contact_group|
-            contact_group_relation = staff.contact_group_relations.find { |contact_group_relation| contact_group_relation.contact_group_id == contact_group.id }
+          if admin?
+            group_options = super_user.contact_groups.connected.map do |contact_group|
+              contact_group_relation = staff.contact_group_relations.find { |contact_group_relation| contact_group_relation.contact_group_id == contact_group.id }
 
-            Option.new(
-              contact_group_id: contact_group.id,
-              name: contact_group.name,
-              readable: contact_group_relation.present?,
-              permission: contact_group_relation ? contact_group_relation.contact_group_read_permission : "reservations_only_readable"
-            )
+              Option.new(
+                contact_group_id: contact_group.id,
+                name: contact_group.name,
+                readable: contact_group_relation.present?,
+                permission: contact_group_relation ? contact_group_relation.contact_group_read_permission : "reservations_only_readable"
+              )
+            end
           end
         %>
 
         <%= react_component "settings/staffs/staff_form", {
-          shopLabel: t("settings.staff.shop_label"),
           is_staff_persisted: !staff.new_record?,
+          isAdmin: admin?,
           staffId: staff.id,
           staff_shop_options: staff_shop_options,
           contact_group_options: group_options,
@@ -88,16 +90,18 @@
           staff_account_capability_label: t("settings.staff_account.capability"),
           staff_account_staff_level_label: t("settings.staff_account.staff_capability"),
           staff_account_manager_level_label: t("settings.staff_account.manager_capability"),
-          staff_holiday_permission: staff.staff_holiday_permission,
           working_setting_title: t("settings.staff_working_time.setting_title"),
           holiday_setting_title: t("settings.staff_holiday_time.setting_title"),
           full_time_permission: t("settings.staff_working_time.full_time_permission"),
           regular_working_time_permission: t("settings.staff_working_time.regular_working_time_permission"),
           temporary_working_time_permission: t("settings.staff_working_time.temporary_working_time_permission"),
-          holiday_permission_label: t("settings.staff_holiday_time.holiday_permission"),
           staff_account_gmail_hint: t("settings.staff_account.gmail_hint"),
           pending_state: t("common.pending"),
-          resendActivationEmailBtnLabel: t("settings.staff_account.resend_email")
+          resendActivationEmailBtnLabel: t("settings.staff_account.resend_email"),
+          shopLabel: t("settings.staff.shop_label"),
+          contactGroupsLabel: t("settings.staff.contact_groups_label"),
+          groupReservationsOnlyReadableLabel: t("settings.staff.group_reservations_only_readable_label"),
+          groupDetailsReadableLabel: t("settings.staff.group_details_readable_label"),
         } %>
       <% end %>
     <% end %>

@@ -51,7 +51,7 @@ class SettingsStaffFormfields extends React.Component {
                           onChange={this.handleStaffWorkOption.bind(this, "staff")}
                           name={`shop_staff[${option.shop_id}][level]`}
                           />
-                        <label htmlFor={`accountCapability-shop-${option.shop_id}-1`}><span>{this.props.staffAccountStaffLevelLabel}</span></label>
+                        <label className="radio-label" htmlFor={`accountCapability-shop-${option.shop_id}-1`}><span>{this.props.staffAccountStaffLevelLabel}</span></label>
                       </div>
                       <div>
                         <input id={`accountCapability-shop-${option.shop_id}-2`}
@@ -63,7 +63,7 @@ class SettingsStaffFormfields extends React.Component {
                           onChange={this.handleStaffWorkOption.bind(this, "manager")}
                           name={`shop_staff[${option.shop_id}][level]`}
                           />
-                        <label htmlFor={`accountCapability-shop-${option.shop_id}-2`}><span>{this.props.staffAccountManagerLevelLabel}</span></label>
+                        <label className="radio-label" htmlFor={`accountCapability-shop-${option.shop_id}-2`}><span>{this.props.staffAccountManagerLevelLabel}</span></label>
                       </div>
                     </div>
                   </dd>
@@ -252,7 +252,7 @@ class SettingsStaffFormfields extends React.Component {
                           onChange={this.handleGroupReadableOption.bind(this, "reservations_only_readable")}
                           name={`contact_groups[${option.contact_group_id}][contact_group_read_permission]`}
                           />
-                        <label htmlFor={`accountCapability-group-${option.contact_group_id}-1`}><span>{this.props.staffAccountStaffLevelLabel}利用履歴のみ</span></label>
+                        <label className="radio-label" htmlFor={`accountCapability-group-${option.contact_group_id}-1`}><span>{this.props.groupReservationsOnlyReadableLabel}</span></label>
                       </div>
                       <div>
                         <input id={`accountCapability-group-${option.contact_group_id}-2`}
@@ -264,7 +264,7 @@ class SettingsStaffFormfields extends React.Component {
                           onChange={this.handleGroupReadableOption.bind(this, "details_readable")}
                           name={`contact_groups[${option.contact_group_id}][contact_group_read_permission]`}
                           />
-                        <label htmlFor={`accountCapability-group-${option.contact_group_id}-2`}><span>{this.props.staffAccountStaffLevelLabel}全情報</span></label>
+                        <label className="radio-label" htmlFor={`accountCapability-group-${option.contact_group_id}-2`}><span>{this.props.groupDetailsReadableLabel}</span></label>
                       </div>
                     </div>
                   </dd>
@@ -352,9 +352,9 @@ class SettingsStaffFormfields extends React.Component {
           </div>
         )}
 
-        {!this.props.staffAccountIsPending && (
+        {!this.props.staffAccountIsPending && this.props.isAdmin &&(
           <div>
-            <h3>{this.props.shopLabel}<strong>必須項目</strong></h3>
+            <h3>{this.props.contactGroupsLabel}</h3>
             <div id="belong" className="formRow">
               <input type="hidden" name="staff[contact_group_ids][]" value="" />
               {this.renderContactGroups()}

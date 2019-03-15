@@ -430,6 +430,9 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
+      contact_groups_label: 顧客台帳の閲覧権限
+      group_reservations_only_readable_label: 利用履歴のみ
+      group_details_readable_label: 全情報
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務日時
       holiday_time: 休暇

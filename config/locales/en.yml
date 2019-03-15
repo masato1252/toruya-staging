@@ -274,6 +274,9 @@ en:
       new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       shop_label: Belonging Shop
+      contact_groups_label: Customer Groups Readability
+      group_reservations_only_readable_label: reservation records only
+      group_details_readable_label: all information
       delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
       work_time: Work Time
       holiday_time: Holiday
