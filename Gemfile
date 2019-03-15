@@ -13,7 +13,7 @@ gem "jquery-rails"
 gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem "bcrypt", "~> 3.1.7"
-gem "bootstrap-sass", "~> 3.3.6"
+gem "bootstrap-sass", "~> 3.4.1"
 gem "sprockets", ">= 3.7.2"
 gem "sass-rails", "~> 5.0.6"
 gem "dotenv-rails", "~> 2.2.1", :require => "dotenv/rails-now"
