@@ -941,6 +941,10 @@ ja:
   active_interaction:
     errors:
       models:
+        staff_accounts/create:
+          attributes:
+            staff:
+              email_uniqueness_required: "^電子メールは別のスタッフによって使用されています"
         customers/delete:
           attributes:
             customer:

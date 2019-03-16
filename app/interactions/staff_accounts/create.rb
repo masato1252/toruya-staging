@@ -9,6 +9,8 @@ module StaffAccounts
       string :level, default: "employee"
     end
 
+    validate :validate_unique_user
+
     def execute
       staff_account = owner.owner_staff_accounts.find_or_initialize_by(staff: staff)
       staff_account.email = params[:email]
@@ -23,17 +25,16 @@ module StaffAccounts
         end
       end
 
-      unless staff_account.active?
-        staff_account.state = :pending
-      end
+      staff_account.mark_pending unless staff_account.active?
 
       if resend || staff_account.email_changed?
         staff_account.user = User.find_by(email: staff_account.email)
 
         if staff_account.owner?
-          staff_account.state = :active
+          staff_account.mark_active
         else
-          staff_account.state = :pending unless staff_account.disabled?
+          staff_account.mark_pending unless staff_account.disabled?
+
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
 
           if staff_account.save
@@ -48,6 +49,14 @@ module StaffAccounts
         else
           errors.merge!(staff_account.errors)
         end
+      end
+    end
+
+    private
+
+    def validate_unique_user
+      if owner.owner_staff_accounts.where(email: params[:email], active_uniqueness: true).where.not(staff_id: staff.id).exists?
+        errors.add(:staff, :email_uniqueness_required)
       end
     end
   end

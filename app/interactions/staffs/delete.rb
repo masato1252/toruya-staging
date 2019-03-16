@@ -7,7 +7,7 @@ module Staffs
     def execute
       staff.transaction do
         if staff.staff_account
-          staff.staff_account.disabled!
+          staff.staff_account.update(state: :disabled, active_uniqueness: nil)
         end
 
         staff.update_columns(deleted_at: Time.current)

@@ -973,7 +973,8 @@ CREATE TABLE public.staff_accounts (
     state integer DEFAULT 0 NOT NULL,
     level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    active_uniqueness boolean
 );
 
 
@@ -2225,6 +2226,13 @@ CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (s
 
 
 --
+-- Name: unique_staff_account_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_staff_account_index ON public.staff_accounts USING btree (owner_id, user_id, active_uniqueness);
+
+
+--
 -- Name: user_state_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2315,6 +2323,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190307123116'),
 ('20190311165617'),
 ('20190312140721'),
-('20190313140955');
+('20190313140955'),
+('20190316013202');
 
 

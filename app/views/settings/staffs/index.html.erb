@@ -42,7 +42,9 @@
             <%= modal_link_to(t("action.edit"), edit_staff_for_admin_warnings_path, class: "BTNtarco") %>
           <% end %>
 
-          <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>
+          <% if can?(:delete, staff) %>
+            <%= link_to t("action.delete"), settings_user_staff_path(super_user, staff), class: "BTNorange", method: :delete, data: { confirm: I18n.t("settings.staff.delete_confirmation_message", staff_name: staff.name) } %>
+          <% end %>
         </dd>
       </dl>
     <% end %>
