@@ -10,6 +10,10 @@ module StaffAccounts
         password = Devise.friendly_token
         raw, enc = Devise.token_generator.generate(User, :reset_password_token)
 
+        if Rails.env.development?
+          password = "password123"
+        end
+
         user = User.create(email: staff_account.email,
                            password: password,
                            password_confirmation: password,
