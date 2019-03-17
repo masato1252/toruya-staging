@@ -28,7 +28,6 @@ RSpec.describe StaffAccounts::CreateUser do
         staff_account.reload
         expect(staff_account).to be_active
         expect(staff_account.active_uniqueness).to eq(true)
-        expect(outcome.result).to eq({ user: staff_account.user, owner: staff_account.owner })
       end
     end
 
