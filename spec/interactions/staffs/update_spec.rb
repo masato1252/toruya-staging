@@ -61,6 +61,7 @@ RSpec.describe Staffs::Update do
     context "when staff is an employee" do
       context "when user is an admin" do
         it "changes all attributes" do
+          allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
           shop = FactoryBot.create(:shop, user: staff.user)
           contact_group = FactoryBot.create(:contact_group, user: staff.user)
           email = Faker::Internet.email
@@ -125,6 +126,7 @@ RSpec.describe Staffs::Update do
 
       context "when user is an manager" do
         it "changes attributes except contact_group_ids" do
+          allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
           shop = FactoryBot.create(:shop, user: staff.user)
           contact_group = FactoryBot.create(:contact_group, user: staff.user)
           email = Faker::Internet.email
@@ -246,6 +248,7 @@ RSpec.describe Staffs::Update do
 
     context "when staff change the working shops" do
       it "cleans up previous shop business_schedules, custom_schedules" do
+        allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
         shop = FactoryBot.create(:shop, user: staff.user)
         previous_shop = FactoryBot.create(:shop, user: staff.user)
         contact_group = FactoryBot.create(:contact_group, user: staff.user)

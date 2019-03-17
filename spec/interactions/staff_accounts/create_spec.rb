@@ -80,9 +80,11 @@ RSpec.describe StaffAccounts::Create do
         let!(:existing_user) { FactoryBot.create(:user, email: email) }
 
         it "bind the existing user to staff" do
+          allow(NotificationMailer).to receive(:activate_staff_account).and_return(spy)
           outcome
 
           expect(staff.staff_account.user).to eq(existing_user)
+          expect(NotificationMailer).to have_received(:activate_staff_account)
         end
       end
     end

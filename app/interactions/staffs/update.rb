@@ -95,16 +95,20 @@ module Staffs
           staff.custom_schedules.where(shop_id: shop_id).destroy_all
         end
 
-        if staff_account_attributes
-          compose(StaffAccounts::Create, staff: staff, params: staff_account_attributes)
+        if user_level == "admin" || user_level == "manager"
+          if staff_account_attributes
+            compose(StaffAccounts::Create, staff: staff, params: staff_account_attributes)
+          end
+
+          shop_staff_attributes&.each do |shop_id, attrs|
+            staff.shop_relations.find_by(shop_id: shop_id).update(attrs.to_h)
+          end
         end
 
-        shop_staff_attributes&.each do |shop_id, attrs|
-          staff.shop_relations.find_by(shop_id: shop_id)&.update(attrs.to_h)
-        end
-
-        contact_group_attributes&.each do |group_id, attrs|
-          staff.contact_group_relations.find_by(contact_group_id: group_id)&.update(attrs.to_h)
+        if user_level == "admin"
+          contact_group_attributes&.each do |group_id, attrs|
+            staff.contact_group_relations.find_by(contact_group_id: group_id).update(attrs.to_h)
+          end
         end
       else
         errors.merge!(staff.errors)
