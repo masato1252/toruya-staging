@@ -30,9 +30,17 @@ FactoryBot.define do
       mapping_contact_group { FactoryBot.create(:contact_group, user: user) }
     end
 
+    trait :without_staff_account do
+      mapping_user nil
+    end
+
     after(:create) do |staff, proxy|
       FactoryBot.create(:shop_staff, staff: staff, shop: proxy.shop, level: proxy.level)
-      FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
+
+      if proxy.mapping_user
+        FactoryBot.create(:staff_account, staff: staff, owner: proxy.shop.user, user: proxy.mapping_user)
+      end
+
       Array(proxy.menus).each do |menu|
         FactoryBot.create(:staff_menu, menu: menu, staff: staff)
       end

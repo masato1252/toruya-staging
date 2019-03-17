@@ -46,7 +46,7 @@ class Settings::StaffsController < SettingsController
     staff_outcome = Staffs::Create.run(user: super_user, attrs: params[:staff]&.permit!&.to_h)
     staff = staff_outcome.result
 
-    StaffAccounts::Create.run(staff: staff, owner: staff.user, params: params[:staff_account].permit!.to_h)
+    StaffAccounts::Create.run(staff: staff, params: params[:staff_account].permit!.to_h)
 
     params.permit![:shop_staff].each do |shop_id, attrs|
       staff.shop_relations.where(shop_id: shop_id).update(attrs.to_h)
@@ -64,14 +64,16 @@ class Settings::StaffsController < SettingsController
   def update
     authorize! :edit, @staff
 
-    manager_level = if admin?
+    user_level = if admin?
       "admin"
     elsif manager?
       "manager"
+    else
+      "staff"
     end
 
     outcome = Staffs::Update.run(
-      manager_level: manager_level,
+      user_level: user_level,
       staff: @staff,
       attrs: params[:staff]&.permit!&.to_h,
       staff_account_attributes: params[:staff_account]&.permit!&.to_h,
@@ -110,7 +112,7 @@ class Settings::StaffsController < SettingsController
   end
 
   def resend_activation_email
-    outcome = StaffAccounts::Create.run(staff: @staff, owner: @staff.user, resend: true, params: { email: params[:email], level: params[:level] })
+    outcome = StaffAccounts::Create.run(staff: @staff, resend: true, params: { email: params[:email], level: params[:level] })
 
     if outcome.valid?
       flash[:notice] = I18n.t("settings.staff_account.sent_message")

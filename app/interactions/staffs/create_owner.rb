@@ -27,7 +27,6 @@ module Staffs
 
         compose(StaffAccounts::Create,
                 staff: staff,
-                owner: user,
                 params: {
                   email: user.email,
                   level: "owner"

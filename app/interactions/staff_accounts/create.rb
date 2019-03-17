@@ -1,7 +1,6 @@
 module StaffAccounts
   class Create < ActiveInteraction::Base
     object :staff
-    object :owner, class: User
     boolean :resend, default: false
 
     hash :params do
@@ -30,6 +29,7 @@ module StaffAccounts
       if resend || staff_account.email_changed?
         staff_account.user = User.find_by(email: staff_account.email)
 
+        # Owner staff account only be created after user login, so it is definitely active
         if staff_account.owner?
           staff_account.mark_active
         else
@@ -58,6 +58,10 @@ module StaffAccounts
       if owner.owner_staff_accounts.where(email: params[:email], active_uniqueness: true).where.not(staff_id: staff.id).exists?
         errors.add(:staff, :email_uniqueness_required)
       end
+    end
+
+    def owner
+      staff.user
     end
   end
 end

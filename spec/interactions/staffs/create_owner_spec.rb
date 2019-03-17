@@ -12,7 +12,7 @@ RSpec.describe Staffs::CreateOwner do
 
   describe "#execute" do
     context "when user's itself staff account exists" do
-      let(:staff_account) { FactoryBot.create(:staff_account, user: user, owner: user) }
+      let(:staff_account) { FactoryBot.create(:staff_account, user: user, owner: user, level: "employee") }
 
       context "when user's staff account is not owner level" do
         it "change it to owner level" do
