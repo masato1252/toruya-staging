@@ -194,7 +194,7 @@ class CustomerInfoEdit extends React.Component {
                   <Select
                     prefix="primaryPhone"
                     options={(this.props.customer.phoneNumbers || []).map(function(phoneNumber, i) {
-                      let fuzzyMode = (!this.props.customerEditPermission && this.props.customer.phoneNumbersOriginal && i < this.props.customer.phoneNumbersOriginal.length)
+                      let fuzzyMode = (!this.props.customer.detailsReadable && this.props.customer.phoneNumbersOriginal && i < this.props.customer.phoneNumbersOriginal.length)
 
                       return({
                         label: (
@@ -218,7 +218,7 @@ class CustomerInfoEdit extends React.Component {
                   <Select
                     prefix="primaryEmail"
                     options={(this.props.customer.emails || []).map(function(email, i) {
-                      let fuzzyMode = (!this.props.customerEditPermission && this.props.customer.emailsOriginal && i < this.props.customer.emailsOriginal.length)
+                      let fuzzyMode = (!this.props.customer.detailsReadable && this.props.customer.emailsOriginal && i < this.props.customer.emailsOriginal.length)
 
                       return({
                         label: fuzzyMode ? `${this.optionMappingLabel(email.type)} ${this.displayFuzzyEmail(email.value.address)}` : `${this.optionMappingLabel(email.type)} ${email.value.address}`,
@@ -356,7 +356,7 @@ class CustomerInfoEdit extends React.Component {
               <ul>
                 {
                   (this.props.customer.phoneNumbers || []).map(function(phoneNumber, i) {
-                    let fuzzyMode = (!this.props.customerEditPermission && this.props.customer.phoneNumbersOriginal && i < this.props.customer.phoneNumbersOriginal.length)
+                    let fuzzyMode = (!this.props.customer.detailsReadable && this.props.customer.phoneNumbersOriginal && i < this.props.customer.phoneNumbersOriginal.length)
 
                     return (
                       <li key={`phoneNumber-${i}`}>
@@ -416,7 +416,7 @@ class CustomerInfoEdit extends React.Component {
             <ul>
                 {
                   (this.props.customer.emails || []).map(function(email, i) {
-                    let fuzzyMode = (!this.props.customerEditPermission && this.props.customer.emailsOriginal && i < this.props.customer.emailsOriginal.length)
+                    let fuzzyMode = (!this.props.customer.detailsReadable && this.props.customer.emailsOriginal && i < this.props.customer.emailsOriginal.length)
 
                     return (
                       <li key={`email-${i}`}>

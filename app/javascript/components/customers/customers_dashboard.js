@@ -298,7 +298,7 @@ class CustomersDashboard extends React.Component {
 
     newCustomer[optionType].splice(index, 1)
 
-    if (!this.props.customerEditPermission && !_.isEqual(newCustomer[optionType].slice(0, originalValue.length), originalValue)) { return; }
+    if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[optionType].slice(0, originalValue.length), originalValue)) { return; }
 
     this.setState({customer: newCustomer});
   };
@@ -377,7 +377,7 @@ class CustomersDashboard extends React.Component {
         newCustomer[key[0]][parseInt(key[2])][key[1]] = event.target.value;
 
         originalValue = this.state.customer[`${key[0]}Original`]
-        if (!this.props.customerEditPermission && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
+        if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
 
         newCustomer[`${key[0]}Original`]
 
@@ -387,7 +387,7 @@ class CustomersDashboard extends React.Component {
         newCustomer.emails[parseInt(key[2])]["value"]["address"] = event.target.value;
 
         originalValue = this.state.customer[`${key[0]}Original`]
-        if (!this.props.customerEditPermission && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
+        if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
         break;
     }
 
@@ -395,7 +395,7 @@ class CustomersDashboard extends React.Component {
   };
 
   addressEditPermission = () => {
-    return (this.props.customerEditPermission || !this.state.customer.displayAddress);
+    return (this.state.customer.detailsReadable || !this.state.customer.displayAddress);
   };
 
   switchEditMode = () => {
@@ -509,7 +509,6 @@ class CustomersDashboard extends React.Component {
           switchReservationMode={this.switchReservationMode}
           saveCustomerPath={this.props.saveCustomerPath}
           fetchCustomerDetails={this.fetchCustomerDetails}
-          customerEditPermission={this.props.customerEditPermission}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
           selectRegionLabel={this.props.selectRegionLabel}
