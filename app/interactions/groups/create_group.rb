@@ -15,7 +15,7 @@ class Groups::CreateGroup < ActiveInteraction::Base
     contact_group.backup_google_group_id = backup_google_group.id
 
     if contact_group.save
-      CustomersImporterJob.perform_later(contact_group.id)
+      CustomersImporterJob.perform_later(contact_group.id, true)
       contact_group
     else
       errors.merge!(contact_group.errors)

@@ -20,7 +20,7 @@ class Settings::ContactGroupsController < SettingsController
           Groups::RetrieveGroups.run!(user: super_user).empty?
         Groups::CreateGroup.run!(contact_group: contact_group)
 
-        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("common.create_successfully_message")
+        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.importing_message")
         return
       end
 
@@ -73,7 +73,7 @@ class Settings::ContactGroupsController < SettingsController
       if session[:settings_tour]
         redirect_to settings_user_shops_path(super_user)
       else
-        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.bind_successfully_message")
+        redirect_to settings_user_contact_groups_path(super_user), notice: I18n.t("settings.contact.importing_message")
       end
     else
       redirect_to settings_user_contact_groups_path(super_user), alert: outcome.errors.full_messages.join(", ")

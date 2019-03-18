@@ -499,7 +499,6 @@ ja:
       import_all_warning_message: "* Toruyaでの重複を避けるために、一番最初の顧客台帳についてのみ全ての連絡先をインポートできます。"
       bind_btn: インポート
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
-      bind_successfully_message: Google連絡先データは正常にインポートされました。
       delete_confirmation_message: 顧客台帳を削除すると、Google連絡先から同期しているグループ（タグ）も削除されます。よろしいですか？
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
       dont_want_connect_google: インポートしたいGoogleグループが無い場合は
