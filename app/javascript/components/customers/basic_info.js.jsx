@@ -23,14 +23,14 @@ class CustomerBasicInfo extends React.Component {
           </dd>
           <dd>
             {
-              this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
+              this.props.customer.detailsReadable && this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
                 <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
                   <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
                 </a>
               ) : null
             }
             {
-              this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? (
+              this.props.customer.detailsReadable && this.props.customer.primaryEmail && this.props.customer.primaryEmail.value ? (
                 <a href={`mail:${this.props.customer.primaryEmail.value.address}`} className="BTNtarco">
                   <i className="fa fa-envelope fa-2x" aria-hidden="true" title="mail"></i>
                 </a>
