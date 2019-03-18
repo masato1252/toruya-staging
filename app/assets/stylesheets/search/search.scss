@@ -130,7 +130,14 @@
   text-align: center;
   line-height: 1.2em;
 }
-.filter #resList dl .status, .filter #resList dl .customer, .filter #resList dl .address, .filter #resList dl .group { line-height: 34px; }
+.filter #resList dl .status, .filter #resList dl .customer, .filter #resList dl .address, .filter #resList dl .group {
+  line-height: 1em;
+  padding: 5px;
+  vertical-align: text-top;
+}
+.filter #resList dl:nth-child(odd) {
+  background: #fafafa;
+}
 .filter #resList dl .status { width: 33px; }
 .filter #resList dl .address { width: 150px; }
 .filter #resList dl .group { width: 100px; }
