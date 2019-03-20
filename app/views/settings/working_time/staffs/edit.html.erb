@@ -11,7 +11,7 @@
       timezone: Time.zone.tzinfo.identifier,
       staff: @staff,
       save_staff_path: settings_user_working_time_staff_path(super_user, @staff),
-      cancel_path: settings_user_working_time_staffs_path(super_user),
+      cancel_path: settings_user_working_time_staffs_path(super_user, working_time_menu_scope: params[:working_time_menu_scope]),
       shops: @shops,
       full_time_permission: @full_time_permission,
       regular_working_time_permission: @regular_working_time_permission,
