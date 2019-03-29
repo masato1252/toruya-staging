@@ -10,9 +10,9 @@
 // Support component names relative to this directory:
 import 'babel-polyfill'
 import 'jquery'
-import 'bootstrap'
+import 'bootstrap/dist/js/bootstrap'
 
-var componentRequireContext = require.context("components", true)
+var componentRequireContext = require.context("../javascripts/components", true)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(componentRequireContext)
 
@@ -21,9 +21,8 @@ import { Application } from "stimulus"
 import { definitionsFromContext } from "stimulus/webpack-helpers"
 
 const application = Application.start()
-const context = require.context("controllers", true, /.js$/)
+const context = require.context("../javascripts/controllers", true, /.js$/)
 application.load(definitionsFromContext(context))
-
 
 import Rails from 'rails-ujs';
 Rails.start();
