@@ -2,6 +2,8 @@
 
 import React from "react";
 import _ from "underscore";
+import axios from "axios";
+
 import Select from "../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
 
@@ -70,10 +72,6 @@ class SettingsMenuForm extends React.Component {
   _retrieveRepeatingDates = () => {
     var _this = this;
 
-    if (this.currentRequest != null) {
-      this.currentRequest.abort();
-    }
-
     if (!this._isValidRepeatConditions()) {
       return;
     }
@@ -86,21 +84,19 @@ class SettingsMenuForm extends React.Component {
       return checkedMenuShopOption.shopId
     })
 
-    this.currentRequest = jQuery.ajax({
+    axios({
+      method: "GET",
       url: _this.props.repeatingDatesPath,
-      data: {
+      params: {
         reservation_setting_id: _this.state.selectedReservationSetting.id,
         shop_ids: checkedShopIds.join(","),
         repeats: _this.state.selectedReservationSettingRule.repeats,
         start_date: _this.state.selectedReservationSettingRule.start_date,
       },
-      dataType: "json",
-    }).done(
-      function(result) {
-        _this.setState({repeatingDateSentence: result["sentence"]});
-      }).fail(function(errors){
-      }).always(function() {
-      });
+      responseType: "json",
+    }).then(function(response) {
+      _this.setState({repeatingDateSentence: response.data["sentence"]});
+    });
   };
 
   _handleStaffCheck = (event) => {

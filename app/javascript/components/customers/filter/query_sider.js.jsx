@@ -2,8 +2,10 @@
 
 import React from "react";
 import _ from "underscore";
+import axios from "axios";
 import moment from "moment-timezone";
 import ReactSelect from "react-select";
+
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
 
@@ -118,16 +120,13 @@ class CustomersFilterQuerySider extends React.Component {
       return;
     }
 
-    $.ajax({
-      type: "GET",
+    axios({
+      method: "GET",
       url: this.props.fetchFilterPath, //sumbits it to the given url of the form
-      data: { id: stateValue },
-      dataType: "JSON"
-    }).success(function(result) {
-      _this.updateFilterOption(result);
-      // _this.props.forceStopProcessing();
-    }).always(function() {
-      // _this.props.forceStopProcessing();
+      params: { id: stateValue },
+      responseType: "json"
+    }).then(function(response) {
+      _this.updateFilterOption(response.data);
     });
   };
 
@@ -150,8 +149,6 @@ class CustomersFilterQuerySider extends React.Component {
   };
 
   onCheckoutInAYearClick = () => {
-    if (!this.props.hasShop) return;
-
     this.updateFilterOption({
       reservationDateQueryType: "between",
       start_reservation_date: moment().add(-1, "Y").format("YYYY-MM-DD"),
@@ -227,14 +224,13 @@ class CustomersFilterQuerySider extends React.Component {
     this.queryConditions = $(this.filterForm).serialize();
     _this.props.startProcessing();
 
-    $.ajax({
-      type: "POST",
+    axios({
+      method: "POST",
       url: _this.props.filterPath, //sumbits it to the given url of the form
       data: _this.queryConditions,
-      dataType: "JSON"
-    }).success(function(result) {
-      _this.props.updateCustomers(result["customers"]);
-    }).always(function() {
+      responseType: "json"
+    }).then(function(response) {
+      _this.props.updateCustomers(response.data["customers"]);
     });
   };
 
@@ -483,15 +479,9 @@ class CustomersFilterQuerySider extends React.Component {
       <div id="searchKeys" className="sidel">
         <div id="tabs" className="tabs">
           <a href="#" className="here"><i className="fa fa-users" aria-hidden="true"></i></a>
-          { this.props.hasShop ? (
-            <a href={this.props.reservationFilterPath}>
-              <i className="fa fa-calendar" aria-hidden="true"></i>
-            </a>
-          ) : (
-            <a href="#" data-toggle="modal" data-target="#no-shop-modal">
-              <i className="fa fa-calendar" aria-hidden="true"></i>
-            </a>
-          )}
+          <a href={this.props.reservationFilterPath}>
+            <i className="fa fa-calendar" aria-hidden="true"></i>
+          </a>
         </div>
 
         <div id="filterKeys" className="tabBody">
@@ -511,7 +501,7 @@ class CustomersFilterQuerySider extends React.Component {
                   {this.props.dobInNextMonth}
                 </a>
                 <a href="#"
-                  className={`BTNgray ${!this.props.hasShop && "disabled"}`}
+                  className="BTNgray"
                   onClick={this.onCheckoutInAYearClick}>
                   {this.props.checkoutInAYear}
                 </a>
@@ -683,341 +673,327 @@ class CustomersFilterQuerySider extends React.Component {
             </dl>
           </div>
           <h2>{this.props.customerReservationConditionsHeader}</h2>
-          { !this.props.hasShop && (
-            <div class="no-shop-warning">
-              <div class="caution">{this.props.noShopWarning}</div>
-              <a
-                className="btn btn-tarco"
-                href={this.props.settingsPath}
-                >{this.props.createAShopButton}
-              </a>
-            </div>
-          )}
 
-          {this.props.hasShop && (
-            <div className="filterKey">
-              <h3>{this.props.customerReservationDateTitle}</h3>
-              <div>
-                <dl className="filterFor">
-                  <dd>
-                    {this.props.locale === "ja" ? (
-                      <Select
-                        options={this.props.reservationDateQueryOptions}
-                        data-name="reservationDateQueryType"
-                        value={this.state.reservationDateQueryType}
-                        onChange={this.onDataChange}
-                      />
-                    ) : (
-                      <Select
-                        options={this.props.yesNoOptions}
-                        data-name="hasReservation"
-                        value={this.state.hasReservation}
-                        onChange={this.onDataChange}
-                        />
-                    )}
-                    <span className="filterForReservationWording">{this.props.reservationsWording}</span>
-                    {this.props.locale === "ja" ? (
-                      <Select
-                        options={this.props.yesNoOptions}
-                        data-name="hasReservation"
-                        value={this.state.hasReservation}
-                        onChange={this.onDataChange}
-                        />
-                    ) : (
-                      <Select
-                        options={this.props.reservationDateQueryOptions}
-                        data-name="reservationDateQueryType"
-                        value={this.state.reservationDateQueryType}
-                        onChange={this.onDataChange}
-                      />
-                    )}
-                  </dd>
-                </dl>
-                <dl className="date">
-                  <dd>
-                    {this.renderReservationDateOptions()}
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          )}
-
-          {this.props.hasShop && (
+          <div className="filterKey">
+            <h3>{this.props.customerReservationDateTitle}</h3>
             <div>
-              <div className="filterKey">
-                <h3>
-                  {this.props.customerReservationShopTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-                </h3>
-                <dl>
-                  <dt>{this.props.selectShopLabel}</dt>
-                  <dd>
-                    <ul>
-                      {this.renderMultipleSelectInputs(this.state.shop_ids, "shop_ids", this.props.shopOptions)}
-                      <li>
-                        <Select
-                          includeBlank="true"
-                          blankOption={this.props.selectShopLabel}
-                          options={this.props.shopOptions}
-                          data-name="shop_id"
-                          value={this.state.shop_id}
-                          onChange={this.onDataChange}
-                          />
-                        <a
-                          href="#"
-                          className={`BTNyellow ${this.state.shop_id ? null : "disabled"}`}
-                          onClick={this.onAddItem}
-                          data-target-name="shop_id"
-                          data-name="shop_ids"
-                          >
-                          <i
-                            className="fa fa-plus"
-                            aria-hidden="true"
-                            data-target-name="shop_id"
-                            data-name="shop_ids" >
-                          </i>
-                        </a>
-                      </li>
-                      {
-                        (this.state.shop_id && !_.contains(this.state.shop_ids, this.state.shop_id)) ?
-                          (
-                            <li className="warning">
-                              {this.props.shopConfirmWarning}
-                            </li>
-                          ) : null
-                      }
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
-              <div className="filterKey">
-                <h3>
-                  {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-                </h3>
-                <dl>
-                  <dt>{this.props.selectMenuLabel}</dt>
-                  <dd>
-                    <ul>
-                      {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
-                      <li>
-                        <ReactSelect
-                          ref={(c) => this.menuSelector = c}
-                          className="menu-select-container"
-                          placeholder={this.props.selectMenuLabel}
-                          options={this.props.menuGroupOptions}
-                          onChange={this.onMenuChange}
-                          />
-                        <a
-                          href="#"
-                          className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
-                          onClick={this.onAddItem}
-                          data-target-name="menu_id"
-                          data-name="menu_ids"
-                          >
-                          <i
-                            className="fa fa-plus"
-                            aria-hidden="true"
-                            data-target-name="menu_id"
-                            data-name="menu_ids" >
-                          </i>
-                        </a>
-                      </li>
-                      {
-                        (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
-                          (
-                            <li className="warning">
-                              {this.props.menuConfirmWarning}
-                            </li>
-                          ) : null
-                      }
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
-              <div className="filterKey">
-                <h3>
-                  {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
-                </h3>
-                <dl>
-                  <dt>{this.props.selectStaffLabel}</dt>
-                  <dd>
-                    <ul>
-                      {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
-                      <li>
-                        <Select
-                          includeBlank="true"
-                          blankOption={this.props.selectStaffLabel}
-                          options={this.props.staffOptions}
-                          data-name="staff_id"
-                          value={this.state.staff_id}
-                          onChange={this.onDataChange}
+              <dl className="filterFor">
+                <dd>
+                  {this.props.locale === "ja" ? (
+                    <Select
+                      options={this.props.reservationDateQueryOptions}
+                      data-name="reservationDateQueryType"
+                      value={this.state.reservationDateQueryType}
+                      onChange={this.onDataChange}
+                    />
+                  ) : (
+                    <Select
+                      options={this.props.yesNoOptions}
+                      data-name="hasReservation"
+                      value={this.state.hasReservation}
+                      onChange={this.onDataChange}
+                      />
+                  )}
+                  <span className="filterForReservationWording">{this.props.reservationsWording}</span>
+                  {this.props.locale === "ja" ? (
+                    <Select
+                      options={this.props.yesNoOptions}
+                      data-name="hasReservation"
+                      value={this.state.hasReservation}
+                      onChange={this.onDataChange}
+                      />
+                  ) : (
+                    <Select
+                      options={this.props.reservationDateQueryOptions}
+                      data-name="reservationDateQueryType"
+                      value={this.state.reservationDateQueryType}
+                      onChange={this.onDataChange}
+                    />
+                  )}
+                </dd>
+              </dl>
+              <dl className="date">
+                <dd>
+                  {this.renderReservationDateOptions()}
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          <div>
+            <div className="filterKey">
+              <h3>
+                {this.props.customerReservationShopTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+              </h3>
+              <dl>
+                <dt>{this.props.selectShopLabel}</dt>
+                <dd>
+                  <ul>
+                    {this.renderMultipleSelectInputs(this.state.shop_ids, "shop_ids", this.props.shopOptions)}
+                    <li>
+                      <Select
+                        includeBlank="true"
+                        blankOption={this.props.selectShopLabel}
+                        options={this.props.shopOptions}
+                        data-name="shop_id"
+                        value={this.state.shop_id}
+                        onChange={this.onDataChange}
                         />
-                        <a
-                          href="#"
-                          className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
-                          onClick={this.onAddItem}
+                      <a
+                        href="#"
+                        className={`BTNyellow ${this.state.shop_id ? null : "disabled"}`}
+                        onClick={this.onAddItem}
+                        data-target-name="shop_id"
+                        data-name="shop_ids"
+                        >
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          data-target-name="shop_id"
+                          data-name="shop_ids" >
+                        </i>
+                      </a>
+                    </li>
+                    {
+                      (this.state.shop_id && !_.contains(this.state.shop_ids, this.state.shop_id)) ?
+                        (
+                          <li className="warning">
+                            {this.props.shopConfirmWarning}
+                          </li>
+                        ) : null
+                    }
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <div className="filterKey">
+              <h3>
+                {this.props.customerReservationMenuTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+              </h3>
+              <dl>
+                <dt>{this.props.selectMenuLabel}</dt>
+                <dd>
+                  <ul>
+                    {this.renderMultipleSelectInputs(this.state.menu_ids, "menu_ids", this.props.menuOptions)}
+                    <li>
+                      <ReactSelect
+                        ref={(c) => this.menuSelector = c}
+                        className="menu-select-container"
+                        placeholder={this.props.selectMenuLabel}
+                        options={this.props.menuGroupOptions}
+                        onChange={this.onMenuChange}
+                        />
+                      <a
+                        href="#"
+                        className={`BTNyellow ${this.state.menu_id ? null : "disabled"}`}
+                        onClick={this.onAddItem}
+                        data-target-name="menu_id"
+                        data-name="menu_ids"
+                        >
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
+                          data-target-name="menu_id"
+                          data-name="menu_ids" >
+                        </i>
+                      </a>
+                    </li>
+                    {
+                      (this.state.menu_id && !_.contains(this.state.menu_ids, this.state.menu_id)) ?
+                        (
+                          <li className="warning">
+                            {this.props.menuConfirmWarning}
+                          </li>
+                        ) : null
+                    }
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <div className="filterKey">
+              <h3>
+                {this.props.customerReservationStaffTitle}<span>({this.props.customerReservationMultipleChoices})</span>
+              </h3>
+              <dl>
+                <dt>{this.props.selectStaffLabel}</dt>
+                <dd>
+                  <ul>
+                    {this.renderMultipleSelectInputs(this.state.staff_ids, "staff_ids", this.props.staffOptions)}
+                    <li>
+                      <Select
+                        includeBlank="true"
+                        blankOption={this.props.selectStaffLabel}
+                        options={this.props.staffOptions}
+                        data-name="staff_id"
+                        value={this.state.staff_id}
+                        onChange={this.onDataChange}
+                      />
+                      <a
+                        href="#"
+                        className={`BTNyellow ${this.state.staff_id ? null : "disabled"}`}
+                        onClick={this.onAddItem}
+                        data-target-name="staff_id"
+                        data-name="staff_ids"
+                        >
+                        <i
+                          className="fa fa-plus"
+                          aria-hidden="true"
                           data-target-name="staff_id"
-                          data-name="staff_ids"
-                          >
-                          <i
-                            className="fa fa-plus"
-                            aria-hidden="true"
-                            data-target-name="staff_id"
-                            data-name="staff_ids" >
-                          </i>
-                        </a>
-                      </li>
-                      {
-                        (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
-                          (
-                            <li className="warning">
-                              {this.props.staffConfirmWarning}
-                            </li>
-                          ) : null
-                      }
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
-              <div className="filterKey">
-                <h3>{this.props.customerReservationStatusTitle}</h3>
-                <dl>
-                  <dt>{this.props.customerReservationStatusInfo}</dt>
-                  <dd>
-                    <ul>
-                      {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
-              <div className="filterKey">
-                <h3>{this.props.customerCheckInStatusTitle}</h3>
-                <dl>
-                  <dt>{this.props.customerCheckInStatusInfo}</dt>
-                  <dd>
-                    <ul>
-                      {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
-                    </ul>
-                  </dd>
-                </dl>
-              </div>
+                          data-name="staff_ids" >
+                        </i>
+                      </a>
+                    </li>
+                    {
+                      (this.state.staff_id && !_.contains(this.state.staff_ids, this.state.staff_id)) ?
+                        (
+                          <li className="warning">
+                            {this.props.staffConfirmWarning}
+                          </li>
+                        ) : null
+                    }
+                  </ul>
+                </dd>
+              </dl>
             </div>
-          )}
+            <div className="filterKey">
+              <h3>{this.props.customerReservationStatusTitle}</h3>
+              <dl>
+                <dt>{this.props.customerReservationStatusInfo}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+            <div className="filterKey">
+              <h3>{this.props.customerCheckInStatusTitle}</h3>
+              <dl>
+                <dt>{this.props.customerCheckInStatusInfo}</dt>
+                <dd>
+                  <ul>
+                    {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
+                  </ul>
+                </dd>
+              </dl>
+            </div>
+          </div>
         </div>
-          <form
-            acceptCharset="UTF-8"
-            id="filter-form"
-            method="post"
-            ref={(c) => {this.filterForm = c}}
-            >
-            <input name="utf8" type="hidden" value="✓" />
-            <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
-            {
-              this.state.group_ids.length !== 0 ? (
-                <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
-              ) : null
-            }
-            {
-              this.state.rank_ids.length !== 0 ? (
-                <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
-              ) : null
-            }
-            { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
-            {
-              this.state.email_types.length !== 0 ? (
-                <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
-              ) : null
-            }
-            {
-              this.state.states.join(",") ? (
-                <div>
-                  <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
-                  <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
-                </div>
-              ) : null
-            }
-            {
-              this.state.custom_ids.length !== 0 ? (
-                <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
-              ) : null
-            }
-            {
-              this.state.month_of_dob ? (
-                <div>
-                  <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
-                  <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
-                </div>
-              ) : null
-            }
-            {
-              this.state.start_dob_date ? (
-                <div>
-                  <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
-                  <input
-                     name="birthday[start_date]"
-                     type="hidden"
-                     value={this.state.start_dob_date} />
-                </div>
-               ) : null
-            }
-            {
-              this.state.end_dob_date ? (
+
+        <form
+          acceptCharset="UTF-8"
+          id="filter-form"
+          method="post"
+          ref={(c) => {this.filterForm = c}}
+          >
+          <input name="utf8" type="hidden" value="✓" />
+          <input name="authenticity_token" type="hidden" value={this.props.formAuthToken} />
+          {
+            this.state.group_ids.length !== 0 ? (
+              <input name="group_ids" type="hidden" value={this.state.group_ids.join(",")} />
+            ) : null
+          }
+          {
+            this.state.rank_ids.length !== 0 ? (
+              <input name="rank_ids" type="hidden" value={this.state.rank_ids.join(",")} />
+            ) : null
+          }
+          { this.state.has_email ? <input name="has_email" type="hidden" value={this.state.has_email} /> : null }
+          {
+            this.state.email_types.length !== 0 ? (
+              <input name="email_types" type="hidden" value={this.state.email_types.join(",")} />
+            ) : null
+          }
+          {
+            this.state.states.join(",") ? (
+              <div>
+                <input name="living_place[inside]" type="hidden" value={this.state.livingPlaceInside} />
+                <input name="living_place[states]" type="hidden" value={this.state.states.join(",")} />
+              </div>
+            ) : null
+          }
+          {
+            this.state.custom_ids.length !== 0 ? (
+              <input name="custom_ids" type="hidden" value={this.state.custom_ids.join(",")} />
+            ) : null
+          }
+          {
+            this.state.month_of_dob ? (
+              <div>
+                <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
+                <input name="birthday[month]" type="hidden" value={this.state.month_of_dob} />
+              </div>
+            ) : null
+          }
+          {
+            this.state.start_dob_date ? (
+              <div>
+                <input name="birthday[query_type]" type="hidden" value={this.state.birthdayQueryType} />
                 <input
-                   name="birthday[end_date]"
+                   name="birthday[start_date]"
                    type="hidden"
-                   value={this.state.end_dob_date} />
-              ) : null
-            }
-            {
-              this.state.start_reservation_date ? (
-                <div>
-                  <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
-                  <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
-                  <input
-                    name="reservation[start_date]"
-                    type="hidden"
-                    value={this.state.start_reservation_date} />
-                </div>
-              ) : null
-            }
-            {
-              this.state.end_reservation_date ? (
+                   value={this.state.start_dob_date} />
+              </div>
+             ) : null
+          }
+          {
+            this.state.end_dob_date ? (
+              <input
+                 name="birthday[end_date]"
+                 type="hidden"
+                 value={this.state.end_dob_date} />
+            ) : null
+          }
+          {
+            this.state.start_reservation_date ? (
+              <div>
+                <input name="reservation[has_reservation]" type="hidden" value={this.state.hasReservation} />
+                <input name="reservation[query_type]" type="hidden" value={this.state.reservationDateQueryType} />
                 <input
-                  name="reservation[end_date]"
+                  name="reservation[start_date]"
                   type="hidden"
-                  value={this.state.end_reservation_date} />
-              ) : null
-            }
-            {
-              this.state.shop_ids.join(",") ? (
-                <input name="reservation[shop_ids]" type="hidden" value={this.state.shop_ids.join(",")} />
-              ) : null
-            }
-            {
-              this.state.menu_ids.join(",") ? (
-                <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
-              ) : null
-            }
-            {
-              this.state.staff_ids.join(",") ? (
-                <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
-              ) : null
-            }
-            {
-              this.state.reservation_states.join(",") ? (
-                <input name="reservation[states]" type="hidden" value={this.state.reservation_states.join(",")} />
-              ) : null
-            }
+                  value={this.state.start_reservation_date} />
+              </div>
+            ) : null
+          }
+          {
+            this.state.end_reservation_date ? (
+              <input
+                name="reservation[end_date]"
+                type="hidden"
+                value={this.state.end_reservation_date} />
+            ) : null
+          }
+          {
+            this.state.shop_ids.join(",") ? (
+              <input name="reservation[shop_ids]" type="hidden" value={this.state.shop_ids.join(",")} />
+            ) : null
+          }
+          {
+            this.state.menu_ids.join(",") ? (
+              <input name="reservation[menu_ids]" type="hidden" value={this.state.menu_ids.join(",")} />
+            ) : null
+          }
+          {
+            this.state.staff_ids.join(",") ? (
+              <input name="reservation[staff_ids]" type="hidden" value={this.state.staff_ids.join(",")} />
+            ) : null
+          }
+          {
+            this.state.reservation_states.join(",") ? (
+              <input name="reservation[states]" type="hidden" value={this.state.reservation_states.join(",")} />
+            ) : null
+          }
 
-            <div className="submit">
-              <a
-                className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
-                onClick={this.submitFilterForm}
-                href="#"
-                >{this.props.searchLabel}
-              </a>
-            </div>
-          </form>
-
+          <div className="submit">
+            <a
+              className={`BTNtarco ${this.isQueryConditionLegal() ? null : "disabled"}`}
+              onClick={this.submitFilterForm}
+              href="#"
+              >{this.props.searchLabel}
+            </a>
+          </div>
+        </form>
       </div>
     );
   }

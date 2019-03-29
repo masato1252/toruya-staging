@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import axios from "axios";
 import DayNames from "./day_names.js";
 import Week from "./week.js";
 import Select from "../shared/select.js";
@@ -47,12 +48,14 @@ class Calendar extends React.Component {
       staff_id = location.search.replace(/\?staff_id=/, '');
     }
 
-    $.ajax({
-      type: "GET",
+    axios({
+      method: "GET",
       url: this.props.workingSchedulePath,
-      data: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
-      dataType: "JSON"
-    }).success((result) => {
+      params: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
+      responseType: "json"
+    }).then((response) => {
+      var result = response.data;
+
       this.setState({
         holidayDays: result["holiday_days"],
         fullTime: result["full_time"],

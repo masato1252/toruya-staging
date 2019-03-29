@@ -2,6 +2,7 @@
 
 import React from "react";
 import _ from "underscore";
+import axios from 'axios';
 import Select from "../shared/select.js";
 
 class CustomerInfoEdit extends React.Component {
@@ -30,18 +31,18 @@ class CustomerInfoEdit extends React.Component {
     var valuesToSubmit = $(this.customerForm).serialize();
 
     this.props.switchProcessing(function(){
-      $.ajax({
-        type: "POST",
+      axios({
+        method: "POST",
         url: _this.props.saveCustomerPath, //sumbits it to the given url of the form
         data: valuesToSubmit,
-        dataType: "JSON"
-      }).success(function(result) {
-        _this.props.handleCreatedCustomer(result["customer"]);
+        responseType: "json"
+      }).then(function(response) {
+        _this.props.handleCreatedCustomer(response.data["customer"]);
         _this.props.forceStopProcessing();
         _this.props.switchEditMode();
-      }).error(function() {
+      }).catch(function() {
         alert(_this.props.googleDownMessage);
-      }).always(function() {
+      }).then(function() {
         _this.props.forceStopProcessing();
       });
     })

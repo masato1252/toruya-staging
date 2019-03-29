@@ -2,7 +2,9 @@
 
 import React from "react";
 import _ from "underscore";
-import "whatwg-fetch";
+import axios from "axios";
+import Rails from "rails-ujs";
+
 import CommonCustomersList from "../shared/customers_list.js";
 import ProcessingBar from "../shared/processing_bar.js";
 import CustomerInfoView from "./customer_info_view.js";
@@ -42,17 +44,18 @@ class CustomersDashboard extends React.Component {
 
   fetchCustomerDetails = () => {
     var _this = this;
+
     if (this.state.selected_customer_id) {
-      $.ajax({
-        type: "GET",
+      axios({
+        method: "GET",
         url: this.props.customerDetailPath,
-        data: { id: this.state.selected_customer_id },
-        dataType: "JSON"
-      }).success(function(result) {
-        _this.setState({customer: result["customer"], updated_customer: result["customer"]});
-      }).always(function() {
+        params: { id: this.state.selected_customer_id },
+        responseType: "json"
+      }).then(function(response) {
+        _this.setState({customer: response.data["customer"], updated_customer: response.data["customer"]});
+      }).then(function() {
         _this.forceStopProcessing()
-    });
+      });
     }
   };
 
@@ -108,21 +111,24 @@ class CustomersDashboard extends React.Component {
     var _this = this;
 
     this.switchProcessing(function(){
-      $.ajax({
-        type: "POST",
+      axios({
+        method: "DELETE",
+        headers: {
+          "X-CSRF-Token": Rails.csrfToken()
+        },
         url: _this.props.deleteCustomerPath,
-        data: { _method: "delete", id: _this.state.selected_customer_id },
-        dataType: "JSON"
-      }).success(function(result) {
+        data: { id: _this.state.selected_customer_id },
+        responseType: "json"
+      }).then(function(response) {
         _this.setState({
           customers: _.reject(_this.state.customers, function(customer) {
             return customer.id == _this.state.selected_customer_id;
           })
         })
         _this.newCustomerMode();
-      }).error(function(jqXhr) {
-        alert(jqXhr.responseJSON.error);
-      }).always(function() {
+      }).catch(function(error) {
+        alert(error.response.data.error);
+      }).then(function() {
         _this.forceStopProcessing();
       });
     })
@@ -236,20 +242,19 @@ class CustomersDashboard extends React.Component {
   customersRequest = (path, data, originalCustomers) => {
     var _this = this;
 
-    if (this.currentRequest != null) {
-      this.currentRequest.abort();
-    }
-
     if (this.state.no_more_customers) {
       this.setState({moreCustomerProcessing: false})
       return;
     }
 
-    this.currentRequest = jQuery.ajax({
+    axios({
+      method: "get",
       url: path,
-      data: data,
-      dataType: "json",
-    }).done(function(result) {
+      params: data,
+      responseType: "json",
+    }).then(function(response) {
+      var result = response.data;
+
       if (result["customers"].length == 0) {
         _this.setState({no_more_customers: true, moreCustomerProcessing: false, customers: originalCustomers.concat(result["customers"])})
       }
@@ -261,8 +266,7 @@ class CustomersDashboard extends React.Component {
 
         _this.setState({customers: originalCustomers.concat(result["customers"]), no_more_customers: noMoreCustomers});
       }
-    }).fail(function(errors){
-    }).always(function() {
+    }).then(function() {
       _this.setState({moreCustomerProcessing: false, processing: false});
     });
   };
@@ -294,11 +298,8 @@ class CustomersDashboard extends React.Component {
 
   removeOption = (optionType, index) => {
     let newCustomer = jQuery.extend(true, {}, this.state.customer);
-    let originalValue = this.state.customer[`${optionType}Original`]
 
     newCustomer[optionType].splice(index, 1)
-
-    if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[optionType].slice(0, originalValue.length), originalValue)) { return; }
 
     this.setState({customer: newCustomer});
   };
@@ -342,7 +343,6 @@ class CustomersDashboard extends React.Component {
   handleCustomerGoogleDataChange = (event) => {
     event.preventDefault();
     var newCustomer = jQuery.extend(true, {}, this.state.customer);
-    let originalValue;
 
     switch (event.target.dataset.name) {
       case "primaryPhone":
@@ -376,18 +376,11 @@ class CustomersDashboard extends React.Component {
         var key = event.target.dataset.valueName.split("-");
         newCustomer[key[0]][parseInt(key[2])][key[1]] = event.target.value;
 
-        originalValue = this.state.customer[`${key[0]}Original`]
-        if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
-
-        newCustomer[`${key[0]}Original`]
-
         break;
       case "emails-value":
         var key = event.target.dataset.valueName.split("-");
         newCustomer.emails[parseInt(key[2])]["value"]["address"] = event.target.value;
 
-        originalValue = this.state.customer[`${key[0]}Original`]
-        if (!this.state.customer.detailsReadable && !_.isEqual(newCustomer[key[0]].slice(0, originalValue.length), originalValue)) { return; }
         break;
     }
 
@@ -508,7 +501,6 @@ class CustomersDashboard extends React.Component {
           forceStopProcessing={this.forceStopProcessing}
           switchReservationMode={this.switchReservationMode}
           saveCustomerPath={this.props.saveCustomerPath}
-          fetchCustomerDetails={this.fetchCustomerDetails}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
           selectRegionLabel={this.props.selectRegionLabel}

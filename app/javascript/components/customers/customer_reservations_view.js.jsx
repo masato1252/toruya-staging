@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import axios from 'axios';
 
 import CustomerBasicInfo from "./basic_info.js";
 
@@ -22,16 +23,16 @@ class CustomerReservationsView extends React.Component {
 
     if (this.props.customer.id) {
       this.props.switchProcessing(function() {
-        $.ajax({
-          type: "GET",
+        axios({
+          method: "GET",
           url: _this.props.customerReservationsPath,
-          data: { id: _this.props.customer.id },
-          dataType: "JSON"
-        }).success(function(result) {
-          _this.setState({ reservations: result["reservations"] });
-        }).fail(function() {
+          params: { id: _this.props.customer.id },
+          responseType: "json"
+        }).then(function(response) {
+          _this.setState({ reservations: response.data["reservations"] });
+        }).catch(function() {
           _this.setState({ reservations: [] });
-        }).always(function() {
+        }).then(function() {
           _this.props.forceStopProcessing();
         });
       });

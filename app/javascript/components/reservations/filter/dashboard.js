@@ -1,6 +1,9 @@
 "use strict";
 
 import React from "react";
+import axios from "axios";
+import Rails from "rails-ujs";
+
 import ReservationsFilterQuerySider from "./query_sider.js";
 import ReservationsFilterReservationsList from "./reservations_list.js";
 
@@ -62,15 +65,13 @@ class ReservationsFilterDashboard extends React.Component {
     var valuesToSubmit = $(this.querySider.filterForm).serialize();
 
     if (this.props.canManageSavedFilter) {
-      $.ajax({
-        type: "POST",
+      axios({
+        method: "POST",
         url: _this.props.saveFilterPath, //sumbits it to the given url of the form
         data: `${valuesToSubmit}&name=${this.state.filter_name}`,
-        dataType: "JSON"
-      }).done(function(result) {
-        _this.querySider.updateFilterOption(result, false);
-        // [TODO]: Discuss the expected behavior what to do.
-        // _this.querySider.reset();
+        responseType: "json"
+      }).then(function(response) {
+        _this.querySider.updateFilterOption(response.data, false);
       })
     } else {
       // Show popup for admin/staff
@@ -90,16 +91,18 @@ class ReservationsFilterDashboard extends React.Component {
     event.preventDefault();
     var _this = this;
 
-    $.ajax({
-      type: "POST",
+    axios({
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
       url: _this.props.deleteFilterPath, //sumbits it to the given url of the form
-      data: { _method: "delete", id: this.state.current_saved_filter_id },
-      dataType: "JSON"
-    }).done(function(result) {
-      _this.querySider.updateFilterOption(result, false);
+      data: { id: this.state.current_saved_filter_id },
+      responseType: "json"
+    }).then(function(response) {
+      _this.querySider.updateFilterOption(response.data, false);
       _this.reset();
       _this.setState({reservations: []});
-      // _this.props.forceStopProcessing();
     })
   };
 

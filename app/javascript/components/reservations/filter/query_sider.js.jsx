@@ -2,7 +2,9 @@
 
 import React from "react";
 import _ from "underscore";
+import axios from "axios";
 import ReactSelect from "react-select";
+
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
 
@@ -178,14 +180,13 @@ class ReservationsFilterQuerySider extends React.Component {
     this.queryConditions = $(this.filterForm).serialize();
     this.props.startProcessing();
 
-    $.ajax({
-      type: "POST",
+    axios({
+      method: "POST",
       url: _this.props.filterPath, //sumbits it to the given url of the form
       data: _this.queryConditions,
-      dataType: "JSON"
-    }).success(function(result) {
-      _this.props.updateResult(result["reservations"]);
-    }).always(function() {
+      responseType: "json"
+    }).then(function(response) {
+      _this.props.updateResult(response.data["reservations"]);
     });
   };
 
@@ -200,16 +201,13 @@ class ReservationsFilterQuerySider extends React.Component {
       return;
     }
 
-    $.ajax({
-      type: "GET",
+    axios({
+      method: "GET",
       url: this.props.fetchFilterPath, //sumbits it to the given url of the form
-      data: { id: stateValue },
-      dataType: "JSON"
-    }).success(function(result) {
-      _this.updateFilterOption(result);
-      // _this.props.forceStopProcessing();
-    }).always(function() {
-      // _this.props.forceStopProcessing();
+      params: { id: stateValue },
+      responseType: "JSON"
+    }).then(function(response) {
+      _this.updateFilterOption(response.data);
     });
   };
 
@@ -331,7 +329,7 @@ class ReservationsFilterQuerySider extends React.Component {
           <h2>{this.props.customerReservationConditionsHeader}</h2>
 
           <div className="filterKey">
-          <h3>Shops</h3>
+          <h3>店舗</h3>
             <dl className="groups">
               <dt>{this.props.customerGroupTitle}</dt>
               <dd>

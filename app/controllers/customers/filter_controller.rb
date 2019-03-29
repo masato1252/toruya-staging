@@ -13,7 +13,6 @@ class Customers::FilterController < DashboardController
 
     @filters = super_user.customer_query_filters
     @filtered_outcomes = super_user.filtered_outcomes.customers.active.order("created_at DESC")
-    @has_shop = super_user.shops.exists?
   end
 
   def create

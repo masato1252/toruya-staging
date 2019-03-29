@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import axios from "axios";
 
 import ReservationDatetimeFields from "../reservations/datetime_fields.js"
 
@@ -16,14 +17,14 @@ class WorkingSchedulesModal extends React.Component {
       event.preventDefault();
       var valuesToSubmit = $(this.working_schedules_form).serialize();
 
-      $.ajax({
-        type: "POST",
+      axios({
+        method: "POST",
         url: this.props.customSchedulesPath, //sumbits it to the given url of the form
         data: valuesToSubmit,
-        dataType: "JSON"
-      }).success(function() {
+        responseType: "json"
+      }).then(function() {
         _this.props.callback();
-      }).always(function() {
+      }).then(function() {
         $("#working-date-modal").modal("hide");
       });
     } else {

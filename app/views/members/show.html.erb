@@ -8,7 +8,7 @@
                           day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
                           reservations_path: member_path,
-                          working_schedule_path: personal_working_schedule_calendars_path,
+                          working_schedule_path: personal_working_schedule_calendars_path(format: :json),
                           selected_date: params[:reservation_date],
                           holiday_days: @working_dates[:holidays].map(&:day),
                           full_time: @working_dates[:full_time],

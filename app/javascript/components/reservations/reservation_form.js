@@ -3,6 +3,8 @@
 import React from "react";
 import _ from "underscore";
 import moment from "moment-timezone";
+import axios from "axios";
+
 import Select from "../shared/select.js"
 import ReactSelect from "react-select";
 import CommonCustomersList from "../shared/customers_list.js"
@@ -324,23 +326,20 @@ class ReservationForm extends React.Component {
       return;
     }
 
-    this.currentRequest = jQuery.ajax({
+    _this.setState({ processing: true });
+
+    axios({
+      method: "GET",
       url: this.props.availableTimesPath,
-      data: {date: this.state.start_time_date_part},
-      dataType: "json",
-      beforeSend: function() {
-        _this.setState({ processing: true });
-      }
-    })
-    .done(
-      function(result) {
-        _this.setState({
-          start_time_restriction: result["start_time_restriction"],
-          end_time_restriction: result["end_time_restriction"],
-          processing: false
-        });
-    }).fail(function(errors){
-    }).always(function() {
+      params: { date: this.state.start_time_date_part },
+      responseType: "json"
+    }).then(function(response) {
+      _this.setState({
+        start_time_restriction: response.data["start_time_restriction"],
+        end_time_restriction: response.data["end_time_restriction"],
+        processing: false
+      });
+    }).then(function() {
       _this.setState({ processing: false });
     });
   };
@@ -348,43 +347,39 @@ class ReservationForm extends React.Component {
   _retrieveAvailableMenus = () => {
     var _this = this;
 
-    if (this.currentRequest != null) {
-      this.currentRequest.abort();
-    }
-
     if (!this._isValidReservationTime()) {
       return;
     }
 
-    this.currentRequest = jQuery.ajax({
+    _this.setState({ processing: true });
+
+    axios({
+      method: "GET",
       url: this.props.availableMenusPath,
-      data: {
+      params: {
         reservation_id: this.props.reservation.id,
         start_time_date_part: this.state.start_time_date_part,
         start_time_time_part: this.state.start_time_time_part,
         end_time_time_part: this.state.end_time_time_part,
         customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       },
-      dataType: "json",
-      beforeSend: function() {
-        _this.setState({ processing: true });
-      }
-    })
-    .done(
-      function(result) {
-      _this.setState({menu_group_options: result["menu"]["group_options"],
-                      menu_id: result["menu"]["selected_option"]["id"],
-                      menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
-                      menu_available_seat: result["menu"]["selected_option"]["available_seat"],
-                      staff_options: result["staff"]["options"],
-                      staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
+      responseType: "json"
+    }).then(function(response) {
+      var result = response.data;
+
+      _this.setState({
+        menu_group_options: result["menu"]["group_options"],
+        menu_id: result["menu"]["selected_option"]["id"],
+        menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
+        menu_available_seat: result["menu"]["selected_option"]["available_seat"],
+        staff_options: result["staff"]["options"],
+        staff_ids: _.map(result["staff"]["options"], function(o) { return o.value }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1)
       });
 
       if (result["menu"]["group_options"].length == 0) {
         alert(_this.props.noValidMenuAlert);
       }
-    }).fail(function(errors){
-    }).always(function() {
+    }).then(function() {
       _this.setState({ processing: false });
     });
   };
@@ -392,13 +387,12 @@ class ReservationForm extends React.Component {
   _retrieveAvailableStaffs = () => {
     var _this = this;
 
-    if (this.currentRequest != null) {
-      this.currentRequest.abort();
-    }
+    _this.setState({ processing: true });
 
-    this.currentRequest = jQuery.ajax({
+    axios({
+      method: "GET",
       url: this.props.availableStaffsPath,
-      data: {
+      params: {
         menu_id: this.state.menu_id,
         reservation_id: this.props.reservation.id,
         start_time_date_part: this.state.start_time_date_part,
@@ -406,39 +400,41 @@ class ReservationForm extends React.Component {
         end_time_time_part: this.state.end_time_time_part,
         customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       },
-      dataType: "json",
-      beforeSend: function() {
-        _this.setState({ processing: true });
-      }
-    })
-    .done(
-    function(result) {
+      responseType: "json",
+    }).then(function(response) {
+      var result = response.data;
+
       _this.setState({
         menu_min_staffs_number: result["menu"]["selected_option"]["min_staffs_number"],
         staff_options: result["staff"]["options"],
         staff_ids: _.map(result["staff"]["options"], function(o) { return `${o.value}` }).slice(0, result["menu"]["selected_option"]["min_staffs_number"] || 1),
         processing: false
       });
-    }).fail(function(errors){
-    }).always(function() {
+    }).then(function() {
       _this.setState({ processing: false });
     });
   };
 
   _validateReservation = () => {
     var _this = this;
+    var call;
 
-    if (this.currentRequest != null) {
-      this.currentRequest.abort();
+    if (call) {
+      call.cancel();
     }
 
     if (!this.state.start_time_date_part) {
       return;
     }
 
-    this.currentRequest = jQuery.ajax({
+    call = axios.CancelToken.source();
+
+    _this.setState({ processing: true });
+
+    axios({
+      method: "GET",
       url: this.props.validateReservationPath,
-      data: {
+      params: {
         menu_id: this.state.menu_id,
         reservation_id: this.props.reservation.id,
         start_time_date_part: this.state.start_time_date_part,
@@ -447,21 +443,22 @@ class ReservationForm extends React.Component {
         staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
         customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       },
-      dataType: "json",
-      beforeSend: function() {
-        _this.setState({ processing: true });
-      }
-    })
-    .done(
-    function(result) {
+      responseType: "json",
+      cancelToken: call.token
+    }).then(function(response) {
+      var result = response.data;
+
       _this.setState({
         start_time_restriction: result["start_time_restriction"],
         end_time_restriction: result["end_time_restriction"],
         errors: result["errors"],
         menu_min_staffs_number: result["menu_min_staffs_number"]
       });
-    }).fail(function(errors){
-    }).always(function() {
+    }).catch(function(thrown) {
+      if (axios.isCancel(thrown)) {
+        console.log('First request canceled', thrown.message);
+      }
+    }).then(function() {
       _this.setState({ processing: false });
     });
   };

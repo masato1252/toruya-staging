@@ -11,7 +11,7 @@
                           month_names: I18n.t("date.abbr_month_names").compact,
                           reservations_path: shop_reservations_path(shop),
                           selected_date: params[:reservation_date],
-                          working_schedule_path: working_schedule_calendars_path,
+                          working_schedule_path: working_schedule_calendars_path(format: :json),
                           holiday_days: @working_dates[:holidays].map(&:day),
                           full_time: @working_dates[:full_time],
                           shop_working_wdays: @working_dates[:shop_working_wdays],

@@ -4,76 +4,6 @@ import React from "react";
 import ProcessingBar from "../../shared/processing_bar.js";
 
 class ReservationsFilterReservationsList extends React.Component {
-  renderReservationModals = () => {
-    var _this = this;
-
-    var reservationModalsView = (this.props.reservations || []).map(function(reservation, i) {
-      return (
-        <div key={`reservation-modal-${reservation.id}`} id={`reservation-modal-${reservation.id}`}>
-          <div className="modal fade" id={`reservationModal${reservation.id}`} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 className="modal-title" id="myModalLabel">
-                    <a href={`/shops/${reservation.shopId}/reservations/${reservation.date}`}>
-                      {reservation.monthDate}
-                    </a>
-                    <span>
-                      {reservation.startTime} 〜 {reservation.endTime}
-                    </span>
-                  </h4>
-                </div>
-                <div className="modal-body">
-                <div>
-                  {reservation.customers.map(function(customer) {
-                    return (
-                      <a
-                        key={`reservation-${reservation.id}-customer-${customer.id}`}
-                        className="customer-link"
-                        href={`/shops/${reservation.shopId}/customers?customer_id=${customer.id}`}>
-                        {customer.name}
-                      </a>
-                    )
-                  })
-                  }
-                  </div>
-                  <div className="reservation-menu">
-                    {reservation.menu}
-                  </div>
-                  <div>
-                    {reservation.staffs}
-                  </div>
-                  {
-                    reservation.withWarnings ? (
-                      <div className="warning">
-                        <i className="fa fa-check-circle" aria-hidden="true"></i>
-                        {this.props.withWarningsMessage}
-                      </div>
-                    ) : null
-                  }
-                  {
-                    reservation.deletedStaffs ? (
-                      <div className="danger">
-                        <i className="fa fa-exclamation-circle" aria-hidden="true"></i>
-                        {reservation.deletedStaffs}
-                      </div>
-                    ) : null
-                  }
-                  <div dangerouslySetInnerHTML={{ __html: reservation.memo }} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }.bind(this));
-
-    return reservationModalsView
-  };
-
   renderReservationsList = () => {
     if (!this.props.reservations) {
       return <div></div>
@@ -86,10 +16,11 @@ class ReservationsFilterReservationsList extends React.Component {
         this.props.reservations.map(function(reservation) {
           return (
             <a href="#"
+              data-controller="modal"
+              data-modal-target="#dummyModal"
+              data-action="click->modal#popup"
+              data-modal-path={`/shops/${reservation.shopId}/reservations/${reservation.id}?from_filter=true`}
               className={reservation.state}
-              data-toggle="modal"
-              data-target={`#reservationModal${reservation.id}`}
-              key={`reservation-${reservation.id}`}
               >
               <dl key={reservation.id}>
                 <dd className="date">
@@ -134,7 +65,6 @@ class ReservationsFilterReservationsList extends React.Component {
             <div><span className="reservation-state canceled"></span>キャンセル</div>
           </div>
         </div>
-        {this.renderReservationModals()}
       </div>
     );
   }

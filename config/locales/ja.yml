@@ -947,7 +947,7 @@ ja:
         customers/delete:
           attributes:
             customer:
-              delete_google_contact_failed: "Google連絡先を削除できませんでした。しばらく経ってからもう一度お試しください。"
+              delete_google_contact_failed: "^Google連絡先を削除できませんでした。しばらく経ってからもう一度お試しください。"
         plans/subscribe:
           attributes:
             plan:

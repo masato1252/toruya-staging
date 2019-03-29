@@ -62,7 +62,7 @@ class CustomersController < DashboardController
     outcome = Customers::Delete.run(customer: customer)
 
     if outcome.valid?
-      head :no_content
+      head :ok
     else
       render json: { error: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end

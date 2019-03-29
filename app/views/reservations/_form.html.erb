@@ -40,11 +40,11 @@
                       staff_options: staff_options,
                       start_time_restriction: @time_ranges.try(:first).try(:to_s, :time),
                       end_time_restriction: @time_ranges.try(:last).try(:to_s, :time),
-                      available_times_path: times_shop_reservations_available_options_path(shop),
-                      available_menus_path:  menus_shop_reservations_available_options_path(shop),
-                      available_staffs_path: staffs_shop_reservations_available_options_path(shop),
+                      availableTimesPath: times_shop_reservations_available_options_path(shop, format: :json),
+                      available_menus_path:  menus_shop_reservations_available_options_path(shop, format: :json),
+                      available_staffs_path: staffs_shop_reservations_available_options_path(shop, format: :json),
                       customer_add_path: user_customers_path(super_user),
-                      validate_reservation_path: validate_shop_reservations_path(shop),
+                      validate_reservation_path: validate_shop_reservations_path(shop, format: :json),
                       form_authenticity_token: form_authenticity_token,
                       reservation_path: reservation_path,
                       valid_time_tip_message: I18n.t("reservation.valid_time_tip_message"),
@@ -54,5 +54,5 @@
                       processing_message: I18n.t("common.processing"),
                       delete_confirmation_message: I18n.t("reservation.delete_confirmation_message"),
                       memo_placeholder: I18n.t("reservation.memo"),
-                      custom_schedules_path: custom_schedules_path
+                      customSchedulesPath: custom_schedules_path(format: :json)
 } ) %>
