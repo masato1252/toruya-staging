@@ -15,24 +15,21 @@
     <%= link_to "速攻ダウングレード", downgrade_settings_payments_path, class: "btn btn-orange" %>
   <% end %>
 
-  <%= content_tag :div,
-    id: "plans",
-    data: {
-      formAuthenticityToken: form_authenticity_token,
-      paymentPath: settings_payments_path,
-      stripeKey: Rails.application.secrets.stripe_publishable_key,
-      email: current_user.email,
-      processing_message: I18n.t("common.processing"),
-      locale: I18n.default_locale,
-      currentPlanLevel: current_user.subscription.current_plan.level,
-      plans: @plans_properties,
-      planLabels: @plan_labels,
-      chargeDirectly: @charge_directly,
-      paymentsPath: settings_payments_path,
-      defaultUpgradePlan: @default_upgrade_plan,
-      isExceededPremiumBaseShops: shop_number_over_charge_threshold.positive?,
-      isExceededStaff: exceeded_staff_number.positive?
-    }.to_json,
+  <%= react_component "plans/plans", {
+    formAuthenticityToken: form_authenticity_token,
+    paymentPath: settings_payments_path,
+    stripeKey: Rails.application.secrets.stripe_publishable_key,
+    email: current_user.email,
+    processing_message: I18n.t("common.processing"),
+    locale: I18n.default_locale,
+    currentPlanLevel: current_user.subscription.current_plan.level,
+    plans: @plans_properties,
+    planLabels: @plan_labels,
+    chargeDirectly: @charge_directly,
+    paymentsPath: settings_payments_path,
+    defaultUpgradePlan: @default_upgrade_plan,
+    isExceededPremiumBaseShops: shop_number_over_charge_threshold.positive?,
+    isExceededStaff: exceeded_staff_number.positive?,
     i18n: {
       currentPlan: t("settings.plans.plan_info.current_plan"),
       upgradeImmediately: t("settings.plans.upgrade.immediately"),
@@ -60,7 +57,7 @@
       chargeFailedTitle: t("settings.plans.payment.failed_title"),
       chargeFailedDesc1: t("settings.plans.payment.failed_desc1"),
       chargeFailedDesc2: t("settings.plans.payment.failed_desc2"),
-    }.to_json do %>
-  <% end %>
+    }
+  }
+%>
 </div>
-<%= javascript_pack_tag 'plans_component' %>
