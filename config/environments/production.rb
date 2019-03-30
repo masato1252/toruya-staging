@@ -82,12 +82,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  if ENV["ASSETS_DISABLED"]
-    config.assets.debug = true
-  else
-    # Do not fallback to assets pipeline if a precompiled asset is missed.
-    config.assets.compile = false
-  end
+  config.assets.compile = false
 
   config.active_record.logger = nil
   config.lograge.enabled = true
