@@ -13,3 +13,8 @@ environment.plugins.prepend(
     jquery: 'jquery'
   })
 )
+
+environment.loaders.get('sass').use.splice(-1, 0, {
+  loader: 'resolve-url-loader',
+});
+

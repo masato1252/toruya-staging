@@ -1,5 +1,23 @@
 /* CSS Document */
 /* Reservation */
+#manager {
+  #resList {
+    a.btn {
+      padding: 15px;
+      height: 0;
+      line-height: 0;
+    }
+
+    a.customer-link {
+      display: inline-block;
+      padding: 0;
+      color: #97bfb8;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      border-bottom: 0;
+    }
+  }
+}
 #resNew #resInfo {
   color: #8F8F8F;
   padding-right: 20px;
