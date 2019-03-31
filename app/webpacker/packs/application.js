@@ -10,7 +10,7 @@
 // Support component names relative to this directory:
 import 'babel-polyfill'
 import 'jquery'
-import 'bootstrap/dist/js/bootstrap'
+import 'bootstrap-sass/assets/javascripts/bootstrap'
 
 var componentRequireContext = require.context("../javascripts/components", true)
 var ReactRailsUJS = require("react_ujs")

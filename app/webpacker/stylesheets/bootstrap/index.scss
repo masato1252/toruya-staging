@@ -1,9 +1,8 @@
-// TODO: copy from bootstrap-sass@3.4.1 manually, need to figure out the css importing issues
-@import "variables";
-@import "mixins";
-@import "close";
-@import "modals";
-@import "dropdowns";
-@import "labels";
-@import "buttons";
-@import "alerts";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/close";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/modals";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/labels";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/alerts";
