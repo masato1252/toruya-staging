@@ -3,7 +3,9 @@ const webpack = require('webpack')
 const erb = require('./loaders/erb')
 
 environment.loaders.prepend('erb', erb)
-module.exports = environment
+environment.loaders.get('sass').use.splice(-1, 0, {
+  loader: 'resolve-url-loader',
+});
 
 environment.plugins.prepend(
   'Provide',
@@ -14,7 +16,4 @@ environment.plugins.prepend(
   })
 )
 
-environment.loaders.get('sass').use.splice(-1, 0, {
-  loader: 'resolve-url-loader',
-});
-
+module.exports = environment
