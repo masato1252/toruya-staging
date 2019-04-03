@@ -5,15 +5,12 @@ ruby "2.4.2"
 gem "rails", "~> 5.1.0"
 gem "pg", "~> 0.21.0"
 gem "uglifier", ">= 1.3.0"
-gem "coffee-rails", "~> 4.2"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem "therubyracer", platforms: :ruby
 
-gem "jquery-rails"
 gem "jbuilder", "~> 2.5"
 # Use ActiveModel has_secure_password
 # gem "bcrypt", "~> 3.1.7"
-gem "bootstrap-sass", "~> 3.3.6"
 gem "sprockets", ">= 3.7.2"
 gem "sass-rails", "~> 5.0.6"
 gem "dotenv-rails", "~> 2.2.1", :require => "dotenv/rails-now"
@@ -28,7 +25,7 @@ gem "active_interaction", github: "AaronLasseigne/active_interaction", branch: "
 gem "holidays", "~> 4.5.0"
 gem "default_value_for", "~> 3.0.0"
 gem "week_of_month"
-gem "nokogiri", "~> 1.8.1"
+gem "nokogiri", ">= 1.8.5"
 gem "google_contacts_api", "~> 0.2.10", github: "ilake/google_contacts_api"
 gem "delayed_job_active_record", "~> 4.1.1"
 gem "jp_prefecture", "~> 0.8.1", github: "ilake/jp_prefecture"
@@ -79,4 +76,6 @@ end
 
 group :test do
   gem "stripe-ruby-mock", "~> 2.5.4", require: "stripe_mock"
+  gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
+  gem "rspec_junit_formatter"
 end

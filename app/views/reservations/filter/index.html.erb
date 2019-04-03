@@ -24,10 +24,10 @@
   reservation_after_checked_in_state_options: Reservation::AFTER_CHECKED_IN_STATES.map{ |state|
     { label: I18n.t("reservation.#{state}"), value: state }
   },
-  filter_path: reservation_user_filter_index_path(super_user),
-  save_filter_path: reservation_user_saved_filters_path(super_user),
-  fetch_filter_path: fetch_reservation_user_saved_filters_path(super_user),
-  delete_filter_path: delete_reservation_user_saved_filters_path(super_user),
+  filter_path: reservation_user_filter_index_path(super_user, format: :json),
+  save_filter_path: reservation_user_saved_filters_path(super_user, format: :json),
+  fetch_filter_path: fetch_reservation_user_saved_filters_path(super_user, format: :json),
+  delete_filter_path: delete_reservation_user_saved_filters_path(super_user, format: :json),
   search_label: I18n.t("action.search"),
   select_menu_label: I18n.t("common.select_a_menu"),
   customer_reservation_conditions_header: I18n.t("customer.filter.reservation_conditions_header"),

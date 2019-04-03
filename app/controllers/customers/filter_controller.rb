@@ -13,14 +13,12 @@ class Customers::FilterController < DashboardController
 
     @filters = super_user.customer_query_filters
     @filtered_outcomes = super_user.filtered_outcomes.customers.active.order("created_at DESC")
-    @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
-    @has_shop = super_user.shops.exists?
   end
 
   def create
     authorize! :read, :filter
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
-    outcome = Customers::Filter.run(query.merge(super_user: super_user))
+    outcome = Customers::Filter.run(query.merge(super_user: super_user, current_user_staff: current_user_staff))
 
     if outcome.valid?
       @customers = outcome.result

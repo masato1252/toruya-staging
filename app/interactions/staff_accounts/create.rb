@@ -1,13 +1,14 @@
 module StaffAccounts
   class Create < ActiveInteraction::Base
     object :staff
-    object :owner, class: User
     boolean :resend, default: false
 
     hash :params do
       string :email, default: nil
-      string :level, default: "staff"
+      string :level, default: "employee"
     end
+
+    validate :validate_unique_user
 
     def execute
       staff_account = owner.owner_staff_accounts.find_or_initialize_by(staff: staff)
@@ -23,17 +24,17 @@ module StaffAccounts
         end
       end
 
-      unless staff_account.active?
-        staff_account.state = :pending
-      end
+      staff_account.mark_pending unless staff_account.active?
 
       if resend || staff_account.email_changed?
         staff_account.user = User.find_by(email: staff_account.email)
 
+        # Owner staff account only be created after user login, so it is definitely active
         if staff_account.owner?
-          staff_account.state = :active
+          staff_account.mark_active
         else
-          staff_account.state = :pending unless staff_account.disabled?
+          staff_account.mark_pending unless staff_account.disabled?
+
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
 
           if staff_account.save
@@ -49,6 +50,18 @@ module StaffAccounts
           errors.merge!(staff_account.errors)
         end
       end
+    end
+
+    private
+
+    def validate_unique_user
+      if owner.owner_staff_accounts.where(email: params[:email], active_uniqueness: true).where.not(staff_id: staff.id).exists?
+        errors.add(:staff, :email_uniqueness_required)
+      end
+    end
+
+    def owner
+      staff.user
     end
   end
 end

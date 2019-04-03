@@ -13,7 +13,7 @@ class Settings::ProfilesController < SettingsController
   def update
     respond_to do |format|
       if @profile.update(profile_params)
-        format.html { redirect_to settings_user_profile_path(super_user), notice: I18n.t("common.update_successfully_message") }
+        format.html { redirect_to settings_profile_path, notice: I18n.t("common.update_successfully_message") }
       else
         format.html { render :edit }
       end
@@ -23,7 +23,7 @@ class Settings::ProfilesController < SettingsController
   private
 
   def set_profile
-    @profile = super_user.profile
+    @profile = current_user.profile
   end
 
   def profile_params

@@ -10,6 +10,7 @@
 #  staff_regular_working_day_permission   :boolean          default(FALSE), not null
 #  staff_temporary_working_day_permission :boolean          default(FALSE), not null
 #  staff_full_time_permission             :boolean          default(FALSE), not null
+#  level                                  :integer          default("staff"), not null
 #
 # Indexes
 #
@@ -21,4 +22,9 @@ class ShopStaff < ApplicationRecord
   belongs_to :staff
 
   validates :staff_id, uniqueness: { scope: [:shop_id] }
+
+  enum level: {
+    staff: 0,
+    manager: 1
+  }, _suffix: true
 end

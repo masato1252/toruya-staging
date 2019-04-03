@@ -24,6 +24,7 @@ class Groups::Delete < ActiveInteraction::Base
           )
         end
 
+        contact_group.google_group_id = nil
         contact_group.destroy
       end
     end

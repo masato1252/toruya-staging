@@ -4,8 +4,7 @@
     <title>Toruyaースモールビジネスの顧客管理ツールー</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    "application", media: "all" %>
-    <%= javascript_include_tag "application" %>
+    <%= stylesheet_pack_tag "stylesheets" %>
     <%= javascript_pack_tag "application" %>
   </head>
 
@@ -21,11 +20,11 @@
     <div class="contents">
       <%=
         if admin?
-          render "layouts/owner_settings_sider"
+          render "settings/siders/owner_settings_sider"
         elsif manager?
-          render "layouts/manager_settings_sider"
+          render "settings/siders/manager_settings_sider"
         else
-          render "layouts/settings_sider"
+          render "settings/siders/staff_sider"
         end
       %>
       <div id="content">

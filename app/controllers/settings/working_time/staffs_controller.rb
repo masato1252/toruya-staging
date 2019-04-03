@@ -1,19 +1,29 @@
 class Settings::WorkingTime::StaffsController < SettingsController
-  before_action :set_staff, only: [:update, :working_schedules, :holiday_schedules]
-  skip_before_action :authorize_manager_level_permission, only: [:working_schedules, :holiday_schedules, :update]
+  before_action :set_staff, only: [:update, :working_schedules]
+  skip_before_action :authorize_manager_level_permission, only: [:working_schedules, :update]
 
   def index
+    @staffs = if admin?
+                Staff.where(user: super_user).undeleted.order(:id)
+              else
+                Staff.where(user: super_user).undeleted.includes(:staff_account).joins(:shop_relations).where("shop_staffs.shop_id": shop.id).order(:id)
+              end
   end
 
   def working_schedules
     authorize! :edit, @staff
-
-    @mode = "working_schedules"
+    flash[:working_time_menu_scope] = params[:working_time_menu_scope]
 
     if admin?
       @full_time_permission = @regular_working_time_permission = @temporary_working_time_permission = true
 
       @shops = @staff.shops.order("id")
+
+      if @shops.empty?
+        session[:empty_shop_before_setup_working_time] = true
+        redirect_to edit_settings_user_staff_path(super_user, @staff)
+        return
+      end
 
       @full_time_schedules = @staff.business_schedules.full_time
       @wdays_business_schedules_by_shop = @staff.business_schedules.part_time.order(:day_of_week).group_by(&:shop_id)
@@ -31,23 +41,6 @@ class Settings::WorkingTime::StaffsController < SettingsController
       @wdays_business_schedules_by_shop = @staff.business_schedules.part_time.where(shop: shop).order(:day_of_week).group_by(&:shop_id)
       @opened_custom_schedules_by_shop = @staff.custom_schedules.future.opened.where(shop: shop).order(:start_time).group_by(&:shop_id)
     end
-
-    render :edit
-  end
-
-  def holiday_schedules
-    authorize! :edit, @staff
-
-    @mode = "holiday_schedules"
-    @closed_custom_schedules = @staff.custom_schedules.future.closed.order(:start_time)
-
-    @holiday_permission = if admin?
-                            true
-                          else
-                            shop_staff = ShopStaff.find_by(shop: shop, staff: @staff)
-
-                            can?(:manage_staff_holiday_permission, shop_staff)
-                          end
 
     render :edit
   end
@@ -80,12 +73,10 @@ class Settings::WorkingTime::StaffsController < SettingsController
       if session[:settings_tour]
         redirect_to settings_user_reservation_settings_path(super_user)
       else
-        redirect_to settings_user_working_time_staffs_path(super_user, mode: params[:mode]), notice: I18n.t("common.update_successfully_message")
+        redirect_to settings_user_working_time_staffs_path(super_user, working_time_menu_scope: flash[:working_time_menu_scope]), notice: I18n.t("common.update_successfully_message")
       end
-    elsif params[:mode] == "working_schedules"
-      redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     else
-      redirect_to holiday_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
+      redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")
     end
   end
 

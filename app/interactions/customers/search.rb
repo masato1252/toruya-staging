@@ -2,12 +2,20 @@ class Customers::Search < ActiveInteraction::Base
   PER_PAGE = 50
 
   object :super_user, class: User
+  object :current_user_staff, class: Staff
   string :keyword
   integer :page, default: 1
   integer :pre_page, default: PER_PAGE
 
   def execute
-    scoped = super_user.customers.jp_chars_order.includes(:rank, :contact_group, updated_by_user: :profile).page(page).per(pre_page)
+    scoped =
+      super_user
+      .customers
+      .contact_groups_scope(current_user_staff)
+      .jp_chars_order
+      .includes(:rank, :contact_group, updated_by_user: :profile)
+      .page(page)
+      .per(pre_page)
 
     scoped.where("
       phonetic_last_name ilike :keyword or

@@ -1,0 +1,192 @@
+/* CSS Document */
+
+#filterFirst {
+  width: 100%;
+}
+#filterFirst .tabBody {
+  padding: 20px;
+}
+#filterKeys .filterKey {
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: #DFDFDF;
+}
+#filterKeys .filterKey h3 {
+  line-height: 37px;
+  background: #efefef;
+  border-bottom: 1px solid #DFDFDF;
+  padding: 0 10px;
+}
+#filterKeys .filterKey h3 span {
+  font-size: 90%;
+  font-weight: normal;
+  padding-left: 5px;
+}
+#filterKeys .filterKey h3 i { margin-right: 10px; }
+#filterKeys .filterKey dl {
+  padding: 10px;
+  display: table-row;
+}
+#filterKeys .filterKey dl dt, #filterKeys .filterKey dl dd {
+  padding: 10px;
+  display: table-cell;
+  vertical-align: top;
+}
+#filterKeys .filterKey dl dt {
+  width: 160px;
+}
+#filterKeys .filterKey dl dd ul li {
+  padding-bottom: 10px;
+}
+#filterKeys .filterKey dl dd ul li:last-child {
+  padding-bottom: 0;
+}
+#filterKeys h2 {
+  margin-bottom: 10px;
+  display: table;
+  width: 100%;
+}
+#filterKeys h2 i { margin-right: 10px; }
+#filterKeys h2:not(:first-of-type) {
+  padding-top: 10px;
+}
+#filterKeys h2:not(:first-of-type), #filterKeys .submit {
+  border-top: 1px solid #DFDFDF;
+}
+#filterKeys .submit {
+  text-align: center;
+}
+.filter .sidel #filterKeys .submit a:link {
+  width: 80%;
+  height: 45px;
+  line-height: 45px;
+}
+.filter .sidel .tabs a {
+  text-align: center;
+  width: 50%;
+}
+.filter .sidel {
+  font-size: 14px;
+  width: 284px;
+  min-width: 284px;
+}
+.filter .sidel #filterKeys {
+  padding: 10px;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 75%;
+  border-top-width: 0;
+}
+.filter .sidel #filterKeys .savedFilter {
+  margin-bottom: 10px;
+}
+.filter .sidel #filterKeys .savedFilter a, .filter .sidel #filterKeys .savedFilter a.BTNtarco, .filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
+  margin-bottom: 10px;
+  line-height: 35px;
+  height: 35px;
+  padding: 0;
+  width: 100%;
+}
+.filter .sidel #filterKeys .filterKey { padding-bottom: 10px; }
+.filter .sidel #filterKeys .filterKey:last-child { border-bottom-width: 1px; }
+.filter .sidel #filterKeys .filterKey dl dt, .filter .sidel #filterKeys .filterKey dl dd {
+  display: block;
+  padding: 10px 5px 0 5px;
+  width: 100%;
+}
+.filter .sidel #filterKeys .filterKey dl dt { font-weight: bold; }
+.filter .sidel #filterKeys .filterKey dl dd { padding-left: 10px; }
+.filter .sidel #filterKeys select {
+  padding-left: 5px;
+  padding-right: 14px;
+  text-align: center;
+  margin: 0 5px;
+  background-color: #fffef5;
+}
+.filter .sidel #filterKeys .filterFor select, .filter .sidel #filterKeys .date select { margin: 0; }
+.filter .sidel #filterKeys input[type="date"] { width: 120px; }
+.filter .sidel #filterKeys input[type="text"] { max-width: 160px; }
+.filter .sidel #filterKeys a.reservationCalendar {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+}
+.filter .sidel #filterKeys a.BTNtarco, .filter .sidel #filterKeys a.BTNyellow, .filter .sidel #filterKeys a.BTNorange {
+  width: 35px;
+  line-height: 35px;
+  height: 35px;
+}
+.filter .sidel .submit a.BTNtarco {
+  width: 100%;
+  margin: 10px 0;
+}
+.filter #resList { overflow: scroll; }
+.filter #resList dl dd:not(:first-child) {
+  min-height: 34px;
+  padding-left: 0;
+}
+.filter #resList dl .date {
+  width: 50px;
+  text-align: center;
+  line-height: 1.2em;
+}
+.filter #resList dl .status, .filter #resList dl .customer, .filter #resList dl .address, .filter #resList dl .group {
+  line-height: 1em;
+  padding: 5px;
+  vertical-align: text-top;
+}
+.filter #resList dl:nth-child(odd) {
+  background: #fafafa;
+}
+.filter #resList dl .status { width: 33px; }
+.filter #resList dl .address { width: 150px; }
+.filter #resList dl .group { width: 100px; }
+.filter #mainNav dl dt {
+  font-weight: bold;
+  color: #858585;
+  padding-bottom: 5px;
+}
+.filter #mainNav #NAVrefresh a, .filter #mainNav #NAVprintFilter a {
+  font-size: 12pt;
+  font-weight: normal;
+}
+.filter #mainNav #NAVrefresh a i, .filter #mainNav #NAVprintFilter a i {
+  display: inline-block;
+  line-height: 35px;
+}
+.modal-dialog #searchPrint dl dt, .modal-dialog #searchPrint dl dd {
+  display: inline-block;
+  min-width: 22px;
+  padding: 0 6px;
+}
+.modal-dialog #searchPrint dl dt {
+  padding-bottom: 5px;
+  font-size: 90%;
+  color: #AAA;
+}
+.modal-dialog #searchPrint dl dd {
+  line-height: 47px;
+}
+.modal-dialog #searchPrint #files dl:nth-child(odd) {
+  background: #F2F2F2;
+}
+.modal-dialog #searchPrint .status { margin: 0 0 0 5px; }
+.modal-dialog #searchPrint .status i.fa-hourglass-half { color: #e6a21f; }
+.modal-dialog #searchPrint .status i.fa-print { color: #60938a; }
+.modal-dialog #searchPrint .type, .modal-dialog #searchPrint .filterName { width: 126px; }
+.modal-dialog #searchPrint .function { padding-right: 0; }
+.modal-dialog a.BTNtarco, .modal-dialog a.BTNtarco:link, .modal-dialog a.BTNyellow, .modal-dialog a.BTNyellow:link, .modal-dialog a.BTNorange, .modal-dialog a.BTNorange:link,.modal-dialog a.BTNgray, .modal-dialog a.BTNgray:link {
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 37px;
+  line-height: 37px;
+}
+.modal-dialog #savedFilters a {
+  width: 31.3%;
+  margin: 5px;
+}
+.modal-dialog #savedFilters a:nth-child(3n) { margin-right: 0; }
+.modal-dialog #savedFilters .no-filter {
+  text-align: center;
+  line-height: 1.5;
+}

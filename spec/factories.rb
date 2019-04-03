@@ -25,22 +25,6 @@ FactoryBot.define do
     end
   end
 
-  factory :business_schedule do
-    association :shop
-    day_of_week { start_time.wday }
-    business_state "opened"
-    start_time { Time.zone.local(2016, 8, 22, 8, 0, 0) }
-    end_time { Time.zone.local(2016, 8, 22, 19, 0, 0) }
-
-    trait :full_time do
-      full_time true
-    end
-
-    trait :opened do
-      business_state "opened"
-    end
-  end
-
   factory :reservation_setting_menu do
     association :reservation_setting
     association :menu
@@ -100,11 +84,6 @@ FactoryBot.define do
     max_customers 2
   end
 
-  factory :shop_staff do
-    association :shop
-    association :staff
-  end
-
   factory :contact_group do
     association :user
     sequence(:name) { |n| "group-#{n}" }
@@ -113,12 +92,5 @@ FactoryBot.define do
     trait :bind_all do
       bind_all true
     end
-  end
-
-  factory :customer do
-    association :user
-    association :contact_group
-    sequence(:last_name) { |n| "last_name-#{n}" }
-    sequence(:first_name) { |n| "first_name-#{n}" }
   end
 end

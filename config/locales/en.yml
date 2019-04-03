@@ -274,6 +274,9 @@ en:
       new_info_2: Toruya will accept reservation based on this setting.
       name: Name
       shop_label: Belonging Shop
+      contact_groups_label: Customer Groups Readability
+      group_reservations_only_readable_label: reservation records only
+      group_details_readable_label: all information
       delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
       work_time: Work Time
       holiday_time: Holiday
@@ -330,7 +333,6 @@ en:
       import_all_warning_message: "* You can import all contacts only for the very first customer group to avoid duplication on Toruya."
       bind_btn: Bind
       binding_confirmation_message: Are you sure binding this google group (%{google_group_name}) with Toruya group (%{contact_group_name}) ?
-      bind_successfully_message: Contact Groups was successfully binded.
       delete_confirmation_message: Google contact group(tag) synced will be deleted when you delete customer group on Toruya. Are you sure you want to delete?
       importing_message: We are importing your customers, would notify you when the process finished.
       dont_want_connect_google: "Or you don't want to connect with google group"

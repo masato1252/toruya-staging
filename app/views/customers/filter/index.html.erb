@@ -2,15 +2,13 @@
   form_auth_token: form_authenticity_token,
   reservation_filter_path: reservation_user_filter_index_path,
   isAdmin: admin?,
-  hasShop: @has_shop,
   can_manage_saved_filter: can?(:manage, :saved_filter),
   can_manage_preset_filter: can?(:manage, :preset_filter),
   customer_path: user_customers_path(super_user),
-  settings_path: settings_dashboard_path,
   locale: I18n.locale,
   regions: regions,
   contact_group_options: contact_group_options,
-  rank_options: rank_options(@ranks),
+  rank_options: rank_options,
   year_options: year_options,
   month_options: month_options,
   day_options: day_options,
@@ -50,11 +48,11 @@
   info_printing_page_size_options: [{ label: "A4", value: "a4"}],
   address_printing_type: FilteredOutcome::OUTCOME_TYPES.first,
   info_printing_type: FilteredOutcome::OUTCOME_TYPES.second,
-  printing_path: customer_printing_index_path(format: :pdf),
-  filter_path: customer_user_filter_index_path(super_user),
-  save_filter_path: customer_user_saved_filters_path(super_user),
-  fetch_filter_path: fetch_customer_user_saved_filters_path(super_user),
-  delete_filter_path: delete_customer_user_saved_filters_path(super_user),
+  printingPath: customer_user_printing_index_path(super_user, format: :pdf),
+  filter_path: customer_user_filter_index_path(super_user, format: :json),
+  save_filter_path: customer_user_saved_filters_path(super_user, format: :json),
+  fetch_filter_path: fetch_customer_user_saved_filters_path(super_user, format: :json),
+  delete_filter_path: delete_customer_user_saved_filters_path(super_user, format: :json),
   home_label: I18n.t("customer.home"),
   work_label: I18n.t("customer.work"),
   mobile_label: I18n.t("customer.mobile"),
@@ -121,4 +119,3 @@
 
 <%= render "filters/admin_saved_filter_upgrade_modal" %>
 <%= render "filters/staff_saved_filter_upgrade_modal" %>
-<%= render "customers/filter/no_shop_modal" %>

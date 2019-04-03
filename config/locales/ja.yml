@@ -224,14 +224,6 @@ ja:
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
-    dashboard:
-      modal:
-        no_shop_to_create_reservation:
-          title: 店舗を設定してください
-          content: 予約を作成するには、店舗を設定する必要があります。
-        no_shop_to_manage_reservation:
-          title: 店舗を設定してください
-          content: 予約を管理するには、店舗を設定する必要があります。
     filter:
       no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"
@@ -438,6 +430,9 @@ ja:
       new_info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       name: 氏名
       shop_label: 勤務店舗
+      contact_groups_label: 顧客台帳の閲覧権限
+      group_reservations_only_readable_label: 利用履歴のみ
+      group_details_readable_label: 全情報
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務日時
       holiday_time: 休暇
@@ -461,10 +456,8 @@ ja:
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
-        holiday_schedules: 休暇
       info_1:
         working_schedules: 貴方の勤務日時を設定します。
-        holiday_schedules: 貴方の休暇を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
       in_out_label: 出勤／休み
       start_label: 出勤予定
@@ -506,7 +499,6 @@ ja:
       import_all_warning_message: "* Toruyaでの重複を避けるために、一番最初の顧客台帳についてのみ全ての連絡先をインポートできます。"
       bind_btn: インポート
       binding_confirmation_message: 本当に、Google連絡先グループ(%{google_group_name})に登録されている連絡先データを、Toruya顧客台帳(%{contact_group_name})へインポートしますか？
-      bind_successfully_message: Google連絡先データは正常にインポートされました。
       delete_confirmation_message: 顧客台帳を削除すると、Google連絡先から同期しているグループ（タグ）も削除されます。よろしいですか？
       importing_message: Google連絡先データをToruyaへインポート中です。インポートが完了したらメールにてお知らせします。
       dont_want_connect_google: インポートしたいGoogleグループが無い場合は
@@ -948,10 +940,14 @@ ja:
   active_interaction:
     errors:
       models:
+        staff_accounts/create:
+          attributes:
+            staff:
+              email_uniqueness_required: "^電子メールは別のスタッフによって使用されています"
         customers/delete:
           attributes:
             customer:
-              delete_google_contact_failed: "Google連絡先を削除できませんでした。しばらく経ってからもう一度お試しください。"
+              delete_google_contact_failed: "^Google連絡先を削除できませんでした。しばらく経ってからもう一度お試しください。"
         plans/subscribe:
           attributes:
             plan:

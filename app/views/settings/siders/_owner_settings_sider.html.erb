@@ -1,0 +1,76 @@
+<nav id="sideNav">
+  <dl>
+    <%= active_link_to settings_user_contact_groups_path(super_user), active: [["settings/contact_groups", "settings/ranks"]], wrap_tag: :dt, class_active: "here" do %>
+      <span><i class="fa fa-users fa-2x"></i>&nbsp;<%= t("settings.contact.info_title") %></span>
+    <% end %>
+    <dd>
+      <ul>
+        <%= active_link_to settings_user_contact_groups_path(super_user),
+          active: [["settings/contact_groups"]], wrap_tag: :li, class_active: "here" do %>
+          <span><%= t("settings.contact.info_sub_title") %></span>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
+  </dl>
+
+  <% if basic_setting_presenter.customers_management_enabled? %>
+    <dl class="shop">
+      <%= active_link_to content_tag(:span, "<i class='fa fa-calendar fa-2x'></i>&nbsp;予約管理".html_safe), settings_user_shops_path(super_user),
+        active: [[
+          "settings/shops",
+          "settings/business_schedules",
+          "settings/reservation_settings",
+          params[:working_time_menu_scope] == "shop" && "settings/working_time/staffs"]],
+        wrap_tag: :dt,
+        class_active: "here" %>
+      <dd>
+        <ul>
+          <%= active_link_to t("settings.shop.info_title"), settings_user_shops_path(super_user), active: [["settings/shops"], []], wrap_tag: :li, class_active: "here" %>
+
+          <% if basic_setting_presenter.shops_settings_completed? %>
+            <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
+          <% end %>
+
+          <% if basic_setting_presenter.business_hours_settings_completed? %>
+            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, working_time_menu_scope: :shop),
+              active: /working_time_menu_scope=shop/,
+              wrap_tag: :li,
+              class_active: "here" %>
+          <% end %>
+
+          <% if basic_setting_presenter.working_time_settings_completed? %>
+            <%= active_link_to "予約枠", settings_user_reservation_settings_path(super_user), active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
+          <% end %>
+        </ul>
+      </dd>
+    </dl>
+
+    <% if basic_setting_presenter.reservation_settings_completed? %>
+      <%= render "settings/siders/menu_menus" %>
+    <% end %>
+
+    <% if basic_setting_presenter.reservation_management_enabled? %>
+      <%= render "settings/siders/staff_menus" %>
+    <% end %>
+  <% end %>
+
+  <dl>
+    <%= active_link_to settings_profile_path, active: [["settings/profiles", "settings/payments", "settings/plans"]], wrap_tag: :dt, class_active: "here" do %>
+      <span><i class="fa fa-wrench fa-2x"></i>&nbsp;<%= t("settings.account.info_title") %></span>
+    <% end %>
+    <dd>
+      <ul>
+        <%= active_link_to settings_profile_path,
+          active: [["settings/profiles"]], wrap_tag: :li, class_active: "here" do %>
+          <span><%= t("settings.account.info_title2") %></span>
+        <% end %>
+
+        <%= active_link_to settings_payments_path,
+          active: [["settings/payments", "settings/plans"]], wrap_tag: :li, class_active: "here" do %>
+          <span><%= t("settings.plans.info_title") %></span>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
+</nav>

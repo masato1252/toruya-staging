@@ -25,6 +25,7 @@ class ContactGroup < ApplicationRecord
   has_many :rankings, class_name: "ContactGroupRanking", dependent: :destroy
   has_many :ranks, through: :rankings
   has_many :customers
+  has_many :staff_relations, class_name: "StaffContactGroupRelation", dependent: :destroy
   belongs_to :user
 
   validates :google_group_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true

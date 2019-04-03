@@ -32,7 +32,7 @@ class MembersController < DashboardController
     # When user checked the management shops and user is a manager/owner
     # Show the reservations
     reservations = reservations.find_all do |r|
-      user_ability = ability(r.shop.user)
+      user_ability = ability(r.shop.user, r.shop)
       user_ability.responsible_for_reservation(r) || (member_shop_ids.include?(r.shop_id.to_s) && user_ability.can?(:see, r))
     end
 

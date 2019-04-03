@@ -1,5 +1,6 @@
 class Customers::SavedFiltersController < DashboardController
   def fetch
+    authorize! :read, :filter
     @filter = super_user.customer_query_filters.find(params[:id])
 
     @filters = super_user.customer_query_filters

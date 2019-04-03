@@ -1,5 +1,6 @@
 class Customers::Filter < ActiveInteraction::Base
   object :super_user, class: User
+  object :current_user_staff, class: Staff
   array :group_ids, default: nil
   array :rank_ids, default: nil
   hash :living_place, default: nil do
@@ -30,8 +31,12 @@ class Customers::Filter < ActiveInteraction::Base
 
   def execute
     scoped = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile)
+    scoped = if group_ids.present?
+               scoped.where(contact_group_id: group_ids & current_user_staff.readable_contact_group_ids.map(&:to_s))
+             else
+               scoped.where(contact_group_id: current_user_staff.readable_contact_group_ids)
+             end
 
-    scoped = scoped.where(contact_group_id: group_ids) if group_ids.present?
     scoped = scoped.where(rank_id: rank_ids) if rank_ids.present?
 
     if living_place && living_place[:states].present?

@@ -14,9 +14,8 @@ module OptionsHelper
     { label: menu.name, value: menu.id, availableSeat: menu.available_seat }
   end
 
-  def rank_options(ranks)
-    return unless ranks
-    ranks.map { |r| { label: r.name, value: r.id, key: r.key } }
+  def rank_options
+    super_user.ranks.order("id DESC").map { |r| { label: r.name, value: r.id, key: r.key } }
   end
 
   def menu_group_options(category_menus)
@@ -67,7 +66,7 @@ module OptionsHelper
     h
   end
 
-  def customer_options(customers)
+  def customer_options(customers, details_permission_checking_required = false)
     return [] unless customers.present?
     customers.map do |c|
       React.camelize_props(c.attributes.merge(
@@ -89,7 +88,8 @@ module OptionsHelper
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
         display_address: c.display_address,
         google_down: c.google_down,
-        googleContactMissing: c.google_contact_missing
+        googleContactMissing: c.google_contact_missing,
+        details_readable: details_permission_checking_required && can?(:read_details, c)
       ))
     end
   end
@@ -138,7 +138,7 @@ module OptionsHelper
   end
 
   def contact_group_options
-    default_options(super_user.contact_groups.connected)
+    default_options(current_user_staff.readable_contact_groups.connected)
   end
 
   def filtered_outcome_options(filtered_outcomes)

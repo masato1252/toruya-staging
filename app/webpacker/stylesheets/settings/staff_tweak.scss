@@ -1,0 +1,22 @@
+.setting.staffs-container {
+  .resend {
+    margin-left: 6px;
+    margin-right: 6px;
+  }
+
+  .shop-permission, .contact-group-permission {
+    label.radio-label {
+      &:before,
+      &:after {
+        content: unset;
+      }
+    }
+    dd {
+      display: inline-block !important;
+
+      &:first-child {
+        width: 20%;
+      }
+    }
+  }
+}

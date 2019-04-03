@@ -24,8 +24,10 @@
   </dl>
 
   <dl>
+    <%= render "layouts/dashboard_header/filter_button" %>
+
     <dd>
-      <%= active_link_to edit_settings_user_staff_path(super_user, current_user_staff, shop_id: shop.id), active: /^\/member/, class_active: "here" do %>
+      <%= active_link_to edit_at_shop_settings_user_staff_path(super_user, current_user_staff, shop_id: shop.id), active: /^\/member/, class_active: "here" do %>
         <i class="fa fa-cog fa-4x" aria-hidden="true"></i>
         設定
       <% end %>

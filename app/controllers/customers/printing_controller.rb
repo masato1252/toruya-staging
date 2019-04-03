@@ -1,6 +1,6 @@
 class Customers::PrintingController < DashboardController
   def new
-    @customer = super_user.customers.find(params[:customer_id]).with_google_contact
+    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id]).with_google_contact
     @page_size = params[:page_size]
 
     options = {
@@ -13,8 +13,6 @@ class Customers::PrintingController < DashboardController
   end
 
   def create
-    authorize! :manage, :filter
-
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
     filtered_outcome = super_user.filtered_outcomes.create(params[:filtered_outcome].merge(query: query))
 

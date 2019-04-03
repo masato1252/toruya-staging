@@ -1,0 +1,70 @@
+#settingForm {
+  .dashboard {
+    display: flex;
+    background-color: $gray2;
+    height: 200px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid $gray;
+
+    .cell {
+      justify-content: center;
+      align-items: center;
+      display: inline-flex;
+      width: 33%;
+      flex-direction: column;
+
+      > div {
+        margin: 12px 0;
+      }
+
+      .big {
+        font-size: 32px;
+      }
+
+      &:first-child {
+        border-right: 2px solid $gray;
+      }
+
+      &:last-child {
+        border-left: 2px solid $gray;
+      }
+    }
+  }
+
+  .tour {
+    .title {
+      font-size: 20px;
+    }
+
+    .label {
+      font-size: 16px;
+
+      &.label-done {
+        background-color: $palette-color2;
+      }
+    }
+
+    .task {
+      @include clearfix;
+
+      i.fa {
+        font-size: 32px;
+
+        &.fa-check-circle {
+          opacity: 0.3;
+        }
+
+        &.done {
+          color: $palette-color2;
+          opacity: 1;
+        }
+
+        &.next-setting {
+          color: $palette-color2;
+          float: right;
+        }
+      }
+    }
+  }
+}

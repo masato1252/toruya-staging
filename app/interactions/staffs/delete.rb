@@ -7,7 +7,7 @@ module Staffs
     def execute
       staff.transaction do
         if staff.staff_account
-          staff.staff_account.disabled!
+          staff.staff_account.update(state: :disabled, active_uniqueness: nil)
         end
 
         staff.update_columns(deleted_at: Time.current)
@@ -16,8 +16,9 @@ module Staffs
           NotificationMailer.staff_deleted(staff).deliver_later
         end
 
-        staff.shop_staffs.destroy_all
+        staff.shop_relations.destroy_all
         staff.staff_menus.destroy_all
+        staff.contact_group_relations.destroy_all
       end
     end
 

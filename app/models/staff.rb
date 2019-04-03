@@ -23,17 +23,18 @@ class Staff < ApplicationRecord
   include NormalizeName
   include ReservationChecking
 
-  attr_accessor :enable_staff_account
-
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, -> { active }, through: :staff_menus
+  has_many :shop_relations, class_name: "ShopStaff", dependent: :destroy
   has_many :shop_staffs, dependent: :destroy
   has_many :shops, -> { active }, through: :shop_staffs
   has_many :business_schedules, dependent: :destroy
   has_many :custom_schedules, dependent: :destroy
   has_many :reservation_staffs
   has_many :reservations, through: :reservation_staffs
+  has_many :contact_group_relations, class_name: "StaffContactGroupRelation", dependent: :destroy
+  has_many :contact_groups, through: :contact_group_relations
   has_one :staff_account, dependent: :destroy
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true
@@ -47,12 +48,16 @@ class Staff < ApplicationRecord
     !deleted_at && staff_account&.active?
   end
 
-  def can?(*args)
-    Ability.new(staff_account.user, user).can?(*args)
-  end
-
   # no any business schedule exists
   def freelancer?(shop)
     !business_schedules.where(shop: shop).exists?
+  end
+
+  def readable_contact_groups
+    @readable_contact_groups ||= staff_account.owner? ? user.contact_groups : contact_groups
+  end
+
+  def readable_contact_group_ids
+    @readable_contact_group_ids ||= staff_account.owner? ? user.contact_group_ids.push(nil) : contact_group_relations.pluck(:contact_group_id)
   end
 end

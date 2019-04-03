@@ -4,25 +4,35 @@ class CustomersController < DashboardController
   # GET /customers
   # GET /customers.json
   def index
+    authorize! :read, :customers_dashboard
     @body_class = "customer"
 
-    @customers = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile).order("updated_at DESC").limit(Customers::Search::PER_PAGE)
-    @customer = super_user.customers.includes(:rank, :contact_group).find_by(id: params[:customer_id])
+    @customers =
+      super_user
+      .customers
+      .contact_groups_scope(current_user_staff)
+      .includes(:rank, :contact_group, updated_by_user: :profile)
+      .order("updated_at DESC")
+      .limit(Customers::Search::PER_PAGE)
+    @customer =
+      super_user
+      .customers
+      .contact_groups_scope(current_user_staff)
+      .includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
-    @from_shop = shop || super_user.shops.first # avoid users don't come in from shop dashboard
-    if @from_shop
+    if shop
       @add_reservation_path = if params[:reservation_id].present?
-                                edit_shop_reservation_path(@from_shop, id: params[:reservation_id])
+                                edit_shop_reservation_path(shop, id: params[:reservation_id])
                               else
-                                new_shop_reservation_path(@from_shop)
+                                new_shop_reservation_path(shop)
                               end
     end
-    @contact_groups = super_user.contact_groups.connected
-    @ranks = super_user.ranks.order("id DESC") # For regular first then VIP
   end
 
   def detail
-    customer = super_user.customers.find(params[:id])
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    authorize! :read, customer
+
     @customer = if customer.google_contact_id
                   customer.build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: customer))
                 else
@@ -46,27 +56,34 @@ class CustomersController < DashboardController
   end
 
   def delete
-    customer = super_user.customers.find(params[:id])
+    authorize! :edit, Customer
+
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
     outcome = Customers::Delete.run(customer: customer)
 
     if outcome.valid?
-      head :no_content
+      head :ok
     else
       render json: { error: outcome.errors.full_messages.join(", ") }, status: :unprocessable_entity
     end
   end
 
   def recent
-    @customers = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile).
-      order("updated_at DESC").
-      page(params[:page].presence || 1).
-      per(Customers::Search::PER_PAGE)
+    @customers =
+      super_user
+      .customers
+      .contact_groups_scope(current_user_staff)
+      .includes(:rank, :contact_group, updated_by_user: :profile)
+      .order("updated_at DESC")
+      .page(params[:page].presence || 1)
+      .per(Customers::Search::PER_PAGE)
     render action: :query
   end
 
   def filter
     @customers = Customers::CharFilter.run(
       super_user: super_user,
+      current_user_staff: current_user_staff,
       pattern_number: params[:pattern_number],
       page: params[:page].presence || 1
     ).result
@@ -76,6 +93,7 @@ class CustomersController < DashboardController
   def search
     @customers = Customers::Search.run(
       super_user: super_user,
+      current_user_staff: current_user_staff,
       keyword: params[:keyword],
       page: params[:page].presence || 1
     ).result

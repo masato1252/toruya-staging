@@ -895,7 +895,8 @@ CREATE TABLE public.shop_staffs (
     updated_at timestamp without time zone NOT NULL,
     staff_regular_working_day_permission boolean DEFAULT false NOT NULL,
     staff_temporary_working_day_permission boolean DEFAULT false NOT NULL,
-    staff_full_time_permission boolean DEFAULT false NOT NULL
+    staff_full_time_permission boolean DEFAULT false NOT NULL,
+    level integer DEFAULT 0 NOT NULL
 );
 
 
@@ -972,7 +973,8 @@ CREATE TABLE public.staff_accounts (
     state integer DEFAULT 0 NOT NULL,
     level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    active_uniqueness boolean
 );
 
 
@@ -993,6 +995,39 @@ CREATE SEQUENCE public.staff_accounts_id_seq
 --
 
 ALTER SEQUENCE public.staff_accounts_id_seq OWNED BY public.staff_accounts.id;
+
+
+--
+-- Name: staff_contact_group_relations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.staff_contact_group_relations (
+    id bigint NOT NULL,
+    staff_id bigint NOT NULL,
+    contact_group_id bigint NOT NULL,
+    contact_group_read_permission integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: staff_contact_group_relations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.staff_contact_group_relations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: staff_contact_group_relations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.staff_contact_group_relations_id_seq OWNED BY public.staff_contact_group_relations.id;
 
 
 --
@@ -1407,6 +1442,13 @@ ALTER TABLE ONLY public.staff_accounts ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: staff_contact_group_relations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.staff_contact_group_relations ALTER COLUMN id SET DEFAULT nextval('public.staff_contact_group_relations_id_seq'::regclass);
+
+
+--
 -- Name: staff_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1673,6 +1715,14 @@ ALTER TABLE ONLY public.staff_accounts
 
 
 --
+-- Name: staff_contact_group_relations staff_contact_group_relations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.staff_contact_group_relations
+    ADD CONSTRAINT staff_contact_group_relations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_menus staff_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1756,6 +1806,13 @@ CREATE INDEX customer_names_on_phonetic_last_name_idx ON public.customers USING 
 
 
 --
+-- Name: customers_basic_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX customers_basic_index ON public.customers USING btree (user_id, contact_group_id, deleted_at);
+
+
+--
 -- Name: customers_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1816,34 +1873,6 @@ CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btre
 --
 
 CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
-
-
---
--- Name: index_customers_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_contact_group_id ON public.customers USING btree (contact_group_id);
-
-
---
--- Name: index_customers_on_rank_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_rank_id ON public.customers USING btree (rank_id);
-
-
---
--- Name: index_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_user_id ON public.customers USING btree (user_id);
-
-
---
--- Name: index_customers_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_customers_on_user_id_and_deleted_at ON public.customers USING btree (user_id, deleted_at);
 
 
 --
@@ -1984,6 +2013,20 @@ CREATE INDEX index_staff_accounts_on_staff_id ON public.staff_accounts USING btr
 --
 
 CREATE INDEX index_staff_accounts_on_user_id ON public.staff_accounts USING btree (user_id);
+
+
+--
+-- Name: index_staff_contact_group_relations_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_contact_group_relations_on_contact_group_id ON public.staff_contact_group_relations USING btree (contact_group_id);
+
+
+--
+-- Name: index_staff_contact_group_relations_on_staff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_staff_contact_group_relations_on_staff_id ON public.staff_contact_group_relations USING btree (staff_id);
 
 
 --
@@ -2155,6 +2198,13 @@ CREATE INDEX staff_account_token_index ON public.staff_accounts USING btree (tok
 
 
 --
+-- Name: staff_contact_group_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX staff_contact_group_unique_index ON public.staff_contact_group_relations USING btree (staff_id, contact_group_id);
+
+
+--
 -- Name: staff_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2173,6 +2223,13 @@ CREATE INDEX staff_working_time_index ON public.business_schedules USING btree (
 --
 
 CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (staff_id, state);
+
+
+--
+-- Name: unique_staff_account_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_staff_account_index ON public.staff_accounts USING btree (owner_id, user_id, active_uniqueness);
 
 
 --
@@ -2259,7 +2316,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20181227064220'),
 ('20190117090106'),
 ('20190214062710'),
+('20190224032620'),
 ('20190225080604'),
 ('20190227040922'),
 ('20190304143150'),
-('20190307123116');
+('20190307123116'),
+('20190311165617'),
+('20190312140721'),
+('20190313140955'),
+('20190316013202');
+
+

@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   end
   post "member", to: "members#show"
 
-  resources :users do
+  resources :users, only: [] do
     resources :customers, only: [:index] do
       collection do
         get :filter
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resource :profile, only: %i[new create]
   end
 
-  resources :shops do
+  resources :shops, only: [] do
     resources :reservations do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
@@ -52,16 +52,9 @@ Rails.application.routes.draw do
   end
 
   scope module: "customers", as: "customer", path: "customer" do
-    resources :reservations, only: [:index] do
-      collection do
-        get :state
-        get :edit
-      end
-    end
-
-    resources :printing, only: [:new, :create]
-
-    resources :users do
+    resources :users, only: [] do
+      resources :printing, only: [:new, :create]
+      resources :reservations, only: [:index]
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
@@ -73,7 +66,7 @@ Rails.application.routes.draw do
   end
 
   scope module: "reservations", as: "reservation", path: "reservation" do
-    resources :users do
+    resources :users, only: [] do
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
@@ -111,12 +104,17 @@ Rails.application.routes.draw do
         get :receipt
       end
     end
+    resource :profile, only: %i[show edit update]
 
-    resources :users do
-      resource :profile, only: %i[show edit update]
+    resources :users, only: [] do
+      get :dashboard, to: "dashboards#index", as: :dashboard
       resources :staffs, except: [:show] do
         collection do
           get :resend_activation_email
+        end
+
+        member do
+          get "shop/:shop_id/edit", to: "staffs#edit", as: :edit_at_shop
         end
       end
       resources :business_schedules, only: [:index]
@@ -131,7 +129,6 @@ Rails.application.routes.draw do
         resources :staffs, only: [:index, :update] do
           member do
             get :working_schedules
-            get :holiday_schedules
           end
         end
       end
@@ -179,6 +176,7 @@ Rails.application.routes.draw do
       get :edit_staff_for_admin
       get :new_staff_for_admin
       get :create_reservation
+      get :admin_upgrade_filter_modal
     end
   end
 
@@ -190,6 +188,5 @@ Rails.application.routes.draw do
     end
   end
 
-  get "settings/:super_user_id", to: "home#settings", as: :settings
   root to: "members#show"
 end

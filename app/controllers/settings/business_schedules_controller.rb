@@ -40,9 +40,14 @@ class Settings::BusinessSchedulesController < SettingsController
 
 
     if session[:settings_tour]
-      redirect_to settings_user_working_time_staffs_path(super_user, mode: "working_schedules")
+      redirect_to settings_user_working_time_staffs_path(super_user)
     else
-      flash[:alert] = update_shop.errors.full_messages.join(", ")
+      if update_shop.errors.present?
+        flash[:alert] = update_shop.errors.full_messages.join(", ")
+      else
+        flash[:notice] = I18n.t("common.update_successfully_message")
+      end
+
       redirect_to settings_user_business_schedules_path(super_user)
     end
   end

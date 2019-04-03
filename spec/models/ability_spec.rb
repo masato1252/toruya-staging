@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Ability do
   let(:current_user) { FactoryBot.create(:user) }
   let(:super_user) { current_user }
-  let(:ability) { described_class.new(current_user, super_user) }
+  let(:shop) { nil }
+  let(:ability) { described_class.new(current_user, super_user, shop) }
 
   RSpec.shared_examples "permission management" do |member_level, action, ability_name, permission|
     it "#{member_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
@@ -198,13 +199,12 @@ RSpec.describe Ability do
       end
     end
 
-    context "manager level" do
-    end
-
     context "staff level" do
-      let(:staff_account) { FactoryBot.create(:staff_account) }
+      let(:staff) { FactoryBot.create(:staff, level: :staff) }
+      let(:staff_account) { staff.staff_account }
       let(:current_user) { staff_account.user }
       let(:super_user) { staff_account.owner }
+      let(:shop) { staff.shops.first }
 
       context "create Reservation" do
         context "when users don't have any reservation" do
@@ -243,7 +243,8 @@ RSpec.describe Ability do
             before { allow(super_user).to receive(:member_level).and_return(member_level) }
 
             it "can manage only one shop reservations" do
-              expect(ability.can?(:manage_shop_reservations, shop1)).to eq(true)
+              expect(ability.can?(:manage_shop_reservations, shop)).to eq(true)
+              expect(ability.can?(:manage_shop_reservations, shop1)).to eq(false)
               expect(ability.can?(:manage_shop_reservations, shop2)).to eq(false)
             end
           end
@@ -252,11 +253,14 @@ RSpec.describe Ability do
     end
 
     context "edit reservation" do
+      let(:super_user) { FactoryBot.create(:user) }
+      let(:current_user) { super_user }
       before { allow(super_user).to receive(:premium_member?).and_return(is_premium_member) }
       let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids, start_time: reservation_time) }
       let(:shop) { FactoryBot.create(:shop, user: super_user) }
-      let(:staff_ids) { [FactoryBot.create(:staff).id]  }
-      let(:reservation_time) { Time.now  }
+      let(:staff) { FactoryBot.create(:staff, user: super_user) }
+      let(:staff_ids) { [staff.id] }
+      let(:reservation_time) { Time.now }
 
       context "when user is an owner" do
         context "when user is premium member" do
@@ -325,9 +329,9 @@ RSpec.describe Ability do
       end
 
       context "when user is NOT owner" do
-        let(:staff_account) { FactoryBot.create(:staff_account) }
+        let(:staff_account) { staff.staff_account }
         let(:current_user) { staff_account.user }
-        let(:super_user) { staff_account.owner }
+        let(:shop) { staff.shops.first }
 
         context "when super user is premium member" do
           let(:is_premium_member) { true }
@@ -358,10 +362,11 @@ RSpec.describe Ability do
       end
 
       context "when user is manager in reservation's shop" do
-        let(:staff_account) { FactoryBot.create(:staff_account, :manager) }
+        let(:staff) { FactoryBot.create(:staff, :manager) }
+        let(:staff_account) { staff.staff_account }
         let(:current_user) { staff_account.user }
         let(:super_user) { staff_account.owner }
-        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let(:shop) { staff.shops.first }
         let!(:reservation) { FactoryBot.create(:reservation, shop: shop) }
 
         it "returns true" do
@@ -373,7 +378,7 @@ RSpec.describe Ability do
         let(:staff_account) { FactoryBot.create(:staff_account) }
         let(:current_user) { staff_account.user }
         let(:super_user) { staff_account.owner }
-        let(:shop) { FactoryBot.create(:shop, user: super_user) }
+        let(:shop) { staff_account.staff.shops.first }
         let!(:reservation) { FactoryBot.create(:reservation, shop: shop, staff_ids: staff_ids) }
 
         context "when staff is responsible for this reservation" do
@@ -389,6 +394,304 @@ RSpec.describe Ability do
 
           it "returns false" do
             expect(ability.can?(:see, reservation)).to eq(false)
+          end
+        end
+      end
+    end
+
+    context "edit Staff" do
+      let(:staff) { FactoryBot.create(:staff) }
+      let(:staff_account) { staff.staff_account }
+      let(:super_user) { staff_account.owner }
+      let(:current_user) { staff_account.user }
+      let(:shop) { staff.shops.first }
+
+      context "when super user is premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+        context "user is admin level" do
+          let(:current_user) { staff_account.owner }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(true)
+            end
+          end
+
+          context "when staff is owned by other user" do
+            let(:other_staff) { FactoryBot.create(:staff) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, other_staff)).to eq(false)
+            end
+          end
+        end
+
+        context "user is manager level" do
+          let(:staff) { FactoryBot.create(:staff, :manager) }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(true)
+            end
+          end
+        end
+
+        context "user is staff level" do
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+      end
+
+      context "when super user is NOT premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(false) }
+
+        context "user is admin level" do
+          let(:staff) { FactoryBot.create(:staff, :owner) }
+          let(:current_user) { staff_account.owner }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(true)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+
+          context "when staff is owned by other user" do
+            let(:other_staff) { FactoryBot.create(:staff) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, other_staff)).to eq(false)
+            end
+          end
+        end
+
+        context "user is manager level" do
+          let(:staff) { FactoryBot.create(:staff, :manager) }
+
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(false)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+
+        context "user is staff level" do
+          context "when staff is userself" do
+            it "returns true" do
+              expect(ability.can?(:edit, staff)).to eq(false)
+            end
+          end
+
+          context "when staff is NOT userself" do
+            let(:staff2) { FactoryBot.create(:staff, user: super_user) }
+
+            it "returns true" do
+              expect(ability.can?(:edit, staff2)).to eq(false)
+            end
+          end
+        end
+      end
+    end
+
+    context "read customers_dashboard" do
+      context "user is admin level" do
+        it "returns true" do
+          expect(ability.can?(:read, :customers_dashboard)).to eq(true)
+        end
+      end
+
+      context "when super_user is premium member" do
+        before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+        let(:staff) { FactoryBot.create(:staff) }
+        let(:staff_account) { staff.staff_account }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        it "returns false" do
+          expect(ability.can?(:read, :customers_dashboard)).to eq(false)
+        end
+
+        context "when staff had contact groups" do
+          let(:staff) { FactoryBot.create(:staff, :with_contact_groups) }
+
+          it "returns true" do
+            expect(ability.can?(:read, :customers_dashboard)).to eq(true)
+          end
+        end
+      end
+    end
+
+    context "read Customer" do
+      context "user is admin level" do
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+          it "returns true" do
+            expect(ability.can?(:read, customer)).to eq(true)
+          end
+        end
+
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer) }
+
+          it "returns false" do
+            expect(ability.can?(:read, customer)).to eq(false)
+          end
+        end
+      end
+
+      context "when user is staff/manager level" do
+        let(:staff) { FactoryBot.create(:staff, :with_contact_groups, level: :staff) }
+        let(:staff_account) { staff.staff_account }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        context "when super_user is premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+          context "when the user could read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
+
+            it "returns true" do
+              expect(ability.can?(:read, customer)).to eq(true)
+            end
+          end
+
+          context "when the user could NOT read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+            it "returns false" do
+              expect(ability.can?(:read, customer)).to eq(false)
+            end
+          end
+        end
+
+        context "when super_user is NOT premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(false) }
+          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
+
+          context "when the user could read the customer's group" do
+            it "returns false" do
+              customer = FactoryBot.create(:customer, user: current_user)
+
+              expect(ability.can?(:read, customer)).to eq(false)
+            end
+          end
+        end
+      end
+    end
+
+    context "read_details Customer" do
+      context "user is admin level" do
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+          it "returns true" do
+            expect(ability.can?(:read_details, customer)).to eq(true)
+          end
+        end
+
+        context "when customer is owned by the current_user" do
+          let(:customer) { FactoryBot.create(:customer) }
+
+          it "returns false" do
+            expect(ability.can?(:read_details, customer)).to eq(false)
+          end
+        end
+      end
+
+      context "when user is staff/manager level" do
+        let(:staff) { FactoryBot.create(:staff, :with_contact_groups, level: :staff) }
+        let(:staff_account) { staff.staff_account }
+        let(:current_user) { staff_account.user }
+        let(:super_user) { staff_account.owner }
+
+        context "when super_user is premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(true) }
+
+          context "when the user could read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
+
+            context "when the read permission is reservations_only_readable" do
+              it "returns false" do
+                staff.contact_group_relations.first.reservations_only_readable!
+
+                expect(ability.can?(:read_details, customer)).to eq(false)
+              end
+            end
+
+            context "when the read permission is details_readable" do
+              it "returns true" do
+                staff.contact_group_relations.first.details_readable!
+
+                expect(ability.can?(:read_details, customer)).to eq(true)
+              end
+            end
+          end
+
+          context "when the user could NOT read the customer's group" do
+            let(:customer) { FactoryBot.create(:customer, user: current_user) }
+
+            it "returns false" do
+              expect(ability.can?(:read_details, customer)).to eq(false)
+            end
+          end
+        end
+
+        context "when super_user is NOT premium member" do
+          before { allow(super_user).to receive(:premium_member?).and_return(false) }
+          let(:customer) { FactoryBot.create(:customer, user: super_user, contact_group: staff.readable_contact_groups.first) }
+
+          context "when the user could read the customer's group" do
+            it "returns false" do
+              customer = FactoryBot.create(:customer, user: current_user)
+
+              expect(ability.can?(:read_details, customer)).to eq(false)
+            end
           end
         end
       end
