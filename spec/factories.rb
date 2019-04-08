@@ -6,7 +6,7 @@ FactoryBot.define do
 
   factory :user do
     sequence(:email) { |n| "foo#{n}@gmail.com" }
-    password "foobar78"
+    password { "foobar78" }
     confirmed_at { Time.zone.now }
   end
 
@@ -14,14 +14,14 @@ FactoryBot.define do
     association :user
     sequence(:name) { |n| "foo#{n}" }
     sequence(:short_name) { |n| "f#{n}" }
-    zip_code "160-0005"
-    phone_number "123456789"
+    zip_code { "160-0005" }
+    phone_number { "123456789" }
     sequence(:email) { |n| "foo#{n}@gmail.com" }
     sequence(:address) { |n| "address#{n}" }
     holiday_working { false }
 
     trait :holiday_working do
-      holiday_working true
+      holiday_working { true }
     end
   end
 
@@ -35,7 +35,7 @@ FactoryBot.define do
     start_date { Time.zone.now.to_date }
 
     trait :repeating do
-      repeats 2
+      repeats { 2 }
 
       after(:create) do |rule|
         FactoryBot.create(:shop_menu_repeating_date, shop: menu.shop, menu: menu)
@@ -52,8 +52,8 @@ FactoryBot.define do
 
   factory :rank do
     association :user
-    name "Regular"
-    key Rank::REGULAR_KEY
+    name { "Regular" }
+    key { Rank::REGULAR_KEY }
   end
 
   factory :category do
@@ -61,7 +61,7 @@ FactoryBot.define do
     sequence(:name) { |n| "category-#{n}" }
 
     transient do
-      menus []
+      menus { [] }
     end
 
     after(:create) do |category, proxy|
@@ -81,7 +81,7 @@ FactoryBot.define do
   factory :staff_menu do
     association :staff
     association :menu
-    max_customers 2
+    max_customers { 2 }
   end
 
   factory :contact_group do
@@ -90,7 +90,7 @@ FactoryBot.define do
     sequence(:backup_google_group_id) { |n| "backup_google_group_id-#{n}" }
 
     trait :bind_all do
-      bind_all true
+      bind_all { true }
     end
   end
 end

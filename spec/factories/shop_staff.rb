@@ -5,11 +5,11 @@ FactoryBot.define do
     level { :staff }
 
     trait :staff do
-      level :staff
+      level { :staff }
     end
 
     trait :manager do
-      level :manager
+      level { :manager }
     end
   end
 end

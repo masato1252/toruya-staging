@@ -4,24 +4,24 @@ FactoryBot.define do
 
     sequence(:name) { |n| "settings-#{n}" }
     sequence(:short_name) { |n| "s-#{n}" }
-    day_type "business_days"
+    day_type { "business_days" }
 
     transient do
       menu { FactoryBot.create(:menu, user: user) }
     end
 
     trait :weekly do
-      day_type "weekly"
+      day_type { "weekly" }
       sequence(:days_of_week) { |n| [n%7] }
     end
 
     trait :number_of_day_monthly do
-      day_type "monthly"
+      day_type { "monthly" }
       sequence(:day) { |n| n%28 }
     end
 
     trait :day_of_week_monthly do
-      day_type "monthly"
+      day_type { "monthly" }
       sequence(:nth_of_week) { |n| n%4 }
       sequence(:days_of_week) { |n| [n%7] }
     end
