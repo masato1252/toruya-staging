@@ -22,7 +22,7 @@ module Reservable
         or(
           scoped.where("reservations.shop_id != ?", shop.id).where("reservations.start_time > ? and reservations.end_time <= ?", beginning_of_day, end_of_day)
       ).
-        pluck("DISTINCT staff_id")
+      pluck(Arel.sql("DISTINCT staff_id"))
     end
 
     def closed_custom_schedules
@@ -35,7 +35,7 @@ module Reservable
     def closed_custom_schedules_staff_ids
       @closed_custom_schedules_staff_ids ||= closed_custom_schedules.
         where(staff_id: shop.staff_ids).
-        pluck("DISTINCT custom_schedules.staff_id") +
+        pluck(Arel.sql("DISTINCT custom_schedules.staff_id")) +
       closed_personal_custom_schedules_staff_ids
     end
 
@@ -44,7 +44,7 @@ module Reservable
 
       closed_schedule_user_ids = closed_custom_schedules.
         where(user_id: active_staff_accounts.map(&:user_id)).
-        pluck("DISTINCT custom_schedules.user_id")
+        pluck(Arel.sql("DISTINCT custom_schedules.user_id"))
 
       active_staff_accounts.find_all {|staff_account| closed_schedule_user_ids.include?(staff_account.user_id) }.map(&:staff_id)
     end
