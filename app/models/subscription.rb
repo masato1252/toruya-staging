@@ -23,7 +23,7 @@ class Subscription < ApplicationRecord
   REFUNDABLE_DAYS = 8
 
   belongs_to :plan, required: false
-  belongs_to :next_plan, class_name: "Plan"
+  belongs_to :next_plan, class_name: "Plan", required: false
   belongs_to :user
 
   scope :recurring_chargeable_at, ->(date) {

@@ -10,12 +10,12 @@ FactoryBot.define do
     active_uniqueness { true }
 
     trait :employee do
-      level :employee
+      level { :employee }
     end
 
     trait :pending do
-      state :pending
-      active_uniqueness nil
+      state { :pending }
+      active_uniqueness { nil }
     end
   end
 end

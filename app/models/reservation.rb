@@ -40,7 +40,7 @@ class Reservation < ApplicationRecord
 
   belongs_to :shop
   belongs_to :menu
-  belongs_to :by_staff, class_name: "Staff"
+  belongs_to :by_staff, class_name: "Staff", required: false
   has_many :reservation_staffs, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
   has_many :reservation_customers, dependent: :destroy
