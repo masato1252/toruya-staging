@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :staff do
     transient do
       shop { FactoryBot.create(:shop, user: user) }
-      menus []
+      menus { [] }
       mapping_user { FactoryBot.create(:user) }
       mapping_contact_group { }
       level { :staff }
@@ -19,7 +19,7 @@ FactoryBot.define do
     end
 
     trait :manager do
-      level :manager
+      level { :manager }
     end
 
     trait :owner do
@@ -31,7 +31,7 @@ FactoryBot.define do
     end
 
     trait :without_staff_account do
-      mapping_user nil
+      mapping_user { nil }
     end
 
     after(:create) do |staff, proxy|

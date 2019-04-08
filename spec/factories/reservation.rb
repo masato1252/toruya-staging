@@ -8,11 +8,11 @@ FactoryBot.define do
     customer_ids { [FactoryBot.create(:customer).id] }
 
     trait :pending do
-      aasm_state "pending"
+      aasm_state { "pending" }
     end
 
     trait :reserved do
-      aasm_state "reserved"
+      aasm_state { "reserved" }
     end
   end
 end

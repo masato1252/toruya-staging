@@ -8,10 +8,13 @@ Bundler.require(*Rails.groups)
 
 module Kasaike
   class Application < Rails::Application
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.0
 
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
     Dotenv.overload Rails.root.join(".env.#{Rails.env}")
     config.i18n.default_locale = 'ja'
     config.i18n.locale = 'ja'
