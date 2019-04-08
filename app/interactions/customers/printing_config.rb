@@ -12,6 +12,7 @@ class Customers::PrintingConfig < ActiveInteraction::Base
     specified_size = PAGE_SIZE[page_size]
 
     {
+      lowquality: true,
       page_width: specified_size[:width],
       page_height: specified_size[:height],
       margin: {
