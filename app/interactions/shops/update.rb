@@ -12,7 +12,7 @@ module Shops
         if shop.update(params)
 
           if logo_params
-            if logo_params.content_type.in?(CONTENT_TYPES) && logo_params.size.between?(0, 1.megabyte)
+            if logo_params.content_type.in?(CONTENT_TYPES) && logo_params.size.between?(0, 0.05.megabyte)
               shop.logo.attach(logo_params)
             else
               errors.add(:shop, :photo_invalid)

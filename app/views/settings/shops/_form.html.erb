@@ -60,6 +60,17 @@
       </dl>
     </div>
 
+    <h3>logo</h3>
+    <div class="formRow">
+      <dl>
+        <dt>logo</dt>
+        <dd>
+          <%= shop_logo(shop, "390x135") %>
+          <%= f.file_field :logo, placeholder: true %>
+        </dd>
+      </dl>
+    </div>
+
     <ul id="footerav">
       <li>
         <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>

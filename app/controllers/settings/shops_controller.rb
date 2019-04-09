@@ -48,9 +48,12 @@ class Settings::ShopsController < SettingsController
   def update
     authorize! :edit, Shop
 
-    if @shop.update(shop_params)
+    outcome = Shops::Update.run(shop: @shop, params: shop_params.permit!.to_h)
+
+    if outcome.valid?
       redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message")
     else
+      flash.now[:alert] = outcome.errors.full_messages.join(", ")
       render :edit
     end
   end
@@ -77,6 +80,6 @@ class Settings::ShopsController < SettingsController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def shop_params
-    params.require(:shop).permit(:name, :short_name, :zip_code, :phone_number, :email, :website, :address)
+    params.require(:shop).permit(:name, :short_name, :zip_code, :phone_number, :email, :website, :address, :logo)
   end
 end

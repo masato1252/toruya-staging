@@ -958,6 +958,10 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
+        shops/update:
+          attributes:
+            shop:
+              photo_invalid: "^店舗ロゴの画像 30KB未満のPNGまたはGIF形式"
         reservable/time:
           attributes:
             date:
