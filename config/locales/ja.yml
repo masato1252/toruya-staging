@@ -435,6 +435,7 @@ ja:
       group_details_readable_label: 全情報
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務日時
+      all_work_time: スタッフ勤務日時
       holiday_time: 休暇
       modal:
         upgrade_title: アカウントをアップグレード
