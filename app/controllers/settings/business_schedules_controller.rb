@@ -21,7 +21,7 @@ class Settings::BusinessSchedulesController < SettingsController
       CustomSchedules::Change.run(owner: shop, attrs: attrs.to_h)
     end if custom_schedules_params[:custom_schedules]
 
-    update_shop = Shops::Update.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
+    update_shop = Shops::HolidayWorkingUpdate.run(shop: shop, holiday_working: shop_params[:shop].try(:[], :holiday_working))
 
     # Recalculate repeating dates
     ShopMenuRepeatingDate.

@@ -42,6 +42,8 @@ gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 gem "carrierwave"
 gem "fog-aws", "~> 1.4.0"
+gem "aws-sdk-s3" # for activestorage
+gem "image_processing", "~> 1.2"
 gem "bitly", "~> 1.0.0"
 gem "lograge"
 gem "stripe"
