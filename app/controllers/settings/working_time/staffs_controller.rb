@@ -73,7 +73,11 @@ class Settings::WorkingTime::StaffsController < SettingsController
       if session[:settings_tour]
         redirect_to settings_user_reservation_settings_path(super_user)
       else
-        redirect_to settings_user_working_time_staffs_path(super_user, working_time_menu_scope: flash[:working_time_menu_scope]), notice: I18n.t("common.update_successfully_message")
+        if flash[:working_time_menu_scope] == "shop"
+          redirect_to working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: :shop), notice: I18n.t("common.update_successfully_message")
+        else
+          redirect_to settings_user_working_time_staffs_path(super_user, working_time_menu_scope: flash[:working_time_menu_scope]), notice: I18n.t("common.update_successfully_message")
+        end
       end
     else
       redirect_to working_schedules_settings_user_working_time_staff_path(super_user, current_user.current_staff(super_user)), notice: I18n.t("common.update_successfully_message")

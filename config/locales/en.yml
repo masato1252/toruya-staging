@@ -285,6 +285,7 @@ en:
       group_details_readable_label: all information
       delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
       work_time: Work Time
+      all_work_time: Staff Working Time
       holiday_time: Holiday
     staff_account:
       info_title: Staff Account
