@@ -3,25 +3,25 @@ FactoryBot.define do
     association :user
     association :shop
     association :staff
-    open false
+    open { false }
 
     trait :opened do
-      open true
-      user nil
+      open { true }
+      user { nil }
     end
 
     trait :closed do
-      open false
+      open { false }
     end
 
     trait :for_shop do
-      staff nil
-      user nil
+      staff { nil }
+      user { nil }
     end
 
     trait :personal do
-      shop nil
-      staff nil
+      shop { nil }
+      staff { nil }
     end
   end
 end

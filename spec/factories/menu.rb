@@ -2,34 +2,31 @@ FactoryBot.define do
   factory :menu do
     transient do
       shop { FactoryBot.create(:shop, user: user) }
-      staffs []
+      staffs { [] }
       max_seat_number { 3 }
-    end
-
-    transient do
     end
 
     user { FactoryBot.create(:user) }
     sequence(:name) { |n| "menu-#{n}" }
     sequence(:short_name) { |n| "m-#{n}" }
-    minutes 60
-    interval 10
-    min_staffs_number 1
+    minutes { 60 }
+    interval { 10 }
+    min_staffs_number { 1 }
 
     trait :no_manpower do
-      min_staffs_number 0
+      min_staffs_number { 0 }
     end
 
     trait :normal do
-      min_staffs_number 1
+      min_staffs_number { 1 }
     end
 
     trait :lecture do
-      min_staffs_number 2
+      min_staffs_number { 2 }
     end
 
     trait :cooperation do
-      min_staffs_number 2
+      min_staffs_number { 2 }
     end
 
     trait :with_reservation_setting do

@@ -42,15 +42,15 @@ class Customer < ApplicationRecord
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
   belongs_to :user
-  belongs_to :updated_by_user, class_name: "User"
-  belongs_to :contact_group
-  belongs_to :rank
+  belongs_to :updated_by_user, class_name: "User", required: false
+  belongs_to :contact_group, required: false
+  belongs_to :rank, required: false
 
   validates :google_contact_id, uniqueness: { scope: [:user_id, :google_uid] }, presence: true, allow_nil: true
 
   before_validation :assign_default_rank
 
-  scope :jp_chars_order, -> { order('phonetic_last_name COLLATE "C" ASC') }
+  scope :jp_chars_order, -> { order(Arel.sql('phonetic_last_name COLLATE "C" ASC')) }
   scope :active, -> { where(deleted_at: nil) }
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
 
