@@ -1,6 +1,6 @@
 module Shops
   class Update < ActiveInteraction::Base
-    CONTENT_TYPES = %w[image/png image/jpeg image/gif].freeze
+    CONTENT_TYPES = %w[image/png image/gif].freeze
 
     object :shop
     hash :params, strip: false

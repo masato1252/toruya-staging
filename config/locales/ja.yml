@@ -347,6 +347,12 @@ ja:
       create_successfully_message: 店舗情報を保存しました。
       update_successfully_message: 店舗情報を更新しました。
       delete_successfully_message: 店舗情報を削除しました。
+      logo_area:
+        title: 店舗ロゴ
+        description_about_logo: オンライン予約を受ける際の予約ページに表示されます。
+        description_about_image: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+        upload_button_text: アップロード
+        no_image: ファイルがありません
       modal:
         upgrade_title: アカウントをアップグレード
         upgrade_content_html: 既に１軒の店舗を作成しています。<br />さらに店舗を追加するにはアカウントのアップグレードが必要です。<br /><br />月額%{premium_plan_price}で複数の店舗を追加することができます。<br /><br />アカウントはいつでもダウングレードすることができます。

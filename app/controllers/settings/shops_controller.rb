@@ -51,7 +51,12 @@ class Settings::ShopsController < SettingsController
     outcome = Shops::Update.run(shop: @shop, params: shop_params.permit!.to_h)
 
     if outcome.valid?
-      redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message")
+      case route_to params
+      when :logo
+        render :edit
+      when :shop
+        redirect_to settings_user_shops_path(super_user), notice: I18n.t("settings.shop.update_successfully_message")
+      end
     else
       flash.now[:alert] = outcome.errors.full_messages.join(", ")
       render :edit
@@ -73,6 +78,7 @@ class Settings::ShopsController < SettingsController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_shop
     @shop = super_user.shops.find(params[:id])
@@ -81,5 +87,9 @@ class Settings::ShopsController < SettingsController
   # Never trust parameters from the scary internet, only allow the white list through.
   def shop_params
     params.require(:shop).permit(:name, :short_name, :zip_code, :phone_number, :email, :website, :address, :logo)
+  end
+
+  def route_to params
+    params[:route_to].keys.first.to_sym
   end
 end
