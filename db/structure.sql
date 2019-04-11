@@ -77,6 +77,74 @@ ALTER SEQUENCE public.access_providers_id_seq OWNED BY public.access_providers.i
 
 
 --
+-- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_storage_attachments (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
+    blob_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_storage_attachments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_storage_attachments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_storage_attachments_id_seq OWNED BY public.active_storage_attachments.id;
+
+
+--
+-- Name: active_storage_blobs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_storage_blobs (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    filename character varying NOT NULL,
+    content_type character varying,
+    metadata text,
+    byte_size bigint NOT NULL,
+    checksum character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_storage_blobs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_storage_blobs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_storage_blobs_id_seq OWNED BY public.active_storage_blobs.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -86,6 +154,144 @@ CREATE TABLE public.ar_internal_metadata (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: booking_option_menus; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_option_menus (
+    id bigint NOT NULL,
+    booking_option_id bigint NOT NULL,
+    menu_id bigint NOT NULL
+);
+
+
+--
+-- Name: booking_option_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_option_menus_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_option_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_option_menus_id_seq OWNED BY public.booking_option_menus.id;
+
+
+--
+-- Name: booking_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_options (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    name character varying NOT NULL,
+    display_name character varying,
+    minutes integer,
+    "interval" integer,
+    amount_cents numeric,
+    amount_currency character varying,
+    tax_include boolean,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    memo text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_options_id_seq OWNED BY public.booking_options.id;
+
+
+--
+-- Name: booking_page_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_page_options (
+    id bigint NOT NULL,
+    booking_page_id bigint NOT NULL,
+    booking_option_id bigint NOT NULL
+);
+
+
+--
+-- Name: booking_page_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_page_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_page_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_page_options_id_seq OWNED BY public.booking_page_options.id;
+
+
+--
+-- Name: booking_pages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_pages (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    shop_id bigint NOT NULL,
+    name character varying NOT NULL,
+    title character varying,
+    greeting text,
+    note text,
+    "interval" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_pages_id_seq OWNED BY public.booking_pages.id;
 
 
 --
@@ -1267,6 +1473,48 @@ ALTER TABLE ONLY public.access_providers ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: active_storage_attachments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments ALTER COLUMN id SET DEFAULT nextval('public.active_storage_attachments_id_seq'::regclass);
+
+
+--
+-- Name: active_storage_blobs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval('public.active_storage_blobs_id_seq'::regclass);
+
+
+--
+-- Name: booking_option_menus id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_option_menus ALTER COLUMN id SET DEFAULT nextval('public.booking_option_menus_id_seq'::regclass);
+
+
+--
+-- Name: booking_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_options ALTER COLUMN id SET DEFAULT nextval('public.booking_options_id_seq'::regclass);
+
+
+--
+-- Name: booking_page_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_options ALTER COLUMN id SET DEFAULT nextval('public.booking_page_options_id_seq'::regclass);
+
+
+--
+-- Name: booking_pages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_pages ALTER COLUMN id SET DEFAULT nextval('public.booking_pages_id_seq'::regclass);
+
+
+--
 -- Name: business_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1499,11 +1747,59 @@ ALTER TABLE ONLY public.access_providers
 
 
 --
+-- Name: active_storage_attachments active_storage_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments
+    ADD CONSTRAINT active_storage_attachments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: active_storage_blobs active_storage_blobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_blobs
+    ADD CONSTRAINT active_storage_blobs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: booking_option_menus booking_option_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_option_menus
+    ADD CONSTRAINT booking_option_menus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_options booking_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_options
+    ADD CONSTRAINT booking_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_page_options booking_page_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_options
+    ADD CONSTRAINT booking_page_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_pages booking_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_pages
+    ADD CONSTRAINT booking_pages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1838,6 +2134,76 @@ CREATE INDEX filtered_outcome_index ON public.filtered_outcomes USING btree (use
 --
 
 CREATE INDEX index_access_providers_on_provider_and_uid ON public.access_providers USING btree (provider, uid);
+
+
+--
+-- Name: index_active_storage_attachments_on_blob_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_active_storage_attachments_on_blob_id ON public.active_storage_attachments USING btree (blob_id);
+
+
+--
+-- Name: index_active_storage_attachments_uniqueness; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active_storage_attachments USING btree (record_type, record_id, name, blob_id);
+
+
+--
+-- Name: index_active_storage_blobs_on_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
+
+
+--
+-- Name: index_booking_option_menus_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_option_menus_on_booking_option_id ON public.booking_option_menus USING btree (booking_option_id);
+
+
+--
+-- Name: index_booking_option_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_option_menus_on_menu_id ON public.booking_option_menus USING btree (menu_id);
+
+
+--
+-- Name: index_booking_options_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_options_on_user_id ON public.booking_options USING btree (user_id);
+
+
+--
+-- Name: index_booking_page_options_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_page_options_on_booking_option_id ON public.booking_page_options USING btree (booking_option_id);
+
+
+--
+-- Name: index_booking_page_options_on_booking_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_page_options_on_booking_page_id ON public.booking_page_options USING btree (booking_page_id);
+
+
+--
+-- Name: index_booking_pages_on_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_pages_on_shop_id ON public.booking_pages USING btree (shop_id);
+
+
+--
+-- Name: index_booking_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_pages_on_user_id ON public.booking_pages USING btree (user_id);
 
 
 --
@@ -2240,6 +2606,14 @@ CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_i
 
 
 --
+-- Name: active_storage_attachments fk_rails_c3b3935057; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_storage_attachments
+    ADD CONSTRAINT fk_rails_c3b3935057 FOREIGN KEY (blob_id) REFERENCES public.active_storage_blobs(id);
+
+
+--
 -- Name: profiles fk_rails_e424190865; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2324,6 +2698,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190311165617'),
 ('20190312140721'),
 ('20190313140955'),
-('20190316013202');
+('20190316013202'),
+('20190409065338'),
+('20190410073550');
 
 

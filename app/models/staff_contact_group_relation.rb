@@ -2,9 +2,9 @@
 #
 # Table name: staff_contact_group_relations
 #
-#  id                            :integer          not null, primary key
-#  staff_id                      :integer          not null
-#  contact_group_id              :integer          not null
+#  id                            :bigint(8)        not null, primary key
+#  staff_id                      :bigint(8)        not null
+#  contact_group_id              :bigint(8)        not null
 #  contact_group_read_permission :integer          default("reservations_only_readable"), not null
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null

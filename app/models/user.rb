@@ -39,6 +39,7 @@ class User < ApplicationRecord
 
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
+  has_one :subscription
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
@@ -52,13 +53,13 @@ class User < ApplicationRecord
   has_many :customer_query_filters
   has_many :reservation_query_filters
   has_many :filtered_outcomes
-  has_one :subscription
   has_many :subscription_charges do
     def last_completed
       where(state: :completed).order("updated_at").last
     end
   end
   has_many :custom_schedules, dependent: :destroy
+  has_many :booking_options
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

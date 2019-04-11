@@ -2,7 +2,7 @@
 #
 # Table name: plans
 #
-#  id       :integer          not null, primary key
+#  id       :bigint(8)        not null, primary key
 #  position :integer
 #  level    :integer
 #

@@ -1,0 +1,34 @@
+<div id="subNav">
+  <h2>基本情報 − <%= t("settings.menu.info_title") %></h2>
+</div>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= link_to t("settings.menu.new_button"), new_settings_user_booking_option_path(super_user), class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p><%= t("settings.menu.info_1") %><br /><%= t("settings.menu.info_2") %></p>
+</div>
+
+<%= content_tag(:div, id: "settingForm") do %>
+  <div id="menuList" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL"><%= t("settings.menu.name") %></li>
+      <li class="rowTTL"><%= t("settings.menu.staff") %></li>
+      <li class="rowTTL"><%= t("settings.menu.reservation_setting_name") %></li>
+      <li class="updateTime"><%= t("common.updated_time") %></li>
+    </ul>
+    <% @booking_options.each do |booking_option| %>
+      <dl>
+        <dt class="rowTTL"><%= link_to booking_option.name, edit_settings_user_booking_option_path(super_user, booking_option) %></dt>
+        <dd class="staff"><%= booking_option.menu_relations.size %></dd>
+        <dd class="updateTime"><%= booking_option.start_at %></dd>
+        <dd class="updateTime"><%= booking_option.end_at %></dd>
+        <dd class="function">
+          <%= link_to t("action.edit"), edit_settings_user_booking_option_path(super_user, booking_option), class: "BTNtarco" %>
+          <%= link_to t("action.delete"), settings_user_booking_option_path(super_user, booking_option), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+<% end %>

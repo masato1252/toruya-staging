@@ -39,11 +39,13 @@ class Menu < ApplicationRecord
   has_many :menu_categories, dependent: :destroy
   has_many :categories, through: :menu_categories
   has_many :reservations
-  belongs_to :user
+  has_many :shop_menu_repeating_dates, dependent: :destroy
+
   has_one :reservation_setting_menu, dependent: :destroy
   has_one :reservation_setting, through: :reservation_setting_menu
   has_one :menu_reservation_setting_rule, dependent: :destroy
-  has_many :shop_menu_repeating_dates, dependent: :destroy
+
+  belongs_to :user
 
   accepts_nested_attributes_for :staff_menus, allow_destroy: true, reject_if: :reject_staffs
   accepts_nested_attributes_for :shop_menus, allow_destroy: true, reject_if: :reject_shops
