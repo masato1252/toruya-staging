@@ -60,6 +60,33 @@
       </dl>
     </div>
 
+    <h3><%= t("settings.shop.logo_area.title") %></h3>
+    <div class="formRow logo-area">
+      <dl>
+        <dd>
+          <div>
+            <% logo = shop_logo(shop, "390x135", image_class: "logo") %>
+            <% if logo %>
+              <%= logo %>
+            <% else %>
+              <b><%= t("settings.shop.logo_area.no_image") %></b>
+            <% end %>
+            <span class="explanation-about-logo"><%= t("settings.shop.logo_area.description_about_logo") %></span>
+          </div>
+
+          <div>
+            <%= f.file_field :logo, placeholder: true, accept: Shops::Update::CONTENT_TYPES.join(",") %>
+
+            <%= f.submit t("settings.shop.logo_area.upload_button_text"), class: "btn btn-yellow", name: "route_to[logo]" %>
+          </div>
+
+          <div class="explanation-about-image">
+            <%= t("settings.shop.logo_area.description_about_image") %>
+          </div>
+        </dd>
+      </dl>
+    </div>
+
     <ul id="footerav">
       <li>
         <%= link_to t("action.cancel"), settings_user_shops_path(super_user), class: "BTNtarco" %>
@@ -68,7 +95,7 @@
         <% if local_assigns[:fit_shop_charge_threshold] %>
           <%= link_to "保存", "#", class: "BTNyellow", data: { toggle: "modal", target: "#upgradeModal" } %>
         <% else %>
-          <%= f.submit "保存", class: "BTNyellow" %>
+          <%= f.submit "保存", class: "BTNyellow", name: "route_to[shop]" %>
         <% end %>
       </li>
     </ul>
