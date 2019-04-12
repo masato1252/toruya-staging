@@ -33,6 +33,7 @@ class Shop < ApplicationRecord
   validates :email, presence: true
   validates :address, presence: true
 
+  has_one_attached :logo
   has_many :staff_relations, class_name: "ShopStaff", dependent: :destroy
   has_many :shop_staffs, dependent: :destroy
   has_many :staffs, through: :shop_staffs

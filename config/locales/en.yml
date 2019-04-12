@@ -202,6 +202,12 @@ en:
       name: Shop Name
       create_successfully_message: Shop was successfully created.
       update_successfully_message: Shop was successfully updated.
+      logo_area:
+        title: Shop Logo
+        description_about_logo: It will appear on your booking page.
+        description_about_image: PNG or GIF format of 390x135 pixels, less than 30KB
+        upload_button_text: upload
+        no_image: There's no image
     business_hours:
       info_title: Business Hours
       info_1: Please enter business hours here.
@@ -279,6 +285,7 @@ en:
       group_details_readable_label: all information
       delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
       work_time: Work Time
+      all_work_time: Staff Working Time
       holiday_time: Holiday
     staff_account:
       info_title: Staff Account

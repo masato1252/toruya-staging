@@ -57,7 +57,7 @@ class BasicSettingsPresenter
     when :business_schedule
       h.settings_user_business_schedules_path(user)
     when :working_time
-      h.settings_user_working_time_staffs_path(user)
+      h.working_schedules_settings_user_working_time_staff_path(user, user.current_staff(user), working_time_menu_scope: :shop)
     when :reservation_setting
       h.new_settings_user_reservation_setting_path(user)
     when :menu

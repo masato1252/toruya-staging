@@ -16,10 +16,6 @@
     <dd>
       <ul>
         <%= active_link_to t("settings.business_hours.info_title"), settings_user_business_schedules_path(super_user), active: [["settings/business_schedules"], []], wrap_tag: :li, class_active: "here" %>
-        <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, working_time_menu_scope: :shop),
-          active: /working_time_menu_scope=shop/,
-          wrap_tag: :li,
-          class_active: "here" %>
         <%= active_link_to "予約枠", settings_user_reservation_settings_path(super_user), active: [["settings/reservation_settings"], []], wrap_tag: :li, class_active: "here" %>
       </ul>
     </dd>

@@ -34,7 +34,7 @@
       </div>
     <% end %>
 
-    <% if !staff.staff_account.try(:owner?) %>
+    <% if !staff.staff_account.try(:owner?) && current_user_staff != staff %>
       <% if can? :manage, Settings %>
         <%
           shop_staffs = staff.shop_relations.to_a

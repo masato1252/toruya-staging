@@ -33,7 +33,7 @@
           <% end %>
 
           <% if basic_setting_presenter.business_hours_settings_completed? %>
-            <%= active_link_to t("settings.staff.work_time"), settings_user_working_time_staffs_path(super_user, working_time_menu_scope: :shop),
+            <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: :shop),
               active: /working_time_menu_scope=shop/,
               wrap_tag: :li,
               class_active: "here" %>
