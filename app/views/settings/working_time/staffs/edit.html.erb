@@ -1,3 +1,5 @@
+<%= jump_out_modal(settings_tours_working_time_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
+
 <div id="subNav">
   <% if params[:working_time_menu_scope] == "staff" %>
     <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.working_schedules") %></h2>
