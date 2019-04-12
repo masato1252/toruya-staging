@@ -65,13 +65,13 @@
       <dl>
         <dd>
           <div>
-            <% logo = shop_logo(shop, "390x135") %>
+            <% logo = shop_logo(shop, "390x135", image_class: "logo") %>
             <% if logo %>
               <%= logo %>
             <% else %>
               <b><%= t("settings.shop.logo_area.no_image") %></b>
             <% end %>
-            <span><%= t("settings.shop.logo_area.description_about_logo") %></span>
+            <span class="explanation-about-logo"><%= t("settings.shop.logo_area.description_about_logo") %></span>
           </div>
 
           <div>
@@ -80,7 +80,7 @@
             <%= f.submit t("settings.shop.logo_area.upload_button_text"), class: "btn btn-yellow", name: "route_to[logo]" %>
           </div>
 
-          <div>
+          <div class="explanation-about-image">
             <%= t("settings.shop.logo_area.description_about_image") %>
           </div>
         </dd>
