@@ -1,5 +1,9 @@
 <div id="subNav">
-  <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.working_schedules") %></h2>
+  <% if params[:working_time_menu_scope] == "staff" %>
+    <h2><%= Staff.model_name.human %> − <%= t("settings.staff_working_time.title.working_schedules") %></h2>
+  <% else %>
+    <h2><%= t("settings.staff_working_time.title.owner_working_schedule") %></h2>
+  <% end %>
 </div>
 <div id="about">
   <p><%= t("settings.staff_working_time.info_1.working_schedules") %><br /><%= t("settings.staff_working_time.info_2") %></p>
