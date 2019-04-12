@@ -435,6 +435,7 @@ ja:
       group_details_readable_label: 全情報
       delete_confirmation_message: ‼︎ スタッフを削除します !! %{staff_name}を削除しても、これまでに担当した予約の担当スタッフ名は残ります。
       work_time: 勤務日時
+      all_work_time: スタッフ勤務日時
       holiday_time: 休暇
       modal:
         upgrade_title: アカウントをアップグレード
@@ -456,6 +457,7 @@ ja:
     staff_working_time:
       title:
         working_schedules: 勤務スタイル
+        owner_working_schedule: 予約管理 - 勤務日時
       info_1:
         working_schedules: 貴方の勤務日時を設定します。
       info_2: Toruyaはこの設定に基づいて予約を受け付けます。
