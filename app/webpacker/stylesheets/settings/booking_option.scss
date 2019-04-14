@@ -7,5 +7,9 @@
     input[type="number"] {
       width: auto !important;
     }
+
+    input[type="radio"] {
+      margin-top: 0;
+    }
   }
 }

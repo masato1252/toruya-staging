@@ -289,16 +289,17 @@ class ReservationsFilterQuerySider extends React.Component {
       options.map(function(option) {
         return (
           <li key={`${stateName}-${option.value}`}>
-            <input
-              type="checkbox"
-              id={`${stateName}-${option.value}`}
-              onChange={this.onCheckboxChange}
-              data-name={stateName}
-              data-value={option.value}
-              value={option.value}
-              checked={_.contains(this.state[stateName], `${option.value}`)}
-              />
-            <label htmlFor={`${stateName}-${option.value}`}>{option.label}</label>
+            <label>
+              <input
+                type="checkbox"
+                onChange={this.onCheckboxChange}
+                data-name={stateName}
+                data-value={option.value}
+                value={option.value}
+                checked={_.contains(this.state[stateName], `${option.value}`)}
+                />
+              {option.label}
+            </label>
           </li>
         )
       }.bind(this))
@@ -332,7 +333,7 @@ class ReservationsFilterQuerySider extends React.Component {
           <h3>店舗</h3>
             <dl className="groups">
               <dt>{this.props.customerGroupTitle}</dt>
-              <dd>
+              <dd className="bootstrap-checkbox">
                 <ul>
                   {this.renderCheckboxOptions(this.props.shopOptions, "shop_ids")}
                 </ul>
@@ -469,29 +470,31 @@ class ReservationsFilterQuerySider extends React.Component {
               <h3>{this.props.customerReservationErrorTitle}</h3>
               <dl>
                 <dt>{this.props.customerReservationErrorTitle}</dt>
-                <dd>
+                <dd className="radio">
                   <ul>
                     <li>
-                      <input
-                        type="radio"
-                        id="hasANerror"
-                        data-name="reservation_with_warnings"
-                        data-value="true"
-                        checked={this.state.reservation_with_warnings === "true"}
-                        onChange={this.onDataChange}
-                        />
-                      <label htmlFor="hasANerror">{this.props.yesLabel}</label>
+                      <label>
+                        <input
+                          type="radio"
+                          data-name="reservation_with_warnings"
+                          data-value="true"
+                          checked={this.state.reservation_with_warnings === "true"}
+                          onChange={this.onDataChange}
+                          />
+                          {this.props.yesLabel}
+                      </label>
                     </li>
                     <li>
-                      <input
-                        type="radio"
-                        id="hasNOrror"
-                        data-name="reservation_with_warnings"
-                        data-value="false"
-                        checked={this.state.reservation_with_warnings === "false"}
-                        onChange={this.onDataChange}
-                        />
-                      <label htmlFor="hasNOrror">{this.props.noLabel}</label>
+                      <label>
+                        <input
+                          type="radio"
+                          data-name="reservation_with_warnings"
+                          data-value="false"
+                          checked={this.state.reservation_with_warnings === "false"}
+                          onChange={this.onDataChange}
+                          />
+                         {this.props.noLabel}
+                      </label>
                     </li>
                   </ul>
                 </dd>
@@ -501,7 +504,7 @@ class ReservationsFilterQuerySider extends React.Component {
               <h3>{this.props.customerReservationStatusTitle}</h3>
               <dl>
                 <dt>{this.props.customerReservationStatusInfo}</dt>
-                <dd>
+                <dd className="bootstrap-checkbox">
                   <ul>
                     {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
                   </ul>
@@ -512,7 +515,7 @@ class ReservationsFilterQuerySider extends React.Component {
               <h3>{this.props.customerCheckInStatusTitle}</h3>
               <dl>
                 <dt>{this.props.customerCheckInStatusInfo}</dt>
-                <dd>
+                <dd className="bootstrap-checkbox">
                   <ul>
                     {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
                   </ul>
