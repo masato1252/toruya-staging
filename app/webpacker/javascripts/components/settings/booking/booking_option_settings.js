@@ -4,18 +4,12 @@ import React from "react";
 import { Form, Field } from "react-final-form";
 import createDecorator from "final-form-focus";
 
-import { InputRow, requiredValidation } from "../../../libraries/helper";
+import { InputRow, Radio, Error, requiredValidation } from "../../../libraries/helper";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {
     super(props);
     this.focusOnError = createDecorator();
-
-    const option = this.props.bookingOption;
-
-    this.state = {
-      amountCents: option.amountCents || ""
-    }
   };
 
   renderNameFields = () => {
@@ -89,6 +83,22 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[amount_currency]"
             value="JPY"
           />
+          <dl>
+            <dt>Tax Include</dt>
+            <dd>
+              <div className="radio">
+                <Field name="booking_option[tax_include]" type="radio" value="true" component={Radio}>
+                  Yes
+                </Field>
+              </div>
+              <div className="radio">
+                <Field name="booking_option[tax_include]" type="radio" value="false" component={Radio}>
+                  No
+                </Field>
+              </div>
+              <Error name="booking_option[tax_include]" />
+            </dd>
+          </dl>
         </div>
       </div>
     );
@@ -104,10 +114,11 @@ class BookingOptionSettings extends React.Component {
 
   validate = (values) => {
     const errors = {};
-    const { display_name } = values.booking_option || {};
+    errors.booking_option = {};
+    const { tax_include } = values.booking_option || {};
 
-    if (!display_name && isNaN(display_name)) {
-      errors.display_name = "Required";
+    if (!tax_include) {
+      errors.booking_option.tax_include = this.props.i18n.errors.required;
     }
 
     return errors;
@@ -125,7 +136,7 @@ class BookingOptionSettings extends React.Component {
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError]}
-        render={({ handleSubmit, invalid }) => (
+        render={({ handleSubmit, submitting, invalid }) => (
           <form onSubmit={handleSubmit}
             className="booking_option_settings"
             id="booking_option_settings_form"
@@ -152,8 +163,8 @@ class BookingOptionSettings extends React.Component {
                   value="保存"
                   className="BTNyellow"
                   data-disable-with="保存"
-                  disabled={!this._isValid()}
-                  />
+                  disabled={submitting}
+                />
               </li>
             </ul>
           </form>
