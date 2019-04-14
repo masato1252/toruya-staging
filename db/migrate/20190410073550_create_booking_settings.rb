@@ -15,11 +15,11 @@ class CreateBookingSettings < ActiveRecord::Migration[5.2]
       t.references :user, null: false
       t.string :name, null: false
       t.string :display_name
-      t.integer :minutes
-      t.integer :interval
-      t.decimal :amount_cents
-      t.string :amount_currency
-      t.boolean :tax_include
+      t.integer :minutes, null: false
+      t.integer :interval, null: false
+      t.decimal :amount_cents, null: false
+      t.string :amount_currency, null: false
+      t.boolean :tax_include, null: false
       t.datetime :start_at
       t.datetime :end_at
       t.text :memo

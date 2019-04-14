@@ -1,0 +1,11 @@
+.booking_option_settings {
+  .formRow {
+    dl dt {
+      width: 200px;
+    }
+
+    input[type="number"] {
+      width: auto !important;
+    }
+  }
+}

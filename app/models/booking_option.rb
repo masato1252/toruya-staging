@@ -6,11 +6,11 @@
 #  user_id         :bigint(8)        not null
 #  name            :string           not null
 #  display_name    :string
-#  minutes         :integer
-#  interval        :integer
-#  amount_cents    :decimal(, )
-#  amount_currency :string
-#  tax_include     :boolean
+#  minutes         :integer          not null
+#  interval        :integer          not null
+#  amount_cents    :decimal(, )      not null
+#  amount_currency :string           not null
+#  tax_include     :boolean          not null
 #  start_at        :datetime
 #  end_at          :datetime
 #  memo            :text
@@ -23,7 +23,11 @@
 #
 
 class BookingOption < ApplicationRecord
+  belongs_to :user
+
   has_many :menu_relations, class_name: "BookingOptionMenu"
   has_many :booking_option_menus
   has_many :menus, through: :booking_option_menus
+
+  monetize :amount_cents
 end
