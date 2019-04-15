@@ -3,9 +3,12 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import createDecorator from "final-form-focus";
+import moment from "moment-timezone";
 
-import { requiredValidation, transformValues } from "../../../libraries/helper";
-import { InputRow, Radio, Error } from "../../shared/components";
+import { requiredValidation, transformValues, handleSingleAttrInput } from "../../../libraries/helper";
+import { InputRow, Radio, Error, Condition } from "../../shared/components";
+import CommonDatepickerField from "../../shared/datepicker_field";
+import DateFieldAdapter from "../../shared/date_field_adapter";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {
@@ -79,11 +82,6 @@ class BookingOptionSettings extends React.Component {
             validate={(value) => requiredValidation(this, value)}
             component={InputRow}
           />
-          <input
-            type="hidden"
-            name="booking_option[amount_currency]"
-            value="JPY"
-          />
           <dl>
             <dt>Tax Include</dt>
             <dd>
@@ -100,35 +98,135 @@ class BookingOptionSettings extends React.Component {
               <Error name="booking_option[tax_include]" />
             </dd>
           </dl>
+          <input
+            type="hidden"
+            name="booking_option[amount_currency]"
+            value="JPY"
+          />
         </div>
       </div>
     );
   };
 
   renderSellingTimeFields = () => {
-
+    return (
+      <div>
+        <h3>{this.props.i18n.infoLabel}<strong>必須項目</strong></h3>
+        <div className="formRow">
+          <dl>
+            <dt>Start At</dt>
+            <dd>
+              <div className="radio">
+                <Field name="booking_option[start_at_type]" type="radio" value="now" component={Radio}>
+                  Now
+                </Field>
+              </div>
+              <div className="radio">
+                <Field name="booking_option[start_at_type]" type="radio" value="date" component={Radio}>
+                  Specific date
+                </Field>
+              </div>
+              <Condition when="booking_option[start_at_type]" is="date">
+                <div>
+                  <Field
+                    name="booking_option[start_at_date_part]"
+                    component={DateFieldAdapter}
+                    date={moment().format("YYYY-MM-DD")}
+                    hiddenWeekDate={true}
+                  />
+                  <Field
+                    name="booking_option[start_at_time_part]"
+                    type="time"
+                    component="input"
+                  />
+                  <Error name="booking_option[start_at_time_part]" />
+                </div>
+              </Condition>
+            </dd>
+          </dl>
+          <dl>
+            <dt>End At</dt>
+            <dd>
+              <div className="radio">
+                <Field name="booking_option[end_at_type]" type="radio" value="now" component={Radio}>
+                  Now
+                </Field>
+              </div>
+              <div className="radio">
+                <Field name="booking_option[end_at_type]" type="radio" value="date" component={Radio}>
+                  Specific date
+                </Field>
+              </div>
+              <Condition when="booking_option[end_at_type]" is="date">
+                <div>
+                  <Field
+                    name="booking_option[end_at_date_part]"
+                    component={DateFieldAdapter}
+                    date={moment().format("YYYY-MM-DD")}
+                    hiddenWeekDate={true}
+                  />
+                  <Field
+                    name="booking_option[end_at_time_part]"
+                    type="time"
+                    component="input"
+                  />
+                  <Error name="booking_option[end_at_time_part]" />
+                </div>
+              </Condition>
+            </dd>
+          </dl>
+          <input
+            type="hidden"
+            name="booking_option[amount_currency]"
+            value="JPY"
+          />
+        </div>
+      </div>
+    );
   };
 
   renderMemoFields = () => {
-
+    return (
+      <div>
+        <h3>{this.props.i18n.infoLabel}</h3>
+        <div className="formRow">
+          <dl>
+            <dt>Memo</dt>
+            <dd>
+              <Field
+                name="booking_option[memo]"
+                label="Memo"
+                component="textarea"
+              />
+            </dd>
+          </dl>
+        </div>
+      </div>
+    );
   };
 
   validate = (values) => {
     const errors = {};
     errors.booking_option = {};
-    const { tax_include } = values.booking_option || {};
+    const { tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
 
     if (!tax_include) {
       errors.booking_option.tax_include = this.props.i18n.errors.required;
+    }
+
+    if (start_at_type === "date" && !start_at_time_part) {
+      errors.booking_option.start_at_time_part = this.props.i18n.errors.required;
+    }
+
+    if (end_at_type === "date" && !end_at_time_part) {
+      errors.booking_option.end_at_time_part = this.props.i18n.errors.required;
     }
 
     return errors;
   };
 
   onSubmit = (values) => {
-    console.log(values)
     $("#booking_option_settings_form").submit()
-    // document.getElementById('booking_option_settings_form').dispatchEvent(new Event('submit', { cancelable: true }))
   };
 
   render() {
@@ -174,11 +272,6 @@ class BookingOptionSettings extends React.Component {
       />
     )
   }
-
-  _isValid = () => {
-    return true
-  };
-
 }
 
 export default BookingOptionSettings;

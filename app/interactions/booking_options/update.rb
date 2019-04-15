@@ -10,8 +10,10 @@ module BookingOptions
       integer :amount_cents
       string :amount_currency, default: "JPY"
       boolean :tax_include, default: false
-      date_time :start_at, default: nil
-      date_time :end_at, default: nil
+      string :start_at_date_part, default: nil
+      string :start_at_time_part, default: nil
+      string :end_at_date_part, default: nil
+      string :end_at_time_part, default: nil
       string :memo, default: nil
       array :menu_ids, default: nil
     end
