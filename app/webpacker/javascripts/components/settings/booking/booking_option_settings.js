@@ -4,7 +4,8 @@ import React from "react";
 import { Form, Field } from "react-final-form";
 import createDecorator from "final-form-focus";
 
-import { InputRow, Radio, Error, requiredValidation } from "../../../libraries/helper";
+import { requiredValidation, transformValues } from "../../../libraries/helper";
+import { InputRow, Radio, Error } from "../../shared/components";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {
@@ -133,6 +134,7 @@ class BookingOptionSettings extends React.Component {
   render() {
     return (
       <Form
+        initialValues={{ booking_option: { ...transformValues(this.props.bookingOption) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError]}
