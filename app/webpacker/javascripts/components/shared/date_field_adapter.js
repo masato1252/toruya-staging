@@ -14,12 +14,6 @@ class DateFieldAdapter extends React.Component {
     this.dayPickerInput.input.focus();
   };
 
-  handleDateChange = (date) => {
-    if (moment(date, [ "YYYY/M/D", "YYYY-M-D" ]).isValid()) {
-      this.props.input.onChange({ [this.props.input.name]: moment(date).format("YYYY-MM-DD") });
-    }
-  }
-
   render() {
     const selectedDate = this.props.input.value ? moment(this.props.input.value).format("YYYY-MM-DD") : this.props.date
     const fieldName = this.props.input.name;

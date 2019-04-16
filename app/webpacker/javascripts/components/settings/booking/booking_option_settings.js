@@ -3,12 +3,14 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import createDecorator from "final-form-focus";
+import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
 
 import { requiredValidation, transformValues, handleSingleAttrInput } from "../../../libraries/helper";
 import { InputRow, Radio, Error, Condition } from "../../shared/components";
 import CommonDatepickerField from "../../shared/datepicker_field";
 import DateFieldAdapter from "../../shared/date_field_adapter";
+import SelectMultipleInputs from "../../shared/select_multiple_inputs";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {
@@ -43,7 +45,19 @@ class BookingOptionSettings extends React.Component {
   }
 
   renderMenuFields = () => {
-
+    return (
+      <div>
+        <h3>{this.props.i18n.infoLabel}</h3>
+        <div className="formRow">
+          <Field
+            name="menus"
+            collection_name="menus"
+            component={SelectMultipleInputs}
+            options={this.props.menuGroupOptions}
+          />
+        </div>
+      </div>
+    );
   };
 
   renderTimeFields = () => {
@@ -232,15 +246,21 @@ class BookingOptionSettings extends React.Component {
   render() {
     return (
       <Form
-        initialValues={{ booking_option: { ...transformValues(this.props.bookingOption) }}}
+        initialValues={{ menus: this.props.menus, booking_option: { ...transformValues(this.props.bookingOption) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError]}
-        render={({ handleSubmit, submitting, invalid }) => (
-          <form onSubmit={handleSubmit}
+        mutators={{
+          ...arrayMutators
+        }}
+        render={({ handleSubmit, submitting }) => (
+          <form
+            action={this.props.path.save}
             className="booking_option_settings"
             id="booking_option_settings_form"
-            action={this.props.path.save} acceptCharset="UTF-8" method="post">
+            onSubmit={handleSubmit}
+            acceptCharset="UTF-8"
+            method="post">
             <input name="utf8" type="hidden" value="✓" />
             {this.props.bookingOption.id ? <input type="hidden" name="_method" value="PUT" /> : null}
             <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
