@@ -50,7 +50,7 @@ class BookingOptionSettings extends React.Component {
         <h3>{this.props.i18n.infoLabel}</h3>
         <div className="formRow">
           <Field
-            name="menus"
+            name="booking_option[menus]"
             collection_name="menus"
             component={SelectMultipleInputs}
             options={this.props.menuGroupOptions}
@@ -234,6 +234,10 @@ class BookingOptionSettings extends React.Component {
 
     if (end_at_type === "date" && !end_at_time_part) {
       errors.booking_option.end_at_time_part = this.props.i18n.errors.required;
+    }
+
+    if (!values.menus.length) {
+      errors.menus_error = this.props.i18n.errors.required;
     }
 
     return errors;

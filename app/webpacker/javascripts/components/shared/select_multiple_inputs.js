@@ -5,12 +5,14 @@ import { Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import ReactSelect from "react-select";
 
+import { Error } from "./components";
+
 const renderMultipleSelectInputs = (fields, collection_name) => {
   return (
     <div>
       {fields.map((field, index) => {
         return (
-         <li key={`${field.value}`}>
+         <li key={`${collection_name}-${index}`}>
            <Field
              name={`${field}label`}
              value={field.label}
@@ -73,6 +75,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, input, met
               >
               <i className="fa fa-plus" aria-hidden="true" ></i>
             </a>
+            <Error name={`${collection_name}_error`} />
           </li>
         </ul>
       )}
