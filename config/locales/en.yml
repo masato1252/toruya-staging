@@ -58,6 +58,9 @@ en:
     select_a_staff: Please select a staff
     google_down: We can't connect with Google currently. Please try again later. Re-login might fix the problem immediately.
     pending: Pending
+    required_label: required
+    minute: minute
+    total: Total
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -422,6 +425,37 @@ en:
         customer_filter: custom filters
         print_address: all at once
         add_staff: ⃝
+    booking_option:
+      sider_label: Online Booking
+      booking_option_label: Booking Prices
+      title: Booking Prices setting
+      info_html: You can set your booking price here.<br />Your customers will book your shop online with this price.
+      name: Price Name
+      menu_for_sale: Menu
+      start_at: Sales start
+      end_at: Sales end
+      new_button: New booking price
+      form:
+        price_name: Price name
+        price_name_hint: Name your booking-price to manage it
+        display_name: Display name
+        display_name_hint: Name your booking-price to show to your customer as menu
+        menu_for_sale_label: Menu for sale
+        time_span_label: Reservation time
+        reservation_interval: before and after reservation
+        price_label: Price
+        price: Catalog price
+        tax_label: Tax display
+        tax_include: tax included
+        tax_excluded: tax excluded
+        sale_period: Sales period
+        sale_now: Right now
+        sale_on: On
+        sale_forever: Never
+        sale_start: Sales start
+        sale_end: Sales end
+        note_label: Explanation / Important notes
+        note_hint: The important notes showed to your customer on booking with this price.
   constants:
     rank:
       regular: "Regular"

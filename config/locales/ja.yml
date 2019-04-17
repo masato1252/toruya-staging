@@ -64,6 +64,9 @@ ja:
     pending: 承認待ち
     no_permission: 権限がありません
     done: 完了
+    required_label: 必須項目
+    minute: 分
+    total: 合計
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -647,6 +650,37 @@ ja:
         customer_filter: 条件検索を保存可能
         print_address: 一斉
         add_staff: ⃝
+    booking_option:
+      sider_label: オンライン予約
+      booking_option_label: 予約価格
+      title: 予約価格の設定
+      info_html: 予約価格を設定します。<br />お客様はここで設定した価格でオンライン予約をします。
+      name: 価格名
+      menu_for_sale: ニュー
+      start_at: 販売開始
+      end_at: 販売終了
+      new_button: 新規作成
+      form:
+        price_name: 価格名
+        price_name_hint: あなたが予約価格を管理する際に使用する名前です。
+        display_name: 表示名
+        display_name_hint: あなたのお客様がご予約の際にメニューとして表示される名前です。
+        menu_for_sale_label: 販売メニュー
+        time_span_label: 予約時間
+        reservation_interval: 予約の前後
+        price_label: 販売予定価格
+        price: 定価
+        tax_label: 税表示
+        tax_include: 内税
+        tax_excluded: 外税
+        sale_period: 販売期間
+        sale_now: 今すぐ
+        sale_on: 指定日
+        sale_forever: 終了しない
+        sale_start: 販売開始
+        sale_end: 販売終了
+        note_label: 説明・注意事項
+        note_hint: この価格で予約する際の注意事項などをお客様に表示します。
   constants:
     rank:
       regular: "一般"

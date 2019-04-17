@@ -25,10 +25,10 @@
 #
 # Indexes
 #
-#  customer_names_on_first_name_idx           (first_name gin_trgm_ops)
-#  customer_names_on_last_name_idx            (last_name gin_trgm_ops)
-#  customer_names_on_phonetic_first_name_idx  (phonetic_first_name gin_trgm_ops)
-#  customer_names_on_phonetic_last_name_idx   (phonetic_last_name gin_trgm_ops)
+#  customer_names_on_first_name_idx           (first_name) USING gin
+#  customer_names_on_last_name_idx            (last_name) USING gin
+#  customer_names_on_phonetic_first_name_idx  (phonetic_first_name) USING gin
+#  customer_names_on_phonetic_last_name_idx   (phonetic_last_name) USING gin
 #  customers_basic_index                      (user_id,contact_group_id,deleted_at)
 #  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
 #  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)

@@ -157,6 +157,144 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: booking_option_menus; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_option_menus (
+    id bigint NOT NULL,
+    booking_option_id bigint NOT NULL,
+    menu_id bigint NOT NULL
+);
+
+
+--
+-- Name: booking_option_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_option_menus_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_option_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_option_menus_id_seq OWNED BY public.booking_option_menus.id;
+
+
+--
+-- Name: booking_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_options (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    name character varying NOT NULL,
+    display_name character varying,
+    minutes integer NOT NULL,
+    "interval" integer NOT NULL,
+    amount_cents numeric NOT NULL,
+    amount_currency character varying NOT NULL,
+    tax_include boolean NOT NULL,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    memo text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_options_id_seq OWNED BY public.booking_options.id;
+
+
+--
+-- Name: booking_page_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_page_options (
+    id bigint NOT NULL,
+    booking_page_id bigint NOT NULL,
+    booking_option_id bigint NOT NULL
+);
+
+
+--
+-- Name: booking_page_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_page_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_page_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_page_options_id_seq OWNED BY public.booking_page_options.id;
+
+
+--
+-- Name: booking_pages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_pages (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    shop_id bigint NOT NULL,
+    name character varying NOT NULL,
+    title character varying,
+    greeting text,
+    note text,
+    "interval" integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_pages_id_seq OWNED BY public.booking_pages.id;
+
+
+--
 -- Name: business_schedules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1349,6 +1487,34 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: booking_option_menus id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_option_menus ALTER COLUMN id SET DEFAULT nextval('public.booking_option_menus_id_seq'::regclass);
+
+
+--
+-- Name: booking_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_options ALTER COLUMN id SET DEFAULT nextval('public.booking_options_id_seq'::regclass);
+
+
+--
+-- Name: booking_page_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_options ALTER COLUMN id SET DEFAULT nextval('public.booking_page_options_id_seq'::regclass);
+
+
+--
+-- Name: booking_pages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_pages ALTER COLUMN id SET DEFAULT nextval('public.booking_pages_id_seq'::regclass);
+
+
+--
 -- Name: business_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1602,6 +1768,38 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: booking_option_menus booking_option_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_option_menus
+    ADD CONSTRAINT booking_option_menus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_options booking_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_options
+    ADD CONSTRAINT booking_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_page_options booking_page_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_options
+    ADD CONSTRAINT booking_page_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_pages booking_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_pages
+    ADD CONSTRAINT booking_pages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1957,6 +2155,55 @@ CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active
 --
 
 CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
+
+
+--
+-- Name: index_booking_option_menus_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_option_menus_on_booking_option_id ON public.booking_option_menus USING btree (booking_option_id);
+
+
+--
+-- Name: index_booking_option_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_option_menus_on_menu_id ON public.booking_option_menus USING btree (menu_id);
+
+
+--
+-- Name: index_booking_options_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_options_on_user_id ON public.booking_options USING btree (user_id);
+
+
+--
+-- Name: index_booking_page_options_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_page_options_on_booking_option_id ON public.booking_page_options USING btree (booking_option_id);
+
+
+--
+-- Name: index_booking_page_options_on_booking_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_page_options_on_booking_page_id ON public.booking_page_options USING btree (booking_page_id);
+
+
+--
+-- Name: index_booking_pages_on_shop_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_pages_on_shop_id ON public.booking_pages USING btree (shop_id);
+
+
+--
+-- Name: index_booking_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_pages_on_user_id ON public.booking_pages USING btree (user_id);
 
 
 --
@@ -2452,6 +2699,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190312140721'),
 ('20190313140955'),
 ('20190316013202'),
-('20190409065338');
+('20190409065338'),
+('20190410073550');
 
 

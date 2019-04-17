@@ -2,10 +2,10 @@
 #
 # Table name: subscriptions
 #
-#  id                 :integer          not null, primary key
-#  plan_id            :integer
+#  id                 :bigint(8)        not null, primary key
+#  plan_id            :bigint(8)
 #  next_plan_id       :integer
-#  user_id            :integer
+#  user_id            :bigint(8)
 #  stripe_customer_id :string
 #  recurring_day      :integer
 #  expired_date       :date

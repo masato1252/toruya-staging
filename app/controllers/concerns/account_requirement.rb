@@ -41,9 +41,9 @@ module AccountRequirement
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(4) + IGNORE_CONTROLLERS)
           flash[:alert] = I18n.t("requirement.staff_working_schedule_redirect_message")
 
-          redirect_to settings_user_working_time_staffs_path(super_user)
+          redirect_to working_schedules_settings_user_working_time_staff_path(super_user, super_user.current_staff(super_user), working_time_menu_scope: :shop)
         elsif except_path("settings/working_time/staffs")
-          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), settings_user_working_time_staffs_path(super_user))).html_safe
+          flash.now[:alert] = I18n.t("requirement.staff_working_schedule_warning_message", link: view_context.link_to(I18n.t("requirement.staff_working_schedule_warning_link_title"), working_schedules_settings_user_working_time_staff_path(super_user, super_user.current_staff(super_user), working_time_menu_scope: :shop))).html_safe
         end
       elsif !basic_setting_presenter.reservation_settings_completed?
         if except_path(ALLOWED_ACCESS_CONTROLLERS.last(5) + IGNORE_CONTROLLERS)

@@ -239,16 +239,17 @@ class CustomersFilterQuerySider extends React.Component {
       options.map(function(option) {
         return (
           <li key={`${stateName}-${option.value}`}>
-            <input
-              type="checkbox"
-              id={`${stateName}-${option.value}`}
-              onChange={this.onCheckboxChange}
-              data-name={stateName}
-              data-value={option.value}
-              value={option.value}
-              checked={_.contains(this.state[stateName], `${option.value}`)}
-              />
-            <label htmlFor={`${stateName}-${option.value}`}>{option.label}</label>
+            <label>
+              <input
+                type="checkbox"
+                onChange={this.onCheckboxChange}
+                data-name={stateName}
+                data-value={option.value}
+                value={option.value}
+                checked={_.contains(this.state[stateName], `${option.value}`)}
+                />
+              {option.label}
+            </label>
           </li>
         )
       }.bind(this))
@@ -513,7 +514,7 @@ class CustomersFilterQuerySider extends React.Component {
             <h3>{this.props.customerGroupTitle}</h3>
             <dl className="groups">
               <dt>{this.props.customerGroupTitle}</dt>
-              <dd>
+              <dd className="bootstrap-checkbox">
                 <ul>
                   {this.renderCheckboxOptions(this.props.contactGroupOptions, "group_ids")}
                 </ul>
@@ -524,7 +525,7 @@ class CustomersFilterQuerySider extends React.Component {
             <h3>{this.props.customerLevelTitle}</h3>
             <dl className="groups">
               <dt>{this.props.customerLevelTitle}</dt>
-              <dd>
+              <dd className="bootstrap-checkbox">
                 <ul>
                   {this.renderCheckboxOptions(this.props.rankOptions, "rank_ids")}
                 </ul>
@@ -569,29 +570,31 @@ class CustomersFilterQuerySider extends React.Component {
             <div>
               <dl>
                 <dt>{this.props.customerEmailTitle}</dt>
-                <dd>
+                <dd className="radio">
                   <ul>
                     <li>
-                      <input
-                        type="radio"
-                        id="hasEmail"
-                        data-name="has_email"
-                        data-value="true"
-                        checked={this.state.has_email === "true"}
-                        onChange={this.onDataChange}
-                        />
-                      <label htmlFor="hasEmail">{this.props.yesLabel}</label>
+                      <label>
+                        <input
+                          type="radio"
+                          data-name="has_email"
+                          data-value="true"
+                          checked={this.state.has_email === "true"}
+                          onChange={this.onDataChange}
+                          />
+                          {this.props.yesLabel}
+                      </label>
                     </li>
                     <li>
-                      <input
-                        type="radio"
-                        id="hasNOemail"
-                        data-name="has_email"
-                        data-value="false"
-                        checked={this.state.has_email === "false"}
-                        onChange={this.onDataChange}
-                        />
-                      <label htmlFor="hasNOemail">{this.props.noLabel}</label>
+                      <label>
+                        <input
+                          type="radio"
+                          data-name="has_email"
+                          data-value="false"
+                          checked={this.state.has_email === "false"}
+                          onChange={this.onDataChange}
+                          />
+                          {this.props.noLabel}
+                      </label>
                     </li>
                   </ul>
                 </dd>
@@ -600,7 +603,7 @@ class CustomersFilterQuerySider extends React.Component {
                 this.state.has_email === "true" ? (
                   <dl>
                     <dt>{this.props.customerEmailTypes}</dt>
-                    <dd>
+                    <dd className="bootstrap-checkbox">
                       <ul>
                         {this.renderCheckboxOptions(this.emailTypes, "email_types")}
                       </ul>
@@ -859,7 +862,7 @@ class CustomersFilterQuerySider extends React.Component {
               <h3>{this.props.customerReservationStatusTitle}</h3>
               <dl>
                 <dt>{this.props.customerReservationStatusInfo}</dt>
-                <dd>
+                <dd className="bootstrap-checkbox">
                   <ul>
                     {this.renderCheckboxOptions(this.props.reservationBeforeCheckedInStateOptions, "reservation_states")}
                   </ul>
@@ -870,7 +873,7 @@ class CustomersFilterQuerySider extends React.Component {
               <h3>{this.props.customerCheckInStatusTitle}</h3>
               <dl>
                 <dt>{this.props.customerCheckInStatusInfo}</dt>
-                <dd>
+                <dd className="bootstrap-checkbox">
                   <ul>
                     {this.renderCheckboxOptions(this.props.reservationAfterCheckedInStateOptions, "reservation_states")}
                   </ul>

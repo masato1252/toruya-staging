@@ -5,8 +5,6 @@
   <p><%= t("settings.staff_working_time.info_1.working_schedules") %><br /><%= t("settings.staff_working_time.info_2") %></p>
 </div>
 
-<%= jump_out_modal(settings_tours_working_time_path) if session[:settings_tour] && !params[:from_settings_tour_root] %>
-
 <%= content_tag(:div, id: "settingForm") do %>
   <div id="staffList" class="formRow">
     <ul class="tableTTL">
@@ -14,7 +12,7 @@
       <li class="updateTime"><%= t("common.updated_time") %></li>
     </ul>
     <% @staffs.each do |staff| %>
-      <% next if staff.staff_account&.owner? %>
+      <% next if staff.staff_account&.owner? && params[:working_time_menu_scope] == "staff" %>
 
       <dl>
         <dt>

@@ -13,7 +13,7 @@
     <div class="modal-footer centerize">
       <% if @from_settings_tour_root %>
         <%= link_to t("settings.modal.tour.no_need"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
-        <%= link_to t("settings.modal.tour.setup_working_time"), settings_user_working_time_staffs_path(current_user, from_settings_tour_root: true), class: "btn BTNtarco" %>
+        <%= link_to t("settings.modal.tour.setup_working_time"), working_schedules_settings_user_working_time_staff_path(current_user, current_user.current_staff(current_user), working_time_menu_scope: :shop, from_settings_tour_root: true), class: "btn BTNtarco" %>
       <% else %>
         <%= link_to t("settings.modal.tour.end_tour"), settings_end_tour_path, class: "btn BTNtarco" %>
         <%= link_to t("settings.modal.tour.setup_working_time"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>

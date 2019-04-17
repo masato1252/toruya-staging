@@ -2,9 +2,9 @@
 #
 # Table name: subscription_charges
 #
-#  id                    :integer          not null, primary key
-#  user_id               :integer
-#  plan_id               :integer
+#  id                    :bigint(8)        not null, primary key
+#  user_id               :bigint(8)
+#  plan_id               :bigint(8)
 #  amount_cents          :decimal(, )
 #  amount_currency       :string
 #  state                 :integer

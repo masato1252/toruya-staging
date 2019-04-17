@@ -7,3 +7,22 @@
     vertical-align: baseline;
   }
 }
+
+.field-error-message {
+  margin-left: 12px;
+  color: $danger;
+}
+
+.calendar-picker {
+  width: 35px !important;
+  height: 38px !important;
+  line-height: 34px !important;
+  font-size: 21px !important;
+  display: inline-block !important;
+  margin-left: 6px;
+  margin-right: 6px;
+
+  i.fa-calendar {
+    font-size: 18px !important;
+  }
+}
