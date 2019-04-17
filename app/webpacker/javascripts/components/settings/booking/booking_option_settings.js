@@ -115,7 +115,7 @@ class BookingOptionSettings extends React.Component {
               collection_name="menus"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedMenuFields}
-              options={this.props.menuGroupOptions}
+              options={this.props.menu_group_options}
               selectLabel={select_a_menu}
               />
           </dl>
@@ -324,7 +324,7 @@ class BookingOptionSettings extends React.Component {
   render() {
     return (
       <Form
-        initialValues={{ menus: this.props.menus, booking_option: { ...transformValues(this.props.bookingOption) }}}
+        initialValues={{ menus: this.props.menus, booking_option: { ...transformValues(this.props.booking_option) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError, this.calculator]}
@@ -340,8 +340,8 @@ class BookingOptionSettings extends React.Component {
             acceptCharset="UTF-8"
             method="post">
             <input name="utf8" type="hidden" value="✓" />
-            {this.props.bookingOption.id ? <input type="hidden" name="_method" value="PUT" /> : null}
-            <input type="hidden" name="authenticity_token" value={this.props.formAuthenticityToken} />
+            {this.props.booking_option.id ? <input type="hidden" name="_method" value="PUT" /> : null}
+            <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
 
             {this.renderNameFields()}
             {this.renderMenuFields()}
