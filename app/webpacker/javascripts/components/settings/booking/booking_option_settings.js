@@ -20,8 +20,8 @@ class BookingOptionSettings extends React.Component {
     this.calculator = createChangesDecorator({
       field: /menus/, // when a field matching this pattern changes...
       updates: {
-        "booking_option[minutes]": (ignoredValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0),
-        "booking_option[interval]": (ignoredValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+        "booking_option[minutes]": (meunValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0),
+        "booking_option[interval]": (menuValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
       }
     })
   };
