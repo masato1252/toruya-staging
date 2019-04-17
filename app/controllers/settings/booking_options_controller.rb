@@ -6,7 +6,7 @@ class Settings::BookingOptionsController < SettingsController
   def new
     @booking_option = super_user.booking_options.new
     menu_options = super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
   end
@@ -20,7 +20,7 @@ class Settings::BookingOptionsController < SettingsController
     else
       @booking_option = super_user.booking_options.new
       menu_options = super_user.menus.map do |menu|
-        ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
       end
       @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
@@ -31,7 +31,7 @@ class Settings::BookingOptionsController < SettingsController
   def edit
     @booking_option = super_user.booking_options.find(params[:id])
     menu_options = super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
   end
@@ -46,7 +46,7 @@ class Settings::BookingOptionsController < SettingsController
       redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
     else
       menu_options = super_user.menus.map do |menu|
-        ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
       end
       @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
       render :edit

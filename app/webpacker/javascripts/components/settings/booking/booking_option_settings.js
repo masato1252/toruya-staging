@@ -44,17 +44,64 @@ class BookingOptionSettings extends React.Component {
     );
   }
 
+  renderSelectedMenuFields = (fields, collection_name) => {
+    return (
+      <div className="result-fields">
+        {fields.map((field, index) => {
+          return (
+           <div key={`${collection_name}-${index}`} className="result-field">
+             <Field
+               name={`${field}label`}
+               value={field.label}
+               component="input"
+               readOnly={true}
+             />
+             <Field
+               name={`${field}value`}
+               value={field.value}
+               component="input"
+               type="hidden"
+             />
+             <a
+               href="#"
+               className="btn btn-symbol btn-orange"
+               onClick={() => {fields.remove(index) }}
+               >
+               <i className="fa fa-minus" aria-hidden="true" ></i>
+             </a>
+             <Field
+               name={`${field}minutes`}
+               value={field.minutes}
+               component={({input}) => <span>Minutes: {input.value}</span>}
+             />
+             ，
+             <Field
+               name={`${field}interval`}
+               value={field.interval}
+               component={({input}) => <span>Interval: {input.value}</span>}
+             />
+           </div>
+          )
+         })}
+      </div>
+    )
+  };
+
   renderMenuFields = () => {
     return (
       <div>
         <h3>{this.props.i18n.infoLabel}</h3>
         <div className="formRow">
-          <Field
-            name="booking_option[menus]"
-            collection_name="menus"
-            component={SelectMultipleInputs}
-            options={this.props.menuGroupOptions}
-          />
+          <dl>
+            <Field
+              name="booking_option[menus]"
+              collection_name="menus"
+              component={SelectMultipleInputs}
+              resultFields={this.renderSelectedMenuFields}
+              options={this.props.menuGroupOptions}
+              selectLabel={"Choose"}
+              />
+          </dl>
         </div>
       </div>
     );
