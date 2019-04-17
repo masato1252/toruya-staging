@@ -28,25 +28,30 @@ class BookingOptionSettings extends React.Component {
 
 
   renderNameFields = () => {
+    const { required_label, price_name, price_name_hint, display_name, display_name_hint } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}</h3>
+        <h3>{price_name}</h3>
         <div className="formRow">
           <Field
             name="booking_option[name]"
-            label="Name"
-            type="text"
-            requiredLabel={true}
-            validate={(value) => requiredValidation(this, value)}
             component={InputRow}
+            type="text"
+            validate={(value) => requiredValidation(this, value)}
+            label={price_name}
+            placeholder={price_name}
+            hint={price_name_hint}
+            requiredLabel={required_label}
           />
 
           <Field
             name="booking_option[display_name]"
-            label="Display Name"
-            type="text"
             component={InputRow}
-            placeholder="display name"
+            type="text"
+            label={display_name}
+            placeholder={display_name}
+            hint={display_name_hint}
           />
         </div>
       </div>
@@ -54,6 +59,8 @@ class BookingOptionSettings extends React.Component {
   }
 
   renderSelectedMenuFields = (fields, collection_name) => {
+    const { menu_time_span, menu_interval, minute } = this.props.i18n;
+
     return (
       <div className="result-fields">
         {fields.map((field, index) => {
@@ -81,13 +88,12 @@ class BookingOptionSettings extends React.Component {
              <Field
                name={`${field}minutes`}
                value={field.minutes}
-               component={({input}) => <span>Minutes: {input.value}</span>}
+               component={({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
              />
-             ，
              <Field
                name={`${field}interval`}
                value={field.interval}
-               component={({input}) => <span>Interval: {input.value}</span>}
+               component={({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
              />
            </div>
           )
@@ -97,9 +103,11 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderMenuFields = () => {
+    const { menu_for_sale_label, select_a_menu } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}</h3>
+        <h3>{menu_for_sale_label}</h3>
         <div className="formRow">
           <dl>
             <Field
@@ -108,7 +116,7 @@ class BookingOptionSettings extends React.Component {
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedMenuFields}
               options={this.props.menuGroupOptions}
-              selectLabel={"Choose"}
+              selectLabel={select_a_menu}
               />
           </dl>
         </div>
@@ -117,23 +125,29 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderTimeFields = () => {
+    const { required_label, time_span_label, menu_time_span, menu_interval, total, minute, reservation_interval } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}<strong>必須項目</strong></h3>
+        <h3>{time_span_label}<strong>{required_label}</strong></h3>
         <div className="formRow">
           <Field
             name="booking_option[minutes]"
-            label="Minutes"
+            label={menu_time_span}
             type="number"
             validate={(value) => requiredValidation(this, value)}
             component={InputRow}
+            before_hint={total}
+            hint={minute}
           />
           <Field
             name="booking_option[interval]"
-            label="Interval"
+            label={menu_interval}
             type="number"
             validate={(value) => requiredValidation(this, value)}
             component={InputRow}
+            before_hint={reservation_interval}
+            hint={minute}
           />
         </div>
       </div>
@@ -141,28 +155,31 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderPriceFields = () => {
+    const { required_label, price_label, price, currency_unit, tax_label, tax_include, tax_excluded } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}<strong>必須項目</strong></h3>
+        <h3>{price_label}<strong>{required_label}</strong></h3>
         <div className="formRow">
           <Field
             name="booking_option[amount_cents]"
-            label="Price"
+            label={price}
             type="number"
             validate={(value) => requiredValidation(this, value)}
             component={InputRow}
+            hint={currency_unit}
           />
           <dl>
-            <dt>Tax Include</dt>
+            <dt>{tax_label}</dt>
             <dd>
               <div className="radio">
                 <Field name="booking_option[tax_include]" type="radio" value="true" component={Radio}>
-                  Yes
+                  {tax_include}
                 </Field>
               </div>
               <div className="radio">
                 <Field name="booking_option[tax_include]" type="radio" value="false" component={Radio}>
-                  No
+                  {tax_excluded}
                 </Field>
               </div>
               <Error name="booking_option[tax_include]" />
@@ -179,21 +196,23 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderSellingTimeFields = () => {
+    const { required_label, sale_period, sale_start, sale_end, sale_now, sale_on, sale_forever } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}<strong>必須項目</strong></h3>
+        <h3>{sale_period}<strong>{required_label}</strong></h3>
         <div className="formRow">
           <dl>
-            <dt>Start At</dt>
+            <dt>{sale_start}</dt>
             <dd>
               <div className="radio">
                 <Field name="booking_option[start_at_type]" type="radio" value="now" component={Radio}>
-                  Now
+                  {sale_now}
                 </Field>
               </div>
               <div className="radio">
                 <Field name="booking_option[start_at_type]" type="radio" value="date" component={Radio}>
-                  Specific date
+                  {sale_on}
                 </Field>
               </div>
               <Condition when="booking_option[start_at_type]" is="date">
@@ -215,16 +234,16 @@ class BookingOptionSettings extends React.Component {
             </dd>
           </dl>
           <dl>
-            <dt>End At</dt>
+            <dt>{sale_end}</dt>
             <dd>
               <div className="radio">
                 <Field name="booking_option[end_at_type]" type="radio" value="now" component={Radio}>
-                  Now
+                  {sale_forever}
                 </Field>
               </div>
               <div className="radio">
                 <Field name="booking_option[end_at_type]" type="radio" value="date" component={Radio}>
-                  Specific date
+                  {sale_on}
                 </Field>
               </div>
               <Condition when="booking_option[end_at_type]" is="date">
@@ -245,28 +264,27 @@ class BookingOptionSettings extends React.Component {
               </Condition>
             </dd>
           </dl>
-          <input
-            type="hidden"
-            name="booking_option[amount_currency]"
-            value="JPY"
-          />
         </div>
       </div>
     );
   };
 
   renderMemoFields = () => {
+    const { note_label, note_hint } = this.props.i18n;
+
     return (
       <div>
-        <h3>{this.props.i18n.infoLabel}</h3>
+        <h3>{note_label}</h3>
         <div className="formRow">
           <dl>
-            <dt>Memo</dt>
             <dd>
               <Field
                 name="booking_option[memo]"
-                label="Memo"
+                label={note_label}
                 component="textarea"
+                placeholder={note_hint}
+                cols={100}
+                rows={10}
               />
             </dd>
           </dl>
@@ -334,7 +352,7 @@ class BookingOptionSettings extends React.Component {
 
             <ul id="footerav">
               <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancelBtn}</a>
+                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel_btn}</a>
               </li>
               <li>
                 <input

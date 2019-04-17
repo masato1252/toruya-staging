@@ -5,15 +5,17 @@ const errorMessage = (error) => (
   <span className="field-error-message">{error}</span>
 )
 
-const InputRow = ({ label, type, input, requiredLabel, meta: { error, touched, submitFailed } }) => {
+const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: { error, touched, submitFailed } }) => {
   const hasError = error && touched && submitFailed;
 
   return (
     <dl>
-      <dt>{label} { requiredLabel && <strong>必須項目</strong> }</dt>
+      <dt>{label} { requiredLabel ? <strong>{requiredLabel}</strong> : ""}</dt>
       <dd>
+        { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
         <input {...input} type={type} placeholder={label} className={hasError ? "field-error" : ""} />
         { hasError && errorMessage(error) }
+        { hint ? <span className="field-hint">{hint}</span> : ""}
       </dd>
     </dl>
   );

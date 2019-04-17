@@ -422,6 +422,9 @@ en:
         customer_filter: custom filters
         print_address: all at once
         add_staff: ⃝
+    booking_option:
+      title: Booking Prices setting
+      info_html: You can set your booking price here.<br />Your customers will book your shop online with this price.
   constants:
     rank:
       regular: "Regular"

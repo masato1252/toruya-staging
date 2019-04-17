@@ -15,10 +15,22 @@
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
       }
+
+      dt {
+        width: 200px;
+      }
     }
 
-    dl dt {
-      width: 200px;
+    .before-field-hint {
+      margin-right: 6px;
+    }
+
+    .field-hint {
+      margin-left: 12px;
+    }
+
+    .result-field {
+      margin-bottom: 12px;
     }
 
     input[type="number"] {
