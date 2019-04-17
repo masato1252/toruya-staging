@@ -651,6 +651,8 @@ ja:
         print_address: 一斉
         add_staff: ⃝
     booking_option:
+      sider_label: オンライン予約
+      booking_option_label: 予約価格
       title: 予約価格の設定
       info_html: 予約価格を設定します。<br />お客様はここで設定した価格でオンライン予約をします。
       name: 価格名

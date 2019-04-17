@@ -52,4 +52,14 @@ class Settings::BookingOptionsController < SettingsController
       render :edit
     end
   end
+
+  def destroy
+    booking_option = super_user.booking_options.find(params[:id])
+
+    if booking_option.destroy
+      redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to settings_user_booking_options_path(super_user)
+    end
+  end
 end
