@@ -1,7 +1,7 @@
 <div id="settingForm">
   <%= react_component("settings/booking/booking_option_settings", {
-    formAuthenticityToken: form_authenticity_token,
-    bookingOption: @booking_option.attributes.merge!(
+    form_authenticity_token: form_authenticity_token,
+    booking_option: @booking_option.attributes.merge!(
       amount_cents: @booking_option.amount&.fractional,
       start_at_type: @booking_option.start_at ? "date" : "now",
       start_at_date_part: @booking_option.start_at_date,
@@ -10,7 +10,7 @@
       end_at_date_part: @booking_option.end_at_date,
       end_at_time_part: @booking_option.end_at_time,
     ),
-    menuGroupOptions: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval),
+    menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval),
     menus: menu_group_options(@menu_result[:menu_options], :minutes, :interval).find_all { |option| @booking_option.menu_ids.include?(option["value"]) },
     path: {
       cancel: settings_user_booking_options_path(super_user),
