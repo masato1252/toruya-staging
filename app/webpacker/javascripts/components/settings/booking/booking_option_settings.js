@@ -2,7 +2,8 @@
 
 import React from "react";
 import { Form, Field } from "react-final-form";
-import createDecorator from "final-form-focus";
+import createFocusDecorator from "final-form-focus";
+import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
 
@@ -15,8 +16,16 @@ import SelectMultipleInputs from "../../shared/select_multiple_inputs";
 class BookingOptionSettings extends React.Component {
   constructor(props) {
     super(props);
-    this.focusOnError = createDecorator();
+    this.focusOnError = createFocusDecorator();
+    this.calculator = createChangesDecorator({
+      field: /menus/, // when a field matching this pattern changes...
+      updates: {
+        "booking_option[minutes]": (ignoredValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0),
+        "booking_option[interval]": (ignoredValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+      }
+    })
   };
+
 
   renderNameFields = () => {
     return (
@@ -300,7 +309,7 @@ class BookingOptionSettings extends React.Component {
         initialValues={{ menus: this.props.menus, booking_option: { ...transformValues(this.props.bookingOption) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
-        decorators={[this.focusOnError]}
+        decorators={[this.focusOnError, this.calculator]}
         mutators={{
           ...arrayMutators
         }}
