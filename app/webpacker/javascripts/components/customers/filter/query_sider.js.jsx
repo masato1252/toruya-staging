@@ -8,6 +8,7 @@ import ReactSelect from "react-select";
 
 import CommonDatepickerField from "../../shared/datepicker_field.js";
 import Select from "../../shared/select.js";
+import { selectCustomStyles } from "../../../libraries/styles";
 
 
 class CustomersFilterQuerySider extends React.Component {
@@ -785,6 +786,7 @@ class CustomersFilterQuerySider extends React.Component {
                         placeholder={this.props.selectMenuLabel}
                         options={this.props.menuGroupOptions}
                         onChange={this.onMenuChange}
+                        styles={selectCustomStyles}
                         />
                       <a
                         href="#"

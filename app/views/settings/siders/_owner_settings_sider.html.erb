@@ -55,7 +55,7 @@
     <% end %>
   <% end %>
 
-  <% if basic_setting_presenter.completed? %>
+  <% if basic_setting_presenter.completed? && booking_feature_enabled? %>
     <%= render "settings/siders/booking_options" %>
   <% end %>
 

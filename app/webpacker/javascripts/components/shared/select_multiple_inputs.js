@@ -5,6 +5,7 @@ import { FieldArray } from 'react-final-form-arrays'
 import ReactSelect from "react-select";
 
 import { Error } from "./components";
+import { selectCustomStyles } from "../../libraries/styles";
 
 const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFields, input, meta}) => {
   return (
@@ -19,6 +20,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
               placeholder={selectLabel}
               options={options}
               onChange={input.onChange}
+              styles={selectCustomStyles}
               />
             <a
               href="#"

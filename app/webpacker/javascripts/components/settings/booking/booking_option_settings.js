@@ -7,7 +7,7 @@ import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
 
-import { requiredValidation, transformValues, handleSingleAttrInput } from "../../../libraries/helper";
+import { requiredValidation, transformValues } from "../../../libraries/helper";
 import { InputRow, Radio, Error, Condition } from "../../shared/components";
 import CommonDatepickerField from "../../shared/datepicker_field";
 import DateFieldAdapter from "../../shared/date_field_adapter";
