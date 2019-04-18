@@ -12,8 +12,7 @@ class Settings::BookingOptionsController < SettingsController
   end
 
   def create
-    attrs = params[:booking_option]&.permit!&.to_h.merge!(menu_ids: params[:menus]&.values&.pluck(:value) )
-    outcome = BookingOptions::Create.run(user: super_user, attrs: attrs)
+    outcome = BookingOptions::Create.run(user: super_user, attrs: params[:booking_option].permit!.to_h)
 
     if outcome.valid?
       redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
@@ -38,9 +37,8 @@ class Settings::BookingOptionsController < SettingsController
 
   def update
     @booking_option = super_user.booking_options.find(params[:id])
-    attrs = params[:booking_option]&.permit!&.to_h.merge!(menu_ids: params[:menus]&.values&.pluck(:value) )
 
-    outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: attrs)
+    outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params[:booking_option].permit!.to_h)
 
     if outcome.valid?
       redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")

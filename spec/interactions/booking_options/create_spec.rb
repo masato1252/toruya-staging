@@ -15,7 +15,9 @@ RSpec.describe BookingOptions::Create do
         start_at_date_part: DateTime.now.to_s(:date),
         start_at_time_part: DateTime.now.to_s(:time),
         end_at: nil,
-        menu_ids: [menu.id]
+        menus: {
+          "0" => { "label" => menu.name, "value" => menu.id }
+        }
       }
     }
   end
