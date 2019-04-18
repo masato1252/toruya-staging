@@ -42,7 +42,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
               >
               <i className="fa fa-plus" aria-hidden="true" ></i>
             </a>
-            <Error name={`${collection_name}_error`} />
+            <Error name={`${input.name}`} />
           </div>
         </div>
       )}

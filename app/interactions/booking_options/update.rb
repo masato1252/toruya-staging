@@ -15,10 +15,18 @@ module BookingOptions
       string :end_at_date_part, default: nil
       string :end_at_time_part, default: nil
       string :memo, default: nil
-      array :menu_ids, default: nil
+      # menus hash
+      # {
+      #   "0" => { "label" => "menu_name", "value" => "menu_id" },
+      #   "1" => { "label" => "ANAT002筋骨BODY", "value" => "6" }
+      # }
+      hash :menus, default: nil, strip: false
     end
 
     def execute
+      menus = attrs.delete(:menus)
+      attrs.merge!(menu_ids: menus&.values&.pluck(:value) )
+
       if booking_option.update(attrs)
         booking_option
       else

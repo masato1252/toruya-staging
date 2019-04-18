@@ -9,9 +9,9 @@
       end_at_type: @booking_option.end_at ? "date" : "now",
       end_at_date_part: @booking_option.end_at_date,
       end_at_time_part: @booking_option.end_at_time,
+      menus: menu_group_options(@menu_result[:menu_options], :minutes, :interval).find_all { |option| @booking_option.menu_ids.include?(option["value"]) },
     ),
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval),
-    menus: menu_group_options(@menu_result[:menu_options], :minutes, :interval).find_all { |option| @booking_option.menu_ids.include?(option["value"]) },
     path: {
       cancel: settings_user_booking_options_path(super_user),
       save: @booking_option.new_record? ? settings_user_booking_options_path(super_user) : settings_user_booking_option_path(super_user, @booking_option)

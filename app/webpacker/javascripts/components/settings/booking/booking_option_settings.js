@@ -18,10 +18,12 @@ class BookingOptionSettings extends React.Component {
     super(props);
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator({
-      field: /menus/, // when a field matching this pattern changes...
+      field: /booking_option\[menus\]/, // when a field matching this pattern changes...
       updates: {
-        "booking_option[minutes]": (meunValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0),
-        "booking_option[interval]": (menuValue, allValues) => (allValues.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+        "booking_option[minutes]": (menuValues, allValues) => {
+          return (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0)
+        },
+        "booking_option[interval]": (menuValues, allValues) => (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
       }
     })
   };
@@ -111,8 +113,8 @@ class BookingOptionSettings extends React.Component {
         <div className="formRow">
           <dl>
             <Field
-              name="booking_option[menus]"
-              collection_name="menus"
+              name="selected_menu"
+              collection_name="booking_option[menus]"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedMenuFields}
               options={this.props.menu_group_options}
@@ -297,21 +299,22 @@ class BookingOptionSettings extends React.Component {
     const errors = {};
     errors.booking_option = {};
     const { tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
+    const { required } = this.props.i18n.errors;
 
     if (!tax_include) {
-      errors.booking_option.tax_include = this.props.i18n.errors.required;
+      errors.booking_option.tax_include = required;
     }
 
     if (start_at_type === "date" && !start_at_time_part) {
-      errors.booking_option.start_at_time_part = this.props.i18n.errors.required;
+      errors.booking_option.start_at_time_part = required;
     }
 
     if (end_at_type === "date" && !end_at_time_part) {
-      errors.booking_option.end_at_time_part = this.props.i18n.errors.required;
+      errors.booking_option.end_at_time_part = required;
     }
 
-    if (!values.menus.length) {
-      errors.menus_error = this.props.i18n.errors.required;
+    if (!values.booking_option.menus.length) {
+      errors.selected_menu = required;
     }
 
     return errors;
@@ -324,7 +327,7 @@ class BookingOptionSettings extends React.Component {
   render() {
     return (
       <Form
-        initialValues={{ menus: this.props.menus, booking_option: { ...transformValues(this.props.booking_option) }}}
+        initialValues={{ booking_option: { ...transformValues(this.props.booking_option) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError, this.calculator]}
