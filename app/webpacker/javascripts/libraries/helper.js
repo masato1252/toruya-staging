@@ -1,12 +1,5 @@
 "use strict";
 
-const handleSingleAttrInput = (component, event) => {
-  const name = event.target.dataset.name;
-  const value = event.target.value;
-
-  component.setState({[name]: value});
-};
-
 const requiredValidation = (component, value) => (value ? undefined : component.props.i18n.errors.required);
 
 const transformValues = values => {
@@ -24,7 +17,6 @@ const transformValues = values => {
 const isBoolean = val => "boolean" === typeof val;
 
 export {
-  handleSingleAttrInput,
   requiredValidation,
   transformValues
 };
