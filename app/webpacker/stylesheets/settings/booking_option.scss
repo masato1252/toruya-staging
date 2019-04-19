@@ -1,3 +1,30 @@
+// booking_options list
+#priceList.formRow {
+
+  .updateTime,
+  .salesFrom,
+  .salesTo {
+    width: 100px;
+    min-width: 100px;
+    font-size: 90%;
+  }
+
+  .salesMenu {
+    width: 60px;
+    text-align: center;
+  }
+
+  .rowTTL {
+    min-width: 164px;
+    box-sizing: unset;
+    float: left;
+    width: 25%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// booking_option form
 .booking_option_settings {
   .formRow {
     overflow: initial !important;
