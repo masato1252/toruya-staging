@@ -2,11 +2,11 @@ import React from "react";
 import { Field } from "react-final-form";
 
 const errorMessage = (error) => (
-  <span className="field-error-message">{error}</span>
+  <p className="field-error-message">{error}</p>
 )
 
-const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: { error, touched, submitFailed } }) => {
-  const hasError = error && touched && submitFailed;
+const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: { error, touched } }) => {
+  const hasError = error && touched;
 
   return (
     <dl>
@@ -14,8 +14,8 @@ const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: 
       <dd>
         { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
         <input {...input} type={type} placeholder={label} className={hasError ? "field-error" : ""} />
-        { hasError && errorMessage(error) }
         { hint ? <span className="field-hint">{hint}</span> : ""}
+        { hasError && errorMessage(error) }
       </dd>
     </dl>
   );
@@ -32,9 +32,9 @@ const Radio = ({ input, children }) =>
   );
 
 const Error = ({ name }) => (
-  <Field name={name} subscription={{ error: true, touched: true, submitFailed: true }}>
-    {({ meta: { error, touched, submitFailed } }) =>
-      error && touched && submitFailed ? errorMessage(error) : null
+  <Field name={name} subscription={{ error: true, touched: true }}>
+    {({ meta: { error, touched } }) =>
+      error && touched ? errorMessage(error) : null
     }
   </Field>
 );
