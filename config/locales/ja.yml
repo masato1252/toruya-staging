@@ -681,6 +681,8 @@ ja:
         sale_end: 販売終了
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
+        form_errors:
+          enough_time_for_menu: 設定メニューに十分な長さを設定してください。
   constants:
     rank:
       regular: "一般"

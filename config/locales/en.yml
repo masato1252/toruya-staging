@@ -456,6 +456,8 @@ en:
         sale_end: Sales end
         note_label: Explanation / Important notes
         note_hint: The important notes showed to your customer on booking with this price.
+        form_errors:
+          enough_time_for_menu: Please set enough length for the set menu.
   constants:
     rank:
       regular: "Regular"
