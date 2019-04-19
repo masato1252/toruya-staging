@@ -404,14 +404,14 @@ ja:
       name: メニュー名
       staff: 対応スタッフ
       reservation_setting_name: 予約枠
-      add_new_reservation_setting_btn: を追加
+      add_new_reservation_setting_btn: 追加
       reservation_ending_rule_none: 終了しない
       reservation_ending_rule_repeating: 繰り返し後
       reservation_ending_rule_repeating_setting: 繰り返し設定
       reservation_ending_rule_repeating_times: 回
       reservation_ending_rule_end_date_setting: 終了日
       category_label: カテゴリー
-      new_category_btn: カテゴリーを追加
+      new_category_btn: 追加
       notification_message_html: "%{shop_name}でメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
       in_shop_dashboard_notification_message_html: "この店舗はメニューが未設定です。<a href='%{url}'>こちら</a>から設定してください。"
     category:
