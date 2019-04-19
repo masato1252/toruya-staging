@@ -208,6 +208,11 @@ input:disabled, select:disabled, textarea[disabled], .input div.disabled {
   }
 }
 
+// profile new page, path: /profile/new
+.login .container {
+  padding-bottom: 100px;
+}
+
 .shopIndex {
   .sidel {
     .busHours {
