@@ -5,6 +5,7 @@ const requiredValidation = (component, value) => (value ? undefined : component.
 const transformValues = values => {
   const data = {...values};
 
+  // Move object boolean true/false value to string "true" or "false"
   Object.keys(data).forEach((key) => {
     if (isBoolean(data[key])) {
       data[key] = data[key] ? "true" : "false"

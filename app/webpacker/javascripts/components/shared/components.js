@@ -22,8 +22,6 @@ const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: 
 }
 
 const Radio = ({ input, children }) =>
-  // input should contain checked value to indicate
-  // if the input is checked
   (
     <label>
       <input type="radio" {...input} />
