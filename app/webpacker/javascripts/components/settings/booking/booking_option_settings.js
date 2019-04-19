@@ -6,6 +6,7 @@ import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
+import _ from "lodash";
 
 import { requiredValidation, transformValues } from "../../../libraries/helper";
 import { InputRow, Radio, Error, Condition } from "../../shared/components";
@@ -137,7 +138,6 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[minutes]"
             label={menu_time_span}
             type="number"
-            validate={(value) => requiredValidation(this, value)}
             component={InputRow}
             before_hint={total}
             hint={minute}
@@ -146,7 +146,6 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[interval]"
             label={menu_interval}
             type="number"
-            validate={(value) => requiredValidation(this, value)}
             component={InputRow}
             before_hint={reservation_interval}
             hint={minute}
@@ -296,28 +295,40 @@ class BookingOptionSettings extends React.Component {
   };
 
   validate = (values) => {
-    const errors = {};
-    errors.booking_option = {};
-    const { tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
-    const { required } = this.props.i18n.errors;
+    const fields_errors = {};
+    fields_errors.booking_option = {};
+    const { menus, minutes, interval, tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
+    const { errors, form_errors } = this.props.i18n;
 
     if (!tax_include) {
-      errors.booking_option.tax_include = required;
+      fields_errors.booking_option.tax_include = errors.required;
     }
 
     if (start_at_type === "date" && !start_at_time_part) {
-      errors.booking_option.start_at_time_part = required;
+      fields_errors.booking_option.start_at_time_part = errors.required;
     }
 
     if (end_at_type === "date" && !end_at_time_part) {
-      errors.booking_option.end_at_time_part = required;
+      fields_errors.booking_option.end_at_time_part = errors.required;
     }
 
     if (!values.booking_option.menus.length) {
-      errors.selected_menu = required;
+      fields_errors.selected_menu = errors.required;
     }
 
-    return errors;
+    if (minutes === undefined) {
+      fields_errors.booking_option.minutes = errors.required;
+    } else if (minutes < _.min(menus.map((menu) => menu.minutes))) {
+      fields_errors.booking_option.minutes = form_errors.enough_time_for_menu;
+    }
+
+    if (interval === undefined) {
+      fields_errors.booking_option.interval = errors.required;
+    } else if (interval < _.min(menus.map((menu) => menu.interval))) {
+      fields_errors.booking_option.interval = form_errors.enough_time_for_menu;
+    }
+
+    return fields_errors;
   };
 
   onSubmit = (values) => {
