@@ -122,6 +122,7 @@ Rails.application.routes.draw do
         get :repeating_dates, on: :collection
       end
       resources :booking_options, except: [:show]
+      resources :booking_pages, except: [:show]
       resources :reservation_settings, except: [:show]
       resources :categories, except: [:show]
       resources :ranks, except: [:show]

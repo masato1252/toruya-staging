@@ -683,6 +683,19 @@ ja:
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
+    booking_page:
+      start_at: 販売開始
+      end_at: 販売終了
+      new_button: 新規作成
+      form:
+        sale_period: 販売期間
+        sale_now: 今すぐ
+        sale_on: 指定日
+        sale_forever: 終了しない
+        sale_start: 販売開始
+        sale_end: 販売終了
+        note_label: 説明・注意事項
+        note_hint: この価格で予約する際の注意事項などをお客様に表示します。
   constants:
     rank:
       regular: "一般"

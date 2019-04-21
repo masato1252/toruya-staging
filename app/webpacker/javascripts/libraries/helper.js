@@ -10,12 +10,17 @@ const transformValues = values => {
     if (isBoolean(data[key])) {
       data[key] = data[key] ? "true" : "false"
     }
+
+    if (isNumber(data[key])) {
+      data[key] = `${data[key]}`
+    }
   })
 
   return data;
 };
 
 const isBoolean = val => "boolean" === typeof val;
+const isNumber = val => "number" === typeof val;
 
 export {
   requiredValidation,

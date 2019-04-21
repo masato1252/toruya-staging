@@ -1,0 +1,29 @@
+<div id="settingForm">
+  <%= react_component("settings/booking/booking_page_settings", {
+    form_authenticity_token: form_authenticity_token,
+    booking_page: @booking_page.attributes.merge!({}),
+    shop_options: shop_options(super_user.shops),
+    booking_options: default_options(super_user.booking_options),
+    booking_page: @booking_page.attributes.merge!(
+      start_at_type: @booking_page.start_at ? "date" : "now",
+      start_at_date_part: @booking_page.start_at_date,
+      start_at_time_part: @booking_page.start_at_time,
+      end_at_type: @booking_page.end_at ? "date" : "now",
+      end_at_date_part: @booking_page.end_at_date,
+      end_at_time_part: @booking_page.end_at_time,
+      options: default_options(@booking_page.booking_options)
+    ),
+    path: {
+      cancel: settings_user_booking_pages_path(super_user),
+      save: @booking_page.new_record? ? settings_user_booking_pages_path(super_user) : settings_user_booking_page_path(super_user, @booking_page)
+    },
+    i18n: {
+      cancel_btn: t("action.cancel"),
+      errors: {
+        required: I18n.t("errors.messages.required")
+      }
+    }.merge!(t("settings.booking_page.form").merge!(t("common").slice(:required_label))),
+  },
+  { camelize_props: false }
+  ) %>
+</div>

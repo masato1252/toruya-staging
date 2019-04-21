@@ -271,7 +271,9 @@ CREATE TABLE public.booking_pages (
     note text,
     "interval" integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone
 );
 
 
@@ -2700,6 +2702,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190313140955'),
 ('20190316013202'),
 ('20190409065338'),
-('20190410073550');
+('20190410073550'),
+('20190420050353');
 
 

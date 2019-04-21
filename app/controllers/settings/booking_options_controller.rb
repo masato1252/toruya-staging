@@ -1,4 +1,6 @@
 class Settings::BookingOptionsController < SettingsController
+  before_action :authorize_booking_option
+
   def index
     @booking_options = super_user.booking_options.includes(:menu_relations).order("id")
   end
@@ -55,5 +57,9 @@ class Settings::BookingOptionsController < SettingsController
     super_user.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
     end
+  end
+
+  def authorize_booking_option
+    authorize! :manage, BookingOption
   end
 end

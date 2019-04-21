@@ -12,6 +12,8 @@
 #  interval   :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  start_at   :datetime
+#  end_at     :datetime
 #
 # Indexes
 #
@@ -20,6 +22,9 @@
 #
 
 class BookingPage < ApplicationRecord
-  has_many :page_options, class_name: "BookingPageOption", foreign_key: :booking_page_id
-  has_many :options, class_name: "BookingOption", through: :page_options
+  include DateTimeAccessor
+  date_time_accessor :start_at, :end_at
+
+  has_many :booking_page_options
+  has_many :booking_options, through: :booking_page_options
 end

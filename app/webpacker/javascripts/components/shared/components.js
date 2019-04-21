@@ -5,21 +5,43 @@ const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>
 )
 
-const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, meta: { error, touched } }) => {
+const TextInput = (props) => (
+  <input {...props} />
+)
+
+const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, componentType, ...rest, meta: { error, touched } }) => {
   const hasError = error && touched;
+  const Component = componentType || "input";
 
   return (
     <dl>
-      <dt>{label} { requiredLabel ? <strong>{requiredLabel}</strong> : ""}</dt>
+      {label ?
+        <dt>
+          {label} { requiredLabel ? <strong>{requiredLabel}</strong> : "" }
+        </dt> : ""
+      }
       <dd>
         { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
-        <input {...input} type={type} placeholder={label} className={hasError ? "field-error" : ""} />
+        <Component {...input} {...rest} type={type} placeholder={label} className={hasError ? "field-error" : ""} />
         { hint ? <span className="field-hint">{hint}</span> : ""}
         { hasError && errorMessage(error) }
       </dd>
     </dl>
   );
 }
+
+const RadioRow = ({ input, children }) =>
+  (
+    <dl>
+      <dd>
+        <div className="radio">
+          <Radio input={input}>
+            {children}
+          </Radio>
+        </div>
+      </dd>
+    </dl>
+  );
 
 const Radio = ({ input, children }) =>
   (
@@ -45,6 +67,7 @@ const Condition = ({ when, is, children }) => (
 
 export {
   InputRow,
+  RadioRow,
   Radio,
   Error,
   Condition
