@@ -656,7 +656,7 @@ ja:
       title: 予約価格の設定
       info_html: 予約価格を設定します。<br />お客様はここで設定した価格でオンライン予約をします。
       name: 価格名
-      menu_for_sale: ニュー
+      menu_for_sale: メニュー
       start_at: 販売開始
       end_at: 販売終了
       new_button: 新規作成
