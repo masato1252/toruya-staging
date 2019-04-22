@@ -258,6 +258,39 @@ ALTER SEQUENCE public.booking_page_options_id_seq OWNED BY public.booking_page_o
 
 
 --
+-- Name: booking_page_special_dates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_page_special_dates (
+    id bigint NOT NULL,
+    booking_page_id bigint NOT NULL,
+    start_at timestamp without time zone NOT NULL,
+    end_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_page_special_dates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_page_special_dates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_page_special_dates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_page_special_dates_id_seq OWNED BY public.booking_page_special_dates.id;
+
+
+--
 -- Name: booking_pages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1510,6 +1543,13 @@ ALTER TABLE ONLY public.booking_page_options ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: booking_page_special_dates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_special_dates ALTER COLUMN id SET DEFAULT nextval('public.booking_page_special_dates_id_seq'::regclass);
+
+
+--
 -- Name: booking_pages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1794,6 +1834,14 @@ ALTER TABLE ONLY public.booking_options
 
 ALTER TABLE ONLY public.booking_page_options
     ADD CONSTRAINT booking_page_options_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: booking_page_special_dates booking_page_special_dates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_page_special_dates
+    ADD CONSTRAINT booking_page_special_dates_pkey PRIMARY KEY (id);
 
 
 --
@@ -2192,6 +2240,13 @@ CREATE INDEX index_booking_page_options_on_booking_option_id ON public.booking_p
 --
 
 CREATE INDEX index_booking_page_options_on_booking_page_id ON public.booking_page_options USING btree (booking_page_id);
+
+
+--
+-- Name: index_booking_page_special_dates_on_booking_page_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_booking_page_special_dates_on_booking_page_id ON public.booking_page_special_dates USING btree (booking_page_id);
 
 
 --

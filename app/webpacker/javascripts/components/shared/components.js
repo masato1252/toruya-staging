@@ -9,7 +9,7 @@ const TextInput = (props) => (
   <input {...props} />
 )
 
-const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, componentType, ...rest, meta: { error, touched } }) => {
+const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, ...rest, meta: { error, touched } }) => {
   const hasError = error && touched;
   const Component = componentType || "input";
 
@@ -22,7 +22,7 @@ const InputRow = ({ label, type, input, requiredLabel, hint, before_hint, compon
       }
       <dd>
         { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
-        <Component {...input} {...rest} type={type} placeholder={label} className={hasError ? "field-error" : ""} />
+        <Component {...input} {...rest} type={type} placeholder={placeholder || label} className={hasError ? "field-error" : ""} />
         { hint ? <span className="field-hint">{hint}</span> : ""}
         { hasError && errorMessage(error) }
       </dd>

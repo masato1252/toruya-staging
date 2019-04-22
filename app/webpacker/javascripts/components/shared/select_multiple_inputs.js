@@ -7,7 +7,7 @@ import ReactSelect from "react-select";
 import { Error } from "./components";
 import { selectCustomStyles } from "../../libraries/styles";
 
-const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFields, input, meta}) => {
+const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFields, hint, input, meta}) => {
   return (
     <FieldArray name={collection_name}>
       {({ fields }) => (
@@ -25,7 +25,8 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
             <a
               href="#"
               className={`btn btn-symbol btn-yellow ${input.value ? "" : "disabled"}`}
-              onClick={() =>  {
+              onClick={(event) => {
+                event.preventDefault();
                 let isFieldDuplicated = false;
 
                 if (fields.value) {
@@ -44,6 +45,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
               >
               <i className="fa fa-plus" aria-hidden="true" ></i>
             </a>
+            { hint ? <span className="field-hint">{hint}</span> : ""}
             <Error name={`${input.name}`} />
           </div>
         </div>

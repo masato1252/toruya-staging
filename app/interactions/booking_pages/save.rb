@@ -1,6 +1,6 @@
 module BookingPages
-  class Create < ActiveInteraction::Base
-    object :user
+  class Save < ActiveInteraction::Base
+    object :booking_page, class: "BookingPage"
 
     hash :attrs, default: nil do
       integer :shop_id
@@ -19,18 +19,25 @@ module BookingPages
       #   "1" => { "label" => "ANAT002筋骨BODY", "value" => "6" }
       # }
       hash :options, default: nil, strip: false
+      hash :special_dates, default: nil, strip: false
     end
 
     def execute
       booking_options = attrs.delete(:options)
+      special_dates = attrs.delete(:special_dates)
+
       attrs.merge!(booking_option_ids: booking_options&.values&.pluck(:value) )
 
-      booking_page = user.booking_pages.new(attrs || {})
-
-      if booking_page.save
-        booking_page
-      else
-        errors.merge!(booking_page.errors)
+      booking_page.transaction do
+        if booking_page.update(attrs)
+          booking_page.booking_page_special_dates.destroy_all
+          special_dates.values.each do |date_times|
+            booking_page.booking_page_special_dates.create(date_times)
+          end
+          booking_page
+        else
+          errors.merge!(booking_page.errors)
+        end
       end
     end
   end

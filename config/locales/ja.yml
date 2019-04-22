@@ -34,6 +34,7 @@ ja:
     cancel_upgrade: キャンセル
     new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
+    copy: コピー
   common:
     processing: 送信中
     date: 日付
@@ -60,6 +61,7 @@ ja:
     select_a_shop: 店鋪選択
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
+    select_a_booking_option: 予約価格を選択
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
     no_permission: 権限がありません
@@ -684,11 +686,27 @@ ja:
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
     booking_page:
-      start_at: 販売開始
-      end_at: 販売終了
+      title: 予約ページの設定
+      info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
+      name: ページ名
+      start_at: 受付開始
+      end_at: 受付終了
       new_button: 新規作成
       form:
-        sale_period: 販売期間
+        name_header: ページヘッダ
+        page_name: ページ名
+        page_name_hint: あなたが予約ページを管理する際に使用する名前です。
+        title: ページタイトル
+        title_hint: 予約ページのタイトルとして表示されます。
+        greeting: 挨拶文
+        greeting_placeholder: 予約ページ上部に表示されるます。
+        booking_option_header: 予約価格
+        booking_option_hint: あなたのお客様はこの価格で予約をします。
+        shop_header: 予約可能な店舗
+        booking_dates_header: 予約カレンダー
+        booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        interval_header: 予約の開始時間
+        sale_period: 予約受付期間
         sale_now: 今すぐ
         sale_on: 指定日
         sale_forever: 終了しない

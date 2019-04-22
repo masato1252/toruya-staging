@@ -7,34 +7,35 @@ class Settings::BookingPagesController < SettingsController
 
   def new
     @booking_page = super_user.booking_pages.new
+    render :form
   end
 
   def create
-    outcome = BookingPages::Create.run(user: super_user, attrs: params[:booking_page].permit!.to_h)
+    outcome = BookingPages::Save.run(booking_page: super_user.booking_pages.new, attrs: params[:booking_page].permit!.to_h)
 
-    debugger
     if outcome.valid?
       redirect_to settings_user_booking_pages_path(super_user), notice: I18n.t("common.create_successfully_message")
     else
       @booking_page = super_user.booking_pages.new
 
-      render :new
+      render :form
     end
   end
 
   def edit
     @booking_page = super_user.booking_pages.find(params[:id])
+    render :form
   end
 
   def update
     @booking_page = super_user.booking_pages.find(params[:id])
 
-    outcome = BookingPages::Update.run(booking_page: @booking_page, attrs: params[:booking_page].permit!.to_h)
+    outcome = BookingPages::Save.run(booking_page: @booking_page, attrs: params[:booking_page].permit!.to_h)
 
     if outcome.valid?
       redirect_to settings_user_booking_pages_path(super_user), notice: I18n.t("common.create_successfully_message")
     else
-      render :edit
+      render :form
     end
   end
 

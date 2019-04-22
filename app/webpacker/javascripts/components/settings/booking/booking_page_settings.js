@@ -1,7 +1,8 @@
 "use strict";
 
 import React from "react";
-import { Form, Field } from "react-final-form";
+import { Form, Field, FormSpy } from "react-final-form";
+import { FieldArray } from 'react-final-form-arrays'
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
@@ -28,19 +29,19 @@ class BookingPageSettings extends React.Component {
 
 
   renderNameFields = () => {
-    const { required_label, name, title } = this.props.i18n;
+    const { required_label, name_header, page_name, page_name_hint, title, title_hint, greeting, greeting_placeholder } = this.props.i18n;
 
     return (
       <div>
-        <h3>name</h3>
+        <h3>{name_header}</h3>
         <div className="formRow">
           <Field
             name="booking_page[name]"
             component={InputRow}
             type="text"
             validate={(value) => requiredValidation(this, value)}
-            label="name"
-            placeholder={name}
+            label={page_name}
+            hint={page_name_hint}
             requiredLabel={required_label}
           />
 
@@ -48,16 +49,16 @@ class BookingPageSettings extends React.Component {
             name="booking_page[title]"
             component={InputRow}
             type="text"
-            label="title"
-            placeholder={title}
+            label={title}
+            hint={title_hint}
           />
 
           <Field
             name="booking_page[greeting]"
             component={InputRow}
             componentType="textarea"
-            label="Greeting"
-            placeholder={title}
+            label={greeting}
+            placeholder={greeting_placeholder}
             cols={100}
             rows={10}
           />
@@ -101,20 +102,21 @@ class BookingPageSettings extends React.Component {
   };
 
   renderBookingOptionFields = () => {
-    // const { select_a_menu } = this.props.i18n;
+    const { required_label, booking_option_header, select_a_booking_option, booking_option_hint } = this.props.i18n;
 
     return (
       <div>
-        <h3>menu_for_sale_label</h3>
+        <h3>{booking_option_header}<strong>{required_label}</strong></h3>
         <div className="formRow">
           <dl>
             <Field
-              name="selected_menu"
+              name="selected_booking_option"
               collection_name="booking_page[options]"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedBookingOptionFields}
               options={this.props.booking_options}
-              selectLabel={`select_a_option`}
+              selectLabel={select_a_booking_option}
+              hint={booking_option_hint}
               />
           </dl>
         </div>
@@ -123,11 +125,11 @@ class BookingPageSettings extends React.Component {
   }
 
   renderShopFields = () => {
-    const { required_label } = this.props.i18n;
+    const { required_label, shop_header } = this.props.i18n;
 
     return (
       <div>
-        <h3>Shop<strong>{required_label}</strong></h3>
+        <h3>{shop_header}<strong>{required_label}</strong></h3>
         <div className="formRow">
           {this.props.shop_options.map((shop_option) =>
             <Field key={`shop-${shop_option.value}`} name="booking_page[shop_id]" type="radio" value={shop_option.value} component={RadioRow}>
@@ -139,11 +141,128 @@ class BookingPageSettings extends React.Component {
     );
   }
 
-  renderBookingDateFields = () => {
+  resultFields = (fields, collection_name) => {
+    return (
+      <div className="result-fields">
+        {fields.map((field, index) => {
+          return (
+           <div key={`${collection_name}-${index}`} className="result-field">
+              <Field
+                name={`${field}start_at_date_part`}
+                component={DateFieldAdapter}
+                date={moment().format("YYYY-MM-DD")}
+                hiddenWeekDate={true}
+              />
+              <Field
+                name={`${field}start_at_time_part`}
+                type="time"
+                component="input"
+              />
+              <Field
+                name={`${field}end_at_date_part`}
+                type="hidden"
+                component="input"
+              />
+              <Field
+                name={`${field}end_at_time_part`}
+                type="time"
+                component="input"
+              />
+             <a
+               href="#"
+               className="btn btn-symbol btn-orange after-field-btn"
+               onClick={(event) => {
+                   event.preventDefault();
+                   fields.remove(index)
+                 }
+               }>
+               <i className="fa fa-minus" aria-hidden="true" ></i>
+             </a>
+           </div>
+          )
+         })}
+      </div>
+    );
+  };
 
+  renderBookingDateFields = () => {
+    const { required_label, booking_dates_header } = this.props.i18n;
+
+    const collection_name = "booking_page[special_dates]"
+
+    return (
+      <div>
+        <h3>{booking_dates_header}</h3>
+        <div className="formRow">
+          <FieldArray name={collection_name}>
+            {({ fields }) => (
+              <div className="select-multiple-inputs">
+                {this.resultFields(fields, collection_name)}
+                <Field
+                  name="start_at_date_part"
+                  component={DateFieldAdapter}
+                  date={moment().format("YYYY-MM-DD")}
+                  hiddenWeekDate={true}
+                />
+                <Field
+                  name="start_at_time_part"
+                  type="time"
+                  component="input"
+                />
+                <Field
+                  name="end_at_date_part"
+                  type="hidden"
+                  component="input"
+                />
+                <Field
+                  name="end_at_time_part"
+                  type="time"
+                  component="input"
+                />
+                <FormSpy subscription={{ values: true }}>
+                  {({ values }) => (
+                      <a
+                        href="#"
+                        className={`btn btn-symbol btn-yellow after-field-btn`}
+                        onClick={(event) => {
+                          event.preventDefault();
+
+                          const start_at_date_part = values.start_at_date_part || moment().format("YYYY-MM-DD");
+                          fields.push({
+                            start_at_date_part: start_at_date_part,
+                            start_at_time_part: values.start_at_time_part,
+                            end_at_date_part: start_at_date_part,
+                            end_at_time_part: values.end_at_time_part
+                          })
+                        }}>
+                        <i className="fa fa-plus" aria-hidden="true" ></i>
+                      </a>
+                  )}
+                </FormSpy>
+              </div>
+            )}
+          </FieldArray>
+        </div>
+      </div>
+    );
   }
 
   renderBookingIntervalFields = () => {
+    const { required_label, interval_header } = this.props.i18n;
+
+    return (
+      <div>
+        <h3>{interval_header}</h3>
+        <div className="formRow">
+          <Field
+            name="booking_page[interval]"
+            component={InputRow}
+            type="number"
+            requiredLabel={required_label}
+          />
+        </div>
+      </div>
+    );
   }
 
   renderBookingPeriodFields = () => {
@@ -231,7 +350,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[note]"
             component={InputRow}
             componentType="textarea"
-            placeholder={note_hint}
+            placeholder={note_label}
             cols={100}
             rows={10}
           />

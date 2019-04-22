@@ -84,7 +84,11 @@ class BookingOptionSettings extends React.Component {
              <a
                href="#"
                className="btn btn-symbol btn-orange"
-               onClick={() => {fields.remove(index) }}
+               onClick={(event) => {
+                   event.preventDefault();
+                   fields.remove(index)
+                 }
+               }
                >
                <i className="fa fa-minus" aria-hidden="true" ></i>
              </a>
