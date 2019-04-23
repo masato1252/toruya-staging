@@ -11,6 +11,7 @@ import CommonCustomersList from "../shared/customers_list.js"
 import ProcessingBar from "../shared/processing_bar.js"
 import CommonDatepickerField from "../shared/datepicker_field.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
+import { selectCustomStyles } from "../../libraries/styles";
 
 class ReservationForm extends React.Component {
   static errorGroups() {
@@ -757,6 +758,7 @@ class ReservationForm extends React.Component {
                     placeholder={this.props.selectMenuLabel}
                     noOptionsMessage={() => this.props.noMenuMessage}
                     isDisabled={!this.props.isEditable}
+                    styles={selectCustomStyles}
                     />
                   <span className="errors">
                     {this.state.menu_min_staffs_number === 0 ? <span className="warning">最低スタッフ０</span> : null}

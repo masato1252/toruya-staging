@@ -55,6 +55,10 @@
     <% end %>
   <% end %>
 
+  <% if basic_setting_presenter.completed? && booking_feature_enabled? %>
+    <%= render "settings/siders/booking_options" %>
+  <% end %>
+
   <dl>
     <%= active_link_to settings_profile_path, active: [["settings/profiles", "settings/payments", "settings/plans"]], wrap_tag: :dt, class_active: "here" do %>
       <span><i class="fa fa-wrench fa-2x"></i>&nbsp;<%= t("settings.account.info_title") %></span>

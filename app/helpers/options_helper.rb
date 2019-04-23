@@ -4,21 +4,21 @@ module OptionsHelper
     items.map { |i| { label: i.name, value: i.id } }
   end
 
-  def menu_options(menus)
+  def menu_options(menus, attrs = [])
     return unless menus
-    menus.map { |m| menu_option(m) }
+    menus.map { |m| menu_option(m, attrs) }
   end
 
-  def menu_option(menu)
+  def menu_option(menu, attrs = [])
     return unless menu
-    { label: menu.name, value: menu.id, availableSeat: menu.available_seat }
+    { label: menu.name, value: menu.id, availableSeat: menu.available_seat }.reverse_merge!(menu.attributes.with_indifferent_access.slice(*attrs))
   end
 
   def rank_options
     super_user.ranks.order("id DESC").map { |r| { label: r.name, value: r.id, key: r.key } }
   end
 
-  def menu_group_options(category_menus)
+  def menu_group_options(category_menus, *attrs)
     return unless category_menus
 
     if category_menus.first && !category_menus.first.is_a?(Options::MenuOption)
@@ -26,12 +26,12 @@ module OptionsHelper
       category_menus.map do |category_menu|
         {
           label: category_menu[:category].name,
-          options: menu_options(category_menu[:menu_options])
+          options: menu_options(category_menu[:menu_options], attrs)
         }
       end
     else
       # When some menu doesn't have category
-      menu_options(category_menus)
+      menu_options(category_menus, attrs)
     end
   end
 
