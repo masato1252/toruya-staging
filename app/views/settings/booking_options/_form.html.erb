@@ -24,7 +24,12 @@
       errors: {
         required: I18n.t("errors.messages.required")
       }
-    }.merge!(t("settings.booking_option.form").merge!(t("common").slice(:required_label, :minute, :total, :select_a_menu))),
+    }.merge!([
+      t("settings.booking_option.form"),
+      t("common").slice(:required_label, :minute, :total, :select_a_menu),
+      t("action").slice(:save)
+    ].inject(:merge!)
+    ),
   },
   { camelize_props: false }
   ) %>

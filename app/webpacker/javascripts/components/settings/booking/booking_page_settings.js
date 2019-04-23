@@ -409,9 +409,9 @@ class BookingPageSettings extends React.Component {
                 <input
                   type="submit"
                   name="commit"
-                  value="保存"
+                  value={this.props.i18n.save}
                   className="BTNyellow"
-                  data-disable-with="保存"
+                  data-disable-with={this.props.i18n.save}
                   disabled={submitting}
                 />
               </li>
