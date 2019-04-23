@@ -24,7 +24,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
               />
             <a
               href="#"
-              className={`btn btn-symbol btn-yellow ${input.value ? "" : "disabled"}`}
+              className={`btn btn-symbol btn-yellow after-field-btn ${input.value ? "" : "disabled"}`}
               onClick={(event) => {
                 event.preventDefault();
                 let isFieldDuplicated = false;

@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import { Form, Field, FormSpy } from "react-final-form";
+import { Form, Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
@@ -14,6 +14,7 @@ import { InputRow, RadioRow, Radio, Error, Condition } from "../../shared/compon
 import CommonDatepickerField from "../../shared/datepicker_field";
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../shared/select_multiple_inputs";
+import MultipleDatetimeInput from "../../shared/multiple_datetime_input";
 
 class BookingPageSettings extends React.Component {
   constructor(props) {
@@ -89,7 +90,7 @@ class BookingPageSettings extends React.Component {
              />
              <a
                href="#"
-               className="btn btn-symbol btn-orange"
+               className="btn btn-symbol btn-orange after-field-btn"
                onClick={() => {fields.remove(index) }}
                >
                <i className="fa fa-minus" aria-hidden="true" ></i>
@@ -141,107 +142,17 @@ class BookingPageSettings extends React.Component {
     );
   }
 
-  resultFields = (fields, collection_name) => {
-    return (
-      <div className="result-fields">
-        {fields.map((field, index) => {
-          return (
-           <div key={`${collection_name}-${index}`} className="result-field">
-              <Field
-                name={`${field}start_at_date_part`}
-                component={DateFieldAdapter}
-                date={moment().format("YYYY-MM-DD")}
-                hiddenWeekDate={true}
-              />
-              <Field
-                name={`${field}start_at_time_part`}
-                type="time"
-                component="input"
-              />
-              <Field
-                name={`${field}end_at_date_part`}
-                type="hidden"
-                component="input"
-              />
-              <Field
-                name={`${field}end_at_time_part`}
-                type="time"
-                component="input"
-              />
-             <a
-               href="#"
-               className="btn btn-symbol btn-orange after-field-btn"
-               onClick={(event) => {
-                   event.preventDefault();
-                   fields.remove(index)
-                 }
-               }>
-               <i className="fa fa-minus" aria-hidden="true" ></i>
-             </a>
-           </div>
-          )
-         })}
-      </div>
-    );
-  };
-
   renderBookingDateFields = () => {
     const { required_label, booking_dates_header } = this.props.i18n;
-
-    const collection_name = "booking_page[special_dates]"
 
     return (
       <div>
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
-          <FieldArray name={collection_name}>
-            {({ fields }) => (
-              <div className="select-multiple-inputs">
-                {this.resultFields(fields, collection_name)}
-                <Field
-                  name="start_at_date_part"
-                  component={DateFieldAdapter}
-                  date={moment().format("YYYY-MM-DD")}
-                  hiddenWeekDate={true}
-                />
-                <Field
-                  name="start_at_time_part"
-                  type="time"
-                  component="input"
-                />
-                <Field
-                  name="end_at_date_part"
-                  type="hidden"
-                  component="input"
-                />
-                <Field
-                  name="end_at_time_part"
-                  type="time"
-                  component="input"
-                />
-                <FormSpy subscription={{ values: true }}>
-                  {({ values }) => (
-                      <a
-                        href="#"
-                        className={`btn btn-symbol btn-yellow after-field-btn`}
-                        onClick={(event) => {
-                          event.preventDefault();
-
-                          const start_at_date_part = values.start_at_date_part || moment().format("YYYY-MM-DD");
-                          fields.push({
-                            start_at_date_part: start_at_date_part,
-                            start_at_time_part: values.start_at_time_part,
-                            end_at_date_part: start_at_date_part,
-                            end_at_time_part: values.end_at_time_part
-                          })
-                        }}>
-                        <i className="fa fa-plus" aria-hidden="true" ></i>
-                      </a>
-                  )}
-                </FormSpy>
-              </div>
-            )}
-          </FieldArray>
+          <Field
+            collection_name="booking_page[special_dates]"
+            component={MultipleDatetimeInput}
+          />
         </div>
       </div>
     );

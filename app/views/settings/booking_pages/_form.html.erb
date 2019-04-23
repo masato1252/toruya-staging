@@ -12,14 +12,14 @@
       end_at_date_part: @booking_page.end_at_date,
       end_at_time_part: @booking_page.end_at_time,
       options: default_options(@booking_page.booking_options),
-      special_dates: @booking_page.booking_page_special_dates.map { |special_date|
+      special_dates: @booking_page.booking_page_special_dates.map do |special_date|
         {
           start_at_date_part: special_date.start_at_date,
           start_at_time_part: special_date.start_at_time,
           end_at_date_part:   special_date.end_at_date,
           end_at_time_part:   special_date.end_at_time
         }
-      }
+      end
     ),
     path: {
       cancel: settings_user_booking_pages_path(super_user),

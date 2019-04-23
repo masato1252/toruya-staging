@@ -83,7 +83,7 @@ class BookingOptionSettings extends React.Component {
              />
              <a
                href="#"
-               className="btn btn-symbol btn-orange"
+               className="btn btn-symbol btn-orange after-field-btn"
                onClick={(event) => {
                    event.preventDefault();
                    fields.remove(index)
