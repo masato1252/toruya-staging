@@ -1,7 +1,8 @@
 require "rails_helper"
 
-RSpec.describe BookingOptions::Create do
+RSpec.describe BookingPage::Save do
   let(:user) { FactoryBot.create(:user) }
+  let(:booking_option) { FactoryBot.create(:booking_option, user: user) }
   let(:menu) { FactoryBot.create(:menu, user: user) }
   let(:args) do
     {
@@ -24,14 +25,26 @@ RSpec.describe BookingOptions::Create do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "creates a booking option" do
+    context "when booking option is a new record" do
+      let(:booking_option) { user.booking_options.new }
+
+      it "creates a booking option" do
+        expect {
+          outcome
+        }.to change {
+          user.booking_options.reload.count
+        }.by(1)
+
+        expect(user.booking_options.first.menus.first.id).to eq(menu.id)
+      end
+    end
+
+    it "updates a booking option" do
       expect {
         outcome
       }.to change {
-        user.booking_options.reload.count
-      }.by(1)
-
-      expect(user.booking_options.first.menus.first.id).to eq(menu.id)
+        user.booking_options.first.updated_at
+      }
     end
   end
 end
