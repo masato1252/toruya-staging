@@ -8,6 +8,11 @@ export default class CollapseController extends Controller {
   ];
 
   connect() {
+    if (this.isOpen) {
+      this.open();
+    } else {
+      this.close();
+    }
   }
 
   toggle = () => {

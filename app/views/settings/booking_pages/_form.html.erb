@@ -1,9 +1,31 @@
+<%
+  booking_option_lambda = lambda do |booking_option|
+    Option.new(
+      id: booking_option.id,
+      name: booking_option.display_name,
+      minutes: booking_option.minutes,
+      price: booking_option.amount.format,
+      start_at: booking_option.start_at ? l(booking_option.start_at) : nil,
+      end_at: booking_option.end_at ? l(booking_option.end_at) : nil,
+      memo: booking_option.memo
+    )
+  end
+
+  user_booking_options = super_user.booking_options.map do |option|
+    booking_option_lambda.call(option)
+  end
+
+  page_booking_options = @booking_page.booking_options.map do |option|
+    booking_option_lambda.call(option)
+  end
+%>
+
 <div id="settingForm">
   <%= react_component("settings/booking/booking_page_settings", {
     form_authenticity_token: form_authenticity_token,
     booking_page: @booking_page.attributes.merge!({}),
     shop_options: shop_options(super_user.shops),
-    booking_options: default_options(super_user.booking_options),
+    booking_options: custom_options(user_booking_options),
     booking_page: @booking_page.attributes.merge!(
       start_at_type: @booking_page.start_at ? "date" : "now",
       start_at_date_part: @booking_page.start_at_date,
@@ -11,7 +33,7 @@
       end_at_type: @booking_page.end_at ? "date" : "now",
       end_at_date_part: @booking_page.end_at_date,
       end_at_time_part: @booking_page.end_at_time,
-      options: default_options(@booking_page.booking_options),
+      options: custom_options(page_booking_options),
       special_dates: @booking_page.booking_page_special_dates.map do |special_date|
         {
           start_at_date_part: special_date.start_at_date,

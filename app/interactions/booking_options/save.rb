@@ -1,5 +1,5 @@
 module BookingOptions
-  class Update < ActiveInteraction::Base
+  class Save < ActiveInteraction::Base
     object :booking_option, class: "BookingOption"
 
     hash :attrs, default: nil do

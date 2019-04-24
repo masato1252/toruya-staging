@@ -15,6 +15,7 @@ import CommonDatepickerField from "../../shared/datepicker_field";
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../shared/select_multiple_inputs";
 import MultipleDatetimeInput from "../../shared/multiple_datetime_input";
+import BookingPageOption from "./booking_page_option";
 
 class BookingPageSettings extends React.Component {
   constructor(props) {
@@ -69,32 +70,52 @@ class BookingPageSettings extends React.Component {
   }
 
   renderSelectedBookingOptionFields = (fields, collection_name) => {
-    const { menu_time_span, menu_interval, minute } = this.props.i18n;
+    const { menu_time_span, menu_interval, minute, open_details, close_details } = this.props.i18n;
 
     return (
       <div className="result-fields">
         {fields.map((field, index) => {
           return (
-           <div key={`${collection_name}-${index}`} className="result-field">
-             <Field
-               name={`${field}label`}
-               value={field.label}
-               component="input"
-               readOnly={true}
-             />
-             <Field
-               name={`${field}value`}
-               value={field.value}
-               component="input"
-               type="hidden"
-             />
-             <a
-               href="#"
-               className="btn btn-symbol btn-orange after-field-btn"
-               onClick={() => {fields.remove(index) }}
-               >
-               <i className="fa fa-minus" aria-hidden="true" ></i>
-             </a>
+            <div key={`${collection_name}-${index}`} className="result-field">
+              <Field
+                name={`${field}value`}
+                value={field.value}
+                component="input"
+                type="hidden"
+              />
+              <BookingPageOption
+                field={field}
+                close_details={close_details}
+                open_details={open_details}
+              />
+
+             <div className="booking-option-action">
+               <a
+                 href="#"
+                 className="btn btn-symbol btn-orange after-field-btn"
+                 onClick={(event) => {
+                   event.preventDefault();
+                   fields.remove(index)
+                 }}
+                 >
+                 <i className="fa fa-minus" aria-hidden="true" ></i>
+               </a>
+               <div className="booking-option-period">
+                 <Field
+                   name={`${field}start_at`}
+                   value={field.start_at}
+                   >
+                   {({input}) => input.value}
+                 </Field>
+                 ～
+                 <Field
+                   name={`${field}end_at`}
+                   value={field.end_at}
+                   >
+                   {({input}) => input.value}
+                 </Field>
+                </div>
+              </div>
            </div>
           )
          })}

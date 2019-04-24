@@ -706,6 +706,8 @@ ja:
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         interval_header: 予約の開始時間
+        open_details: 詳細
+        close_details: 閉じる
         sale_period: 予約受付期間
         sale_now: 今すぐ
         sale_on: 指定日
