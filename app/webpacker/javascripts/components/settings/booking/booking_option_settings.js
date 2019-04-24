@@ -362,7 +362,7 @@ class BookingOptionSettings extends React.Component {
 
             <ul id="footerav">
               <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel_btn}</a>
+                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
               </li>
               <li>
                 <input

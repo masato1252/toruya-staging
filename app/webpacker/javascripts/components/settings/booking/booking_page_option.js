@@ -3,7 +3,9 @@
 import React from "react";
 import { Field } from "react-final-form";
 
-const BookingPageOption = ({ field, close_details, open_details }) => {
+const BookingPageOption = ({ i18n, field }) => {
+  const { open_details, close_details, booking_option_required_time, minute } = i18n;
+
   return (
     <div className="booking-option-field" data-controller="collapse" data-collapse-status="closed">
       <div className="booking-option-info">
@@ -16,7 +18,7 @@ const BookingPageOption = ({ field, close_details, open_details }) => {
         </div>
 
         <Field name={`${field}minutes`} value={field.minutes} >
-          {({input}) => (input.value)}
+          {({input}) => `${booking_option_required_time}${input.value}${minute}`}
         </Field>
       </div>
 

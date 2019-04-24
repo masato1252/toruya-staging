@@ -70,7 +70,7 @@ class BookingPageSettings extends React.Component {
   }
 
   renderSelectedBookingOptionFields = (fields, collection_name) => {
-    const { menu_time_span, menu_interval, minute, open_details, close_details } = this.props.i18n;
+    const { menu_time_span, menu_interval, minute } = this.props.i18n;
 
     return (
       <div className="result-fields">
@@ -85,8 +85,7 @@ class BookingPageSettings extends React.Component {
               />
               <BookingPageOption
                 field={field}
-                close_details={close_details}
-                open_details={open_details}
+                i18n={this.props.i18n}
               />
 
              <div className="booking-option-action">
@@ -159,6 +158,7 @@ class BookingPageSettings extends React.Component {
             </Field>
           )}
         </div>
+        <Error name="booking_page[shop_id]" />
       </div>
     );
   }
@@ -282,6 +282,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[note]"
             component={InputRow}
             componentType="textarea"
+            validate={(value) => requiredValidation(this, value)}
             placeholder={note_label}
             cols={100}
             rows={10}
@@ -292,9 +293,26 @@ class BookingPageSettings extends React.Component {
   }
 
   validate = (values) => {
-    console.log(values);
+    const { errors } = this.props.i18n;
     const fields_errors = {};
     fields_errors.booking_page = {};
+    const { shop_id, options, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_page || {};
+
+    if (!options.length) {
+      fields_errors.selected_booking_option = errors.required;
+    }
+
+    if (!shop_id) {
+      fields_errors.booking_page.shop_id = errors.required;
+    }
+
+    if (start_at_type === "date" && !start_at_time_part) {
+      fields_errors.booking_page.start_at_time_part = errors.required;
+    }
+
+    if (end_at_type === "date" && !end_at_time_part) {
+      fields_errors.booking_page.end_at_time_part = errors.required;
+    }
 
     return fields_errors;
   };
@@ -335,7 +353,7 @@ class BookingPageSettings extends React.Component {
 
             <ul id="footerav">
               <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel_btn}</a>
+                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
               </li>
               <li>
                 <input

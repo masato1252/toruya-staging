@@ -702,6 +702,7 @@ ja:
         greeting_placeholder: 予約ページ上部に表示されるます。
         booking_option_header: 予約価格
         booking_option_hint: あなたのお客様はこの価格で予約をします。
+        booking_option_required_time: 所要時間
         shop_header: 予約可能な店舗
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
