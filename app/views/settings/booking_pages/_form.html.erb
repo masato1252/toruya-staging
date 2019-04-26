@@ -37,6 +37,7 @@
       end_at_date_part: @booking_page.end_at_date,
       end_at_time_part: @booking_page.end_at_time,
       options: custom_options(page_booking_options),
+      had_special_date: @booking_page.booking_page_special_dates.exists? ? true : nil,
       special_dates: @booking_page.booking_page_special_dates.map do |special_date|
         {
           start_at_date_part: special_date.start_at_date,

@@ -706,6 +706,7 @@ ja:
         shop_header: 予約可能な店舗
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_explanation: 現在の設定内容と空席状況から選択肢を表示しています。
         interval_start_time: 開始時間

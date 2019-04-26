@@ -164,18 +164,25 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingDateFields = (values) => {
-    const { required_label, booking_dates_header } = this.props.i18n;
+    const { required_label, booking_dates_header, special_date_label } = this.props.i18n;
 
     return (
       <div>
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
           <dl>
-            <dd>
-              <div className="bootstrap-checkbox">
-                <Field name="booking_page_at_special_date" type="checkbox" component="input" />
+            <dd className="bootstrap-checkbox">
+              <ul>
+                <li>
+                  <label>
+                    <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
+                    {special_date_label}
+                  </label>
+                </li>
+              </ul>
+              <ul>
                 {
-                  values.booking_page_at_special_date && (
+                  values.booking_page.had_special_date && (
                     <Field
                       name="special_dates_array"
                       collection_name="booking_page[special_dates]"
@@ -183,7 +190,7 @@ class BookingPageSettings extends React.Component {
                     />
                   )
                 }
-              </div>
+              </ul>
             </dd>
           </dl>
         </div>

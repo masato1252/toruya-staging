@@ -1,5 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
+import _ from "lodash";
 
 const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>
@@ -61,7 +62,16 @@ const Error = ({ name }) => (
 
 const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
-    {({ input: { value } }) => (value === is ? children : null)}
+    {({ input: { value } }) =>
+      {
+        if (Array.isArray(is)) {
+          return _.isEqual(_.sortBy(value), _.sortBy(is)) ? children : null
+        }
+        else {
+          return value === is ? children : null
+        }
+      }
+    }
   </Field>
 );
 
