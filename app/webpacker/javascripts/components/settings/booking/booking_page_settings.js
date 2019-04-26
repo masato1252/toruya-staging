@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import { Form, Field } from "react-final-form";
+import { Form, Field, FormSpy } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
@@ -163,35 +163,77 @@ class BookingPageSettings extends React.Component {
     );
   }
 
-  renderBookingDateFields = () => {
+  renderBookingDateFields = (values) => {
     const { required_label, booking_dates_header } = this.props.i18n;
 
     return (
       <div>
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
-          <Field
-            collection_name="booking_page[special_dates]"
-            component={MultipleDatetimeInput}
-          />
+          <dl>
+            <dd>
+              <div className="bootstrap-checkbox">
+                <Field name="booking_page_at_special_date" type="checkbox" component="input" />
+                {
+                  values.booking_page_at_special_date && (
+                    <Field
+                      name="special_dates_array"
+                      collection_name="booking_page[special_dates]"
+                      component={MultipleDatetimeInput}
+                    />
+                  )
+                }
+              </div>
+            </dd>
+          </dl>
         </div>
       </div>
     );
   }
 
   renderBookingIntervalFields = () => {
-    const { required_label, interval_header } = this.props.i18n;
+    const { required_label, interval_header, interval_explanation, interval_start_time, interval_option, per_minute, interval_example_html } = this.props.i18n;
 
     return (
       <div>
         <h3>{interval_header}</h3>
         <div className="formRow">
-          <Field
-            name="booking_page[interval]"
-            component={InputRow}
-            type="number"
-            requiredLabel={required_label}
-          />
+          <dl>
+            <dd>
+              <div className="interval-explanation">
+                {interval_explanation}
+              </div>
+              <div>
+                <b>{interval_start_time}</b>
+              </div>
+              <FormSpy subscription={{ values: true }}>
+                {({ values }) => {
+                  let times = [moment({hour: 9})]
+
+                  for(var index = 1; index < 4; index++) {
+                    times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
+                  }
+
+                  return times.map((time) => <div className="time-interval" key={`interval-${time}`}>{time.format("HH:mm")}~</div>)
+                }}
+              </FormSpy>
+            </dd>
+          </dl>
+          <dl>
+            <dd>
+              <div>
+                {interval_option}
+                <Field name="booking_page[interval]" component="select" className="interval-selector">
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="60">60</option>
+                </Field>
+                {per_minute}
+              </div>
+              <div dangerouslySetInnerHTML={{ __html: interval_example_html }} />
+            </dd>
+          </dl>
         </div>
       </div>
     );
@@ -331,7 +373,7 @@ class BookingPageSettings extends React.Component {
         mutators={{
           ...arrayMutators
         }}
-        render={({ handleSubmit, submitting }) => (
+        render={({ handleSubmit, submitting, values }) => (
           <form
             action={this.props.path.save}
             className="booking-page-settings settings-form"
@@ -346,7 +388,7 @@ class BookingPageSettings extends React.Component {
             {this.renderNameFields()}
             {this.renderBookingOptionFields()}
             {this.renderShopFields()}
-            {this.renderBookingDateFields()}
+            {this.renderBookingDateFields(values)}
             {this.renderBookingIntervalFields()}
             {this.renderBookingPeriodFields()}
             {this.renderBookingNoteField()}

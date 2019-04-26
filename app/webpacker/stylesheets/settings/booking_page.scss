@@ -46,6 +46,24 @@
       margin-left: 12px;
       margin-top: 6px;
     }
+  }
 
+  .interval-selector {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .interval-explanation {
+    margin-bottom: 12px;
+  }
+
+  .time-interval {
+    display: inline-block;
+    width: 150px;
+    padding: 12px;
+    margin: 12px 12px 12px 0;
+    background-color: $gray5;
+    border: 1px solid $gray6;
+    color: $black;
   }
 }

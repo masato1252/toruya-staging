@@ -29,6 +29,7 @@
     shop_options: shop_options(super_user.shops),
     booking_options: custom_options(user_booking_options),
     booking_page: @booking_page.attributes.merge!(
+      interval: @booking_page.interval || 30,
       start_at_type: @booking_page.start_at ? "date" : "now",
       start_at_date_part: @booking_page.start_at_date,
       start_at_time_part: @booking_page.start_at_time,

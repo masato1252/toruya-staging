@@ -707,6 +707,11 @@ ja:
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         interval_header: 予約の開始時間
+        interval_explanation: 現在の設定内容と空席状況から選択肢を表示しています。
+        interval_start_time: 開始時間
+        interval_option: 選択肢の間隔
+        per_minute: 分毎
+        interval_example_html: 例えば、予約可能時間が9:00〜12:00で、選択肢の間隔を<strong>「30分毎」</strong>と設定した場合、予約開始時間の選択肢が「9:00、9:30、10:00、10:30...」となります
         open_details: 詳細
         close_details: 閉じる
         sale_period: 予約受付期間
