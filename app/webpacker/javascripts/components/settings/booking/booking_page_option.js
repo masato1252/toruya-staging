@@ -28,14 +28,19 @@ const BookingPageOption = ({ i18n, field }) => {
             {({input}) => input.value}
           </Field>
         </span>
-        <span className="booking-option-details-toggler" data-action="click->collapse#toggle">
-          <a className="toggler-link" data-target="collapse.openToggler">{close_details}<i className="fa fa-chevron-up" aria-hidden="true"></i></a>
-          <a className="toggler-link" data-target="collapse.closeToggler">{open_details}<i className="fa fa-chevron-down" aria-hidden="true"></i></a>
-        </span>
+
+        <Field name={`${field}memo`} value={field.memo} >
+          {({input}) => input.value && input.value.length &&
+            <span className="booking-option-details-toggler" data-action="click->collapse#toggle">
+              <a className="toggler-link" data-target="collapse.openToggler">{close_details}<i className="fa fa-chevron-up" aria-hidden="true"></i></a>
+              <a className="toggler-link" data-target="collapse.closeToggler">{open_details}<i className="fa fa-chevron-down" aria-hidden="true"></i></a>
+            </span>
+          }
+        </Field>
       </div>
       <div className="booking-option-row" data-target="collapse.content">
         <Field name={`${field}memo`} value={field.memo} >
-          {({input}) => (input.value || "No details")}
+          {({input}) => input.value}
         </Field>
       </div>
     </div>
