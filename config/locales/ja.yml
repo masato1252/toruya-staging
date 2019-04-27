@@ -688,6 +688,7 @@ ja:
     booking_page:
       title: 予約ページの設定
       info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
+      booking_page_label: 予約ページ
       name: ページ名
       start_at: 受付開始
       end_at: 受付終了
