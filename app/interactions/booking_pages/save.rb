@@ -13,12 +13,17 @@ module BookingPages
       string :start_at_time_part, default: nil
       string :end_at_date_part, default: nil
       string :end_at_time_part, default: nil
-      # menus hash
+      # options hash
       # {
       #   "0" => { "label" => "booking_option_name", "value" => "booking_option_id" },
       #   "1" => { "label" => "ANAT002筋骨BODY", "value" => "6" }
       # }
       hash :options, default: nil, strip: false
+      # special_dates hash
+      # {
+      #   "0" => {"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"},
+      #   "1" = >{"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"}
+      # }
       hash :special_dates, default: nil, strip: false
     end
 
@@ -31,8 +36,11 @@ module BookingPages
       booking_page.transaction do
         if booking_page.update(attrs)
           booking_page.booking_page_special_dates.destroy_all
-          special_dates.values.each do |date_times|
-            booking_page.booking_page_special_dates.create(date_times)
+
+          if special_dates
+            special_dates.values.each do |date_times|
+              booking_page.booking_page_special_dates.create(date_times)
+            end
           end
           booking_page
         else
