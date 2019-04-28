@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 
 import DateFieldAdapter from "./date_field_adapter";
 
-const defaultResultFields = (fields, collection_name) => {
+const defaultResultFields = (fields, collection_name, timezone) => {
   return (
     <div className="result-fields">
       {fields.map((field, index) => {
@@ -14,7 +14,7 @@ const defaultResultFields = (fields, collection_name) => {
             <Field
               name={`${field}start_at_date_part`}
               component={DateFieldAdapter}
-              date={moment().format("YYYY-MM-DD")}
+              date={moment.tz(timezone).format("YYYY-MM-DD")}
               hiddenWeekDate={true}
             />
             <Field
@@ -50,13 +50,13 @@ const defaultResultFields = (fields, collection_name) => {
   );
 };
 
-const DatetimeField = ({collection_name, fields, results}) => (
+const DatetimeField = ({collection_name, fields, results, timezone}) => (
   <div className="select-multiple-inputs">
-    {results(fields, collection_name)}
+    {results(fields, collection_name, timezone)}
     <Field
       name="start_at_date_part"
       component={DateFieldAdapter}
-      date={moment().format("YYYY-MM-DD")}
+      date={moment.tz(timezone).format("YYYY-MM-DD")}
       hiddenWeekDate={true}
     />
     <Field
@@ -79,11 +79,12 @@ const DatetimeField = ({collection_name, fields, results}) => (
       {({ values }) => (
         <a
           href="#"
-          className={`btn btn-symbol btn-yellow after-field-btn`}
+          className={`btn btn-symbol btn-yellow after-field-btn ${!values.start_at_time_part || !values.end_at_time_part ? "disabled" : ""}`}
           onClick={(event) => {
             event.preventDefault();
 
-            const start_at_date_part = values.start_at_date_part || moment().format("YYYY-MM-DD");
+            const start_at_date_part = values.start_at_date_part || moment.tz(timezone).format("YYYY-MM-DD");
+
             fields.push({
               start_at_date_part: start_at_date_part,
               start_at_time_part: values.start_at_time_part,
@@ -98,11 +99,11 @@ const DatetimeField = ({collection_name, fields, results}) => (
   </div>
 )
 
-const MultipleDatetimeInput = ({collection_name, resultFields}) => {
+const MultipleDatetimeInput = ({collection_name, resultFields, timezone}) => {
   const results = resultFields || defaultResultFields
 
   return (
-    <FieldArray name={collection_name} component={DatetimeField} results={results} />
+    <FieldArray name={collection_name} component={DatetimeField} results={results} timezone={ timezone || "Asia/Tokyo" }/>
   );
 }
 

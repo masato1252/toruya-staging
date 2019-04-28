@@ -10,7 +10,7 @@ import moment from "moment-timezone";
 import _ from "lodash";
 
 import { requiredValidation, transformValues } from "../../../libraries/helper";
-import { InputRow, RadioRow, Radio, Error, Condition } from "../../shared/components";
+import { Input, InputRow, RadioRow, Radio, Error, Condition } from "../../shared/components";
 import CommonDatepickerField from "../../shared/datepicker_field";
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../shared/select_multiple_inputs";
@@ -20,6 +20,7 @@ import BookingPageOption from "./booking_page_option";
 class BookingPageSettings extends React.Component {
   constructor(props) {
     super(props);
+
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator({
       field: /booking_page\[booking_options\]/, // when a field matching this pattern changes...
@@ -164,12 +165,20 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingDateFields = (values) => {
-    const { required_label, booking_dates_header, special_date_label } = this.props.i18n;
+    const { required_label, booking_dates_header, special_date_label,
+      booking_dates_calendar_hint, booking_dates_working_date, booking_dates_available_booking_date } = this.props.i18n;
 
     return (
       <div>
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
+          <dl>
+            <dd>
+              {booking_dates_calendar_hint}
+              {booking_dates_working_date}
+              {booking_dates_available_booking_date}
+            </dd>
+          </dl>
           <dl>
             <dd className="bootstrap-checkbox">
               <ul>
@@ -187,9 +196,11 @@ class BookingPageSettings extends React.Component {
                       name="special_dates_array"
                       collection_name="booking_page[special_dates]"
                       component={MultipleDatetimeInput}
+                      timezone={this.props.timezone}
                     />
                   )
                 }
+                <Error name="booking_page[had_special_date]" />
               </ul>
             </dd>
           </dl>
@@ -271,13 +282,13 @@ class BookingPageSettings extends React.Component {
                   <Field
                     name="booking_page[start_at_date_part]"
                     component={DateFieldAdapter}
-                    date={moment().format("YYYY-MM-DD")}
+                    date={moment.tz(this.props.timezone).format("YYYY-MM-DD")}
                     hiddenWeekDate={true}
                   />
                   <Field
                     name="booking_page[start_at_time_part]"
                     type="time"
-                    component="input"
+                    component={Input}
                   />
                   <Error name="booking_page[start_at_time_part]" />
                 </div>
@@ -302,13 +313,14 @@ class BookingPageSettings extends React.Component {
                   <Field
                     name="booking_page[end_at_date_part]"
                     component={DateFieldAdapter}
-                    date={moment().format("YYYY-MM-DD")}
+                    date={moment.tz(this.props.timezone).format("YYYY-MM-DD")}
+                    timezone={this.props.timezone}
                     hiddenWeekDate={true}
                   />
                   <Field
                     name="booking_page[end_at_time_part]"
                     type="time"
-                    component="input"
+                    component={Input}
                   />
                   <Error name="booking_page[end_at_time_part]" />
                 </div>
@@ -321,11 +333,11 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingNoteField = () => {
-    const { note_label, note_hint } = this.props.i18n;
+    const { required_label, note_label, note_hint } = this.props.i18n;
 
     return (
       <div>
-        <h3>{note_label}</h3>
+        <h3>{note_label}<strong>{required_label}</strong></h3>
         <div className="formRow">
           <Field
             name="booking_page[note]"
@@ -342,10 +354,11 @@ class BookingPageSettings extends React.Component {
   }
 
   validate = (values) => {
-    const { errors } = this.props.i18n;
+    const { timezone } = this.props;
+    const { errors, form_errors } = this.props.i18n;
     const fields_errors = {};
     fields_errors.booking_page = {};
-    const { shop_id, options, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_page || {};
+    const { shop_id, options, start_at_type, start_at_date_part, start_at_time_part, end_at_type, end_at_date_part, end_at_time_part, had_special_date, special_dates } = values.booking_page || {};
 
     if (!options.length) {
       fields_errors.selected_booking_option = errors.required;
@@ -361,6 +374,36 @@ class BookingPageSettings extends React.Component {
 
     if (end_at_type === "date" && !end_at_time_part) {
       fields_errors.booking_page.end_at_time_part = errors.required;
+    }
+
+    if (had_special_date && !special_dates.length) {
+      fields_errors.booking_page.had_special_date = errors.required;
+    }
+
+    if (special_dates.length && start_at_date_part && start_at_time_part) {
+      const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
+      const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
+      const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
+
+      if (bookingStartAt.isAfter(specialDateStartAt)) {
+        const start_at_error_message = form_errors.start_at_too_late.replace("{datetime}", specialDateStartAt.format("YYYY/M/D HH:mm"))
+
+        fields_errors.booking_page.start_at_date_part = start_at_error_message;
+        fields_errors.booking_page.start_at_time_part = start_at_error_message;
+      }
+    }
+
+    if (special_dates.length && end_at_date_part && end_at_time_part) {
+      const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
+      const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
+      const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
+
+      if (bookingEndAt.isBefore(specialDateEndAt)) {
+        const end_at_error_message = form_errors.end_at_too_early.replace("{datetime}", specialDateEndAt.format("YYYY/M/D HH:mm"))
+
+        fields_errors.booking_page.end_at_date_part = end_at_error_message;
+        fields_errors.booking_page.end_at_time_part = end_at_error_message;
+      }
     }
 
     return fields_errors;

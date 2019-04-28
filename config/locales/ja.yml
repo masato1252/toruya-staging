@@ -707,6 +707,9 @@ ja:
         shop_header: 予約可能な店舗
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        booking_dates_calendar_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        booking_dates_working_date: 営業日
+        booking_dates_available_booking_date: 予約可能日
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_explanation: 現在の設定内容と空席状況から選択肢を表示しています。
@@ -724,6 +727,9 @@ ja:
         sale_end: 販売終了
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
+        form_errors:
+          start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
+          end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
   constants:
     rank:
       regular: "一般"

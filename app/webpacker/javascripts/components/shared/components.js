@@ -6,11 +6,15 @@ const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>
 )
 
-const TextInput = (props) => (
-  <input {...props} />
-)
+const Input = ({input, meta, ...rest}) => {
+  const { error, touched } = meta;
 
-const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, ...rest, meta: { error, touched } }) => {
+  return (
+    <input {...input} {...rest} className={error && touched ? "field-error" : ""} />
+  )
+}
+
+const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, meta: { error, touched }, ...rest }) => {
   const hasError = error && touched;
   const Component = componentType || "input";
 
@@ -76,6 +80,7 @@ const Condition = ({ when, is, children }) => (
 );
 
 export {
+  Input,
   InputRow,
   RadioRow,
   Radio,
