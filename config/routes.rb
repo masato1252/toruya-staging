@@ -122,7 +122,9 @@ Rails.application.routes.draw do
         get :repeating_dates, on: :collection
       end
       resources :booking_options, except: [:show]
-      resources :booking_pages, except: [:show]
+      resources :booking_pages, except: [:show] do
+        get :copy_modal, on: :member
+      end
       resources :reservation_settings, except: [:show]
       resources :categories, except: [:show]
       resources :ranks, except: [:show]
@@ -191,4 +193,8 @@ Rails.application.routes.draw do
   end
 
   root to: "members#show"
+
+  constraints(SubdomainConstraint[:booking]) do
+    get "page/:id", to: "booking_pages#show", as: :booking_page
+  end
 end

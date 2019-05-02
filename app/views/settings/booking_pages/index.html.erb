@@ -27,7 +27,8 @@
         <dd class="function">
           <%= link_to t("action.edit"), edit_settings_user_booking_page_path(super_user, booking_page), class: "BTNtarco" %>
           <%= link_to t("action.delete"), settings_user_booking_page_path(super_user, booking_page), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
-          <%= link_to t("action.copy"), "#", class: "BTNgray", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
+
+          <%= modal_link_to t("action.copy"), copy_modal_settings_user_booking_page_path(super_user, booking_page), class: "BTNgray" %>
         </dd>
       </dl>
     <% end %>

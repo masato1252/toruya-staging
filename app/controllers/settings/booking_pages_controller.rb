@@ -49,6 +49,12 @@ class Settings::BookingPagesController < SettingsController
     end
   end
 
+  def copy_modal
+    @booking_page = super_user.booking_pages.find(params[:id])
+
+    render layout: false
+  end
+
   private
 
   def authorize_booking_page

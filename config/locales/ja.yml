@@ -35,6 +35,7 @@ ja:
     new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
     copy: コピー
+    copy_code: コードをコピー
   common:
     processing: 送信中
     date: 日付
@@ -69,6 +70,7 @@ ja:
     required_label: 必須項目
     minute: 分
     total: 合計
+    copied: コピーした
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -693,6 +695,9 @@ ja:
       start_at: 受付開始
       end_at: 受付終了
       new_button: 新規作成
+      share_modal_title: 貼り付けコードをコピー
+      share_button_label: 予約ボタン
+      share_button_text: 予約する
       form:
         name_header: ページヘッダ
         page_name: ページ名

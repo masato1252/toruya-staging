@@ -67,3 +67,24 @@
     color: $black;
   }
 }
+
+.booking-page-modal {
+  .label-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 6px 0;
+  }
+
+  input, textarea {
+    width: 100%;
+    background-color: $gray3;
+    color: $gray8;
+    border-color: $gray;
+  }
+
+  label {
+    font-weight: bold;
+    color: $black;
+  }
+}
