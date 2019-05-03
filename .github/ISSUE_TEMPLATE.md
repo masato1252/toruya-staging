@@ -1,3 +1,9 @@
+## Category
+  - [ ] Outline
+  - [ ] Feature
+  - [ ] Bug
+  - [ ] Discussion
+
 <!--- Provide a general summary of the issue in the Title above -->
 
 ## Expected Behavior
