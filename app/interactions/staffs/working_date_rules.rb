@@ -9,7 +9,7 @@ module Staffs
 
       is_staff_full_time = shop.business_schedules.full_time.where(staff_id: staff_id).exists?
       off_dates = working_dates = []
-      shop_calendar = compose(Shops::WorkingCalendar, shop: shop, date_range: date_range)
+      shop_calendar_rules = compose(Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
 
       # working dates
       unless is_staff_full_time
@@ -36,13 +36,13 @@ module Staffs
         end
       end
 
-      off_dates << shop_calendar[:off_dates]
+      off_dates << shop_calendar_rules[:off_dates]
 
       {
         full_time: is_staff_full_time,
-        shop_working_on_holiday: shop_calendar[:shop_working_on_holiday],
-        shop_working_wdays: shop_calendar[:shop_working_wdays] || [],
-        holidays: shop_calendar[:holidays],
+        shop_working_on_holiday: shop_calendar_rules[:shop_working_on_holiday],
+        shop_working_wdays: shop_calendar_rules[:shop_working_wdays] || [],
+        holidays: shop_calendar_rules[:holidays],
         off_dates: off_dates.flatten, # for staff and shop
         staff_working_wdays: staff_working_wdays || [],
         working_dates: working_dates.flatten # for staff

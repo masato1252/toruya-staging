@@ -1,5 +1,5 @@
 module Shops
-  class WorkingCalendar < ActiveInteraction::Base
+  class WorkingCalendarRules < ActiveInteraction::Base
     object :shop
     object :date_range, class: Range
 

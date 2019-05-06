@@ -6,12 +6,14 @@
   <div id="calendar" class="sidel">
     <%= react_component("calendar/calendar",
                         {
-                          shop_id: shop.id,
                           day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
                           dateSelectedCallbackPath: shop_reservations_path(shop),
                           schedulePath: working_schedule_calendars_path(format: :json),
-                          selected_date: params[:reservation_date],
+                          scheduleParams: {
+                            shop_id: shop.id
+                          },
+                          selected_date: params[:reservation_date]
                         },
                         { id: "custom-calendar", class: "clearfix" }) %>
 

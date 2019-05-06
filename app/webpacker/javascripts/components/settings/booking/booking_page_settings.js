@@ -181,7 +181,14 @@ class BookingPageSettings extends React.Component {
               <FormSpy subscription={{ values: true }}>
                 {({ values }) => {
                   return (
-                    <Calendar {...this.props.calendar} shopId={values.booking_page["shop_id"]} />
+                    <Calendar
+                      {...this.props.calendar}
+                      scheduleParams={{
+                        shop_id: values.booking_page["shop_id"],
+                        booking_option_ids: values.booking_page["options"].map((option) => option.id),
+                        special_dates: values.booking_page["special_dates"]
+                      }}
+                    />
                   );
                 }}
               </FormSpy>

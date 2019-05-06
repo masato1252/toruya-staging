@@ -26,7 +26,7 @@
   <%= react_component("settings/booking/booking_page_settings", {
     form_authenticity_token: form_authenticity_token,
     booking_page: @booking_page.attributes.merge!({}),
-    shop_options: shop_options(super_user.shops),
+    shop_options: shop_options(super_user.shops.order("id")),
     booking_options: custom_options(user_booking_options),
     timezone: Time.zone.tzinfo.name,
     booking_page: @booking_page.attributes.merge!(

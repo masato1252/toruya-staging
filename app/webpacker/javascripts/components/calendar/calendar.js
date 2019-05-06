@@ -2,6 +2,8 @@
 
 import React from "react";
 import axios from "axios";
+import _ from "lodash";
+
 import DayNames from "./day_names.js";
 import Week from "./week.js";
 import Select from "../shared/select.js";
@@ -25,7 +27,7 @@ class Calendar extends React.Component {
   };
 
   componentDidUpdate = (prevProps) => {
-    if (this.props.shopId !== prevProps.shopId) {
+    if (!_.isEqual(this.props.scheduleParams, prevProps.scheduleParams)) {
       this._fetchSchedule();
     }
   }
@@ -49,23 +51,20 @@ class Calendar extends React.Component {
       staff_id = location.search.replace(/\?staff_id=/, '');
     }
 
+    const scheduleParams = _.merge({ date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id }, this.props.scheduleParams || {})
+
     axios({
       method: "GET",
       url: this.props.schedulePath,
-      params: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
+      params: scheduleParams,
       responseType: "json"
     }).then((response) => {
       var result = response.data;
 
       this.setState({
-        holidayDays: result["holiday_days"],
-        fullTime: result["full_time"],
-        shopWorkingWdays: result["shop_working_wdays"],
-        shopWorkingOnHoliday: result["shop_working_on_holiday"],
-        staffWorkingWdays: result["staff_working_wdays"],
-        workingDays: result["working_days"],
-        offDays: result["off_days"],
-        reservationDays: result["reservation_days"]
+        holidayDates: result["holiday_dates"],
+        workingDates: result["working_dates"],
+        reservationDates: result["reservation_dates"]
       });
     });
   };
@@ -143,20 +142,19 @@ class Calendar extends React.Component {
         count = 0;
 
         while (!done) {
-          weeks.push(<Week key={date.toString()}
-                              date={date.clone()}
-                              month={this.state.month}
-                              select={this.select}
-                              selectedDate={this.state.selectedDate}
-                              holidayDays={this.state.holidayDays}
-                              fullTime={this.state.fullTime}
-                              shopWorkingWdays={this.state.shopWorkingWdays}
-                              shopWorkingOnHoliday={this.state.shopWorkingOnHoliday}
-                              staffWorkingWdays={this.state.staffWorkingWdays}
-                              workingDays={this.state.workingDays}
-                              offDays={this.state.offDays}
-                              reservationDays={this.state.reservationDays}
-                              selected={this.state.month} />);
+          weeks.push(
+            <Week
+              key={date.toString()}
+              date={date.clone()}
+              month={this.state.month}
+              select={this.select}
+              selected={this.state.month}
+              selectedDate={this.state.selectedDate}
+              holidayDates={this.state.holidayDates}
+              workingDates={this.state.workingDates}
+              reservationDates={this.state.reservationDates}
+            />
+          );
           date.add(1, "w");
           done = count++ > 2 && monthIndex !== date.month();
           monthIndex = date.month();
