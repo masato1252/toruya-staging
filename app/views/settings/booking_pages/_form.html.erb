@@ -48,6 +48,11 @@
         }
       end
     ),
+    calendar: {
+      dayNames: I18n.t("date.abbr_day_names"),
+      monthNames: I18n.t("date.abbr_month_names").compact,
+      schedulePath: booking_page_settings_calendars_path(format: :json)
+    },
     path: {
       cancel: settings_user_booking_pages_path(super_user),
       save: @booking_page.new_record? ? settings_user_booking_pages_path(super_user) : settings_user_booking_page_path(super_user, @booking_page)

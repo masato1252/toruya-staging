@@ -167,6 +167,7 @@ Rails.application.routes.draw do
     collection do
       get "working_schedule"
       get "personal_working_schedule"
+      get "booking_page_settings"
     end
   end
 

@@ -16,6 +16,7 @@ import DateFieldAdapter from "../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../shared/select_multiple_inputs";
 import MultipleDatetimeInput from "../../shared/multiple_datetime_input";
 import BookingPageOption from "./booking_page_option";
+import Calendar from "../../calendar/calendar";
 
 class BookingPageSettings extends React.Component {
   constructor(props) {
@@ -177,6 +178,13 @@ class BookingPageSettings extends React.Component {
               {booking_dates_calendar_hint}
               {booking_dates_working_date}
               {booking_dates_available_booking_date}
+              <FormSpy subscription={{ values: true }}>
+                {({ values }) => {
+                  return (
+                    <Calendar {...this.props.calendar} shopId={values.booking_page["shop_id"]} />
+                  );
+                }}
+              </FormSpy>
             </dd>
           </dl>
           <dl>

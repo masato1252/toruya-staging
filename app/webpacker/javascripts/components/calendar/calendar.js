@@ -17,31 +17,32 @@ class Calendar extends React.Component {
     this.state = {
       month: this.startDate.clone(),
       selectedDate: this.startDate.clone(),
-      holidayDays: this.props.holidayDays,
-      fullTime: this.props.fullTime,
-      shopWorkingWdays: this.props.shopWorkingWdays,
-      shopWorkingOnHoliday: this.props.shopWorkingOnHoliday,
-      staffWorkingWdays: this.props.staffWorkingWdays,
-      workingDays: this.props.workingDays,
-      offDays: this.props.offDays,
-      reservationDays: this.props.reservationDays
     };
   };
 
+  componentDidMount = () => {
+    this._fetchSchedule();
+  };
+
+  componentDidUpdate = (prevProps) => {
+    if (this.props.shopId !== prevProps.shopId) {
+      this._fetchSchedule();
+    }
+  }
 
   previous = () => {
     var month = this.state.month;
     month.add(-1, "M");
-    this.setState({ month: month }, this._fetchWorkingSchedule);
+    this.setState({ month: month }, this._fetchSchedule);
   };
 
   next = () => {
     var month = this.state.month;
     month.add(1, "M");
-    this.setState({ month: month }, this._fetchWorkingSchedule);
+    this.setState({ month: month }, this._fetchSchedule);
   };
 
-  _fetchWorkingSchedule = () => {
+  _fetchSchedule = () => {
     var staff_id;
 
     if (location.search.length) {
@@ -50,7 +51,7 @@ class Calendar extends React.Component {
 
     axios({
       method: "GET",
-      url: this.props.workingSchedulePath,
+      url: this.props.schedulePath,
       params: { shop_id: this.props.shopId, date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id },
       responseType: "json"
     }).then((response) => {
@@ -71,12 +72,15 @@ class Calendar extends React.Component {
 
   select = (day) => {
     this.setState({ month: day.date, selectedDate: day.date });
-    location = `${this.props.reservationsPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
+
+    if (this.props.dateSelectedCallbackPath) {
+      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
+    }
   };
 
   handleCalendarSelect = (event) => {
     event.preventDefault();
-    this.setState({month: moment(event.target.value)}, this._fetchWorkingSchedule);
+    this.setState({month: moment(event.target.value)}, this._fetchSchedule);
   };
 
   renderYearSelector = () => {
@@ -117,16 +121,18 @@ class Calendar extends React.Component {
   };
 
   render() {
-    return <div>
-            <div className="header">
-              <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
-                {this.renderYearSelector()}
-                {this.renderMonthSelector()}
-              <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
-            </div>
-            <DayNames dayNames={this.props.dayNames} />
-            {this.renderWeeks()}
-           </div>;
+    return (
+      <div className="calendar">
+        <div className="header">
+          <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
+          {this.renderYearSelector()}
+          {this.renderMonthSelector()}
+          <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
+        </div>
+        <DayNames dayNames={this.props.dayNames} />
+        {this.renderWeeks()}
+      </div>
+    );
   };
 
   renderWeeks = () => {

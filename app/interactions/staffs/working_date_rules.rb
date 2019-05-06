@@ -8,20 +8,20 @@ module Staffs
       staff_id = staff.id
 
       is_staff_full_time = shop.business_schedules.full_time.where(staff_id: staff_id).exists?
-      custom_schedules_scope = shop.custom_schedules.where(start_time: date_range).select("start_time").order("start_time")
       off_dates = working_dates = []
+      shop_calendar = compose(Shops::WorkingCalendar, shop: shop, date_range: date_range)
 
       # working dates
-      if is_staff_full_time
-        shop_working_wdays = shop.business_schedules.for_shop.opened.map(&:day_of_week)
-      else
+      unless is_staff_full_time
         staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff_id).map(&:day_of_week)
-        working_dates = custom_schedules_scope.opened.where(staff_id: staff_id).map{|d| d.start_time.to_date }
+        working_dates = shop.custom_schedules.opened.where(staff_id: staff_id, start_time: date_range).
+          select("start_time").
+          order("start_time").
+          map{ |d| d.start_time.to_date }
       end
 
       # off dates
       # when date is a working day unless it's all day off
-      shop_closed_dates = custom_schedules_scope.closed.for_shop.map{|d| d.start_time.to_date }
       staff_off_date_candidates = staff.custom_schedules.closed.where(start_time: date_range).select("start_time").order("start_time").map{|d| d.start_time.to_date }
 
       staff_off_date_candidates.each do |suspicious_date|
@@ -36,16 +36,16 @@ module Staffs
         end
       end
 
-      off_dates << shop_closed_dates
+      off_dates << shop_calendar[:off_dates]
 
       {
         full_time: is_staff_full_time,
-        shop_working_on_holiday: !!shop.holiday_working,
-        shop_working_wdays: shop_working_wdays || [],
+        shop_working_on_holiday: shop_calendar[:shop_working_on_holiday],
+        shop_working_wdays: shop_calendar[:shop_working_wdays] || [],
+        holidays: shop_calendar[:holidays],
+        off_dates: off_dates.flatten, # for staff and shop
         staff_working_wdays: staff_working_wdays || [],
-        working_dates: working_dates.flatten, # for staff
-        off_dates: off_dates.flatten, # for staff
-        holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+        working_dates: working_dates.flatten # for staff
       }
     end
   end
