@@ -174,7 +174,7 @@ class BookingPageSettings extends React.Component {
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
           <dl>
-            <dd>
+            <dd className="booking-calendar">
               {booking_dates_calendar_hint}
               {booking_dates_working_date}
               {booking_dates_available_booking_date}

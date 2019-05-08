@@ -27,7 +27,7 @@ class CalendarsController < DashboardController
     )
 
     if outcome.valid?
-      @schedules = outcome.result
+      @schedules, @available_booking_dates = outcome.result
     end
 
     render action: :working_schedule

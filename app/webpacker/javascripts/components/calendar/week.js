@@ -4,16 +4,20 @@ import React from "react";
 import _ from "underscore";
 
 class Week extends React.Component {
-  isReservedDay = (date) => {
-    return _.contains(this.props.reservationDates, date.format("YYYY-MM-DD"));
+  isWorkingDate = (date) => {
+    return _.contains(this.props.workingDates, date.format("YYYY-MM-DD"));
   };
 
   isHoliday = (date) => {
     return _.contains(this.props.holidayDates, date.format("YYYY-MM-DD"));
   };
 
-  isWorkingDay = (date) => {
-    return _.contains(this.props.workingDates, date.format("YYYY-MM-DD"));
+  isReservedDate = (date) => {
+    return _.contains(this.props.reservationDates, date.format("YYYY-MM-DD"));
+  };
+
+  isAvailableBookingDate = (date) => {
+    return _.contains(this.props.availableBookingDates, date.format("YYYY-MM-DD"));
   };
 
   render() {
@@ -28,8 +32,9 @@ class Week extends React.Component {
         isCurrentMonth: date.month() === month.month(),
         isToday: date.isSame(new Date(), "day"),
         isHoliday: this.isHoliday(date),
-        isWorkingDay: this.isWorkingDay(date),
-        isReservedDay: this.isReservedDay(date),
+        isWorkingDate: this.isWorkingDate(date),
+        isReservedDate: this.isReservedDate(date),
+        isAvailableBookingDate: this.isAvailableBookingDate(date),
         date: date
       };
 
@@ -40,8 +45,9 @@ class Week extends React.Component {
               (day.isCurrentMonth ? "" : " different-month") +
               (day.date.isSame(this.props.selectedDate) ? " selected" : "") +
               (day.isHoliday ? " holiday" : "") +
-              (day.isWorkingDay ? " workDay" : "") +
-              (day.isReservedDay ? " reserved" : "")
+              (day.isWorkingDate ? " workDay" : "") +
+              (day.isReservedDate ? " reserved" : "") +
+              (day.isAvailableBookingDate ? " booking-available" : "")
           }
           onClick={this.props.select.bind(null, day)}>
           {day.number}

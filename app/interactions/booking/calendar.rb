@@ -14,19 +14,25 @@ module Booking
 
     def execute
       rules = compose(Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
-      # Available booking dates
+      schedules = compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
 
-      if special_dates
-        special_dates.map do |special_date|
-          # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
-          JSON.parse(special_date)["start_at_date_part"]
+      available_booking_dates =
+        if special_dates
+          special_dates.map do |special_date|
+            # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
+            JSON.parse(special_date)["start_at_date_part"]
+          end
+        else
+          booking_options = shop.user.booking_options.where(id: booking_option_ids)
+          booking_options = compose(BookingOptions::Prioritize, booking_options: booking_options)
+
+          schedules[:working_dates]
         end
-      else
-        booking_options = shop.user.booking_options.where(id: booking_option_ids)
-        booking_options = compose(BookingOptions::Prioritize, booking_options: booking_options)
-      end
 
-      compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
+      [
+        schedules,
+        available_booking_dates
+      ]
     end
 
     private

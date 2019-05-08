@@ -64,7 +64,8 @@ class Calendar extends React.Component {
       this.setState({
         holidayDates: result["holiday_dates"],
         workingDates: result["working_dates"],
-        reservationDates: result["reservation_dates"]
+        reservationDates: result["reservation_dates"],
+        availableBookingDates: result["available_booking_dates"]
       });
     });
   };
@@ -152,6 +153,7 @@ class Calendar extends React.Component {
               selectedDate={this.state.selectedDate}
               holidayDates={this.state.holidayDates}
               workingDates={this.state.workingDates}
+              availableBookingDates={this.state.availableBookingDates}
               reservationDates={this.state.reservationDates}
             />
           );

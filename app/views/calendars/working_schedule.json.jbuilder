@@ -7,3 +7,4 @@ else
 end
 
 json.reservation_dates @reservation_dates ? @reservation_dates.map(&:to_s) : []
+json.available_booking_dates @available_booking_dates || []
