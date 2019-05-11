@@ -8,6 +8,7 @@ RSpec.describe Booking::Calendar do
 
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
   let(:shop) { business_schedule.shop }
+  let(:user) { shop.user }
   let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month  }
   let(:args) do
     {
@@ -39,6 +40,7 @@ RSpec.describe Booking::Calendar do
       booking_option = FactoryBot.create(:booking_option, :single_menu, user: shop.user)
       staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
       FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
+      FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
 
       args.merge!(booking_option_ids: [booking_option.id])
     end
@@ -56,6 +58,7 @@ RSpec.describe Booking::Calendar do
         booking_option = FactoryBot.create(:booking_option, :single_coperation_menu, user: shop.user)
         staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
 
         args.merge!(booking_option_ids: [booking_option.id])
       end
@@ -74,6 +77,28 @@ RSpec.describe Booking::Calendar do
         staff2 = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff1)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff2)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
+
+        args.merge!(booking_option_ids: [booking_option.id])
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
+  end
+
+  context "when booking option with multiple menus" do
+    context "when enough staffs could handle the menu" do
+      before do
+        booking_option = FactoryBot.create(:booking_option, :multiple_menus, user: shop.user)
+        staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
+        FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
+        FactoryBot.create(:staff_menu, menu: booking_option.menus.last, staff: staff)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.last, shop: shop)
 
         args.merge!(booking_option_ids: [booking_option.id])
       end

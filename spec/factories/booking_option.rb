@@ -14,19 +14,29 @@ FactoryBot.define do
     end
 
     trait :single_menu do
-      menus { [FactoryBot.create(:menu, user: user)] }
+      menus { [FactoryBot.create(:menu, :with_reservation_setting, user: user)] }
     end
 
     trait :single_coperation_menu do
-      menus { [FactoryBot.create(:menu, :coperation, user: user)] }
+      menus { [FactoryBot.create(:menu, :with_reservation_setting, :coperation, user: user)] }
     end
 
     trait :multiple_menus do
-      menus { [ FactoryBot.create(:menu, user: user), FactoryBot.create(:menu, user: user) ] }
+      menus {
+        [
+          FactoryBot.create(:menu, :with_reservation_setting, user: user),
+          FactoryBot.create(:menu, :with_reservation_setting, user: user)
+        ]
+      }
     end
 
     trait :multiple_coperation_menus do
-      menus { [ FactoryBot.create(:menu, user: user), FactoryBot.create(:menu, :coperation, user: user) ] }
+      menus {
+        [
+          FactoryBot.create(:menu, :with_reservation_setting, user: user),
+          FactoryBot.create(:menu, :with_reservation_setting, :coperation, user: user)
+        ]
+      }
     end
 
     after(:create) do |option, proxy|
