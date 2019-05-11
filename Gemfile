@@ -52,6 +52,7 @@ gem "paper_trail"
 gem "sentry-raven"
 gem "slack-ruby-client"
 gem "bootsnap"
+gem "parallel"
 
 group :development, :test do
   gem "byebug", platform: :mri

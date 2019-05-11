@@ -30,74 +30,88 @@ module Booking
             booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
           )
 
-          schedules[:working_dates].map do |date|
-            time_range_outcome = Reservable::Time.run(shop: shop, date: date)
-            next if time_range_outcome.invalid?
-
-            time_range = time_range_outcome.result
-            booking_start_at = shop_open_at = time_range.first
-            shop_close_at = time_range.last
-
-            catch :next_working_date do
-              booking_options.each.with_index do |booking_option, index|
-                # the booking reservation need at least booking_option.minutes + booking_option.interval
-                # but as more as possible booking_option.interval * 2
-                booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval * 2)
-
-                if booking_end_at > shop_close_at
-                  booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
-
-                  if booking_end_at > shop_close_at
-                    next
-                  else
-                    booking_end_at = shop_close_at
-                  end
-                end
-
-                loop do
-                  valid_menus = []
-
-                  booking_option.menus.each do |menu|
-                    active_staff_ids = menu.active_staff_ids & shop.staff_ids
-
-                    active_staff_ids.combination(menu.min_staffs_number).each do |candidate_staff_ids|
-                      reserable_outcome = Reservable::Reservation.run(
-                        shop: shop,
-                        date: date,
-                        business_time_range: booking_start_at..booking_end_at,
-                        menu_ids: [menu.id],
-                        staff_ids: candidate_staff_ids
-                      )
-
-                      if reserable_outcome.valid?
-                        valid_menus << menu
-
-                        # all menus got staffs to handle
-                        if booking_option.menus.count == valid_menus.length
-                          throw :next_working_date, date
-                        end
-                      end
-                    end
-                  end
-
-                  booking_start_at = booking_start_at.advance(minutes: interval)
-                  booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
-
-                  if booking_end_at > shop_close_at
-                    break
-                  end
-                end
-              end
-
-              nil
-            end
-          end.compact
+          if Rails.env.test?
+            schedules[:working_dates].map do |date|
+              test_available_booking_date(booking_options, date)
+            end.compact
+          else
+            # XXX: Parallel doesn't work properly in test mode,
+            # some data might be stay in transaction of test thread and would lost in test while using Parallel.
+            Parallel.map(schedules[:working_dates]) do |date|
+              test_available_booking_date(booking_options, date)
+            end.compact
+          end
         end
 
       [
         schedules,
         available_booking_dates
       ]
+    end
+
+    private
+
+    def test_available_booking_date(booking_options, date)
+      time_range_outcome = Reservable::Time.run(shop: shop, date: date)
+      return if time_range_outcome.invalid?
+
+      time_range = time_range_outcome.result
+      booking_start_at = shop_open_at = time_range.first
+      shop_close_at = time_range.last
+
+      catch :next_working_date do
+        booking_options.each.with_index do |booking_option, index|
+          # the booking reservation need at least booking_option.minutes + booking_option.interval
+          # but as more as possible booking_option.interval * 2
+          booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval * 2)
+
+          if booking_end_at > shop_close_at
+            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
+
+            if booking_end_at > shop_close_at
+              next
+            else
+              booking_end_at = shop_close_at
+            end
+          end
+
+          loop do
+            valid_menus = []
+
+            booking_option.menus.each do |menu|
+              active_staff_ids = menu.active_staff_ids & shop.staff_ids
+
+              active_staff_ids.combination(menu.min_staffs_number).each do |candidate_staff_ids|
+                reserable_outcome = Reservable::Reservation.run(
+                  shop: shop,
+                  date: date,
+                  business_time_range: booking_start_at..booking_end_at,
+                  menu_ids: [menu.id],
+                  staff_ids: candidate_staff_ids
+                )
+
+                if reserable_outcome.valid?
+                  valid_menus << menu
+
+                  # all menus got staffs to handle
+                  if booking_option.menus.count == valid_menus.length
+                    throw :next_working_date, date
+                  end
+                end
+              end
+            end
+
+            booking_start_at = booking_start_at.advance(minutes: interval)
+            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
+
+            if booking_end_at > shop_close_at
+              break
+            end
+          end
+        end
+
+        nil
+      end
     end
   end
 end
