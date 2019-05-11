@@ -24,7 +24,10 @@ module Booking
           JSON.parse(special_date)["start_at_date_part"]
         end
       else
-        booking_options = compose(BookingOptions::Prioritize, booking_options: shop.user.booking_options.where(id: booking_option_ids))
+        booking_options = compose(
+          BookingOptions::Prioritize,
+          booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
+        )
 
         schedules[:working_dates].each do |date|
           time_range_outcome = Reservable::Time.run(shop: shop, date: date)
@@ -95,14 +98,6 @@ module Booking
         schedules,
         available_booking_dates
       ]
-    end
-
-    private
-
-    def start_date
-    end
-
-    def end_date
     end
   end
 end

@@ -53,21 +53,31 @@ class Calendar extends React.Component {
 
     const scheduleParams = _.merge({ date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id }, this.props.scheduleParams || {})
 
-    axios({
-      method: "GET",
-      url: this.props.schedulePath,
-      params: scheduleParams,
-      responseType: "json"
-    }).then((response) => {
-      var result = response.data;
+    this.setState({
+      loading: true
+    }, () => {
+      axios({
+        method: "GET",
+        url: this.props.schedulePath,
+        params: scheduleParams,
+        responseType: "json"
+      })
+        .then((response) => {
+          var result = response.data;
 
-      this.setState({
-        holidayDates: result["holiday_dates"],
-        workingDates: result["working_dates"],
-        reservationDates: result["reservation_dates"],
-        availableBookingDates: result["available_booking_dates"]
-      });
-    });
+          this.setState({
+            holidayDates: result["holiday_dates"],
+            workingDates: result["working_dates"],
+            reservationDates: result["reservation_dates"],
+            availableBookingDates: result["available_booking_dates"]
+          });
+        })
+        .finally(() => {
+          this.setState({
+            loading: false
+          })
+        });
+    })
   };
 
   select = (day) => {
@@ -121,6 +131,14 @@ class Calendar extends React.Component {
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <div className="calendar-loading">
+          <i className="fa fa-spinner fa-spin fa-fw fa-3x" aria-hidden="true"></i>
+        </div>
+      );
+    }
+
     return (
       <div className="calendar">
         <div className="header">
