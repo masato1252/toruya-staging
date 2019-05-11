@@ -255,9 +255,9 @@ RSpec.describe Reservable::Menus do
               end
             end
 
-            context "when the existing reservations menu's needs cooperation(min_staffs_number > 1)" do
+            context "when the existing reservations menu's needs coperation(min_staffs_number > 1)" do
               let(:staff2) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
-              let(:menu) { FactoryBot.create(:menu, :cooperation, user: user, shop: shop, max_seat_number: 3) }
+              let(:menu) { FactoryBot.create(:menu, :coperation, user: user, shop: shop, max_seat_number: 3) }
               # occupied by 1 customer
               let!(:reservation) do
                 FactoryBot.create(:reservation, shop: shop, menu: menu,
@@ -275,7 +275,7 @@ RSpec.describe Reservable::Menus do
 
                 context "when menu max_customers is enough, by one of staffs is not affordable" do
                   # staff is not affordable, staff2 is affordable
-                  let(:menu) { FactoryBot.create(:menu, :cooperation, user: user, shop: shop, max_seat_number: 4) }
+                  let(:menu) { FactoryBot.create(:menu, :coperation, user: user, shop: shop, max_seat_number: 4) }
 
                   it "returns empty" do
                     expect(Reservable::Menus.run!(shop: shop, business_time_range: time_range, number_of_customer: 3)).to be_empty

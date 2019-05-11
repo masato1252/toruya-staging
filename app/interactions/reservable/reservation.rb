@@ -21,6 +21,8 @@ module Reservable
         errors.add(:menu_ids, :time_not_enough)
       end
 
+
+      # validate_reservation_request(the reservation without staffs)
       validate_interval_time
       validate_menu_schedules
       validate_seats_for_customers

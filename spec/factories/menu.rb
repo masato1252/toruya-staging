@@ -25,7 +25,7 @@ FactoryBot.define do
       min_staffs_number { 2 }
     end
 
-    trait :cooperation do
+    trait :coperation do
       min_staffs_number { 2 }
     end
 
