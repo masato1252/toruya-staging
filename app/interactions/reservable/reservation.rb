@@ -13,10 +13,6 @@ module Reservable
 
     def execute
       time_outcome = Reservable::Time.run(shop: shop, date: date)
-      shop_start_at = time_outcome.result.first
-      shop_close_at = time_outcome.result.last
-      reservation_start_at = business_time_range.first
-      reservation_end_at = business_time_range.last
 
       if time_outcome.invalid?
         errors.merge!(time_outcome.errors)
@@ -25,12 +21,17 @@ module Reservable
       return if (menu_ids.blank? && booking_option_id.nil?) || business_time_range.blank?
 
       # validate_time_range
-      if time_outcome.valid? && (
-          reservation_start_at < shop_start_at ||
-          reservation_end_at > shop_close_at ||
-          reservation_start_at > reservation_end_at
-      )
-        errors.add(:business_time_range, :invalid_time_range)
+      if time_outcome.valid?
+        shop_start_at = time_outcome.result.first
+        shop_close_at = time_outcome.result.last
+        reservation_start_at = business_time_range.first
+        reservation_end_at = business_time_range.last
+
+        if reservation_start_at < shop_start_at ||
+            reservation_end_at > shop_close_at ||
+            reservation_start_at > reservation_end_at
+          errors.add(:business_time_range, :invalid_time_range)
+        end
       end
 
       if new_reseravtion_time_interval < services_required_timee
