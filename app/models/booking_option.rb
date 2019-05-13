@@ -34,4 +34,8 @@ class BookingOption < ApplicationRecord
   has_many :menus, through: :booking_option_menus
 
   monetize :amount_cents
+
+  def start_time
+    start_at || created_at
+  end
 end

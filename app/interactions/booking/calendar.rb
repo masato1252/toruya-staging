@@ -60,6 +60,12 @@ module Booking
 
       catch :next_working_date do
         booking_options.each do |booking_option|
+          # booking_option doesn't sell on that date
+          if booking_option.start_time.to_date > Date.parse(date) ||
+              booking_option.end_at && booking_option.end_at.to_date < Date.parse(date)
+            next
+          end
+
           booking_start_at = shop_open_at = time_range.first
 
           loop do

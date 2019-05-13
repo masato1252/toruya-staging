@@ -37,9 +37,9 @@ RSpec.describe Booking::Calendar do
 
   context "when booking option with single menu and one staff could handle the menu" do
     let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+    let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user) }
 
     before do
-      booking_option = FactoryBot.create(:booking_option, :single_menu, user: user)
       FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
       FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
 
@@ -50,6 +50,18 @@ RSpec.describe Booking::Calendar do
       result = outcome.result
 
       expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+    end
+
+    context "when booking option only sells during a period" do
+      let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user,
+                                               start_at_date_part: "2019-05-14", start_at_time_part: "00:00",
+                                               end_at_date_part: "2019-05-26", end_at_time_part: "00:00") }
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-20"])
+      end
     end
 
     context "when all day are reserved" do
