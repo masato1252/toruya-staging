@@ -56,26 +56,19 @@ module Booking
       return if time_range_outcome.invalid?
 
       time_range = time_range_outcome.result
-      booking_start_at = shop_open_at = time_range.first
       shop_close_at = time_range.last
 
       catch :next_working_date do
-        booking_options.each.with_index do |booking_option, index|
-          # the booking reservation need at least booking_option.minutes + booking_option.interval
-          # but as more as possible booking_option.interval * 2
-          booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval * 2)
-
-          if booking_end_at > shop_close_at
-            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
-
-            if booking_end_at > shop_close_at
-              next
-            else
-              booking_end_at = shop_close_at
-            end
-          end
+        booking_options.each do |booking_option|
+          booking_start_at = shop_open_at = time_range.first
 
           loop do
+            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
+
+            if booking_end_at > shop_close_at
+              break
+            end
+
             valid_menus = []
 
             booking_option.menus.each do |menu|
@@ -86,6 +79,7 @@ module Booking
                   shop: shop,
                   date: date,
                   business_time_range: booking_start_at..booking_end_at,
+                  booking_option_id: booking_option.id,
                   menu_ids: [menu.id],
                   staff_ids: candidate_staff_ids
                 )
@@ -95,6 +89,7 @@ module Booking
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
+                    Rails.logger.info("====#{date}===#{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}========")
                     throw :next_working_date, date
                   end
                 end
@@ -102,14 +97,10 @@ module Booking
             end
 
             booking_start_at = booking_start_at.advance(minutes: interval)
-            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes + booking_option.interval)
-
-            if booking_end_at > shop_close_at
-              break
-            end
           end
         end
 
+        # XXX: When date is not available to book, return nil, otherwise it returns booking_option instance by default
         nil
       end
     end

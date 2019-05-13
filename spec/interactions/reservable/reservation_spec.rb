@@ -455,5 +455,51 @@ RSpec.describe Reservable::Reservation do
         end
       end
     end
+
+    # validate_time_range
+    context "when time range out of shop open/closed time" do
+      before do
+        FactoryBot.create(:business_schedule, shop: shop, start_time: Time.zone.local(2016, 12, 22, 9), end_time: Time.zone.local(2016, 12, 22, 17))
+      end
+
+      context "when start time is earlier than shop open time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 8, 59)..Time.zone.local(2016, 12, 22, 12)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
+        end
+      end
+
+      context "when end time is later than shop open time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 16, 59)..Time.zone.local(2016, 12, 22, 17, 1)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
+        end
+      end
+
+      context "when end time is earlier than start time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 17)..Time.zone.local(2016, 12, 22, 16)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
+        end
+      end
+    end
   end
 end

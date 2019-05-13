@@ -1073,6 +1073,7 @@ ja:
               shop_closed: "^休業日"
             business_time_range:
               interval_too_short: "^インターバル不足"
+              invalid_time_range: "^予約時間が正しくありません。"
             staff_ids:
               unworking_staff: "^休暇中"
               ask_for_leave: "^休暇中"

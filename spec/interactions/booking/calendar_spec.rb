@@ -36,9 +36,10 @@ RSpec.describe Booking::Calendar do
   end
 
   context "when booking option with single menu and one staff could handle the menu" do
+    let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+
     before do
-      booking_option = FactoryBot.create(:booking_option, :single_menu, user: shop.user)
-      staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
+      booking_option = FactoryBot.create(:booking_option, :single_menu, user: user)
       FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
       FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
 
@@ -50,13 +51,78 @@ RSpec.describe Booking::Calendar do
 
       expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
     end
+
+    context "when all day are reserved" do
+      before do
+        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                          start_time: Time.zone.local(2019, 5, 13, 9),
+                          end_time: Time.zone.local(2019, 5, 13, 17))
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context "when there is existing reservation after this new reservation time" do
+      before do
+        # The free gap is 9: 00 ~ 10:10
+        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                          start_time: Time.zone.local(2019, 5, 13, 10, 10),
+                          end_time: Time.zone.local(2019, 5, 13, 17))
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context "when there is existing reservation before this new reservation time" do
+      # the time gap need booking option required time(60) + interval(10)
+      before do
+        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                          start_time: Time.zone.local(2019, 5, 13, 9),
+                          end_time: Time.zone.local(2019, 5, 13, 15, 50))
+        # The free gap is 16: 00 ~ 17:00
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context "when there are existing reservations around this new reservation time" do
+      # the time gap need booking option required time(60) + interval(10)
+      before do
+        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                          start_time: Time.zone.local(2019, 5, 13, 9),
+                          end_time: Time.zone.local(2019, 5, 13, 10))
+
+        # The free gap is 10: 30 ~ 11:40
+        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                          start_time: Time.zone.local(2019, 5, 13, 11, 40),
+                          end_time: Time.zone.local(2019, 5, 13, 17))
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
   end
 
   context "when booking option with coperation menu" do
     context "when NOT enough staffs could handle the menu" do
       before do
-        booking_option = FactoryBot.create(:booking_option, :single_coperation_menu, user: shop.user)
-        staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
+        booking_option = FactoryBot.create(:booking_option, :single_coperation_menu, user: user)
+        staff = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
         FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
 
@@ -72,9 +138,9 @@ RSpec.describe Booking::Calendar do
 
     context "when enough staffs could handle the menu" do
       before do
-        booking_option = FactoryBot.create(:booking_option, :single_coperation_menu, user: shop.user)
-        staff1 = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
-        staff2 = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
+        booking_option = FactoryBot.create(:booking_option, :single_coperation_menu, user: user)
+        staff1 = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
+        staff2 = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff1)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff2)
         FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
@@ -91,12 +157,33 @@ RSpec.describe Booking::Calendar do
   end
 
   context "when booking option with multiple menus" do
-    context "when enough staffs could handle the menu" do
+    context "when all menus are single menu and enough staffs could handle the menu" do
       before do
-        booking_option = FactoryBot.create(:booking_option, :multiple_menus, user: shop.user)
-        staff = FactoryBot.create(:staff, :full_time, shop: shop, user: shop.user)
+        booking_option = FactoryBot.create(:booking_option, :multiple_menus, user: user)
+        staff = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
         FactoryBot.create(:staff_menu, menu: booking_option.menus.last, staff: staff)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
+        FactoryBot.create(:shop_menu, menu: booking_option.menus.last, shop: shop)
+
+        args.merge!(booking_option_ids: [booking_option.id])
+      end
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context "when there is menu is coperation menu and enough staffs could handle the menu" do
+      before do
+        booking_option = FactoryBot.create(:booking_option, :multiple_coperation_menus, user: user)
+        staff1 = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
+        staff2 = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
+        FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff1)
+        FactoryBot.create(:staff_menu, menu: booking_option.menus.last, staff: staff1)
+        FactoryBot.create(:staff_menu, menu: booking_option.menus.last, staff: staff2)
         FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
         FactoryBot.create(:shop_menu, menu: booking_option.menus.last, shop: shop)
 

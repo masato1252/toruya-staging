@@ -707,7 +707,7 @@ en:
           attributes:
             business_time_range:
               interval_too_short: "^Not enough interval time"
-              too_short: "^Not enough time"
+              invalid_time_range: "^Invalid time"
             staff_ids:
               unworking_staff: "^Off-day"
               ask_for_leave: "^Off-day"
