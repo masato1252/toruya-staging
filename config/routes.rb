@@ -124,6 +124,7 @@ Rails.application.routes.draw do
       resources :booking_options, except: [:show]
       resources :booking_pages, except: [:show] do
         get :copy_modal, on: :member
+        get :validate_special_dates, on: :collection
       end
       resources :reservation_settings, except: [:show]
       resources :categories, except: [:show]

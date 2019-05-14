@@ -8,6 +8,7 @@ import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
 import _ from "lodash";
+import axios from "axios";
 
 import { requiredValidation, transformValues } from "../../../libraries/helper";
 import { Input, InputRow, RadioRow, Radio, Error, Condition } from "../../shared/components";
@@ -22,6 +23,7 @@ class BookingPageSettings extends React.Component {
   constructor(props) {
     super(props);
 
+    this.throttleVerifySpecialDates = _.throttle(this.verifySpecialDates, 100);
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator({
       field: /booking_page\[booking_options\]/, // when a field matching this pattern changes...
@@ -213,6 +215,7 @@ class BookingPageSettings extends React.Component {
                       collection_name="booking_page[special_dates]"
                       component={MultipleDatetimeInput}
                       timezone={this.props.timezone}
+                      validate={this.special_dates_available}
                     />
                   )
                 }
@@ -388,6 +391,21 @@ class BookingPageSettings extends React.Component {
     );
   }
 
+  verifySpecialDates = async (values) => {
+    const { shop_id, special_dates } = values.booking_page;
+
+    if (shop_id && special_dates && special_dates.length) {
+      const response = await axios({
+        method: "GET",
+        url: this.props.path.validate_special_dates,
+        params: { shop_id: values.booking_page.shop_id, special_dates: values.booking_page.special_dates },
+        responseType: "json"
+      })
+
+      return { booking_page: {  had_special_date: response.data.message }};
+    }
+  }
+
   validate = (values) => {
     const { timezone } = this.props;
     const { errors, form_errors } = this.props.i18n;
@@ -441,7 +459,7 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    return fields_errors;
+    return Object.keys(fields_errors.booking_page).length ? fields_errors : this.throttleVerifySpecialDates(values);
   };
 
   onSubmit = (values) => {

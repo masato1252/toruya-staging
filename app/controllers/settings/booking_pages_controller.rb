@@ -55,6 +55,12 @@ class Settings::BookingPagesController < SettingsController
     render layout: false
   end
 
+  def validate_special_dates
+    outcome = Booking::ValidateSpecialDates.run(shop: super_user.shops.find(params[:shop_id]), special_dates: params[:special_dates])
+
+    render json: { message: outcome.errors.full_messages.join(", ") }
+  end
+
   private
 
   def authorize_booking_page

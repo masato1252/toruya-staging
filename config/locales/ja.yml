@@ -1065,6 +1065,10 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
+        booking/validate_special_dates:
+          attributes:
+            special_dates:
+              on_unworking_dates: "^%{invalid_dates} 予約可能な日時は営業時間内である必要があります"
         subscriptions/charge:
           attributes:
             plan:
