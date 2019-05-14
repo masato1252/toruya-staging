@@ -186,7 +186,8 @@ class BookingPageSettings extends React.Component {
                       scheduleParams={{
                         shop_id: values.booking_page["shop_id"],
                         booking_option_ids: values.booking_page["options"].map((option) => option.id),
-                        special_dates: values.booking_page["special_dates"]
+                        special_dates: values.booking_page["special_dates"],
+                        overlap_restriction: values.booking_page["overlap_restriction"]
                       }}
                     />
                   );
@@ -347,6 +348,25 @@ class BookingPageSettings extends React.Component {
     );
   }
 
+  renderBookingOverlapRestrictionField = () => {
+    const { overlap_booking, not_allow_overlap_booking_label, allow_overlap_booking_label} = this.props.i18n;
+
+    return (
+      <div>
+        <h3>{overlap_booking}</h3>
+        <div className="formRow">
+          <Field name="booking_page[overlap_restriction]" type="radio" value="true" component={RadioRow}>
+            {not_allow_overlap_booking_label}
+          </Field>
+          <Field name="booking_page[overlap_restriction]" type="radio" value="false" component={RadioRow}>
+            {allow_overlap_booking_label}
+          </Field>
+        </div>
+        <Error name="booking_page[overlap_restriction]" />
+      </div>
+    )
+  }
+
   renderBookingNoteField = () => {
     const { required_label, note_label, note_hint } = this.props.i18n;
 
@@ -456,6 +476,7 @@ class BookingPageSettings extends React.Component {
             {this.renderBookingDateFields(values)}
             {this.renderBookingIntervalFields()}
             {this.renderBookingPeriodFields()}
+            {this.renderBookingOverlapRestrictionField()}
             {this.renderBookingNoteField()}
 
             <ul id="footerav">

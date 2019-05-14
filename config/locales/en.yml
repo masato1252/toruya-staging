@@ -454,6 +454,9 @@ en:
         sale_forever: Never
         sale_start: Sales start
         sale_end: Sales end
+        overlap_booking: Double booking
+        not_allow_overlap_booking_label: Close reservation acceptance with the number of available staff
+        allow_overlap_booking_label: Accept reservations over the number of staff available
         note_label: Explanation / Important notes
         note_hint: The important notes showed to your customer on booking with this price.
         form_errors:

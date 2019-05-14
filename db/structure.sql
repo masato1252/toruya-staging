@@ -306,7 +306,8 @@ CREATE TABLE public.booking_pages (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     start_at timestamp without time zone,
-    end_at timestamp without time zone
+    end_at timestamp without time zone,
+    overlap_restriction boolean DEFAULT true
 );
 
 

@@ -12,6 +12,7 @@ module Booking
     # ]
     array :special_dates, default: nil
     integer :interval, default: 30
+    boolean :overlap_restriction, default: true
 
     def execute
       rules = compose(Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
@@ -87,7 +88,8 @@ module Booking
                   business_time_range: booking_start_at..booking_end_at,
                   booking_option_id: booking_option.id,
                   menu_ids: [menu.id],
-                  staff_ids: candidate_staff_ids
+                  staff_ids: candidate_staff_ids,
+                  overlap_restriction: overlap_restriction
                 )
 
                 if reserable_outcome.valid?
