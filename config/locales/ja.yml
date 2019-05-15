@@ -1069,6 +1069,7 @@ ja:
           attributes:
             special_dates:
               on_unworking_dates: "^%{invalid_dates} 予約可能な日時は営業時間内である必要があります"
+              not_enough_time_dates: "^上記の設定内容に基づくと、%{not_enough_time_dates}分以上の時間が必要です"
         subscriptions/charge:
           attributes:
             plan:

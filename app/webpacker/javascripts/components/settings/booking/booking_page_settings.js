@@ -392,13 +392,17 @@ class BookingPageSettings extends React.Component {
   }
 
   verifySpecialDates = async (values) => {
-    const { shop_id, special_dates } = values.booking_page;
+    const { shop_id, special_dates, options } = values.booking_page;
 
-    if (shop_id && special_dates && special_dates.length) {
+    if (shop_id && special_dates && special_dates.length && options && options.length) {
       const response = await axios({
         method: "GET",
         url: this.props.path.validate_special_dates,
-        params: { shop_id: values.booking_page.shop_id, special_dates: values.booking_page.special_dates },
+        params: {
+          shop_id: values.booking_page.shop_id,
+          special_dates: values.booking_page.special_dates,
+          booking_option_ids: options.map((option) => option.id)
+        },
         responseType: "json"
       })
 
