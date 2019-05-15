@@ -3,6 +3,7 @@ FactoryBot.define do
     association :shop
     day_of_week { start_time.wday }
     business_state { "opened" }
+    # Monday
     start_time { Time.zone.local(2016, 8, 22, 9, 0, 0) }
     end_time { Time.zone.local(2016, 8, 22, 17, 0, 0) }
 

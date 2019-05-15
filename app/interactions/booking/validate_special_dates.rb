@@ -17,13 +17,6 @@ module Booking
 
       longest_option = shop.user.booking_options.where(id: booking_option_ids).sort_by { |option| option.minutes }.last
 
-      # case 1: the reservation starts at 9:00 AM, it'll be 70(9:00 to 10:10) => OK
-      # case 2: the reservation starts at 9:01 AM, it'll be 80(9:01 to 11:01) => OK
-      # case 3: the reservation starts at 3:40 PM, it will be 80 (3:40 to 5:00) => OK
-      # case 4: the reservation starts at 3:41 PM, it will be 79 (3:41 to 5:00) => OK
-      # case 6: the reservation starts at 3:49 PM, it will be 71 (3:49 to 5:00) => OK
-      # case 7: the reservation starts at 3:50 PM, it will be 70 (3:50 to 5:00) => OK
-      # case 8: the reservation starts at 3:51 PM, it will be 70 (3:51 to 5:01) => Failed
       special_dates.each do |raw_special_date|
         json_parsed_date = JSON.parse(raw_special_date)
         special_date = Date.parse(json_parsed_date["start_at_date_part"])
