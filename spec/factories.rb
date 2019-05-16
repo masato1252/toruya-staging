@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :shop_menu do
     association :shop
     association :menu
+    max_seat_number { 2 }
   end
 
   factory :user do

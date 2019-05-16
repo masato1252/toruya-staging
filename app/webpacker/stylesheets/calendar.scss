@@ -1,0 +1,216 @@
+.calendar {
+  text-align: center;
+  font-size: 14px;
+  width: 252px;
+  line-height: 35px;
+
+  .header,
+  .calendar .month {
+    padding-bottom: 10px;
+  }
+
+  .month ul {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    line-height: 35px;
+  }
+
+  .month .prev {
+    float: left;
+  }
+
+  .month .next {
+    float: right;
+  }
+
+  .header i,
+  .month .prev a,
+  .month .prev a:link,
+  .month .prev a:visited,
+  .month .next a,
+  .month .next a:link,
+  .month .next a:visited {
+    display: block;
+    background: #858585;
+    color: #fff;
+    border-radius: 5px; /* 記述無し */
+    -moz-border-radius: 5px; /* Firefox */
+    -webkit-border-radius: 5px; /* Google Chrome、Safari */
+    -o-border-radius: 5px; /* Opera */
+    -ms-border-radius: 5px; /* Internet Explorer */
+    line-height: 35px;
+    width: 27px;
+    font-weight: bold;
+    font-size: 28px;
+  }
+
+  .header i,
+  .header select {
+    float: left;
+  }
+
+  .header select {
+    width: 35%;
+    margin-left: 5px;
+  }
+
+  .header select:last-of-type,
+  .month select#calYear {
+    margin-right: 5px;
+  }
+
+  .header select:last-of-type,
+  .month select {
+    background-color: #fff;
+  }
+
+  .week,
+  .weekdays,
+  .days {
+    background: #fff;
+  }
+
+  .week span,
+  .weekdays li,
+  .days li {
+    width: 13.4%;
+  }
+
+  .week span,
+  .weekdays li {
+    display: inline-block;
+    text-align: center;
+    margin: 1px;
+  }
+
+  .weekdays li {
+    color: #666;
+  }
+
+  .week span {
+    border-radius: 20px; /* 記述無し */
+    -moz-border-radius: 20px; /* Firefox */
+    -webkit-border-radius: 20px; /* Google Chrome、Safari */
+    -o-border-radius: 20px; /* Opera */
+    -ms-border-radius: 20px; /* Internet Explorer */
+    line-height: 26px;
+    color: #333;
+    border: 2px solid #fff;
+  }
+
+  .week:not(.names) span:not(.close):hover {
+    cursor: pointer;
+  }
+
+  .week {
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .week:last-child {
+    border-bottom: none;
+  }
+
+  .week.names,
+  .week:first-of-type,
+  .days:first-of-type {
+    font-size: 90%;
+  }
+
+  .days a,
+  .days a:link,
+  .days a:visited {
+    color: #666;
+    line-height: 35px;
+    display: block;
+    width: 100%;
+  }
+
+  .day.today,
+  .days .today a {
+    font-weight: bold;
+    color: #e6a220;
+  }
+
+  .day.selected,
+  .day.today.select,
+  .days a.here,
+  .days .today a.here {
+    font-weight: bold;
+    color: #fff;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .day.reserved {
+    background: #dedede;
+    border-color: #dedede;
+  }
+
+  .day.selected {
+    background: #fcbe46;
+    border-color: #fcbe46;
+  }
+
+  .day.workDay {
+    border-color: #84b3aa;
+  }
+
+  .week span.different-month {
+    color: #B3B3B3;
+  }
+
+  .week span.different-month.workDay {
+    border-color: #aecfc8;
+  }
+
+  .week span.different-month.reserved {
+    background: #EAEAEA;
+    border-color: #EAEAEA;
+  }
+
+  .week span.holiday {
+    color: #E00003;
+  }
+
+  .header:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+.booking-calendar {
+  .calendar {
+    .day {
+      &.workDay {
+        background: #dedede;
+        border-color: #dedede;
+      }
+
+      &.booking-available {
+        background: #84b3aa;
+        border-color: #84b3aa;
+      }
+    }
+  }
+
+  .demo-day {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 24px;
+    margin-left: 12px;
+    margin-right: 3px;
+  }
+}
+
+.calendar-loading {
+  text-align: center;
+  font-size: 14px;
+  width: 252px;
+  height: 286px;
+  line-height: 286px;
+}

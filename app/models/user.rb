@@ -60,6 +60,7 @@ class User < ApplicationRecord
   end
   has_many :custom_schedules, dependent: :destroy
   has_many :booking_options
+  has_many :booking_pages
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

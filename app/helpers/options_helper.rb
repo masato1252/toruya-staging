@@ -1,4 +1,15 @@
 module OptionsHelper
+  def custom_options(items)
+    return [] unless items
+
+    items.map do |item|
+      item.attributes.merge({
+        label: item.name,
+        value: item.id,
+      })
+    end
+  end
+
   def default_options(items)
     return unless items
     items.map { |i| { label: i.name, value: i.id } }

@@ -138,8 +138,8 @@ RSpec.describe Reservable::Staffs do
             expect(Reservable::Staffs.run!(shop: shop, menu: menu, business_time_range: time_range).map(&:id)).to include(staff2.id)
           end
 
-          context "when the existing reservation's menu's need cooperation(min_staffs_number > 1)" do
-            let(:menu) { FactoryBot.create(:menu, :cooperation, user: user, shop: shop) }
+          context "when the existing reservation's menu's need coperation(min_staffs_number > 1)" do
+            let(:menu) { FactoryBot.create(:menu, :coperation, user: user, shop: shop) }
             let!(:reservation) do
               FactoryBot.create(:reservation, shop: shop, menu: menu,
                                  start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id, staff2.id])
@@ -152,7 +152,7 @@ RSpec.describe Reservable::Staffs do
                 expect(staff_ids).to include(staff2.id)
               end
 
-              context "when there are other no reservation staffs could do this cooperation menu" do
+              context "when there are other no reservation staffs could do this coperation menu" do
                 let(:staff3) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
                 let(:staff4) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
                 before do

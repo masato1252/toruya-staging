@@ -6,22 +6,40 @@ module Reservable
     date :date
     object :business_time_range, class: Range, default: nil
     array :menu_ids, default: nil
+    integer :booking_option_id, default: nil
     array :staff_ids, default: nil
     integer :reservation_id, default: nil
     integer :number_of_customer, default: 1
+    boolean :overlap_restriction, default: true
 
     def execute
       time_outcome = Reservable::Time.run(shop: shop, date: date)
 
-      errors.merge!(time_outcome.errors) if time_outcome.invalid?
+      if time_outcome.invalid?
+        errors.merge!(time_outcome.errors)
+      end
 
-      return if menu_ids.blank? || business_time_range.blank?
+      return if (menu_ids.blank? && booking_option_id.nil?) || business_time_range.blank?
 
-      if new_reseravtion_time_interval < total_menus_working_time
+      # validate_time_range
+      if time_outcome.valid?
+        shop_start_at = time_outcome.result.first
+        shop_close_at = time_outcome.result.last
+        reservation_start_at = business_time_range.first
+        reservation_end_at = business_time_range.last
+
+        if reservation_start_at < shop_start_at ||
+            reservation_end_at > shop_close_at ||
+            reservation_start_at > reservation_end_at
+          errors.add(:business_time_range, :invalid_time_range)
+        end
+      end
+
+      if new_reseravtion_time_interval < services_required_timee
         errors.add(:menu_ids, :time_not_enough)
       end
 
-      validate_interval_time
+      validate_interval_time if overlap_restriction
       validate_menu_schedules
       validate_seats_for_customers
 
@@ -44,7 +62,7 @@ module Reservable
 
         validate_staffs_ability_for_customers(staff)
         validate_other_shop_reservation(staff)
-        validate_same_shop_overlap_reservations(staff)
+        validate_same_shop_overlap_reservations(staff) if overlap_restriction
         validate_staff_ability(staff)
       end
 
@@ -56,18 +74,27 @@ module Reservable
     private
 
     def total_menus_taking_time
-      total_menus_working_time + last_menu_interval_time
+      services_required_timee + interval_time
     end
 
-    def total_menus_working_time
-      menus.sum(:minutes).minutes
+    def services_required_timee
+      if booking_option_id
+        booking_option.minutes.minutes
+      else
+        menus.sum(:minutes).minutes
+      end
     end
 
-    def last_menu_interval_time
-      menus.last.interval.minutes
+    def interval_time
+      if booking_option_id
+        booking_option.interval.minutes
+      else
+        menus.last.interval.minutes
+      end
     end
 
-    def earliest_menu_start_time
+    def booking_option
+      @booking_option ||= shop.user.booking_options.find_by(id: booking_option_id)
     end
 
     def menus
@@ -76,6 +103,9 @@ module Reservable
 
     def staffs
       @staffs ||= shop.staffs.where(id: staff_ids)
+    end
+
+    def validate_time_range
     end
 
     def validate_interval_time
@@ -95,7 +125,7 @@ module Reservable
 
       # When the start time is the same, it will be counts as overlap reservation in this case.
       next_reservation_validation_start_time = end_time.advance(minutes: -1)
-      next_reservation_validation_end_time = end_time.advance(seconds: last_menu_interval_time)
+      next_reservation_validation_end_time = end_time.advance(seconds: interval_time)
 
       if next_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
                                             reservation_id: reservation_id,

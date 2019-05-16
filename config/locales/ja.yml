@@ -34,6 +34,8 @@ ja:
     cancel_upgrade: キャンセル
     new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
+    copy: コピー
+    copy_code: コードをコピー
   common:
     processing: 送信中
     date: 日付
@@ -60,6 +62,7 @@ ja:
     select_a_shop: 店鋪選択
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
+    select_a_booking_option: 予約価格を選択
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
     no_permission: 権限がありません
@@ -67,6 +70,7 @@ ja:
     required_label: 必須項目
     minute: 分
     total: 合計
+    copied: コピーした
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -683,6 +687,57 @@ ja:
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
+    booking_page:
+      title: 予約ページの設定
+      info_html: 予約ページを設定します。<br>お客様はここで設定したページからオンライン予約します。
+      booking_page_label: 予約ページ
+      name: ページ名
+      start_at: 受付開始
+      end_at: 受付終了
+      new_button: 新規作成
+      share_modal_title: 貼り付けコードをコピー
+      share_button_label: 予約ボタン
+      share_button_text: 予約する
+      form:
+        name_header: ページヘッダ
+        page_name: ページ名
+        page_name_hint: あなたが予約ページを管理する際に使用する名前です。
+        title: ページタイトル
+        title_hint: 予約ページのタイトルとして表示されます。
+        greeting: 挨拶文
+        greeting_placeholder: 予約ページ上部に表示されるます。
+        booking_option_header: 予約価格
+        booking_option_hint: あなたのお客様はこの価格で予約をします。
+        booking_option_required_time: 所要時間
+        shop_header: 予約可能な店舗
+        booking_dates_header: 予約カレンダー
+        booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        booking_dates_calendar_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
+        booking_dates_working_date: 営業日
+        booking_dates_available_booking_date: 予約可能日
+        special_date_label: 指定日のみ受付ける
+        interval_header: 予約の開始時間
+        interval_explanation: 現在の設定内容と空席状況から選択肢を表示しています。
+        interval_start_time: 開始時間
+        interval_option: 選択肢の間隔
+        per_minute: 分毎
+        interval_example_html: 例えば、予約可能時間が9:00〜12:00で、選択肢の間隔を<strong>「30分毎」</strong>と設定した場合、予約開始時間の選択肢が「9:00、9:30、10:00、10:30...」となります
+        open_details: 詳細
+        close_details: 閉じる
+        sale_period: 予約受付期間
+        sale_now: 今すぐ
+        sale_on: 指定日
+        sale_forever: 終了しない
+        sale_start: 販売開始
+        sale_end: 販売終了
+        overlap_booking: 重複予約
+        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する
+        allow_overlap_booking_label: 予約可能なスタッフ数以上に予約を受け付ける
+        note_label: 説明・注意事項
+        note_hint: この価格で予約する際の注意事項などをお客様に表示します。
+        form_errors:
+          start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
+          end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
   constants:
     rank:
       regular: "一般"
@@ -1010,6 +1065,11 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
+        booking/validate_special_dates:
+          attributes:
+            special_dates:
+              on_unworking_dates: "^%{invalid_dates} 予約可能な日時は営業時間内である必要があります"
+              not_enough_time_dates: "^上記の設定内容に基づくと、%{not_enough_time_dates}分以上の時間が必要です"
         subscriptions/charge:
           attributes:
             plan:
@@ -1021,6 +1081,7 @@ ja:
               shop_closed: "^休業日"
             business_time_range:
               interval_too_short: "^インターバル不足"
+              invalid_time_range: "^予約時間が正しくありません。"
             staff_ids:
               unworking_staff: "^休暇中"
               ask_for_leave: "^休暇中"

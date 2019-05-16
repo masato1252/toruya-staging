@@ -83,21 +83,21 @@ class BookingOptionSettings extends React.Component {
              />
              <a
                href="#"
-               className="btn btn-symbol btn-orange"
-               onClick={() => {fields.remove(index) }}
+               className="btn btn-symbol btn-orange after-field-btn"
+               onClick={(event) => {
+                   event.preventDefault();
+                   fields.remove(index)
+                 }
+               }
                >
                <i className="fa fa-minus" aria-hidden="true" ></i>
              </a>
-             <Field
-               name={`${field}minutes`}
-               value={field.minutes}
-               component={({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
-             />
-             <Field
-               name={`${field}interval`}
-               value={field.interval}
-               component={({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
-             />
+             <Field name={`${field}minutes`} value={field.minutes}>
+               {({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
+             </Field>
+             <Field name={`${field}interval`} value={field.interval}>
+               {({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
+             </Field>
            </div>
           )
          })}
@@ -277,18 +277,14 @@ class BookingOptionSettings extends React.Component {
       <div>
         <h3>{note_label}</h3>
         <div className="formRow">
-          <dl>
-            <dd>
-              <Field
-                name="booking_option[memo]"
-                label={note_label}
-                component="textarea"
-                placeholder={note_hint}
-                cols={100}
-                rows={10}
-              />
-            </dd>
-          </dl>
+          <Field
+            name="booking_option[memo]"
+            component={InputRow}
+            componentType="textarea"
+            placeholder={note_hint}
+            cols={100}
+            rows={10}
+          />
         </div>
       </div>
     );
@@ -348,7 +344,7 @@ class BookingOptionSettings extends React.Component {
         render={({ handleSubmit, submitting }) => (
           <form
             action={this.props.path.save}
-            className="booking_option_settings"
+            className="booking-option-settings settings-form"
             id="booking_option_settings_form"
             onSubmit={handleSubmit}
             acceptCharset="UTF-8"
@@ -366,15 +362,15 @@ class BookingOptionSettings extends React.Component {
 
             <ul id="footerav">
               <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel_btn}</a>
+                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
               </li>
               <li>
                 <input
                   type="submit"
                   name="commit"
-                  value="保存"
+                  value={this.props.i18n.save}
                   className="BTNyellow"
-                  data-disable-with="保存"
+                  data-disable-with={this.props.i18n.save}
                   disabled={submitting}
                 />
               </li>

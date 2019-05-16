@@ -1,8 +1,10 @@
-json.holiday_days @working_dates[:holidays].map(&:day)
-json.full_time @working_dates[:full_time]
-json.shop_working_wdays @working_dates[:shop_working_wdays]
-json.shop_working_on_holiday @working_dates[:shop_working_on_holiday]
-json.staff_working_wdays @working_dates[:staff_working_wdays]
-json.working_days @working_dates[:working_dates].map(&:day)
-json.off_days @working_dates[:off_dates].map(&:day)
-json.reservation_days @reservation_dates.map(&:day)
+if @schedules
+  json.working_dates @schedules[:working_dates]
+  json.holiday_dates @schedules[:holiday_dates]
+else
+  json.working_dates []
+  json.holiday_dates []
+end
+
+json.reservation_dates @reservation_dates ? @reservation_dates.map(&:to_s) : []
+json.available_booking_dates @available_booking_dates || []

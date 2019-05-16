@@ -72,6 +72,8 @@ class Ability
     can :manage, Profile
     can :manage_staff_temporary_working_day_permission, ShopStaff
     can :manage_staff_holiday_permission, ShopStaff
+    can :manage, BookingOption
+    can :manage, BookingPage
 
     case super_user.member_level
     when "premium"

@@ -42,3 +42,14 @@
     opacity: 0.7;
   }
 }
+
+.btn-gray {
+  background: $palette-color3;
+  border-color: $palette-color3-1;
+
+  &:hover {
+    background: $gray5;
+    border-color: $gray7;
+    opacity: 0.7;
+  }
+}

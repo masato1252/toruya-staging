@@ -4,31 +4,20 @@ import React from "react";
 import _ from "underscore";
 
 class Week extends React.Component {
-  isContainedBy = (container, date) => {
-    return (_.contains(container, date.date()) && date.month() === this.props.month.month())
+  isWorkingDate = (date) => {
+    return _.contains(this.props.workingDates, date.format("YYYY-MM-DD"));
   };
 
-  isReservedDay = (date) => {
-    return this.isContainedBy(this.props.reservationDays, date);
+  isHoliday = (date) => {
+    return _.contains(this.props.holidayDates, date.format("YYYY-MM-DD"));
   };
 
-  isHoliday = (date, wday) => {
-    var month = this.props.month;
-    var isWeekend = (wday === 0 && date.month() === month.month());
-    return isWeekend || (this.isContainedBy(this.props.holidayDays, date));
+  isReservedDate = (date) => {
+    return _.contains(this.props.reservationDates, date.format("YYYY-MM-DD"));
   };
 
-  isWorkingDay = (date, wday) => {
-    if (this.isHoliday(date) && !this.props.shopWorkingOnHoliday) { return; }
-    if (this.isContainedBy(this.props.offDays, date)) { return; }
-    if (date.month() !== this.props.month.month()) { return; }
-
-    if (this.props.fullTime) {
-      return _.contains(this.props.shopWorkingWdays, wday);
-    }
-    else {
-      return _.contains(this.props.staffWorkingWdays, wday) || this.isContainedBy(this.props.workingDays, date);
-    }
+  isAvailableBookingDate = (date) => {
+    return _.contains(this.props.availableBookingDates, date.format("YYYY-MM-DD"));
   };
 
   render() {
@@ -42,23 +31,26 @@ class Week extends React.Component {
         number: date.date(),
         isCurrentMonth: date.month() === month.month(),
         isToday: date.isSame(new Date(), "day"),
-        isHoliday: this.isHoliday(date, i),
-        isWorkingDay: this.isWorkingDay(date, i),
-        isReservedDay: this.isReservedDay(date),
+        isHoliday: this.isHoliday(date),
+        isWorkingDate: this.isWorkingDate(date),
+        isReservedDate: this.isReservedDate(date),
+        isAvailableBookingDate: this.isAvailableBookingDate(date),
         date: date
       };
 
       days.push(
         <span key={day.date.toString()}
-        className={
-          "day" + (day.isToday ? " today" : "") +
-            (day.isCurrentMonth ? "" : " different-month") +
-            (day.date.isSame(this.props.selectedDate) ? " selected" : "") +
-            (day.isHoliday ? " holiday" : "") +
-            (day.isWorkingDay ? " workDay" : "") +
-            (day.isReservedDay ? " reserved" : "")
-        }
-              onClick={this.props.select.bind(null, day)}>{day.number}
+          className={
+            "day" + (day.isToday ? " today" : "") +
+              (day.isCurrentMonth ? "" : " different-month") +
+              (day.date.isSame(this.props.selectedDate) ? " selected" : "") +
+              (day.isHoliday ? " holiday" : "") +
+              (day.isWorkingDate ? " workDay" : "") +
+              (day.isReservedDate ? " reserved" : "") +
+              (day.isAvailableBookingDate ? " booking-available" : "")
+          }
+          onClick={this.props.select.bind(null, day)}>
+          {day.number}
         </span>
       );
       date = date.clone();

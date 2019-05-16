@@ -39,6 +39,9 @@ class PersonalCalendar < ActiveInteraction::Base
 
     reservation_dates += Users::ReservationDates.run!(user: user, all_shop_ids: all_shop_ids, date_range: date_range)
 
-    return [working_dates, reservation_dates.uniq]
+    return [
+      compose(CalendarSchedules::Create, rules: working_dates, date_range: date_range),
+      reservation_dates.uniq
+    ]
   end
 end
