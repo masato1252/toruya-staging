@@ -71,6 +71,8 @@ const Condition = ({ when, is, children }) => (
         if (Array.isArray(is)) {
           return _.isEqual(_.sortBy(value), _.sortBy(is)) ? children : null
         }
+        else if (typeof value === "boolean")
+          return String(value) === is ? children : null
         else {
           return value === is ? children : null
         }
