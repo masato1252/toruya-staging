@@ -14,6 +14,7 @@ class Calendar extends React.Component {
     super(props);
     moment.locale('ja');
 
+    this.throttleFetchSchedule = _.throttle(this._fetchSchedule, 200);
     this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
     this.state = {
@@ -23,25 +24,25 @@ class Calendar extends React.Component {
   };
 
   componentDidMount = () => {
-    this._fetchSchedule();
+    this.throttleFetchSchedule();
   };
 
   componentDidUpdate = (prevProps) => {
     if (!_.isEqual(this.props.scheduleParams, prevProps.scheduleParams)) {
-      this._fetchSchedule();
+      this.throttleFetchSchedule();
     }
   }
 
   previous = () => {
     var month = this.state.month;
     month.add(-1, "M");
-    this.setState({ month: month }, this._fetchSchedule);
+    this.setState({ month: month }, this.throttleFetchSchedule);
   };
 
   next = () => {
     var month = this.state.month;
     month.add(1, "M");
-    this.setState({ month: month }, this._fetchSchedule);
+    this.setState({ month: month }, this.throttleFetchSchedule);
   };
 
   _fetchSchedule = () => {
@@ -90,7 +91,7 @@ class Calendar extends React.Component {
 
   handleCalendarSelect = (event) => {
     event.preventDefault();
-    this.setState({month: moment(event.target.value)}, this._fetchSchedule);
+    this.setState({month: moment(event.target.value)}, this.throttleFetchSchedule);
   };
 
   renderYearSelector = () => {
