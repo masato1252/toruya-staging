@@ -5,6 +5,7 @@ import { Form, Field, FormSpy } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
+import { OnChange } from 'react-final-form-listeners'
 import arrayMutators from 'final-form-arrays'
 import moment from "moment-timezone";
 import _ from "lodash";
@@ -213,6 +214,13 @@ class BookingPageSettings extends React.Component {
                 <li>
                   <label>
                     <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
+                    <OnChange name="booking_page[had_special_date]">
+                      {(value, previous) => {
+                        if (value) {
+                          this.specialDateChangedCallback(moment.tz(this.props.timezone).format("YYYY-MM-DD"));
+                        }
+                      }}
+                    </OnChange>
                     {special_date_label}
                   </label>
                 </li>
@@ -225,7 +233,7 @@ class BookingPageSettings extends React.Component {
                       collection_name="booking_page[special_dates]"
                       component={MultipleDatetimeInput}
                       timezone={this.props.timezone}
-                      validate={this.special_dates_available}
+                      dateChangedCallback={this.specialDateChangedCallback.bind(this)}
                     />
                   )
                 }
@@ -401,6 +409,24 @@ class BookingPageSettings extends React.Component {
     );
   }
 
+  specialDateChangedCallback = async (date) => {
+    const { booking_page } = this.bookingForm.state.state.values;
+
+    if ( booking_page && booking_page.shop_id && booking_page.had_special_date && date) {
+      const response = await axios({
+        method: "GET",
+        url: this.props.path.business_time,
+        params: {
+          shop_id: booking_page.shop_id,
+          date: date
+        },
+        responseType: "json"
+      })
+
+      this.setFormValue("start_at_time_part", response.data.start_at_time_part);
+      this.setFormValue("end_at_time_part", response.data.end_at_time_part);
+    }
+  }
 
   isSpecialDatesLegal = (special_dates) => {
     return (_.every(special_dates, (special_date) => special_date.start_at_date_part == special_date.end_at_date_part));
@@ -418,8 +444,8 @@ class BookingPageSettings extends React.Component {
         method: "GET",
         url: this.props.path.validate_special_dates,
         params: {
-          shop_id: values.booking_page.shop_id,
-          special_dates: values.booking_page.special_dates,
+          shop_id: shop_id,
+          special_dates: special_dates,
           booking_option_ids: options.map((option) => option.id)
         },
         responseType: "json"
@@ -494,51 +520,60 @@ class BookingPageSettings extends React.Component {
   render() {
     return (
       <Form
+        ref={(c) => this.bookingForm = c }
         initialValues={{ booking_page: { ...transformValues(this.props.booking_page) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError, this.calculator]}
         mutators={{
-          ...arrayMutators
+          ...arrayMutators,
+          setValue: ([field, value], state, { changeValue }) => {
+            changeValue(state, field, () => value)
+          }
         }}
-        render={({ handleSubmit, submitting, values }) => (
-          <form
-            action={this.props.path.save}
-            className="booking-page-settings settings-form"
-            id="booking_page_settings_form"
-            onSubmit={handleSubmit}
-            acceptCharset="UTF-8"
-            method="post">
-            <input name="utf8" type="hidden" value="✓" />
-            {this.props.booking_page.id ? <input type="hidden" name="_method" value="PUT" /> : null}
-            <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
+        render={({ handleSubmit, submitting, values, form }) => {
+          if (!this.setFormValue) {
+            this.setFormValue = form.mutators.setValue;
+          }
+          return (
+            <form
+              action={this.props.path.save}
+              className="booking-page-settings settings-form"
+              id="booking_page_settings_form"
+              onSubmit={handleSubmit}
+              acceptCharset="UTF-8"
+              method="post">
+              <input name="utf8" type="hidden" value="✓" />
+              {this.props.booking_page.id ? <input type="hidden" name="_method" value="PUT" /> : null}
+              <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
 
-            {this.renderNameFields()}
-            {this.renderBookingOptionFields()}
-            {this.renderShopFields()}
-            {this.renderBookingDateFields(values)}
-            {this.renderBookingIntervalFields()}
-            {this.renderBookingPeriodFields()}
-            {this.renderBookingOverlapRestrictionField()}
-            {this.renderBookingNoteField()}
+              {this.renderNameFields()}
+              {this.renderBookingOptionFields()}
+              {this.renderShopFields()}
+              {this.renderBookingDateFields(values)}
+              {this.renderBookingIntervalFields()}
+              {this.renderBookingPeriodFields()}
+              {this.renderBookingOverlapRestrictionField()}
+              {this.renderBookingNoteField()}
 
-            <ul id="footerav">
-              <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
-              </li>
-              <li>
-                <input
-                  type="submit"
-                  name="commit"
-                  value={this.props.i18n.save}
-                  className="BTNyellow"
-                  data-disable-with={this.props.i18n.save}
-                  disabled={submitting}
-                />
-              </li>
-            </ul>
-          </form>
-        )}
+              <ul id="footerav">
+                <li>
+                  <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
+                </li>
+                <li>
+                  <input
+                    type="submit"
+                    name="commit"
+                    value={this.props.i18n.save}
+                    className="BTNyellow"
+                    data-disable-with={this.props.i18n.save}
+                    disabled={submitting}
+                  />
+                </li>
+              </ul>
+            </form>
+          )
+        }}
       />
     )
   }

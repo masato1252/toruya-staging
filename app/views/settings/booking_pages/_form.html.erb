@@ -56,7 +56,8 @@
     path: {
       cancel: settings_user_booking_pages_path(super_user),
       save: @booking_page.new_record? ? settings_user_booking_pages_path(super_user) : settings_user_booking_page_path(super_user, @booking_page),
-      validate_special_dates: validate_special_dates_settings_user_booking_pages_path(super_user)
+      validate_special_dates: validate_special_dates_settings_user_booking_pages_path(super_user),
+      business_time: business_time_settings_user_booking_pages_path(super_user)
     },
     i18n: {
       errors: t("errors.messages").slice(:required),
