@@ -192,6 +192,7 @@ class BookingPageSettings extends React.Component {
                         booking_option_ids: values.booking_page.options.map((option) => option.id),
                         special_dates: values.booking_page.special_dates,
                         overlap_restriction: values.booking_page.overlap_restriction,
+                        interval: values.booking_page.interval,
                         had_special_date: values.booking_page.had_special_date
                       }}
                     />
