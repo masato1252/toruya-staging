@@ -23,7 +23,7 @@ class CalendarsController < DashboardController
       shop: shop,
       date_range: month_dates,
       booking_option_ids: params[:booking_option_ids],
-      special_dates: params[:special_dates]
+      special_dates: ActiveModel::Type::Boolean.new.cast(params[:had_special_date]) ? params[:special_dates] : []
     )
 
     if outcome.valid?

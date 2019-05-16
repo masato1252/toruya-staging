@@ -20,7 +20,7 @@ module Booking
       available_booking_dates = []
 
       available_booking_dates =
-        if special_dates
+        if special_dates.present?
           special_dates.map do |special_date|
             # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
             JSON.parse(special_date)["start_at_date_part"]

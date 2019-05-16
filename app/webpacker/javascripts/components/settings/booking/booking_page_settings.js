@@ -23,7 +23,7 @@ class BookingPageSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    this.throttleVerifySpecialDates = _.throttle(this.verifySpecialDates, 100);
+    this.throttleVerifySpecialDates = _.throttle(this.verifySpecialDates, 200);
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator({
       field: /booking_page\[booking_options\]/, // when a field matching this pattern changes...
@@ -178,23 +178,31 @@ class BookingPageSettings extends React.Component {
           <dl>
             <dd className="booking-calendar">
               {booking_dates_calendar_hint}
-              {booking_dates_working_date}
-              {booking_dates_available_booking_date}
               <FormSpy subscription={{ values: true }}>
                 {({ values }) => {
+                  if (values.booking_page.had_special_date && !this.isSpecialDatesLegal(values.booking_page.special_dates)) {
+                    return null;
+                  }
+
                   return (
                     <Calendar
                       {...this.props.calendar}
                       scheduleParams={{
-                        shop_id: values.booking_page["shop_id"],
-                        booking_option_ids: values.booking_page["options"].map((option) => option.id),
-                        special_dates: values.booking_page["special_dates"],
-                        overlap_restriction: values.booking_page["overlap_restriction"]
+                        shop_id: values.booking_page.shop_id,
+                        booking_option_ids: values.booking_page.options.map((option) => option.id),
+                        special_dates: values.booking_page.special_dates,
+                        overlap_restriction: values.booking_page.overlap_restriction,
+                        had_special_date: values.booking_page.had_special_date
                       }}
                     />
                   );
                 }}
               </FormSpy>
+              <div className="calendar">
+                <span className="day workDay"></span>
+                {booking_dates_working_date}
+                {booking_dates_available_booking_date}
+              </div>
             </dd>
           </dl>
           <dl>
@@ -391,10 +399,19 @@ class BookingPageSettings extends React.Component {
     );
   }
 
-  verifySpecialDates = async (values) => {
-    const { shop_id, special_dates, options } = values.booking_page;
 
-    if (shop_id && special_dates && special_dates.length && options && options.length) {
+  isSpecialDatesLegal = (special_dates) => {
+    return (_.every(special_dates, (special_date) => special_date.start_at_date_part == special_date.end_at_date_part));
+  }
+
+  verifySpecialDates = async (values) => {
+    const { shop_id, had_special_date, special_dates, options } = values.booking_page;
+
+    if (shop_id && had_special_date && special_dates && special_dates.length && options && options.length) {
+      if (!this.isSpecialDatesLegal(special_dates)) {
+        return;
+      }
+
       const response = await axios({
         method: "GET",
         url: this.props.path.validate_special_dates,
@@ -437,7 +454,7 @@ class BookingPageSettings extends React.Component {
       fields_errors.booking_page.had_special_date = errors.required;
     }
 
-    if (special_dates.length && start_at_date_part && start_at_time_part) {
+    if (special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
       const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
       const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
       const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
@@ -450,7 +467,7 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    if (special_dates.length && end_at_date_part && end_at_time_part) {
+    if (special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
       const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
       const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
       const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
