@@ -50,13 +50,14 @@ const defaultResultFields = (fields, collection_name, timezone) => {
   );
 };
 
-const DatetimeField = ({collection_name, fields, results, timezone}) => (
+const DatetimeField = ({collection_name, fields, results, timezone, dateChangedCallback}) => (
   <div className="select-multiple-inputs">
     {results(fields, collection_name, timezone)}
     <Field
       name="start_at_date_part"
       component={DateFieldAdapter}
       date={moment.tz(timezone).format("YYYY-MM-DD")}
+      dateChangedCallback={dateChangedCallback}
       hiddenWeekDate={true}
     />
     <Field
@@ -118,11 +119,17 @@ const DatetimeField = ({collection_name, fields, results, timezone}) => (
   </div>
 )
 
-const MultipleDatetimeInput = ({collection_name, resultFields, timezone}) => {
+const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateChangedCallback}) => {
   const results = resultFields || defaultResultFields
 
   return (
-    <FieldArray name={collection_name} component={DatetimeField} results={results} timezone={ timezone || "Asia/Tokyo" }/>
+    <FieldArray
+      name={collection_name}
+      component={DatetimeField}
+      results={results}
+      timezone={ timezone || "Asia/Tokyo" }
+      dateChangedCallback={dateChangedCallback}
+    />
   );
 }
 

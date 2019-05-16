@@ -29,7 +29,12 @@ class DateFieldAdapter extends React.Component {
             ref={(c) => this.dayPickerInput = c }
             {...this.props.input}
             onDayChange={(date) => {
-              this.props.input.onChange(moment.tz(date, this.props.timezone).format("YYYY-MM-DD"))
+              const parsedDate = moment.tz(date, this.props.timezone).format("YYYY-MM-DD")
+              this.props.input.onChange(parsedDate);
+
+              if (this.props.dateChangedCallback) {
+                this.props.dateChangedCallback(parsedDate);
+              }
             }}
             parseDate={parseDate}
             format={[ "YYYY/M/D", "YYYY-M-D", "YYYY-MM-DD" ]}

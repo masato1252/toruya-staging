@@ -65,6 +65,22 @@ class Settings::BookingPagesController < SettingsController
     render json: { message: outcome.errors.full_messages.join(", ") }
   end
 
+  def business_time
+    time_outcome = Reservable::Time.run(shop: super_user.shops.find(params[:shop_id]), date: params[:date])
+
+    if time_outcome.valid?
+      render json: {
+        start_at_time_part: I18n.l(time_outcome.result.first, format: :hour_minute),
+        end_at_time_part: I18n.l(time_outcome.result.last, format: :hour_minute)
+      }
+    else
+      render json: {
+        start_at_time_part: nil,
+        end_at_time_part: nil
+      }
+    end
+  end
+
   private
 
   def authorize_booking_page
