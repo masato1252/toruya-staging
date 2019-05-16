@@ -15,7 +15,7 @@ module Booking
     boolean :overlap_restriction, default: true
 
     def execute
-      rules = compose(Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
+      rules = compose(::Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
       schedules = compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
       available_booking_dates = []
 
