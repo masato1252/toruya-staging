@@ -423,7 +423,9 @@ class BookingPageSettings extends React.Component {
         responseType: "json"
       })
 
-      return { booking_page: {  had_special_date: response.data.message }};
+      if (response.data.message.length) {
+        return { booking_page: {  had_special_date: response.data.message }};
+      }
     }
   }
 
