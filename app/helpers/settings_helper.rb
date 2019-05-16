@@ -7,6 +7,10 @@ module SettingsHelper
     content_tag(:i, nil, class: "fa fa-check-circle #{completed && "done"}")
   end
 
+  def booking_url(page)
+    @booking_url ||= Rails.configuration.x.env.staging? ? booking_page_url(page) : booking_page_url(page, subdomain: :booking)
+  end
+
   def booking_page_share_button_link(page)
     style = <<-STYLE.strip_heredoc.gsub!("\n", "")
       display: inline-block;
@@ -25,6 +29,6 @@ module SettingsHelper
       padding: 0 10px;
     STYLE
 
-    link_to(t("settings.booking_page.share_button_text"), booking_page_url(@booking_page, subdomain: :booking), style: style)
+    link_to(t("settings.booking_page.share_button_text"), booking_url(page), style: style)
   end
 end

@@ -12,10 +12,15 @@
           <label for="page-url">
             URL
           </label>
-          <%= button_tag t("action.copy_code"), class: "btn btn-gray", data: { controller: "clipboard", clipboard_text: booking_page_url(@booking_page, subdomain: :booking), clipboard_popup_text: t("common.copied") } %>
+          <%= button_tag t("action.copy_code"), class: "btn btn-gray",
+            data: {
+              controller: "clipboard",
+              clipboard_text: booking_url(@booking_page),
+              clipboard_popup_text: t("common.copied")
+            } %>
         </div>
         <div>
-          <%= text_field_tag nil, booking_page_url(@booking_page, subdomain: :booking), data: { controller: "clipboard", clipboard_text: booking_page_url(@booking_page, subdomain: :booking), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
+          <%= text_field_tag nil, booking_url(@booking_page), data: { controller: "clipboard", clipboard_text: booking_url(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
         </div>
       </div>
       <div class="page-booking-button-row">
@@ -26,7 +31,7 @@
             </label>
           </div>
           <div>
-            <%= button_tag t("action.copy_code"), class: "btn btn-gray", data: { controller: "clipboard", clipboard_text: booking_page_url(@booking_page, subdomain: :booking), clipboard_popup_text: t("common.copied") } %>
+            <%= button_tag t("action.copy_code"), class: "btn btn-gray", data: { controller: "clipboard", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
           </div>
         </div>
         <div>
