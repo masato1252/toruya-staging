@@ -199,9 +199,10 @@ class BookingPageSettings extends React.Component {
                 }}
               </FormSpy>
               <div className="calendar">
-                <span className="day workDay"></span>
-                {booking_dates_working_date}
+                <div className="demo-day day booking-available"></div>
                 {booking_dates_available_booking_date}
+                <div className="demo-day day workDay"></div>
+                {booking_dates_working_date}
               </div>
             </dd>
           </dl>
