@@ -76,6 +76,25 @@ const DatetimeField = ({collection_name, fields, results, timezone}) => (
       component="input"
     />
     <FormSpy subscription={{ values: true }}>
+      {({ values }) => {
+        // XXX: Because we only show the end time field in the view, so when start date changed,
+        // the end date should always the same as star date
+
+        values.booking_page.special_dates.forEach((special_date, i) => {
+          if (special_date.start_at_date_part != special_date.end_at_date_part) {
+            fields.update(i, {
+              start_at_date_part: special_date.start_at_date_part,
+              start_at_time_part: special_date.start_at_time_part,
+              end_at_date_part: special_date.start_at_date_part,
+              end_at_time_part: special_date.end_at_time_part
+            })
+          }
+        })
+
+        return null;
+      }}
+    </FormSpy>
+    <FormSpy subscription={{ values: true }}>
       {({ values }) => (
         <a
           href="#"
