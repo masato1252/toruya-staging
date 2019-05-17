@@ -81,6 +81,22 @@ class Settings::BookingPagesController < SettingsController
     end
   end
 
+  def booking_times
+    outcome = Booking::AvailableBookingTimes.run(
+      shop: super_user.shops.find(params[:shop_id]),
+      special_dates: params[:special_dates],
+      booking_option_ids: params[:booking_option_ids],
+      interval: params[:interval],
+      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction])
+    )
+
+    if outcome.valid?
+      render json: { booking_times: outcome.result.flatten.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4) }
+    else
+      render json: { booking_times: [] }
+    end
+  end
+
   private
 
   def authorize_booking_page
