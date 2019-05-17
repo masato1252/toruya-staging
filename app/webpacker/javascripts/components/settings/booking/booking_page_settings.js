@@ -31,6 +31,12 @@ class BookingPageSettings extends React.Component {
       updates: {
         "booking_page[interval]": (menuValues, allValues) => (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
       }
+    },
+    {
+      field: /start_at_date_part|booking_page\[had_special_date\]|booking_page\[shop_id\]/, // when a field matching this pattern changes...
+      updates: async (value, name, allValues) => {
+        return await this.prefillBusinessTime(allValues);
+      }
     })
   };
 
@@ -214,13 +220,6 @@ class BookingPageSettings extends React.Component {
                 <li>
                   <label>
                     <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
-                    <OnChange name="booking_page[had_special_date]">
-                      {(value, previous) => {
-                        if (value) {
-                          this.specialDateChangedCallback(moment.tz(this.props.timezone).format("YYYY-MM-DD"));
-                        }
-                      }}
-                    </OnChange>
                     {special_date_label}
                   </label>
                 </li>
@@ -233,7 +232,6 @@ class BookingPageSettings extends React.Component {
                       collection_name="booking_page[special_dates]"
                       component={MultipleDatetimeInput}
                       timezone={this.props.timezone}
-                      dateChangedCallback={this.specialDateChangedCallback.bind(this)}
                     />
                   )
                 }
@@ -409,22 +407,24 @@ class BookingPageSettings extends React.Component {
     );
   }
 
-  specialDateChangedCallback = async (date) => {
-    const { booking_page } = this.bookingForm.state.state.values;
+  prefillBusinessTime = async (allValues) => {
+    const { shop_id, had_special_date, start_at_date_part } = allValues.booking_page;
 
-    if ( booking_page && booking_page.shop_id && booking_page.had_special_date && date) {
+    if (shop_id && had_special_date && start_at_date_part) {
       const response = await axios({
         method: "GET",
         url: this.props.path.business_time,
         params: {
-          shop_id: booking_page.shop_id,
-          date: date
+          shop_id: shop_id,
+          date: start_at_date_part
         },
         responseType: "json"
       })
 
-      this.setFormValue("start_at_time_part", response.data.start_at_time_part);
-      this.setFormValue("end_at_time_part", response.data.end_at_time_part);
+      return {
+        start_at_time_part: response.data.start_at_time_part,
+        end_at_time_part: response.data.end_at_time_part
+      }
     }
   }
 
@@ -520,21 +520,14 @@ class BookingPageSettings extends React.Component {
   render() {
     return (
       <Form
-        ref={(c) => this.bookingForm = c }
         initialValues={{ booking_page: { ...transformValues(this.props.booking_page) }}}
         onSubmit={this.onSubmit}
         validate={this.validate}
         decorators={[this.focusOnError, this.calculator]}
         mutators={{
           ...arrayMutators,
-          setValue: ([field, value], state, { changeValue }) => {
-            changeValue(state, field, () => value)
-          }
         }}
-        render={({ handleSubmit, submitting, values, form }) => {
-          if (!this.setFormValue) {
-            this.setFormValue = form.mutators.setValue;
-          }
+        render={({ handleSubmit, submitting, values }) => {
           return (
             <form
               action={this.props.path.save}
