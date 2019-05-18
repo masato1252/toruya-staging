@@ -26,24 +26,19 @@ class BookingPageSettings extends React.Component {
 
     this.throttleVerifySpecialDates = _.throttle(this.verifySpecialDates, 200);
     this.focusOnError = createFocusDecorator();
-    this.calculator = createChangesDecorator({
-      field: /booking_page\[booking_options\]/, // when a field matching this pattern changes...
-      updates: {
-        "booking_page[interval]": (menuValues, allValues) => (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+    this.calculator = createChangesDecorator(
+      {
+        field: /special_dates_array_start_at_date_part_input|had_special_date|shop_id/, // when a field matching this pattern changes...
+        updates: async (value, name, allValues) => {
+          return await this.prefillBusinessTime(allValues);
+        }
+      },
+      {
+        field: /had_special_date|shop_id|interval|overlap_restriction|special_dates|options/, // when a field matching this pattern changes...
+        updates: async (value, name, allValues) => {
+          return await this.calculateBookingTimes(allValues);
+        }
       }
-    },
-    {
-      field: /start_at_date_part|booking_page\[had_special_date\]|booking_page\[shop_id\]/, // when a field matching this pattern changes...
-      updates: async (value, name, allValues) => {
-        return await this.prefillBusinessTime(allValues);
-      }
-    },
-    {
-      field: /had_special_date|shop_id|interval|overlap_restriction|special_dates/, // when a field matching this pattern changes...
-      updates: async (value, name, allValues) => {
-        return await this.calculateBookingTimes(allValues);
-      }
-    }
     )
   };
 
@@ -450,7 +445,7 @@ class BookingPageSettings extends React.Component {
   }
 
   calculateBookingTimes = async (allValues) => {
-    const { shop_id, had_special_date, special_dates, start_at_date_part, options, overlap_restriction, interval } = allValues.booking_page;
+    const { shop_id, had_special_date, special_dates, options, overlap_restriction, interval } = allValues.booking_page;
 
     if (this.calculateBookingTimesCall) {
       this.calculateBookingTimesCall.cancel();
@@ -491,14 +486,15 @@ class BookingPageSettings extends React.Component {
   }
 
   prefillBusinessTime = async (allValues) => {
-    const { shop_id, had_special_date, start_at_date_part } = allValues.booking_page;
+    const { shop_id, had_special_date } = allValues.booking_page;
+    const { special_dates_array_start_at_date_part_input } = allValues;
 
     if (this.prefillBusinessTimeCall) {
       this.prefillBusinessTimeCall.cancel();
     }
     this.prefillBusinessTimeCall = axios.CancelToken.source();
 
-    if (!(shop_id && had_special_date && start_at_date_part)) {
+    if (!(shop_id && had_special_date && special_dates_array_start_at_date_part_input )) {
       return {}
     }
 
@@ -507,15 +503,15 @@ class BookingPageSettings extends React.Component {
       url: this.props.path.business_time,
       params: {
         shop_id: shop_id,
-        date: start_at_date_part
+        date: special_dates_array_start_at_date_part_input
       },
       responseType: "json",
       cancelToken: this.prefillBusinessTimeCall.token
     })
 
     return {
-      start_at_time_part: response.data.start_at_time_part,
-      end_at_time_part: response.data.end_at_time_part
+      special_dates_array_start_at_time_part_input: response.data.start_at_time_part,
+      special_dates_array_end_at_time_part_input: response.data.end_at_time_part
     }
   }
 
