@@ -26,14 +26,9 @@ class BookingPageSettings extends React.Component {
 
     this.throttleVerifySpecialDates = _.throttle(this.verifySpecialDates, 200);
     this.focusOnError = createFocusDecorator();
-    this.calculator = createChangesDecorator({
-      field: /booking_page\[booking_options\]/, // when a field matching this pattern changes...
-      updates: {
-        "booking_page[interval]": (menuValues, allValues) => (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
-      }
-    },
+    this.calculator = createChangesDecorator(
     {
-      field: /start_at_date_part|booking_page\[had_special_date\]|booking_page\[shop_id\]/, // when a field matching this pattern changes...
+      field: /start_at_date_part|had_special_date|shop_id/, // when a field matching this pattern changes...
       updates: async (value, name, allValues) => {
         return await this.prefillBusinessTime(allValues);
       }
