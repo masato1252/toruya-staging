@@ -39,7 +39,7 @@ class BookingPageSettings extends React.Component {
       }
     },
     {
-      field: /had_special_date|shop_id|interval|overlap_restriction|special_dates/, // when a field matching this pattern changes...
+      field: /had_special_date|shop_id|interval|overlap_restriction|special_dates|options/, // when a field matching this pattern changes...
       updates: async (value, name, allValues) => {
         return await this.calculateBookingTimes(allValues);
       }
