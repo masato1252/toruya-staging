@@ -418,17 +418,15 @@ class ReservationForm extends React.Component {
 
   _validateReservation = () => {
     var _this = this;
-    var call;
 
-    if (call) {
-      call.cancel();
+    if (this.validateReservationCall) {
+      this.validateReservationCall.cancel();
     }
+    this.validateReservationCall = axios.CancelToken.source();
 
     if (!this.state.start_time_date_part) {
       return;
     }
-
-    call = axios.CancelToken.source();
 
     _this.setState({ processing: true });
 
@@ -445,7 +443,7 @@ class ReservationForm extends React.Component {
         customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(",")
       },
       responseType: "json",
-      cancelToken: call.token
+      cancelToken: this.validateReservationCall.token
     }).then(function(response) {
       var result = response.data;
 

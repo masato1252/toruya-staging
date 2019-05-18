@@ -48,6 +48,11 @@ class Calendar extends React.Component {
   _fetchSchedule = () => {
     var staff_id;
 
+    if (this.fetchScheduleCall) {
+      this.fetchScheduleCall.cancel();
+    }
+    this.fetchScheduleCall = axios.CancelToken.source();
+
     if (location.search.length) {
       staff_id = location.search.replace(/\?staff_id=/, '');
     }
@@ -61,7 +66,8 @@ class Calendar extends React.Component {
         method: "GET",
         url: this.props.schedulePath,
         params: scheduleParams,
-        responseType: "json"
+        responseType: "json",
+        cancelToken: this.fetchScheduleCall.token
       })
         .then((response) => {
           var result = response.data;
