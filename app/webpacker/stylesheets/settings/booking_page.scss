@@ -1,9 +1,10 @@
 .booking-page-settings {
   .booking-option-field {
-    border: 1px solid $gray;
+    border: 1px solid $gray9;
     border-radius: 6px;
     display: inline-block;
     width: 320px;
+    font-size: 90%;
 
     .booking-option-info {
       padding: 10px 10px 6px 10px;
@@ -16,7 +17,7 @@
     }
 
     .booking-option-row {
-      border-top: 1px solid $gray;
+      border-top: 1px solid $gray9;
       padding: 6px 10px 6px 10px;
       position: relative;
       white-space: pre-wrap;
@@ -61,10 +62,26 @@
     display: inline-block;
     width: 150px;
     padding: 12px;
-    margin: 12px 12px 12px 0;
+    margin: 0 12px 12px 0;
     background-color: $gray5;
     border: 1px solid $gray6;
     color: $black;
+  }
+
+  textarea {
+    width: 100%;
+  }
+
+  ul.special-date-label {
+    background: none !important;
+  }
+
+  .booking-times-label {
+    margin-bottom: 12px;
+  }
+
+  .booking-times-examples {
+    max-width: 360px;
   }
 }
 
