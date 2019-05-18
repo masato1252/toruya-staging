@@ -50,29 +50,29 @@ const defaultResultFields = (fields, collection_name, timezone) => {
   );
 };
 
-const DatetimeField = ({collection_name, fields, results, timezone, dateChangedCallback}) => (
+const DatetimeField = ({input_prefix_name, collection_name, fields, results, timezone, dateChangedCallback}) => (
   <div className="select-multiple-inputs">
     {results(fields, collection_name, timezone)}
     <Field
-      name="start_at_date_part"
+      name={`${input_prefix_name}_start_at_date_part_input`}
       component={DateFieldAdapter}
       date={moment.tz(timezone).format("YYYY-MM-DD")}
       dateChangedCallback={dateChangedCallback}
       hiddenWeekDate={true}
     />
     <Field
-      name="start_at_time_part"
+      name={`${input_prefix_name}_start_at_time_part_input`}
       type="time"
       component="input"
     />
     ～
     <Field
-      name="end_at_date_part"
+      name={`${input_prefix_name}_end_at_date_part_input`}
       type="hidden"
       component="input"
     />
     <Field
-      name="end_at_time_part"
+      name={`${input_prefix_name}_end_at_time_part_input`}
       type="time"
       component="input"
     />
@@ -99,17 +99,17 @@ const DatetimeField = ({collection_name, fields, results, timezone, dateChangedC
       {({ values }) => (
         <a
           href="#"
-          className={`btn btn-symbol btn-yellow after-field-btn ${!values.start_at_time_part || !values.end_at_time_part ? "disabled" : ""}`}
+          className={`btn btn-symbol btn-yellow after-field-btn ${!values[`${input_prefix_name}_start_at_time_part_input`] || !values[`${input_prefix_name}_end_at_time_part_input`] ? "disabled" : ""}`}
           onClick={(event) => {
             event.preventDefault();
 
-            const start_at_date_part = values.start_at_date_part || moment.tz(timezone).format("YYYY-MM-DD");
+            const start_at_date_part = values[`${input_prefix_name}_start_at_date_part_input`] || moment.tz(timezone).format("YYYY-MM-DD");
 
             fields.push({
               start_at_date_part: start_at_date_part,
-              start_at_time_part: values.start_at_time_part,
+              start_at_time_part: values[`${input_prefix_name}_start_at_time_part_input`],
               end_at_date_part: start_at_date_part,
-              end_at_time_part: values.end_at_time_part
+              end_at_time_part: values[`${input_prefix_name}_end_at_time_part_input`]
             })
           }}>
           <i className="fa fa-plus" aria-hidden="true" ></i>
@@ -119,11 +119,12 @@ const DatetimeField = ({collection_name, fields, results, timezone, dateChangedC
   </div>
 )
 
-const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateChangedCallback}) => {
+const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateChangedCallback, input}) => {
   const results = resultFields || defaultResultFields
 
   return (
     <FieldArray
+      input_prefix_name={input.name}
       name={collection_name}
       component={DatetimeField}
       results={results}
