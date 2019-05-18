@@ -68,7 +68,17 @@ const Condition = ({ when, is, children }) => (
   <Field name={when} subscription={{ value: true }}>
     {({ input: { value } }) =>
       {
-        if (Array.isArray(is)) {
+        if (is === "present") {
+          const isPresent = Array.isArray(value) ? value.length : !!value;
+
+          return isPresent ? children : null
+        }
+        else if (is === "blank") {
+          const isPresent = Array.isArray(value) ? value.length : !!value;
+
+          return isPresent ? null : children
+        }
+        else if (Array.isArray(is)) {
           return _.isEqual(_.sortBy(value), _.sortBy(is)) ? children : null
         }
         else if (typeof value === "boolean")

@@ -182,8 +182,15 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingDateFields = (values) => {
-    const { required_label, booking_dates_header, special_date_label,
-      booking_dates_calendar_hint, booking_dates_working_date, booking_dates_available_booking_date } = this.props.i18n;
+    const {
+      required_label,
+      booking_dates_header,
+      special_date_label,
+      booking_dates_calendar_hint,
+      booking_dates_working_date,
+      booking_dates_available_booking_date,
+      interval_real_booking_time_warning
+    } = this.props.i18n;
 
     return (
       <div>
@@ -219,6 +226,9 @@ class BookingPageSettings extends React.Component {
                 <div className="demo-day day workDay"></div>
                 {booking_dates_working_date}
               </div>
+              <Condition when="booking_page[booking_times]" is="present">
+                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
+              </Condition>
             </dd>
           </dl>
           <dl>
@@ -252,7 +262,17 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingIntervalFields = () => {
-    const { required_label, interval_header, interval_explanation, interval_start_time, interval_option, per_minute, interval_example_html } = this.props.i18n;
+    const {
+      required_label,
+      interval_header,
+      interval_explanation,
+      interval_real_booking_time_warning,
+      interval_real_booking_time_explanation,
+      interval_start_time,
+      interval_option,
+      per_minute,
+      interval_example_html
+    } = this.props.i18n;
 
     return (
       <div>
@@ -261,7 +281,12 @@ class BookingPageSettings extends React.Component {
           <dl>
             <dd>
               <div className="interval-explanation">
-                {interval_explanation}
+                <Condition when="booking_page[booking_times]" is="present">
+                  {interval_real_booking_time_explanation}
+                </Condition>
+                <Condition when="booking_page[booking_times]" is="blank">
+                  {interval_explanation}
+                </Condition>
               </div>
               <div>
                 <b>{interval_start_time}</b>
@@ -284,6 +309,9 @@ class BookingPageSettings extends React.Component {
                   }
                 }}
               </FormSpy>
+              <Condition when="booking_page[booking_times]" is="present">
+                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
+              </Condition>
             </dd>
           </dl>
           <dl>

@@ -717,7 +717,9 @@ ja:
         booking_dates_available_booking_date: 予約可能日
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
-        interval_explanation: 現在の設定内容と空席状況から選択肢を表示しています。
+        interval_real_booking_time_explanation: 現在の設定内容と空席状況から、始めの４つ選択肢を表示しています。
+        interval_real_booking_time_warning: 予約状況やスタッフの空き状況によって、実際の表示は異なる場合があります
+        interval_explanation: 9:00〜12:00までの、始めの４つ選択肢を表示しています。
         interval_start_time: 開始時間
         interval_option: 選択肢の間隔
         per_minute: 分毎
