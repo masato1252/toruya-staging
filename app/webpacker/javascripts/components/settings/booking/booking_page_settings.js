@@ -37,7 +37,14 @@ class BookingPageSettings extends React.Component {
       updates: async (value, name, allValues) => {
         return await this.prefillBusinessTime(allValues);
       }
-    })
+    },
+    {
+      field: /had_special_date|shop_id|interval|overlap_restriction|special_dates/, // when a field matching this pattern changes...
+      updates: async (value, name, allValues) => {
+        return await this.calculateBookingTimes(allValues);
+      }
+    }
+    )
   };
 
 
@@ -175,8 +182,15 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingDateFields = (values) => {
-    const { required_label, booking_dates_header, special_date_label,
-      booking_dates_calendar_hint, booking_dates_working_date, booking_dates_available_booking_date } = this.props.i18n;
+    const {
+      required_label,
+      booking_dates_header,
+      special_date_label,
+      booking_dates_calendar_hint,
+      booking_dates_working_date,
+      booking_dates_available_booking_date,
+      interval_real_booking_time_warning
+    } = this.props.i18n;
 
     return (
       <div>
@@ -212,6 +226,9 @@ class BookingPageSettings extends React.Component {
                 <div className="demo-day day workDay"></div>
                 {booking_dates_working_date}
               </div>
+              <Condition when="booking_page[booking_times]" is="present">
+                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
+              </Condition>
             </dd>
           </dl>
           <dl>
@@ -245,7 +262,17 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingIntervalFields = () => {
-    const { required_label, interval_header, interval_explanation, interval_start_time, interval_option, per_minute, interval_example_html } = this.props.i18n;
+    const {
+      required_label,
+      interval_header,
+      interval_explanation,
+      interval_real_booking_time_warning,
+      interval_real_booking_time_explanation,
+      interval_start_time,
+      interval_option,
+      per_minute,
+      interval_example_html
+    } = this.props.i18n;
 
     return (
       <div>
@@ -254,22 +281,37 @@ class BookingPageSettings extends React.Component {
           <dl>
             <dd>
               <div className="interval-explanation">
-                {interval_explanation}
+                <Condition when="booking_page[booking_times]" is="present">
+                  {interval_real_booking_time_explanation}
+                </Condition>
+                <Condition when="booking_page[booking_times]" is="blank">
+                  {interval_explanation}
+                </Condition>
               </div>
               <div>
                 <b>{interval_start_time}</b>
               </div>
               <FormSpy subscription={{ values: true }}>
                 {({ values }) => {
-                  let times = [moment({hour: 9})]
+                  const { interval, booking_times } = values.booking_page;
 
-                  for(var index = 1; index < 4; index++) {
-                    times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
+                  if (booking_times && booking_times.length) {
+                    return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
                   }
+                  else {
+                    let times = [moment({hour: 9})]
 
-                  return times.map((time) => <div className="time-interval" key={`interval-${time}`}>{time.format("HH:mm")}~</div>)
+                    for(var index = 1; index < 4; index++) {
+                      times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
+                    }
+
+                    return times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time.format("HH:mm")}~</div>)
+                  }
                 }}
               </FormSpy>
+              <Condition when="booking_page[booking_times]" is="present">
+                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
+              </Condition>
             </dd>
           </dl>
           <dl>
@@ -407,24 +449,61 @@ class BookingPageSettings extends React.Component {
     );
   }
 
+  calculateBookingTimes = async (allValues) => {
+    const { shop_id, had_special_date, special_dates, start_at_date_part, options, overlap_restriction, interval } = allValues.booking_page;
+
+    if (!(shop_id &&
+      had_special_date && special_dates && special_dates.length &&
+      options && options.length == 1)) {
+      return {
+        "booking_page[booking_times]": []
+      }
+    }
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.booking_times,
+      params: {
+        shop_id: shop_id,
+        special_dates: special_dates,
+        booking_option_ids: options.map((option) => option.id),
+        interval: interval,
+        overlap_restriction: overlap_restriction
+      },
+      responseType: "json"
+    })
+
+    if (!response.data.booking_times.length) {
+      return {
+        "booking_page[booking_times]": []
+      }
+    }
+
+    return {
+      "booking_page[booking_times]": response.data.booking_times
+    }
+  }
+
   prefillBusinessTime = async (allValues) => {
     const { shop_id, had_special_date, start_at_date_part } = allValues.booking_page;
 
-    if (shop_id && had_special_date && start_at_date_part) {
-      const response = await axios({
-        method: "GET",
-        url: this.props.path.business_time,
-        params: {
-          shop_id: shop_id,
-          date: start_at_date_part
-        },
-        responseType: "json"
-      })
+    if (!(shop_id && had_special_date && start_at_date_part)) {
+      return {}
+    }
 
-      return {
-        start_at_time_part: response.data.start_at_time_part,
-        end_at_time_part: response.data.end_at_time_part
-      }
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.business_time,
+      params: {
+        shop_id: shop_id,
+        date: start_at_date_part
+      },
+      responseType: "json"
+    })
+
+    return {
+      start_at_time_part: response.data.start_at_time_part,
+      end_at_time_part: response.data.end_at_time_part
     }
   }
 
@@ -434,27 +513,30 @@ class BookingPageSettings extends React.Component {
 
   verifySpecialDates = async (values) => {
     const { shop_id, had_special_date, special_dates, options } = values.booking_page;
-
-    if (shop_id && had_special_date && special_dates && special_dates.length && options && options.length) {
-      if (!this.isSpecialDatesLegal(special_dates)) {
-        return;
-      }
-
-      const response = await axios({
-        method: "GET",
-        url: this.props.path.validate_special_dates,
-        params: {
-          shop_id: shop_id,
-          special_dates: special_dates,
-          booking_option_ids: options.map((option) => option.id)
-        },
-        responseType: "json"
-      })
-
-      if (response.data.message.length) {
-        return { booking_page: {  had_special_date: response.data.message }};
-      }
+    if (!(shop_id && had_special_date && special_dates && special_dates.length && options && options.length)) {
+      return {}
     }
+
+    if (!this.isSpecialDatesLegal(special_dates)) {
+      return {}
+    }
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.validate_special_dates,
+      params: {
+        shop_id: shop_id,
+        special_dates: special_dates,
+        booking_option_ids: options.map((option) => option.id)
+      },
+      responseType: "json"
+    })
+
+    if (!response.data.message.length) {
+      return {}
+    }
+
+    return { booking_page: { had_special_date: response.data.message }};
   }
 
   validate = (values) => {

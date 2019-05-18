@@ -387,7 +387,7 @@ RSpec.describe Reservable::Reservation do
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
           FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-          FactoryBot.create(:reservation, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+          FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
         it "is invalid" do
@@ -401,7 +401,20 @@ RSpec.describe Reservable::Reservation do
           expect(other_shop_error).to eq(error: :overlap_reservations)
         end
 
-        context "when reservation is canceled" do
+        context "when the existing reservation's menu min_staffs_number is 0" do
+          let(:menu1) { FactoryBot.create(:menu, :no_manpower, shop: shop, minutes: time_minutes) }
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when the existing reservation is canceled" do
           before do
             reservation.cancel!
           end

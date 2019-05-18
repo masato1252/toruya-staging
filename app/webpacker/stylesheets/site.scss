@@ -13,6 +13,11 @@
   display: block;
 }
 
+.field-warning-message {
+  color: $warning;
+  display: block;
+}
+
 .calendar-picker {
   width: 35px !important;
   height: 38px !important;
