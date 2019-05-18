@@ -79,7 +79,6 @@ class BookingPageSettings extends React.Component {
             componentType="textarea"
             label={greeting}
             placeholder={greeting_placeholder}
-            cols={100}
             rows={10}
           />
         </div>
@@ -220,7 +219,7 @@ class BookingPageSettings extends React.Component {
                   );
                 }}
               </FormSpy>
-              <div className="calendar">
+              <div className="demo-days">
                 <div className="demo-day day booking-available"></div>
                 {booking_dates_available_booking_date}
                 <div className="demo-day day workDay"></div>
@@ -233,7 +232,7 @@ class BookingPageSettings extends React.Component {
           </dl>
           <dl>
             <dd className="bootstrap-checkbox">
-              <ul>
+              <ul className="special-date-label">
                 <li>
                   <label>
                     <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
@@ -288,27 +287,29 @@ class BookingPageSettings extends React.Component {
                   {interval_explanation}
                 </Condition>
               </div>
-              <div>
+              <div className="booking-times-label">
                 <b>{interval_start_time}</b>
               </div>
-              <FormSpy subscription={{ values: true }}>
-                {({ values }) => {
-                  const { interval, booking_times } = values.booking_page;
+              <div className="booking-times-examples">
+                <FormSpy subscription={{ values: true }}>
+                  {({ values }) => {
+                    const { interval, booking_times } = values.booking_page;
 
-                  if (booking_times && booking_times.length) {
-                    return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
-                  }
-                  else {
-                    let times = [moment({hour: 9})]
-
-                    for(var index = 1; index < 4; index++) {
-                      times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
+                    if (booking_times && booking_times.length) {
+                      return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
                     }
+                    else {
+                      let times = [moment({hour: 9})]
 
-                    return times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time.format("HH:mm")}~</div>)
-                  }
-                }}
-              </FormSpy>
+                      for(var index = 1; index < 4; index++) {
+                        times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
+                      }
+
+                      return times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time.format("HH:mm")}~</div>)
+                    }
+                  }}
+                </FormSpy>
+              </div>
               <Condition when="booking_page[booking_times]" is="present">
                 <p className="field-warning-message">{interval_real_booking_time_warning}</p>
               </Condition>
@@ -441,7 +442,6 @@ class BookingPageSettings extends React.Component {
             componentType="textarea"
             validate={(value) => requiredValidation(this, value)}
             placeholder={note_label}
-            cols={100}
             rows={10}
           />
         </div>
