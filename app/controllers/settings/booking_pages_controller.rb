@@ -91,7 +91,7 @@ class Settings::BookingPagesController < SettingsController
     )
 
     if outcome.valid?
-      render json: { booking_times: outcome.result.flatten.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4) }
+      render json: { booking_times: outcome.result.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4) }
     else
       render json: { booking_times: [] }
     end

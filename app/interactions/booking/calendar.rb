@@ -80,8 +80,7 @@ module Booking
 
             booking_option.menus.each do |menu|
               active_staff_ids = menu.active_staff_ids & shop.staff_ids
-              # need spec
-              # XXX Avoid no manpower menu(min_staffs_number is 0) don't be assigned any staff
+              # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
               required_staffs_number = [menu.min_staffs_number, 1].max
 
               active_staff_ids.combination(required_staffs_number).each do |candidate_staff_ids|
