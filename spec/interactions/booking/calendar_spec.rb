@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Booking::Calendar do
   before do
     # Monday
-    Timecop.freeze(Time.zone.local(2019, 5, 10))
+    Timecop.freeze(Time.zone.local(2019, 5, 13))
   end
 
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
@@ -75,6 +75,18 @@ RSpec.describe Booking::Calendar do
         result = outcome.result
 
         expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+      end
+
+      context "when the booking option's menu is no-manpower type(min_staffs_number is 0)" do
+        let(:menu) { FactoryBot.create(:menu, :with_reservation_setting, :no_manpower, user: user) }
+        let(:booking_option) { FactoryBot.create(:booking_option, user: user, menus: [menu]) }
+
+        # The no-manpower menu still need available staff
+        it "returns expected result" do
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
       end
     end
 
