@@ -12,7 +12,7 @@ import 'babel-polyfill'
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
 
-var componentRequireContext = require.context("../javascripts/components", true)
+var componentRequireContext = require.context("../javascripts/components", true, /management|shared/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(componentRequireContext)
 

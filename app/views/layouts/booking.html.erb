@@ -1,0 +1,15 @@
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_pack_tag "booking" %>
+    <%= javascript_pack_tag "booking" %>
+  </head>
+
+  <body>
+    <%= flash_messages %>
+    <%= yield %>
+    <%= render "layouts/upgrade_modals" %>
+  </body>
+</html>
