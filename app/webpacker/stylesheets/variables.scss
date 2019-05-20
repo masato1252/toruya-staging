@@ -28,6 +28,7 @@ $gray6: #858585;
 $gray7: #b3b3b3;
 $gray8: #555555;
 $gray9: #bbbbbb;
+$gray10: #e9ebee;
 
 $black: #333333;
 
@@ -40,3 +41,11 @@ $black: #333333;
     clear: both;
   }
 }
+
+$grid-breakpoints: (
+  mobile: 0,
+  tablet: 768px,
+  computer: 940px,
+  large-monitor: 1200px,
+  wide-screen-monitor: 1920px
+)
