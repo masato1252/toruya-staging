@@ -522,11 +522,6 @@ class BookingPageSettings extends React.Component {
   verifySpecialDates = async (values) => {
     const { shop_id, had_special_date, special_dates, options } = values.booking_page;
 
-    if (this.verifySpecialDatesCall) {
-      this.verifySpecialDatesCall.cancel();
-    }
-    this.verifySpecialDatesCall = axios.CancelToken.source();
-
     if (!(shop_id && had_special_date && special_dates && special_dates.length && options && options.length)) {
       return {}
     }
@@ -534,7 +529,6 @@ class BookingPageSettings extends React.Component {
     if (!this.isSpecialDatesLegal(special_dates)) {
       return {}
     }
-
 
     const response = await axios({
       method: "GET",
@@ -544,8 +538,7 @@ class BookingPageSettings extends React.Component {
         special_dates: special_dates,
         booking_option_ids: options.map((option) => option.id)
       },
-      responseType: "json",
-      cancelToken: this.verifySpecialDatesCall.token
+      responseType: "json"
     })
 
     if (!response.data.message.length) {
