@@ -22,7 +22,7 @@
           </div>
           <div class="modal-footer centerize">
             <%= link_to t("settings.shop.modal.premium.cancel_button"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
-            <%= react_component("payment_checkout", {
+            <%= react_component("management/payment_checkout", {
               stripeKey: Rails.application.secrets.stripe_publishable_key,
               formlId: "new_shop",
               paymentPath: settings_user_shops_path(super_user),

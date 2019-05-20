@@ -1,0 +1,17 @@
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title>ToruyaーBooking</title>
+    <%= csrf_meta_tags %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name booking.js, booking.scss %>
+    <%= stylesheet_pack_tag "booking_stylesheets" %>
+    <%= javascript_pack_tag "booking" %>
+  </head>
+
+  <body>
+    <div class="booking-content">
+      <%= yield %>
+    </div>
+  </body>
+</html>

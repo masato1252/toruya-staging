@@ -15,7 +15,7 @@
     <%= link_to "速攻ダウングレード", downgrade_settings_payments_path, class: "btn btn-orange" %>
   <% end %>
 
-  <%= react_component "plans/plans", {
+  <%= react_component "management/plans/plans", {
     formAuthenticityToken: form_authenticity_token,
     paymentPath: settings_payments_path,
     stripeKey: Rails.application.secrets.stripe_publishable_key,

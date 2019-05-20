@@ -16,17 +16,21 @@ module ShopHelper
                     { id: "staff" })
   end
 
-  def shop_logo(shop, size, extent: true, image_class: "")
+  def shop_logo_url(shop, size)
     if shop.logo.attached?
-      logo_url =
+      @shop_logo_url ||=
         shop.logo.variant(
           combine_options: {
             resize: "#{size}",
             flatten: true
           }
       )
+    end
+  end
 
-      image_tag(url_for(logo_url), class: image_class)
+  def shop_logo(shop, size, extent: true, image_class: "")
+    if shop.logo.attached?
+      image_tag(url_for(shop_logo_url(shop, size)), class: image_class)
     end
   end
 end

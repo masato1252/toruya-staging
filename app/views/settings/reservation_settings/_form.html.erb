@@ -6,7 +6,7 @@
 </div>
 
 <div id="settingForm">
-  <%= react_component "reservation_settings/reservation_settings_form", {
+  <%= react_component "management/reservation_settings/reservation_settings_form", {
     timezone: Time.zone.tzinfo.identifier,
     save_setting_path: url,
     cancel_path: settings_user_reservation_settings_path(super_user),

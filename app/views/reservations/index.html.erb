@@ -4,7 +4,7 @@
 %>
 <div id="dashboard" class="contents">
   <div id="calendar" class="sidel">
-    <%= react_component("calendar/calendar",
+    <%= react_component("shared/calendar/calendar",
                         {
                           day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
@@ -98,7 +98,7 @@
 </div>
 
 <% if staff_schedule_requirement_condition %>
-  <%= react_component("schedules/working_schedules_modal", {
+  <%= react_component("management/schedules/working_schedules_modal", {
     form_authenticity_token: form_authenticity_token,
     staff: react_attribute(staff.attributes.merge!(name: staff.name)),
     open: true,

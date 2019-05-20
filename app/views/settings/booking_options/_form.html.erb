@@ -1,5 +1,5 @@
 <div id="settingForm">
-  <%= react_component("settings/booking/booking_option_settings", {
+  <%= react_component("management/settings/booking/booking_option_settings", {
     form_authenticity_token: form_authenticity_token,
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval),
     booking_option: @booking_option.attributes.merge!(
