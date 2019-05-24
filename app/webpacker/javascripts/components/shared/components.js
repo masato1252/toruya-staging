@@ -64,30 +64,43 @@ const Error = ({ name }) => (
   </Field>
 );
 
-const Condition = ({ when, is, children }) => (
+const Condition = ({ when, is, children, is_not }) => (
   <Field name={when} subscription={{ value: true }}>
-    {({ input: { value } }) =>
-      {
-        if (is === "present") {
-          const isPresent = Array.isArray(value) ? value.length : !!value;
+    {({ input: { value } }) => {
+      let opposite = false
+      let outcome
 
-          return isPresent ? children : null
-        }
-        else if (is === "blank") {
-          const isPresent = Array.isArray(value) ? value.length : !!value;
-
-          return isPresent ? null : children
-        }
-        else if (Array.isArray(is)) {
-          return _.isEqual(_.sortBy(value), _.sortBy(is)) ? children : null
-        }
-        else if (typeof value === "boolean")
-          return String(value) === is ? children : null
-        else {
-          return value === is ? children : null
-        }
+      if (is_not) {
+        is = is_not;
+        opposite = true
       }
-    }
+
+      if (is === "present") {
+        const isPresent = Array.isArray(value) ? value.length : !!value;
+
+        outcome = isPresent ? children : null
+      }
+      else if (is === "blank") {
+        const isPresent = Array.isArray(value) ? value.length : !!value;
+
+        outcome = isPresent ? null : children
+      }
+      else if (Array.isArray(is)) {
+        outcome = _.isEqual(_.sortBy(value), _.sortBy(is)) ? children : null
+      }
+      else if (typeof value === "boolean")
+        outcome = String(value) === is ? children : null
+      else {
+        outcome = value === is ? children : null
+      }
+
+      if (opposite) {
+        return outcome ? null : children
+      }
+      else {
+        return outcome
+      }
+    }}
   </Field>
 );
 

@@ -1,10 +1,33 @@
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
-  booking_page: @booking_page.attributes,
-  shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
+  booking_page: @booking_page.attributes.slice({}).merge!({
+    shop_logo_url: shop_logo_url(@booking_page.shop, "390x135")
+  }),
+  booking_reservation_form: {
+    regular: cookies[:booking_customer_id] ? "yes" : nil,
+    found_customer: cookies[:booking_customer_id] ? true : nil,
+    found_customer_info: {
+      id: @customer&.id,
+      simple_address: @customer&.address,
+      full_address: @customer&.display_address,
+      address_details: @customer&.primary_address,
+      email: @customer&.primary_email,
+      phone: @customer&.primary_phone,
+      first_name: @customer&.first_name,
+      last_name: @customer&.last_name,
+      phonetic_first_name: @customer&.phonetic_first_name,
+      phonetic_last_name: @customer&.phonetic_last_name
+    }
+  },
   path: {
     save: nil,
+    find_customer: find_customer_booking_page_path(@booking_page)
   },
+  i18n: {
+  }.merge!([
+    t("action").slice(:save)
+    ].inject(:merge!)
+ ),
 },
 { camelize_props: false }
 ) %>

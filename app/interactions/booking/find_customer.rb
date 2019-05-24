@@ -12,8 +12,7 @@ module Booking
       if matched_customers.length == 1
         matched_customers.first.with_google_contact
       elsif matched_customers.length > 1
-        # [TODO]
-        # email owner customer duplication notification
+        NotificationMailer.duplicate_customers(user, matched_customers).deliver_later
 
         matched_phone_customer = matched_customers.find do |matched_customer|
           matched_customer.with_google_contact.primary_phone&.value&.gsub(/[^0-9]/, '') == phone_number.gsub(/[^0-9]/, '')
