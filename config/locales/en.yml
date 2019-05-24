@@ -763,7 +763,7 @@ en:
           attributes:
             date:
               shop_closed: "^Shop closed"
-       booking/validate_special_dates:
+        booking/validate_special_dates:
           attributes:
             special_dates:
               on_unworking_dates: "^%{invalid_dates} Reservable date and time should be in business hours"
