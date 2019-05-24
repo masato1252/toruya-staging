@@ -12,7 +12,7 @@
         method: local_assigns[:custom_schedule_id] ? :patch : :post do %>
         <div class="modal-body">
           <dl id="addWorkDay">
-            <%= react_component("reservations/datetime_fields", {
+            <%= react_component("management/reservations/datetime_fields", {
               custom_schedule_id: local_assigns[:custom_schedule_id],
               staff_id: local_assigns[:staff].try(:id),
               open: false,

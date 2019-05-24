@@ -13,6 +13,6 @@
 #
 
 class BookingPageOption < ApplicationRecord
-  belongs_to :page, class_name: "BookingPage", foreign_key: :booking_page_id
-  belongs_to :option, class_name: "BookingOption", foreign_key: :booking_option_id
+  belongs_to :booking_page
+  belongs_to :booking_option
 end

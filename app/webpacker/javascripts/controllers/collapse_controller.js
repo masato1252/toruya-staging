@@ -8,6 +8,11 @@ export default class CollapseController extends Controller {
   ];
 
   connect() {
+    if (this.isOpen) {
+      this.open();
+    } else {
+      this.close();
+    }
   }
 
   toggle = () => {
@@ -20,16 +25,34 @@ export default class CollapseController extends Controller {
 
   close = () => {
     this.status = "closed";
-    this.contentTarget.classList.add("display-hidden");
-    this.openTogglerTarget.classList.add("display-hidden");
-    this.closeTogglerTarget.classList.remove("display-hidden");
+
+    if (this.hasContentTarget) {
+      this.contentTarget.classList.add("display-hidden");
+    }
+
+    if (this.hasOpenTogglerTarget) {
+      this.openTogglerTarget.classList.add("display-hidden");
+    }
+
+    if (this.hasCloseTogglerTarget) {
+      this.closeTogglerTarget.classList.remove("display-hidden");
+    }
   }
 
   open = () => {
     this.status = "open";
-    this.contentTarget.classList.remove("display-hidden");
-    this.openTogglerTarget.classList.remove("display-hidden");
-    this.closeTogglerTarget.classList.add("display-hidden");
+
+    if (this.hasContentTarget) {
+      this.contentTarget.classList.remove("display-hidden");
+    }
+
+    if (this.hasOpenTogglerTarget) {
+      this.openTogglerTarget.classList.remove("display-hidden");
+    }
+
+    if (this.hasCloseTogglerTarget) {
+      this.closeTogglerTarget.classList.add("display-hidden");
+    }
   }
 
   get isOpen() {

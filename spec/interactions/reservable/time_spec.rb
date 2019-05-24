@@ -11,7 +11,7 @@ RSpec.describe Reservable::Time do
   let(:date) { now.to_date }
 
   describe "#execute" do
-    context "when shop has custom schedule" do
+    context "when shop has closed custom schedule" do
       let!(:custom_schedule) { FactoryBot.create(:custom_schedule, :for_shop, shop: shop,
                                                   start_time: now.beginning_of_day + 8.hours,
                                                   end_time: now.beginning_of_day + 16.hours) }

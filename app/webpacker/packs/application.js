@@ -12,7 +12,7 @@ import 'babel-polyfill'
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
 
-var componentRequireContext = require.context("../javascripts/components", true)
+var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(componentRequireContext)
 
@@ -26,3 +26,7 @@ application.load(definitionsFromContext(context))
 
 import Rails from 'rails-ujs';
 Rails.start();
+
+// https://github.com/zenorocha/clipboard.js/issues/155#issuecomment-217372642
+// Fix ClipboardJS copy in modal
+$.fn.modal.Constructor.prototype.enforceFocus = function() {};

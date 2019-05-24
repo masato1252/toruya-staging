@@ -13,14 +13,6 @@ class MembersController < DashboardController
       end
     end
 
-    # XXX: CalendarsController#personal_working_schedule use the same PersonalCalendar, be careful
-    @working_dates, @reservation_dates = PersonalCalendar.run!(
-      user: current_user,
-      working_shop_options: member_shops_options,
-      all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
-      date: @date
-    )
-
     reservations = Reservation.where(shop_id: working_shop_options(include_user_own: true).map(&:shop_id).uniq)
       .uncanceled.in_date(@date)
       .includes(:menu, :customers, :staffs, shop: :user)

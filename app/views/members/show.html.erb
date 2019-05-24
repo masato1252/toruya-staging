@@ -3,21 +3,13 @@
 
 <div class="contents" id="dashboard">
   <div id="calendar" class="sidel">
-    <%= react_component("calendar/calendar",
+    <%= react_component("shared/calendar/calendar",
                         {
                           day_names: I18n.t("date.abbr_day_names"),
                           month_names: I18n.t("date.abbr_month_names").compact,
-                          reservations_path: member_path,
-                          working_schedule_path: personal_working_schedule_calendars_path(format: :json),
-                          selected_date: params[:reservation_date],
-                          holiday_days: @working_dates[:holidays].map(&:day),
-                          full_time: @working_dates[:full_time],
-                          shop_working_wdays: @working_dates[:shop_working_wdays],
-                          shop_working_on_holiday: @working_dates[:shop_working_on_holiday],
-                          staff_working_wdays: @working_dates[:staff_working_wdays],
-                          working_days: @working_dates[:working_dates].map(&:day),
-                          off_days: @working_dates[:off_dates].map(&:day),
-                          reservation_days: @reservation_dates.map(&:day)
+                          dateSelectedCallbackPath: member_path,
+                          schedulePath: personal_working_schedule_calendars_path(format: :json),
+                          selected_date: params[:reservation_date]
                         },
                         { id: "custom-calendar", class: "clearfix" }) %>
     <div class="staffDashboard">

@@ -15,7 +15,7 @@
   end
 %>
 
-<%= react_component("reservations/reservation_form",
+<%= react_component("management/reservations/reservation_form",
                     { reservation: reservation.attributes.merge(
                         start_time_date_part: date,
                         start_time_time_part: start_time,
@@ -24,7 +24,7 @@
                         customers: reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } }
                       ),
                       current_user_staff_id: current_user.current_staff(super_user).id.to_s,
-                      downgradeFromPremium: shop.staffs.active.count > @staff_options.length,
+                      downgradeFromPremium: shop.staffs.count > @staff_options.length,
                       isEditable: ability(reservation.shop.user, reservation.shop).can?(:edit, reservation),
                       isCustomersReadable: ability(reservation.shop.user, reservation.shop).can?(:read, :customers_dashboard),
                       shop: react_attribute(shop.attributes.merge!(display_name: shop.display_name)),

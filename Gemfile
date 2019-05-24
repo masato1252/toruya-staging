@@ -34,7 +34,6 @@ gem "sendgrid-rails"
 gem "delayed-web"
 gem "puma", "~> 3.11.0"
 gem "kaminari"
-gem "expeditor", "~> 0.5.0"
 gem "newrelic_rpm", "~> 3.18.0"
 gem "custom_error_message", "~> 1.2.1", github: "thethanghn/custom-err-msg"
 gem "cancancan", "~> 1.15.0"
@@ -52,6 +51,7 @@ gem "paper_trail"
 gem "sentry-raven"
 gem "slack-ruby-client"
 gem "bootsnap"
+gem "parallel"
 
 group :development, :test do
   gem "byebug", platform: :mri

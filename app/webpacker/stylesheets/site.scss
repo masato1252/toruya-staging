@@ -13,6 +13,11 @@
   display: block;
 }
 
+.field-warning-message {
+  color: $warning;
+  display: block;
+}
+
 .calendar-picker {
   width: 35px !important;
   height: 38px !important;
@@ -25,4 +30,14 @@
   i.fa-calendar {
     font-size: 18px !important;
   }
+}
+
+.fake-date-field {
+  display: inline-block;
+  border-radius: 3px;
+}
+
+textarea {
+  padding: 8px;
+  font-size: 16px;
 }

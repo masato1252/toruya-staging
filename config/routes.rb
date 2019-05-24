@@ -122,6 +122,14 @@ Rails.application.routes.draw do
         get :repeating_dates, on: :collection
       end
       resources :booking_options, except: [:show]
+      resources :booking_pages, except: [:show] do
+        get :copy_modal, on: :member
+        collection do
+          get :validate_special_dates
+          get :business_time
+          get :booking_times
+        end
+      end
       resources :reservation_settings, except: [:show]
       resources :categories, except: [:show]
       resources :ranks, except: [:show]
@@ -164,6 +172,7 @@ Rails.application.routes.draw do
     collection do
       get "working_schedule"
       get "personal_working_schedule"
+      get "booking_page_settings"
     end
   end
 
@@ -190,4 +199,8 @@ Rails.application.routes.draw do
   end
 
   root to: "members#show"
+
+  constraints(SubdomainConstraint[:booking]) do
+    get "page/:id", to: "booking_pages#show", as: :booking_page
+  end
 end

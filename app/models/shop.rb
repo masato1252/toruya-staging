@@ -36,7 +36,7 @@ class Shop < ApplicationRecord
   has_one_attached :logo
   has_many :staff_relations, class_name: "ShopStaff", dependent: :destroy
   has_many :shop_staffs, dependent: :destroy
-  has_many :staffs, through: :shop_staffs
+  has_many :staffs, -> { active }, through: :shop_staffs
   has_many :shop_menus, dependent: :destroy
   has_many :menus, -> { active }, through: :shop_menus
   has_many :business_schedules

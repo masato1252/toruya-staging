@@ -21,6 +21,16 @@ $palette-color4-2: #984418; // orange hover border
 $gray: #dfdfdf;
 $gray2: #e6e6e6;
 $gray3: #f9f9f9;
+$gray4: #efefef;
+$gray5: #d0d0d0;
+$gray6: #858585;
+$gray6: #858585;
+$gray7: #b3b3b3;
+$gray8: #555555;
+$gray9: #bbbbbb;
+$gray10: #e9ebee;
+
+$black: #333333;
 
 @mixin clearfix {
   &:before, &:after {
@@ -31,3 +41,11 @@ $gray3: #f9f9f9;
     clear: both;
   }
 }
+
+$grid-breakpoints: (
+  mobile: 0,
+  tablet: 768px,
+  computer: 940px,
+  large-monitor: 1200px,
+  wide-screen-monitor: 1920px
+)

@@ -3,8 +3,9 @@ FactoryBot.define do
     association :shop
     day_of_week { start_time.wday }
     business_state { "opened" }
-    start_time { Time.zone.local(2016, 8, 22, 8, 0, 0) }
-    end_time { Time.zone.local(2016, 8, 22, 19, 0, 0) }
+    # Monday
+    start_time { Time.zone.local(2016, 8, 22, 9, 0, 0) }
+    end_time { Time.zone.local(2016, 8, 22, 17, 0, 0) }
 
     trait :full_time do
       full_time { true }

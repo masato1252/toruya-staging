@@ -17,27 +17,40 @@ class DateFieldAdapter extends React.Component {
   render() {
     const selectedDate = this.props.input.value ? moment(this.props.input.value).format("YYYY-MM-DD") : this.props.date
     const fieldName = this.props.input.name;
+    const { error, touched } = this.props.meta;
+    const timezone = this.props.timezone || "Asia/Tokyo";
 
+    // onDayChange decide the YYYY-MM-DD is the real value format
+    // value property decide the YYYY/M/D is the display format
     return(
       <div className={`datepicker-field`}>
-        <DayPickerInput
-          ref={(c) => this.dayPickerInput = c }
-          {...this.props.input}
-          onDayChange={this.props.input.onChange}
-          parseDate={parseDate}
-          format={[ "YYYY/M/D", "YYYY-M-D" ]}
-          dayPickerProps={{
-            month: moment(selectedDate).toDate(),
-            selectedDays: moment(selectedDate).toDate(),
-            localeUtils: MomentLocaleUtils,
-            locale: "ja"
-          }}
-          placeholder="yyyy/mm/dd"
-          value={moment(selectedDate, [ "YYYY/M/D", "YYYY-M-D" ]).format("YYYY/M/D")}
-          inputProps={{
-            disabled: this.props.isDisabled
-          }}
-        />
+        <div className={`fake-date-field ${error && touched ? "field-error" : ""}`}>
+          <DayPickerInput
+            ref={(c) => this.dayPickerInput = c }
+            {...this.props.input}
+            onDayChange={(date) => {
+              const parsedDate = moment.tz(date, this.props.timezone).format("YYYY-MM-DD")
+              this.props.input.onChange(parsedDate);
+
+              if (this.props.dateChangedCallback) {
+                this.props.dateChangedCallback(parsedDate);
+              }
+            }}
+            parseDate={parseDate}
+            format={[ "YYYY/M/D", "YYYY-M-D", "YYYY-MM-DD" ]}
+            dayPickerProps={{
+              month: moment(selectedDate).toDate(),
+              selectedDays: moment(selectedDate).toDate(),
+              localeUtils: MomentLocaleUtils,
+              locale: "ja"
+            }}
+            placeholder="yyyy/mm/dd"
+            value={moment(selectedDate, [ "YYYY/M/D", "YYYY-M-D", "YYYY-MM-DD" ]).format("YYYY/M/D")}
+            inputProps={{
+              disabled: this.props.isDisabled
+            }}
+          />
+        </div>
         <input
           type="hidden"
           id={fieldName}

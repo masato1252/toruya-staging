@@ -70,6 +70,7 @@ RSpec.describe Reservable::Reservation do
       context "when there are reservations overlap in interval time" do
         context "when the overlap happened on previous reservation" do
           let!(:reservation) do
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             FactoryBot.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
                                staff_ids: [staff1.id])
@@ -77,8 +78,8 @@ RSpec.describe Reservable::Reservation do
 
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                  menu_ids: [menu1.id, menu2.id],
-                                                  staff_ids: [staff1.id, staff2.id],
+                                                  menu_ids: [menu1.id],
+                                                  staff_ids: [staff1.id],
                                                   business_time_range: time_range)
 
             expect(outcome).to be_invalid
@@ -89,7 +90,6 @@ RSpec.describe Reservable::Reservation do
 
           context "when reservation is canceled" do
             before do
-              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation.cancel!
             end
 
@@ -97,7 +97,19 @@ RSpec.describe Reservable::Reservation do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_ids: [menu1.id],
                                                     business_time_range: time_range,
-                                                    staff_ids: [staff1.id, staff2.id])
+                                                    staff_ids: [staff1.id])
+
+              expect(outcome).to be_valid
+            end
+          end
+
+          context "when allow to double booking" do
+            it "is valid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range,
+                                                    overlap_restriction: false)
 
               expect(outcome).to be_valid
             end
@@ -106,6 +118,7 @@ RSpec.describe Reservable::Reservation do
 
         context "when the overlap happened on next reservation" do
           let!(:reservation) do
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             FactoryBot.create(:reservation, shop: shop, menu: menu1,
                                start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
                                staff_ids: [staff1.id])
@@ -113,8 +126,8 @@ RSpec.describe Reservable::Reservation do
 
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                  menu_ids: [menu1.id, menu2.id],
-                                                  staff_ids: [staff1.id, staff2.id],
+                                                  menu_ids: [menu1.id],
+                                                  staff_ids: [staff1.id],
                                                   business_time_range: time_range)
 
             expect(outcome).to be_invalid
@@ -125,15 +138,26 @@ RSpec.describe Reservable::Reservation do
 
           context "when reservation is canceled" do
             before do
-              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation.cancel!
             end
 
             it "is valid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range)
+
+              expect(outcome).to be_valid
+            end
+          end
+
+          context "when allow to double booking" do
+            it "is valid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
                                                     business_time_range: time_range,
-                                                    staff_ids: [staff1.id, staff2.id])
+                                                    overlap_restriction: false)
 
               expect(outcome).to be_valid
             end
@@ -362,7 +386,8 @@ RSpec.describe Reservable::Reservation do
       # validate_same_shop_overlap_reservations(staff)
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
-          FactoryBot.create(:reservation, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+          FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
         it "is invalid" do
@@ -376,9 +401,21 @@ RSpec.describe Reservable::Reservation do
           expect(other_shop_error).to eq(error: :overlap_reservations)
         end
 
-        context "when reservation is canceled" do
+        context "when the existing reservation's menu min_staffs_number is 0" do
+          let(:menu1) { FactoryBot.create(:menu, :no_manpower, shop: shop, minutes: time_minutes) }
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when the existing reservation is canceled" do
           before do
-            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             reservation.cancel!
           end
 
@@ -387,6 +424,18 @@ RSpec.describe Reservable::Reservation do
                                                   menu_ids: [menu1.id],
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when allow to double booking" do
+          it "is valid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id],
+                                                  overlap_restriction: false)
 
             expect(outcome).to be_valid
           end
@@ -452,6 +501,52 @@ RSpec.describe Reservable::Reservation do
             other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :lack_overlap_staffs }
             expect(other_shop_error).to eq(error: :lack_overlap_staffs)
           end
+        end
+      end
+    end
+
+    # validate_time_range
+    context "when time range out of shop open/closed time" do
+      before do
+        FactoryBot.create(:business_schedule, shop: shop, start_time: Time.zone.local(2016, 12, 22, 9), end_time: Time.zone.local(2016, 12, 22, 17))
+      end
+
+      context "when start time is earlier than shop open time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 8, 59)..Time.zone.local(2016, 12, 22, 12)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
+        end
+      end
+
+      context "when end time is later than shop open time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 16, 59)..Time.zone.local(2016, 12, 22, 17, 1)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
+        end
+      end
+
+      context "when end time is earlier than start time" do
+        it "is invalid" do
+          outcome = Reservable::Reservation.run(
+            shop: shop, date: date,
+            menu_ids: [menu1.id],
+            business_time_range: Time.zone.local(2016, 12, 22, 17)..Time.zone.local(2016, 12, 22, 16)
+          )
+
+          expect(outcome).to be_invalid
+          expect(outcome.errors.details[:business_time_range].first[:error]).to eq(:invalid_time_range)
         end
       end
     end

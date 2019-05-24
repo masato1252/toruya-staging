@@ -15,14 +15,6 @@ class ReservationsController < DashboardController
     @staffs_selector_displaying = true
     @date = params[:reservation_date] ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
-    # Calendar START
-    # The calendar green cirlce is Working Date is for some staffs
-    # The calendar gray cirlce area is Reservations is for this Shop
-    date_range = @date.beginning_of_month.beginning_of_day..@date.end_of_month.end_of_day
-    @working_dates = Staffs::WorkingDateRules.run!(shop: shop, staff: staff, date_range: date_range)
-    @reservation_dates = Shops::ReservationDates.run!(shop: shop, date_range: date_range)
-    # Calendar END
-
     # Staff schedules on date START
     staff_working_schedules_outcome = Shops::StaffsWorkingSchedules.run(shop: shop, date: @date)
     @staffs_working_schedules = staff_working_schedules_outcome.valid? ? staff_working_schedules_outcome.result : []
@@ -190,7 +182,7 @@ class ReservationsController < DashboardController
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
     @staff_options = if super_user.premium_member?
-      shop.staffs.active.order("id").map do |staff|
+      shop.staffs.order("id").map do |staff|
         ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
       end
     else
