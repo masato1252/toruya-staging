@@ -733,7 +733,7 @@ ja:
         sale_start: 販売開始
         sale_end: 販売終了
         overlap_booking: 重複予約
-        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する
+        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する(推奨)
         allow_overlap_booking_label: 予約可能なスタッフ数以上に予約を受け付ける
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。

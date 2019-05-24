@@ -105,9 +105,6 @@ module Reservable
       @staffs ||= shop.staffs.where(id: staff_ids)
     end
 
-    def validate_time_range
-    end
-
     def validate_interval_time
       # The interval time should be after reservation, so we just need to any reservation overlap start time.
       previous_reservation_validation_start_time = start_time
