@@ -55,11 +55,12 @@ class Customer < ApplicationRecord
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
 
   def with_google_contact
-    if google_contact_id
-      build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: self))
-    else
-      self
-    end
+    @customer_with_google_contact ||=
+      if google_contact_id
+        build_by_google_contact(Customers::RetrieveGoogleContact.run!(customer: self))
+      else
+        self
+      end
   end
 
   def build_by_google_contact(google_contact)
@@ -89,6 +90,11 @@ class Customer < ApplicationRecord
     # google_contact.primary_email format:
     # <Hashie::Mash type=:other value=#<Hashie::Mash address="awakeningyouedu@gmail.com" primary=true>>
     self.primary_email = google_contact.primary_email
+    # primary_phone format
+    # {
+    #   "type" => :home,
+    #   "value" => "12312312"
+    # }
     self.primary_phone = primary_value(google_contact.phone_numbers)
     self
   end
