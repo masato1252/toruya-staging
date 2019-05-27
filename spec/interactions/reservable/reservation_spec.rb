@@ -383,6 +383,111 @@ RSpec.describe Reservable::Reservation do
         end
       end
 
+      # validate_shop_capability_for_customers
+      context "when shop/staff doesn't have capability to handle customers because of existing reservations" do
+        context "when shop doesn't have capability(customers number > 3, staff's capability is 4)" do
+          it "is invalid" do
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+                                            customer_ids: [FactoryBot.create(:customer, user: user).id])
+            StaffMenu.find_by(staff_id: staff2.id, menu_id: menu1.id).update(max_customers: 4)
+
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id],
+                                                  number_of_customer: 3)
+            expect(outcome).to be_invalid
+            not_enough_ability_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :shop_or_staff_not_enough_ability }
+            expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability)
+          end
+
+          context "when there is new customer try too join existing reservation" do
+            it "is invalid" do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+                                              customer_ids: [FactoryBot.create(:customer, user: user).id])
+              StaffMenu.find_by(staff_id: staff1.id, menu_id: menu1.id).update(max_customers: 4)
+
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    reservation_id: reservation.id,
+                                                    staff_ids: [staff1.id])
+
+              expect(outcome).to be_valid
+
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    reservation_id: reservation.id,
+                                                    staff_ids: [staff1.id],
+                                                    number_of_customer: 4)
+              expect(outcome).to be_invalid
+              not_enough_ability_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :shop_or_staff_not_enough_ability }
+              expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability)
+            end
+          end
+        end
+
+        context "when staff doesn't have capability(customers number > 2, shop's capability is 3)" do
+          it "is invalid" do
+            FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+            reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+                                            customer_ids: [FactoryBot.create(:customer, user: user).id])
+
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id])
+
+            expect(outcome).to be_valid
+
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff2.id],
+                                                  number_of_customer: 2)
+            expect(outcome).to be_invalid
+            not_enough_ability_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :shop_or_staff_not_enough_ability }
+            expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability)
+          end
+
+          context "when there is new customer try too join existing reservation" do
+            it "is invalid" do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+                                              customer_ids: [FactoryBot.create(:customer, user: user).id])
+
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    reservation_id: reservation.id,
+                                                    staff_ids: [staff1.id])
+
+              expect(outcome).to be_valid
+
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    business_time_range: time_range,
+                                                    reservation_id: reservation.id,
+                                                    staff_ids: [staff1.id],
+                                                    number_of_customer: 3)
+              expect(outcome).to be_invalid
+              not_enough_ability_error = outcome.errors.details[:menu_ids].find { |error_hash| error_hash[:error] == :shop_or_staff_not_enough_ability }
+              expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability)
+            end
+          end
+        end
+      end
+
       # validate_same_shop_overlap_reservations(staff)
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
