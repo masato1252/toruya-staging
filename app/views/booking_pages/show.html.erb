@@ -1,12 +1,17 @@
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
   booking_page: @booking_page.attributes.slice({}).merge!({
-    shop_logo_url: shop_logo_url(@booking_page.shop, "390x135")
+    shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
+    shop_name: @booking_page.shop.name
   }),
   booking_reservation_form: {
     regular: cookies[:booking_customer_id] ? "yes" : nil,
     found_customer: cookies[:booking_customer_id] ? true : nil,
-    found_customer_info: {
+    remember_me: true,
+    customer_first_name: @customer&.first_name,
+    customer_last_name: @customer&.last_name,
+    customer_phone_number: @customer&.primary_phone&.value,
+    customer_info: {
       id: @customer&.id,
       simple_address: @customer&.address,
       full_address: @customer&.display_address,

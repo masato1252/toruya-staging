@@ -17,8 +17,12 @@ class BookingPagesController < ActionController::Base
     )
 
     if customer
+      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
+        cookies[:booking_customer_id] = customer.id
+      end
+
       render json: {
-        found_customer_info: {
+        customer_info: {
           id: customer.id,
           simple_address: customer.address,
           full_address: customer.display_address,
@@ -32,7 +36,9 @@ class BookingPagesController < ActionController::Base
         }
       }
     else
-      render json: {}
+      render json: {
+        customer_info: {}
+      }
     end
   end
 
