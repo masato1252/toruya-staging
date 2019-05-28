@@ -30,27 +30,35 @@ RSpec.describe Booking::FindCustomer do
     context "when only one customer matched" do
       it "returns expected result" do
         customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
+        query = spy(to_a: [customer])
+        expected_customer = spy(phone_numbers: [spy(value: phone_number)])
+        allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
+        allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
+        allow(customer).to receive(:with_google_contact).and_return(expected_customer)
+
         result = outcome.result
 
-        expect(result).to eq(customer)
+        expect(result).to eq(expected_customer)
       end
     end
 
     context "when multiple customers matched" do
-      context "when there is a customer phone number matched" do
-        it "returns the first phone_number matched one" do
+      context "when no reservations" do
+        it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
           customer2 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          query2 = spy(to_a: [customer1, customer2])
-          allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query2)
-          allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query2))
-          expected_customer = spy(primary_phone: spy(value: phone_number))
-          allow(customer1).to receive(:with_google_contact).and_return(expected_customer)
+          query = spy(to_a: [customer1, customer2])
+          expected_customer1 = spy(phone_numbers: [spy(value: phone_number)])
+          expected_customer2 = spy(phone_numbers: [spy(value: phone_number)])
+          allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
+          allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
+          allow(customer1).to receive(:with_google_contact).and_return(expected_customer1)
+          allow(customer2).to receive(:with_google_contact).and_return(expected_customer2)
           allow(NotificationMailer).to receive(:duplicate_customers).with(user, [customer1, customer2]).and_return(double(deliver_later: true))
 
           result = outcome.result
 
-          expect(result).to eq(expected_customer)
+          expect(result).to eq(expected_customer2)
           expect(NotificationMailer).to have_received(:duplicate_customers).with(user, [customer1, customer2])
         end
       end
@@ -59,23 +67,19 @@ RSpec.describe Booking::FindCustomer do
         it "returns the recent reservation's customer" do
           customer1 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
           customer2 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
+          query = spy(to_a: [customer1, customer2])
+          expected_customer1 = spy(phone_numbers: [spy(value: phone_number)])
+          expected_customer2 = spy(phone_numbers: [spy(value: phone_number)])
+          allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
+          allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
+          allow(customer1).to receive(:with_google_contact).and_return(expected_customer1)
+          allow(customer2).to receive(:with_google_contact).and_return(expected_customer2)
           FactoryBot.create(:reservation_customer, customer: customer1)
           FactoryBot.create(:reservation_customer, customer: customer2)
 
           result = outcome.result
 
-          expect(result).to eq(customer2)
-        end
-      end
-
-      context "when no matched phone number and no reservations" do
-        it "returns the recent created customer" do
-          customer1 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          customer2 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-
-          result = outcome.result
-
-          expect(result).to eq(customer2)
+          expect(result).to eq(expected_customer2)
         end
       end
     end

@@ -7,29 +7,25 @@ module Booking
 
     def execute
       user_customers = user.customers
-      matched_customers = user_customers.where(last_name: last_name, first_name: first_name).or(user_customers.where(phonetic_last_name: last_name, phonetic_first_name: first_name)).to_a
+      customers = user_customers.where(last_name: last_name, first_name: first_name).or(user_customers.where(phonetic_last_name: last_name, phonetic_first_name: first_name)).to_a
+
+      matched_customers = customers.find_all do |customer|
+        customer.with_google_contact&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') }&.include?(phone_number.gsub(/[^0-9]/, ''))
+      end
 
       if matched_customers.length == 1
         matched_customers.first.with_google_contact
       elsif matched_customers.length > 1
         NotificationMailer.duplicate_customers(user, matched_customers).deliver_later
 
-        matched_phone_customer = matched_customers.find do |matched_customer|
-          matched_customer.with_google_contact.primary_phone&.value&.gsub(/[^0-9]/, '') == phone_number.gsub(/[^0-9]/, '')
-        end
+        sql = matched_customers.map(&:id).map { |customer_id| "customer_id = #{customer_id}" }.join(" OR ")
+        last_reservation_customer = ReservationCustomer.where(Arel.sql(sql)).order("id").last
+        last_reservation_customer = matched_customers.find { |matched_customer| matched_customer.id == last_reservation_customer&.customer_id }
 
-        if matched_phone_customer
-          matched_phone_customer.with_google_contact
+        if last_reservation_customer
+          last_reservation_customer.with_google_contact
         else
-          sql = matched_customers.map(&:id).map { |customer_id| "customer_id = #{customer_id}" }.join(" OR ")
-          last_reservation_customer = ReservationCustomer.where(Arel.sql(sql)).order("id").last
-          last_reservation_customer = matched_customers.find { |matched_customer| matched_customer.id == last_reservation_customer&.customer_id }
-
-          if last_reservation_customer
-            last_reservation_customer.with_google_contact
-          else
-            matched_customers.sort_by(&:id).last.with_google_contact
-          end
+          matched_customers.sort_by(&:id).last.with_google_contact
         end
       end
     end
