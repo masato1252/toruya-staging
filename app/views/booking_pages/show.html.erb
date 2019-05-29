@@ -10,18 +10,21 @@
     remember_me: true,
     customer_first_name: @customer&.first_name,
     customer_last_name: @customer&.last_name,
-    customer_phone_number: @customer&.primary_phone&.value,
+    customer_phone_number: cookies[:booking_customer_phone_number],
     customer_info: {
       id: @customer&.id,
-      simple_address: @customer&.address,
-      full_address: @customer&.display_address,
-      address_details: @customer&.primary_address,
-      email: @customer&.primary_email,
-      phone: @customer&.primary_phone,
       first_name: @customer&.first_name,
       last_name: @customer&.last_name,
       phonetic_first_name: @customer&.phonetic_first_name,
-      phonetic_last_name: @customer&.phonetic_last_name
+      phonetic_last_name: @customer&.phonetic_last_name,
+      phone_number: cookies[:booking_customer_phone_number],
+      phone_numbers: @customer&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
+      email: @customer.primary_email&.value&.address,
+      emails: @customer.emails&.map { |email| email.value.address },
+      simple_address: @customer&.address,
+      full_address: @customer&.display_address,
+      address_details: @customer&.primary_address&.value,
+      original_address_details: @customer.primary_address&.value
     }
   },
   path: {

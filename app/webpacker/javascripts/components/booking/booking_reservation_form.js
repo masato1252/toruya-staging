@@ -4,6 +4,7 @@ import React from "react";
 import { Form, Field } from "react-final-form";
 import axios from "axios";
 import _ from "lodash";
+import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
 import { Radio, Condition } from "../shared/components";
 
@@ -118,6 +119,149 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  customerInfoFieldModalHideHandler = () => {
+    $("#customer-info-modal").modal("show");
+  }
+
+  openCustomerInfoFeildModel = async (form, field_name) => {
+    await form.change("booking_reservation_form[customer_info_field_name]", field_name)
+    $("#customer-info-modal").modal("hide")
+    $("#customer-info-field-modal").on("hidden.bs.modal", this.customerInfoFieldModalHideHandler);
+    $("#customer-info-field-modal").modal("show")
+  }
+
+  renderCustomerInfoFieldModel = (form, values) => {
+    const field_name = values.booking_reservation_form.customer_info_field_name;
+    if (!field_name) return;
+
+    return (
+      <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 className="modal-title">
+              </h4>
+            </div>
+            <div className="modal-body">
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="full_name">
+                <Field
+                  name="booking_reservation_form[customer_info][last_name]"
+                  type="text"
+                  component="input"
+                />
+                <Field
+                  name="booking_reservation_form[customer_info][first_name]"
+                  type="text"
+                  component="input"
+                />
+              </Condition>
+
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="phonetic_full_name">
+                <Field
+                  name="booking_reservation_form[customer_info][phonetic_last_name]"
+                  type="text"
+                  component="input"
+                />
+                <Field
+                  name="booking_reservation_form[customer_info][phonetic_first_name]"
+                  type="text"
+                  component="input"
+                />
+              </Condition>
+
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="phone_number">
+                <Field
+                  name="booking_reservation_form[customer_info][phone_number]"
+                  type="text"
+                  component="input"
+                />
+              </Condition>
+
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="email">
+                <Field
+                  name="booking_reservation_form[customer_info][email]"
+                  type="text"
+                  component="input"
+                />
+              </Condition>
+
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="address">
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][postcode]"
+                  type="text"
+                  component="input"
+                />
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][city]"
+                  type="text"
+                  component="input"
+                />
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][region]"
+                  type="text"
+                  component="input"
+                />
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][street]"
+                  type="text"
+                  component="input"
+                />
+              </Condition>
+            </div>
+            <div className="modal-footer centerize">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderCustomerInfoModal = (form, values) => {
+    return (
+      <div className="modal fade" id="customer-info-modal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 className="modal-title">
+              </h4>
+            </div>
+            <div className="modal-body">
+              <div>
+                {values.booking_reservation_form.customer_info.first_name}
+                {values.booking_reservation_form.customer_info.last_name}
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel(form, "full_name")}>Edit Full Name</a>
+              </div>
+              <div>
+                {values.booking_reservation_form.customer_info.phonetic_last_name}
+                {values.booking_reservation_form.customer_info.phonetic_first_name}
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel(form, "phonetic_full_name")}>Edit Phonetic Full Name</a>
+              </div>
+              <div>
+                {values.booking_reservation_form.customer_info.phone_number}
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel(form, "phone_number")}>Edit Phone number</a>
+              </div>
+              <div>
+                {values.booking_reservation_form.customer_info.email}
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel(form, "email")}>Edit Email</a>
+              </div>
+              <div>
+                {values.booking_reservation_form.customer_info.full_address}
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel(form, "address")}>Edit Address</a>
+              </div>
+            </div>
+            <div className="modal-footer centerize">
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   renderCurrentCustomerInfo = (form, values) => {
     const { simple_address, last_name, first_name } = values.booking_reservation_form.customer_info;
     return (
@@ -132,6 +276,8 @@ class BookingReservationForm extends React.Component {
             <a href="#" onClick={() => form.change("booking_reservation_form[found_customer]", null)}>
               Not me
             </a>
+            <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>Edit</a>
+            {this.renderCustomerInfoModal(form, values)}
           </div>
         </Condition>
       </div>
@@ -152,7 +298,6 @@ class BookingReservationForm extends React.Component {
         }}
         mutators={{
         }}
-        id="booking_reservation_form"
         render={({ handleSubmit, submitting, values, form }) => {
           return (
             <form
@@ -166,6 +311,7 @@ class BookingReservationForm extends React.Component {
               {this.renderBookingHeader()}
               {this.renderRegularCustomersOption(form, values)}
               {this.renderCurrentCustomerInfo(form, values)}
+              {this.renderCustomerInfoFieldModel(form, values)}
             </form>
           )
         }}

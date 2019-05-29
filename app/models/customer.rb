@@ -82,13 +82,47 @@ class Customer < ApplicationRecord
     self.google_contact_group_ids = google_contact.group_ids
     self.birthday = Date.parse(google_contact.birthday) if google_contact.birthday
     self.addresses = google_contact.addresses || []
+    # primary_address format
+    # {
+    #   type: "home",
+    #   value: {
+    #     formatted_address: "4F.-3, No.125, Sinsing St\nTainan, 岩手県 7107108"
+    #     primary: true
+    #     postcode: "7107108"
+    #     city: "Tainan"
+    #     region: "岩手県"
+    #     street: "4F.-3, No.125, Sinsing St"
+    #   }
+    # }
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
     self.address = primary_part_address(google_contact.addresses)
+    # emails format
+    # [
+    #   {
+    #     "type" => :home,
+    #     "value" => {
+    #       "address" => "lake.ilakela@gmail.com",
+    #       "primary" => true,
+    #       "label" => "home"
+    #     }
+    #   }
+    # ]
     self.emails = google_contact.emails
+    # phone_numbers format
+    # [
+    #   {
+    #     "type" => :home,
+    #     "value" => "12312312"
+    #   }
+    # ]
     self.phone_numbers = google_contact.phone_numbers
-    # google_contact.primary_email format:
-    # <Hashie::Mash type=:other value=#<Hashie::Mash address="awakeningyouedu@gmail.com" primary=true>>
+    # primary_email format:
+    # {
+    #   address: "lake.ilakela@gmail.com",
+    #   primary: true,
+    #   label: "home"
+    # }
     self.primary_email = google_contact.primary_email
     # primary_phone format
     # {

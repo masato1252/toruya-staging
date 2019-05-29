@@ -19,20 +19,27 @@ class BookingPagesController < ActionController::Base
     if customer
       if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
         cookies[:booking_customer_id] = customer.id
+        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+      else
+        cookies.delete :booking_customer_id
+        cookies.delete :booking_customer_phone_number
       end
 
       render json: {
         customer_info: {
           id: customer.id,
-          simple_address: customer.address,
-          full_address: customer.display_address,
-          address_details: customer.primary_address,
-          email: customer.primary_email,
-          phone: customer.primary_phone,
           first_name: customer.first_name,
           last_name: customer.last_name,
           phonetic_first_name: customer.phonetic_first_name,
-          phonetic_last_name: customer.phonetic_last_name
+          phonetic_last_name: customer.phonetic_last_name,
+          phone_number: params[:customer_phone_number],
+          phone_numbers: customer.phone_numbers.map { |phone| phone.value.gsub(/[^0-9]/, '') },
+          email: customer.primary_email&.value&.address,
+          emails: customer.emails.map { |email| email.value.address },
+          simple_address: customer.address,
+          full_address: customer.display_address,
+          address_details: customer.primary_address&.value,
+          original_address_details: customer.primary_address&.value
         }
       }
     else
