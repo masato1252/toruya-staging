@@ -5,10 +5,16 @@ import React from "react";
 const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n }) => {
   const { open_details, close_details, booking_option_required_time, minute } = i18n;
 
+  const handleOptionClick = (booking_option_id) => {
+    if (selectBookingOptionCallback) {
+      selectBookingOptionCallback(booking_option_id)
+    }
+  }
+
   return (
     <div className="result-field">
       <div className="booking-option-field" data-controller="collapse" data-collapse-status="closed">
-        <div className="booking-option-info" onClick={() => selectBookingOptionCallback(booking_option_value.id)}>
+        <div className="booking-option-info" onClick={() => handleOptionClick(booking_option_value.id)}>
           <div className="booking-option-name">
             <b>
               {booking_option_value.label}

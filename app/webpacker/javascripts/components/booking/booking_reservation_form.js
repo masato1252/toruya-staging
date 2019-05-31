@@ -6,6 +6,7 @@ import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
+import createChangesDecorator from "final-form-calculate";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
 import { Radio, Condition } from "../shared/components";
@@ -15,11 +16,41 @@ import moment from 'moment-timezone';
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
-    super(props);
     // booking_reservation_form[found_customer]:
     // null:  doesn't find customer yet
     // true:  found customer
     // false: couldn't find customer
+    super(props);
+
+    this.calculator = createChangesDecorator(
+      {
+        field: /regular/,
+        updates: async (value, name, allValues) => {
+          return await this.resetValues([
+            "customer_last_name",
+            "customer_first_name",
+            "customer_phone_number",
+            "customer_info",
+            "booking_date",
+            "booking_at",
+            "booking_times",
+            "booking_option_id",
+            "found_customer"
+          ]);
+        }
+      },
+      {
+        field: /booking_flow/,
+        updates: async (value, name, allValues) => {
+          return await this.resetValues([
+            "booking_date",
+            "booking_at",
+            "booking_times",
+            "booking_option_id"
+          ]);
+        }
+      }
+    )
   };
 
   renderBookingHeader = () => {
@@ -38,8 +69,12 @@ class BookingReservationForm extends React.Component {
   }
 
   renderRegularCustomersOption = () => {
+    const { found_customer } = this.booking_reservation_form_values;
+
+    if (found_customer) return;
+
     return (
-      <Condition when="booking_reservation_form[found_customer]" is_not="true">
+      <div>
         <div className="regular-customer-options">
           <div className="radio">
             <Field name="booking_reservation_form[regular]" type="radio" value="yes" component={Radio}>
@@ -52,6 +87,7 @@ class BookingReservationForm extends React.Component {
             </Field>
           </div>
         </div>
+
         <Condition when="booking_reservation_form[regular]" is="yes">
           <Field
             name="booking_reservation_form[customer_last_name]"
@@ -81,7 +117,7 @@ class BookingReservationForm extends React.Component {
             Find customer
           </a>
         </Condition>
-      </Condition>
+      </div>
     )
   }
 
@@ -220,6 +256,8 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingFlowOptions = () => {
+    if (!this.isBookingFlowStart()) return;
+
     return (
       <div>
         <div className="regular-customer-options">
@@ -262,6 +300,8 @@ class BookingReservationForm extends React.Component {
   };
 
   renderBookingOptionFirstFlow = () => {
+    if (!this.isBookingFlowStart()) return;
+
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
@@ -289,7 +329,7 @@ class BookingReservationForm extends React.Component {
             booking_option_value={selected_booking_option}
             i18n={this.props.i18n}
           />
-          <a href="#" onClick={this.optionFlowResetBookingOption}>Edit</a>
+          <a href="#" onClick={this.resetFlowValues}>Edit</a>
           <Condition when="booking_reservation_form[booking_at]" is="blank">
             <div className="booking-calendar">
               <Calendar
@@ -315,10 +355,7 @@ class BookingReservationForm extends React.Component {
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
             {booking_date} {booking_at}
-            <a href="#" onClick={this.optionFlowResetBookingAt}>Edit</a>
-          </div>
-          <div>
-            <button onClick={this.onSubmit}>Booking</button>
+            <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>Edit</a>
           </div>
         </Condition>
       </Condition>
@@ -326,6 +363,8 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDateFirstFlow = () => {
+    if (!this.isBookingFlowStart()) return;
+
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
@@ -355,7 +394,7 @@ class BookingReservationForm extends React.Component {
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
             {booking_date} {booking_at}
-            <a href="#" onClick={this.dateFlowResetBookingAt}>Edit</a>
+            <a href="#" onClick={this.resetFlowValues}>Edit</a>
           </div>
           <Condition when="booking_reservation_form[booking_option_id]" is="blank">
             {this.renderAvailableBookingOption()}
@@ -368,18 +407,20 @@ class BookingReservationForm extends React.Component {
             booking_option_value={selected_booking_option}
             i18n={this.props.i18n}
           />
-          <a href="#" onClick={this.dateFlowResetBookingOption}>Edit</a>
-          <button onClick={this.onSubmit}>Booking</button>
+          <a href="#" onClick={() => this.resetValues(["booking_option_id"])}>Edit</a>
         </Condition>
       </Condition>
     )
   }
 
   renderCurrentCustomerInfo = () => {
+    const { found_customer } = this.booking_reservation_form_values;
     const { simple_address, last_name, first_name } = this.booking_reservation_form_values.customer_info;
 
+    if (!found_customer) return;
+
     return (
-      <Condition when="booking_reservation_form[found_customer]" is="true">
+      <div>
         <div>
           {simple_address}
         </div>
@@ -391,12 +432,58 @@ class BookingReservationForm extends React.Component {
           </a>
           <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>Edit</a>
           {this.renderCustomerInfoModal()}
-          {this.renderBookingFlowOptions()}
-          {this.renderBookingOptionFirstFlow()}
-          {this.renderBookingDateFirstFlow()}
         </div>
+      </div>
+    )
+  }
+
+  renderNewCustomerFields = () => {
+    if (!this.isBookingFlowEnd()) return;
+
+    return (
+      <Condition when="booking_reservation_form[regular]" is="no">
+        <Field
+          name="booking_reservation_form[customer_last_name]"
+          component="input"
+          placeholder="last_name"
+        />
+        <Field
+          name="booking_reservation_form[customer_first_name]"
+          component="input"
+          placeholder="first_name"
+        />
+        <Field
+          name="booking_reservation_form[customer_phonetic_last_name]"
+          component="input"
+          placeholder="phonetic_last_name"
+          type="tel"
+        />
+        <Field
+          name="booking_reservation_form[customer_phonetic_first_name]"
+          component="input"
+          placeholder="phonetic_first_name"
+          type="tel"
+        />
+        <Field
+          name="booking_reservation_form[customer_phone_number]"
+          component="input"
+          placeholder="phone_number"
+          type="tel"
+        />
+        <Field
+          name="booking_reservation_form[customer_email]"
+          component="input"
+          placeholder="email"
+          type="tel"
+        />
       </Condition>
     )
+  }
+
+  renderBookingReservationInfo = () => {
+    if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
+
+    return <button onClick={this.onSubmit}>Booking</button>
   }
 
   render() {
@@ -407,6 +494,7 @@ class BookingReservationForm extends React.Component {
         initialValues={{
           booking_reservation_form: { ...(this.props.booking_reservation_form) },
         }}
+        decorators={[this.calculator]}
         mutators={{
           ...arrayMutators,
         }}
@@ -428,6 +516,13 @@ class BookingReservationForm extends React.Component {
               {this.renderBookingHeader()}
               {this.renderRegularCustomersOption()}
               {this.renderCurrentCustomerInfo()}
+
+              {this.renderBookingFlowOptions()}
+              {this.renderBookingOptionFirstFlow()}
+              {this.renderBookingDateFirstFlow()}
+              {this.renderNewCustomerFields()}
+              {this.renderBookingReservationInfo()}
+
               {this.renderCustomerInfoFieldModel()}
             </form>
           )
@@ -465,40 +560,33 @@ class BookingReservationForm extends React.Component {
   }
 
   findCustomer = async () => {
-    try {
-      const { customer_first_name, customer_last_name, customer_phone_number, remember_me } = this.booking_reservation_form_values;
+    const { customer_first_name, customer_last_name, customer_phone_number, remember_me } = this.booking_reservation_form_values;
 
-      if (!(customer_first_name && customer_last_name && customer_phone_number)) {
-        return;
-      }
-
-      if (this.findCustomerCall) {
-        return;
-      }
-
-      this.findCustomerCall = "loading";
-
-      const response = await axios({
-        method: "GET",
-        url: this.props.path.find_customer,
-        params: {
-          customer_first_name: customer_first_name,
-          customer_last_name: customer_last_name,
-          customer_phone_number: customer_phone_number,
-          remember_me: remember_me
-        },
-        responseType: "json"
-      })
-
-      this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
-      this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    if (!(customer_first_name && customer_last_name && customer_phone_number)) {
+      return;
     }
-    catch(err) {
-      console.info(err)
+
+    if (this.findCustomerCall) {
+      return;
     }
-    finally {
-      this.findCustomerCall = null;
-    }
+
+    this.findCustomerCall = "loading";
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.find_customer,
+      params: {
+        customer_first_name: customer_first_name,
+        customer_last_name: customer_last_name,
+        customer_phone_number: customer_phone_number,
+        remember_me: remember_me
+      },
+      responseType: "json"
+    })
+
+    this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
+    this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    this.findCustomerCall = null;
   }
 
   onSubmit = async (event) => {
@@ -536,34 +624,65 @@ class BookingReservationForm extends React.Component {
     $("#customer-info-field-modal").modal("show")
   }
 
-  dateFlowResetBookingAt = async () => {
-    await Promise.all(
-      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", null),
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", null),
-      this.booking_reservation_form.change("booking_reservation_form[booking_at]", null)
-    )
-    this.booking_reservation_form.change("booking_reservation_form[booking_date]", moment().format("YYYY-MM-DD"))
+  resetFlowValues = async () => {
+    this.resetValues([
+      "booking_option_id",
+      "booking_date",
+      "booking_at",
+      "booking_times"
+    ])
   }
 
-  dateFlowResetBookingOption = () => {
-    this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", null)
+  resetValues = (fields) => {
+    let newBaokingForm = {}
+
+    fields.forEach((field) => {
+      let resetValue = null;
+
+      switch (field) {
+        case "customer_info":
+          resetValue = {}
+          break;
+        case "booking_times":
+          resetValue = []
+          break;
+      }
+
+      this.booking_reservation_form.change(`booking_reservation_form[${field}]`, resetValue)
+    })
+
+    return {};
   }
 
-  optionFlowResetBookingAt = async () => {
-    await Promise.all(
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", null),
-      this.booking_reservation_form.change("booking_reservation_form[booking_at]", null)
-    )
-    this.booking_reservation_form.change("booking_reservation_form[booking_date]", moment().format("YYYY-MM-DD"))
+  isBookingFlowStart = () => {
+    return this.booking_reservation_form_values.found_customer || this.booking_reservation_form_values.regular === "no"
   }
 
-  optionFlowResetBookingOption = async () => {
-    await Promise.all(
-      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", null),
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", null),
-      this.booking_reservation_form.change("booking_reservation_form[booking_at]", null)
+  isBookingFlowEnd = () => {
+    const { booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values;
+
+    return booking_option_id && booking_date && booking_at
+  }
+
+  isEnoughCustomerInfo = () => {
+    const {
+      customer_info,
+      customer_last_name,
+      customer_first_name,
+      customer_phonetic_last_name,
+      customer_phonetic_first_name,
+      customer_phone_number,
+      customer_email
+    } = this.booking_reservation_form_values;
+
+    return (customer_info && customer_info.id) || (
+      customer_last_name &&
+      customer_first_name &&
+      customer_phonetic_last_name &&
+      customer_phonetic_first_name &&
+      customer_phone_number &&
+      customer_email
     )
-    this.booking_reservation_form.change("booking_reservation_form[booking_date]", moment().format("YYYY-MM-DD"))
   }
 }
 
