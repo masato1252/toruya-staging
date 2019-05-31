@@ -203,7 +203,10 @@ Rails.application.routes.draw do
   constraints(SubdomainConstraint[:booking]) do
     resources :booking_pages, path: "page", only: [:show] do
       member do
+        post "booking_reservation"
         get "find_customer"
+        get "calendar"
+        get "booking_times"
       end
     end
   end

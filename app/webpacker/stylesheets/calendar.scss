@@ -4,6 +4,14 @@
   width: 252px;
   line-height: 35px;
 
+  select {
+    appearance: none;
+    line-height: 35px;
+    padding: 0 15px;
+    background-color: #fff;
+    border: 1px solid #CCCCCC;
+  }
+
   .header,
   .calendar .month {
     padding-bottom: 10px;

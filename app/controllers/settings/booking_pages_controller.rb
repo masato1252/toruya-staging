@@ -87,11 +87,14 @@ class Settings::BookingPagesController < SettingsController
       special_dates: params[:special_dates],
       booking_option_ids: params[:booking_option_ids],
       interval: params[:interval],
-      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction])
+      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction]),
+      limit: 4
     )
 
+    available_booking_times = outcome.result.keys.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4)
+
     if outcome.valid?
-      render json: { booking_times: outcome.result.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4) }
+      render json: { booking_times: available_booking_times }
     else
       render json: { booking_times: [] }
     end

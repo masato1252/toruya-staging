@@ -1,13 +1,39 @@
+<%
+  booking_option_lambda = lambda do |booking_option|
+    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
+
+    Option.new(
+      id: booking_option.id,
+      name: booking_option.display_name,
+      minutes: booking_option.minutes,
+      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
+      start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
+      end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
+      memo: booking_option.memo
+    )
+  end
+
+  page_booking_options = @booking_page.booking_options.map do |option|
+    booking_option_lambda.call(option)
+  end
+%>
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
   booking_page: @booking_page.attributes.slice({}).merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
     shop_name: @booking_page.shop.name
   }),
+  calendar: {
+    dayNames: I18n.t("date.abbr_day_names"),
+    monthNames: I18n.t("date.abbr_month_names").compact,
+    dateSelectedCallbackPath: booking_times_booking_page_path(@booking_page),
+    schedulePath: calendar_booking_page_path(@booking_page, format: :json)
+  },
   booking_reservation_form: {
     regular: cookies[:booking_customer_id] ? "yes" : nil,
     found_customer: cookies[:booking_customer_id] ? true : nil,
     remember_me: true,
+    booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,
     customer_last_name: @customer&.last_name,
     customer_phone_number: cookies[:booking_customer_phone_number],
@@ -28,11 +54,13 @@
     }
   },
   path: {
-    save: nil,
+    save: booking_reservation_booking_page_path(@booking_page),
     find_customer: find_customer_booking_page_path(@booking_page)
   },
   i18n: {
   }.merge!([
+    t("settings.booking_page.form"),
+    t("common").slice(:required_label, :select_a_booking_option, :minute),
     t("action").slice(:save)
     ].inject(:merge!)
  ),

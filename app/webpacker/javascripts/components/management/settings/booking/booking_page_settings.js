@@ -275,8 +275,10 @@ class BookingPageSettings extends React.Component {
           <dl>
             <dd>
               <div className="interval-explanation">
-                <Condition when="booking_page[booking_times]" is="present">
-                  {interval_real_booking_time_explanation}
+                <Condition when="booking_page[special_dates]" is="present">
+                  <Condition when="booking_page[booking_times]" is="present">
+                    {interval_real_booking_time_explanation}
+                  </Condition>
                 </Condition>
                 <Condition when="booking_page[booking_times]" is="blank">
                   {interval_explanation}
@@ -288,10 +290,15 @@ class BookingPageSettings extends React.Component {
               <div className="booking-times-examples">
                 <FormSpy subscription={{ values: true }}>
                   {({ values }) => {
-                    const { interval, booking_times } = values.booking_page;
+                    const { interval, booking_times, special_dates, options, had_special_date } = values.booking_page;
 
-                    if (booking_times && booking_times.length) {
-                      return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
+                    if (had_special_date && special_dates && special_dates.length && options && options.length == 1) {
+                      if (booking_times && booking_times.length) {
+                        return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
+                      }
+                      else {
+                        return <div>No available booking times</div>;
+                      }
                     }
                     else {
                       let times = [moment({hour: 9})]

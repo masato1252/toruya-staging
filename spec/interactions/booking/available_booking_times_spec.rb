@@ -11,6 +11,7 @@ RSpec.describe Booking::AvailableBookingTimes do
   let(:user) { shop.user }
   let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
   let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user) }
+  let(:booking_option2) { FactoryBot.create(:booking_option, :single_menu, user: user) }
   let(:special_dates) {[
     "{\"start_at_date_part\":\"2019-05-13\",\"start_at_time_part\":\"09:00\",\"end_at_date_part\":\"2019-05-13\",\"end_at_time_part\":\"14:00\"}",
   ]}
@@ -19,7 +20,7 @@ RSpec.describe Booking::AvailableBookingTimes do
     {
       shop: shop,
       special_dates: special_dates,
-      booking_option_ids: [booking_option.id],
+      booking_option_ids: [booking_option.id, booking_option2.id],
       interval: 60,
       overlap_restriction: overlap_restriction
     }

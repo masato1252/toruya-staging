@@ -4,5 +4,13 @@ var BookingcomponentRequireContext = require.context("../javascripts/components"
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(BookingcomponentRequireContext)
 
+import "@stimulus/polyfills"
+import { Application } from "stimulus"
+import { definitionsFromContext } from "stimulus/webpack-helpers"
+
+const application = Application.start()
+const context = require.context("../javascripts/controllers", true, /^\.\/(collapse)/)
+application.load(definitionsFromContext(context))
+
 import Rails from 'rails-ujs';
 Rails.start();
