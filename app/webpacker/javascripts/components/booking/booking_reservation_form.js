@@ -356,24 +356,7 @@ class BookingReservationForm extends React.Component {
           {this.renderSelectedBookingOption()}
           <a href="#" onClick={this.resetFlowValues}>Edit</a>
           <Condition when="booking_reservation_form[booking_at]" is="blank">
-            <div className="booking-calendar">
-              <Calendar
-                {...this.props.calendar}
-                dateSelectedCallback={this.fetchBookingTimes}
-                scheduleParams={{
-                  booking_option_id: booking_option_id
-                }}
-              />
-              {
-                (booking_times && Object.keys(booking_times).length) ? (
-                  Object.keys(booking_times).map((time) => (
-                    <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
-                  )
-                ) : (
-                  <div>No available booking times</div>
-                )
-              }
-            </div>
+            {this.renderBookingCalendar()}
           </Condition>
         </Condition>
 
@@ -395,21 +378,7 @@ class BookingReservationForm extends React.Component {
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_date_first">
         <Condition when="booking_reservation_form[booking_at]" is="blank">
-          <div className="booking-calendar">
-            <Calendar
-              {...this.props.calendar}
-              dateSelectedCallback={this.fetchBookingTimes}
-            />
-            {
-              (booking_times && Object.keys(booking_times).length) ? (
-                Object.keys(booking_times).map((time) => (
-                  <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
-                )
-              ) : (
-                <div>No available booking times</div>
-              )
-            }
-          </div>
+          {this.renderBookingCalendar()}
         </Condition>
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
@@ -533,21 +502,12 @@ class BookingReservationForm extends React.Component {
     return moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")
   }
 
-  renderBookingFlow = () => {
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id } = this.booking_reservation_form_values
+  renderBookingCalendar = () => {
+    const { booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
+    if (booking_date && booking_at) return;
 
-    if (is_single_booking_time && is_single_option) {
-      return <div>
-        {this.renderSelectedBookingOption()}
-        {this.renderBookingDatetime()}
-        {this.renderRegularCustomersOption()}
-        {this.renderCurrentCustomerInfo()}
-        {this.renderNewCustomerFields()}
-      </div>
-    } else if (is_single_option) {
-      return <div>
-        {this.renderSelectedBookingOption()}
+    return (
+      <div className="booking-calendar">
         <Calendar
           {...this.props.calendar}
           dateSelectedCallback={this.fetchBookingTimes}
@@ -555,17 +515,57 @@ class BookingReservationForm extends React.Component {
             booking_option_id: booking_option_id
           }}
         />
+        {
+          (booking_times && Object.keys(booking_times).length) ? (
+            Object.keys(booking_times).map((time) => (
+              <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
+            )
+          ) : (
+            <div>No available booking times</div>
+          )
+        }
       </div>
+    )
+  }
+
+  renderBookingFlow = () => {
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { booking_options, special_date, booking_option_id } = this.booking_reservation_form_values
+
+    if (is_single_booking_time && is_single_option) {
+      return (
+        <div>
+          {this.renderSelectedBookingOption()}
+          {this.renderBookingDatetime()}
+          {this.renderRegularCustomersOption()}
+          {this.renderCurrentCustomerInfo()}
+          {this.renderNewCustomerFields()}
+        </div>
+      )
+    } else if (is_single_option) {
+      return (
+        <div>
+          {this.renderSelectedBookingOption()}
+          {this.renderBookingCalendar()}
+          {this.renderBookingDatetime()}
+          {this.isBookingFlowEnd() && <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>Edit</a> }
+          {this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
+          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
+        </div>
+      )
     } else {
-      return <div>
-        {this.renderRegularCustomersOption()}
-        {this.renderCurrentCustomerInfo()}
-        {this.renderBookingFlowOptions()}
-        {this.renderBookingOptionFirstFlow()}
-        {this.renderBookingDateFirstFlow()}
-        {this.renderNewCustomerFields()}
-        {this.renderBookingReservationButton()}
-      </div>
+      return (
+        <div>
+          {this.renderRegularCustomersOption()}
+          {this.renderCurrentCustomerInfo()}
+          {this.renderBookingFlowOptions()}
+          {this.renderBookingOptionFirstFlow()}
+          {this.renderBookingDateFirstFlow()}
+          {this.renderNewCustomerFields()}
+          {this.renderBookingReservationButton()}
+        </div>
+      )
     }
 
   }
