@@ -36,13 +36,13 @@ RSpec.describe Booking::AvailableBookingTimes do
   it "returns expected result, returns all available booking time" do
     result = outcome.result
 
-    expect(result.flatten).to eq([
-      Time.zone.local(2019, 5, 13, 9),
-      Time.zone.local(2019, 5, 13, 10),
-      Time.zone.local(2019, 5, 13, 11),
-      Time.zone.local(2019, 5, 13, 12),
-      Time.zone.local(2019, 5, 13, 13)
-    ])
+    expect(result).to eq({
+      Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
+      Time.zone.local(2019, 5, 13, 10) => [booking_option.id],
+      Time.zone.local(2019, 5, 13, 11) => [booking_option.id],
+      Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
+      Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+    })
   end
 
   context "when there is existing reservation" do
@@ -56,11 +56,11 @@ RSpec.describe Booking::AvailableBookingTimes do
     it "returns expected result, returns all available booking time" do
       result = outcome.result
 
-      expect(result.flatten).to eq([
-        Time.zone.local(2019, 5, 13, 9),
-        Time.zone.local(2019, 5, 13, 12),
-        Time.zone.local(2019, 5, 13, 13)
-      ])
+      expect(result).to eq({
+        Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
+        Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
+        Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+      })
     end
 
     context "when allow to overlap" do
@@ -69,13 +69,13 @@ RSpec.describe Booking::AvailableBookingTimes do
       it "returns expected result, returns all available booking time" do
         result = outcome.result
 
-        expect(result.flatten).to eq([
-          Time.zone.local(2019, 5, 13, 9),
-          Time.zone.local(2019, 5, 13, 10),
-          Time.zone.local(2019, 5, 13, 11),
-          Time.zone.local(2019, 5, 13, 12),
-          Time.zone.local(2019, 5, 13, 13)
-        ])
+        expect(result).to eq({
+          Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 10) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 11) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+        })
       end
     end
 
@@ -87,11 +87,11 @@ RSpec.describe Booking::AvailableBookingTimes do
       it "returns expected result, returns all available booking time" do
         result = outcome.result
 
-        expect(result.flatten).to eq([
-          Time.zone.local(2019, 5, 13, 9),
-          Time.zone.local(2019, 5, 13, 12),
-          Time.zone.local(2019, 5, 13, 13)
-        ])
+        expect(result).to eq({
+          Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
+          Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+        })
       end
     end
   end
