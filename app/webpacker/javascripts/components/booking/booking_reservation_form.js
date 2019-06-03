@@ -476,6 +476,14 @@ class BookingReservationForm extends React.Component {
           placeholder="email"
           type="tel"
         />
+        <label>
+          <Field
+            name="booking_reservation_form[remember_me]"
+            component="input"
+            type="checkbox"
+          />
+          Remember Me
+        </label>
       </Condition>
     )
   }
@@ -603,7 +611,11 @@ class BookingReservationForm extends React.Component {
         "customer_info",
         "booking_date",
         "booking_at",
-        "booking_option_id"
+        "booking_option_id",
+        "customer_phonetic_last_name",
+        "customer_phonetic_first_name",
+        "customer_email",
+        "remember_me"
       ),
       responseType: "json"
     })
