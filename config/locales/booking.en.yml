@@ -1,0 +1,27 @@
+ja:
+  booking_page:
+    time_from: ""
+    ever_used: "have you been used"
+    yes_ever_used: "Yes, I had"
+    no_first_time: "No, it's my first time"
+    name: Name
+    last_name: Last name
+    first_name: First name
+    email: Email
+    phone_number: Mobile phone
+    remember_me: Remember me
+    confirm_customer_info: Confirm Your Information
+    confirm_reservation: Confirm Temporary Reservation
+    not_you: is not you?
+    edit_info: Edit your address/mobile phone
+    edit: Edit
+    address: Address
+    address_details:
+      zip_code: Zip code
+      living_state: State
+      city: City
+      steet: street
+    save_change: Save Changes
+    flow_label: Please select what you want to select first
+    date_flow_first: from booking date and time
+    option_flow_first: from booking menu

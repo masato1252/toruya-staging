@@ -83,16 +83,14 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingHeader = () => {
+    const { title, greeting, shop_logo_url } = this.props.booking_page;
     return (
       <div>
-        {
-          this.props.booking_page.shop_logo_url ? (
-            <img className="logo" src={this.props.booking_page.shop_logo_url} />
-          ) : (
-            <strong>{this.props.booking_page.shop_name}</strong>
-          )
-        }
-        Booking
+        { shop_logo_url &&  <img className="logo" src={shop_logo_url} /> }
+        <strong>{title}</strong>
+        <div>
+          {greeting}
+        </div>
       </div>
     )
   }
@@ -102,36 +100,46 @@ class BookingReservationForm extends React.Component {
 
     if (found_customer) return;
 
+    const { ever_used, yes_ever_used, no_first_time, name, last_name, first_name, phone_number, remember_me, confirm_customer_info } = this.props.i18n;
+    const { shop_name } = this.props.booking_page;
+
     return (
       <div>
         <div className="regular-customer-options">
+          {ever_used}{shop_name}
           <div className="radio">
             <Field name="booking_reservation_form[regular]" type="radio" value="yes" component={Radio}>
-              Regular
+              {yes_ever_used}
             </Field>
           </div>
           <div className="radio">
             <Field name="booking_reservation_form[regular]" type="radio" value="no" component={Radio}>
-              New
+              {no_first_time}
             </Field>
           </div>
         </div>
 
         <Condition when="booking_reservation_form[regular]" is="yes">
+          <h4>
+            {name}
+          </h4>
           <Field
             name="booking_reservation_form[customer_last_name]"
             component="input"
-            placeholder="last_name"
+            placeholder={last_name}
           />
           <Field
             name="booking_reservation_form[customer_first_name]"
             component="input"
-            placeholder="first_name"
+            placeholder={first_name}
           />
+          <h4>
+            {phone_number}
+          </h4>
           <Field
             name="booking_reservation_form[customer_phone_number]"
             component="input"
-            placeholder="phone_number"
+            placeholder="0123456789"
             type="tel"
           />
           <label>
@@ -140,10 +148,10 @@ class BookingReservationForm extends React.Component {
               component="input"
               type="checkbox"
             />
-            Remember Me
+            {remember_me}
           </label>
           <a href="#" onClick={() => this.findCustomer()}>
-            Find customer
+            {confirm_customer_info}
           </a>
         </Condition>
       </div>
@@ -154,6 +162,11 @@ class BookingReservationForm extends React.Component {
     const field_name = this.booking_reservation_form_values.customer_info_field_name;
     if (!field_name) return;
 
+    const {
+      name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name,
+      phone_number, email, save_change, info_change_title, address_details
+    } = this.props.i18n;
+
     return (
       <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
@@ -161,67 +174,98 @@ class BookingReservationForm extends React.Component {
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 className="modal-title">
+                {info_change_title}
               </h4>
             </div>
             <div className="modal-body">
               <Condition when="booking_reservation_form[customer_info_field_name]" is="full_name">
+                <h4>
+                  {name}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][last_name]"
                   type="text"
                   component="input"
+                  placeholder={last_name}
                 />
                 <Field
                   name="booking_reservation_form[customer_info][first_name]"
                   type="text"
                   component="input"
+                  placeholder={first_name}
                 />
               </Condition>
 
               <Condition when="booking_reservation_form[customer_info_field_name]" is="phonetic_full_name">
+                <h4>
+                  {phonetic_name}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][phonetic_last_name]"
                   type="text"
                   component="input"
+                  placeholder={phonetic_last_name}
                 />
                 <Field
                   name="booking_reservation_form[customer_info][phonetic_first_name]"
                   type="text"
                   component="input"
+                  placeholder={phonetic_first_name}
                 />
               </Condition>
 
               <Condition when="booking_reservation_form[customer_info_field_name]" is="phone_number">
+                <h4>
+                  {phone_number}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][phone_number]"
                   type="text"
                   component="input"
+                  placeholder="0123456789"
                 />
               </Condition>
 
               <Condition when="booking_reservation_form[customer_info_field_name]" is="email">
+                <h4>
+                  {email}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][email]"
                   type="text"
                   component="input"
+                  placeholder="mail@domail.com"
                 />
               </Condition>
 
               <Condition when="booking_reservation_form[customer_info_field_name]" is="address">
+                <h4>
+                  {address_details.zipcode}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   type="text"
                   component="input"
                 />
-                <Field
-                  name="booking_reservation_form[customer_info][address_details][city]"
-                  type="text"
-                  component="input"
-                />
+                <h4>
+                  {address_details.living_state}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][address_details][region]"
                   type="text"
                   component="input"
                 />
+                <h4>
+                  {address_details.city}
+                </h4>
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][city]"
+                  type="text"
+                  component="input"
+                />
+                <h4>
+                  {address_details.street}
+                </h4>
                 <Field
                   name="booking_reservation_form[customer_info][address_details][street]"
                   type="text"
@@ -231,7 +275,7 @@ class BookingReservationForm extends React.Component {
             </div>
             <div className="modal-footer centerize">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                Close
+                {save_change}
               </button>
             </div>
           </div>
@@ -242,6 +286,7 @@ class BookingReservationForm extends React.Component {
 
   renderCustomerInfoModal = () => {
     const { last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, email, full_address } = this.booking_reservation_form_values.customer_info;
+    const { i18n } = this.props
 
     return (
       <div className="modal fade" id="customer-info-modal" tabIndex="-1" role="dialog">
@@ -250,33 +295,52 @@ class BookingReservationForm extends React.Component {
             <div className="modal-header">
               <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
               <h4 className="modal-title">
+                {i18n.info_change_title}
               </h4>
             </div>
             <div className="modal-body">
+              <h4>
+                {i18n.name}
+              </h4>
               <div>
                 {first_name}
                 {last_name}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("full_name")}>Edit Full Name</a>
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel("full_name")}>{i18n.edit}</a>
               </div>
+              <h4>
+                {i18n.phonetic_name}
+              </h4>
               <div>
                 {phonetic_last_name}
                 {phonetic_first_name}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>Edit Phonetic Full Name</a>
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>{i18n.edit}</a>
               </div>
+              <h4>
+                {i18n.phone_number}
+              </h4>
               <div>
                 {phone_number}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phone_number")}>Edit Phone number</a>
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phone_number")}>{i18n.edit}</a>
               </div>
+              <h4>
+                {i18n.email}
+              </h4>
               <div>
                 {email}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("email")}>Edit Email</a>
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel("email")}>{i18n.edit}</a>
               </div>
+              <h4>
+                {i18n.address}
+              </h4>
               <div>
                 {full_address}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("address")}>Edit Address</a>
+                <a href="#" onClick={() => this.openCustomerInfoFeildModel("address")}>{i18n.edit}</a>
               </div>
             </div>
             <div className="modal-footer centerize">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                OK
+              </button>
             </div>
           </div>
         </div>
@@ -286,18 +350,22 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlowOptions = () => {
     if (!this.isBookingFlowStart()) return;
+    const { flow_label, date_flow_first, option_flow_first } = this.props.i18n
 
     return (
       <div>
         <div className="regular-customer-options">
+          <h4>
+            {flow_label}
+          </h4>
           <div className="radio">
-            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_option_first" component={Radio}>
-              Option first
+            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_date_first" component={Radio}>
+              {date_flow_first}
             </Field>
           </div>
           <div className="radio">
-            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_date_first" component={Radio}>
-              Date first
+            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_option_first" component={Radio}>
+              {option_flow_first}
             </Field>
           </div>
         </div>
@@ -332,6 +400,7 @@ class BookingReservationForm extends React.Component {
     if (!this.isBookingFlowStart()) return;
 
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
+    const { edit } = this.props.i18n;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
       return booking_option.id === booking_option_id
@@ -354,7 +423,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
           {this.renderSelectedBookingOption()}
-          <a href="#" onClick={this.resetFlowValues}>Edit</a>
+          <a href="#" onClick={this.resetFlowValues}>{edit}</a>
           <Condition when="booking_reservation_form[booking_at]" is="blank">
             {this.renderBookingCalendar()}
           </Condition>
@@ -363,7 +432,7 @@ class BookingReservationForm extends React.Component {
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
             {this.renderBookingDatetime()}
-            <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>Edit</a>
+            <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>{edit}</a>
           </div>
         </Condition>
       </Condition>
@@ -374,6 +443,7 @@ class BookingReservationForm extends React.Component {
     if (!this.isBookingFlowStart()) return;
 
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
+    const { edit } = this.props.i18n;
 
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_date_first">
@@ -384,7 +454,7 @@ class BookingReservationForm extends React.Component {
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
             {this.renderBookingDatetime()}
-            <a href="#" onClick={this.resetFlowValues}>Edit</a>
+            <a href="#" onClick={this.resetFlowValues}>{edit}</a>
           </div>
           <Condition when="booking_reservation_form[booking_option_id]" is="blank">
             {this.renderAvailableBookingOption()}
@@ -393,7 +463,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
           {this.renderSelectedBookingOption()}
-          <a href="#" onClick={() => this.resetValues(["booking_option_id"])}>Edit</a>
+          <a href="#" onClick={() => this.resetValues(["booking_option_id"])}>{edit}</a>
         </Condition>
       </Condition>
     )
@@ -405,19 +475,23 @@ class BookingReservationForm extends React.Component {
 
     if (!found_customer) return;
 
+    const { not_me, edit_info } = this.props.i18n
+
     return (
       <div>
         <div>
           {simple_address}
         </div>
         <div>
-          {last_name}
-          {first_name}
-          <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
-            Not me
-          </a>
-          <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>Edit</a>
-          {this.renderCustomerInfoModal()}
+          <div>
+            <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
+              {last_name} {first_name} {not_me}
+            </a>
+          </div>
+          <div>
+            <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>{edit_info}</a>
+            {this.renderCustomerInfoModal()}
+          </div>
         </div>
       </div>
     )
@@ -426,41 +500,53 @@ class BookingReservationForm extends React.Component {
   renderNewCustomerFields = () => {
     if (!this.isBookingFlowEnd()) return;
 
+    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me } = this.props.i18n;
+
     return (
       <Condition when="booking_reservation_form[regular]" is="no">
+        <h4>
+          {name}
+        </h4>
         <Field
           name="booking_reservation_form[customer_last_name]"
           component="input"
-          placeholder="last_name"
+          placeholder={last_name}
         />
         <Field
           name="booking_reservation_form[customer_first_name]"
           component="input"
-          placeholder="first_name"
+          placeholder={first_name}
         />
+        <h4>
+          {phonetic_name}
+        </h4>
         <Field
           name="booking_reservation_form[customer_phonetic_last_name]"
           component="input"
-          placeholder="phonetic_last_name"
-          type="tel"
+          placeholder={phonetic_last_name}
         />
         <Field
           name="booking_reservation_form[customer_phonetic_first_name]"
           component="input"
-          placeholder="phonetic_first_name"
-          type="tel"
+          placeholder={phonetic_first_name}
         />
+        <h4>
+          {phone_number}
+        </h4>
         <Field
           name="booking_reservation_form[customer_phone_number]"
           component="input"
-          placeholder="phone_number"
+          placeholder="0123456789"
           type="tel"
         />
+        <h4>
+          {email}
+        </h4>
         <Field
           name="booking_reservation_form[customer_email]"
           component="input"
-          placeholder="email"
-          type="tel"
+          placeholder="mail@domail.com"
+          type="email"
         />
         <label>
           <Field
@@ -468,7 +554,7 @@ class BookingReservationForm extends React.Component {
             component="input"
             type="checkbox"
           />
-          Remember Me
+          {remember_me}
         </label>
       </Condition>
     )
@@ -477,7 +563,7 @@ class BookingReservationForm extends React.Component {
   renderBookingReservationButton = () => {
     if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
 
-    return <button onClick={this.onSubmit}>Booking</button>
+    return <button onClick={this.onSubmit}>{this.props.i18n.confirm_reservation}</button>
   }
 
   renderSelectedBookingOption = () => {
@@ -499,7 +585,12 @@ class BookingReservationForm extends React.Component {
     const { booking_date, booking_at} = this.booking_reservation_form_values
     if (!(booking_date && booking_at)) return;
 
-    return moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")
+    return (
+      <div>
+        <i className="fa fa-calendar"></i>
+        {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {this.props.i18n.time_from}
+      </div>
+    )
   }
 
   renderBookingCalendar = () => {
@@ -531,15 +622,17 @@ class BookingReservationForm extends React.Component {
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time } = this.props.booking_page
     const { booking_options, special_date, booking_option_id } = this.booking_reservation_form_values
+    const { edit } = this.props.i18n;
 
     if (is_single_booking_time && is_single_option) {
       return (
         <div>
-          {this.renderSelectedBookingOption()}
           {this.renderBookingDatetime()}
+          {this.renderSelectedBookingOption()}
           {this.renderRegularCustomersOption()}
           {this.renderCurrentCustomerInfo()}
           {this.renderNewCustomerFields()}
+          {this.renderBookingReservationButton()}
         </div>
       )
     } else if (is_single_option) {
@@ -548,10 +641,11 @@ class BookingReservationForm extends React.Component {
           {this.renderSelectedBookingOption()}
           {this.renderBookingCalendar()}
           {this.renderBookingDatetime()}
-          {this.isBookingFlowEnd() && <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>Edit</a> }
+          {this.isBookingFlowEnd() && <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>{edit}</a>}
           {this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
+          {this.renderBookingReservationButton()}
         </div>
       )
     } else {
