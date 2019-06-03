@@ -6,13 +6,13 @@ import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
+import moment from 'moment-timezone';
 import createChangesDecorator from "final-form-calculate";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
 import { Radio, Condition } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
-import moment from 'moment-timezone';
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
@@ -21,22 +21,34 @@ class BookingReservationForm extends React.Component {
     // true:  found customer
     // false: couldn't find customer
     super(props);
+    moment.locale("ja");
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
 
     this.calculator = createChangesDecorator(
       {
         field: /regular/,
         updates: async (value, name, allValues) => {
-          return await this.resetValues([
-            "customer_last_name",
-            "customer_first_name",
-            "customer_phone_number",
-            "customer_info",
-            "booking_date",
-            "booking_at",
-            "booking_times",
-            "booking_option_id",
-            "found_customer"
-          ]);
+          if (is_single_option) {
+            return await this.resetValues([
+              "customer_last_name",
+              "customer_first_name",
+              "customer_phone_number",
+              "customer_info",
+              "found_customer"
+            ]);
+          } else {
+            return await this.resetValues([
+              "customer_last_name",
+              "customer_first_name",
+              "customer_phone_number",
+              "customer_info",
+              "booking_date",
+              "booking_at",
+              "booking_times",
+              "booking_option_id",
+              "found_customer"
+            ]);
+          }
         }
       },
       {
@@ -52,6 +64,23 @@ class BookingReservationForm extends React.Component {
       }
     )
   };
+
+  componentDidMount = () => {
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { booking_options, single_booking_time } = this.booking_reservation_form_values
+
+    if (is_single_booking_time && is_single_option) {
+      const selected_booking_option = booking_options[0];
+
+      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", selected_booking_option.id)
+      this.booking_reservation_form.change("booking_reservation_form[booking_date]", single_booking_time.booking_date)
+      this.booking_reservation_form.change("booking_reservation_form[booking_at]", single_booking_time.booking_at)
+    } else if (is_single_option) {
+      const selected_booking_option = booking_options[0];
+
+      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", selected_booking_option.id)
+    }
+  }
 
   renderBookingHeader = () => {
     return (
@@ -324,11 +353,7 @@ class BookingReservationForm extends React.Component {
         </Condition>
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
-          <BookingPageOption
-            key={`booking_options-${booking_option_id}`}
-            booking_option_value={selected_booking_option}
-            i18n={this.props.i18n}
-          />
+          {this.renderSelectedBookingOption()}
           <a href="#" onClick={this.resetFlowValues}>Edit</a>
           <Condition when="booking_reservation_form[booking_at]" is="blank">
             <div className="booking-calendar">
@@ -354,7 +379,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
-            {booking_date} {booking_at}
+            {this.renderBookingDatetime()}
             <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>Edit</a>
           </div>
         </Condition>
@@ -366,10 +391,6 @@ class BookingReservationForm extends React.Component {
     if (!this.isBookingFlowStart()) return;
 
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
-
-    const selected_booking_option = _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
-    })
 
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_date_first">
@@ -393,7 +414,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
-            {booking_date} {booking_at}
+            {this.renderBookingDatetime()}
             <a href="#" onClick={this.resetFlowValues}>Edit</a>
           </div>
           <Condition when="booking_reservation_form[booking_option_id]" is="blank">
@@ -402,11 +423,7 @@ class BookingReservationForm extends React.Component {
         </Condition>
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
-          <BookingPageOption
-            key={`booking_options-${booking_option_id}`}
-            booking_option_value={selected_booking_option}
-            i18n={this.props.i18n}
-          />
+          {this.renderSelectedBookingOption()}
           <a href="#" onClick={() => this.resetValues(["booking_option_id"])}>Edit</a>
         </Condition>
       </Condition>
@@ -488,10 +505,69 @@ class BookingReservationForm extends React.Component {
     )
   }
 
-  renderBookingReservationInfo = () => {
+  renderBookingReservationButton = () => {
     if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
 
     return <button onClick={this.onSubmit}>Booking</button>
+  }
+
+  renderSelectedBookingOption = () => {
+    const { booking_options, booking_option_id } = this.booking_reservation_form_values
+    if (!booking_option_id) return;
+
+    const selected_booking_option = _.find(booking_options, (booking_option) => {
+      return booking_option.id === booking_option_id
+    })
+
+    return <BookingPageOption
+      key={`booking_options-${selected_booking_option.id}`}
+      booking_option_value={selected_booking_option}
+      i18n={this.props.i18n}
+    />
+  }
+
+  renderBookingDatetime = () => {
+    const { booking_date, booking_at} = this.booking_reservation_form_values
+    if (!(booking_date && booking_at)) return;
+
+    return moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")
+  }
+
+  renderBookingFlow = () => {
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { booking_options, special_date, booking_option_id } = this.booking_reservation_form_values
+
+    if (is_single_booking_time && is_single_option) {
+      return <div>
+        {this.renderSelectedBookingOption()}
+        {this.renderBookingDatetime()}
+        {this.renderRegularCustomersOption()}
+        {this.renderCurrentCustomerInfo()}
+        {this.renderNewCustomerFields()}
+      </div>
+    } else if (is_single_option) {
+      return <div>
+        {this.renderSelectedBookingOption()}
+        <Calendar
+          {...this.props.calendar}
+          dateSelectedCallback={this.fetchBookingTimes}
+          scheduleParams={{
+            booking_option_id: booking_option_id
+          }}
+        />
+      </div>
+    } else {
+      return <div>
+        {this.renderRegularCustomersOption()}
+        {this.renderCurrentCustomerInfo()}
+        {this.renderBookingFlowOptions()}
+        {this.renderBookingOptionFirstFlow()}
+        {this.renderBookingDateFirstFlow()}
+        {this.renderNewCustomerFields()}
+        {this.renderBookingReservationButton()}
+      </div>
+    }
+
   }
 
   render() {
@@ -522,14 +598,7 @@ class BookingReservationForm extends React.Component {
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
               {this.renderBookingHeader()}
-              {this.renderRegularCustomersOption()}
-              {this.renderCurrentCustomerInfo()}
-
-              {this.renderBookingFlowOptions()}
-              {this.renderBookingOptionFirstFlow()}
-              {this.renderBookingDateFirstFlow()}
-              {this.renderNewCustomerFields()}
-              {this.renderBookingReservationInfo()}
+              {this.renderBookingFlow()}
 
               {this.renderCustomerInfoFieldModel()}
             </form>

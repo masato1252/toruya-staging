@@ -19,9 +19,12 @@
 %>
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
+  timezone: Time.zone.tzinfo.name,
   booking_page: @booking_page.attributes.slice({}).merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
-    shop_name: @booking_page.shop.name
+    shop_name: @booking_page.shop.name,
+    is_single_booking_time: !!@single_booking_time,
+    is_single_option: @is_single_booking_option
   }),
   calendar: {
     dayNames: I18n.t("date.abbr_day_names"),
@@ -32,6 +35,7 @@
   booking_reservation_form: {
     regular: cookies[:booking_customer_id] ? "yes" : nil,
     found_customer: cookies[:booking_customer_id] ? true : nil,
+    single_booking_time: @single_booking_time,
     remember_me: true,
     booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,

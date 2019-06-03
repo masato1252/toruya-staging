@@ -6,6 +6,43 @@ class BookingPagesController < ActionController::Base
     if cookies[:booking_customer_id]
       @customer = @booking_page.user.customers.find(cookies[:booking_customer_id]).with_google_contact
     end
+
+    @is_single_booking_option = @booking_page.booking_page_options.count == 1
+
+    if @is_single_booking_option
+      is_single_special_date = @booking_page.booking_page_special_dates.count == 1
+
+      if is_single_special_date
+        booking_dates = @booking_page.booking_page_special_dates.map do |matched_special_date|
+          {
+            start_at_date_part: matched_special_date.start_at_date,
+            start_at_time_part: matched_special_date.start_at_time,
+            end_at_date_part:   matched_special_date.end_at_date,
+            end_at_time_part:   matched_special_date.end_at_time
+          }.to_json
+        end
+
+        outcome = Booking::AvailableBookingTimes.run(
+          shop: @booking_page.shop,
+          special_dates: booking_dates,
+          booking_option_ids: @booking_page.booking_option_ids,
+          interval: @booking_page.interval,
+          overlap_restriction: @booking_page.overlap_restriction,
+          limit: 2
+        )
+
+        if outcome.valid?
+          available_booking_times = outcome.result.keys
+
+          if available_booking_times.length == 1
+            booking_time = available_booking_times.first
+
+            @single_booking_time = { booking_date: booking_time.to_s(:date), booking_at: booking_time.to_s(:time) }
+          end
+        end
+      end
+    end
+
   end
 
   def booking_reservation
