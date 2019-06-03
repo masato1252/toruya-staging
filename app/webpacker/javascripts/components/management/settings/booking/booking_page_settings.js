@@ -42,6 +42,15 @@ class BookingPageSettings extends React.Component {
     )
   };
 
+  componentDidMount = () => {
+    this.initBookingTimes()
+  }
+
+  initBookingTimes = async () => {
+    const booking_times = await this.calculateBookingTimes(this.booking_page_settings_values);
+
+    this.booking_page_settings_form.change("booking_page[booking_times]", booking_times["booking_page[booking_times]"])
+  }
 
   renderNameFields = () => {
     const { required_label, name_header, page_name, page_name_hint, title, title_hint, greeting, greeting_placeholder } = this.props.i18n;
@@ -625,7 +634,10 @@ class BookingPageSettings extends React.Component {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values }) => {
+        render={({ handleSubmit, submitting, values, form }) => {
+          this.booking_page_settings_form = form;
+          this.booking_page_settings_values = values;
+
           return (
             <form
               action={this.props.path.save}
