@@ -32,4 +32,15 @@ ja:
     booking_end_at: 終了予定
     thanks_for_come_back: いつもご利用ありがとうございます
     please_select_a_menu: メニューをお選びください
+    done:
+      title: 仮予約が完了しました
+      message1: ご登録の携帯電話に
+      message2: ご予約内容を送信しました
+      desc1: の予約情報を
+      desc2: あなたの予定と一緒に管理できる
+      desc3: 無料カレンダーアプリ
+      feature1: プライベートの予定を管理
+      feature2: お友達毎で約束やタスクを管理
+      feature3: 各種店舗の予約をカレンダーで確認
+      signup_now: 今すぐ登録
 

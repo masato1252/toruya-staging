@@ -82,18 +82,17 @@ class BookingReservationForm extends React.Component {
     }
   }
 
-  renderBookingHeader = () => {
+  renderBookingHeader = (pristine) => {
     const { title, greeting, shop_logo_url } = this.props.booking_page;
+
     return (
       <div className="header">
-        <div>
+        <div className="header-title-part">
           { shop_logo_url &&  <img className="logo" src={shop_logo_url} /> }
           <strong className="page-title">{title}</strong>
         </div>
 
-        <div className="greeting">
-          {greeting}
-        </div>
+        {pristine && !this.booking_reservation_form_values.isDone && <div className="greeting">{greeting}</div>}
       </div>
     )
   }
@@ -590,19 +589,24 @@ class BookingReservationForm extends React.Component {
     )
   }
 
-  renderBookingReservationButton = (with_new_customer_fields = false) => {
-    // if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
+  renderBookingReservationButton = () => {
+    const { isBooking, regular } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
-    if (!this.isEnoughCustomerInfo() && !with_new_customer_fields) return;
+    if (!this.isEnoughCustomerInfo() && regular !== "no") return;
 
     return (
       <div className="reservation-confirmation">
         <div className="note">
           {this.props.booking_page.note}
         </div>
-        <button onClick={this.onSubmit} className="btn btn-tarco">
-          {this.props.i18n.confirm_reservation}
+
+        <button onClick={this.onSubmit} className="btn btn-tarco" disabled={isBooking}>
+          {isBooking ? (
+            <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+          ) : (
+            this.props.i18n.confirm_reservation
+          )}
         </button>
       </div>
     )
@@ -707,10 +711,69 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  renderBookingDownView = () => {
+    const {
+      title,
+      message1,
+      message2,
+      desc1,
+      desc2,
+      desc3,
+      feature1,
+      feature2,
+      feature3,
+      signup_now
+    } = this.props.i18n.done
+
+    return (
+      <div className="done-view">
+        <h3 className="title">
+          {title}
+        </h3>
+        <div className="message">
+          {message1}
+          <br />
+          {message2}
+        </div>
+        <div className="desc">
+          {this.props.booking_page.shop_name}{desc1}
+          <br />
+          {desc2}
+          <br />
+          {desc3}
+        </div>
+        <div>
+          <img className="toruya-logo" src="https://toruya.com/wp-content/uploads/2018/09/logo_H.png" />
+        </div>
+        <div className="feature-list">
+          <div>
+            <i className="fa fa-check-square"></i>
+            {feature1}
+          </div>
+          <div>
+            <i className="fa fa-check-square"></i>
+            {feature2}
+          </div>
+          <div>
+            <i className="fa fa-check-square"></i>
+            {feature3}
+          </div>
+        </div>
+        <div>
+          <a href="https://toruya.com" className="btn btn-gray">{signup_now}</a>
+        </div>
+      </div>
+    )
+  }
+
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, regular } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, regular, isDone } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
+
+    if (isDone) {
+      return this.renderBookingDownView()
+    }
 
     if (is_single_booking_time && is_single_option) {
       return (
@@ -720,7 +783,7 @@ class BookingReservationForm extends React.Component {
           {this.renderRegularCustomersOption()}
           {this.renderCurrentCustomerInfo()}
           {this.renderNewCustomerFields()}
-          {this.renderBookingReservationButton(regular == "no")}
+          {this.renderBookingReservationButton()}
         </div>
       )
     } else if (is_single_option) {
@@ -732,7 +795,7 @@ class BookingReservationForm extends React.Component {
           {this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
-          {this.renderBookingReservationButton(regular == "no")}
+          {this.renderBookingReservationButton()}
         </div>
       )
     } else {
@@ -763,7 +826,7 @@ class BookingReservationForm extends React.Component {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values, form }) => {
+        render={({ handleSubmit, submitting, values, form, pristine }) => {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
 
@@ -778,7 +841,7 @@ class BookingReservationForm extends React.Component {
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
-              {this.renderBookingHeader()}
+              {this.renderBookingHeader(pristine)}
               {this.renderBookingFlow()}
 
               {this.renderCustomerInfoFieldModel()}
@@ -850,6 +913,13 @@ class BookingReservationForm extends React.Component {
   onSubmit = async (event) => {
     event.preventDefault()
 
+    if (this.bookingReserationLoading) {
+      return;
+    }
+
+    this.bookingReserationLoading = "loading";
+    this.booking_reservation_form.change("booking_reservation_form[isBooking]", true)
+
     const response = await axios({
       method: "POST",
       url: this.props.path.save,
@@ -870,8 +940,11 @@ class BookingReservationForm extends React.Component {
       responseType: "json"
     })
 
+    this.bookingReserationLoading = null;
+    this.booking_reservation_form.change("booking_reservation_form[isBooking]", false)
+
     if (response.data.status === "successful") {
-      alert("Successful")
+      this.booking_reservation_form.change("booking_reservation_form[isDone]", true)
     }
   };
 

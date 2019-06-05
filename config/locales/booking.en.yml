@@ -28,3 +28,14 @@ ja:
     booking_end_at: end at
     thanks_for_come_back: Thank you for coming back
     please_select_a_menu: Please select a menu
+    done:
+      title: Temporary reservation has been made
+      message1: Reservation detail has been
+      message2: sent to your mobile phone
+      desc1: Manage {shop-name} reservation
+      desc2: with your personal schedule
+      desc3: FREE
+      feature1: Manage private schedule
+      feature2: Manage arrangement and tasks for friends
+      feature3: Remind you for your reservations
+      signup_now: Signup Now!
