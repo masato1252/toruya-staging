@@ -71,6 +71,8 @@ ja:
     minute: 分
     total: 合計
     copied: コピーした
+    of: の
+    sir: 様
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗

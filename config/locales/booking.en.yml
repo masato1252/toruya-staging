@@ -25,3 +25,6 @@ ja:
     flow_label: Please select what you want to select first
     date_flow_first: from booking date and time
     option_flow_first: from booking menu
+    booking_end_at: end at
+    thanks_for_come_back: Thank you for coming back
+    please_select_a_menu: Please select a menu

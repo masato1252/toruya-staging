@@ -1,14 +1,24 @@
 "use strict";
 
 import React from "react";
+import moment from 'moment-timezone';
 
-const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n }) => {
+const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at }) => {
+  let option_content;
   const { open_details, close_details, booking_option_required_time, minute } = i18n;
 
   const handleOptionClick = (booking_option_id) => {
     if (selectBookingOptionCallback) {
       selectBookingOptionCallback(booking_option_id)
     }
+  }
+
+  if (selectBookingOptionCallback || !booking_start_at || !booking_start_at.isValid()) {
+    option_content = `${booking_option_required_time}${booking_option_value.minutes}${minute}`;
+  }
+  else {
+    booking_start_at = booking_start_at.add(booking_option_value.minutes, "minutes")
+    option_content = `${booking_start_at.format("hh:mm")} ${i18n.booking_end_at}`
   }
 
   return (
@@ -21,7 +31,7 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
             </b>
           </div>
 
-          {`${booking_option_required_time}${booking_option_value.minutes}${minute}`}
+          {option_content}
         </div>
 
         <div className="booking-option-row">

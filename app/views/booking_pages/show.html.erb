@@ -20,7 +20,7 @@
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
-  booking_page: @booking_page.attributes.slice("title", "greeting").merge!({
+  booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
     shop_name: @booking_page.shop.name,
     is_single_booking_time: !!@single_booking_time,
@@ -65,7 +65,7 @@
   }.merge!([
     t("settings.booking_page.form"),
     t("booking_page"),
-    t("common").slice(:required_label, :select_a_booking_option, :minute),
+    t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
     t("action").slice(:save)
     ].inject(:merge!)
  ),

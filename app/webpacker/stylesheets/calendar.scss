@@ -156,8 +156,8 @@
   }
 
   .day.selected {
-    background: #fcbe46;
-    border-color: #fcbe46;
+    background: #fcbe46 !important;
+    border-color: #fcbe46 !important;
   }
 
   .day.workDay {
@@ -228,6 +228,7 @@
     }
 
     .demo-day {
+      vertical-align: middle;
       display: inline-block;
       width: 24px;
       height: 24px;

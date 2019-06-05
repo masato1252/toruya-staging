@@ -1,0 +1,150 @@
+.booking-content {
+  .header {
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    .page-title {
+      font-size: 24px;
+      margin-left: 20px;
+    }
+
+    .logo {
+      width: 130px;
+      height: auto;
+      max-height: 45px;
+    }
+
+    .greeting {
+      margin: 12px 6px 20px;
+    }
+  }
+
+  a.edit {
+    float: right;
+    font-size: $small-font-size;
+    font-weight: normal;
+  }
+
+  .selected-booking-datetime {
+    margin-top: 12px;
+    margin-left: 6px;
+    margin-bottom: 20px;
+    font-size: $normal-font-size;
+
+    .fa-calendar {
+      margin-right: 12px;
+    }
+  }
+
+  .booking-option-field {
+    display: block;
+    width: initial;
+  }
+
+  .selected-booking-option {
+    position: relative;
+
+    .fa-check-circle {
+      position: absolute;
+      font-size: 1.5em;
+      right: -0.35em;
+      top: -0.35em;
+      color: $palette-color5;
+      background-color: #ffffff;
+    }
+
+    .booking-option-field {
+      border: 3px solid $palette-color5;
+      color: $gray11;
+    }
+  }
+
+  .customer-type-options,
+  .regular-customer-options {
+    margin-top: 40px;
+
+    .radios {
+      text-align: center;
+
+      .radio {
+        display: inline-block;
+        margin: 6px 20px;
+      }
+    }
+  }
+
+  .remember-me {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .customer-found {
+    margin-top: 40px;
+    text-align: center;
+
+    .simple-address {
+      margin-top: 20px;
+      font-size: $normal-font-size;
+    }
+
+    .customer-full-name {
+      font-size: $large-font-size;
+    }
+
+    .edit-customer-info, .not-me {
+      margin-top: 12px;
+      font-size: $normal-font-size;
+    }
+  }
+
+  .reservation-confirmation {
+    text-align: center;
+    margin-top: 30px;
+
+    .note {
+      color: $gray11;
+      margin-bottom: 20px;
+    }
+  }
+
+  .booking-calendar {
+    margin-top: 30px;
+
+    .calendar,
+    .demo-days {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  #customer-info-modal {
+    text-align: left;
+
+    .info {
+      margin-left: 20px;
+    }
+  }
+
+  #customer-info-field-modal {
+    .street-field,
+    .email-field {
+      width: 100%;
+    }
+  }
+
+  .time-interval {
+    display: inline-block;
+    width: 150px;
+    padding: 12px;
+    margin: 0 12px 12px 0;
+    background-color: $gray5;
+    border: 1px solid $gray6;
+    color: $black;
+  }
+
+  .booking-options {
+    .result-field {
+      margin-top: 15px;
+    }
+  }
+}

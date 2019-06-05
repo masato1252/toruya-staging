@@ -29,4 +29,7 @@ ja:
     flow_label: 先に選択したいものをお選びください
     date_flow_first: 予約日時から選ぶ
     option_flow_first: 予約メニューから選ぶ
+    booking_end_at: 終了予定
+    thanks_for_come_back: いつもご利用ありがとうございます
+    please_select_a_menu: メニューをお選びください
 

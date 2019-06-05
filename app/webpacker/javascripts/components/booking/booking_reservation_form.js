@@ -85,10 +85,13 @@ class BookingReservationForm extends React.Component {
   renderBookingHeader = () => {
     const { title, greeting, shop_logo_url } = this.props.booking_page;
     return (
-      <div>
-        { shop_logo_url &&  <img className="logo" src={shop_logo_url} /> }
-        <strong>{title}</strong>
+      <div className="header">
         <div>
+          { shop_logo_url &&  <img className="logo" src={shop_logo_url} /> }
+          <strong className="page-title">{title}</strong>
+        </div>
+
+        <div className="greeting">
           {greeting}
         </div>
       </div>
@@ -104,18 +107,23 @@ class BookingReservationForm extends React.Component {
     const { shop_name } = this.props.booking_page;
 
     return (
-      <div>
+      <div className="customer-type-options">
         <div className="regular-customer-options">
-          {ever_used}{shop_name}
-          <div className="radio">
-            <Field name="booking_reservation_form[regular]" type="radio" value="yes" component={Radio}>
-              {yes_ever_used}
-            </Field>
-          </div>
-          <div className="radio">
-            <Field name="booking_reservation_form[regular]" type="radio" value="no" component={Radio}>
-              {no_first_time}
-            </Field>
+          <h4>
+            {ever_used}{shop_name}
+          </h4>
+
+          <div className="radios">
+            <div className="radio">
+              <Field name="booking_reservation_form[regular]" type="radio" value="yes" component={Radio}>
+                {yes_ever_used}
+              </Field>
+            </div>
+            <div className="radio">
+              <Field name="booking_reservation_form[regular]" type="radio" value="no" component={Radio}>
+                {no_first_time}
+              </Field>
+            </div>
           </div>
         </div>
 
@@ -127,11 +135,13 @@ class BookingReservationForm extends React.Component {
             name="booking_reservation_form[customer_last_name]"
             component="input"
             placeholder={last_name}
+            type="text"
           />
           <Field
             name="booking_reservation_form[customer_first_name]"
             component="input"
             placeholder={first_name}
+            type="text"
           />
           <h4>
             {phone_number}
@@ -142,17 +152,21 @@ class BookingReservationForm extends React.Component {
             placeholder="0123456789"
             type="tel"
           />
-          <label>
-            <Field
-              name="booking_reservation_form[remember_me]"
-              component="input"
-              type="checkbox"
-            />
-            {remember_me}
-          </label>
-          <a href="#" onClick={() => this.findCustomer()}>
-            {confirm_customer_info}
-          </a>
+          <div className="remember-me">
+            <label>
+              <Field
+                name="booking_reservation_form[remember_me]"
+                component="input"
+                type="checkbox"
+              />
+              {remember_me}
+            </label>
+          </div>
+          <div className="centerize">
+            <a href="#" className="btn btn-tarco" onClick={this.findCustomer}>
+              {confirm_customer_info}
+            </a>
+          </div>
         </Condition>
       </div>
     )
@@ -235,6 +249,7 @@ class BookingReservationForm extends React.Component {
                   type="text"
                   component="input"
                   placeholder="mail@domail.com"
+                  className="email-field"
                 />
               </Condition>
 
@@ -270,11 +285,12 @@ class BookingReservationForm extends React.Component {
                   name="booking_reservation_form[customer_info][address_details][street]"
                   type="text"
                   component="input"
+                  className="street-field"
                 />
               </Condition>
             </div>
             <div className="modal-footer centerize">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
                 {save_change}
               </button>
             </div>
@@ -301,44 +317,44 @@ class BookingReservationForm extends React.Component {
             <div className="modal-body">
               <h4>
                 {i18n.name}
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("full_name")}>{i18n.edit}</a>
               </h4>
-              <div>
+              <div className="info">
                 {first_name}
                 {last_name}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("full_name")}>{i18n.edit}</a>
               </div>
               <h4>
                 {i18n.phonetic_name}
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>{i18n.edit}</a>
               </h4>
-              <div>
+              <div className="info">
                 {phonetic_last_name}
                 {phonetic_first_name}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>{i18n.edit}</a>
               </div>
               <h4>
                 {i18n.phone_number}
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("phone_number")}>{i18n.edit}</a>
               </h4>
-              <div>
+              <div className="info">
                 {phone_number}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("phone_number")}>{i18n.edit}</a>
               </div>
               <h4>
                 {i18n.email}
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("email")}>{i18n.edit}</a>
               </h4>
-              <div>
+              <div className="info">
                 {email}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("email")}>{i18n.edit}</a>
               </div>
               <h4>
                 {i18n.address}
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address")}>{i18n.edit}</a>
               </h4>
-              <div>
+              <div className="info">
                 {full_address}
-                <a href="#" onClick={() => this.openCustomerInfoFeildModel("address")}>{i18n.edit}</a>
               </div>
             </div>
             <div className="modal-footer centerize">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+              <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
                 OK
               </button>
             </div>
@@ -350,6 +366,7 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlowOptions = () => {
     if (!this.isBookingFlowStart()) return;
+    if (this.isFlowSelected()) return;
     const { flow_label, date_flow_first, option_flow_first } = this.props.i18n
 
     return (
@@ -358,15 +375,17 @@ class BookingReservationForm extends React.Component {
           <h4>
             {flow_label}
           </h4>
-          <div className="radio">
-            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_date_first" component={Radio}>
-              {date_flow_first}
-            </Field>
-          </div>
-          <div className="radio">
-            <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_option_first" component={Radio}>
-              {option_flow_first}
-            </Field>
+          <div className="radios">
+            <div className="radio">
+              <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_date_first" component={Radio}>
+                {date_flow_first}
+              </Field>
+            </div>
+            <div className="radio">
+              <Field name="booking_reservation_form[booking_flow]" type="radio" value="booking_option_first" component={Radio}>
+                {option_flow_first}
+              </Field>
+            </div>
           </div>
         </div>
       </div>
@@ -383,7 +402,7 @@ class BookingReservationForm extends React.Component {
     })
 
     return (
-      <div className="result-fields">
+      <div className="result-fields booking-options">
         {available_booking_options.map((booking_option_value) => {
           return <BookingPageOption
             key={`booking_options-${booking_option_value.id}`}
@@ -400,7 +419,7 @@ class BookingReservationForm extends React.Component {
     if (!this.isBookingFlowStart()) return;
 
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
-    const { edit } = this.props.i18n;
+    const { edit, please_select_a_menu } = this.props.i18n;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
       return booking_option.id === booking_option_id
@@ -409,7 +428,10 @@ class BookingReservationForm extends React.Component {
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_option_first">
         <Condition when="booking_reservation_form[booking_option_id]" is="blank">
-          <div className="result-fields">
+          <div className="result-fields booking-options">
+            <h4>
+              {please_select_a_menu}
+            </h4>
             {booking_options.map((booking_option_value) => {
               return <BookingPageOption
                 key={`booking_options-${booking_option_value.id}`}
@@ -422,8 +444,7 @@ class BookingReservationForm extends React.Component {
         </Condition>
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
-          {this.renderSelectedBookingOption()}
-          <a href="#" onClick={this.resetFlowValues}>{edit}</a>
+          {this.renderSelectedBookingOption(this.resetFlowValues)}
           <Condition when="booking_reservation_form[booking_at]" is="blank">
             {this.renderBookingCalendar()}
           </Condition>
@@ -431,8 +452,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
-            {this.renderBookingDatetime()}
-            <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>{edit}</a>
+            {this.renderBookingDatetime(() => this.resetValues(["booking_date", "booking_at", "booking_times"]))}
           </div>
         </Condition>
       </Condition>
@@ -453,8 +473,7 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
-            {this.renderBookingDatetime()}
-            <a href="#" onClick={this.resetFlowValues}>{edit}</a>
+            {this.renderBookingDatetime(this.resetFlowValues)}
           </div>
           <Condition when="booking_reservation_form[booking_option_id]" is="blank">
             {this.renderAvailableBookingOption()}
@@ -462,8 +481,7 @@ class BookingReservationForm extends React.Component {
         </Condition>
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
-          {this.renderSelectedBookingOption()}
-          <a href="#" onClick={() => this.resetValues(["booking_option_id"])}>{edit}</a>
+          {this.renderSelectedBookingOption(() => this.resetValues(["booking_option_id"]))}
         </Condition>
       </Condition>
     )
@@ -475,23 +493,29 @@ class BookingReservationForm extends React.Component {
 
     if (!found_customer) return;
 
-    const { not_me, edit_info } = this.props.i18n
+    const { not_me, edit_info, of, sir, thanks_for_come_back } = this.props.i18n
 
     return (
-      <div>
+      <div className="customer-found">
         <div>
-          {simple_address}
+          {thanks_for_come_back}
         </div>
         <div>
-          <div>
-            <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
-              {last_name} {first_name} {not_me}
-            </a>
+          <div className="simple-address">
+            {simple_address}{of}
           </div>
-          <div>
-            <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>{edit_info}</a>
-            {this.renderCustomerInfoModal()}
+          <div className="customer-full-name">
+            {last_name} {first_name} {sir}
           </div>
+        </div>
+        <div className="edit-customer-info">
+          <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>{edit_info}</a>
+          {this.renderCustomerInfoModal()}
+        </div>
+        <div className="not-me">
+          <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
+            {last_name} {first_name} {not_me}
+          </a>
         </div>
       </div>
     )
@@ -511,11 +535,13 @@ class BookingReservationForm extends React.Component {
           name="booking_reservation_form[customer_last_name]"
           component="input"
           placeholder={last_name}
+          type="text"
         />
         <Field
           name="booking_reservation_form[customer_first_name]"
           component="input"
           placeholder={first_name}
+          type="text"
         />
         <h4>
           {phonetic_name}
@@ -524,11 +550,13 @@ class BookingReservationForm extends React.Component {
           name="booking_reservation_form[customer_phonetic_last_name]"
           component="input"
           placeholder={phonetic_last_name}
+          type="text"
         />
         <Field
           name="booking_reservation_form[customer_phonetic_first_name]"
           component="input"
           placeholder={phonetic_first_name}
+          type="text"
         />
         <h4>
           {phone_number}
@@ -548,47 +576,86 @@ class BookingReservationForm extends React.Component {
           placeholder="mail@domail.com"
           type="email"
         />
-        <label>
-          <Field
-            name="booking_reservation_form[remember_me]"
-            component="input"
-            type="checkbox"
-          />
-          {remember_me}
-        </label>
+        <div className="remember-me">
+          <label>
+            <Field
+              name="booking_reservation_form[remember_me]"
+              component="input"
+              type="checkbox"
+            />
+            {remember_me}
+          </label>
+        </div>
       </Condition>
     )
   }
 
-  renderBookingReservationButton = () => {
-    if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
+  renderBookingReservationButton = (with_new_customer_fields = false) => {
+    // if (!(this.isBookingFlowEnd() && this.isEnoughCustomerInfo())) return;
 
-    return <button onClick={this.onSubmit}>{this.props.i18n.confirm_reservation}</button>
+    if (!this.isBookingFlowEnd()) return;
+    if (!this.isEnoughCustomerInfo() && !with_new_customer_fields) return;
+
+    return (
+      <div className="reservation-confirmation">
+        <div className="note">
+          {this.props.booking_page.note}
+        </div>
+        <button onClick={this.onSubmit} className="btn btn-tarco">
+          {this.props.i18n.confirm_reservation}
+        </button>
+      </div>
+    )
   }
 
-  renderSelectedBookingOption = () => {
-    const { booking_options, booking_option_id } = this.booking_reservation_form_values
+  renderSelectedBookingOption = (resetValuesCallback = false) => {
+    const { booking_options, booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values
+    const { please_select_a_menu, edit } = this.props.i18n;
+
     if (!booking_option_id) return;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
       return booking_option.id === booking_option_id
     })
 
-    return <BookingPageOption
-      key={`booking_options-${selected_booking_option.id}`}
-      booking_option_value={selected_booking_option}
-      i18n={this.props.i18n}
-    />
+    const selected_booking_option_content = (
+      <div className="selected-booking-option">
+        <i className="fa fa-check-circle"></i>
+        <BookingPageOption
+          key={`booking_options-${selected_booking_option.id}`}
+          booking_option_value={selected_booking_option}
+          i18n={this.props.i18n}
+          booking_start_at={moment.tz(`${booking_date} ${booking_at}`, this.props.timezone)}
+        />
+      </div>
+    )
+
+    if (resetValuesCallback) {
+      return (
+        <div>
+          <h4>
+            {please_select_a_menu}
+            <a href="#" className="edit" onClick={resetValuesCallback}>{edit}</a>
+          </h4>
+          {selected_booking_option_content}
+        </div>
+      )
+    }
+
+    return selected_booking_option_content
   }
 
-  renderBookingDatetime = () => {
+  renderBookingDatetime = (resetValuesCallback = false) => {
     const { booking_date, booking_at} = this.booking_reservation_form_values
     if (!(booking_date && booking_at)) return;
 
+    const { edit, time_from } = this.props.i18n;
+
     return (
-      <div>
+      <div className="selected-booking-datetime">
         <i className="fa fa-calendar"></i>
-        {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {this.props.i18n.time_from}
+        {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {time_from}
+        {resetValuesCallback && <a href="#" className="edit" onClick={resetValuesCallback}>{edit}</a>}
       </div>
     )
   }
@@ -597,8 +664,20 @@ class BookingReservationForm extends React.Component {
     const { booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
     if (booking_date && booking_at) return;
 
+    const {
+      booking_dates_calendar_hint,
+      booking_dates_working_date,
+      booking_dates_available_booking_date,
+      date,
+      start_time
+    } = this.props.i18n;
+
     return (
       <div className="booking-calendar">
+        <h4>
+          {date}
+        </h4>
+        {booking_dates_calendar_hint}
         <Calendar
           {...this.props.calendar}
           dateSelectedCallback={this.fetchBookingTimes}
@@ -606,6 +685,15 @@ class BookingReservationForm extends React.Component {
             booking_option_id: booking_option_id
           }}
         />
+        <div className="demo-days">
+          <div className="demo-day day booking-available"></div>
+          {booking_dates_available_booking_date}
+          <div className="demo-day day workDay"></div>
+          {booking_dates_working_date}
+        </div>
+        <h4>
+          {start_time}
+        </h4>
         {
           (booking_times && Object.keys(booking_times).length) ? (
             Object.keys(booking_times).map((time) => (
@@ -621,7 +709,7 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, regular } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
     if (is_single_booking_time && is_single_option) {
@@ -632,7 +720,7 @@ class BookingReservationForm extends React.Component {
           {this.renderRegularCustomersOption()}
           {this.renderCurrentCustomerInfo()}
           {this.renderNewCustomerFields()}
-          {this.renderBookingReservationButton()}
+          {this.renderBookingReservationButton(regular == "no")}
         </div>
       )
     } else if (is_single_option) {
@@ -640,12 +728,11 @@ class BookingReservationForm extends React.Component {
         <div>
           {this.renderSelectedBookingOption()}
           {this.renderBookingCalendar()}
-          {this.renderBookingDatetime()}
-          {this.isBookingFlowEnd() && <a href="#" onClick={() => this.resetValues(["booking_date", "booking_at", "booking_times"])}>{edit}</a>}
+          {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "booking_times"])))}
           {this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
-          {this.renderBookingReservationButton()}
+          {this.renderBookingReservationButton(regular == "no")}
         </div>
       )
     } else {
@@ -839,6 +926,12 @@ class BookingReservationForm extends React.Component {
     return booking_option_id && booking_date && booking_at
   }
 
+  isFlowSelected = () => {
+    const { booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values;
+
+    return booking_option_id || (booking_date && booking_at)
+  }
+
   isEnoughCustomerInfo = () => {
     const {
       customer_info,
@@ -847,10 +940,11 @@ class BookingReservationForm extends React.Component {
       customer_phonetic_last_name,
       customer_phonetic_first_name,
       customer_phone_number,
-      customer_email
+      customer_email,
+      found_customer
     } = this.booking_reservation_form_values;
 
-    return (customer_info && customer_info.id) || (
+    return (found_customer && customer_info && customer_info.id) || (
       customer_last_name &&
       customer_first_name &&
       customer_phonetic_last_name &&
