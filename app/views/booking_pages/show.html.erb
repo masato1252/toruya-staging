@@ -20,9 +20,7 @@
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
-  booking_page: @booking_page.attributes.slice("title", "greeting").merge!({
-    note: format_content(@booking_page.note),
-    greeting: format_content(@booking_page.greeting),
+  booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
     shop_name: @booking_page.shop.name,
     is_single_booking_time: !!@single_booking_time,
