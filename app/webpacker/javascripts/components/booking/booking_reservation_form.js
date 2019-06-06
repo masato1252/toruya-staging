@@ -845,7 +845,7 @@ class BookingReservationForm extends React.Component {
           {this.renderSelectedBookingOption()}
           {this.renderBookingCalendar()}
           {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "booking_times"])))}
-          {this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
