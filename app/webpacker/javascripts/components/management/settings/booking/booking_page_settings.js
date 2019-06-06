@@ -274,7 +274,8 @@ class BookingPageSettings extends React.Component {
       interval_start_time,
       interval_option,
       per_minute,
-      interval_example_html
+      interval_example_html,
+      no_available_booking_times
     } = this.props.i18n;
 
     return (
@@ -306,7 +307,7 @@ class BookingPageSettings extends React.Component {
                         return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
                       }
                       else {
-                        return <div>No available booking times</div>;
+                        return <div className="warning">{no_available_booking_times}</div>;
                       }
                     }
                     else {

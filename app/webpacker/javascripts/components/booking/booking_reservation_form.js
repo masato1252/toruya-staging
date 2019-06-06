@@ -673,7 +673,8 @@ class BookingReservationForm extends React.Component {
       booking_dates_working_date,
       booking_dates_available_booking_date,
       date,
-      start_time
+      start_time,
+      no_available_booking_times
     } = this.props.i18n;
 
     return (
@@ -704,7 +705,7 @@ class BookingReservationForm extends React.Component {
               <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
             )
           ) : (
-            <div>No available booking times</div>
+            <div className="warning">{no_available_booking_times}</div>
           )
         }
       </div>
