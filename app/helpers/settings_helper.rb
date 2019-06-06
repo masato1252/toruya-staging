@@ -8,7 +8,7 @@ module SettingsHelper
   end
 
   def booking_url(page)
-    @booking_url ||= Rails.configuration.x.env.staging? ? booking_page_url(page) : booking_page_url(page, subdomain: :booking)
+    booking_page_url(page)
   end
 
   def booking_page_share_button_link(page)
