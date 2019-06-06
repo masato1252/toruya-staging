@@ -92,7 +92,7 @@ class BookingReservationForm extends React.Component {
           <strong className="page-title">{title}</strong>
         </div>
 
-        {pristine && !this.booking_reservation_form_values.isDone && <div className="greeting">{greeting}</div>}
+        {pristine && !this.booking_reservation_form_values.isDone && <div className="greeting"><div dangerouslySetInnerHTML={{ __html: greeting  }} /></div>}
       </div>
     )
   }
@@ -598,7 +598,7 @@ class BookingReservationForm extends React.Component {
     return (
       <div className="reservation-confirmation">
         <div className="note">
-          {this.props.booking_page.note}
+          <div dangerouslySetInnerHTML={{ __html: this.props.booking_page.note  }} />
         </div>
 
         <button onClick={this.onSubmit} className="btn btn-tarco" disabled={isBooking}>

@@ -82,4 +82,10 @@ module ApplicationHelper
   def booking_feature_enabled?
     !Rails.configuration.x.env.production?
   end
+
+  def format_content(content, spliter: "<br /><br />", html_options: {})
+    paragraphs = split_paragraphs(content)
+
+    content_tag(:q, paragraphs.map! { |paragraph| raw(paragraph) }.join(spliter).html_safe, html_options)
+  end
 end
