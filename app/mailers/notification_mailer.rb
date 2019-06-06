@@ -43,4 +43,12 @@ class NotificationMailer < ApplicationMailer
     mail(:to => @admin.email,
          :subject => subject("スタッフが削除されました。"))
   end
+
+  def duplicate_customers(user, customers)
+    @user = user
+    @customers = customers
+
+    mail(:to => @user.email,
+         :subject => subject("Duplicate customers"))
+  end
 end

@@ -29,6 +29,13 @@ en:
     log_out: Log out
     save: Save
     search: Search
+    upgrade_to_premium: Upgrade to premium plan
+    upgrade_to_basic: Upgrade to basic plan
+    cancel_upgrade: Cancel upgrade
+    new_reservation: Add a new reservation
+    create_a_shop: Set up a shop
+    copy: Copy
+    copy_code: Copy
   common:
     processing: Processing
     date: Date
@@ -56,11 +63,13 @@ en:
     select_a_menu: Please select a shop
     select_a_menu: Please select a menu
     select_a_staff: Please select a staff
+    select_a_booking_option: Select a booking option
     google_down: We can't connect with Google currently. Please try again later. Re-login might fix the problem immediately.
     pending: Pending
     required_label: required
     minute: minute
     total: Total
+    copied: Copied
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -461,6 +470,59 @@ en:
         note_hint: The important notes showed to your customer on booking with this price.
         form_errors:
           enough_time_for_menu: Please set enough length for the set menu.
+    booking_page:
+      title: Booking page setting
+      info_html: You can set your booking page here.<br>Your customers will book your shop online from this page.
+      booking_page_label: Booking page
+      name: Page Name
+      start_at: Accept from
+      end_at: Accept to
+      new_button: New Booking Page
+      share_modal_title: Copy codes
+      share_button_label: Booking Button
+      share_button_text: Booking
+      form:
+        name_header: Booking Page
+        page_name: Page name
+        page_name_hint: Name your page to manage it
+        title: Page title
+        title_hint: Page title to show on the booking page
+        greeting: Greeting phrase
+        greeting_placeholder: It will be displayed at the top of the booking page
+        booking_option_header: Booking prices
+        booking_option_hint: Your customer will book with this price
+        booking_option_required_time: Time required
+        shop_header: Available shop
+        booking_dates_header: Reservation calendar
+        booking_dates_hint: Calendar is showing from current setting contents and vacancy situation.
+        booking_dates_calendar_hint: Calendar is showing from current setting contents and vacancy situation.
+        booking_dates_working_date: Business day
+        booking_dates_available_booking_date: Available day
+        special_date_label: Available only for specific date
+        interval_header: Starting time of reservation
+        interval_real_booking_time_explanation: The choices from the current settings and availability are displayed.
+        interval_real_booking_time_warning: Actual display may be different based on reservation status and staff availability
+        interval_explanation: The first four choices from 9:00 to 12:00 are displayed.
+        interval_start_time: Start time
+        interval_option: Time choice spacing
+        per_minute: Per minute
+        interval_example_html: 'For example, if the available time is 9:00-12:00 and time choice spacing is set to <strong>"every 30 minutes"</strong>, the choice of reservation start time is "9: 00, 9: 30, 10: 00, 10: 30 ... " will be shown to your customer'
+        open_details: Detail
+        close_details: Close
+        sale_period: Reservation acceptance period
+        sale_now: Right now
+        sale_on: On
+        sale_forever: Never
+        sale_start: Sell start at
+        sale_end: Sell end at
+        overlap_booking: Overlap Booking
+        not_allow_overlap_booking_label: Close reservation acceptance with the number of available staff(recommended)
+        allow_overlap_booking_label: Accept reservations over the number of staff available
+        note_label: Description/Important notes
+        note_hint: Description/Important notes
+        form_errors:
+          start_at_too_late: Based on your setting, it should be before {datetime}
+          end_at_too_early: Based on your setting, it should be after {datetime}
   constants:
     rank:
       regular: "Regular"
@@ -534,6 +596,8 @@ en:
     am: am
     formats:
       default: "%a, %d %b %Y %I:%M:%S %p %Z"
+      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      standard: "%Y-%m-%d %H:%M"
       long: "%B %d, %Y %I:%M %p"
       short: "%d %b %I:%M %p"
       date: "%B %d, %Y"
@@ -701,6 +765,11 @@ en:
           attributes:
             date:
               shop_closed: "^Shop closed"
+        booking/validate_special_dates:
+          attributes:
+            special_dates:
+              on_unworking_dates: "^%{invalid_dates} Reservable date and time should be in business hours"
+              not_enough_time_dates: "^Based on your setting, it should be longer than %{not_enough_time_dates} minutes"
         subscriptions/charge:
           attributes:
             plan:

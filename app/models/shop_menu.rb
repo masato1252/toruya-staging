@@ -15,6 +15,7 @@
 #
 
 class ShopMenu < ApplicationRecord
+  default_value_for :max_seat_number, 1
   belongs_to :shop
   belongs_to :menu
   validates :max_seat_number, presence: true, numericality: { greater_than_or_equal_to: 0 }

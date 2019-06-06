@@ -1,10 +1,77 @@
+<%
+  booking_option_lambda = lambda do |booking_option|
+    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
+
+    Option.new(
+      id: booking_option.id,
+      name: booking_option.display_name,
+      minutes: booking_option.minutes,
+      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
+      start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
+      end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
+      memo: booking_option.memo
+    )
+  end
+
+  page_booking_options = @booking_page.booking_options.map do |option|
+    booking_option_lambda.call(option)
+  end
+%>
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
-  booking_page: @booking_page.attributes,
-  shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
-  path: {
-    save: nil,
+  timezone: Time.zone.tzinfo.name,
+  booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
+    shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
+    shop_name: @booking_page.shop.name,
+    is_single_booking_time: !!@single_booking_time,
+    is_single_option: @is_single_booking_option,
+    is_started: Time.zone.now >= @booking_page.start_at,
+    is_ended: @booking_page.end_at && Time.zone.now > @booking_page.end_at,
+    start_at: I18n.l(@booking_page.start_at, format: :date_with_wday)
+  }),
+  calendar: {
+    dayNames: I18n.t("date.abbr_day_names"),
+    monthNames: I18n.t("date.abbr_month_names").compact,
+    dateSelectedCallbackPath: booking_times_booking_page_path(@booking_page),
+    schedulePath: calendar_booking_page_path(@booking_page, format: :json)
   },
+  booking_reservation_form: {
+    regular: cookies[:booking_customer_id] ? "yes" : nil,
+    found_customer: cookies[:booking_customer_id] ? true : nil,
+    single_booking_time: @single_booking_time,
+    remember_me: true,
+    booking_options: custom_options(page_booking_options),
+    customer_first_name: @customer&.first_name,
+    customer_last_name: @customer&.last_name,
+    customer_phone_number: cookies[:booking_customer_phone_number],
+    customer_info: {
+      id: @customer&.id,
+      first_name: @customer&.first_name,
+      last_name: @customer&.last_name,
+      phonetic_first_name: @customer&.phonetic_first_name,
+      phonetic_last_name: @customer&.phonetic_last_name,
+      phone_number: cookies[:booking_customer_phone_number],
+      phone_numbers: @customer&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
+      email: @customer&.primary_email&.value&.address,
+      emails: @customer&.emails&.map { |email| email.value.address },
+      simple_address: @customer&.address,
+      full_address: @customer&.display_address,
+      address_details: @customer&.primary_address&.value,
+      original_address_details: @customer&.primary_address&.value
+    }
+  },
+  path: {
+    save: booking_reservation_booking_page_path(@booking_page),
+    find_customer: find_customer_booking_page_path(@booking_page)
+  },
+  i18n: {
+  }.merge!([
+    t("settings.booking_page.form"),
+    t("booking_page"),
+    t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
+    t("action").slice(:save)
+    ].inject(:merge!)
+ ),
 },
 { camelize_props: false }
 ) %>

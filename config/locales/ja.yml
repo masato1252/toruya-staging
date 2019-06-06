@@ -71,6 +71,8 @@ ja:
     minute: 分
     total: 合計
     copied: コピーした
+    of: の
+    sir: 様
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -722,6 +724,7 @@ ja:
         interval_explanation: 9:00〜12:00までの、始めの４つ選択肢を表示しています。
         interval_start_time: 開始時間
         interval_option: 選択肢の間隔
+        no_available_booking_times: 予約可能な時間がありません
         per_minute: 分毎
         interval_example_html: 例えば、予約可能時間が9:00〜12:00で、選択肢の間隔を<strong>「30分毎」</strong>と設定した場合、予約開始時間の選択肢が「9:00、9:30、10:00、10:30...」となります
         open_details: 詳細
@@ -733,7 +736,7 @@ ja:
         sale_start: 販売開始
         sale_end: 販売終了
         overlap_booking: 重複予約
-        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する
+        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する(推奨)
         allow_overlap_booking_label: 予約可能なスタッフ数以上に予約を受け付ける
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
@@ -879,15 +882,17 @@ ja:
     - :month
     - :day
   time:
-    am: 午前
+    am: AM
     formats:
       default: "%Y/%m/%d %H:%M"
+      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      standard: "%Y-%m-%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"
       date: "%Y/%m/%d(%a)"
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
-    pm: 午後
+    pm: PM
   datetime:
     distance_in_words:
       about_x_hours:

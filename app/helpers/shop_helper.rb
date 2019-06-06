@@ -1,6 +1,6 @@
 module ShopHelper
   def shops_select_component
-    react_component("header_selector",
+    react_component("management/header_selector",
                     { options: shops.map{|s| { value: s.to_param, label: s.name } },
                       selected_option: shop.to_param,
                       is_shop_selector: true
@@ -9,7 +9,7 @@ module ShopHelper
   end
 
   def staffs_select_component
-    react_component("header_selector",
+    react_component("management/header_selector",
                     { options: staffs.map{ |s| { value: s.to_param, label: s.name } },
                       selected_option: staff.to_param
                     },
@@ -19,18 +19,18 @@ module ShopHelper
   def shop_logo_url(shop, size)
     if shop.logo.attached?
       @shop_logo_url ||=
-        shop.logo.variant(
+        url_for(shop.logo.variant(
           combine_options: {
             resize: "#{size}",
             flatten: true
           }
-      )
+      ))
     end
   end
 
   def shop_logo(shop, size, extent: true, image_class: "")
     if shop.logo.attached?
-      image_tag(url_for(shop_logo_url(shop, size)), class: image_class)
+      image_tag(shop_logo_url(shop, size), class: image_class)
     end
   end
 end
