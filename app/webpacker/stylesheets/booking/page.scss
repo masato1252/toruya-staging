@@ -148,7 +148,9 @@
     }
   }
 
-  .done-view {
+  .done-view,
+  .start-yet-view,
+  .ended-view {
     text-align: center;
 
     .title {
@@ -171,6 +173,14 @@
       text-align: left;
       margin: 10px auto;
       display: inline-block;
+    }
+  }
+
+  .start-yet-view,
+  .ended-view {
+    .title {
+      padding: 20px;
+      background-color: $palette-color7;
     }
   }
 }

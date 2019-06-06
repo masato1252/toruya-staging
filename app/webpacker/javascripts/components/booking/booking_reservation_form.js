@@ -767,13 +767,65 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  renderBookingStartedYetView = () => {
+    const {
+      title,
+      message1,
+      message2
+    } = this.props.i18n.start_yet
+
+    return (
+      <div className="start-yet-view">
+        <h3 className="title">
+          {title}
+        </h3>
+        <div className="message">
+          {message1}
+          <br />
+          <strong>{this.props.booking_page.start_at}～</strong>
+          <br />
+          {message2}
+        </div>
+      </div>
+    )
+  }
+
+  renderBookingEndedView = () => {
+    const {
+      title,
+      message1,
+      message2
+    } = this.props.i18n.ended
+
+    return (
+      <div className="ended-view">
+        <h3 className="title">
+          {title}
+        </h3>
+        <div className="message">
+          {message1}
+          <br />
+          {message2}
+        </div>
+      </div>
+    )
+  }
+
   renderBookingFlow = () => {
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { is_single_option, is_single_booking_time, is_started, is_ended } = this.props.booking_page
     const { booking_options, special_date, booking_option_id, regular, isDone } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
     if (isDone) {
       return this.renderBookingDownView()
+    }
+
+    if (!is_started) {
+      return this.renderBookingStartedYetView()
+    }
+
+    if (is_ended) {
+      return this.renderBookingEndedView()
     }
 
     if (is_single_booking_time && is_single_option) {

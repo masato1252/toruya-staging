@@ -43,4 +43,12 @@ ja:
       feature2: お友達毎で約束やタスクを管理
       feature3: 各種店舗の予約をカレンダーで確認
       signup_now: 今すぐ登録
+    start_yet:
+      title: 受付開始前です
+      message1: このページからのご予約は
+      message2: 受付を開始します。
+    ended:
+      title: 受付を終了しました
+      message1: このページからのご予約は
+      message2: 受付を終了いたしました。
 
