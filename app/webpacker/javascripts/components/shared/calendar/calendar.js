@@ -38,13 +38,13 @@ class Calendar extends React.Component {
   }
 
   previous = () => {
-    var month = this.state.month;
+    var month = this.state.month.clone();
     month.add(-1, "M");
     this.setState({ month: month }, this.throttleFetchSchedule);
   };
 
   next = () => {
-    var month = this.state.month;
+    var month = this.state.month.clone();
     month.add(1, "M");
     this.setState({ month: month }, this.throttleFetchSchedule);
   };
