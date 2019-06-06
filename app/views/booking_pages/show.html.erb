@@ -25,9 +25,9 @@
     shop_name: @booking_page.shop.name,
     is_single_booking_time: !!@single_booking_time,
     is_single_option: @is_single_booking_option,
-    is_started: Time.zone.now >= (@booking_page.start_at || @booking_page.created_at),
+    is_started: Time.zone.now >= @booking_page.start_time,
     is_ended: @booking_page.end_at && Time.zone.now > @booking_page.end_at,
-    start_at: I18n.l(@booking_page.start_at, format: :date_with_wday)
+    start_at: I18n.l(@booking_page.start_time, format: :date_with_wday)
   }),
   calendar: {
     dayNames: I18n.t("date.abbr_day_names"),

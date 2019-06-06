@@ -32,4 +32,8 @@ class BookingPage < ApplicationRecord
 
   belongs_to :user
   belongs_to :shop
+
+  def start_time
+    start_at || created_at
+  end
 end
