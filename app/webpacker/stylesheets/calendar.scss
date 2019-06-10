@@ -4,6 +4,14 @@
   width: 252px;
   line-height: 35px;
 
+  select {
+    appearance: none;
+    line-height: 35px;
+    padding: 0 15px;
+    background-color: #fff;
+    border: 1px solid #CCCCCC;
+  }
+
   .header,
   .calendar .month {
     padding-bottom: 10px;
@@ -148,8 +156,8 @@
   }
 
   .day.selected {
-    background: #fcbe46;
-    border-color: #fcbe46;
+    background: #fcbe46 !important;
+    border-color: #fcbe46 !important;
   }
 
   .day.workDay {
@@ -220,6 +228,7 @@
     }
 
     .demo-day {
+      vertical-align: middle;
       display: inline-block;
       width: 24px;
       height: 24px;
@@ -236,4 +245,5 @@
   width: 252px;
   height: 286px;
   line-height: 286px;
+  color: $gray11;
 }

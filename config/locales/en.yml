@@ -596,6 +596,8 @@ en:
     am: am
     formats:
       default: "%a, %d %b %Y %I:%M:%S %p %Z"
+      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      standard: "%Y-%m-%d %H:%M"
       long: "%B %d, %Y %I:%M %p"
       short: "%d %b %I:%M %p"
       date: "%B %d, %Y"
@@ -743,6 +745,9 @@ en:
       last_word_connector: ", and "
       two_words_connector: " and "
       words_connector: ", "
+  notification_mailer:
+    duplicate_customers:
+      title: We've found duplicated customer data
   subscription_mailer:
     charge_successfully:
       title: Toruya Payment Notification

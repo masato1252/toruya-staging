@@ -1,0 +1,25 @@
+■ 顧客データ重複のお知らせ ■
+
+<%= line %>
+
+<%= @user.name || @user.email %> 様
+
+いつもToruyaをご利用いただきまして、誠にありがとうございます。
+
+オンライン予約ページ「<%= @booking_page.title %>」にて参照された顧客情報について、重複する顧客データが見つかりました。
+
+今回は、Toruyaにおける優先順位において、以下の通り仮予約を作成しましたので、ご確認ください。
+
+顧客氏名：
+<%= @booking_customer.name %> 様
+
+参照されたお電話番号：
+<%= @phone_number %>
+
+今回使用した顧客データ：
+<%= user_customers_url(@user, customer_id: @booking_customer.id) %>
+
+重複した顧客データ数：
+<%= @customers.size %>件
+
+以上、ご予約内容の承認と併せて、ご確認・ご対応ください。

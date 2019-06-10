@@ -200,7 +200,12 @@ Rails.application.routes.draw do
 
   root to: "members#show"
 
-  constraints(SubdomainConstraint[:booking]) do
-    get "page/:id", to: "booking_pages#show", as: :booking_page
+  resources :booking_pages, only: [:show] do
+    member do
+      post "booking_reservation"
+      get "find_customer"
+      get "calendar"
+      get "booking_times"
+    end
   end
 end

@@ -99,7 +99,7 @@ module Booking
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
-                    Rails.logger.info("====#{date}===#{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}========")
+                    # Rails.logger.info("====#{date}===#{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}========")
                     throw :next_working_date, date
                   end
                 end

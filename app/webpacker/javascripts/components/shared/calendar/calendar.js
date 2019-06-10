@@ -25,6 +25,10 @@ class Calendar extends React.Component {
 
   componentDidMount = () => {
     this.throttleFetchSchedule();
+
+    if (this.props.dateSelectedCallback) {
+      this.props.dateSelectedCallback(moment().format("YYYY-MM-DD"))
+    }
   };
 
   componentDidUpdate = (prevProps) => {
@@ -34,13 +38,13 @@ class Calendar extends React.Component {
   }
 
   previous = () => {
-    var month = this.state.month;
+    var month = this.state.month.clone();
     month.add(-1, "M");
     this.setState({ month: month }, this.throttleFetchSchedule);
   };
 
   next = () => {
-    var month = this.state.month;
+    var month = this.state.month.clone();
     month.add(1, "M");
     this.setState({ month: month }, this.throttleFetchSchedule);
   };
@@ -90,7 +94,10 @@ class Calendar extends React.Component {
   select = (day) => {
     this.setState({ month: day.date, selectedDate: day.date });
 
-    if (this.props.dateSelectedCallbackPath) {
+    if (this.props.dateSelectedCallback) {
+      this.props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
+    }
+    else if (this.props.dateSelectedCallbackPath) {
       location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
     }
   };

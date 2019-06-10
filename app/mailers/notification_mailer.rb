@@ -43,4 +43,16 @@ class NotificationMailer < ApplicationMailer
     mail(:to => @admin.email,
          :subject => subject("スタッフが削除されました。"))
   end
+
+  def duplicate_customers(booking_page, customers, booking_customer, phone_number)
+    @booking_page = booking_page
+    @user = booking_page.user
+    @customers = customers
+    @booking_customer = booking_customer
+    @phone_number = phone_number
+
+    mail(:to => @user.email,
+         subject: subject(I18n.t("notification_mailer.duplicate_customers.title")),
+         locale: I18n.default_locale)
+  end
 end

@@ -42,6 +42,15 @@ class BookingPageSettings extends React.Component {
     )
   };
 
+  componentDidMount = () => {
+    this.initBookingTimes()
+  }
+
+  initBookingTimes = async () => {
+    const booking_times = await this.calculateBookingTimes(this.booking_page_settings_values);
+
+    this.booking_page_settings_form.change("booking_page[booking_times]", booking_times["booking_page[booking_times]"])
+  }
 
   renderNameFields = () => {
     const { required_label, name_header, page_name, page_name_hint, title, title_hint, greeting, greeting_placeholder } = this.props.i18n;
@@ -265,7 +274,8 @@ class BookingPageSettings extends React.Component {
       interval_start_time,
       interval_option,
       per_minute,
-      interval_example_html
+      interval_example_html,
+      no_available_booking_times
     } = this.props.i18n;
 
     return (
@@ -275,8 +285,10 @@ class BookingPageSettings extends React.Component {
           <dl>
             <dd>
               <div className="interval-explanation">
-                <Condition when="booking_page[booking_times]" is="present">
-                  {interval_real_booking_time_explanation}
+                <Condition when="booking_page[special_dates]" is="present">
+                  <Condition when="booking_page[booking_times]" is="present">
+                    {interval_real_booking_time_explanation}
+                  </Condition>
                 </Condition>
                 <Condition when="booking_page[booking_times]" is="blank">
                   {interval_explanation}
@@ -288,10 +300,15 @@ class BookingPageSettings extends React.Component {
               <div className="booking-times-examples">
                 <FormSpy subscription={{ values: true }}>
                   {({ values }) => {
-                    const { interval, booking_times } = values.booking_page;
+                    const { interval, booking_times, special_dates, options, had_special_date } = values.booking_page;
 
-                    if (booking_times && booking_times.length) {
-                      return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
+                    if (had_special_date && special_dates && special_dates.length && options && options.length == 1) {
+                      if (booking_times && booking_times.length) {
+                        return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
+                      }
+                      else {
+                        return <div className="warning">{no_available_booking_times}</div>;
+                      }
                     }
                     else {
                       let times = [moment({hour: 9})]
@@ -575,7 +592,7 @@ class BookingPageSettings extends React.Component {
       fields_errors.booking_page.had_special_date = errors.required;
     }
 
-    if (special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
+    if (had_special_date && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
       const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
       const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
       const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
@@ -588,7 +605,7 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    if (special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
+    if (had_special_date && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
       const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
       const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
       const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
@@ -618,7 +635,10 @@ class BookingPageSettings extends React.Component {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values }) => {
+        render={({ handleSubmit, submitting, values, form }) => {
+          this.booking_page_settings_form = form;
+          this.booking_page_settings_values = values;
+
           return (
             <form
               action={this.props.path.save}

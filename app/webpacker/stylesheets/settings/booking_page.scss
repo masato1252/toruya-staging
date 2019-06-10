@@ -1,45 +1,4 @@
 .booking-page-settings {
-  .booking-option-field {
-    border: 1px solid $gray9;
-    border-radius: 6px;
-    display: inline-block;
-    width: 320px;
-    font-size: 90%;
-
-    .booking-option-info {
-      padding: 10px 10px 6px 10px;
-
-      .booking-option-name {
-        font-size: 18px;
-        color: $black;
-        margin-bottom: 3px;
-      }
-    }
-
-    .booking-option-row {
-      border-top: 1px solid $gray9;
-      padding: 6px 10px 6px 10px;
-      position: relative;
-      white-space: pre-wrap;
-    }
-
-    .booking-option-details-toggler {
-      position: absolute;
-      right: 20px;
-      top: 0;
-
-      a.toggler-link {
-        position: relative;
-        text-decoration: underline;
-
-        .fa {
-          position: absolute;
-          top: 1px
-        }
-      }
-    }
-  }
-
   .booking-option-action {
     display: inline-block;
 
