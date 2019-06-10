@@ -745,6 +745,9 @@ en:
       last_word_connector: ", and "
       two_words_connector: " and "
       words_connector: ", "
+  notification_mailer:
+    duplicate_customers:
+      title: We've found duplicated customer data
   subscription_mailer:
     charge_successfully:
       title: Toruya Payment Notification

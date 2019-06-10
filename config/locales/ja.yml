@@ -1019,6 +1019,9 @@ ja:
       last_word_connector: と
       two_words_connector: と
       words_connector: と
+  notification_mailer:
+    duplicate_customers:
+      title: 重複した顧客データが見つかりました
   subscription_mailer:
     charge_successfully:
       title: ご請求完了のご連絡
