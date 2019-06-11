@@ -1,0 +1,25 @@
+■ Duplicated Data Found ■
+
+<%= line %>
+
+Dear <%= @user.name %>,
+
+Thank you for using Toruya.
+
+Duplicated customer data was found for the customer information referenced on the booking page "<%= @booking_page.title %>".
+
+As following, we have created a pending reservation based on priority in Toruya this time.
+
+Customer name:
+<%= @booking_customer.name %>
+
+Referenced customer phone number:
+<%= @phone_number %>
+
+Customer data used this time:
+<%= user_customers_url(@user, customer_id: @booking_customer.id) %>
+
+Number of duplicate customer data:
+<%= @customers.size %>
+
+Please confirm/respond to this situation with the approval of the reservation.

@@ -54,12 +54,12 @@ RSpec.describe Booking::FindCustomer do
           allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
           allow(customer1).to receive(:with_google_contact).and_return(expected_customer1)
           allow(customer2).to receive(:with_google_contact).and_return(expected_customer2)
-          allow(NotificationMailer).to receive(:duplicate_customers).with(user, [customer1, customer2]).and_return(double(deliver_later: true))
+          allow(NotificationMailer).to receive(:duplicate_customers).with(booking_page, [customer1, customer2], expected_customer2, phone_number).and_return(double(deliver_later: true))
 
           result = outcome.result
 
           expect(result).to eq(expected_customer2)
-          expect(NotificationMailer).to have_received(:duplicate_customers).with(user, [customer1, customer2])
+          expect(NotificationMailer).to have_received(:duplicate_customers).with(booking_page, [customer1, customer2], expected_customer2, phone_number)
         end
       end
 

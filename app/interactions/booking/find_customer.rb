@@ -16,13 +16,16 @@ module Booking
       if matched_customers.length == 1
         matched_customers.first.with_google_contact
       elsif matched_customers.length > 1
-        NotificationMailer.duplicate_customers(user, matched_customers).deliver_later
 
         sql = matched_customers.map(&:id).map { |customer_id| "customer_id = #{customer_id}" }.join(" OR ")
         last_reservation_customer = ReservationCustomer.where(Arel.sql(sql)).order("id").last
         last_reservation_customer = matched_customers.find { |matched_customer| matched_customer.id == last_reservation_customer&.customer_id }
 
-        last_reservation_customer&.with_google_contact || matched_customers.sort_by(&:id).last.with_google_contact
+        booking_customer = last_reservation_customer&.with_google_contact || matched_customers.sort_by(&:id).last.with_google_contact
+
+        NotificationMailer.duplicate_customers(booking_page, matched_customers, booking_customer, phone_number).deliver_later
+
+        booking_customer
       end
     end
 
