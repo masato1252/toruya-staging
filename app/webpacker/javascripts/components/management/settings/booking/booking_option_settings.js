@@ -120,7 +120,7 @@ class BookingOptionSettings extends React.Component {
               resultFields={this.renderSelectedMenuFields}
               options={this.props.menu_group_options}
               selectLabel={select_a_menu}
-              />
+            />
           </dl>
         </div>
       </div>
@@ -308,8 +308,12 @@ class BookingOptionSettings extends React.Component {
       fields_errors.booking_option.end_at_time_part = errors.required;
     }
 
-    if (!values.booking_option.menus.length) {
+    if (!menus.length) {
       fields_errors.selected_menu = errors.required;
+    }
+
+    if (menus.length > this.props.menu_total_limit) {
+      fields_errors.selected_menu = form_errors.reached_the_menus_limit;
     }
 
     if (minutes === undefined) {
