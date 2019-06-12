@@ -46,7 +46,7 @@ class Reservation < ApplicationRecord
   has_many :reservation_customers, dependent: :destroy
   has_many :customers, through: :reservation_customers
 
-  before_validation :set_start_time, :set_end_time, :set_ready_time
+  before_validation :set_start_time, :set_end_time, :set_ready_time, :set_prepare_time
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.current) }
@@ -92,6 +92,10 @@ class Reservation < ApplicationRecord
 
   def set_ready_time
     self.ready_time = end_time + menu.interval.to_i.minutes
+  end
+
+  def set_prepare_time
+    self.prepare_time = start_time - menu.interval.to_i.minutes
   end
 
   def start_time_date
