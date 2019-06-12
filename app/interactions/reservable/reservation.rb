@@ -94,6 +94,14 @@ module Reservable
       end
     end
 
+    def interval_time_before_reservation
+      if booking_option_id
+        booking_option.interval.minutes
+      else
+        menus.first.interval.minutes
+      end
+    end
+
     def booking_option
       @booking_option ||= shop.user.booking_options.find_by(id: booking_option_id)
     end
@@ -111,28 +119,58 @@ module Reservable
       previous_reservation_validation_start_time = start_time
       previous_reservation_validation_end_time = start_time
 
-      if previous_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
-                                            reservation_id: reservation_id,
-                                            start_time: previous_reservation_validation_start_time,
-                                            end_time: previous_reservation_validation_end_time).
-                                            where.not("reservations.aasm_state": "canceled").
-                                            where("reservations.deleted_at": nil).
-                                            where("reservations.shop_id = ?", shop.id).exists?
+      # The interval time is not enough for previous reservation
+      if previous_reservation_overlap =
+          ReservationStaff.overlap_reservations(
+            staff_ids: staff_ids,
+            reservation_id: reservation_id,
+            start_time: previous_reservation_validation_start_time,
+            end_time: previous_reservation_validation_end_time).
+            where("reservations.shop_id = ?", shop.id).exists?
         errors.add(:business_time_range, "previous_reservation_interval_overlap")
       end
 
-      # When the start time is the same, it will be counts as overlap reservation in this case.
-      next_reservation_validation_start_time = end_time.advance(minutes: -1)
+      unless previous_reservation_overlap
+        previous_reservation_validation_start_time = start_time.advance(seconds: -interval_time_before_reservation)
+        previous_reservation_validation_end_time = start_time.advance(seconds: -interval_time_before_reservation)
+
+        # The interval time is enough for previous reservation but not enough for current reservation
+        if previous_reservation_overlap =
+            ReservationStaff.
+            overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id).
+            where("reservations.shop_id = ?", shop.id).
+            where("reservations.start_time < ? and reservations.end_time > ?",
+                  previous_reservation_validation_end_time, previous_reservation_validation_start_time).exists?
+          errors.add(:business_time_range, "previous_reservation_interval_overlap")
+        end
+      end
+
+      next_reservation_validation_start_time = end_time
       next_reservation_validation_end_time = end_time.advance(seconds: interval_time)
 
-      if next_reservation_overlap = ReservationStaff.overlap_reservations(staff_ids: staff_ids,
-                                            reservation_id: reservation_id,
-                                            start_time: next_reservation_validation_start_time,
-                                            end_time: next_reservation_validation_end_time).
-                                            where.not("reservations.aasm_state": "canceled").
-                                            where("reservations.deleted_at": nil).
-                                            where("reservations.shop_id = ?", shop.id).exists?
+      # The interval time is not enough for current reservation
+      if next_reservation_overlap =
+          ReservationStaff.overlap_reservations(
+            staff_ids: staff_ids,
+            reservation_id: reservation_id,
+            start_time: next_reservation_validation_start_time,
+            end_time: next_reservation_validation_end_time).where("reservations.shop_id = ?", shop.id).exists?
         errors.add(:business_time_range, "next_reservation_interval_overlap")
+      end
+
+      # The interval time is enough for current reservation, but not enough for next reservation
+      unless next_reservation_overlap
+        next_reservation_validation_start_time = end_time
+        next_reservation_validation_end_time = end_time
+
+        if next_reservation_overlap =
+            ReservationStaff.
+            overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id).
+            where("reservations.shop_id = ?", shop.id).
+            where("reservations.prepare_time < ? and reservations.end_time > ?",
+                  next_reservation_validation_end_time, next_reservation_validation_start_time).exists?
+          errors.add(:business_time_range, "next_reservation_interval_overlap")
+        end
       end
 
       if previous_reservation_overlap || next_reservation_overlap
