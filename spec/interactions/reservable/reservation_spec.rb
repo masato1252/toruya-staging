@@ -76,16 +76,45 @@ RSpec.describe Reservable::Reservation do
                                staff_ids: [staff1.id])
           end
 
-          it "is invalid" do
-            outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                  menu_ids: [menu1.id],
-                                                  staff_ids: [staff1.id],
-                                                  business_time_range: time_range)
+          context "when the interval time is not enough for previous reservation" do
+            it "is invalid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range)
 
-            expect(outcome).to be_invalid
-            expect(outcome.errors.details[:business_time_range]).to include(error: "previous_reservation_interval_overlap")
-            expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
-            expect(outcome.errors.details[:business_time_range]).not_to include(error: "next_reservation_interval_overlap")
+              expect(outcome).to be_invalid
+              expect(outcome.errors.details[:business_time_range]).to include(error: "previous_reservation_interval_overlap")
+              expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
+              expect(outcome.errors.details[:business_time_range]).not_to include(error: "next_reservation_interval_overlap")
+            end
+          end
+
+          context "when the interval time is enough for previous reservation but not enough for current reservation" do
+            let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, interval: 9) }
+            let!(:reservation) do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
+              FactoryBot.create(:reservation, shop: shop, menu: menu2,
+                                start_time: time_range.first.advance(minutes: -menu2.minutes),
+                                end_time: time_range.first.advance(minutes: -menu2.interval),
+                                staff_ids: [staff1.id])
+            end
+
+            it "is invalid" do
+              # XXX: The existing reservation need 9 minutes interval time(menu2),
+              #      and the new booking reservation need 10 minutes interval time(menu1)
+              #      but the interval time between two reservations is only 9 minutes
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range)
+
+              expect(outcome).to be_invalid
+              expect(outcome.errors.details[:business_time_range]).to include(error: "previous_reservation_interval_overlap")
+              expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
+              expect(outcome.errors.details[:business_time_range]).not_to include(error: "next_reservation_interval_overlap")
+            end
           end
 
           context "when reservation is canceled" do
@@ -124,16 +153,44 @@ RSpec.describe Reservable::Reservation do
                                staff_ids: [staff1.id])
           end
 
-          it "is invalid" do
-            outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                  menu_ids: [menu1.id],
-                                                  staff_ids: [staff1.id],
-                                                  business_time_range: time_range)
+          context "when the interval time is not enough for current reservation" do
+            it "is invalid" do
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range)
 
-            expect(outcome).to be_invalid
-            expect(outcome.errors.details[:business_time_range]).to include(error: "next_reservation_interval_overlap")
-            expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
-            expect(outcome.errors.details[:business_time_range]).not_to include(error: "previous_reservation_interval_overlap")
+              expect(outcome).to be_invalid
+              expect(outcome.errors.details[:business_time_range]).to include(error: "next_reservation_interval_overlap")
+              expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
+              expect(outcome.errors.details[:business_time_range]).not_to include(error: "previous_reservation_interval_overlap")
+            end
+          end
+
+          context "when the interval time is enough for current reservation, but not enough for next reservation" do
+            let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, interval: 20) }
+            let!(:reservation) do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
+              FactoryBot.create(:reservation, shop: shop, menu: menu2,
+                                start_time: time_range.last.advance(minutes: 19),
+                                end_time: time_range.last.advance(minutes: 60),
+                                staff_ids: [staff1.id])
+            end
+
+            it "is invalid" do
+              # XXX: The existing reservation need 20 minutes interval time(menu2),
+              #      and the new booking reservation need 10 minutes interval time(menu1)
+              #      but the interval time between two reservations is only 19 minutes
+              outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                    menu_ids: [menu1.id],
+                                                    staff_ids: [staff1.id],
+                                                    business_time_range: time_range)
+
+              expect(outcome).to be_invalid
+              expect(outcome.errors.details[:business_time_range]).to include(error: "next_reservation_interval_overlap")
+              expect(outcome.errors.details[:business_time_range]).to include(error: :interval_too_short)
+              expect(outcome.errors.details[:business_time_range]).not_to include(error: "previous_reservation_interval_overlap")
+            end
           end
 
           context "when reservation is canceled" do
