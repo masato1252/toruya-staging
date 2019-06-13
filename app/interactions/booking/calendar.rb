@@ -89,7 +89,7 @@ module Booking
                   date: date,
                   business_time_range: booking_start_at..booking_end_at,
                   booking_option_id: booking_option.id,
-                  menu_ids: [menu.id],
+                  menu_id: menu.id,
                   staff_ids: candidate_staff_ids,
                   overlap_restriction: overlap_restriction
                 )

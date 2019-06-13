@@ -197,7 +197,7 @@ class ReservationsController < DashboardController
       shop: shop,
       date: Time.zone.parse(params[:start_time_date_part]).to_date,
       business_time_range: start_time..end_time,
-      menu_ids: [params[:menu_id].presence].compact.uniq,
+      menu_id: params[:menu_id].presence,
       staff_ids: params[:staff_ids].try(:split, ",") || [],
       reservation_id: params[:reservation_id].presence,
       number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size
