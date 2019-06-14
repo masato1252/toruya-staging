@@ -92,13 +92,13 @@ class BookingReservationForm extends React.Component {
           <strong className="page-title">{title}</strong>
         </div>
 
-        {pristine && !this.booking_reservation_form_values.isDone && <div className="greeting">{greeting}</div>}
+        {pristine && !this.booking_reservation_form_values.is_done && <div className="greeting">{greeting}</div>}
       </div>
     )
   }
 
   renderRegularCustomersOption = () => {
-    const { found_customer } = this.booking_reservation_form_values;
+    const { found_customer, is_finding_customer } = this.booking_reservation_form_values;
 
     if (found_customer) return;
 
@@ -162,8 +162,8 @@ class BookingReservationForm extends React.Component {
             </label>
           </div>
           <div className="centerize">
-            <a href="#" className="btn btn-tarco" onClick={this.findCustomer}>
-              {confirm_customer_info}
+            <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
+              {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
         </Condition>
@@ -319,8 +319,7 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("full_name")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {first_name}
-                {last_name}
+                {last_name} {first_name}
               </div>
               <h4>
                 {i18n.phonetic_name}
@@ -590,7 +589,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { isBooking, regular } = this.booking_reservation_form_values;
+    const { is_booking, regular } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -601,8 +600,8 @@ class BookingReservationForm extends React.Component {
           {this.props.booking_page.note}
         </div>
 
-        <button onClick={this.onSubmit} className="btn btn-tarco" disabled={isBooking}>
-          {isBooking ? (
+        <button onClick={this.onSubmit} className="btn btn-tarco" disabled={is_booking}>
+          {is_booking ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
             this.props.i18n.confirm_reservation
@@ -813,10 +812,10 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, regular, isDone } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, regular, is_done } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
-    if (isDone) {
+    if (is_done) {
       return this.renderBookingDownView()
     }
 
@@ -933,7 +932,9 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", booking_option_id)
   }
 
-  findCustomer = async () => {
+  findCustomer = async (event) => {
+    event.preventDefault();
+
     const { customer_first_name, customer_last_name, customer_phone_number, remember_me } = this.booking_reservation_form_values;
 
     if (!(customer_first_name && customer_last_name && customer_phone_number)) {
@@ -944,6 +945,7 @@ class BookingReservationForm extends React.Component {
       return;
     }
 
+    this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", true)
     this.findCustomerCall = "loading";
 
     const response = await axios({
@@ -960,6 +962,7 @@ class BookingReservationForm extends React.Component {
 
     this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
     this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
   }
 
@@ -971,7 +974,7 @@ class BookingReservationForm extends React.Component {
     }
 
     this.bookingReserationLoading = "loading";
-    this.booking_reservation_form.change("booking_reservation_form[isBooking]", true)
+    this.booking_reservation_form.change("booking_reservation_form[is_booking]", true)
 
     const response = await axios({
       method: "POST",
@@ -994,10 +997,10 @@ class BookingReservationForm extends React.Component {
     })
 
     this.bookingReserationLoading = null;
-    this.booking_reservation_form.change("booking_reservation_form[isBooking]", false)
+    this.booking_reservation_form.change("booking_reservation_form[is_booking]", false)
 
     if (response.data.status === "successful") {
-      this.booking_reservation_form.change("booking_reservation_form[isDone]", true)
+      this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
     }
   };
 
