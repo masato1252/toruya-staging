@@ -21,7 +21,10 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
               styles={selectCustomStyles}
               placeholder={selectLabel}
               options={options}
-              onChange={input.onChange}
+              onChange={(event) => {
+                input.onChange(event);
+                input.onBlur(event)
+              }}
             />
             <OnChange name={input.name}>
               {(option) => {
