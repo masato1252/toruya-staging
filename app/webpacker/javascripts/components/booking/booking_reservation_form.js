@@ -326,8 +326,7 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {phonetic_last_name}
-                {phonetic_first_name}
+                {phonetic_last_name} {phonetic_first_name}
               </div>
               <h4>
                 {i18n.phone_number}
