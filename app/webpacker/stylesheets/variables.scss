@@ -55,8 +55,17 @@ $black: #333333;
   }
 }
 
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius; /* Internet Explorer */
+}
+
 $grid-breakpoints: (
   mobile: 0,
+  mobile-standard: 375px,
+  mobile-plus: 414px,
   tablet: 768px,
   computer: 940px,
   large-monitor: 1200px,

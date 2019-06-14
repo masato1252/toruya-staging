@@ -1,8 +1,14 @@
+@import "./breakpoint";
+
 .calendar {
   text-align: center;
   font-size: 14px;
-  width: 252px;
   line-height: 35px;
+  width: 100%; // mobile version
+
+  @include media-breakpoint-up(tablet) {
+    width: 252px;
+  }
 
   select {
     appearance: none;
@@ -42,25 +48,22 @@
     display: block;
     background: #858585;
     color: #fff;
-    border-radius: 5px; /* 記述無し */
-    -moz-border-radius: 5px; /* Firefox */
-    -webkit-border-radius: 5px; /* Google Chrome、Safari */
-    -o-border-radius: 5px; /* Opera */
-    -ms-border-radius: 5px; /* Internet Explorer */
     line-height: 35px;
     width: 27px;
     font-weight: bold;
     font-size: 28px;
+    @include border-radius(5px);
   }
 
   .header i,
   .header select {
-    float: left;
+    display: inline-block;
   }
 
   .header select {
     width: 35%;
     margin-left: 5px;
+    vertical-align: top;
   }
 
   .header select:last-of-type,
@@ -97,12 +100,21 @@
   }
 
   .week span {
-    border-radius: 20px; /* 記述無し */
-    -moz-border-radius: 20px; /* Firefox */
-    -webkit-border-radius: 20px; /* Google Chrome、Safari */
-    -o-border-radius: 20px; /* Opera */
-    -ms-border-radius: 20px; /* Internet Explorer */
-    line-height: 26px;
+    @include border-radius(100px);
+    line-height: 26px; // tablet
+
+    @include media-breakpoint-down(mobile-plus) {
+      line-height: 45px;
+    }
+
+    @include media-breakpoint-down(mobile-standard) {
+      line-height: 40px;
+    }
+
+    @include media-breakpoint-down(mobile) {
+      line-height: 32px;
+    }
+
     color: #333;
     border: 2px solid #fff;
   }
