@@ -12,7 +12,7 @@ class Reservations::Filter < ActiveInteraction::Base
   end
 
   def execute
-    scoped = Reservation.active.where(shop_id: reservation[:shop_ids]).includes(:shop, :menu, :customers, :staffs)
+    scoped = Reservation.active.where(shop_id: reservation[:shop_ids]).includes(:shop, :menus, :customers, :staffs)
 
     scoped = case reservation[:query_type]
              when "on"
@@ -26,7 +26,8 @@ class Reservations::Filter < ActiveInteraction::Base
              end
 
     if reservation[:menu_ids].present?
-      scoped = scoped.where("menu_id": reservation[:menu_ids])
+      scoped = scoped.left_outer_joins(:reservation_menus).
+        where("reservation_menus.menu_id": reservation[:menu_ids])
     end
 
     if reservation[:staff_ids].present?

@@ -20,6 +20,11 @@ RSpec.describe Reservable::Reservation do
 
 
   describe "#execute" do
+    it "" do
+      reservation = FactoryBot.create(:reservation)
+      expect(reservation).to be_valid
+    end
+
     context "when shop closed on that date" do
       it "is invalid" do
         outcome = Reservable::Reservation.run(shop: shop, date: date)
@@ -69,7 +74,7 @@ RSpec.describe Reservable::Reservation do
         context "when the overlap happened on previous reservation" do
           let!(:reservation) do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-            FactoryBot.create(:reservation, shop: shop, menu: menu1,
+            FactoryBot.create(:reservation, shop: shop, menus: [ menu1 ],
                                start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
                                staff_ids: [staff1.id])
           end
@@ -92,7 +97,7 @@ RSpec.describe Reservable::Reservation do
             let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, interval: 9) }
             let!(:reservation) do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
-              FactoryBot.create(:reservation, shop: shop, menu: menu2,
+              FactoryBot.create(:reservation, shop: shop, menus: [ menu2 ],
                                 start_time: time_range.first.advance(minutes: -menu2.minutes),
                                 end_time: time_range.first.advance(minutes: -menu2.interval),
                                 staff_ids: [staff1.id])
@@ -145,7 +150,7 @@ RSpec.describe Reservable::Reservation do
         context "when the overlap happened on next reservation" do
           let!(:reservation) do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-            FactoryBot.create(:reservation, shop: shop, menu: menu1,
+            FactoryBot.create(:reservation, shop: shop, menus: [ menu1 ],
                                start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
                                staff_ids: [staff1.id])
           end
@@ -168,7 +173,7 @@ RSpec.describe Reservable::Reservation do
             let(:menu2) { FactoryBot.create(:menu, shop: shop, minutes: time_minutes, interval: 20) }
             let!(:reservation) do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
-              FactoryBot.create(:reservation, shop: shop, menu: menu2,
+              FactoryBot.create(:reservation, shop: shop, menus: [ menu2 ],
                                 start_time: time_range.last.advance(minutes: 19),
                                 end_time: time_range.last.advance(minutes: 60),
                                 staff_ids: [staff1.id])
@@ -439,7 +444,7 @@ RSpec.describe Reservable::Reservation do
         context "when shop doesn't have capability(customers number > 3, staff's capability is 4)" do
           it "is invalid" do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-            reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+            reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
                                             customer_ids: [FactoryBot.create(:customer, user: user).id])
             StaffMenu.find_by(staff_id: staff2.id, menu_id: menu1.id).update(max_customers: 4)
 
@@ -463,7 +468,7 @@ RSpec.describe Reservable::Reservation do
           context "when there is new customer try too join existing reservation" do
             it "is invalid" do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-              reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+              reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
                                               customer_ids: [FactoryBot.create(:customer, user: user).id])
               StaffMenu.find_by(staff_id: staff1.id, menu_id: menu1.id).update(max_customers: 4)
 
@@ -491,7 +496,7 @@ RSpec.describe Reservable::Reservation do
         context "when staff doesn't have capability(customers number > 2, shop's capability is 3)" do
           it "is invalid" do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-            reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+            reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
                                             customer_ids: [FactoryBot.create(:customer, user: user).id])
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -514,7 +519,7 @@ RSpec.describe Reservable::Reservation do
           context "when there is new customer try too join existing reservation" do
             it "is invalid" do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-              reservation = FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+              reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
                                               customer_ids: [FactoryBot.create(:customer, user: user).id])
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -543,7 +548,7 @@ RSpec.describe Reservable::Reservation do
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
           FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
-          FactoryBot.create(:reservation, menu: menu1, shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+          FactoryBot.create(:reservation, menus: [ menu1 ], shop: shop, staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
         end
 
         it "is invalid" do

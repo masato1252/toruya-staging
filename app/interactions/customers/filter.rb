@@ -107,7 +107,7 @@ class Customers::Filter < ActiveInteraction::Base
         end
 
         if reservation[:menu_ids].present?
-          scoped = scoped.where("reservations.menu_id": reservation[:menu_ids])
+          scoped = scoped.left_outer_joins(reservations: :reservation_menus).where("reservation_menus.menu_id": reservation[:menu_ids])
         end
 
         if reservation[:staff_ids].present?

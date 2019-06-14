@@ -52,7 +52,7 @@ RSpec.describe Reservable::Staffs do
       context "when all menu's staffs already had normal menu reservations during that time" do
         context "when old reservation is already full" do
           let!(:reservation) do
-            FactoryBot.create(:reservation, shop: shop, menu: menu,
+            FactoryBot.create(:reservation, shop: shop, menus: [ menu ],
                                start_time: time_range.first, end_time: time_range.last,
                                staff_ids: [staff.id], customer_ids: [customer1.id, customer2.id])
           end
@@ -78,7 +78,7 @@ RSpec.describe Reservable::Staffs do
         end
 
         let!(:reservation) do
-          FactoryBot.create(:reservation, shop: shop, menu: menu,
+          FactoryBot.create(:reservation, shop: shop, menus: [ menu ],
                              start_time: time_range.first, end_time: time_range.last,
                              staff_ids: [staff.id], customer_ids: [customer1.id])
         end
@@ -141,7 +141,7 @@ RSpec.describe Reservable::Staffs do
           context "when the existing reservation's menu's need coperation(min_staffs_number > 1)" do
             let(:menu) { FactoryBot.create(:menu, :coperation, user: user, shop: shop) }
             let!(:reservation) do
-              FactoryBot.create(:reservation, shop: shop, menu: menu,
+              FactoryBot.create(:reservation, shop: shop, menus: [ menu ],
                                  start_time: time_range.first, end_time: time_range.last, staff_ids: [staff.id, staff2.id])
             end
 

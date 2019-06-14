@@ -81,7 +81,27 @@ class ReservationsController < DashboardController
   def create
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
-    outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
+
+    reservation_params_hash = reservation_params.to_h
+
+    reservation_params_hash[:params][:menu_staffs_list].map! do |h|
+      h[:work_start_at] = Time.zone.parse(h[:work_start_at]) if h[:work_start_at]
+      h[:work_end_at] = Time.zone.parse(h[:work_end_at]) if h[:work_end_at]
+      h
+    end
+    reservation_params_hash[:params][:customer_ids] =
+      reservation_params_hash[:params][:customer_ids].present? ? reservation_params_hash[:params][:customer_ids].split(",").uniq : []
+    reservation_params_hash[:params][:by_staff_id] = reservation_params_hash[:by_staff_id].to_i
+
+    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:start_time_time_part]
+      reservation_params_hash[:params][:start_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:start_time_time_part]}")
+    end
+
+    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:end_time_time_part]
+      reservation_params_hash[:params][:end_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:end_time_time_part]}")
+    end
+
+    outcome = Reservations::Create.run(shop: shop, params: reservation_params_hash)
 
     respond_to do |format|
       if outcome.valid?
