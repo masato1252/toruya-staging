@@ -779,7 +779,7 @@ class BookingReservationForm extends React.Component {
           {desc3}
         </div>
         <div>
-          <img className="toruya-logo" src="https://toruya.com/wp-content/uploads/2018/09/logo_H.png" />
+          <img className="toruya-logo" src={this.props.toruya_logo} />
         </div>
         <div className="feature-list">
           <div>
