@@ -65,6 +65,7 @@
     find_customer: find_customer_booking_page_path(@booking_page)
   },
   i18n: {
+    errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
   }.merge!([
     t("settings.booking_page.form"),
     t("booking_page"),
