@@ -635,7 +635,6 @@ class BookingReservationForm extends React.Component {
         <button
           onClick={(event) => {
             this.handleSubmit(event)
-            this.onSubmit(event)
           }}
         className="btn btn-tarco" disabled={is_booking}>
           {is_booking ? (
@@ -915,10 +914,9 @@ class BookingReservationForm extends React.Component {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values, form, pristine, errors }) => {
+        render={({ handleSubmit, submitting, values, form, pristine }) => {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
-          this.booking_reservation_form_errors = errors;
           this.handleSubmit = handleSubmit
 
           return (
@@ -928,7 +926,6 @@ class BookingReservationForm extends React.Component {
               className="booking-page"
               onSubmit={handleSubmit}
               acceptCharset="UTF-8"
-              data-remote="true"
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
@@ -1006,13 +1003,6 @@ class BookingReservationForm extends React.Component {
   }
 
   onSubmit = async (event) => {
-    event.preventDefault()
-
-    if (Object.keys(this.booking_reservation_form_errors).length &&
-      Object.keys(this.booking_reservation_form_errors.booking_reservation_form).length) {
-      return;
-    }
-
     if (this.bookingReserationLoading) {
       return;
     }
