@@ -621,7 +621,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { is_booking, regular } = this.booking_reservation_form_values;
+    const { regular } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -636,8 +636,8 @@ class BookingReservationForm extends React.Component {
           onClick={(event) => {
             this.handleSubmit(event)
           }}
-        className="btn btn-tarco" disabled={is_booking}>
-          {is_booking ? (
+        className="btn btn-tarco" disabled={this.submitting}>
+          {this.submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
             this.props.i18n.confirm_reservation
@@ -918,6 +918,7 @@ class BookingReservationForm extends React.Component {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
           this.handleSubmit = handleSubmit
+          this.submitting = submitting
 
           return (
             <form
@@ -1008,7 +1009,6 @@ class BookingReservationForm extends React.Component {
     }
 
     this.bookingReserationLoading = "loading";
-    this.booking_reservation_form.change("booking_reservation_form[is_booking]", true)
 
     const response = await axios({
       method: "POST",
@@ -1031,7 +1031,6 @@ class BookingReservationForm extends React.Component {
     })
 
     this.bookingReserationLoading = null;
-    this.booking_reservation_form.change("booking_reservation_form[is_booking]", false)
 
     if (response.data.status === "successful") {
       this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
