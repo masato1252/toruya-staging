@@ -549,41 +549,49 @@ class BookingReservationForm extends React.Component {
         <h4>
           {name}
         </h4>
-        <Field
-          name="booking_reservation_form[customer_last_name]"
-          component="input"
-          placeholder={last_name}
-          type="text"
-          validate={composeValidators(this, requiredValidation)}
-        />
-        <Error name="booking_reservation_form[customer_last_name]" />
-        <Field
-          name="booking_reservation_form[customer_first_name]"
-          component="input"
-          placeholder={first_name}
-          type="text"
-          validate={composeValidators(this, requiredValidation)}
-        />
-        <Error name="booking_reservation_form[customer_first_name]" />
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_last_name]"
+            component="input"
+            placeholder={last_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_last_name]" />
+        </div>
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_first_name]"
+            component="input"
+            placeholder={first_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_first_name]" />
+        </div>
         <h4>
           {phonetic_name}
         </h4>
-        <Field
-          name="booking_reservation_form[customer_phonetic_last_name]"
-          component="input"
-          placeholder={phonetic_last_name}
-          type="text"
-          validate={composeValidators(this, requiredValidation)}
-        />
-        <Error name="booking_reservation_form[customer_phonetic_last_name]" />
-        <Field
-          name="booking_reservation_form[customer_phonetic_first_name]"
-          component="input"
-          placeholder={phonetic_first_name}
-          type="text"
-          validate={composeValidators(this, requiredValidation)}
-        />
-        <Error name="booking_reservation_form[customer_phonetic_first_name]" />
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_phonetic_last_name]"
+            component="input"
+            placeholder={phonetic_last_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_last_name]" />
+        </div>
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_phonetic_first_name]"
+            component="input"
+            placeholder={phonetic_first_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_first_name]" />
+        </div>
         <h4>
           {phone_number}
         </h4>

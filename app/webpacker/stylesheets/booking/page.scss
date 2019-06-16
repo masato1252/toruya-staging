@@ -1,4 +1,24 @@
 .booking-content {
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"] {
+    width: 45%;
+  }
+
+  input[type="email"] {
+    width: 100%;
+  }
+
+  .field {
+    width: 45%;
+    margin: 0 3px;
+    display: inline-block;
+    vertical-align: top;
+
+    input {
+      width: 100%;
+    }
+  }
   .header {
     margin-top: 12px;
     margin-bottom: 12px;
