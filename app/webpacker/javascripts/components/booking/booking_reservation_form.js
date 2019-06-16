@@ -7,12 +7,14 @@ import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
 import moment from 'moment-timezone';
+import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
-import { Radio, Condition } from "../shared/components";
+import { Radio, Condition, Error } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
+import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class BookingReservationForm extends React.Component {
     moment.locale("ja");
     const { is_single_option, is_single_booking_time } = this.props.booking_page
 
+    this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator(
       {
         field: /regular/,
@@ -235,7 +238,12 @@ class BookingReservationForm extends React.Component {
                   name="booking_reservation_form[customer_info][phone_number]"
                   type="text"
                   component="input"
-                  placeholder="0123456789"
+                  placeholder="01234567891"
+                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][phone_number]"
+                  touched_required={false}
                 />
               </Condition>
 
@@ -249,6 +257,11 @@ class BookingReservationForm extends React.Component {
                   component="input"
                   placeholder="mail@domail.com"
                   className="email-field"
+                  validate={composeValidators(this, requiredValidation, emailFormatValidator)}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][email]"
+                  touched_required={false}
                 />
               </Condition>
 
@@ -260,6 +273,11 @@ class BookingReservationForm extends React.Component {
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   type="text"
                   component="input"
+                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(7))}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][address_details][postcode]"
+                  touched_required={false}
                 />
                 <h4>
                   {address_details.living_state}
@@ -334,6 +352,7 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {phone_number}
+                <Error name="booking_reservation_form[customer_info][phone_number]" />
               </div>
               <h4>
                 {i18n.email}
@@ -341,6 +360,7 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {email}
+                <Error name="booking_reservation_form[customer_info][email]" />
               </div>
               <h4>
                 {i18n.address}
@@ -348,6 +368,7 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {full_address}
+                <Error name="booking_reservation_form[customer_info][address_details][postcode]" />
               </div>
             </div>
             <div className="modal-footer centerize">
@@ -533,13 +554,17 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder={last_name}
           type="text"
+          validate={composeValidators(this, requiredValidation)}
         />
+        <Error name="booking_reservation_form[customer_last_name]" />
         <Field
           name="booking_reservation_form[customer_first_name]"
           component="input"
           placeholder={first_name}
           type="text"
+          validate={composeValidators(this, requiredValidation)}
         />
+        <Error name="booking_reservation_form[customer_first_name]" />
         <h4>
           {phonetic_name}
         </h4>
@@ -548,13 +573,17 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder={phonetic_last_name}
           type="text"
+          validate={composeValidators(this, requiredValidation)}
         />
+        <Error name="booking_reservation_form[customer_phonetic_last_name]" />
         <Field
           name="booking_reservation_form[customer_phonetic_first_name]"
           component="input"
           placeholder={phonetic_first_name}
           type="text"
+          validate={composeValidators(this, requiredValidation)}
         />
+        <Error name="booking_reservation_form[customer_phonetic_first_name]" />
         <h4>
           {phone_number}
         </h4>
@@ -563,7 +592,9 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder="0123456789"
           type="tel"
+          validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
         />
+        <Error name="booking_reservation_form[customer_phone_number]" />
         <h4>
           {email}
         </h4>
@@ -572,7 +603,9 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder="mail@domail.com"
           type="email"
+          validate={composeValidators(this, requiredValidation, emailFormatValidator)}
         />
+        <Error name="booking_reservation_form[customer_email]" />
         <div className="remember-me">
           <label>
             <Field
@@ -588,7 +621,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { is_booking, regular } = this.booking_reservation_form_values;
+    const { regular } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -599,8 +632,12 @@ class BookingReservationForm extends React.Component {
           {this.props.booking_page.note}
         </div>
 
-        <button onClick={this.onSubmit} className="btn btn-tarco" disabled={is_booking}>
-          {is_booking ? (
+        <button
+          onClick={(event) => {
+            this.handleSubmit(event)
+          }}
+        className="btn btn-tarco" disabled={this.submitting}>
+          {this.submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
             this.props.i18n.confirm_reservation
@@ -873,13 +910,15 @@ class BookingReservationForm extends React.Component {
         initialValues={{
           booking_reservation_form: { ...(this.props.booking_reservation_form) },
         }}
-        decorators={[this.calculator]}
+        decorators={[this.focusOnError, this.calculator]}
         mutators={{
           ...arrayMutators,
         }}
         render={({ handleSubmit, submitting, values, form, pristine }) => {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
+          this.handleSubmit = handleSubmit
+          this.submitting = submitting
 
           return (
             <form
@@ -888,7 +927,6 @@ class BookingReservationForm extends React.Component {
               className="booking-page"
               onSubmit={handleSubmit}
               acceptCharset="UTF-8"
-              data-remote="true"
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
@@ -966,14 +1004,11 @@ class BookingReservationForm extends React.Component {
   }
 
   onSubmit = async (event) => {
-    event.preventDefault()
-
     if (this.bookingReserationLoading) {
       return;
     }
 
     this.bookingReserationLoading = "loading";
-    this.booking_reservation_form.change("booking_reservation_form[is_booking]", true)
 
     const response = await axios({
       method: "POST",
@@ -996,7 +1031,6 @@ class BookingReservationForm extends React.Component {
     })
 
     this.bookingReserationLoading = null;
-    this.booking_reservation_form.change("booking_reservation_form[is_booking]", false)
 
     if (response.data.status === "successful") {
       this.booking_reservation_form.change("booking_reservation_form[is_done]", true)

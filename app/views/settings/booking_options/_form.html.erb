@@ -21,7 +21,7 @@
       currency_unit: t("number.currency.format.unit"),
       menu_time_span: Menu.human_attribute_name(:minutes),
       menu_interval: Menu.human_attribute_name(:interval),
-      errors: t("errors.messages").slice(:required),
+      errors: t("errors.messages").slice(:required, :invalid_email_format, :not_a_number),
     }.merge!([
       t("settings.booking_option.form"),
       t("common").slice(:required_label, :minute, :total, :select_a_menu),

@@ -78,3 +78,13 @@ a {
 .warning {
   color: $warning !important;
 }
+
+.field-error-message {
+  color: $danger;
+  display: block;
+}
+
+.field-warning-message {
+  color: $warning;
+  display: block;
+}
