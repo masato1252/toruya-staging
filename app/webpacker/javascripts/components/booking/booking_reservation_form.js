@@ -1035,19 +1035,22 @@ class BookingReservationForm extends React.Component {
     const response = await axios({
       method: "POST",
       url: this.props.path.save,
-      params: _.pick(
-        this.booking_reservation_form_values,
-        "customer_first_name",
-        "customer_last_name",
-        "customer_phone_number",
-        "customer_info",
-        "booking_date",
-        "booking_at",
-        "booking_option_id",
-        "customer_phonetic_last_name",
-        "customer_phonetic_first_name",
-        "customer_email",
-        "remember_me"
+      params: _.merge(
+        { authenticity_token: this.props.form_authenticity_token },
+        _.pick(
+          this.booking_reservation_form_values,
+          "customer_first_name",
+          "customer_last_name",
+          "customer_phone_number",
+          "customer_info",
+          "booking_date",
+          "booking_at",
+          "booking_option_id",
+          "customer_phonetic_last_name",
+          "customer_phonetic_first_name",
+          "customer_email",
+          "remember_me"
+        ),
       ),
       responseType: "json"
     })
