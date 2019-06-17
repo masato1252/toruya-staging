@@ -352,7 +352,10 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {phone_number}
-                <Error name="booking_reservation_form[customer_info][phone_number]" />
+                <Error
+                  name="booking_reservation_form[customer_info][phone_number]"
+                  touched_required={false}
+                />
               </div>
               <h4>
                 {i18n.email}
@@ -360,7 +363,10 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {email}
-                <Error name="booking_reservation_form[customer_info][email]" />
+                <Error
+                  name="booking_reservation_form[customer_info][email]"
+                  touched_required={false}
+                />
               </div>
               <h4>
                 {i18n.address}
@@ -368,7 +374,10 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {full_address}
-                <Error name="booking_reservation_form[customer_info][address_details][postcode]" />
+                <Error
+                  name="booking_reservation_form[customer_info][address_details][postcode]"
+                  touched_required={false}
+                />
               </div>
             </div>
             <div className="modal-footer centerize">
@@ -643,6 +652,10 @@ class BookingReservationForm extends React.Component {
         <button
           onClick={(event) => {
             this.handleSubmit(event)
+            if (Object.keys(this.booking_reservation_form_errors).length &&
+              Object.keys(this.booking_reservation_form_errors.customer_info).length) {
+              this.customerInfoFieldModalHideHandler()
+            }
           }}
         className="btn btn-tarco" disabled={this.submitting}>
           {this.submitting ? (
@@ -922,11 +935,12 @@ class BookingReservationForm extends React.Component {
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values, form, pristine }) => {
+        render={({ handleSubmit, submitting, values, errors, form, pristine }) => {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
           this.handleSubmit = handleSubmit
           this.submitting = submitting
+          this.booking_reservation_form_errors = errors.booking_reservation_form
 
           return (
             <form
