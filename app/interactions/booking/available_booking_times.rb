@@ -27,7 +27,7 @@ module Booking
           booking_start_at = special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
           special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
 
-          shop.user.booking_options.where(id: booking_option_ids).each do |booking_option|
+          shop.user.booking_options.where(id: booking_option_ids).includes(:menus).each do |booking_option|
             loop do
               booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
 
