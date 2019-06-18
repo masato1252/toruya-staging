@@ -16,7 +16,11 @@ module Reservable
       time_outcome = Reservable::Time.run(shop: shop, date: date)
 
       if time_outcome.invalid?
-        errors.merge!(time_outcome.errors)
+        time_outcome.errors.details.each do |error_attr, time_errors|
+          time_errors.each do |error_hash|
+            errors.add(error_attr, error_hash.values.first)
+          end
+        end
       end
 
       return if (menu_id.nil? && booking_option_id.nil?) || business_time_range.blank?

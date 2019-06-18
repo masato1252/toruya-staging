@@ -31,7 +31,7 @@ class Reservation < ApplicationRecord
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
-  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
+  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part
 
   validates :start_time, presence: true
   validates :end_time, presence: true

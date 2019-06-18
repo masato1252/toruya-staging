@@ -1,0 +1,18 @@
+
+<%= react_component("management/reservations/form", {
+  form_authenticity_token: form_authenticity_token,
+  timezone: Time.zone.tzinfo.name,
+  shop_name: shop.display_name,
+  reservation_form: @reservation.attributes.slice().merge!({
+    start_time_date_part: @reservation.start_time_date_part,
+    start_time_time_part: @reservation.start_time_time_part,
+    end_time_date_part: @reservation.end_time_date_part,
+    end_time_time_part: @reservation.end_time_time_part
+  }),
+  path: {
+    save: @reservation.new_record? ? shop_reservations_path(shop) : shop_reservation_path(shop, @reservation),
+    validate_reservation: validate_shop_reservations_path(shop, format: :json)
+  },
+},
+{ camelize_props: false }
+) %>

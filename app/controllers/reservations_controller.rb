@@ -60,6 +60,27 @@ class ReservationsController < DashboardController
     end
   end
 
+  def form
+    @body_class = "resNew"
+
+    @reservation = shop.reservations.new(
+      start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
+      start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
+      end_time_date_part: params[:end_time_date_part] || params[:start_time_date_part] || Time.zone.now.to_s(:date),
+      end_time_time_part: params[:end_time_time_part] || Time.zone.now.advance(hours: 2).to_s(:time),
+      memo: params[:memo],
+      menu_id: params[:menu_id],
+      staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
+      customer_ids: params[:customer_ids].try(:split, ",").try(:uniq)
+    )
+
+    all_options
+    if params[:start_time_date_part].present?
+      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      @time_ranges = outcome.valid? ? outcome.result : nil
+    end
+  end
+
   # GET /reservations/1/edit
   def edit
     authorize! :manage_shop_reservations, shop
