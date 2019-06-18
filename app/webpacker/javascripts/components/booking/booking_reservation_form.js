@@ -180,15 +180,19 @@ class BookingReservationForm extends React.Component {
 
     const {
       name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name,
-      phone_number, email, save_change, info_change_title, address_details
+      phone_number, email, save_change, invalid_to_change, info_change_title, address_details
     } = this.props.i18n;
-
+    const is_field_error = this.booking_reservation_form_errors &&
+      this.booking_reservation_form_errors.customer_info &&
+      this.booking_reservation_form_errors.customer_info[field_name]
     return (
       <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              { is_field_error ? null : (
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              )}
               <h4 className="modal-title">
                 {info_change_title}
               </h4>
@@ -265,7 +269,7 @@ class BookingReservationForm extends React.Component {
                 />
               </Condition>
 
-              <Condition when="booking_reservation_form[customer_info_field_name]" is="address">
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="address_details">
                 <h4>
                   {address_details.zipcode}
                 </h4>
@@ -307,9 +311,15 @@ class BookingReservationForm extends React.Component {
               </Condition>
             </div>
             <div className="modal-footer centerize">
-              <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
-                {save_change}
-              </button>
+              { is_field_error ? (
+                <button type="button" className="btn btn-tarco disabled" disabled="true">
+                  {invalid_to_change}
+                </button>
+              ) : (
+                <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
+                  {save_change}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -370,7 +380,7 @@ class BookingReservationForm extends React.Component {
               </div>
               <h4>
                 {i18n.address}
-                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address")}>{i18n.edit}</a>
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address_details")}>{i18n.edit}</a>
               </h4>
               <div className="info">
                 {full_address}
@@ -1070,7 +1080,11 @@ class BookingReservationForm extends React.Component {
     await this.booking_reservation_form.change("booking_reservation_form[customer_info_field_name]", field_name)
     $("#customer-info-modal").modal("hide")
     $("#customer-info-field-modal").on("hidden.bs.modal", this.customerInfoFieldModalHideHandler);
-    $("#customer-info-field-modal").modal("show")
+    $("#customer-info-field-modal").modal({
+      backdrop: "static",
+      keyboard: false,
+      show: true
+    })
   }
 
   resetFlowValues = async () => {

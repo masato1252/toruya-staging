@@ -25,6 +25,7 @@ ja:
       city: 市区町村
       street: 続き住所
     save_change: 変更依頼を保存する
+    invalid_to_change: 入力データ無効
     info_change_title: 顧客情報の変更依頼
     flow_label: 先に選択したいものをお選びください
     date_flow_first: 予約日時から選ぶ
