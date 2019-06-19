@@ -689,7 +689,7 @@ class BookingReservationForm extends React.Component {
     })
 
     const selected_booking_option_content = (
-      <div className="selected-booking-option">
+      <div className="selected-booking-option" id="selected-booking-option">
         <i className="fa fa-check-circle"></i>
         <BookingPageOption
           key={`booking_options-${selected_booking_option.id}`}
@@ -722,7 +722,7 @@ class BookingReservationForm extends React.Component {
     const { edit, time_from } = this.props.i18n;
 
     return (
-      <div className="selected-booking-datetime">
+      <div className="selected-booking-datetime" id="selected-booking-datetime">
         <i className="fa fa-calendar"></i>
         {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {time_from}
         {resetValuesCallback && <a href="#" className="edit" onClick={resetValuesCallback}>{edit}</a>}
@@ -993,12 +993,14 @@ class BookingReservationForm extends React.Component {
     }
   }
 
-  setBookingTimeAt = (time) => {
-    this.booking_reservation_form.change("booking_reservation_form[booking_at]", time)
+  setBookingTimeAt = async (time) => {
+    await this.booking_reservation_form.change("booking_reservation_form[booking_at]", time)
+    this.scrolloToView()
   }
 
-  selectBookingOption = (booking_option_id) => {
-    this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", booking_option_id)
+  selectBookingOption = async (booking_option_id) => {
+    await this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", booking_option_id)
+    this.scrolloToView()
   }
 
   findCustomer = async (event) => {
@@ -1153,6 +1155,20 @@ class BookingReservationForm extends React.Component {
       customer_phone_number &&
       customer_email
     )
+  }
+
+  scrolloToView = () => {
+    const { booking_flow } = this.booking_reservation_form_values;
+    let scroll_to;
+
+    if (booking_flow === "booking_date_first") {
+      scroll_to = "selected-booking-datetime"
+    }
+    else if (booking_flow === "booking_option_first") {
+      scroll_to = "selected-booking-option"
+    }
+
+    document.getElementById(scroll_to).scrollIntoView();
   }
 }
 
