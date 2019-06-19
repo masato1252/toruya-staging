@@ -751,6 +751,7 @@ class BookingReservationForm extends React.Component {
         {booking_dates_calendar_hint}
         <Calendar
           {...this.props.calendar}
+          skip_default_date={true}
           dateSelectedCallback={this.fetchBookingTimes}
           scheduleParams={{
             booking_option_id: booking_option_id
@@ -771,7 +772,7 @@ class BookingReservationForm extends React.Component {
               <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
             )
           ) : (
-            <div className="warning">{no_available_booking_times}</div>
+            booking_date && <div className="warning">{no_available_booking_times}</div>
           )
         }
       </div>
