@@ -5,13 +5,13 @@
   <div id="calendar" class="sidel">
     <%= react_component("shared/calendar/calendar",
                         {
-                          day_names: I18n.t("date.abbr_day_names"),
-                          month_names: I18n.t("date.abbr_month_names").compact,
+                          dayNames: I18n.t("date.abbr_day_names"),
+                          monthNames: I18n.t("date.abbr_month_names").compact,
                           dateSelectedCallbackPath: member_path,
                           schedulePath: personal_working_schedule_calendars_path(format: :json),
-                          selected_date: params[:reservation_date]
+                          selectedDate: params[:reservation_date]
                         },
-                        { id: "custom-calendar", class: "clearfix" }) %>
+                        { id: "custom-calendar", class: "clearfix", camelize_props: false }) %>
     <div class="staffDashboard">
       <div class="edit-worktime">
         <% if working_shop_options(include_user_own: true).present? %>
