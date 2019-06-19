@@ -2,7 +2,10 @@
 <%= react_component("management/reservations/form", {
   form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
-  shop_name: shop.display_name,
+  reservation_properties: {
+    shop_name: shop.display_name,
+    is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
+  },
   reservation_form: @reservation.attributes.slice().merge!({
     start_time_date_part: @reservation.start_time_date_part,
     start_time_time_part: @reservation.start_time_time_part,
@@ -13,6 +16,11 @@
     save: @reservation.new_record? ? shop_reservations_path(shop) : shop_reservation_path(shop, @reservation),
     validate_reservation: validate_shop_reservations_path(shop, format: :json)
   },
+  i18n: {
+  }.merge!([
+    t("reservation"),
+    t("common").slice(:processing, :select_a_menu),
+  ].inject(:merge!))
 },
 { camelize_props: false }
 ) %>

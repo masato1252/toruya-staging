@@ -24,7 +24,7 @@ class DateFieldAdapter extends React.Component {
     // value property decide the YYYY/M/D is the display format
     return(
       <div className={`datepicker-field`}>
-        <div className={`fake-date-field ${error && touched ? "field-error" : ""}`}>
+        <div className={`fake-date-field ${error && touched ? "field-error" : ""} ${this.props.className}`}>
           <DayPickerInput
             ref={(c) => this.dayPickerInput = c }
             {...this.props.input}

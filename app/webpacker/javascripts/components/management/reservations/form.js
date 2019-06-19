@@ -13,7 +13,7 @@ class ManagementReservationForm extends React.Component {
   static errorGroups() {
     return (
       {
-        warnings: ["shop_closed"]
+        warnings: ["shop_closed", "interval_too_short"]
       }
     )
   };
@@ -25,8 +25,14 @@ class ManagementReservationForm extends React.Component {
       {
         field: /start_time_date_part|start_time_time_part|end_time_time_part/,
         updates: async (value, name, allValues) => {
-          await this.validateReservation()
+          await this.validateReservation(allValues.reservation_form)
           return {};
+        }
+      },
+      {
+        field: /start_time_date_part/,
+        updates: {
+          "reservation_form[end_time_date_part]": (start_time_date_part_value, allValues) => start_time_date_part_value
         }
       }
     )
@@ -38,6 +44,8 @@ class ManagementReservationForm extends React.Component {
 
   renderReservationDateTime = () => {
     const { start_time_restriction, end_time_restriction } = this.reservation_form_values;
+    const { is_editable, shop_name } = this.props.reservation_properties;
+    const { valid_time_tip_message } = this.props.i18n;
 
     return (
       <div>
@@ -53,16 +61,18 @@ class ManagementReservationForm extends React.Component {
                 name="reservation_form[start_time_date_part]"
                 component={DateFieldAdapter}
                 date={moment.tz(this.props.timezone).format("YYYY-MM-DD")}
+                className={this.dateErrors().length ? "field-warning" : ""}
+                isDisabled={!is_editable}
               />
               {
                 start_time_restriction && end_time_restriction ? (
                   <div className="busHours table">
-                    <div className="tableCell shopname">{this.props.shop_name}</div>
+                    <div className="tableCell shopname">{shop_name}</div>
                     <div className="tableCell">{start_time_restriction}〜{end_time_restriction}</div>
                   </div>
                 ) : (
                   <div className="busHours shopClose table">
-                    <div className="tableCell shopname">{this.props.shop_name}</div>
+                    <div className="tableCell shopname">{shop_name}</div>
                     <div className="tableCell">CLOSED</div>
                   </div>
                 )
@@ -79,6 +89,9 @@ class ManagementReservationForm extends React.Component {
                 name="reservation_form[start_time_time_part]"
                 type="time"
                 component={Input}
+                step="300"
+                className={this.previousReservationOverlap() ? "field-warning" : ""}
+                disabled={!is_editable}
               />
               〜
               <Field
@@ -90,7 +103,14 @@ class ManagementReservationForm extends React.Component {
                 name="reservation_form[end_time_time_part]"
                 type="time"
                 component={Input}
+                step="300"
+                className={this.nextReservationOverlap() ? "field-warning" : ""}
+                disabled={!is_editable}
               />
+              <span className="errors">
+                {this.isValidReservationTime() ? null : <span className="warning">{valid_time_tip_message}</span>}
+                {this.displayErrors(["interval_too_short"])}
+              </span>
             </dd>
           </dl>
         </div>
@@ -135,15 +155,17 @@ class ManagementReservationForm extends React.Component {
     )
   }
 
-  validateReservation = async () => {
+  validateReservation = async (form_values = null) => {
     var _this = this;
+
+    form_values = form_values || this.reservation_form_values;
 
     if (this.validateReservationCall) {
       this.validateReservationCall.cancel();
     }
     this.validateReservationCall = axios.CancelToken.source();
 
-    if (!this.reservation_form_values.start_time_date_part) {
+    if (!form_values.start_time_date_part) {
       return;
     }
 
@@ -154,7 +176,7 @@ class ManagementReservationForm extends React.Component {
         method: "GET",
         url: this.props.path.validate_reservation,
         params: _.pick(
-          this.reservation_form_values,
+          form_values,
           "reservation_id",
           "start_time_date_part",
           "start_time_time_part",
@@ -187,7 +209,7 @@ class ManagementReservationForm extends React.Component {
 
     error_reasons.forEach((error_reason) => {
       if (this.reservation_form_values.errors && this.reservation_form_values.errors[error_reason]) {
-        if (_.intersection([error_reason], ReservationForm.errorGroups().warnings).length != 0) {
+        if (_.intersection([error_reason], ManagementReservationForm.errorGroups().warnings).length != 0) {
           error_messages.push(<span className="warning" key={error_reason}>{this.reservation_form_values.errors[error_reason]}</span>)
         }
         else {
@@ -201,6 +223,36 @@ class ManagementReservationForm extends React.Component {
 
   dateErrors = () => {
     return this.displayErrors(["shop_closed"]);
+  };
+
+  previousReservationOverlap = () => {
+    return this.displayErrors(["previous_reservation_interval_overlap"]).length != 0;
+  };
+
+  nextReservationOverlap = () => {
+    return this.displayErrors(["next_reservation_interval_overlap"]).length != 0;
+  };
+
+  isValidReservationTime = () => {
+    const {
+      start_time_restriction,
+      end_time_restriction,
+      start_time_date_part,
+      start_time_time_part,
+      end_time_time_part
+    } = this.reservation_form_values;
+
+    if (start_time_restriction && end_time_restriction && start_time_time_part && end_time_time_part) {
+      const reservation_start_time = moment(`${start_time_date_part} ${start_time_time_part}`);
+      const reservation_end_time = moment(`${start_time_date_part} ${end_time_time_part}`);
+
+      return reservation_start_time  >= moment(`${start_time_date_part} ${start_time_restriction}`) &&
+             reservation_end_time <= moment(`${start_time_date_part} ${end_time_restriction}`) &&
+             reservation_start_time < reservation_end_time
+    }
+    else {
+      return false;
+    }
   };
 }
 
