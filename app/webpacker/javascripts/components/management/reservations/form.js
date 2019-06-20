@@ -8,6 +8,7 @@ import axios from "axios";
 
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import { Input } from "../../shared/components";
+import CommonCustomersList from "../common/customers_list.js"
 
 class ManagementReservationForm extends React.Component {
   static errorGroups() {
@@ -141,6 +142,65 @@ class ManagementReservationForm extends React.Component {
     )
   }
 
+  _customerWording = () => {
+    if (this._isMeetCustomerLimit()) {
+      return "満席"
+    }
+    else {
+      return "追加"
+    }
+  };
+
+  renderCustomersList = () => {
+    const {
+      customers_list_label,
+    } = this.props.i18n;
+    const {
+      is_customers_readable,
+      is_editable,
+    } = this.props.reservation_properties;
+    const {
+      customers
+    } = this.reservation_form_values;
+
+    return (
+      <div id="customers">
+        <h2>
+          <i className="fa fa-user-plus" aria-hidden="true"></i>
+          {customers_list_label}
+          {is_customers_readable &&
+            <a
+              onClick={this.handleCustomerAdd}
+              className={this._customerAddClass()}
+              id="addCustomer">
+              {this._customerWording()}
+            </a>}
+          </h2>
+
+          <CommonCustomersList
+            isDisabled={!is_editable}
+            customers={customers}
+            handleCustomerRemove={this.handleCustomerRemove} />
+          <div id="customerLevels">
+            <ul>
+              <li className="regular">
+                <span className="customer-level-symbol regular">
+                  <i className="fa fa-address-card"></i>
+                </span>
+                <span>一般</span>
+              </li>
+              <li className="vip">
+                <span className="customer-level-symbol vip">
+                  <i className="fa fa-address-card"></i>
+                </span>
+                <span className="wording">VIP</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+    )
+  }
+
   renderFooterBar = () => {
     const {
       delete_reservation,
@@ -257,6 +317,7 @@ class ManagementReservationForm extends React.Component {
                   {this.renderReservationDateTime()}
                   {this.renderReservationMemo()}
                 </div>
+                {this.renderCustomersList()}
               </div>
               {this.renderFooterBar()}
             </form>
@@ -398,6 +459,103 @@ class ManagementReservationForm extends React.Component {
     //   (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
     // )
     return true;
+  };
+
+  _maxCustomerLimit = () => {
+    const _this = this;
+
+    // TODO
+    // if (this.state.menu_min_staffs_number === 0) {
+    //   return this.state.menu_available_seat
+    // }
+    // else if (this.state.menu_min_staffs_number == 1) {
+    //   var selected_staffs = this._selected_staffs();
+    //
+    //   if (selected_staffs[0]) {
+    //     return _.min([selected_staffs[0].handableCustomers, this.state.menu_available_seat]);
+    //   }
+    // }
+    // else if (this.state.menu_min_staffs_number > 1) {
+    //   var selected_staffs = this._selected_staffs();
+    //
+    //   var handableCustomers = selected_staffs.map(function(staff) {
+    //     return staff.handableCustomers;
+    //   });
+    //
+    //   var minCustomersHandleable = _.min(handableCustomers);
+    //
+    //   return _.min([minCustomersHandleable, this.state.menu_available_seat]);
+    // }
+  };
+
+  _isMeetCustomerLimit = () => {
+    // TODO
+
+    // let customersLimit;
+    //
+    // if (customersLimit = this._maxCustomerLimit()) {
+    //   return (customersLimit == this.state.customers.length);
+    // }
+    // else {
+    //   return false;
+    // }
+  };
+
+  handleCustomerAdd = (event) => {
+    event.preventDefault();
+
+    // TODO
+    // if (this.state.menu_group_options.length == 0 || this._isMeetCustomerLimit()) {
+    //   return;
+    // }
+
+    // var params = $.param({
+    //   shop_id: this.props.shopId,
+    //   from_reservation: true,
+    //   reservation_id: this.props.reservation.id,
+    //   menu_id: this.state.menu_id,
+    //   memo: this.state.memo,
+    //   start_time_date_part: this.state.start_time_date_part,
+    //   start_time_time_part: this.state.start_time_time_part,
+    //   end_time_time_part: this.state.end_time_time_part,
+    //   staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
+    //   customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(","),
+    // })
+    //
+    // window.location = `${this.props.customerAddPath}?${params}`
+  };
+
+  _customerAddClass = () => {
+    // TODO
+    // if (this.state.menu_group_options.length == 0) {
+    //   return "disabled BTNtarco";
+    // }
+    // else if (this._isMeetCustomerLimit()) {
+    //   return "disabled BTNorange"
+    // }
+    // else if (!this.props.isEditable) {
+    //   return "disabled BTNtarco";
+    // }
+    // else {
+      return "BTNtarco"
+    // }
+  };
+
+  handleCustomerRemove = (customer_id, event) => {
+    // TODO
+    // var _this = this;
+    // var customers = _.reject(this.state.customers, function(option) {
+    //   return option.value == customer_id;
+    // });
+    //
+    // this.setState({customers: customers}, function() {
+    //   if (_this.props.memberMode) {
+    //     _this._validateReservation()
+    //   }
+    //   else {
+    //     _this._retrieveAvailableMenus()
+    //   }
+    // })
   };
 }
 

@@ -163,6 +163,7 @@ ja:
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
     confirm_with_warnings: エラーのままこの予約を保存します
+    customers_list_label: 顧客
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。

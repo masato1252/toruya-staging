@@ -147,7 +147,7 @@ class ReservationsController < DashboardController
     respond_to do |format|
       if outcome.valid?
         format.html do
-          if params[:from_customer_id]
+          if params[:from_customer_id].present?
             redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
           elsif in_personal_dashboard?
             redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
@@ -169,7 +169,7 @@ class ReservationsController < DashboardController
 
     Reservations::Delete.run!(reservation: @reservation)
 
-    if params[:from_customer_id]
+    if params[:from_customer_id].present?
       redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
     elsif in_personal_dashboard?
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")

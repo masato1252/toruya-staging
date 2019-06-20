@@ -116,6 +116,7 @@ en:
     contain_some_warnings: Containing some warnings
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
     confirm_with_warnings: Confirm with warnings
+    customers_list_label: Customers
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region
