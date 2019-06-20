@@ -22,6 +22,7 @@ ja:
       city: City
       steet: street
     save_change: Save Changes
+    invalid_to_change: Invalid to change
     flow_label: Please select what you want to select first
     date_flow_first: from booking date and time
     option_flow_first: from booking menu

@@ -14,8 +14,8 @@ const Input = ({input, meta, className, ...rest}) => {
   )
 }
 
-const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, meta: { error, touched }, ...rest }) => {
-  const hasError = error && touched;
+const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, touched_required = true, meta: { error, touched }, ...rest }) => {
+  const hasError = error && (touched_required ? touched : true);
   const Component = componentType || "input";
 
   return (
@@ -56,10 +56,10 @@ const Radio = ({ input, children }) =>
     </label>
   );
 
-const Error = ({ name }) => (
-  <Field name={name} subscription={{ error: true, touched: true }}>
+const Error = ({ name, touched_required = true }) => (
+  <Field name={name} subscription={{ error: true, touched: touched_required }}>
     {({ meta: { error, touched } }) =>
-      error && touched ? errorMessage(error) : null
+      error && (touched_required ? touched : true) ? errorMessage(error) : null
     }
   </Field>
 );
