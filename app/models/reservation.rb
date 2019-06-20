@@ -26,12 +26,14 @@
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
+  include DateTimeAccessor
+
   has_paper_trail on: [:update]
+  date_time_accessor :start_time, :end_time, accessor_only: true
 
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
-  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_date_part, :end_time_time_part
 
   validates :start_time, presence: true
   validates :end_time, presence: true
@@ -78,18 +80,6 @@ class Reservation < ApplicationRecord
     event :cancel do
       transitions from: [:pending, :reserved, :noshow, :checked_in, :checked_out], to: :canceled
     end
-  end
-
-  def start_time_date
-    start_time.to_s(:date)
-  end
-
-  def start_time_time
-    start_time.to_s(:time)
-  end
-
-  def end_time_time
-    end_time.try(:to_s, :time)
   end
 
   def for_staff(staff)

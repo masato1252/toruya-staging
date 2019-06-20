@@ -118,7 +118,114 @@ class ManagementReservationForm extends React.Component {
     )
   }
 
-  onSubmit = () => {
+  renderReservationMemo = () => {
+    const { is_editable } = this.props.reservation_properties;
+    const { memo } = this.props.i18n;
+
+    return (
+      <div id="resMemo" className="formRow">
+        <dl className="form" id="resMemoRow">
+          <dt>メモ</dt>
+          <dd className="input">
+            <Field
+              name="reservation_form[memo]"
+              component="textarea"
+              placeholder={memo}
+              rows={4}
+              cols={40}
+              disabled={!is_editable}
+            />
+          </dd>
+        </dl>
+      </div>
+    )
+  }
+
+  renderFooterBar = () => {
+    const {
+      delete_reservation,
+      delete_confirmation_message,
+      confirm_with_warnings,
+    } = this.props.i18n;
+    const {
+      reservation_id,
+      from_customer_id,
+      from_shop_id,
+    } = this.props.reservation_properties;
+    const { submitting } = this.reservation_form_values;
+
+    return (
+      <footer>
+        <ul id="leftFunctions" className="checkbox">
+          <li>
+            <Field
+              name="reservation_form[rough_mode]"
+              type="checkbox"
+              component="input"
+              id="confirm-with-errors"
+            />
+            <label htmlFor="confirm-with-errors">
+              {confirm_with_warnings}
+            </label>
+          </li>
+        </ul>
+        <ul id="BTNfunctions">
+          {reservation_id ? (
+            <li>
+              <a className="BTNorange"
+                data-confirm={delete_confirmation_message}
+                rel="nofollow"
+                data-method="delete"
+                href={`${this.props.path.save}?from_customer_id=${from_customer_id ? from_customer_id : ""}`}>
+                <i className="fa fa-trash-o" aria-hidden="true"></i>
+                {delete_reservation}
+              </a>
+            </li>
+          ) : null
+          }
+          <li>
+            <button
+              id="BTNsave"
+              className={this.otherStaffsResponsibleThisReservation() ? "BTNorange" : "BTNyellow"}
+              disabled={!this._isValidToReserve() || submitting}
+              onClick={(event) => {
+                if (this._isValidToReserve()) {
+                  this.handleSubmit(event)
+                }
+              }}>
+              <i className="fa fa-folder-o" aria-hidden="true"></i>
+              {this.renderSubmitButtonText()}
+            </button>
+          </li>
+        </ul>
+    </footer>
+    )
+  }
+
+  renderSubmitButtonText = () => {
+    const {
+      processing,
+      save,
+      save_pending
+    } = this.props.i18n;
+    const { submitting } = this.reservation_form_values;
+
+    if (submitting) {
+      return processing;
+    }
+    else {
+      if (this.otherStaffsResponsibleThisReservation()) {
+        return save_pending;
+      }
+      else {
+        return save;
+      }
+    }
+  };
+
+  onSubmit = async (event) => {
+    await this.reservation_form.change("reservation_form[submitting]", true)
+    $("#save-reservation-form").submit();
   }
 
   render() {
@@ -133,6 +240,7 @@ class ManagementReservationForm extends React.Component {
         render={({ handleSubmit, submitting, values, errors, form, pristine }) => {
           this.reservation_form = form;
           this.reservation_form_values = values.reservation_form
+          this.handleSubmit = handleSubmit
 
           return (
             <form
@@ -143,11 +251,14 @@ class ManagementReservationForm extends React.Component {
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
+              { this.props.reservation_properties.reservation_id ?  <input name="_method" type="hidden" value="PUT" /> : null }
               <div id="resNew" className="contents">
                 <div id="resInfo" className="contBody">
                   {this.renderReservationDateTime()}
+                  {this.renderReservationMemo()}
                 </div>
               </div>
+              {this.renderFooterBar()}
             </form>
           )
         }}
@@ -253,6 +364,40 @@ class ManagementReservationForm extends React.Component {
     else {
       return false;
     }
+  };
+
+  otherStaffsResponsibleThisReservation = () => {
+    // TODO
+    // menu_staffs_list
+    // [
+    //   {
+    //     menu_id: menu_id,
+    //     menu_interval_time: 10,
+    //     staff_ids: $staff_ids,
+    //     work_start_at: $work_start_time,
+    //     work_end_at: $work_end_time
+    //   }
+    // ]
+    // const all_staff_ids = _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids)
+    // return all_staff_ids.some(staff_id => staff_id !== this.props.currentUserStaffId);
+
+    return true;
+  };
+
+  _isValidToReserve = () => {
+    // TODO
+    // let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().errors)
+    //
+    // return (
+    //   this.props.isEditable &&
+    //   this.state.start_time_date_part &&
+    //   this.state.start_time_time_part &&
+    //   this.state.end_time_time_part &&
+    //   this.state.menu_id &&
+    //   this.state.staff_ids.length &&
+    //   (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
+    // )
+    return true;
   };
 }
 

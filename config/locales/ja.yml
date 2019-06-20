@@ -24,10 +24,12 @@ ja:
     reservation_setting_warning_link_title: 予約枠設定ページ
   action:
     delete: 削除
+    delete_reservation: 予約を削除
     edit: 編集
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
+    save_pending: 未承認で保存
     search: 検索
     upgrade_to_premium: プレミアムにアップグレードする
     upgrade_to_basic: ベーシックにアップグレードする
@@ -160,6 +162,7 @@ ja:
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
+    confirm_with_warnings: エラーのままこの予約を保存します
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
