@@ -63,7 +63,8 @@ class ReservationsController < DashboardController
   def form
     @body_class = "resNew"
 
-    @reservation = shop.reservations.new(
+    @reservation = shop.reservations.find_by(id: params[:id])
+    @reservation ||= shop.reservations.new(
       start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
       start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
       end_time_date_part: params[:end_time_date_part] || params[:start_time_date_part] || Time.zone.now.to_s(:date),
@@ -100,6 +101,10 @@ class ReservationsController < DashboardController
   end
 
   def create
+    # sleep 3
+    # redirect_to form_shop_reservations_path(shop)
+    # return
+
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
 
@@ -234,6 +239,9 @@ class ReservationsController < DashboardController
   end
 
   def reservation_errors
+    params[:menu_id] = "2"
+    params[:staff_ids] = "2"
+
     outcome = Reservable::Reservation.run(
       shop: shop,
       date: Time.zone.parse(params[:start_time_date_part]).to_date,
