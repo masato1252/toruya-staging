@@ -177,7 +177,7 @@ class SettingsMenuForm extends React.Component {
                 type="text"
                 name="menu[name]"
                 data-name="name"
-                value={this.state.menu.name}
+                value={this.state.menu.name || ""}
                 onChange={this._handleMenuData}
                 />
             </dd>
@@ -191,7 +191,7 @@ class SettingsMenuForm extends React.Component {
                 type="text"
                 name="menu[short_name]"
                 data-name="short_name"
-                value={this.state.menu.short_name}
+                value={this.state.menu.short_name || ""}
                 onChange={this._handleMenuData}
                 />
             </dd>
@@ -205,7 +205,7 @@ class SettingsMenuForm extends React.Component {
                 type="number"
                 name="menu[minutes]"
                 data-name="minutes"
-                value={this.state.menu.minutes}
+                value={this.state.menu.minutes || ""}
                 onChange={this._handleMenuData}
               />分
             </dd>
@@ -233,7 +233,7 @@ class SettingsMenuForm extends React.Component {
                 type="number"
                 name="menu[min_staffs_number]"
                 data-name="min_staffs_number"
-                value={this.state.menu.min_staffs_number}
+                value={this.state.menu.min_staffs_number || ""}
                 onChange={this._handleMenuData}
               />人
             </dd>
@@ -261,7 +261,7 @@ class SettingsMenuForm extends React.Component {
                       type="checkbox"
                       name="menu[shop_menus_attributes][][shop_id]"
                       id={`shop-${menuShopOption.shopId}`}
-                      value={menuShopOption.shopId}
+                      value={menuShopOption.shopId || ""}
                       checked={menuShopOption.checked}
                       onChange={this._handleShopCheck}
                     />
@@ -278,7 +278,7 @@ class SettingsMenuForm extends React.Component {
                             type="number"
                             name="menu[shop_menus_attributes][][max_seat_number]"
                             data-shop-id={menuShopOption.shopId}
-                            value={menuShopOption.maxSeatNumber}
+                            value={menuShopOption.maxSeatNumber || ""}
                             onChange={this._handleShopMaxSeatNumber}
                           /> : null
                       }
@@ -317,7 +317,7 @@ class SettingsMenuForm extends React.Component {
                 type="date"
                 placeholder="開始日"
                 name="menu[menu_reservation_setting_rule_attributes][start_date]"
-                value={this.state.selectedReservationSettingRule.start_date}
+                value={this.state.selectedReservationSettingRule.start_date || ""}
                 data-name="start_date"
                 onChange={this._handleReservationSettingRuleChange}
                 />
@@ -329,7 +329,7 @@ class SettingsMenuForm extends React.Component {
               <input
                 type="hidden"
                 name="menu[menu_reservation_setting_rule_attributes][reservation_type]"
-                value={this.state.selectedReservationSettingRule.reservation_type}
+                value={this.state.selectedReservationSettingRule.reservation_type || ""}
                 />
 
               <div className="BTNselect" id="menuEnds">
@@ -380,7 +380,7 @@ class SettingsMenuForm extends React.Component {
                       size="3"
                       maxLength="3"
                       name="menu[menu_reservation_setting_rule_attributes][repeats]"
-                      value={this.state.selectedReservationSettingRule.repeats}
+                      value={this.state.selectedReservationSettingRule.repeats || ""}
                       data-name="repeats"
                       onChange={this._handleReservationSettingRuleChange}
                       /> {this.props.reservationEndingRuleRepeatingTimes}
@@ -459,7 +459,7 @@ class SettingsMenuForm extends React.Component {
                       className="BTNyesno"
                       name="menu[staff_menus_attributes][][staff_id]"
                       id={`staff-${menuStaffOption.staffId}`}
-                      value={menuStaffOption.staffId}
+                      value={menuStaffOption.staffId || ""}
                       data-name="staff-selection"
                       checked={menuStaffOption.checked}
                       onChange={this._handleStaffCheck}
@@ -470,7 +470,7 @@ class SettingsMenuForm extends React.Component {
                     {
                       menuStaffOption.checked ?
                         <input type="number"
-                           value={menuStaffOption.maxCustomers}
+                           value={menuStaffOption.maxCustomers || ""}
                            data-name="max-customers"
                            data-staff-id={menuStaffOption.staffId}
                            onChange={this._handleStaffMaxCustomers}
