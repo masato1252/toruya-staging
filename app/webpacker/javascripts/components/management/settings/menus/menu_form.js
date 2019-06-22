@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+import { sortableContainer, sortableElement, sortableHandle } from "react-sortable-hoc";
+import arrayMove from "array-move";
 import _ from "underscore";
 import axios from "axios";
 
@@ -8,6 +10,84 @@ import Select from "../../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
 
 var moment = require('moment-timezone');
+
+const DragHandle = sortableHandle(() => (
+  <span className="drag-handler">
+    <i className="fa fa-ellipsis-v"></i>
+  </span>
+));
+
+const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMaxCustomersHandler, sortIndex}) => (
+  <dl className="body menu-staff-option" key={`staff-${value.staffId}`}>
+    {
+      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={value.id || ""} />
+    }
+
+    {
+      value.id && !value.checked ?
+      <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
+    }
+
+    <dt className="staff-name">
+      <DragHandle />
+      {value.name}
+    </dt>
+    <dd className="capability">
+      <input
+        type="checkbox"
+        className="BTNyesno"
+        name="menu[staff_menus_attributes][][staff_id]"
+        id={`staff-${value.staffId}`}
+        value={value.staffId}
+        data-name="staff-selection"
+        checked={value.checked}
+        onChange={staffCheckHandler}
+      />
+      <label htmlFor={`staff-${value.staffId}`}></label>
+    </dd>
+    <dd>
+      {
+        value.checked ?
+        <input
+          type="hidden"
+          name="menu[staff_menus_attributes][][priority]"
+          value={value.priority}
+        /> : null
+      }
+      {
+        value.checked ?
+        <input type="number"
+          value={value.maxCustomers}
+          data-name="max-customers"
+          data-staff-id={value.staffId}
+          onChange={staffMaxCustomersHandler}
+          name="menu[staff_menus_attributes][][max_customers]" /> : null
+      }
+      {
+        value.checked ? "人" : null
+      }
+    </dd>
+  </dl>
+))
+
+const SortableOptionsList = sortableContainer(({staffOptions, staffCheckHandler, staffMaxCustomersHandler}) => {
+  const _this = this;
+
+  return (
+    <div>
+      {staffOptions.map((staffOption, index) => (
+        <SortableStaffOption
+          value={staffOption}
+          key={`option-${staffOption.staffId}-${index}`}
+          index={index}
+          sortIndex={index}
+          staffCheckHandler={staffCheckHandler}
+          staffMaxCustomersHandler={staffMaxCustomersHandler}
+        />
+      ))}
+    </div>
+  );
+});
 
 class SettingsMenuForm extends React.Component {
   constructor(props) {
@@ -440,49 +520,13 @@ class SettingsMenuForm extends React.Component {
               <li className="match">対応</li>
               <li>対応可能人数</li>
             </ul>
-            {this.state.menuStaffsOptions.map(function(menuStaffOption) {
-              return(
-                <dl className="body" key={`staff-${menuStaffOption.staffId}`}>
-                  {
-                    <input type="hidden" name="menu[staff_menus_attributes][][id]" value={menuStaffOption.id || ""} />
-                  }
-
-                  {
-                    menuStaffOption.id && !menuStaffOption.checked ?
-                    <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
-                  }
-
-                  <dt className="staff-name">{menuStaffOption.name}</dt>
-                  <dd className="capability">
-                    <input
-                      type="checkbox"
-                      className="BTNyesno"
-                      name="menu[staff_menus_attributes][][staff_id]"
-                      id={`staff-${menuStaffOption.staffId}`}
-                      value={menuStaffOption.staffId || ""}
-                      data-name="staff-selection"
-                      checked={menuStaffOption.checked}
-                      onChange={this._handleStaffCheck}
-                    />
-                  <label htmlFor={`staff-${menuStaffOption.staffId}`}></label>
-                  </dd>
-                  <dd>
-                    {
-                      menuStaffOption.checked ?
-                        <input type="number"
-                           value={menuStaffOption.maxCustomers || ""}
-                           data-name="max-customers"
-                           data-staff-id={menuStaffOption.staffId}
-                           onChange={this._handleStaffMaxCustomers}
-                           name="menu[staff_menus_attributes][][max_customers]" /> : null
-                    }
-                    {
-                      menuStaffOption.checked ? "人" : null
-                    }
-                  </dd>
-                </dl>
-              );
-            }.bind(this))}
+            <SortableOptionsList
+              useDragHandle
+              onSortEnd={this.onSortEnd}
+              staffOptions={this.state.menuStaffsOptions}
+              staffCheckHandler={this._handleStaffCheck}
+              staffMaxCustomersHandler={this._handleStaffMaxCustomers}
+            />
         </div>
 
         <ul id="footerav">
@@ -503,6 +547,17 @@ class SettingsMenuForm extends React.Component {
       </form>
     );
   }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+    this.setState(({menuStaffsOptions}) => ({
+      menuStaffsOptions: arrayMove(menuStaffsOptions, oldIndex, newIndex).map((menuStaffsOption, i) => {
+        menuStaffsOption.priority = i
+        return menuStaffsOption
+      }),
+    }));
+  };
+
+
 };
 
 export default SettingsMenuForm;

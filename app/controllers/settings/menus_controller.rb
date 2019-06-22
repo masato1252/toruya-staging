@@ -128,7 +128,7 @@ class Settings::MenusController < SettingsController
     :reservation_setting_id,
     staff_ids: [], category_ids: [],
     new_categories: [],
-    staff_menus_attributes: [[:id, :max_customers, :staff_id, :_destroy]],
+    staff_menus_attributes: [[:id, :max_customers, :staff_id, :priority, :_destroy]],
     shop_menus_attributes: [[:id, :max_seat_number, :shop_id, :_destroy]],
     menu_reservation_setting_rule_attributes: [:start_date, :end_date, :repeats, :reservation_type],
     )
