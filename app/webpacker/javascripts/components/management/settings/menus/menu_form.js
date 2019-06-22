@@ -514,6 +514,7 @@ class SettingsMenuForm extends React.Component {
         </div>
 
         <h3>対応従業員</h3>
+        <div>オンライン予約の際は、上から順にスタッフが予約に割り当てられます。</div>
         <div id="customize-table" className="formRow menu-staffs-table table">
             <ul className="tableTTL">
               <li className="staff-name">対応従業員</li>
