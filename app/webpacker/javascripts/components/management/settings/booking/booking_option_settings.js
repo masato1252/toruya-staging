@@ -110,7 +110,7 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderTimeFields = () => {
-    const { required_label, time_span_label, menu_time_span, menu_interval, total, minute, reservation_interval } = this.props.i18n;
+    const { required_label, time_span_label, menu_time_span, menu_interval, total, minute, reservation_interval, total_time } = this.props.i18n;
 
     return (
       <div>
@@ -118,24 +118,29 @@ class BookingOptionSettings extends React.Component {
         <div className="formRow">
           <dl>
             <dt>
-              Required Times
+              {menu_time_span}
             </dt>
             <FieldArray name="booking_option[menus]">
               {({ fields }) => (
                 <div>
                   {fields.map((field, index) => (
-                    <div key={`menu-${index}`}>
-                      <Field
-                        name={`${field}label`}
-                        component="input"
-                        readOnly={true}
-                      />
+                    <div key={`menu-${index}`} className="result-field">
+                      <Field name={`${field}label`}>
+                        {({input, meta}) => (
+                          <span className="before-field-hint">
+                            {input.value}
+                          </span>
+                        )}
+                      </Field>
                       <Field
                         name={`${field}required_time`}
                         type="number"
                         component={Input}
                         validate={composeValidators(this, requiredValidation, mustBeNumber)}
                       />
+                      <span className="field-hint">
+                        {minute}
+                      </span>
                       <Error name={`${field}required_time`} />
                     </div>
                   ))}
@@ -145,7 +150,7 @@ class BookingOptionSettings extends React.Component {
           </dl>
           <Field
             name="booking_option[minutes]"
-            label={menu_time_span}
+            label={total_time}
             type="number"
             component={InputRow}
             before_hint={total}

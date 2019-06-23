@@ -673,6 +673,7 @@ ja:
         display_name_hint: あなたのお客様がご予約の際にメニューとして表示される名前です。
         menu_for_sale_label: 販売メニュー
         time_span_label: 予約時間
+        total_time: 合計時間
         reservation_interval: 予約の前後
         price_label: 販売予定価格
         price: 定価
