@@ -163,7 +163,8 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.booking_option_menus (
     id bigint NOT NULL,
     booking_option_id bigint NOT NULL,
-    menu_id bigint NOT NULL
+    menu_id bigint NOT NULL,
+    priority integer
 );
 
 
@@ -2895,6 +2896,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190420050353'),
 ('20190612074957'),
 ('20190612142854'),
-('20190622101709');
+('20190622101709'),
+('20190623050322');
 
 

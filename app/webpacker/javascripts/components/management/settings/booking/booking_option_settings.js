@@ -5,6 +5,8 @@ import { Form, Field } from "react-final-form";
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
+import { sortableContainer, sortableElement } from "react-sortable-hoc";
+import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
 
@@ -13,6 +15,7 @@ import { InputRow, Radio, Error, Condition } from "../../../shared/components";
 import CommonDatepickerField from "../../../shared/datepicker_field";
 import DateFieldAdapter from "../../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../../shared/select_multiple_inputs";
+import { DragHandle } from "../../../shared/components";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {
@@ -61,48 +64,23 @@ class BookingOptionSettings extends React.Component {
     );
   }
 
-  renderSelectedMenuFields = (fields, collection_name) => {
-    const { menu_time_span, menu_interval, minute } = this.props.i18n;
+  onSortEnd = ({oldIndex, newIndex}) => {
+    const sorted_menus = arrayMove(this.booking_option_settings_form_values.menus, oldIndex, newIndex).map((menu, i) => {
+      menu.priority = i
+      return menu
+    })
 
-    return (
-      <div className="result-fields">
-        {fields.map((field, index) => {
-          return (
-           <div key={`${collection_name}-${index}`} className="result-field">
-             <Field
-               name={`${field}label`}
-               value={field.label}
-               component="input"
-               readOnly={true}
-             />
-             <Field
-               name={`${field}value`}
-               value={field.value}
-               component="input"
-               type="hidden"
-             />
-             <a
-               href="#"
-               className="btn btn-symbol btn-orange after-field-btn"
-               onClick={(event) => {
-                   event.preventDefault();
-                   fields.remove(index)
-                 }
-               }
-               >
-               <i className="fa fa-minus" aria-hidden="true" ></i>
-             </a>
-             <Field name={`${field}minutes`} value={field.minutes}>
-               {({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
-             </Field>
-             <Field name={`${field}interval`} value={field.interval}>
-               {({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
-             </Field>
-           </div>
-          )
-         })}
-      </div>
-    )
+    this.booking_option_settings_form.change("booking_option[menus]", sorted_menus)
+  };
+
+  renderSelectedMenuFields = (fields, _) => {
+    return <SortableOptionsList
+      useDragHandle
+      onSortEnd={this.onSortEnd}
+      menu_values={this.booking_option_settings_form_values.menus}
+      fields={fields}
+      i18n={this.props.i18n}
+    />
   };
 
   renderMenuFields = () => {
@@ -345,45 +323,113 @@ class BookingOptionSettings extends React.Component {
         mutators={{
           ...arrayMutators
         }}
-        render={({ handleSubmit, submitting }) => (
-          <form
-            action={this.props.path.save}
-            className="booking-option-settings settings-form"
-            id="booking_option_settings_form"
-            onSubmit={handleSubmit}
-            acceptCharset="UTF-8"
-            method="post">
-            <input name="utf8" type="hidden" value="✓" />
-            {this.props.booking_option.id ? <input type="hidden" name="_method" value="PUT" /> : null}
-            <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
+        render={({ handleSubmit, submitting, form, values }) => {
+          this.booking_option_settings_form = form;
+          this.booking_option_settings_form_values = values.booking_option;
 
-            {this.renderNameFields()}
-            {this.renderMenuFields()}
-            {this.renderTimeFields()}
-            {this.renderPriceFields()}
-            {this.renderSellingTimeFields()}
-            {this.renderMemoFields()}
+          return (
+            <form
+              action={this.props.path.save}
+              className="booking-option-settings settings-form"
+              id="booking_option_settings_form"
+              onSubmit={handleSubmit}
+              acceptCharset="UTF-8"
+              method="post">
+              <input name="utf8" type="hidden" value="✓" />
+              {this.props.booking_option.id ? <input type="hidden" name="_method" value="PUT" /> : null}
+              <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
 
-            <ul id="footerav">
-              <li>
-                <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
-              </li>
-              <li>
-                <input
-                  type="submit"
-                  name="commit"
-                  value={this.props.i18n.save}
-                  className="BTNyellow"
-                  data-disable-with={this.props.i18n.save}
-                  disabled={submitting}
-                />
-              </li>
-            </ul>
-          </form>
-        )}
+              {this.renderNameFields()}
+              {this.renderMenuFields()}
+              {this.renderTimeFields()}
+              {this.renderPriceFields()}
+              {this.renderSellingTimeFields()}
+              {this.renderMemoFields()}
+
+              <ul id="footerav">
+                <li>
+                  <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
+                </li>
+                <li>
+                  <input
+                    type="submit"
+                    name="commit"
+                    value={this.props.i18n.save}
+                    className="BTNyellow"
+                    data-disable-with={this.props.i18n.save}
+                    disabled={submitting}
+                  />
+                </li>
+              </ul>
+            </form>
+          )
+        }}
       />
     )
   }
 }
+
+const SortableMenuOption = sortableElement(({fields, field, i18n, index}) => {
+  const { menu_time_span, menu_interval, minute } = i18n;
+
+  return (
+    <div className="result-field">
+      <DragHandle />
+      <Field
+        name={`${field}label`}
+        value={field.label}
+        component="input"
+        readOnly={true}
+      />
+      <Field
+        name={`${field}priority`}
+        value={field.priority}
+        component="input"
+        type="hidden"
+      />
+      <Field
+        name={`${field}value`}
+        value={field.value}
+        component="input"
+        type="hidden"
+      />
+      <a
+        href="#"
+        className="btn btn-symbol btn-orange after-field-btn"
+        onClick={(event) => {
+          event.preventDefault();
+          fields.remove(index)
+        }
+        }
+      >
+        <i className="fa fa-minus" aria-hidden="true" ></i>
+      </a>
+      <Field name={`${field}minutes`} value={field.minutes}>
+        {({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
+      </Field>
+      <Field name={`${field}interval`} value={field.interval}>
+        {({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
+      </Field>
+    </div>
+  )
+});
+
+const SortableOptionsList = sortableContainer(({menu_values, fields, i18n}) => {
+  return (
+    <div className="result-fields">
+      {fields.map((field, index) => {
+        if (!menu_values[index]) { return; }
+
+        return <SortableMenuOption
+          key={`option-${menu_values[index].value}`}
+          fields={fields}
+          field={field}
+          index={index}
+          i18n={i18n}
+        />
+      })}
+    </div>
+  )
+})
 
 export default BookingOptionSettings;
