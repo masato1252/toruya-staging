@@ -10,7 +10,7 @@ import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
 
-import { requiredValidation, emailFormatValidator, transformValues, composeValidators } from "../../../../libraries/helper";
+import { requiredValidation, transformValues } from "../../../../libraries/helper";
 import { InputRow, Radio, Error, Condition } from "../../../shared/components";
 import CommonDatepickerField from "../../../shared/datepicker_field";
 import DateFieldAdapter from "../../../shared/date_field_adapter";
@@ -44,7 +44,7 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[name]"
             component={InputRow}
             type="text"
-            validate={composeValidators(this, requiredValidation, emailFormatValidator)}
+            validate={(value) => requiredValidation(this, value)}
             label={price_name}
             placeholder={price_name}
             hint={price_name_hint}
