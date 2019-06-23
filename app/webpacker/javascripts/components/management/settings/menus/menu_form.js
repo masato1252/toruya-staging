@@ -8,14 +8,9 @@ import axios from "axios";
 
 import Select from "../../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
+import { DragHandle } from "../../../shared/components";
 
 var moment = require('moment-timezone');
-
-const DragHandle = sortableHandle(() => (
-  <span className="drag-handler">
-    <i className="fa fa-ellipsis-v"></i>
-  </span>
-));
 
 const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMaxCustomersHandler, sortIndex}) => (
   <dl className="body menu-staff-option" key={`staff-${value.staffId}`}>

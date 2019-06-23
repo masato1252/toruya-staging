@@ -1,6 +1,7 @@
 import React from "react";
 import { Field } from "react-final-form";
 import _ from "lodash";
+import { sortableElement, sortableHandle } from "react-sortable-hoc";
 
 const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>
@@ -104,11 +105,18 @@ const Condition = ({ when, is, children, is_not }) => (
   </Field>
 );
 
+const DragHandle = sortableHandle(() => (
+  <span className="drag-handler">
+    <i className="fa fa-ellipsis-v"></i>
+  </span>
+));
+
 export {
   Input,
   InputRow,
   RadioRow,
   Radio,
   Error,
-  Condition
+  Condition,
+  DragHandle,
 };
