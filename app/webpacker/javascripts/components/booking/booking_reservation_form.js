@@ -240,7 +240,7 @@ class BookingReservationForm extends React.Component {
                 </h4>
                 <Field
                   name="booking_reservation_form[customer_info][phone_number]"
-                  type="text"
+                  type="number"
                   component="input"
                   placeholder="01234567891"
                   validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
@@ -275,7 +275,7 @@ class BookingReservationForm extends React.Component {
                 </h4>
                 <Field
                   name="booking_reservation_form[customer_info][address_details][postcode]"
-                  type="text"
+                  type="number"
                   component="input"
                   validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(7))}
                 />
@@ -618,7 +618,7 @@ class BookingReservationForm extends React.Component {
           name="booking_reservation_form[customer_phone_number]"
           component="input"
           placeholder="0123456789"
-          type="tel"
+          type="number"
           validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
         />
         <Error name="booking_reservation_form[customer_phone_number]" />
