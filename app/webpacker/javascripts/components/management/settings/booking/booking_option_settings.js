@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Form, Field } from "react-final-form";
+import { FieldArray } from 'react-final-form-arrays'
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import arrayMutators from 'final-form-arrays'
@@ -10,8 +11,8 @@ import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
 
-import { requiredValidation, transformValues } from "../../../../libraries/helper";
-import { InputRow, Radio, Error, Condition } from "../../../shared/components";
+import { mustBeNumber, requiredValidation, transformValues, composeValidators } from "../../../../libraries/helper";
+import { Input, InputRow, Radio, Error, Condition } from "../../../shared/components";
 import CommonDatepickerField from "../../../shared/datepicker_field";
 import DateFieldAdapter from "../../../shared/date_field_adapter";
 import SelectMultipleInputs from "../../../shared/select_multiple_inputs";
@@ -22,16 +23,19 @@ class BookingOptionSettings extends React.Component {
     super(props);
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator({
-      field: /booking_option\[menus\]/, // when a field matching this pattern changes...
-      updates: {
-        "booking_option[minutes]": (menuValues, allValues) => {
-          return (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.minutes || 0), 0)
-        },
-        "booking_option[interval]": (menuValues, allValues) => (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+      field: /booking_option\[menus\]/,
+      updates: (value, name, allValues) => {
+        return this.booking_option_times_calculation(allValues)
       }
     })
   };
 
+  booking_option_times_calculation = (allValues) => {
+    return {
+      "booking_option[minutes]": (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.required_time || 0), 0),
+      "booking_option[interval]": (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+    }
+  }
 
   renderNameFields = () => {
     const { required_label, price_name, price_name_hint, display_name, display_name_hint } = this.props.i18n;
@@ -112,6 +116,33 @@ class BookingOptionSettings extends React.Component {
       <div>
         <h3>{time_span_label}<strong>{required_label}</strong></h3>
         <div className="formRow">
+          <dl>
+            <dt>
+              Required Times
+            </dt>
+            <FieldArray name="booking_option[menus]">
+              {({ fields }) => (
+                <div>
+                  {fields.map((field, index) => (
+                    <div key={`menu-${index}`}>
+                      <Field
+                        name={`${field}label`}
+                        component="input"
+                        readOnly={true}
+                      />
+                      <Field
+                        name={`${field}required_time`}
+                        type="number"
+                        component={Input}
+                        validate={composeValidators(this, requiredValidation, mustBeNumber)}
+                      />
+                      <Error name={`${field}required_time`} />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </FieldArray>
+          </dl>
           <Field
             name="booking_option[minutes]"
             label={menu_time_span}
@@ -119,6 +150,7 @@ class BookingOptionSettings extends React.Component {
             component={InputRow}
             before_hint={total}
             hint={minute}
+            readOnly={true}
           />
           <Field
             name="booking_option[interval]"

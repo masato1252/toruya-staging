@@ -164,7 +164,8 @@ CREATE TABLE public.booking_option_menus (
     id bigint NOT NULL,
     booking_option_id bigint NOT NULL,
     menu_id bigint NOT NULL,
-    priority integer
+    priority integer,
+    required_time integer
 );
 
 

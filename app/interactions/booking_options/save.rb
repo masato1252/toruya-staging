@@ -17,8 +17,8 @@ module BookingOptions
       string :memo, default: nil
       # menus hash
       # {
-      #   "0" => { "label" => "menu_name", "value" => "menu_id", "priority" => 0 },
-      #   "1" => { "label" => "ANAT002筋骨BODY", "value" => "6", "priority" => 1 }
+      #   "0" => { "label" => "menu_name", "value" => "menu_id", "priority" => 0, "required_time" => 100 },
+      #   "1" => { "label" => "ANAT002筋骨BODY", "value" => "6", "priority" => 1, "required_time" => 200 }
       # }
       hash :menus, default: nil, strip: false
     end
@@ -33,7 +33,8 @@ module BookingOptions
             menus&.values&.map do |menu|
               {
                 menu_id: menu["value"],
-                priority: menu["priority"]
+                priority: menu["priority"],
+                required_time: menu["required_time"]
               }
             end || []
           )
