@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "react-final-form";
 import _ from "lodash";
-import { sortableElement, sortableHandle } from "react-sortable-hoc";
+import { sortableHandle } from "react-sortable-hoc";
 
 const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>

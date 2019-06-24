@@ -163,7 +163,9 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.booking_option_menus (
     id bigint NOT NULL,
     booking_option_id bigint NOT NULL,
-    menu_id bigint NOT NULL
+    menu_id bigint NOT NULL,
+    priority integer,
+    required_time integer
 );
 
 
@@ -204,7 +206,8 @@ CREATE TABLE public.booking_options (
     end_at timestamp without time zone,
     memo text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    menu_restrict_order boolean DEFAULT false NOT NULL
 );
 
 
@@ -2469,6 +2472,7 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 
 --
 -- Name: index_reservation_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
+<<<<<<< HEAD
 --
 
 CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
@@ -2478,6 +2482,17 @@ CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USIN
 -- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
 --
 
+=======
+--
+
+CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
+
+
+--
+-- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+>>>>>>> add-priority-to-option-menus
 CREATE INDEX index_reservation_menus_on_reservation_id ON public.reservation_menus USING btree (reservation_id);
 
 
@@ -2895,6 +2910,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190420050353'),
 ('20190612074957'),
 ('20190612142854'),
-('20190622101709');
+('20190622101709'),
+('20190623050322'),
+('20190624001252');
 
 

@@ -4,7 +4,7 @@
 #
 #  id                 :integer          not null, primary key
 #  shop_id            :integer          not null
-#  menu_id            :integer          not null
+#  menu_id            :integer
 #  start_time         :datetime         not null
 #  end_time           :datetime         not null
 #  ready_time         :datetime         not null
@@ -16,6 +16,7 @@
 #  with_warnings      :boolean          default(FALSE), not null
 #  by_staff_id        :integer
 #  deleted_at         :datetime
+#  prepare_time       :datetime
 #
 # Indexes
 #
