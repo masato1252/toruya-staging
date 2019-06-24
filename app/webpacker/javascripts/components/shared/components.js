@@ -7,11 +7,11 @@ const errorMessage = (error) => (
   <p className="field-error-message">{error}</p>
 )
 
-const Input = ({input, meta, ...rest}) => {
+const Input = ({input, meta, className, ...rest}) => {
   const { error, touched } = meta;
 
   return (
-    <input {...input} {...rest} className={error && touched ? "field-error" : ""} />
+    <input {...input} {...rest} className={`${error && touched ? "field-error" : ""} ${className}`} />
   )
 }
 

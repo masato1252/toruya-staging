@@ -5,7 +5,7 @@ module Reservable
     object :shop
     date :date
     object :business_time_range, class: Range, default: nil
-    array :menu_ids, default: nil
+    integer :menu_id, default: nil
     integer :booking_option_id, default: nil
     array :staff_ids, default: nil
     integer :reservation_id, default: nil
@@ -16,10 +16,14 @@ module Reservable
       time_outcome = Reservable::Time.run(shop: shop, date: date)
 
       if time_outcome.invalid?
-        errors.merge!(time_outcome.errors)
+        time_outcome.errors.details.each do |error_attr, time_errors|
+          time_errors.each do |error_hash|
+            errors.add(error_attr, error_hash.values.first)
+          end
+        end
       end
 
-      return if (menu_ids.blank? && booking_option_id.nil?) || business_time_range.blank?
+      return if (menu_id.nil? && booking_option_id.nil?) || business_time_range.blank?
 
       # validate_time_range
       if time_outcome.valid?
@@ -35,8 +39,8 @@ module Reservable
         end
       end
 
-      if new_reseravtion_time_interval < services_required_timee
-        errors.add(:menu_ids, :time_not_enough)
+      if new_reseravtion_time_interval < services_required_time
+        errors.add(:menu_id, :time_not_enough)
       end
 
       validate_interval_time if overlap_restriction
@@ -67,22 +71,18 @@ module Reservable
         validate_staff_ability(staff)
       end
 
-      menus.sum(:min_staffs_number).times do |i|
+      menu.min_staffs_number.times do |i|
         validate_lack_overlap_staff(staff_ids[i], i)
       end
     end
 
     private
 
-    def total_menus_taking_time
-      services_required_timee + interval_time
-    end
-
-    def services_required_timee
+    def services_required_time
       if booking_option_id
         booking_option.minutes.minutes
       else
-        menus.sum(:minutes).minutes
+        menu.minutes.minutes
       end
     end
 
@@ -90,15 +90,7 @@ module Reservable
       if booking_option_id
         booking_option.interval.minutes
       else
-        menus.last.interval.minutes
-      end
-    end
-
-    def interval_time_before_reservation
-      if booking_option_id
-        booking_option.interval.minutes
-      else
-        menus.first.interval.minutes
+        menu.interval.minutes
       end
     end
 
@@ -106,8 +98,8 @@ module Reservable
       @booking_option ||= shop.user.booking_options.find_by(id: booking_option_id)
     end
 
-    def menus
-      @menus ||= shop.menus.where(id: menu_ids)
+    def menu
+      @menu ||= shop.menus.find(menu_id)
     end
 
     def staffs
@@ -131,15 +123,15 @@ module Reservable
       end
 
       unless previous_reservation_overlap
-        previous_reservation_validation_start_time = start_time.advance(seconds: -interval_time_before_reservation)
-        previous_reservation_validation_end_time = start_time.advance(seconds: -interval_time_before_reservation)
+        previous_reservation_validation_start_time = start_time.advance(seconds: -interval_time)
+        previous_reservation_validation_end_time = start_time.advance(seconds: -interval_time)
 
         # The interval time is enough for previous reservation but not enough for current reservation
         if previous_reservation_overlap =
             ReservationStaff.
             overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id).
             where("reservations.shop_id = ?", shop.id).
-            where("reservations.start_time < ? and reservations.end_time > ?",
+            where("reservation_staffs.work_start_at < ? and reservation_staffs.work_end_at > ?",
                   previous_reservation_validation_end_time, previous_reservation_validation_start_time).exists?
           errors.add(:business_time_range, "previous_reservation_interval_overlap")
         end
@@ -167,7 +159,7 @@ module Reservable
             ReservationStaff.
             overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id).
             where("reservations.shop_id = ?", shop.id).
-            where("reservations.prepare_time < ? and reservations.end_time > ?",
+            where("reservation_staffs.prepare_time < ? and reservation_staffs.work_end_at > ?",
                   next_reservation_validation_end_time, next_reservation_validation_start_time).exists?
           errors.add(:business_time_range, "next_reservation_interval_overlap")
         end
@@ -179,68 +171,62 @@ module Reservable
     end
 
     def validate_menu_schedules
-      menus.each do |menu|
-        unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
-          errors.add(:menu_ids, :unschedule_menu)
+      unless Menu.workable_scoped(shop: shop, start_time: start_time, end_time: end_time).where(id: menu.id).exists?
+        errors.add(:menu_id, :unschedule_menu)
+      end
+
+      if menu.menu_reservation_setting_rule
+        if menu.menu_reservation_setting_rule.start_date > date
+          errors.add(:menu_id, :start_yet,
+                     start_at: menu.menu_reservation_setting_rule.start_date.to_s)
         end
 
-        if menu.menu_reservation_setting_rule
-          if menu.menu_reservation_setting_rule.start_date > date
-            errors.add(:menu_ids, :start_yet,
-                       start_at: menu.menu_reservation_setting_rule.start_date.to_s)
-          end
-
-          if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < date) ||
+        if (menu.menu_reservation_setting_rule.end_date && menu.menu_reservation_setting_rule.end_date < date) ||
             (menu.menu_reservation_setting_rule.repeating? && ShopMenuRepeatingDate.where(shop: shop, menu: menu).first.end_date < date)
-            errors.add(:menu_ids, :is_over)
-          end
+          errors.add(:menu_id, :is_over)
         end
       end
     end
 
     def validate_seats_for_customers
-      menus.each do |menu|
-        if number_of_customer > shop_menus.find { |shop_menu| shop_menu.menu_id == menu.id }.max_seat_number
-          errors.add(:menu_ids, :not_enough_seat)
-        end
+      if number_of_customer > shop_menu.max_seat_number
+        errors.add(:menu_id, :not_enough_seat)
       end
     end
 
     def validate_staffs_ability_for_customers(staff)
-      staff_menus = StaffMenu.where(staff_id: staff.id, menu_id: menu_ids)
+      staff_menus = StaffMenu.where(staff_id: staff.id, menu_id: menu_id)
 
-      menus.each do |menu|
-        if staff_menu = staff_menus.find { |staff_menu| staff_menu.menu_id == menu.id }
-          if number_of_customer > staff_menu.max_customers
-            errors.add(:staff_ids, :not_enough_ability)
-            errors.add(:not_enough_ability, staff.id.to_s)
-          end
+      if staff_menu = staff_menus.find { |staff_menu| staff_menu.menu_id == menu.id }
+        if number_of_customer > staff_menu.max_customers
+          errors.add(:staff_ids, :not_enough_ability)
+          errors.add(:not_enough_ability, staff.id.to_s)
         end
       end
     end
 
     # validate does the number of customers using the menu over the shop/staff capabiliy
     def validate_shop_capability_for_customers
-      menu_ids.each do |menu_id|
-        shop_max_seat_number = shop_menus.find { |shop_menu| shop_menu.menu_id == menu_id }&.max_seat_number || 1
-        staff_max_customers = StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).where.not(max_customers: nil).minimum(:max_customers)
+      shop_max_seat_number = shop_menu&.max_seat_number || 1
+      staff_max_customers = StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).where.not(max_customers: nil).minimum(:max_customers)
 
-        min_shop_customer_capability = [shop_max_seat_number, staff_max_customers].min
+      min_shop_customer_capability = [shop_max_seat_number, staff_max_customers].min
 
-        existing_customers = ::Reservation.joins(:menu).
-          where.not(id: reservation_id.presence).
-          where.not("reservations.aasm_state": "canceled").
-          where.not("menus.min_staffs_number": 0).
-          where("reservations.menu_id": menu_id).
-          where("reservations.deleted_at": nil).
-          where("reservations.shop_id = ?", shop.id).
-          where("reservations.start_time < ? and reservations.end_time > ?", end_time, start_time).
-          sum(:count_of_customers)
+      existing_customers = ::Reservation.
+        left_outer_joins(:menus).
+        where.not(id: reservation_id.presence).
+        where.not("reservations.aasm_state": "canceled").
+        where.not("menus.min_staffs_number": 0).
+        where("reservation_menus.menu_id": menu_id).
+        where("reservations.deleted_at": nil).
+        where("reservations.shop_id = ?", shop.id).
+        where("reservations.start_time < ? and reservations.end_time > ?", end_time, start_time).
+        group("reservations.id").
+        sum(&:count_of_customers)
 
-        if min_shop_customer_capability < existing_customers + number_of_customer
-          errors.add(:menu_ids, :shop_or_staff_not_enough_ability)
-          errors.add(:shop_or_staff_not_enough_ability, menu_id)
-        end
+      if min_shop_customer_capability < existing_customers + number_of_customer
+        errors.add(:menu_id, :shop_or_staff_not_enough_ability)
+        errors.add(:shop_or_staff_not_enough_ability, menu_id)
       end
     end
 
@@ -279,13 +265,10 @@ module Reservable
     end
 
     def validate_other_shop_reservation(staff)
-      other_shop_reservation_exist = ReservationStaff.joins(reservation: :menu).
-        where.not(reservation_id: reservation_id.presence).
-        where.not("reservations.aasm_state": "canceled").
-        where("reservations.deleted_at": nil).
-        where("reservation_staffs.staff_id": staff.id).
+      other_shop_reservation_exist = ReservationStaff.
+        overlap_reservations_scope(staff_ids: staff.id, reservation_id: reservation_id).
         where("reservations.shop_id != ?", shop.id).
-        where("reservations.start_time > ? and reservations.end_time < ?", beginning_of_day, end_of_day).exists?
+        where("reservation_staffs.work_start_at > ? and reservation_staffs.work_end_at < ?", beginning_of_day, end_of_day).exists?
 
       if other_shop_reservation_exist
         errors.add(:staff_ids, :other_shop)
@@ -294,15 +277,10 @@ module Reservable
     end
 
     def validate_same_shop_overlap_reservations(staff)
-      overlap_reservations_exist =
-        ReservationStaff.joins(reservation: :menu).
-          where.not(reservation_id: reservation_id.presence).
-          where.not("reservations.aasm_state": "canceled").
-          where.not("menus.min_staffs_number": 0).
-          where("reservations.deleted_at": nil).
-          where("reservation_staffs.staff_id": staff.id).
-          where("reservations.shop_id = ?", shop.id).
-          where("reservations.start_time < ? and reservations.end_time > ?", end_time, start_time).exists?
+      overlap_reservations_exist = ReservationStaff.
+        overlap_reservations_scope(staff_ids: staff.id, reservation_id: reservation_id).
+        where("reservations.shop_id = ?", shop.id).
+        where("reservation_staffs.work_start_at < ? and reservation_staffs.work_end_at > ?", end_time, start_time).exists?
 
       if overlap_reservations_exist
         errors.add(:staff_ids, :overlap_reservations)
@@ -313,11 +291,9 @@ module Reservable
     def validate_staff_ability(staff)
       staff_menu_ids = staff.staff_menus.pluck(:menu_id)
 
-      menus.each do |menu|
-        if staff_menu_ids.exclude?(menu.id)
-          errors.add(:staff_ids, :incapacity_menu)
-          errors.add(:incapacity_menu, staff.id.to_s)
-        end
+      if staff_menu_ids.exclude?(menu.id)
+        errors.add(:staff_ids, :incapacity_menu)
+        errors.add(:incapacity_menu, staff.id.to_s)
       end
     end
 
@@ -330,8 +306,8 @@ module Reservable
       end
     end
 
-    def shop_menus
-      @shop_menus ||= shop.shop_menus.where(menu_id: menu_ids).to_a
+    def shop_menu
+      @shop_menu ||= shop.shop_menus.find_by(menu_id: menu_id)
     end
   end
 end

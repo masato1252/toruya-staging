@@ -77,8 +77,8 @@ RSpec.describe Reservations::Filter do
           let(:matched_menu) { FactoryBot.create(:menu, user: user) }
           let(:unmatched_menu) { FactoryBot.create(:menu, user: user) }
 
-          let(:matched_reservation) { FactoryBot.create(:reservation, shop: shop, menu: matched_menu) }
-          let(:unmatch_reservation) { FactoryBot.create(:reservation, shop: shop, menu: unmatched_menu) }
+          let(:matched_reservation) { FactoryBot.create(:reservation, shop: shop, menus: [ matched_menu ]) }
+          let(:unmatch_reservation) { FactoryBot.create(:reservation, shop: shop, menus: [ unmatched_menu ]) }
 
           it "returns expected reservations" do
             result = described_class.run!(super_user: user, reservation: reservation_conditions.merge(menu_ids: [matched_menu.id]))

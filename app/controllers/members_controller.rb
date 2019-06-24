@@ -15,7 +15,7 @@ class MembersController < DashboardController
 
     reservations = Reservation.where(shop_id: working_shop_options(include_user_own: true).map(&:shop_id).uniq)
       .uncanceled.in_date(@date)
-      .includes(:menu, :customers, :staffs, shop: :user)
+      .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
 
     @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]

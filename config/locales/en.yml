@@ -24,10 +24,12 @@ en:
     reservation_setting_warning_link_title: Reservation Settings page
   action:
     delete: Delete
+    delete_reservation: Delete reservation
     edit: edit
     cancel: Cancel
     log_out: Log out
     save: Save
+    save_pending: Save as pending
     search: Search
     upgrade_to_premium: Upgrade to premium plan
     upgrade_to_basic: Upgrade to basic plan
@@ -113,6 +115,8 @@ en:
     memo: Memo
     contain_some_warnings: Containing some warnings
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
+    confirm_with_warnings: Confirm with warnings
+    customers_list_label: Customers
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

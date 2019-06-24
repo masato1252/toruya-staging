@@ -5,7 +5,7 @@ module Reservable
       # start_time/ready_time checking is >, < not, >=, <= that means we accept reservation is overlap 1 minute
       return @reserved_staff_ids if defined?(@reserved_staff_ids)
 
-      scoped = ReservationStaff.joins(reservation: :menu).
+      scoped = ReservationStaff.joins(:reservation, :menu).
         where.not(reservation_id: reservation_id.presence).
         where("reservation_staffs.staff_id": shop.staff_ids).
         where("reservations.deleted_at": nil).
@@ -53,7 +53,7 @@ module Reservable
       # XXX: TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)
       # a range time is available or not, it is depend on what menu it used,
       # so we use the above query to find all the available menus when using our query time range.
-      scoped = shop.reservations.left_outer_joins(:menu, :reservation_customers, :staffs => :staff_menus).
+      scoped = shop.reservations.left_outer_joins(:menus, :reservation_customers, :staffs => :staff_menus).
         where.not(id: reservation_id.presence).
         where("(reservations.start_time < (TIMESTAMP ? + (INTERVAL '1 min' * menus.interval)) and reservations.ready_time > ?)", end_time, start_time)
 

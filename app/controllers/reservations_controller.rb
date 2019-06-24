@@ -60,6 +60,28 @@ class ReservationsController < DashboardController
     end
   end
 
+  def form
+    @body_class = "resNew"
+
+    @reservation = shop.reservations.find_by(id: params[:id])
+    @reservation ||= shop.reservations.new(
+      start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
+      start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
+      end_time_date_part: params[:end_time_date_part] || params[:start_time_date_part] || Time.zone.now.to_s(:date),
+      end_time_time_part: params[:end_time_time_part] || Time.zone.now.advance(hours: 2).to_s(:time),
+      memo: params[:memo],
+      menu_id: params[:menu_id],
+      staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
+      customer_ids: params[:customer_ids].try(:split, ",").try(:uniq)
+    )
+
+    all_options
+    if params[:start_time_date_part].present?
+      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+      @time_ranges = outcome.valid? ? outcome.result : nil
+    end
+  end
+
   # GET /reservations/1/edit
   def edit
     authorize! :manage_shop_reservations, shop
@@ -79,9 +101,33 @@ class ReservationsController < DashboardController
   end
 
   def create
+    # sleep 3
+    # redirect_to form_shop_reservations_path(shop)
+    # return
+
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
-    outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
+
+    reservation_params_hash = reservation_params.to_h
+
+    reservation_params_hash[:params][:menu_staffs_list].map! do |h|
+      h[:work_start_at] = Time.zone.parse(h[:work_start_at]) if h[:work_start_at]
+      h[:work_end_at] = Time.zone.parse(h[:work_end_at]) if h[:work_end_at]
+      h
+    end
+    reservation_params_hash[:params][:customer_ids] =
+      reservation_params_hash[:params][:customer_ids].present? ? reservation_params_hash[:params][:customer_ids].split(",").uniq : []
+    reservation_params_hash[:params][:by_staff_id] = reservation_params_hash[:by_staff_id].to_i
+
+    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:start_time_time_part]
+      reservation_params_hash[:params][:start_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:start_time_time_part]}")
+    end
+
+    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:end_time_time_part]
+      reservation_params_hash[:params][:end_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:end_time_time_part]}")
+    end
+
+    outcome = Reservations::Create.run(shop: shop, params: reservation_params_hash)
 
     respond_to do |format|
       if outcome.valid?
@@ -106,7 +152,7 @@ class ReservationsController < DashboardController
     respond_to do |format|
       if outcome.valid?
         format.html do
-          if params[:from_customer_id]
+          if params[:from_customer_id].present?
             redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
           elsif in_personal_dashboard?
             redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
@@ -128,7 +174,7 @@ class ReservationsController < DashboardController
 
     Reservations::Delete.run!(reservation: @reservation)
 
-    if params[:from_customer_id]
+    if params[:from_customer_id].present?
       redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
     elsif in_personal_dashboard?
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
@@ -193,11 +239,14 @@ class ReservationsController < DashboardController
   end
 
   def reservation_errors
+    params[:menu_id] = "2"
+    params[:staff_ids] = "2"
+
     outcome = Reservable::Reservation.run(
       shop: shop,
       date: Time.zone.parse(params[:start_time_date_part]).to_date,
       business_time_range: start_time..end_time,
-      menu_ids: [params[:menu_id].presence].compact.uniq,
+      menu_id: params[:menu_id].presence,
       staff_ids: params[:staff_ids].try(:split, ",") || [],
       reservation_id: params[:reservation_id].presence,
       number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size

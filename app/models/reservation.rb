@@ -26,12 +26,14 @@
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
+  include DateTimeAccessor
+
   has_paper_trail on: [:update]
+  date_time_accessor :start_time, :end_time, accessor_only: true
 
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
-  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
   validates :start_time, presence: true
   validates :end_time, presence: true
@@ -40,14 +42,15 @@ class Reservation < ApplicationRecord
   # validate :enough_staffs_for_customers
 
   belongs_to :shop
-  belongs_to :menu
   belongs_to :by_staff, class_name: "Staff", required: false
+  has_one :reservation_booking_option
+  has_one :booking_option, through: :reservation_booking_option
   has_many :reservation_staffs, dependent: :destroy
+  has_many :reservation_menus, -> { order("position") }, dependent: :destroy
+  has_many :menus, through: :reservation_menus, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
   has_many :reservation_customers, dependent: :destroy
   has_many :customers, through: :reservation_customers
-
-  before_validation :set_start_time, :set_end_time, :set_ready_time, :set_prepare_time
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.current) }
@@ -77,38 +80,6 @@ class Reservation < ApplicationRecord
     event :cancel do
       transitions from: [:pending, :reserved, :noshow, :checked_in, :checked_out], to: :canceled
     end
-  end
-
-  def set_start_time
-    if start_time_date_part && start_time_time_part
-      self.start_time = Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
-    end
-  end
-
-  def set_end_time
-    if start_time_date_part && end_time_time_part
-      self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
-    end
-  end
-
-  def set_ready_time
-    self.ready_time = end_time + menu.interval.to_i.minutes
-  end
-
-  def set_prepare_time
-    self.prepare_time = start_time - menu.interval.to_i.minutes
-  end
-
-  def start_time_date
-    start_time.to_s(:date)
-  end
-
-  def start_time_time
-    start_time.to_s(:time)
-  end
-
-  def end_time_time
-    end_time.try(:to_s, :time)
   end
 
   def for_staff(staff)

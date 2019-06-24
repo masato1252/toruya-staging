@@ -1,0 +1,32 @@
+
+<%= react_component("management/reservations/form", {
+  form_authenticity_token: form_authenticity_token,
+  timezone: Time.zone.tzinfo.name,
+  reservation_properties: {
+    shop_name: shop.display_name,
+    is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
+    is_customers_readable: ability(@reservation.shop.user, @reservation.shop).can?(:read, :customers_dashboard),
+    reservation_id: @reservation.id,
+    from_customer_id: params[:from_customer_id],
+    from_shop_id: params[:from_shop_id],
+  },
+  reservation_form: @reservation.attributes.slice("memo").merge!({
+    start_time_date_part: @reservation.start_time_date,
+    start_time_time_part: @reservation.start_time_time,
+    end_time_date_part: @reservation.end_time_date,
+    end_time_time_part: @reservation.end_time_time,
+    customers: @reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } },
+  }),
+  path: {
+    save: @reservation.new_record? ? shop_reservations_path(shop) : shop_reservation_path(shop, @reservation),
+    validate_reservation: validate_shop_reservations_path(shop, format: :json)
+  },
+  i18n: {
+  }.merge!([
+    t("reservation"),
+    t("common").slice(:processing, :select_a_menu),
+    t("action").slice(:save, :save_pending, :delete_reservation),
+  ].inject(:merge!))
+},
+{ camelize_props: false }
+) %>

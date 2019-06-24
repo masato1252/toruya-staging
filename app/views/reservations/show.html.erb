@@ -28,7 +28,7 @@
         <% end %>
       </div>
       <div class="reservation-menu">
-        <%= @reservation.menu.name %>
+        <%= @reservation.menus.pluck(:name).join(", ") %>
       </div>
       <div>
         <%= @sentences[:staffs_sentence] %>
