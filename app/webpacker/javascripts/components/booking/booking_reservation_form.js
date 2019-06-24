@@ -7,12 +7,14 @@ import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
 import moment from 'moment-timezone';
+import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
-import { Radio, Condition } from "../shared/components";
+import { Radio, Condition, Error } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
+import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
@@ -24,6 +26,7 @@ class BookingReservationForm extends React.Component {
     moment.locale("ja");
     const { is_single_option, is_single_booking_time } = this.props.booking_page
 
+    this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator(
       {
         field: /regular/,
@@ -92,13 +95,13 @@ class BookingReservationForm extends React.Component {
           <strong className="page-title">{title}</strong>
         </div>
 
-        {pristine && !this.booking_reservation_form_values.isDone && <div className="greeting">{greeting}</div>}
+        {pristine && !this.booking_reservation_form_values.is_done && <div className="greeting">{greeting}</div>}
       </div>
     )
   }
 
   renderRegularCustomersOption = () => {
-    const { found_customer } = this.booking_reservation_form_values;
+    const { found_customer, is_finding_customer } = this.booking_reservation_form_values;
 
     if (found_customer) return;
 
@@ -162,8 +165,8 @@ class BookingReservationForm extends React.Component {
             </label>
           </div>
           <div className="centerize">
-            <a href="#" className="btn btn-tarco" onClick={this.findCustomer}>
-              {confirm_customer_info}
+            <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
+              {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
         </Condition>
@@ -177,15 +180,19 @@ class BookingReservationForm extends React.Component {
 
     const {
       name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name,
-      phone_number, email, save_change, info_change_title, address_details
+      phone_number, email, save_change, invalid_to_change, info_change_title, address_details
     } = this.props.i18n;
-
+    const is_field_error = this.booking_reservation_form_errors &&
+      this.booking_reservation_form_errors.customer_info &&
+      this.booking_reservation_form_errors.customer_info[field_name]
     return (
       <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              { is_field_error ? null : (
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              )}
               <h4 className="modal-title">
                 {info_change_title}
               </h4>
@@ -233,9 +240,14 @@ class BookingReservationForm extends React.Component {
                 </h4>
                 <Field
                   name="booking_reservation_form[customer_info][phone_number]"
-                  type="text"
+                  type="number"
                   component="input"
-                  placeholder="0123456789"
+                  placeholder="01234567891"
+                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][phone_number]"
+                  touched_required={false}
                 />
               </Condition>
 
@@ -249,17 +261,27 @@ class BookingReservationForm extends React.Component {
                   component="input"
                   placeholder="mail@domail.com"
                   className="email-field"
+                  validate={composeValidators(this, requiredValidation, emailFormatValidator)}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][email]"
+                  touched_required={false}
                 />
               </Condition>
 
-              <Condition when="booking_reservation_form[customer_info_field_name]" is="address">
+              <Condition when="booking_reservation_form[customer_info_field_name]" is="address_details">
                 <h4>
                   {address_details.zipcode}
                 </h4>
                 <Field
                   name="booking_reservation_form[customer_info][address_details][postcode]"
-                  type="text"
+                  type="number"
                   component="input"
+                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(7))}
+                />
+                <Error
+                  name="booking_reservation_form[customer_info][address_details][postcode]"
+                  touched_required={false}
                 />
                 <h4>
                   {address_details.living_state}
@@ -289,9 +311,15 @@ class BookingReservationForm extends React.Component {
               </Condition>
             </div>
             <div className="modal-footer centerize">
-              <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
-                {save_change}
-              </button>
+              { is_field_error ? (
+                <button type="button" className="btn btn-tarco disabled" disabled="true">
+                  {invalid_to_change}
+                </button>
+              ) : (
+                <button type="button" className="btn btn-tarco" data-dismiss="modal" aria-label="Close">
+                  {save_change}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -319,16 +347,14 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("full_name")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {first_name}
-                {last_name}
+                {last_name} {first_name}
               </div>
               <h4>
                 {i18n.phonetic_name}
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("phonetic_full_name")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {phonetic_last_name}
-                {phonetic_first_name}
+                {phonetic_last_name} {phonetic_first_name}
               </div>
               <h4>
                 {i18n.phone_number}
@@ -336,6 +362,10 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {phone_number}
+                <Error
+                  name="booking_reservation_form[customer_info][phone_number]"
+                  touched_required={false}
+                />
               </div>
               <h4>
                 {i18n.email}
@@ -343,13 +373,21 @@ class BookingReservationForm extends React.Component {
               </h4>
               <div className="info">
                 {email}
+                <Error
+                  name="booking_reservation_form[customer_info][email]"
+                  touched_required={false}
+                />
               </div>
               <h4>
                 {i18n.address}
-                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address")}>{i18n.edit}</a>
+                <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address_details")}>{i18n.edit}</a>
               </h4>
               <div className="info">
                 {full_address}
+                <Error
+                  name="booking_reservation_form[customer_info][address_details][postcode]"
+                  touched_required={false}
+                />
               </div>
             </div>
             <div className="modal-footer centerize">
@@ -530,33 +568,49 @@ class BookingReservationForm extends React.Component {
         <h4>
           {name}
         </h4>
-        <Field
-          name="booking_reservation_form[customer_last_name]"
-          component="input"
-          placeholder={last_name}
-          type="text"
-        />
-        <Field
-          name="booking_reservation_form[customer_first_name]"
-          component="input"
-          placeholder={first_name}
-          type="text"
-        />
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_last_name]"
+            component="input"
+            placeholder={last_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_last_name]" />
+        </div>
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_first_name]"
+            component="input"
+            placeholder={first_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_first_name]" />
+        </div>
         <h4>
           {phonetic_name}
         </h4>
-        <Field
-          name="booking_reservation_form[customer_phonetic_last_name]"
-          component="input"
-          placeholder={phonetic_last_name}
-          type="text"
-        />
-        <Field
-          name="booking_reservation_form[customer_phonetic_first_name]"
-          component="input"
-          placeholder={phonetic_first_name}
-          type="text"
-        />
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_phonetic_last_name]"
+            component="input"
+            placeholder={phonetic_last_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_last_name]" />
+        </div>
+        <div className="field">
+          <Field
+            name="booking_reservation_form[customer_phonetic_first_name]"
+            component="input"
+            placeholder={phonetic_first_name}
+            type="text"
+            validate={composeValidators(this, requiredValidation)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_first_name]" />
+        </div>
         <h4>
           {phone_number}
         </h4>
@@ -564,8 +618,10 @@ class BookingReservationForm extends React.Component {
           name="booking_reservation_form[customer_phone_number]"
           component="input"
           placeholder="0123456789"
-          type="tel"
+          type="number"
+          validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
         />
+        <Error name="booking_reservation_form[customer_phone_number]" />
         <h4>
           {email}
         </h4>
@@ -574,7 +630,9 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder="mail@domail.com"
           type="email"
+          validate={composeValidators(this, requiredValidation, emailFormatValidator)}
         />
+        <Error name="booking_reservation_form[customer_email]" />
         <div className="remember-me">
           <label>
             <Field
@@ -590,7 +648,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { isBooking, regular } = this.booking_reservation_form_values;
+    const { regular } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -601,8 +659,16 @@ class BookingReservationForm extends React.Component {
           {this.props.booking_page.note}
         </div>
 
-        <button onClick={this.onSubmit} className="btn btn-tarco" disabled={isBooking}>
-          {isBooking ? (
+        <button
+          onClick={(event) => {
+            this.handleSubmit(event)
+            if (Object.keys(this.booking_reservation_form_errors).length &&
+              Object.keys(this.booking_reservation_form_errors.customer_info).length) {
+              this.customerInfoFieldModalHideHandler()
+            }
+          }}
+        className="btn btn-tarco" disabled={this.submitting}>
+          {this.submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
             this.props.i18n.confirm_reservation
@@ -623,7 +689,7 @@ class BookingReservationForm extends React.Component {
     })
 
     const selected_booking_option_content = (
-      <div className="selected-booking-option">
+      <div className="selected-booking-option" id="selected-booking-option">
         <i className="fa fa-check-circle"></i>
         <BookingPageOption
           key={`booking_options-${selected_booking_option.id}`}
@@ -656,7 +722,7 @@ class BookingReservationForm extends React.Component {
     const { edit, time_from } = this.props.i18n;
 
     return (
-      <div className="selected-booking-datetime">
+      <div className="selected-booking-datetime" id="selected-booking-datetime">
         <i className="fa fa-calendar"></i>
         {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {time_from}
         {resetValuesCallback && <a href="#" className="edit" onClick={resetValuesCallback}>{edit}</a>}
@@ -685,6 +751,7 @@ class BookingReservationForm extends React.Component {
         {booking_dates_calendar_hint}
         <Calendar
           {...this.props.calendar}
+          skip_default_date={true}
           dateSelectedCallback={this.fetchBookingTimes}
           scheduleParams={{
             booking_option_id: booking_option_id
@@ -705,7 +772,7 @@ class BookingReservationForm extends React.Component {
               <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
             )
           ) : (
-            <div className="warning">{no_available_booking_times}</div>
+            booking_date && <div className="warning">{no_available_booking_times}</div>
           )
         }
       </div>
@@ -744,7 +811,7 @@ class BookingReservationForm extends React.Component {
           {desc3}
         </div>
         <div>
-          <img className="toruya-logo" src="https://toruya.com/wp-content/uploads/2018/09/logo_H.png" />
+          <img className="toruya-logo" src={this.props.toruya_logo} />
         </div>
         <div className="feature-list">
           <div>
@@ -813,10 +880,10 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, regular, isDone } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, regular, is_done } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
-    if (isDone) {
+    if (is_done) {
       return this.renderBookingDownView()
     }
 
@@ -875,13 +942,16 @@ class BookingReservationForm extends React.Component {
         initialValues={{
           booking_reservation_form: { ...(this.props.booking_reservation_form) },
         }}
-        decorators={[this.calculator]}
+        decorators={[this.focusOnError, this.calculator]}
         mutators={{
           ...arrayMutators,
         }}
-        render={({ handleSubmit, submitting, values, form, pristine }) => {
+        render={({ handleSubmit, submitting, values, errors, form, pristine }) => {
           this.booking_reservation_form = form;
           this.booking_reservation_form_values = values.booking_reservation_form;
+          this.handleSubmit = handleSubmit
+          this.submitting = submitting
+          this.booking_reservation_form_errors = errors.booking_reservation_form
 
           return (
             <form
@@ -890,7 +960,6 @@ class BookingReservationForm extends React.Component {
               className="booking-page"
               onSubmit={handleSubmit}
               acceptCharset="UTF-8"
-              data-remote="true"
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
@@ -925,15 +994,19 @@ class BookingReservationForm extends React.Component {
     }
   }
 
-  setBookingTimeAt = (time) => {
-    this.booking_reservation_form.change("booking_reservation_form[booking_at]", time)
+  setBookingTimeAt = async (time) => {
+    await this.booking_reservation_form.change("booking_reservation_form[booking_at]", time)
+    this.scrolloToView()
   }
 
-  selectBookingOption = (booking_option_id) => {
-    this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", booking_option_id)
+  selectBookingOption = async (booking_option_id) => {
+    await this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", booking_option_id)
+    this.scrolloToView()
   }
 
-  findCustomer = async () => {
+  findCustomer = async (event) => {
+    event.preventDefault();
+
     const { customer_first_name, customer_last_name, customer_phone_number, remember_me } = this.booking_reservation_form_values;
 
     if (!(customer_first_name && customer_last_name && customer_phone_number)) {
@@ -944,6 +1017,7 @@ class BookingReservationForm extends React.Component {
       return;
     }
 
+    this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", true)
     this.findCustomerCall = "loading";
 
     const response = await axios({
@@ -960,44 +1034,44 @@ class BookingReservationForm extends React.Component {
 
     this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
     this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
   }
 
   onSubmit = async (event) => {
-    event.preventDefault()
-
     if (this.bookingReserationLoading) {
       return;
     }
 
     this.bookingReserationLoading = "loading";
-    this.booking_reservation_form.change("booking_reservation_form[isBooking]", true)
 
     const response = await axios({
       method: "POST",
       url: this.props.path.save,
-      params: _.pick(
-        this.booking_reservation_form_values,
-        "customer_first_name",
-        "customer_last_name",
-        "customer_phone_number",
-        "customer_info",
-        "booking_date",
-        "booking_at",
-        "booking_option_id",
-        "customer_phonetic_last_name",
-        "customer_phonetic_first_name",
-        "customer_email",
-        "remember_me"
+      params: _.merge(
+        { authenticity_token: this.props.form_authenticity_token },
+        _.pick(
+          this.booking_reservation_form_values,
+          "customer_first_name",
+          "customer_last_name",
+          "customer_phone_number",
+          "customer_info",
+          "booking_date",
+          "booking_at",
+          "booking_option_id",
+          "customer_phonetic_last_name",
+          "customer_phonetic_first_name",
+          "customer_email",
+          "remember_me"
+        ),
       ),
       responseType: "json"
     })
 
     this.bookingReserationLoading = null;
-    this.booking_reservation_form.change("booking_reservation_form[isBooking]", false)
 
     if (response.data.status === "successful") {
-      this.booking_reservation_form.change("booking_reservation_form[isDone]", true)
+      this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
     }
   };
 
@@ -1009,7 +1083,11 @@ class BookingReservationForm extends React.Component {
     await this.booking_reservation_form.change("booking_reservation_form[customer_info_field_name]", field_name)
     $("#customer-info-modal").modal("hide")
     $("#customer-info-field-modal").on("hidden.bs.modal", this.customerInfoFieldModalHideHandler);
-    $("#customer-info-field-modal").modal("show")
+    $("#customer-info-field-modal").modal({
+      backdrop: "static",
+      keyboard: false,
+      show: true
+    })
   }
 
   resetFlowValues = async () => {
@@ -1078,6 +1156,20 @@ class BookingReservationForm extends React.Component {
       customer_phone_number &&
       customer_email
     )
+  }
+
+  scrolloToView = () => {
+    const { booking_flow } = this.booking_reservation_form_values;
+    let scroll_to;
+
+    if (booking_flow === "booking_date_first") {
+      scroll_to = "selected-booking-datetime"
+    }
+    else if (booking_flow === "booking_option_first") {
+      scroll_to = "selected-booking-option"
+    }
+
+    document.getElementById(scroll_to).scrollIntoView();
   }
 }
 

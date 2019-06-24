@@ -20,6 +20,7 @@
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
+  toruya_logo: asset_pack_path("assets/booking/logo.png"),
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
     shop_name: @booking_page.shop.name,
@@ -39,6 +40,7 @@
     regular: cookies[:booking_customer_id] ? "yes" : nil,
     found_customer: cookies[:booking_customer_id] ? true : nil,
     single_booking_time: @single_booking_time,
+    booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
     remember_me: true,
     booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,
@@ -65,6 +67,7 @@
     find_customer: find_customer_booking_page_path(@booking_page)
   },
   i18n: {
+    errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
   }.merge!([
     t("settings.booking_page.form"),
     t("booking_page"),

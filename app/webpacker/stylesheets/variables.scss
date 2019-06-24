@@ -1,6 +1,7 @@
 $tiny-font-size: 10px; // 10px;
 $small-font-size: 12px; // 12px;
 $normal-font-size: 14px; // 14px
+$normal2-font-size: 15px; // 15px
 $medium-font-size: 16px; // 16px
 $large-font-size: 20px; // 20px
 $huge-font-size: 24px; // 24px
@@ -54,8 +55,17 @@ $black: #333333;
   }
 }
 
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius; /* Internet Explorer */
+}
+
 $grid-breakpoints: (
   mobile: 0,
+  mobile-standard: 375px,
+  mobile-plus: 414px,
   tablet: 768px,
   computer: 940px,
   large-monitor: 1200px,
