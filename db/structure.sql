@@ -2472,7 +2472,6 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 
 --
 -- Name: index_reservation_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
-<<<<<<< HEAD
 --
 
 CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
@@ -2482,17 +2481,6 @@ CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USIN
 -- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-=======
---
-
-CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
-
-
---
--- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
---
-
->>>>>>> add-priority-to-option-menus
 CREATE INDEX index_reservation_menus_on_reservation_id ON public.reservation_menus USING btree (reservation_id);
 
 
