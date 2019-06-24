@@ -206,7 +206,8 @@ CREATE TABLE public.booking_options (
     end_at timestamp without time zone,
     memo text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    menu_restrict_order boolean DEFAULT false NOT NULL
 );
 
 
@@ -2898,6 +2899,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190612074957'),
 ('20190612142854'),
 ('20190622101709'),
-('20190623050322');
+('20190623050322'),
+('20190624001252');
 
 

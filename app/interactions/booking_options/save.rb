@@ -9,6 +9,7 @@ module BookingOptions
       integer :interval
       integer :amount_cents
       string :amount_currency, default: "JPY"
+      boolean :menu_restrict_order, default: false
       boolean :tax_include, default: false
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil

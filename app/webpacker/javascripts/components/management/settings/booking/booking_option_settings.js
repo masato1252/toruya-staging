@@ -88,7 +88,12 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderMenuFields = () => {
-    const { menu_for_sale_label, select_a_menu } = this.props.i18n;
+    const {
+      menu_for_sale_label,
+      select_a_menu,
+      menu_restrict_dont_need_order,
+      menu_restrict_order,
+    } = this.props.i18n;
 
     return (
       <div>
@@ -103,6 +108,20 @@ class BookingOptionSettings extends React.Component {
               options={this.props.menu_group_options}
               selectLabel={select_a_menu}
             />
+          </dl>
+          <dl>
+            <dt>
+              <div className="radio">
+                <Field name="booking_option[menu_restrict_order]" type="radio" value="false" component={Radio}>
+                  {menu_restrict_dont_need_order}
+                </Field>
+              </div>
+              <div className="radio">
+                <Field name="booking_option[menu_restrict_order]" type="radio" value="true" component={Radio}>
+                  {menu_restrict_order}
+                </Field>
+              </div>
+            </dt>
           </dl>
         </div>
       </div>
