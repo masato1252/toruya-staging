@@ -1349,7 +1349,8 @@ CREATE TABLE public.staff_menus (
     menu_id integer NOT NULL,
     max_customers integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    priority integer
 );
 
 
@@ -2893,6 +2894,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190410073550'),
 ('20190420050353'),
 ('20190612074957'),
-('20190612142854');
+('20190612142854'),
+('20190622101709');
 
 

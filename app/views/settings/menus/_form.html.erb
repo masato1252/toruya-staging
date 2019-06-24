@@ -7,9 +7,19 @@
 
   menu_staffs_options = super_user.staffs.active.order("created_at").map do |staff|
     if staff_menu = staff_menus.find { |staff_menu| staff_menu.staff_id == staff.id }
-      Option.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, max_customers: staff_menu.max_customers, checked: true)
+      Option.new(id: staff_menu.id, name: staff.name, staff_id: staff.id, menu_id: staff_menu.menu_id, priority: staff_menu.priority, max_customers: staff_menu.max_customers, checked: true)
     else
-      Option.new(id: nil, name: staff.name, staff_id: staff.id, menu_id: menu.try(:id), max_customers: "", checked: false)
+      Option.new(id: nil, name: staff.name, staff_id: staff.id, menu_id: menu.try(:id), priority: nil, max_customers: "", checked: false)
+    end
+  end.sort do |a, b|
+    if (a.priority && b.priority)
+      a.priority <=> b.priority
+    elsif a.priority
+      -1
+    elsif b.priority
+      1
+    else
+      0
     end
   end
 
