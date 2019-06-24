@@ -5,6 +5,8 @@
 #  id                :bigint(8)        not null, primary key
 #  booking_option_id :bigint(8)        not null
 #  menu_id           :bigint(8)        not null
+#  priority          :integer
+#  required_time     :integer
 #
 # Indexes
 #

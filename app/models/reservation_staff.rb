@@ -8,11 +8,16 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  state          :integer          default("pending")
+#  menu_id        :integer
+#  prepare_time   :datetime
+#  work_start_at  :datetime
+#  work_end_at    :datetime
+#  ready_time     :datetime
 #
 # Indexes
 #
-#  index_reservation_staffs_on_reservation_id_and_staff_id  (reservation_id,staff_id) UNIQUE
-#  state_by_staff_id_index                                  (staff_id,state)
+#  reservation_staff_index  (reservation_id,menu_id,staff_id,prepare_time,work_start_at,work_end_at,ready_time)
+#  state_by_staff_id_index  (staff_id,state)
 #
 
 class ReservationStaff < ApplicationRecord
