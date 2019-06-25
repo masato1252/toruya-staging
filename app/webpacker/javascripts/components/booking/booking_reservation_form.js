@@ -662,7 +662,9 @@ class BookingReservationForm extends React.Component {
         <button
           onClick={(event) => {
             this.handleSubmit(event)
-            if (Object.keys(this.booking_reservation_form_errors).length &&
+            if (this.booking_reservation_form_errors &&
+              Object.keys(this.booking_reservation_form_errors).length &&
+              this.booking_reservation_form_errors.customer_info &&
               Object.keys(this.booking_reservation_form_errors.customer_info).length) {
               this.customerInfoFieldModalHideHandler()
             }
