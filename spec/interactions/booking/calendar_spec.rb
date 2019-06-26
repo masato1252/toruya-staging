@@ -185,10 +185,10 @@ RSpec.describe Booking::Calendar do
       before do
         booking_option = FactoryBot.create(:booking_option, :multiple_menus, user: user)
         staff = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
-        FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
-        FactoryBot.create(:staff_menu, menu: booking_option.menus.last, staff: staff)
-        FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
-        FactoryBot.create(:shop_menu, menu: booking_option.menus.last, shop: shop)
+        booking_option.menus.each do |menu|
+          FactoryBot.create(:staff_menu, menu: menu, staff: staff)
+          FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+        end
 
         args.merge!(booking_option_ids: [booking_option.id])
       end
@@ -197,6 +197,190 @@ RSpec.describe Booking::Calendar do
         result = outcome.result
 
         expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+      end
+    end
+
+    context "when booking_option DON'T need menus be executed in order(menu_restrict_order is false)" do
+      context "when all possible menus order are invalid to book" do
+        let(:booking_option) { FactoryBot.create(:booking_option, :multiple_menus, menu_restrict_order: false, user: user) }
+        let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+
+        before do
+          booking_option.menus.each do |menu|
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff)
+            FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+          end
+
+          args.merge!(booking_option_ids: [booking_option.id])
+        end
+
+        it "returns expected result" do
+          # staff was fully booked all day on 5/13 
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                            start_time: Time.zone.local(2019, 5, 13, 9),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+
+        context "when there is another staff could handle the booking option's menus" do
+          it "returns expected result" do
+            # staff was fully booked all day on 5/13 
+            FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+                              start_time: Time.zone.local(2019, 5, 13, 9),
+                              end_time: Time.zone.local(2019, 5, 13, 17))
+
+            # when staff2 is still available on 5/13
+            staff2 = FactoryBot.create(:staff, :full_time, shop: shop, user: user)
+            booking_option.menus.each do |menu|
+              FactoryBot.create(:staff_menu, menu: menu, staff: staff2)
+            end
+            result2 = outcome.result
+            expect(result2[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+          end
+        end
+      end
+
+      context "when any possible menus order are valid to book" do
+        let(:booking_option) {
+          FactoryBot.create(
+            :booking_option,
+            user: user,
+            menu_restrict_order: false,
+            interval: 15,
+            menus: [
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 60, interval: 10)
+            ]
+          )
+        }
+        let(:staff1) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+        let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+
+        before do
+          booking_option.menus.each do |menu|
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff1)
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff2)
+            FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+          end
+
+          args.merge!(booking_option_ids: [booking_option.id])
+        end
+
+        it "returns expected result" do
+          # when staff1 are available for 70 minutes(60 + 15(before reservation)), then staff2 are available for 120 minutes(120 + 15(after reservation))
+          # 15 is booking option interval time
+          # free from 9:00 ~ 10:00 for staff1, so staff1 take create the 60 minutes menu from 9:00 ~ 10:00
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+                            start_time: Time.zone.local(2019, 5, 13, 10, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          # free from 10:00 ~ 12:15 for staff2, so staff2 take create the 120 minutes menu from 10:00 ~ 12:15
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 9, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 10, 00))
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 12, 15),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+        end
+      end
+    end
+
+    context "when booking_option need menus be executed in priority order(menu_restrict_order is true)" do
+      context "when the priority order is valid to book" do
+        let(:booking_option) {
+          FactoryBot.create(
+            :booking_option,
+            user: user,
+            menu_restrict_order: true,
+            interval: 15,
+            menus: [
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 60, interval: 10)
+            ]
+          )
+        }
+        let(:staff1) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+        let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+
+        before do
+          booking_option.menus.each do |menu|
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff1)
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff2)
+            FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+          end
+
+          args.merge!(booking_option_ids: [booking_option.id])
+        end
+
+        it "returns expected result" do
+          # when staff1 are available for 120 minutes(120 + 15(before reservation)), staff2 are available for 70 minutes(60 + 15(after reservation))
+          # 15 is booking option interval time
+          # free from 9:00 ~ 11:00 for staff1, so staff1 take create the 120 minutes menu from 9:00 ~ 11:00
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+                            start_time: Time.zone.local(2019, 5, 13, 11, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          # free from 11:00 ~ 12:15 for staff2, so staff2 take create the 60 minutes menu from 11:00 ~ 12:15
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 9, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 11, 00))
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 12, 15),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+        end
+      end
+
+      context "when the priority order is NOT valid to book" do
+        let(:booking_option) {
+          FactoryBot.create(
+            :booking_option,
+            user: user,
+            menu_restrict_order: true,
+            interval: 15,
+            menus: [
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
+              FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 60, interval: 10)
+            ]
+          )
+        }
+        let(:staff1) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+        let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+
+        before do
+          booking_option.menus.each do |menu|
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff1)
+            FactoryBot.create(:staff_menu, menu: menu, staff: staff2)
+            FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+          end
+
+          args.merge!(booking_option_ids: [booking_option.id])
+        end
+
+        it "returns expected result" do
+          # when staff1 are available for 70 minutes(60 + 15(before reservation)), then staff2 are available for 120 minutes(120 + 15(after reservation))
+          # 15 is booking option interval time
+          # free from 9:00 ~ 10:00 for staff1, so staff1 take create the 60 minutes menu from 9:00 ~ 10:00
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+                            start_time: Time.zone.local(2019, 5, 13, 10, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          # free from 10:00 ~ 12:15 for staff2, so staff2 take create the 120 minutes menu from 10:00 ~ 12:15
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 9, 00),
+                            end_time: Time.zone.local(2019, 5, 13, 10, 00))
+          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            start_time: Time.zone.local(2019, 5, 13, 12, 15),
+                            end_time: Time.zone.local(2019, 5, 13, 17))
+          # BUT the menu order is restrict, 120 minutes need to be executed first, so no staffs could handle this booking option
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
       end
     end
 

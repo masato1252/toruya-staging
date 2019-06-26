@@ -9,6 +9,7 @@ FactoryBot.define do
     start_at_date_part { "2016-06-08" }
     start_at_time_part { "00:00" }
     end_at { nil }
+    menu_restrict_order { false }
 
     transient do
       menus { [] }
@@ -40,10 +41,15 @@ FactoryBot.define do
       }
     end
 
+    trait :restrict_order do
+      menu_restrict_order { true }
+    end
+
     after(:create) do |option, proxy|
-      proxy.menus.each do |menu|
-        FactoryBot.create(:booking_option_menu, booking_option: option, menu: menu)
+      proxy.menus.each.with_index do |menu, index|
+        FactoryBot.create(:booking_option_menu, booking_option: option, menu: menu, priority: index)
       end
+      option.update_columns(minutes: proxy.menus.sum(&:minutes) )
     end
   end
 end

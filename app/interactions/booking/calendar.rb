@@ -76,31 +76,89 @@ module Booking
               break
             end
 
-            valid_menus = []
+            base_booking_option_menus = booking_option.booking_option_menus.includes("menu").order("priority").to_a
 
-            booking_option.menus.each do |menu|
-              active_staff_ids = menu.active_staff_ids & shop.staff_ids
-              # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
-              required_staffs_number = [menu.min_staffs_number, 1].max
+            if booking_option.menu_restrict_order
+              candidate_booking_option_menus_groups = [base_booking_option_menus]
+            else
+              # XXX: Different menus orders will affect staffs could handle it or not,
+              #      so test all the possibility when booking option doesn't restrict menu order
+              candidate_booking_option_menus_groups = base_booking_option_menus.permutation(base_booking_option_menus.size)
+            end
 
-              active_staff_ids.combination(required_staffs_number).each do |candidate_staff_ids|
-                reserable_outcome = Reservable::Reservation.run(
-                  shop: shop,
-                  date: date,
-                  business_time_range: booking_start_at..booking_end_at,
-                  booking_option_id: booking_option.id,
-                  menu_id: menu.id,
-                  staff_ids: candidate_staff_ids,
-                  overlap_restriction: overlap_restriction
-                )
+            candidate_booking_option_menus_groups.each do |candidate_booking_option_menus_group|
+              catch :next_menu_group do
+                valid_menus = []
 
-                if reserable_outcome.valid?
-                  valid_menus << menu
+                candidate_booking_option_menus_group.each.with_index do |booking_option_menu, index|
+                  catch :next_menu do
+                    menu = booking_option_menu.menu
+                    active_staff_ids = menu.staff_menus.joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staff_ids
+                    required_staffs_number = [menu.min_staffs_number, 1].max # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
+                    menus_count = booking_option.booking_option_menus.count
 
-                  # all menus got staffs to handle
-                  if booking_option.menus.count == valid_menus.length
-                    # Rails.logger.info("====#{date}===#{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}========")
-                    throw :next_working_date, date
+                    is_first_menu = (index == 0)
+                    is_last_menu = (index == (menus_count - 1))
+
+                    if is_first_menu && is_last_menu
+                      menu_book_start_at = booking_start_at
+                      menu_book_end_at = booking_end_at
+
+                      skip_before_interval_time_validation = false
+                      skip_after_interval_time_validation = false
+                    elsif is_first_menu
+                      menu_book_start_at = booking_start_at
+                      menu_book_end_at = booking_start_at.advance(minutes: booking_option_menu.required_time)
+
+                      skip_before_interval_time_validation = false
+                      skip_after_interval_time_validation = true
+                    elsif is_last_menu
+                      menu_book_start_at = booking_end_at.advance(minutes: -booking_option_menu.required_time)
+                      menu_book_end_at = booking_end_at
+                      skip_before_interval_time_validation = true
+                      skip_after_interval_time_validation = false
+                    else
+                      # middle menu
+                      menu_book_start_at = booking_start_at.advance(
+                        minutes: booking_option.booking_option_menus.order("priority").where("priority < ?", booking_option_menu.priority).sum(:required_time)
+                      )
+                      menu_book_end_at = menu_book_start_at.advance(minutes: booking_option_menu.required_time)
+                      skip_before_interval_time_validation = true
+                      skip_after_interval_time_validation = true
+                    end
+
+                    all_possiable_active_staff_ids_groups = active_staff_ids.combination(required_staffs_number).to_a
+                    all_possiable_active_staff_ids_groups.each.with_index do |candidate_staff_ids, candidate_staff_index|
+                      reserable_outcome = Reservable::Reservation.run(
+                        shop: shop,
+                        date: date,
+                        business_time_range: menu_book_start_at..menu_book_end_at,
+                        booking_option_id: booking_option.id,
+                        menu_id: menu.id,
+                        staff_ids: candidate_staff_ids,
+                        overlap_restriction: overlap_restriction,
+                        skip_before_interval_time_validation: skip_before_interval_time_validation,
+                        skip_after_interval_time_validation: skip_after_interval_time_validation
+                      )
+
+                      if reserable_outcome.valid?
+                        # Rails.logger.info("====#{date}===#{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}=menu #{menu.id}==staff=#{candidate_staff_ids}====is_first_menu #{is_first_menu} === is_last_menu==#{is_last_menu} #{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}")
+                        valid_menus << menu
+
+                        # all menus got staffs to handle
+                        if booking_option.menus.count == valid_menus.length
+                          throw :next_working_date, date
+                        end
+
+                        # XXX: There is staff could handle this menu, so try next menu
+                        throw :next_menu
+                      else
+                        if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index
+                          # XXX: prior menu no staff could handle, no need to test the behind menus
+                          throw :next_menu_group
+                        end
+                      end
+                    end
                   end
                 end
               end
