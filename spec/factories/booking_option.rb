@@ -12,7 +12,7 @@ FactoryBot.define do
     menu_restrict_order { false }
 
     transient do
-      menus { [] }
+      menus { [FactoryBot.create(:menu, :with_reservation_setting, user: user)] }
     end
 
     trait :single_menu do
