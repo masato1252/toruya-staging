@@ -39,4 +39,16 @@ class BookingOption < ApplicationRecord
   def start_time
     start_at || created_at
   end
+
+  def possible_menus_order_groups
+    base_booking_option_menus = self.booking_option_menus.includes("menu").order("priority").to_a
+
+    if menu_restrict_order
+      [base_booking_option_menus]
+    else
+      # XXX: Different menus orders will affect staffs could handle it or not,
+      #      so test all the possibility when booking option doesn't restrict menu order
+      base_booking_option_menus.permutation(base_booking_option_menus.size)
+    end
+  end
 end
