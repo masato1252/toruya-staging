@@ -695,7 +695,7 @@ class BookingReservationForm extends React.Component {
           key={`booking_options-${selected_booking_option.id}`}
           booking_option_value={selected_booking_option}
           i18n={this.props.i18n}
-          booking_start_at={moment.tz(`${booking_date} ${booking_at}`, this.props.timezone)}
+          booking_start_at={moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone)}
         />
       </div>
     )
@@ -724,7 +724,7 @@ class BookingReservationForm extends React.Component {
     return (
       <div className="selected-booking-datetime" id="selected-booking-datetime">
         <i className="fa fa-calendar"></i>
-        {moment.tz(`${booking_date} ${booking_at}`, this.props.timezone).format("llll")} {time_from}
+        {moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone).format("llll")} {time_from}
         {resetValuesCallback && <a href="#" className="edit" onClick={resetValuesCallback}>{edit}</a>}
       </div>
     )

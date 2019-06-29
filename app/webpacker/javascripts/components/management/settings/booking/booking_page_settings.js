@@ -594,8 +594,8 @@ class BookingPageSettings extends React.Component {
 
     if (had_special_date && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
       const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
-      const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
-      const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
+      const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
+      const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
 
       if (bookingStartAt.isAfter(specialDateStartAt)) {
         const start_at_error_message = form_errors.start_at_too_late.replace("{datetime}", specialDateStartAt.format("YYYY/M/D HH:mm"))
@@ -606,9 +606,9 @@ class BookingPageSettings extends React.Component {
     }
 
     if (had_special_date && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
-      const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
-      const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
-      const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
+      const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone))
+      const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
+      const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
 
       if (bookingEndAt.isBefore(specialDateEndAt)) {
         const end_at_error_message = form_errors.end_at_too_early.replace("{datetime}", specialDateEndAt.format("YYYY/M/D HH:mm"))
