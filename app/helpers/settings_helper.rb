@@ -29,6 +29,6 @@ module SettingsHelper
       padding: 0 10px;
     STYLE
 
-    link_to(t("settings.booking_page.share_button_text"), booking_url(page), style: style)
+    link_to(t("settings.booking_page.share_button_text"), booking_url(page), style: style, target: "_blank")
   end
 end
