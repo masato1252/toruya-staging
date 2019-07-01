@@ -1,26 +1,26 @@
 module Booking
   module SharedMethods
-    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at)
+    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at ,overlap_restriction)
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
           valid_menus = []
 
           Rails.logger.info("==")
           Rails.logger.info("==group #{candidate_booking_option_menus_group.map(&:required_time).join(", ")}")
-          candidate_booking_option_menus_group.each.with_index do |booking_option_menu, index|
+          candidate_booking_option_menus_group.each.with_index do |booking_option_menu, menu_position_index|
             catch :next_menu do
-              Rails.logger.info("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} index: #{index}")
+              Rails.logger.info("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} menu_position_index: #{menu_position_index}")
 
               menu = booking_option_menu.menu
               active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staff_ids
               required_staffs_number = [menu.min_staffs_number, 1].max # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
               menus_count = booking_option.booking_option_menus.count
 
-              skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
-              skip_after_interval_time_validation = (index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
+              skip_before_interval_time_validation = menu_position_index != 0 # XXX: Only first menu need to validate before interval time
+              skip_after_interval_time_validation = (menu_position_index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
 
               menu_book_start_at = booking_start_at.advance(
-                minutes: candidate_booking_option_menus_group.slice(0, index).sum(&:required_time)
+                minutes: candidate_booking_option_menus_group.slice(0, menu_position_index).sum(&:required_time)
               )
               menu_book_end_at = menu_book_start_at.advance(minutes: booking_option_menu.required_time)
 
@@ -40,11 +40,17 @@ module Booking
                 Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids} #{reserable_outcome.errors.full_messages.join(", ")}")
 
                 if reserable_outcome.valid?
-                  valid_menus << menu
+                  valid_menus << {
+                    menu_id: menu.id,
+                    menu_interval_time: booking_option.interval,
+                    staff_ids: candidate_staff_ids,
+                    work_start_at: menu_book_start_at,
+                    work_end_at: menu_book_end_at
+                  }
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
-                    yield
+                    yield valid_menus
                   end
 
                   # XXX: There is staff could handle this menu, so try next menu

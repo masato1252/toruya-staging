@@ -44,21 +44,32 @@ class BookingPagesController < ActionController::Base
         end
       end
     end
-
   end
 
   def booking_reservation
     outcome = Booking::CreateReservation.run(
       booking_page: BookingPage.find(params[:id]),
-      booking_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       booking_option_id: params[:booking_option_id],
+      booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       customer_last_name: params[:customer_last_name],
       customer_first_name: params[:customer_first_name],
+      customer_phonetic_last_name: params[:customer_phonetic_last_name],
+      customer_phonetic_first_name: params[:customer_phonetic_first_name],
       customer_phone_number: params[:customer_phone_number],
-      customer_info: JSON.parse(params[:customer_info])
+      customer_email: params[:customer_email],
+      customer_info: JSON.parse(params[:customer_info]),
+      present_customer_info: JSON.parse(params[:present_customer_info])
     )
 
     if outcome.valid?
+      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
+        cookies[:booking_customer_id] = customer.id
+        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+      else
+        cookies.delete :booking_customer_id
+        cookies.delete :booking_customer_phone_number
+      end
+
       render json: {
         status: "successful"
       }

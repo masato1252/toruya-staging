@@ -78,7 +78,7 @@ module Booking
               break
             end
 
-            loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at) do
+            loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overlap_restriction) do
               throw :next_working_date, date
             end
 

@@ -662,7 +662,9 @@ class BookingReservationForm extends React.Component {
         <button
           onClick={(event) => {
             this.handleSubmit(event)
-            if (Object.keys(this.booking_reservation_form_errors).length &&
+            if (this.booking_reservation_form_errors &&
+              Object.keys(this.booking_reservation_form_errors).length &&
+              this.booking_reservation_form_errors.customer_info &&
               Object.keys(this.booking_reservation_form_errors.customer_info).length) {
               this.customerInfoFieldModalHideHandler()
             }
@@ -1033,6 +1035,7 @@ class BookingReservationForm extends React.Component {
     })
 
     this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
+    this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", response.data.customer_info)
     this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
@@ -1052,16 +1055,17 @@ class BookingReservationForm extends React.Component {
         { authenticity_token: this.props.form_authenticity_token },
         _.pick(
           this.booking_reservation_form_values,
-          "customer_first_name",
-          "customer_last_name",
-          "customer_phone_number",
-          "customer_info",
+          "booking_option_id",
           "booking_date",
           "booking_at",
-          "booking_option_id",
+          "customer_first_name",
+          "customer_last_name",
           "customer_phonetic_last_name",
           "customer_phonetic_first_name",
+          "customer_phone_number",
           "customer_email",
+          "customer_info",
+          "present_customer_info",
           "remember_me"
         ),
       ),
