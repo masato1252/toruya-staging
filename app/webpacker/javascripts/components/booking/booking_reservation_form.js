@@ -9,6 +9,7 @@ import _ from "lodash";
 import moment from 'moment-timezone';
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
+import { CSSTransitionGroup } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
 import { Radio, Condition, Error } from "../shared/components";
@@ -47,6 +48,7 @@ class BookingReservationForm extends React.Component {
               "customer_info",
               "booking_date",
               "booking_at",
+              "time_selected",
               "booking_times",
               "booking_option_id",
               "found_customer"
@@ -60,6 +62,7 @@ class BookingReservationForm extends React.Component {
           return await this.resetValues([
             "booking_date",
             "booking_at",
+            "time_selected",
             "booking_times",
             "booking_option_id"
           ]);
@@ -482,14 +485,19 @@ class BookingReservationForm extends React.Component {
 
         <Condition when="booking_reservation_form[booking_option_id]" is="present">
           {this.renderSelectedBookingOption(this.resetFlowValues)}
-          <Condition when="booking_reservation_form[booking_at]" is="blank">
+
+          <CSSTransitionGroup
+            transitionName="calendar-transition"
+            transitionAppearTimeout={500}
+            transitionLeaveTimeout={1000}
+          >
             {this.renderBookingCalendar()}
-          </Condition>
+          </CSSTransitionGroup>
         </Condition>
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
-            {this.renderBookingDatetime(() => this.resetValues(["booking_date", "booking_at", "booking_times"]))}
+            {this.renderBookingDatetime(() => this.resetValues(["booking_date", "booking_at", "time_selected", "booking_times"]))}
           </div>
         </Condition>
       </Condition>
@@ -504,9 +512,7 @@ class BookingReservationForm extends React.Component {
 
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_date_first">
-        <Condition when="booking_reservation_form[booking_at]" is="blank">
-          {this.renderBookingCalendar()}
-        </Condition>
+        {this.renderBookingCalendar()}
 
         <Condition when="booking_reservation_form[booking_at]" is="present">
           <div>
@@ -718,8 +724,12 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDatetime = (resetValuesCallback = false) => {
-    const { booking_date, booking_at} = this.booking_reservation_form_values
-    if (!(booking_date && booking_at)) return;
+    const {
+      booking_date,
+      booking_at,
+      time_selected
+    } = this.booking_reservation_form_values
+    if (!(booking_date && booking_at && time_selected)) return;
 
     const { edit, time_from } = this.props.i18n;
 
@@ -733,8 +743,15 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingCalendar = () => {
-    const { booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
-    if (booking_date && booking_at) return;
+    const {
+      booking_times,
+      booking_date,
+      booking_at,
+      booking_option_id,
+      time_selected
+    } = this.booking_reservation_form_values;
+
+    if (booking_date && booking_at && time_selected) return;
 
     const {
       booking_dates_calendar_hint,
@@ -745,7 +762,7 @@ class BookingReservationForm extends React.Component {
     } = this.props.i18n;
 
     return (
-      <div className="booking-calendar">
+      <div className="booking-calendar" key="booking-calendar">
         <h4>
           {date}
         </h4>
@@ -777,9 +794,8 @@ class BookingReservationForm extends React.Component {
       booking_times,
       booking_date,
       booking_at,
-      is_fetching_booking_time
+      is_fetching_booking_time,
     } = this.booking_reservation_form_values;
-    if (booking_date && booking_at) return;
 
     const {
       booking_dates_calendar_hint,
@@ -800,8 +816,13 @@ class BookingReservationForm extends React.Component {
     else if (booking_times && Object.keys(booking_times).length) {
       return (
         <div>
-          {Object.keys(booking_times).map((time) => (
-            <div className="time-interval" key={`booking-time-${time}`} onClick={() => this.setBookingTimeAt(time)}>{time}~</div>)
+          {Object.keys(booking_times).map((time, i) => (
+            <div
+              className={`time-interval ${time == booking_at ? "selected-time-item" : null}`}
+              key={`booking-time-${time}`}
+              onClick={() => this.setBookingTimeAt(time)}>
+              {time}~
+            </div>)
           )}
         </div>
       )
@@ -943,7 +964,7 @@ class BookingReservationForm extends React.Component {
         <div>
           {this.renderSelectedBookingOption()}
           {this.renderBookingCalendar()}
-          {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "booking_times"])))}
+          {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "time_selected", "booking_times"])))}
           {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
@@ -1031,6 +1052,7 @@ class BookingReservationForm extends React.Component {
 
   setBookingTimeAt = async (time) => {
     await this.booking_reservation_form.change("booking_reservation_form[booking_at]", time)
+    setTimeout(() => this.booking_reservation_form.change("booking_reservation_form[time_selected]", true), 500)
     this.scrollToSelectedTarget()
   }
 
@@ -1130,6 +1152,7 @@ class BookingReservationForm extends React.Component {
       "booking_option_id",
       "booking_date",
       "booking_at",
+      "time_selected",
       "booking_times"
     ])
   }

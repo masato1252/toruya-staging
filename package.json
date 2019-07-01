@@ -28,6 +28,7 @@
     "react-final-form-listeners": "^1.0.2",
     "react-select": "^2.0.0",
     "react-stripe-checkout": "^2.6.3",
+    "react-transition-group": "1.x",
     "react_ujs": "^2.4.1",
     "resolve-url-loader": "^3.0.1",
     "stimulus": "^1.0.1",
