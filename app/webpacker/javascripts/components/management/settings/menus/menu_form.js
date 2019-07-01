@@ -3,19 +3,14 @@
 import React from "react";
 import { sortableContainer, sortableElement, sortableHandle } from "react-sortable-hoc";
 import arrayMove from "array-move";
-import _ from "underscore";
+import _ from "lodash";
 import axios from "axios";
 
 import Select from "../../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
+import { DragHandle } from "../../../shared/components";
 
 var moment = require('moment-timezone');
-
-const DragHandle = sortableHandle(() => (
-  <span className="drag-handler">
-    <i className="fa fa-ellipsis-v"></i>
-  </span>
-));
 
 const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMaxCustomersHandler, sortIndex}) => (
   <dl className="body menu-staff-option" key={`staff-${value.staffId}`}>
@@ -43,7 +38,6 @@ const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMax
         checked={value.checked}
         onChange={staffCheckHandler}
       />
-      <label htmlFor={`staff-${value.staffId}`}></label>
     </dd>
     <dd>
       {
@@ -57,7 +51,7 @@ const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMax
       {
         value.checked ?
         <input type="number"
-          value={value.maxCustomers}
+          value={value.maxCustomers || ""}
           data-name="max-customers"
           data-staff-id={value.staffId}
           onChange={staffMaxCustomersHandler}
@@ -66,6 +60,21 @@ const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMax
       {
         value.checked ? "人" : null
       }
+    </dd>
+    <dd>
+      <a
+        href="#"
+        className="btn btn-symbol btn-orange"
+        data-value={value.staffId}
+        value={value.staffId}
+        onClick={staffCheckHandler}>
+        <i
+          className="fa fa-minus"
+          aria-hidden="true"
+          data-value={value.staffId}
+          value={value.staffId} >
+        </i>
+      </a>
     </dd>
   </dl>
 ))
@@ -180,9 +189,27 @@ class SettingsMenuForm extends React.Component {
   };
 
   _handleStaffCheck = (event) => {
-    this.selectedMenuStaffOption(event.target.value).checked = !this.selectedMenuStaffOption(event.target.value).checked
+    event.preventDefault()
+    const staffId = event.target.value || event.target.dataset.value
+    let selectedStaffOption = this.selectedMenuStaffOption(staffId)
 
-    this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
+    selectedStaffOption.checked = !selectedStaffOption.checked
+
+    const newOrderStaffOptions = arrayMove(this.state.menuStaffsOptions, _.findIndex(this.state.menuStaffsOptions, (o) => { return o.staffId == staffId; }), -1)
+
+    let i = 0;
+    const newMenuStaffsOptions = newOrderStaffOptions.map((menuStaffsOption) => {
+      if (menuStaffsOption.checked) {
+        menuStaffsOption.priority = i++;
+      }
+      else {
+        menuStaffsOption.priority = null
+      }
+
+      return menuStaffsOption
+    })
+
+    this.setState({menuStaffsOptions: newMenuStaffsOptions})
   };
 
   _handleStaffMaxCustomers = (event) => {
@@ -516,18 +543,28 @@ class SettingsMenuForm extends React.Component {
         <h3>対応従業員</h3>
         <div>オンライン予約の際は、上から順にスタッフが予約に割り当てられます。</div>
         <div id="customize-table" className="formRow menu-staffs-table table">
-            <ul className="tableTTL">
-              <li className="staff-name">対応従業員</li>
-              <li className="match">対応</li>
-              <li>対応可能人数</li>
-            </ul>
-            <SortableOptionsList
-              useDragHandle
-              onSortEnd={this.onSortEnd}
-              staffOptions={this.state.menuStaffsOptions}
-              staffCheckHandler={this._handleStaffCheck}
-              staffMaxCustomersHandler={this._handleStaffMaxCustomers}
-            />
+          <ul className="tableTTL">
+            <li className="staff-name">対応従業員</li>
+            <li className="match">対応</li>
+            <li>対応可能人数</li>
+          </ul>
+          <SortableOptionsList
+            useDragHandle
+            onSortEnd={this.onSortEnd}
+            staffOptions={this.renderSelectedStaffOptions()}
+            staffCheckHandler={this._handleStaffCheck}
+            staffMaxCustomersHandler={this._handleStaffMaxCustomers}
+          />
+          <dl>
+            <dt>
+              <Select
+                options={this.renderUnselectedStaffOptions()}
+                includeBlank={true}
+                onChange={this._handleStaffCheck}
+                blankOption={this.props.i18n.selectAStaff}
+              />
+            </dt>
+          </dl>
         </div>
 
         <ul id="footerav">
@@ -558,7 +595,13 @@ class SettingsMenuForm extends React.Component {
     }));
   };
 
+  renderSelectedStaffOptions = () => {
+    return _.filter(this.state.menuStaffsOptions, (menuStaffsOption) => menuStaffsOption.checked)
+  }
 
+  renderUnselectedStaffOptions = () => {
+    return _.filter(this.state.menuStaffsOptions, (menuStaffsOption) => !menuStaffsOption.checked)
+  }
 };
 
 export default SettingsMenuForm;
