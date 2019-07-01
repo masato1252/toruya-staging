@@ -914,7 +914,10 @@ CREATE TABLE public.reservation_customers (
     reservation_id integer NOT NULL,
     customer_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    booking_page_id integer,
+    booking_option_id integer,
+    details jsonb
 );
 
 
@@ -2900,6 +2903,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190612142854'),
 ('20190622101709'),
 ('20190623050322'),
-('20190624001252');
+('20190624001252'),
+('20190630004604'),
+('20190630055440');
 
 

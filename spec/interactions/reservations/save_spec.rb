@@ -1,8 +1,8 @@
 require "rails_helper"
 
-RSpec.describe Reservations::Create do
+RSpec.describe Reservations::Save do
   let(:shop) { FactoryBot.create(:shop) }
-  let(:reservation) { nil }
+  let(:reservation) { shop.reservations.new }
   let(:menu) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 5) }
   let(:menu2) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 10) }
   let(:menu3) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 15) }
@@ -24,14 +24,17 @@ RSpec.describe Reservations::Create do
           staff_ids: [staff.id.to_s]
         }
       ],
-      customer_ids: [customer.id.to_s],
+      customer_list: [
+        {
+          customer_id: customer.id.to_s
+        }
+      ],
       with_warnings: false,
       by_staff_id: by_staff.id.to_s
     }
   end
   let(:args) do
     {
-      shop: shop,
       reservation: reservation,
       params: params
     }
@@ -43,7 +46,16 @@ RSpec.describe Reservations::Create do
       context "when reservation had booking_option" do
         it "uses booking_option's interval time" do
           booking_option = FactoryBot.create(:booking_option, user: shop.user, interval: 15)
+          booking_page = FactoryBot.create(:booking_page, user: shop.user)
+
           params[:booking_option_id] = booking_option.id
+          params[:customers_list] = [
+            {
+              customer_id: customer.id,
+              booking_option_id: booking_option.id,
+              booking_page_id: booking_page.id
+            }
+          ]
 
           result = outcome.result
 
@@ -54,6 +66,11 @@ RSpec.describe Reservations::Create do
           expect(reservation_staff.work_end_at).to eq(result.end_time)
           expect(reservation_staff.ready_time).to eq(result.ready_time)
           expect(result.ready_time).to eq(end_time + booking_option.interval.minutes)
+
+          reservation_customer = result.reservation_customers.first
+          expect(reservation_customer.customer_id).to eq(customer.id)
+          expect(reservation_customer.booking_page_id).to eq(booking_page.id)
+          expect(reservation_customer.booking_option_id).to eq(booking_option.id)
         end
       end
 

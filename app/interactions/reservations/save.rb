@@ -1,13 +1,28 @@
 module Reservations
-  class Create < ActiveInteraction::Base
-    object :shop
+  class Save < ActiveInteraction::Base
+    object :reservation
     hash :params do
       time :start_time
       time :end_time
-      array :customer_ids
+      array :customers_list, default: nil do
+        hash do
+          integer :customer_id
+          integer :booking_page_id, default: nil
+          integer :booking_option_id, default: nil
+          # {
+          #   new_customer_info: { ... },
+          #   price: {
+          #     currency: JPY,
+          #     fractional: 1000
+          #   }
+          #   created_at: Time.current.to_s,
+          # }
+          hash :details, strip: false, default: nil
+        end
+      end
       string :memo, default: nil
       boolean :with_warnings
-      integer :by_staff_id
+      integer :by_staff_id, default: nil
       # menu_staffs_list
       # [
       #   {
@@ -33,7 +48,7 @@ module Reservations
     def execute
       other_staff_ids_changes = []
 
-      Reservation.transaction do
+      reservation.transaction do
         # notify non current staff
         other_staff_ids_changes = params[:menu_staffs_list].map {|h| h[:staff_ids] }.flatten.find_all { |staff_id| staff_id.to_s != params[:by_staff_id].to_s }
 
@@ -45,10 +60,11 @@ module Reservations
         end
 
         menu_staffs_list = params.delete(:menu_staffs_list)
+        customers_list = params.delete(:customers_list)
         booking_option_id = params.delete(:booking_option_id)
+        reservation.attributes = params
 
-        reservation = shop.reservations.new(params)
-
+        reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
           menu_staffs_list.map.with_index do |h, index|
             {
@@ -69,7 +85,7 @@ module Reservations
           reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
         end
 
-        unless reservation.save
+        unless reservation.update(params)
           errors.merge!(reservation.errors)
           raise ActiveRecord::Rollback
         end
@@ -96,6 +112,17 @@ module Reservations
           end
         end
 
+        if customers_list.present?
+          reservation.reservation_customers.destroy_all
+
+          customers_list.each do |h|
+            reservation.reservation_customers.create(h)
+          end
+        end
+
+        reservation.accept if reservation.accepted_by_all_staffs?
+        reservation.save!
+
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
         compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
         reservation
@@ -106,6 +133,10 @@ module Reservations
 
     def user
       @user ||= shop.user
+    end
+
+    def shop
+      @shop ||= reservation.shop
     end
   end
 end

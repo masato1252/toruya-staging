@@ -127,7 +127,7 @@ class ReservationsController < DashboardController
       reservation_params_hash[:params][:end_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:end_time_time_part]}")
     end
 
-    outcome = Reservations::Create.run(shop: shop, params: reservation_params_hash)
+    outcome = Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
 
     respond_to do |format|
       if outcome.valid?
@@ -147,7 +147,7 @@ class ReservationsController < DashboardController
   def update
     authorize! :manage_shop_reservations, shop
     authorize! :edit, @reservation
-    outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::Save.run(reservation: @reservation, params: reservation_params.to_h)
 
     respond_to do |format|
       if outcome.valid?
