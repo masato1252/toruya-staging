@@ -220,21 +220,23 @@
     border: 1px solid $danger;
   }
 
-  .calendar-transition-enter {
-    opacity: 0.01;
-  }
+  .booking-calendar {
+    &.enter {
+      opacity: 0.01;
+    }
 
-  .calendar-transition-enter.calendar-transition-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
-  }
+    &.enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
 
-  .calendar-transition-leave {
-    opacity: 1;
-  }
+    &.exit {
+      opacity: 1;
+    }
 
-  .calendar-transition-leave.calendar-transition-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
+    &.exit-active {
+      opacity: 0.01;
+      transition: opacity 1000ms ease-in;
+    }
   }
 }
