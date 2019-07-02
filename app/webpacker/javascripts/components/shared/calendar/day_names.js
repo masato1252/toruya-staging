@@ -6,7 +6,11 @@ class DayNames extends React.Component {
   render() {
     var days = this.props.dayNames.map(function(name) {
       return(
-        <span className="day" key={name}>{name}</span>
+        <span className="day" key={name}>
+          <span className="number">
+            {name}
+          </span>
+        </span>
       );
     });
 

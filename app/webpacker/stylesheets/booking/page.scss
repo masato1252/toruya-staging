@@ -128,6 +128,10 @@
       text-align: left;
       white-space: pre-wrap;
       font-size: 80%;
+      overflow: scroll;
+      height: 150px;
+      border: 1px solid #ddd;
+      padding: 5px;
     }
   }
 
@@ -209,6 +213,30 @@
     .title {
       padding: 20px;
       background-color: $palette-color7;
+    }
+  }
+
+  .selected-time-item {
+    border: 1px solid $danger;
+  }
+
+  .booking-calendar {
+    &.enter {
+      opacity: 0.01;
+    }
+
+    &.enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in;
+    }
+
+    &.exit {
+      opacity: 1;
+    }
+
+    &.exit-active {
+      opacity: 0.01;
+      transition: opacity 1000ms ease-in;
     }
   }
 }
