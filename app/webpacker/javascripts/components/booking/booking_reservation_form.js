@@ -754,7 +754,7 @@ class BookingReservationForm extends React.Component {
         className="booking-calendar"
         unmountOnExit
         in={!booking_date || !booking_at}
-        timeout={1000}
+        timeout={{ enter: 500, exit: 1000  }}
       >
         <div>
           <h4>
@@ -813,7 +813,7 @@ class BookingReservationForm extends React.Component {
         <div>
           {Object.keys(booking_times).map((time, i) => (
             <div
-              className={`time-interval ${time == booking_at ? "selected-time-item" : null}`}
+              className={`time-interval ${time == booking_at ? "selected-time-item" : ""}`}
               key={`booking-time-${time}`}
               onClick={() => this.setBookingTimeAt(time)}>
               {time}~
