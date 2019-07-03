@@ -27,6 +27,7 @@
     "react-final-form-arrays": "^2.0.3",
     "react-final-form-listeners": "^1.0.2",
     "react-select": "^2.0.0",
+    "react-slidedown": "^2.4.3",
     "react-stripe-checkout": "^2.6.3",
     "react-transition-group": "^4.2.0",
     "react_ujs": "^2.4.1",

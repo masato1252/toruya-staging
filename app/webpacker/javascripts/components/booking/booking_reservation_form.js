@@ -11,6 +11,7 @@ import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import { CSSTransition } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
+import { SlideDown } from 'react-slidedown';
 
 import { Radio, Condition, Error } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
@@ -750,37 +751,36 @@ class BookingReservationForm extends React.Component {
     } = this.props.i18n;
 
     return (
-      <CSSTransition
-        className="booking-calendar"
-        unmountOnExit
-        in={!booking_date || !booking_at}
-        timeout={{ enter: 500, exit: 1000  }}
-      >
-        <div>
-          <h4>
-            {date}
-          </h4>
-          {booking_dates_calendar_hint}
-          <Calendar
-            {...this.props.calendar}
-            skip_default_date={true}
-            dateSelectedCallback={this.fetchBookingTimes}
-            scheduleParams={{
-              booking_option_id: booking_option_id
-            }}
-          />
-          <div className="demo-days">
-            <div className="demo-day day booking-available"></div>
-            {booking_dates_available_booking_date}
-            <div className="demo-day day workDay"></div>
-            {booking_dates_working_date}
-          </div>
-          <h4 id="start_times_header">
-            {booking_date && start_time}
-          </h4>
-          {this.renderBookingTimes()}
-        </div>
-      </CSSTransition>
+      <SlideDown className={'calendar-slidedown'}>
+        {
+          !booking_date || !booking_at ? (
+            <div className="booking-calendar">
+              <h4>
+                {date}
+              </h4>
+              {booking_dates_calendar_hint}
+              <Calendar
+                {...this.props.calendar}
+                skip_default_date={true}
+                dateSelectedCallback={this.fetchBookingTimes}
+                scheduleParams={{
+                  booking_option_id: booking_option_id
+                }}
+              />
+              <div className="demo-days">
+                <div className="demo-day day booking-available"></div>
+                {booking_dates_available_booking_date}
+                <div className="demo-day day workDay"></div>
+                {booking_dates_working_date}
+              </div>
+              <h4>
+                {booking_date && start_time}
+              </h4>
+              {this.renderBookingTimes()}
+            </div>
+          ) : null
+        }
+      </SlideDown>
     )
   }
 
@@ -1024,7 +1024,6 @@ class BookingReservationForm extends React.Component {
 
   fetchBookingTimes = async (date) => {
     await this.booking_reservation_form.change("booking_reservation_form[booking_date]", date)
-    this.scrollToTarget("start_times_header")
 
     this.booking_reservation_form.change("booking_reservation_form[is_fetching_booking_time]", true)
     const response = await axios({
@@ -1039,10 +1038,12 @@ class BookingReservationForm extends React.Component {
 
     this.booking_reservation_form.change("booking_reservation_form[is_fetching_booking_time]", null)
     if (Object.keys(response.data.booking_times).length) {
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", response.data.booking_times)
+      await this.booking_reservation_form.change("booking_reservation_form[booking_times]", response.data.booking_times)
     } else {
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", [])
+      await this.booking_reservation_form.change("booking_reservation_form[booking_times]", [])
     }
+
+    setTimeout(() => this.scrollToTarget("footer"), 1000)
   }
 
   setBookingTimeAt = async (time) => {
