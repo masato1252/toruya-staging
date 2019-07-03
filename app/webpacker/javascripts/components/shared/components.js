@@ -3,8 +3,8 @@ import { Field } from "react-final-form";
 import _ from "lodash";
 import { sortableHandle } from "react-sortable-hoc";
 
-const errorMessage = (error) => (
-  <p className="field-error-message">{error}</p>
+const ErrorMessage = ({ error }) => (
+  <p className="field-error-message" dangerouslySetInnerHTML={{ __html: error }} />
 )
 
 const Input = ({input, meta, ...rest}) => {
@@ -30,7 +30,7 @@ const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before
         { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
         <Component {...input} {...rest} type={type} placeholder={placeholder || label} className={hasError ? "field-error" : ""} />
         { hint ? <span className="field-hint">{hint}</span> : ""}
-        { hasError && errorMessage(error) }
+        { hasError && <ErrorMessage error={error} />}
       </dd>
     </dl>
   );
@@ -60,7 +60,7 @@ const Radio = ({ input, children }) =>
 const Error = ({ name, touched_required = true }) => (
   <Field name={name} subscription={{ error: true, touched: touched_required }}>
     {({ meta: { error, touched } }) =>
-      error && (touched_required ? touched : true) ? errorMessage(error) : null
+      error && (touched_required ? touched : true) ? <ErrorMessage error={error} /> : null
     }
   </Field>
 );
@@ -119,4 +119,5 @@ export {
   Error,
   Condition,
   DragHandle,
+  ErrorMessage
 };
