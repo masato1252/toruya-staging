@@ -751,7 +751,7 @@ class BookingReservationForm extends React.Component {
 
     return (
       <CSSTransition
-        className="booking-calendar"
+        className="booking-calendar animated infinite bounce delay-2s"
         unmountOnExit
         in={!booking_date || !booking_at}
         timeout={1000}

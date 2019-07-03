@@ -220,23 +220,23 @@
     border: 1px solid $danger;
   }
 
-  .booking-calendar {
-    &.enter {
-      opacity: 0.01;
-    }
-
-    &.enter-active {
-      opacity: 1;
-      transition: opacity 500ms ease-in;
-    }
-
-    &.exit {
-      opacity: 1;
-    }
-
-    &.exit-active {
-      opacity: 0.01;
-      transition: opacity 1000ms ease-in;
-    }
-  }
+  // .booking-calendar {
+  //   &.enter {
+  //     opacity: 0.01;
+  //   }
+  //
+  //   &.enter-active {
+  //     opacity: 1;
+  //     transition: opacity 500ms ease-in;
+  //   }
+  //
+  //   &.exit {
+  //     opacity: 1;
+  //   }
+  //
+  //   &.exit-active {
+  //     opacity: 0.01;
+  //     transition: opacity 1000ms ease-in;
+  //   }
+  // }
 }
