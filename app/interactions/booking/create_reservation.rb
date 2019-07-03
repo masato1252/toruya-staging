@@ -143,12 +143,11 @@ module Booking
                   customer_id: customer.id,
                   booking_page_id: booking_page.id,
                   booking_option_id: booking_option_id,
+                  amount_cents: booking_option.amount.fractional,
+                  amount_currency: booking_option.amount.currency.to_s,
+                  tax_include: booking_option.tax_excluded,
                   details: {
                     new_customer_info: new_customer_info_hash,
-                    price: {
-                      currency: booking_option.amount.currency.to_s,
-                      fractional: booking_option.amount.fractional
-                    },
                     created_at: Time.current.to_s
                   }
                 }],

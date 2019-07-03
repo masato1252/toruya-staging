@@ -9,6 +9,10 @@
 #  updated_at        :datetime         not null
 #  booking_page_id   :integer
 #  booking_option_id :integer
+#  state             :integer          default("pending")
+#  amount_currency   :string
+#  amount_cents      :decimal(, )
+#  tax_include       :boolean
 #  details           :jsonb
 #
 # Indexes
@@ -19,4 +23,11 @@
 class ReservationCustomer < ApplicationRecord
   belongs_to :reservation, counter_cache: :count_of_customers
   belongs_to :customer, touch: true
+  enum state: {
+    pending: 0,
+    accepted: 1,
+    canceled: 2,
+  }
+
+  monetize :amount_cents
 end

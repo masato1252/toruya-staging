@@ -49,7 +49,8 @@ class Reservation < ApplicationRecord
   has_many :reservation_menus, -> { order("position") }, dependent: :destroy
   has_many :menus, through: :reservation_menus, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
-  has_many :reservation_customers, dependent: :destroy
+  # TODO: Test if the count_of_customers work
+  has_many :reservation_customers, -> { where.not(state: :canceled) }, dependent: :destroy
   has_many :customers, through: :reservation_customers
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }

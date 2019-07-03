@@ -917,6 +917,10 @@ CREATE TABLE public.reservation_customers (
     updated_at timestamp without time zone NOT NULL,
     booking_page_id integer,
     booking_option_id integer,
+    state integer DEFAULT 0,
+    amount_currency character varying,
+    amount_cents numeric,
+    tax_include boolean,
     details jsonb
 );
 

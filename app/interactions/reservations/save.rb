@@ -9,12 +9,11 @@ module Reservations
           integer :customer_id
           integer :booking_page_id, default: nil
           integer :booking_option_id, default: nil
+          integer :amount_cents,  default: nil
+          string :amount_currency, default: nil
+          boolean :tax_include, default: nil
           # {
           #   new_customer_info: { ... },
-          #   price: {
-          #     currency: JPY,
-          #     fractional: 1000
-          #   }
           #   created_at: Time.current.to_s,
           # }
           hash :details, strip: false, default: nil
