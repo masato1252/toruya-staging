@@ -13,7 +13,7 @@ import { CSSTransition } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
-import { Radio, Condition, Error } from "../shared/components";
+import { Radio, Condition, Error, ErrorMessage } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
@@ -39,7 +39,8 @@ class BookingReservationForm extends React.Component {
               "customer_first_name",
               "customer_phone_number",
               "customer_info",
-              "found_customer"
+              "found_customer",
+              "find_customer_message"
             ]);
           } else {
             return await this.resetValues([
@@ -51,7 +52,8 @@ class BookingReservationForm extends React.Component {
               "booking_at",
               "booking_times",
               "booking_option_id",
-              "found_customer"
+              "found_customer",
+              "find_customer_message"
             ]);
           }
         }
@@ -103,7 +105,11 @@ class BookingReservationForm extends React.Component {
   }
 
   renderRegularCustomersOption = () => {
-    const { found_customer, is_finding_customer } = this.booking_reservation_form_values;
+    const {
+      found_customer,
+      is_finding_customer,
+      find_customer_message,
+    } = this.booking_reservation_form_values;
 
     if (found_customer) return;
 
@@ -167,6 +173,7 @@ class BookingReservationForm extends React.Component {
             </label>
           </div>
           <div className="centerize">
+            {find_customer_message ? <ErrorMessage error={find_customer_message} /> : null}
             <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
               {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
@@ -187,6 +194,7 @@ class BookingReservationForm extends React.Component {
     const is_field_error = this.booking_reservation_form_errors &&
       this.booking_reservation_form_errors.customer_info &&
       this.booking_reservation_form_errors.customer_info[field_name]
+
     return (
       <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
@@ -1084,10 +1092,16 @@ class BookingReservationForm extends React.Component {
       responseType: "json"
     })
 
-    this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
-    this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    const { customer_info, errors } = response.data;
+
+    this.booking_reservation_form.change("booking_reservation_form[customer_info]", customer_info)
+    this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(customer_info).length ? true : false)
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
+
+    if (errors) {
+      this.booking_reservation_form.change("booking_reservation_form[find_customer_message]", errors.message)
+    }
   }
 
   onSubmit = async (event) => {
