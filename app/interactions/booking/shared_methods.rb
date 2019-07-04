@@ -3,6 +3,7 @@ module Booking
     def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overlap_restriction)
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
+          menu_position = 0
           valid_menus = []
 
           Rails.logger.info("==")
@@ -40,16 +41,20 @@ module Booking
                 Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
 
                 if reserable_outcome.valid?
-                  valid_menus << {
-                    menu_id: menu.id,
-                    menu_interval_time: booking_option.interval,
-                    staff_ids: candidate_staff_ids,
-                    work_start_at: menu_book_start_at,
-                    work_end_at: menu_book_end_at
-                  }
+                  candidate_staff_ids.each do |staff_id|
+                    valid_menus << {
+                      menu_id: menu.id,
+                      position: menu_position,
+                      menu_interval_time: booking_option.interval,
+                      menu_required_time: booking_option_menu.required_time,
+                      staff_id: staff_id,
+                      state: "pending"
+                    }
+                  end
+                  menu_position = menu_position + 1
 
                   # all menus got staffs to handle
-                  if booking_option.menus.count == valid_menus.length
+                  if booking_option.menus.count == valid_menus.group_by { |h| h[:menu_id] }.length
                     yield valid_menus
                   end
 

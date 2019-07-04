@@ -12,18 +12,25 @@ RSpec.describe Reservations::Save do
   let(:customer) { FactoryBot.create(:customer, user: shop.user) }
   let(:by_staff) { staff }
   let(:start_time) { Time.zone.local(2016, 1, 1, 7) }
-  let(:end_time) { Time.zone.local(2016, 1, 1, 17) }
+  # XXX: end time == start time + menus total required time
+  let(:end_time) { start_time.advance(minutes: menu_staffs_list.map { |list| list.slice(:menu_id, :menu_required_time) }.uniq.sum { |h| h[:menu_required_time] } ) }
+  let(:menu_staffs_list) do
+    [
+      {
+        menu_id: menu.id,
+        position: 0,
+        state: "pending",
+        staff_id: staff.id,
+        menu_required_time: menu.minutes,
+        menu_interval_time: menu.interval
+      }
+    ]
+  end
   let(:params) do
     {
       start_time: start_time,
       end_time: end_time,
-      menu_staffs_list: [
-        {
-          menu_id: menu.id,
-          menu_interval_time: menu.interval,
-          staff_ids: [staff.id.to_s]
-        }
-      ],
+      menu_staffs_list: menu_staffs_list,
       customer_list: [
         {
           customer_id: customer.id.to_s
@@ -91,92 +98,104 @@ RSpec.describe Reservations::Save do
       end
 
       context "when there are multiple menus" do
-        it "staff's prepare time, work times and ready_time need to be set separately and the menus should be in position order" do
-          params[:menu_staffs_list] = [
+        let(:menu_staffs_list) do
+          [
             {
               menu_id: menu.id,
-              menu_interval_time: menu.interval,
-              staff_ids: [staff.id.to_s],
-              work_start_at: Time.zone.local(2016, 1, 1, 7),
-              work_end_at: Time.zone.local(2016, 1, 1, 12),
+              position: 0,
+              state: "pending",
+              staff_id: staff.id.to_s,
+              menu_required_time: menu.minutes,
+              menu_interval_time: menu.interval
             },
             {
               menu_id: menu2.id,
-              menu_interval_time: menu2.interval,
-              staff_ids: [staff.id.to_s],
-              work_start_at: Time.zone.local(2016, 1, 1, 12),
-              work_end_at: Time.zone.local(2016, 1, 1, 17)
+              position: 1,
+              state: "pending",
+              staff_id: staff.id.to_s,
+              menu_required_time: menu2.minutes,
+              menu_interval_time: menu2.interval
             }
           ]
+        end
 
+        it "staff's prepare time, work times and ready_time need to be set separately and the menus should be in position order" do
           result = outcome.result
 
           reservation_staff = result.reservation_staffs.first
+          reservation_staff = result.reservation_staffs.order_by_menu_position.first
           expect(reservation_staff.prepare_time).to eq(result.prepare_time)
-          expect(reservation_staff.prepare_time).to eq(Time.zone.local(2016, 1, 1, 7) - menu.interval.minutes)
-          expect(reservation_staff.work_start_at).to eq(Time.zone.local(2016, 1, 1, 7))
-          expect(reservation_staff.work_end_at).to eq(Time.zone.local(2016, 1, 1, 12))
-          expect(reservation_staff.ready_time).to eq(Time.zone.local(2016, 1, 1, 12))
+          expect(reservation_staff.prepare_time).to eq(start_time.advance(minutes: -menu.interval))
+          expect(reservation_staff.work_start_at).to eq(start_time)
+          expect(reservation_staff.work_end_at).to eq(start_time.advance(minutes: menu.minutes))
+          expect(reservation_staff.ready_time).to eq(reservation_staff.work_end_at)
+          expect(reservation_staff.staff).to eq(staff)
 
-          second_reservation_staff = result.reservation_staffs.second
-          expect(second_reservation_staff.prepare_time).to eq(Time.zone.local(2016, 1, 1, 12))
-          expect(second_reservation_staff.work_start_at).to eq(Time.zone.local(2016, 1, 1, 12))
-          expect(second_reservation_staff.work_end_at).to eq(Time.zone.local(2016, 1, 1, 17))
+          second_reservation_staff = result.reservation_staffs.order_by_menu_position.second
+          expect(second_reservation_staff.prepare_time).to eq(reservation_staff.work_end_at)
+          expect(second_reservation_staff.work_start_at).to eq(reservation_staff.work_end_at)
+          expect(second_reservation_staff.work_end_at).to eq(second_reservation_staff.work_start_at.advance(minutes: menu2.minutes))
           expect(second_reservation_staff.ready_time).to eq(result.ready_time)
-          expect(second_reservation_staff.ready_time).to eq(Time.zone.local(2016, 1, 1, 17) + menu2.interval.minutes)
+          expect(second_reservation_staff.ready_time).to eq(second_reservation_staff.work_end_at.advance(minutes: menu2.interval))
+          expect(second_reservation_staff.staff).to eq(staff)
 
           expect(result.menu_ids).to eq([menu.id, menu2.id])
         end
 
         context "when there are three menus responsible by three staffs" do
-          it "the first and last staff need to take care interval time, the middle staff doesn't" do
-            params[:menu_staffs_list] = [
+          let(:menu_staffs_list) do
+            [
               {
                 menu_id: menu3.id,
+                position: 0,
+                state: "pending",
+                staff_id: staff3.id.to_s,
+                menu_required_time: menu3.minutes,
                 menu_interval_time: menu3.interval,
-                staff_ids: [staff3.id.to_s],
-                work_start_at: Time.zone.local(2016, 1, 1, 7),
-                work_end_at: Time.zone.local(2016, 1, 1, 11),
               },
               {
                 menu_id: menu2.id,
+                position: 1,
+                state: "pending",
+                staff_id: staff2.id.to_s,
+                menu_required_time: menu2.minutes,
                 menu_interval_time: menu2.interval,
-                staff_ids: [staff2.id.to_s],
-                work_start_at: Time.zone.local(2016, 1, 1, 11),
-                work_end_at: Time.zone.local(2016, 1, 1, 14)
               },
               {
                 menu_id: menu.id,
+                position: 2,
+                state: "pending",
+                staff_id: staff.id.to_s,
+                menu_required_time: menu.minutes,
                 menu_interval_time: menu.interval,
-                staff_ids: [staff.id.to_s],
-                work_start_at: Time.zone.local(2016, 1, 1, 14),
-                work_end_at: Time.zone.local(2016, 1, 1, 17)
               }
             ]
+          end
 
+          it "the first and last staff need to take care interval time, the middle staff doesn't" do
             result = outcome.result
 
             reservation_staff = result.reservation_staffs.order_by_menu_position.first
             expect(reservation_staff.prepare_time).to eq(result.prepare_time)
-            expect(reservation_staff.prepare_time).to eq(Time.zone.local(2016, 1, 1, 7) - menu3.interval.minutes)
-            expect(reservation_staff.work_start_at).to eq(Time.zone.local(2016, 1, 1, 7))
-            expect(reservation_staff.work_end_at).to eq(Time.zone.local(2016, 1, 1, 11))
-            expect(reservation_staff.ready_time).to eq(Time.zone.local(2016, 1, 1, 11))
+            expect(reservation_staff.prepare_time).to eq(start_time.advance(minutes: -menu3.interval))
+            expect(reservation_staff.work_start_at).to eq(start_time)
+            expect(reservation_staff.work_end_at).to eq(start_time.advance(minutes: menu3.minutes))
+            expect(reservation_staff.ready_time).to eq(reservation_staff.work_end_at)
             expect(reservation_staff.staff).to eq(staff3)
 
             second_reservation_staff = result.reservation_staffs.order_by_menu_position.second
-            expect(second_reservation_staff.prepare_time).to eq(Time.zone.local(2016, 1, 1, 11))
-            expect(second_reservation_staff.work_start_at).to eq(Time.zone.local(2016, 1, 1, 11))
-            expect(second_reservation_staff.work_end_at).to eq(Time.zone.local(2016, 1, 1, 14))
-            expect(second_reservation_staff.ready_time).to eq(Time.zone.local(2016, 1, 1, 14))
+            expect(second_reservation_staff.prepare_time).to eq(reservation_staff.work_end_at)
+            expect(second_reservation_staff.work_start_at).to eq(reservation_staff.work_end_at)
+            expect(second_reservation_staff.work_end_at).to eq(second_reservation_staff.work_start_at.advance(minutes: menu2.minutes))
+            expect(second_reservation_staff.ready_time).to eq(second_reservation_staff.work_end_at)
             expect(second_reservation_staff.staff).to eq(staff2)
 
             third_reservation_staff = result.reservation_staffs.order_by_menu_position.third
-            expect(third_reservation_staff.prepare_time).to eq(Time.zone.local(2016, 1, 1, 14))
-            expect(third_reservation_staff.work_start_at).to eq(Time.zone.local(2016, 1, 1, 14))
-            expect(third_reservation_staff.work_end_at).to eq(Time.zone.local(2016, 1, 1, 17))
+            expect(third_reservation_staff.prepare_time).to eq(second_reservation_staff.work_end_at)
+            expect(third_reservation_staff.work_start_at).to eq(second_reservation_staff.work_end_at)
+            expect(third_reservation_staff.work_end_at).to eq(third_reservation_staff.work_start_at.advance(minutes: menu.minutes))
             expect(third_reservation_staff.ready_time).to eq(result.ready_time)
-            expect(third_reservation_staff.ready_time).to eq(Time.zone.local(2016, 1, 1, 17) + menu.interval.minutes)
+            expect(third_reservation_staff.ready_time).to eq(third_reservation_staff.work_end_at.advance(minutes: menu.interval))
             expect(third_reservation_staff.staff).to eq(staff)
 
             expect(result.menu_ids).to eq([menu3.id, menu2.id, menu.id])

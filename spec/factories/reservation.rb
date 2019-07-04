@@ -1,3 +1,5 @@
+require "reservation_menu_time_calculator"
+
 FactoryBot.define do
   factory :reservation do
     association :shop
@@ -21,20 +23,35 @@ FactoryBot.define do
     end
 
      after(:create) do |reservation, proxy|
-       proxy.menus.each.with_index do |menu, i|
-         FactoryBot.create(:reservation_menu, reservation: reservation, menu: menu, position: i)
+       menus_number = Array.wrap(proxy.menus).length
+
+       proxy.menus.each.with_index do |menu, menu_index|
+         FactoryBot.create(:reservation_menu, reservation: reservation, menu: menu, position: menu_index)
+         time_result = ReservationMenuTimeCalculator.calculate(reservation, proxy.menus, menu_index)
 
          proxy.staffs.each do |staff|
            FactoryBot.create(:staff_menu, staff: staff, menu: menu)
+           FactoryBot.create(
+             :reservation_staff,
+             reservation: reservation,
+             staff: staff,
+             menu: menu,
+             prepare_time: time_result[:prepare_time],
+             work_start_at: time_result[:work_start_at],
+             work_end_at: time_result[:work_end_at],
+             ready_time: time_result[:ready_time]
+           )
          end
        end
 
-       proxy.staffs.each do |staff|
-         FactoryBot.create(:reservation_staff, reservation: reservation, staff: staff)
-       end
 
        proxy.customers.each do |customer|
          FactoryBot.create(:reservation_customer, reservation: reservation, customer: customer)
+       end
+
+
+       if proxy.menus.present?
+         reservation.update_columns(end_time: reservation.start_time.advance(minutes: proxy.menus.sum(&:minutes)))
        end
      end
   end

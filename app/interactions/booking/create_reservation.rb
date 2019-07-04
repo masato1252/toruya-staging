@@ -149,10 +149,11 @@ module Booking
               # [
               #   {
               #     menu_id: menu_id,
+              #     position: $position,
               #     menu_interval_time: 10,
-              #     staff_ids: $staff_ids,
-              #     work_start_at: $work_start_time,
-              #     work_end_at: $work_end_time
+              #     menu_required_time: 60,
+              #     staff_id: $staff_id,
+              #     state: $pending
               #   }
               # ]
               reservation_outcome = Reservations::Save.run(

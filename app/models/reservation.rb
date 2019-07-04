@@ -97,6 +97,9 @@ class Reservation < ApplicationRecord
     !reservation_staffs.pending.exists?
   end
 
+  def accepted_all_customers?
+    !reservation_staffs.pending.exists?
+  end
 
   ACTIONS = {
     "checked_in" => ["check_out", "cancel", "edit"],

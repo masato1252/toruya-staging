@@ -1,3 +1,5 @@
+require "reservation_menu_time_calculator"
+
 module Reservations
   class Save < ActiveInteraction::Base
     object :reservation
@@ -13,35 +15,26 @@ module Reservations
           string :booking_amount_currency, default: nil
           boolean :tax_include, default: nil
           time :booking_at, default: nil
+          # details might like
           # {
           #   new_customer_info: { ... },
           # }
           hash :details, strip: false, default: nil
         end
       end
-      string :memo, default: nil
-      boolean :with_warnings
-      integer :by_staff_id, default: nil
-      # menu_staffs_list
-      # [
-      #   {
-      #     menu_id: menu_id,
-      #     menu_interval_time: 10,
-      #     menu_required_time: 40,
-      #     staff_ids: $staff_ids,
-      #     work_start_at: $work_start_time,
-      #     work_end_at: $work_end_time
-      #   }
-      # ]
       array :menu_staffs_list do
         hash do
           integer :menu_id
+          integer :position
+          string :state
+          integer :staff_id
           integer :menu_interval_time
-          array :staff_ids
-          time :work_start_at, default: nil
-          time :work_end_at, default: nil
+          integer :menu_required_time
         end
       end
+      string :memo, default: nil
+      boolean :with_warnings
+      integer :by_staff_id, default: nil
       integer :booking_option_id, default: nil
     end
 
@@ -50,7 +43,7 @@ module Reservations
 
       reservation.transaction do
         # notify non current staff
-        other_staff_ids_changes = params[:menu_staffs_list].map {|h| h[:staff_ids] }.flatten.find_all { |staff_id| staff_id.to_s != params[:by_staff_id].to_s }
+        other_staff_ids_changes = params[:menu_staffs_list].map {|h| h[:staff_id] }.flatten.find_all { |staff_id| staff_id.to_s != params[:by_staff_id].to_s }
 
         if other_staff_ids_changes.present?
           params.merge!(aasm_state: "pending")
@@ -66,11 +59,11 @@ module Reservations
 
         reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
-          menu_staffs_list.map.with_index do |h, index|
+          menu_staffs_list.map { |h| h.slice(:menu_id, :menu_required_time, :position) }.uniq.map do |h|
             {
               menu_id: h[:menu_id],
               required_time: h[:menu_required_time],
-              position: index,
+              position: h[:position],
             }
           end
         )
@@ -92,25 +85,36 @@ module Reservations
         end
 
         if menu_staffs_list.present?
-          menus_number = menu_staffs_list.length
+          reservation.reservation_staffs.destroy_all
+          menu_staffs_list.each do |h|
+            time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.menus, h[:position])
 
-          menu_staffs_list.each_with_index do |h, index|
-            is_first_menu = index == 0
-            is_last_menu = index + 1 == menus_number
-
-            h[:staff_ids].each do |staff_id|
-              reservation.reservation_staffs.create(
-                menu_id: h[:menu_id],
-                staff_id: staff_id,
-                # If the new staff ids includes current user staff, the staff accepted the reservation automatically
-                state: staff_id.to_s == params[:by_staff_id].to_s ? :accepted : :pending,
-                prepare_time: is_first_menu ? reservation.prepare_time : (h[:work_start_at] || reservation.prepare_time),
-                work_start_at: h[:work_start_at] || reservation.start_time,
-                work_end_at: h[:work_end_at] || reservation.end_time,
-                ready_time: is_last_menu ? reservation.ready_time : (h[:work_end_at] || reservation.ready_time)
-              )
-            end
+            reservation.reservation_staffs.create(
+              menu_id: h[:menu_id],
+              staff_id: h[:staff_id],
+              # If the new staff ids includes current user staff, the staff accepted the reservation automatically
+              state: h[:state] == "accepted" ? "accepted" : (h[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending),
+              prepare_time: time_result[:prepare_time],
+              work_start_at: time_result[:work_start_at],
+              work_end_at: time_result[:work_end_at],
+              ready_time: time_result[:ready_time]
+            )
           end
+          # menu_staffs_list.each do |h|
+          #   is_first_menu = h[:position] == 0
+          #   is_last_menu = h[:position] + 1 == menus_number
+          #
+          #   reservation.reservation_staffs.create(
+          #     menu_id: h[:menu_id],
+          #     staff_id: h[:staff_id],
+          #     # If the new staff ids includes current user staff, the staff accepted the reservation automatically
+          #     state: h[:state] || h[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending,
+          #     prepare_time: is_first_menu ? reservation.prepare_time : (h[:work_start_at] || reservation.prepare_time),
+          #     work_start_at: h[:work_start_at] || reservation.start_time,
+          #     work_end_at: h[:work_end_at] || reservation.end_time,
+          #     ready_time: is_last_menu ? reservation.ready_time : (h[:work_end_at] || reservation.ready_time)
+          #   )
+          # end
         end
 
         if customers_list.present?
@@ -121,7 +125,8 @@ module Reservations
           end
         end
 
-        reservation.accept if reservation.accepted_by_all_staffs?
+        # TODO need to check all customers are accepted, too
+        reservation.accept if reservation.accepted_by_all_staffs? && reservation.accepted_all_customers?
         reservation.save!
 
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)

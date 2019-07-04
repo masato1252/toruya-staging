@@ -56,8 +56,8 @@ FactoryBot.define do
           FactoryBot.create(:shop_menu, menu: menu, shop: shop)
         end
 
-        Array.wrap(proxy.staffs).each do |staff|
-          FactoryBot.create(:staff_menu, menu: menu, staff: staff)
+        Array.wrap(proxy.staffs).each.with_index do |staff, priority|
+          FactoryBot.create(:staff_menu, menu: menu, staff: staff, priority: priority)
         end
       end
 

@@ -16,6 +16,6 @@
 #
 
 class ReservationMenu < ApplicationRecord
-  belongs_to :reservation
+  belongs_to :reservation, required: false
   belongs_to :menu
 end
