@@ -9,12 +9,12 @@ module Reservations
           integer :customer_id
           integer :booking_page_id, default: nil
           integer :booking_option_id, default: nil
-          integer :amount_cents,  default: nil
-          string :amount_currency, default: nil
+          integer :booking_amount_cents,  default: nil
+          string :booking_amount_currency, default: nil
           boolean :tax_include, default: nil
+          time :booking_at, default: nil
           # {
           #   new_customer_info: { ... },
-          #   created_at: Time.current.to_s,
           # }
           hash :details, strip: false, default: nil
         end
@@ -27,6 +27,7 @@ module Reservations
       #   {
       #     menu_id: menu_id,
       #     menu_interval_time: 10,
+      #     menu_required_time: 40,
       #     staff_ids: $staff_ids,
       #     work_start_at: $work_start_time,
       #     work_end_at: $work_end_time
@@ -68,6 +69,7 @@ module Reservations
           menu_staffs_list.map.with_index do |h, index|
             {
               menu_id: h[:menu_id],
+              required_time: h[:menu_required_time],
               position: index,
             }
           end

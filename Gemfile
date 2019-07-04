@@ -52,6 +52,7 @@ gem "sentry-raven"
 gem "slack-ruby-client"
 gem "bootsnap"
 gem "parallel"
+gem "active_attr"
 
 group :development, :test do
   gem "byebug", platform: :mri

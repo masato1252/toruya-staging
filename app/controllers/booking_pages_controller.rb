@@ -48,7 +48,7 @@ class BookingPagesController < ActionController::Base
 
   def booking_reservation
     outcome = Booking::CreateReservation.run(
-      booking_page: BookingPage.find(params[:id]),
+      booking_page_id: params[:id],
       booking_option_id: params[:booking_option_id],
       booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       customer_last_name: params[:customer_last_name],
@@ -60,22 +60,34 @@ class BookingPagesController < ActionController::Base
       customer_info: JSON.parse(params[:customer_info]),
       present_customer_info: JSON.parse(params[:present_customer_info])
     )
+    result = outcome.result
 
-    if outcome.valid?
-      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies[:booking_customer_id] = customer.id
-        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
-      else
-        cookies.delete :booking_customer_id
-        cookies.delete :booking_customer_phone_number
-      end
+    if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
+      cookies[:booking_customer_id] = result[:customer]&.id
+      cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+    else
+      cookies.delete :booking_customer_id
+      cookies.delete :booking_customer_phone_number
+    end
 
+    if result[:reservation]
       render json: {
         status: "successful"
       }
+    elsif params[:customer_info].present?
+      render json: {
+        status: "failed",
+        errors: {
+          message: "error_message"
+        }
+      }
     else
       render json: {
-        status: "failed"
+        status: "failed",
+        customer_info: customer&.persisted? ? view_context.customer_info_as_json(customer) : {},
+        errors: {
+          message: "error_message"
+        }
       }
     end
   end
@@ -98,21 +110,7 @@ class BookingPagesController < ActionController::Base
       end
 
       render json: {
-        customer_info: {
-          id: customer.id,
-          first_name: customer.first_name,
-          last_name: customer.last_name,
-          phonetic_first_name: customer.phonetic_first_name,
-          phonetic_last_name: customer.phonetic_last_name,
-          phone_number: params[:customer_phone_number],
-          phone_numbers: customer.phone_numbers.map { |phone| phone.value.gsub(/[^0-9]/, '') },
-          email: customer.primary_email&.value&.address,
-          emails: customer.emails.map { |email| email.value.address },
-          simple_address: customer.address,
-          full_address: customer.display_address,
-          address_details: customer.primary_address&.value,
-          original_address_details: customer.primary_address&.value
-        }
+        customer_info: view_context.customer_info_as_json(customer)
       }
     else
       render json: {

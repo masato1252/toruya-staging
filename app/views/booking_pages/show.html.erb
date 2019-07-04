@@ -17,21 +17,7 @@
     booking_option_lambda.call(option)
   end
 
-  customer_info_hash = {
-    id: @customer&.id,
-    first_name: @customer&.first_name,
-    last_name: @customer&.last_name,
-    phonetic_first_name: @customer&.phonetic_first_name,
-    phonetic_last_name: @customer&.phonetic_last_name,
-    phone_number: cookies[:booking_customer_phone_number],
-    phone_numbers: @customer&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
-    email: @customer&.primary_email&.value&.address,
-    emails: @customer&.emails&.map { |email| email.value.address },
-    simple_address: @customer&.address,
-    full_address: @customer&.display_address,
-    address_details: @customer&.primary_address&.value,
-    original_address_details: @customer&.primary_address&.value
-  }
+  customer_info_hash = customer_info_as_json(@customer)
 %>
 <%= react_component("booking/booking_reservation_form", {
   form_authenticity_token: form_authenticity_token,

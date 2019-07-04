@@ -1,6 +1,6 @@
 module Booking
   module SharedMethods
-    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at ,overlap_restriction)
+    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overlap_restriction)
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
           valid_menus = []
@@ -37,7 +37,7 @@ module Booking
                   skip_before_interval_time_validation: skip_before_interval_time_validation,
                   skip_after_interval_time_validation: skip_after_interval_time_validation
                 )
-                Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids} #{reserable_outcome.errors.full_messages.join(", ")}")
+                Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
 
                 if reserable_outcome.valid?
                   valid_menus << {

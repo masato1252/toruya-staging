@@ -13,6 +13,9 @@ FactoryBot.define do
 
     transient do
       menus { [FactoryBot.create(:menu, :with_reservation_setting, user: user)] }
+      booking_pages { [] }
+      shops { [] }
+      staffs { [] }
     end
 
     trait :single_menu do
@@ -48,7 +51,20 @@ FactoryBot.define do
     after(:create) do |option, proxy|
       proxy.menus.each.with_index do |menu, index|
         FactoryBot.create(:booking_option_menu, booking_option: option, menu: menu, priority: index)
+
+        Array.wrap(proxy.shops).each do |shop|
+          FactoryBot.create(:shop_menu, menu: menu, shop: shop)
+        end
+
+        Array.wrap(proxy.staffs).each do |staff|
+          FactoryBot.create(:staff_menu, menu: menu, staff: staff)
+        end
       end
+
+      Array.wrap(proxy.booking_pages).each do |page|
+        FactoryBot.create(:booking_page_option, booking_page: page, booking_option: option)
+      end
+
       option.update_columns(minutes: proxy.menus.sum(&:minutes) )
     end
   end

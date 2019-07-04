@@ -918,9 +918,10 @@ CREATE TABLE public.reservation_customers (
     booking_page_id integer,
     booking_option_id integer,
     state integer DEFAULT 0,
-    amount_currency character varying,
-    amount_cents numeric,
+    booking_amount_currency character varying,
+    booking_amount_cents numeric,
     tax_include boolean,
+    booking_at timestamp without time zone,
     details jsonb
 );
 
@@ -952,7 +953,8 @@ CREATE TABLE public.reservation_menus (
     id bigint NOT NULL,
     reservation_id bigint,
     menu_id bigint,
-    "position" integer
+    "position" integer,
+    required_time integer
 );
 
 

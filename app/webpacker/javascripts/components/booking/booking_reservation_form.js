@@ -1126,6 +1126,13 @@ class BookingReservationForm extends React.Component {
     if (response.data.status === "successful") {
       this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
     }
+    else if (response.data.status === "failed") {
+      if (response.data.customer_info && Object.keys(response.data.customer_info).length) {
+        this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
+        this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", response.data.customer_info)
+        this.booking_reservation_form.change("booking_reservation_form[found_customer]", true)
+      }
+    }
   };
 
   customerInfoFieldModalHideHandler = () => {

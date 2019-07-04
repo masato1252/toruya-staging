@@ -79,12 +79,6 @@ FactoryBot.define do
     association :category
   end
 
-  factory :staff_menu do
-    association :staff
-    association :menu
-    max_customers { 2 }
-  end
-
   factory :contact_group do
     association :user
     sequence(:name) { |n| "group-#{n}" }

@@ -56,3 +56,6 @@ RSpec.configure do |config|
     Seeders::Plan.seed!
   end
 end
+
+# ref: https://stackoverflow.com/a/36724913/609365
+RSpec::Matchers.define_negated_matcher(:not_change, :change)

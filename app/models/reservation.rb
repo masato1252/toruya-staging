@@ -63,7 +63,7 @@ class Reservation < ApplicationRecord
     state :reserved, :noshow, :checked_in, :checked_out, :canceled
 
     event :pend do
-      transitions from: [:checked_out, :reserved, :noshow], to: :pending
+      transitions from: [:checked_out, :checked_in, :reserved, :noshow], to: :pending
     end
 
     event :accept do

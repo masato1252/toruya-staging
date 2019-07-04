@@ -6,6 +6,7 @@
 #  reservation_id :bigint(8)
 #  menu_id        :bigint(8)
 #  position       :integer
+#  required_time  :integer
 #
 # Indexes
 #
@@ -15,5 +16,6 @@
 #
 
 class ReservationMenu < ApplicationRecord
+  belongs_to :reservation
   belongs_to :menu
 end

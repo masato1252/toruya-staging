@@ -201,6 +201,6 @@ class Customer < ApplicationRecord
   end
 
   def assign_default_rank
-    self.rank ||= contact_group.ranks.find_by(key: Rank::REGULAR_KEY)
+    self.rank ||= contact_group&.ranks&.find_by(key: Rank::REGULAR_KEY)
   end
 end
