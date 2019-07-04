@@ -11,8 +11,9 @@ import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import { CSSTransition } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
+import { SlideDown } from 'react-slidedown';
 
-import { Radio, Condition, Error } from "../shared/components";
+import { Radio, Condition, Error, ErrorMessage } from "../shared/components";
 import Calendar from "../shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
@@ -38,7 +39,8 @@ class BookingReservationForm extends React.Component {
               "customer_first_name",
               "customer_phone_number",
               "customer_info",
-              "found_customer"
+              "found_customer",
+              "find_customer_message"
             ]);
           } else {
             return await this.resetValues([
@@ -50,7 +52,8 @@ class BookingReservationForm extends React.Component {
               "booking_at",
               "booking_times",
               "booking_option_id",
-              "found_customer"
+              "found_customer",
+              "find_customer_message"
             ]);
           }
         }
@@ -102,7 +105,11 @@ class BookingReservationForm extends React.Component {
   }
 
   renderRegularCustomersOption = () => {
-    const { found_customer, is_finding_customer } = this.booking_reservation_form_values;
+    const {
+      found_customer,
+      is_finding_customer,
+      find_customer_message,
+    } = this.booking_reservation_form_values;
 
     if (found_customer) return;
 
@@ -166,6 +173,7 @@ class BookingReservationForm extends React.Component {
             </label>
           </div>
           <div className="centerize">
+            {find_customer_message ? <ErrorMessage error={find_customer_message} /> : null}
             <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
               {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
@@ -186,6 +194,7 @@ class BookingReservationForm extends React.Component {
     const is_field_error = this.booking_reservation_form_errors &&
       this.booking_reservation_form_errors.customer_info &&
       this.booking_reservation_form_errors.customer_info[field_name]
+
     return (
       <div className="modal fade" id="customer-info-field-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
@@ -750,37 +759,36 @@ class BookingReservationForm extends React.Component {
     } = this.props.i18n;
 
     return (
-      <CSSTransition
-        className="booking-calendar animated infinite bounce delay-2s"
-        unmountOnExit
-        in={!booking_date || !booking_at}
-        timeout={1000}
-      >
-        <div>
-          <h4>
-            {date}
-          </h4>
-          {booking_dates_calendar_hint}
-          <Calendar
-            {...this.props.calendar}
-            skip_default_date={true}
-            dateSelectedCallback={this.fetchBookingTimes}
-            scheduleParams={{
-              booking_option_id: booking_option_id
-            }}
-          />
-          <div className="demo-days">
-            <div className="demo-day day booking-available"></div>
-            {booking_dates_available_booking_date}
-            <div className="demo-day day workDay"></div>
-            {booking_dates_working_date}
-          </div>
-          <h4 id="start_times_header">
-            {booking_date && start_time}
-          </h4>
-          {this.renderBookingTimes()}
-        </div>
-      </CSSTransition>
+      <SlideDown className={'calendar-slidedown'}>
+        {
+          !booking_date || !booking_at ? (
+            <div className="booking-calendar">
+              <h4>
+                {date}
+              </h4>
+              {booking_dates_calendar_hint}
+              <Calendar
+                {...this.props.calendar}
+                skip_default_date={true}
+                dateSelectedCallback={this.fetchBookingTimes}
+                scheduleParams={{
+                  booking_option_id: booking_option_id
+                }}
+              />
+              <div className="demo-days">
+                <div className="demo-day day booking-available"></div>
+                {booking_dates_available_booking_date}
+                <div className="demo-day day workDay"></div>
+                {booking_dates_working_date}
+              </div>
+              <h4>
+                {booking_date && start_time}
+              </h4>
+              {this.renderBookingTimes()}
+            </div>
+          ) : null
+        }
+      </SlideDown>
     )
   }
 
@@ -813,7 +821,7 @@ class BookingReservationForm extends React.Component {
         <div>
           {Object.keys(booking_times).map((time, i) => (
             <div
-              className={`time-interval ${time == booking_at ? "selected-time-item" : null}`}
+              className={`time-interval ${time == booking_at ? "selected-time-item" : ""}`}
               key={`booking-time-${time}`}
               onClick={() => this.setBookingTimeAt(time)}>
               {time}~
@@ -1024,7 +1032,6 @@ class BookingReservationForm extends React.Component {
 
   fetchBookingTimes = async (date) => {
     await this.booking_reservation_form.change("booking_reservation_form[booking_date]", date)
-    this.scrollToTarget("start_times_header")
 
     this.booking_reservation_form.change("booking_reservation_form[is_fetching_booking_time]", true)
     const response = await axios({
@@ -1039,10 +1046,12 @@ class BookingReservationForm extends React.Component {
 
     this.booking_reservation_form.change("booking_reservation_form[is_fetching_booking_time]", null)
     if (Object.keys(response.data.booking_times).length) {
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", response.data.booking_times)
+      await this.booking_reservation_form.change("booking_reservation_form[booking_times]", response.data.booking_times)
     } else {
-      this.booking_reservation_form.change("booking_reservation_form[booking_times]", [])
+      await this.booking_reservation_form.change("booking_reservation_form[booking_times]", [])
     }
+
+    setTimeout(() => this.scrollToTarget("footer"), 1000)
   }
 
   setBookingTimeAt = async (time) => {
@@ -1083,11 +1092,17 @@ class BookingReservationForm extends React.Component {
       responseType: "json"
     })
 
-    this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
-    this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", response.data.customer_info)
-    this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(response.data.customer_info).length ? true : false)
+    const { customer_info, errors } = response.data;
+
+    this.booking_reservation_form.change("booking_reservation_form[customer_info]", customer_info)
+    this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", customer_info)
+    this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(customer_info).length ? true : false)
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
+
+    if (errors) {
+      this.booking_reservation_form.change("booking_reservation_form[find_customer_message]", errors.message)
+    }
   }
 
   onSubmit = async (event) => {

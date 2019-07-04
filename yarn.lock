@@ -5484,6 +5484,13 @@ react-sortable-hoc@^1.9.1:
     invariant "^2.2.4"
     prop-types "^15.5.7"
 
+react-slidedown@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/react-slidedown/-/react-slidedown-2.4.3.tgz#92e9c2132eae3d0ddc848df91a3cd1f09c04c12f"
+  integrity sha512-KTkdqh+G8hiMMz5mmk+/3eXfUVgbRZeL9PhfWtO1dX62gUKUdx31cfknabOkj2UAmf/lJvPmC6YKoBRgjA7/8A==
+  dependencies:
+    tslib "^1.9.0"
+
 react-stripe-checkout@^2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/react-stripe-checkout/-/react-stripe-checkout-2.6.3.tgz#3173a870b04e5a3c321a06d24cd53c6030111c45"
@@ -6530,6 +6537,11 @@ tryer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/tryer/-/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA==
+
+tslib@^1.9.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
+  integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
 
 tty-browserify@0.0.0:
   version "0.0.0"

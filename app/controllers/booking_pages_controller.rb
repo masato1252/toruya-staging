@@ -114,7 +114,10 @@ class BookingPagesController < ActionController::Base
       }
     else
       render json: {
-        customer_info: {}
+        customer_info: {},
+        errors: {
+          message: I18n.t("booking_page.message.unfound_customer_html")
+        }
       }
     end
   end

@@ -239,4 +239,9 @@
   //     transition: opacity 1000ms ease-in;
   //   }
   // }
+
+  .react-slidedown.calendar-slidedown {
+    transition-duration: 1.0s;
+    transition-timing-function: ease-in-out;
+  }
 }
