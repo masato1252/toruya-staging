@@ -120,7 +120,7 @@ class BookingReservationForm extends React.Component {
       <div className="customer-type-options">
         <div className="regular-customer-options">
           <h4>
-            {ever_used}{shop_name}
+            {ever_used}
           </h4>
 
           <div className="radios">
