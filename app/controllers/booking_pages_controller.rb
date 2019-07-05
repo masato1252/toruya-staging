@@ -157,8 +157,8 @@ class BookingPagesController < ActionController::Base
       time_outcome = Reservable::Time.run(shop: booking_page.shop, date: params[:date])
 
       if time_outcome.valid?
-        shop_start_at = time_outcome.first
-        shop_end_at = time_outcome.last
+        shop_start_at = time_outcome.result.first
+        shop_end_at = time_outcome.result.last
 
         [
           {
