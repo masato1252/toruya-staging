@@ -205,7 +205,7 @@ class SettingsMenuForm extends React.Component {
                 type="number"
                 name="menu[minutes]"
                 data-name="minutes"
-                value={this.state.menu.minutes}
+                value={this.state.menu.minutes === null ? "" : this.state.menu.minutes}
                 onChange={this._handleMenuData}
               />分
             </dd>
@@ -233,7 +233,7 @@ class SettingsMenuForm extends React.Component {
                 type="number"
                 name="menu[min_staffs_number]"
                 data-name="min_staffs_number"
-                value={this.state.menu.min_staffs_number}
+                value={this.state.menu.min_staffs_number === null ? "" : this.state.menu.min_staffs_number}
                 onChange={this._handleMenuData}
               />人
             </dd>
