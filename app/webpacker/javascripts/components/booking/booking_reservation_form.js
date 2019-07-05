@@ -781,7 +781,7 @@ class BookingReservationForm extends React.Component {
                 <div className="demo-day day workDay"></div>
                 {booking_dates_working_date}
               </div>
-              <h4>
+              <h4 id="times_header">
                 {booking_date && start_time}
               </h4>
               {this.renderBookingTimes()}
@@ -1031,6 +1031,7 @@ class BookingReservationForm extends React.Component {
   }
 
   fetchBookingTimes = async (date) => {
+    this.scrollToTarget("times_header")
     await this.booking_reservation_form.change("booking_reservation_form[booking_date]", date)
 
     this.booking_reservation_form.change("booking_reservation_form[is_fetching_booking_time]", true)
