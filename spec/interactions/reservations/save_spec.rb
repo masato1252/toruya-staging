@@ -31,9 +31,10 @@ RSpec.describe Reservations::Save do
       start_time: start_time,
       end_time: end_time,
       menu_staffs_list: menu_staffs_list,
-      customer_list: [
+      customers_list: [
         {
-          customer_id: customer.id.to_s
+          customer_id: customer.id.to_s,
+          state: "pending"
         }
       ],
       with_warnings: false,
@@ -59,6 +60,7 @@ RSpec.describe Reservations::Save do
           params[:customers_list] = [
             {
               customer_id: customer.id,
+              state: "pending",
               booking_option_id: booking_option.id,
               booking_page_id: booking_page.id
             }

@@ -9,6 +9,7 @@ module Reservations
       array :customers_list, default: nil do
         hash do
           integer :customer_id
+          string :state
           integer :booking_page_id, default: nil
           integer :booking_option_id, default: nil
           integer :booking_amount_cents,  default: nil

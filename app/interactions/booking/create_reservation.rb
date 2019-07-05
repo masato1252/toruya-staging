@@ -163,6 +163,7 @@ module Booking
                   end_time: booking_end_at,
                   customers_list: [{
                     customer_id: customer.id,
+                    state: "pending",
                     booking_page_id: booking_page.id,
                     booking_option_id: booking_option_id,
                     booking_amount_cents: booking_option.amount.fractional,
