@@ -1,7 +1,7 @@
 ja:
   booking_page:
     time_from: "から"
-    ever_used: "以前に利用"
+    ever_used: "以前に利用されたことが"
     yes_ever_used: ある
     no_first_time: 初めて
     name: お名前
