@@ -118,9 +118,6 @@ export {
   Radio,
   Error,
   Condition,
-<<<<<<< HEAD
   DragHandle,
-=======
   ErrorMessage
->>>>>>> booking-page-review
 };
