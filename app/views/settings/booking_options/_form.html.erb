@@ -4,7 +4,7 @@
   <%= react_component("management/settings/booking/booking_option_settings", {
     form_authenticity_token: form_authenticity_token,
     menu_total_limit: 2,
-    menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval),
+    menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes),
     booking_option: @booking_option.attributes.merge!(
       amount_cents: @booking_option.amount&.fractional,
       start_at_type: @booking_option.start_at ? "date" : "now",
@@ -23,8 +23,7 @@
     i18n: {
       currency_unit: t("number.currency.format.unit"),
       menu_time_span: Menu.human_attribute_name(:minutes),
-      menu_interval: Menu.human_attribute_name(:interval),
-      errors: t("errors.messages").slice(:required),
+      errors: t("errors.messages").slice(:required, :invalid_email_format, :not_a_number),
     }.merge!([
       t("settings.booking_option.form"),
       t("common").slice(:required_label, :minute, :total, :select_a_menu),

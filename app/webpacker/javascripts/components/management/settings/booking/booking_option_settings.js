@@ -32,8 +32,7 @@ class BookingOptionSettings extends React.Component {
 
   booking_option_times_calculation = (allValues) => {
     return {
-      "booking_option[minutes]": (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.required_time || 0), 0),
-      "booking_option[interval]": (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.interval || 0), 0)
+      "booking_option[minutes]": (allValues.booking_option.menus || []).reduce((sum, menu) => sum + Number(menu.required_time || 0), 0)
     }
   }
 
@@ -129,7 +128,7 @@ class BookingOptionSettings extends React.Component {
   };
 
   renderTimeFields = () => {
-    const { required_label, time_span_label, menu_time_span, menu_interval, total, minute, reservation_interval, total_time } = this.props.i18n;
+    const { required_label, time_span_label, menu_time_span, total, minute, total_time } = this.props.i18n;
 
     return (
       <div>
@@ -175,14 +174,6 @@ class BookingOptionSettings extends React.Component {
             before_hint={total}
             hint={minute}
             readOnly={true}
-          />
-          <Field
-            name="booking_option[interval]"
-            label={menu_interval}
-            type="number"
-            component={InputRow}
-            before_hint={reservation_interval}
-            hint={minute}
           />
         </div>
       </div>
@@ -327,7 +318,7 @@ class BookingOptionSettings extends React.Component {
   validate = (values) => {
     const fields_errors = {};
     fields_errors.booking_option = {};
-    const { menus, minutes, interval, tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
+    const { menus, minutes, tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
     const { errors, form_errors } = this.props.i18n;
 
     if (!tax_include) {
@@ -354,12 +345,6 @@ class BookingOptionSettings extends React.Component {
       fields_errors.booking_option.minutes = errors.required;
     } else if (minutes < _.min(menus.map((menu) => menu.minutes))) {
       fields_errors.booking_option.minutes = form_errors.enough_time_for_menu;
-    }
-
-    if (interval === undefined) {
-      fields_errors.booking_option.interval = errors.required;
-    } else if (interval < _.min(menus.map((menu) => menu.interval))) {
-      fields_errors.booking_option.interval = form_errors.enough_time_for_menu;
     }
 
     return fields_errors;
@@ -426,7 +411,7 @@ class BookingOptionSettings extends React.Component {
 }
 
 const SortableMenuOption = sortableElement(({fields, field, i18n, index}) => {
-  const { menu_time_span, menu_interval, minute } = i18n;
+  const { menu_time_span, minute } = i18n;
 
   return (
     <div className="result-field">
@@ -462,9 +447,6 @@ const SortableMenuOption = sortableElement(({fields, field, i18n, index}) => {
       </a>
       <Field name={`${field}minutes`} value={field.minutes}>
         {({input}) => <span className="field-hint">{menu_time_span}{input.value}{minute}</span>}
-      </Field>
-      <Field name={`${field}interval`} value={field.interval}>
-        {({input}) => <span className="field-hint">{menu_interval}{input.value}{minute}</span>}
       </Field>
     </div>
   )
