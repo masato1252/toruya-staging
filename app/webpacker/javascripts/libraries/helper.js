@@ -3,7 +3,7 @@
 const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
 
-const requiredValidation = (component, value) => (value ? undefined : component.props.i18n.errors.required);
+const requiredValidation = (component, value, key = "") => (value ? undefined : `${key}${component.props.i18n.errors.required}`);
 
 const emailPatten =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
 const emailFormatValidator = (component, value) => {

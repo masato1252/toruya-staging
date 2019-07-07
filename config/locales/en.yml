@@ -41,6 +41,7 @@ en:
     processing: Processing
     date: Date
     day: Day
+    time: Time
     start_time: Start Time
     end_time: End Time
     updated_time: Update time

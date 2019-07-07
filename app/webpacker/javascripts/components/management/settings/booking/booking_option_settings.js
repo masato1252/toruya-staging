@@ -41,7 +41,7 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[name]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(this, value, price_name)}
             label={price_name}
             placeholder={price_name}
             hint={price_name_hint}
@@ -166,7 +166,7 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[amount_cents]"
             label={price}
             type="number"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(this, value, price)}
             component={InputRow}
             hint={currency_unit}
           />
@@ -294,26 +294,33 @@ class BookingOptionSettings extends React.Component {
     const fields_errors = {};
     fields_errors.booking_option = {};
     const { menus, minutes, interval, tax_include, start_at_type, start_at_time_part, end_at_type, end_at_time_part } = values.booking_option || {};
-    const { errors, form_errors } = this.props.i18n;
+    const {
+      errors,
+      form_errors,
+      menu_for_sale_label,
+      tax_label,
+      sale_start,
+      sale_end,
+    } = this.props.i18n;
 
     if (!tax_include) {
-      fields_errors.booking_option.tax_include = errors.required;
+      fields_errors.booking_option.tax_include = `${tax_label}${errors.required}`;
     }
 
     if (start_at_type === "date" && !start_at_time_part) {
-      fields_errors.booking_option.start_at_time_part = errors.required;
+      fields_errors.booking_option.start_at_time_part = `${sale_start}${errors.required}`;
     }
 
     if (end_at_type === "date" && !end_at_time_part) {
-      fields_errors.booking_option.end_at_time_part = errors.required;
+      fields_errors.booking_option.end_at_time_part = `${sale_end}${errors.required}`;
     }
 
     if (!menus.length) {
-      fields_errors.selected_menu = errors.required;
+      fields_errors.selected_menu = `${menu_for_sale_label}${errors.required}`;
     }
 
     if (menus.length > this.props.menu_total_limit) {
-      fields_errors.selected_menu = form_errors.reached_the_menus_limit;
+      fields_errors.selected_menu = `${menu_for_sale_label}${form_errors.reached_the_menus_limit}`;
     }
 
     if (minutes === undefined) {

@@ -41,6 +41,7 @@ ja:
     processing: 送信中
     date: 日付
     day: 曜日
+    time: 時間
     start_time: 開始時間
     end_time: 終了時間
     updated_time: 更新時間
