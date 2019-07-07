@@ -3,7 +3,7 @@
 const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
 
-const requiredValidation = (component, value) => (value ? undefined : component.props.i18n.errors.required);
+const requiredValidation = (component, value, key = "") => (value ? undefined : `${key}${component.props.i18n.errors.required}`);
 
 const emailPatten =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
 const emailFormatValidator = (component, value) => {
@@ -18,6 +18,12 @@ const lengthValidator = required_length => (component, value) => {
   if (!value) return undefined;
 
   return value.length === required_length ? undefined : component.props.i18n.errors.wrong_length.replace(/%{count}/, required_length)
+}
+
+const greaterEqualThan = (number, key="") => (component, value) => {
+  if (!value) return undefined;
+
+  return value >= number ? undefined : `${key}${component.props.i18n.errors.greater_than_or_equal_to.replace(/%{value}/, number)}`
 }
 
 const transformValues = values => {
@@ -46,5 +52,6 @@ export {
   transformValues,
   composeValidators,
   lengthValidator,
-  mustBeNumber
+  mustBeNumber,
+  greaterEqualThan,
 };

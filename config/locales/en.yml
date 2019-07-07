@@ -36,12 +36,14 @@ en:
     cancel_upgrade: Cancel upgrade
     new_reservation: Add a new reservation
     create_a_shop: Set up a shop
-    copy: Copy
+    copy_url: Copy URL
+    copy_url2: Copy URL
     copy_code: Copy
   common:
     processing: Processing
     date: Date
     day: Day
+    time: Time
     start_time: Start Time
     end_time: End Time
     updated_time: Update time

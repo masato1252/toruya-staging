@@ -16,6 +16,7 @@ module Booking
       not_enough_time_special_dates = []
 
       longest_option = shop.user.booking_options.where(id: booking_option_ids).sort_by { |option| option.minutes }.last
+      longest_interval_time = longest_option.menus.order("interval").last.interval
 
       special_dates.each do |raw_special_date|
         json_parsed_date = JSON.parse(raw_special_date)
@@ -28,8 +29,8 @@ module Booking
           special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
           special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
           special_date_time_length = special_date_end_at - special_date_start_at
-          basic_required_minutes = longest_option.minutes + longest_option.interval
-          long_required_minutes = longest_option.minutes + longest_option.interval * 2
+          basic_required_minutes = longest_option.minutes + longest_interval_time
+          long_required_minutes = longest_option.minutes + longest_interval_time * 2
           special_time_range = "#{I18n.l(special_date_start_at)} ~ #{I18n.l(special_date_end_at, format: :hour_minute)}"
 
           if special_date_start_at < shop_start_at ||

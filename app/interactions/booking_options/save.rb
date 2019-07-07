@@ -6,7 +6,6 @@ module BookingOptions
       string :name
       string :display_name, default: nil
       integer :minutes
-      integer :interval
       integer :amount_cents
       string :amount_currency, default: "JPY"
       boolean :menu_restrict_order, default: false

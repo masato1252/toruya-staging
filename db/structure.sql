@@ -198,7 +198,6 @@ CREATE TABLE public.booking_options (
     name character varying NOT NULL,
     display_name character varying,
     minutes integer NOT NULL,
-    "interval" integer NOT NULL,
     amount_cents numeric NOT NULL,
     amount_currency character varying NOT NULL,
     tax_include boolean NOT NULL,
@@ -1105,7 +1104,8 @@ CREATE TABLE public.reservations (
     with_warnings boolean DEFAULT false NOT NULL,
     by_staff_id integer,
     deleted_at timestamp without time zone,
-    prepare_time timestamp without time zone
+    prepare_time timestamp without time zone,
+    details jsonb
 );
 
 
@@ -2911,6 +2911,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190623050322'),
 ('20190624001252'),
 ('20190630004604'),
-('20190630055440');
+('20190630055440'),
+('20190707082104');
 
 

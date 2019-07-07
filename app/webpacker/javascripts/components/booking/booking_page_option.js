@@ -18,7 +18,7 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
   }
   else {
     booking_start_at = booking_start_at.add(booking_option_value.minutes, "minutes")
-    option_content = `${booking_start_at.format("hh:mm")} ${i18n.booking_end_at}`
+    option_content = `${booking_start_at.format("HH:mm")} ${i18n.booking_end_at}`
   }
 
   return (

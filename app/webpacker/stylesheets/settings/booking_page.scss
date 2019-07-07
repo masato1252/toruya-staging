@@ -1,3 +1,17 @@
+#content {
+  #settingForm {
+    #pageList {
+      .function {
+        width: 229px;
+
+        a:last-child {
+          width: 80px;
+        }
+      }
+    }
+  }
+}
+
 .booking-page-settings {
   .booking-option-action {
     display: inline-block;

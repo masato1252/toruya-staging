@@ -63,7 +63,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[name]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(this, value, page_name)}
             label={page_name}
             hint={page_name_hint}
             requiredLabel={required_label}
@@ -152,7 +152,7 @@ class BookingPageSettings extends React.Component {
         <div className="formRow">
           <dl>
             <Field
-              name="selected_booking_option"
+              name="booking_page[selected_booking_option]"
               collection_name="booking_page[options]"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedBookingOptionFields}
@@ -252,6 +252,7 @@ class BookingPageSettings extends React.Component {
                       collection_name="booking_page[special_dates]"
                       component={MultipleDatetimeInput}
                       timezone={this.props.timezone}
+                      state_form={this.booking_page_settings_form}
                     />
                   )
                 }
@@ -452,7 +453,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[note]"
             component={InputRow}
             componentType="textarea"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(this, value, note_label)}
             placeholder={note_label}
             rows={10}
           />
@@ -567,29 +568,48 @@ class BookingPageSettings extends React.Component {
 
   validate = (values) => {
     const { timezone } = this.props;
-    const { errors, form_errors } = this.props.i18n;
+    const {
+      errors,
+      form_errors,
+      booking_option_header,
+      shop_header,
+      time,
+      sale_start,
+      sale_end,
+    } = this.props.i18n;
     const fields_errors = {};
     fields_errors.booking_page = {};
-    const { shop_id, options, start_at_type, start_at_date_part, start_at_time_part, end_at_type, end_at_date_part, end_at_time_part, had_special_date, special_dates } = values.booking_page || {};
+    const {
+      shop_id,
+      options,
+      start_at_type,
+      start_at_date_part,
+      start_at_time_part,
+      end_at_type,
+      end_at_date_part,
+      end_at_time_part,
+      had_special_date,
+      special_dates
+    } = values.booking_page || {};
 
     if (!options.length) {
-      fields_errors.selected_booking_option = errors.required;
+      fields_errors.booking_page.selected_booking_option = `${booking_option_header}${errors.required}`;
     }
 
     if (!shop_id) {
-      fields_errors.booking_page.shop_id = errors.required;
+      fields_errors.booking_page.shop_id = `${shop_header}${errors.required}`;
     }
 
     if (start_at_type === "date" && !start_at_time_part) {
-      fields_errors.booking_page.start_at_time_part = errors.required;
+      fields_errors.booking_page.start_at_time_part = `${sale_start}${errors.required}`;
     }
 
     if (end_at_type === "date" && !end_at_time_part) {
-      fields_errors.booking_page.end_at_time_part = errors.required;
+      fields_errors.booking_page.end_at_time_part = `${sale_end}${errors.required}`;
     }
 
     if (had_special_date && !special_dates.length) {
-      fields_errors.booking_page.had_special_date = errors.required;
+      fields_errors.booking_page.had_special_date = `${time}${errors.required}`;
     }
 
     if (had_special_date && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {

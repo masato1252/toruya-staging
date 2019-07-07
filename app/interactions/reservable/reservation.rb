@@ -89,11 +89,7 @@ module Reservable
     end
 
     def interval_time
-      if booking_option_id
-        booking_option.interval.minutes
-      else
-        menu.interval.minutes
-      end
+      menu.interval.minutes
     end
 
     def booking_option

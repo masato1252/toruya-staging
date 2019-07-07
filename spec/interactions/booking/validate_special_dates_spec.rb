@@ -5,7 +5,7 @@ RSpec.describe Booking::ValidateSpecialDates do
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
-  let(:booking_option_ids) { [FactoryBot.create(:booking_option, user: user).id] }
+  let(:booking_option_ids) { [FactoryBot.create(:booking_option, :single_menu, user: user).id] }
   let(:date) { "2019-05-13" }
   let(:start_at) { "09:00" }
   let(:end_at) { "17:00" }

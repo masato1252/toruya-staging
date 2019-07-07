@@ -64,7 +64,7 @@
       errors: t("errors.messages").slice(:required),
     }.merge!([
       t("settings.booking_page.form"),
-      t("common").slice(:required_label, :select_a_booking_option, :minute),
+      t("common").slice(:required_label, :select_a_booking_option, :minute, :time),
       t("action").slice(:save, :cancel)
     ].inject(:merge!)
     ),
