@@ -11,7 +11,7 @@ import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
 
-import { mustBeNumber, requiredValidation, transformValues, composeValidators } from "../../../../libraries/helper";
+import { mustBeNumber, requiredValidation, greaterEqualThan, transformValues, composeValidators } from "../../../../libraries/helper";
 import { Input, InputRow, Radio, Error, Condition } from "../../../shared/components";
 import CommonDatepickerField from "../../../shared/datepicker_field";
 import DateFieldAdapter from "../../../shared/date_field_adapter";
@@ -154,7 +154,14 @@ class BookingOptionSettings extends React.Component {
                         name={`${field}required_time`}
                         type="number"
                         component={Input}
-                        validate={composeValidators(this, requiredValidation, mustBeNumber)}
+                        validate={
+                          composeValidators(
+                            this,
+                            requiredValidation,
+                            mustBeNumber,
+                            greaterEqualThan(this.booking_option_settings_form_values.menus[index].minutes, menu_time_span)
+                          )
+                        }
                       />
                       <span className="field-hint">
                         {minute}

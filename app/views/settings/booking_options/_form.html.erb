@@ -23,7 +23,7 @@
     i18n: {
       currency_unit: t("number.currency.format.unit"),
       menu_time_span: Menu.human_attribute_name(:minutes),
-      errors: t("errors.messages").slice(:required, :invalid_email_format, :not_a_number),
+      errors: t("errors.messages").slice(:required, :invalid_email_format, :not_a_number, :greater_than_or_equal_to),
     }.merge!([
       t("settings.booking_option.form"),
       t("common").slice(:required_label, :minute, :total, :select_a_menu),
