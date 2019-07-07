@@ -34,7 +34,8 @@ ja:
     cancel_upgrade: キャンセル
     new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
-    copy: コピー
+    copy_url: URLコピー
+    copy_url2: URLをコピー
     copy_code: コードをコピー
   common:
     processing: 送信中
