@@ -20,6 +20,12 @@ const lengthValidator = required_length => (component, value) => {
   return value.length === required_length ? undefined : component.props.i18n.errors.wrong_length.replace(/%{count}/, required_length)
 }
 
+const greaterEqualThan = (number, key="") => (component, value) => {
+  if (!value) return undefined;
+
+  return value >= number ? undefined : `${key}${component.props.i18n.errors.greater_than_or_equal_to.replace(/%{value}/, number)}`
+}
+
 const transformValues = values => {
   const data = {...values};
 
@@ -46,5 +52,6 @@ export {
   transformValues,
   composeValidators,
   lengthValidator,
-  mustBeNumber
+  mustBeNumber,
+  greaterEqualThan,
 };

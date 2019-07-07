@@ -2,11 +2,19 @@
 #
 # Table name: reservation_customers
 #
-#  id             :integer          not null, primary key
-#  reservation_id :integer          not null
-#  customer_id    :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                      :integer          not null, primary key
+#  reservation_id          :integer          not null
+#  customer_id             :integer          not null
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  booking_page_id         :integer
+#  booking_option_id       :integer
+#  state                   :integer          default(0)
+#  booking_amount_currency :string
+#  booking_amount_cents    :decimal(, )
+#  tax_include             :boolean
+#  booking_at              :datetime
+#  details                 :jsonb
 #
 # Indexes
 #

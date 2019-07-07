@@ -7,7 +7,6 @@
 #  name                :string           not null
 #  display_name        :string
 #  minutes             :integer          not null
-#  interval            :integer          not null
 #  amount_cents        :decimal(, )      not null
 #  amount_currency     :string           not null
 #  tax_include         :boolean          not null
