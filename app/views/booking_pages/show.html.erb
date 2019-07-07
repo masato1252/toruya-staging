@@ -13,7 +13,7 @@
     )
   end
 
-  page_booking_options = @booking_page.booking_options.map do |option|
+  page_booking_options = @booking_page.booking_options.active.map do |option|
     booking_option_lambda.call(option)
   end
 
