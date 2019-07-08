@@ -66,9 +66,9 @@ RSpec.describe Booking::Calendar do
 
     context "when all day are reserved" do
       before do
-        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+        FactoryBot.create(:reservation, shop: shop, staffs: staff,
                           start_time: Time.zone.local(2019, 5, 13, 9),
-                          end_time: Time.zone.local(2019, 5, 13, 17))
+                          force_end_time: Time.zone.local(2019, 5, 13, 17))
       end
 
       it "returns expected result" do
@@ -93,7 +93,7 @@ RSpec.describe Booking::Calendar do
     context "when there is existing reservation after this new reservation time" do
       before do
         # The free gap is 9: 00 ~ 10:10
-        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+        FactoryBot.create(:reservation, shop: shop, staffs: staff,
                           start_time: Time.zone.local(2019, 5, 13, 10, 10),
                           end_time: Time.zone.local(2019, 5, 13, 17))
       end
@@ -108,7 +108,7 @@ RSpec.describe Booking::Calendar do
     context "when there is existing reservation before this new reservation time" do
       # the time gap need booking option required time(60) + interval(10)
       before do
-        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+        FactoryBot.create(:reservation, shop: shop, staffs: staff,
                           start_time: Time.zone.local(2019, 5, 13, 9),
                           end_time: Time.zone.local(2019, 5, 13, 15, 50))
         # The free gap is 16: 00 ~ 17:00
@@ -124,12 +124,12 @@ RSpec.describe Booking::Calendar do
     context "when there are existing reservations around this new reservation time" do
       # the time gap need booking option required time(60) + interval(10)
       before do
-        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+        FactoryBot.create(:reservation, shop: shop, staffs: staff,
                           start_time: Time.zone.local(2019, 5, 13, 9),
                           end_time: Time.zone.local(2019, 5, 13, 10))
 
         # The free gap is 10: 30 ~ 11:40
-        FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+        FactoryBot.create(:reservation, shop: shop, staffs: staff,
                           start_time: Time.zone.local(2019, 5, 13, 11, 40),
                           end_time: Time.zone.local(2019, 5, 13, 17))
       end
@@ -216,9 +216,9 @@ RSpec.describe Booking::Calendar do
 
         it "returns expected result" do
           # staff was fully booked all day on 5/13 
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff,
                             start_time: Time.zone.local(2019, 5, 13, 9),
-                            end_time: Time.zone.local(2019, 5, 13, 17))
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
@@ -227,7 +227,7 @@ RSpec.describe Booking::Calendar do
         context "when there is another staff could handle the booking option's menus" do
           it "returns expected result" do
             # staff was fully booked all day on 5/13 
-            FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+            FactoryBot.create(:reservation, shop: shop, staffs: staff,
                               start_time: Time.zone.local(2019, 5, 13, 9),
                               end_time: Time.zone.local(2019, 5, 13, 17))
 
@@ -248,7 +248,6 @@ RSpec.describe Booking::Calendar do
             :booking_option,
             user: user,
             menu_restrict_order: false,
-            interval: 15,
             menus: [
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 90, interval: 20),
@@ -281,21 +280,21 @@ RSpec.describe Booking::Calendar do
           # 15 is booking option interval time
           # free from 9:00 ~ 11:00 for staff1, free all day for staff4,
           # so staff1 and staff 4 take create the 60 minutes coperation menu from 10:00 ~ 11:00
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff1,
                             start_time: Time.zone.local(2019, 5, 13, 11, 00),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 11:00 ~ 13:00 for staff2, so staff2 take create the 120 minutes menu from 11:00 ~ 13:00
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
                             end_time: Time.zone.local(2019, 5, 13, 11, 00))
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 13, 00),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 13:00 ~ 14:45 for staff3, so staff2 take create the 90 minutes menu from 13:00 ~ 14:45
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff3.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff3,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
                             end_time: Time.zone.local(2019, 5, 13, 13, 00))
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff3.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff3,
                             start_time: Time.zone.local(2019, 5, 13, 14, 45),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           result = outcome.result
@@ -312,7 +311,6 @@ RSpec.describe Booking::Calendar do
             :booking_option,
             user: user,
             menu_restrict_order: true,
-            interval: 15,
             menus: [
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 90, interval: 20),
@@ -342,21 +340,21 @@ RSpec.describe Booking::Calendar do
           # when staff3 are available for 75 minute menu, required 60 + 15 minutes,
           # 15 is booking option interval time
           # free from 9:00 ~ 11:00 for staff1, so staff1 take create the 120 minutes menu from 9:00 ~ 11:00
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff1,
                             start_time: Time.zone.local(2019, 5, 13, 11, 00),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 11:00 ~ 12:30 for staff2, so staff2 take create the 90 minutes menu from 11:00 ~ 12:30
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
                             end_time: Time.zone.local(2019, 5, 13, 11, 00))
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 12, 30),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 12:30 ~ 13:45 for staff3, so staff3 take create the 60 minutes menu from 12:30 ~ 13:45
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff3.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff3,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
                             end_time: Time.zone.local(2019, 5, 13, 12, 30))
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff3.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff3,
                             start_time: Time.zone.local(2019, 5, 13, 13, 45),
                             end_time: Time.zone.local(2019, 5, 13, 17))
           result = outcome.result
@@ -371,7 +369,6 @@ RSpec.describe Booking::Calendar do
             :booking_option,
             user: user,
             menu_restrict_order: true,
-            interval: 15,
             menus: [
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 120, interval: 20),
               FactoryBot.create(:menu, :with_reservation_setting, user: user, minutes: 60, interval: 10)
@@ -395,16 +392,16 @@ RSpec.describe Booking::Calendar do
           # when staff1 are available for 70 minutes(60 + 15(before reservation)), then staff2 are available for 120 minutes(120 + 15(after reservation))
           # 15 is booking option interval time
           # free from 9:00 ~ 10:00 for staff1, so staff1 take create the 60 minutes menu from 9:00 ~ 10:00
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff1.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff1,
                             start_time: Time.zone.local(2019, 5, 13, 10, 00),
-                            end_time: Time.zone.local(2019, 5, 13, 17))
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 10:00 ~ 12:15 for staff2, so staff2 take create the 120 minutes menu from 10:00 ~ 12:15
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
-                            end_time: Time.zone.local(2019, 5, 13, 10, 00))
-          FactoryBot.create(:reservation, shop: shop, staff_ids: [staff2.id],
+                            force_end_time: Time.zone.local(2019, 5, 13, 10, 00))
+          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
                             start_time: Time.zone.local(2019, 5, 13, 12, 15),
-                            end_time: Time.zone.local(2019, 5, 13, 17))
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
           # BUT the menu order is restrict, 120 minutes need to be executed first, so no staffs could handle this booking option
           result = outcome.result
 

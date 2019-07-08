@@ -24,7 +24,7 @@ RSpec.describe Reservable::Staffs do
     FactoryBot.create(:staff_menu, menu: _menu, staff: staff)
   end
 
-  describe "#run" do
+  xdescribe "#run" do
     context "when staff is full time" do
       let!(:staff) { FactoryBot.create(:staff, :full_time, user: user, shop: shop) }
 

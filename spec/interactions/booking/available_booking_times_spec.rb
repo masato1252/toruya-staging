@@ -48,9 +48,9 @@ RSpec.describe Booking::AvailableBookingTimes do
   context "when there is existing reservation" do
     before do
       # The free gap is 9: 00 ~ 10:10
-      FactoryBot.create(:reservation, shop: shop, staff_ids: [staff.id],
+      FactoryBot.create(:reservation, shop: shop, staffs: staff,
                         start_time: Time.zone.local(2019, 5, 13, 10, 10),
-                        end_time: Time.zone.local(2019, 5, 13, 11))
+                        force_end_time: Time.zone.local(2019, 5, 13, 11))
     end
 
     it "returns expected result, returns all available booking time" do
