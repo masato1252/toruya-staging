@@ -36,16 +36,17 @@ class ReservationStaff < ApplicationRecord
   }
 
   def self.overlap_reservations(staff_ids: [], reservation_id: nil, start_time: , end_time:)
-    overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id).
-    where("reservation_staffs.work_start_at < ? and reservation_staffs.ready_time > ?", end_time, start_time)
+    overlap_reservations_scope(staff_ids: staff_ids, reservation_id: reservation_id)
+      .where("reservation_staffs.work_start_at < ? and reservation_staffs.ready_time > ?", end_time, start_time)
   end
 
   def self.overlap_reservations_scope(staff_ids: [], reservation_id: nil)
-    ReservationStaff.joins(:reservation, :menu).
-      where.not(reservation_id: reservation_id.presence).
-      where.not("menus.min_staffs_number": 0).
-      where.not("reservations.aasm_state": "canceled").
-      where("reservation_staffs.staff_id": staff_ids).
-      where("reservations.deleted_at": nil)
+    ReservationStaff
+      .joins(:reservation, :menu)
+      .where.not(reservation_id: reservation_id.presence)
+      .where.not("menus.min_staffs_number": 0)
+      .where.not("reservations.aasm_state": "canceled")
+      .where("reservation_staffs.staff_id": staff_ids)
+      .where("reservations.deleted_at": nil)
   end
 end

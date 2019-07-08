@@ -6,7 +6,7 @@ FactoryBot.define do
     start_time { Time.zone.now }
     end_time { start_time.advance(hours: 1) }
     prepare_time { start_time - menus.first.interval.minutes }
-    ready_time { end_time - menus.last.interval.minutes }
+    ready_time { end_time + menus.last.interval.minutes }
 
     transient do
       customers { [ FactoryBot.create(:customer, user: shop.user) ] }
@@ -25,12 +25,15 @@ FactoryBot.define do
      after(:create) do |reservation, proxy|
        menus_number = Array.wrap(proxy.menus).length
 
-       proxy.menus.each.with_index do |menu, menu_index|
+       Array.wrap(proxy.menus).each.with_index do |menu, menu_index|
          FactoryBot.create(:reservation_menu, reservation: reservation, menu: menu, position: menu_index)
          time_result = ReservationMenuTimeCalculator.calculate(reservation, proxy.menus, menu_index)
 
-         proxy.staffs.each do |staff|
-           FactoryBot.create(:staff_menu, staff: staff, menu: menu)
+         Array.wrap(proxy.staffs).each do |staff|
+           unless StaffMenu.where(staff: staff, menu: menu).exists?
+             FactoryBot.create(:staff_menu, staff: staff, menu: menu)
+           end
+
            FactoryBot.create(
              :reservation_staff,
              reservation: reservation,
@@ -45,14 +48,16 @@ FactoryBot.define do
        end
 
 
-       proxy.customers.each do |customer|
+       Array.wrap(proxy.customers).each do |customer|
          FactoryBot.create(:reservation_customer, reservation: reservation, customer: customer)
        end
 
 
-       if proxy.menus.present?
+       if Array.wrap(proxy.menus).present?
          reservation.update_columns(end_time: reservation.start_time.advance(minutes: proxy.menus.sum(&:minutes)))
        end
+
+       reservation.update_columns(count_of_customers: reservation.reservation_customers.active.count)
      end
   end
 end

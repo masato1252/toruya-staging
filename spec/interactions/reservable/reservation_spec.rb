@@ -20,11 +20,6 @@ RSpec.describe Reservable::Reservation do
 
 
   describe "#execute" do
-    it "" do
-      reservation = FactoryBot.create(:reservation)
-      expect(reservation).to be_valid
-    end
-
     context "when shop closed on that date" do
       it "is invalid" do
         outcome = Reservable::Reservation.run(shop: shop, date: date)
@@ -76,7 +71,7 @@ RSpec.describe Reservable::Reservation do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             FactoryBot.create(:reservation, shop: shop, menus: [ menu1 ],
                                start_time: time_range.first.advance(minutes: -menu1.minutes), end_time: time_range.first,
-                               staff_ids: [staff1.id])
+                               staffs: staff1)
           end
 
           context "when the interval time is not enough for previous reservation" do
@@ -100,7 +95,7 @@ RSpec.describe Reservable::Reservation do
               FactoryBot.create(:reservation, shop: shop, menus: [ menu2 ],
                                 start_time: time_range.first.advance(minutes: -menu2.minutes),
                                 end_time: time_range.first.advance(minutes: -menu2.interval),
-                                staff_ids: [staff1.id])
+                                staffs: [ staff1 ])
             end
 
             it "is invalid" do
@@ -152,7 +147,7 @@ RSpec.describe Reservable::Reservation do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             FactoryBot.create(:reservation, shop: shop, menus: [ menu1 ],
                                start_time: time_range.last, end_time: time_range.last.advance(minutes: menu1.minutes),
-                               staff_ids: [staff1.id])
+                               staffs: staff1)
           end
 
           context "when the interval time is not enough for current reservation" do
@@ -176,7 +171,7 @@ RSpec.describe Reservable::Reservation do
               FactoryBot.create(:reservation, shop: shop, menus: [ menu2 ],
                                 start_time: time_range.last.advance(minutes: 19),
                                 end_time: time_range.last.advance(minutes: 60),
-                                staff_ids: [staff1.id])
+                                staffs: staff1)
             end
 
             it "is invalid" do
@@ -445,7 +440,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
-                                            customer_ids: [FactoryBot.create(:customer, user: user).id])
+                                            customers: FactoryBot.create(:customer, user: user))
             StaffMenu.find_by(staff_id: staff2.id, menu_id: menu1.id).update(max_customers: 4)
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -469,7 +464,7 @@ RSpec.describe Reservable::Reservation do
             it "is invalid" do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
-                                              customer_ids: [FactoryBot.create(:customer, user: user).id])
+                                              customers: FactoryBot.create(:customer, user: user))
               StaffMenu.find_by(staff_id: staff1.id, menu_id: menu1.id).update(max_customers: 4)
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
@@ -497,7 +492,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
             reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
-                                            customer_ids: [FactoryBot.create(:customer, user: user).id])
+                                            customers: FactoryBot.create(:customer, user: user))
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
@@ -520,7 +515,7 @@ RSpec.describe Reservable::Reservation do
             it "is invalid" do
               FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
               reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
-                                              customer_ids: [FactoryBot.create(:customer, user: user).id])
+                                              customers: FactoryBot.create(:customer, user: user))
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,

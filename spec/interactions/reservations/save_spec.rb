@@ -2,14 +2,15 @@ require "rails_helper"
 
 RSpec.describe Reservations::Save do
   let(:shop) { FactoryBot.create(:shop) }
+  let(:user) { shop.user }
   let(:reservation) { shop.reservations.new }
-  let(:menu) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 5) }
-  let(:menu2) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 10) }
-  let(:menu3) { FactoryBot.create(:menu, shop: shop, user: shop.user, interval: 15) }
-  let(:staff) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
-  let(:staff2) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
-  let(:staff3) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
-  let(:customer) { FactoryBot.create(:customer, user: shop.user) }
+  let(:menu) { FactoryBot.create(:menu, shop: shop, user: user, interval: 5) }
+  let(:menu2) { FactoryBot.create(:menu, shop: shop, user: user, interval: 10) }
+  let(:menu3) { FactoryBot.create(:menu, shop: shop, user: user, interval: 15) }
+  let(:staff) { FactoryBot.create(:staff, shop: shop, user: user) }
+  let(:staff2) { FactoryBot.create(:staff, shop: shop, user: user) }
+  let(:staff3) { FactoryBot.create(:staff, shop: shop, user: user) }
+  let(:customer) { FactoryBot.create(:customer, user: user) }
   let(:by_staff) { staff }
   let(:start_time) { Time.zone.local(2016, 1, 1, 7) }
   # XXX: end time == start time + menus total required time
@@ -26,17 +27,20 @@ RSpec.describe Reservations::Save do
       }
     ]
   end
+  let(:customers_list) do
+    [
+      {
+        customer_id: customer.id.to_s,
+        state: "pending"
+      }
+    ]
+  end
   let(:params) do
     {
       start_time: start_time,
       end_time: end_time,
       menu_staffs_list: menu_staffs_list,
-      customers_list: [
-        {
-          customer_id: customer.id.to_s,
-          state: "pending"
-        }
-      ],
+      customers_list: customers_list,
       with_warnings: false,
       by_staff_id: by_staff.id.to_s
     }
@@ -51,38 +55,6 @@ RSpec.describe Reservations::Save do
 
   describe "#execute" do
     describe "when create a new reservation" do
-      context "when reservation had booking_option" do
-        it "uses booking_option's interval time" do
-          booking_option = FactoryBot.create(:booking_option, user: shop.user, interval: 15)
-          booking_page = FactoryBot.create(:booking_page, user: shop.user)
-
-          params[:booking_option_id] = booking_option.id
-          params[:customers_list] = [
-            {
-              customer_id: customer.id,
-              state: "pending",
-              booking_option_id: booking_option.id,
-              booking_page_id: booking_page.id
-            }
-          ]
-
-          result = outcome.result
-
-          reservation_staff = result.reservation_staffs.first
-          expect(result.prepare_time).to eq(start_time - booking_option.interval.minutes)
-          expect(reservation_staff.prepare_time).to eq(result.prepare_time)
-          expect(reservation_staff.work_start_at).to eq(result.start_time)
-          expect(reservation_staff.work_end_at).to eq(result.end_time)
-          expect(reservation_staff.ready_time).to eq(result.ready_time)
-          expect(result.ready_time).to eq(end_time + booking_option.interval.minutes)
-
-          reservation_customer = result.reservation_customers.first
-          expect(reservation_customer.customer_id).to eq(customer.id)
-          expect(reservation_customer.booking_page_id).to eq(booking_page.id)
-          expect(reservation_customer.booking_option_id).to eq(booking_option.id)
-        end
-      end
-
       context "when there is only one menu" do
         it "staff's prepare time, work times and ready_time would be equal to reservation" do
           result = outcome.result
@@ -206,9 +178,9 @@ RSpec.describe Reservations::Save do
       end
 
       context "when reservation's staff is only current user staff(by_staff_id)" do
-        it "state is reserved" do
+        it "reservation staff's state is accepted" do
           result = outcome.result
-          expect(result).to be_reserved
+          expect(result).to be_pending
           expect(result.staff_ids).to eq([staff.id])
 
           reservation_staff = result.reservation_staffs.reload.first
@@ -217,13 +189,67 @@ RSpec.describe Reservations::Save do
       end
 
       context "when reservation's staffs are not only current user staff(by_staff_id)" do
-        let(:by_staff) { FactoryBot.create(:staff, shop: shop, user: shop.user) }
+        let(:by_staff) { FactoryBot.create(:staff, shop: shop, user: user) }
         let(:new_reseravtion) { FactoryBot.create(:reservation, :pending) }
 
         it "state is pending" do
           expect(outcome.result).to be_pending
           expect(outcome.result.staff_ids).to eq([staff.id])
         end
+      end
+
+      context "when all reservation staffs and customers accepted" do
+        let(:customers_list) do
+          [
+            {
+              customer_id: customer.id.to_s,
+              state: "accepted"
+            },
+            {
+              customer_id: FactoryBot.create(:customer, user: user).id,
+              state: "canceled"
+            }
+          ]
+        end
+
+        it "reservation state is reserved" do
+          result = outcome.result
+          expect(result).to be_reserved
+          expect(result.staff_ids).to eq([staff.id])
+
+          reservation_staff = result.reservation_staffs.reload.first
+          expect(reservation_staff).to be_accepted
+
+          first_reservation_customer = result.reservation_customers.reload.first
+          expect(first_reservation_customer).to be_accepted
+
+          last_reservation_customer = result.reservation_customers.reload.last
+          expect(last_reservation_customer).to be_canceled
+        end
+      end
+    end
+
+    context "count_of_customers doesn't contains canceled" do
+      let(:customers_list) do
+        [
+          {
+            customer_id: customer.id.to_s,
+            state: "pending"
+          },
+          {
+            customer_id: FactoryBot.create(:customer, user: user).id,
+            state: "accepted"
+          },
+          {
+            customer_id: FactoryBot.create(:customer, user: user).id,
+            state: "canceled"
+          }
+        ]
+      end
+
+      it "updates count_of_customers" do
+        result = outcome.result
+        expect(result.count_of_customers).to eq(2)
       end
     end
   end

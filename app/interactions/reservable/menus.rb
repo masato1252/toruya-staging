@@ -48,7 +48,7 @@ module Reservable
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
         elsif menu.min_staffs_number == 1
           if reservations.any? { |reservation|
-            reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
+            reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.active.count
           }
 
           Options::MenuOption.new(id: menu.id, name: menu.display_name,
@@ -59,7 +59,7 @@ module Reservable
           if reservations.any? { |reservation|
             staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.find_by(menu: menu).max_customers }.min
 
-            staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
+            staffs_max_customer >= number_of_customer + reservation.reservation_customers.active.count
           }
 
           Options::MenuOption.new(id: menu.id, name: menu.display_name,

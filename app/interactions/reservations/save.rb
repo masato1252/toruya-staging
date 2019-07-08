@@ -40,19 +40,7 @@ module Reservations
     end
 
     def execute
-      other_staff_ids_changes = []
-
       reservation.transaction do
-        # notify non current staff
-        other_staff_ids_changes = params[:menu_staffs_list].map {|h| h[:staff_id] }.flatten.find_all { |staff_id| staff_id.to_s != params[:by_staff_id].to_s }
-
-        if other_staff_ids_changes.present?
-          params.merge!(aasm_state: "pending")
-        else
-          # staffs create a reservation for themselves
-          params.merge!(aasm_state: "reserved")
-        end
-
         menu_staffs_list = params.delete(:menu_staffs_list)
         customers_list = params.delete(:customers_list)
         booking_option_id = params.delete(:booking_option_id)
@@ -69,16 +57,8 @@ module Reservations
           end
         )
 
-        if booking_option_id
-          reservation.build_reservation_booking_option(booking_option_id: booking_option_id)
-          booking_option = shop.user.booking_options.find(booking_option_id)
-
-          reservation.ready_time = reservation.end_time + booking_option.interval.minutes
-          reservation.prepare_time = reservation.start_time - booking_option.interval.minutes
-        else
-          reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
-          reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
-        end
+        reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
+        reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
 
         unless reservation.update(params)
           errors.merge!(reservation.errors)
@@ -101,21 +81,6 @@ module Reservations
               ready_time: time_result[:ready_time]
             )
           end
-          # menu_staffs_list.each do |h|
-          #   is_first_menu = h[:position] == 0
-          #   is_last_menu = h[:position] + 1 == menus_number
-          #
-          #   reservation.reservation_staffs.create(
-          #     menu_id: h[:menu_id],
-          #     staff_id: h[:staff_id],
-          #     # If the new staff ids includes current user staff, the staff accepted the reservation automatically
-          #     state: h[:state] || h[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending,
-          #     prepare_time: is_first_menu ? reservation.prepare_time : (h[:work_start_at] || reservation.prepare_time),
-          #     work_start_at: h[:work_start_at] || reservation.start_time,
-          #     work_end_at: h[:work_end_at] || reservation.end_time,
-          #     ready_time: is_last_menu ? reservation.ready_time : (h[:work_end_at] || reservation.ready_time)
-          #   )
-          # end
         end
 
         if customers_list.present?
@@ -126,8 +91,8 @@ module Reservations
           end
         end
 
-        # TODO need to check all customers are accepted, too
         reservation.accept if reservation.accepted_by_all_staffs? && reservation.accepted_all_customers?
+        reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)

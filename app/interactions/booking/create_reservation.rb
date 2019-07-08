@@ -124,7 +124,20 @@ module Booking
               )
 
               if present_reservable_reservation_outcome.valid?
-                same_time_reservation.customers << customer
+                same_time_reservation.reservation_customers.create(
+                  customer_id: customer.id,
+                  state: "pending",
+                  booking_page_id: booking_page.id,
+                  booking_option_id: booking_option_id,
+                  booking_amount_cents: booking_option.amount.fractional,
+                  booking_amount_currency: booking_option.amount.currency.to_s,
+                  tax_include: booking_option.tax_include,
+                  booking_at: Time.current,
+                  details: {
+                    new_customer_info: new_customer_info.attributes.compact,
+                  }
+                )
+                same_time_reservation.count_of_customers = same_time_reservation.reservation_customers.active.count
                 same_time_reservation.pend!
                 reservation = same_time_reservation
                 break

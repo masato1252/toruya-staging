@@ -45,7 +45,7 @@ module Booking
                     valid_menus << {
                       menu_id: menu.id,
                       position: menu_position,
-                      menu_interval_time: booking_option.interval,
+                      menu_interval_time: menu.interval,
                       menu_required_time: booking_option_menu.required_time,
                       staff_id: staff_id,
                       state: "pending"

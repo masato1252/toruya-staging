@@ -147,7 +147,7 @@ module Reservable
             reservation_id: reservation_id,
             start_time: next_reservation_validation_start_time,
             end_time: next_reservation_validation_end_time).where("reservations.shop_id = ?", shop.id).exists?
-      errors.add(:business_time_range, "next_reservation_interval_overlap")
+        errors.add(:business_time_range, "next_reservation_interval_overlap")
       end
 
       # The interval time is enough for current reservation, but not enough for next reservation

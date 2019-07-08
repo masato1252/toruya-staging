@@ -37,10 +37,10 @@ RSpec.describe Booking::CreateReservation do
 
         expect(customer).to eq(customer)
 
-        expect(reservation.prepare_time).to eq(booking_start_at.advance(minutes: -booking_option.interval))
+        expect(reservation.prepare_time).to eq(booking_start_at.advance(minutes: -booking_option.menus.first.interval))
         expect(reservation.start_time).to eq(booking_start_at)
         expect(reservation.end_time).to eq(booking_end_at)
-        expect(reservation.ready_time).to eq(booking_end_at.advance(minutes: booking_option.interval))
+        expect(reservation.ready_time).to eq(booking_end_at.advance(minutes: booking_option.menus.last.interval))
         expect(reservation).to be_pending
 
         first_menu_reservation_staff = reservation.reservation_staffs.order_by_menu_position.first
@@ -157,6 +157,9 @@ RSpec.describe Booking::CreateReservation do
             args[:present_customer_info] = { "id": customer.id }
 
             present_reservation = FactoryBot.create(:reservation, :reserved, menus: booking_option.menus, shop: shop, start_time: booking_start_at)
+            FactoryBot.create(:reservation_customer, :accepted, reservation: present_reservation, customer: FactoryBot.create(:customer, user: user))
+            FactoryBot.create(:reservation_customer, :canceled, reservation: present_reservation, customer: FactoryBot.create(:customer, user: user))
+            FactoryBot.create(:reservation_customer, :pending, reservation: present_reservation, customer: FactoryBot.create(:customer, user: user))
 
             expect {
               outcome
@@ -172,6 +175,17 @@ RSpec.describe Booking::CreateReservation do
 
             expect(reservation).to eq(present_reservation)
             expect(reservation.customers).to include(customer)
+            expect(reservation.count_of_customers).to eq(reservation.customers.count)
+            expect(reservation.count_of_customers).to eq(reservation.reservation_customers.active.count)
+
+            reservation_customer = reservation.reservation_customers.last
+            expect(reservation_customer.customer).to eq(customer)
+            expect(reservation_customer.booking_amount).to eq(booking_option.amount)
+            expect(reservation_customer.booking_page).to eq(booking_page)
+            expect(reservation_customer.booking_option).to eq(booking_option)
+            expect(reservation_customer.tax_include).to eq(booking_option.tax_include)
+            expect(reservation_customer.booking_at).to be_present
+            expect(reservation_customer.details.new_customer_info).to eq({})
           end
         end
 

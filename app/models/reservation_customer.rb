@@ -24,7 +24,7 @@
 require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
-  belongs_to :reservation, counter_cache: :count_of_customers
+  belongs_to :reservation
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false
@@ -37,6 +37,8 @@ class ReservationCustomer < ApplicationRecord
   }
 
   monetize :booking_amount_cents, allow_nil: true
+
+  scope :active, -> { where.not(state: :canceled) }
 
   def customer_info
     CustomerInfo.new(details.new_customer_info)

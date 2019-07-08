@@ -49,9 +49,9 @@ class Reservation < ApplicationRecord
   has_many :reservation_menus, -> { order("position") }, dependent: :destroy
   has_many :menus, through: :reservation_menus, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
-  # TODO: Test if the count_of_customers work
-  has_many :reservation_customers, -> { where.not(state: :canceled) }, dependent: :destroy
-  has_many :customers, through: :reservation_customers
+  has_many :reservation_customers, dependent: :destroy
+  has_many :active_reservation_customers, -> { active }, dependent: :destroy, class_name: "ReservationCustomer"
+  has_many :customers, through: :active_reservation_customers
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.current) }
@@ -98,7 +98,7 @@ class Reservation < ApplicationRecord
   end
 
   def accepted_all_customers?
-    !reservation_staffs.pending.exists?
+    !reservation_customers.pending.exists?
   end
 
   ACTIONS = {
