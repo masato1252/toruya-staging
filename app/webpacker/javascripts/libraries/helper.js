@@ -20,21 +20,6 @@ const lengthValidator = required_length => (component, value) => {
   return value.length === required_length ? undefined : component.props.i18n.errors.wrong_length.replace(/%{count}/, required_length)
 }
 
-const emailPatten =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
-const emailFormatValidator = (component, value) => {
-  if (!value) return undefined;
-
-  return emailPatten.test(value) ? undefined : component.props.i18n.errors.invalid_email_format
-}
-
-const mustBeNumber = (component, value) => (isNaN(value) ? component.props.i18n.errors.not_a_number : undefined)
-
-const lengthValidator = required_length => (component, value) => {
-  if (!value) return undefined;
-
-  return value.length === required_length ? undefined : component.props.i18n.errors.wrong_length.replace(/%{count}/, required_length)
-}
-
 const greaterEqualThan = (number, key="") => (component, value) => {
   if (!value) return undefined;
 
