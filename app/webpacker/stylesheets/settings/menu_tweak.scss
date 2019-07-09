@@ -15,3 +15,22 @@
     }
   }
 }
+
+dl.body.menu-staff-option {
+  border-width: 0;
+  border-style: solid;
+  border-color: #DFDFDF;
+  background: #fff;
+  padding: 10px 20px;
+
+  dt,
+  dd {
+    display: table-cell;
+    padding-right: 10px;
+
+    input[type="number"] {
+      width: 50px;
+      margin-right: 10px;
+    }
+  }
+}

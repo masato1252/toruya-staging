@@ -1,13 +1,102 @@
 "use strict";
 
 import React from "react";
-import _ from "underscore";
+import { sortableContainer, sortableElement, sortableHandle } from "react-sortable-hoc";
+import arrayMove from "array-move";
+import _ from "lodash";
 import axios from "axios";
 
 import Select from "../../../shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
+import { DragHandle } from "../../../shared/components";
 
 var moment = require('moment-timezone');
+
+const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMaxCustomersHandler, sortIndex}) => (
+  <dl className="body menu-staff-option" key={`staff-${value.staffId}`}>
+    {
+      <input type="hidden" name="menu[staff_menus_attributes][][id]" value={value.id || ""} />
+    }
+
+    {
+      value.id && !value.checked ?
+      <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
+    }
+
+    <dt className="staff-name">
+      <DragHandle />
+      {value.name}
+    </dt>
+    <dd className="capability">
+      <input
+        type="checkbox"
+        className="BTNyesno"
+        name="menu[staff_menus_attributes][][staff_id]"
+        id={`staff-${value.staffId}`}
+        value={value.staffId}
+        data-name="staff-selection"
+        checked={value.checked}
+        onChange={staffCheckHandler}
+      />
+    </dd>
+    <dd>
+      {
+        value.checked ?
+        <input
+          type="hidden"
+          name="menu[staff_menus_attributes][][priority]"
+          value={value.priority}
+        /> : null
+      }
+      {
+        value.checked ?
+        <input type="number"
+          value={value.maxCustomers || ""}
+          data-name="max-customers"
+          data-staff-id={value.staffId}
+          onChange={staffMaxCustomersHandler}
+          name="menu[staff_menus_attributes][][max_customers]" /> : null
+      }
+      {
+        value.checked ? "人" : null
+      }
+    </dd>
+    <dd>
+      <a
+        href="#"
+        className="btn btn-symbol btn-orange"
+        data-value={value.staffId}
+        value={value.staffId}
+        onClick={staffCheckHandler}>
+        <i
+          className="fa fa-minus"
+          aria-hidden="true"
+          data-value={value.staffId}
+          value={value.staffId} >
+        </i>
+      </a>
+    </dd>
+  </dl>
+))
+
+const SortableOptionsList = sortableContainer(({staffOptions, staffCheckHandler, staffMaxCustomersHandler}) => {
+  const _this = this;
+
+  return (
+    <div>
+      {staffOptions.map((staffOption, index) => (
+        <SortableStaffOption
+          value={staffOption}
+          key={`option-${staffOption.staffId}-${index}`}
+          index={index}
+          sortIndex={index}
+          staffCheckHandler={staffCheckHandler}
+          staffMaxCustomersHandler={staffMaxCustomersHandler}
+        />
+      ))}
+    </div>
+  );
+});
 
 class SettingsMenuForm extends React.Component {
   constructor(props) {
@@ -100,9 +189,27 @@ class SettingsMenuForm extends React.Component {
   };
 
   _handleStaffCheck = (event) => {
-    this.selectedMenuStaffOption(event.target.value).checked = !this.selectedMenuStaffOption(event.target.value).checked
+    event.preventDefault()
+    const staffId = event.target.value || event.target.dataset.value
+    let selectedStaffOption = this.selectedMenuStaffOption(staffId)
 
-    this.setState({menuStaffsOptions: this.state.menuStaffsOptions})
+    selectedStaffOption.checked = !selectedStaffOption.checked
+
+    const newOrderStaffOptions = arrayMove(this.state.menuStaffsOptions, _.findIndex(this.state.menuStaffsOptions, (o) => { return o.staffId == staffId; }), -1)
+
+    let i = 0;
+    const newMenuStaffsOptions = newOrderStaffOptions.map((menuStaffsOption) => {
+      if (menuStaffsOption.checked) {
+        menuStaffsOption.priority = i++;
+      }
+      else {
+        menuStaffsOption.priority = null
+      }
+
+      return menuStaffsOption
+    })
+
+    this.setState({menuStaffsOptions: newMenuStaffsOptions})
   };
 
   _handleStaffMaxCustomers = (event) => {
@@ -177,7 +284,7 @@ class SettingsMenuForm extends React.Component {
                 type="text"
                 name="menu[name]"
                 data-name="name"
-                value={this.state.menu.name}
+                value={this.state.menu.name || ""}
                 onChange={this._handleMenuData}
                 />
             </dd>
@@ -191,7 +298,7 @@ class SettingsMenuForm extends React.Component {
                 type="text"
                 name="menu[short_name]"
                 data-name="short_name"
-                value={this.state.menu.short_name}
+                value={this.state.menu.short_name || ""}
                 onChange={this._handleMenuData}
                 />
             </dd>
@@ -261,7 +368,7 @@ class SettingsMenuForm extends React.Component {
                       type="checkbox"
                       name="menu[shop_menus_attributes][][shop_id]"
                       id={`shop-${menuShopOption.shopId}`}
-                      value={menuShopOption.shopId}
+                      value={menuShopOption.shopId || ""}
                       checked={menuShopOption.checked}
                       onChange={this._handleShopCheck}
                     />
@@ -278,7 +385,7 @@ class SettingsMenuForm extends React.Component {
                             type="number"
                             name="menu[shop_menus_attributes][][max_seat_number]"
                             data-shop-id={menuShopOption.shopId}
-                            value={menuShopOption.maxSeatNumber}
+                            value={menuShopOption.maxSeatNumber || ""}
                             onChange={this._handleShopMaxSeatNumber}
                           /> : null
                       }
@@ -317,7 +424,7 @@ class SettingsMenuForm extends React.Component {
                 type="date"
                 placeholder="開始日"
                 name="menu[menu_reservation_setting_rule_attributes][start_date]"
-                value={this.state.selectedReservationSettingRule.start_date}
+                value={this.state.selectedReservationSettingRule.start_date || ""}
                 data-name="start_date"
                 onChange={this._handleReservationSettingRuleChange}
                 />
@@ -329,7 +436,7 @@ class SettingsMenuForm extends React.Component {
               <input
                 type="hidden"
                 name="menu[menu_reservation_setting_rule_attributes][reservation_type]"
-                value={this.state.selectedReservationSettingRule.reservation_type}
+                value={this.state.selectedReservationSettingRule.reservation_type || ""}
                 />
 
               <div className="BTNselect" id="menuEnds">
@@ -380,7 +487,7 @@ class SettingsMenuForm extends React.Component {
                       size="3"
                       maxLength="3"
                       name="menu[menu_reservation_setting_rule_attributes][repeats]"
-                      value={this.state.selectedReservationSettingRule.repeats}
+                      value={this.state.selectedReservationSettingRule.repeats || ""}
                       data-name="repeats"
                       onChange={this._handleReservationSettingRuleChange}
                       /> {this.props.reservationEndingRuleRepeatingTimes}
@@ -434,55 +541,30 @@ class SettingsMenuForm extends React.Component {
         </div>
 
         <h3>対応従業員</h3>
+        <div>オンライン予約の際は、上から順にスタッフが予約に割り当てられます。</div>
         <div id="customize-table" className="formRow menu-staffs-table table">
-            <ul className="tableTTL">
-              <li className="staff-name">対応従業員</li>
-              <li className="match">対応</li>
-              <li>対応可能人数</li>
-            </ul>
-            {this.state.menuStaffsOptions.map(function(menuStaffOption) {
-              return(
-                <dl className="body" key={`staff-${menuStaffOption.staffId}`}>
-                  {
-                    <input type="hidden" name="menu[staff_menus_attributes][][id]" value={menuStaffOption.id || ""} />
-                  }
-
-                  {
-                    menuStaffOption.id && !menuStaffOption.checked ?
-                    <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
-                  }
-
-                  <dt className="staff-name">{menuStaffOption.name}</dt>
-                  <dd className="capability">
-                    <input
-                      type="checkbox"
-                      className="BTNyesno"
-                      name="menu[staff_menus_attributes][][staff_id]"
-                      id={`staff-${menuStaffOption.staffId}`}
-                      value={menuStaffOption.staffId}
-                      data-name="staff-selection"
-                      checked={menuStaffOption.checked}
-                      onChange={this._handleStaffCheck}
-                    />
-                  <label htmlFor={`staff-${menuStaffOption.staffId}`}></label>
-                  </dd>
-                  <dd>
-                    {
-                      menuStaffOption.checked ?
-                        <input type="number"
-                           value={menuStaffOption.maxCustomers}
-                           data-name="max-customers"
-                           data-staff-id={menuStaffOption.staffId}
-                           onChange={this._handleStaffMaxCustomers}
-                           name="menu[staff_menus_attributes][][max_customers]" /> : null
-                    }
-                    {
-                      menuStaffOption.checked ? "人" : null
-                    }
-                  </dd>
-                </dl>
-              );
-            }.bind(this))}
+          <ul className="tableTTL">
+            <li className="staff-name">対応従業員</li>
+            <li className="match">対応</li>
+            <li>対応可能人数</li>
+          </ul>
+          <SortableOptionsList
+            useDragHandle
+            onSortEnd={this.onSortEnd}
+            staffOptions={this.renderSelectedStaffOptions()}
+            staffCheckHandler={this._handleStaffCheck}
+            staffMaxCustomersHandler={this._handleStaffMaxCustomers}
+          />
+          <dl>
+            <dt>
+              <Select
+                options={this.renderUnselectedStaffOptions()}
+                includeBlank={true}
+                onChange={this._handleStaffCheck}
+                blankOption={this.props.i18n.selectAStaff}
+              />
+            </dt>
+          </dl>
         </div>
 
         <ul id="footerav">
@@ -502,6 +584,23 @@ class SettingsMenuForm extends React.Component {
         </ul>
       </form>
     );
+  }
+
+  onSortEnd = ({oldIndex, newIndex}) => {
+    this.setState(({menuStaffsOptions}) => ({
+      menuStaffsOptions: arrayMove(menuStaffsOptions, oldIndex, newIndex).map((menuStaffsOption, i) => {
+        menuStaffsOption.priority = i
+        return menuStaffsOption
+      }),
+    }));
+  };
+
+  renderSelectedStaffOptions = () => {
+    return _.filter(this.state.menuStaffsOptions, (menuStaffsOption) => menuStaffsOption.checked)
+  }
+
+  renderUnselectedStaffOptions = () => {
+    return _.filter(this.state.menuStaffsOptions, (menuStaffsOption) => !menuStaffsOption.checked)
   }
 };
 
