@@ -452,7 +452,10 @@ en:
         display_name: Display name
         display_name_hint: Name your booking-price to show to your customer as menu
         menu_for_sale_label: Menu for sale
+        menu_restrict_dont_need_order: Staff will be assigned who can respond regardless of menu order.(Recommended)
+        menu_restrict_order: Staff will be assigned who can respond in the menu order.
         time_span_label: Reservation time
+        total_time: Total time
         reservation_interval: before and after reservation
         price_label: Price
         price: Catalog price

@@ -163,7 +163,9 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.booking_option_menus (
     id bigint NOT NULL,
     booking_option_id bigint NOT NULL,
-    menu_id bigint NOT NULL
+    menu_id bigint NOT NULL,
+    priority integer,
+    required_time integer
 );
 
 
@@ -196,7 +198,6 @@ CREATE TABLE public.booking_options (
     name character varying NOT NULL,
     display_name character varying,
     minutes integer NOT NULL,
-    "interval" integer NOT NULL,
     amount_cents numeric NOT NULL,
     amount_currency character varying NOT NULL,
     tax_include boolean NOT NULL,
@@ -204,7 +205,8 @@ CREATE TABLE public.booking_options (
     end_at timestamp without time zone,
     memo text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    menu_restrict_order boolean DEFAULT false NOT NULL
 );
 
 
@@ -873,6 +875,36 @@ ALTER SEQUENCE public.ranks_id_seq OWNED BY public.ranks.id;
 
 
 --
+-- Name: reservation_booking_options; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reservation_booking_options (
+    id bigint NOT NULL,
+    reservation_id bigint,
+    booking_option_id bigint
+);
+
+
+--
+-- Name: reservation_booking_options_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reservation_booking_options_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reservation_booking_options_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reservation_booking_options_id_seq OWNED BY public.reservation_booking_options.id;
+
+
+--
 -- Name: reservation_customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -881,7 +913,15 @@ CREATE TABLE public.reservation_customers (
     reservation_id integer NOT NULL,
     customer_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    booking_page_id integer,
+    booking_option_id integer,
+    state integer DEFAULT 0,
+    booking_amount_currency character varying,
+    booking_amount_cents numeric,
+    tax_include boolean,
+    booking_at timestamp without time zone,
+    details jsonb
 );
 
 
@@ -902,6 +942,38 @@ CREATE SEQUENCE public.reservation_customers_id_seq
 --
 
 ALTER SEQUENCE public.reservation_customers_id_seq OWNED BY public.reservation_customers.id;
+
+
+--
+-- Name: reservation_menus; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.reservation_menus (
+    id bigint NOT NULL,
+    reservation_id bigint,
+    menu_id bigint,
+    "position" integer,
+    required_time integer
+);
+
+
+--
+-- Name: reservation_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.reservation_menus_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: reservation_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.reservation_menus_id_seq OWNED BY public.reservation_menus.id;
 
 
 --
@@ -985,7 +1057,12 @@ CREATE TABLE public.reservation_staffs (
     staff_id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    state integer DEFAULT 0
+    state integer DEFAULT 0,
+    menu_id integer,
+    prepare_time timestamp without time zone,
+    work_start_at timestamp without time zone,
+    work_end_at timestamp without time zone,
+    ready_time timestamp without time zone
 );
 
 
@@ -1015,7 +1092,7 @@ ALTER SEQUENCE public.reservation_staffs_id_seq OWNED BY public.reservation_staf
 CREATE TABLE public.reservations (
     id integer NOT NULL,
     shop_id integer NOT NULL,
-    menu_id integer NOT NULL,
+    menu_id integer,
     start_time timestamp without time zone NOT NULL,
     end_time timestamp without time zone NOT NULL,
     ready_time timestamp without time zone NOT NULL,
@@ -1283,7 +1360,8 @@ CREATE TABLE public.staff_menus (
     menu_id integer NOT NULL,
     max_customers integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    priority integer
 );
 
 
@@ -1664,10 +1742,24 @@ ALTER TABLE ONLY public.ranks ALTER COLUMN id SET DEFAULT nextval('public.ranks_
 
 
 --
+-- Name: reservation_booking_options id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reservation_booking_options ALTER COLUMN id SET DEFAULT nextval('public.reservation_booking_options_id_seq'::regclass);
+
+
+--
 -- Name: reservation_customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reservation_customers ALTER COLUMN id SET DEFAULT nextval('public.reservation_customers_id_seq'::regclass);
+
+
+--
+-- Name: reservation_menus id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reservation_menus ALTER COLUMN id SET DEFAULT nextval('public.reservation_menus_id_seq'::regclass);
 
 
 --
@@ -1975,11 +2067,27 @@ ALTER TABLE ONLY public.ranks
 
 
 --
+-- Name: reservation_booking_options reservation_booking_options_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reservation_booking_options
+    ADD CONSTRAINT reservation_booking_options_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reservation_customers reservation_customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reservation_customers
     ADD CONSTRAINT reservation_customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: reservation_menus reservation_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.reservation_menus
+    ADD CONSTRAINT reservation_menus_pkey PRIMARY KEY (id);
 
 
 --
@@ -2350,6 +2458,20 @@ CREATE INDEX index_ranks_on_user_id ON public.ranks USING btree (user_id);
 
 
 --
+-- Name: index_reservation_booking_options_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_booking_options_on_booking_option_id ON public.reservation_booking_options USING btree (booking_option_id);
+
+
+--
+-- Name: index_reservation_booking_options_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_booking_options_on_reservation_id ON public.reservation_booking_options USING btree (reservation_id);
+
+
+--
 -- Name: index_reservation_customers_on_reservation_id_and_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2357,10 +2479,17 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 
 
 --
--- Name: index_reservation_staffs_on_reservation_id_and_staff_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_reservation_menus_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_reservation_staffs_on_reservation_id_and_staff_id ON public.reservation_staffs USING btree (reservation_id, staff_id);
+CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
+
+
+--
+-- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reservation_menus_on_reservation_id ON public.reservation_menus USING btree (reservation_id);
 
 
 --
@@ -2574,6 +2703,13 @@ CREATE INDEX reservation_index ON public.reservations USING btree (shop_id, aasm
 
 
 --
+-- Name: reservation_menu_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reservation_menu_index ON public.reservation_menus USING btree (reservation_id, menu_id);
+
+
+--
 -- Name: reservation_setting_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2585,6 +2721,13 @@ CREATE INDEX reservation_setting_index ON public.reservation_settings USING btre
 --
 
 CREATE INDEX reservation_setting_menus_index ON public.reservation_setting_menus USING btree (reservation_setting_id, menu_id);
+
+
+--
+-- Name: reservation_staff_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reservation_staff_index ON public.reservation_staffs USING btree (reservation_id, menu_id, staff_id, prepare_time, work_start_at, work_end_at, ready_time);
 
 
 --
@@ -2761,6 +2904,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190409065338'),
 ('20190410073550'),
 ('20190420050353'),
-('20190612074957');
+('20190612074957'),
+('20190612142854'),
+('20190622101709'),
+('20190623050322'),
+('20190624001252'),
+('20190630004604'),
+('20190630055440'),
+('20190707082104');
 
 

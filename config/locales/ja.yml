@@ -674,7 +674,10 @@ ja:
         display_name: 表示名
         display_name_hint: あなたのお客様がご予約の際にメニューとして表示される名前です。
         menu_for_sale_label: 販売メニュー
+        menu_restrict_dont_need_order: メニュー順序にこだわらず対応できるスタッフを割り振る。（推奨）
+        menu_restrict_order: 設定されたメニュー順序で対応できるスタッフを割り振る。
         time_span_label: 予約時間
+        total_time: 合計時間
         reservation_interval: 予約の前後
         price_label: 販売予定価格
         price: 定価

@@ -3,7 +3,6 @@ FactoryBot.define do
     association :user
     name { Faker::Lorem.word }
     minutes { 60 }
-    interval { 10 }
     amount { 1000.to_money(:jpy) }
     tax_include { true }
     start_at_date_part { "2016-06-08" }

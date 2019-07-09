@@ -41,3 +41,9 @@ textarea {
   padding: 8px;
   font-size: 16px;
 }
+
+.drag-handler {
+  padding: 8px 16px;
+  vertical-align: top;
+  cursor: row-resize;
+}
