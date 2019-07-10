@@ -271,11 +271,14 @@ module Reservable
     end
 
     def validate_other_shop_reservation(staff)
+      # all the staffs connected with this user
+      related_staff_ids = staff.staff_account.user.staff_accounts.pluck(:staff_id)
+
       other_shop_reservation_exist = ReservationStaff.joins(reservation: :menu).
         where.not(reservation_id: reservation_id.presence).
         where.not("reservations.aasm_state": "canceled").
         where("reservations.deleted_at": nil).
-        where("reservation_staffs.staff_id": staff.id).
+        where("reservation_staffs.staff_id": related_staff_ids).
         where("reservations.shop_id != ?", shop.id).
         where("reservations.start_time > ? and reservations.end_time < ?", beginning_of_day, end_of_day).exists?
 
