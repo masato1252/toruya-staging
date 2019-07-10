@@ -40,7 +40,7 @@ FactoryBot.define do
     end
 
     after(:create) do |option, proxy|
-      proxy.menus.each do |menu|
+      Array.wrap(proxy.menus).each do |menu|
         FactoryBot.create(:booking_option_menu, booking_option: option, menu: menu)
       end
     end

@@ -38,12 +38,19 @@ class BookingPageSettings extends React.Component {
         updates: async (value, name, allValues) => {
           return await this.calculateBookingTimes(allValues);
         }
+      },
+      {
+        field: /shop_id/,
+        updates: async (value, name, allValues) => {
+          return await this.fetchAvailableBookingOptions(allValues);
+        }
       }
     )
   };
 
   componentDidMount = () => {
     this.initBookingTimes()
+    this.initAvailableBookingOptions()
   }
 
   initBookingTimes = async () => {
@@ -94,7 +101,7 @@ class BookingPageSettings extends React.Component {
     const { menu_time_span, menu_interval, minute } = this.props.i18n;
 
     return (
-      <div className="result-fields">
+      <div className="result-fields booking-options-result">
         {fields.map((field, index) => {
           return (
             <div key={`${collection_name}-${index}`} className="result-field">
@@ -136,6 +143,10 @@ class BookingPageSettings extends React.Component {
                  </Field>
                 </div>
               </div>
+              <Error
+                name={field}
+                touched_required={false}
+              />
            </div>
           )
          })}
@@ -145,6 +156,7 @@ class BookingPageSettings extends React.Component {
 
   renderBookingOptionFields = () => {
     const { required_label, booking_option_header, select_a_booking_option, booking_option_hint } = this.props.i18n;
+    const { available_booking_options } = this.booking_page_settings_values.booking_page;
 
     return (
       <div>
@@ -156,7 +168,7 @@ class BookingPageSettings extends React.Component {
               collection_name="booking_page[options]"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedBookingOptionFields}
-              options={this.props.booking_options}
+              options={available_booking_options}
               selectLabel={select_a_booking_option}
               hint={booking_option_hint}
               />
@@ -581,6 +593,7 @@ class BookingPageSettings extends React.Component {
     fields_errors.booking_page = {};
     const {
       shop_id,
+      available_booking_options,
       options,
       start_at_type,
       start_at_date_part,
@@ -589,7 +602,7 @@ class BookingPageSettings extends React.Component {
       end_at_date_part,
       end_at_time_part,
       had_special_date,
-      special_dates
+      special_dates,
     } = values.booking_page || {};
 
     if (!options.length) {
@@ -638,6 +651,18 @@ class BookingPageSettings extends React.Component {
       }
     }
 
+    if (options.length && available_booking_options.length) {
+      const available_booking_option_ids = _.map(available_booking_options, (available_booking_option) => available_booking_option.id)
+      const shop_name = this.props.shop_options.find((shop_option) => shop_option.value == shop_id).label
+
+      options.forEach((option, i) => {
+        if (!_.includes(available_booking_option_ids, option.id)) {
+          fields_errors.booking_page.options = fields_errors.booking_page.options || []
+          fields_errors.booking_page.options[i] = form_errors.unavailable_booking_option.replace("{shop_name}", shop_name)
+        }
+      })
+    }
+
     return Object.keys(fields_errors.booking_page).length ? fields_errors : this.throttleVerifySpecialDates(values);
   };
 
@@ -672,8 +697,8 @@ class BookingPageSettings extends React.Component {
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
 
               {this.renderNameFields()}
-              {this.renderBookingOptionFields()}
               {this.renderShopFields()}
+              {this.renderBookingOptionFields()}
               {this.renderBookingDateFields(values)}
               {this.renderBookingIntervalFields()}
               {this.renderBookingPeriodFields()}
@@ -700,6 +725,41 @@ class BookingPageSettings extends React.Component {
         }}
       />
     )
+  }
+
+  initAvailableBookingOptions = async () => {
+    const options = await this.fetchAvailableBookingOptions(this.booking_page_settings_values);
+
+    this.booking_page_settings_form.change("booking_page[available_booking_options]", options["booking_page[available_booking_options]"])
+  }
+
+  fetchAvailableBookingOptions = async (allValues) => {
+    const { shop_id } = allValues.booking_page;
+
+    if (this.fetchAvailableBookingOptionsCall) {
+      this.fetchAvailableBookingOptionsCall.cancel();
+    }
+    this.fetchAvailableBookingOptionsCall= axios.CancelToken.source();
+
+    if (!shop_id) {
+      return {
+        "booking_page[available_booking_options]": []
+      }
+    }
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.booking_options,
+      params: {
+        shop_id: shop_id
+      },
+      responseType: "json",
+      cancelToken: this.fetchAvailableBookingOptionsCall.token
+    })
+
+    return {
+      "booking_page[available_booking_options]": response.data.available_booking_options
+    }
   }
 }
 

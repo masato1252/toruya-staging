@@ -31,4 +31,18 @@ module SettingsHelper
 
     link_to(t("settings.booking_page.share_button_text"), booking_url(page), style: style, target: "_blank")
   end
+
+  def booking_option_item(booking_option)
+    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
+
+    Option.new(
+      id: booking_option.id,
+      name: booking_option.display_name,
+      minutes: booking_option.minutes,
+      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
+      start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
+      end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
+      memo: booking_option.memo
+    )
+  end
 end
