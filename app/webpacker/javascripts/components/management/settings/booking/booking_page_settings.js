@@ -80,8 +80,10 @@ class BookingPageSettings extends React.Component {
             name="booking_page[title]"
             component={InputRow}
             type="text"
+            validate={(value) => requiredValidation(this, value, title)}
             label={title}
             hint={title_hint}
+            requiredLabel={required_label}
           />
 
           <Field
