@@ -64,7 +64,7 @@ FactoryBot.define do
         FactoryBot.create(:booking_page_option, booking_page: page, booking_option: option)
       end
 
-      option.update_columns(minutes: proxy.menus.sum(&:minutes) )
+      option.update_columns(minutes: Array.wrap(proxy.menus).sum(&:minutes) )
     end
   end
 end

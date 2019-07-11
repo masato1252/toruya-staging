@@ -428,7 +428,7 @@ RSpec.describe Reservable::Reservation do
 
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
-                                                  menu_ids: [menu1.id, menu2.id],
+                                                  menu_id: menu1.id,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
