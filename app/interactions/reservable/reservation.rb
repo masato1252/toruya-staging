@@ -273,8 +273,11 @@ module Reservable
     end
 
     def validate_other_shop_reservation(staff)
+      # all the staffs connected with this user
+      related_staff_ids = staff.staff_account.user.staff_accounts.pluck(:staff_id)
+
       other_shop_reservation_exist = ReservationStaff.
-        overlap_reservations_scope(staff_ids: staff.id, reservation_id: reservation_id).
+        overlap_reservations_scope(staff_ids: related_staff_ids, reservation_id: reservation_id).
         where("reservations.shop_id != ?", shop.id).
         where("reservation_staffs.work_start_at > ? and reservation_staffs.work_end_at < ?", beginning_of_day, end_of_day).exists?
 

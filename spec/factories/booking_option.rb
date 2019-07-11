@@ -48,7 +48,7 @@ FactoryBot.define do
     end
 
     after(:create) do |option, proxy|
-      proxy.menus.each.with_index do |menu, index|
+      Array.wrap(proxy.menus).each.with_index do |menu, index|
         FactoryBot.create(:booking_option_menu, booking_option: option, menu: menu, priority: index)
 
         Array.wrap(proxy.shops).each do |shop|

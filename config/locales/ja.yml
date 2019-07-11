@@ -753,6 +753,7 @@ ja:
         form_errors:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
+          unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
   constants:
     rank:
       regular: "一般"

@@ -100,6 +100,18 @@ class Settings::BookingPagesController < SettingsController
     end
   end
 
+  def booking_options
+    options = BookingPages::AvailableBookingOptions.run!(
+      shop: super_user.shops.find(params[:shop_id])
+    )
+
+    user_booking_options = options.map do |option|
+      view_context.booking_option_item(option)
+    end
+
+    render json: { available_booking_options: view_context.custom_options(user_booking_options) }
+  end
+
   private
 
   def authorize_booking_page

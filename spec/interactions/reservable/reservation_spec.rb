@@ -418,6 +418,26 @@ RSpec.describe Reservable::Reservation do
           expect(other_shop_error).to eq(error: :other_shop)
         end
 
+        # XXX: A staff's represent a user and this user might work for different owner
+        #      So any existing reservation need to be checked whatever the owner
+        context "when the existing reservation is not under current staff's user" do
+          let!(:reservation) do
+            other_owner_staff = FactoryBot.create(:staff_account, user: staff2.staff_account.user).staff
+            FactoryBot.create(:reservation, staffs: [other_owner_staff], start_time: time_range.first, end_time: time_range.last)
+          end
+
+          it "is invalid" do
+            outcome = Reservable::Reservation.run(shop: shop, date: date,
+                                                  menu_ids: [menu1.id, menu2.id],
+                                                  business_time_range: time_range,
+                                                  staff_ids: [staff1.id, staff2.id])
+
+            expect(outcome).to be_invalid
+            other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :other_shop }
+            expect(other_shop_error).to eq(error: :other_shop)
+          end
+        end
+
         context "when reservation is canceled" do
           before do
             FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)

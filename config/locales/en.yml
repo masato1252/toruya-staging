@@ -533,6 +533,7 @@ en:
         form_errors:
           start_at_too_late: Based on your setting, it should be before {datetime}
           end_at_too_early: Based on your setting, it should be after {datetime}
+          unavailable_booking_option: Some prices sells unavailable menu for {shop_name}
   constants:
     rank:
       regular: "Regular"

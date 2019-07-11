@@ -118,6 +118,6 @@ export {
   Radio,
   Error,
   Condition,
+  ErrorMessage,
   DragHandle,
-  ErrorMessage
 };
