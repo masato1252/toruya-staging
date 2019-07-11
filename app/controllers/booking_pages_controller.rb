@@ -78,7 +78,7 @@ class BookingPagesController < ActionController::Base
       render json: {
         status: "failed",
         errors: {
-          message: "error_message"
+          message: I18n.t("booking_page.message.booking_failed_messsage_html")
         }
       }
     else
@@ -86,7 +86,7 @@ class BookingPagesController < ActionController::Base
         status: "failed",
         customer_info: customer&.persisted? ? view_context.customer_info_as_json(customer) : {},
         errors: {
-          message: "error_message"
+          message: I18n.t("booking_page.message.booking_failed_messsage_html")
         }
       }
     end

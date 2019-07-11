@@ -654,8 +654,31 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  renderBookingFailedArea = () => {
+    const {
+      booking_failed,
+      booking_failed_message
+    } = this.booking_reservation_form_values;
+    const { reset_button } = this.props.i18n;
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
+
+    if (!booking_failed) return;
+
+    return (
+      <div className="booking-failed-message">
+        <ErrorMessage error={booking_failed_message} />
+        {
+          (!is_single_option || !is_single_booking_time) &&
+          <button onClick={this.resetBookingFailedValues} className="btn btn-orange reset">
+            {reset_button}
+          </button>
+        }
+      </div>
+    )
+  }
+
   renderBookingReservationButton = () => {
-    const { regular } = this.booking_reservation_form_values;
+    const { regular, booking_failed } = this.booking_reservation_form_values;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -683,6 +706,7 @@ class BookingReservationForm extends React.Component {
             this.props.i18n.confirm_reservation
           )}
         </button>
+        {this.renderBookingFailedArea()}
       </div>
     )
   }
@@ -1139,14 +1163,23 @@ class BookingReservationForm extends React.Component {
 
     this.bookingReserationLoading = null;
 
-    if (response.data.status === "successful") {
+    const { status, customer_info, errors } = response.data;
+
+    if (status === "successful") {
       this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
     }
-    else if (response.data.status === "failed") {
-      if (response.data.customer_info && Object.keys(response.data.customer_info).length) {
-        this.booking_reservation_form.change("booking_reservation_form[customer_info]", response.data.customer_info)
-        this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", response.data.customer_info)
+    else if (status === "failed") {
+      if (customer_info && Object.keys(customer_info).length) {
+        this.booking_reservation_form.change("booking_reservation_form[customer_info]", customer_info)
+        this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", customer_info)
         this.booking_reservation_form.change("booking_reservation_form[found_customer]", true)
+      }
+
+      this.booking_reservation_form.change("booking_reservation_form[booking_failed]", true)
+
+      if (errors) {
+        this.booking_reservation_form.change("booking_reservation_form[booking_failed_message]", errors.message)
+        setTimeout(() => this.scrollToTarget("footer"), 200)
       }
     }
   };
@@ -1175,6 +1208,24 @@ class BookingReservationForm extends React.Component {
     ])
   }
 
+  resetBookingFailedValues = () => {
+    const { is_single_option, is_single_booking_time } = this.props.booking_page
+
+    if (is_single_option && is_single_booking_time) {
+      return;
+    }
+    else if (is_single_option) {
+      this.resetValues([
+        "booking_date",
+        "booking_at",
+        "booking_times"
+      ])
+    }
+    else {
+      this.resetFlowValues();
+    }
+  }
+
   resetValues = (fields) => {
     let newBaokingForm = {}
 
@@ -1192,6 +1243,8 @@ class BookingReservationForm extends React.Component {
 
       this.booking_reservation_form.change(`booking_reservation_form[${field}]`, resetValue)
     })
+
+    this.booking_reservation_form.change("booking_reservation_form[booking_failed]", null)
 
     return {};
   }
@@ -1249,7 +1302,9 @@ class BookingReservationForm extends React.Component {
   }
 
   scrollToTarget = (target_id) => {
-    document.getElementById(target_id).scrollIntoView();
+    if (document.getElementById(target_id)) {
+      document.getElementById(target_id).scrollIntoView();
+    }
   }
 }
 

@@ -29,8 +29,10 @@ ja:
     booking_end_at: end at
     thanks_for_come_back: Thank you for coming back
     please_select_a_menu: Please select a menu
+    reset_button: Start Over
     message:
       unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
+      booking_failed_messsage_html: Time and menu you chose is full.<br>Please try another option.
     done:
       title: Temporary reservation has been made
       message1: Reservation detail has been
