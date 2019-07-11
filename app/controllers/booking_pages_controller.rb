@@ -9,7 +9,7 @@ class BookingPagesController < ActionController::Base
       @customer = @booking_page.user.customers.find(cookies[:booking_customer_id]).with_google_contact
     end
 
-    @is_single_booking_option = @booking_page.booking_page_options.count == 1
+    @is_single_booking_option = @booking_page.booking_options.active.count == 1
 
     if @is_single_booking_option
       is_single_special_date = @booking_page.booking_page_special_dates.count == 1
@@ -44,7 +44,6 @@ class BookingPagesController < ActionController::Base
         end
       end
     end
-
   end
 
   def booking_reservation
