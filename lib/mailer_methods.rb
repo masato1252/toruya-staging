@@ -16,7 +16,7 @@ module MailerMethods
             if locale == :ja
               render action_name
             else
-              render "#{action_name}_#{locale}", layout: "mailer_#{locale}"
+              render "#{action_name}_#{locale}", layout: self.class._layout ? "#{self.class._layout}_#{locale}" : false
             end
           end
         end

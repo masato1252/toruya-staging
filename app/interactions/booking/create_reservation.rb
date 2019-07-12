@@ -259,7 +259,20 @@ module Booking
 
         if customer && reservation
           # XXX: Use the phone_number using at booking time
-          ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
+          if phone_number.present?
+            ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
+          end
+
+          # XXX: Use the email using at booking time
+          if email.present?
+            BookingMailer.with(
+              customer: customer,
+              reservation: reservation,
+              booking_page: booking_page,
+              booking_option: booking_option,
+              email: email
+            ).customer_reservation_notification.deliver_later
+          end
         end
 
         {
@@ -329,6 +342,14 @@ module Booking
         customer_info["phone_number"]
       else
         customer_phone_number
+      end
+    end
+
+    def email
+      if customer_info.present?
+        customer_info["email"]
+      else
+        customer_email
       end
     end
   end

@@ -46,3 +46,6 @@ ja:
       signup_now: Signup Now!
     notifications:
       sms: "To %{customer_name}\n You just booked %{shop_name} for %{booking_time} remporarily\n Please contact %{shop_phone_number} for changes"
+    booking_mailer:
+      customer_reservation_notification:
+        title: "You've just booked %{shop_name}"

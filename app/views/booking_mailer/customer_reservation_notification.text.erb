@@ -1,0 +1,32 @@
+<%= line %>
+
+■ <%= @shop.display_name %> ■
+
+<%= line %>
+
+■　仮予約が完了しました　■
+
+<%= line %>
+
+<%= @customer.name %> 様
+
+この度は、<%= @shop.display_name %>の<%= @booking_page.title %>をご利用いただきまして、誠にありがとうございます。
+
+以下の通り、<%= @shop.display_name %>への仮予約が完了いたしました。
+スタッフによる承認作業が完了いたしますまでお待ちください。
+
+ご予約日時：
+<%= I18n.l(@reservation.start_time, format: :date) %>
+<%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
+
+予約価格：
+<%= @booking_option.display_name %>
+<%= @price %>
+
+ご予約内容の変更・キャンセルは <%= @shop.phone_number %> までご連絡ください。
+
+<%= line %>
+
+■ <%= @shop.name %> ■
+
+<%= line %>
