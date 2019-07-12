@@ -4,7 +4,7 @@
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
     <p>
-      <%= link_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleでログイン" do %>
+      <%= button_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleでログイン" do %>
         <i class="fa fa-google" aria-hidden="true"></i>Googleでログイン
       <% end %>
     </p>
