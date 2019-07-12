@@ -72,7 +72,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.8.2.tgz#576ff7fb1230185b619a75d258cbc98f0867a8dc"
   integrity sha512-rLu3wcBWH4P5q1CGoSSH/i9hrXs7SlbRLkoq9IGuoPYNGQvDJ3pt/wmOM+XgYjIDRMVIdkUWt0RsfzF50JfnCw==
 
-"@rails/webpacker@^3.0.2":
+"@rails/webpacker@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@rails/webpacker/-/webpacker-3.6.0.tgz#89f50421934a40cad7193cd62756a18fa5027251"
   integrity sha512-QlEPgdi++lBjc2rGp2s3hhT9vbhskeMSpHWOxVnpoMjIspTvjSyRWBV8t15d9M4cy5W5Zxlt87aVce7gVI4lFA==
