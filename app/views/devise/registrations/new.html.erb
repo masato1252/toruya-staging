@@ -5,7 +5,7 @@
     <p>Toruyaのご利用にはGoogleアカウントが必要です。既にお持ちのGoogleアカウントを使うことで、より安全にToruyaをご利用いただけます。</p>
 
     <p>
-      <%= link_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleで登録" do %>
+      <%= button_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleで登録" do %>
         <i class="fa fa-google" aria-hidden="true"></i>Googleで登録
       <% end %>
     </p>
