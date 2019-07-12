@@ -61,4 +61,5 @@ ja:
     booking_mailer:
       customer_reservation_notification:
         title: "%{shop_name}の仮予約が完了しました"
-
+      shop_owner_reservation_booked_notification:
+        title: 新しいオンライン予約があります

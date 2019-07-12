@@ -49,3 +49,5 @@ ja:
     booking_mailer:
       customer_reservation_notification:
         title: "You've just booked %{shop_name}"
+      shop_owner_reservation_booked_notification:
+        title: New reservation has made from online

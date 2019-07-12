@@ -1,0 +1,13 @@
+■新規オンライン予約があります■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+<%= @booking_page.title %>より新しいご予約が入りました。
+
+以下のご予約について、速やかにご確認をお願いします。
+
+<%= I18n.l(@reservation.start_time, format: :date_with_wday) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
+<%= date_member_url(@reservation.start_time.to_s(:date), @reservation.id) %>
+<%= @customer.name %>が<%= @booking_option.display_name %>で<%= I18n.l(@reservation_customer.booking_at, format: :date_with_wday) %>に作成

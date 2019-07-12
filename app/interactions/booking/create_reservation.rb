@@ -273,6 +273,13 @@ module Booking
               email: email
             ).customer_reservation_notification.deliver_later
           end
+
+          BookingMailer.with(
+            customer: customer,
+            reservation: reservation,
+            booking_page: booking_page,
+            booking_option: booking_option,
+          ).shop_owner_reservation_booked_notification.deliver_later
         end
 
         {
