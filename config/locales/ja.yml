@@ -896,7 +896,8 @@ ja:
     am: AM
     formats:
       default: "%Y/%m/%d %H:%M"
-      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      date_with_wday: "%Y/%m/%d(%a) %H:%M"
+      time_only: "%H:%M"
       standard: "%Y-%m-%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"

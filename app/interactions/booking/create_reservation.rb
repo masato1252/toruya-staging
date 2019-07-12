@@ -13,7 +13,59 @@ module Booking
     string :customer_phonetic_first_name, default: nil
     string :customer_phone_number, default: nil
     string :customer_email, default: nil
-    hash :customer_info, strip: false, default: nil
+    # customer_info format might like
+    # {
+    #   id: customer_with_google_contact&.id,
+    #   first_name: customer_with_google_contact&.first_name,
+    #   last_name: customer_with_google_contact&.last_name,
+    #   phonetic_first_name: customer_with_google_contact&.phonetic_first_name,
+    #   phonetic_last_name: customer_with_google_contact&.phonetic_last_name,
+    #   phone_number: params[:customer_phone_number] || cookies[:booking_customer_phone_number],
+    #   phone_numbers: customer_with_google_contact&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
+    #   email: customer_with_google_contact&.primary_email&.value&.address,
+    #   emails: customer_with_google_contact&.emails&.map { |email| email.value.address },
+    #   simple_address: customer_with_google_contact&.address,
+    #   full_address: customer_with_google_contact&.display_address,
+    #   address_details: customer_with_google_contact&.primary_address&.value,
+    #   original_address_details: customer_with_google_contact&.primary_address&.value
+    # }
+    hash :customer_info, strip: false, default: nil do
+      integer :id, default: nil
+      string :last_name, default: nil
+      string :first_name, default: nil
+      string :phonetic_last_name, default: nil
+      string :phonetic_first_name, default: nil
+      string :phone_number, default: nil
+      array :phone_numbers, default: nil do
+        string
+      end
+
+      string :email, default: nil
+      array :emails, default: nil do
+        string
+      end
+
+      string :simple_address, default: nil
+      string :full_address, default: nil
+      hash :address_details, default: nil, strip: false do
+        string :formatted_address, default: nil
+        boolean :primary, default: nil
+        string :postcode, default: nil
+        string :city, default: nil
+        string :region, default: nil
+        string :street, default: nil
+      end
+
+      hash :original_address_details, default: nil, strip: false do
+        string :formatted_address, default: nil
+        boolean :primary, default: nil
+        string :postcode, default: nil
+        string :city, default: nil
+        string :region, default: nil
+        string :street, default: nil
+      end
+    end
+    # present_customer_info and customer_info format is the same
     hash :present_customer_info, strip: false, default: nil
 
     validate :validates_enough_customer_data
@@ -124,21 +176,24 @@ module Booking
               )
 
               if present_reservable_reservation_outcome.valid?
-                same_time_reservation.reservation_customers.create(
-                  customer_id: customer.id,
-                  state: "pending",
-                  booking_page_id: booking_page.id,
-                  booking_option_id: booking_option_id,
-                  booking_amount_cents: booking_option.amount.fractional,
-                  booking_amount_currency: booking_option.amount.currency.to_s,
-                  tax_include: booking_option.tax_include,
-                  booking_at: Time.current,
-                  details: {
-                    new_customer_info: new_customer_info.attributes.compact,
-                  }
-                )
-                same_time_reservation.count_of_customers = same_time_reservation.reservation_customers.active.count
-                same_time_reservation.pend!
+                unless same_time_reservation.reservation_customers.where(customer: customer).exists?
+                  same_time_reservation.reservation_customers.create(
+                    customer_id: customer.id,
+                    state: "pending",
+                    booking_page_id: booking_page.id,
+                    booking_option_id: booking_option_id,
+                    booking_amount_cents: booking_option.amount.fractional,
+                    booking_amount_currency: booking_option.amount.currency.to_s,
+                    tax_include: booking_option.tax_include,
+                    booking_at: Time.current,
+                    details: {
+                      new_customer_info: new_customer_info.attributes.compact,
+                    }
+                  )
+                  same_time_reservation.count_of_customers = same_time_reservation.reservation_customers.active.count
+                  same_time_reservation.pend!
+                end
+
                 reservation = same_time_reservation
                 break
               else
@@ -202,6 +257,11 @@ module Booking
           end
         end
 
+        if customer && reservation
+          # XXX: Use the phone_number using at booking time
+          ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
+        end
+
         {
           customer: customer,
           reservation: reservation
@@ -262,6 +322,14 @@ module Booking
             email: customer_email
           )
         end
+    end
+
+    def phone_number
+      if customer_info.present?
+        customer_info["phone_number"]
+      else
+        customer_phone_number
+      end
     end
   end
 end
