@@ -723,6 +723,7 @@ ja:
         booking_dates_calendar_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         booking_dates_working_date: 営業日
         booking_dates_available_booking_date: 予約可能日
+        default_available_dates_label: 全ての予約可能日に受付ける
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_real_booking_time_explanation: 現在の設定内容と空席状況から、始めの４つ選択肢を表示しています。

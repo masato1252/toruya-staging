@@ -203,10 +203,7 @@ class BookingPageSettings extends React.Component {
       required_label,
       booking_dates_header,
       special_date_label,
-      booking_dates_calendar_hint,
-      booking_dates_working_date,
-      booking_dates_available_booking_date,
-      interval_real_booking_time_warning
+      default_available_dates_label
     } = this.props.i18n;
 
     return (
@@ -214,64 +211,29 @@ class BookingPageSettings extends React.Component {
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
           <dl>
-            <dd className="booking-calendar">
-              {booking_dates_calendar_hint}
-              <FormSpy subscription={{ values: true }}>
-                {({ values }) => {
-                  if (values.booking_page.had_special_date && !this.isSpecialDatesLegal(values.booking_page.special_dates)) {
-                    return null;
-                  }
-
-                  return (
-                    <Calendar
-                      {...this.props.calendar}
-                      scheduleParams={{
-                        shop_id: values.booking_page.shop_id,
-                        booking_option_ids: values.booking_page.options.map((option) => option.id),
-                        special_dates: values.booking_page.special_dates,
-                        overlap_restriction: values.booking_page.overlap_restriction,
-                        interval: values.booking_page.interval,
-                        had_special_date: values.booking_page.had_special_date
-                      }}
-                    />
-                  );
-                }}
-              </FormSpy>
-              <div className="demo-days">
-                <div className="demo-day day booking-available"></div>
-                {booking_dates_available_booking_date}
-                <div className="demo-day day workDay"></div>
-                {booking_dates_working_date}
+            <dd>
+              <div className="radio">
+                <Field name="booking_page[had_special_date]" type="radio" value="false" component={Radio}>
+                  {default_available_dates_label}
+                </Field>
               </div>
-              <Condition when="booking_page[booking_times]" is="present">
-                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
-              </Condition>
-            </dd>
-          </dl>
-          <dl>
-            <dd className="bootstrap-checkbox">
-              <ul className="special-date-label">
-                <li>
-                  <label>
-                    <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
-                    {special_date_label}
-                  </label>
-                </li>
-              </ul>
-              <ul>
-                {
-                  values.booking_page.had_special_date && (
-                    <Field
-                      name="special_dates_array"
-                      collection_name="booking_page[special_dates]"
-                      component={MultipleDatetimeInput}
-                      timezone={this.props.timezone}
-                      state_form={this.booking_page_settings_form}
-                    />
-                  )
-                }
+              <div className="radio">
+                <Field name="booking_page[had_special_date]" type="radio" value="true" component={Radio}>
+                  {special_date_label}
+                </Field>
                 <Error name="booking_page[had_special_date]" />
-              </ul>
+              </div>
+              {
+                values.booking_page.had_special_date === "true" && (
+                  <Field
+                    name="special_dates_array"
+                    collection_name="booking_page[special_dates]"
+                    component={MultipleDatetimeInput}
+                    timezone={this.props.timezone}
+                    state_form={this.booking_page_settings_form}
+                  />
+                )
+              }
             </dd>
           </dl>
         </div>
@@ -283,10 +245,7 @@ class BookingPageSettings extends React.Component {
     const {
       required_label,
       interval_header,
-      interval_explanation,
       interval_real_booking_time_warning,
-      interval_real_booking_time_explanation,
-      interval_start_time,
       interval_option,
       per_minute,
       interval_example_html,
@@ -297,51 +256,6 @@ class BookingPageSettings extends React.Component {
       <div>
         <h3>{interval_header}</h3>
         <div className="formRow">
-          <dl>
-            <dd>
-              <div className="interval-explanation">
-                <Condition when="booking_page[special_dates]" is="present">
-                  <Condition when="booking_page[booking_times]" is="present">
-                    {interval_real_booking_time_explanation}
-                  </Condition>
-                </Condition>
-                <Condition when="booking_page[booking_times]" is="blank">
-                  {interval_explanation}
-                </Condition>
-              </div>
-              <div className="booking-times-label">
-                <b>{interval_start_time}</b>
-              </div>
-              <div className="booking-times-examples">
-                <FormSpy subscription={{ values: true }}>
-                  {({ values }) => {
-                    const { interval, booking_times, special_dates, options, had_special_date } = values.booking_page;
-
-                    if (had_special_date && special_dates && special_dates.length && options && options.length == 1) {
-                      if (booking_times && booking_times.length) {
-                        return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
-                      }
-                      else {
-                        return <div className="warning">{no_available_booking_times}</div>;
-                      }
-                    }
-                    else {
-                      let times = [moment({hour: 9})]
-
-                      for(var index = 1; index < 4; index++) {
-                        times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
-                      }
-
-                      return times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time.format("HH:mm")}~</div>)
-                    }
-                  }}
-                </FormSpy>
-              </div>
-              <Condition when="booking_page[booking_times]" is="present">
-                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
-              </Condition>
-            </dd>
-          </dl>
           <dl>
             <dd>
               <div>
@@ -485,7 +399,7 @@ class BookingPageSettings extends React.Component {
     this.calculateBookingTimesCall = axios.CancelToken.source();
 
     if (!(shop_id &&
-      had_special_date && special_dates && special_dates.length &&
+      had_special_date === "true" && special_dates && special_dates.length &&
       options && options.length == 1)) {
       return {
         "booking_page[booking_times]": []
@@ -526,7 +440,7 @@ class BookingPageSettings extends React.Component {
     }
     this.prefillBusinessTimeCall = axios.CancelToken.source();
 
-    if (!(shop_id && had_special_date && special_dates_array_start_at_date_part_input )) {
+    if (!(shop_id && had_special_date === "true" && special_dates_array_start_at_date_part_input )) {
       return {}
     }
 
@@ -554,7 +468,7 @@ class BookingPageSettings extends React.Component {
   verifySpecialDates = async (values) => {
     const { shop_id, had_special_date, special_dates, options } = values.booking_page;
 
-    if (!(shop_id && had_special_date && special_dates && special_dates.length && options && options.length)) {
+    if (!(shop_id && had_special_date === "true" && special_dates && special_dates.length && options && options.length)) {
       return {}
     }
 
@@ -623,11 +537,11 @@ class BookingPageSettings extends React.Component {
       fields_errors.booking_page.end_at_time_part = `${sale_end}${errors.required}`;
     }
 
-    if (had_special_date && !special_dates.length) {
+    if (had_special_date === "true" && !special_dates.length) {
       fields_errors.booking_page.had_special_date = `${time}${errors.required}`;
     }
 
-    if (had_special_date && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
+    if (had_special_date === "true" && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
       const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
       const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
       const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
@@ -640,7 +554,7 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    if (had_special_date && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
+    if (had_special_date === "true" && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
       const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
       const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
       const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
