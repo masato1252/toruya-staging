@@ -508,6 +508,7 @@ en:
         booking_dates_calendar_hint: Calendar is showing from current setting contents and vacancy situation.
         booking_dates_working_date: Business day
         booking_dates_available_booking_date: Available day
+        default_available_dates_label: Show all available days automatically
         special_date_label: Available only for specific date
         interval_header: Starting time of reservation
         interval_real_booking_time_explanation: The choices from the current settings and availability are displayed.
