@@ -568,7 +568,7 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    if (options.length && available_booking_options.length) {
+    if (options.length) {
       const available_booking_option_ids = _.map(available_booking_options, (available_booking_option) => available_booking_option.id)
       const shop_name = this.props.shop_options.find((shop_option) => shop_option.value == shop_id).label
 
