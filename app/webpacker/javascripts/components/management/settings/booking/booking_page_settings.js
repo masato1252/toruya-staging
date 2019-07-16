@@ -231,6 +231,7 @@ class BookingPageSettings extends React.Component {
                     component={MultipleDatetimeInput}
                     timezone={this.props.timezone}
                     state_form={this.booking_page_settings_form}
+                    i18n={this.props.i18n}
                   />
                 )
               }
