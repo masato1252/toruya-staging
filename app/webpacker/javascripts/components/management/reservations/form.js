@@ -2,13 +2,17 @@
 
 import React from "react";
 import { Form, Field } from "react-final-form";
+import { FieldArray } from 'react-final-form-arrays'
+import arrayMutators from 'final-form-arrays'
 import createChangesDecorator from "final-form-calculate";
 import moment from "moment-timezone";
 import axios from "axios";
+import _ from "lodash";
 
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import { Input } from "../../shared/components";
 import CommonCustomersList from "../common/customers_list.js"
+import MultipleMenuInput from "./multiple_menu_input.js"
 
 class ManagementReservationForm extends React.Component {
   static errorGroups() {
@@ -24,8 +28,9 @@ class ManagementReservationForm extends React.Component {
 
     this.calculator = createChangesDecorator(
       {
-        field: /start_time_date_part|start_time_time_part|end_time_time_part/,
+        field: /end_time_date_part|end_time_time_part|menu_staffs_list/,
         updates: async (value, name, allValues) => {
+          // TODO: Need test
           await this.validateReservation(allValues.reservation_form)
           return {};
         }
@@ -34,6 +39,27 @@ class ManagementReservationForm extends React.Component {
         field: /start_time_date_part/,
         updates: {
           "reservation_form[end_time_date_part]": (start_time_date_part_value, allValues) => start_time_date_part_value
+        }
+      },
+      {
+        field: /start_time_date_part|start_time_time_part|menu_staffs_list/,
+        updates: async (value, name, allValues) => {
+          const {
+            start_time_date_part,
+            start_time_time_part,
+            menu_staffs_list,
+          } = allValues.reservation_form;
+
+          if (!start_time_date_part || !start_time_time_part || !_.filter(menu_staffs_list, (menu) => !!menu.menu_id).length) {
+            return {}
+          }
+
+          const end_at = this.end_at(allValues.reservation_form);
+
+          return {
+            "reservation_form[end_time_date_part]": end_at.format("YYYY-MM-DD"),
+            "reservation_form[end_time_time_part]": end_at.format("HH:mm")
+          }
         }
       }
     )
@@ -44,9 +70,15 @@ class ManagementReservationForm extends React.Component {
   };
 
   renderReservationDateTime = () => {
-    const { start_time_restriction, end_time_restriction } = this.reservation_form_values;
+    const {
+      start_time_restriction,
+      end_time_restriction,
+      end_time_date_part,
+      end_time_time_part,
+    } = this.reservation_form_values;
     const { is_editable, shop_name } = this.props.reservation_properties;
     const { valid_time_tip_message } = this.props.i18n;
+    const end_at = this.end_at();
 
     return (
       <div>
@@ -95,6 +127,7 @@ class ManagementReservationForm extends React.Component {
                 disabled={!is_editable}
               />
               〜
+              {end_at && end_at.locale('en').format("hh:mm A")}
               <Field
                 name="reservation_form[end_time_date_part]"
                 type="hidden"
@@ -102,11 +135,9 @@ class ManagementReservationForm extends React.Component {
               />
               <Field
                 name="reservation_form[end_time_time_part]"
-                type="time"
+                type="hidden"
                 component={Input}
-                step="300"
                 className={this.nextReservationOverlap() ? "field-warning" : ""}
-                disabled={!is_editable}
               />
               <span className="errors">
                 {this.isValidReservationTime() ? null : <span className="warning">{valid_time_tip_message}</span>}
@@ -115,6 +146,31 @@ class ManagementReservationForm extends React.Component {
             </dd>
           </dl>
         </div>
+      </div>
+    )
+  }
+
+  renderReservationMenus = () => {
+    const {
+      staff_options,
+      menu_group_options,
+    } = this.props.reservation_properties;
+
+    return (
+      <div className="formRow res-menus">
+        <dl className="form">
+          <dt>Content</dt>
+          <dd className="input">
+            <MultipleMenuInput
+              collection_name="reservation_form[menu_staffs_list]"
+              staff_options={staff_options}
+              menu_options={menu_group_options}
+              i18n={this.props.i18n}
+              reservation_form={this.reservation_form}
+              all_values={this.all_values}
+            />
+          </dd>
+        </dl>
       </div>
     )
   }
@@ -296,10 +352,14 @@ class ManagementReservationForm extends React.Component {
         initialValues={{
           reservation_form: { ...(this.props.reservation_form) },
         }}
+        mutators={{
+          ...arrayMutators,
+        }}
         decorators={[this.calculator]}
         render={({ handleSubmit, submitting, values, errors, form, pristine }) => {
           this.reservation_form = form;
           this.reservation_form_values = values.reservation_form
+          this.all_values = values
           this.handleSubmit = handleSubmit
 
           return (
@@ -315,6 +375,7 @@ class ManagementReservationForm extends React.Component {
               <div id="resNew" className="contents">
                 <div id="resInfo" className="contBody">
                   {this.renderReservationDateTime()}
+                  {this.renderReservationMenus()}
                   {this.renderReservationMemo()}
                 </div>
                 {this.renderCustomersList()}
@@ -557,6 +618,34 @@ class ManagementReservationForm extends React.Component {
     //   }
     // })
   };
+
+  start_at = (reservation_form_values = null) => {
+    const {
+      start_time_date_part,
+      start_time_time_part,
+    } = (reservation_form_values || this.reservation_form_values);
+
+    if (!start_time_date_part || !start_time_time_part) {
+      return;
+    }
+
+    return moment.tz(`${start_time_date_part} ${start_time_time_part}`, "YYYY-MM-DD HH:mm", this.props.timezone)
+  }
+
+  end_at = (reservation_form_values = null) => {
+    const {
+      menu_staffs_list,
+    } = (reservation_form_values || this.reservation_form_values);
+
+    const start_at = this.start_at(reservation_form_values);
+
+    if (!start_at || !_.filter(menu_staffs_list, (menu) => !!menu.menu_id).length) {
+      return;
+    }
+
+    const total_required_time = menu_staffs_list.reduce((sum, menu) => sum + Number(menu.menu_required_time || 0), 0)
+    return start_at.add(total_required_time, "minutes")
+  }
 }
 
 export default ManagementReservationForm;

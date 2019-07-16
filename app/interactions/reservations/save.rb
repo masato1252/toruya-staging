@@ -27,14 +27,18 @@ module Reservations
         hash do
           integer :menu_id
           integer :position
-          string :state
-          integer :staff_id
           integer :menu_interval_time
           integer :menu_required_time
+          array :staff_ids do
+            hash do
+              integer :staff_id
+              string :state
+            end
+          end
         end
       end
       string :memo, default: nil
-      boolean :with_warnings
+      boolean :with_warnings, default: false
       integer :by_staff_id, default: nil
       integer :booking_option_id, default: nil
     end
@@ -66,20 +70,27 @@ module Reservations
         end
 
         if menu_staffs_list.present?
+          # TODO: Should keep the original staff's state
+          # _ids = [ ... ]
+          # update
+          # pending notification for staff? mail?
           reservation.reservation_staffs.destroy_all
+
           menu_staffs_list.each do |h|
             time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.menus, h[:position])
 
-            reservation.reservation_staffs.create(
-              menu_id: h[:menu_id],
-              staff_id: h[:staff_id],
-              # If the new staff ids includes current user staff, the staff accepted the reservation automatically
-              state: h[:state] == "accepted" ? "accepted" : (h[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending),
-              prepare_time: time_result[:prepare_time],
-              work_start_at: time_result[:work_start_at],
-              work_end_at: time_result[:work_end_at],
-              ready_time: time_result[:ready_time]
-            )
+            h[:staff_ids].each do |staff_hash|
+              reservation.reservation_staffs.create(
+                menu_id: h[:menu_id],
+                staff_id: staff_hash[:staff_id],
+                # If the new staff ids includes current user staff, the staff accepted the reservation automatically
+                state: staff_hash[:state] == "accepted" ? "accepted" : (staff_hash[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending),
+                prepare_time: time_result[:prepare_time],
+                work_start_at: time_result[:work_start_at],
+                work_end_at: time_result[:work_end_at],
+                ready_time: time_result[:ready_time]
+              )
+            end
           end
         end
 

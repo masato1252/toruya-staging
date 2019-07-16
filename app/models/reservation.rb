@@ -83,10 +83,12 @@ class Reservation < ApplicationRecord
     end
   end
 
+  # TODO: handel For multiple same staff case
   def for_staff(staff)
     reservation_staffs.find_by(staff: staff)
   end
 
+  # TODO: handel For multiple same staff case
   def acceptable_by_staff?(staff)
     may_accept? && (
       reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id }&.pending? : for_staff(staff)&.pending?

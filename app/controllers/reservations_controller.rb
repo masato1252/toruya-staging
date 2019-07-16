@@ -108,23 +108,20 @@ class ReservationsController < DashboardController
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
 
-    reservation_params_hash = reservation_params.to_h
+    repair_nested_params
+    debugger
+    reservation_params_hash = params.permit!.to_h["reservation_form"]
 
-    reservation_params_hash[:params][:menu_staffs_list].map! do |h|
-      h[:work_start_at] = Time.zone.parse(h[:work_start_at]) if h[:work_start_at]
-      h[:work_end_at] = Time.zone.parse(h[:work_end_at]) if h[:work_end_at]
-      h
-    end
-    reservation_params_hash[:params][:customer_ids] =
-      reservation_params_hash[:params][:customer_ids].present? ? reservation_params_hash[:params][:customer_ids].split(",").uniq : []
-    reservation_params_hash[:params][:by_staff_id] = reservation_params_hash[:by_staff_id].to_i
+    reservation_params_hash[:customer_ids] =
+      reservation_params_hash[:customer_ids].present? ? reservation_params_hash[:customer_ids].split(",").uniq : []
+    reservation_params_hash[:by_staff_id] = reservation_params_hash[:by_staff_id].to_i
 
-    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:start_time_time_part]
-      reservation_params_hash[:params][:start_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:start_time_time_part]}")
+    if reservation_params_hash[:start_time_date_part] && reservation_params_hash[:start_time_time_part]
+      reservation_params_hash[:start_time] = Time.zone.parse("#{reservation_params_hash[:start_time_date_part]}-#{reservation_params_hash[:start_time_time_part]}")
     end
 
-    if reservation_params_hash[:params][:start_time_date_part] && reservation_params_hash[:params][:end_time_time_part]
-      reservation_params_hash[:params][:end_time] = Time.zone.parse("#{reservation_params_hash[:params][:start_time_date_part]}-#{reservation_params_hash[:params][:end_time_time_part]}")
+    if reservation_params_hash[:start_time_date_part] && reservation_params_hash[:end_time_time_part]
+      reservation_params_hash[:end_time] = Time.zone.parse("#{reservation_params_hash[:start_time_date_part]}-#{reservation_params_hash[:end_time_time_part]}")
     end
 
     outcome = Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
@@ -135,11 +132,11 @@ class ReservationsController < DashboardController
           if in_personal_dashboard?
             redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
           else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
+            redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
           end
         end
       else
-        format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
+        format.html { redirect_to new_shop_reservation_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ") }
       end
     end
   end
@@ -221,21 +218,27 @@ class ReservationsController < DashboardController
 
   def all_options
     menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
-      ::Options::MenuOption.new(id: shop_menu.menu_id, name: shop_menu.menu.display_name,
-                                min_staffs_number: shop_menu.menu.min_staffs_number,
-                                available_seat: shop_menu.max_seat_number)
+      ::Options::MenuOption.new(
+        id: shop_menu.menu_id,
+        name: shop_menu.menu.display_name,
+        min_staffs_number: shop_menu.menu.min_staffs_number,
+        available_seat: shop_menu.max_seat_number,
+        minutes: shop_menu.menu.minutes,
+        interval: shop_menu.menu.interval
+      )
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = if super_user.premium_member?
-      shop.staffs.order("id").map do |staff|
-        ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    @staff_options =
+      if super_user.premium_member?
+        shop.staffs.order("id").map do |staff|
+          ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
+        end
+      else
+        [
+          ::Option.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
+        ]
       end
-    else
-      [
-        ::Options::StaffOption.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
-      ]
-    end
   end
 
   def reservation_errors
@@ -273,5 +276,19 @@ class ReservationsController < DashboardController
 
   def set_current_dashboard_mode
     cookies[:dashboard_mode] = shop.id
+  end
+
+  def repair_nested_params(obj = params)
+    obj.each do |key, value|
+      if value.is_a?(ActionController::Parameters) || value.is_a?(Hash)
+        # If any non-integer keys
+        if value.keys.find {|k, _| k =~ /\D/ }
+          repair_nested_params(value)
+        else
+          obj[key] = value.values
+          value.values.each {|h| repair_nested_params(h) }
+        end
+      end
+    end
   end
 end

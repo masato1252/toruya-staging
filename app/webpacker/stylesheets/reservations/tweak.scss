@@ -98,3 +98,18 @@
     }
   }
 }
+
+// New menus design
+#resNew {
+  #resInfo {
+    .res-menus {
+      dt {
+        width: 50px;
+      }
+
+      .menu-options-actions {
+        text-align: right;
+      }
+    }
+  }
+}

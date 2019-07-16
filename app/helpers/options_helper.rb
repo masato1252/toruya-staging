@@ -1,12 +1,16 @@
 module OptionsHelper
+  def custom_option(item)
+    item.attributes.merge({
+      label: item.name,
+      value: item.id,
+    })
+  end
+
   def custom_options(items)
     return [] unless items
 
     items.map do |item|
-      item.attributes.merge({
-        label: item.name,
-        value: item.id,
-      })
+      custom_option(item)
     end
   end
 
