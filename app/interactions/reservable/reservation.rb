@@ -19,7 +19,7 @@ module Reservable
         errors.merge!(time_outcome.errors)
       end
 
-      return if (menu_ids.blank? && booking_option_id.nil?) || business_time_range.blank?
+      return if business_time_range.blank?
 
       # validate_time_range
       if time_outcome.valid?
@@ -34,6 +34,9 @@ module Reservable
           errors.add(:business_time_range, :invalid_time_range)
         end
       end
+
+      # XXX: menu_ids is required for below validation
+      return if menu_ids.blank?
 
       if new_reseravtion_time_interval < services_required_timee
         errors.add(:menu_ids, :time_not_enough)
