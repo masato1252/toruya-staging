@@ -83,11 +83,20 @@ class Calendar extends React.Component {
             availableBookingDates: result["available_booking_dates"]
           });
         })
-        .finally(() => {
+        .then(() => {
           this.setState({
             loading: false
           })
-        });
+        })
+        .catch((error) => {
+          // XXX: No request is running
+          if (!this.fetchScheduleCall) {
+            this.setState({
+              loading: false
+            })
+          }
+        })
+      ;
     })
   };
 
