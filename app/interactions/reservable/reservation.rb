@@ -6,7 +6,7 @@ module Reservable
     date :date
     object :business_time_range, class: Range, default: nil
     integer :menu_id, default: nil
-    integer :booking_option_id, default: nil
+    integer :menu_required_time, default: nil
     array :staff_ids, default: nil
     integer :reservation_id, default: nil
     integer :number_of_customer, default: 1
@@ -42,9 +42,9 @@ module Reservable
       end
 
       # XXX: menu is required for the below validation
-      return if menu_id.nil?
+      return if menu_id.nil? || menu_required_time.nil?
 
-      if new_reseravtion_time_interval < services_required_time
+      if new_reseravtion_time_interval < menu_required_time.minutes
         errors.add(:menu_id, :time_not_enough)
       end
 
@@ -83,20 +83,8 @@ module Reservable
 
     private
 
-    def services_required_time
-      if booking_option_id
-        booking_option.booking_option_menus.find_by(menu_id: menu_id).required_time.minutes
-      else
-        menu.minutes.minutes
-      end
-    end
-
     def interval_time
       menu.interval.minutes
-    end
-
-    def booking_option
-      @booking_option ||= shop.user.booking_options.find_by(id: booking_option_id)
     end
 
     def menu

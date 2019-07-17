@@ -31,30 +31,29 @@ module Booking
                   shop: shop,
                   date: date,
                   business_time_range: menu_book_start_at..menu_book_end_at,
-                  booking_option_id: booking_option.id,
                   menu_id: menu.id,
+                  menu_required_time: booking_option.booking_option_menus.find_by(menu_id: menu.id).required_time,
                   staff_ids: candidate_staff_ids,
                   overlap_restriction: overlap_restriction,
                   skip_before_interval_time_validation: skip_before_interval_time_validation,
                   skip_after_interval_time_validation: skip_after_interval_time_validation
                 )
+
                 Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
 
                 if reserable_outcome.valid?
-                  candidate_staff_ids.each do |staff_id|
-                    valid_menus << {
-                      menu_id: menu.id,
-                      position: menu_position,
-                      menu_interval_time: menu.interval,
-                      menu_required_time: booking_option_menu.required_time,
-                      staff_id: staff_id,
-                      state: "pending"
-                    }
-                  end
+                  valid_menus << {
+                    menu_id: menu.id,
+                    position: menu_position,
+                    menu_interval_time: menu.interval,
+                    menu_required_time: booking_option_menu.required_time,
+                    staff_ids: candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } },
+                    state: "pending"
+                  }
                   menu_position = menu_position + 1
 
                   # all menus got staffs to handle
-                  if booking_option.menus.count == valid_menus.group_by { |h| h[:menu_id] }.length
+                  if booking_option.menus.count == valid_menus.length
                     yield valid_menus
                   end
 

@@ -41,6 +41,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu2.id,
+                                                menu_required_time: menu2.minutes,
                                                 business_time_range: start_time..end_time.advance(minutes: -1))
 
           expect(outcome).to be_invalid
@@ -58,6 +59,7 @@ RSpec.describe Reservable::Reservation do
         it "is valid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range)
 
           expect(outcome).to be_valid
@@ -79,6 +81,7 @@ RSpec.describe Reservable::Reservation do
             it "is invalid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range)
 
@@ -105,6 +108,7 @@ RSpec.describe Reservable::Reservation do
               #      but the interval time between two reservations is only 9 minutes
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range)
 
@@ -123,6 +127,7 @@ RSpec.describe Reservable::Reservation do
             it "is valid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     staff_ids: [staff1.id])
 
@@ -155,6 +160,7 @@ RSpec.describe Reservable::Reservation do
             it "is invalid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range)
 
@@ -181,6 +187,7 @@ RSpec.describe Reservable::Reservation do
               #      but the interval time between two reservations is only 19 minutes
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range)
 
@@ -199,6 +206,7 @@ RSpec.describe Reservable::Reservation do
             it "is valid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range)
 
@@ -210,6 +218,7 @@ RSpec.describe Reservable::Reservation do
             it "is valid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     staff_ids: [staff1.id],
                                                     business_time_range: time_range,
                                                     overlap_restriction: false)
@@ -225,6 +234,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range)
 
           expect(outcome).to be_invalid
@@ -240,6 +250,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range)
 
           expect(outcome).to be_invalid
@@ -259,6 +270,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range)
 
             expect(outcome).to be_invalid
@@ -276,6 +288,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range)
 
             expect(outcome).to be_invalid
@@ -291,6 +304,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range,
                                                 number_of_customer: 5)
 
@@ -310,6 +324,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range,
                                                 staff_ids: [staff1.id, staff2.id],
                                                 number_of_customer: 2)
@@ -327,6 +342,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -347,6 +363,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -367,6 +384,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -388,6 +406,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -410,6 +429,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range,
                                                 staff_ids: [staff1.id, staff2.id])
 
@@ -429,6 +449,7 @@ RSpec.describe Reservable::Reservation do
           it "is invalid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -447,6 +468,7 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -466,6 +488,7 @@ RSpec.describe Reservable::Reservation do
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id])
 
@@ -473,6 +496,7 @@ RSpec.describe Reservable::Reservation do
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id],
                                                   number_of_customer: 3)
@@ -490,6 +514,7 @@ RSpec.describe Reservable::Reservation do
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     reservation_id: reservation.id,
                                                     staff_ids: [staff1.id])
@@ -498,6 +523,7 @@ RSpec.describe Reservable::Reservation do
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     reservation_id: reservation.id,
                                                     staff_ids: [staff1.id],
@@ -517,6 +543,7 @@ RSpec.describe Reservable::Reservation do
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id])
 
@@ -524,6 +551,7 @@ RSpec.describe Reservable::Reservation do
 
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id],
                                                   number_of_customer: 2)
@@ -540,6 +568,7 @@ RSpec.describe Reservable::Reservation do
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     reservation_id: reservation.id,
                                                     staff_ids: [staff1.id])
@@ -548,6 +577,7 @@ RSpec.describe Reservable::Reservation do
 
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     reservation_id: reservation.id,
                                                     staff_ids: [staff1.id],
@@ -570,6 +600,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range,
                                                 staff_ids: [staff1.id, staff2.id])
 
@@ -584,6 +615,7 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id])
 
@@ -599,6 +631,7 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id])
 
@@ -610,6 +643,7 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff2.id],
                                                   overlap_restriction: false)
@@ -627,6 +661,7 @@ RSpec.describe Reservable::Reservation do
           # XXX: Staff2 only could handle menu2, has no ability to handle menu1
           outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                 menu_id: menu1.id,
+                                                menu_required_time: menu1.minutes,
                                                 business_time_range: time_range,
                                                 staff_ids: [staff1.id, staff2.id])
 
@@ -648,6 +683,7 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id, staff2.id])
 
@@ -660,6 +696,7 @@ RSpec.describe Reservable::Reservation do
             it "is invalid" do
               outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                     menu_id: menu1.id,
+                                                    menu_required_time: menu1.minutes,
                                                     business_time_range: time_range,
                                                     staff_ids: [staff1.id, staff1.id])
 
@@ -677,6 +714,7 @@ RSpec.describe Reservable::Reservation do
             # menus required 2 staffs but we only assign one
             outcome = Reservable::Reservation.run(shop: shop, date: date,
                                                   menu_id: menu1.id,
+                                                  menu_required_time: menu1.minutes,
                                                   business_time_range: time_range,
                                                   staff_ids: [staff1.id])
 
@@ -699,6 +737,7 @@ RSpec.describe Reservable::Reservation do
           outcome = Reservable::Reservation.run(
             shop: shop, date: date,
             menu_id: menu1.id,
+            menu_required_time: menu1.minutes,
             business_time_range: Time.zone.local(2016, 12, 22, 8, 59)..Time.zone.local(2016, 12, 22, 12)
           )
 
@@ -712,6 +751,7 @@ RSpec.describe Reservable::Reservation do
           outcome = Reservable::Reservation.run(
             shop: shop, date: date,
             menu_id: menu1.id,
+            menu_required_time: menu1.minutes,
             business_time_range: Time.zone.local(2016, 12, 22, 16, 59)..Time.zone.local(2016, 12, 22, 17, 1)
           )
 
@@ -725,6 +765,7 @@ RSpec.describe Reservable::Reservation do
           outcome = Reservable::Reservation.run(
             shop: shop, date: date,
             menu_id: menu1.id,
+            menu_required_time: menu1.minutes,
             business_time_range: Time.zone.local(2016, 12, 22, 17)..Time.zone.local(2016, 12, 22, 16)
           )
 

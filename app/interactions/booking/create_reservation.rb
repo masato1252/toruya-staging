@@ -166,7 +166,7 @@ module Booking
                 date: date,
                 business_time_range: reservation_staff_properties.work_start_at..reservation_staff_properties.work_end_at,
                 menu_id: reservation_staff_properties.menu_id,
-                booking_option_id: booking_option_id,
+                menu_required_time: booking_option.booking_option_menus.find_by(menu_id: reservation_staff_properties.menu_id).required_time,
                 staff_ids: reservation_staff_properties.staff_ids,
                 reservation_id: same_time_reservation.id,
                 number_of_customer: same_time_reservation.count_of_customers + 1,
@@ -220,7 +220,13 @@ module Booking
               #     position: $position,
               #     menu_interval_time: 10,
               #     menu_required_time: 60,
-              #     staff_id: $staff_id,
+              #     staff_ids: [
+              #       {
+              #         staff_id: $staff_id
+              #         state: pending/accepted
+              #       },
+              #       ...
+              #     ],
               #     state: $pending
               #   }
               # ]
@@ -245,7 +251,6 @@ module Booking
                   memo: "",
                   with_warnings: false,
                   menu_staffs_list: valid_menus_spots,
-                  booking_option_id: booking_option_id
                 }
               )
 
