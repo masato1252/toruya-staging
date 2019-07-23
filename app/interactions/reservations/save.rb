@@ -26,7 +26,7 @@ module Reservations
       array :menu_staffs_list do
         hash do
           integer :menu_id
-          integer :position
+          integer :position, default: nil # TODO: wait position implement
           integer :menu_interval_time
           integer :menu_required_time
           array :staff_ids do
@@ -74,8 +74,9 @@ module Reservations
           # pending notification for staff? mail?
           reservation.reservation_staffs.destroy_all
 
-          menu_staffs_list.each do |h|
-            time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.menus, h[:position])
+          # TODO: wait position implement
+          menu_staffs_list.each.with_index do |h, i|
+            time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, h[:position] || i)
 
             h[:staff_ids].each do |staff_hash|
               reservation.reservation_staffs.create(

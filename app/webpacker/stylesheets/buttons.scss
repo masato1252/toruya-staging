@@ -6,13 +6,11 @@ a.btn {
   text-indent: 0;
   display: inline-block !important;
   color: #ffffff !important;
-  line-height: inherit !important;
-  height: inherit !important;
+  line-height: 35px !important;
+  height: 35px !important;
 
   &.btn-symbol {
     width: 35px;
-    line-height: 35px !important;
-    height: 35px !important;
     padding: 0;
   }
 }
