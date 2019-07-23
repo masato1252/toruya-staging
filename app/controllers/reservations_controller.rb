@@ -1,6 +1,7 @@
 class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
   before_action :set_current_dashboard_mode, only: %i(index)
+  before_action :repair_nested_params, only: [:create, :update, :validate]
 
   def show
     @sentences = view_context.reservation_staff_sentences(@reservation)
@@ -21,7 +22,7 @@ class ReservationsController < DashboardController
     # Staff schedules on date END
 
     # Reservations START
-    reservations = shop.reservations.uncanceled.in_date(@date).includes(:shop, :menu, :customers, :staffs).order("reservations.start_time ASC")
+    reservations = shop.reservations.uncanceled.in_date(@date).includes(:shop, :menus, :customers, :staffs).order("reservations.start_time ASC")
     @schedules = reservations.map do |reservation|
       Option.new(type: :reservation, source: reservation)
     end
@@ -108,22 +109,6 @@ class ReservationsController < DashboardController
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
 
-    repair_nested_params
-    debugger
-    reservation_params_hash = params.permit!.to_h["reservation_form"]
-
-    reservation_params_hash[:customer_ids] =
-      reservation_params_hash[:customer_ids].present? ? reservation_params_hash[:customer_ids].split(",").uniq : []
-    reservation_params_hash[:by_staff_id] = reservation_params_hash[:by_staff_id].to_i
-
-    if reservation_params_hash[:start_time_date_part] && reservation_params_hash[:start_time_time_part]
-      reservation_params_hash[:start_time] = Time.zone.parse("#{reservation_params_hash[:start_time_date_part]}-#{reservation_params_hash[:start_time_time_part]}")
-    end
-
-    if reservation_params_hash[:start_time_date_part] && reservation_params_hash[:end_time_time_part]
-      reservation_params_hash[:end_time] = Time.zone.parse("#{reservation_params_hash[:start_time_date_part]}-#{reservation_params_hash[:end_time_time_part]}")
-    end
-
     outcome = Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
 
     respond_to do |format|
@@ -144,25 +129,20 @@ class ReservationsController < DashboardController
   def update
     authorize! :manage_shop_reservations, shop
     authorize! :edit, @reservation
-    outcome = Reservations::Save.run(reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::Save.run(reservation: @reservation, params: reservation_params_hash)
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html do
-          if params[:from_customer_id].present?
-            redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
-          elsif in_personal_dashboard?
-            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
-          else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
-          end
-        end
-        format.json { render :show, status: :ok, location: @reservation }
+    if outcome.valid?
+      if params[:from_customer_id].present?
+        redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
+      elsif in_personal_dashboard?
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
       else
-        @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: reservation_params.to_h)
-        format.html { render :edit }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
+        redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
       end
+    else
+      # TODO: Handle failure case
+      all_options
+      render "form"
     end
   end
 
@@ -181,40 +161,26 @@ class ReservationsController < DashboardController
   end
 
   def validate
-    params[:customer_ids] = if params[:customer_ids].present?
-                              params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
-                            else
-                              []
-                            end
-
-    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:reservation_form][:start_time_date_part]).to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
 
     reservation_errors
-    if params[:menu_id].presence
-      @menu_min_staffs_number = shop.menus.find_by(id: params[:menu_id]).min_staffs_number
-    end
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_reservation
     @reservation = shop.reservations.find(params[:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def reservation_params
-    params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                        :customer_ids, :staff_ids, :memo, :with_warnings, :by_staff_id)
-  end
-
-  def start_time
-    @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
-  end
-
-  def end_time
-    @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
-  end
+  # def start_time
+  #   @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
+  # end
+  #
+  # def end_time
+  #   @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
+  # end
 
   def all_options
     menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
@@ -242,37 +208,13 @@ class ReservationsController < DashboardController
   end
 
   def reservation_errors
-    params[:menu_id] = "2"
-    params[:staff_ids] = "2"
-
-    outcome = Reservable::Reservation.run(
-      shop: shop,
-      date: Time.zone.parse(params[:start_time_date_part]).to_date,
-      business_time_range: start_time..end_time,
-      menu_id: params[:menu_id].presence,
-      staff_ids: params[:staff_ids].try(:split, ",") || [],
-      reservation_id: params[:reservation_id].presence,
-      number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size
+    outcome = Reservations::Validate.run(
+      reservation: @reservation || shop.reservations.new,
+      params: reservation_params_hash
     )
 
-    @errors = outcome.errors.details.each.with_object({}) do |(error_key, error_details), errors|
-      error_details.each do |error_detail|
-        error_reason = error_detail[:error]
-        option = error_detail.tap { |error| error_detail.delete(:error) }
-
-        if error_reason.is_a?(Symbol)
-          errors[error_reason] = outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
-        elsif error_reason.to_i.is_a?(Integer)
-          errors[error_reason] ||= []
-          errors[error_reason] << error_key
-        else
-          errors[error_reason] = outcome.errors.full_message(error_key, error_reason)
-        end
-      end
-    end
+    @errors_with_warnings = outcome.result
   end
-
-  private
 
   def set_current_dashboard_mode
     cookies[:dashboard_mode] = shop.id
@@ -290,5 +232,22 @@ class ReservationsController < DashboardController
         end
       end
     end
+  end
+
+  def reservation_params_hash
+    return @reservation_params_hash if defined?(@reservation_params_hash)
+
+    @reservation_params_hash = params.permit!.to_h["reservation_form"]
+
+    if @reservation_params_hash[:start_time_date_part] && @reservation_params_hash[:start_time_time_part]
+      @reservation_params_hash[:start_time] = Time.zone.parse("#{@reservation_params_hash[:start_time_date_part]}-#{@reservation_params_hash[:start_time_time_part]}")
+    end
+
+    if @reservation_params_hash[:start_time_date_part] && @reservation_params_hash[:end_time_time_part]
+      @reservation_params_hash[:end_time] = Time.zone.parse("#{@reservation_params_hash[:start_time_date_part]}-#{@reservation_params_hash[:end_time_time_part]}")
+    end
+
+    @reservation_params_hash["menu_staffs_list"].delete_if {|hh| hh["menu_id"].blank? } if @reservation_params_hash["menu_staffs_list"]
+    @reservation_params_hash
   end
 end

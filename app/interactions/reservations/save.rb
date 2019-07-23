@@ -40,19 +40,17 @@ module Reservations
       string :memo, default: nil
       boolean :with_warnings, default: false
       integer :by_staff_id, default: nil
-      integer :booking_option_id, default: nil
     end
 
     def execute
       reservation.transaction do
         menu_staffs_list = params.delete(:menu_staffs_list)
         customers_list = params.delete(:customers_list)
-        booking_option_id = params.delete(:booking_option_id)
         reservation.attributes = params
 
         reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
-          menu_staffs_list.map { |h| h.slice(:menu_id, :menu_required_time, :position) }.uniq.map do |h|
+          menu_staffs_list.map do |h|
             {
               menu_id: h[:menu_id],
               required_time: h[:menu_required_time],

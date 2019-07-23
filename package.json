@@ -19,6 +19,7 @@
     "popper.js": "^1.14.3",
     "postcss-smart-import": "^0.7.6",
     "prop-types": "^15.6.0",
+    "qs": "^6.7.0",
     "rails-erb-loader": "^5.4.2",
     "rails-ujs": "^5.2.3",
     "react": "^16.0.0",

@@ -8,21 +8,15 @@ import createChangesDecorator from "final-form-calculate";
 import moment from "moment-timezone";
 import axios from "axios";
 import _ from "lodash";
+import qs from "qs";
 
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import { Input } from "../../shared/components";
 import CommonCustomersList from "../common/customers_list.js"
 import MultipleMenuInput from "./multiple_menu_input.js"
+import { displayErrors } from "./helpers.js"
 
 class ManagementReservationForm extends React.Component {
-  static errorGroups() {
-    return (
-      {
-        warnings: ["shop_closed", "interval_too_short"]
-      }
-    )
-  };
-
   constructor(props) {
     super(props);
 
@@ -126,6 +120,9 @@ class ManagementReservationForm extends React.Component {
                 className={this.previousReservationOverlap() ? "field-warning" : ""}
                 disabled={!is_editable}
               />
+              <span className="errors">
+                {this.startTimeError()}
+              </span>
               〜
               {end_at && end_at.locale('en').format("hh:mm A")}
               <Field
@@ -140,8 +137,8 @@ class ManagementReservationForm extends React.Component {
                 className={this.nextReservationOverlap() ? "field-warning" : ""}
               />
               <span className="errors">
-                {this.isValidReservationTime() ? null : <span className="warning">{valid_time_tip_message}</span>}
-                {this.displayErrors(["interval_too_short"])}
+                {this.displayIntervalOverlap()}
+                {this.endTimeError()}
               </span>
             </dd>
           </dl>
@@ -408,14 +405,20 @@ class ManagementReservationForm extends React.Component {
       const response = await axios({
         method: "GET",
         url: this.props.path.validate_reservation,
-        params: _.pick(
-          form_values,
-          "reservation_id",
-          "start_time_date_part",
-          "start_time_time_part",
-          "end_time_date_part",
-          "end_time_time_part",
-        ),
+        params: {
+          reservation_form: _.pick(
+            form_values,
+            "reservation_id",
+            "start_time_date_part",
+            "start_time_time_part",
+            "end_time_date_part",
+            "end_time_time_part",
+            "menu_staffs_list"
+          ),
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, {arrayFormat: 'brackets'})
+        },
         responseType: "json",
         cancelToken: this.validateReservationCall.token
       })
@@ -424,8 +427,7 @@ class ManagementReservationForm extends React.Component {
       this.reservation_form.change("reservation_form[start_time_restriction]", result["start_time_restriction"])
       this.reservation_form.change("reservation_form[end_time_restriction]", result["end_time_restriction"])
       this.reservation_form.change("reservation_form[errors]", result["errors"])
-      // not enough
-      // this.reservation_form.change("reservation_form[menu_min_staffs_number]", result["end_time_restriction"])
+      this.reservation_form.change("reservation_form[warnings]", result["warnings"])
     }
     catch(err) {
       if (axios.isCancel(err)) {
@@ -437,57 +439,32 @@ class ManagementReservationForm extends React.Component {
     }
   }
 
-  displayErrors = (error_reasons) => {
-    let error_messages = [];
+  startTimeError = () => {
+    return displayErrors(this.reservation_form_values, ["reservation_form.start_time.invalid_time"]);
+  };
 
-    error_reasons.forEach((error_reason) => {
-      if (this.reservation_form_values.errors && this.reservation_form_values.errors[error_reason]) {
-        if (_.intersection([error_reason], ManagementReservationForm.errorGroups().warnings).length != 0) {
-          error_messages.push(<span className="warning" key={error_reason}>{this.reservation_form_values.errors[error_reason]}</span>)
-        }
-        else {
-          error_messages.push(<span className="danger" key={error_reason}>{this.reservation_form_values.errors[error_reason]}</span>)
-        }
-      }
-    })
-
-    return _.compact(error_messages);
+  endTimeError = () => {
+    return displayErrors(this.reservation_form_values, ["reservation_form.end_time.invalid_time"]);
   };
 
   dateErrors = () => {
-    return this.displayErrors(["shop_closed"]);
+    return displayErrors(this.reservation_form_values, ["reservation_form.date.shop_closed"]);
   };
 
   previousReservationOverlap = () => {
-    return this.displayErrors(["previous_reservation_interval_overlap"]).length != 0;
+    return displayErrors(this.reservation_form_values, ["reservation_form.start_time.interval_too_short"]).length != 0;
   };
 
   nextReservationOverlap = () => {
-    return this.displayErrors(["next_reservation_interval_overlap"]).length != 0;
+    return displayErrors(this.reservation_form_values, ["reservation_form.end_time.interval_too_short"]).length != 0;
   };
 
-  isValidReservationTime = () => {
-    const {
-      start_time_restriction,
-      end_time_restriction,
-      start_time_date_part,
-      start_time_time_part,
-      end_time_time_part
-    } = this.reservation_form_values;
+  displayIntervalOverlap = () => {
+    return displayErrors(this.reservation_form_values, ["reservation_form.start_time.interval_too_short"]) &&
+      displayErrors(this.reservation_form_values, ["reservation_form.end_time.interval_too_short"])
+  }
 
-    if (start_time_restriction && end_time_restriction && start_time_time_part && end_time_time_part) {
-      const reservation_start_time = moment(`${start_time_date_part} ${start_time_time_part}`);
-      const reservation_end_time = moment(`${start_time_date_part} ${end_time_time_part}`);
-
-      return reservation_start_time  >= moment(`${start_time_date_part} ${start_time_restriction}`) &&
-             reservation_end_time <= moment(`${start_time_date_part} ${end_time_restriction}`) &&
-             reservation_start_time < reservation_end_time
-    }
-    else {
-      return false;
-    }
-  };
-
+  // Not only current staff responsible for this reservation.
   otherStaffsResponsibleThisReservation = () => {
     // TODO
     // menu_staffs_list
@@ -520,33 +497,6 @@ class ManagementReservationForm extends React.Component {
     //   (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
     // )
     return true;
-  };
-
-  _maxCustomerLimit = () => {
-    const _this = this;
-
-    // TODO
-    // if (this.state.menu_min_staffs_number === 0) {
-    //   return this.state.menu_available_seat
-    // }
-    // else if (this.state.menu_min_staffs_number == 1) {
-    //   var selected_staffs = this._selected_staffs();
-    //
-    //   if (selected_staffs[0]) {
-    //     return _.min([selected_staffs[0].handableCustomers, this.state.menu_available_seat]);
-    //   }
-    // }
-    // else if (this.state.menu_min_staffs_number > 1) {
-    //   var selected_staffs = this._selected_staffs();
-    //
-    //   var handableCustomers = selected_staffs.map(function(staff) {
-    //     return staff.handableCustomers;
-    //   });
-    //
-    //   var minCustomersHandleable = _.min(handableCustomers);
-    //
-    //   return _.min([minCustomersHandleable, this.state.menu_available_seat]);
-    // }
   };
 
   _isMeetCustomerLimit = () => {

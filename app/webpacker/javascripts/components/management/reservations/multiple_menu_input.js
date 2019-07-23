@@ -6,6 +6,7 @@ import { OnChange } from 'react-final-form-listeners'
 
 import { selectCustomStyles } from "../../../libraries/styles";
 import { InputRow } from "../../shared/components";
+import { displayErrors } from "./helpers.js"
 
 const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, i18n }) => {
   let selected_ids = []
@@ -28,7 +29,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
               name={`${staff_field}staff_id`}
               component="select"
             >
-              <option>
+              <option value="">
                 {i18n.select_a_staff}
               </option>
               {filterd_staff_options.map((staff_option) => (
@@ -57,6 +58,9 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
                 </a>
               )
             }
+            <span className="errors">
+              {displayErrors(all_values.reservation_form, [`${staff_field}[staff_id]`])}
+            </span>
           </div>
         )
       })}
@@ -122,6 +126,9 @@ const MenusFields = ({ reservation_form, all_values, collection_name, fields, st
                   reservation_form.change(`${field}staff_ids`, staff_ids)
                 }}
               </OnChange>
+              <span className="errors">
+                {displayErrors(all_values.reservation_form, [`${field}[menu_id]`])}
+              </span>
             </div>
             <div>
               <Field

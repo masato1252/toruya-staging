@@ -91,7 +91,6 @@ en:
     pending_reservation_need_confirm: You have %{number} reservation need to be confirm.
     pending_reservation_confirm: Check here
   reservation:
-    valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
     no_valid_menu_alert: No available menu
     no_menu_message: No results found
@@ -794,9 +793,12 @@ en:
               processor_failed: "^The reason why your payment failed can be your credit card is invalid."
         reservable/reservation:
           attributes:
-            business_time_range:
+            start_time:
               interval_too_short: "^Not enough interval time"
-              invalid_time_range: "^Invalid time"
+              invalid_time: "^Invalid time"
+            end_time:
+              interval_too_short: "^Not enough interval time"
+              invalid_time: "^Invalid time"
             staff_ids:
               unworking_staff: "^Off-day"
               ask_for_leave: "^Off-day"
@@ -811,3 +813,5 @@ en:
               unschedule_menu: "^%{menu_name} Not match with reservation block"
               start_yet: "^%{menu_name} starts from ${start_at}"
               is_over: "^%{menu_name} ended"
+              shop_or_staff_not_enough_ability: "^Over Shop or Staff capability"
+              lack_staffs: "^not enough staffs"

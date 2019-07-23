@@ -41,7 +41,7 @@ FactoryBot.define do
 
       Array.wrap(proxy.menus).each.with_index do |menu, menu_index|
         FactoryBot.create(:reservation_menu, reservation: reservation, menu: menu, position: menu_index)
-        time_result = ReservationMenuTimeCalculator.calculate(reservation, proxy.menus, menu_index)
+        time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, menu_index)
 
         Array.wrap(proxy.staffs).each do |staff|
           unless StaffMenu.where(staff: staff, menu: menu).exists?

@@ -30,7 +30,8 @@ module Booking
                 reserable_outcome = Reservable::Reservation.run(
                   shop: shop,
                   date: date,
-                  business_time_range: menu_book_start_at..menu_book_end_at,
+                  start_time: menu_book_start_at,
+                  end_time: menu_book_end_at,
                   menu_id: menu.id,
                   menu_required_time: booking_option.booking_option_menus.find_by(menu_id: menu.id).required_time,
                   staff_ids: candidate_staff_ids,

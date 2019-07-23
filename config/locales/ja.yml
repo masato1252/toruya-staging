@@ -137,7 +137,6 @@ ja:
         title: 店舗を設定してください
         content: 利用履歴で顧客を高度検索するには、店舗を設定する必要があります。
   reservation:
-    valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
     no_valid_menu_alert: メニューを入力してください。
     no_menu_message: 検索結果なし
@@ -1103,9 +1102,12 @@ ja:
           attributes:
             date:
               shop_closed: "^休業日"
-            business_time_range:
+            start_time:
               interval_too_short: "^インターバル不足"
-              invalid_time_range: "^予約時間が正しくありません。"
+              invalid_time: "^予約時間が正しくありません。"
+            end_time:
+              interval_too_short: "^インターバル不足"
+              invalid_time: "^予約時間が正しくありません。"
             staff_ids:
               unworking_staff: "^休暇中"
               ask_for_leave: "^休暇中"
@@ -1114,10 +1116,11 @@ ja:
               overlap_reservations: "^重複予約あり"
               incapacity_menu: "^非対応メニュー"
               not_enough_ability: "^対応人数超"
-              lack_overlap_staffs: "^無効なスタッフ"
             menu_id:
               time_not_enough: "^所要時間不足"
               not_enough_seat: "^席数不足"
               unschedule_menu: "^予約枠外"
               start_yet: "^受付開始 %{start_at}"
               is_over: "^受付終了"
+              shop_or_staff_not_enough_ability: "^Over Shop or Staff capability"
+              lack_staffs: "^対応スタッフ不足"

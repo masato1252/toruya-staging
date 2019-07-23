@@ -14,16 +14,18 @@ RSpec.describe Reservations::Save do
   let(:by_staff) { staff }
   let(:start_time) { Time.zone.local(2016, 1, 1, 7) }
   # XXX: end time == start time + menus total required time
-  let(:end_time) { start_time.advance(minutes: menu_staffs_list.map { |list| list.slice(:menu_id, :menu_required_time) }.uniq.sum { |h| h[:menu_required_time] } ) }
+  let(:end_time) { start_time.advance(minutes: menu_staffs_list.sum { |h| h[:menu_required_time] } ) }
   let(:menu_staffs_list) do
     [
       {
         menu_id: menu.id,
         position: 0,
-        state: "pending",
-        staff_id: staff.id,
         menu_required_time: menu.minutes,
-        menu_interval_time: menu.interval
+        menu_interval_time: menu.interval,
+        staff_ids: [
+          staff_id: staff.id,
+          state: "pending"
+        ]
       }
     ]
   end
@@ -77,18 +79,22 @@ RSpec.describe Reservations::Save do
             {
               menu_id: menu.id,
               position: 0,
-              state: "pending",
-              staff_id: staff.id.to_s,
               menu_required_time: menu.minutes,
-              menu_interval_time: menu.interval
+              menu_interval_time: menu.interval,
+              staff_ids: [
+                staff_id: staff.id.to_s,
+                state: "pending"
+              ]
             },
             {
               menu_id: menu2.id,
               position: 1,
-              state: "pending",
-              staff_id: staff.id.to_s,
               menu_required_time: menu2.minutes,
-              menu_interval_time: menu2.interval
+              menu_interval_time: menu2.interval,
+              staff_ids: [
+                staff_id: staff.id.to_s,
+                state: "pending"
+              ]
             }
           ]
         end
@@ -122,26 +128,32 @@ RSpec.describe Reservations::Save do
               {
                 menu_id: menu3.id,
                 position: 0,
-                state: "pending",
-                staff_id: staff3.id.to_s,
                 menu_required_time: menu3.minutes,
                 menu_interval_time: menu3.interval,
+                staff_ids: [
+                  staff_id: staff3.id.to_s,
+                  state: "pending"
+                ]
               },
               {
                 menu_id: menu2.id,
                 position: 1,
-                state: "pending",
-                staff_id: staff2.id.to_s,
                 menu_required_time: menu2.minutes,
                 menu_interval_time: menu2.interval,
+                staff_ids: [
+                  staff_id: staff2.id.to_s,
+                  state: "pending"
+                ]
               },
               {
                 menu_id: menu.id,
                 position: 2,
-                state: "pending",
-                staff_id: staff.id.to_s,
                 menu_required_time: menu.minutes,
                 menu_interval_time: menu.interval,
+                staff_ids: [
+                  staff_id: staff.id.to_s,
+                  state: "pending"
+                ]
               }
             ]
           end

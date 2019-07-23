@@ -160,11 +160,11 @@ module Booking
               #   }
               # ]
               skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
-              skip_after_interval_time_validation = (index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
               present_reservable_reservation_outcome = Reservable::Reservation.run(
                 shop: shop,
                 date: date,
-                business_time_range: reservation_staff_properties.work_start_at..reservation_staff_properties.work_end_at,
+                start_time: reservation_staff_properties.work_start_at,
+                end_time: reservation_staff_properties.work_end_at,
                 menu_id: reservation_staff_properties.menu_id,
                 menu_required_time: booking_option.booking_option_menus.find_by(menu_id: reservation_staff_properties.menu_id).required_time,
                 staff_ids: reservation_staff_properties.staff_ids,

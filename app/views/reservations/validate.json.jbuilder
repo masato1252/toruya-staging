@@ -3,6 +3,5 @@ if @time_ranges
   json.end_time_restriction @time_ranges.last.to_s(:time)
 end
 
-json.menu_min_staffs_number @menu_min_staffs_number || 1
-
-json.errors @errors
+json.errors @errors_with_warnings[:errors]
+json.warnings @errors_with_warnings[:warnings]

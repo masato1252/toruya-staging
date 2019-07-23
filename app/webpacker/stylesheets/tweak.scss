@@ -91,7 +91,7 @@ input:disabled, select:disabled, textarea[disabled], .input div.disabled {
       }
 
       .danger {
-        color: #cf0003;
+        color: $danger;
       }
 
       .modal-body .warning i.fa-check-circle {
