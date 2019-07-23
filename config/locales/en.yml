@@ -44,6 +44,7 @@ en:
     date: Date
     day: Day
     time: Time
+    content: Content
     start_time: Start Time
     end_time: End Time
     updated_time: Update time
@@ -118,6 +119,7 @@ en:
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
     confirm_with_warnings: Confirm with warnings
     customers_list_label: Customers
+    details: Details
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

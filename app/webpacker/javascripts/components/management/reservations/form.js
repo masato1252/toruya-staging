@@ -24,7 +24,6 @@ class ManagementReservationForm extends React.Component {
       {
         field: /end_time_date_part|end_time_time_part|menu_staffs_list/,
         updates: async (value, name, allValues) => {
-          // TODO: Need test
           await this.validateReservation(allValues.reservation_form)
           return {};
         }
@@ -71,18 +70,22 @@ class ManagementReservationForm extends React.Component {
       end_time_time_part,
     } = this.reservation_form_values;
     const { is_editable, shop_name } = this.props.reservation_properties;
-    const { valid_time_tip_message } = this.props.i18n;
+    const {
+      details,
+      date_on,
+      time,
+    } = this.props.i18n;
     const end_at = this.end_at();
 
     return (
       <div>
         <h2>
           <i className="fa fa-calendar-o" aria-hidden="true"></i>
-          予約詳細
+          {details}
         </h2>
         <div id="resDateTime" className="formRow">
           <dl className="form" id="resDate">
-            <dt>日付</dt>
+            <dt>{date_on}</dt>
             <dd className="input">
               <Field
                 name="reservation_form[start_time_date_part]"
@@ -110,7 +113,7 @@ class ManagementReservationForm extends React.Component {
             </dd>
           </dl>
           <dl className="form" id="resTime">
-            <dt>時間</dt>
+            <dt>{time}</dt>
             <dd className="input">
               <Field
                 name="reservation_form[start_time_time_part]"
@@ -149,6 +152,9 @@ class ManagementReservationForm extends React.Component {
 
   renderReservationMenus = () => {
     const {
+      content,
+    } = this.props.i18n;
+    const {
       staff_options,
       menu_group_options,
     } = this.props.reservation_properties;
@@ -156,7 +162,7 @@ class ManagementReservationForm extends React.Component {
     return (
       <div className="formRow res-menus">
         <dl className="form">
-          <dt>Content</dt>
+          <dt>{content}</dt>
           <dd className="input">
             <MultipleMenuInput
               collection_name="reservation_form[menu_staffs_list]"
@@ -466,37 +472,36 @@ class ManagementReservationForm extends React.Component {
 
   // Not only current staff responsible for this reservation.
   otherStaffsResponsibleThisReservation = () => {
-    // TODO
-    // menu_staffs_list
-    // [
-    //   {
-    //     menu_id: menu_id,
-    //     menu_interval_time: 10,
-    //     staff_ids: $staff_ids,
-    //     work_start_at: $work_start_time,
-    //     work_end_at: $work_end_time
-    //   }
-    // ]
-    // const all_staff_ids = _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids)
-    // return all_staff_ids.some(staff_id => staff_id !== this.props.currentUserStaffId);
-
-    return true;
+    const {
+      current_user_staff_id
+    } = this.props.reservation_properties;
+    return this._all_staff_ids().some(staff_id => staff_id !== current_user_staff_id);
   };
 
+  _all_staff_ids = () => {
+    return _.compact(_.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids).map((staff) => staff.staff_id))
+  }
+
+  _all_menu_ids = () => {
+    return _.compact(_.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.menu_id))
+  }
+
   _isValidToReserve = () => {
-    // TODO
-    // let errors = _.intersection(Object.keys(this.state.errors), ReservationForm.errorGroups().errors)
-    //
-    // return (
-    //   this.props.isEditable &&
-    //   this.state.start_time_date_part &&
-    //   this.state.start_time_time_part &&
-    //   this.state.end_time_time_part &&
-    //   this.state.menu_id &&
-    //   this.state.staff_ids.length &&
-    //   (this.state.rough_mode ? errors.length == 0 : (errors.length == 0 && !this._isAnyWarning()))
-    // )
-    return true;
+    const { is_editable } = this.props.reservation_properties;
+    const {
+      errors,
+      warnings,
+      menu_staffs_list,
+      rough_mode
+    } = this.reservation_form_values
+
+    return (
+      is_editable &&
+      menu_staffs_list.length &&
+      this._all_menu_ids().length &&
+      this._all_staff_ids().length &&
+      (rough_mode ? !errors : (!errors && !warnings))
+    )
   };
 
   _isMeetCustomerLimit = () => {

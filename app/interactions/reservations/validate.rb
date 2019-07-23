@@ -9,7 +9,7 @@ module Reservations
       time :start_time
       time :end_time
       array :customers_list, default: []
-      array :menu_staffs_list do
+      array :menu_staffs_list, default: nil do
         hash do
           integer :menu_id
           integer :position, default: 0
@@ -34,7 +34,7 @@ module Reservations
       reservation.attributes = params
 
       reservation.reservation_menus.build(
-        menu_staffs_list.map do |h|
+        Array.wrap(menu_staffs_list).map do |h|
           {
             menu_id: h[:menu_id],
             required_time: h[:menu_required_time],
@@ -42,10 +42,11 @@ module Reservations
           }
         end
       )
-      reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
-      reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
 
       if menu_staffs_list.present?
+        reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
+        reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
+
         menu_staffs_list.each.with_index do |h, index|
           time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, h[:position])
 

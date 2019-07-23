@@ -27,7 +27,7 @@ module Reservable
         end
       end
 
-      return if start_time.blank? && end_time.blank?
+      return if start_time.blank? || end_time.blank?
 
       # validate_time_range
       if time_outcome.valid?

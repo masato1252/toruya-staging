@@ -45,7 +45,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
               component="input"
             />
             {
-              (!menu || index < menu.min_staffs_number) ? null : (
+              (!menu || index < Math.max(menu.min_staffs_number, 1)) ? null : (
                 <a
                   href="#"
                   className="btn btn-symbol btn-orange after-field-btn"
