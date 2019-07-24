@@ -164,6 +164,17 @@ class ReservationsController < DashboardController
     outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:reservation_form][:start_time_date_part]).to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
 
+    @customer_max_load_capability = reservation_params_hash[:menu_staffs_list].map do |menu_staffs_list|
+      staff_ids = menu_staffs_list[:staff_ids].map { |hh| hh[:staff_id] }.compact
+      return 0 if staff_ids.blank?
+
+      Reservable::CalculateCapabilityForCustomers.run!(
+        shop: shop,
+        menu_id: menu_staffs_list[:menu_id],
+        staff_ids: staff_ids
+      )
+    end.min
+
     reservation_errors
   end
 
@@ -218,20 +229,6 @@ class ReservationsController < DashboardController
 
   def set_current_dashboard_mode
     cookies[:dashboard_mode] = shop.id
-  end
-
-  def repair_nested_params(obj = params)
-    obj.each do |key, value|
-      if value.is_a?(ActionController::Parameters) || value.is_a?(Hash)
-        # If any non-integer keys
-        if value.keys.find {|k, _| k =~ /\D/ }
-          repair_nested_params(value)
-        else
-          obj[key] = value.values
-          value.values.each {|h| repair_nested_params(h) }
-        end
-      end
-    end
   end
 
   def reservation_params_hash

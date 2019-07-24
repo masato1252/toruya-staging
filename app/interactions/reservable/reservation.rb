@@ -199,12 +199,7 @@ module Reservable
 
     # validate does the number of customers using the menu over the shop/staff capabiliy
     def validate_shop_capability_for_customers
-      shop_max_seat_number = shop_menu&.max_seat_number || 1
-
-      # XXX: when no staffs could handle this menu, staff_max_customers is 0
-      staff_max_customers = StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).where.not(max_customers: nil).minimum(:max_customers) || 0
-
-      min_shop_customer_capability = [shop_max_seat_number, staff_max_customers].min
+      min_shop_customer_capability = compose(Reservable::CalculateCapabilityForCustomers, shop: shop, menu_id: menu_id, staff_ids: staff_ids)
 
       existing_customers = ::Reservation.
         left_outer_joins(:menus).
@@ -293,7 +288,7 @@ module Reservable
     end
 
     def shop_menu
-      @shop_menu ||= shop.shop_menus.find_by(menu_id: menu_id)
+      @shop_menu ||= shop.shop_menus.find_by!(menu_id: menu_id)
     end
   end
 end
