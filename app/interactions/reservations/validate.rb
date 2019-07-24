@@ -67,9 +67,7 @@ module Reservations
             skip_after_interval_time_validation: skip_after_interval_time_validation
           )
 
-          if outcome.invalid?
-            errors_list << outcome.errors
-          end
+          errors_list << outcome.errors
         end
       else
         outcome = Reservable::Reservation.run(
@@ -86,7 +84,7 @@ module Reservations
       end
       errors_with_warnings = {}
 
-      errors_list.each do |outcome_errors|
+      errors_list.each.with_index do |outcome_errors, menu_index|
         outcome_errors.details.each.with_object({}) do |(error_key, error_details), errors|
           error_details.each do |error_detail|
             error_reason = error_detail[:error]
@@ -113,12 +111,10 @@ module Reservations
             case error_key
             when :menu_id
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list] ||= Array.new(menu_staffs_list.length) { Hash[:menu_id, {}] }
-              menu_index = menu_staffs_list.find_index { |menu_list| menu_list[:menu_id] == option[:menu_id] }
 
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list][menu_index][:menu_id][error_reason] = error_message
             when :staff_ids
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list] ||= Array.new(menu_staffs_list.length) { Hash[:menu_id, {}] }
-              menu_index = menu_staffs_list.find_index { |menu_list| menu_list[:menu_id] == option[:menu_id] }
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list][menu_index][:staff_ids] ||= Array.new(menu_staffs_list[menu_index][:staff_ids].length) { Hash[:staff_id, {}] }
               staff_index = menu_staffs_list[menu_index][:staff_ids].find_index { |staff_h| staff_h[:staff_id] == option[:staff_id] }
 
