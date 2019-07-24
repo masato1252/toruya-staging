@@ -220,9 +220,10 @@ RSpec.describe Booking::CreateReservation do
             args[:customer_info] = { "id": customer.id }
             args[:present_customer_info] = { "id": customer.id }
 
-            # XXX: assign different required time for menu
-            menus_with_different_required_time = booking_option.menus.tap { |_menus| _menus.last.update_columns(minutes: _menus.last.minutes * 2) }
-            present_reservation = FactoryBot.create(:reservation, :reserved, menus: menus_with_different_required_time, shop: shop, start_time: booking_start_at)
+            different_menu_required_time = booking_option.menus.last.minutes * 2
+            # XXX: The booking option menu required time is different from reservation menu required time
+            booking_option.booking_option_menus.last.update_columns(required_time: different_menu_required_time)
+            present_reservation = FactoryBot.create(:reservation, :reserved, menus: booking_option.menus, shop: shop, start_time: booking_start_at)
 
             expect {
               outcome

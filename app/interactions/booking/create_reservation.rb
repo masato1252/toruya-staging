@@ -160,6 +160,8 @@ module Booking
               #   }
               # ]
               skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
+              skip_after_interval_time_validation = (index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
+
               present_reservable_reservation_outcome = Reservable::Reservation.run(
                 shop: shop,
                 date: date,
