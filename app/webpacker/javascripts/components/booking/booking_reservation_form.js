@@ -89,6 +89,14 @@ class BookingReservationForm extends React.Component {
     }
   }
 
+  renderDraftWarning = () => {
+    if (this.props.booking_page.draft) {
+      return (
+        <div className="alert alert-info">{this.props.i18n.showing_preview}</div>
+      )
+    }
+  }
+
   renderBookingHeader = (pristine) => {
     const { title, greeting, shop_logo_url } = this.props.booking_page;
 
@@ -1043,6 +1051,7 @@ class BookingReservationForm extends React.Component {
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
+              {this.renderDraftWarning()}
               {this.renderBookingHeader(pristine)}
               {this.renderBookingFlow()}
 

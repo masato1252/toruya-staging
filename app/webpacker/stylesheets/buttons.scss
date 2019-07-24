@@ -13,6 +13,13 @@ a.btn {
     width: 35px;
     padding: 0;
   }
+
+  &.btn-large {
+    line-height: 50px !important;
+    height: 50px !important;
+    padding: 0 10px;
+    font-weight: bold;
+  }
 }
 
 .btn-tarco {

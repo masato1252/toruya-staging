@@ -600,6 +600,11 @@ class BookingPageSettings extends React.Component {
         render={({ handleSubmit, submitting, values, form }) => {
           this.booking_page_settings_form = form;
           this.booking_page_settings_values = values;
+          const {
+            cancel,
+            save_as_draft,
+            save_and_publish,
+          } = this.props.i18n;
 
           return (
             <form
@@ -627,13 +632,30 @@ class BookingPageSettings extends React.Component {
                   <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
                 </li>
                 <li>
-                  <input
+                  <button
                     type="submit"
-                    name="commit"
-                    value={this.props.i18n.save}
-                    className="BTNyellow"
-                    data-disable-with={this.props.i18n.save}
+                    className="btn btn-yellow btn-large"
                     disabled={submitting}
+                    onClick={() => {
+                      form.change("booking_page[draft]", true);
+                    }}>
+                    {save_as_draft}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="submit"
+                    className="btn btn-orange btn-large"
+                    disabled={submitting}
+                    onClick={() => {
+                      form.change("booking_page[draft]", false);
+                    }}>
+                    {save_and_publish}
+                  </button>
+                  <Field
+                    name="booking_page[draft]"
+                    component="input"
+                    type="hidden"
                   />
                 </li>
               </ul>

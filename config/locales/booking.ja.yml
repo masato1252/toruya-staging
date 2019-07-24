@@ -1,5 +1,6 @@
 ja:
   booking_page:
+    showing_preview: プレビュー表示中
     time_from: "から"
     ever_used: "以前に利用されたことが"
     yes_ever_used: ある

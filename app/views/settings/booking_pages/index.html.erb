@@ -28,7 +28,11 @@
           <%= link_to t("action.edit"), edit_settings_user_booking_page_path(super_user, booking_page), class: "BTNtarco" %>
           <%= link_to t("action.delete"), settings_user_booking_page_path(super_user, booking_page), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
 
-          <%= modal_link_to t("action.copy_url"), copy_modal_settings_user_booking_page_path(super_user, booking_page), class: "BTNgray" %>
+          <% if booking_page.draft %>
+            <%= link_to t("action.preview"), booking_page_path(booking_page), target: "_blank", class: "BTNgray" %>
+          <% else %>
+            <%= modal_link_to t("action.copy_url"), copy_modal_settings_user_booking_page_path(super_user, booking_page), class: "BTNgray" %>
+          <% end %>
         </dd>
       </dl>
     <% end %>

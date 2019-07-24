@@ -15,6 +15,7 @@
 #  start_at            :datetime
 #  end_at              :datetime
 #  overlap_restriction :boolean          default(TRUE)
+#  draft               :boolean          default(TRUE), not null
 #
 # Indexes
 #
