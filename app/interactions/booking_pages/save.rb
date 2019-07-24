@@ -3,6 +3,7 @@ module BookingPages
     object :booking_page, class: "BookingPage"
 
     hash :attrs, default: nil do
+      boolean :draft, default: true
       integer :shop_id
       string :name
       string :title, default: nil

@@ -28,6 +28,8 @@ ja:
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
+    save_as_draft: 下書きとして保存
+    save_and_publish: 保存して公開
     search: 検索
     upgrade_to_premium: プレミアムにアップグレードする
     upgrade_to_basic: ベーシックにアップグレードする
@@ -37,6 +39,7 @@ ja:
     copy_url: URLコピー
     copy_url2: URLをコピー
     copy_code: コードをコピー
+    preview: プレビュー
   common:
     processing: 送信中
     date: 日付

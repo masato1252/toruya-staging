@@ -1,4 +1,9 @@
 .booking-content {
+  .alert.alert-info {
+    margin: -12px -12px 0 -12px;
+    border-radius: 0;
+  }
+
   input[type="text"],
   input[type="tel"],
   input[type="email"] {

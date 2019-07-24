@@ -28,6 +28,8 @@ en:
     cancel: Cancel
     log_out: Log out
     save: Save
+    save_as_draft: Save as draft
+    save_and_publish: Save and publish
     search: Search
     upgrade_to_premium: Upgrade to premium plan
     upgrade_to_basic: Upgrade to basic plan
@@ -37,6 +39,7 @@ en:
     copy_url: Copy URL
     copy_url2: Copy URL
     copy_code: Copy
+    preview: Preview
   common:
     processing: Processing
     date: Date

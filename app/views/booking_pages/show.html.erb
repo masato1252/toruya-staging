@@ -28,7 +28,8 @@
     is_single_option: @is_single_booking_option,
     is_started: Time.zone.now >= @booking_page.start_time && @has_active_booking_option,
     is_ended: @booking_page.end_at && Time.zone.now > @booking_page.end_at,
-    start_at: I18n.l(@booking_page.start_time, format: :date_with_wday)
+    start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
+    draft: @booking_page.draft
   }),
   calendar: {
     dayNames: I18n.t("date.abbr_day_names"),
