@@ -1,32 +1,3 @@
-<%
-  menu_list = @reservation.reservation_menus.includes(:menu).map do |rm|
-    {
-      menu: custom_option(@menu_result[:menu_options].find { |option| option.id == rm.menu_id }),
-      menu_id: rm.menu_id,
-      menu_required_time: rm.required_time,
-      menu_interval_time: rm.menu.interval,
-      staff_ids: []
-    }
-  end
-
-  @reservation.reservation_staffs.each do |reservation_staff|
-    menu_hash = menu_list.find { |menu_item| menu_item[:menu_id] == reservation_staff.menu_id }
-    menu_hash[:staff_ids] << { staff_id: reservation_staff.staff_id, state: reservation_staff.state }
-  end
-
-  menu_list = menu_list.size != 0 ? menu_list : [
-    {
-      menu_id: nil,
-      position: 0,
-      menu_required_time: nil,
-      menu_interval_time: nil,
-      staff_ids: [{
-        staff_id: nil,
-        state: "pending"
-      }]
-    }
-  ]
-%>
 <%= react_component("management/reservations/form", {
   form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
@@ -41,17 +12,20 @@
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     current_user_staff_id: current_user.current_staff(super_user).id,
   },
-  reservation_form: @reservation.attributes.slice("memo").merge!({
+  reservation_form: @reservation.attributes.slice("id", "memo").merge!({
+    reservation_id: @reservation.id,
     start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,
     start_time_time_part: @reservation.start_time_time || @reservation.start_time_time_part,
     end_time_date_part: @reservation.end_time_date,
     end_time_time_part: @reservation.end_time_time,
     customers: @reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } },
-    menu_staffs_list: menu_list
+    menu_staffs_list: @menu_staffs_list,
+    customers_list: @customers_list,
   }),
   path: {
     save: @reservation.new_record? ? shop_reservations_path(shop) : shop_reservation_path(shop, @reservation),
-    validate_reservation: validate_shop_reservations_path(shop, format: :json)
+    validate_reservation: validate_shop_reservations_path(shop, format: :json),
+    add_customer: add_customer_shop_reservations_path(shop, format: :json)
   },
   i18n: {
   }.merge!([

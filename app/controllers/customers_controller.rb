@@ -21,11 +21,7 @@ class CustomersController < DashboardController
       .includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
     if shop
-      @add_reservation_path = if params[:reservation_id].present?
-                                edit_shop_reservation_path(shop, id: params[:reservation_id])
-                              else
-                                new_shop_reservation_path(shop)
-                              end
+      @add_reservation_path = form_shop_reservations_path(shop)
     end
   end
 

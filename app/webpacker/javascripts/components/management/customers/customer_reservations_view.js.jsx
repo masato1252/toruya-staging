@@ -19,7 +19,16 @@ class CustomerReservationsView extends React.Component {
   };
 
   fetchReservations = () => {
-    var _this = this;
+    const _this = this;
+
+    if (_this.processing) return;
+
+    _this.processing = true;
+
+    if (_this.customerReservationsCall) {
+      _this.customerReservationsCall.cancel();
+    }
+    _this.customerReservationsCall = axios.CancelToken.source();
 
     if (this.props.customer.id) {
       this.props.switchProcessing(function() {
@@ -27,12 +36,14 @@ class CustomerReservationsView extends React.Component {
           method: "GET",
           url: _this.props.customerReservationsPath,
           params: { id: _this.props.customer.id },
-          responseType: "json"
+          responseType: "json",
+          cancelToken: _this.customerReservationsCall.token
         }).then(function(response) {
           _this.setState({ reservations: response.data["reservations"] });
         }).catch(function() {
           _this.setState({ reservations: [] });
         }).then(function() {
+          _this.processing = false;
           _this.props.forceStopProcessing();
         });
       });

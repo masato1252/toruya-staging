@@ -14,6 +14,7 @@ import DateFieldAdapter from "../../shared/date_field_adapter";
 import { Input } from "../../shared/components";
 import CommonCustomersList from "../common/customers_list.js"
 import MultipleMenuInput from "./multiple_menu_input.js"
+import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"
 
 class ManagementReservationForm extends React.Component {
@@ -229,17 +230,17 @@ class ManagementReservationForm extends React.Component {
           {customers_list_label}
           {is_customers_readable &&
             <a
-              onClick={this.handleCustomerAdd}
+              onClick={this.addCustomer}
               className={this._customerAddClass()}
               id="addCustomer">
               {this._customerWording()}
             </a>}
           </h2>
 
-          <CommonCustomersList
-            isDisabled={!is_editable}
-            customers={customers}
-            handleCustomerRemove={this.handleCustomerRemove} />
+          <ReservationCustomersList
+            collection_name="reservation_form[customers_list]"
+            all_values={this.all_values}
+          />
           <div id="customerLevels">
             <ul>
               <li className="regular">
@@ -267,11 +268,13 @@ class ManagementReservationForm extends React.Component {
       confirm_with_warnings,
     } = this.props.i18n;
     const {
-      reservation_id,
       from_customer_id,
       from_shop_id,
     } = this.props.reservation_properties;
-    const { submitting } = this.reservation_form_values;
+    const {
+      submitting,
+      reservation_id
+    } = this.reservation_form_values;
 
     return (
       <footer>
@@ -374,7 +377,8 @@ class ManagementReservationForm extends React.Component {
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
-              { this.props.reservation_properties.reservation_id ?  <input name="_method" type="hidden" value="PUT" /> : null }
+              <Field name="reservation_form[id]" type="hidden" component="input" />
+              { this.reservation_form_values.reservation_id ?  <input name="_method" type="hidden" value="PUT" /> : null }
               <div id="resNew" className="contents">
                 <div id="resInfo" className="contBody">
                   {this.renderReservationDateTime()}
@@ -419,7 +423,8 @@ class ManagementReservationForm extends React.Component {
             "start_time_time_part",
             "end_time_date_part",
             "end_time_time_part",
-            "menu_staffs_list"
+            "menu_staffs_list",
+            "customers_list"
           ),
         },
         paramsSerializer: (params) => {
@@ -443,6 +448,31 @@ class ManagementReservationForm extends React.Component {
     finally {
       this.reservation_form.change("reservation_form[processing]", false)
     }
+  }
+
+  addCustomer = async () => {
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.add_customer,
+      params: {
+        reservation_form: _.pick(
+          this.reservation_form_values,
+          "reservation_id",
+          "start_time_date_part",
+          "start_time_time_part",
+          "end_time_date_part",
+          "end_time_time_part",
+          "menu_staffs_list",
+          "customers_list"
+        ),
+      },
+      paramsSerializer: (params) => {
+        return qs.stringify(params, {arrayFormat: 'brackets'})
+      },
+      responseType: "json",
+    })
+
+    window.location = response.data.redirect_to;
   }
 
   startTimeError = () => {

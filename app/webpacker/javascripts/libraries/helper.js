@@ -46,6 +46,16 @@ const transformValues = values => {
 const isBoolean = val => "boolean" === typeof val;
 const isNumber = val => "number" === typeof val;
 
+const setProperListHeight = (component, adjustHeight) => {
+  const listHeight = `${$(window).innerHeight() - adjustHeight} px`;
+
+  component.setState({listHeight: listHeight})
+
+  $(window).resize(() => {
+    component.setState({listHeight: listHeight})
+  });
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -54,4 +64,5 @@ export {
   lengthValidator,
   mustBeNumber,
   greaterEqualThan,
+  setProperListHeight,
 };

@@ -28,7 +28,8 @@ Rails.application.routes.draw do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
         get :validate
-        get "form/(:id)", action: :form
+        get :add_customer
+        get "form/(:id)", action: :form, as: :form
       end
 
       scope module: "reservations" do

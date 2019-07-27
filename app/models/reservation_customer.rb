@@ -41,6 +41,6 @@ class ReservationCustomer < ApplicationRecord
   scope :active, -> { where.not(state: :canceled) }
 
   def customer_info
-    CustomerInfo.new(details.new_customer_info)
+    Booking::CustomerInfo.new(details.new_customer_info)
   end
 end
