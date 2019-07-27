@@ -7,7 +7,6 @@
     is_customers_readable: ability(@reservation.shop.user, @reservation.shop).can?(:read, :customers_dashboard),
     reservation_id: @reservation.id,
     from_customer_id: params[:from_customer_id],
-    from_shop_id: params[:from_shop_id],
     staff_options: custom_options(@staff_options),
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     current_user_staff_id: current_user.current_staff(super_user).id,

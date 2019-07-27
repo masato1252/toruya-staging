@@ -35,32 +35,6 @@ class ReservationsController < DashboardController
     # Notifications END
   end
 
-  # GET /reservations/new
-  def new
-    authorize! :create_reservation, shop
-    authorize! :manage_shop_reservations, shop
-    @body_class = "resNew"
-
-    @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-                                         start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
-                                         end_time_time_part: params[:end_time_time_part] || Time.zone.now.advance(hours: 2).to_s(:time),
-                                         memo: params[:memo],
-                                         menu_id: params[:menu_id],
-                                         staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
-                                         customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
-
-    if current_user.member?
-      all_options
-    elsif params[:menu_id].present?
-      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
-    end
-
-    if params[:start_time_date_part].present?
-      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
-      @time_ranges = outcome.valid? ? outcome.result : nil
-    end
-  end
-
   def form
     @body_class = "resNew"
     all_options
@@ -78,9 +52,9 @@ class ReservationsController < DashboardController
     else
       @reservation = shop.reservations.find_by(id: params[:id])
       @reservation ||= shop.reservations.new(
-        start_time_date_part: Time.zone.now.to_s(:date),
+        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
         start_time_time_part: Time.zone.now.to_s(:time),
-        end_time_date_part: Time.zone.now.to_s(:date),
+        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
         end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
       )
       @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map do |rm|
@@ -143,46 +117,20 @@ class ReservationsController < DashboardController
     end
   end
 
-  # GET /reservations/1/edit
-  def edit
-    authorize! :manage_shop_reservations, shop
-    authorize! :edit, @reservation
-
-    @body_class = "resNew"
-
-    if current_user.member?
-      all_options
-      @reservation = Reservations::Edit.run!(reservation: @reservation, params: params.permit!.to_h)
-    else
-      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
-    end
-
-    outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
-    @time_ranges = outcome.valid? ? outcome.result : nil
-  end
-
   def create
-    # sleep 3
-    # redirect_to form_shop_reservations_path(shop)
-    # return
-
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
 
     outcome = Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html do
-          if in_personal_dashboard?
-            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
-          else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
-          end
-        end
+    if outcome.valid?
+      if in_personal_dashboard?
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
       else
-        format.html { redirect_to new_shop_reservation_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ") }
+        redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
       end
+    else
+      redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
@@ -193,7 +141,7 @@ class ReservationsController < DashboardController
 
     if outcome.valid?
       if params[:from_customer_id].present?
-        redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
+        redirect_to user_customers_path(shop.user, customer_id: params[:from_customer_id])
       elsif in_personal_dashboard?
         redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
       else

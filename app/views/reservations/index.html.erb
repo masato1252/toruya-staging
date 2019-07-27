@@ -20,7 +20,7 @@
       <div class="staffDashboard">
         <div class="edit-worktime">
           <% if can?(:create_reservation, shop) %>
-            <%= link_to t("action.new_reservation"), new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
+            <%= link_to t("action.new_reservation"), form_shop_reservations_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
           <% else %>
             <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
                     (
