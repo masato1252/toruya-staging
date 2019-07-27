@@ -282,7 +282,7 @@ module Reservable
     end
 
     def validate_required_staffs
-      if staff_ids.size < menu.min_staffs_number
+      if staff_ids.uniq.size < menu.min_staffs_number
         errors.add(:menu_id, :lack_staffs, menu_id: menu_id)
       end
     end
