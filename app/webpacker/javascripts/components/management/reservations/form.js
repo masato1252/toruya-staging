@@ -377,6 +377,7 @@ class ManagementReservationForm extends React.Component {
               method="post">
               <input name="utf8" type="hidden" value="✓" />
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
+              <input type="hidden" name="from_customer_id" value={this.props.reservation_properties.from_customer_id} />
               <Field name="reservation_form[id]" type="hidden" component="input" />
               { this.reservation_form_values.reservation_id ?  <input name="_method" type="hidden" value="PUT" /> : null }
               <div id="resNew" className="contents">
