@@ -20,12 +20,13 @@ import { displayErrors } from "./helpers.js"
 class ManagementReservationForm extends React.Component {
   constructor(props) {
     super(props);
+    this.debounceValidateReservation = _.debounce(this.validateReservation, 200, true)
 
     this.calculator = createChangesDecorator(
       {
         field: /end_time_date_part|end_time_time_part|menu_staffs_list/,
         updates: async (value, name, allValues) => {
-          await this.validateReservation(allValues.reservation_form)
+          await this.debounceValidateReservation(allValues.reservation_form)
           return {};
         }
       },
@@ -60,7 +61,7 @@ class ManagementReservationForm extends React.Component {
   };
 
   componentDidMount() {
-    this.validateReservation()
+    this.debounceValidateReservation()
   };
 
   renderReservationDateTime = () => {
@@ -269,7 +270,6 @@ class ManagementReservationForm extends React.Component {
     } = this.props.i18n;
     const {
       from_customer_id,
-      from_shop_id,
     } = this.props.reservation_properties;
     const {
       submitting,
