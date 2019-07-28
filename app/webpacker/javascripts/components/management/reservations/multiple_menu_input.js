@@ -9,7 +9,7 @@ import { selectCustomStyles } from "../../../libraries/styles";
 import { InputRow } from "../../shared/components";
 import { displayErrors } from "./helpers.js"
 
-const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, i18n }) => {
+const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, i18n, is_editable }) => {
   let selected_ids = []
 
   return (
@@ -29,6 +29,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
             <Field
               name={`${staff_field}staff_id`}
               component="select"
+              disabled={!is_editable}
             >
               <option value="">
                 {i18n.select_a_staff}
@@ -46,11 +47,12 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
               component="input"
             />
             {
-              (!menu || index < Math.max(menu.min_staffs_number, 1)) ? null : (
+              !is_editable || (!menu || index < Math.max(menu.min_staffs_number, 1)) ? null : (
                 <a
                   href="#"
                   className="btn btn-symbol btn-orange after-field-btn"
                   onClick={(event) => {
+                    if (!is_editable) return;
                     event.preventDefault();
                     fields.remove(index)
                   }
@@ -66,9 +68,10 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
         )
       })}
       <a
-        className={`btn btn-yellow ${staff_options.length === fields.length ? "disabled" : ""}`}
+        className={`btn btn-yellow ${staff_options.length === fields.length || !is_editable ? "disabled" : ""}`}
         onClick={(event) => {
           event.preventDefault();
+          if (!is_editable) return;
           if (staff_options.length  === fields.length) return;
 
           fields.push({
@@ -82,9 +85,10 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
   )
 }
 
-const MenusFields = ({ reservation_form, all_values, collection_name, fields, staff_options, menu_options, i18n }) => {
+const MenusFields = ({ reservation_form, all_values, collection_name, fields, staff_options, menu_options, i18n, is_editable }) => {
   const {
     select_a_menu,
+    required_time,
   } = i18n;
 
   return (
@@ -107,6 +111,7 @@ const MenusFields = ({ reservation_form, all_values, collection_name, fields, st
                       onChange={(event) => {
                         input.onChange(event);
                       }}
+                      isDisabled={!is_editable}
                     />
                   )
                 }}
@@ -136,6 +141,8 @@ const MenusFields = ({ reservation_form, all_values, collection_name, fields, st
                 name={`${field}menu_required_time`}
                 type="number"
                 component={InputRow}
+                placeholder={required_time}
+                disabled={!is_editable}
               />
             </div>
             <FieldArray
@@ -145,13 +152,16 @@ const MenusFields = ({ reservation_form, all_values, collection_name, fields, st
               staff_options={staff_options}
               all_values={all_values}
               i18n={i18n}
+              is_editable={is_editable}
             />
             <div className="menu-options-actions">
               <a
                 href="#"
-                className="btn btn-orange"
+                className={`btn btn-orange ${is_editable ? "" : "disabled"}`}
                 onClick={(event) => {
+                  if (!is_editable) return;
                   event.preventDefault();
+
                   fields.remove(index)
                 }
                 }>
@@ -176,38 +186,41 @@ const MenusFields = ({ reservation_form, all_values, collection_name, fields, st
   )
 }
 
-const MultipleMenuFields = ({ fields, ...rest }) => {
+const MultipleMenuFields = ({ fields, is_editable, ...rest }) => {
   return (
     <div>
       <MenusFields
         fields={fields}
+        is_editable={is_editable}
         {...rest}
       />
-      <div className="centerize">
-        <a
-          className="btn btn-symbol btn-yellow after-field-btn"
-          onClick={(event) => {
-            event.preventDefault();
+      {is_editable && (
+        <div className="centerize">
+          <a
+            className="btn btn-symbol btn-yellow after-field-btn"
+            onClick={(event) => {
+              event.preventDefault();
 
-            fields.push({
-              menu_id: null,
-              position: fields.length,
-              menu_required_time: null,
-              menu_interval_time: null,
-              staff_ids: [{
-                staff_id: null,
-                state: "pending"
-              }]
-            })
-          }}>
-          <i className="fa fa-plus" aria-hidden="true" ></i>
-        </a>
-      </div>
+              fields.push({
+                menu_id: null,
+                position: fields.length,
+                menu_required_time: null,
+                menu_interval_time: null,
+                staff_ids: [{
+                  staff_id: null,
+                  state: "pending"
+                }]
+              })
+            }}>
+            <i className="fa fa-plus" aria-hidden="true" ></i>
+          </a>
+        </div>
+      )}
     </div>
   )
 }
 
-const MultipleMenuInput = ({ reservation_form, all_values, collection_name, staff_options, menu_options, i18n }) => {
+const MultipleMenuInput = ({ reservation_form, all_values, collection_name, staff_options, menu_options, i18n, is_editable }) => {
   return (
     <FieldArray
       name={collection_name}
@@ -218,6 +231,7 @@ const MultipleMenuInput = ({ reservation_form, all_values, collection_name, staf
       staff_options={staff_options}
       menu_options={menu_options}
       i18n={i18n}
+      is_editable={is_editable}
     />
   );
 }

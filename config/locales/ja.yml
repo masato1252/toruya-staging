@@ -82,6 +82,7 @@ ja:
     of: の
     sir: 様
     number: 名
+    required_time: 所要時間
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗

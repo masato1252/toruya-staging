@@ -153,6 +153,7 @@ class ManagementReservationForm extends React.Component {
     const {
       staff_options,
       menu_group_options,
+      is_editable,
     } = this.props.reservation_properties;
 
     return (
@@ -167,6 +168,7 @@ class ManagementReservationForm extends React.Component {
               i18n={this.props.i18n}
               reservation_form={this.reservation_form}
               all_values={this.all_values}
+              is_editable={is_editable}
             />
           </dd>
         </dl>

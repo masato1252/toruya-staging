@@ -783,7 +783,9 @@ input.BTNonoff:checked + label:after {
   background-color: #ca4e0e;
   border: 1px #b0450d solid;
 }
-.customer-level-symbol {
+.customer-level-symbol,
+.customer-reservation-state
+{
   font-size: 17px;
   display: inline-block;
   margin-right: 3px;

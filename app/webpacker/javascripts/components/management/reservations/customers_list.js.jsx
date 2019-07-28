@@ -5,7 +5,7 @@ import _ from "lodash";
 
 import { setProperListHeight } from "../../../libraries/helper";
 
-const CustomerFields = ({ fields, customer_field, customer_index, all_values }) => {
+const CustomerFields = ({ fields, customer_field, customer_index, all_values, is_editable }) => {
   return (
     <dl key={`customer_field_${customer_index}`} className={`customer-option`}>
       {["customer_id", "state", "booking_page_id", "booking_option_id",
@@ -18,8 +18,8 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values }) 
           />
       ))}
       <dd className="customer-symbol">
-        <span className={`customer-level-symbol ${_.get(all_values, `${customer_field}rank`)}`}>
-          <i className="fa fa-address-card"></i>
+        <span className={`customer-reservation-state ${_.get(all_values, `${customer_field}state`)}`}>
+          <i className="fa fa-user"></i>
         </span>
       </dd>
       <dt>
@@ -27,10 +27,11 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values }) 
         <p className="place">{_.get(all_values, `${customer_field}address`)}</p>
       </dt>
       <dd onClick={(event) => {
+        if (!is_editable) return
         event.preventDefault();
         fields.remove(customer_index)
         }}>
-        <span className={`BTNyellow customer-remove-symbol glyphicon glyphicon-remove}`}>
+        <span className={`btn btn-yellow btn-symbol customer-remove-symbol glyphicon glyphicon-remove ${!is_editable ? "disabled" : ""}`}>
           <i className="fa fa-times" aria-hidden="true"></i>
         </span>
       </dd>
@@ -45,7 +46,9 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
     reserved,
     full_seat,
     number,
-    add_customer_btn
+    add_customer_btn,
+    accept,
+    pending,
   } = i18n;
   const {
     is_customers_readable,
@@ -85,31 +88,36 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
               customer_field={field}
               customer_index={index}
               all_values={all_values}
+              is_editable={is_editable}
               {...rest}
             />
           )
         })}
-        <dl onClick={addCustomer} className="add-customer">
-          <i className="fa fa-plus fa-2x" aria-hidden="true"></i>
-          <div>
-            {add_customer_btn}
-          </div>
-        </dl>
+        {
+          is_customers_readable && is_editable && (
+            <dl onClick={addCustomer} className="add-customer">
+              <i className="fa fa-plus fa-2x" aria-hidden="true"></i>
+              <div>
+                {add_customer_btn}
+              </div>
+            </dl>
+          )
+        }
         {warning_content}
       </div>
       <div id="customerLevels">
         <ul>
-          <li className="regular">
-            <span className="customer-level-symbol regular">
-              <i className="fa fa-address-card"></i>
+          <li>
+            <span className="customer-reservation-state accepted">
+              <i className="fa fa-user"></i>
             </span>
-            <span>一般</span>
+            <span>{accept}</span>
           </li>
-          <li className="vip">
-            <span className="customer-level-symbol vip">
-              <i className="fa fa-address-card"></i>
+          <li>
+            <span className="customer-reservation-state pending">
+              <i className="fa fa-user"></i>
             </span>
-            <span className="wording">VIP</span>
+            <span>{pending}</span>
           </li>
         </ul>
       </div>

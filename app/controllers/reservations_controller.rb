@@ -79,7 +79,6 @@ class ReservationsController < DashboardController
         reservation_customer.attributes.merge!(
           label: customer.name,
           value: customer.id,
-          rank: customer.rank&.key,
           address: customer.address,
           details: reservation_customer.details.to_json
         )
@@ -110,7 +109,6 @@ class ReservationsController < DashboardController
           state: "accepted",
           label: customer.name,
           value: customer.id,
-          rank: customer.rank&.key,
           address: customer.address
         }
       end

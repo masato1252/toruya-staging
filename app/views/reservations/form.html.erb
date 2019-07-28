@@ -17,7 +17,6 @@
     start_time_time_part: @reservation.start_time_time || @reservation.start_time_time_part,
     end_time_date_part: @reservation.end_time_date,
     end_time_time_part: @reservation.end_time_time,
-    customers: @reservation.customers.map { |c| { label: c.name, value: c.id, rank: c.rank } },
     menu_staffs_list: @menu_staffs_list,
     customers_list: @customers_list,
   }),
@@ -29,7 +28,7 @@
   i18n: {
   }.merge!([
     t("reservation"),
-    t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :time, :content, :number),
+    t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :time, :content, :number, :required_time),
     t("action").slice(:save, :save_pending, :delete_reservation),
   ].inject(:merge!))
 },

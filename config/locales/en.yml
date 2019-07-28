@@ -78,6 +78,7 @@ en:
     minute: minute
     total: Total
     copied: Copied
+    required_time: Required time
   dashboard:
     shops: Shops
     my_shop: My shops
