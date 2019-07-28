@@ -48,7 +48,7 @@ class ReservationsController < DashboardController
       @reservation = shop.reservations.find_or_initialize_by(id: reservation_id)
       @reservation.attributes = reservarion_params
       @menu_staffs_list = menu_staffs_list
-        @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
+      @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
     else
       @reservation = shop.reservations.find_by(id: params[:id])
       @reservation ||= shop.reservations.new(
@@ -88,12 +88,12 @@ class ReservationsController < DashboardController
 
     @menu_staffs_list = @menu_staffs_list.size != 0 ? @menu_staffs_list : [
       {
-        menu_id: nil,
+        menu_id: "",
         position: 0,
-        menu_required_time: nil,
-        menu_interval_time: nil,
+        menu_required_time: "",
+        menu_interval_time: "",
         staff_ids: [{
-          staff_id: nil,
+          staff_id: "",
           state: "pending"
         }]
       }

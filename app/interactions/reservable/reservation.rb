@@ -250,7 +250,7 @@ module Reservable
 
     def validate_other_shop_reservation(staff)
       # all the staffs connected with this user
-      related_staff_ids = staff.staff_account.user.staff_accounts.pluck(:staff_id)
+      related_staff_ids = staff.staff_account.user&.staff_accounts&.pluck(:staff_id) || staff.id
 
       other_shop_reservation_exist = ReservationStaff.
         overlap_reservations_scope(staff_ids: related_staff_ids, reservation_id: reservation_id).
