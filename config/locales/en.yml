@@ -123,6 +123,11 @@ en:
     confirm_with_warnings: Confirm with warnings
     customers_list_label: Customers
     details: Details
+    become_overbooking: Become overbooking!
+    overlap_booking: Overbooking!
+    reserved: Reserved
+    full_seat: vacancy
+    add_customer_btn: Add a customer
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

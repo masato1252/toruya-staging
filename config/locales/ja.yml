@@ -81,6 +81,7 @@ ja:
     copied: コピー完了
     of: の
     sir: 様
+    number: 名
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -170,6 +171,11 @@ ja:
     confirm_with_warnings: エラーのままこの予約を保存します
     customers_list_label: 顧客
     details: 予約詳細
+    become_overbooking: オーバーブッキングになります！
+    overlap_booking: オーバーブッキング中！
+    reserved: 予約
+    full_seat: 満席
+    add_customer_btn: 顧客を追加
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
@@ -1127,5 +1133,5 @@ ja:
               unschedule_menu: "^予約枠外"
               start_yet: "^受付開始 %{start_at}"
               is_over: "^受付終了"
-              shop_or_staff_not_enough_ability: "^Over Shop or Staff capability"
+              shop_or_staff_not_enough_ability: "^オーバーブッキング中！"
               lack_staffs: "^対応スタッフ不足"

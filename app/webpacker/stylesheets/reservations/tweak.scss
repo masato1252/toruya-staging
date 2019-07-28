@@ -112,4 +112,26 @@
       }
     }
   }
+
+  #customers {
+    .customers-seats-state {
+      float: right;
+      font-size: 16px;
+      font-weight: normal;
+
+      .number {
+        font-size: 21px;
+        font-weight: bold;
+        vertical-align: baseline;
+      }
+    }
+
+    .add-customer {
+      background-color: $palette-color9;
+      border: 1px solid $palette-color2;
+      color: $palette-color2;
+      text-align: center;
+      height: fit-content;
+    }
+  }
 }

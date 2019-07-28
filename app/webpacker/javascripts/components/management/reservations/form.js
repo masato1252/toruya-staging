@@ -31,12 +31,6 @@ class ManagementReservationForm extends React.Component {
         }
       },
       {
-        field: /start_time_date_part/,
-        updates: {
-          "reservation_form[end_time_date_part]": (start_time_date_part_value, allValues) => start_time_date_part_value
-        }
-      },
-      {
         field: /start_time_date_part|start_time_time_part|menu_staffs_list/,
         updates: async (value, name, allValues) => {
           const {
@@ -203,62 +197,15 @@ class ManagementReservationForm extends React.Component {
     )
   }
 
-  _customerWording = () => {
-    if (this._isMeetCustomerLimit()) {
-      return "満席"
-    }
-    else {
-      return "追加"
-    }
-  };
-
   renderCustomersList = () => {
-    const {
-      customers_list_label,
-    } = this.props.i18n;
-    const {
-      is_customers_readable,
-      is_editable,
-    } = this.props.reservation_properties;
-    const {
-      customers
-    } = this.reservation_form_values;
-
     return (
-      <div id="customers">
-        <h2>
-          <i className="fa fa-user-plus" aria-hidden="true"></i>
-          {customers_list_label}
-          {is_customers_readable &&
-            <a
-              onClick={this.addCustomer}
-              className={this._customerAddClass()}
-              id="addCustomer">
-              {this._customerWording()}
-            </a>}
-          </h2>
-
-          <ReservationCustomersList
-            collection_name="reservation_form[customers_list]"
-            all_values={this.all_values}
-          />
-          <div id="customerLevels">
-            <ul>
-              <li className="regular">
-                <span className="customer-level-symbol regular">
-                  <i className="fa fa-address-card"></i>
-                </span>
-                <span>一般</span>
-              </li>
-              <li className="vip">
-                <span className="customer-level-symbol vip">
-                  <i className="fa fa-address-card"></i>
-                </span>
-                <span className="wording">VIP</span>
-              </li>
-            </ul>
-          </div>
-        </div>
+      <ReservationCustomersList
+        collection_name="reservation_form[customers_list]"
+        all_values={this.all_values}
+        reservation_properties={this.props.reservation_properties}
+        i18n={this.props.i18n}
+        addCustomer={this.addCustomer}
+      />
     )
   }
 
@@ -440,6 +387,7 @@ class ManagementReservationForm extends React.Component {
       this.reservation_form.change("reservation_form[end_time_restriction]", result["end_time_restriction"])
       this.reservation_form.change("reservation_form[errors]", result["errors"])
       this.reservation_form.change("reservation_form[warnings]", result["warnings"])
+      this.reservation_form.change("reservation_form[customer_max_load_capability]", result["customer_max_load_capability"])
     }
     catch(err) {
       if (axios.isCancel(err)) {
@@ -533,76 +481,6 @@ class ManagementReservationForm extends React.Component {
       this._all_staff_ids().length &&
       (rough_mode ? !errors : (!errors && !warnings))
     )
-  };
-
-  _isMeetCustomerLimit = () => {
-    // TODO
-
-    // let customersLimit;
-    //
-    // if (customersLimit = this._maxCustomerLimit()) {
-    //   return (customersLimit == this.state.customers.length);
-    // }
-    // else {
-    //   return false;
-    // }
-  };
-
-  handleCustomerAdd = (event) => {
-    event.preventDefault();
-
-    // TODO
-    // if (this.state.menu_group_options.length == 0 || this._isMeetCustomerLimit()) {
-    //   return;
-    // }
-
-    // var params = $.param({
-    //   shop_id: this.props.shopId,
-    //   from_reservation: true,
-    //   reservation_id: this.props.reservation.id,
-    //   menu_id: this.state.menu_id,
-    //   memo: this.state.memo,
-    //   start_time_date_part: this.state.start_time_date_part,
-    //   start_time_time_part: this.state.start_time_time_part,
-    //   end_time_time_part: this.state.end_time_time_part,
-    //   staff_ids: Array.prototype.slice.call(this.state.staff_ids).join(","),
-    //   customer_ids: this.state.customers.map(function(c) { return c["value"]; }).join(","),
-    // })
-    //
-    // window.location = `${this.props.customerAddPath}?${params}`
-  };
-
-  _customerAddClass = () => {
-    // TODO
-    // if (this.state.menu_group_options.length == 0) {
-    //   return "disabled BTNtarco";
-    // }
-    // else if (this._isMeetCustomerLimit()) {
-    //   return "disabled BTNorange"
-    // }
-    // else if (!this.props.isEditable) {
-    //   return "disabled BTNtarco";
-    // }
-    // else {
-      return "BTNtarco"
-    // }
-  };
-
-  handleCustomerRemove = (customer_id, event) => {
-    // TODO
-    // var _this = this;
-    // var customers = _.reject(this.state.customers, function(option) {
-    //   return option.value == customer_id;
-    // });
-    //
-    // this.setState({customers: customers}, function() {
-    //   if (_this.props.memberMode) {
-    //     _this._validateReservation()
-    //   }
-    //   else {
-    //     _this._retrieveAvailableMenus()
-    //   }
-    // })
   };
 
   start_at = (reservation_form_values = null) => {

@@ -8,6 +8,18 @@
 
 .warning {
   color: $warning !important;
+
+  &.with-symbol {
+    &:before {
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding-right: 3px;
+      content: "\f058";
+    }
+  }
 }
 
 .display-hidden {
