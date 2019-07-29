@@ -15,7 +15,7 @@ RSpec.describe Reservations::Validate do
   let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user, menus: [ menu1, menu2, menu3 ]) }
   let(:staff3) { FactoryBot.create(:staff, :full_time, shop: shop, user: user, menus: [ menu1, menu2, menu3 ]) }
   let(:customer) { FactoryBot.create(:customer, user: user) }
-  let(:start_time) { Time.zone.now }
+  let(:start_time) { Time.zone.local(2016, 12, 22, 10) }
   # XXX: end time == start time + menus total required time
   let(:end_time) { start_time.advance(minutes: menu_staffs_list.sum { |h| h[:menu_required_time] } ) }
   let(:menu_staffs_list) do

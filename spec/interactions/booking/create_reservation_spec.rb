@@ -69,8 +69,8 @@ RSpec.describe Booking::CreateReservation do
         expect(last_menu_reservation_staff2.work_end_at).to eq(last_menu_reservation_staff1.work_end_at)
         expect(last_menu_reservation_staff2.ready_time).to eq(last_menu_reservation_staff1.ready_time)
 
-        expect(last_menu_reservation_staff1.staff).to eq(staff2)
-        expect(last_menu_reservation_staff2.staff).to eq(staff)
+        expect([staff, staff2]).to include(last_menu_reservation_staff1.staff)
+        expect([staff, staff2]).to include(last_menu_reservation_staff2.staff)
 
         expect(reservation.menus).to eq(booking_option.menus)
         expect(reservation.menus.first).to eq(booking_option.menus.first)
