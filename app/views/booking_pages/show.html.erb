@@ -40,8 +40,8 @@
     schedulePath: calendar_booking_page_path(@booking_page, format: :json)
   },
   booking_reservation_form: {
-    regular: cookies[:booking_customer_id] ? "yes" : nil,
-    found_customer: cookies[:booking_customer_id] ? true : nil,
+    regular: @customer ? "yes" : nil,
+    found_customer: @customer ? true : nil,
     single_booking_time: @single_booking_time,
     booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
     remember_me: true,
