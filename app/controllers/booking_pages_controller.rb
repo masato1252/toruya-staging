@@ -5,8 +5,16 @@ class BookingPagesController < ActionController::Base
 
   def show
     @booking_page = BookingPage.find(params[:id])
+
+    if @booking_page.draft
+      if !current_user || !current_user.current_staff_account(@booking_page.user)
+        redirect_to root_path, alert: I18n.t("common.no_permission")
+        return
+      end
+    end
+
     if cookies[:booking_customer_id]
-      @customer = @booking_page.user.customers.find(cookies[:booking_customer_id]).with_google_contact
+      @customer = @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])&.with_google_contact
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count
