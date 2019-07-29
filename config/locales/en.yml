@@ -42,6 +42,7 @@ en:
     copy_url2: Copy URL
     copy_code: Copy
     preview: Preview
+    add_a_menu: "Add a menu"
   common:
     processing: Processing
     date: Date
@@ -79,6 +80,8 @@ en:
     total: Total
     copied: Copied
     required_time: Required time
+    menu: Menu
+    responsible_employee: Staff
   dashboard:
     shops: Shops
     my_shop: My shops

@@ -31,7 +31,7 @@ module Reservations
           integer :menu_required_time
           array :staff_ids do
             hash do
-              integer :staff_id
+              integer :staff_id, default: nil
               string :state
             end
           end
@@ -79,6 +79,8 @@ module Reservations
             time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, h[:position] || i)
 
             h[:staff_ids].each do |staff_hash|
+              next if staff_hash[:staff_id].blank?
+
               reservation.reservation_staffs.create(
                 menu_id: h[:menu_id],
                 staff_id: staff_hash[:staff_id],

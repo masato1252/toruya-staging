@@ -42,6 +42,7 @@ ja:
     copy_url2: URLをコピー
     copy_code: コードをコピー
     preview: プレビュー
+    add_a_menu: メニューを追加
   common:
     processing: 送信中
     date: 日付
@@ -83,6 +84,8 @@ ja:
     sir: 様
     number: 名
     required_time: 所要時間
+    menu: メニュー
+    responsible_employee: 担当者
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
