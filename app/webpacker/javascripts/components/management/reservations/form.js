@@ -68,7 +68,7 @@ class ManagementReservationForm extends React.Component {
     const { is_editable, shop_name } = this.props.reservation_properties;
     const {
       details,
-      date_on,
+      date,
       time,
     } = this.props.i18n;
     const end_at = this.end_at();
@@ -81,7 +81,7 @@ class ManagementReservationForm extends React.Component {
         </h2>
         <div id="resDateTime" className="formRow">
           <dl className="form" id="resDate">
-            <dt>{date_on}</dt>
+            <dt className="subject">{date}</dt>
             <dd className="input">
               <Field
                 name="reservation_form[start_time_date_part]"
@@ -109,7 +109,7 @@ class ManagementReservationForm extends React.Component {
             </dd>
           </dl>
           <dl className="form" id="resTime">
-            <dt>{time}</dt>
+            <dt className="subject">{time}</dt>
             <dd className="input">
               <Field
                 name="reservation_form[start_time_time_part]"
@@ -122,8 +122,10 @@ class ManagementReservationForm extends React.Component {
               <span className="errors">
                 {this.startTimeError()}
               </span>
-              〜
-              {end_at && end_at.locale('en').format("hh:mm A")}
+              <span>
+                〜
+                  {end_at && end_at.locale('en').format("hh:mm A")}
+              </span>
               <Field
                 name="reservation_form[end_time_date_part]"
                 type="hidden"
@@ -159,7 +161,7 @@ class ManagementReservationForm extends React.Component {
     return (
       <div className="formRow res-menus">
         <dl className="form">
-          <dt>{content}</dt>
+          <dt className="subject">{content}</dt>
           <dd className="input">
             <MultipleMenuInput
               collection_name="reservation_form[menu_staffs_list]"
@@ -183,7 +185,7 @@ class ManagementReservationForm extends React.Component {
     return (
       <div id="resMemo" className="formRow">
         <dl className="form" id="resMemoRow">
-          <dt>メモ</dt>
+          <dt className="subject">{memo}</dt>
           <dd className="input">
             <Field
               name="reservation_form[memo]"

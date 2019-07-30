@@ -85,6 +85,11 @@
 // overwrite manager_reservation.scss#L8
 #resNew #resInfo .formRow {
   opacity: unset !important;
+
+  dt.subject {
+    vertical-align: top;
+    padding-top: 13px;
+  }
 }
 
 .toruya-modal {
@@ -106,7 +111,6 @@
       dt {
         width: 50px;
       }
-
 
       .add-menu {
         padding: 12px;
