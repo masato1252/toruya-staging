@@ -84,7 +84,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
             state: "pending"
           })
         }}>
-        <i className="fa fa-plus" aria-hidden="true"></i>{responsible_employee}
+        <i className="fa fa-user-plus" aria-hidden="true"></i>{responsible_employee}
       </a>
     </div>
   )

@@ -173,13 +173,16 @@ class ReservationsController < DashboardController
 
     @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
       staff_ids = menu_staffs_list[:staff_ids].map { |hh| hh[:staff_id] }.compact
-      return 0 if staff_ids.blank?
 
-      Reservable::CalculateCapabilityForCustomers.run!(
-        shop: shop,
-        menu_id: menu_staffs_list[:menu_id],
-        staff_ids: staff_ids
-      )
+      if staff_ids.blank?
+        0
+      else
+        Reservable::CalculateCapabilityForCustomers.run!(
+          shop: shop,
+          menu_id: menu_staffs_list[:menu_id],
+          staff_ids: staff_ids.uniq
+        )
+      end
     end.min
 
     reservation_errors

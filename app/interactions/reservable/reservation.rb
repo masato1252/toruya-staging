@@ -55,10 +55,10 @@ module Reservable
       validate_interval_time if overlap_restriction
       validate_menu_schedules
       validate_seats_for_customers
+      validate_required_staffs
 
       return if staff_ids.blank?
 
-      validate_required_staffs
       validate_shop_capability_for_customers
 
       working_day_staff_ids = working_day_staffs.map(&:id)
@@ -282,7 +282,7 @@ module Reservable
     end
 
     def validate_required_staffs
-      if staff_ids.uniq.size < menu.min_staffs_number
+      if Array.wrap(staff_ids).uniq.size < menu.min_staffs_number
         errors.add(:menu_id, :lack_staffs, menu_id: menu_id)
       end
     end
