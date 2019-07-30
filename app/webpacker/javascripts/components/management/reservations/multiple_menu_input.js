@@ -2,7 +2,6 @@ import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays';
 import ReactSelect from "react-select";
-import { OnChange } from 'react-final-form-listeners'
 import { sortableContainer, sortableElement } from "react-sortable-hoc";
 import _ from "lodash";
 import arrayMove from "array-move";
@@ -118,34 +117,27 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
                   options={menu_options}
                   value={input.value}
                   defaultValue={input.value}
-                  onChange={(event) => {
-                    input.onChange(event);
+                  onChange={(option) => {
+                    input.onChange(option);
+
+                    reservation_form.change(`${menu_field}menu_id`, option.value)
+                    reservation_form.change(`${menu_field}menu_required_time`, option.minutes)
+                    reservation_form.change(`${menu_field}menu_interval_time`, option.interval)
+
+                    const staff_ids = [];
+                    for (let i = 0; i < Math.max(option.min_staffs_number, 1); i++) {
+                      staff_ids.push({
+                        staff_id: null,
+                        state: "pending"
+                      });
+                    }
+                    reservation_form.change(`${menu_field}staff_ids`, staff_ids)
                   }}
                   isDisabled={!is_editable}
                 />
               )
             }}
           />
-          <OnChange name={`${menu_field}menu`}>
-            {(option, previous_option) => {
-              if (all_values.reservation_form.changing_menus_position) {
-                return;
-              }
-
-              reservation_form.change(`${menu_field}menu_id`, option.value)
-              reservation_form.change(`${menu_field}menu_required_time`, option.minutes)
-              reservation_form.change(`${menu_field}menu_interval_time`, option.interval)
-
-              const staff_ids = [];
-              for (let i = 0; i < Math.max(option.min_staffs_number, 1); i++) {
-                staff_ids.push({
-                  staff_id: null,
-                  state: "pending"
-                });
-              }
-              reservation_form.change(`${menu_field}staff_ids`, staff_ids)
-            }}
-          </OnChange>
           <span className="errors">
             {displayErrors(all_values.reservation_form, [`${menu_field}[menu_id]`])}
           </span>
@@ -185,11 +177,11 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
         <a
           href="#"
           className={`btn btn-orange ${is_editable ? "" : "disabled"}`}
-          onClick={async (event) => {
+          onClick={(event) => {
             if (!is_editable) return;
             event.preventDefault();
 
-            await menu_fields.remove(menu_index)
+            menu_fields.remove(menu_index)
           }
           }>
           {i18n.delete}
@@ -305,11 +297,9 @@ const MultipleMenuFields = ({ fields, is_editable, i18n, all_values, reservation
         reservation_form={reservation_form}
         {...rest}
         useDragHandle
-        onSortEnd={async ({oldIndex, newIndex}) => {
+        onSortEnd={({oldIndex, newIndex}) => {
           const sorted_menu_staffs_list = arrayMove(all_values.reservation_form.menu_staffs_list, oldIndex, newIndex)
-          await reservation_form.change("reservation_form[changing_menus_position]", true)
-          await reservation_form.change("reservation_form[menu_staffs_list]", sorted_menu_staffs_list)
-          reservation_form.change("reservation_form[changing_menus_position]", false)
+          reservation_form.change("reservation_form[menu_staffs_list]", sorted_menu_staffs_list)
         }}
       />
       {is_editable && (
