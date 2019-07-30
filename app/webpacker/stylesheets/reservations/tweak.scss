@@ -107,46 +107,6 @@
         width: 50px;
       }
 
-      .menu-option-field {
-        border: 1px solid $gray;
-        background-color: #ffffff;
-        margin-top: 6px;
-
-        .menu-option-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border: 1px solid $gray;
-          padding: 6px 6px 6px 12px;
-          background-color: $gray4;
-
-          .menu-option-info-name {
-            font-weight: bold;
-            margin-right: 12px;
-          }
-
-          .menu-option-details-toggler {
-            vertical-align: baseline;
-          }
-        }
-
-        .menu-option-content {
-          padding: 6px 6px 6px 12px;
-
-          .menu-field-row {
-            margin: 6px 0;
-
-            dt.menu-field-label {
-              width: 100px;
-              vertical-align: top;
-            }
-          }
-        }
-      }
-
-      .menu-options-actions {
-        text-align: right;
-      }
 
       .add-menu {
         padding: 12px;
@@ -164,14 +124,6 @@
       margin: 3px 0;
     }
 
-    .btn-add-staff {
-      margin-top: 6px;
-      margin-left: 0;
-
-      .fa-plus {
-        padding-right: 6px;
-      }
-    }
   }
 
   #customers {
@@ -202,6 +154,84 @@
 
       &.pending {
         color: $palette-color4-1;
+      }
+    }
+  }
+}
+
+// XXX: Because the menu-option-field is dragable, so need to move the style out
+.menu-option-field {
+  @include clearfix;
+  border: 1px solid $gray;
+  background-color: #ffffff;
+  margin-top: 6px;
+
+  .menu-option-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid $gray;
+    padding: 6px 6px 6px 12px;
+    background-color: $gray4;
+
+    .menu-with-staffs,
+    .menu-option-info-required-time
+    {
+      display: flex !important;
+      align-items: center;
+    }
+
+    .menu-option-info-name {
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    .menu-option-details-toggler {
+      vertical-align: baseline;
+
+      a.toggler-link {
+        padding: 0 10px;
+        margin-left: 5px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 18px;
+        display: inline-block;
+        color: $black;
+      }
+    }
+  }
+
+  .menu-option-content {
+    padding: 6px 6px 6px 12px;
+
+    .menu-field-row {
+      margin: 6px 0;
+
+      dt.menu-field-label {
+        width: 100px !important;
+        vertical-align: top;
+        display: table-cell;
+      }
+
+      dd.menu-field-content {
+        display: table-cell;
+
+        .btn-add-staff {
+          margin-top: 6px;
+          margin-left: 0 !important;
+
+          .fa-plus {
+            padding-right: 6px;
+          }
+        }
+      }
+    }
+
+    .menu-options-actions {
+      text-align: right;
+
+      .btn {
+        margin-left: 5px;
       }
     }
   }

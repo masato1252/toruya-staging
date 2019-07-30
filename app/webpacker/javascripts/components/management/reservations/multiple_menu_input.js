@@ -3,10 +3,12 @@ import { Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays';
 import ReactSelect from "react-select";
 import { OnChange } from 'react-final-form-listeners'
+import { sortableContainer, sortableElement } from "react-sortable-hoc";
 import _ from "lodash";
+import arrayMove from "array-move";
 
 import { selectCustomStyles } from "../../../libraries/styles";
-import { InputRow } from "../../shared/components";
+import { InputRow, DragHandle } from "../../shared/components";
 import { displayErrors } from "./helpers.js"
 
 const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, i18n, is_editable }) => {
@@ -89,7 +91,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
   )
 }
 
-const MenuFields = ({ reservation_form, all_values, collection_name, fields, field, menu_index, staff_options, menu_options, i18n, is_editable }) => {
+const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields, menu_field, menu_index, staff_options, menu_options, i18n, is_editable }) => {
   const {
     select_a_menu,
     required_time,
@@ -105,7 +107,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
         </dt>
         <dd className="menu-field-content">
           <Field
-            name={`${field}menu`}
+            name={`${menu_field}menu`}
             render={({ input }) => {
               return (
                 <ReactSelect
@@ -114,6 +116,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
                   styles={selectCustomStyles}
                   placeholder={select_a_menu}
                   options={menu_options}
+                  value={input.value}
                   defaultValue={input.value}
                   onChange={(event) => {
                     input.onChange(event);
@@ -123,11 +126,15 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
               )
             }}
           />
-          <OnChange name={`${field}menu`}>
-            {(option) => {
-              reservation_form.change(`${field}menu_id`, option.value)
-              reservation_form.change(`${field}menu_required_time`, option.minutes)
-              reservation_form.change(`${field}menu_interval_time`, option.interval)
+          <OnChange name={`${menu_field}menu`}>
+            {(option, previous_option) => {
+              if (all_values.reservation_form.changing_menus_position) {
+                return;
+              }
+
+              reservation_form.change(`${menu_field}menu_id`, option.value)
+              reservation_form.change(`${menu_field}menu_required_time`, option.minutes)
+              reservation_form.change(`${menu_field}menu_interval_time`, option.interval)
 
               const staff_ids = [];
               for (let i = 0; i < Math.max(option.min_staffs_number, 1); i++) {
@@ -136,11 +143,11 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
                   state: "pending"
                 });
               }
-              reservation_form.change(`${field}staff_ids`, staff_ids)
+              reservation_form.change(`${menu_field}staff_ids`, staff_ids)
             }}
           </OnChange>
           <span className="errors">
-            {displayErrors(all_values.reservation_form, [`${field}[menu_id]`])}
+            {displayErrors(all_values.reservation_form, [`${menu_field}[menu_id]`])}
           </span>
         </dd>
       </dl>
@@ -150,7 +157,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
         </dt>
         <dd className="menu-field-content">
           <Field
-            name={`${field}menu_required_time`}
+            name={`${menu_field}menu_required_time`}
             type="number"
             component={InputRow}
             placeholder={required_time}
@@ -164,8 +171,8 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
         </dt>
         <dd className="menu-field-content">
           <FieldArray
-            name={`${field}staff_ids`}
-            menu_field_name={`${field}menu`}
+            name={`${menu_field}staff_ids`}
+            menu_field_name={`${menu_field}menu`}
             component={MenuStaffsFields}
             staff_options={staff_options}
             all_values={all_values}
@@ -178,11 +185,11 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
         <a
           href="#"
           className={`btn btn-orange ${is_editable ? "" : "disabled"}`}
-          onClick={(event) => {
+          onClick={async (event) => {
             if (!is_editable) return;
             event.preventDefault();
 
-            fields.remove(menu_index)
+            await menu_fields.remove(menu_index)
           }
           }>
           {i18n.delete}
@@ -196,12 +203,12 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
       </div>
 
       <Field
-        name={`${field}menu_id`}
+        name={`${menu_field}menu_id`}
         type="hidden"
         component="input"
       />
       <Field
-        name={`${field}menu_interval_time`}
+        name={`${menu_field}menu_interval_time`}
         type="hidden"
         component="input"
       />
@@ -209,68 +216,81 @@ const MenuFields = ({ reservation_form, all_values, collection_name, fields, fie
   )
 }
 
-const MenuRows = ({ fields, collection_name, all_values, staff_options, i18n, ...rest }) => {
+const SortableMenuRow = sortableElement(({ menu_fields, menu_field, collection_name, all_values, staff_options, i18n, index, ...rest }) => {
   const {
     select_a_menu,
     minute,
   } = i18n;
-  const default_menu_collapse_status = fields && fields.length > 1 ? "closed" : "open"
+  const default_menu_collapse_status = menu_fields && menu_fields.length > 1 ? "closed" : "open"
+
+  const menu = _.get(all_values, `${menu_field}menu`)
+  const menu_required_time = _.get(all_values, `${menu_field}menu_required_time`)
+  let staff_ids = []
+  if (_.get(all_values, `${menu_field}staff_ids`)) {
+    staff_ids = _.get(all_values, `${menu_field}staff_ids`).map((staff) => String(staff.staff_id))
+  }
+  const staff_names = staff_options.filter((staff_option) => staff_ids.includes(String(staff_option.value))).map((staff_option) => staff_option.label).join(", ")
 
   return (
-    <div>
-      {fields.map((menu_field, index) => {
-        const menu = _.get(all_values, `${menu_field}menu`)
-        const menu_required_time = _.get(all_values, `${menu_field}menu_required_time`)
-        let staff_ids = []
-        if (_.get(all_values, `${menu_field}staff_ids`)) {
-          staff_ids = _.get(all_values, `${menu_field}staff_ids`).map((staff) => staff.staff_id)
-        }
-        const staff_names = staff_options.filter((staff_option) => staff_ids.includes(String(staff_option.value))).map((staff_option) => staff_option.label).join(", ")
+    <div
+      className="menu-option-field"
+      data-controller="collapse"
+      data-collapse-status={default_menu_collapse_status}>
+      <div
+        className="menu-option-header"
+        data-action="click->collapse#toggle">
+        <span className="menu-with-staffs">
+          <DragHandle />
+          <span className="menu-option-info-name">
+            {menu ? menu.label : select_a_menu}
+          </span>
+          <span className="menu-option-info-staffs-name">
+            {staff_names}
+          </span>
+        </span>
+        <span className="menu-option-info-required-time">
+          {menu_required_time}{minute}
+          <span className="menu-option-details-toggler">
+            <a className="toggler-link" data-target="collapse.openToggler"><i className="fa fa-chevron-up" aria-hidden="true"></i></a>
+            <a className="toggler-link" data-target="collapse.closeToggler"><i className="fa fa-chevron-down" aria-hidden="true"></i></a>
+          </span>
+        </span>
+      </div>
+      <div className="menu-option-content" data-target="collapse.content">
+        <MenuFields
+          all_values={all_values}
+          staff_options={staff_options}
+          menu_fields={menu_fields}
+          menu_field={menu_field}
+          menu_index={index}
+          i18n={i18n}
+          {...rest}
+        />
+      </div>
+    </div>
+  )
+})
 
+const MenuRows = sortableContainer(({ menu_fields, collection_name, all_values, ...rest }) => {
+  return (
+    <div>
+      {menu_fields.map((menu_field, index) => {
         return (
-          <div
-            key={`${collection_name}-${index}`}
-            className="menu-option-field"
-            data-controller="collapse"
-            data-collapse-status={default_menu_collapse_status}>
-            <div
-              className="menu-option-header"
-              data-action="click->collapse#toggle">
-              <span className="menu-with-staffs">
-                <span className="menu-option-info-name">
-                  {menu ? menu.label : select_a_menu}
-                </span>
-                <span className="menu-option-info-staffs-name">
-                  {staff_names}
-                </span>
-              </span>
-              <span className="menu-option-info-required-time">
-                {menu_required_time}{minute}
-                <span className="menu-option-details-toggler">
-                  <a className="toggler-link" data-target="collapse.openToggler"><i className="fa fa-chevron-up" aria-hidden="true"></i></a>
-                  <a className="toggler-link" data-target="collapse.closeToggler"><i className="fa fa-chevron-down" aria-hidden="true"></i></a>
-                </span>
-              </span>
-            </div>
-            <div className="menu-option-content" data-target="collapse.content">
-              <MenuFields
-                all_values={all_values}
-                staff_options={staff_options}
-                fields={fields}
-                field={menu_field}
-                menu_index={index}
-                i18n={i18n}
-                {...rest}
-              />
-            </div>
-          </div>
+          <SortableMenuRow
+            key={`${collection_name}-${_.get(all_values, `${menu_field}_menu_id`)}-${index}`}
+            menu_fields={menu_fields}
+            menu_field={menu_field}
+            index={index}
+            all_values={all_values}
+            {...rest}
+          />
         )
       })}
     </div>
   )
-}
+})
 
-const MultipleMenuFields = ({ fields, is_editable, i18n, ...rest }) => {
+const MultipleMenuFields = ({ fields, is_editable, i18n, all_values, reservation_form, ...rest }) => {
   const {
     add_a_menu
   } = i18n;
@@ -278,10 +298,19 @@ const MultipleMenuFields = ({ fields, is_editable, i18n, ...rest }) => {
   return (
     <div>
       <MenuRows
-        fields={fields}
+        menu_fields={fields}
         is_editable={is_editable}
         i18n={i18n}
+        all_values={all_values}
+        reservation_form={reservation_form}
         {...rest}
+        useDragHandle
+        onSortEnd={async ({oldIndex, newIndex}) => {
+          const sorted_menu_staffs_list = arrayMove(all_values.reservation_form.menu_staffs_list, oldIndex, newIndex)
+          await reservation_form.change("reservation_form[changing_menus_position]", true)
+          await reservation_form.change("reservation_form[menu_staffs_list]", sorted_menu_staffs_list)
+          reservation_form.change("reservation_form[changing_menus_position]", false)
+        }}
       />
       {is_editable && (
         <div className="centerize add-menu">
@@ -292,7 +321,6 @@ const MultipleMenuFields = ({ fields, is_editable, i18n, ...rest }) => {
 
               fields.push({
                 menu_id: null,
-                position: fields.length,
                 menu_required_time: null,
                 menu_interval_time: null,
                 staff_ids: [{

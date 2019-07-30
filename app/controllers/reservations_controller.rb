@@ -57,9 +57,10 @@ class ReservationsController < DashboardController
         end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
         end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
       )
-      @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map do |rm|
+      @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map.with_index do |rm, position|
         {
           menu: view_context.custom_option(@menu_result[:menu_options].find { |option| option.id == rm.menu_id }),
+          position: rm.position || position,
           menu_id: rm.menu_id,
           menu_required_time: rm.required_time,
           menu_interval_time: rm.menu.interval,

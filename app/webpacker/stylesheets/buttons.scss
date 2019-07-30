@@ -8,6 +8,8 @@ a.btn {
   color: #ffffff !important;
   line-height: 35px !important;
   height: 35px !important;
+  padding: 0 10px;
+  font-size: 18px;
 
   &.btn-symbol {
     width: 35px;
@@ -17,7 +19,6 @@ a.btn {
   &.btn-large {
     line-height: 50px !important;
     height: 50px !important;
-    padding: 0 10px;
     font-weight: bold;
   }
 }

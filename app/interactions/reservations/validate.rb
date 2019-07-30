@@ -12,7 +12,6 @@ module Reservations
       array :menu_staffs_list, default: nil do
         hash do
           integer :menu_id
-          integer :position, default: 0
           integer :menu_required_time
           integer :menu_interval_time
           array :staff_ids do
@@ -34,11 +33,11 @@ module Reservations
       reservation.attributes = params
 
       reservation.reservation_menus.build(
-        Array.wrap(menu_staffs_list).map do |h|
+        Array.wrap(menu_staffs_list).map.with_index do |h, position|
           {
             menu_id: h[:menu_id],
             required_time: h[:menu_required_time],
-            position: h[:position]
+            position: position
           }
         end
       )
@@ -47,11 +46,11 @@ module Reservations
         reservation.prepare_time = reservation.start_time - menu_staffs_list.first[:menu_interval_time].minutes
         reservation.ready_time = reservation.end_time + menu_staffs_list.last[:menu_interval_time].minutes
 
-        menu_staffs_list.each.with_index do |h, index|
-          time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, h[:position])
+        menu_staffs_list.each.with_index do |h, position|
+          time_result = ReservationMenuTimeCalculator.calculate(reservation, reservation.reservation_menus, position)
 
-          skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
-          skip_after_interval_time_validation = (index != (menu_staffs_list.length - 1)) # XXX: Only last menu need to validate after interval time
+          skip_before_interval_time_validation = position != 0 # XXX: Only first menu need to validate before interval time
+          skip_after_interval_time_validation = (position != (menu_staffs_list.length - 1)) # XXX: Only last menu need to validate after interval time
 
           outcome = Reservable::Reservation.run(
             shop: reservation.shop,
