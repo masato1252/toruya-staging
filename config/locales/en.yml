@@ -133,6 +133,7 @@ en:
     full_seat: vacancy
     add_customer_btn: Add a customer
     no_manpower_tip: Min required staff 0
+    add_working_schedule: Add working schedule
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

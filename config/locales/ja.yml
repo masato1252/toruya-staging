@@ -181,6 +181,7 @@ ja:
     full_seat: 満席
     add_customer_btn: 顧客を追加
     no_manpower_tip: 最低スタッフ０
+    add_working_schedule: この時間を出勤にする
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。

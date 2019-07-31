@@ -10,22 +10,43 @@ import { selectCustomStyles } from "../../../libraries/styles";
 import { InputRow, DragHandle } from "../../shared/components";
 import { displayErrors } from "./helpers.js"
 
-const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, i18n, is_editable }) => {
-  let selected_ids = []
+const staff_time_warnings = ["freelancer", "unworking_staff"]
+
+const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservation_properties, ...rest }) => {
   const {
     responsible_employee,
+    add_working_schedule,
   } = i18n;
+
+  const {
+    staff_options,
+    is_editable,
+    current_user_staff_id,
+  } = reservation_properties;
+
+  let selected_ids = []
 
   return (
     <div>
       {fields.map((staff_field, index) => {
         const selected_id = _.get(all_values, `${staff_field}staff_id`)
         const menu = _.get(all_values, menu_field_name)
+        let current_user_working_date_modal = false;
+        const staff_warnings = _.get(all_values.reservation_form.warnings, `${staff_field}staff_id`)
 
         const filterd_staff_options = staff_options.filter((staff_option) => !selected_ids.includes(String(staff_option.value)))
 
         if (selected_id) {
           selected_ids.push(selected_id)
+        }
+
+        // XXX: Find current_user staff had freelancer, unworking_staff warnings
+        if (current_user_staff_id && String(current_user_staff_id) === String(selected_id) && staff_warnings) {
+          const staff_warning_types = Object.keys(staff_warnings)
+
+          if (_.intersection(staff_warning_types, staff_time_warnings).length) {
+            current_user_working_date_modal = true
+          }
         }
 
         return (
@@ -69,6 +90,13 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
             <span className="errors">
               {displayErrors(all_values.reservation_form, [`${staff_field}[staff_id]`])}
             </span>
+            {
+              current_user_working_date_modal && (
+                <a href="#" data-toggle="modal" data-target="#working-date-modal" className="BTNtarco">
+                  {add_working_schedule}
+                </a>
+              )
+            }
           </div>
         )
       })}
@@ -90,7 +118,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, staff_options, 
   )
 }
 
-const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields, menu_field, menu_index, staff_options, menu_options, i18n, is_editable }) => {
+const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields, menu_field, menu_index, i18n, reservation_properties, ...rest }) => {
   const {
     select_a_menu,
     required_time,
@@ -98,6 +126,12 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
     responsible_employee,
     no_manpower_tip,
   } = i18n;
+
+  const {
+    staff_options,
+    menu_group_options,
+    is_editable
+  } = reservation_properties
 
   const selected_menu = _.get(all_values, `${menu_field}menu`)
 
@@ -117,7 +151,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
                   className="menu-select-container"
                   styles={selectCustomStyles}
                   placeholder={select_a_menu}
-                  options={menu_options}
+                  options={menu_group_options}
                   value={input.value}
                   defaultValue={input.value}
                   onChange={(option) => {
@@ -170,10 +204,10 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
             name={`${menu_field}staff_ids`}
             menu_field_name={`${menu_field}menu`}
             component={MenuStaffsFields}
-            staff_options={staff_options}
             all_values={all_values}
             i18n={i18n}
-            is_editable={is_editable}
+            reservation_properties={reservation_properties}
+            {...rest}
           />
         </dd>
       </dl>
@@ -212,11 +246,16 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
   )
 }
 
-const SortableMenuRow = sortableElement(({ menu_fields, menu_field, collection_name, all_values, staff_options, i18n, index, ...rest }) => {
+const SortableMenuRow = sortableElement(({ menu_fields, menu_field, collection_name, all_values, reservation_properties, i18n, index, ...rest }) => {
   const {
     select_a_menu,
     minute,
   } = i18n;
+
+  const {
+    staff_options
+  } = reservation_properties
+
   const default_menu_collapse_status = menu_fields && menu_fields.length > 1 ? "closed" : "open"
 
   const menu = _.get(all_values, `${menu_field}menu`)
@@ -255,7 +294,7 @@ const SortableMenuRow = sortableElement(({ menu_fields, menu_field, collection_n
       <div className="menu-option-content" data-target="collapse.content">
         <MenuFields
           all_values={all_values}
-          staff_options={staff_options}
+          reservation_properties={reservation_properties}
           menu_fields={menu_fields}
           menu_field={menu_field}
           menu_index={index}
@@ -286,16 +325,20 @@ const MenuRows = sortableContainer(({ menu_fields, collection_name, all_values, 
   )
 })
 
-const MultipleMenuFields = ({ fields, is_editable, i18n, all_values, reservation_form, ...rest }) => {
+const MultipleMenuFields = ({ fields, reservation_properties, i18n, all_values, reservation_form, ...rest }) => {
   const {
     add_a_menu
   } = i18n;
+
+  const {
+    is_editable
+  } = reservation_properties;
 
   return (
     <div>
       <MenuRows
         menu_fields={fields}
-        is_editable={is_editable}
+        reservation_properties={reservation_properties}
         i18n={i18n}
         all_values={all_values}
         reservation_form={reservation_form}
@@ -337,18 +380,12 @@ const MultipleMenuFields = ({ fields, is_editable, i18n, all_values, reservation
   )
 }
 
-const MultipleMenuInput = ({ reservation_form, all_values, collection_name, staff_options, menu_options, i18n, is_editable }) => {
+const MultipleMenuInput = ({ collection_name, ...rest }) => {
   return (
     <FieldArray
       name={collection_name}
       component={MultipleMenuFields}
-      collection_name={collection_name}
-      reservation_form={reservation_form}
-      all_values={all_values}
-      staff_options={staff_options}
-      menu_options={menu_options}
-      i18n={i18n}
-      is_editable={is_editable}
+      {...rest}
     />
   );
 }

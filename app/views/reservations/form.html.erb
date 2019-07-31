@@ -3,6 +3,9 @@
   timezone: Time.zone.tzinfo.name,
   reservation_properties: {
     shop_name: shop.display_name,
+    shop: react_attribute(@reservation.shop.attributes),
+    shops: react_attributes([@reservation.shop]),
+    staff: react_attribute(current_user_staff.attributes.merge!(name: current_user_staff.name)),
     is_editable: ability(@reservation.shop.user, @reservation.shop).can?(:edit, @reservation),
     is_customers_readable: ability(@reservation.shop.user, @reservation.shop).can?(:read, :customers_dashboard),
     reservation_id: @reservation.id,
@@ -23,7 +26,8 @@
   path: {
     save: @reservation.new_record? ? shop_reservations_path(shop) : shop_reservation_path(shop, @reservation),
     validate_reservation: validate_shop_reservations_path(shop, format: :json),
-    add_customer: add_customer_shop_reservations_path(shop, format: :json)
+    add_customer: add_customer_shop_reservations_path(shop, format: :json),
+    working_schedule: custom_schedules_path
   },
   i18n: {
   }.merge!([

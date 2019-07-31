@@ -16,6 +16,7 @@ import CommonCustomersList from "../common/customers_list.js"
 import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"
+import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
 
 class ManagementReservationForm extends React.Component {
   constructor(props) {
@@ -152,11 +153,6 @@ class ManagementReservationForm extends React.Component {
     const {
       content,
     } = this.props.i18n;
-    const {
-      staff_options,
-      menu_group_options,
-      is_editable,
-    } = this.props.reservation_properties;
 
     return (
       <div className="formRow res-menus">
@@ -165,12 +161,10 @@ class ManagementReservationForm extends React.Component {
           <dd className="input">
             <MultipleMenuInput
               collection_name="reservation_form[menu_staffs_list]"
-              staff_options={staff_options}
-              menu_options={menu_group_options}
               i18n={this.props.i18n}
               reservation_form={this.reservation_form}
               all_values={this.all_values}
-              is_editable={is_editable}
+              reservation_properties={this.props.reservation_properties}
             />
           </dd>
         </dl>
@@ -319,28 +313,65 @@ class ManagementReservationForm extends React.Component {
           this.all_values = values
           this.handleSubmit = handleSubmit
 
+          const {
+            form_authenticity_token
+          } = this.props
+
+          const {
+            current_user_staff_id,
+            from_customer_id,
+            staff_options,
+            shop,
+            shops,
+            staff,
+          } = this.props.reservation_properties;
+
+          const {
+            start_time_date_part,
+            start_time_time_part,
+            end_time_time_part,
+            reservation_id,
+          } = values.reservation_form;
+
           return (
-            <form
-              action={this.props.path.save}
-              id="save-reservation-form"
-              onSubmit={handleSubmit}
-              acceptCharset="UTF-8"
-              method="post">
-              <input name="utf8" type="hidden" value="✓" />
-              <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
-              <input type="hidden" name="from_customer_id" value={this.props.reservation_properties.from_customer_id} />
-              <Field name="reservation_form[id]" type="hidden" component="input" />
-              { this.reservation_form_values.reservation_id ?  <input name="_method" type="hidden" value="PUT" /> : null }
-              <div id="resNew" className="contents">
-                <div id="resInfo" className="contBody">
-                  {this.renderReservationDateTime()}
-                  {this.renderReservationMenus()}
-                  {this.renderReservationMemo()}
+            <div>
+              <form
+                action={this.props.path.save}
+                id="save-reservation-form"
+                onSubmit={handleSubmit}
+                acceptCharset="UTF-8"
+                method="post">
+                <input name="utf8" type="hidden" value="✓" />
+                <input type="hidden" name="authenticity_token" value={form_authenticity_token} />
+                <input type="hidden" name="from_customer_id" value={from_customer_id || ""} />
+                <Field name="reservation_form[id]" type="hidden" component="input" />
+                { reservation_id ? <input name="_method" type="hidden" value="PUT" /> : null }
+                <div id="resNew" className="contents">
+                  <div id="resInfo" className="contBody">
+                    {this.renderReservationDateTime()}
+                    {this.renderReservationMenus()}
+                    {this.renderReservationMemo()}
+                  </div>
+                  {this.renderCustomersList()}
                 </div>
-                {this.renderCustomersList()}
-              </div>
-              {this.renderFooterBar()}
-            </form>
+                {this.renderFooterBar()}
+              </form>
+              {staff && (
+                <WorkingSchedulesModal
+                  remote="true"
+                  form_authenticity_token={form_authenticity_token}
+                  open={true}
+                  staff={staff}
+                  shop={shop}
+                  shops={shops}
+                  start_time_date_part={start_time_date_part}
+                  start_time_time_part={start_time_time_part}
+                  end_time_time_part={end_time_time_part}
+                  custom_schedules_path={this.props.path.working_schedule}
+                  callback={this.validateReservation}
+                />
+              )}
+            </div>
           )
         }}
       />

@@ -108,5 +108,7 @@
     start_time_time_part: working_time_range.first.to_s(:time),
     end_time_time_part: working_time_range.last.to_s(:time),
     custom_schedules_path: custom_schedules_path
-  }) %>
+  },
+  { camelize_props: false }
+  ) %>
 <% end %>
