@@ -96,7 +96,10 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
     required_time,
     menu,
     responsible_employee,
+    no_manpower_tip,
   } = i18n;
+
+  const selected_menu = _.get(all_values, `${menu_field}menu`)
 
   return (
     <div className="result-field">
@@ -139,6 +142,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
             }}
           />
           <span className="errors">
+            {selected_menu && selected_menu.min_staffs_number === 0 ? <span className="warning">{no_manpower_tip}</span> : null}
             {displayErrors(all_values.reservation_form, [`${menu_field}[menu_id]`])}
           </span>
         </dd>
