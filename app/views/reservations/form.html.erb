@@ -12,6 +12,7 @@
     from_customer_id: params[:from_customer_id],
     staff_options: custom_options(@staff_options),
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
+    downgrade_from_premium: @reservation.shop.staffs.count > @staff_options.length,
   },
   reservation_form: @reservation.attributes.slice("id", "memo").merge!({
     reservation_id: @reservation.id,

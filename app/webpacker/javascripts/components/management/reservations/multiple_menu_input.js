@@ -21,6 +21,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
   const {
     staff_options,
     is_editable,
+    downgrade_from_premium,
   } = reservation_properties;
 
   const {
@@ -117,6 +118,13 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
         }}>
         <i className="fa fa-user-plus" aria-hidden="true"></i>{responsible_employee}
       </a>
+      {
+        downgrade_from_premium && (
+          <a href="https://toruya.com/faq/48/" target="_blank">
+            <i className="fa fa-question-circle" aria-hidden="true"></i>自分以外のスタッフが選択できなくなった場合
+            </a>
+        )
+      }
     </div>
   )
 }
@@ -133,7 +141,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
   const {
     staff_options,
     menu_group_options,
-    is_editable
+    is_editable,
   } = reservation_properties
 
   const selected_menu = _.get(all_values, `${menu_field}menu`)
