@@ -318,7 +318,6 @@ class ManagementReservationForm extends React.Component {
           } = this.props
 
           const {
-            current_user_staff_id,
             from_customer_id,
             staff_options,
             shop,
@@ -331,6 +330,7 @@ class ManagementReservationForm extends React.Component {
             start_time_time_part,
             end_time_time_part,
             reservation_id,
+            by_staff_id,
           } = values.reservation_form;
 
           return (
@@ -345,6 +345,7 @@ class ManagementReservationForm extends React.Component {
                 <input type="hidden" name="authenticity_token" value={form_authenticity_token} />
                 <input type="hidden" name="from_customer_id" value={from_customer_id || ""} />
                 <Field name="reservation_form[id]" type="hidden" component="input" />
+                <Field name="reservation_form[by_staff_id]" type="hidden" component="input" />
                 { reservation_id ? <input name="_method" type="hidden" value="PUT" /> : null }
                 <div id="resNew" className="contents">
                   <div id="resInfo" className="contBody">
@@ -487,9 +488,9 @@ class ManagementReservationForm extends React.Component {
   // Not only current staff responsible for this reservation.
   otherStaffsResponsibleThisReservation = () => {
     const {
-      current_user_staff_id
-    } = this.props.reservation_properties;
-    return this._all_staff_ids().some(staff_id => staff_id !== current_user_staff_id);
+      by_staff_id
+    } = this.reservation_form_values;
+    return this._all_staff_ids().some(staff_id => staff_id !== by_staff_id);
   };
 
   _all_staff_ids = () => {

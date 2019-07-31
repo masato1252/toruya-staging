@@ -21,8 +21,11 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
   const {
     staff_options,
     is_editable,
-    current_user_staff_id,
   } = reservation_properties;
+
+  const {
+    by_staff_id,
+  } = all_values.reservation_form
 
   let selected_ids = []
 
@@ -41,7 +44,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
         }
 
         // XXX: Find current_user staff had freelancer, unworking_staff warnings
-        if (current_user_staff_id && String(current_user_staff_id) === String(selected_id) && staff_warnings) {
+        if (by_staff_id && String(by_staff_id) === String(selected_id) && staff_warnings) {
           const staff_warning_types = Object.keys(staff_warnings)
 
           if (_.intersection(staff_warning_types, staff_time_warnings).length) {
