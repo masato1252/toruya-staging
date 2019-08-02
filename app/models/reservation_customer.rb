@@ -24,6 +24,8 @@
 require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
+  ACTIVE_STATES = %w[pending accepted].freeze
+
   belongs_to :reservation
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
@@ -39,7 +41,7 @@ class ReservationCustomer < ApplicationRecord
 
   monetize :booking_amount_cents, allow_nil: true
 
-  scope :active, -> { where.not(state: [:canceled, :deleted]) }
+  scope :active, -> { where(state: ACTIVE_STATES) }
 
   def customer_info
     Booking::CustomerInfo.new(details.new_customer_info)

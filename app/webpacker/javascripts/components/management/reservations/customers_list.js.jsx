@@ -6,8 +6,13 @@ import _ from "lodash";
 import { setProperListHeight } from "../../../libraries/helper";
 
 const CustomerFields = ({ fields, customer_field, customer_index, all_values, is_editable }) => {
+  const customer_state = _.get(all_values, `${customer_field}state`)
+
+  // XXX: depending on ReservationCustomer::ACTIVE_STATES
+  const hidden = (customer_state !== "accepted" && customer_state !== "pending")
+
   return (
-    <dl key={`customer_field_${customer_index}`} className={`customer-option`}>
+    <dl key={`customer_field_${customer_index}`} className={`customer-option ${hidden ? "display-hidden" : ""}`}>
       {["customer_id", "state", "booking_page_id", "booking_option_id",
         "booking_amount_cents", "booking_amount_currency", "tax_include", "booking_at", "details"].map((attr_name, attr_index) => (
           <Field
@@ -18,7 +23,7 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values, is
           />
       ))}
       <dd className="customer-symbol">
-        <span className={`customer-reservation-state ${_.get(all_values, `${customer_field}state`)}`}>
+        <span className={`customer-reservation-state ${customer_state}`}>
           <i className="fa fa-user"></i>
         </span>
       </dd>
@@ -38,6 +43,7 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values, is
     </dl>
   )
 }
+
 const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_height, addCustomer, ...rest }) => {
   const {
     customers_list_label,
@@ -56,7 +62,8 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
   } = reservation_properties;
 
   const customer_max_load_capability = all_values.reservation_form.customer_max_load_capability
-  const customers_number = fields.length;
+  // XXX: depending on ReservationCustomer::ACTIVE_STATES
+  const customers_number = fields.map((customer_field) => _.get(all_values, `${customer_field}state`)).filter((state) => state === "accepted" || state === "pending" ).length;
   let warning_content;
 
   if (customers_number !== 0) {

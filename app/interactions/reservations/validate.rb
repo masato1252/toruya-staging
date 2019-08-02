@@ -8,7 +8,11 @@ module Reservations
     hash :params do
       time :start_time
       time :end_time
-      array :customers_list, default: []
+      array :customers_list, default: [] do
+        hash do
+          string :state
+        end
+      end
       array :menu_staffs_list, default: nil do
         hash do
           integer :menu_id
@@ -28,7 +32,7 @@ module Reservations
 
       menu_staffs_list = params.delete(:menu_staffs_list)
       customers_list = params.delete(:customers_list)
-      number_of_customer = customers_list.size.zero? ? 1 : customers_list.size
+      number_of_customer = customers_list.size.zero? ? 1 : customers_list.count {|h| h[:state].in?(ReservationCustomer::ACTIVE_STATES) }
 
       reservation.attributes = params
 
