@@ -17,6 +17,7 @@ import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
+import ProcessingBar from "../../shared/processing_bar.js"
 
 class ManagementReservationForm extends React.Component {
   constructor(props) {
@@ -335,6 +336,7 @@ class ManagementReservationForm extends React.Component {
 
           return (
             <div>
+              <ProcessingBar processing={values.reservation_form.processing}  />
               <form
                 action={this.props.path.save}
                 id="save-reservation-form"
