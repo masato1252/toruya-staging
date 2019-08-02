@@ -37,7 +37,7 @@ class Reservations::StatesController < DashboardController
   end
 
   def cancel
-    reservation.cancel!
+    Reservations::Cancel.run!(reservation: reservation)
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.canceled_successfully_message")
   end
 

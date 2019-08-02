@@ -34,6 +34,7 @@ class ReservationCustomer < ApplicationRecord
     pending: 0,
     accepted: 1,
     canceled: 2,
+    deleted: 3,
   }
 
   monetize :booking_amount_cents, allow_nil: true
