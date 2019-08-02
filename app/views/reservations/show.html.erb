@@ -1,5 +1,6 @@
 <%
-  user_ability = ability(@reservation.shop.user, @reservation.shop)
+  shop_user = @reservation.shop.user
+  user_ability = ability(shop_user, @reservation.shop)
   reservation_date = params[:from_customer_id] ? I18n.l(@reservation.start_time, format: :month_day_wday) : l(@reservation.start_time, format: :date)
 %>
 
@@ -19,19 +20,20 @@
     </div>
     <div class="modal-body">
       <div>
-        <% @reservation.customers.includes(:user).each do |customer| %>
+        <% @reservation.reservation_customers.active.includes(:customer).each do |reservation_customer| %>
+          <% customer = reservation_customer.customer %>
+
+          <i class="fa fa-user customer-reservation-state <%= reservation_customer.state %>"></i>
           <% if customer.deleted_at || user_ability.cannot?(:read, customer) %>
             <span><%= customer.name %></span>
           <% else %>
-            <%= link_to customer.name, user_customers_path(customer.user, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+            <%= link_to customer.name, user_customers_path(shop_user, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
           <% end %>
         <% end %>
       </div>
       <div class="reservation-menu">
-        <%= @reservation.menus.pluck(:name).join(", ") %>
-      </div>
-      <div>
-        <%= @sentences[:staffs_sentence] %>
+        <i class="fa fa-tags"></i>
+        <p><%= @sentences[:staffs_sentence] %></p>
       </div>
       <% if @reservation.with_warnings %>
         <div class="warning">
@@ -45,7 +47,7 @@
       </div>
     <% end %>
     <div>
-      <%= simple_format(@reservation.memo) %>
+      <i class="fa fa-pencil"></i><%= simple_format(@reservation.memo) %>
     </div>
 
     <% if user_ability.cannot?(:edit, @reservation) %>
@@ -88,7 +90,7 @@
           </dd>
         <% end %>
 
-        <% if @reservation.acceptable_by_staff?(current_user.current_staff(@reservation.shop.user)) %>
+        <% if @reservation.acceptable_by_staff?(current_user.current_staff(shop_user)) %>
           <dd>
             <% if user_ability.can?(:edit, @reservation) %>
               <% if in_personal_dashboard? %>

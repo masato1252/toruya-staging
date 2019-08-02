@@ -9,7 +9,8 @@ module Reservations
     def execute
       reservation.transaction do
         reservation_for_staff.accepted!
-        reservation.accept if reservation.accepted_by_all_staffs?
+        # TODO need to refactor
+        reservation.accept if reservation.accepted_by_all_staffs? && reservation.accepted_all_customers?
         reservation.save!
 
         if !has_valid_working_schedule?

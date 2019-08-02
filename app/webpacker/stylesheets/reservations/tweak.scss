@@ -150,16 +150,16 @@
       text-align: center;
       height: fit-content;
     }
+  }
+}
 
-    .customer-reservation-state {
-      &.accepted {
-        color: $palette-color2-2;
-      }
+.customer-reservation-state {
+  &.accepted {
+    color: $palette-color2-2;
+  }
 
-      &.pending {
-        color: $palette-color4-1;
-      }
-    }
+  &.pending {
+    color: $palette-color4-1;
   }
 }
 

@@ -39,7 +39,7 @@ class ReservationCustomer < ApplicationRecord
 
   monetize :booking_amount_cents, allow_nil: true
 
-  scope :active, -> { where.not(state: :canceled) }
+  scope :active, -> { where.not(state: [:canceled, :deleted]) }
 
   def customer_info
     Booking::CustomerInfo.new(details.new_customer_info)
