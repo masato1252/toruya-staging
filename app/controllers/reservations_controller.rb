@@ -5,7 +5,13 @@ class ReservationsController < DashboardController
 
   def show
     @sentences = view_context.reservation_staff_sentences(@reservation)
-    render layout: false
+    @shop_user = @reservation.shop.user
+    @user_ability = ability(@shop_user, @reservation.shop)
+    @reservation_date = params[:from_customer_id] ? I18n.l(@reservation.start_time, format: :month_day_wday) : l(@reservation.start_time, format: :date)
+    @customer = Customer.find_by(id: params[:from_customer_id])
+    @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:from_customer_id])
+
+    render action: params[:from_customer_id] ? "customer_reservation_show" : "show", layout: false
   end
 
   # GET /reservations
@@ -26,6 +32,8 @@ class ReservationsController < DashboardController
     @schedules = reservations.map do |reservation|
       Option.new(type: :reservation, source: reservation)
     end
+    @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
+
     # Reservations END
 
     # Notifications START

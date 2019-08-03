@@ -109,38 +109,48 @@ module OptionsHelper
     end
   end
 
+  def reservation_customer_options(reservation_customers)
+    reservation_customers.map do |reservation_customer|
+      reservation_option(reservation_customer.reservation).merge!(reservation_customer_state: reservation_customer.state)
+    end
+  end
+
+  def reservation_option(r)
+    sentences = reservation_staff_sentences(r)
+
+    customer_names = r.customers.map(&:name)
+    customer_names_sentence = if customer_names.count > 1
+                                "#{customer_names.first} +#{customer_names.count - 1}"
+                              else
+                                customer_names.first
+                              end
+
+    acceptable = r.acceptable_by_staff?(current_user.current_staff(r.shop.user))
+
+    React.camelize_props({
+      id: r.id,
+      year: r.start_time.year,
+      date: r.start_time.to_s(:date),
+      month_date: I18n.l(r.start_time, format: :month_day_wday),
+      start_time: I18n.l(r.start_time, format: :hour_minute),
+      end_time: I18n.l(r.end_time, format: :hour_minute),
+      menu: r.menus.map(&:display_name).join(", "),
+      shop: r.shop.display_name,
+      state: r.aasm_state,
+      shop_id: r.shop_id,
+      customers: r.customers.map { |c| { id: c.id, name: c.name, user_id: c.user_id } },
+      customers_sentence: customer_names_sentence,
+      staffs: sentences[:staffs_sentence],
+      deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
+      memo: simple_format(r.memo),
+      with_warnings: r.with_warnings,
+      acceptable: acceptable
+    })
+  end
+
   def reservation_options(reservations)
     reservations.map do |r|
-      sentences = reservation_staff_sentences(r)
-
-      customer_names = r.customers.map(&:name)
-      customer_names_sentence = if customer_names.count > 1
-                                  "#{customer_names.first} +#{customer_names.count - 1}"
-                                else
-                                  customer_names.first
-                                end
-
-      acceptable = r.acceptable_by_staff?(current_user.current_staff(r.shop.user))
-
-      React.camelize_props({
-        id: r.id,
-        year: r.start_time.year,
-        date: r.start_time.to_s(:date),
-        month_date: I18n.l(r.start_time, format: :month_day_wday),
-        start_time: I18n.l(r.start_time, format: :hour_minute),
-        end_time: I18n.l(r.end_time, format: :hour_minute),
-        menu: r.menus.map(&:display_name).join(", "),
-        shop: r.shop.display_name,
-        state: r.aasm_state,
-        shop_id: r.shop_id,
-        customers: r.customers.map { |c| { id: c.id, name: c.name, user_id: c.user_id } },
-        customers_sentence: customer_names_sentence,
-        staffs: sentences[:staffs_sentence],
-        deleted_staffs: sentences[:deleted_staffs_sentence] ? I18n.t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) : nil,
-        memo: simple_format(r.memo),
-        with_warnings: r.with_warnings,
-        acceptable: acceptable
-      })
+      reservation_option(r)
     end
   end
 

@@ -43,3 +43,18 @@
     }
   }
 }
+
+.booking-from {
+  display: flex;
+  justify-content: flex-end;
+
+  .fa-clock-o {
+    margin-right: 3px;
+  }
+}
+
+#resList {
+  .reservation-customer-state-canceled {
+    color: $gray7 !important;
+  }
+}

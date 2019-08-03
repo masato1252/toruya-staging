@@ -87,6 +87,7 @@ ja:
     required_time: 所要時間
     menu: メニュー
     responsible_employee: 担当者
+    booking_price: 予約価格
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -163,6 +164,7 @@ ja:
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
     cancel: 全員キャンセル
+    customer_cancel: 予約キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
     noshow: 未来店
@@ -183,6 +185,7 @@ ja:
     add_customer_btn: 顧客を追加
     no_manpower_tip: 最低スタッフ０
     add_working_schedule: この時間を出勤にする
+    other_customers: "他%{other_customers_number}名"
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。

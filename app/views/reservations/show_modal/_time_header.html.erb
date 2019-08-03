@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title" id="myModalLabel">
+    <% if (params[:from_customer_id] || params[:from_filter]) && user_ability.can?(:read, :shop_dashboard) %>
+      <%= link_to reservation_date, date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_s(:date)) %>
+    <% else %>
+      <span><%= reservation_date %></span>
+    <% end %>
+
+    <span><%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %></span>
+  </h4>
+</div>

@@ -83,6 +83,7 @@ en:
     required_time: Required time
     menu: Menu
     responsible_employee: Staff
+    booking_price: Booking Price
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -115,6 +116,7 @@ en:
     accept_in_canceled: Resume
     shop_closed: Shop closed
     cancel: Cancel All Customers
+    customer_cancel: Cancel
     cancel_confirmation_message: You can view the canceled reservation on the customer page.
     pending: Pending
     noshow: No show
@@ -135,6 +137,7 @@ en:
     add_customer_btn: Add a customer
     no_manpower_tip: Min required staff 0
     add_working_schedule: Add working schedule
+    other_customers: "other customers: %{other_customers_number}"
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

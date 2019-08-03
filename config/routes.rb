@@ -56,7 +56,14 @@ Rails.application.routes.draw do
   scope module: "customers", as: "customer", path: "customer" do
     resources :users, only: [] do
       resources :printing, only: [:new, :create]
-      resources :reservations, only: [:index]
+      resources :reservations, only: [:index] do
+        collection do
+          get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
+          get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
+          get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+        end
+      end
+
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do

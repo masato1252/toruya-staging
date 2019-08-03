@@ -1,0 +1,77 @@
+<% unless params[:from_filter] %>
+  <div class="modal-footer">
+    <dl>
+      <% if reservation.may_check_out? %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <%= link_to t("reservation.check_out"), check_out_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+        <% else %>
+          <%= link_to t("reservation.check_out"), "#", class: "btn BTNyellow disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <% if reservation.reserved? || reservation.noshow? %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <%= link_to t("reservation.check_in"), check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+        <% else %>
+          <%= link_to t("reservation.check_in"), "#", class: "btn BTNyellow disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <% if reservation.checked_out? %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <%= link_to t("reservation.recheck_in"), check_in_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNyellow" %>
+        <% else %>
+          <%= link_to t("reservation.recheck_in"), "#", class: "btn BTNyellow disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <% if reservation.acceptable_by_staff?(current_user.current_staff(shop_user)) %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <% if in_personal_dashboard? %>
+            <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_in_group_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
+          <% else %>
+            <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
+          <% end %>
+        <% else %>
+          <%= link_to t("reservation.accept_in_canceled"), "#", class: "btn BTNtarco disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <% if reservation.may_pend? %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <%= link_to t("reservation.pend"), pend_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNgray" %>
+        <% else %>
+          <%= link_to t("reservation.pend"), "#", class: "btn BTNgray disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <% if reservation.may_cancel? %>
+        <dd>
+        <% if user_ability.can?(:edit, reservation) %>
+          <%= link_to t("reservation.cancel"), cancel_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
+        <% else %>
+          <%= link_to t("reservation.cancel"), "#", class: "btn BTNorange disabled" %>
+        <% end %>
+        </dd>
+      <% end %>
+
+      <dd>
+      <% if user_ability.can?(:manage_shop_reservations, reservation.shop) && user_ability.can?(:edit, reservation) %>
+        <%= link_to t("action.details"), form_shop_reservations_path(reservation.shop, reservation.id, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
+      <% else %>
+        <%= link_to t("action.details"), "#", class: "btn BTNtarco disabled" %>
+      <% end %>
+      </dd>
+    </dl>
+  </div>
+<% end %>

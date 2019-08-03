@@ -1,0 +1,29 @@
+<div class="reservation-menu">
+  <i class="fa fa-tags"></i>
+  <p><%= sentences[:staffs_sentence] %></p>
+</div>
+
+<% if reservation.with_warnings %>
+  <div class="warning">
+    <i class="fa fa-check-circle" aria-hidden="true"></i><%= t("reservation.contain_some_warnings") %>
+  </div>
+<% end %>
+
+<% if sentences[:deleted_staffs_sentence] %>
+  <div class="danger">
+    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+    <%= t("reservation.deleted_staffs_sentence", staff_names_sentence: sentences[:deleted_staffs_sentence]) %>
+  </div>
+<% end %>
+
+<% if reservation.memo.present? %>
+  <div>
+    <i class="fa fa-pencil"></i><%= simple_format(reservation.memo) %>
+  </div>
+<% end %>
+
+<% if user_ability.cannot?(:edit, reservation) %>
+  <div>
+    <%= t("reservation.modal.#{user_ability.admin? ? "admin" : "staff"}.disable_edit_when_user_membership_no_permission") %>
+  </div>
+<% end %>

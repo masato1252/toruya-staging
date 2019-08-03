@@ -1,4 +1,6 @@
 <%= notification_messages %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation %>
+
 <%
   staff_schedule_requirement_condition = staff && working_time_range
 %>
