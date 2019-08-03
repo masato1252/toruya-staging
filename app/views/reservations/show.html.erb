@@ -126,9 +126,9 @@
 
         <dd>
           <% if user_ability.can?(:manage_shop_reservations, @reservation.shop) && user_ability.can?(:edit, @reservation) %>
-            <%= link_to t("action.edit"), form_shop_reservations_path(@reservation.shop, @reservation.id, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
+            <%= link_to t("action.details"), form_shop_reservations_path(@reservation.shop, @reservation.id, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
           <% else %>
-            <%= link_to t("action.edit"), "#", class: "btn BTNtarco disabled" %>
+            <%= link_to t("action.details"), "#", class: "btn BTNtarco disabled" %>
           <% end %>
         </dd>
       </dl>

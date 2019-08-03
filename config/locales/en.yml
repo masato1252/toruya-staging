@@ -25,7 +25,8 @@ en:
   action:
     delete: Delete
     delete_reservation: Delete reservation
-    edit: edit
+    edit: Edit
+    details: Details
     cancel: Cancel
     log_out: Log out
     save: Save
@@ -113,7 +114,7 @@ en:
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
-    cancel: Cancel Reservation
+    cancel: Cancel All Customers
     cancel_confirmation_message: You can view the canceled reservation on the customer page.
     pending: Pending
     noshow: No show

@@ -26,6 +26,7 @@ ja:
     delete: 削除
     delete_reservation: 予約を削除
     edit: 編集
+    details: 詳細
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
@@ -161,7 +162,7 @@ ja:
     pend: 未承認
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
-    cancel: 予約キャンセル
+    cancel: 全員キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
     noshow: 未来店
