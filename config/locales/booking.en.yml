@@ -34,6 +34,7 @@ ja:
     message:
       unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
       booking_failed_messsage_html: Time and menu you chose is full.<br>Please try another option.
+      booking_unexpected_failed_message: Booking failed with some reason. Please try again.
     done:
       title: Temporary reservation has been made
       message1: Reservation detail has been

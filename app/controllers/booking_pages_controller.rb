@@ -71,9 +71,10 @@ class BookingPagesController < ActionController::Base
       present_customer_info: JSON.parse(params[:present_customer_info])
     )
     result = outcome.result
+    customer = result[:customer]
 
     if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-      cookies[:booking_customer_id] = result[:customer]&.id
+      cookies[:booking_customer_id] = customer&.id
       cookies[:booking_customer_phone_number] = params[:customer_phone_number]
     else
       cookies.delete :booking_customer_id
@@ -84,11 +85,11 @@ class BookingPagesController < ActionController::Base
       render json: {
         status: "successful"
       }
-    elsif params[:customer_info].present?
+    elsif JSON.parse(params[:customer_info])&.present?
       render json: {
         status: "failed",
         errors: {
-          message: I18n.t("booking_page.message.booking_failed_messsage_html")
+          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
         }
       }
     else
@@ -96,7 +97,7 @@ class BookingPagesController < ActionController::Base
         status: "failed",
         customer_info: customer&.persisted? ? view_context.customer_info_as_json(customer) : {},
         errors: {
-          message: I18n.t("booking_page.message.booking_failed_messsage_html")
+          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
         }
       }
     end

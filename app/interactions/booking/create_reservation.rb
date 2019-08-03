@@ -91,7 +91,7 @@ module Booking
       Reservation.transaction do
         reservation = nil
 
-        if customer_info.present?
+        if customer_info.compact.present?
           # regular customer
           customer = user.customers.find(customer_info["id"])
         else
@@ -264,7 +264,7 @@ module Booking
           end
         end
 
-        if customer && reservation
+        if customer.persisted? && reservation
           # XXX: Use the phone_number using at booking time
           if phone_number.present?
             ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
