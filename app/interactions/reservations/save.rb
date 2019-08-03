@@ -101,7 +101,7 @@ module Reservations
           end
         end
 
-        reservation.accept if reservation.accepted_by_all_staffs? && reservation.accepted_all_customers?
+        reservation.try_accept
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 

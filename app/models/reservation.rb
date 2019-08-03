@@ -103,6 +103,10 @@ class Reservation < ApplicationRecord
     !reservation_customers.pending.exists?
   end
 
+  def try_accept
+    self.accept if accepted_by_all_staffs? && accepted_all_customers?
+  end
+
   ACTIONS = {
     "checked_in" => ["check_out", "cancel", "edit"],
     "reserved" => ["check_in", "pend", "cancel", "edit"],
