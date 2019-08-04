@@ -238,6 +238,9 @@ ja:
     work: 職場
     mobile: 携帯
     city: 市区町村
+    region: 都道府県
+    street: 続き住所
+    postcode: 郵便番号
     address1: 続き住所
     address2: 建物名／部屋番号
     no_customer: 該当データなし
@@ -259,6 +262,7 @@ ja:
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
+    customer_info_changed_messsage: 顧客データ要変更
     filter:
       no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"
@@ -844,6 +848,13 @@ ja:
         min_staffs_number: "最低担当者数"
         interval: インターバル
         max_customers: 最大シート数
+      customer:
+        last_name: 姓
+        first_name: 名
+        phonetic_last_name: せい
+        phonetic_first_name: めい
+        phone_number: 電話番号
+        email: メール
       staff_menu:
         max_customers: "最高客戶数"
       profile:
