@@ -10,5 +10,9 @@ class AddBookingPageReleatedColumnToReservations < ActiveRecord::Migration[5.2]
     add_column :reservation_customers, :details, :jsonb
 
     add_column :reservation_menus, :required_time, :integer
+
+    ReservationMenu.where(required_time: nil).find_each do |reservation_menu|
+      reservation_menu.update_columns(required_time:  reservation_menu.menu.minutes, position: 0)
+    end
   end
 end

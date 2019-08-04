@@ -43,6 +43,7 @@ RSpec.describe Reservable::Reservation do
             shop: shop, date: date,
             menu_id: menu2.id,
             menu_required_time: menu2.minutes - 1,
+            staff_ids: [staff1.id],
             start_time: start_time,
             end_time: end_time.advance(minutes: -1)
           )
@@ -64,6 +65,7 @@ RSpec.describe Reservable::Reservation do
             shop: shop, date: date,
             menu_id: menu1.id,
             menu_required_time: menu1.minutes,
+            staff_ids: [staff1.id],
             start_time: start_time,
             end_time: end_time
           )

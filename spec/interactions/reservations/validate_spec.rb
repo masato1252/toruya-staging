@@ -54,6 +54,7 @@ RSpec.describe Reservations::Validate do
     [
       {
         customer_id: customer.id.to_s,
+        state: "accepted"
       }
     ]
   end
@@ -414,9 +415,11 @@ RSpec.describe Reservations::Validate do
         [
           {
             customer_id: customer.id,
+            state: "accepted"
           },
           {
             customer_id: FactoryBot.create(:customer, user: user).id,
+            state: "accepted"
           }
         ]
       end
@@ -524,9 +527,11 @@ RSpec.describe Reservations::Validate do
         [
           {
             customer_id: customer.id,
+            state: "accepted"
           },
           {
             customer_id: FactoryBot.create(:customer, user: user).id,
+            state: "accepted"
           }
         ]
       end

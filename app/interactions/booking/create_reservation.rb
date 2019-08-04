@@ -91,7 +91,7 @@ module Booking
       Reservation.transaction do
         reservation = nil
 
-        if customer_info.compact.present?
+        if customer_info&.compact.present?
           # regular customer
           customer = user.customers.find(customer_info["id"])
         else
@@ -338,6 +338,7 @@ module Booking
     def new_customer_info
       @new_customer_info ||=
         if customer_info.present?
+          # TODO: if non attributes changed, no data
           Booking::CustomerInfo.new(present_customer_info.changed_deep_diff(customer_info))
         else
           Booking::CustomerInfo.new(
