@@ -95,6 +95,10 @@ class Reservation < ApplicationRecord
     )
   end
 
+  def responsible_by_staff?(staff)
+    reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id } : for_staff(staff)
+  end
+
   def accepted_by_all_staffs?
     !reservation_staffs.pending.exists?
   end

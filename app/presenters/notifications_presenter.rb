@@ -8,15 +8,17 @@ class NotificationsPresenter
   end
 
   def data
-    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
+    new_pending_reservations + oldest_pending_customer_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
   end
 
   def recent_pending_reservations
     @recent_pending_reservations ||= begin
-      staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
-
       ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC")
     end
+  end
+
+  def recent_pending_customer_reservations
+    ReservationCustomer.pending.includes(reservation: [:shop, :reservation_staffs]).where("reservation_staffs.staff_id": staff_ids).order("reservation_customers.created_at ASC")
   end
 
   private
@@ -27,6 +29,10 @@ class NotificationsPresenter
     oldest_res ? [
       "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{link_to(I18n.t("notifications.pending_reservation_confirm"), h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
     ] : []
+  end
+
+  def oldest_pending_customer_reservations
+    Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data
   end
 
   def new_staff_accounts
@@ -80,5 +86,9 @@ class NotificationsPresenter
           []
         end
       end
+  end
+
+  def staff_ids
+    @staff_ids ||= current_user.staff_accounts.active.pluck(:staff_id)
   end
 end

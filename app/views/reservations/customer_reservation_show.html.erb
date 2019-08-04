@@ -36,7 +36,7 @@
 
     <div class="modal-footer">
       <dl>
-        <% if @reservation_customer.pending? %>
+        <% if @reservation_customer.pending? && @reservation.responsible_by_staff?(current_user.current_staff(@shop_user)) %>
           <dd>
             <% if @user_ability.can?(:edit, @reservation) %>
               <%= link_to t("reservation.accept"), accept_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNtarco" %>

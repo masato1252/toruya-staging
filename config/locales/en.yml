@@ -100,6 +100,8 @@ en:
   notifications:
     pending_reservation_need_confirm: You have %{number} reservation need to be confirm.
     pending_reservation_confirm: Check here
+    pending_customer_reservation_need_confirm: "%{number} customer data need to be confirm."
+    pending_customer_reservation_confirm: Check here
   reservation:
     business_time_suggestion: "※Business Hour"
     no_valid_menu_alert: No available menu

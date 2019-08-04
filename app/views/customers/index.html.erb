@@ -1,3 +1,6 @@
+<%= notification_messages %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation, from_customer_id: params[:customer_id])) if @reservation %>
+
 <%= react_component("management/customers/customers_dashboard",
                     { shop: shop,
                       customers: customer_options(@customers),

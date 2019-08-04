@@ -20,9 +20,15 @@ class CustomersController < DashboardController
       .contact_groups_scope(current_user_staff)
       .includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
+    @reservation = ReservationCustomer.find_by(customer_id: params[:customer_id], reservation_id: params[:reservation_id])&.reservation
+
     if shop
       @add_reservation_path = form_shop_reservations_path(shop)
     end
+
+    # Notifications START
+    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact
+    # Notifications END
   end
 
   def detail
