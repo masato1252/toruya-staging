@@ -111,8 +111,10 @@ module OptionsHelper
 
   def reservation_customer_options(reservation_customers)
     reservation_customers.map do |reservation_customer|
+      next unless reservation_customer.reservation
+
       reservation_option(reservation_customer.reservation).merge!(reservation_customer_state: reservation_customer.state)
-    end
+    end.compact
   end
 
   def reservation_option(r)
