@@ -5,7 +5,7 @@
   <% address_details = changed_attributes.delete("address_details") %>
 
   <div class="reservation-info-row">
-    <i class="fa fa-database"></i><%= I18n.t("customer.customer_info_changed_messsage") %>
+    <i class="fa fa-database"></i><span><%= I18n.t("customer.customer_info_changed_messsage") %>:</span>
     <p>
       <% changed_attributes.each do |changed_attr, value| %>
         <%= Customer.human_attribute_name(changed_attr) %>: <%= value %><br />
