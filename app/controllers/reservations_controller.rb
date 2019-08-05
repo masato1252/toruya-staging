@@ -278,7 +278,7 @@ class ReservationsController < DashboardController
 
     @reservation_params_hash["menu_staffs_list"].delete_if {|hh| hh["menu_id"].blank? } if @reservation_params_hash["menu_staffs_list"]
     @reservation_params_hash[:customers_list].map! { |h| h.merge!(details: JSON.parse(h["details"].presence || "{}")) } if @reservation_params_hash[:customers_list]
-    @reservation_params_hash[:customers_list].map! { |h| h[:booking_at] ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
+    @reservation_params_hash[:customers_list].map! { |h| h[:booking_at].present? ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
     @reservation_params_hash
   end
 end
