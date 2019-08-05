@@ -102,8 +102,8 @@ module Booking
               first_name: customer_first_name,
               phonetic_last_name: customer_phonetic_last_name,
               phonetic_first_name: customer_phonetic_first_name,
-              emails: [{ type: "mobile", value: customer_email, primary: true }],
               email_types: "mobile",
+              emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
               phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
             }
 
