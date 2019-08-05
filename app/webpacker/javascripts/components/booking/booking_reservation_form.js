@@ -346,7 +346,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderCustomerInfoModal = () => {
-    const { last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, email, full_address } = this.booking_reservation_form_values.customer_info;
+    const { last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, email, address_details } = this.booking_reservation_form_values.customer_info;
     const { i18n } = this.props
 
     return (
@@ -401,7 +401,7 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address_details")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {full_address}
+                {address_details && address_details.postcode} {address_details && address_details.region} {address_details && address_details.city} {address_details && address_details.street}
                 <Error
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   touched_required={false}
