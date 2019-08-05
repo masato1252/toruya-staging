@@ -137,6 +137,11 @@ class ReservationsController < DashboardController
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
       end
     else
+      Rollbar.warning("Create reservation failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: reservation_params_hash
+      )
       redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
@@ -155,9 +160,12 @@ class ReservationsController < DashboardController
         redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
       end
     else
-      # TODO: Handle failure case
-      all_options
-      render "form"
+      Rollbar.warning("Update reservation failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: reservation_params_hash
+      )
+      redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
@@ -269,7 +277,8 @@ class ReservationsController < DashboardController
     end
 
     @reservation_params_hash["menu_staffs_list"].delete_if {|hh| hh["menu_id"].blank? } if @reservation_params_hash["menu_staffs_list"]
-    @reservation_params_hash[:customers_list].map! {|h| h.merge!(details: JSON.parse(h["details"].presence || "{}")) } if @reservation_params_hash[:customers_list]
+    @reservation_params_hash[:customers_list].map! { |h| h.merge!(details: JSON.parse(h["details"].presence || "{}")) } if @reservation_params_hash[:customers_list]
+    @reservation_params_hash[:customers_list].map! { |h| h[:booking_at] ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
     @reservation_params_hash
   end
 end

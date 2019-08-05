@@ -1133,6 +1133,10 @@ ja:
             plan:
               auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
               processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+        reservations/save:
+          attributes:
+            params:
+              invalid_nested: " Invalid nested"
         reservable/reservation:
           attributes:
             date:
