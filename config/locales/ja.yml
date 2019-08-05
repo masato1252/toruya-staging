@@ -188,6 +188,7 @@ ja:
     no_manpower_tip: 最低スタッフ０
     add_working_schedule: この時間を出勤にする
     other_customers: "他%{other_customers_number}名"
+    no_ending_time_message: 終了時刻は編集できません。予約の終了時刻は、メニューの所要時間から自動的に計算されます。
     modal:
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。

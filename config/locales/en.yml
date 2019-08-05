@@ -140,6 +140,7 @@ en:
     no_manpower_tip: Min required staff 0
     add_working_schedule: Add working schedule
     other_customers: "other customers: %{other_customers_number}"
+    no_ending_time_message: "The end time cannot be edited. The end time will be calculated automatically from the menu required time."
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

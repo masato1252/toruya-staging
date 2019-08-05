@@ -72,6 +72,7 @@ class ManagementReservationForm extends React.Component {
       details,
       date,
       time,
+      no_ending_time_message,
     } = this.props.i18n;
     const end_at = this.end_at();
 
@@ -126,7 +127,7 @@ class ManagementReservationForm extends React.Component {
               </span>
               <span>
                 〜
-                  {end_at && end_at.locale('en').format("hh:mm A")}
+                  {end_at ? end_at.locale('en').format("hh:mm A") : no_ending_time_message}
               </span>
               <Field
                 name="reservation_form[end_time_date_part]"
