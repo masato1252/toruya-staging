@@ -5,7 +5,9 @@ module ReservationCustomers
 
     def execute
       reservation_customer.accepted!
-      reservation_customer.reservation.try_accept
+      reservation = reservation_customer.reservation
+      reservation.try_accept
+      reservation.save!
     end
 
     private

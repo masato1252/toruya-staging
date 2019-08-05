@@ -1,11 +1,12 @@
 module ReservationCustomers
   class Pend < ActiveInteraction::Base
-    object :reservation
-    object :customer
+    integer :reservation_id
+    integer :customer_id
 
     def execute
       reservation_customer.pending!
-      reservation_customer.reservation.try_accept
+      reservation = reservation_customer.reservation
+      reservation.pend!
     end
 
     private
