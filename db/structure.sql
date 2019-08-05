@@ -1105,8 +1105,7 @@ CREATE TABLE public.reservations (
     with_warnings boolean DEFAULT false NOT NULL,
     by_staff_id integer,
     deleted_at timestamp without time zone,
-    prepare_time timestamp without time zone,
-    details jsonb
+    prepare_time timestamp without time zone
 );
 
 
@@ -2914,6 +2913,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190630004604'),
 ('20190630055440'),
 ('20190707082104'),
-('20190724082958');
+('20190724082958'),
+('20190805155207');
 
 
