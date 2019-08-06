@@ -16,7 +16,7 @@ class FilterCustomersList extends React.Component {
         return (
           <dl key={customer.id} onClick={this.onCustomerClick.bind(this, customer)}>
             <dd className="status">
-              <span className={`customer-level-symbol ${customer.rank.key}`}>
+              <span className={`customer-level-symbol ${customer.rank && customer.rank.key}`}>
                 <i className="fa fa-address-card"></i>
               </span>
             </dd>
