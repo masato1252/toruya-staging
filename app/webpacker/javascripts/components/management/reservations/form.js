@@ -493,15 +493,21 @@ class ManagementReservationForm extends React.Component {
     const {
       by_staff_id
     } = this.reservation_form_values;
-    return this._all_staff_ids().some(staff_id => staff_id !== by_staff_id);
+    return this._all_staff_ids().some((staff_id) => String(staff_id) !== String(by_staff_id));
   };
 
   _all_staff_ids = () => {
-    return _.compact(_.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids).map((staff) => staff.staff_id))
+    return _.compact(
+      _.compact(
+        _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids)
+      ).map((staff) => staff.staff_id)
+    )
   }
 
   _all_menu_ids = () => {
-    return _.compact(_.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.menu_id))
+    return _.compact(
+      _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.menu_id)
+    )
   }
 
   _isValidToReserve = () => {
