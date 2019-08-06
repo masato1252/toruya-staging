@@ -62,7 +62,7 @@ module Reservable
       validate_shop_capability_for_customers
 
       working_day_staff_ids = working_day_staffs.map(&:id)
-      staffs.includes(:staff_menus).each do |staff|
+      staffs.includes(:staff_menus, staff_account: :user).each do |staff|
         if working_day_staff_ids.exclude?(staff.id)
           if closed_custom_schedules_staff_ids.include?(staff.id)
             errors.add(:staff_ids, :ask_for_leave, staff_id: staff.id, menu_id: menu_id)

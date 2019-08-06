@@ -5,7 +5,7 @@ class Customers::ReservationsController < DashboardController
     head :unprocessable_entity if cannot?(:read, @customer)
 
     @reservation_customers = @customer.reservation_customers
-    .includes(reservation: [ :menus, :customers, :staffs, shop: :user ])
+      .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
     .order("reservations.start_time DESC")
   end
 
