@@ -41,7 +41,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
         const filterd_staff_options = staff_options.filter((staff_option) => !selected_ids.includes(String(staff_option.value)))
 
         if (selected_id) {
-          selected_ids.push(selected_id)
+          selected_ids.push(String(selected_id))
         }
 
         // XXX: Find current_user staff had freelancer, unworking_staff warnings
