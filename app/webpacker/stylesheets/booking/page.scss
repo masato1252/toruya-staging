@@ -62,6 +62,14 @@
     }
   }
 
+  .last-selected-option {
+    color: $palette-color1;
+
+    .fa {
+      margin-right: 3px;
+    }
+  }
+
   .booking-option-field {
     display: block;
     width: initial;
@@ -239,7 +247,6 @@
   .selected-time-item {
     border: 1px solid $danger;
   }
-
 
   .react-slidedown.calendar-slidedown {
     transition-duration: 1.0s;

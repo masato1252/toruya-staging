@@ -7,6 +7,7 @@ import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
 import moment from 'moment-timezone';
+import arrayMove from "array-move"
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
 import { CSSTransition } from 'react-transition-group'
@@ -447,8 +448,24 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  sorted_booking_options = (booking_options, last_selected_option_id) => {
+    const matched_index = booking_options.findIndex(option => option.id === last_selected_option_id);
+
+    if (matched_index > 0) {
+      return arrayMove(booking_options, matched_index, 0);
+    }
+    else {
+      return booking_options
+    }
+  }
+
   renderAvailableBookingOption = () => {
-    const { booking_options, booking_at, booking_times } = this.booking_reservation_form_values;
+    const {
+      booking_options,
+      booking_at,
+      booking_times,
+      last_selected_option_id,
+    } = this.booking_reservation_form_values;
 
     if (!booking_at) return;
 
@@ -458,10 +475,11 @@ class BookingReservationForm extends React.Component {
 
     return (
       <div className="result-fields booking-options">
-        {available_booking_options.map((booking_option_value) => {
+        {this.sorted_booking_options(available_booking_options, last_selected_option_id).map((booking_option_value) => {
           return <BookingPageOption
             key={`booking_options-${booking_option_value.id}`}
             booking_option_value={booking_option_value}
+            last_selected_option_id={last_selected_option_id}
             selectBookingOptionCallback={this.selectBookingOption}
             i18n={this.props.i18n}
           />
@@ -473,7 +491,14 @@ class BookingReservationForm extends React.Component {
   renderBookingOptionFirstFlow = () => {
     if (!this.isBookingFlowStart()) return;
 
-    const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
+    const {
+      booking_options,
+      booking_times,
+      booking_date,
+      booking_at,
+      booking_option_id,
+      last_selected_option_id,
+    } = this.booking_reservation_form_values;
     const { edit, please_select_a_menu } = this.props.i18n;
 
     const selected_booking_option = _.find(booking_options, (booking_option) => {
@@ -487,10 +512,11 @@ class BookingReservationForm extends React.Component {
             <h4>
               {please_select_a_menu}
             </h4>
-            {booking_options.map((booking_option_value) => {
+            {this.sorted_booking_options(booking_options, last_selected_option_id).map((booking_option_value) => {
               return <BookingPageOption
                 key={`booking_options-${booking_option_value.id}`}
                 booking_option_value={booking_option_value}
+                last_selected_option_id={last_selected_option_id}
                 selectBookingOptionCallback={this.selectBookingOption}
                 i18n={this.props.i18n}
               />
@@ -720,7 +746,13 @@ class BookingReservationForm extends React.Component {
   }
 
   renderSelectedBookingOption = (resetValuesCallback = false) => {
-    const { booking_options, booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values
+    const {
+      booking_options,
+      booking_option_id,
+      booking_date,
+      booking_at,
+      last_selected_option_id,
+    } = this.booking_reservation_form_values
     const { please_select_a_menu, edit } = this.props.i18n;
 
     if (!booking_option_id) return;
@@ -735,6 +767,7 @@ class BookingReservationForm extends React.Component {
         <BookingPageOption
           key={`booking_options-${selected_booking_option.id}`}
           booking_option_value={selected_booking_option}
+          last_selected_option_id={last_selected_option_id}
           i18n={this.props.i18n}
           booking_start_at={moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone)}
         />
@@ -1126,11 +1159,16 @@ class BookingReservationForm extends React.Component {
       responseType: "json"
     })
 
-    const { customer_info, errors } = response.data;
+    const {
+      customer_info,
+      last_selected_option_id,
+      errors
+    } = response.data;
 
     this.booking_reservation_form.change("booking_reservation_form[customer_info]", customer_info)
     this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", customer_info)
     this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(customer_info).length ? true : false)
+    this.booking_reservation_form.change("booking_reservation_form[last_selected_option_id]", last_selected_option_id)
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.findCustomerCall = null;
 

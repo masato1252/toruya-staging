@@ -50,7 +50,8 @@
     customer_last_name: @customer&.last_name,
     customer_phone_number: cookies[:booking_customer_phone_number],
     customer_info: customer_info_hash,
-    present_customer_info: customer_info_hash
+    present_customer_info: customer_info_hash,
+    last_selected_option_id: @last_selected_option_id
   },
   path: {
     save: booking_reservation_booking_page_path(@booking_page),

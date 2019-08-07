@@ -3,9 +3,15 @@
 import React from "react";
 import moment from 'moment-timezone';
 
-const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at }) => {
+const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, i18n, booking_start_at, last_selected_option_id }) => {
   let option_content;
-  const { open_details, close_details, booking_option_required_time, minute } = i18n;
+  const {
+    open_details,
+    close_details,
+    booking_option_required_time,
+    minute,
+    last_selected_option,
+  } = i18n;
 
   const handleOptionClick = (booking_option_id) => {
     if (selectBookingOptionCallback) {
@@ -25,6 +31,11 @@ const BookingPageOption = ({ booking_option_value, selectBookingOptionCallback, 
     <div className="result-field">
       <div className="booking-option-field" data-controller="collapse" data-collapse-status="closed">
         <div className="booking-option-info" onClick={() => handleOptionClick(booking_option_value.id)}>
+          {last_selected_option_id && last_selected_option_id === booking_option_value.id && (
+            <div className="last-selected-option">
+              <i className="fa fa-repeat" aria-hidden="true"></i>{last_selected_option}
+            </div>
+          )}
           <div className="booking-option-name">
             <b>
               {booking_option_value.label}

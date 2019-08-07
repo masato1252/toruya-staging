@@ -15,6 +15,7 @@ class BookingPagesController < ActionController::Base
 
     if cookies[:booking_customer_id]
       @customer = @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])&.with_google_contact
+      @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count
@@ -121,7 +122,8 @@ class BookingPagesController < ActionController::Base
       end
 
       render json: {
-        customer_info: view_context.customer_info_as_json(customer)
+        customer_info: view_context.customer_info_as_json(customer),
+        last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
       }
     else
       render json: {
