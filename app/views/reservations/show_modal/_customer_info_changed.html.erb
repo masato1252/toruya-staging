@@ -11,7 +11,7 @@
         <%= Customer.human_attribute_name(changed_attr) %>: <%= value %><br />
       <% end %>
 
-      <% address_details.compact.each do |changed_attr, value| %>
+      <% address_details&.compact&.each do |changed_attr, value| %>
         <%= I18n.t("customer.#{changed_attr}") %>: <%= value %><br />
       <% end %>
     </p>
