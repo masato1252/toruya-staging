@@ -323,7 +323,7 @@ module Booking
     end
 
     def validates_enough_customer_data
-      if customer_info.blank?
+      if customer_info&.compact.blank?
         if !customer_last_name ||
           !customer_first_name ||
           !customer_phonetic_last_name ||
@@ -337,7 +337,7 @@ module Booking
 
     def new_customer_info
       @new_customer_info ||=
-        if customer_info.present?
+        if customer_info&.compact.present?
           # TODO: if non attributes changed, no data
           Booking::CustomerInfo.new(present_customer_info.changed_deep_diff(customer_info))
         else
@@ -353,7 +353,7 @@ module Booking
     end
 
     def phone_number
-      if customer_info.present?
+      if customer_info&.compact.present?
         customer_info["phone_number"]
       else
         customer_phone_number
@@ -361,7 +361,7 @@ module Booking
     end
 
     def email
-      if customer_info.present?
+      if customer_info&.compact.present?
         customer_info["email"]
       else
         customer_email
