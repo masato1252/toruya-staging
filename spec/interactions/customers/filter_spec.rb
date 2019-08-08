@@ -360,6 +360,7 @@ RSpec.describe Customers::Filter do
           context "when query_type is on" do
             before do
               FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
               FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
             end
 
@@ -376,6 +377,7 @@ RSpec.describe Customers::Filter do
             before do
               FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now)
               FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now)
             end
 
             it "returns expected customers" do
@@ -391,6 +393,7 @@ RSpec.describe Customers::Filter do
             before do
               FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
               FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.tomorrow)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
@@ -406,6 +409,7 @@ RSpec.describe Customers::Filter do
             before do
               FactoryBot.create(:reservation, customers: [matched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
               FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day)
+              FactoryBot.create(:reservation, customers: [unmatched_customer], start_time: Time.now.beginning_of_day.advance(seconds: -1))
             end
 
             it "returns expected customers" do
