@@ -1,6 +1,8 @@
-<% if reservation_customer.booking_page %>
-  <div class="booking-from reservation-info-row">
-    <i class="fa fa-clock-o"></i>
+<div class="booking-from reservation-info-row">
+  <i class="fa fa-clock-o"></i>
+  <% if reservation_customer.booking_page %>
     <%= I18n.l(reservation_customer.booking_at.to_date, format: :year_month_date) %> <%= reservation_customer.booking_page.name %> <%= reservation_customer.booking_option.display_name %>
-  </div>
-<% end %>
+  <% else %>
+    <%= reservation.by_staff&.name %>
+  <% end %>
+</div>
