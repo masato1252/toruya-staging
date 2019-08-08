@@ -126,20 +126,21 @@ class Customers::Filter < ActiveInteraction::Base
         # No reservation case
         scoped = scoped.left_outer_joins(:reservations)
 
-        # if reservation[:start_date].present?
-          scoped = case reservation[:query_type]
-                   when "on"
-                     scoped.where.not("reservations.start_time": reservation[:start_date]..reservation[:start_date].end_of_day)
-                   when "before"
-                     scoped.where.not("reservations.start_time < ?", reservation[:start_date])
-                   when "after"
-                     scoped.where.not("reservations.start_time > ?", reservation[:start_date].end_of_day)
-                   when "between"
-                     scoped.where.not("reservations.start_time": reservation[:start_date]..reservation[:end_date])
-                   end
-        # else
-        #   scoped = scoped.where("reservations.id is NULL")
-        # end
+        customers_had_reservations_scope =
+          case reservation[:query_type]
+          when "on"
+            scoped.where("reservations.start_time": reservation[:start_date]..reservation[:start_date].end_of_day)
+          when "before"
+            scoped.where("reservations.start_time < ?", reservation[:start_date])
+          when "after"
+            scoped.where("reservations.start_time > ?", reservation[:start_date].end_of_day)
+          when "between"
+            scoped.where("reservations.start_time": reservation[:start_date]..reservation[:end_date])
+          end
+
+        customer_had_reservation_ids = customers_had_reservations_scope.distinct.pluck(:id)
+
+        scoped = scoped.where.not("customers.id": customer_had_reservation_ids)
       end
     end
     scoped.distinct
