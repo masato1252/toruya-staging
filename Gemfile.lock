@@ -188,15 +188,16 @@ GEM
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.10.0)
-    fog-aws (1.4.1)
-      fog-core (~> 1.38)
-      fog-json (~> 1.0)
+    fog-aws (3.5.2)
+      fog-core (~> 2.1)
+      fog-json (~> 1.1)
       fog-xml (~> 0.1)
       ipaddress (~> 0.8)
-    fog-core (1.45.0)
+    fog-core (2.1.2)
       builder
       excon (~> 0.58)
       formatador (~> 0.2)
+      mime-types
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
@@ -519,7 +520,7 @@ DEPENDENCIES
   dotenv-rails (~> 2.2.1)
   factory_bot_rails
   faker!
-  fog-aws (~> 1.4.0)
+  fog-aws (~> 3.5.2)
   google_contacts_api (~> 0.2.11)!
   hashie (~> 3.4.4)
   holidays (~> 4.5.0)
