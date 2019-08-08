@@ -32,7 +32,7 @@ class FilteredOutcome < ApplicationRecord
   scope :reservations, -> { where(outcome_type: RESERVATIONS_OUTCOME_TYPES) }
 
   belongs_to :user
-  belongs_to :filter, class_name: "QueryFilter"
+  belongs_to :filter, class_name: "QueryFilter", optional: true
   validates :outcome_type, presence: true, inclusion: { in: OUTCOME_TYPES }
 
   aasm :whiny_transitions => false do
