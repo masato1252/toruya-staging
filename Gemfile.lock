@@ -179,7 +179,7 @@ GEM
       railties (>= 3.2, < 6.0)
     equatable (0.5.0)
     erubi (1.8.0)
-    excon (0.63.0)
+    excon (0.66.0)
     execjs (2.7.0)
     extlib (0.9.16)
     factory_bot (5.0.2)
@@ -192,15 +192,16 @@ GEM
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.10.0)
-    fog-aws (1.4.1)
-      fog-core (~> 1.38)
-      fog-json (~> 1.0)
+    fog-aws (3.5.2)
+      fog-core (~> 2.1)
+      fog-json (~> 1.1)
       fog-xml (~> 0.1)
       ipaddress (~> 0.8)
-    fog-core (1.45.0)
+    fog-core (2.1.2)
       builder
       excon (~> 0.58)
       formatador (~> 0.2)
+      mime-types
     fog-json (1.2.0)
       fog-core
       multi_json (~> 1.10)
@@ -302,7 +303,6 @@ GEM
     multipart-post (2.0.0)
     net-http-persistent (3.0.0)
       connection_pool (~> 2.2)
-    newrelic_rpm (3.18.1.330)
     nio4r (2.3.1)
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
@@ -528,7 +528,7 @@ DEPENDENCIES
   dotenv-rails (~> 2.2.1)
   factory_bot_rails
   faker!
-  fog-aws (~> 1.4.0)
+  fog-aws (~> 3.5.2)
   google_contacts_api (~> 0.2.11)!
   hashie (~> 3.4.4)
   holidays (~> 4.5.0)
@@ -540,7 +540,6 @@ DEPENDENCIES
   listen
   lograge
   money-rails (~> 1.11.0)
-  newrelic_rpm (~> 3.18.0)
   nokogiri
   omniauth-google-oauth2 (~> 0.7.0)
   omniauth-rails_csrf_protection
