@@ -299,7 +299,6 @@ GEM
     multipart-post (2.0.0)
     net-http-persistent (3.0.0)
       connection_pool (~> 2.2)
-    newrelic_rpm (6.5.0.357)
     nio4r (2.3.1)
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
@@ -532,7 +531,6 @@ DEPENDENCIES
   listen
   lograge
   money-rails (~> 1.11.0)
-  newrelic_rpm
   nokogiri
   omniauth-google-oauth2 (~> 0.7.0)
   omniauth-rails_csrf_protection
