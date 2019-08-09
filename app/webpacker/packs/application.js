@@ -24,6 +24,8 @@ const application = Application.start()
 const context = require.context("../javascripts/controllers", true, /.js$/)
 application.load(definitionsFromContext(context))
 
+require.context('../assets/management', true)
+
 import Rails from 'rails-ujs';
 Rails.start();
 
