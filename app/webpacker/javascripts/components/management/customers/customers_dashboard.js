@@ -481,7 +481,7 @@ class CustomersDashboard extends React.Component {
       }
       return (
         <CustomerInfoEdit
-          ref={function(c) { this.customer_info_edit = c }.bind(this)}
+          ref={(c) => { this.customer_info_edit = c }}
           customer={this.state.customer}
           contactGroups={this.props.contactGroups}
           ranks={this.props.ranks}
