@@ -4,8 +4,11 @@
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
     <p>
-      <%= button_to user_google_oauth2_omniauth_authorize_path, id: "SLgoogle", class: "BTNorange", title: "Googleでログイン" do %>
-        <i class="fa fa-google" aria-hidden="true"></i>Googleでログイン
+      <%= button_to user_google_oauth2_omniauth_authorize_path, class: "google-button" do %>
+        <img class="google-button__icon" src="<%= asset_pack_path("assets/management/btn_google_signin.svg") %>" />
+        <span class="google-button__text">
+          Googleでログイン
+        </span>
       <% end %>
     </p>
   </main>
