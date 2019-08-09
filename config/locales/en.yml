@@ -235,6 +235,12 @@ en:
         dob_in_next_month: Birthday in Next Month
         checkout_in_a_year: Checked-out within a Year
   settings:
+    dashboard:
+      booking_tour:
+        title: Online Booking
+        shop_logo_setup: Set shop information
+        booking_option_setup: Set a booking price
+        booking_page_setup: Set a booking page
     shop:
       info_title: Shop Info
       new_title: Add a New Shop

@@ -38,4 +38,10 @@ class Settings::DashboardsController < ActionController::Base
 
     redirect_to member_path
   end
+
+  def booking_tour
+    session[:booking_settings_tour] = true
+
+    redirect_to booking_settings_presenter.last_step_task_path
+  end
 end

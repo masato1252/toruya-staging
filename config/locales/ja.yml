@@ -338,6 +338,11 @@ ja:
       do_reservations_created: 回、予約を作成しました
       reservations_created: 件の予約があります
       no_limit: 無制限
+      booking_tour:
+        title: オンライン予約
+        shop_logo_setup: 店舗情報を設定する
+        booking_option_setup: 予約価格を作成する
+        booking_page_setup: 予約ページを作成する
       basic_tour:
         title: 基本設定
         start_btn: 設定ツアー開始

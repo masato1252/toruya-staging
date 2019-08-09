@@ -11,11 +11,13 @@
         wrap_tag: :li,
         class_active: "here" %>
     </ul>
-    <ul>
-      <%= active_link_to t("settings.booking_page.booking_page_label"), settings_user_booking_pages_path(super_user),
-        active: [[ "settings/booking_pages" ]],
-        wrap_tag: :li,
-        class_active: "here" %>
-    </ul>
+    <% if booking_settings_presenter.booking_option_setup? %>
+      <ul>
+        <%= active_link_to t("settings.booking_page.booking_page_label"), settings_user_booking_pages_path(super_user),
+          active: [[ "settings/booking_pages" ]],
+          wrap_tag: :li,
+          class_active: "here" %>
+      </ul>
+    <% end %>
   </dd>
 </dl>

@@ -91,6 +91,7 @@ Rails.application.routes.draw do
     get :tour, to: "dashboards#tour", as: :tour
     get :end_tour, to: "dashboards#end_tour", as: :end_tour
     get :hide_tour_warning, to: "dashboards#hide_tour_warning", as: :hide_tour_warning
+    get :booking_tour, to: "dashboards#booking_tour", as: :booking_tour
 
     namespace :tours, constraints: ::XhrConstraint do
       get :current_step_warning

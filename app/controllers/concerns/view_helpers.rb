@@ -23,6 +23,7 @@ module ViewHelpers
     helper_method :in_personal_dashboard?
     helper_method :shop_dashboard_id
     helper_method :basic_settings_presenter
+    helper_method :booking_settings_presenter
     helper_method :previous_controller_is
     helper_method :working_time_range
   end
@@ -150,6 +151,9 @@ module ViewHelpers
   def basic_settings_presenter
     @basic_settings_presenter ||= Tours::BasicSettingsPresenter.new(view_context, current_user)
   end
+
+  def booking_settings_presenter
+    @booking_settings_presenter ||= Tours::BookingSettingsPresenter.new(view_context, current_user)
   end
 
   def admin?
