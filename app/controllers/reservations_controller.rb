@@ -241,7 +241,7 @@ class ReservationsController < DashboardController
 
     @staff_options =
       if super_user.premium_member?
-        shop.staffs.order("id").map do |staff|
+        shop.staffs.order("id").uniq.map do |staff|
           ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
         end
       else
