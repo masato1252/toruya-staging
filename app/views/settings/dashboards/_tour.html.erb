@@ -1,0 +1,38 @@
+<div class="tour">
+  <h3>
+    <span class="title"><%= presenter.title %></span>
+    <%= link_to t("settings.dashboard.basic_tour.start_btn"), presenter.tour_path, class: "btn btn-tarco" %>
+  </h3>
+
+  <div class="formRow">
+    <% presenter.steps.each.with_index do |tour, step| %>
+      <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
+        <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
+          <dt>
+          <% if tour.done %>
+            <span class="label label-done"><%= t("common.done") %></span>
+          <% else %>
+            <span class="label label-warning"><%= tour.percentage %></span>
+          <% end %>
+          <span>Step<%= step + 1 %>: <%= tour.title %></span>
+          </dt>
+          <dd>
+          <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
+          <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
+          </dd>
+        <% end %>
+        <div data-target="collapse.content">
+          <% tour.tasks.each do |task| %>
+            <dl class="task">
+              <%= check_setting_icon(task.done) %>
+              <%= task.title %>
+              <%= link_to task.setting_path do %>
+                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
+              <% end if task.setting_path_condition %>
+            </dl>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

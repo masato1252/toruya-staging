@@ -1,10 +1,10 @@
 module Notifications
   class BasicSettingTourPresenter < ::NotificationsPresenter
     def data
-      current_step = h.basic_setting_presenter.current_step
+      current_step = h.basic_settings_presenter.current_step
 
       if current_step.present?
-        uri = URI.parse(h.basic_setting_presenter.current_step_setting_path)
+        uri = URI.parse(h.basic_settings_presenter.current_step_setting_path)
         query = Rack::Utils.parse_query(uri.query)
         query["enable_tour_warning"] = true
         uri.query = Rack::Utils.build_query(query)
