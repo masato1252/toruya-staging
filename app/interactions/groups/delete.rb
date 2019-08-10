@@ -15,9 +15,9 @@ class Groups::Delete < ActiveInteraction::Base
       contact_group.with_lock do
         contact_group.customers.find_each do |customer|
           google_group_ids = customer.google_contact_group_ids
-          google_group_ids.delete(contact_group.backup_google_group_id)
 
           if !Rails.configuration.x.env.staging?
+            google_group_ids.delete(contact_group.backup_google_group_id)
             google_group_ids.delete(contact_group.google_group_id)
           end
 
