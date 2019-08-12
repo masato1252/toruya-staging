@@ -11,7 +11,10 @@ class Groups::Delete < ActiveInteraction::Base
     google_user = user.google_user
 
     # delete toruya backup google group and binding original google group
-    if google_user.delete_group(contact_group.backup_google_group_id) && google_user.delete_group(contact_group.google_group_id)
+    # XXX: Don't delete google contact group in staging to prevent it affect real user google contact data
+    if Rails.configuration.x.env.staging? ||
+      (google_user.delete_group(contact_group.backup_google_group_id) &&
+       google_user.delete_group(contact_group.google_group_id))
       contact_group.with_lock do
         contact_group.customers.find_each do |customer|
           google_group_ids = customer.google_contact_group_ids
