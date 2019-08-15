@@ -192,6 +192,7 @@ Rails.application.routes.draw do
 
   authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
+    mount PgHero::Engine, at: "/_pghero"
 
     scope path: "admin"do
       get "as_user", to: "admin#as_user"

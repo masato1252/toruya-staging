@@ -4,6 +4,8 @@ ruby "2.4.2"
 
 gem "rails", "~> 5.2.2"
 gem "pg", "~> 1.1.4"
+gem "pghero", "~> 2.2.1"
+gem "pg_query", "~> 1.1.0"
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem "therubyracer", platforms: :ruby
