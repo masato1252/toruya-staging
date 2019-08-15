@@ -2523,10 +2523,8 @@ CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USIN
 
 
 --
--- Name: index_reservation_menus_on_reservation_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_reservation_menus_on_reservation_id ON public.reservation_menus USING btree (reservation_id);
 
 
 --
@@ -2903,6 +2901,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190724082958'),
 ('20190805155207'),
 ('20190815150851'),
-('20190815160047');
+('20190815160047'),
+('20190815171601');
 
 
