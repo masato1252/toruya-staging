@@ -334,7 +334,10 @@ GEM
     pastel (0.7.2)
       equatable (~> 0.5.0)
       tty-color (~> 0.4.0)
-    pg (0.21.0)
+    pg (1.1.4)
+    pg_query (1.1.0)
+    pghero (2.2.1)
+      activerecord
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -545,7 +548,9 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   paper_trail
   parallel
-  pg (~> 0.21.0)
+  pg (~> 1.1.4)
+  pg_query (~> 1.1.0)
+  pghero (~> 2.2.1)
   puma (~> 3.11.0)
   rails (~> 5.2.2)
   react-rails

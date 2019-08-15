@@ -736,6 +736,41 @@ ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
 
 
 --
+-- Name: pghero_query_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pghero_query_stats (
+    id bigint NOT NULL,
+    database text,
+    "user" text,
+    query text,
+    query_hash bigint,
+    total_time double precision,
+    calls bigint,
+    captured_at timestamp without time zone
+);
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pghero_query_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pghero_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pghero_query_stats_id_seq OWNED BY public.pghero_query_stats.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1715,6 +1750,13 @@ ALTER TABLE ONLY public.menus ALTER COLUMN id SET DEFAULT nextval('public.menus_
 
 
 --
+-- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats ALTER COLUMN id SET DEFAULT nextval('public.pghero_query_stats_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2033,6 +2075,14 @@ ALTER TABLE ONLY public.menu_reservation_setting_rules
 
 ALTER TABLE ONLY public.menus
     ADD CONSTRAINT menus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pghero_query_stats pghero_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pghero_query_stats
+    ADD CONSTRAINT pghero_query_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -2396,24 +2446,10 @@ CREATE INDEX index_contact_group_rankings_on_rank_id ON public.contact_group_ran
 
 
 --
--- Name: index_contact_groups_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btree (user_id);
-
-
---
 -- Name: index_contact_groups_on_user_id_and_bind_all; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
-
-
---
--- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_filtered_outcomes_on_user_id ON public.filtered_outcomes USING btree (user_id);
 
 
 --
@@ -2424,17 +2460,17 @@ CREATE INDEX index_menu_categories_on_menu_id_and_category_id ON public.menu_cat
 
 
 --
--- Name: index_menus_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_menus_on_user_id ON public.menus USING btree (user_id);
-
-
---
 -- Name: index_menus_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (user_id, deleted_at);
+
+
+--
+-- Name: index_pghero_query_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pghero_query_stats_on_database_and_captured_at ON public.pghero_query_stats USING btree (database, captured_at);
 
 
 --
@@ -2508,13 +2544,6 @@ CREATE INDEX index_shop_menu_repeating_dates_on_menu_id ON public.shop_menu_repe
 
 
 --
--- Name: index_shop_menu_repeating_dates_on_shop_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_shop_menu_repeating_dates_on_shop_id ON public.shop_menu_repeating_dates USING btree (shop_id);
-
-
---
 -- Name: index_shop_menu_repeating_dates_on_shop_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2536,24 +2565,10 @@ CREATE UNIQUE INDEX index_shop_staffs_on_shop_id_and_staff_id ON public.shop_sta
 
 
 --
--- Name: index_shops_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_shops_on_user_id ON public.shops USING btree (user_id);
-
-
---
 -- Name: index_shops_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (user_id, deleted_at);
-
-
---
--- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staff_accounts_on_owner_id ON public.staff_accounts USING btree (owner_id);
 
 
 --
@@ -2578,24 +2593,10 @@ CREATE INDEX index_staff_contact_group_relations_on_contact_group_id ON public.s
 
 
 --
--- Name: index_staff_contact_group_relations_on_staff_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staff_contact_group_relations_on_staff_id ON public.staff_contact_group_relations USING btree (staff_id);
-
-
---
 -- Name: index_staff_menus_on_staff_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON public.staff_menus USING btree (staff_id, menu_id);
-
-
---
--- Name: index_staffs_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
 
 
 --
@@ -2610,13 +2611,6 @@ CREATE INDEX index_staffs_on_user_id_and_deleted_at ON public.staffs USING btree
 --
 
 CREATE INDEX index_subscription_charges_on_plan_id ON public.subscription_charges USING btree (plan_id);
-
-
---
--- Name: index_subscription_charges_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_subscription_charges_on_user_id ON public.subscription_charges USING btree (user_id);
 
 
 --
@@ -2750,13 +2744,6 @@ CREATE INDEX shop_working_time_index ON public.business_schedules USING btree (s
 --
 
 CREATE INDEX staff_account_email_index ON public.staff_accounts USING btree (owner_id, email);
-
-
---
--- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX staff_account_index ON public.staff_accounts USING btree (owner_id, user_id);
 
 
 --
@@ -2914,6 +2901,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190630055440'),
 ('20190707082104'),
 ('20190724082958'),
-('20190805155207');
+('20190805155207'),
+('20190815150851'),
+('20190815160047');
 
 
