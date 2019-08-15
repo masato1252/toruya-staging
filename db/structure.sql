@@ -2337,13 +2337,6 @@ CREATE INDEX index_contact_group_rankings_on_rank_id ON public.contact_group_ran
 
 
 --
--- Name: index_contact_groups_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_contact_groups_on_user_id ON public.contact_groups USING btree (user_id);
-
-
---
 -- Name: index_contact_groups_on_user_id_and_bind_all; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2351,24 +2344,10 @@ CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.conta
 
 
 --
--- Name: index_filtered_outcomes_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_filtered_outcomes_on_user_id ON public.filtered_outcomes USING btree (user_id);
-
-
---
 -- Name: index_menu_categories_on_menu_id_and_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_menu_categories_on_menu_id_and_category_id ON public.menu_categories USING btree (menu_id, category_id);
-
-
---
--- Name: index_menus_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_menus_on_user_id ON public.menus USING btree (user_id);
 
 
 --
@@ -2435,13 +2414,6 @@ CREATE INDEX index_shop_menu_repeating_dates_on_menu_id ON public.shop_menu_repe
 
 
 --
--- Name: index_shop_menu_repeating_dates_on_shop_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_shop_menu_repeating_dates_on_shop_id ON public.shop_menu_repeating_dates USING btree (shop_id);
-
-
---
 -- Name: index_shop_menu_repeating_dates_on_shop_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2463,24 +2435,10 @@ CREATE UNIQUE INDEX index_shop_staffs_on_shop_id_and_staff_id ON public.shop_sta
 
 
 --
--- Name: index_shops_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_shops_on_user_id ON public.shops USING btree (user_id);
-
-
---
 -- Name: index_shops_on_user_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (user_id, deleted_at);
-
-
---
--- Name: index_staff_accounts_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staff_accounts_on_owner_id ON public.staff_accounts USING btree (owner_id);
 
 
 --
@@ -2505,24 +2463,10 @@ CREATE INDEX index_staff_contact_group_relations_on_contact_group_id ON public.s
 
 
 --
--- Name: index_staff_contact_group_relations_on_staff_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staff_contact_group_relations_on_staff_id ON public.staff_contact_group_relations USING btree (staff_id);
-
-
---
 -- Name: index_staff_menus_on_staff_id_and_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_staff_menus_on_staff_id_and_menu_id ON public.staff_menus USING btree (staff_id, menu_id);
-
-
---
--- Name: index_staffs_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_staffs_on_user_id ON public.staffs USING btree (user_id);
 
 
 --
@@ -2537,13 +2481,6 @@ CREATE INDEX index_staffs_on_user_id_and_deleted_at ON public.staffs USING btree
 --
 
 CREATE INDEX index_subscription_charges_on_plan_id ON public.subscription_charges USING btree (plan_id);
-
-
---
--- Name: index_subscription_charges_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_subscription_charges_on_user_id ON public.subscription_charges USING btree (user_id);
 
 
 --
@@ -2663,13 +2600,6 @@ CREATE INDEX shop_working_time_index ON public.business_schedules USING btree (s
 --
 
 CREATE INDEX staff_account_email_index ON public.staff_accounts USING btree (owner_id, email);
-
-
---
--- Name: staff_account_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX staff_account_index ON public.staff_accounts USING btree (owner_id, user_id);
 
 
 --
@@ -2819,6 +2749,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190410073550'),
 ('20190420050353'),
 ('20190612074957'),
-('20190815150851');
+('20190815150851'),
+('20190815160047');
 
 
