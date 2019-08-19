@@ -1142,6 +1142,10 @@ ja:
           attributes:
             params:
               invalid_nested: " Invalid nested"
+        reservations/validate:
+          attributes:
+            menu_staffs_list:
+              duplicate: "同じメニューは追加できません。予約時間を変更したい場合は所要時間を編集してください。"
         reservable/reservation:
           attributes:
             date:

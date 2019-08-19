@@ -130,6 +130,26 @@ module Reservations
         end
       end
 
+      if menu_staffs_list.present?
+        menu_ids = menu_staffs_list.map { |h| h[:menu_id] }
+        duplicate_menu_ids = menu_ids.select { |e| menu_ids.count(e) > 1 }.uniq
+
+        if duplicate_menu_ids.present?
+          errors_with_warnings[:errors] ||= {}
+          errors_with_warnings[:errors][:reservation_form] ||= {}
+          errors_with_warnings[:errors][:reservation_form][:menu_staffs_list] ||= Array.new(menu_staffs_list.length) { Hash[:menu_id, {}] }
+
+          duplicate_menu_ids.each do |duplicate_menu_id|
+            duplicate_menu_ids_index = menu_ids.each_index.select {|i| menu_ids[i] == duplicate_menu_id }
+            duplicate_menu_ids_index.shift
+
+            duplicate_menu_ids_index.each do |duplicate_menu_id_index|
+              errors_with_warnings[:errors][:reservation_form][:menu_staffs_list][duplicate_menu_id_index][:menu_id][:duplicate] = I18n.t("active_interaction.errors.models.reservations/validate.attributes.menu_staffs_list.duplicate")
+            end
+          end
+        end
+      end
+
       # All possible errors and warnings
       # {
       #   errors: {
@@ -140,7 +160,8 @@ module Reservations
       #             time_not_enough: "time_not_enough",
       #             start_yet: "start_yet",
       #             is_over: "is_over",
-      #             lack_staffs: "lack_staffs"
+      #             lack_staffs: "lack_staffs",
+      #             duplicate: "duplicate"
       #           },
       #         }
       #       ]

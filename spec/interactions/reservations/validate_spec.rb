@@ -736,5 +736,58 @@ RSpec.describe Reservations::Validate do
         expect(result[:warnings][:reservation_form][:menu_staffs_list][1][:staff_ids][1][:staff_id][:incapacity_menu]).to be_present
       end
     end
+
+    context "when some menus duplicate" do
+      let(:menu_staffs_list) do
+        [
+          {
+            menu_id: menu1.id,
+            position: 0,
+            menu_required_time: menu1.minutes,
+            menu_interval_time: menu1.interval,
+            staff_ids: [
+              {
+                staff_id: staff1.id.to_s,
+                state: "pending"
+              }
+            ]
+          },
+          {
+            menu_id: menu1.id,
+            position: 1,
+            menu_required_time: menu1.minutes,
+            menu_interval_time: menu1.interval,
+            staff_ids: [
+              {
+                staff_id: staff1.id.to_s,
+                state: "pending"
+              }
+            ]
+          }
+        ]
+      end
+
+      it "returns expected error" do
+        result = outcome.result
+
+        # {
+        #   :errors => {
+        #     :reservation_form => {
+        #       :menu_staffs_list => [
+        #         [0] {
+        #           :menu_id => {}
+        #         },
+        #         [1] {
+        #           :menu_id => {
+        #             :duplicate => "同じメニューは追加できません。予約時間を変更したい場合は所要時間を編集して\nください。"
+        #           }
+        #         }
+        #       ]
+        #     }
+        #   }
+        # }
+        expect(result[:errors][:reservation_form][:menu_staffs_list][1][:menu_id][:duplicate]).to be_present
+      end
+    end
   end
 end

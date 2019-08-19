@@ -832,6 +832,10 @@ en:
             plan:
               auth_failed: "^The reason why your payment failed can be your credit card is invalid."
               processor_failed: "^The reason why your payment failed can be your credit card is invalid."
+        reservations/validate:
+          attributes:
+            menu_staffs_list:
+              duplicate: "Not allowed to add the same menu. Please edit required time if you want to change booking time."
         reservable/reservation:
           attributes:
             start_time:
