@@ -130,6 +130,7 @@ module Reservations
         end
       end
 
+      # XXX: validate multiple menus duplicate case
       if menu_staffs_list.present?
         menu_ids = menu_staffs_list.map { |h| h[:menu_id] }
         duplicate_menu_ids = menu_ids.select { |e| menu_ids.count(e) > 1 }.uniq
