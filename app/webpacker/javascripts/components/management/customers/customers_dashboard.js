@@ -282,7 +282,9 @@ class CustomersDashboard extends React.Component {
 
   handleCustomerCreate = (event) => {
     if (this.state.processing || !this._isCustomerDataValid()) { return ;}
-    this.customer_info_edit.handleCreateCustomer(event);
+    if (this.customer_info_edit) {
+      this.customer_info_edit.handleCreateCustomer(event);
+    }
   };
 
   _isCustomerDataValid = () => {
