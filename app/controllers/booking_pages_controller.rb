@@ -15,7 +15,10 @@ class BookingPagesController < ActionController::Base
 
     if cookies[:booking_customer_id]
       @customer = @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])&.with_google_contact
-      @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+
+      if @customer
+        @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+      end
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count
