@@ -24,13 +24,19 @@
       width: 100%;
     }
   }
+
   .header {
     margin-top: 12px;
     margin-bottom: 12px;
 
+    .header-title-part {
+      h1 {
+        margin: 20px 0 10px;
+      }
+    }
+
     .page-title {
       font-size: 24px;
-      margin-left: 20px;
     }
 
     .logo {
@@ -40,7 +46,7 @@
     }
 
     .greeting {
-      margin: 12px 6px 20px;
+      margin: 12px 0 20px;
       white-space: pre-wrap;
     }
   }

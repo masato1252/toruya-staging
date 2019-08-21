@@ -99,13 +99,20 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingHeader = (pristine) => {
-    const { title, greeting, shop_logo_url } = this.props.booking_page;
+    const {
+      title,
+      greeting,
+      shop_logo_url,
+      shop_name
+    } = this.props.booking_page;
 
     return (
       <div className="header">
         <div className="header-title-part">
-          { shop_logo_url &&  <img className="logo" src={shop_logo_url} /> }
-          <strong className="page-title">{title}</strong>
+          <h1>
+            { shop_logo_url ?  <img className="logo" src={shop_logo_url} /> : shop_name }
+          </h1>
+          <h2 className="page-title">{title}</h2>
         </div>
 
         {pristine && !this.booking_reservation_form_values.is_done && <div className="greeting">{greeting}</div>}
