@@ -48,7 +48,7 @@ class MembersController < DashboardController
       end
     end.sort_by { |option| option.time }
 
-    @notification_messages = NotificationsPresenter.new(view_context, current_user).data
+    @notification_messages = NotificationsPresenter.new(view_context, current_user, params).data
   end
 
   private

@@ -1,5 +1,5 @@
 <%= notification_messages %>
-<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <div class="contents" id="dashboard">
   <div id="calendar" class="sidel">

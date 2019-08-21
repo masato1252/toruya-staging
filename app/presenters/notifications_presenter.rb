@@ -2,13 +2,14 @@ class NotificationsPresenter
   attr_reader :current_user, :h
   delegate :link_to, to: :h
 
-  def initialize(h, current_user)
+  def initialize(h, current_user, params = {})
     @h = h
     @current_user = current_user
+    @reservation_id = params[:reservation_id]
   end
 
   def data
-    new_pending_reservations + oldest_pending_customer_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
+    Array.wrap(new_pending_reservations) + oldest_pending_customer_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
   end
 
   def recent_pending_reservations
@@ -24,11 +25,53 @@ class NotificationsPresenter
   private
 
   def new_pending_reservations
-    oldest_res = recent_pending_reservations.first&.reservation
+    if recent_pending_reservations.present?
+      message = "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)}"
 
-    oldest_res ? [
-      "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{link_to(I18n.t("notifications.pending_reservation_confirm"), h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
-    ] : []
+      if @reservation_id
+        reservations = recent_pending_reservations.map(&:reservation)
+        reservation_ids = reservations.map(&:id)
+        matched_index = reservation_ids.find_index {|r_id| r_id == @reservation_id.to_i }
+      end
+
+      if matched_index
+        text = "<strong>#{matched_index + 1}/#{reservation_ids.size}</strong>"
+
+        if matched_index == 0
+          previous_reservation_id = nil
+          next_reservation_id = reservation_ids[matched_index + 1]
+        elsif matched_index + 1 == reservation_ids.size
+          previous_reservation_id = reservation_ids[matched_index - 1]
+          next_reservation_id = nil
+        else
+          previous_reservation_id = reservation_ids[matched_index - 1]
+          next_reservation_id = reservation_ids[matched_index + 1]
+        end
+
+        if previous_reservation_id
+          previous_path = h.date_member_path(reservations[matched_index].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
+        end
+
+        if next_reservation_id
+          next_path = h.date_member_path(reservations[matched_index].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
+        end
+      else
+        oldest_res = recent_pending_reservations.first&.reservation
+
+        text = I18n.t("notifications.pending_reservation_confirm")
+        path = h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id, popup_disabled: true)
+      end
+
+      if path
+        "#{message} #{link_to(text.html_safe, path)}"
+      else
+        "#{message} #{link_to('<i class="fa fa-caret-square-o-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
+        #{text}
+        #{link_to('<i class="fa fa-caret-square-o-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path}"
+      end
+    else
+      []
+    end
   end
 
   def oldest_pending_customer_reservations

@@ -1,5 +1,9 @@
 .notification.alert.alert-info {
   margin-bottom: 0;
+
+  a {
+    vertical-align: top;
+  }
 }
 
 .field-error {
