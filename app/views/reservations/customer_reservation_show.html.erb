@@ -39,9 +39,9 @@
         <% if @reservation_customer.pending? && @reservation.responsible_by_staff?(current_user.current_staff(@shop_user)) %>
           <dd>
             <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.accept"), accept_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNtarco" %>
+              <%= link_to t("reservation.accept_customer"), accept_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNtarco" %>
             <% else %>
-              <%= link_to t("reservation.accept_in_canceled"), "#", class: "btn BTNtarco disabled" %>
+              <%= link_to t("reservation.accept_customer"), "#", class: "btn BTNtarco disabled" %>
             <% end %>
           </dd>
         <% end %>

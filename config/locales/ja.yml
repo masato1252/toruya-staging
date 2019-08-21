@@ -161,7 +161,8 @@ ja:
     recheck_in: 再チェックイン
     check_in: チェックイン
     check_out: チェックアウト
-    accept: 承認
+    accept: 予約を承認
+    accept_customer: 承認
     pend: 未承認
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
