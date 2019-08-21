@@ -238,7 +238,6 @@ en:
     dashboard:
       booking_tour:
         title: Online Booking
-        shop_logo_setup: Set shop information
         booking_option_setup: Set a booking price
         booking_page_setup: Set a booking page
     shop:
