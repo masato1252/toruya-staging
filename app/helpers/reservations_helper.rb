@@ -9,7 +9,7 @@ module ReservationsHelper
 
     menu_staffs = reservation.reservation_staffs.group_by{|rs| rs.menu.display_name }.map do |menu_name, reservation_staffs|
       "#{menu_name} (#{reservation_staffs.map { |rs| rs.staff.name }.join(", ")})"
-    end.join("<br />").html_safe
+    end.join(", ").html_safe
 
     {
       staffs_sentence: menu_staffs,

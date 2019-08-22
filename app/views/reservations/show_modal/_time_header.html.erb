@@ -5,9 +5,9 @@
       <%= t("reservation.#{reservation.aasm_state}") %>
     </span>
     <% if (params[:from_customer_id] || params[:from_filter]) && user_ability.can?(:read, :shop_dashboard) %>
-      <%= link_to reservation_date, date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_s(:date)) %>
+      <%= link_to I18n.l(reservation.start_time, format: :date), date_shop_reservations_path(reservation.shop, reservation_date: reservation.start_time.to_s(:date)) %>
     <% else %>
-      <span><%= reservation_date %></span>
+      <span><%= I18n.l(reservation.start_time, format: :date) %></span>
     <% end %>
 
     <span><%= reservation.start_time.to_s(:time)%>〜<%= reservation.end_time.to_s(:time) %></span>

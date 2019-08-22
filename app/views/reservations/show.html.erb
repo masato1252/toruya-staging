@@ -1,10 +1,6 @@
 <div class="modal-dialog toruya-modal" role="document">
   <div class="modal-content">
-    <%= render "reservations/show_modal/time_header",
-      reservation: @reservation,
-      user_ability: @user_ability,
-      reservation_date: @reservation_date
-    %>
+    <%= render "reservations/show_modal/time_header", reservation: @reservation, user_ability: @user_ability %>
 
     <div class="modal-body">
       <div>

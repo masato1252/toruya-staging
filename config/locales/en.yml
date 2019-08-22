@@ -114,6 +114,7 @@ en:
     check_in: Check in
     check_out: Check Out
     accept: Accept
+    accept_customer: Approve Booking Customer
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
