@@ -1,11 +1,19 @@
 #manager {
- span.new-shop-reservation {
-   margin-left: 3px;
- }
+  span.new-shop-reservation {
+    margin-left: 3px;
+  }
 
- &.members-container {
-   .shops-list {
-     text-align: left;
-   }
- }
+  &.members-container {
+    .shops-list {
+      text-align: left;
+    }
+  }
+}
+
+#reservation-show-modal {
+  .reservation-state {
+    border-radius: 3px;
+    margin-right: 6px;
+    padding: 0 3px;
+  }
 }

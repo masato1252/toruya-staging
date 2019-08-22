@@ -751,7 +751,7 @@ input.BTNonoff:checked + label:after {
   font-size: 14px;
   bottom: 0;
 }
-.reservation-state {
+.reservation-state-item {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -760,16 +760,16 @@ input.BTNonoff:checked + label:after {
   margin-right: 3px;
 }
 .reserved.reservation-state {
-  background-color: #60938a;
-  border-color: #488479;
+  background-color: $palette-color2-1;
+  border-color: $palette-color2-2;
 }
 .checked_out.reservation-state, .checkout.reservation-state, #customerInfo #basic dl dt li {
-  background-color: #d0d0d0;
-  border: 1px solid #b3b3b3;
+  background-color: $gray5;
+  border: 1px solid $gray7;
 }
 .checked_in.reservation-state, .checkin.reservation-state {
-  background-color: #fcbe46;
-  border: 1px #e6a21f solid;
+  background-color: $palette-color1;
+  border: 1px $palette-color1-1 solid;
 }
 .noshow.reservation-state {
   background-color: #aecfc8;
