@@ -76,9 +76,11 @@
   display: inline-block;
   line-height: 54px;
   width: 60px;
-}
-#customerInfo #basic a.BTNtarco:first-child {
-  margin-left: 10px;
+  margin: 0 5px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 #customerInfo #basic dl dt li:first-child { margin-bottom: 5px; }
 #customerInfo #basic dl dt li {
