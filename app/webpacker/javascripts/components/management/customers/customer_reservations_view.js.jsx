@@ -79,7 +79,7 @@ class CustomerReservationsView extends React.Component {
             <dl>
               <dd className="date">{reservation.monthDate}</dd>
               <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
-              <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
+              <dd className="resSts"><span className={`reservation-state-item reservation-state ${reservation.state}`}></span></dd>
               <dd className="menu">{reservation.menu}</dd>
               <dd className="shop">{reservation.shop}</dd>
               {
