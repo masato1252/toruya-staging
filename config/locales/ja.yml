@@ -170,6 +170,8 @@ ja:
     customer_cancel: 予約キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
+    accepted_state: 承認済
+    pending_state: 未承認
     noshow: 未来店
     checked_in: チェックイン
     checked_out: チェックアウト
@@ -191,6 +193,11 @@ ja:
     other_customers: "他%{other_customers_number}名"
     no_ending_time_message: 終了時刻は編集できません。予約の終了時刻は、メニューの所要時間から自動的に計算されます。
     modal:
+      staff_states:
+        title: 予約を承認
+        message: "%{total_staffs_number}人中%{accepted_staffs_number}人のスタッフがこの予約を承認しています。"
+        approve_btn: この予約を承認する
+        unapprove_btn: この予約を未承認にする
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
         manage_self_shop_reservations_no_permission: ※あなたのご利用プランに基づき、新規予約を作成できない店舗があります。

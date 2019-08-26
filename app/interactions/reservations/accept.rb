@@ -9,6 +9,13 @@ module Reservations
     def execute
       reservation.transaction do
         reservation_for_staff.accepted!
+        reservation.reservation_customers.pending.each do |reservation_customer|
+          compose(
+            ReservationCustomers::Accept,
+            reservation_id: reservation_customer.reservation_id,
+            customer_id: reservation_customer.customer_id
+          )
+        end
         reservation.try_accept
         reservation.save!
 

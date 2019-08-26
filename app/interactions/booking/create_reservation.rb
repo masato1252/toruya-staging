@@ -214,7 +214,7 @@ module Booking
               booking_start_at,
               booking_end_at,
               booking_page.overlap_restriction
-            ) do |valid_menus_spots|
+            ) do |valid_menus_spots, staff_states|
               # valid_menus_spots likes
               # [
               #   {
@@ -229,8 +229,14 @@ module Booking
               #       },
               #       ...
               #     ],
-              #     state: $pending
               #   }
+              # ]
+              # staff_states
+              # [
+              #   {
+              #     staff_id: $staff_id
+              #     state: pending/accepted
+              #   },
               # ]
               reservation_outcome = Reservations::Save.run(
                 reservation: shop.reservations.new,
@@ -250,9 +256,10 @@ module Booking
                       new_customer_info: new_customer_info.attributes.compact,
                     }
                   }],
-                  memo: "",
-                  with_warnings: false,
                   menu_staffs_list: valid_menus_spots,
+                  staff_states: staff_states,
+                  memo: "",
+                  with_warnings: false
                 }
               )
 

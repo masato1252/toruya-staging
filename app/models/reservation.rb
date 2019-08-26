@@ -108,7 +108,11 @@ class Reservation < ApplicationRecord
   end
 
   def try_accept
-    self.accept if accepted_by_all_staffs? && accepted_all_customers?
+    if accepted_by_all_staffs?
+      self.accept
+    else reserved?
+      self.pend
+    end
   end
 
   ACTIONS = {

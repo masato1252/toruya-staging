@@ -31,9 +31,14 @@ module Reservations
           array :staff_ids do
             hash do
               integer :staff_id, default: nil
-              string :state
             end
           end
+        end
+      end
+      array :staff_states do
+        hash do
+          integer :staff_id, default: nil
+          string :state
         end
       end
       string :memo, default: nil
@@ -45,6 +50,8 @@ module Reservations
       reservation.transaction do
         menu_staffs_list = params.delete(:menu_staffs_list)
         customers_list = params.delete(:customers_list)
+        staff_states = params.delete(:staff_states)
+
         reservation.attributes = params
 
         reservation.reservation_menus.destroy_all
@@ -79,11 +86,12 @@ module Reservations
             h[:staff_ids].each do |staff_hash|
               next if staff_hash[:staff_id].blank?
 
+              staff_state = staff_states.find { |staff_state| staff_state[:staff_id] == staff_hash[:staff_id] }
+
               reservation.reservation_staffs.create(
                 menu_id: h[:menu_id],
                 staff_id: staff_hash[:staff_id],
-                # If the new staff ids includes current user staff, the staff accepted the reservation automatically
-                state: staff_hash[:state] == "accepted" ? "accepted" : (staff_hash[:staff_id].to_s == params[:by_staff_id].to_s ? :accepted : :pending),
+                state: staff_state[:state],
                 prepare_time: time_result[:prepare_time],
                 work_start_at: time_result[:work_start_at],
                 work_end_at: time_result[:work_end_at],

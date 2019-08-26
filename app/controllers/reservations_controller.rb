@@ -78,7 +78,7 @@ class ReservationsController < DashboardController
       staff_ids = @staff_options.map(&:id)
       @reservation.reservation_staffs.each do |reservation_staff|
         menu_hash = @menu_staffs_list.find { |menu_item| menu_item[:menu_id] == reservation_staff.menu_id }
-        menu_hash[:staff_ids] << { staff_id: (staff_ids.include?(reservation_staff.staff_id) ? reservation_staff.staff_id : nil), state: reservation_staff.state }
+        menu_hash[:staff_ids] << { staff_id: (staff_ids.include?(reservation_staff.staff_id) ? reservation_staff.staff_id : nil) }
       end
 
       @customers_list ||= @reservation.reservation_customers.includes(:customer).map do |reservation_customer|

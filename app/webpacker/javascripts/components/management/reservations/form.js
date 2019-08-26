@@ -17,6 +17,7 @@ import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
+import StaffStatesModal from "./staff_states_modal.js"
 import ProcessingBar from "../../shared/processing_bar.js"
 
 class ManagementReservationForm extends React.Component {
@@ -52,6 +53,51 @@ class ManagementReservationForm extends React.Component {
             "reservation_form[end_time_time_part]": end_at.format("HH:mm")
           }
         }
+      },
+      {
+        field: /menu_staffs_list/,
+        updates: async (value, name, allValues) => {
+          const {
+            menu_staffs_list,
+            staff_states,
+            by_staff_id,
+          } = allValues.reservation_form;
+
+          const {
+            existing_staff_states,
+            reservation_staff_states: {
+              pending_state,
+              accepted_state,
+            }
+          } = this.props.reservation_properties;
+
+          const new_staff_states = this._all_staff_ids(allValues.reservation_form).map((staff_id) => {
+            let state;
+            let existing_staff_state = staff_states.find(staff_state => String(staff_state.staff_id) === String(staff_id))
+            existing_staff_state = existing_staff_state || existing_staff_states.find(staff_state => String(staff_state.staff_id) === String(staff_id))
+
+            if (existing_staff_state) {
+              state = existing_staff_state.state
+            }
+            else if (String(staff_id) === String(by_staff_id)) {
+              state = accepted_state
+            }
+            else {
+              state = pending_state
+            }
+
+            return (
+              {
+                staff_id: staff_id,
+                state: state
+              }
+            )
+          })
+
+          return {
+            "reservation_form[staff_states]": new_staff_states
+          }
+        }
       }
     )
   };
@@ -59,6 +105,39 @@ class ManagementReservationForm extends React.Component {
   componentDidMount() {
     this.debounceValidateReservation()
   };
+
+  renderReservationState = () => {
+    const {
+      pending_state,
+      accepted_state,
+    } = this.props.reservation_properties.reservation_staff_states
+
+    const is_reservation_accepted = this._accepted_staffs_number() === this._all_staff_ids().length
+    const reservation_current_staffs_state = is_reservation_accepted ? accepted_state : pending_state
+    const reservation_state_wording = is_reservation_accepted ? this.props.i18n.accepted_state : this.props.i18n.pending_state
+
+    return (
+      <div
+        className={`reservation-state-btn btn ${reservation_current_staffs_state}`}
+        onClick={() => $("#staff-states-modal").modal("show")}>
+        {reservation_state_wording} ({`${this._accepted_staffs_number()}/${this._all_staff_ids().length}`})
+        <i className="fa fa-pencil"></i>
+
+        <FieldArray name="reservation_form[staff_states]">
+          {({ fields }) => (
+            <div>
+              {fields.map((name) => (
+                <div key={name}>
+                  <Field name={`${name}staff_id`} component="input" type="hidden" />
+                  <Field name={`${name}state`} component="input" type="hidden" />
+                </div>
+              ))}
+            </div>
+          )}
+        </FieldArray>
+      </div>
+    )
+  }
 
   renderReservationDateTime = () => {
     const {
@@ -140,6 +219,7 @@ class ManagementReservationForm extends React.Component {
                 component={Input}
                 className={this.nextReservationOverlap() ? "field-warning" : ""}
               />
+              {this.renderReservationState()}
               <span className="errors">
                 {this.displayIntervalOverlap()}
                 {this.endTimeError()}
@@ -321,7 +401,6 @@ class ManagementReservationForm extends React.Component {
 
           const {
             from_customer_id,
-            staff_options,
             shop,
             shops,
             staff,
@@ -375,6 +454,14 @@ class ManagementReservationForm extends React.Component {
                   callback={this.validateReservation}
                 />
               )}
+              <StaffStatesModal
+                reservation_form={this.reservation_form}
+                reservation_form_values={this.reservation_form_values}
+                reservation_properties={this.props.reservation_properties}
+                i18n={this.props.i18n}
+                total_staffs_number={this._all_staff_ids().length}
+                accepted_staffs_number={this._accepted_staffs_number()}
+              />
             </div>
           )
         }}
@@ -496,17 +583,35 @@ class ManagementReservationForm extends React.Component {
     return this._all_staff_ids().some((staff_id) => String(staff_id) !== String(by_staff_id));
   };
 
-  _all_staff_ids = () => {
-    return _.compact(
+  _accepted_staffs_number = () => {
+    const {
+      staff_states,
+    } = this.reservation_form_values;
+
+    const {
+      accepted_state,
+    } = this.props.reservation_properties.reservation_staff_states
+
+    return staff_states.filter(staff_state => staff_state.state === accepted_state).length
+  }
+
+  _all_staff_ids = (form_values) => {
+    form_values = form_values || this.reservation_form_values;
+
+    return _.uniq(
       _.compact(
-        _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids)
-      ).map((staff) => staff.staff_id)
+        _.flatMap(
+          form_values.menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids
+        ).map((staff) => staff.staff_id)
+      )
     )
   }
 
   _all_menu_ids = () => {
-    return _.compact(
-      _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.menu_id)
+    return _.uniq(
+      _.compact(
+        _.flatMap(this.reservation_form_values.menu_staffs_list, (menu_mapping) => menu_mapping.menu_id)
+      )
     )
   }
 

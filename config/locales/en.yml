@@ -122,6 +122,8 @@ en:
     customer_cancel: Cancel
     cancel_confirmation_message: You can view the canceled reservation on the customer page.
     pending: Pending
+    accepted_state: Accepted
+    pending_state: Pending
     noshow: No show
     checked_in: Checked in
     checked_out: Checked out
@@ -142,6 +144,12 @@ en:
     add_working_schedule: Add working schedule
     other_customers: "other customers: %{other_customers_number}"
     no_ending_time_message: "The end time cannot be edited. The end time will be calculated automatically from the menu required time."
+    modal:
+      staff_states:
+        title: Approve this Reservation
+        message: "%{accepted_staffs_number} out of %{total_staffs_number} staff approved this reservation."
+        approve_btn: Approve this Reservation
+        unapprove_btn: Unapproved this Reservation
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

@@ -48,14 +48,13 @@ module Booking
                     position: menu_position,
                     menu_interval_time: menu.interval,
                     menu_required_time: booking_option_menu.required_time,
-                    staff_ids: candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } },
-                    state: "pending"
+                    staff_ids: candidate_staff_ids.map { |staff_id| { staff_id: staff_id } },
                   }
                   menu_position = menu_position + 1
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
-                    yield valid_menus
+                    yield valid_menus, candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } }
                   end
 
                   # XXX: There is staff could handle this menu, so try next menu

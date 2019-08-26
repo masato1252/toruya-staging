@@ -21,9 +21,12 @@
 #
 
 class ReservationStaff < ApplicationRecord
+  PENDING_STATE = "pending"
+  ACCEPTED_STATE = "accepted"
+
   enum state: {
-    pending: 0,
-    accepted: 1
+    PENDING_STATE => 0,
+    ACCEPTED_STATE => 1
   }
 
   belongs_to :reservation

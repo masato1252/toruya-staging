@@ -107,6 +107,18 @@ RSpec.describe Reservations::Accept do
           }
         end
       end
+
+      context "when there is pending customers" do
+        it "customers state to accepted" do
+          reservation.reservation_customers.first.pending!
+
+          expect {
+            outcome
+          }.to change {
+            reservation.reservation_customers.first.state
+          }.to("accepted")
+        end
+      end
     end
   end
 end

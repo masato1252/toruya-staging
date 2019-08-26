@@ -71,11 +71,6 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
               ))}
             </Field>
 
-            <Field
-              name={`${staff_field}state`}
-              type="hidden"
-              component="input"
-            />
             {
               !is_editable || (!menu || index < Math.max(menu.min_staffs_number, 1)) ? null : (
                 <a
@@ -112,8 +107,7 @@ const MenuStaffsFields = ({ all_values, fields, menu_field_name, i18n, reservati
           if (staff_options.length  === fields.length) return;
 
           fields.push({
-            staff_id: null,
-            state: "pending"
+            staff_id: null
           })
         }}>
         <i className="fa fa-user-plus" aria-hidden="true"></i>{responsible_employee}
@@ -175,8 +169,7 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
                     const staff_ids = [];
                     for (let i = 0; i < Math.max(option.min_staffs_number, 1); i++) {
                       staff_ids.push({
-                        staff_id: null,
-                        state: "pending"
+                        staff_id: null
                       });
                     }
                     reservation_form.change(`${menu_field}staff_ids`, staff_ids)
@@ -372,8 +365,7 @@ const MultipleMenuFields = ({ fields, reservation_properties, i18n, all_values, 
                 menu_required_time: null,
                 menu_interval_time: null,
                 staff_ids: [{
-                  staff_id: null,
-                  state: "pending"
+                  staff_id: null
                 }]
               })
 
