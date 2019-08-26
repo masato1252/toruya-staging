@@ -276,3 +276,13 @@
     color: $palette-color4;
   }
 }
+
+.customer-remove-symbol {
+  position: relative;
+
+  .fa-times {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+  }
+}
