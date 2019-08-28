@@ -5,13 +5,6 @@ module ReservationCustomers
 
     def execute
       reservation_customer.canceled!
-      reservation = reservation_customer.reservation
-      reservation.try_accept
-      reservation.save!
-
-      unless reservation.reservation_customers.active.exists?
-        reservation.cancel!
-      end
     end
 
     private

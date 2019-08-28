@@ -193,7 +193,7 @@ module Booking
                     }
                   )
                   same_time_reservation.count_of_customers = same_time_reservation.reservation_customers.active.count
-                  same_time_reservation.pend!
+                  same_time_reservation.save
                 end
 
                 reservation = same_time_reservation

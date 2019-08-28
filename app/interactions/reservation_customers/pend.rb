@@ -5,8 +5,6 @@ module ReservationCustomers
 
     def execute
       reservation_customer.pending!
-      reservation = reservation_customer.reservation
-      reservation.pend!
     end
 
     private

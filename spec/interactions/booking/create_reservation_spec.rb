@@ -165,9 +165,9 @@ RSpec.describe Booking::CreateReservation do
               outcome
             }.to change {
               present_reservation.reload.customers.count
-            }.by(1).and change {
+            }.by(1).and not_change {
               present_reservation.aasm_state
-            }.from("reserved").to("pending")
+            }
 
             result = outcome.result
             customer = result[:customer]
@@ -262,7 +262,7 @@ RSpec.describe Booking::CreateReservation do
               outcome
             }.to change {
               present_reservation.reload.customers.count
-            }.and change {
+            }.and not_change {
               present_reservation.aasm_state
             }
 
