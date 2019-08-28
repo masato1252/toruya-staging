@@ -85,10 +85,16 @@ class ReservationsController < DashboardController
         customer = reservation_customer.customer
 
         reservation_customer.attributes.merge!(
+          binding: true,
           label: customer.name,
           value: customer.id,
           address: customer.address,
-          details: reservation_customer.details.to_json
+          details: reservation_customer.details.to_json,
+          booking_price: render_to_string(partial: "reservations/show_modal/booking_price", locals: { reservation_customer: reservation_customer }),
+          booking_from: render_to_string(
+            partial: "reservations/show_modal/booking_from",
+            locals: { reservation_customer: reservation_customer, reservation: @reservation, current_user_staff: current_user_staff }
+          )
         )
       end
     end
@@ -100,8 +106,7 @@ class ReservationsController < DashboardController
         menu_required_time: "",
         menu_interval_time: "",
         staff_ids: [{
-          staff_id: "",
-          state: "pending"
+          staff_id: ""
         }]
       }
     ]
@@ -111,7 +116,7 @@ class ReservationsController < DashboardController
     if params[:customer_id]
       customer = super_user.customers.find(params[:customer_id])
 
-      if @customers_list.map { |c| c[:customer_id] }.exclude?(params[:customer_id])
+      if @customers_list.map { |c| c["customer_id"] }.exclude?(params[:customer_id].to_i)
         @customers_list << {
           customer_id: params[:customer_id],
           state: "accepted",
@@ -207,7 +212,7 @@ class ReservationsController < DashboardController
   def add_customer
     cookies[:reservation_form_hash] = reservation_params_hash.to_json
 
-    render json: { redirect_to: user_customers_path(super_user, from_reservation: true) }
+    render json: { redirect_to: user_customers_path(super_user, reservation_id: reservation_params_hash[:reservation_id], from_reservation: true) }
   end
 
   private

@@ -23,7 +23,7 @@ class CustomersController < DashboardController
     @reservation = ReservationCustomer.find_by(customer_id: params[:customer_id], reservation_id: params[:reservation_id])&.reservation
 
     if shop
-      @add_reservation_path = form_shop_reservations_path(shop)
+      @add_reservation_path = form_shop_reservations_path(shop, params[:reservation_id])
     end
 
     # Notifications START

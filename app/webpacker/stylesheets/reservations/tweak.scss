@@ -150,6 +150,12 @@
       text-align: center;
       height: fit-content;
     }
+
+    #customerLevels {
+      ul {
+        width: initial;
+      }
+    }
   }
 }
 
@@ -284,5 +290,11 @@
     position: absolute;
     right: 8px;
     top: 6px;
+  }
+}
+
+.modal-title {
+  .reservation-state {
+    margin-right: 6px;
   }
 }

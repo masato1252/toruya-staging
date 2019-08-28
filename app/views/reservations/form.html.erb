@@ -17,7 +17,8 @@
     reservation_staff_states: {
       pending_state: ReservationStaff::PENDING_STATE,
       accepted_state: ReservationStaff::ACCEPTED_STATE
-    }
+    },
+    current_staff_name: current_user.current_staff(super_user).name
   },
   reservation_form: @reservation.attributes.slice("id", "memo").merge!({
     reservation_id: @reservation.id,

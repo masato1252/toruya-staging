@@ -759,9 +759,12 @@ input.BTNonoff:checked + label:after {
   vertical-align: middle;
   margin-right: 3px;
 }
-.reserved.reservation-state {
-  background-color: $palette-color2-1;
-  border-color: $palette-color2-2;
+.reservation-state {
+  &.reserved,
+  &.accepted {
+    background-color: $palette-color2-1;
+    border-color: $palette-color2-2;
+  }
 }
 .checked_out.reservation-state, .checkout.reservation-state, #customerInfo #basic dl dt li {
   background-color: $gray5;

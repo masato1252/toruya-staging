@@ -283,6 +283,7 @@ class ManagementReservationForm extends React.Component {
         collection_name="reservation_form[customers_list]"
         all_values={this.all_values}
         reservation_properties={this.props.reservation_properties}
+        reservation_form={this.reservation_form}
         i18n={this.props.i18n}
         addCustomer={this.addCustomer}
       />

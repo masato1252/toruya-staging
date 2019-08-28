@@ -1,7 +1,6 @@
 "use strict";
 
 import React from "react";
-import axios from "axios";
 
 class StaffStatesModal extends React.Component {
   constructor(props) {
@@ -124,7 +123,7 @@ class StaffStatesModal extends React.Component {
             <div className="modal-footer centerize">
               <dl>
                 <dd>
-                  <button type="submit" id="BTNsave" className="btn BTNyellow" onClick={this.handleSubmit} disabled={!this._is_current_staff_responsible()}>
+                  <button id="BTNsave" className="btn BTNyellow" onClick={this.handleSubmit} disabled={!this._is_current_staff_responsible()}>
                     {this._is_current_staff_responsible() && this._is_current_staff_approved() ? unapprove_btn : approve_btn}
                   </button>
                 </dd>
