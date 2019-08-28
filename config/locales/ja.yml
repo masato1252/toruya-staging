@@ -135,8 +135,8 @@ ja:
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
-    pending_customer_reservation_need_confirm: "%{number}個の確認が必要な顧客データがあります"
-    pending_customer_reservation_confirm: 顧客を確認
+    pending_customer_reservation_need_confirm: "%{number}名の顧客が予約に追加されました。"
+    pending_customer_reservation_confirm: 予約顧客を承認
   filter:
     modal:
       saved_filter:
