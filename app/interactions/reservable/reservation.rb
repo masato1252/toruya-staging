@@ -225,7 +225,7 @@ module Reservable
         shop_max_seat_number = shop_menus.find { |shop_menu| shop_menu.menu_id == menu_id }&.max_seat_number || 1
         staff_max_customers = StaffMenu.where(staff_id: staff_ids, menu_id: menu_id).where.not(max_customers: nil).minimum(:max_customers)
 
-        min_shop_customer_capability = [shop_max_seat_number, staff_max_customers].min
+        min_shop_customer_capability = [shop_max_seat_number, staff_max_customers].compact.min
 
         existing_customers = ::Reservation.joins(:menu).
           where.not(id: reservation_id.presence).
