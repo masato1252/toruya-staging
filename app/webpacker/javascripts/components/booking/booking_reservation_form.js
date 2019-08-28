@@ -269,7 +269,7 @@ class BookingReservationForm extends React.Component {
                   type="number"
                   component="input"
                   placeholder="01234567891"
-                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
+                  validate={composeValidators(this, requiredValidation(phone_number), mustBeNumber, lengthValidator(11))}
                 />
                 <Error
                   name="booking_reservation_form[customer_info][phone_number]"
@@ -287,7 +287,7 @@ class BookingReservationForm extends React.Component {
                   component="input"
                   placeholder="mail@domail.com"
                   className="email-field"
-                  validate={composeValidators(this, requiredValidation, emailFormatValidator)}
+                  validate={composeValidators(this, requiredValidation(email), emailFormatValidator)}
                 />
                 <Error
                   name="booking_reservation_form[customer_info][email]"
@@ -303,7 +303,7 @@ class BookingReservationForm extends React.Component {
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   type="number"
                   component="input"
-                  validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(7))}
+                  validate={composeValidators(this, requiredValidation(address_details.zipcode), mustBeNumber, lengthValidator(7))}
                 />
                 <Error
                   name="booking_reservation_form[customer_info][address_details][postcode]"
@@ -622,7 +622,7 @@ class BookingReservationForm extends React.Component {
             component="input"
             placeholder={last_name}
             type="text"
-            validate={composeValidators(this, requiredValidation)}
+            validate={(value) => requiredValidation(last_name)(this, value)}
           />
           <Error name="booking_reservation_form[customer_last_name]" />
         </div>
@@ -632,7 +632,7 @@ class BookingReservationForm extends React.Component {
             component="input"
             placeholder={first_name}
             type="text"
-            validate={composeValidators(this, requiredValidation)}
+            validate={(value) => requiredValidation(first_name)(this, value)}
           />
           <Error name="booking_reservation_form[customer_first_name]" />
         </div>
@@ -645,7 +645,7 @@ class BookingReservationForm extends React.Component {
             component="input"
             placeholder={phonetic_last_name}
             type="text"
-            validate={composeValidators(this, requiredValidation)}
+            validate={(value) => requiredValidation(phonetic_last_name)(this, value)}
           />
           <Error name="booking_reservation_form[customer_phonetic_last_name]" />
         </div>
@@ -655,7 +655,7 @@ class BookingReservationForm extends React.Component {
             component="input"
             placeholder={phonetic_first_name}
             type="text"
-            validate={composeValidators(this, requiredValidation)}
+            validate={(value) => requiredValidation(phonetic_first_name)(this, value)}
           />
           <Error name="booking_reservation_form[customer_phonetic_first_name]" />
         </div>
@@ -667,7 +667,7 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder="0123456789"
           type="number"
-          validate={composeValidators(this, requiredValidation, mustBeNumber, lengthValidator(11))}
+          validate={composeValidators(this, requiredValidation(phone_number), mustBeNumber, lengthValidator(11))}
         />
         <Error name="booking_reservation_form[customer_phone_number]" />
         <h4>
@@ -678,7 +678,7 @@ class BookingReservationForm extends React.Component {
           component="input"
           placeholder="mail@domail.com"
           type="email"
-          validate={composeValidators(this, requiredValidation, emailFormatValidator)}
+          validate={composeValidators(this, requiredValidation(email), emailFormatValidator)}
         />
         <Error name="booking_reservation_form[customer_email]" />
         <div className="remember-me">

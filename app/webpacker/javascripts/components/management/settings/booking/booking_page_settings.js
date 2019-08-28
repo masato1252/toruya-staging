@@ -70,7 +70,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[name]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value, page_name)}
+            validate={(value) => requiredValidation(page_name)(this, value)}
             label={page_name}
             hint={page_name_hint}
             requiredLabel={required_label}
@@ -80,7 +80,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[title]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value, title)}
+            validate={(value) => requiredValidation(title)(this, value)}
             label={title}
             hint={title_hint}
             requiredLabel={required_label}
@@ -382,7 +382,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[note]"
             component={InputRow}
             componentType="textarea"
-            validate={(value) => requiredValidation(this, value, note_label)}
+            validate={(value) => requiredValidation(note_label)(this, value)}
             placeholder={note_label}
             rows={10}
           />

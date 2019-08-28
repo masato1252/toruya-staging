@@ -3,7 +3,14 @@
 const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
 
-const requiredValidation = (component, value, key = "") => (value ? undefined : `${key}${component.props.i18n.errors.required}`);
+const requiredValidation = (key = "") => (component, value) => {
+  if (component && (value === undefined || value === null || !value.length)) {
+    return `${key}${component.props.i18n.errors.required}`
+  }
+  else {
+    return undefined
+  }
+}
 
 const emailPatten =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w{2,}([-.]\w+)*$/u;
 const emailFormatValidator = (component, value) => {
@@ -45,6 +52,7 @@ const transformValues = values => {
 
 const isBoolean = val => "boolean" === typeof val;
 const isNumber = val => "number" === typeof val;
+const isString = val => "string" === typeof val;
 
 const setProperListHeight = (component, adjustHeight) => {
   const listHeight = `${$(window).innerHeight() - adjustHeight} px`;
@@ -65,4 +73,5 @@ export {
   mustBeNumber,
   greaterEqualThan,
   setProperListHeight,
+  requiredValidator,
 };

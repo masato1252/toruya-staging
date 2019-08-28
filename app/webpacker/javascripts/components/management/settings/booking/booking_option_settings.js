@@ -47,7 +47,7 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[name]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value, price_name)}
+            validate={(value) => requiredValidation(price_name)(this, value)}
             label={price_name}
             placeholder={price_name}
             hint={price_name_hint}
@@ -157,7 +157,7 @@ class BookingOptionSettings extends React.Component {
                         validate={
                           composeValidators(
                             this,
-                            requiredValidation,
+                            requiredValidation(),
                             mustBeNumber,
                             greaterEqualThan(
                               this.booking_option_settings_form_values.menus[index] && this.booking_option_settings_form_values.menus[index].minutes || 0,
@@ -200,7 +200,7 @@ class BookingOptionSettings extends React.Component {
             name="booking_option[amount_cents]"
             label={price}
             type="number"
-            validate={(value) => requiredValidation(this, value, price)}
+            validate={(value) => requiredValidation(price)(this, value)}
             component={InputRow}
             hint={currency_unit}
           />
