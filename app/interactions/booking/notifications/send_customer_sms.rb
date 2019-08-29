@@ -19,6 +19,14 @@ module Booking
           to: phone_number,
           body: message
         )
+
+        Notification.create!(
+          user: customer.user,
+          phone_number:  phone_number,
+          customer_id: customer.id,
+          reservation_id: reservation.id,
+          content: message
+        )
       rescue Twilio::REST::RestError => e
         Rollbar.error(
           e,

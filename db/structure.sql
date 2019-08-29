@@ -23,6 +23,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -733,6 +747,42 @@ CREATE SEQUENCE public.menus_id_seq
 --
 
 ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
+
+
+--
+-- Name: notifications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notifications (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    phone_number character varying,
+    content text,
+    customer_id integer,
+    reservation_id integer,
+    charged boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notifications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
@@ -1750,6 +1800,13 @@ ALTER TABLE ONLY public.menus ALTER COLUMN id SET DEFAULT nextval('public.menus_
 
 
 --
+-- Name: notifications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
+
+
+--
 -- Name: pghero_query_stats id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2075,6 +2132,14 @@ ALTER TABLE ONLY public.menu_reservation_setting_rules
 
 ALTER TABLE ONLY public.menus
     ADD CONSTRAINT menus_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notifications notifications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notifications
+    ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -2467,6 +2532,13 @@ CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (
 
 
 --
+-- Name: index_notifications_on_user_id_and_charged; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_notifications_on_user_id_and_charged ON public.notifications USING btree (user_id, charged);
+
+
+--
 -- Name: index_pghero_query_stats_on_database_and_captured_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2520,11 +2592,6 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 --
 
 CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
-
-
---
---
-
 
 
 --
@@ -2902,6 +2969,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190805155207'),
 ('20190815150851'),
 ('20190815160047'),
-('20190815171601');
+('20190815171601'),
+('20190829140951');
 
 
