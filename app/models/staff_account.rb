@@ -16,11 +16,9 @@
 #
 # Indexes
 #
-#  index_staff_accounts_on_owner_id  (owner_id)
 #  index_staff_accounts_on_staff_id  (staff_id)
 #  index_staff_accounts_on_user_id   (user_id)
 #  staff_account_email_index         (owner_id,email)
-#  staff_account_index               (owner_id,user_id)
 #  staff_account_token_index         (token)
 #  unique_staff_account_index        (owner_id,user_id,active_uniqueness) UNIQUE
 #

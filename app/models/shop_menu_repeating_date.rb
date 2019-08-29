@@ -13,7 +13,6 @@
 # Indexes
 #
 #  index_shop_menu_repeating_dates_on_menu_id              (menu_id)
-#  index_shop_menu_repeating_dates_on_shop_id              (shop_id)
 #  index_shop_menu_repeating_dates_on_shop_id_and_menu_id  (shop_id,menu_id) UNIQUE
 #
 

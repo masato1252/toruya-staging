@@ -10,9 +10,8 @@
 #
 # Indexes
 #
-#  index_reservation_menus_on_menu_id         (menu_id)
-#  index_reservation_menus_on_reservation_id  (reservation_id)
-#  reservation_menu_index                     (reservation_id,menu_id)
+#  index_reservation_menus_on_menu_id  (menu_id)
+#  reservation_menu_index              (reservation_id,menu_id)
 #
 
 class ReservationMenu < ApplicationRecord

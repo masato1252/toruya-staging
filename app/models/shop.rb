@@ -18,7 +18,6 @@
 #
 # Indexes
 #
-#  index_shops_on_user_id                 (user_id)
 #  index_shops_on_user_id_and_deleted_at  (user_id,deleted_at)
 #
 

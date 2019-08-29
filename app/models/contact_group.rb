@@ -16,7 +16,6 @@
 # Indexes
 #
 #  contact_groups_google_index                   (user_id,google_uid,google_group_id,backup_google_group_id) UNIQUE
-#  index_contact_groups_on_user_id               (user_id)
 #  index_contact_groups_on_user_id_and_bind_all  (user_id,bind_all) UNIQUE
 #
 
