@@ -40,6 +40,10 @@ class CustomersDashboard extends React.Component {
 
   componentDidMount() {
     this.fetchCustomerDetails()
+
+    if (this.state.edit_mode && !this.props.customer.contact_group_id) {
+      setTimeout(() => alert(this.props.i18n.nonGroupCustomersAlertMessage), 200)
+    }
   };
 
   fetchCustomerDetails = () => {

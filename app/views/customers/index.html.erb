@@ -5,7 +5,7 @@
                     { shop: shop,
                       customers: customer_options(@customers),
                       customer: customer_options([ @customer || super_user.customers.new]).first,
-                      reservation_mode: !!@customer,
+                      reservation_mode: !!@customer && @customer.contact_group_id,
                       from_reservation: params[:from_reservation],
                       reservationCreatePermission: shop && can?(:create_reservation, shop) && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop),
                       reservationCreateWarningPath: create_reservation_warnings_path(owner_id: super_user.id, shop_id: shop),
@@ -64,5 +64,8 @@
                       google_down_message: I18n.t("common.google_down"),
                       customerDeleteConfirmMessage: I18n.t("customer.delete_confirmation_message"),
                       groupBlankOption: I18n.t("customer.group_blank_option"),
-                      googleContactMissingMessage: I18n.t("customer.google_contact_missing_message_html")
+                      googleContactMissingMessage: I18n.t("customer.google_contact_missing_message_html"),
+                      i18n: {
+                        non_group_customers_alert_message: I18n.t("notifications.non_group_customers_alert_message")
+                      }
 }) %>

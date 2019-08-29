@@ -9,7 +9,13 @@ class NotificationsPresenter
   end
 
   def data
-    Array.wrap(new_pending_reservations) + oldest_pending_customer_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
+    Array.wrap(new_pending_reservations) +
+      Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
+      Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
+      new_staff_accounts +
+      empty_reservation_setting_users +
+      empty_menu_shops +
+      Array(basic_settings_tour)
   end
 
   def recent_pending_reservations
@@ -74,10 +80,6 @@ class NotificationsPresenter
     end
   end
 
-  def oldest_pending_customer_reservations
-    Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data
-  end
-
   def new_staff_accounts
     Staff.where(user: current_user).active_without_data.includes(:staff_account).map do |staff|
       "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), h.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}" if h.ability(staff.user).can?(:edit, staff)
@@ -133,5 +135,10 @@ class NotificationsPresenter
 
   def staff_ids
     @staff_ids ||= current_user.staff_accounts.active.pluck(:staff_id)
+  end
+
+  # XXX: includes current_user themselves
+  def working_shop_owners
+    @working_shop_owners ||= current_user.staff_accounts.active.map(&:owner)
   end
 end
