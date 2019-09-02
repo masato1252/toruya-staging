@@ -137,7 +137,7 @@ ja:
     pending_reservation_confirm: 予約を確認
     pending_customer_reservation_need_confirm: "%{number}名の顧客が予約に追加されました。"
     pending_customer_reservation_confirm: 予約顧客を承認
-    non_group_customers: "顧客台帳が設定されていない顧客情報が %{number} つ見つかりました。"
+    non_group_customers: "顧客台帳が設定されていない顧客情報が %{number} 個見つかりました。"
     next_non_group_customer: "台帳を設定"
     non_group_customers_alert_message: この顧客に顧客台帳を設定してください。
   filter:
