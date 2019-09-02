@@ -26,6 +26,7 @@ module BookingPages
       #   "1" = >{"start_at_date_part"=>"2019-04-22", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-04-22", "end_at_time_part"=>"12:59"}
       # }
       hash :special_dates, default: nil, strip: false
+      boolean :overlap_restriction
     end
 
     def execute
