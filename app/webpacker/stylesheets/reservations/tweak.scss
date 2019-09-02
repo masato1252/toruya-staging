@@ -276,10 +276,12 @@
 #staff-states-modal {
   .fa-calendar-check-o {
     color: $palette-color2;
+    margin-right: 3px;
   }
 
   .fa-calendar {
     color: $palette-color4;
+    margin-right: 3px;
   }
 }
 
@@ -296,5 +298,6 @@
 .modal-title {
   .reservation-state {
     margin-right: 6px;
+    padding: 0 3px;
   }
 }
