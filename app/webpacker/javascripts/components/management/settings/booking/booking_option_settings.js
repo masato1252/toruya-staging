@@ -157,7 +157,7 @@ class BookingOptionSettings extends React.Component {
                         validate={
                           composeValidators(
                             this,
-                            requiredValidation(),
+                            requiredValidation(menu_time_span),
                             mustBeNumber,
                             greaterEqualThan(
                               this.booking_option_settings_form_values.menus[index] && this.booking_option_settings_form_values.menus[index].minutes || 0,
