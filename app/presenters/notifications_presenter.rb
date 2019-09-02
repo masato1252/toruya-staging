@@ -19,9 +19,7 @@ class NotificationsPresenter
   end
 
   def recent_pending_reservations
-    @recent_pending_reservations ||= begin
-      ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC")
-    end
+    @recent_pending_reservations ||= ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC, reservations.id ASC")
   end
 
   def recent_pending_customer_reservations
@@ -55,11 +53,11 @@ class NotificationsPresenter
         end
 
         if previous_reservation_id
-          previous_path = h.date_member_path(reservations[matched_index].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
+          previous_path = h.date_member_path(reservations[matched_index - 1].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
         end
 
         if next_reservation_id
-          next_path = h.date_member_path(reservations[matched_index].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
+          next_path = h.date_member_path(reservations[matched_index + 1].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
         end
       else
         oldest_res = recent_pending_reservations.first&.reservation
