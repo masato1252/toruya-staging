@@ -14,9 +14,10 @@ module Booking
           booking_time: "#{I18n.l(reservation.start_time, format: :date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
         )
 
+        # XXX: Japan dependency
         Twilio::REST::Client.new.messages.create(
           from: Rails.application.secrets.twilio_from_phone,
-          to: phone_number,
+          to: Phonelib.parse(phone_number, "jp").international(true),
           body: message
         )
 

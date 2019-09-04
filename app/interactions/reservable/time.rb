@@ -20,6 +20,7 @@ module Reservable
       end
 
       # Holiday
+      # XXX: Japan dependency
       if date.holiday?(:jp)
         if shop.holiday_working
           return business_working_schedule

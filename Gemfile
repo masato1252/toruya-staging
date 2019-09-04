@@ -56,6 +56,7 @@ gem "bootsnap"
 gem "parallel"
 gem "active_attr"
 gem "twilio-ruby", "~> 5.25.1"
+gem "phonelib"
 
 group :development, :test do
   gem "byebug", platform: :mri
