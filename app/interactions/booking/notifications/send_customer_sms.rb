@@ -13,11 +13,12 @@ module Booking
           shop_phone_number: shop.phone_number,
           booking_time: "#{I18n.l(reservation.start_time, format: :date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
         )
+        formatted_phone = Phonelib.parse(phone_number, "jp").international(true)
 
         # XXX: Japan dependency
         Twilio::REST::Client.new.messages.create(
           from: Rails.application.secrets.twilio_from_phone,
-          to: Phonelib.parse(phone_number, "jp").international(true),
+          to: formatted_phone,
           body: message
         )
 
@@ -32,6 +33,7 @@ module Booking
         Rollbar.error(
           e,
           phone_numbers: phone_number,
+          formatted_phone: formatted_phone,
           customer_id: customer.id,
           reservation_id: reservation.id,
           rails_env: Rails.configuration.x.env
