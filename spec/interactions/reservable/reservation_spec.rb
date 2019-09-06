@@ -158,7 +158,7 @@ RSpec.describe Reservable::Reservation do
                 staff_ids: [staff1.id],
                 start_time: start_time,
                 end_time: end_time,
-                overlap_restriction: false
+                overbooking_restriction: false
               )
 
               expect(outcome).to be_valid
@@ -249,7 +249,7 @@ RSpec.describe Reservable::Reservation do
                 staff_ids: [staff1.id],
                 start_time: start_time,
                 end_time: end_time,
-                overlap_restriction: false
+                overbooking_restriction: false
               )
 
               expect(outcome).to be_valid
@@ -762,7 +762,7 @@ RSpec.describe Reservable::Reservation do
               start_time: start_time,
               end_time: end_time,
               staff_ids: [staff2.id],
-              overlap_restriction: false
+              overbooking_restriction: false
             )
 
             expect(outcome).to be_valid

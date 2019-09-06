@@ -172,7 +172,7 @@ module Booking
                 staff_ids: reservation_staff_properties.staff_ids,
                 reservation_id: same_time_reservation.id,
                 number_of_customer: same_time_reservation.count_of_customers + 1,
-                overlap_restriction: booking_page.overlap_restriction,
+                overbooking_restriction: booking_page.overbooking_restriction,
                 skip_before_interval_time_validation: skip_before_interval_time_validation,
                 skip_after_interval_time_validation: skip_after_interval_time_validation
               )
@@ -213,7 +213,7 @@ module Booking
               date,
               booking_start_at,
               booking_end_at,
-              booking_page.overlap_restriction
+              booking_page.overbooking_restriction
             ) do |valid_menus_spots, staff_states|
               # valid_menus_spots likes
               # [

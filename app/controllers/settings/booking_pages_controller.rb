@@ -87,7 +87,7 @@ class Settings::BookingPagesController < SettingsController
       special_dates: params[:special_dates],
       booking_option_ids: params[:booking_option_ids],
       interval: params[:interval],
-      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction]),
+      overbooking_restriction: ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction]),
       limit: 4
     )
 

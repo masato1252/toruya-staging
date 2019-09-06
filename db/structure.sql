@@ -323,7 +323,7 @@ CREATE TABLE public.booking_pages (
     updated_at timestamp without time zone NOT NULL,
     start_at timestamp without time zone,
     end_at timestamp without time zone,
-    overlap_restriction boolean DEFAULT true,
+    overbooking_restriction boolean DEFAULT true,
     draft boolean DEFAULT true NOT NULL
 );
 
@@ -2970,6 +2970,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190815150851'),
 ('20190815160047'),
 ('20190815171601'),
-('20190829140951');
+('20190829140951'),
+('20190906143743');
 
 

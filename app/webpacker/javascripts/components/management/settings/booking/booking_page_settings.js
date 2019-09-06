@@ -34,7 +34,7 @@ class BookingPageSettings extends React.Component {
         }
       },
       {
-        field: /had_special_date|shop_id|interval|overlap_restriction|special_dates|options/, // when a field matching this pattern changes...
+        field: /had_special_date|shop_id|interval|overbooking_restriction|special_dates|options/, // when a field matching this pattern changes...
         updates: async (value, name, allValues) => {
           return await this.calculateBookingTimes(allValues);
         }
@@ -359,14 +359,14 @@ class BookingPageSettings extends React.Component {
       <div>
         <h3>{overlap_booking}</h3>
         <div className="formRow">
-          <Field name="booking_page[overlap_restriction]" type="radio" value="true" component={RadioRow}>
+          <Field name="booking_page[overbooking_restriction]" type="radio" value="true" component={RadioRow}>
             {not_allow_overlap_booking_label}
           </Field>
-          <Field name="booking_page[overlap_restriction]" type="radio" value="false" component={RadioRow}>
+          <Field name="booking_page[overbooking_restriction]" type="radio" value="false" component={RadioRow}>
             {allow_overlap_booking_label}
           </Field>
         </div>
-        <Error name="booking_page[overlap_restriction]" />
+        <Error name="booking_page[overbooking_restriction]" />
       </div>
     )
   }
@@ -392,7 +392,7 @@ class BookingPageSettings extends React.Component {
   }
 
   calculateBookingTimes = async (allValues) => {
-    const { shop_id, had_special_date, special_dates, options, overlap_restriction, interval } = allValues.booking_page;
+    const { shop_id, had_special_date, special_dates, options, overbooking_restriction, interval } = allValues.booking_page;
 
     if (this.calculateBookingTimesCall) {
       this.calculateBookingTimesCall.cancel();
@@ -415,7 +415,7 @@ class BookingPageSettings extends React.Component {
         special_dates: special_dates,
         booking_option_ids: options.map((option) => option.id),
         interval: interval,
-        overlap_restriction: overlap_restriction
+        overbooking_restriction: overbooking_restriction
       },
       responseType: "json",
       cancelToken: this.calculateBookingTimesCall.token

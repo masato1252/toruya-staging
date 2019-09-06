@@ -15,14 +15,14 @@ RSpec.describe Booking::AvailableBookingTimes do
   let(:special_dates) {[
     "{\"start_at_date_part\":\"2019-05-13\",\"start_at_time_part\":\"09:00\",\"end_at_date_part\":\"2019-05-13\",\"end_at_time_part\":\"14:00\"}",
   ]}
-  let(:overlap_restriction) { true }
+  let(:overbooking_restriction) { true }
   let(:args) do
     {
       shop: shop,
       special_dates: special_dates,
       booking_option_ids: [booking_option.id, booking_option2.id],
       interval: 60,
-      overlap_restriction: overlap_restriction
+      overbooking_restriction: overbooking_restriction
     }
   end
 
@@ -64,7 +64,7 @@ RSpec.describe Booking::AvailableBookingTimes do
     end
 
     context "when allow to overlap" do
-      let(:overlap_restriction) { false }
+      let(:overbooking_restriction) { false }
 
       it "returns expected result, returns all available booking time" do
         result = outcome.result

@@ -14,7 +14,7 @@ module Booking
     # ]
     array :special_dates, default: nil
     integer :interval, default: 30
-    boolean :overlap_restriction, default: true
+    boolean :overbooking_restriction, default: true
 
     def execute
       rules = compose(::Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
@@ -79,7 +79,7 @@ module Booking
               break
             end
 
-            loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overlap_restriction) do
+            loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction) do
               throw :next_working_date, date
             end
 

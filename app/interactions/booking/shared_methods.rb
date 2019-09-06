@@ -1,6 +1,6 @@
 module Booking
   module SharedMethods
-    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overlap_restriction)
+    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction)
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
           menu_position = 0
@@ -35,7 +35,7 @@ module Booking
                   menu_id: menu.id,
                   menu_required_time: booking_option.booking_option_menus.find_by(menu_id: menu.id).required_time,
                   staff_ids: candidate_staff_ids,
-                  overlap_restriction: overlap_restriction,
+                  overbooking_restriction: overbooking_restriction,
                   skip_before_interval_time_validation: skip_before_interval_time_validation,
                   skip_after_interval_time_validation: skip_after_interval_time_validation
                 )

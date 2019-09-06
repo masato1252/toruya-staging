@@ -2,20 +2,20 @@
 #
 # Table name: booking_pages
 #
-#  id                  :bigint(8)        not null, primary key
-#  user_id             :bigint(8)        not null
-#  shop_id             :bigint(8)        not null
-#  name                :string           not null
-#  title               :string
-#  greeting            :text
-#  note                :text
-#  interval            :integer
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  start_at            :datetime
-#  end_at              :datetime
-#  overlap_restriction :boolean          default(TRUE)
-#  draft               :boolean          default(TRUE), not null
+#  id                      :bigint(8)        not null, primary key
+#  user_id                 :bigint(8)        not null
+#  shop_id                 :bigint(8)        not null
+#  name                    :string           not null
+#  title                   :string
+#  greeting                :text
+#  note                    :text
+#  interval                :integer
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  start_at                :datetime
+#  end_at                  :datetime
+#  overbooking_restriction :boolean          default(TRUE)
+#  draft                   :boolean          default(TRUE), not null
 #
 # Indexes
 #

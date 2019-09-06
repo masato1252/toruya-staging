@@ -43,7 +43,7 @@ class BookingPagesController < ActionController::Base
           special_dates: booking_dates,
           booking_option_ids: @booking_page.booking_option_ids,
           interval: @booking_page.interval,
-          overlap_restriction: @booking_page.overlap_restriction,
+          overbooking_restriction: @booking_page.overbooking_restriction,
           limit: 2
         )
 
@@ -156,7 +156,7 @@ class BookingPagesController < ActionController::Base
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       special_dates: special_dates,
       interval: booking_page.interval,
-      overlap_restriction: booking_page.overlap_restriction
+      overbooking_restriction: booking_page.overbooking_restriction
     )
 
     if outcome.valid?
@@ -203,7 +203,7 @@ class BookingPagesController < ActionController::Base
       special_dates: booking_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       interval: booking_page.interval,
-      overlap_restriction: booking_page.overlap_restriction
+      overbooking_restriction: booking_page.overbooking_restriction
     )
 
     available_booking_times = outcome.result.each_with_object({}) { |(time, option_ids), h| h[I18n.l(time, format: :hour_minute)] = option_ids  }

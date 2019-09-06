@@ -13,7 +13,7 @@ module Booking
     # ]
     array :special_dates
     integer :interval
-    boolean :overlap_restriction, default: true
+    boolean :overbooking_restriction, default: true
     integer :limit, default: nil
 
     def execute
@@ -37,7 +37,7 @@ module Booking
                 break
               end
 
-              loop_for_reserable_spot(shop, booking_option, booking_start_at.to_date, booking_start_at, booking_end_at, overlap_restriction) do
+              loop_for_reserable_spot(shop, booking_option, booking_start_at.to_date, booking_start_at, booking_end_at, overbooking_restriction) do
                 available_booking_times << booking_start_at
 
                 available_booking_time_mapping[booking_start_at] ||= []
