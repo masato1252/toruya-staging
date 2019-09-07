@@ -63,7 +63,7 @@ RSpec.describe Booking::AvailableBookingTimes do
       })
     end
 
-    context "when allow to overlap" do
+    context "when allow to overbooking" do
       let(:overbooking_restriction) { false }
 
       it "returns expected result, returns all available booking time" do
@@ -71,8 +71,6 @@ RSpec.describe Booking::AvailableBookingTimes do
 
         expect(result).to eq({
           Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 10) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 11) => [booking_option.id],
           Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
           Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
         })

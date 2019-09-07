@@ -353,17 +353,17 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingOverlapRestrictionField = () => {
-    const { overlap_booking, not_allow_overlap_booking_label, allow_overlap_booking_label} = this.props.i18n;
+    const { overbooking, not_allow_overbooking_label, allow_overbooking_label} = this.props.i18n;
 
     return (
       <div>
-        <h3>{overlap_booking}</h3>
+        <h3>{overbooking}</h3>
         <div className="formRow">
           <Field name="booking_page[overbooking_restriction]" type="radio" value="true" component={RadioRow}>
-            {not_allow_overlap_booking_label}
+            {not_allow_overbooking_label}
           </Field>
           <Field name="booking_page[overbooking_restriction]" type="radio" value="false" component={RadioRow}>
-            {allow_overlap_booking_label}
+            {allow_overbooking_label}
           </Field>
         </div>
         <Error name="booking_page[overbooking_restriction]" />

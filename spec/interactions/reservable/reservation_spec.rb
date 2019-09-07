@@ -239,22 +239,6 @@ RSpec.describe Reservable::Reservation do
               expect(outcome).to be_valid
             end
           end
-
-          context "when allow to double booking" do
-            it "is valid" do
-              outcome = Reservable::Reservation.run(
-                shop: shop, date: date,
-                menu_id: menu1.id,
-                menu_required_time: menu1.minutes,
-                staff_ids: [staff1.id],
-                start_time: start_time,
-                end_time: end_time,
-                overbooking_restriction: false
-              )
-
-              expect(outcome).to be_valid
-            end
-          end
         end
       end
 
@@ -356,6 +340,23 @@ RSpec.describe Reservable::Reservation do
           not_enough_seat_error = outcome.errors.details[:menu_id].find { |error_hash| error_hash[:error] == :not_enough_seat }
           expect(not_enough_seat_error).to eq(error: :not_enough_seat, menu_id: menu1.id)
         end
+
+        context "when allow overbooking" do
+          it "don't validate shop seat" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              number_of_customer: 5,
+              overbooking_restriction: false
+            )
+
+            not_enough_seat_error = outcome.errors.details[:menu_id].find { |error_hash| error_hash[:error] == :not_enough_seat }
+            expect(not_enough_seat_error).to be_nil
+          end
+        end
       end
 
       context "when there is not enough staffs for menus" do
@@ -398,6 +399,24 @@ RSpec.describe Reservable::Reservation do
           expect(outcome).to be_invalid
           not_enough_ability_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :not_enough_ability }
           expect(not_enough_ability_error).to eq(error: :not_enough_ability, staff_id: staff2.id, menu_id: menu1.id)
+        end
+
+        context "when allow overbooking" do
+          it "doesn't have not_enough_ability errors" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff1.id, staff2.id],
+              number_of_customer: 2,
+              overbooking_restriction: false
+            )
+
+            not_enough_ability_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :not_enough_ability }
+            expect(not_enough_ability_error).to be_nil
+          end
         end
       end
 
@@ -626,6 +645,29 @@ RSpec.describe Reservable::Reservation do
               expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability, menu_id: menu1.id)
             end
           end
+
+          context "when allow overbooking" do
+            it "is valid" do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, end_time: time_range.last,
+                                              customers: FactoryBot.create(:customer, user: user))
+              StaffMenu.find_by(staff_id: staff1.id, menu_id: menu1.id).update(max_customers: 4)
+
+              outcome = Reservable::Reservation.run(
+                shop: shop, date: date,
+                menu_id: menu1.id,
+                menu_required_time: menu1.minutes,
+                start_time: start_time,
+                end_time: end_time,
+                reservation_id: reservation.id,
+                staff_ids: [staff1.id],
+                number_of_customer: 4,
+                overbooking_restriction: false
+              )
+
+              expect(outcome).to be_valid
+            end
+          end
         end
 
         context "when staff doesn't have capability(customers number > 2, shop's capability is 3)" do
@@ -692,6 +734,27 @@ RSpec.describe Reservable::Reservation do
               expect(not_enough_ability_error).to eq(error: :shop_or_staff_not_enough_ability, menu_id: menu1.id)
             end
           end
+
+          context "when allow overbooking" do
+            it "is valid" do
+              FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
+              reservation = FactoryBot.create(:reservation, menus: [menu1], shop: shop, staffs: [staff1], start_time: time_range.first, force_end_time: time_range.last,
+                                              customers: FactoryBot.create(:customer, user: user))
+
+              outcome = Reservable::Reservation.run(
+                shop: shop, date: date,
+                menu_id: menu1.id,
+                menu_required_time: menu1.minutes,
+                start_time: start_time,
+                end_time: end_time,
+                staff_ids: [staff2.id],
+                number_of_customer: 2,
+                overbooking_restriction: false
+              )
+
+              expect(outcome).to be_valid
+            end
+          end
         end
       end
 
@@ -747,22 +810,6 @@ RSpec.describe Reservable::Reservation do
               start_time: start_time,
               end_time: end_time,
               staff_ids: [staff2.id]
-            )
-
-            expect(outcome).to be_valid
-          end
-        end
-
-        context "when allow to double booking" do
-          it "is valid" do
-            outcome = Reservable::Reservation.run(
-              shop: shop, date: date,
-              menu_id: menu1.id,
-              menu_required_time: menu1.minutes,
-              start_time: start_time,
-              end_time: end_time,
-              staff_ids: [staff2.id],
-              overbooking_restriction: false
             )
 
             expect(outcome).to be_valid

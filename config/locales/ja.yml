@@ -187,7 +187,7 @@ ja:
     customers_list_label: 顧客
     details: 予約詳細
     become_overbooking: オーバーブッキングになります！
-    overlap_booking: オーバーブッキング中！
+    overbooking: オーバーブッキング中！
     reserved: 予約
     full_seat: 満席
     add_customer_btn: 顧客を追加
@@ -788,9 +788,9 @@ ja:
         sale_forever: 終了しない
         sale_start: 販売開始
         sale_end: 販売終了
-        overlap_booking: 重複予約
-        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する(推奨)
-        allow_overlap_booking_label: 予約可能なスタッフ数以上に予約を受け付ける
+        overbooking: 重複予約
+        not_allow_overbooking_label: 満席数に達した時点で予約を締め切る(推奨)
+        allow_overbooking_label: 満席数に関わらず予約を受け付ける
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         form_errors:

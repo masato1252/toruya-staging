@@ -198,7 +198,7 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values, is
 const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_height, addCustomer, ...rest }) => {
   const {
     customers_list_label,
-    overlap_booking,
+    overbooking,
     become_overbooking,
     reserved,
     full_seat,
@@ -219,7 +219,7 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
 
   if (customers_number !== 0) {
     if (customers_number > customer_max_load_capability) {
-      warning_content = <dl><span className="warning with-symbol">{overlap_booking}</span></dl>
+      warning_content = <dl><span className="warning with-symbol">{overbooking}</span></dl>
     }
     else if (customers_number === customer_max_load_capability) {
       warning_content = <dl><span className="warning with-symbol">{become_overbooking}</span></dl>
