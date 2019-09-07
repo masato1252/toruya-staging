@@ -85,7 +85,7 @@ class BookingPagesController < ActionController::Base
       cookies.delete :booking_customer_phone_number
     end
 
-    if result[:reservation]
+    if result[:reservation] && customer&.persisted?
       render json: {
         status: "successful"
       }

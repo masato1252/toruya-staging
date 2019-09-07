@@ -11,6 +11,7 @@ module Reservable
     array :staff_ids, default: nil
     integer :reservation_id, default: nil
     integer :number_of_customer, default: 1
+    boolean :overlap_restriction, default: true
     boolean :overbooking_restriction, default: true
     boolean :skip_before_interval_time_validation, default: false
     boolean :skip_after_interval_time_validation, default: false
@@ -52,7 +53,7 @@ module Reservable
         errors.add(:menu_id, :time_not_enough, menu_id: menu_id)
       end
 
-      validate_interval_time
+      validate_interval_time if overlap_restriction
       validate_menu_schedules
       validate_seats_for_customers if overbooking_restriction
       validate_required_staffs
@@ -75,7 +76,7 @@ module Reservable
 
         validate_staffs_ability_for_customers(staff) if overbooking_restriction
         validate_other_shop_reservation(staff)
-        validate_same_shop_overlap_reservations(staff)
+        validate_same_shop_overlap_reservations(staff) if overlap_restriction
         validate_staff_ability(staff)
       end
     end
