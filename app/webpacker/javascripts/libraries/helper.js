@@ -4,7 +4,7 @@ const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
 
 const requiredValidation = (key = "") => (component, value) => {
-  if (component && (value === undefined || value === null || !value.length)) {
+  if (component && (value === undefined || value === null || !String(value).length)) {
     return `${key}${component.props.i18n.errors.required}`
   }
   else {
