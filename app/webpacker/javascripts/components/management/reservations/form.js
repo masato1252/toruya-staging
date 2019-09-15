@@ -198,16 +198,13 @@ class ManagementReservationForm extends React.Component {
                 type="time"
                 component={Input}
                 step="300"
-                className={this.previousReservationOverlap() ? "field-warning" : ""}
+                className={`start-time-input ${this.previousReservationOverlap() ? "field-warning" : ""}`}
                 disabled={!is_editable}
               />
               <span className="errors">
                 {this.startTimeError()}
               </span>
-              <span>
-                〜
-                  {end_at ? end_at.locale('en').format("hh:mm A") : no_ending_time_message}
-              </span>
+              <span> 〜 {end_at ? end_at.locale('en').format("HH:mm") : "--:--"}</span>
               <Field
                 name="reservation_form[end_time_date_part]"
                 type="hidden"
@@ -224,6 +221,7 @@ class ManagementReservationForm extends React.Component {
                 {this.displayIntervalOverlap()}
                 {this.endTimeError()}
               </span>
+              {!end_at && <div className="no-end-time-message">{no_ending_time_message}</div>}
             </dd>
           </dl>
         </div>
