@@ -219,10 +219,10 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
 
   if (customers_number !== 0) {
     if (customers_number > customer_max_load_capability) {
-      warning_content = <dl><span className="warning with-symbol">{overbooking}</span></dl>
+      warning_content = <span className="warning with-symbol">{overbooking}</span>
     }
     else if (customers_number === customer_max_load_capability) {
-      warning_content = <dl><span className="warning with-symbol">{become_overbooking}</span></dl>
+      warning_content = <span className="warning with-symbol">{become_overbooking}</span>
     }
   }
 
@@ -258,10 +258,10 @@ const CustomersList = ({ fields, all_values, i18n, reservation_properties, list_
               <div>
                 {add_customer_btn}
               </div>
+              {warning_content}
             </dl>
           )
         }
-        {warning_content}
       </div>
       <div id="customerLevels">
         <ul>
