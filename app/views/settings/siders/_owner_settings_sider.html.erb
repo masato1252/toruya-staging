@@ -36,7 +36,7 @@
             <%= active_link_to t("settings.staff.work_time"), working_schedules_settings_user_working_time_staff_path(super_user, staff, working_time_menu_scope: :shop),
               active: /working_time_menu_scope=shop/,
               wrap_tag: :li,
-              class_active: "here" %>
+              class_active: "here" if staff.persisted? %>
           <% end %>
 
           <% if basic_settings_presenter.working_time_settings_completed? %>
