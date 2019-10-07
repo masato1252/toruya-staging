@@ -51,10 +51,12 @@ class ReservationsController < DashboardController
       menu_staffs_list = reservarion_params.delete(:menu_staffs_list)
       customers_list = reservarion_params.delete(:customers_list)
       reservation_id = reservarion_params.delete(:reservation_id)
+      staff_states = reservarion_params.delete(:staff_states)
 
       @reservation = shop.reservations.find_or_initialize_by(id: reservation_id)
       @reservation.attributes = reservarion_params
       @menu_staffs_list = menu_staffs_list
+      @staff_states = staff_states
       @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
     else
       @reservation = shop.reservations.find_by(id: params[:id])
@@ -97,6 +99,8 @@ class ReservationsController < DashboardController
           )
         )
       end
+
+      @staff_states = @reservation.reservation_staffs.map { |rs| { staff_id: rs.staff_id, state: rs.state }}
     end
 
     @menu_staffs_list = @menu_staffs_list.size != 0 ? @menu_staffs_list : [

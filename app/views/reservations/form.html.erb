@@ -13,7 +13,7 @@
     staff_options: custom_options(@staff_options),
     menu_group_options: menu_group_options(@menu_result[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
     downgrade_from_premium: @reservation.shop.staffs.count > @staff_options.length,
-    existing_staff_states: @reservation.reservation_staffs.map { |rs| { staff_id: rs.staff_id, state: rs.state }},
+    existing_staff_states: @staff_states,
     reservation_staff_states: {
       pending_state: ReservationStaff::PENDING_STATE,
       accepted_state: ReservationStaff::ACCEPTED_STATE
@@ -27,7 +27,7 @@
     end_time_date_part: @reservation.end_time_date,
     end_time_time_part: @reservation.end_time_time,
     menu_staffs_list: @menu_staffs_list,
-    staff_states: @reservation.reservation_staffs.map { |rs| { staff_id: rs.staff_id, state: rs.state }},
+    staff_states: @staff_states,
     customers_list: @customers_list,
     by_staff_id: current_user.current_staff(super_user).id
   }),

@@ -537,6 +537,7 @@ class ManagementReservationForm extends React.Component {
           "end_time_date_part",
           "end_time_time_part",
           "menu_staffs_list",
+          "staff_states",
           "customers_list"
         ),
       },
