@@ -326,10 +326,19 @@ class BookingReservationForm extends React.Component {
                   component="input"
                 />
                 <h4>
-                  {address_details.street}
+                  {address_details.street1}
                 </h4>
                 <Field
-                  name="booking_reservation_form[customer_info][address_details][street]"
+                  name="booking_reservation_form[customer_info][address_details][street1]"
+                  type="text"
+                  component="input"
+                  className="street-field"
+                />
+                <h4>
+                  {address_details.street2}
+                </h4>
+                <Field
+                  name="booking_reservation_form[customer_info][address_details][street2]"
                   type="text"
                   component="input"
                   className="street-field"
@@ -409,7 +418,7 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address_details")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {address_details && address_details.postcode} {address_details && address_details.region} {address_details && address_details.city} {address_details && address_details.street}
+                {address_details && address_details.postcode && `〒 ${address_details.postcode}`} {address_details && address_details.region} {address_details && address_details.city} {address_details && address_details.street1} {address_details && address_details.street2}
                 <Error
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   touched_required={false}

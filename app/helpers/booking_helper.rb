@@ -12,7 +12,7 @@ module BookingHelper
       emails: customer_with_google_contact&.emails&.map { |email| email.value.address },
       simple_address: customer_with_google_contact&.address,
       full_address: customer_with_google_contact&.display_address,
-      address_details: customer_with_google_contact&.primary_address&.value,
+      address_details: customer_with_google_contact&.primary_formatted_address&.value,
       original_address_details: customer_with_google_contact&.primary_address&.value
     }
   end

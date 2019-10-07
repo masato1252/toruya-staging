@@ -24,7 +24,8 @@ ja:
       zipcode: 郵便番号
       living_state: 都道府県
       city: 市区町村
-      street: 続き住所
+      street1: 続き住所
+      street2: 建物名／部屋番号
     save_change: 変更依頼を保存する
     invalid_to_change: 入力データ無効
     info_change_title: 顧客情報の変更依頼
