@@ -4,9 +4,11 @@ class Customers::ReservationsController < DashboardController
   def index
     head :unprocessable_entity if cannot?(:read, @customer)
 
-    @reservation_customers = @customer.reservation_customers
-      .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
-    .order("reservations.start_time DESC")
+    @reservation_customers =
+      @customer.reservation_customers
+        .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
+        .merge(Reservation.active)
+        .order("reservations.start_time DESC")
   end
 
   def accept
