@@ -4,7 +4,7 @@
 
     Option.new(
       id: booking_option.id,
-      name: booking_option.display_name,
+      name: booking_option.display_name.presence || booking_option.name,
       minutes: booking_option.minutes,
       price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
       start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
