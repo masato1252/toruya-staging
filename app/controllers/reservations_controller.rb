@@ -261,7 +261,7 @@ class ReservationsController < DashboardController
 
   def reservation_errors
     outcome = Reservations::Validate.run(
-      reservation: @reservation || shop.reservations.new,
+      reservation: @reservation || shop.reservations.find_by(id: params[:reservation_form][:reservation_id]) || shop.reservations.new,
       params: reservation_params_hash
     )
 
