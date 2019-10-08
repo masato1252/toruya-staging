@@ -27,8 +27,10 @@ RSpec.describe Booking::AvailableBookingTimes do
   end
 
   before do
-    FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff)
-    FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop)
+    FactoryBot.create(:staff_menu, menu: booking_option.menus.first, staff: staff, max_customers: 1)
+    FactoryBot.create(:shop_menu, menu: booking_option.menus.first, shop: shop, max_seat_number: 1)
+    FactoryBot.create(:staff_menu, menu: booking_option2.menus.first, staff: staff, max_customers: 1)
+    FactoryBot.create(:shop_menu, menu: booking_option2.menus.first, shop: shop, max_seat_number: 1)
   end
 
   let(:outcome) { described_class.run(args) }
@@ -37,11 +39,11 @@ RSpec.describe Booking::AvailableBookingTimes do
     result = outcome.result
 
     expect(result).to eq({
-      Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
-      Time.zone.local(2019, 5, 13, 10) => [booking_option.id],
-      Time.zone.local(2019, 5, 13, 11) => [booking_option.id],
-      Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
-      Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+      Time.zone.local(2019, 5, 13, 9)  => [booking_option.id, booking_option2.id],
+      Time.zone.local(2019, 5, 13, 10) => [booking_option.id, booking_option2.id],
+      Time.zone.local(2019, 5, 13, 11) => [booking_option.id, booking_option2.id],
+      Time.zone.local(2019, 5, 13, 12) => [booking_option.id, booking_option2.id],
+      Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
     })
   end
 
@@ -49,6 +51,7 @@ RSpec.describe Booking::AvailableBookingTimes do
     before do
       # The free gap is 9: 00 ~ 10:10
       FactoryBot.create(:reservation, shop: shop, staffs: staff,
+                        menus: [booking_option.menus.first],
                         start_time: Time.zone.local(2019, 5, 13, 10, 10),
                         force_end_time: Time.zone.local(2019, 5, 13, 11))
     end
@@ -57,9 +60,11 @@ RSpec.describe Booking::AvailableBookingTimes do
       result = outcome.result
 
       expect(result).to eq({
-        Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
-        Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
-        Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+        Time.zone.local(2019, 5, 13, 9)  => [booking_option.id, booking_option2.id],
+        Time.zone.local(2019, 5, 13, 10) => [booking_option2.id],
+        Time.zone.local(2019, 5, 13, 11) => [booking_option.id, booking_option2.id],
+        Time.zone.local(2019, 5, 13, 12) => [booking_option.id, booking_option2.id],
+        Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
       })
     end
 
@@ -70,9 +75,11 @@ RSpec.describe Booking::AvailableBookingTimes do
         result = outcome.result
 
         expect(result).to eq({
-          Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+          Time.zone.local(2019, 5, 13, 9)  => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 10) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 11) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 12) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
         })
       end
     end
@@ -86,9 +93,11 @@ RSpec.describe Booking::AvailableBookingTimes do
         result = outcome.result
 
         expect(result).to eq({
-          Time.zone.local(2019, 5, 13, 9) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 12) => [booking_option.id],
-          Time.zone.local(2019, 5, 13, 13) => [booking_option.id]
+          Time.zone.local(2019, 5, 13, 9)  => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 10) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 11) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 12) => [booking_option.id, booking_option2.id],
+          Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
         })
       end
     end
