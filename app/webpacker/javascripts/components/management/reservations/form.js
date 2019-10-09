@@ -12,7 +12,6 @@ import qs from "qs";
 
 import DateFieldAdapter from "../../shared/date_field_adapter";
 import { Input } from "../../shared/components";
-import CommonCustomersList from "../common/customers_list.js"
 import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"

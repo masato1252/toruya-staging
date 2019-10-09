@@ -122,6 +122,7 @@ class CustomerPopup extends React.Component {
 
             <div className="modal-body">
               <div dangerouslySetInnerHTML={{ __html: selected_customer && selected_customer.booking_price }} />
+              <div dangerouslySetInnerHTML={{ __html: selected_customer && selected_customer.booking_customer_info_changed }} />
               { selected_customer && selected_customer.booking_from ? (
                 <div dangerouslySetInnerHTML={{ __html: selected_customer && selected_customer.booking_from }} />
               ) :(
@@ -174,7 +175,7 @@ const CustomerFields = ({ fields, customer_field, customer_index, all_values, is
       onClick={handleCustomerItemClick}>
       {["customer_id", "state", "booking_page_id", "booking_option_id",
         "booking_amount_cents", "booking_amount_currency", "tax_include", "booking_at", "details",
-        "booking_price", "booking_from"].map((attr_name, attr_index) => (
+        "booking_price", "booking_from", "booking_customer_info_changed"].map((attr_name, attr_index) => (
           <Field
             key={`${customer_field}${attr_index}`}
             name={`${customer_field}${attr_name}`}

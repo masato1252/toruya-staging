@@ -96,6 +96,10 @@ class ReservationsController < DashboardController
           booking_from: render_to_string(
             partial: "reservations/show_modal/booking_from",
             locals: { reservation_customer: reservation_customer, reservation: @reservation, current_user_staff: current_user_staff }
+          ),
+          booking_customer_info_changed: render_to_string(
+            partial: "reservations/show_modal/customer_info_changed",
+            locals: { reservation_customer: reservation_customer }
           )
         )
       end
