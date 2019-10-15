@@ -418,7 +418,7 @@ class BookingReservationForm extends React.Component {
                 <a href="#" className="edit" onClick={() => this.openCustomerInfoFeildModel("address_details")}>{i18n.edit}</a>
               </h4>
               <div className="info">
-                {address_details && address_details.postcode && `〒 ${address_details.postcode}`} {address_details && address_details.region} {address_details && address_details.city} {address_details && address_details.street1} {address_details && address_details.street2}
+                {address_details && address_details.postcode && `〒${address_details.postcode.substring(0,3)}-${address_details.postcode.substring(4, -1)}`} {address_details && address_details.region} {address_details && address_details.city} {address_details && address_details.street1} {address_details && address_details.street2}
                 <Error
                   name="booking_reservation_form[customer_info][address_details][postcode]"
                   touched_required={false}
