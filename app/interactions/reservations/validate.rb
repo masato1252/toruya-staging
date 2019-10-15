@@ -87,6 +87,8 @@ module Reservations
       end
       errors_with_warnings = {}
 
+      ignored_menu_errors = Rails.env.test? ? [] : [:not_enough_seat, :shop_or_staff_not_enough_ability]
+
       errors_list.each.with_index do |outcome_errors, menu_index|
         outcome_errors.details.each.with_object({}) do |(error_key, error_details), errors|
           error_details.each do |error_detail|
@@ -113,6 +115,7 @@ module Reservations
 
             case error_key
             when :menu_id
+              next if ignored_menu_errors.include?(error_reason)
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list] ||= Array.new(menu_staffs_list.length) { Hash[:menu_id, {}] }
 
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list][menu_index][:menu_id][error_reason] = error_message
