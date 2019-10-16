@@ -46,4 +46,8 @@ class ReservationCustomer < ApplicationRecord
   def customer_info
     Booking::CustomerInfo.new(details.new_customer_info)
   end
+
+  def new_customer_info?
+    customer_info.attributes.compact.present?
+  end
 end
