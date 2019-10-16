@@ -2,7 +2,7 @@
   changed_attributes = reservation_customer.customer_info.attributes.compact
 %>
 <% if changed_attributes.present? %>
-  <% address_details = changed_attributes.delete("address_details") %>
+  <% changed_attributes.delete("address_details") %>
 
   <div class="reservation-info-row">
     <i class="fa fa-database"></i><span><%= I18n.t("customer.customer_info_changed_messsage") %>:</span>
@@ -11,7 +11,7 @@
         <%= Customer.human_attribute_name(changed_attr) %>: <%= value %><br />
       <% end %>
 
-      <% address_details&.compact&.each do |changed_attr, value| %>
+      <% reservation_customer.customer_info.sorted_address_details.each do |changed_attr, value| %>
         <%= I18n.t("customer.#{changed_attr}") %>: <%= value %><br />
       <% end %>
     </p>

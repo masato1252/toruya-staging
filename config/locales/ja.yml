@@ -257,6 +257,8 @@ ja:
     postcode: 郵便番号
     address1: 続き住所
     address2: 建物名／部屋番号
+    street1: 続き住所
+    street2: 建物名／部屋番号
     no_customer: 該当データなし
     no_more_customer: 該当データ終了
     group_blank_option: 台帳なし

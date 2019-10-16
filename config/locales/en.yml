@@ -169,6 +169,8 @@ en:
     postcode: Postcode
     address1: address1
     address2: address2
+    street1: address1
+    street2: address2
     no_customer: No Data
     no_more_customer: End of Data
     printing_page_size:
