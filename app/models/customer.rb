@@ -184,7 +184,7 @@ class Customer < ApplicationRecord
   def primary_value(values)
     return unless values
 
-    values.find { |h| h.value.respond_to?(:primary) && h.value.primary } ||
+    values.find { |h| h.try(:primary) } ||
       values.find { |h| h.type == :mobile } ||
       values.find { |h| h.type == :home } ||
       values.find { |h| h.type == :work } ||
