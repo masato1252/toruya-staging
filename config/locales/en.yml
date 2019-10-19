@@ -44,6 +44,8 @@ en:
     copy_code: Copy
     preview: Preview
     add_a_menu: "Add a menu"
+    ignore: Ignore
+    save_changes: Overwrite the data
   common:
     processing: Processing
     date: Date
@@ -153,6 +155,12 @@ en:
         message: "%{accepted_staffs_number} out of %{total_staffs_number} staff approved this reservation."
         approve_btn: Approve this Reservation
         unapprove_btn: Unapproved this Reservation
+      customer:
+        data_changed_title: Customer data change request
+        customer_change_request_desc: "There's some data change requests from %{customer_name}"
+        current_info: Current data
+        change_request_info: Change request
+        check_change_requests: Check change request detail
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region
@@ -603,6 +611,7 @@ en:
         phonetic_first_name: Phonetic first name
         phone_number: Phone number
         email: Email
+        address: Address
   date:
     abbr_day_names:
     - Sun

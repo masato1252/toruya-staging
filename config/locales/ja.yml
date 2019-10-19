@@ -44,6 +44,8 @@ ja:
     copy_code: コードをコピー
     preview: プレビュー
     add_a_menu: メニューを追加
+    ignore: 無視する
+    save_changes: 変更を上書き保存
   common:
     processing: 送信中
     date: 日付
@@ -126,6 +128,12 @@ ja:
         staff:
           upgrade_title: 設定は利用できません
           upgrade_content: "%{shop_name}は設定を利用できません。店舗管理者にご連絡ください。"
+      customer:
+        data_changed_title: 顧客情報の変更依頼
+        customer_change_request_desc: "%{customer_name} さんより、顧客情報の変更依頼がありました。"
+        current_info: 今の情報
+        change_request_info: 変更依頼
+        check_change_requests: 変更内容を確認する
   plan:
     level:
       free: 無料
@@ -875,6 +883,7 @@ ja:
         phonetic_first_name: めい
         phone_number: 電話番号
         email: メール
+        address: 住所
       staff_menu:
         max_customers: "最高客戶数"
       profile:

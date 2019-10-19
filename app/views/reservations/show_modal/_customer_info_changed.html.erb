@@ -1,19 +1,8 @@
-<%
-  changed_attributes = reservation_customer.customer_info.attributes.compact
-%>
-<% if changed_attributes.present? %>
-  <% changed_attributes.delete("address_details") %>
-
+<% if reservation_customer.new_customer_info? %>
   <div class="reservation-info-row">
     <i class="fa fa-database"></i><span><%= I18n.t("customer.customer_info_changed_messsage") %>:</span>
-    <p>
-      <% changed_attributes.each do |changed_attr, value| %>
-        <%= Customer.human_attribute_name(changed_attr) %>: <%= value %><br />
-      <% end %>
-
-      <% reservation_customer.customer_info.sorted_address_details.each do |changed_attr, value| %>
-        <%= I18n.t("customer.#{changed_attr}") %>: <%= value %><br />
-      <% end %>
-    </p>
+    <% if can?(:edit, Customer)  %>
+      <%= link_to t("dashboard.modal.customer.check_change_requests"), "#", data: { controller: "modal", modal_target:  "#dummyModal2", action: "click->modal#popup", modal_path: data_changed_user_customers_path(reservation_customer.customer.user, reservation_customer) } %>
+    <% end %>
   </div>
 <% end %>
