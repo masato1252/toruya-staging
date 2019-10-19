@@ -37,7 +37,7 @@ export default class AtomicRequestsController extends Controller {
   }
 
   notRemoteRequest = (element) => {
-    return element.not(AtomicRequestsController.remoteSelector)
+    return element.not(AtomicRequestsController.remoteSelector).length
   }
 
   canMakeAtomicRequest = (element) => {
