@@ -205,7 +205,8 @@ class BookingReservationForm extends React.Component {
 
     const {
       name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name,
-      phone_number, email, save_change, invalid_to_change, info_change_title, address_details
+      phone_number, email, save_change, invalid_to_change, info_change_title, address_details,
+      select_region
     } = this.props.i18n;
     const is_field_error = this.booking_reservation_form_errors &&
       this.booking_reservation_form_errors.customer_info &&
@@ -312,11 +313,14 @@ class BookingReservationForm extends React.Component {
                 <h4>
                   {address_details.living_state}
                 </h4>
-                <Field
-                  name="booking_reservation_form[customer_info][address_details][region]"
-                  type="text"
-                  component="input"
-                />
+                <Field name="booking_reservation_form[customer_info][address_details][region]" component="select">
+                  <option value=""> {select_region} </option>
+                  {this.props.booking_page.regions.map((region) => (
+                    <option value={region.value} key={region.value}>
+                      {region.label}
+                    </option>
+                  ))}
+                </Field>
                 <h4>
                   {address_details.city}
                 </h4>

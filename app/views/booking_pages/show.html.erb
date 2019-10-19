@@ -31,7 +31,8 @@
     is_started: Time.zone.now >= @booking_page.start_time && @has_active_booking_option,
     is_ended: @booking_page.end_at && Time.zone.now > @booking_page.end_at,
     start_at: I18n.l(@booking_page.start_time, format: :date_with_wday),
-    draft: @booking_page.draft
+    draft: @booking_page.draft,
+    regions: regions
   }),
   calendar: {
     dayNames: I18n.t("date.abbr_day_names"),
@@ -63,7 +64,8 @@
     t("settings.booking_page.form"),
     t("booking_page"),
     t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
-    t("action").slice(:save)
+    t("action").slice(:save),
+    t("customer").slice(:select_region)
     ].inject(:merge!)
  ),
 },
