@@ -1,6 +1,10 @@
 module Booking
   module SharedMethods
     def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction, overlap_restriction = true)
+      unless Rails.env.test?
+        return if date < Subscription.today
+      end
+
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
         catch :next_menu_group do
           menu_position = 0

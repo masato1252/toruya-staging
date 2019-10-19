@@ -47,6 +47,10 @@ module Booking
           end
         end
 
+      unless Rails.env.test?
+        available_booking_dates = available_booking_dates.select { |date| Date.parse(date) >= Subscription.today }
+      end
+
       [
         schedules,
         available_booking_dates
