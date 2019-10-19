@@ -12,7 +12,7 @@ FactoryBot.define do
       customers { [ FactoryBot.create(:customer, user: shop.user) ] }
       staffs { [ FactoryBot.create(:staff, user: shop.user) ] }
       menus { [ FactoryBot.create(:menu, user: shop.user) ] }
-      force_end_time { start_time }
+      force_end_time {}
     end
 
     trait :pending do
@@ -23,11 +23,27 @@ FactoryBot.define do
       aasm_state { "reserved" }
     end
 
+    trait :fully_occupied do
+      customers do
+        [
+          FactoryBot.create(:customer, user: shop.user),
+          FactoryBot.create(:customer, user: shop.user),
+          FactoryBot.create(:customer, user: shop.user),
+        ]
+      end
+    end
+
     after(:create) do |reservation, proxy|
       menus_number = Array.wrap(proxy.menus).length
 
-      if proxy.force_end_time && proxy.menus.length == 1
-        proxy.menus.first.update(minutes: (proxy.force_end_time - reservation.start_time)/60.0)
+      if proxy.force_end_time && proxy.menus.length
+        required_time = (proxy.force_end_time - reservation.start_time)/60.0
+
+        proxy.menus.last.update(minutes: required_time - proxy.menus[0...-1].sum(&:minutes))
+
+        proxy.menus.each do |menu|
+          BookingOptionMenu.where(menu: menu).update_all(required_time: menu.minutes)
+        end
       end
 
       if Array.wrap(proxy.menus).present?

@@ -65,27 +65,30 @@ RSpec.describe Booking::Calendar do
     end
 
     context "when all day are reserved" do
-      before do
-        FactoryBot.create(:reservation, shop: shop, staffs: staff,
-                          start_time: Time.zone.local(2019, 5, 13, 9),
-                          force_end_time: Time.zone.local(2019, 5, 13, 17))
-      end
-
-      it "returns expected result" do
-        result = outcome.result
-
-        expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
-      end
-
-      context "when the booking option's menu is no-manpower type(min_staffs_number is 0)" do
-        let(:menu) { FactoryBot.create(:menu, :with_reservation_setting, :no_manpower, user: user) }
-        let(:booking_option) { FactoryBot.create(:booking_option, user: user, menus: [menu]) }
-
-        # The no-manpower menu still need available staff
+      context "when reservation was fully occupied" do
         it "returns expected result" do
+          FactoryBot.create(:reservation, :fully_occupied,
+                            menus: booking_option.menus,
+                            shop: shop, staffs: staff,
+                            start_time: Time.zone.local(2019, 5, 13, 9),
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+      end
+
+      context "when reservation was not fully occupied(there is space for extra customers)" do
+        it "returns expected result" do
+          FactoryBot.create(:reservation,
+                            menus: booking_option.menus,
+                            shop: shop, staffs: staff,
+                            start_time: Time.zone.local(2019, 5, 13, 9),
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
+
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
         end
       end
     end
@@ -216,12 +219,28 @@ RSpec.describe Booking::Calendar do
 
         it "returns expected result" do
           # staff was fully booked all day on 5/13 
-          FactoryBot.create(:reservation, shop: shop, staffs: staff,
+          FactoryBot.create(:reservation, :fully_occupied,
+                            menus: booking_option.menus,
+                            shop: shop, staffs: staff,
                             start_time: Time.zone.local(2019, 5, 13, 9),
                             force_end_time: Time.zone.local(2019, 5, 13, 17))
+
           result = outcome.result
 
           expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+
+        it "returns expected result" do
+          # staff had reservation on 5/13 but there was left seats
+          FactoryBot.create(:reservation,
+                            menus: booking_option.menus,
+                            shop: shop, staffs: staff,
+                            start_time: Time.zone.local(2019, 5, 13, 9),
+                            force_end_time: Time.zone.local(2019, 5, 13, 17))
+
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
         end
 
         context "when there is another staff could handle the booking option's menus" do
@@ -392,14 +411,17 @@ RSpec.describe Booking::Calendar do
           # when staff1 are available for 70 minutes(60 + 15(before reservation)), then staff2 are available for 120 minutes(120 + 15(after reservation))
           # 15 is booking option interval time
           # free from 9:00 ~ 10:00 for staff1, so staff1 take create the 60 minutes menu from 9:00 ~ 10:00
-          FactoryBot.create(:reservation, shop: shop, staffs: staff1,
+          FactoryBot.create(:reservation, :fully_occupied, shop: shop, staffs: staff1,
+                            menus: booking_option.menus,
                             start_time: Time.zone.local(2019, 5, 13, 10, 00),
                             force_end_time: Time.zone.local(2019, 5, 13, 17))
           # free from 10:00 ~ 12:15 for staff2, so staff2 take create the 120 minutes menu from 10:00 ~ 12:15
-          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
+          FactoryBot.create(:reservation, :fully_occupied, shop: shop, staffs: staff2,
+                            menus: booking_option.menus,
                             start_time: Time.zone.local(2019, 5, 13, 9, 00),
                             force_end_time: Time.zone.local(2019, 5, 13, 10, 00))
-          FactoryBot.create(:reservation, shop: shop, staffs: staff2,
+          FactoryBot.create(:reservation, :fully_occupied, shop: shop, staffs: staff2,
+                            menus: booking_option.menus,
                             start_time: Time.zone.local(2019, 5, 13, 12, 15),
                             force_end_time: Time.zone.local(2019, 5, 13, 17))
           # BUT the menu order is restrict, 120 minutes need to be executed first, so no staffs could handle this booking option
