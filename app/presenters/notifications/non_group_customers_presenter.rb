@@ -11,7 +11,7 @@ module Notifications
     private
 
     def recent_non_group_customers
-      @recent_non_group_customers ||= Customer.where(user: owners_who_current_user_have_ability_to_manage_customers, contact_group_id: nil)
+      @recent_non_group_customers ||= Customer.where(user: owners_who_current_user_have_ability_to_manage_customers, contact_group_id: nil).active
     end
 
     def owners_who_current_user_have_ability_to_manage_customers
