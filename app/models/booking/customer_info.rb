@@ -39,6 +39,14 @@ module Booking
       attributes.reject {|k, _| k == "address_details" }.compact
     end
 
+    def google_data_attributes
+      {
+        phone_number: phone_number,
+        email: email,
+        address_details: address_details&.compact
+      }.compact
+    end
+
     def name_attributes
       {
         last_name: last_name,

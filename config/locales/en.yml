@@ -161,6 +161,7 @@ en:
         current_info: Current data
         change_request_info: Change request
         check_change_requests: Check change request detail
+        overwrite_complete: Overwrite completed
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region

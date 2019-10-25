@@ -134,6 +134,7 @@ ja:
         current_info: 今の情報
         change_request_info: 変更依頼
         check_change_requests: 変更内容を確認する
+        overwrite_complete: 上書き完了
   plan:
     level:
       free: 無料

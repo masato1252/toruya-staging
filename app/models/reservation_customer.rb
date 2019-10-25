@@ -43,6 +43,50 @@ class ReservationCustomer < ApplicationRecord
 
   scope :active, -> { where(state: ACTIVE_STATES) }
 
+  def customer_data_changed?
+    customer_data_changes.present?
+  end
+
+  def customer_data_changes
+    if new_customer_info?
+      changes_data = []
+      current_customer = customer_info.google_data_attributes.present? ? customer.with_google_contact : customer
+
+      customer_info.name_attributes.each do |changed_attr, value|
+        if current_customer.public_send(changed_attr) != value
+          changes_data << changed_attr.to_s
+        end
+      end
+
+      if customer_info.phone_number && current_customer.primary_phone&.value != customer_info.phone_number
+        changes_data << "phone_number"
+      end
+
+      if customer_info.email && current_customer.primary_email&.value&.address != customer_info.email
+        changes_data << "email"
+      end
+
+      if customer_info.sorted_address_details.present?
+        customer_info.sorted_address_details.each do |attr, value|
+          case attr
+          when "postcode", "region", "city"
+            if current_customer.primary_address&.value&.public_send(attr).presence != value
+              changes_data << attr
+            end
+          when "street1", "street2"
+            new_street = [customer_info.address_details.street1, customer_info.address_details.street2].reject(&:blank?).join(",")
+
+            if current_customer.primary_address&.value&.street.presence != new_street
+              changes_data << attr
+            end
+          end
+        end
+      end
+
+      changes_data
+    end
+  end
+
   def customer_info
     Booking::CustomerInfo.new(details.new_customer_info)
   end
