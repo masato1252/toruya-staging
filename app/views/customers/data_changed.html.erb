@@ -13,19 +13,19 @@
         <strong><%= I18n.t("dashboard.modal.customer.current_info") %>:</strong>
         <p>
           <% @reservation_customer.customer_info.name_attributes.each do |changed_attr, value| %>
-            <%= Customer.human_attribute_name(changed_attr) %>: <%= @customer.public_send(changed_attr) %><br />
+            <%= Customer.human_attribute_name(changed_attr) %>: <%= @customer.public_send(changed_attr).presence || "No-data" %><br />
           <% end %>
 
           <% if @reservation_customer.customer_info.phone_number %>
-            <%= Customer.human_attribute_name("phone_number") %>: <%= @customer.primary_phone&.value %><br />
+            <%= Customer.human_attribute_name("phone_number") %>: <%= @customer.primary_phone&.value.presence || "No-data" %><br />
           <% end %>
 
           <% if @reservation_customer.customer_info.email %>
-            <%= Customer.human_attribute_name("email") %>: <%= @customer.primary_email&.value&.address %><br />
+            <%= Customer.human_attribute_name("email") %>: <%= @customer.primary_email&.value&.address.presence || "No-data" %><br />
           <% end %>
 
           <% if @reservation_customer.customer_info.sorted_address_details.present? %>
-            <%= Customer.human_attribute_name("address") %>: <%= @customer.display_address %><br />
+            <%= Customer.human_attribute_name("address") %>: <%= @customer.display_address.presence || "No-data" %><br />
           <% end %>
         </p>
       </div>
