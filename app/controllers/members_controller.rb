@@ -48,7 +48,9 @@ class MembersController < DashboardController
       end
     end.sort_by { |option| option.time }
 
-    @notification_messages = NotificationsPresenter.new(view_context, current_user, params).data
+    notification_presenter = NotificationsPresenter.new(view_context, current_user, params)
+    @notification_messages = notification_presenter.data
+    @reservations_approvement_flow = notification_presenter.reservations_approvement_flow
   end
 
   private

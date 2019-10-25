@@ -1,5 +1,5 @@
 class NotificationsPresenter
-  attr_reader :current_user, :h
+  attr_reader :current_user, :h, :reservations_approvement_flow
   delegate :link_to, to: :h
 
   def initialize(h, current_user, params = {})
@@ -29,7 +29,7 @@ class NotificationsPresenter
   private
 
   def new_pending_reservations
-    if recent_pending_reservations.present?
+    @new_pending_reservations_message ||= if recent_pending_reservations.present?
       message = "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)}"
 
       if @reservation_id
@@ -69,6 +69,8 @@ class NotificationsPresenter
       if path
         "#{message} #{link_to(text.html_safe, path)}"
       else
+        @reservations_approvement_flow = true
+
         "#{message} #{link_to('<i class="fa fa-caret-square-o-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
         #{text}
         #{link_to('<i class="fa fa-caret-square-o-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path}"

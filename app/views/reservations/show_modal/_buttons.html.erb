@@ -34,7 +34,7 @@
       <% if reservation.acceptable_by_staff?(current_user.current_staff(shop_user)) %>
         <dd>
         <% if user_ability.can?(:edit, reservation) %>
-          <% if in_personal_dashboard? %>
+          <% if params[:reservations_approvement_flow].present? %>
             <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_in_group_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
           <% else %>
             <%= link_to reservation.canceled? ? t("reservation.accept_in_canceled") : t("reservation.accept"), accept_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn BTNtarco" %>
