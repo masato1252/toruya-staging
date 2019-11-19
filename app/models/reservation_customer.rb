@@ -91,6 +91,22 @@ class ReservationCustomer < ApplicationRecord
     Booking::CustomerInfo.new(details.new_customer_info)
   end
 
+  def display_changed_address
+    if new_customer_info? && customer_info.sorted_address_details.present?
+      address_details = customer_info.sorted_address_details
+      customer_with_google_contact = customer.with_google_contact
+      current_customer_address = customer_with_google_contact.primary_formatted_address.value
+
+      zipcode = address_details.postcode ? "〒#{address_details.postcode.first(4)}-#{address_details.postcode.last(3)}" : customer_with_google_contact.zipcode
+      region = address_details.region.presence || current_customer_address.region
+      city = address_details.city.presence || current_customer_address.city
+      street1 = address_details.street1.presence || current_customer_address.street1
+      street2 = address_details.street2.presence || current_customer_address.street2
+
+      "#{zipcode} #{region}#{city}#{street1}#{street2}"
+    end
+  end
+
   def new_customer_info?
     customer_info.attributes.compact.present?
   end

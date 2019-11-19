@@ -32,7 +32,7 @@ module Booking
     attribute :address_details
 
     def sorted_address_details
-      address_details&.compact.present? ? Hash[address_details.compact.sort_by { |key, _| ADDRESS_DETAILS_ORDER.index(key) }] : {}
+      address_details&.compact.present? ? Hashie::Mash.new(Hash[address_details.compact.sort_by { |key, _| ADDRESS_DETAILS_ORDER.index(key) }]) : {}
     end
 
     def personal_info_attributes

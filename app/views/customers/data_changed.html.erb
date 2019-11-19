@@ -37,8 +37,8 @@
             <%= Customer.human_attribute_name(changed_attr) %>: <%= value %><br />
           <% end %>
 
-          <% @reservation_customer.customer_info.sorted_address_details.each do |changed_attr, value| %>
-            <%= I18n.t("customer.#{changed_attr}") %>: <%= value %><br />
+          <% if @reservation_customer.customer_info.sorted_address_details.present? %>
+            <%= Customer.human_attribute_name("address") %>: <%= @reservation_customer.display_changed_address %><br />
           <% end %>
         </p>
       </div>
