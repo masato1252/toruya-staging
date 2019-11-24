@@ -1,10 +1,16 @@
 class ReservationsController < DashboardController
   before_action :set_reservation, only: [:show, :edit, :update, :destroy]
   before_action :set_current_dashboard_mode, only: %i(index)
+  before_action :repair_nested_params, only: [:create, :update, :validate, :add_customer]
 
   def show
     @sentences = view_context.reservation_staff_sentences(@reservation)
-    render layout: false
+    @shop_user = @reservation.shop.user
+    @user_ability = ability(@shop_user, @reservation.shop)
+    @customer = Customer.find_by(id: params[:from_customer_id])
+    @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:from_customer_id])
+
+    render action: params[:from_customer_id] ? "customer_reservation_show" : "show", layout: false
   end
 
   # GET /reservations
@@ -21,10 +27,12 @@ class ReservationsController < DashboardController
     # Staff schedules on date END
 
     # Reservations START
-    reservations = shop.reservations.uncanceled.in_date(@date).includes(:shop, :menu, :customers, :staffs).order("reservations.start_time ASC")
+    reservations = shop.reservations.uncanceled.in_date(@date).includes(:shop, :menus, :customers, :staffs).order("reservations.start_time ASC")
     @schedules = reservations.map do |reservation|
       Option.new(type: :reservation, source: reservation)
     end
+    @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
+
     # Reservations END
 
     # Notifications START
@@ -34,92 +42,142 @@ class ReservationsController < DashboardController
     # Notifications END
   end
 
-  # GET /reservations/new
-  def new
-    authorize! :create_reservation, shop
-    authorize! :manage_shop_reservations, shop
+  def form
     @body_class = "resNew"
+    all_options
 
-    @reservation = shop.reservations.new(start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
-                                         start_time_time_part: params[:start_time_time_part] || Time.zone.now.to_s(:time),
-                                         end_time_time_part: params[:end_time_time_part] || Time.zone.now.advance(hours: 2).to_s(:time),
-                                         memo: params[:memo],
-                                         menu_id: params[:menu_id],
-                                         staff_ids: params[:staff_ids].try(:split, ",").try(:uniq),
-                                         customer_ids: params[:customer_ids].try(:split, ",").try(:uniq))
+    if cookies[:reservation_form_hash] && params[:from_adding_customer]
+      reservarion_params = JSON.parse(cookies[:reservation_form_hash]).with_indifferent_access
+      menu_staffs_list = reservarion_params.delete(:menu_staffs_list)
+      customers_list = reservarion_params.delete(:customers_list)
+      reservation_id = reservarion_params.delete(:reservation_id)
+      staff_states = reservarion_params.delete(:staff_states)
 
-    if current_user.member?
-      all_options
-    elsif params[:menu_id].present?
-      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, params: params.permit!.to_h)
-    end
-
-    if params[:start_time_date_part].present?
-      outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
-      @time_ranges = outcome.valid? ? outcome.result : nil
-    end
-  end
-
-  # GET /reservations/1/edit
-  def edit
-    authorize! :manage_shop_reservations, shop
-    authorize! :edit, @reservation
-
-    @body_class = "resNew"
-
-    if current_user.member?
-      all_options
-      @reservation = Reservations::Edit.run!(reservation: @reservation, params: params.permit!.to_h)
+      @reservation = shop.reservations.find_or_initialize_by(id: reservation_id)
+      @reservation.attributes = reservarion_params
+      @menu_staffs_list = menu_staffs_list
+      @staff_states = staff_states
+      @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
     else
-      @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: params.permit!.to_h)
+      @reservation = shop.reservations.find_by(id: params[:id])
+      @reservation ||= shop.reservations.new(
+        start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
+        start_time_time_part: Time.zone.now.to_s(:time),
+        end_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
+        end_time_time_part: Time.zone.now.advance(hours: 2).to_s(:time),
+      )
+      @menu_staffs_list = @reservation.reservation_menus.includes(:menu).map.with_index do |rm, position|
+        {
+          menu: view_context.custom_option(@menu_result[:menu_options].find { |option| option.id == rm.menu_id }),
+          position: rm.position || position,
+          menu_id: rm.menu_id,
+          menu_required_time: rm.required_time,
+          menu_interval_time: rm.menu.interval,
+          staff_ids: []
+        }
+      end
+
+      staff_ids = @staff_options.map(&:id)
+      @reservation.reservation_staffs.each do |reservation_staff|
+        menu_hash = @menu_staffs_list.find { |menu_item| menu_item[:menu_id] == reservation_staff.menu_id }
+        menu_hash[:staff_ids] << { staff_id: (staff_ids.include?(reservation_staff.staff_id) ? reservation_staff.staff_id : nil) }
+      end
+
+      @customers_list ||= @reservation.reservation_customers.includes(:customer).map do |reservation_customer|
+        customer = reservation_customer.customer
+
+        reservation_customer.attributes.merge!(
+          binding: true,
+          label: customer.name,
+          value: customer.id,
+          address: customer.address,
+          details: reservation_customer.details.to_json,
+          booking_price: render_to_string(partial: "reservations/show_modal/booking_price", locals: { reservation_customer: reservation_customer }),
+          booking_from: render_to_string(
+            partial: "reservations/show_modal/booking_from",
+            locals: { reservation_customer: reservation_customer, reservation: @reservation, current_user_staff: current_user_staff }
+          ),
+          booking_customer_info_changed: render_to_string(
+            partial: "reservations/show_modal/customer_info_changed",
+            locals: { reservation_customer: reservation_customer }
+          )
+        )
+      end
+
+      @staff_states = @reservation.reservation_staffs.map { |rs| { staff_id: rs.staff_id, state: rs.state }}
     end
 
-    outcome = Reservable::Time.run(shop: shop, date: @reservation.start_time.to_date)
-    @time_ranges = outcome.valid? ? outcome.result : nil
+    @menu_staffs_list = @menu_staffs_list.size != 0 ? @menu_staffs_list : [
+      {
+        menu_id: "",
+        position: 0,
+        menu_required_time: "",
+        menu_interval_time: "",
+        staff_ids: [{
+          staff_id: ""
+        }]
+      }
+    ]
+
+    cookies.delete(:reservation_form_hash)
+
+    if params[:customer_id]
+      customer = super_user.customers.find(params[:customer_id])
+
+      if @customers_list.map { |c| c["customer_id"] }.exclude?(params[:customer_id].to_i)
+        @customers_list << {
+          customer_id: params[:customer_id],
+          state: "accepted",
+          label: customer.name,
+          value: customer.id,
+          address: customer.address
+        }
+      end
+    end
   end
 
   def create
     authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
-    outcome = Reservations::Create.run(shop: shop, params: reservation_params.to_h)
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html do
-          if in_personal_dashboard?
-            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
-          else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
-          end
-        end
+    outcome = Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)
+
+    if outcome.valid?
+      if in_personal_dashboard?
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
       else
-        format.html { redirect_to new_shop_reservation_path(shop, reservation_params.to_h), alert: outcome.errors.full_messages.join(", ") }
+        redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.create_successfully_message")
       end
+    else
+      Rollbar.warning("Create reservation failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: reservation_params_hash
+      )
+      redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
   def update
     authorize! :manage_shop_reservations, shop
     authorize! :edit, @reservation
-    outcome = Reservations::Update.run(shop: shop, reservation: @reservation, params: reservation_params.to_h)
+    outcome = Reservations::Save.run(reservation: @reservation, params: reservation_params_hash)
 
-    respond_to do |format|
-      if outcome.valid?
-        format.html do
-          if params[:from_customer_id]
-            redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
-          elsif in_personal_dashboard?
-            redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
-          else
-            redirect_to shop_reservations_path(shop, reservation_date: reservation_params[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
-          end
-        end
-        format.json { render :show, status: :ok, location: @reservation }
+    if outcome.valid?
+      if params[:from_customer_id].present?
+        redirect_to user_customers_path(shop.user, customer_id: params[:from_customer_id])
+      elsif in_personal_dashboard?
+        redirect_to date_member_path(reservation_date: outcome.result.start_time.to_s(:date))
       else
-        @result = Reservations::RetrieveAvailableMenus.run!(shop: shop, reservation: @reservation, params: reservation_params.to_h)
-        format.html { render :edit }
-        format.json { render json: @reservation.errors, status: :unprocessable_entity }
+        redirect_to shop_reservations_path(shop, reservation_date: reservation_params_hash[:start_time_date_part]), notice: I18n.t("reservation.update_successfully_message")
       end
+    else
+      Rollbar.warning("Update reservation failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: reservation_params_hash
+      )
+      redirect_to form_shop_reservations_path(shop, reservation_params_hash.to_h), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
@@ -128,7 +186,7 @@ class ReservationsController < DashboardController
 
     Reservations::Delete.run!(reservation: @reservation)
 
-    if params[:from_customer_id]
+    if params[:from_customer_id].present?
       redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
     elsif in_personal_dashboard?
       redirect_to member_path, notice: I18n.t("reservation.delete_successfully_message")
@@ -138,91 +196,104 @@ class ReservationsController < DashboardController
   end
 
   def validate
-    params[:customer_ids] = if params[:customer_ids].present?
-                              params[:customer_ids].split(",").map{ |c| c if c.present? }.compact.uniq
-                            else
-                              []
-                            end
-
-    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:start_time_date_part]).to_date)
+    outcome = Reservable::Time.run(shop: shop, date: Time.zone.parse(params[:reservation_form][:start_time_date_part]).to_date)
     @time_ranges = outcome.valid? ? outcome.result : nil
 
+    @customer_max_load_capability = Array.wrap(reservation_params_hash[:menu_staffs_list]).map do |menu_staffs_list|
+      # XXX: When there is the same menu, the second staffs would merge into first menu, then second menu's staff would disapper, unlikely case
+      staff_ids = Array.wrap(menu_staffs_list[:staff_ids]).map { |hh| hh[:staff_id] }.compact
+
+      if staff_ids.blank?
+        0
+      else
+        Reservable::CalculateCapabilityForCustomers.run!(
+          shop: shop,
+          menu_id: menu_staffs_list[:menu_id],
+          staff_ids: staff_ids.uniq
+        )
+      end
+    end.min
+
     reservation_errors
-    if params[:menu_id].presence
-      @menu_min_staffs_number = shop.menus.find_by(id: params[:menu_id]).min_staffs_number
-    end
+  end
+
+  def add_customer
+    cookies[:reservation_form_hash] = reservation_params_hash.to_json
+
+    render json: { redirect_to: user_customers_path(super_user, reservation_id: reservation_params_hash[:reservation_id], from_reservation: true) }
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_reservation
-    @reservation = shop.reservations.find(params[:id])
+    @reservation = shop.reservations.find(params[:id] || params[:reservation_form][:id])
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def reservation_params
-    params.require(:reservation).permit(:menu_id, :start_time_date_part, :start_time_time_part, :end_time_time_part,
-                                        :customer_ids, :staff_ids, :memo, :with_warnings, :by_staff_id)
-  end
-
-  def start_time
-    @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
-  end
-
-  def end_time
-    @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
-  end
+  # def start_time
+  #   @start_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:start_time_time_part]}")
+  # end
+  #
+  # def end_time
+  #   @end_time ||= Time.zone.parse("#{params[:start_time_date_part]}-#{params[:end_time_time_part]}")
+  # end
 
   def all_options
     menu_options = ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
-      ::Options::MenuOption.new(id: shop_menu.menu_id, name: shop_menu.menu.display_name,
-                                min_staffs_number: shop_menu.menu.min_staffs_number,
-                                available_seat: shop_menu.max_seat_number)
+      ::Options::MenuOption.new(
+        id: shop_menu.menu_id,
+        name: shop_menu.menu.display_name,
+        min_staffs_number: shop_menu.menu.min_staffs_number,
+        available_seat: shop_menu.max_seat_number,
+        minutes: shop_menu.menu.minutes,
+        interval: shop_menu.menu.interval
+      )
     end
     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
 
-    @staff_options = if super_user.premium_member?
-      shop.staffs.order("id").map do |staff|
-        ::Options::StaffOption.new(id: staff.id, name: staff.name, handable_customers: nil)
+    @staff_options =
+      if super_user.premium_member?
+        shop.staffs.order("id").uniq.map do |staff|
+          ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
+        end
+      else
+        [
+          ::Option.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
+        ]
       end
-    else
-      [
-        ::Options::StaffOption.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
-      ]
-    end
   end
 
   def reservation_errors
-    outcome = Reservable::Reservation.run(
-      shop: shop,
-      date: Time.zone.parse(params[:start_time_date_part]).to_date,
-      business_time_range: start_time..end_time,
-      menu_ids: [params[:menu_id].presence].compact.uniq,
-      staff_ids: params[:staff_ids].try(:split, ",") || [],
-      reservation_id: params[:reservation_id].presence,
-      number_of_customer: (params[:customer_ids].try(:split, ",").try(:flatten).try(:uniq) || []).size
+    outcome = Reservations::Validate.run(
+      reservation: @reservation || shop.reservations.find_by(id: params[:reservation_form][:reservation_id]) || shop.reservations.new,
+      params: reservation_params_hash
     )
 
-    @errors = outcome.errors.details.each.with_object({}) do |(error_key, error_details), errors|
-      error_details.each do |error_detail|
-        error_reason = error_detail[:error]
-        option = error_detail.tap { |error| error_detail.delete(:error) }
-
-        if error_reason.is_a?(Symbol)
-          errors[error_reason] = outcome.errors.full_message(error_key, outcome.errors.generate_message(error_key, error_reason, option))
-        elsif error_reason.to_i.is_a?(Integer)
-          errors[error_reason] ||= []
-          errors[error_reason] << error_key
-        else
-          errors[error_reason] = outcome.errors.full_message(error_key, error_reason)
-        end
-      end
-    end
+    @errors_with_warnings = outcome.result
   end
-
-  private
 
   def set_current_dashboard_mode
     cookies[:dashboard_mode] = shop.id
+  end
+
+  def reservation_params_hash
+    return @reservation_params_hash if defined?(@reservation_params_hash)
+
+    @reservation_params_hash = params.permit!.to_h["reservation_form"]
+
+    if @reservation_params_hash[:start_time_date_part] && @reservation_params_hash[:start_time_time_part]
+      @reservation_params_hash[:start_time] = Time.zone.parse("#{@reservation_params_hash[:start_time_date_part]}-#{@reservation_params_hash[:start_time_time_part]}")
+    end
+
+    if @reservation_params_hash[:start_time_date_part] && @reservation_params_hash[:end_time_time_part]
+      @reservation_params_hash[:end_time] = Time.zone.parse("#{@reservation_params_hash[:start_time_date_part]}-#{@reservation_params_hash[:end_time_time_part]}")
+    end
+
+    @reservation_params_hash["menu_staffs_list"].delete_if {|hh| hh["menu_id"].blank? } if @reservation_params_hash["menu_staffs_list"]
+    if @reservation_params_hash[:customers_list].present?
+      @reservation_params_hash[:customers_list].map! { |h| h.merge!(details: JSON.parse(h["details"].presence || "{}")) }
+      @reservation_params_hash[:customers_list].map! { |h| h[:booking_at].present? ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
+    end
+    @reservation_params_hash
   end
 end

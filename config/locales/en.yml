@@ -24,22 +24,34 @@ en:
     reservation_setting_warning_link_title: Reservation Settings page
   action:
     delete: Delete
-    edit: edit
+    delete_reservation: Delete reservation
+    edit: Edit
+    details: Details
     cancel: Cancel
     log_out: Log out
     save: Save
+    save_pending: Save as pending
+    save_as_draft: Save as draft
+    save_and_publish: Save and publish
     search: Search
     upgrade_to_premium: Upgrade to premium plan
     upgrade_to_basic: Upgrade to basic plan
     cancel_upgrade: Cancel upgrade
     new_reservation: Add a new reservation
     create_a_shop: Set up a shop
-    copy: Copy
+    copy_url: Copy URL
+    copy_url2: Copy URL
     copy_code: Copy
+    preview: Preview
+    add_a_menu: "Add a menu"
+    ignore: Ignore
+    save_changes: Overwrite the data
   common:
     processing: Processing
     date: Date
     day: Day
+    time: Time
+    content: Content
     start_time: Start Time
     end_time: End Time
     updated_time: Update time
@@ -70,6 +82,10 @@ en:
     minute: minute
     total: Total
     copied: Copied
+    required_time: Required time
+    menu: Menu
+    responsible_employee: Staff
+    booking_price: Booking Price
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -86,8 +102,12 @@ en:
   notifications:
     pending_reservation_need_confirm: You have %{number} reservation need to be confirm.
     pending_reservation_confirm: Check here
+    pending_customer_reservation_need_confirm: "%{number} customers have been added to the reservations"
+    pending_customer_reservation_confirm: Approve the booked customer
+    non_group_customers: "%{number}customer data with no customer group set has been found."
+    next_non_group_customer: "Set a group"
+    non_group_customers_alert_message: Please set a customer group for this customer.
   reservation:
-    valid_time_tip_message: Need a valid reservation time
     business_time_suggestion: "※Business Hour"
     no_valid_menu_alert: No available menu
     no_menu_message: No results found
@@ -99,12 +119,16 @@ en:
     check_in: Check in
     check_out: Check Out
     accept: Accept
+    accept_customer: Approve Booking Customer
     pend: Pend
     accept_in_canceled: Resume
     shop_closed: Shop closed
-    cancel: Cancel Reservation
+    cancel: Cancel All Customers
+    customer_cancel: Cancel
     cancel_confirmation_message: You can view the canceled reservation on the customer page.
     pending: Pending
+    accepted_state: Accepted
+    pending_state: Pending
     noshow: No show
     checked_in: Checked in
     checked_out: Checked out
@@ -113,6 +137,31 @@ en:
     memo: Memo
     contain_some_warnings: Containing some warnings
     deleted_staffs_sentence: "%{staff_names_sentence} be deleted"
+    confirm_with_warnings: Confirm with warnings
+    customers_list_label: Customers
+    details: Details
+    become_overbooking: Become overbooking!
+    overbooking: Overbooking!
+    reserved: Reserved
+    full_seat: vacancy
+    add_customer_btn: Add a customer
+    no_manpower_tip: Min required staff 0
+    add_working_schedule: Add working schedule
+    other_customers: "other customers: %{other_customers_number}"
+    no_ending_time_message: "The end time cannot be edited. The end time will be calculated automatically from the menu required time."
+    modal:
+      staff_states:
+        title: Approve this Reservation
+        message: "%{accepted_staffs_number} out of %{total_staffs_number} staff approved this reservation."
+        approve_btn: Approve this Reservation
+        unapprove_btn: Unapproved this Reservation
+      customer:
+        data_changed_title: Customer data change request
+        customer_change_request_desc: "There's some data change requests from %{customer_name}"
+        current_info: Current data
+        change_request_info: Change request
+        check_change_requests: Check change request detail
+        overwrite_complete: Overwrite completed
   customer:
     back_without_save: Back Without Save
     select_region: Select a Region
@@ -124,8 +173,13 @@ en:
     work: Work
     mobile: Mobile
     city: City
+    region: Region
+    street: Street
+    postcode: Postcode
     address1: address1
     address2: address2
+    street1: address1
+    street2: address2
     no_customer: No Data
     no_more_customer: End of Data
     printing_page_size:
@@ -143,6 +197,7 @@ en:
     reservation_day: Date
     level_label: Customer Level
     tip_before_new_customer: Search existing data before adding a new customer.
+    customer_info_changed_messsage: Customer data change needed
     filter:
       empty_content: "No reservation found for the filter."
       confirm_message: You're about to leave the filter page to view customer information.
@@ -203,6 +258,11 @@ en:
         dob_in_next_month: Birthday in Next Month
         checkout_in_a_year: Checked-out within a Year
   settings:
+    dashboard:
+      booking_tour:
+        title: Online Booking
+        booking_option_setup: Set a booking price
+        booking_page_setup: Set a booking page
     shop:
       info_title: Shop Info
       new_title: Add a New Shop
@@ -450,7 +510,10 @@ en:
         display_name: Display name
         display_name_hint: Name your booking-price to show to your customer as menu
         menu_for_sale_label: Menu for sale
+        menu_restrict_dont_need_order: Staff will be assigned who can respond regardless of menu order.(Recommended)
+        menu_restrict_order: Staff will be assigned who can respond in the menu order.
         time_span_label: Reservation time
+        total_time: Total time
         reservation_interval: before and after reservation
         price_label: Price
         price: Catalog price
@@ -463,9 +526,9 @@ en:
         sale_forever: Never
         sale_start: Sales start
         sale_end: Sales end
-        overlap_booking: Double booking
-        not_allow_overlap_booking_label: Close reservation acceptance with the number of available staff
-        allow_overlap_booking_label: Accept reservations over the number of staff available
+        overbooking: Double booking
+        not_allow_overbooking_label: Close reservation acceptance with the number of available staff
+        allow_overbooking_label: Accept reservations over the number of staff available
         note_label: Explanation / Important notes
         note_hint: The important notes showed to your customer on booking with this price.
         form_errors:
@@ -499,6 +562,7 @@ en:
         booking_dates_calendar_hint: Calendar is showing from current setting contents and vacancy situation.
         booking_dates_working_date: Business day
         booking_dates_available_booking_date: Available day
+        default_available_dates_label: Show all available days automatically
         special_date_label: Available only for specific date
         interval_header: Starting time of reservation
         interval_real_booking_time_explanation: The choices from the current settings and availability are displayed.
@@ -516,14 +580,15 @@ en:
         sale_forever: Never
         sale_start: Sell start at
         sale_end: Sell end at
-        overlap_booking: Overlap Booking
-        not_allow_overlap_booking_label: Close reservation acceptance with the number of available staff(recommended)
-        allow_overlap_booking_label: Accept reservations over the number of staff available
+        overbooking: Overlap Booking
+        not_allow_overbooking_label: Close reservation acceptance with the number of available staff(recommended)
+        allow_overbooking_label: Accept reservations over the number of staff available
         note_label: Description/Important notes
         note_hint: Description/Important notes
         form_errors:
           start_at_too_late: Based on your setting, it should be before {datetime}
           end_at_too_early: Based on your setting, it should be after {datetime}
+          unavailable_booking_option: Some prices sells unavailable menu for {shop_name}
   constants:
     rank:
       regular: "Regular"
@@ -539,6 +604,15 @@ en:
           attributes:
             bind_all:
               taken: "^You could only have one group to import all the contact groups"
+    attributes:
+      customer:
+        last_name: Last name
+        first_name: First name
+        phonetic_last_name: Phonetic last name
+        phonetic_first_name: Phonetic first name
+        phone_number: Phone number
+        email: Email
+        address: Address
   date:
     abbr_day_names:
     - Sun
@@ -597,7 +671,8 @@ en:
     am: am
     formats:
       default: "%a, %d %b %Y %I:%M:%S %p %Z"
-      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      date_with_wday: "%Y/%m/%d(%a) %H:%M"
+      time_only: "%H:%M"
       standard: "%Y-%m-%d %H:%M"
       long: "%B %d, %Y %I:%M %p"
       short: "%d %b %I:%M %p"
@@ -681,6 +756,7 @@ en:
         one: is the wrong length (should be 1 character)
         other: is the wrong length (should be %{count} characters)
       other_than: must be other than %{count}
+      invalid_email_format: invalid email address
     template:
       body: 'There were problems with the following fields:'
       header:
@@ -779,11 +855,18 @@ en:
             plan:
               auth_failed: "^The reason why your payment failed can be your credit card is invalid."
               processor_failed: "^The reason why your payment failed can be your credit card is invalid."
+        reservations/validate:
+          attributes:
+            menu_staffs_list:
+              duplicate: "Not allowed to add the same menu. Please edit required time if you want to change booking time."
         reservable/reservation:
           attributes:
-            business_time_range:
+            start_time:
               interval_too_short: "^Not enough interval time"
-              invalid_time_range: "^Invalid time"
+              invalid_time: "^Invalid time"
+            end_time:
+              interval_too_short: "^Not enough interval time"
+              invalid_time: "^Invalid time"
             staff_ids:
               unworking_staff: "^Off-day"
               ask_for_leave: "^Off-day"
@@ -798,3 +881,5 @@ en:
               unschedule_menu: "^%{menu_name} Not match with reservation block"
               start_yet: "^%{menu_name} starts from ${start_at}"
               is_over: "^%{menu_name} ended"
+              shop_or_staff_not_enough_ability: "^Over Shop or Staff capability"
+              lack_staffs: "^not enough staffs"

@@ -37,9 +37,10 @@ class CustomerInfoEdit extends React.Component {
         data: valuesToSubmit,
         responseType: "json"
       }).then(function(response) {
-        _this.props.handleCreatedCustomer(response.data["customer"]);
-        _this.props.forceStopProcessing();
-        _this.props.switchEditMode();
+        // _this.props.handleCreatedCustomer(response.data["customer"]);
+        // _this.props.forceStopProcessing();
+        // _this.props.switchEditMode();
+        location.reload()
       }).catch(function() {
         alert(_this.props.googleDownMessage);
       }).then(function() {

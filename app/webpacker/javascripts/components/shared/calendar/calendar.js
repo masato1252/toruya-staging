@@ -19,14 +19,14 @@ class Calendar extends React.Component {
 
     this.state = {
       month: this.startDate.clone(),
-      selectedDate: this.startDate.clone(),
+      selectedDate: this.props.skip_default_date ? null : this.startDate.clone()
     };
   };
 
   componentDidMount = () => {
     this.throttleFetchSchedule();
 
-    if (this.props.dateSelectedCallback) {
+    if (this.props.dateSelectedCallback && !this.props.skip_default_date) {
       this.props.dateSelectedCallback(moment().format("YYYY-MM-DD"))
     }
   };
@@ -83,11 +83,20 @@ class Calendar extends React.Component {
             availableBookingDates: result["available_booking_dates"]
           });
         })
-        .finally(() => {
+        .then(() => {
           this.setState({
             loading: false
           })
-        });
+        })
+        .catch((error) => {
+          // XXX: No request is running
+          if (!this.fetchScheduleCall) {
+            this.setState({
+              loading: false
+            })
+          }
+        })
+      ;
     })
   };
 

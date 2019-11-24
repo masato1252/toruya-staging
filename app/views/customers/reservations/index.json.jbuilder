@@ -1,1 +1,1 @@
-json.reservations reservation_options(@reservations)
+json.reservations reservation_customer_options(@reservation_customers)

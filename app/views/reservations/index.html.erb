@@ -1,4 +1,6 @@
 <%= notification_messages %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation %>
+
 <%
   staff_schedule_requirement_condition = staff && working_time_range
 %>
@@ -20,7 +22,7 @@
       <div class="staffDashboard">
         <div class="edit-worktime">
           <% if can?(:create_reservation, shop) %>
-            <%= link_to t("action.new_reservation"), new_shop_reservation_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
+            <%= link_to t("action.new_reservation"), form_shop_reservations_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
           <% else %>
             <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
                     (
@@ -70,14 +72,7 @@
       <dt class="customer">顧客氏名</dt>
     </dl>
     <%= render "reservations/schedules", schedules: @schedules %>
-
-    <div class="status-list">
-      <div><span class="reservation-state reserved"></span>予約</div>
-      <div><span class="reservation-state checkin"></span>チェックイン</div>
-      <div><span class="reservation-state checkout"></span>チェックアウト</div>
-      <div><span class="reservation-state noshow"></span>未来店</div>
-      <div><span class="reservation-state pending"></span>承認待ち</div>
-    </div>
+    <%= render "reservations/states_list" %>
   </div>
   <div id="mainNav">
     <dl>
@@ -108,5 +103,7 @@
     start_time_time_part: working_time_range.first.to_s(:time),
     end_time_time_part: working_time_range.last.to_s(:time),
     custom_schedules_path: custom_schedules_path
-  }) %>
+  },
+  { camelize_props: false }
+  ) %>
 <% end %>

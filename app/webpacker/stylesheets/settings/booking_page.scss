@@ -1,13 +1,32 @@
-.booking-page-settings {
-  .booking-option-action {
-    display: inline-block;
+#content {
+  #settingForm {
+    #pageList {
+      .function {
+        width: 229px;
 
-    .booking-option-period {
-      margin-left: 12px;
-      margin-top: 6px;
+        a:last-child {
+          width: 80px;
+        }
+      }
     }
   }
+}
 
+.booking-page-settings {
+  .booking-options-result {
+    .booking-option-action {
+      display: inline-block;
+
+      .booking-option-period {
+        margin-left: 12px;
+        margin-top: 6px;
+      }
+    }
+
+    .field-error-message {
+      display: inline-block;
+    }
+  }
   .interval-selector {
     margin-left: 12px;
     margin-right: 12px;
@@ -29,10 +48,6 @@
 
   textarea {
     width: 100%;
-  }
-
-  ul.special-date-label {
-    background: none !important;
   }
 
   .booking-times-label {

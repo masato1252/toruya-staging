@@ -17,7 +17,7 @@
 
     <ul class="dropdown-menu dropdown-menu-right">
       <li>
-        <% if basic_setting_presenter.customers_settings_completed? %>
+        <% if basic_settings_presenter.customers_settings_completed? %>
           <%= link_to t("dashboard.someone_customer", name: current_user.name), user_customers_path(current_user) %>
         <% else %>
           <span class="dropdown-header">

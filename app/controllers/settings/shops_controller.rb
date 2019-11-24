@@ -33,6 +33,8 @@ class Settings::ShopsController < SettingsController
     if @outcome.valid?
       if session[:settings_tour]
         redirect_to settings_user_business_schedules_path(super_user)
+      elsif session[:booking_settings_tour]
+        redirect_to settings_user_booking_options_path(super_user)
       else
         redirect_to settings_user_shops_path(super_user) , notice: I18n.t("settings.shop.create_successfully_message")
       end

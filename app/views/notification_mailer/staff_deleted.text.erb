@@ -25,7 +25,7 @@
                                 customer_names.first
                               end
   %>
-<%= reservation.start_time.to_s(:date) %> <%= reservation.start_time.to_s(:time) %>~<%= reservation.end_time.to_s(:time) %> <%= customer_names_sentence %> <%= edit_shop_reservation_url(reservation.shop_id, reservation.id) %>
+<%= reservation.start_time.to_s(:date) %> <%= reservation.start_time.to_s(:time) %>~<%= reservation.end_time.to_s(:time) %> <%= customer_names_sentence %> <%= form_shop_reservations_url(reservation.shop_id, reservation.id) %>
 
 <%= line %>
 <% end %>

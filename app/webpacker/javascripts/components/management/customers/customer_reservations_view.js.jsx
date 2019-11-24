@@ -19,7 +19,16 @@ class CustomerReservationsView extends React.Component {
   };
 
   fetchReservations = () => {
-    var _this = this;
+    const _this = this;
+
+    if (_this.processing) return;
+
+    _this.processing = true;
+
+    if (_this.customerReservationsCall) {
+      _this.customerReservationsCall.cancel();
+    }
+    _this.customerReservationsCall = axios.CancelToken.source();
 
     if (this.props.customer.id) {
       this.props.switchProcessing(function() {
@@ -27,12 +36,14 @@ class CustomerReservationsView extends React.Component {
           method: "GET",
           url: _this.props.customerReservationsPath,
           params: { id: _this.props.customer.id },
-          responseType: "json"
+          responseType: "json",
+          cancelToken: _this.customerReservationsCall.token
         }).then(function(response) {
           _this.setState({ reservations: response.data["reservations"] });
         }).catch(function() {
           _this.setState({ reservations: [] });
         }).then(function() {
+          _this.processing = false;
           _this.props.forceStopProcessing();
         });
       });
@@ -63,12 +74,12 @@ class CustomerReservationsView extends React.Component {
             data-modal-target="#dummyModal"
             data-action="click->modal#popup"
             data-modal-path={`/shops/${reservation.shopId}/reservations/${reservation.id}?from_customer_id=${_this.props.customer.id}`}
-            className={reservation.state}
+            className={`${reservation.state} reservation-customer-state-${reservation.reservation_customer_state}`}
             >
             <dl>
               <dd className="date">{reservation.monthDate}</dd>
               <dd className="time">{reservation.startTime}<br />{reservation.endTime}</dd>
-              <dd className="resSts"><span className={`reservation-state ${reservation.state}`}></span></dd>
+              <dd className="resSts"><span className={`reservation-state-item reservation-state ${reservation.state}`}></span></dd>
               <dd className="menu">{reservation.menu}</dd>
               <dd className="shop">{reservation.shop}</dd>
               {

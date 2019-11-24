@@ -19,7 +19,7 @@
               <% user_ability = ability(option.owner, option.shop) %>
               <div class="shop-cell">
                 <% if user_ability.can?(:create_reservation, option.shop) %>
-                  <%= link_to_new_reservation(new_shop_reservation_path(option.shop, start_time_date_part: @date), option.shop.display_name)%>
+                  <%= link_to_new_reservation(form_shop_reservations_path(option.shop, start_time_date_part: @date), option.shop.display_name)%>
                 <% else %>
                   <%
                     create_reservation_with_settings_no_permission = true if user_ability.cannot?(:create, :reservation_with_settings)

@@ -88,6 +88,9 @@ class Customers::Save < ActiveInteraction::Base
   end
 
   def execute
+    # XXX: How to assign emails, phone_numbers to customer
+    # emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
+    # phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
     if params[:id].present?
       customer = user.customers.find(params[:id])
       customer.attributes = params.merge(updated_at: Time.zone.now, updated_by_user_id: current_user.id)

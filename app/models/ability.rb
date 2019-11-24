@@ -141,7 +141,7 @@ class Ability
       super_user.valid_shop_ids.include?(reservation.shop_id) && (
         super_user.premium_member? || (
           admin? &&
-          (reservation.staff_ids.length == 0 || (reservation.staff_ids.length == 1 && reservation.staff_ids.first == current_user_staff.try(:id)))
+          (reservation.staff_ids.length == 0 || (reservation.staff_ids.uniq.length == 1 && reservation.staff_ids.uniq.first == current_user_staff.try(:id)))
         )
       )
     end

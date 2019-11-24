@@ -20,13 +20,15 @@ class CustomersController < DashboardController
       .contact_groups_scope(current_user_staff)
       .includes(:rank, :contact_group).find_by(id: params[:customer_id])
 
+    @reservation = ReservationCustomer.find_by(customer_id: params[:customer_id], reservation_id: params[:reservation_id])&.reservation
+
     if shop
-      @add_reservation_path = if params[:reservation_id].present?
-                                edit_shop_reservation_path(shop, id: params[:reservation_id])
-                              else
-                                new_shop_reservation_path(shop)
-                              end
+      @add_reservation_path = form_shop_reservations_path(shop, params[:reservation_id])
     end
+
+    # Notifications START
+    @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, current_user).data.compact
+    # Notifications END
   end
 
   def detail
@@ -98,6 +100,32 @@ class CustomersController < DashboardController
       page: params[:page].presence || 1
     ).result
     render action: :query
+  end
+
+  def data_changed
+    authorize! :edit, Customer
+
+    @reservation_customer = ReservationCustomer.find(params[:reservation_customer_id])
+    @customer = @reservation_customer.customer.with_google_contact
+    @reservation = @reservation_customer.reservation
+
+    render layout: false
+  end
+
+  def save_changes
+    authorize! :edit, Customer
+
+    outcome = Customers::RequestUpdate.run(reservation_customer: ReservationCustomer.find(params[:reservation_customer_id]))
+
+    if outcome.invalid?
+      Rollbar.warning("Update customer changed data failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: params
+      )
+    end
+
+    head :ok
   end
 
   private

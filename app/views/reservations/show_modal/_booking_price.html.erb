@@ -1,0 +1,9 @@
+<div class="reservation-info-row">
+  <i class="fa fa-money"></i><span><%= t("common.booking_price") %>: 
+    <% if reservation_customer.booking_amount_cents %>
+      <%= reservation_customer.booking_amount.format(:ja_default_format) %> (<%= t("settings.booking_option.form.#{reservation_customer.tax_include ? "tax_include" : "tax_excluded"}") %>)
+    <% else %>
+      No-data
+    <% end %>
+  </span>
+</div>

@@ -289,8 +289,8 @@ RSpec.describe Customers::Filter do
               let(:unmatched_menu) { FactoryBot.create(:menu, user: user) }
 
               before do
-                FactoryBot.create(:reservation, customers: [matched_customer], menu: matched_menu)
-                FactoryBot.create(:reservation, customers: [unmatched_customer], menu: unmatched_menu)
+                FactoryBot.create(:reservation, customers: [matched_customer], menus: [ matched_menu ])
+                FactoryBot.create(:reservation, customers: [unmatched_customer], menus: [ unmatched_menu ])
               end
 
               it "returns expected customers" do

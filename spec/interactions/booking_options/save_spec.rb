@@ -11,12 +11,11 @@ RSpec.describe BookingOptions::Save do
         name: "foo",
         display_name: "bar",
         minutes: 60,
-        interval: 10,
         amount_cents: 1000,
         start_at_date_part: DateTime.now.to_s(:date),
         start_at_time_part: DateTime.now.to_s(:time),
         menus: {
-          "0" => { "label" => menu.name, "value" => menu.id }
+          "0" => { "label" => menu.name, "value" => menu.id, "priority" => 0 }
         }
       }
     }

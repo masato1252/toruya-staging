@@ -1,0 +1,75 @@
+<div class="modal-dialog toruya-modal" role="document">
+  <div class="modal-content">
+    <%= render "reservations/show_modal/time_header", reservation: @reservation, user_ability: @user_ability %>
+    <div class="modal-body">
+      <div class="reservation-info-row">
+        <i class="fa fa-user customer-reservation-state <%= @reservation_customer&.state %>"></i>
+        <% if @customer.deleted_at || @user_ability.cannot?(:read, @customer) %>
+          <span><%= @customer.name %></span>
+        <% else %>
+          <%= link_to @customer.name, user_customers_path(@shop_user, shop_id: @reservation.shop_id, customer_id: @customer.id), class: "customer-link" %>
+        <% end %>
+
+        <% if @reservation.count_of_customers > 1 %>
+          <% other_customers_text = I18n.t("reservation.other_customers", other_customers_number: @reservation.count_of_customers - 1) %>
+
+          <% if in_personal_dashboard? %>
+            , <%= link_to other_customers_text,
+              date_member_path(reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
+            %>
+          <% else %>
+          , <%= link_to other_customers_text,
+            shop_reservations_path(@reservation.shop, reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
+          %>
+          <% end %>
+        <% end %>
+      </div>
+      <%= render "reservations/show_modal/reservation_info", reservation: @reservation, sentences: @sentences, user_ability: @user_ability %>
+      <%= render "reservations/show_modal/booking_price", reservation_customer: @reservation_customer %>
+      <%= render "reservations/show_modal/customer_info_changed", reservation_customer: @reservation_customer %>
+      <%= render "reservations/show_modal/booking_from", reservation_customer: @reservation_customer, reservation: @reservation %>
+    </div>
+
+    <div class="modal-footer">
+      <dl>
+        <% if @reservation_customer.pending? && @reservation.responsible_by_staff?(current_user.current_staff(@shop_user)) %>
+          <dd>
+            <% if @user_ability.can?(:edit, @reservation) %>
+              <%= link_to t("reservation.accept_customer"), accept_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNtarco" %>
+            <% else %>
+              <%= link_to t("reservation.accept_customer"), "#", class: "btn BTNtarco disabled" %>
+            <% end %>
+          </dd>
+        <% end %>
+
+        <% if @reservation_customer.accepted? %>
+          <dd>
+            <% if @user_ability.can?(:edit, @reservation) %>
+              <%= link_to t("reservation.pend"), pend_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNgray" %>
+            <% else %>
+              <%= link_to t("reservation.pend"), "#", class: "btn BTNgray disabled" %>
+            <% end %>
+          </dd>
+        <% end %>
+
+        <% if !@reservation_customer.canceled? %>
+          <dd>
+            <% if @user_ability.can?(:edit, @reservation) %>
+              <%= link_to t("reservation.customer_cancel"), cancel_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
+            <% else %>
+              <%= link_to t("reservation.customer_cancel"), "#", class: "btn BTNorange disabled" %>
+            <% end %>
+          </dd>
+        <% end %>
+
+        <dd>
+          <% if @user_ability.can?(:manage_shop_reservations, @reservation.shop) && @user_ability.can?(:edit, @reservation) %>
+            <%= link_to t("action.details"), form_shop_reservations_path(@reservation.shop, @reservation.id, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
+          <% else %>
+            <%= link_to t("action.details"), "#", class: "btn BTNtarco disabled" %>
+          <% end %>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>

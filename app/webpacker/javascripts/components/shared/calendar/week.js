@@ -50,7 +50,9 @@ class Week extends React.Component {
               (day.isAvailableBookingDate ? " booking-available" : "")
           }
           onClick={this.props.select.bind(null, day)}>
-          {day.number}
+          <span className="number">
+            {day.number}
+          </span>
         </span>
       );
       date = date.clone();

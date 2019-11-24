@@ -87,7 +87,7 @@ class Settings::BookingPagesController < SettingsController
       special_dates: params[:special_dates],
       booking_option_ids: params[:booking_option_ids],
       interval: params[:interval],
-      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction]),
+      overbooking_restriction: ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction]),
       limit: 4
     )
 
@@ -98,6 +98,18 @@ class Settings::BookingPagesController < SettingsController
     else
       render json: { booking_times: [] }
     end
+  end
+
+  def booking_options
+    options = BookingPages::AvailableBookingOptions.run!(
+      shop: super_user.shops.find(params[:shop_id])
+    )
+
+    user_booking_options = options.map do |option|
+      view_context.booking_option_item(option)
+    end
+
+    render json: { available_booking_options: view_context.custom_options(user_booking_options) }
   end
 
   private

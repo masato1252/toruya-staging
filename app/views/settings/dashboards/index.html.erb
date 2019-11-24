@@ -42,118 +42,12 @@
     </div>
   </div>
 
-  <% unless basic_setting_presenter.completed? %>
+  <% unless basic_settings_presenter.completed? %>
     <%= jump_out_modal(settings_tours_current_step_warning_path) if session[:settings_tour] %>
+    <%= render "tour", presenter: basic_settings_presenter %>
+  <% end %>
 
-    <div class="tour">
-      <h3><span class="title">基本設定</span> <%= link_to t("settings.dashboard.basic_tour.start_btn"), settings_tour_path, class: "btn btn-tarco" %></h3>
-      <div class="formRow">
-        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-            <dt>
-              <% if basic_setting_presenter.personal_scheduled_enabled? %>
-                <span class="label label-done"><%= t("common.done") %></span>
-              <% else %>
-                <span class="label label-warning">0%</span>
-              <% end %>
-              <span>Step1: <%= t("settings.dashboard.basic_tour.private_schedule_management") %></span>
-            </dt>
-            <dd>
-              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-            </dd>
-          <% end %>
-          <div data-target="collapse.content">
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.profile_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.account_info_settings") %>
-              <%= link_to settings_profile_path do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end %>
-            </dl>
-          </div>
-        <% end %>
-
-        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-            <dt>
-              <% if basic_setting_presenter.customers_management_enabled? %>
-                <span class="label label-done"><%= t("common.done") %></span>
-              <% else %>
-                <span class="label label-warning">0%</span>
-              <% end %>
-              <span>Step2: <%= t("settings.dashboard.basic_tour.customers_management") %></span>
-            </dt>
-            <dd>
-              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-            </dd>
-          <% end %>
-          <div data-target="collapse.content">
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.customers_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.customers_settings") %>
-              <%= link_to settings_user_contact_groups_path(current_user) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end %>
-            </dl>
-          </div>
-        <% end %>
-
-        <%= content_tag(:div, data: { controller: "collapse", collapse_status: "open" }, class: "tasks-group") do %>
-          <%= content_tag(:dl, data: { target: "collapse.toggler", action: "click->collapse#toggle" }, class: "formTTL") do %>
-            <dt>
-              <% if basic_setting_presenter.reservation_management_enabled? %>
-                <span class="label label-done"><%= t("common.done") %></span>
-              <% else %>
-                <span class="label label-warning"><%= number_to_percentage(basic_setting_presenter.reservation_settings_completed_percentage * 100, precision: 0) %></span>
-              <% end %>
-              <span>Step3: <%= t("settings.dashboard.basic_tour.reservations_management") %></span>
-            </dt>
-            <dd>
-              <i data-target="collapse.openToggler" class="fa fa-minus-square-o" aria-hidden="true"></i>
-              <i data-target="collapse.closeToggler" class="fa fa-plus-square-o display-hidden" aria-hidden="true"></i>
-            </dd>
-          <% end %>
-          <div data-target="collapse.content">
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.shops_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.shops_settings") %>
-              <%= link_to settings_user_shops_path(current_user) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end if basic_setting_presenter.shops_settings_completed? || basic_setting_presenter.customers_settings_completed? %>
-            </dl>
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.business_hours_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.business_hours_settings") %>
-              <%= link_to settings_user_business_schedules_path(current_user) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end if basic_setting_presenter.shops_settings_completed? || basic_setting_presenter.business_hours_settings_completed? %>
-            </dl>
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.working_time_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.working_time_settings") %>
-              <%= link_to working_schedules_settings_user_working_time_staff_path(current_user, current_user.current_staff(current_user), working_time_menu_scope: :shop) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end if basic_setting_presenter.working_time_settings_completed? || basic_setting_presenter.business_hours_settings_completed? %>
-            </dl>
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.reservation_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.reservations_blocks_settings") %>
-              <%= link_to settings_user_reservation_settings_path(current_user) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end if basic_setting_presenter.working_time_settings_completed? || basic_setting_presenter.reservation_settings_completed? %>
-            </dl>
-            <dl class="task">
-              <%= check_setting_icon(basic_setting_presenter.menu_settings_completed?) %>
-              <%= t("settings.dashboard.basic_tour.menus_settings") %>
-              <%= link_to settings_user_menus_path(current_user) do %>
-                <i class="fa fa-chevron-right next-setting" aria-hidden="true"></i>
-              <% end if basic_setting_presenter.menu_settings_completed? || basic_setting_presenter.reservation_settings_completed? %>
-              </dl>
-          </div>
-        <% end %>
-      </div>
-    </div>
+  <% if basic_settings_presenter.completed? && !booking_settings_presenter.completed? %>
+    <%= render "tour", presenter: booking_settings_presenter %>
   <% end %>
 <% end %>

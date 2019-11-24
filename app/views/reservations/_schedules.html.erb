@@ -14,11 +14,11 @@
       end
     %>
     <% if reservation %>
-      <%= modal_link_to shop_reservation_path(reservation.shop, reservation) do %>
+      <%= modal_link_to shop_reservation_path(reservation.shop, reservation, reservations_approvement_flow: @reservations_approvement_flow) do %>
         <dl>
           <dd class="time"><%= reservation.start_time.to_s(:time) %><br /><%= reservation.end_time.to_s(:time) %></dd>
-          <dd><span class="reservation-state <%= reservation.aasm_state %>"></span></dd>
-          <dd class="menu"><%= reservation.menu.display_name %></dd>
+          <dd><span class="reservation-state-item reservation-state <%= reservation.aasm_state %>"></span></dd>
+          <dd class="menu"><%= reservation.menus.map(&:display_name).join(", ")%></dd>
           <dd class="customer"><%= customer_names_sentence %></dd>
           <% if in_personal_dashboard? %>
             <dd class="shop"><%= reservation.shop.display_name %></dd>

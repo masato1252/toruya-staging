@@ -30,10 +30,10 @@ RSpec.describe "rake reservations:pending_notifications" do
       let!(:unmatched_pending_reservation1) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 18, 19, 59, 59)) }
       let!(:matched_pending_reservation1) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 18, 20, 0, 0)) }
       let(:same_user_staff) { FactoryBot.create(:staff, mapping_user: matched_pending_reservation1.staffs.first.staff_account.user) }
-      let!(:matched_pending_reservation1_1) { FactoryBot.create(:reservation, :pending, staff_ids: [same_user_staff.id], created_at: Time.zone.local(2018, 6, 18, 20, 0, 0)) }
+      let!(:matched_pending_reservation1_1) { FactoryBot.create(:reservation, :pending, staffs: same_user_staff, created_at: Time.zone.local(2018, 6, 18, 20, 0, 0)) }
       let!(:matched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 7, 59, 59)) }
-      let(:same_staffs) { matched_pending_reservation2.staff_ids }
-      let!(:matched_pending_reservation2_1) { FactoryBot.create(:reservation, :pending, staff_ids: same_staffs , created_at: Time.zone.local(2018, 6, 19, 7, 59, 59)) }
+      let(:same_staffs) { matched_pending_reservation2.staffs }
+      let!(:matched_pending_reservation2_1) { FactoryBot.create(:reservation, :pending, staffs: same_staffs , created_at: Time.zone.local(2018, 6, 19, 7, 59, 59)) }
       let!(:unmatched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
 
       it "sends the jobs to the active staff_account's users" do
@@ -54,10 +54,10 @@ RSpec.describe "rake reservations:pending_notifications" do
       let!(:unmatched_pending_reservation1) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 7, 59, 59)) }
       let!(:matched_pending_reservation1) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
       let(:same_user_staff) { FactoryBot.create(:staff, mapping_user: matched_pending_reservation1.staffs.first.staff_account.user) }
-      let!(:matched_pending_reservation1_1) { FactoryBot.create(:reservation, :pending, staff_ids: [same_user_staff.id], created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
+      let!(:matched_pending_reservation1_1) { FactoryBot.create(:reservation, :pending, staffs: same_user_staff, created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
       let!(:matched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 19, 59, 59)) }
-      let(:same_staffs) { matched_pending_reservation2.staff_ids }
-      let!(:matched_pending_reservation2_1) { FactoryBot.create(:reservation, :pending, staff_ids: same_staffs , created_at: Time.zone.local(2018, 6, 19, 19, 59, 59)) }
+      let(:same_staffs) { matched_pending_reservation2.staffs }
+      let!(:matched_pending_reservation2_1) { FactoryBot.create(:reservation, :pending, staffs: same_staffs , created_at: Time.zone.local(2018, 6, 19, 19, 59, 59)) }
       let!(:unmatched_pending_reservation2) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 20, 0, 0)) }
 
       it "sends the jobs to the users" do

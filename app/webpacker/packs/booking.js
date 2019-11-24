@@ -12,5 +12,7 @@ const application = Application.start()
 const context = require.context("../javascripts/controllers", true, /^\.\/(collapse)/)
 application.load(definitionsFromContext(context))
 
+require.context('../assets/booking', true)
+
 import Rails from 'rails-ujs';
 Rails.start();

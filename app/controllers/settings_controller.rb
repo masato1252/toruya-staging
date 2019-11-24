@@ -5,6 +5,7 @@ class SettingsController < ActionController::Base
 
   include Authorization
   include AccountRequirement
+  include BookingRequirement
   include ViewHelpers
   include Locale
   include ExceptionHandler

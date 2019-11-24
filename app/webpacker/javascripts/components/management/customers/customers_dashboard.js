@@ -40,6 +40,10 @@ class CustomersDashboard extends React.Component {
 
   componentDidMount() {
     this.fetchCustomerDetails()
+
+    if (this.state.edit_mode && this.props.customer.id && !this.props.customer.contact_group_id) {
+      setTimeout(() => alert(this.props.i18n.nonGroupCustomersAlertMessage), 200)
+    }
   };
 
   fetchCustomerDetails = () => {
@@ -98,12 +102,12 @@ class CustomersDashboard extends React.Component {
   handleAddCustomerToReservation = (event) => {
     event.preventDefault();
     if (!this.state.selected_customer_id) { return; }
-    window.location = this.props.addReservationPath + window.location.search + "," + (this.state.selected_customer_id || "");
+    window.location = this.props.addReservationPath + "?from_adding_customer=true&customer_id="+ (this.state.selected_customer_id || "");
   };
 
   handleWithoutCustomerToReservation = () => {
     event.preventDefault();
-    window.location = this.props.addReservationPath + window.location.search;
+    window.location = this.props.addReservationPath + "?from_adding_customer=true";
   };
 
   handleDeleteCustomer = (event) => {
@@ -295,7 +299,7 @@ class CustomersDashboard extends React.Component {
   handleNewReservation = (event) => {
     event.preventDefault();
 
-    window.location = `${this.props.addReservationPath}?customer_ids=${(this.state.selected_customer_id || "")}`;
+    window.location = `${this.props.addReservationPath}?customer_id=${(this.state.selected_customer_id || "")}`;
   };
 
   removeOption = (optionType, index) => {

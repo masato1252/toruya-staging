@@ -1,11 +1,42 @@
 .booking-content {
+  .alert.alert-info {
+    margin: -12px -12px 0 -12px;
+    border-radius: 0;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"] {
+    width: 45%;
+  }
+
+  input[type="email"] {
+    width: 100%;
+  }
+
+  .field {
+    width: 45%;
+    margin: 0 3px;
+    display: inline-block;
+    vertical-align: top;
+
+    input {
+      width: 100%;
+    }
+  }
+
   .header {
     margin-top: 12px;
     margin-bottom: 12px;
 
+    .header-title-part {
+      h1 {
+        margin: 20px 0 10px;
+      }
+    }
+
     .page-title {
       font-size: 24px;
-      margin-left: 20px;
     }
 
     .logo {
@@ -15,7 +46,7 @@
     }
 
     .greeting {
-      margin: 12px 6px 20px;
+      margin: 12px 0 20px;
       white-space: pre-wrap;
     }
   }
@@ -30,10 +61,18 @@
     margin-top: 12px;
     margin-left: 6px;
     margin-bottom: 20px;
-    font-size: $normal-font-size;
+    font-size: $normal2-font-size;
 
     .fa-calendar {
-      margin-right: 12px;
+      margin-right: 5px;
+    }
+  }
+
+  .last-selected-option {
+    color: $palette-color1;
+
+    .fa {
+      margin-right: 3px;
     }
   }
 
@@ -107,6 +146,11 @@
       margin-bottom: 20px;
       text-align: left;
       white-space: pre-wrap;
+      font-size: 80%;
+      overflow: scroll;
+      height: 150px;
+      border: 1px solid #ddd;
+      padding: 5px;
     }
   }
 
@@ -183,11 +227,35 @@
     }
   }
 
+  .booking-failed-message {
+    padding: 24px;
+    background-color: $palette-color7;
+    border: 1px solid $palette-color8;
+    margin-top: 24px;
+
+    .field-error-message {
+      color: $black;
+    }
+
+    button.reset {
+      margin-top: 12px;
+    }
+  }
+
   .start-yet-view,
   .ended-view {
     .title {
       padding: 20px;
       background-color: $palette-color7;
     }
+  }
+
+  .selected-time-item {
+    border: 1px solid $danger;
+  }
+
+  .react-slidedown.calendar-slidedown {
+    transition-duration: 1.0s;
+    transition-timing-function: ease-in-out;
   }
 }

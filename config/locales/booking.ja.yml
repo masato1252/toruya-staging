@@ -1,7 +1,8 @@
 ja:
   booking_page:
+    showing_preview: プレビュー表示中
     time_from: "から"
-    ever_used: "以前に利用"
+    ever_used: "以前に利用されたことが"
     yes_ever_used: ある
     no_first_time: 初めて
     name: お名前
@@ -15,7 +16,7 @@ ja:
     remember_me: 次回から入力を省略する
     confirm_customer_info: 顧客情報を確認する
     confirm_reservation: 仮予約を確定する
-    not_me: でない場合はこちら
+    not_me: 様でない場合はこちら
     edit_info: 住所や電話番号を変更する
     edit: 変更する
     address: 住所
@@ -23,8 +24,10 @@ ja:
       zipcode: 郵便番号
       living_state: 都道府県
       city: 市区町村
-      street: 続き住所
+      street1: 続き住所
+      street2: 建物名／部屋番号
     save_change: 変更依頼を保存する
+    invalid_to_change: 入力データ無効
     info_change_title: 顧客情報の変更依頼
     flow_label: 先に選択したいものをお選びください
     date_flow_first: 予約日時から選ぶ
@@ -32,6 +35,12 @@ ja:
     booking_end_at: 終了予定
     thanks_for_come_back: いつもご利用ありがとうございます
     please_select_a_menu: メニューをお選びください
+    reset_button: 始めからやり直す
+    last_selected_option: 前回ご利用のメニュー
+    message:
+      unfound_customer_html: 入力されたお名前・携帯電話の両方に一致する顧客データが見つかりませんでした。<br>店舗スタッフにご連絡ください。
+      booking_failed_messsage_html: その時間とメニューは満席です。<br>もう一度お試しください。
+      booking_unexpected_failed_message: 何らかの理由で予約に失敗しました。もう一度お試しください。
     done:
       title: 仮予約が完了しました
       message1: ご登録の携帯電話に
@@ -51,4 +60,10 @@ ja:
       title: 受付を終了しました
       message1: このページからのご予約は
       message2: 受付を終了いたしました。
-
+    notifications:
+      sms: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました\n変更は%{shop_phone_number}まで"
+    booking_mailer:
+      customer_reservation_notification:
+        title: "%{shop_name}の仮予約が完了しました"
+      shop_owner_reservation_booked_notification:
+        title: 新しいオンライン予約があります

@@ -24,22 +24,34 @@ ja:
     reservation_setting_warning_link_title: 予約枠設定ページ
   action:
     delete: 削除
+    delete_reservation: 予約を削除
     edit: 編集
+    details: 詳細
     cancel: キャンセル
     log_out: ログアウト
     save: 保存
+    save_pending: 未承認で保存
+    save_as_draft: 下書きとして保存
+    save_and_publish: 保存して公開
     search: 検索
     upgrade_to_premium: プレミアムにアップグレードする
     upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キャンセル
     new_reservation: 予約を追加
     create_a_shop: 店舗を設定する
-    copy: コピー
+    copy_url: URLコピー
+    copy_url2: URLをコピー
     copy_code: コードをコピー
+    preview: プレビュー
+    add_a_menu: メニューを追加
+    ignore: 無視する
+    save_changes: 変更を上書き保存
   common:
     processing: 送信中
     date: 日付
     day: 曜日
+    time: 時間
+    content: 內容
     start_time: 開始時間
     end_time: 終了時間
     updated_time: 更新時間
@@ -70,9 +82,14 @@ ja:
     required_label: 必須項目
     minute: 分
     total: 合計
-    copied: コピーした
+    copied: コピー完了
     of: の
     sir: 様
+    number: 名
+    required_time: 所要時間
+    menu: メニュー
+    responsible_employee: 担当者
+    booking_price: 予約価格
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -111,6 +128,13 @@ ja:
         staff:
           upgrade_title: 設定は利用できません
           upgrade_content: "%{shop_name}は設定を利用できません。店舗管理者にご連絡ください。"
+      customer:
+        data_changed_title: 顧客情報の変更依頼
+        customer_change_request_desc: "%{customer_name} さんより、顧客情報の変更依頼がありました。"
+        current_info: 今の情報
+        change_request_info: 変更依頼
+        check_change_requests: 変更内容を確認する
+        overwrite_complete: 上書き完了
   plan:
     level:
       free: 無料
@@ -120,6 +144,11 @@ ja:
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
+    pending_customer_reservation_need_confirm: "%{number}名の顧客が予約に追加されました。"
+    pending_customer_reservation_confirm: 予約顧客を承認
+    non_group_customers: "顧客台帳が設定されていない顧客情報が %{number} 個見つかりました。"
+    next_non_group_customer: "台帳を設定"
+    non_group_customers_alert_message: この顧客に顧客台帳を設定してください。
   filter:
     modal:
       saved_filter:
@@ -133,7 +162,6 @@ ja:
         title: 店舗を設定してください
         content: 利用履歴で顧客を高度検索するには、店舗を設定する必要があります。
   reservation:
-    valid_time_tip_message: 予約時間が正しくありません。
     business_time_suggestion: "※営業時間"
     no_valid_menu_alert: メニューを入力してください。
     no_menu_message: 検索結果なし
@@ -145,13 +173,17 @@ ja:
     recheck_in: 再チェックイン
     check_in: チェックイン
     check_out: チェックアウト
-    accept: 承認
+    accept: 予約を承認
+    accept_customer: 予約顧客を承認
     pend: 未承認
     accept_in_canceled: 予約復活
     shop_closed: 営業時間外
-    cancel: 予約キャンセル
+    cancel: 全員キャンセル
+    customer_cancel: 予約キャンセル
     cancel_confirmation_message: キャンセルされた予約は顧客台帳からご確認いただけます。
     pending: 承認待ち
+    accepted_state: 承認済
+    pending_state: 未承認
     noshow: 未来店
     checked_in: チェックイン
     checked_out: チェックアウト
@@ -160,7 +192,24 @@ ja:
     memo: メモ内容
     contain_some_warnings: 注意事項を含んだ予約です
     deleted_staffs_sentence: "%{staff_names_sentence} はスタッフから削除されました"
+    confirm_with_warnings: エラーのままこの予約を保存します
+    customers_list_label: 顧客
+    details: 予約詳細
+    become_overbooking: オーバーブッキングになります！
+    overbooking: オーバーブッキング中！
+    reserved: 予約
+    full_seat: 満席
+    add_customer_btn: 顧客を追加
+    no_manpower_tip: 最低スタッフ０
+    add_working_schedule: この時間を出勤にする
+    other_customers: "他%{other_customers_number}名"
+    no_ending_time_message: ※終了時刻は編集できません。予約の終了時刻は、メニューの所要時間から自動的に計算されます。
     modal:
+      staff_states:
+        title: 予約を承認
+        message: "%{total_staffs_number}人中%{accepted_staffs_number}人のスタッフがこの予約を承認しています。"
+        approve_btn: この予約を承認する
+        unapprove_btn: この予約を未承認にする
       invalid_shops_exist_message:
         manage_shop_reservations_no_permission: ※あなた/店舗オーナーのご利用プランに基づき、新規予約を作成できない店舗があります。
         manage_self_shop_reservations_no_permission: ※あなたのご利用プランに基づき、新規予約を作成できない店舗があります。
@@ -212,8 +261,13 @@ ja:
     work: 職場
     mobile: 携帯
     city: 市区町村
+    region: 都道府県
+    street: 続き住所
+    postcode: 郵便番号
     address1: 続き住所
     address2: 建物名／部屋番号
+    street1: 続き住所
+    street2: 建物名／部屋番号
     no_customer: 該当データなし
     no_more_customer: 該当データ終了
     group_blank_option: 台帳なし
@@ -233,6 +287,7 @@ ja:
     level_label: 顧客ランク
     tip_before_new_customer: 新しい顧客を追加する前に既存のデータを検索してください。
     google_contact_missing_message_html: "Toruyaサーバー上の顧客データのみ表示しています。<a href='https://toruya.com/help/168/'><i class='fa fa-question-circle'></a>"
+    customer_info_changed_messsage: 顧客データ要変更
     filter:
       no_shop_warning: "利用履歴で顧客を高度検索するには、店舗の設定が必要です。"
       empty_content: "該当する予約データが見つかりません。"
@@ -305,6 +360,10 @@ ja:
       do_reservations_created: 回、予約を作成しました
       reservations_created: 件の予約があります
       no_limit: 無制限
+      booking_tour:
+        title: オンライン予約
+        booking_option_setup: 予約価格を作成する
+        booking_page_setup: 予約ページを作成する
       basic_tour:
         title: 基本設定
         start_btn: 設定ツアー開始
@@ -672,7 +731,10 @@ ja:
         display_name: 表示名
         display_name_hint: あなたのお客様がご予約の際にメニューとして表示される名前です。
         menu_for_sale_label: 販売メニュー
+        menu_restrict_dont_need_order: メニュー順序にこだわらず対応できるスタッフを割り振る。（推奨）
+        menu_restrict_order: 設定されたメニュー順序で対応できるスタッフを割り振る。
         time_span_label: 予約時間
+        total_time: 合計時間
         reservation_interval: 予約の前後
         price_label: 販売予定価格
         price: 定価
@@ -718,6 +780,7 @@ ja:
         booking_dates_calendar_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         booking_dates_working_date: 営業日
         booking_dates_available_booking_date: 予約可能日
+        default_available_dates_label: 全ての予約可能日に受付ける
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_real_booking_time_explanation: 現在の設定内容と空席状況から、始めの４つ選択肢を表示しています。
@@ -736,14 +799,15 @@ ja:
         sale_forever: 終了しない
         sale_start: 販売開始
         sale_end: 販売終了
-        overlap_booking: 重複予約
-        not_allow_overlap_booking_label: 予約可能なスタッフ数で予約受付を終了する(推奨)
-        allow_overlap_booking_label: 予約可能なスタッフ数以上に予約を受け付ける
+        overbooking: 重複予約
+        not_allow_overbooking_label: 満席数に達した時点で予約を締め切る(推奨)
+        allow_overbooking_label: 満席数に関わらず予約を受け付ける
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         form_errors:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
+          unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
   constants:
     rank:
       regular: "一般"
@@ -813,6 +877,14 @@ ja:
         min_staffs_number: "最低担当者数"
         interval: インターバル
         max_customers: 最大シート数
+      customer:
+        last_name: 姓
+        first_name: 名
+        phonetic_last_name: せい
+        phonetic_first_name: めい
+        phone_number: 電話番号
+        email: メール
+        address: 住所
       staff_menu:
         max_customers: "最高客戶数"
       profile:
@@ -886,7 +958,8 @@ ja:
     am: AM
     formats:
       default: "%Y/%m/%d %H:%M"
-      date_with_wday: "%Y/%m/%d(%a) %I:%M%p"
+      date_with_wday: "%Y/%m/%d(%a) %H:%M"
+      time_only: "%H:%M"
       standard: "%Y-%m-%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"
@@ -962,8 +1035,9 @@ ja:
       taken: はすでに存在します
       too_long: は%{count}文字以内で入力してください
       too_short: は%{count}文字以上で入力してください
-      wrong_length: は%{count}文字で入力してください
+      wrong_length: "%{count}文字で入力してください"
       other_than: は%{count}以外の値にしてください
+      invalid_email_format: メールアドレスではありません
     template:
       body: 次の項目を確認してください
       header:
@@ -1086,13 +1160,24 @@ ja:
             plan:
               auth_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
               processor_failed: "^カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます"
+        reservations/save:
+          attributes:
+            params:
+              invalid_nested: " Invalid nested"
+        reservations/validate:
+          attributes:
+            menu_staffs_list:
+              duplicate: "同じメニューは追加できません。予約時間を変更したい場合は所要時間を編集してください。"
         reservable/reservation:
           attributes:
             date:
               shop_closed: "^休業日"
-            business_time_range:
+            start_time:
               interval_too_short: "^インターバル不足"
-              invalid_time_range: "^予約時間が正しくありません。"
+              invalid_time: "^予約時間が正しくありません。"
+            end_time:
+              interval_too_short: "^インターバル不足"
+              invalid_time: "^予約時間が正しくありません。"
             staff_ids:
               unworking_staff: "^休暇中"
               ask_for_leave: "^休暇中"
@@ -1101,10 +1186,11 @@ ja:
               overlap_reservations: "^重複予約あり"
               incapacity_menu: "^非対応メニュー"
               not_enough_ability: "^対応人数超"
-              lack_overlap_staffs: "^無効なスタッフ"
-            menu_ids:
+            menu_id:
               time_not_enough: "^所要時間不足"
               not_enough_seat: "^席数不足"
               unschedule_menu: "^予約枠外"
               start_yet: "^受付開始 %{start_at}"
               is_over: "^受付終了"
+              shop_or_staff_not_enough_ability: "^オーバーブッキング中！"
+              lack_staffs: "^対応スタッフ不足"

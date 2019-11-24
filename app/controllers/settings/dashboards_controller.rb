@@ -23,16 +23,25 @@ class Settings::DashboardsController < ActionController::Base
 
   def tour
     session[:settings_tour] = true
-    redirect_to settings_user_menus_path(current_user)
+
+    redirect_to basic_settings_presenter.last_step_task_path
   end
 
   def end_tour
     session.delete(:settings_tour)
+
     redirect_to member_path
   end
 
   def hide_tour_warning
     cookies[:basic_settings_tour_warning_hidden] = { value: true, expires: Time.current.advance(months: 1) }
+
     redirect_to member_path
+  end
+
+  def booking_tour
+    session[:booking_settings_tour] = true
+
+    redirect_to booking_settings_presenter.last_step_task_path
   end
 end

@@ -15,7 +15,11 @@ class Settings::BookingOptionsController < SettingsController
     outcome = BookingOptions::Save.run(booking_option: super_user.booking_options.new, attrs: params[:booking_option].permit!.to_h)
 
     if outcome.valid?
-      redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
+      if session[:booking_settings_tour]
+        redirect_to settings_user_booking_pages_path(super_user)
+      else
+        redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
+      end
     else
       @booking_option = super_user.booking_options.new
       @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)

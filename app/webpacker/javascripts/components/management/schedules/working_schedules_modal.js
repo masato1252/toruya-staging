@@ -19,7 +19,7 @@ class WorkingSchedulesModal extends React.Component {
 
       axios({
         method: "POST",
-        url: this.props.customSchedulesPath, //sumbits it to the given url of the form
+        url: this.props.custom_schedules_path, //sumbits it to the given url of the form
         data: valuesToSubmit,
         responseType: "json"
       }).then(function() {
@@ -50,17 +50,17 @@ class WorkingSchedulesModal extends React.Component {
               acceptCharset="UTF-8"
               method="post"
               ref={(c) => this.working_schedules_form = c}
-              action={this.props.customSchedulesPath}
+              action={this.props.custom_schedules_path}
               >
-              <input name="authenticity_token" type="hidden" value={this.props.formAuthenticityToken} />
+              <input name="authenticity_token" type="hidden" value={this.props.form_authenticity_token} />
               <div className="modal-body">
                 <dl id="addWorkDay">
                   <ReservationDatetimeFields
-                    staffId={this.props.staffId || this.props.staff.id || this.props.staff.value}
+                    staffId={this.props.staff_id || this.props.staff.id || this.props.staff.value}
                     open={this.props.open}
-                    startTimeDatePart={this.props.startTimeDatePart}
-                    startTimeTimePart={this.props.startTimeTimePart}
-                    endTimeTimePart={this.props.endTimeTimePart}
+                    startTimeDatePart={this.props.start_time_date_part}
+                    startTimeTimePart={this.props.start_time_time_part}
+                    endTimeTimePart={this.props.end_time_time_part}
                     calendarfieldPrefix="temp_working_schedules"
                   />
                   <div className="shops-list">

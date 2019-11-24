@@ -15,7 +15,7 @@ class MembersController < DashboardController
 
     reservations = Reservation.where(shop_id: working_shop_options(include_user_own: true).map(&:shop_id).uniq)
       .uncanceled.in_date(@date)
-      .includes(:menu, :customers, :staffs, shop: :user)
+      .includes(:menus, :customers, :staffs, shop: :user)
       .order("reservations.start_time ASC")
 
     @reservation = reservations.find { |r| r.id.to_s == params[:reservation_id] } if params[:reservation_id]
@@ -48,7 +48,9 @@ class MembersController < DashboardController
       end
     end.sort_by { |option| option.time }
 
-    @notification_messages = NotificationsPresenter.new(view_context, current_user).data
+    notification_presenter = NotificationsPresenter.new(view_context, current_user, params)
+    @notification_messages = notification_presenter.data
+    @reservations_approvement_flow = notification_presenter.reservations_approvement_flow
   end
 
   private

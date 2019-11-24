@@ -1,5 +1,7 @@
 module Booking
   class Calendar < ActiveInteraction::Base
+    include ::Booking::SharedMethods
+
     object :shop
     object :date_range, class: Range
     # booking_option_ids
@@ -12,7 +14,7 @@ module Booking
     # ]
     array :special_dates, default: nil
     integer :interval, default: 30
-    boolean :overlap_restriction, default: true
+    boolean :overbooking_restriction, default: true
 
     def execute
       rules = compose(::Shops::WorkingCalendarRules, shop: shop, date_range: date_range)
@@ -31,7 +33,8 @@ module Booking
             booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
           )
 
-          if Rails.env.test?
+          # XXX: Heroku keep meeting R14 & R15 memory errors, try does Parallel cause the problem
+          if true || Rails.env.test?
             schedules[:working_dates].map do |date|
               test_available_booking_date(booking_options, date)
             end.compact
@@ -43,6 +46,10 @@ module Booking
             end.compact
           end
         end
+
+      unless Rails.env.test?
+        available_booking_dates = available_booking_dates.select { |date| Date.parse(date) >= Subscription.today }
+      end
 
       [
         schedules,
@@ -76,34 +83,8 @@ module Booking
               break
             end
 
-            valid_menus = []
-
-            booking_option.menus.each do |menu|
-              active_staff_ids = menu.active_staff_ids & shop.staff_ids
-              # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
-              required_staffs_number = [menu.min_staffs_number, 1].max
-
-              active_staff_ids.combination(required_staffs_number).each do |candidate_staff_ids|
-                reserable_outcome = Reservable::Reservation.run(
-                  shop: shop,
-                  date: date,
-                  business_time_range: booking_start_at..booking_end_at,
-                  booking_option_id: booking_option.id,
-                  menu_ids: [menu.id],
-                  staff_ids: candidate_staff_ids,
-                  overlap_restriction: overlap_restriction
-                )
-
-                if reserable_outcome.valid?
-                  valid_menus << menu
-
-                  # all menus got staffs to handle
-                  if booking_option.menus.count == valid_menus.length
-                    # Rails.logger.info("====#{date}===#{booking_start_at.to_s(:time)}~#{booking_end_at.to_s(:time)}========")
-                    throw :next_working_date, date
-                  end
-                end
-              end
+            loop_for_reserable_spot(shop, booking_option, Date.parse(date), booking_start_at, booking_end_at, overbooking_restriction, false) do
+              throw :next_working_date, date
             end
 
             booking_start_at = booking_start_at.advance(minutes: interval)

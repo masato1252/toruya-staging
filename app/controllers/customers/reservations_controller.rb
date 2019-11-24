@@ -4,9 +4,29 @@ class Customers::ReservationsController < DashboardController
   def index
     head :unprocessable_entity if cannot?(:read, @customer)
 
-    @reservations = @customer.reservations
-    .includes(:menu, :customers, :staffs, shop: :user)
-    .order("reservations.start_time DESC")
+    @reservation_customers =
+      @customer.reservation_customers
+        .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
+        .merge(Reservation.active)
+        .order("reservations.start_time DESC")
+  end
+
+  def accept
+    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+
+    redirect_back fallback_location: user_customers_path(super_user, customer_id: params[:customer_id])
+  end
+
+  def pend
+    ReservationCustomers::Pend.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+
+    redirect_back fallback_location: user_customers_path(super_user, customer_id: params[:customer_id])
+  end
+
+  def cancel
+    ReservationCustomers::Cancel.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+
+    redirect_back fallback_location: user_customers_path(super_user, customer_id: params[:customer_id])
   end
 
   private

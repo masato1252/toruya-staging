@@ -12,7 +12,6 @@
 # Indexes
 #
 #  index_staff_contact_group_relations_on_contact_group_id  (contact_group_id)
-#  index_staff_contact_group_relations_on_staff_id          (staff_id)
 #  staff_contact_group_unique_index                         (staff_id,contact_group_id) UNIQUE
 #
 

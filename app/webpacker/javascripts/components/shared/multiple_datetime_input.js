@@ -50,7 +50,7 @@ const defaultResultFields = (fields, collection_name, timezone) => {
   );
 };
 
-const DatetimeField = ({input_prefix_name, collection_name, fields, results, timezone, dateChangedCallback}) => (
+const DatetimeField = ({ input_prefix_name, collection_name, fields, results, timezone, dateChangedCallback, state_form, i18n }) => (
   <div className="select-multiple-inputs">
     {results(fields, collection_name, timezone)}
     <Field
@@ -99,27 +99,36 @@ const DatetimeField = ({input_prefix_name, collection_name, fields, results, tim
       {({ values }) => (
         <a
           href="#"
-          className={`btn btn-symbol btn-yellow after-field-btn ${!values[`${input_prefix_name}_start_at_time_part_input`] || !values[`${input_prefix_name}_end_at_time_part_input`] ? "disabled" : ""}`}
+          className={`btn btn-yellow after-field-btn ${!values[`${input_prefix_name}_start_at_time_part_input`] || !values[`${input_prefix_name}_end_at_time_part_input`] ? "disabled" : ""}`}
           onClick={(event) => {
             event.preventDefault();
+            const start_date_input_name = `${input_prefix_name}_start_at_date_part_input`
+            const start_time_input_name = `${input_prefix_name}_start_at_time_part_input`
+            const end_date_input_name = `${input_prefix_name}_end_at_date_part_input`
+            const end_time_input_name = `${input_prefix_name}_end_at_time_part_input`
 
-            const start_at_date_part = values[`${input_prefix_name}_start_at_date_part_input`] || moment.tz(timezone).format("YYYY-MM-DD");
+            const start_at_date_part = values[start_date_input_name] || moment.tz(timezone).format("YYYY-MM-DD");
 
             fields.push({
               start_at_date_part: start_at_date_part,
-              start_at_time_part: values[`${input_prefix_name}_start_at_time_part_input`],
+              start_at_time_part: values[start_time_input_name],
               end_at_date_part: start_at_date_part,
-              end_at_time_part: values[`${input_prefix_name}_end_at_time_part_input`]
+              end_at_time_part: values[end_time_input_name]
             })
+
+            state_form.change(start_date_input_name, null)
+            state_form.change(start_time_input_name, null)
+            state_form.change(end_date_input_name, null)
+            state_form.change(end_time_input_name, null)
           }}>
-          <i className="fa fa-plus" aria-hidden="true" ></i>
+            {i18n.save}
         </a>
       )}
     </FormSpy>
   </div>
 )
 
-const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateChangedCallback, input}) => {
+const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateChangedCallback, input, state_form, i18n}) => {
   const results = resultFields || defaultResultFields
 
   return (
@@ -130,6 +139,8 @@ const MultipleDatetimeInput = ({collection_name, resultFields, timezone, dateCha
       results={results}
       timezone={ timezone || "Asia/Tokyo" }
       dateChangedCallback={dateChangedCallback}
+      state_form={state_form}
+      i18n={i18n}
     />
   );
 }

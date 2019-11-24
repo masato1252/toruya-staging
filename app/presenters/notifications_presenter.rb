@@ -1,32 +1,83 @@
 class NotificationsPresenter
-  attr_reader :current_user, :h
+  attr_reader :current_user, :h, :reservations_approvement_flow
   delegate :link_to, to: :h
 
-  def initialize(h, current_user)
+  def initialize(h, current_user, params = {})
     @h = h
     @current_user = current_user
+    @reservation_id = params[:reservation_id]
   end
 
   def data
-    new_pending_reservations + new_staff_accounts + empty_reservation_setting_users + empty_menu_shops + Array(basic_settings_tour)
+    Array.wrap(new_pending_reservations) +
+      Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
+      Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
+      new_staff_accounts +
+      empty_reservation_setting_users +
+      empty_menu_shops +
+      Array(basic_settings_tour)
   end
 
   def recent_pending_reservations
-    @recent_pending_reservations ||= begin
-      staff_ids = current_user.staff_accounts.active.pluck(:staff_id)
+    @recent_pending_reservations ||= ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC, reservations.id ASC")
+  end
 
-      ReservationStaff.pending.where(staff_id: staff_ids).includes(reservation: :shop).where("reservations.aasm_state": :pending, "reservations.deleted_at": nil).order("reservations.start_time ASC")
-    end
+  def recent_pending_customer_reservations
+    ReservationCustomer.pending.includes(reservation: [:shop, :reservation_staffs]).where("reservation_staffs.staff_id": staff_ids).order("reservation_customers.created_at ASC")
   end
 
   private
 
   def new_pending_reservations
-    oldest_res = recent_pending_reservations.first&.reservation
+    @new_pending_reservations_message ||= if recent_pending_reservations.present?
+      message = "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)}"
 
-    oldest_res ? [
-      "#{I18n.t("notifications.pending_reservation_need_confirm", number: recent_pending_reservations.count)} #{link_to(I18n.t("notifications.pending_reservation_confirm"), h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id))}"
-    ] : []
+      if @reservation_id
+        reservations = recent_pending_reservations.map(&:reservation)
+        reservation_ids = reservations.map(&:id)
+        matched_index = reservation_ids.find_index {|r_id| r_id == @reservation_id.to_i }
+      end
+
+      if matched_index
+        text = "<strong>#{matched_index + 1}/#{reservation_ids.size}</strong>"
+
+        if matched_index == 0
+          previous_reservation_id = nil
+          next_reservation_id = reservation_ids[matched_index + 1]
+        elsif matched_index + 1 == reservation_ids.size
+          previous_reservation_id = reservation_ids[matched_index - 1]
+          next_reservation_id = nil
+        else
+          previous_reservation_id = reservation_ids[matched_index - 1]
+          next_reservation_id = reservation_ids[matched_index + 1]
+        end
+
+        if previous_reservation_id
+          previous_path = h.date_member_path(reservations[matched_index - 1].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
+        end
+
+        if next_reservation_id
+          next_path = h.date_member_path(reservations[matched_index + 1].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
+        end
+      else
+        oldest_res = recent_pending_reservations.first&.reservation
+
+        text = I18n.t("notifications.pending_reservation_confirm")
+        path = h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id, popup_disabled: true)
+      end
+
+      if path
+        "#{message} #{link_to(text.html_safe, path)}"
+      else
+        @reservations_approvement_flow = true
+
+        "#{message} #{link_to('<i class="fa fa-caret-square-o-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
+        #{text}
+        #{link_to('<i class="fa fa-caret-square-o-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path}"
+      end
+    else
+      []
+    end
   end
 
   def new_staff_accounts
@@ -80,5 +131,14 @@ class NotificationsPresenter
           []
         end
       end
+  end
+
+  def staff_ids
+    @staff_ids ||= current_user.staff_accounts.active.pluck(:staff_id)
+  end
+
+  # XXX: includes current_user themselves
+  def working_shop_owners
+    @working_shop_owners ||= current_user.staff_accounts.active.map(&:owner)
   end
 end

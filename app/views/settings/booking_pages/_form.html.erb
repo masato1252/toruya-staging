@@ -1,24 +1,6 @@
 <%
-  booking_option_lambda = lambda do |booking_option|
-    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
-
-    Option.new(
-      id: booking_option.id,
-      name: booking_option.display_name,
-      minutes: booking_option.minutes,
-      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
-      start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
-      end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
-      memo: booking_option.memo
-    )
-  end
-
-  user_booking_options = super_user.booking_options.map do |option|
-    booking_option_lambda.call(option)
-  end
-
   page_booking_options = @booking_page.booking_options.map do |option|
-    booking_option_lambda.call(option)
+    booking_option_item(option)
   end
 %>
 
@@ -27,7 +9,6 @@
     form_authenticity_token: form_authenticity_token,
     booking_page: @booking_page.attributes,
     shop_options: shop_options(super_user.shops.order("id")),
-    booking_options: custom_options(user_booking_options),
     timezone: Time.zone.tzinfo.name,
     booking_page: @booking_page.attributes.merge!(
       interval: @booking_page.interval || 30,
@@ -37,8 +18,9 @@
       end_at_type: @booking_page.end_at ? "date" : "now",
       end_at_date_part: @booking_page.end_at_date || Date.current.to_s,
       end_at_time_part: @booking_page.end_at_time,
+      available_booking_options: [],
       options: custom_options(page_booking_options),
-      had_special_date: @booking_page.booking_page_special_dates.exists? ? true : nil,
+      had_special_date: @booking_page.booking_page_special_dates.exists?,
       special_dates: @booking_page.booking_page_special_dates.map do |special_date|
         {
           start_at_date_part: special_date.start_at_date,
@@ -59,13 +41,14 @@
       validate_special_dates: validate_special_dates_settings_user_booking_pages_path(super_user),
       business_time: business_time_settings_user_booking_pages_path(super_user),
       booking_times: booking_times_settings_user_booking_pages_path(super_user),
+      booking_options: booking_options_settings_user_booking_pages_path(super_user)
     },
     i18n: {
       errors: t("errors.messages").slice(:required),
     }.merge!([
       t("settings.booking_page.form"),
-      t("common").slice(:required_label, :select_a_booking_option, :minute),
-      t("action").slice(:save, :cancel)
+      t("common").slice(:required_label, :select_a_booking_option, :minute, :time),
+      t("action").slice(:cancel, :save_as_draft, :save_and_publish)
     ].inject(:merge!)
     ),
   },

@@ -35,7 +35,8 @@ module Reservable
         Options::MenuOption.new(id: menu.id, name: menu.display_name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
       end
 
-      reservation_menus = overlap_reservations.group_by { |reservation| reservation.menu }.map do |menu, reservations|
+      # TODO: this intersection was used now, so below reservation.menus.first is a temporary fix.
+      reservation_menus = overlap_reservations.group_by { |reservation| reservation.menus.first }.map do |menu, reservations|
         menu_max_seat_number = menu.shop_menus.find_by(shop: shop).max_seat_number
         customers_amount_of_reservations = shop.reservations.sum(&:count_of_customers)
         is_enough_seat = menu_max_seat_number >= number_of_customer + customers_amount_of_reservations
@@ -47,7 +48,7 @@ module Reservable
                                   available_seat: menu_max_seat_number - customers_amount_of_reservations)
         elsif menu.min_staffs_number == 1
           if reservations.any? { |reservation|
-            reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.count
+            reservation.staffs.first.staff_menus.find_by(menu: menu).max_customers >= number_of_customer + reservation.reservation_customers.active.count
           }
 
           Options::MenuOption.new(id: menu.id, name: menu.display_name,
@@ -58,7 +59,7 @@ module Reservable
           if reservations.any? { |reservation|
             staffs_max_customer = reservation.staffs.map { |staff| staff.staff_menus.find_by(menu: menu).max_customers }.min
 
-            staffs_max_customer >= number_of_customer + reservation.reservation_customers.count
+            staffs_max_customer >= number_of_customer + reservation.reservation_customers.active.count
           }
 
           Options::MenuOption.new(id: menu.id, name: menu.display_name,

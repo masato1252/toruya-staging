@@ -22,7 +22,8 @@ module ViewHelpers
     helper_method :manager?
     helper_method :in_personal_dashboard?
     helper_method :shop_dashboard_id
-    helper_method :basic_setting_presenter
+    helper_method :basic_settings_presenter
+    helper_method :booking_settings_presenter
     helper_method :previous_controller_is
     helper_method :working_time_range
   end
@@ -147,8 +148,12 @@ module ViewHelpers
     @member_shops_options ||= working_shop_options(include_user_own: true).find_all { |s| member_shop_ids.include?(s.shop_id.to_s) }
   end
 
-  def basic_setting_presenter
-    @basic_setting_presenter ||= BasicSettingsPresenter.new(view_context, current_user)
+  def basic_settings_presenter
+    @basic_settings_presenter ||= Tours::BasicSettingsPresenter.new(view_context, current_user)
+  end
+
+  def booking_settings_presenter
+    @booking_settings_presenter ||= Tours::BookingSettingsPresenter.new(view_context, current_user)
   end
 
   def admin?

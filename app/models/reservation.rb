@@ -4,7 +4,7 @@
 #
 #  id                 :integer          not null, primary key
 #  shop_id            :integer          not null
-#  menu_id            :integer          not null
+#  menu_id            :integer
 #  start_time         :datetime         not null
 #  end_time           :datetime         not null
 #  ready_time         :datetime         not null
@@ -16,6 +16,7 @@
 #  with_warnings      :boolean          default(FALSE), not null
 #  by_staff_id        :integer
 #  deleted_at         :datetime
+#  prepare_time       :datetime
 #
 # Indexes
 #
@@ -25,12 +26,14 @@
 
 # ready_time is end_time + menu.interval
 class Reservation < ApplicationRecord
+  include DateTimeAccessor
+
   has_paper_trail on: [:update]
+  date_time_accessor :start_time, :end_time, accessor_only: true
 
   include AASM
   BEFORE_CHECKED_IN_STATES = %w(pending reserved canceled).freeze
   AFTER_CHECKED_IN_STATES = %w(checked_in checked_out noshow).freeze
-  attr_accessor :start_time_date_part, :start_time_time_part, :end_time_time_part
 
   validates :start_time, presence: true
   validates :end_time, presence: true
@@ -39,14 +42,16 @@ class Reservation < ApplicationRecord
   # validate :enough_staffs_for_customers
 
   belongs_to :shop
-  belongs_to :menu
   belongs_to :by_staff, class_name: "Staff", required: false
+  has_one :reservation_booking_option
+  has_one :booking_option, through: :reservation_booking_option
   has_many :reservation_staffs, dependent: :destroy
+  has_many :reservation_menus, -> { order("position") }, dependent: :destroy
+  has_many :menus, through: :reservation_menus, dependent: :destroy
   has_many :staffs, through: :reservation_staffs
   has_many :reservation_customers, dependent: :destroy
-  has_many :customers, through: :reservation_customers
-
-  before_validation :set_start_time, :set_end_time, :set_ready_time, :set_prepare_time
+  has_many :active_reservation_customers, -> { active }, dependent: :destroy, class_name: "ReservationCustomer"
+  has_many :customers, through: :active_reservation_customers
 
   scope :in_date, ->(date) { where("start_time >= ? AND start_time <= ?", date.beginning_of_day, date.end_of_day) }
   scope :future, -> { where("start_time > ?", Time.current) }
@@ -58,7 +63,7 @@ class Reservation < ApplicationRecord
     state :reserved, :noshow, :checked_in, :checked_out, :canceled
 
     event :pend do
-      transitions from: [:checked_out, :reserved, :noshow], to: :pending
+      transitions from: [:checked_out, :checked_in, :reserved, :noshow], to: :pending
     end
 
     event :accept do
@@ -78,52 +83,37 @@ class Reservation < ApplicationRecord
     end
   end
 
-  def set_start_time
-    if start_time_date_part && start_time_time_part
-      self.start_time = Time.zone.parse("#{start_time_date_part}-#{start_time_time_part}")
-    end
-  end
-
-  def set_end_time
-    if start_time_date_part && end_time_time_part
-      self.end_time = Time.zone.parse("#{start_time_date_part}-#{end_time_time_part}")
-    end
-  end
-
-  def set_ready_time
-    self.ready_time = end_time + menu.interval.to_i.minutes
-  end
-
-  def set_prepare_time
-    self.prepare_time = start_time - menu.interval.to_i.minutes
-  end
-
-  def start_time_date
-    start_time.to_s(:date)
-  end
-
-  def start_time_time
-    start_time.to_s(:time)
-  end
-
-  def end_time_time
-    end_time.try(:to_s, :time)
-  end
-
+  # TODO: handel For multiple same staff case
   def for_staff(staff)
     reservation_staffs.find_by(staff: staff)
   end
 
+  # TODO: handel For multiple same staff case
   def acceptable_by_staff?(staff)
     may_accept? && (
       reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id }&.pending? : for_staff(staff)&.pending?
     )
   end
 
+  def responsible_by_staff?(staff)
+    reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id } : for_staff(staff)
+  end
+
   def accepted_by_all_staffs?
     !reservation_staffs.pending.exists?
   end
 
+  def accepted_all_customers?
+    !reservation_customers.pending.exists?
+  end
+
+  def try_accept
+    if accepted_by_all_staffs?
+      self.accept
+    else reserved?
+      self.pend
+    end
+  end
 
   ACTIONS = {
     "checked_in" => ["check_out", "cancel", "edit"],

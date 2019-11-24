@@ -16,7 +16,7 @@ module Reservations
     private
 
     def created_by_admin?
-      reservation.by_staff.user == user
+      reservation.by_staff&.user == user
     end
   end
 end

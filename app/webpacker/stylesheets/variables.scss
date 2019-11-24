@@ -1,6 +1,7 @@
 $tiny-font-size: 10px; // 10px;
 $small-font-size: 12px; // 12px;
 $normal-font-size: 14px; // 14px
+$normal2-font-size: 15px; // 15px
 $medium-font-size: 16px; // 16px
 $large-font-size: 20px; // 20px
 $huge-font-size: 24px; // 24px
@@ -26,7 +27,9 @@ $palette-color4-1: #b0450d; // orange border
 $palette-color4-2: #984418; // orange hover border
 $palette-color5: #de9218;
 $palette-color6: #fffef5;
-$palette-color7: #fbecf3;
+$palette-color7: #fbecf3; // pink
+$palette-color8: #fdbdd9; // pink border
+$palette-color9: #e3ebeb;
 
 $gray: #dfdfdf;
 $gray2: #e6e6e6;
@@ -34,13 +37,12 @@ $gray3: #f9f9f9;
 $gray4: #efefef;
 $gray5: #d0d0d0;
 $gray6: #858585;
-$gray6: #858585;
 $gray7: #b3b3b3;
 $gray8: #555555;
 $gray9: #bbbbbb;
 $gray10: #e9ebee;
 $gray11: #8f8f8f;
-
+$gray12: #cccccc;
 
 $black: #333333;
 
@@ -52,6 +54,13 @@ $black: #333333;
   &:after {
     clear: both;
   }
+}
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  -ms-border-radius: $radius; /* Internet Explorer */
 }
 
 $grid-breakpoints: (

@@ -16,6 +16,7 @@
 スタッフアカウント：<%= @staff_account.email %>
 
 以下のリンクをタップすることで、スタッフアカウントの設定を完了してください。
+
 <%= user_from_callbacks_staff_accounts_url(token: @staff_account.token) %>
 
 ※登録申請につきましては、スタッフアカウントご登録者様ご本人による認証が期日までに必要となります。

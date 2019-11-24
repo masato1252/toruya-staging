@@ -1,21 +1,22 @@
 import React from "react";
 import { Field } from "react-final-form";
 import _ from "lodash";
+import { sortableHandle } from "react-sortable-hoc";
 
-const errorMessage = (error) => (
-  <p className="field-error-message">{error}</p>
+const ErrorMessage = ({ error }) => (
+  <p className="field-error-message" dangerouslySetInnerHTML={{ __html: error }} />
 )
 
-const Input = ({input, meta, ...rest}) => {
+const Input = ({input, meta, className, ...rest}) => {
   const { error, touched } = meta;
 
   return (
-    <input {...input} {...rest} className={error && touched ? "field-error" : ""} />
+    <input {...input} {...rest} className={`${error && touched ? "field-error" : ""} ${className}`} />
   )
 }
 
-const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, meta: { error, touched }, ...rest }) => {
-  const hasError = error && touched;
+const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before_hint, componentType, touched_required = true, meta: { error, touched }, ...rest }) => {
+  const hasError = error && (touched_required ? touched : true);
   const Component = componentType || "input";
 
   return (
@@ -29,7 +30,7 @@ const InputRow = ({ label, placeholder, type, input, requiredLabel, hint, before
         { before_hint ? <span className="before-field-hint">{before_hint}</span> : ""}
         <Component {...input} {...rest} type={type} placeholder={placeholder || label} className={hasError ? "field-error" : ""} />
         { hint ? <span className="field-hint">{hint}</span> : ""}
-        { hasError && errorMessage(error) }
+        { hasError && <ErrorMessage error={error} />}
       </dd>
     </dl>
   );
@@ -56,10 +57,10 @@ const Radio = ({ input, children }) =>
     </label>
   );
 
-const Error = ({ name }) => (
-  <Field name={name} subscription={{ error: true, touched: true }}>
+const Error = ({ name, touched_required = true }) => (
+  <Field name={name} subscription={{ error: true, touched: touched_required }}>
     {({ meta: { error, touched } }) =>
-      error && touched ? errorMessage(error) : null
+      error && (touched_required ? touched : true) ? <ErrorMessage error={error} /> : null
     }
   </Field>
 );
@@ -104,11 +105,19 @@ const Condition = ({ when, is, children, is_not }) => (
   </Field>
 );
 
+const DragHandle = sortableHandle(() => (
+  <span className="drag-handler">
+    <i className="fa fa-ellipsis-v"></i>
+  </span>
+));
+
 export {
   Input,
   InputRow,
   RadioRow,
   Radio,
   Error,
-  Condition
+  Condition,
+  ErrorMessage,
+  DragHandle,
 };

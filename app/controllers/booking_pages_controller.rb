@@ -1,13 +1,29 @@
 class BookingPagesController < ActionController::Base
+  protect_from_forgery with: :exception, prepend: true
+
   layout "booking"
 
   def show
     @booking_page = BookingPage.find(params[:id])
-    if cookies[:booking_customer_id]
-      @customer = @booking_page.user.customers.find(cookies[:booking_customer_id]).with_google_contact
+
+    if @booking_page.draft
+      if !current_user || !current_user.current_staff_account(@booking_page.user)
+        redirect_to root_path, alert: I18n.t("common.no_permission")
+        return
+      end
     end
 
-    @is_single_booking_option = @booking_page.booking_page_options.count == 1
+    if cookies[:booking_customer_id]
+      @customer = @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])&.with_google_contact
+
+      if @customer
+        @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+      end
+    end
+
+    active_booking_options_number = @booking_page.booking_options.active.count
+    @has_active_booking_option =  !active_booking_options_number.zero?
+    @is_single_booking_option = active_booking_options_number == 1
 
     if @is_single_booking_option
       is_single_special_date = @booking_page.booking_page_special_dates.count == 1
@@ -27,7 +43,7 @@ class BookingPagesController < ActionController::Base
           special_dates: booking_dates,
           booking_option_ids: @booking_page.booking_option_ids,
           interval: @booking_page.interval,
-          overlap_restriction: @booking_page.overlap_restriction,
+          overbooking_restriction: @booking_page.overbooking_restriction,
           limit: 2
         )
 
@@ -42,27 +58,51 @@ class BookingPagesController < ActionController::Base
         end
       end
     end
-
   end
 
   def booking_reservation
     outcome = Booking::CreateReservation.run(
-      booking_page: BookingPage.find(params[:id]),
-      booking_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
+      booking_page_id: params[:id],
       booking_option_id: params[:booking_option_id],
+      booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       customer_last_name: params[:customer_last_name],
       customer_first_name: params[:customer_first_name],
+      customer_phonetic_last_name: params[:customer_phonetic_last_name],
+      customer_phonetic_first_name: params[:customer_phonetic_first_name],
       customer_phone_number: params[:customer_phone_number],
-      customer_info: JSON.parse(params[:customer_info])
+      customer_email: params[:customer_email],
+      customer_info: JSON.parse(params[:customer_info]),
+      present_customer_info: JSON.parse(params[:present_customer_info])
     )
+    result = outcome.result
+    customer = result[:customer]
 
-    if outcome.valid?
+    if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
+      cookies[:booking_customer_id] = customer&.id
+      cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+    else
+      cookies.delete :booking_customer_id
+      cookies.delete :booking_customer_phone_number
+    end
+
+    if result[:reservation] && customer&.persisted?
       render json: {
         status: "successful"
       }
+    elsif JSON.parse(params[:customer_info])&.present?
+      render json: {
+        status: "failed",
+        errors: {
+          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
+        }
+      }
     else
       render json: {
-        status: "failed"
+        status: "failed",
+        customer_info: customer&.persisted? ? view_context.customer_info_as_json(customer) : {},
+        errors: {
+          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
+        }
       }
     end
   end
@@ -85,25 +125,15 @@ class BookingPagesController < ActionController::Base
       end
 
       render json: {
-        customer_info: {
-          id: customer.id,
-          first_name: customer.first_name,
-          last_name: customer.last_name,
-          phonetic_first_name: customer.phonetic_first_name,
-          phonetic_last_name: customer.phonetic_last_name,
-          phone_number: params[:customer_phone_number],
-          phone_numbers: customer.phone_numbers.map { |phone| phone.value.gsub(/[^0-9]/, '') },
-          email: customer.primary_email&.value&.address,
-          emails: customer.emails.map { |email| email.value.address },
-          simple_address: customer.address,
-          full_address: customer.display_address,
-          address_details: customer.primary_address&.value,
-          original_address_details: customer.primary_address&.value
-        }
+        customer_info: view_context.customer_info_as_json(customer),
+        last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
       }
     else
       render json: {
-        customer_info: {}
+        customer_info: {},
+        errors: {
+          message: I18n.t("booking_page.message.unfound_customer_html")
+        }
       }
     end
   end
@@ -126,7 +156,7 @@ class BookingPagesController < ActionController::Base
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       special_dates: special_dates,
       interval: booking_page.interval,
-      overlap_restriction: booking_page.overlap_restriction
+      overbooking_restriction: booking_page.overbooking_restriction
     )
 
     if outcome.valid?
@@ -152,8 +182,8 @@ class BookingPagesController < ActionController::Base
       time_outcome = Reservable::Time.run(shop: booking_page.shop, date: params[:date])
 
       if time_outcome.valid?
-        shop_start_at = time_outcome.first
-        shop_end_at = time_outcome.last
+        shop_start_at = time_outcome.result.first
+        shop_end_at = time_outcome.result.last
 
         [
           {
@@ -173,7 +203,7 @@ class BookingPagesController < ActionController::Base
       special_dates: booking_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       interval: booking_page.interval,
-      overlap_restriction: booking_page.overlap_restriction
+      overbooking_restriction: booking_page.overbooking_restriction
     )
 
     available_booking_times = outcome.result.each_with_object({}) { |(time, option_ids), h| h[I18n.l(time, format: :hour_minute)] = option_ids  }

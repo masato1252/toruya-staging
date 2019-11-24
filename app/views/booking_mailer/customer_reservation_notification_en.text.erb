@@ -1,0 +1,32 @@
+<%= line %>
+
+■ <%= @shop.display_name %> ■
+
+<%= line %>
+
+■ Temporary reservation has been made ■
+
+<%= line %>
+
+To <%= @customer.name %>,
+
+Thank you for booking <%= @shop.display_name %> from <%= @booking_page.title %>.
+
+The temporary reservation to <%= @shop.display_name %> has been completed as following.
+Please wait until the staff approve this reservation.
+
+Date and time:
+<%= I18n.l(@reservation.start_time, format: :date) %>
+<%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
+
+Booking price:
+<%= @booking_option.display_name %>
+<%= @price %>
+
+Please contact shop-phone-number for changes or cancellations.
+
+<%= line %>
+
+■ <%= @shop.name %> ■
+
+<%= line %>

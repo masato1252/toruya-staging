@@ -11,7 +11,7 @@ class Settings::ToursController < ActionController::Base
 
   def current_step_warning
     @from_settings_tour_root = true
-    render basic_setting_presenter.current_step_warning
+    render basic_settings_presenter.current_step_warning
   end
 
   def welcome; end

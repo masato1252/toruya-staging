@@ -285,7 +285,7 @@ RSpec.describe Ability do
           context "when reservation is under valid shop" do
             context "when reservation has no staff" do
               let(:menu) { FactoryBot.create(:menu, :no_manpower, shop: shop) }
-              let!(:reservation) { FactoryBot.create(:reservation, menu: menu, shop: shop, staff_ids: staff_ids, start_time: reservation_time) }
+              let!(:reservation) { FactoryBot.create(:reservation, menus: [ menu ], shop: shop, staff_ids: staff_ids, start_time: reservation_time) }
               let(:staff_ids) { []  }
 
               it "returns true" do

@@ -19,7 +19,7 @@
 }
 
 .calendar-picker {
-  width: 35px !important;
+  width: 38px !important;
   height: 38px !important;
   line-height: 34px !important;
   font-size: 21px !important;
@@ -40,4 +40,10 @@
 textarea {
   padding: 8px;
   font-size: 16px;
+}
+
+.drag-handler {
+  padding: 8px 16px;
+  vertical-align: top;
+  cursor: row-resize;
 }

@@ -1,8 +1,14 @@
+@import "./breakpoint";
+
 .calendar {
   text-align: center;
   font-size: 14px;
-  width: 252px;
-  line-height: 35px;
+  width: 100%; // mobile version
+  min-width: 276px;
+
+  @include media-breakpoint-up(tablet) {
+    width: 252px;
+  }
 
   select {
     appearance: none;
@@ -42,25 +48,22 @@
     display: block;
     background: #858585;
     color: #fff;
-    border-radius: 5px; /* 記述無し */
-    -moz-border-radius: 5px; /* Firefox */
-    -webkit-border-radius: 5px; /* Google Chrome、Safari */
-    -o-border-radius: 5px; /* Opera */
-    -ms-border-radius: 5px; /* Internet Explorer */
     line-height: 35px;
     width: 27px;
     font-weight: bold;
     font-size: 28px;
+    @include border-radius(5px);
   }
 
   .header i,
   .header select {
-    float: left;
+    display: inline-block;
   }
 
   .header select {
     width: 35%;
     margin-left: 5px;
+    vertical-align: top;
   }
 
   .header select:last-of-type,
@@ -79,13 +82,26 @@
     background: #fff;
   }
 
-  .week span,
+  .week span.day,
   .weekdays li,
   .days li {
     width: 13.4%;
+
+    padding-bottom: calc(13.4% - 4px);
+    position: relative;
+    display: inline-block;
+
+    span.number {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
   }
 
-  .week span,
+  .week span.day,
   .weekdays li {
     display: inline-block;
     text-align: center;
@@ -96,13 +112,8 @@
     color: #666;
   }
 
-  .week span {
-    border-radius: 20px; /* 記述無し */
-    -moz-border-radius: 20px; /* Firefox */
-    -webkit-border-radius: 20px; /* Google Chrome、Safari */
-    -o-border-radius: 20px; /* Opera */
-    -ms-border-radius: 20px; /* Internet Explorer */
-    line-height: 26px;
+  .week span.day {
+    @include border-radius(100px);
     color: #333;
     border: 2px solid #fff;
   }
@@ -134,14 +145,14 @@
     width: 100%;
   }
 
-  .day.today,
-  .days .today a {
+  span.day.today,
+  .days span.today a {
     font-weight: bold;
     color: #e6a220;
   }
 
-  .day.selected,
-  .day.today.select,
+  span.day.selected,
+  span.day.today.select,
   .days a.here,
   .days .today a.here {
     font-weight: bold;
@@ -150,17 +161,17 @@
     background-position: center center;
   }
 
-  .day.reserved {
+  span.day.reserved {
     background: #dedede;
     border-color: #dedede;
   }
 
-  .day.selected {
+  span.day.selected {
     background: #fcbe46 !important;
     border-color: #fcbe46 !important;
   }
 
-  .day.workDay {
+  span.day.workDay {
     border-color: #84b3aa;
   }
 
@@ -196,7 +207,7 @@
     margin-top: 10px;
     border: 1px solid $gray9;
 
-    .day {
+    span.day {
       &.workDay {
         background: #dedede;
         border-color: #dedede;
@@ -240,7 +251,9 @@
 }
 
 .calendar-loading {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 14px;
   width: 252px;
   height: 286px;

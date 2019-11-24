@@ -85,6 +85,11 @@
 // overwrite manager_reservation.scss#L8
 #resNew #resInfo .formRow {
   opacity: unset !important;
+
+  dt.subject {
+    vertical-align: top;
+    padding-top: 13px;
+  }
 }
 
 .toruya-modal {
@@ -96,5 +101,212 @@
       vertical-align: middle;
       display: inline-block;
     }
+  }
+}
+
+// New menus design
+#resNew {
+  .start-time-input {
+    margin-right: 5px;
+  }
+
+  .no-end-time-message {
+    padding: 10px 0;
+    font-size: 90%;
+  }
+
+  #resInfo {
+    .res-menus {
+      dt {
+        width: 50px;
+      }
+
+      .add-menu {
+        padding: 12px;
+        border: 3px dotted $gray;
+        border-top: 0;
+        margin-bottom: 24px;
+
+        .fa-plus {
+          padding-right: 6px;
+        }
+      }
+    }
+
+    .staff-selection-field {
+      margin: 3px 0;
+    }
+
+  }
+
+  #customers {
+    .customers-seats-state {
+      float: right;
+      font-size: 16px;
+      font-weight: normal;
+
+      .number {
+        font-size: 21px;
+        font-weight: bold;
+        vertical-align: baseline;
+      }
+    }
+
+    .add-customer {
+      background-color: $palette-color9;
+      border: 1px solid $palette-color2;
+      color: $palette-color2;
+      text-align: center;
+      height: fit-content;
+    }
+
+    #customerLevels {
+      ul {
+        width: initial;
+      }
+    }
+  }
+}
+
+.customer-reservation-state {
+  &.accepted {
+    color: $palette-color2-2;
+  }
+
+  &.pending {
+    color: $palette-color4-1;
+  }
+}
+
+// XXX: Because the menu-option-field is dragable, so need to move the style out
+.menu-option-field {
+  @include clearfix;
+  border: 1px solid $gray;
+  background-color: #ffffff;
+  margin-top: 6px;
+
+  .menu-option-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid $gray;
+    padding: 6px 6px 6px 12px;
+    background-color: $gray4;
+
+    .menu-with-staffs,
+    .menu-option-info-required-time
+    {
+      display: flex !important;
+      align-items: center;
+    }
+
+    .menu-option-info-name {
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    .menu-option-details-toggler {
+      vertical-align: baseline;
+
+      a.toggler-link {
+        padding: 0 10px;
+        margin-left: 5px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 18px;
+        display: inline-block;
+        color: $black;
+      }
+    }
+  }
+
+  .menu-option-content {
+    padding: 6px 6px 6px 12px;
+
+    .menu-field-row {
+      margin: 6px 0;
+
+      dt.menu-field-label {
+        width: 100px !important;
+        vertical-align: top;
+        display: table-cell;
+        padding-top: 6px;
+      }
+
+      dd.menu-field-content {
+        display: table-cell;
+
+        .btn-add-staff {
+          margin-top: 6px;
+          margin-left: 0 !important;
+
+          .fa-plus {
+            padding-right: 6px;
+          }
+        }
+      }
+    }
+
+    .menu-options-actions {
+      text-align: right;
+
+      .btn {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.reservation-state-btn {
+  margin-left: 32px;
+  padding-left: 64px !important;
+  padding-right: 64px !important;
+  position: relative;
+
+  &.pending {
+    background: #fcd0ce;
+    border-color: #f97a68;
+    color: #f42c00 !important;
+  }
+
+  &.accepted {
+    background: #def5ff;
+    border-color: #9bd1ef;
+    color: #7ed1f9 !important;
+  }
+
+  .fa-pencil {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+  }
+}
+
+#staff-states-modal {
+  .fa-calendar-check-o {
+    color: $palette-color2;
+    margin-right: 3px;
+  }
+
+  .fa-calendar {
+    color: $palette-color4;
+    margin-right: 3px;
+  }
+}
+
+.customer-remove-symbol {
+  position: relative;
+
+  .fa-times {
+    position: absolute;
+    right: 8px;
+    top: 6px;
+  }
+}
+
+.modal-title {
+  .reservation-state {
+    margin-right: 6px;
+    padding: 0 3px;
   }
 }

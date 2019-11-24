@@ -97,31 +97,42 @@ class Customer < ApplicationRecord
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
     self.address = primary_part_address(google_contact.addresses)
-    # emails format
+    # [Read]
+    # customer.emails
+    #
     # [
     #   {
-    #     "type" => :home,
+    #     "type" => :mobile,
     #     "value" => {
     #       "address" => "lake.ilakela@gmail.com",
     #       "primary" => true,
-    #       "label" => "home"
-    #     }
+    #       "label" => "mobile"
+    #     },
+    #     "primary" => true
     #   }
     # ]
+    #
     self.emails = google_contact.emails
-    # phone_numbers format
+    # [Read]
+    # customer.phone_numbers
     # [
     #   {
     #     "type" => :home,
-    #     "value" => "12312312"
+    #     "value" => "12312312",
+    #     "primary" => true
     #   }
     # ]
+    #
     self.phone_numbers = google_contact.phone_numbers
     # primary_email format:
     # {
-    #   address: "lake.ilakela@gmail.com",
-    #   primary: true,
-    #   label: "home"
+    #   "primary" => true,
+    #   "type" => :mobile,
+    #   "value" => {
+    #     "address" => "lake.ilakela@gmail.com5",
+    #     "primary" => true,
+    #     "label" => "mobile"
+    #   }
     # }
     self.primary_email = google_contact.primary_email
     # primary_phone format
@@ -167,6 +178,46 @@ class Customer < ApplicationRecord
   end
 
   def google_contact_attributes(google_groups_changes={})
+    # [Write]
+    # customer.phone_numbers = new_phone_numbers
+    #
+    # [
+    #   {
+    #     "type"=> "mobile",
+    #     "value"=> "12312312",
+    #     "primary" => true
+    #   }
+    # ]
+    #
+    # [Write]
+    # customer.emails = new_emails
+    #
+    # [
+    #   {
+    #     "type"=> "mobile",
+    #     "value"=> {
+    #       "address" => "lake.ilakela@gmail.com4"
+    #     },
+    #     "primary"=>true
+    #   }
+    # ]
+    #
+    # [Write]
+    # customer.addresses = new_addresses
+    #
+    # [
+    #   {
+    #     "type" => "home",
+    #     "value" => {
+    #       "postcode" => "",
+    #       "region" => "岩手県",
+    #       "city" => "",
+    #       "street" => "4F.-3, No.125, Sinsing StTainan"
+    #     },
+    #     "primary" => true
+    #   }
+    # ]
+    #
     h = {
       name: { familyName: last_name, givenName: first_name},
       phonetic_name: { familyName: phonetic_last_name, givenName: phonetic_first_name},
@@ -184,7 +235,7 @@ class Customer < ApplicationRecord
   def primary_value(values)
     return unless values
 
-    values.find { |h| h.value.respond_to?(:primary) && h.value.primary } ||
+    values.find { |h| h.try(:primary) } ||
       values.find { |h| h.type == :mobile } ||
       values.find { |h| h.type == :home } ||
       values.find { |h| h.type == :work } ||
@@ -201,6 +252,6 @@ class Customer < ApplicationRecord
   end
 
   def assign_default_rank
-    self.rank ||= contact_group.ranks.find_by(key: Rank::REGULAR_KEY)
+    self.rank ||= contact_group&.ranks&.find_by(key: Rank::REGULAR_KEY)
   end
 end

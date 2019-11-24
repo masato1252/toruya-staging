@@ -6,12 +6,20 @@ a.btn {
   text-indent: 0;
   display: inline-block !important;
   color: #ffffff !important;
+  line-height: 35px !important;
+  height: 35px !important;
+  padding: 0 10px !important;
+  font-size: 18px;
 
   &.btn-symbol {
     width: 35px;
-    line-height: 35px;
-    height: 35px;
     padding: 0;
+  }
+
+  &.btn-large {
+    line-height: 50px !important;
+    height: 50px !important;
+    font-weight: bold;
   }
 }
 

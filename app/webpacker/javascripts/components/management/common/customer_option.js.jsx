@@ -19,7 +19,7 @@ class CommonCustomerOption extends React.Component {
     return(
       <dl onClick={this._handleClick} key={this.props.customer.value} className={`customer-option ${this.props.selected_customer_id && this.props.selected_customer_id == this.props.customer.value ? "here" : ""}`}>
         <dd className="customer-symbol">
-          <span className={`customer-level-symbol ${this.props.customer.rank.key}`}>
+          <span className={`customer-level-symbol ${this.props.customer.rank && this.props.customer.rank.key}`}>
             <i className="fa fa-address-card"></i>
           </span>
         </dd>

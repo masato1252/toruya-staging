@@ -43,3 +43,33 @@
     }
   }
 }
+
+.booking-from {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 14px;
+  margin-top: 10px !important;
+
+  .fa-clock-o {
+    margin-right: 3px;
+    margin-top: 3px;
+  }
+}
+
+#resList {
+  .reservation-customer-state-canceled {
+    color: $gray7 !important;
+  }
+}
+
+.reservation-info-row {
+  margin: 3px 0 6px;
+
+  .fa {
+    margin-right: 6px;
+  }
+
+  p {
+    margin-left: 21px;
+  }
+}

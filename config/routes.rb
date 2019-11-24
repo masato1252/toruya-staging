@@ -15,6 +15,8 @@ Rails.application.routes.draw do
         get :detail
         delete :delete
         post :save
+        get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
+        patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
       end
     end
   end
@@ -24,10 +26,12 @@ Rails.application.routes.draw do
   end
 
   resources :shops, only: [] do
-    resources :reservations do
+    resources :reservations, except: [:edit, :new] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
         get :validate
+        get :add_customer
+        get "form/(:id)", action: :form, as: :form
       end
 
       scope module: "reservations" do
@@ -54,7 +58,14 @@ Rails.application.routes.draw do
   scope module: "customers", as: "customer", path: "customer" do
     resources :users, only: [] do
       resources :printing, only: [:new, :create]
-      resources :reservations, only: [:index]
+      resources :reservations, only: [:index] do
+        collection do
+          get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
+          get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
+          get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+        end
+      end
+
       resources :filter, only: [:index, :create]
       resources :saved_filters, only: [:index, :create] do
         collection do
@@ -82,6 +93,7 @@ Rails.application.routes.draw do
     get :tour, to: "dashboards#tour", as: :tour
     get :end_tour, to: "dashboards#end_tour", as: :end_tour
     get :hide_tour_warning, to: "dashboards#hide_tour_warning", as: :hide_tour_warning
+    get :booking_tour, to: "dashboards#booking_tour", as: :booking_tour
 
     namespace :tours, constraints: ::XhrConstraint do
       get :current_step_warning
@@ -128,6 +140,7 @@ Rails.application.routes.draw do
           get :validate_special_dates
           get :business_time
           get :booking_times
+          get :booking_options
         end
       end
       resources :reservation_settings, except: [:show]

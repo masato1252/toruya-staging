@@ -25,7 +25,7 @@ class CalendarsController < DashboardController
       booking_option_ids: params[:booking_option_ids],
       special_dates: ActiveModel::Type::Boolean.new.cast(params[:had_special_date]) ? params[:special_dates] : [],
       interval: params[:interval],
-      overlap_restriction: ActiveModel::Type::Boolean.new.cast(params[:overlap_restriction])
+      overbooking_restriction: ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction])
     )
 
     if outcome.valid?

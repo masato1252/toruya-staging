@@ -34,9 +34,15 @@ class BookingPageSettings extends React.Component {
         }
       },
       {
-        field: /had_special_date|shop_id|interval|overlap_restriction|special_dates|options/, // when a field matching this pattern changes...
+        field: /had_special_date|shop_id|interval|overbooking_restriction|special_dates|options/, // when a field matching this pattern changes...
         updates: async (value, name, allValues) => {
           return await this.calculateBookingTimes(allValues);
+        }
+      },
+      {
+        field: /shop_id/,
+        updates: async (value, name, allValues) => {
+          return await this.fetchAvailableBookingOptions(allValues);
         }
       }
     )
@@ -44,6 +50,7 @@ class BookingPageSettings extends React.Component {
 
   componentDidMount = () => {
     this.initBookingTimes()
+    this.initAvailableBookingOptions()
   }
 
   initBookingTimes = async () => {
@@ -63,7 +70,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[name]"
             component={InputRow}
             type="text"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(page_name)(this, value)}
             label={page_name}
             hint={page_name_hint}
             requiredLabel={required_label}
@@ -73,8 +80,10 @@ class BookingPageSettings extends React.Component {
             name="booking_page[title]"
             component={InputRow}
             type="text"
+            validate={(value) => requiredValidation(title)(this, value)}
             label={title}
             hint={title_hint}
+            requiredLabel={required_label}
           />
 
           <Field
@@ -94,7 +103,7 @@ class BookingPageSettings extends React.Component {
     const { menu_time_span, menu_interval, minute } = this.props.i18n;
 
     return (
-      <div className="result-fields">
+      <div className="result-fields booking-options-result">
         {fields.map((field, index) => {
           return (
             <div key={`${collection_name}-${index}`} className="result-field">
@@ -136,6 +145,10 @@ class BookingPageSettings extends React.Component {
                  </Field>
                 </div>
               </div>
+              <Error
+                name={field}
+                touched_required={false}
+              />
            </div>
           )
          })}
@@ -145,6 +158,7 @@ class BookingPageSettings extends React.Component {
 
   renderBookingOptionFields = () => {
     const { required_label, booking_option_header, select_a_booking_option, booking_option_hint } = this.props.i18n;
+    const { available_booking_options } = this.booking_page_settings_values.booking_page;
 
     return (
       <div>
@@ -152,11 +166,11 @@ class BookingPageSettings extends React.Component {
         <div className="formRow">
           <dl>
             <Field
-              name="selected_booking_option"
+              name="booking_page[selected_booking_option]"
               collection_name="booking_page[options]"
               component={SelectMultipleInputs}
               resultFields={this.renderSelectedBookingOptionFields}
-              options={this.props.booking_options}
+              options={available_booking_options}
               selectLabel={select_a_booking_option}
               hint={booking_option_hint}
               />
@@ -189,10 +203,7 @@ class BookingPageSettings extends React.Component {
       required_label,
       booking_dates_header,
       special_date_label,
-      booking_dates_calendar_hint,
-      booking_dates_working_date,
-      booking_dates_available_booking_date,
-      interval_real_booking_time_warning
+      default_available_dates_label
     } = this.props.i18n;
 
     return (
@@ -200,63 +211,30 @@ class BookingPageSettings extends React.Component {
         <h3>{booking_dates_header}</h3>
         <div className="formRow">
           <dl>
-            <dd className="booking-calendar">
-              {booking_dates_calendar_hint}
-              <FormSpy subscription={{ values: true }}>
-                {({ values }) => {
-                  if (values.booking_page.had_special_date && !this.isSpecialDatesLegal(values.booking_page.special_dates)) {
-                    return null;
-                  }
-
-                  return (
-                    <Calendar
-                      {...this.props.calendar}
-                      scheduleParams={{
-                        shop_id: values.booking_page.shop_id,
-                        booking_option_ids: values.booking_page.options.map((option) => option.id),
-                        special_dates: values.booking_page.special_dates,
-                        overlap_restriction: values.booking_page.overlap_restriction,
-                        interval: values.booking_page.interval,
-                        had_special_date: values.booking_page.had_special_date
-                      }}
-                    />
-                  );
-                }}
-              </FormSpy>
-              <div className="demo-days">
-                <div className="demo-day day booking-available"></div>
-                {booking_dates_available_booking_date}
-                <div className="demo-day day workDay"></div>
-                {booking_dates_working_date}
+            <dd>
+              <div className="radio">
+                <Field name="booking_page[had_special_date]" type="radio" value="false" component={Radio}>
+                  {default_available_dates_label}
+                </Field>
               </div>
-              <Condition when="booking_page[booking_times]" is="present">
-                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
-              </Condition>
-            </dd>
-          </dl>
-          <dl>
-            <dd className="bootstrap-checkbox">
-              <ul className="special-date-label">
-                <li>
-                  <label>
-                    <Field name="booking_page[had_special_date]" type="checkbox" component="input" />
-                    {special_date_label}
-                  </label>
-                </li>
-              </ul>
-              <ul>
-                {
-                  values.booking_page.had_special_date && (
-                    <Field
-                      name="special_dates_array"
-                      collection_name="booking_page[special_dates]"
-                      component={MultipleDatetimeInput}
-                      timezone={this.props.timezone}
-                    />
-                  )
-                }
+              <div className="radio">
+                <Field name="booking_page[had_special_date]" type="radio" value="true" component={Radio}>
+                  {special_date_label}
+                </Field>
                 <Error name="booking_page[had_special_date]" />
-              </ul>
+              </div>
+              {
+                values.booking_page.had_special_date === "true" && (
+                  <Field
+                    name="special_dates_array"
+                    collection_name="booking_page[special_dates]"
+                    component={MultipleDatetimeInput}
+                    timezone={this.props.timezone}
+                    state_form={this.booking_page_settings_form}
+                    i18n={this.props.i18n}
+                  />
+                )
+              }
             </dd>
           </dl>
         </div>
@@ -268,10 +246,7 @@ class BookingPageSettings extends React.Component {
     const {
       required_label,
       interval_header,
-      interval_explanation,
       interval_real_booking_time_warning,
-      interval_real_booking_time_explanation,
-      interval_start_time,
       interval_option,
       per_minute,
       interval_example_html,
@@ -282,51 +257,6 @@ class BookingPageSettings extends React.Component {
       <div>
         <h3>{interval_header}</h3>
         <div className="formRow">
-          <dl>
-            <dd>
-              <div className="interval-explanation">
-                <Condition when="booking_page[special_dates]" is="present">
-                  <Condition when="booking_page[booking_times]" is="present">
-                    {interval_real_booking_time_explanation}
-                  </Condition>
-                </Condition>
-                <Condition when="booking_page[booking_times]" is="blank">
-                  {interval_explanation}
-                </Condition>
-              </div>
-              <div className="booking-times-label">
-                <b>{interval_start_time}</b>
-              </div>
-              <div className="booking-times-examples">
-                <FormSpy subscription={{ values: true }}>
-                  {({ values }) => {
-                    const { interval, booking_times, special_dates, options, had_special_date } = values.booking_page;
-
-                    if (had_special_date && special_dates && special_dates.length && options && options.length == 1) {
-                      if (booking_times && booking_times.length) {
-                        return booking_times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time}~</div>)
-                      }
-                      else {
-                        return <div className="warning">{no_available_booking_times}</div>;
-                      }
-                    }
-                    else {
-                      let times = [moment({hour: 9})]
-
-                      for(var index = 1; index < 4; index++) {
-                        times.push(moment({hour: 9}).add(parseInt(values.booking_page["interval"]) * index, 'm'))
-                      }
-
-                      return times.map((time) => <div className="time-interval" key={`booking-time-${time}`}>{time.format("HH:mm")}~</div>)
-                    }
-                  }}
-                </FormSpy>
-              </div>
-              <Condition when="booking_page[booking_times]" is="present">
-                <p className="field-warning-message">{interval_real_booking_time_warning}</p>
-              </Condition>
-            </dd>
-          </dl>
           <dl>
             <dd>
               <div>
@@ -423,20 +353,20 @@ class BookingPageSettings extends React.Component {
   }
 
   renderBookingOverlapRestrictionField = () => {
-    const { overlap_booking, not_allow_overlap_booking_label, allow_overlap_booking_label} = this.props.i18n;
+    const { overbooking, not_allow_overbooking_label, allow_overbooking_label} = this.props.i18n;
 
     return (
       <div>
-        <h3>{overlap_booking}</h3>
+        <h3>{overbooking}</h3>
         <div className="formRow">
-          <Field name="booking_page[overlap_restriction]" type="radio" value="true" component={RadioRow}>
-            {not_allow_overlap_booking_label}
+          <Field name="booking_page[overbooking_restriction]" type="radio" value="true" component={RadioRow}>
+            {not_allow_overbooking_label}
           </Field>
-          <Field name="booking_page[overlap_restriction]" type="radio" value="false" component={RadioRow}>
-            {allow_overlap_booking_label}
+          <Field name="booking_page[overbooking_restriction]" type="radio" value="false" component={RadioRow}>
+            {allow_overbooking_label}
           </Field>
         </div>
-        <Error name="booking_page[overlap_restriction]" />
+        <Error name="booking_page[overbooking_restriction]" />
       </div>
     )
   }
@@ -452,7 +382,7 @@ class BookingPageSettings extends React.Component {
             name="booking_page[note]"
             component={InputRow}
             componentType="textarea"
-            validate={(value) => requiredValidation(this, value)}
+            validate={(value) => requiredValidation(note_label)(this, value)}
             placeholder={note_label}
             rows={10}
           />
@@ -462,7 +392,7 @@ class BookingPageSettings extends React.Component {
   }
 
   calculateBookingTimes = async (allValues) => {
-    const { shop_id, had_special_date, special_dates, options, overlap_restriction, interval } = allValues.booking_page;
+    const { shop_id, had_special_date, special_dates, options, overbooking_restriction, interval } = allValues.booking_page;
 
     if (this.calculateBookingTimesCall) {
       this.calculateBookingTimesCall.cancel();
@@ -470,7 +400,7 @@ class BookingPageSettings extends React.Component {
     this.calculateBookingTimesCall = axios.CancelToken.source();
 
     if (!(shop_id &&
-      had_special_date && special_dates && special_dates.length &&
+      had_special_date === "true" && special_dates && special_dates.length &&
       options && options.length == 1)) {
       return {
         "booking_page[booking_times]": []
@@ -485,7 +415,7 @@ class BookingPageSettings extends React.Component {
         special_dates: special_dates,
         booking_option_ids: options.map((option) => option.id),
         interval: interval,
-        overlap_restriction: overlap_restriction
+        overbooking_restriction: overbooking_restriction
       },
       responseType: "json",
       cancelToken: this.calculateBookingTimesCall.token
@@ -511,7 +441,7 @@ class BookingPageSettings extends React.Component {
     }
     this.prefillBusinessTimeCall = axios.CancelToken.source();
 
-    if (!(shop_id && had_special_date && special_dates_array_start_at_date_part_input )) {
+    if (!(shop_id && had_special_date === "true" && special_dates_array_start_at_date_part_input )) {
       return {}
     }
 
@@ -539,7 +469,7 @@ class BookingPageSettings extends React.Component {
   verifySpecialDates = async (values) => {
     const { shop_id, had_special_date, special_dates, options } = values.booking_page;
 
-    if (!(shop_id && had_special_date && special_dates && special_dates.length && options && options.length)) {
+    if (!(shop_id && had_special_date === "true" && special_dates && special_dates.length && options && options.length)) {
       return {}
     }
 
@@ -567,35 +497,55 @@ class BookingPageSettings extends React.Component {
 
   validate = (values) => {
     const { timezone } = this.props;
-    const { errors, form_errors } = this.props.i18n;
+    const {
+      errors,
+      form_errors,
+      booking_option_header,
+      shop_header,
+      time,
+      sale_start,
+      sale_end,
+    } = this.props.i18n;
     const fields_errors = {};
     fields_errors.booking_page = {};
-    const { shop_id, options, start_at_type, start_at_date_part, start_at_time_part, end_at_type, end_at_date_part, end_at_time_part, had_special_date, special_dates } = values.booking_page || {};
+    const {
+      shop_id,
+      available_booking_options,
+      options,
+      start_at_type,
+      start_at_date_part,
+      start_at_time_part,
+      end_at_type,
+      end_at_date_part,
+      end_at_time_part,
+      had_special_date,
+      special_dates,
+    } = values.booking_page || {};
 
     if (!options.length) {
-      fields_errors.selected_booking_option = errors.required;
+      fields_errors.booking_page.selected_booking_option = `${booking_option_header}${errors.required}`;
     }
 
     if (!shop_id) {
-      fields_errors.booking_page.shop_id = errors.required;
+      fields_errors.booking_page.shop_id = `${shop_header}${errors.required}`;
     }
 
     if (start_at_type === "date" && !start_at_time_part) {
-      fields_errors.booking_page.start_at_time_part = errors.required;
+      fields_errors.booking_page.start_at_time_part = `${sale_start}${errors.required}`;
     }
 
     if (end_at_type === "date" && !end_at_time_part) {
-      fields_errors.booking_page.end_at_time_part = errors.required;
+      fields_errors.booking_page.end_at_time_part = `${sale_end}${errors.required}`;
     }
 
-    if (had_special_date && !special_dates.length) {
-      fields_errors.booking_page.had_special_date = errors.required;
+    if (had_special_date === "true" && !special_dates.length) {
+      fields_errors.booking_page.had_special_date = `${time}${errors.required}`;
     }
 
-    if (had_special_date && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
+    if (had_special_date === "true" && special_dates.length && start_at_type === "date" && start_at_date_part && start_at_time_part) {
       const earistSpecialDate = _.minBy(special_dates, (special_date) => moment.tz(`${special_date.start_at_date_part} ${special_date.start_at_time_part}`, timezone))
-      const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, timezone)
-      const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, timezone)
+      const specialDateStartAt = moment.tz(`${earistSpecialDate.start_at_date_part} ${earistSpecialDate.start_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
+      const bookingStartAt = moment.tz(`${start_at_date_part} ${start_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
 
       if (bookingStartAt.isAfter(specialDateStartAt)) {
         const start_at_error_message = form_errors.start_at_too_late.replace("{datetime}", specialDateStartAt.format("YYYY/M/D HH:mm"))
@@ -605,10 +555,10 @@ class BookingPageSettings extends React.Component {
       }
     }
 
-    if (had_special_date && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
-      const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, timezone))
-      const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, timezone)
-      const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, timezone)
+    if (had_special_date === "true" && special_dates.length && end_at_type === "date" && end_at_date_part && end_at_time_part) {
+      const latestSpecialDate = _.maxBy(special_dates, (special_date) => moment.tz(`${special_date.end_at_date_part} ${special_date.end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone))
+      const specialDateEndAt = moment.tz(`${latestSpecialDate.end_at_date_part} ${latestSpecialDate.end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
+      const bookingEndAt = moment.tz(`${end_at_date_part} ${end_at_time_part}`, "YYYY-MM-DD HH:mm", timezone)
 
       if (bookingEndAt.isBefore(specialDateEndAt)) {
         const end_at_error_message = form_errors.end_at_too_early.replace("{datetime}", specialDateEndAt.format("YYYY/M/D HH:mm"))
@@ -616,6 +566,18 @@ class BookingPageSettings extends React.Component {
         fields_errors.booking_page.end_at_date_part = end_at_error_message;
         fields_errors.booking_page.end_at_time_part = end_at_error_message;
       }
+    }
+
+    if (options.length) {
+      const available_booking_option_ids = _.map(available_booking_options, (available_booking_option) => available_booking_option.id)
+      const shop_name = this.props.shop_options.find((shop_option) => shop_option.value == shop_id).label
+
+      options.forEach((option, i) => {
+        if (!_.includes(available_booking_option_ids, option.id)) {
+          fields_errors.booking_page.options = fields_errors.booking_page.options || []
+          fields_errors.booking_page.options[i] = form_errors.unavailable_booking_option.replace("{shop_name}", shop_name)
+        }
+      })
     }
 
     return Object.keys(fields_errors.booking_page).length ? fields_errors : this.throttleVerifySpecialDates(values);
@@ -638,6 +600,11 @@ class BookingPageSettings extends React.Component {
         render={({ handleSubmit, submitting, values, form }) => {
           this.booking_page_settings_form = form;
           this.booking_page_settings_values = values;
+          const {
+            cancel,
+            save_as_draft,
+            save_and_publish,
+          } = this.props.i18n;
 
           return (
             <form
@@ -652,8 +619,8 @@ class BookingPageSettings extends React.Component {
               <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
 
               {this.renderNameFields()}
-              {this.renderBookingOptionFields()}
               {this.renderShopFields()}
+              {this.renderBookingOptionFields()}
               {this.renderBookingDateFields(values)}
               {this.renderBookingIntervalFields()}
               {this.renderBookingPeriodFields()}
@@ -665,13 +632,30 @@ class BookingPageSettings extends React.Component {
                   <a className="BTNtarco" href={this.props.path.cancel}>{this.props.i18n.cancel}</a>
                 </li>
                 <li>
-                  <input
+                  <button
                     type="submit"
-                    name="commit"
-                    value={this.props.i18n.save}
-                    className="BTNyellow"
-                    data-disable-with={this.props.i18n.save}
+                    className="btn btn-yellow btn-large"
                     disabled={submitting}
+                    onClick={() => {
+                      form.change("booking_page[draft]", true);
+                    }}>
+                    {save_as_draft}
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="submit"
+                    className="btn btn-orange btn-large"
+                    disabled={submitting}
+                    onClick={() => {
+                      form.change("booking_page[draft]", false);
+                    }}>
+                    {save_and_publish}
+                  </button>
+                  <Field
+                    name="booking_page[draft]"
+                    component="input"
+                    type="hidden"
                   />
                 </li>
               </ul>
@@ -680,6 +664,41 @@ class BookingPageSettings extends React.Component {
         }}
       />
     )
+  }
+
+  initAvailableBookingOptions = async () => {
+    const options = await this.fetchAvailableBookingOptions(this.booking_page_settings_values);
+
+    this.booking_page_settings_form.change("booking_page[available_booking_options]", options["booking_page[available_booking_options]"])
+  }
+
+  fetchAvailableBookingOptions = async (allValues) => {
+    const { shop_id } = allValues.booking_page;
+
+    if (this.fetchAvailableBookingOptionsCall) {
+      this.fetchAvailableBookingOptionsCall.cancel();
+    }
+    this.fetchAvailableBookingOptionsCall= axios.CancelToken.source();
+
+    if (!shop_id) {
+      return {
+        "booking_page[available_booking_options]": []
+      }
+    }
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.booking_options,
+      params: {
+        shop_id: shop_id
+      },
+      responseType: "json",
+      cancelToken: this.fetchAvailableBookingOptionsCall.token
+    })
+
+    return {
+      "booking_page[available_booking_options]": response.data.available_booking_options
+    }
   }
 }
 

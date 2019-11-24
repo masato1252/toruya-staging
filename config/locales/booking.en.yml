@@ -1,5 +1,6 @@
 ja:
   booking_page:
+    showing_preview: Showing preview
     time_from: ""
     ever_used: "have you been used"
     yes_ever_used: "Yes, I had"
@@ -20,14 +21,22 @@ ja:
       zip_code: Zip code
       living_state: State
       city: City
-      steet: street
+      street1: street
+      street2: street
     save_change: Save Changes
+    invalid_to_change: Invalid to change
     flow_label: Please select what you want to select first
     date_flow_first: from booking date and time
     option_flow_first: from booking menu
     booking_end_at: end at
     thanks_for_come_back: Thank you for coming back
     please_select_a_menu: Please select a menu
+    reset_button: Start Over
+    last_selected_option: Last used menu
+    message:
+      unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
+      booking_failed_messsage_html: Time and menu you chose is full.<br>Please try another option.
+      booking_unexpected_failed_message: Booking failed with some reason. Please try again.
     done:
       title: Temporary reservation has been made
       message1: Reservation detail has been
@@ -39,3 +48,10 @@ ja:
       feature2: Manage arrangement and tasks for friends
       feature3: Remind you for your reservations
       signup_now: Signup Now!
+    notifications:
+      sms: "To %{customer_name}\n You just booked %{shop_name} for %{booking_time} remporarily\n Please contact %{shop_phone_number} for changes"
+    booking_mailer:
+      customer_reservation_notification:
+        title: "You've just booked %{shop_name}"
+      shop_owner_reservation_booked_notification:
+        title: New reservation has made from online

@@ -7,8 +7,12 @@ module ReservationsHelper
       reservation_deleted_staff_names_sentence = reservation_staffs.find_all { |reservation_staff| reservation_staff.deleted_at }.map(&:name).join(", ")
     end
 
+    menu_staffs = reservation.reservation_staffs.group_by{|rs| rs.menu.display_name }.map do |menu_name, reservation_staffs|
+      "#{menu_name} (#{reservation_staffs.map { |rs| rs.staff.name }.join(", ")})"
+    end.join(", ").html_safe
+
     {
-      staffs_sentence: reservation_staffs.map(&:name).join(", ").presence,
+      staffs_sentence: menu_staffs,
       deleted_staffs_sentence: in_future_or_today ? reservation_staffs.find_all { |reservation_staff| reservation_staff.deleted_at }.map(&:name).join(", ").presence : nil
     }
   end

@@ -1,5 +1,5 @@
 <%= notification_messages %>
-<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation %>
+<%= jump_out_modal(shop_reservation_path(@reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <div class="contents" id="dashboard">
   <div id="calendar" class="sidel">
@@ -50,13 +50,7 @@
       <dt class="shop">店舗</dt>
     </dl>
     <%= render "reservations/schedules", schedules: @schedules %>
-    <div class="status-list">
-      <div><span class="reservation-state reserved"></span>予約</div>
-      <div><span class="reservation-state checkin"></span>チェックイン</div>
-      <div><span class="reservation-state checkout"></span>チェックアウト</div>
-      <div><span class="reservation-state noshow"></span>未来店</div>
-      <div><span class="reservation-state pending"></span>承認待ち</div>
-    </div>
+    <%= render "reservations/states_list" %>
   </div>
 
   <%= render "reservations/new_modal", date: @date %>
