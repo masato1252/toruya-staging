@@ -264,12 +264,10 @@ class ReservationsController < DashboardController
   end
 
   def reservation_errors
-    outcome = Reservations::Validate.run(
+    @errors_with_warnings = Reservations::Validate.run!(
       reservation: @reservation || shop.reservations.find_by(id: params[:reservation_form][:reservation_id]) || shop.reservations.new,
       params: reservation_params_hash
     )
-
-    @errors_with_warnings = outcome.result
   end
 
   def set_current_dashboard_mode
