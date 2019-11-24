@@ -23,8 +23,8 @@ class Plan < ApplicationRecord
   COST = {
     jpy: {
       "free" => 0,
-      "basic" => 2_160,
-      "premium" => 5_400,
+      "basic" => 2_200,
+      "premium" => 5_500,
     },
   }.freeze
 
