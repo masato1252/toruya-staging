@@ -16,7 +16,7 @@ module Reservations
       array :menu_staffs_list, default: nil do
         hash do
           integer :menu_id
-          integer :menu_required_time
+          integer :menu_required_time, default: 0
           integer :menu_interval_time
           array :staff_ids, default: [] do
             hash do

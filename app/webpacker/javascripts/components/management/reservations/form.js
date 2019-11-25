@@ -22,7 +22,7 @@ import ProcessingBar from "../../shared/processing_bar.js"
 class ManagementReservationForm extends React.Component {
   constructor(props) {
     super(props);
-    this.debounceValidateReservation = _.debounce(this.validateReservation, 200, true)
+    this.debounceValidateReservation = _.debounce(this.validateReservation, 500, true)
 
     this.calculator = createChangesDecorator(
       {
@@ -449,7 +449,7 @@ class ManagementReservationForm extends React.Component {
                   start_time_time_part={start_time_time_part}
                   end_time_time_part={end_time_time_part}
                   custom_schedules_path={this.props.path.working_schedule}
-                  callback={this.validateReservation}
+                  callback={this.debounceValidateReservation}
                 />
               )}
               <StaffStatesModal
