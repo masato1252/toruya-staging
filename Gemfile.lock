@@ -1,10 +1,4 @@
 GIT
-  remote: git://github.com/thethanghn/custom-err-msg.git
-  revision: b913309360995472507ea444c6f1a80315b99d28
-  specs:
-    custom_error_message (1.2.1)
-
-GIT
   remote: https://github.com/ilake/google_contacts_api.git
   revision: 4bdbc647823e232e0028da907184b803c2f65961
   specs:
@@ -31,6 +25,12 @@ GIT
       tty-pager (~> 0.12.0)
       tty-screen (~> 0.6.5)
       tty-tree (~> 0.2.0)
+
+GIT
+  remote: https://github.com/thethanghn/custom-err-msg.git
+  revision: b913309360995472507ea444c6f1a80315b99d28
+  specs:
+    custom_error_message (1.2.1)
 
 GEM
   remote: http://rubygems.org/
