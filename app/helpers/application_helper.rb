@@ -78,8 +78,4 @@ module ApplicationHelper
 
     content_tag(:template, nil, data: data)
   end
-
-  def booking_feature_enabled?
-    !Rails.configuration.x.env.production?
-  end
 end
