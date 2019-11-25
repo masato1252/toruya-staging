@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/thethanghn/custom-err-msg.git
+  revision: b913309360995472507ea444c6f1a80315b99d28
+  specs:
+    custom_error_message (1.2.1)
+
+GIT
   remote: https://github.com/ilake/google_contacts_api.git
   revision: 4bdbc647823e232e0028da907184b803c2f65961
   specs:
@@ -142,7 +148,6 @@ GEM
     concurrent-ruby (1.0.5)
     connection_pool (2.2.2)
     crass (1.0.4)
-    custom_error_message (1.1.1)
     dante (0.2.0)
     database_cleaner (1.7.0)
     debug_inspector (0.0.3)
@@ -512,7 +517,7 @@ DEPENDENCIES
   byebug
   cancancan (~> 1.15.0)
   carrierwave
-  custom_error_message
+  custom_error_message (~> 1.2.1)!
   database_cleaner
   default_value_for
   delayed-web
