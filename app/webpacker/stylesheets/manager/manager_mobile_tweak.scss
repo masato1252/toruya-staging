@@ -21,4 +21,31 @@
   header dl dd a .fa {
     font-size: 35px;
   }
+
+  .alert {
+    padding: 10px;
+    font-size: 90%;
+  }
+
+  .contents {
+    padding: 10px;
+  }
+
+  .contents .sidel {
+    padding-right: 0px;
+    padding-bottom: 10px;
+  }
+
+  #customer, #dashboard, #filter, #resNew, #shopNav {
+    display: block;
+    justify-content: unset;
+    flex-direction: unset;
+    -webkit-box-orient: unset;
+    -webkit-box-direction: unset;
+    -webkit-box-pack: unset;
+  }
+
+  #resList {
+    margin-bottom: 25px;
+  }
 }
