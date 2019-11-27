@@ -1,0 +1,24 @@
+@include media-breakpoint-down(tablet) {
+  header dl:first-child {
+    margin-left: 10px;
+  }
+
+  header dl:last-child {
+    margin-right: 10px;
+  }
+
+  header dl:first-child dd, header dl:first-child dt {
+    padding-right: 5px;
+  }
+
+  header dl:last-child dd {
+    padding-left: 5px;
+  }
+
+  header dl dd a, header dl dd a:link, header dl dd a:visited, header dl dt a, header dl dt a:link, header dl dt a:visited {
+    min-width: 35px;
+  }
+  header dl dd a .fa {
+    font-size: 35px;
+  }
+}
