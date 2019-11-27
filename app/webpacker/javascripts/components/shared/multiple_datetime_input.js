@@ -121,7 +121,7 @@ const DatetimeField = ({ input_prefix_name, collection_name, fields, results, ti
             state_form.change(end_date_input_name, null)
             state_form.change(end_time_input_name, null)
           }}>
-            {i18n.save}
+            {i18n.add_more}
         </a>
       )}
     </FormSpy>

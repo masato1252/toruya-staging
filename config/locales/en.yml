@@ -46,6 +46,7 @@ en:
     add_a_menu: "Add a menu"
     ignore: Ignore
     save_changes: Overwrite the data
+    add_more: More
   common:
     processing: Processing
     date: Date
