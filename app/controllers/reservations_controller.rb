@@ -56,7 +56,7 @@ class ReservationsController < DashboardController
       @reservation = shop.reservations.find_or_initialize_by(id: reservation_id)
       @reservation.attributes = reservarion_params
       @menu_staffs_list = menu_staffs_list
-      @staff_states = staff_states
+      @staff_states = staff_states.presence || []
       @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
     else
       @reservation = shop.reservations.find_by(id: params[:id])
