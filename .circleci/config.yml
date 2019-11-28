@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/ruby:2.4.2-node
+      - image: circleci/ruby:2.5.7-node-browsers
         environment:
           RAILS_ENV: test
           RACK_ENV: test
@@ -48,7 +48,6 @@ jobs:
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
-      - run: sudo apt-get install nodejs
       # Fixed: Please check the output above for any errors and make sure that `psql` is installed in your PATH and has proper permissions.
       - run: sudo apt-get install postgresql-client
 
