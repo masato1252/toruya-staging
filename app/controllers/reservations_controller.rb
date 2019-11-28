@@ -291,33 +291,15 @@ class ReservationsController < DashboardController
     if @reservation_params_hash[:customers_list].present?
       @reservation_params_hash[:customers_list].map! { |h| h.merge!(details: JSON.parse(h["details"].presence || "{}")) }
       @reservation_params_hash[:customers_list].map! { |h| h[:booking_at].present? ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
-      @reservation_params_hash[:customers_list].map! { |h| h[:booking_at].present? ? h.merge!(booking_at: Time.parse(h[:booking_at])) : h }
-      @reservation_params_hash[:customers_list].map! do |h|
-        h.keys.each do |customer_attr|
-          h[customer_attr] = nil if h[customer_attr].blank?
-        end
-        h
-      end
+      convert_params(@reservation_params_hash[:customers_list])
     end
 
     if @reservation_params_hash[:staff_states].present?
-      @reservation_params_hash[:staff_states].map! do |h|
-        h.keys.each do |staff_state_attr|
-          h[staff_state_attr] = nil if h[staff_state_attr].blank?
-        end
-        h
-      end
+      convert_params(@reservation_params_hash[:staff_states])
     end
+
     if @reservation_params_hash[:menu_staffs_list].present?
-      @reservation_params_hash[:menu_staffs_list].map! do |h|
-        h[:staff_ids].map! do |staff_id_hash|
-          staff_id_hash.keys.each do |staff_attr|
-            staff_id_hash[staff_attr] = nil if staff_id_hash[staff_attr].blank?
-          end
-          staff_id_hash
-        end
-        h
-      end
+      convert_params(@reservation_params_hash[:menu_staffs_list])
     end
     @reservation_params_hash
   end

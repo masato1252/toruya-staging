@@ -4,9 +4,11 @@ class DashboardController < ActionController::Base
   layout "application"
   include Authorization
   include ViewHelpers
+  include ParameterConverters
   include Locale
   include ExceptionHandler
   include Sentry
+  include ParameterConverters
 
   before_action :profile_required
   before_action :set_paper_trail_whodunnit
@@ -28,19 +30,5 @@ class DashboardController < ActionController::Base
 
   def sync_user
     Users::ContactsSync.run!(user: super_user) if super_user
-  end
-
-  def repair_nested_params(obj = params)
-    obj.each do |key, value|
-      if value.is_a?(ActionController::Parameters) || value.is_a?(Hash)
-        # If any non-integer keys
-        if value.keys.find {|k, _| k =~ /\D/ }
-          repair_nested_params(value)
-        else
-          obj[key] = value.values
-          value.values.each {|h| repair_nested_params(h) }
-        end
-      end
-    end
   end
 end

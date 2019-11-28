@@ -20,7 +20,7 @@ module Reservations
           integer :menu_interval_time
           array :staff_ids, default: [] do
             hash do
-              string :staff_id, default: nil
+              integer :staff_id, default: nil
             end
           end
         end
@@ -122,7 +122,7 @@ module Reservations
             when :staff_ids
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list] ||= Array.new(menu_staffs_list.length) { Hash[:menu_id, {}] }
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list][menu_index][:staff_ids] ||= Array.new(menu_staffs_list[menu_index][:staff_ids].length) { Hash[:staff_id, {}] }
-              staff_index = menu_staffs_list[menu_index][:staff_ids].find_index { |staff_h| staff_h[:staff_id].to_i == option[:staff_id] }
+              staff_index = menu_staffs_list[menu_index][:staff_ids].find_index { |staff_h| staff_h[:staff_id] == option[:staff_id] }
 
               errors_with_warnings[error_type][:reservation_form][:menu_staffs_list][menu_index][:staff_ids][staff_index][:staff_id][error_reason] = error_message
             else
