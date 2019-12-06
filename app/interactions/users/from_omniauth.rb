@@ -8,7 +8,6 @@ module Users
         User.where(email: auth.info.email).build
 
       user.email = auth.info.email.presence || user.email
-      user.password = Devise.friendly_token[0,20]
       user.skip_confirmation!
       user.skip_confirmation_notification!
 
