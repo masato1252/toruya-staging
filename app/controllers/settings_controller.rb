@@ -5,7 +5,8 @@ class SettingsController < ActionController::Base
 
   include Authorization
   include AccountRequirement
-  include BookingRequirement
+  # XXX: It was suspended because of we didn't have any video or popup for the online booking tour, yet.
+  # include BookingRequirement
   include ViewHelpers
   include Locale
   include ExceptionHandler

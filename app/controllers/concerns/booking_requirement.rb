@@ -6,7 +6,7 @@ module BookingRequirement
   end
 
   def checking_booking_requirement
-    if is_owner
+    if is_owner && basic_settings_presenter.completed?
       return unless session[:booking_settings_tour]
       first_undo_task = booking_settings_presenter.first_undo_task
 
