@@ -107,6 +107,8 @@ RSpec.describe Subscriptions::RecurringCharge do
           let(:next_plan) { Plan.child_premium_level.take }
 
           it "changes subscription to next plan" do
+            allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+
             outcome
 
             subscription.reload
@@ -143,6 +145,8 @@ RSpec.describe Subscriptions::RecurringCharge do
             expect(payment.details).to eq({
               "type" => Payment::TYPES[:referral_connect]
             })
+
+            expect(SubscriptionMailer).to have_received(:charge_successfully)
           end
         end
 
@@ -165,6 +169,8 @@ RSpec.describe Subscriptions::RecurringCharge do
           let(:next_plan) { Plan.business_level.take }
 
           it "changes subscription to next plan" do
+            allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+
             outcome
 
             subscription.reload
@@ -201,6 +207,8 @@ RSpec.describe Subscriptions::RecurringCharge do
               "type" => Payment::TYPES[:referral_disconnect]
             })
             expect(referral.reload).to be_referrer_canceled
+
+            expect(SubscriptionMailer).to have_received(:charge_successfully)
           end
         end
       end

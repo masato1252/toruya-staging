@@ -49,6 +49,8 @@ RSpec.describe Plans::SubscribeBusinessPlan do
         "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
         "plan_name" => plan.name
       })
+
+      expect(SubscriptionMailer).to have_received(:charge_successfully)
     end
 
     context "when user is a referrer" do
@@ -58,6 +60,7 @@ RSpec.describe Plans::SubscribeBusinessPlan do
       before { factory.create_referral(referee: referee, referrer: user, state: :active) }
 
       it "The referee gets 5,500 yen pending payment and referral was canceled" do
+        allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
         outcome
 
         expect(subscription.user.reload).to be_business_member
@@ -70,6 +73,7 @@ RSpec.describe Plans::SubscribeBusinessPlan do
           "type" => Payment::TYPES[:referral_disconnect]
         })
         expect(user.reference).to be_referrer_canceled
+        expect(SubscriptionMailer).to have_received(:charge_successfully)
       end
     end
   end
