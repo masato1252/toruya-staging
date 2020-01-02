@@ -977,6 +977,39 @@ ALTER SEQUENCE public.ranks_id_seq OWNED BY public.ranks.id;
 
 
 --
+-- Name: referrals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.referrals (
+    id bigint NOT NULL,
+    referrer_id integer NOT NULL,
+    referee_id integer NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: referrals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.referrals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: referrals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.referrals_id_seq OWNED BY public.referrals.id;
+
+
+--
 -- Name: reservation_booking_options; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1858,6 +1891,13 @@ ALTER TABLE ONLY public.ranks ALTER COLUMN id SET DEFAULT nextval('public.ranks_
 
 
 --
+-- Name: referrals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.referrals ALTER COLUMN id SET DEFAULT nextval('public.referrals_id_seq'::regclass);
+
+
+--
 -- Name: reservation_booking_options id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2196,6 +2236,14 @@ ALTER TABLE ONLY public.query_filters
 
 ALTER TABLE ONLY public.ranks
     ADD CONSTRAINT ranks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: referrals referrals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.referrals
+    ADD CONSTRAINT referrals_pkey PRIMARY KEY (id);
 
 
 --
@@ -2583,6 +2631,13 @@ CREATE INDEX index_ranks_on_user_id ON public.ranks USING btree (user_id);
 
 
 --
+-- Name: index_referrals_on_referrer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_referrals_on_referrer_id ON public.referrals USING btree (referrer_id);
+
+
+--
 -- Name: index_reservation_booking_options_on_booking_option_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2720,6 +2775,13 @@ CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btre
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
+
+
+--
+-- Name: index_users_on_referral_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_referral_token ON public.users USING btree (referral_token);
 
 
 --

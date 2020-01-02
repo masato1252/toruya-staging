@@ -234,6 +234,14 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.index ["user_id"], name: "index_ranks_on_user_id"
   end
 
+  create_table "referrals", force: :cascade do |t|
+    t.integer "referrer_id", null: false
+    t.integer "referee_id", null: false
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["referrer_id"], name: "index_referrals_on_referrer_id", unique: true
+  end
   create_table "reservation_customers", id: :serial, force: :cascade do |t|
     t.integer "reservation_id", null: false
     t.integer "customer_id", null: false
@@ -437,8 +445,10 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "contacts_sync_at"
+    t.string "referral_token"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["referral_token"], name: "index_users_on_referral_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end

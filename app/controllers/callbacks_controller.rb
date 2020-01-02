@@ -2,7 +2,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
   include Devise::Controllers::Rememberable
 
   def google_oauth2
-    outcome = ::Users::FromOmniauth.run(auth: request.env["omniauth.auth"])
+    param = request.env["omniauth.params"]
+    outcome = ::Users::FromOmniauth.run(auth: request.env["omniauth.auth"], referral_token: param["referral_token"])
 
     if outcome.valid?
       user = outcome.result
