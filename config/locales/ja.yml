@@ -91,6 +91,11 @@ ja:
     menu: メニュー
     responsible_employee: 担当者
     booking_price: 予約価格
+    status: ステータス
+  invitation:
+    business_member_canceled:
+      title: 利用が中止されました
+      desc_html: 代理店様のご都合により、このページの利用が中止されました。<br>ご紹介者様にご連絡ください。
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -142,6 +147,9 @@ ja:
       basic: ベーシック
       premium: プレミアム
       trial: 試用期間
+      business: プレミアム
+      child_basic: ベーシック
+      child_premium: プレミアム
   notifications:
     pending_reservation_need_confirm: "%{number}個の確認が必要な予約があります。"
     pending_reservation_confirm: 予約を確認
@@ -610,6 +618,27 @@ ja:
           label: 返金明細書
           plan: 返金プラン
           amount_tip: 返金合計
+    referrers:
+      info_title: 子アカウント
+      info_desc_html: あなたが招待した子アカウントの情報です。<br />紹介料の受け取りには子アカウントが支払いを完了する必要があります。
+      sider_label: 代理店
+      referrer_label: 子アカウント
+      invite_button: 新しく招待する
+      last_charged_on: 最終支払い
+      state:
+        pending: 登録
+        referrer_canceled: 解除
+      copy_modal:
+        title: 紹介用URL
+        desc: この紹介用URLから登録した新規会員は、あなたの子アカウントになります。
+    withdrawals:
+      withdrawal_label: 紹介料
+      info_desc_html: あなたの紹介料の内訳をご確認いただけます。<br />紹介料の受け取りには子アカウントが支払いを完了する必要があります。
+      transfer_date: 発行日
+      amount: 合計金額
+      print: 明細印刷
+      receipt:
+        issue_date: 発生日
     plans:
       info_title: ご利用プラン
       info_title1: ご利用プランとお支払い情報
@@ -620,6 +649,7 @@ ja:
       plan_info:
         caption: ご利用プラン
         current_plan: ご利用中プラン
+        unselectable: 選択できません
         plan_member: "%{plan_name} メンバー"
         change_plan: プラン変更
         join_date: 登録日
@@ -660,6 +690,12 @@ ja:
         desc2: "%{after_expired_date}から幾つかの機能が使えなくなります。ダウングレード後は、新規の予約を作成できなくなる可能性があります。"
         cancel_btn: ダウングレードしない
         confirm_btn: ダウングレードする
+        child:
+          modal_title: 特別料金での利用ができなくなります！
+          desc: 無料プランに変更すると、特別料金（年会費）は二度と利用できなくなります。よろしいですか？
+        business:
+          modal_title: 代理店登録は解除されます！
+          desc: 無料やベーシックプランに変更すると、代理店ではなくなります。よろしいですか？
       refund:
         modal_title: ダウングレードされます!!
         desc: 返金しようとしているのは、現在ご利用中のメンバーシップです。
@@ -682,6 +718,7 @@ ja:
         add_staff: スタッフ追加
       free:
         title: フリー
+        period: ""
         shop_can_set: "１店舗"
         staff_in_charge: "１人"
         max_customer_per_reservation: ⃝
@@ -694,6 +731,20 @@ ja:
         add_staff: ✕
       basic:
         title: ベーシック
+        period: 月額
+        shop_can_set: "１店舗"
+        staff_in_charge: "１人"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: １日１０件(累計3,600件)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2つ
+        customer_filter: プリセット条件検索
+        print_address: 個別
+        add_staff: ✕
+      child_basic:
+        title: ベーシック
+        period: 一年間
         shop_can_set: "１店舗"
         staff_in_charge: "１人"
         max_customer_per_reservation: ⃝
@@ -706,6 +757,33 @@ ja:
         add_staff: ✕
       premium:
         title: プレミアム
+        period: 月額
+        shop_can_set: "無制限(追加料金)"
+        staff_in_charge: "無制限"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無制限
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無制限
+        customer_filter: 条件検索を保存可能
+        print_address: 一斉
+        add_staff: ⃝
+      child_premium:
+        title: プレミアム
+        period: 一年間
+        shop_can_set: "無制限(追加料金)"
+        staff_in_charge: "無制限"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 無制限
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 無制限
+        customer_filter: 条件検索を保存可能
+        print_address: 一斉
+        add_staff: ⃝
+      business:
+        title: プレミアム
+        period: 一年間
         shop_can_set: "無制限(追加料金)"
         staff_in_charge: "無制限"
         max_customer_per_reservation: ⃝
@@ -1098,6 +1176,8 @@ ja:
   notification_mailer:
     duplicate_customers:
       title: 重複した顧客データが見つかりました
+    new_referrer:
+      title: 新しく子アカウントが追加されました
   subscription_mailer:
     charge_successfully:
       title: ご請求完了のご連絡
@@ -1122,6 +1202,9 @@ ja:
       title: 累計の予約上限数満了のご連絡
     total_reservations_limit_by_staff_reminder:
       title: 累計の予約上限を超えた予約作成のご連絡
+  withdrawal_mailer:
+    monthly_report:
+      title: 紹介料の確定のお知らせ
   active_interaction:
     errors:
       models:

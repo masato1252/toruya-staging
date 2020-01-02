@@ -109,7 +109,13 @@ class Subscription < ApplicationRecord
   end
 
   def scheduled_recurring_date
-    date = user.subscription_charges.last_completed.charge_date.next_month
+    date =
+      if Plan::ANNUAL_CHARGE_PLANS.include?(plan.level)
+        user.subscription_charges.last_completed.charge_date.next_year
+      else
+        user.subscription_charges.last_completed.charge_date.next_month
+      end
+
     recurring_date(date.year, date.month)
   end
 end

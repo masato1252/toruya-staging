@@ -1,0 +1,17 @@
+■Finalization of referral fee■
+
+<%= line %>
+
+Dear <%= @user.name %>,
+
+Thank you for using Toruya.
+
+I am happy to inform you that the most recent referral fee has been finalized.
+
+Transfer date：<%= I18n.l(@transfer_date) %>
+
+Statement period：<%= I18n.l(@period.first) %>~<%= I18n.l(@period.last) %>
+
+Total amount：<%= @total_amount.format %>
+
+You can find referral fee statement on <%= settings_withdrawals_url %> anytime.

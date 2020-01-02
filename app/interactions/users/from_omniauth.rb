@@ -27,6 +27,7 @@ module Users
         compose(Referrals::Build, referee: referee, referrer: user)
       end
       compose(GoogleOauth::Create, user: user, auth: auth)
+      compose(Users::BuildDefaultData, user: user)
       user.save!
       user
     end

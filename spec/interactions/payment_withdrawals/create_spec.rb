@@ -1,6 +1,11 @@
 require "rails_helper"
 
 RSpec.describe PaymentWithdrawals::Create do
+  before do
+    # It is sunday
+    Timecop.freeze(2019, 11, 10)
+  end
+  after { Timecop.return }
   let!(:payment) do
     Timecop.travel(1.month.ago) do
       factory.create_payment
@@ -28,6 +33,7 @@ RSpec.describe PaymentWithdrawals::Create do
       expect(withdrawal.payment_ids).to include(payment.id)
       expect(withdrawal.amount).to eq(user.payments.sum(&:amount))
       expect(withdrawal.details["payment_ids"]).to eq([payment.id])
+      expect(withdrawal.details["transfer_date"]).to eq(I18n.l(Date.new(2019, 11, 8)))
     end
   end
 end

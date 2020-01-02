@@ -8,12 +8,14 @@ class Users::ProfilesController < DashboardController
   end
 
   def create
-    outcome = Profiles::Create.run(user: current_user, params: profile_params)
+    outcome = Profiles::Create.run(user: current_user, params: profile_params.to_h)
 
     if outcome.valid?
       if session[:create_from_staff_account].present?
         session[:create_from_staff_account] = nil
         redirect_to member_path
+      elsif outcome.result.user.reference
+        redirect_to settings_plans_path, notice: I18n.t("common.create_successfully_message")
       else
         redirect_to settings_dashboard_path, notice: I18n.t("common.create_successfully_message")
       end

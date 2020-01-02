@@ -1,0 +1,21 @@
+<dl class="booking-options-sider">
+  <%= active_link_to settings_referrers_path,
+    active: [[ "settings/referrers", "settings/withdrawals" ]],
+    wrap_tag: :dt, class_active: "here" do %>
+    <span><i class="fa fa-briefcase fa-2x"></i>&nbsp;<%= t("settings.referrers.sider_label") %></span>
+  <% end %>
+  <dd>
+    <ul>
+      <%= active_link_to t("settings.referrers.referrer_label"), settings_referrers_path,
+        active: [[ "settings/referrers" ]],
+        wrap_tag: :li,
+        class_active: "here" %>
+    </ul>
+    <ul>
+      <%= active_link_to t("settings.withdrawals.withdrawal_label"), settings_withdrawals_path,
+        active: [[ "settings/withdrawals" ]],
+        wrap_tag: :li,
+        class_active: "here" %>
+    </ul>
+  </dd>
+</dl>

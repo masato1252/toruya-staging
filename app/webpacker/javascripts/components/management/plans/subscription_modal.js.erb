@@ -2,6 +2,7 @@
 
 import React from "react";
 import PlanCharge from "./charge";
+import _ from "lodash";
 
 class SubscriptionModal extends React.Component {
   renderContent = () => {
@@ -9,7 +10,7 @@ class SubscriptionModal extends React.Component {
       <div className="downgrade-area">
         <div className="modal-body">
           <div>
-            {this.props.i18n.downgradeDesc}
+            {this.isSpecialDowngradeLevel() ? this.props.i18n.specialDowngradeContent : this.props.i18n.downgradeDesc}
           </div>
           <div className="downgrade-label">
             {this.props.i18n.downgradeLabel1}
@@ -42,6 +43,10 @@ class SubscriptionModal extends React.Component {
     );
   };
 
+  isSpecialDowngradeLevel = () => {
+    return _.includes(this.props.specialDowngradeLevels, this.props.selectedPlan.level)
+  }
+
   render() {
     return (
       <div className="modal fade" id="subscription-modal" tabIndex="-1" role="dialog">
@@ -52,7 +57,7 @@ class SubscriptionModal extends React.Component {
                 <span aria-hidden="true">×</span>
               </button>
               <h4 className="modal-title" id="myModalLabel">
-                {this.props.i18n.downgradeTitle}
+                {this.isSpecialDowngradeLevel() ? this.props.i18n.specialDowngradeTitle : this.props.i18n.downgradeTitle}
               </h4>
             </div>
             {this.renderContent()}

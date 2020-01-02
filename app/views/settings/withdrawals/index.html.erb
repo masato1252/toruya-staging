@@ -1,0 +1,25 @@
+<div id="subNav">
+  <h2><%= t("settings.referrers.sider_label") %> − <%= t("settings.withdrawals.withdrawal_label") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.withdrawals.info_desc_html") %></p>
+</div>
+
+<%= content_tag(:div, id: "settingForm") do %>
+  <div id="withdrawalsList" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL"><%= t("settings.withdrawals.transfer_date") %></li>
+      <li class="rowTTL"><%= t("settings.withdrawals.amount") %></li>
+      <li class="updateTime"></li>
+    </ul>
+    <% @withdrawals.each do |withdrawal| %>
+      <dl>
+        <dt class="rowTTL"><%= I18n.l(withdrawal.created_at.to_date) %></dt>
+        <dd class="rowTTL"><%= withdrawal.amount.format %></dd>
+        <dd class="updateTime">
+          <%= link_to t("settings.withdrawals.print"), settings_withdrawal_path(withdrawal, format: :pdf), target: "_blank" %>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+<% end %>

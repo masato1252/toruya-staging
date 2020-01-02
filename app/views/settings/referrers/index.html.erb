@@ -1,0 +1,27 @@
+<div id="subNav">
+  <h2><%= t("settings.referrers.sider_label") %> − <%= t("settings.referrers.info_title") %></h2>
+</div>
+<div id="about">
+  <ul class="function">
+    <li>
+      <%= modal_link_to t("settings.referrers.invite_button"), copy_modal_settings_referrers_path, class: "BTNyellow addNew" %>
+    </li>
+  </ul>
+  <p><%= t("settings.referrers.info_desc_html") %></p>
+</div>
+
+<%= content_tag(:div, id: "settingForm") do %>
+  <div id="referrersList" class="formRow">
+    <ul class="tableTTL">
+      <li class="rowTTL"><%= t("common.name") %></li>
+      <li class="rowTTL"><%= t("common.status") %></li>
+      <li class="updateTime"><%= t("settings.referrers.last_charged_on") %></li>
+    </ul>
+    <% @referrals.each do |referral| %>
+      <dl>
+        <dt class="rowTTL"><%= referral.referrer.name %></dt>
+        <dd class="rowTTL"><%= referral.active? ? referral.referrer.permission_level_name : t("settings.referrers.state.#{referral.state}") %></dd>
+        <dd class="updateTime"><%= @charges_by_user_id[referral.referrer_id] %></dd>
+    <% end %>
+  </div>
+<% end %>

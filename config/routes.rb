@@ -116,6 +116,10 @@ Rails.application.routes.draw do
         get :receipt
       end
     end
+    resources :referrers, only: [:index] do
+      get :copy_modal, on: :collection
+    end
+    resources :withdrawals, only: [:index, :show]
     resource :profile, only: %i[show edit update]
 
     resources :users, only: [] do
@@ -235,6 +239,14 @@ Rails.application.routes.draw do
       get "find_customer"
       get "calendar"
       get "booking_times"
+    end
+  end
+
+  resources :referrals, only: [:show], param: :token
+  resource :business, only: [:show] do
+    collection do
+      post :apply
+      post :pay
     end
   end
 end
