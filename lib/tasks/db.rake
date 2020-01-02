@@ -1,3 +1,5 @@
+require "seeders/plan"
+
 namespace :db do
   desc "Backs up heroku database and restores it locally."
   task import_from_heroku: [ :environment, :drop, :create ] do
@@ -42,5 +44,13 @@ namespace :db do
       user.save!
     end
     puts "Done."
+  end
+
+  namespace :structure do
+    task :dump do
+      Seeders::Plan.dump!
+      Rake::Task["db:schema:dump"].invoke
+      `annotate -i -e spec`
+    end
   end
 end
