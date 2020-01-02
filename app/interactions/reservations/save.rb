@@ -74,10 +74,6 @@ module Reservations
         end
 
         if menu_staffs_list.present?
-          # TODO: Should keep the original staff's state
-          # _ids = [ ... ]
-          # update
-          # pending notification for staff? mail?
           reservation.reservation_staffs.destroy_all
 
           menu_staffs_list.each.with_index do |h, position|

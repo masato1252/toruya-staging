@@ -15,7 +15,7 @@
 # Indexes
 #
 #  index_subscriptions_on_plan_id  (plan_id)
-#  index_subscriptions_on_user_id  (user_id)
+#  index_subscriptions_on_user_id  (user_id) UNIQUE
 #
 
 class Subscription < ApplicationRecord
@@ -25,6 +25,8 @@ class Subscription < ApplicationRecord
   belongs_to :plan, required: false
   belongs_to :next_plan, class_name: "Plan", required: false
   belongs_to :user
+
+  validates :user_id, uniqueness: true
 
   scope :recurring_chargeable_at, ->(date) {
     return none if date < today

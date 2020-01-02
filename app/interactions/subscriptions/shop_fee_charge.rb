@@ -1,4 +1,3 @@
-# TODO: What is this receipt look like?
 module Subscriptions
   class ShopFeeCharge < ActiveInteraction::Base
     object :user

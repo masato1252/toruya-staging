@@ -7,7 +7,7 @@
 #  plan_id               :bigint(8)
 #  amount_cents          :decimal(, )
 #  amount_currency       :string
-#  state                 :integer
+#  state                 :integer          default("active"), not null
 #  charge_date           :date
 #  expired_date          :date
 #  manual                :boolean          default(FALSE), not null
