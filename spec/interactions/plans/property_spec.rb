@@ -10,10 +10,10 @@ RSpec.describe Plans::Property do
   end
   let(:outcome) { described_class.run!(args) }
 
-  RSpec.shared_examples "plan property" do |plan, property|
-    let(:plan) { plan }
+  RSpec.shared_examples "plan property" do |plan_level, property|
+    let(:plan) { Plan.public_send(plan_level).take }
 
-    context "when plan is #{plan.level} plan" do
+    context "when plan is #{plan_level} plan" do
       it "returns expected property" do
         expect(outcome).to eq(property)
       end
@@ -24,7 +24,7 @@ RSpec.describe Plans::Property do
     context "when user is regular user" do
       let(:subscription) { FactoryBot.create(:subscription, :free) }
 
-      it_behaves_like "plan property", Plan.free_level.take,
+      it_behaves_like "plan property", :free_level,
         Hashie::Mash.new({
         level: "free",
         key: "free",
@@ -32,11 +32,11 @@ RSpec.describe Plans::Property do
         cost: 0,
         costWithFee: 0,
         costFormat: "¥0",
-        name: Plan.free_level.take.name,
+        name: I18n.t("plan.level.free"),
         details: I18n.t("settings.plans")[:free]
       })
 
-      it_behaves_like "plan property", Plan.basic_level.take,
+      it_behaves_like "plan property", :basic_level,
         Hashie::Mash.new({
         level: "basic",
         key: "basic",
@@ -44,11 +44,11 @@ RSpec.describe Plans::Property do
         cost: 2_200,
         costWithFee: 2_200,
         costFormat: "¥2,200",
-        name: Plan.basic_level.take.name,
+        name: I18n.t("plan.level.basic"),
         details: I18n.t("settings.plans")[:basic]
       })
 
-      it_behaves_like "plan property", Plan.premium_level.take,
+      it_behaves_like "plan property", :premium_level,
         Hashie::Mash.new({
         level: "premium",
         key: "premium",
@@ -56,7 +56,7 @@ RSpec.describe Plans::Property do
         cost: 5_500,
         costWithFee: 5_500,
         costFormat: "¥5,500",
-        name: Plan.premium_level.take.name,
+        name: I18n.t("plan.level.premium"),
         details: I18n.t("settings.plans")[:premium]
       })
     end
@@ -64,7 +64,7 @@ RSpec.describe Plans::Property do
     context "when user is business member" do
       let(:subscription) { FactoryBot.create(:subscription, :business) }
 
-      it_behaves_like "plan property", Plan.business_level.take,
+      it_behaves_like "plan property", :business_level,
         Hashie::Mash.new({
         level: "premium",
         key: "business",
@@ -72,7 +72,7 @@ RSpec.describe Plans::Property do
         cost: 55_000,
         costWithFee: 63_800,
         costFormat: "¥55,000",
-        name: Plan.business_level.take.name,
+        name: I18n.t("plan.level.business"),
         details: I18n.t("settings.plans")[:business]
       })
     end
@@ -82,7 +82,7 @@ RSpec.describe Plans::Property do
         let!(:referral) { factory.create_referral(state: :pending, referrer: user) }
         let(:subscription) { FactoryBot.create(:subscription, :free) }
 
-        it_behaves_like "plan property", Plan.free_level.take,
+        it_behaves_like "plan property", :free_level,
           Hashie::Mash.new({
             level: "free",
             key: "free",
@@ -90,11 +90,11 @@ RSpec.describe Plans::Property do
             cost: 0,
             costWithFee: 0,
             costFormat: "¥0",
-            name: Plan.free_level.take.name,
+            name: I18n.t("plan.level.free"),
             details: I18n.t("settings.plans")[:free]
           })
 
-        it_behaves_like "plan property", Plan.child_basic_level.take,
+        it_behaves_like "plan property", :child_basic_level,
           Hashie::Mash.new({
             level: "basic",
             key: "child_basic",
@@ -102,11 +102,11 @@ RSpec.describe Plans::Property do
             cost: 19_800,
             costWithFee: 19_800,
             costFormat: "¥19,800",
-            name: Plan.child_basic_level.take.name,
+            name: I18n.t("plan.level.child_basic"),
             details: I18n.t("settings.plans")[:child_basic]
           })
 
-        it_behaves_like "plan property", Plan.child_premium_level.take,
+        it_behaves_like "plan property", :child_premium_level,
           Hashie::Mash.new({
             level: "premium",
             key: "child_premium",
@@ -114,7 +114,7 @@ RSpec.describe Plans::Property do
             cost: 49_500,
             costWithFee: 49_500,
             costFormat: "¥49,500",
-            name: Plan.child_premium_level.take.name,
+            name: I18n.t("plan.level.child_premium"),
             details: I18n.t("settings.plans")[:child_premium]
           })
       end
@@ -127,7 +127,7 @@ RSpec.describe Plans::Property do
         let!(:referral) { factory.create_referral(state: :active, referrer: user) }
         let(:subscription) { FactoryBot.create(:subscription, :child_basic) }
 
-        it_behaves_like "plan property", Plan.free_level.take,
+        it_behaves_like "plan property", :free_level,
           Hashie::Mash.new({
           level: "free",
           key: "free",
@@ -135,11 +135,11 @@ RSpec.describe Plans::Property do
           cost: 0,
           costWithFee: 0,
           costFormat: "¥0",
-          name: Plan.free_level.take.name,
+          name: I18n.t("plan.level.free"),
           details: I18n.t("settings.plans")[:free]
         })
 
-        it_behaves_like "plan property", Plan.child_basic_level.take,
+        it_behaves_like "plan property", :child_basic_level,
           Hashie::Mash.new({
           level: "basic",
           key: "child_basic",
@@ -147,11 +147,11 @@ RSpec.describe Plans::Property do
           cost: 22_000,
           costWithFee: 22_000,
           costFormat: "¥22,000",
-          name: Plan.child_basic_level.take.name,
+          name: I18n.t("plan.level.child_basic"),
           details: I18n.t("settings.plans")[:child_basic]
         })
 
-        it_behaves_like "plan property", Plan.child_premium_level.take,
+        it_behaves_like "plan property", :child_premium_level,
           Hashie::Mash.new({
           level: "premium",
           key: "child_premium",
@@ -159,7 +159,7 @@ RSpec.describe Plans::Property do
           cost: 55_000,
           costWithFee: 55_000,
           costFormat: "¥55,000",
-          name: Plan.child_premium_level.take.name,
+          name: I18n.t("plan.level.child_premium"),
           details: I18n.t("settings.plans")[:child_premium]
         })
       end

@@ -14,12 +14,16 @@ RSpec.describe Plan do
 
   describe "#become" do
     [
-      { current_plan: Plan.free_level.take, new_plan: Plan.basic_level.take, result: :upgrade? },
-      { current_plan: Plan.child_premium_level.take, new_plan: Plan.business_level.take, result: :same_grade? },
-      { current_plan: Plan.child_premium_level.take, new_plan: Plan.child_basic_level.take, result: :downgrade? },
+      { current_plan_level: :free_level,          new_plan_level: :basic_level,       result: :upgrade? },
+      { current_plan_level: :child_premium_level, new_plan_level: :business_level,    result: :same_grade? },
+      { current_plan_level: :child_premium_level, new_plan_level: :child_basic_level, result: :downgrade? },
     ].each do |h|
-      it "#{h[:current_plan].level} become #{h[:new_plan].level} #{h[:result]} is true" do
-        expect(h[:current_plan].public_send(h[:result], h[:new_plan])).to eq(true)
+      let(:plan) {  }
+      it "#{h[:current_plan_level]} become #{h[:new_plan_level]} #{h[:result]} is true" do
+        current_plan = Plan.public_send(h[:current_plan_level]).take
+        new_plan = Plan.public_send(h[:new_plan_level]).take
+
+        expect(current_plan.public_send(h[:result], new_plan)).to eq(true)
       end
     end
   end

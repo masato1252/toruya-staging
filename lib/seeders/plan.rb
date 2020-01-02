@@ -5,7 +5,7 @@ module Seeders
     def initialize(plans)
       ::Plan.transaction do
         plans.each do |plan_attrs|
-          ::Plan.create!(plan_attrs)
+          ::Plan.find_or_create_by!(plan_attrs)
         end
       end
     end
