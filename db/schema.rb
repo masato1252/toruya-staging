@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
+  create_table "business_applications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_business_applications_on_user_id"
+  end
+
   create_table "business_schedules", id: :serial, force: :cascade do |t|
     t.integer "shop_id"
     t.integer "staff_id"

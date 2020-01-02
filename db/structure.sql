@@ -348,6 +348,22 @@ ALTER SEQUENCE public.booking_pages_id_seq OWNED BY public.booking_pages.id;
 
 
 --
+-- Name: business_applications; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.business_applications (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: business_applications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+--
 -- Name: business_schedules; Type: TABLE; Schema: public; Owner: -
 --
 

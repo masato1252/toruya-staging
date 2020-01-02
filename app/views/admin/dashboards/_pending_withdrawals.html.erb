@@ -1,0 +1,13 @@
+<h1>Pending withdrawals</h1>
+
+<ul>
+  <% @pending_withdrawals.each do |withdrawal| %>
+    <li>
+      <%= withdrawal.receiver.name %>
+      <%= I18n.l(withdrawal.created_at.to_date) %>
+      <%= withdrawal.amount.format %>
+      <%= link_to "Paid", mark_paid_admin_withdrawal_path(withdrawal), method: :post, class: "btn btn-success" %>
+      <%= link_to "Receipt", settings_withdrawal_path(withdrawal, format: :pdf), target: "_blank" %>
+    </li>
+  <% end %>
+</ul>

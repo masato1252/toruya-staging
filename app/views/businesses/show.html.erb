@@ -1,0 +1,26 @@
+<div id="login">
+  <h2>Business page</h2>
+  <main id="socialLogin">
+  <p>
+  <% if current_user.business_member? %>
+    <h3>Congratulations, You are a business member</h3>
+  <% elsif @presenter.approved? %>
+    <%= react_component("management/plans/charge", {
+      formAuthenticityToken: form_authenticity_token,
+      stripeKey: Rails.application.secrets.stripe_publishable_key,
+      plan: Plans::Property.run!(user: current_user, plan: Plan.business_level.take),
+      paymentPath: @presenter.path,
+      email: current_user.email,
+      locale: I18n.default_locale,
+      i18n: {
+        saveAndPay: @presenter.btn_text
+      }
+    }) %>
+  <% else %>
+    <%= button_to @presenter.path, disabled: @presenter.path.nil?, class: "btn btn-tarco" do %>
+      <%= @presenter.btn_text %>
+    <% end %>
+  <% end %>
+  </p>
+  </main>
+</div>

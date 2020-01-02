@@ -207,8 +207,23 @@ Rails.application.routes.draw do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
 
-    scope path: "admin"do
-      get "as_user", to: "admin#as_user"
+    namespace :admin do
+      get "as_user"
+      get "/", to: "dashboards#index"
+
+      resources :business_applications, only: [] do
+        member do
+          post "approve"
+          post "reject"
+        end
+      end
+
+      resources :withdrawals, only: [] do
+        member do
+          post "mark_paid"
+          get "receipt"
+        end
+      end
     end
   end
 
