@@ -74,7 +74,7 @@ class User < ApplicationRecord
   delegate :current_plan, to: :subscription
 
   def super_admin?
-    ["lake.ilakela@gmail.com"].include?(email)
+    ["lake.ilakela@gmail.com", "haruko_liu@dreamhint.com"].include?(email)
   end
 
   # shop owner or staffs
