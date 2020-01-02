@@ -1,7 +1,7 @@
 <div id="login">
   <h2><%= @user.name %> <%= t"settings.referrers.sider_label" %></h2>
   <main id="socialLogin">
-    <% if !@user.owner_ability.can?(:create, Referral) %>
+    <% if @user.owner_ability.can?(:create, Referral) %>
       <p>
       <%= button_to user_google_oauth2_omniauth_authorize_path(referral_token: @user.referral_token), class: "google-button" do %>
         <img class="google-button__icon" src="<%= asset_pack_path("assets/management/btn_google_signin.svg") %>" />
