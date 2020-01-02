@@ -5,12 +5,6 @@ FactoryBot.define do
     max_seat_number { 2 }
   end
 
-  factory :user do
-    sequence(:email) { |n| "foo#{n}@gmail.com" }
-    password { "foobar78" }
-    confirmed_at { Time.zone.now }
-  end
-
   factory :shop do
     association :user
     sequence(:name) { |n| "foo#{n}" }

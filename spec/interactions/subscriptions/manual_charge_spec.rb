@@ -1,17 +1,10 @@
 require "rails_helper"
 
 RSpec.describe Subscriptions::ManualCharge do
-  let(:subscription) { FactoryBot.create(:subscription, user: user, stripe_customer_id: stripe_customer.id) }
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { subscription.user }
+  let(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
   let(:plan) { Plan.premium_level.take }
-  let(:authorize_token) { stripe_helper.generate_card_token }
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let(:stripe_customer) do
-    Stripe::Customer.create({
-      email: user.email,
-      source: stripe_helper.generate_card_token
-    })
-  end
+  let(:authorize_token) { StripeMock.create_test_helper.generate_card_token }
   let(:args) do
     {
       subscription: subscription,
@@ -50,7 +43,8 @@ RSpec.describe Subscriptions::ManualCharge do
         "type" => SubscriptionCharge::TYPES[:plan_subscruption],
         "user_name" => user.name,
         "user_email" => user.email,
-        "plan_amount" => plan.cost_with_currency.format,
+        "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
+        "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
         "plan_name" => plan.name
       })
     end

@@ -4,8 +4,8 @@ RSpec.describe Payments::StoreStripeCustomer do
   before { StripeMock.start }
   after { StripeMock.stop }
 
-  let(:user) { FactoryBot.create(:user) }
-  let!(:subscription) { FactoryBot.create(:subscription, user: user, stripe_customer_id: stripe_customer_id) }
+  let(:user) { subscription.user }
+  let!(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
   let(:authorize_token) { StripeMock.create_test_helper.generate_card_token }
   let(:args) do
     {
@@ -17,12 +17,7 @@ RSpec.describe Payments::StoreStripeCustomer do
 
   describe "#execute" do
     context "when subscription stripe_customer_id exists" do
-      let(:stripe_customer_id) do
-        Stripe::Customer.create({
-          email: user.email,
-          source: StripeMock.create_test_helper.generate_card_token
-        }).id
-      end
+      let(:stripe_customer_id) { subscription.stripe_customer_id }
 
       it "update stripe customer's card" do
         outcome

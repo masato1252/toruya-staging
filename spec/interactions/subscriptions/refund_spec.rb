@@ -13,15 +13,10 @@ RSpec.describe Subscriptions::Refund do
   end
   after { StripeMock.stop }
 
-  let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :manual, :completed) }
-  let!(:subscription) { FactoryBot.create(:subscription, :basic, user: user, stripe_customer_id: stripe_customer_id) }
-  let(:stripe_customer_id) do
-    Stripe::Customer.create({
-      email: user.email,
-      source: StripeMock.create_test_helper.generate_card_token
-    }).id
-  end
-  let(:user) { subscription_charge.user }
+  let(:subscription) { FactoryBot.create(:subscription, :with_stripe, :basic) }
+  let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :manual, :completed, user: user) }
+  let(:user) { subscription.user }
+  let(:stripe_customer_id) { subscription.stripe_customer_id }
   let(:args) do
     {
       user: user

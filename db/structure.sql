@@ -5,6 +5,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -51,8 +52,6 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 
 SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: access_providers; Type: TABLE; Schema: public; Owner: -
@@ -363,6 +362,22 @@ CREATE TABLE public.business_applications (
 --
 -- Name: business_applications_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
+
+CREATE SEQUENCE public.business_applications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: business_applications_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.business_applications_id_seq OWNED BY public.business_applications.id;
+
+
 --
 -- Name: business_schedules; Type: TABLE; Schema: public; Owner: -
 --
@@ -799,6 +814,79 @@ CREATE SEQUENCE public.notifications_id_seq
 --
 
 ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
+
+
+--
+-- Name: payment_withdrawals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payment_withdrawals (
+    id bigint NOT NULL,
+    receiver_id integer NOT NULL,
+    state integer DEFAULT 0 NOT NULL,
+    amount_cents numeric NOT NULL,
+    amount_currency character varying NOT NULL,
+    order_id character varying,
+    details jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: payment_withdrawals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.payment_withdrawals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payment_withdrawals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.payment_withdrawals_id_seq OWNED BY public.payment_withdrawals.id;
+
+
+--
+-- Name: payments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.payments (
+    id bigint NOT NULL,
+    receiver_id integer NOT NULL,
+    referrer_id integer,
+    payment_withdrawal_id integer,
+    charge_id integer,
+    amount_cents numeric NOT NULL,
+    amount_currency character varying NOT NULL,
+    details jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.payments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.payments_id_seq OWNED BY public.payments.id;
 
 
 --
@@ -1566,7 +1654,7 @@ CREATE TABLE public.subscription_charges (
     plan_id bigint,
     amount_cents numeric,
     amount_currency character varying,
-    state integer,
+    state integer DEFAULT 0 NOT NULL,
     charge_date date,
     expired_date date,
     manual boolean DEFAULT false NOT NULL,
@@ -1658,7 +1746,8 @@ CREATE TABLE public.users (
     locked_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    contacts_sync_at timestamp without time zone
+    contacts_sync_at timestamp without time zone,
+    referral_token character varying
 );
 
 
@@ -1772,6 +1861,13 @@ ALTER TABLE ONLY public.booking_pages ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: business_applications id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.business_applications ALTER COLUMN id SET DEFAULT nextval('public.business_applications_id_seq'::regclass);
+
+
+--
 -- Name: business_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1853,6 +1949,20 @@ ALTER TABLE ONLY public.menus ALTER COLUMN id SET DEFAULT nextval('public.menus_
 --
 
 ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('public.notifications_id_seq'::regclass);
+
+
+--
+-- Name: payment_withdrawals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_withdrawals ALTER COLUMN id SET DEFAULT nextval('public.payment_withdrawals_id_seq'::regclass);
+
+
+--
+-- Name: payments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payments ALTER COLUMN id SET DEFAULT nextval('public.payments_id_seq'::regclass);
 
 
 --
@@ -2103,6 +2213,14 @@ ALTER TABLE ONLY public.booking_pages
 
 
 --
+-- Name: business_applications business_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.business_applications
+    ADD CONSTRAINT business_applications_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: business_schedules business_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2196,6 +2314,22 @@ ALTER TABLE ONLY public.menus
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payment_withdrawals payment_withdrawals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payment_withdrawals
+    ADD CONSTRAINT payment_withdrawals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: payments payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.payments
+    ADD CONSTRAINT payments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2554,6 +2688,13 @@ CREATE INDEX index_booking_pages_on_user_id ON public.booking_pages USING btree 
 
 
 --
+-- Name: index_business_applications_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_business_applications_on_user_id ON public.business_applications USING btree (user_id);
+
+
+--
 -- Name: index_categories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2760,7 +2901,7 @@ CREATE INDEX index_subscriptions_on_plan_id ON public.subscriptions USING btree 
 -- Name: index_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_subscriptions_on_user_id ON public.subscriptions USING btree (user_id);
+CREATE UNIQUE INDEX index_subscriptions_on_user_id ON public.subscriptions USING btree (user_id);
 
 
 --
@@ -2824,6 +2965,27 @@ CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_set
 --
 
 CREATE INDEX order_id_index ON public.subscription_charges USING btree (order_id);
+
+
+--
+-- Name: payment_receiver_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_receiver_index ON public.payments USING btree (receiver_id);
+
+
+--
+-- Name: payment_withdrawal_order_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX payment_withdrawal_order_index ON public.payment_withdrawals USING btree (order_id);
+
+
+--
+-- Name: payment_withdrawal_receiver_state_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX payment_withdrawal_receiver_state_index ON public.payment_withdrawals USING btree (receiver_id, state, amount_cents, amount_currency);
 
 
 --
@@ -3049,6 +3211,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190815160047'),
 ('20190815171601'),
 ('20190829140951'),
-('20190906143743');
+('20190906143743'),
+('20191208001945'),
+('20191208054204'),
+('20191210130536'),
+('20191210150650'),
+('20191211162028'),
+('20191224063600'),
+('20191230084048');
 
 

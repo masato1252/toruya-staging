@@ -6,9 +6,9 @@ RSpec.describe Ability do
   let(:shop) { nil }
   let(:ability) { described_class.new(current_user, super_user, shop) }
 
-  RSpec.shared_examples "permission management" do |member_level, action, ability_name, permission|
-    it "#{member_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
-      allow(super_user).to receive(:member_level).and_return(member_level)
+  RSpec.shared_examples "permission management" do |permission_level, action, ability_name, permission|
+    it "#{permission_level} member #{permission ? "can" : "cannot" } #{action} #{ability_name}" do
+      allow(super_user).to receive(:permission_level).and_return(permission_level)
 
       expect(ability.can?(action, ability_name)).to eq(permission)
     end
@@ -125,9 +125,9 @@ RSpec.describe Ability do
             permission: true
           },
         ],
-      }.each do |member_level, permissions|
+      }.each do |permission_level, permissions|
         permissions.each do |permission|
-          it_behaves_like "permission management", member_level, permission[:action], permission[:ability_name], permission[:permission]
+          it_behaves_like "permission management", permission_level, permission[:action], permission[:ability_name], permission[:permission]
         end
       end
 
@@ -228,7 +228,7 @@ RSpec.describe Ability do
         let!(:shop2) { FactoryBot.create(:shop, user: super_user) }
 
         context "when super_user is premium member" do
-          before { allow(super_user).to receive(:member_level).and_return("premium") }
+          before { allow(super_user).to receive(:permission_level).and_return("premium") }
 
           it "can manage all shop reservations" do
             expect(ability.can?(:manage_shop_reservations, shop1)).to eq(true)
@@ -238,9 +238,9 @@ RSpec.describe Ability do
 
         [
           "basic", "trial", "free"
-        ].each do |member_level|
-          context "when super_user is #{member_level} member" do
-            before { allow(super_user).to receive(:member_level).and_return(member_level) }
+        ].each do |permission_level|
+          context "when super_user is #{permission_level} member" do
+            before { allow(super_user).to receive(:permission_level).and_return(permission_level) }
 
             it "can manage only one shop reservations" do
               expect(ability.can?(:manage_shop_reservations, shop)).to eq(true)
