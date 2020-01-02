@@ -56,6 +56,19 @@ class Plan < ApplicationRecord
     I18n.t("plan.level.#{level}")
   end
 
+  def self.permission_level(level)
+    case level
+    when FREE_PLAN
+      FREE_LEVEL
+    when BASIC_PLAN, CHILD_BASIC_PLAN
+      BASIC_LEVEL
+    when PREMIUM_PLAN, BUSINESS_PLAN, CHILD_PREMIUM_PLAN
+      PREMIUM_LEVEL
+    when TRIAL_PLAN
+      TRIAL_LEVEL
+    end
+  end
+
   # -1: downgrade
   #  0: same level
   #  1: upgrade

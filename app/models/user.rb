@@ -78,20 +78,25 @@ class User < ApplicationRecord
     true
   end
 
-  def member_level
-    return @level if defined?(@level)
+  def member_plan
+    return @plan if defined?(@plan)
 
-    @level = current_plan.level
+    @plan = current_plan.level
 
-    if @level == Plan::FREE_LEVEL && Subscription.today < trial_expired_date
-      @level = Plan::TRIAL_LEVEL
+    if @plan == Plan::FREE_PLAN && Subscription.today < trial_expired_date
+      @plan = Plan::TRIAL_PLAN
     else
-      @level
+      @plan
     end
   end
+  alias_method :member_plan_key, :member_plan
 
-  def member_level_name
-    I18n.t("plan.level.#{member_level}")
+  def permission_level
+    Plan.permission_level(member_plan_key)
+  end
+
+  def permission_level_name
+    I18n.t("plan.level.#{permission_level}")
   end
 
   def current_staff_account(super_user)

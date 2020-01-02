@@ -11,7 +11,7 @@
 %>
 
 <div class="plans">
-  <% if (!Rails.configuration.x.env.production?) && current_user.member_level != Plan::FREE_LEVEL %>
+  <% if (!Rails.configuration.x.env.production?) && current_user.permission_level != Plan::FREE_LEVEL %>
     <%= link_to "速攻ダウングレード", downgrade_settings_payments_path, class: "btn btn-orange" %>
   <% end %>
 
