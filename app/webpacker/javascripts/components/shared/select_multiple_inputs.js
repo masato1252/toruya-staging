@@ -9,6 +9,8 @@ import { Error } from "./components";
 import { selectCustomStyles } from "../../libraries/styles";
 
 const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFields, hint, input, meta}) => {
+  let menuSelector;
+
   return (
     <FieldArray name={collection_name}>
       {({ fields }) => (
@@ -16,7 +18,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
           {resultFields(fields, collection_name)}
           <div className="select-input">
             <ReactSelect
-              ref={(c) => this.menuSelector = c}
+              ref={(c) => menuSelector = c}
               className="menu-select-container"
               styles={selectCustomStyles}
               placeholder={selectLabel}
@@ -44,7 +46,7 @@ const SelectMultipleInputs = ({options, selectLabel, collection_name, resultFiel
                   fields.push({...option})
                 }
 
-                this.menuSelector.select.clearValue();
+                menuSelector.select.clearValue();
               }}
             </OnChange>
             { hint ? <span className="field-hint">{hint}</span> : ""}
