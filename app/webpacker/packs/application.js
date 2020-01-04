@@ -8,7 +8,8 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import 'babel-polyfill'
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
 import './stylesheets.scss';
