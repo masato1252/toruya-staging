@@ -58,7 +58,7 @@
 #resNew #resInfo .errors .danger { color: #CF0003; }
 #resNew #resInfo .errors .warning { color: #e6a21f; }
 #resNew #resInfo .errors .danger:before, #resNew #resInfo .errors .warning:before {
-  font: normal normal normal 14px/1 FontAwesome;
+  font: normal normal normal 14px/1 Font Awesome\ 5 Free;
   font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -120,13 +120,14 @@ input {
   line-height: 50px;
 }
 .resNew .checkbox input[type="checkbox"] + label:before {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f096";
   margin-right: 8px;
   font-size: 120%;
   color: #666;
 }
 .resNew .checkbox input[type="checkbox"]:checked + label:before {
+  font-family: "Font Awesome\ 5 Free";
   content: "\f046";
   margin-right: 5px;
   color: #ca4e0e;

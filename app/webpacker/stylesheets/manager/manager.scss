@@ -401,7 +401,7 @@ footer {
   line-height: 35px;
 }
 .checkbox input[type="radio"]:checked + label:before, .checkbox input[type="checkbox"]:checked + label:before, .termsCheck input[type="checkbox"]:checked + label:before {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f00c";
   color: #97bfb8;
   margin-right: 12px;
@@ -410,13 +410,13 @@ footer {
   margin-right: 8.5px;
 }
 .checkbox input[type="radio"] + label:before, .checkbox input[type="checkbox"] + label:before  {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f096";
   margin-right: 15.5px;
   color: #ccc;
 }
 .termsCheck input[type="checkbox"] + label:before {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f096";
   margin-right: 12px;
   color: #D0D0D0;
