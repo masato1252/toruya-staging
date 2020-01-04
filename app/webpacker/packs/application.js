@@ -11,6 +11,7 @@
 import 'babel-polyfill'
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
+import './stylesheets.scss';
 
 var componentRequireContext = require.context("../javascripts/components", true, /^\.\/(management|shared)/)
 var ReactRailsUJS = require("react_ujs")

@@ -36,15 +36,6 @@
   font-size: 30px;
   margin-right: 5px;
 }
-#sideNav dl.menu dt a span:before { content: "\f02c"; }
-#sideNav dl.staff dt a span:before { content: "\f27e"; }
-#sideNav dl.contacts dt a span:before { content: "\f2ba"; }
-#sideNav dl.googleSync dt a span:before { content: "\f1a0"; }
-#sideNav dl.apps dt a span:before { content: "\f10b"; }
-#sideNav dl.publish dt a { background-image: url(asset-path("screen/settingnav_publish.png")); }
-#sideNav dl.share dt a { background-image: url(asset-path("screen/settingnav_share.png")); }
-#sideNav dl.account dt a span:before, #sideNav dl.settings dt a span:before { content: "\f0ad"; }
-#sideNav dl.logout dt a span:before { content: "\f011"; }
 #sideNav dl.shopSelect dt {
   text-align: center;
   padding: 20px;

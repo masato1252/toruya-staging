@@ -73,5 +73,4 @@ export {
   mustBeNumber,
   greaterEqualThan,
   setProperListHeight,
-  requiredValidator,
 };

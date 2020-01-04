@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Tillana');
-@import "~font-awesome/scss/font-awesome";
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts'; 
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
 @import "../stylesheets/bootstrap/index";
 @import "../stylesheets/dashboard_dropdown";
 @import "../stylesheets/variables";

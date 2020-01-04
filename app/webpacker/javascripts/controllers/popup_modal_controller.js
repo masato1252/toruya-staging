@@ -7,7 +7,7 @@ export default class PopupModal extends Controller {
     popupModal.modal("show");
   }
 
-  get modalTarget(): string {
+  get modalTarget() {
     return this.data.get("target");
   }
 }
