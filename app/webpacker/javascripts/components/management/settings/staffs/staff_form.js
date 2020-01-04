@@ -124,9 +124,9 @@ class SettingsStaffFormfields extends React.Component {
               <dd>
                 {
                    this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
-                     <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                     <i className="fa fa-plus-square" aria-hidden="true"></i>
                    ) : (
-                     <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                     <i className="fa fa-minus-square" aria-hidden="true"></i>
                    )
                 }
               </dd>

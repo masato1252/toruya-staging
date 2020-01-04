@@ -54,7 +54,7 @@ class PrintingModal extends React.Component {
                 <span aria-hidden="true">×</span>
               </button>
               <h4 className="modal-title" id="myModalLabel">
-                <i className="fa fa-database-o" aria-hidden="true"></i>{this.props.filesForPrintWording}
+                <i className="fa fa-database" aria-hidden="true"></i>{this.props.filesForPrintWording}
                 </h4>
               </div>
               <div className="modal-body">

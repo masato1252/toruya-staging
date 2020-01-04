@@ -149,7 +149,7 @@ class CustomersFilterDashboard extends React.Component {
     if (this.state.current_saved_filter_id) {
       return (
         <a className="BTNorange" href="#" onClick={this.deleteFilter} >
-          <i className="fa fa-trash-o" aria-hidden="true"></i>
+          <i className="fa fa-trash" aria-hidden="true"></i>
         </a>
       )
     }
@@ -158,7 +158,7 @@ class CustomersFilterDashboard extends React.Component {
         <a
           className={`BTNyellow ${this.state.filter_name && this.state.filter_name !== this.state.current_saved_filter_name? null : "disabled"}`} href="#"
           onClick={this.saveFilter} >
-          <i className="fa fa-floppy-o" aria-hidden="true"></i>
+          <i className="fa fa-save" aria-hidden="true"></i>
         </a>
       )
     }
@@ -260,7 +260,7 @@ class CustomersFilterDashboard extends React.Component {
                   <a href="#" className="BTNtarco disabled">{this.props.noFileForPrintWording}</a>
                 ) : (
                   <a href="#" data-toggle="modal" data-target="#printing-files-modal" className="BTNtarco">
-                    <i className="fa fa-file-pdf-o"></i> {this.props.filesForPrintWording}
+                    <i className="fa fa-file-pdf"></i> {this.props.filesForPrintWording}
                   </a>
                   )}
                 </dd>
