@@ -8,7 +8,8 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import 'babel-polyfill'
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
 
@@ -28,7 +29,3 @@ require.context('../assets/management', true)
 
 import Rails from 'rails-ujs';
 Rails.start();
-
-// https://github.com/zenorocha/clipboard.js/issues/155#issuecomment-217372642
-// Fix ClipboardJS copy in modal
-$.fn.modal.Constructor.prototype.enforceFocus = function() {};

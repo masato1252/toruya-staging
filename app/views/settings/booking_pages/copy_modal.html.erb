@@ -15,12 +15,13 @@
           <%= button_tag t("action.copy_url2"), class: "btn btn-gray",
             data: {
               controller: "clipboard",
+              action: "click->clipboard#copy",
               clipboard_text: booking_url(@booking_page),
               clipboard_popup_text: t("common.copied")
             } %>
         </div>
         <div>
-          <%= text_field_tag nil, booking_url(@booking_page), data: { controller: "clipboard", clipboard_text: booking_url(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
+          <%= text_field_tag nil, booking_url(@booking_page), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_url(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
         </div>
       </div>
       <div class="page-booking-button-row">
@@ -31,11 +32,11 @@
             </label>
           </div>
           <div>
-            <%= button_tag t("action.copy_code"), class: "btn btn-gray", data: { controller: "clipboard", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
+            <%= button_tag t("action.copy_code"), class: "btn btn-gray", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") } %>
           </div>
         </div>
         <div>
-          <%= text_area_tag nil, booking_page_share_button_link(@booking_page), data: { controller: "clipboard", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-share-button", rows: 6 %>
+          <%= text_area_tag nil, booking_page_share_button_link(@booking_page), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: booking_page_share_button_link(@booking_page), clipboard_popup_text: t("common.copied") }, id: "page-share-button", rows: 6 %>
         </div>
       </div>
     </div>

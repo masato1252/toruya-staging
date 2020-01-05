@@ -90,7 +90,7 @@ class StaffStatesModal extends React.Component {
 
     const staff_states_info = staff_states.map((staff_state) => {
       const match_staff_option =  staff_options.find((staff_option) => String(staff_option.value) === String(staff_state.staff_id))
-      const state_icon = staff_state.state === accepted_state ? <i className="fa fa-calendar-check-o"></i> : <i className="fa fa-calendar"></i>
+      const state_icon = staff_state.state === accepted_state ? <i className="fa fa-calendar-check"></i> : <i className="fa fa-calendar"></i>
 
       return (
         <div key={`${staff_state.staff_id}-${staff_state.state}`}>

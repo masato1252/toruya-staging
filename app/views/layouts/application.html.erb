@@ -5,8 +5,8 @@
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <%= stylesheet_pack_tag "stylesheets" %>
-    <%= javascript_pack_tag "application" %>
+    <%= stylesheet_packs_with_chunks_tag "stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "application", "stylesheets" %>
   </head>
 
   <body id="manager" class='<%= body_class %>' data-controller="atomic-requests">

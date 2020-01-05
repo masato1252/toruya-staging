@@ -152,7 +152,6 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
             render={({ input }) => {
               return (
                 <ReactSelect
-                  ref={(c) => this.menuSelector = c}
                   className="menu-select-container"
                   styles={selectCustomStyles}
                   placeholder={select_a_menu}

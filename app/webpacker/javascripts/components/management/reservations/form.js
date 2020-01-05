@@ -157,7 +157,7 @@ class ManagementReservationForm extends React.Component {
     return (
       <div>
         <h2>
-          <i className="fa fa-calendar-o" aria-hidden="true"></i>
+          <i className="fa fa-calendar" aria-hidden="true"></i>
           {details}
         </h2>
         <div id="resDateTime" className="formRow">
@@ -324,7 +324,7 @@ class ManagementReservationForm extends React.Component {
                 rel="nofollow"
                 data-method="delete"
                 href={`${this.props.path.save}?from_customer_id=${from_customer_id ? from_customer_id : ""}`}>
-                <i className="fa fa-trash-o" aria-hidden="true"></i>
+                <i className="fa fa-trash" aria-hidden="true"></i>
                 {delete_reservation}
               </a>
             </li>
@@ -340,7 +340,7 @@ class ManagementReservationForm extends React.Component {
                   this.handleSubmit(event)
                 }
               }}>
-              <i className="fa fa-folder-o" aria-hidden="true"></i>
+              <i className="fa fa-folder-plus" aria-hidden="true"></i>
               {this.renderSubmitButtonText()}
             </button>
           </li>

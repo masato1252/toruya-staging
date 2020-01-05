@@ -4,8 +4,8 @@
     <title>Toruyaースモールビジネスの顧客管理ツールー</title>
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_pack_tag "stylesheets" %>
-    <%= javascript_pack_tag "application" %>
+    <%= stylesheet_packs_with_chunks_tag "stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "application", "stylesheets" %>
   </head>
 
   <body class="setting firstSetting <%= body_class %>" data-controller="atomic-requests">

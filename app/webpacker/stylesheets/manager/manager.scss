@@ -401,7 +401,7 @@ footer {
   line-height: 35px;
 }
 .checkbox input[type="radio"]:checked + label:before, .checkbox input[type="checkbox"]:checked + label:before, .termsCheck input[type="checkbox"]:checked + label:before {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f00c";
   color: #97bfb8;
   margin-right: 12px;
@@ -410,13 +410,13 @@ footer {
   margin-right: 8.5px;
 }
 .checkbox input[type="radio"] + label:before, .checkbox input[type="checkbox"] + label:before  {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f096";
   margin-right: 15.5px;
   color: #ccc;
 }
 .termsCheck input[type="checkbox"] + label:before {
-  font-family: "FontAwesome";
+  font-family: "Font Awesome\ 5 Free";
   content: "\f096";
   margin-right: 12px;
   color: #D0D0D0;
@@ -928,7 +928,6 @@ input.BTNonoff:checked + label:after {
 #resList .float dl dd a.BTNorange { border-color: #b0450d; }
 #resList .float dl dd a.BTNtarco { border-color: #60938a; }
 #resList .float .bubbleTop {
-  background: transparent url(asset-path("screen/float_top.png")) top center no-repeat;
   height: 8px;
   width: 100%;
   position: absolute;
@@ -1063,8 +1062,6 @@ input.BTNonoff:checked + label:after {
   background-repeat: no-repeat;
   background-position: center center;
 }
-#searchRev .calendars .days a.here { background-image: url(asset-path("screen/calendar_here.png")); }
-#searchRev .calendars .days .today a { background-image: url(asset-path("screen/calendar_today.png")); }
 #searchRev .footer { padding: 10px 20px; }
 .customer #resList, #customerInfo .tabBody {
   width: 100%;

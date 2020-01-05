@@ -1,4 +1,5 @@
-import 'babel-polyfill'
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared)/)
 var ReactRailsUJS = require("react_ujs")
