@@ -12,7 +12,7 @@
           <%= t("settings.referrers.copy_modal.desc") %>
         </div>
         <div>
-          <%= text_field_tag nil, referral_url(super_user.referral_token), data: { controller: "clipboard", clipboard_text: referral_url(super_user.referral_token), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
+          <%= text_field_tag nil, referral_url(super_user.referral_token), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: referral_url(super_user.referral_token), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
         </div>
       </div>
     </div>
@@ -20,6 +20,7 @@
       <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
         data: {
         controller: "clipboard",
+        action: "click->clipboard#copy",
         clipboard_text: referral_url(super_user.referral_token),
         clipboard_popup_text: t("common.copied")
       } %>
