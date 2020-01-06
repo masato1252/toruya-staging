@@ -6,8 +6,8 @@ import axios from "axios";
 import moment from "moment-timezone";
 import ReactSelect from "react-select";
 
-import CommonDatepickerField from "../../../shared/datepicker_field.js";
-import Select from "../../../shared/select.js";
+import CommonDatepickerField from "shared/datepicker_field.js";
+import Select from "shared/select.js";
 import { selectCustomStyles } from "../../../../libraries/styles";
 
 

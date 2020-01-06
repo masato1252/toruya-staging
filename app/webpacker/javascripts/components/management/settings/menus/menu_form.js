@@ -6,9 +6,9 @@ import arrayMove from "array-move";
 import _ from "lodash";
 import axios from "axios";
 
-import Select from "../../../shared/select.js";
+import Select from "shared/select.js";
 import SettingsNewCategories from "../new_categories.js";
-import { DragHandle } from "../../../shared/components";
+import { DragHandle } from "shared/components";
 
 var moment = require('moment-timezone');
 

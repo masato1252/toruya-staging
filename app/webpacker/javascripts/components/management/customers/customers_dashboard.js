@@ -6,13 +6,13 @@ import axios from "axios";
 import Rails from "rails-ujs";
 
 import CommonCustomersList from "../common/customers_list.js";
-import ProcessingBar from "../../shared/processing_bar.js";
+import ProcessingBar from "shared/processing_bar.js";
 import CustomerInfoView from "./customer_info_view.js";
 import CustomerInfoEdit from "./customer_info_edit.js";
 import CustomerReservationsView from "./customer_reservations_view.js";
 import CustomersSearchBar from "./search_bar.js";
-import Select from "../../shared/select.js";
-import MessageBar from "../../shared/message_bar.js";
+import Select from "shared/select.js";
+import MessageBar from "shared/message_bar.js";
 
 class CustomersDashboard extends React.Component {
   constructor(props) {
