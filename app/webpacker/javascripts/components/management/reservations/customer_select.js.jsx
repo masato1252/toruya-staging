@@ -2,7 +2,7 @@
 
 import React from "react";
 import _ from "underscore";
-import Select from "../../shared/select.js"
+import Select from "shared/select.js"
 import ReservationSelectedOptionField from "../reservations/selected_option_field.js"
 
 class ReservationCustomerSelect extends React.Component {

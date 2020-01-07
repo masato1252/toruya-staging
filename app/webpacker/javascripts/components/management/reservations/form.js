@@ -10,14 +10,14 @@ import axios from "axios";
 import _ from "lodash";
 import qs from "qs";
 
-import DateFieldAdapter from "../../shared/date_field_adapter";
-import { Input } from "../../shared/components";
+import DateFieldAdapter from "shared/date_field_adapter";
+import { Input } from "shared/components";
 import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
 import { displayErrors } from "./helpers.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
 import StaffStatesModal from "./staff_states_modal.js"
-import ProcessingBar from "../../shared/processing_bar.js"
+import ProcessingBar from "shared/processing_bar.js"
 
 class ManagementReservationForm extends React.Component {
   constructor(props) {

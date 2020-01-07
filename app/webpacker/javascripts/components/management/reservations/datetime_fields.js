@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import CommonDatepickerField from "../../shared/datepicker_field.js";
+import CommonDatepickerField from "shared/datepicker_field.js";
 
 class ReservationDatetimeFields extends React.Component {
   constructor(props) {

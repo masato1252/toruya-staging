@@ -7,7 +7,7 @@ import _ from "lodash";
 import arrayMove from "array-move";
 
 import { selectCustomStyles } from "../../../libraries/styles";
-import { InputRow, DragHandle } from "../../shared/components";
+import { InputRow, DragHandle } from "shared/components";
 import { displayErrors } from "./helpers.js"
 
 const staff_time_warnings = ["freelancer", "unworking_staff"]

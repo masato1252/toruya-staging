@@ -1,7 +1,7 @@
 "use strict";
 import React from "react";
 import StripeCheckout from 'react-stripe-checkout';
-import ProcessingBar from "../../shared/processing_bar";
+import ProcessingBar from "shared/processing_bar";
 
 class PlanCharge extends React.Component {
   static defaultProps = {

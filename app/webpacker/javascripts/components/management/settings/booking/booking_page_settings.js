@@ -12,13 +12,13 @@ import _ from "lodash";
 import axios from "axios";
 
 import { requiredValidation, transformValues } from "../../../../libraries/helper";
-import { Input, InputRow, RadioRow, Radio, Error, Condition } from "../../../shared/components";
-import CommonDatepickerField from "../../../shared/datepicker_field";
-import DateFieldAdapter from "../../../shared/date_field_adapter";
-import SelectMultipleInputs from "../../../shared/select_multiple_inputs";
-import MultipleDatetimeInput from "../../../shared/multiple_datetime_input";
+import { Input, InputRow, RadioRow, Radio, Error, Condition } from "shared/components";
+import CommonDatepickerField from "shared/datepicker_field";
+import DateFieldAdapter from "shared/date_field_adapter";
+import SelectMultipleInputs from "shared/select_multiple_inputs";
+import MultipleDatetimeInput from "shared/multiple_datetime_input";
 import BookingPageOption from "./booking_page_option";
-import Calendar from "../../../shared/calendar/calendar";
+import Calendar from "shared/calendar/calendar";
 
 class BookingPageSettings extends React.Component {
   constructor(props) {
