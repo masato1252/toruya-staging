@@ -8,7 +8,7 @@ class Users::ProfilesController < DashboardController
   end
 
   def create
-    outcome = Profiles::Create.run(user: current_user, params: profile_params)
+    outcome = Profiles::Create.run(user: current_user, params: profile_params.to_h)
 
     if outcome.valid?
       if session[:create_from_staff_account].present?
