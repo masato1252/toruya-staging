@@ -35,6 +35,8 @@
 #
 
 class User < ApplicationRecord
+  HARUKO_EMAIL = "haruko_liu@dreamhint.com"
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
@@ -74,7 +76,7 @@ class User < ApplicationRecord
   delegate :current_plan, to: :subscription
 
   def super_admin?
-    ["lake.ilakela@gmail.com", "haruko_liu@dreamhint.com"].include?(email)
+    ["lake.ilakela@gmail.com", HARUKO_EMAIL].include?(email)
   end
 
   # shop owner or staffs

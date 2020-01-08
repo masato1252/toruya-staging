@@ -1,0 +1,66 @@
+en:
+  action:
+    delete: Delete
+    delete_reservation: Delete reservation
+    edit: Edit
+    details: Details
+    cancel: Cancel
+    log_out: Log out
+    save: Save
+    save_pending: Save as pending
+    save_as_draft: Save as draft
+    save_and_publish: Save and publish
+    search: Search
+    upgrade_to_premium: Upgrade to premium plan
+    upgrade_to_basic: Upgrade to basic plan
+    cancel_upgrade: Cancel upgrade
+    new_reservation: Add a new reservation
+    create_a_shop: Set up a shop
+    copy_url: Copy URL
+    copy_url2: Copy URL
+    copy_code: Copy
+    preview: Preview
+    add_a_menu: "Add a menu"
+    ignore: Ignore
+    save_changes: Overwrite the data
+    add_more: More
+  common:
+    processing: Processing
+    date: Date
+    day: Day
+    time: Time
+    content: Content
+    start_time: Start Time
+    end_time: End Time
+    updated_time: Update time
+    zip_code: Zip code
+    address: Address
+    phone_number: Phone Number
+    email: E-Mail
+    birthday: Birthday
+    memo: Memo
+    name: Name
+    company_name: Company Name
+    update_successfully_message: Updated successfully
+    create_successfully_message: Created successfully
+    delete_successfully_message: Deleted successfully
+    are_you_sure_message: Are you sure?
+    send: Send
+    yes_label: "YES"
+    no_label: "NO"
+    close: Close
+    print: PRINT
+    select_a_menu: Please select a shop
+    select_a_menu: Please select a menu
+    select_a_staff: Please select a staff
+    select_a_booking_option: Select a booking option
+    google_down: We can't connect with Google currently. Please try again later. Re-login might fix the problem immediately.
+    pending: Pending
+    required_label: required
+    minute: minute
+    total: Total
+    copied: Copied
+    required_time: Required time
+    menu: Menu
+    responsible_employee: Staff
+    booking_price: Booking Price

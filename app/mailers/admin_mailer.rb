@@ -1,11 +1,10 @@
 class AdminMailer < ApplicationMailer
-  ADMIN_EMAIL = "haruko_liu@dreamhint.com"
   layout false
 
   def new_business_application
     mail(
-      to: ADMIN_EMAIL,
-      subject: subject("New business member application"),
+      to: User::HARUKO_EMAIL,
+      subject: subject(I18n.t("admin_mailer.new_business_application.title")),
       locale: I18n.default_locale
     )
   end

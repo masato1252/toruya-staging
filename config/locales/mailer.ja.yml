@@ -1,0 +1,36 @@
+ja:
+  admin_mailer:
+    new_business_application:
+      title: 代理店の新規登録申請
+  notification_mailer:
+    duplicate_customers:
+      title: 重複した顧客データが見つかりました
+    new_referrer:
+      title: 新しく子アカウントが追加されました
+  subscription_mailer:
+    charge_successfully:
+      title: ご請求完了のご連絡
+    charge_failed:
+      title: クレジットカードの利用承認が得られませんでした
+    charge_shop_fee:
+      title: 有料での店舗追加のご連絡
+    charge_reminder:
+      title: ご請求のご連絡
+  reminder_mailer:
+    trial_member_months_ago_reminder:
+      title: 試用期間終了予定日のご連絡
+    trial_member_week_ago_reminder:
+      title: 試用期間の終了間近のご連絡
+    trial_member_day_ago_reminder:
+      title: 試用期間終了のご連絡
+    daily_reservations_limit_by_admin_reminder:
+      title: 今日の予約上限数満了のご連絡
+    daily_reservations_limit_by_staff_reminder:
+      title: 今日の予約上限を超えた予約作成のご連絡
+    total_reservations_limit_by_admin_reminder:
+      title: 累計の予約上限数満了のご連絡
+    total_reservations_limit_by_staff_reminder:
+      title: 累計の予約上限を超えた予約作成のご連絡
+  withdrawal_mailer:
+    monthly_report:
+      title: 紹介料の確定のお知らせ

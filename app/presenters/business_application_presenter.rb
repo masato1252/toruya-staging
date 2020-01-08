@@ -27,13 +27,13 @@ class BusinessApplicationPresenter
   def btn_text
     case application&.state
     when "pending"
-      "Waiting review"
+      I18n.t("business.waiting_review")
     when "approved"
-      "Pay to be business member"
+      I18n.t("business.pay_to_be_business_member")
     when "rejected"
-      "Apply"
+      I18n.t("business.apply")
     else
-      "Apply"
+      I18n.t("business.apply")
     end
   end
 end
