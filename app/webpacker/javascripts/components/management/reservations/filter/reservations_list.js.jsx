@@ -60,7 +60,6 @@ class ReservationsFilterReservationsList extends React.Component {
             <div><span className="reservation-state-item reservation-state reserved"></span>予約</div>
             <div><span className="reservation-state-item reservation-state checkin"></span>チェックイン</div>
             <div><span className="reservation-state-item reservation-state checkout"></span>チェックアウト</div>
-            <div><span className="reservation-state-item reservation-state noshow"></span>未来店</div>
             <div><span className="reservation-state-item reservation-state pending"></span>承認待ち</div>
             <div><span className="reservation-state-item reservation-state canceled"></span>キャンセル</div>
           </div>
