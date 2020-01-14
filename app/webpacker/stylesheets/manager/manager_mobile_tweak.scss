@@ -1,6 +1,7 @@
 @import "../breakpoint";
 
 @include media-breakpoint-down(tablet) {
+  // header navigations START
   header dl:first-child {
     margin-left: 10px;
   }
@@ -20,10 +21,13 @@
   header dl dd a, header dl dd a:link, header dl dd a:visited, header dl dt a, header dl dt a:link, header dl dt a:visited {
     min-width: 35px;
   }
+
   header dl dd a .fa {
     font-size: 35px;
   }
+  // header navigations END
 
+  // user dashboard START
   .alert {
     padding: 10px;
     font-size: 90%;
@@ -50,4 +54,153 @@
   #resList {
     margin-bottom: 25px;
   }
+  // user dashboard END
+
+  // Edit reservations page START
+  #resNews {
+    padding-bottom: 100px;
+  }
+
+  #resNew #resInfo .formRow .form dd, #resNew #resInfo .formRow .form dt {
+    display: block;
+  }
+
+  #resNew .formRow .form#resDate .input div {
+    padding: 5px 0;
+    margin: 0;
+  }
+
+  input.start-time-input {
+    margin-top: 5px;
+  }
+
+  .reservation-state-btn.btn.accepted {
+    position: unset;
+    margin: 0;
+    margin: 10px 0;
+  }
+
+  #resNew #resInfo .menu-option-info-staffs-name {
+    display: none;
+  }
+
+  .resNew .checkbox {
+    line-height: normal;
+    text-align: center;
+    padding: 0;
+  }
+
+  .resNew footer #leftFunctions, .resNew footer #BTNfunctions {
+    float: none;
+  }
+
+  .resNew footer #BTNfunctions {
+    padding: 0 5px 10px;
+    text-align: center;
+  }
+  // Edit reservations page END
+
+  // Customer data page START
+  #customer .contBody {
+    order: 1;
+  }
+
+  #customer #mainNav a br {
+    display: none;
+  }
+
+  #customer.contents {
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #customer #resultList.sidel {
+    flex: 1;
+    order: 3;
+    width: 100%;
+  }
+
+  #manager.customer .checking-search-bar {
+    order: 1;
+    text-align: center;
+    margin: 10px;
+  }
+
+  #mainNav {
+    order: 0;
+    text-align: center;
+    width: 100%;
+    padding: 0;
+  }
+
+  #mainNav a, #mainNav a:link, #mainNav a:visited {
+    width: 100%;
+    line-height: 1em;
+    font-size: 17px;
+    padding: 10px;
+  }
+
+  .customer #mainNav dl {
+    margin-bottom: 5px;
+  }
+
+  .customer #mainNav dl dd {
+    padding-bottom: 0;
+  }
+
+  #mainNav a i {
+    display: unset;
+    line-height: 21px;
+    font-size: 1em;
+    margin: 0;
+    padding-right: 5px;
+  }
+
+  #customerInfo #basic dl dd, #customerInfo #basic dl dt, #customerInfoEdit #basic dl dd, #customerInfoEdit #basic dl dt, #customerInfoNew #basic dl dd, #customerInfoNew #basic dl dt {
+    display: block;
+  }
+
+  #customerInfo #basic dl dt, #customerInfo #basic dl dd {
+    width: 100%;
+    float: none;
+    text-align: center;
+    padding: 0 0 5px;
+  }
+
+  #customerInfo #basic dl dt ul {
+    display: flex;
+  }
+
+  #customerInfo #basic dl dt li:first-child {
+    margin: 0 5px 0 0;
+  }
+
+  #customerInfo #basic dl dt li {
+    width: 50%;
+  }
+
+  #customerInfo .tabs a {
+    width: 49%;
+    text-align: center;
+  }
+
+  .customer footer ul li a, .customer footer ul li a:link, .customer footer ul li a:visited, .customer footer ul li input, .resNew footer ul li a, .resNew footer ul li a:link, .resNew footer ul li a:visited {
+    font-size: 14pt;
+    height: 38px;
+    line-height: 38px;
+  }
+
+  .customer footer ul, .resNew footer ul {
+    padding: 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .customer footer ul li:last-child {
+    width: auto;
+    position: unset;
+  }
+  // Customer data page END
 }
