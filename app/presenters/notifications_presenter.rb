@@ -71,9 +71,9 @@ class NotificationsPresenter
       else
         @reservations_approvement_flow = true
 
-        "#{message} #{link_to('<i class="fa fa-caret-square-o-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
+        "#{message} #{link_to('<i class="fa fa-caret-square-left fa-2x" aria-hidden="true"></i>'.html_safe, previous_path) if previous_path}
         #{text}
-        #{link_to('<i class="fa fa-caret-square-o-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path}"
+        #{link_to('<i class="fa fa-caret-square-right fa-2x" aria-hidden="true"></i>'.html_safe, next_path) if next_path}"
       end
     else
       []

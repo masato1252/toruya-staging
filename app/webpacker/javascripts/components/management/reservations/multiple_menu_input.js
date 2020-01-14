@@ -7,7 +7,7 @@ import _ from "lodash";
 import arrayMove from "array-move";
 
 import { selectCustomStyles } from "../../../libraries/styles";
-import { InputRow, DragHandle } from "../../shared/components";
+import { InputRow, DragHandle } from "shared/components";
 import { displayErrors } from "./helpers.js"
 
 const staff_time_warnings = ["freelancer", "unworking_staff"]
@@ -152,7 +152,6 @@ const MenuFields = ({ reservation_form, all_values, collection_name, menu_fields
             render={({ input }) => {
               return (
                 <ReactSelect
-                  ref={(c) => this.menuSelector = c}
                   className="menu-select-container"
                   styles={selectCustomStyles}
                   placeholder={select_a_menu}

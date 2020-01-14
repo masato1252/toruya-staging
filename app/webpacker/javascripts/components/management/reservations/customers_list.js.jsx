@@ -127,7 +127,7 @@ class CustomerPopup extends React.Component {
                 <div dangerouslySetInnerHTML={{ __html: selected_customer && selected_customer.booking_from }} />
               ) :(
                 <div className="booking-from reservation-info-row">
-                  <i className="fa fa-clock-o"></i>
+                  <i className="fa fa-clock"></i>
                   {current_staff_name}
                 </div>
               )}

@@ -1,11 +1,5 @@
-const { environment } = require('@rails/webpacker')
+const { environment, config } = require('@rails/webpacker')
 const webpack = require('webpack')
-const erb = require('./loaders/erb')
-
-environment.loaders.prepend('erb', erb)
-environment.loaders.get('sass').use.splice(-1, 0, {
-  loader: 'resolve-url-loader',
-});
 
 environment.plugins.prepend(
   'Provide',
@@ -21,4 +15,16 @@ environment.plugins.prepend(
 const util = require('util')
 console.log(util.inspect(environment, false, null, true /* enable colors */))
 
+const path = require("path")
+
+// config.source_path: app/webpacker
+environment.config.merge({
+  resolve: {
+    alias: {
+      shared: path.resolve(config.source_path, 'javascripts/components/shared'),
+    }
+  }
+})
+
+environment.splitChunks()
 module.exports = environment

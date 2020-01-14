@@ -2,7 +2,7 @@
 
 import React from "react";
 import CustomScheduleFields from "./custom_schedule_fields.js";
-import CommonDatepickerField from "../../shared/datepicker_field.js";
+import CommonDatepickerField from "shared/datepicker_field.js";
 
 class CustomSchedules extends React.Component {
   static defaultProps = {

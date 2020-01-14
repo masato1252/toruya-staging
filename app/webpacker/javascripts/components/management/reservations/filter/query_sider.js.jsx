@@ -5,8 +5,8 @@ import _ from "underscore";
 import axios from "axios";
 import ReactSelect from "react-select";
 
-import CommonDatepickerField from "../../../shared/datepicker_field.js";
-import Select from "../../../shared/select.js";
+import CommonDatepickerField from "shared/datepicker_field.js";
+import Select from "shared/select.js";
 import { selectCustomStyles } from "../../../../libraries/styles";
 
 var moment = require('moment-timezone');

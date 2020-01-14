@@ -32,15 +32,15 @@ export default class Modal extends Controller {
     this.popupModal.html("");
   }
 
-  get path(): string {
+  get path() {
     return this.data.get("path");
   }
 
-  get modalTarget(): string {
+  get modalTarget() {
     return this.data.get("target");
   }
 
-  get jumpOut(): string {
+  get jumpOut() {
     return this.data.get("jumpOut");
   }
 }

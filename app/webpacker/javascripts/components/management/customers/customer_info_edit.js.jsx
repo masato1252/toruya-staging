@@ -3,7 +3,7 @@
 import React from "react";
 import _ from "underscore";
 import axios from 'axios';
-import Select from "../../shared/select.js";
+import Select from "shared/select.js";
 
 class CustomerInfoEdit extends React.Component {
   constructor(props) {

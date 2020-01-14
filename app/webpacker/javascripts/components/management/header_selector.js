@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import Select from ".././shared/select.js"
+import Select from "shared/select.js"
 
 class HeaderSelector extends React.Component {
   state = {

@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import ProcessingBar from "../../../shared/processing_bar.js";
+import ProcessingBar from "shared/processing_bar.js";
 
 class ReservationsFilterReservationsList extends React.Component {
   renderReservationsList = () => {

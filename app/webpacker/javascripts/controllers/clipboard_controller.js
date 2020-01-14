@@ -1,21 +1,24 @@
 import { Controller } from "stimulus";
-import ClipboardJS from "clipboard";
+import clipboardCopy from "clipboard-copy";
 
 export default class ClipboardController extends Controller {
-  connect() {
-    // Clipboard, by default, looks for the "data-clipboard-text" attribute on
-    // the element.
-    this.clipboard = new ClipboardJS(this.element);
-    this.clipboard.on("success", this.clipboardSuccessHandler);
-  }
-
   clipboardSuccessHandler = (event) => {
     $(this.element).tooltip({
       title: this.popup_text || "Copied!"
     }).tooltip("show")
   };
 
+  copy = () => {
+    clipboardCopy(this.copied_text).then((success) => {
+      this.clipboardSuccessHandler()
+    });
+  }
+
   get popup_text() {
     return this.data.get("popupText");
+  }
+
+  get copied_text() {
+    return this.data.get("text");
   }
 }

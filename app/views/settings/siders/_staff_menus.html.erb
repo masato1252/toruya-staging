@@ -1,5 +1,5 @@
 <dl class="staff">
-  <%= active_link_to content_tag(:span, t("settings.staff.sider_label")), settings_user_staffs_path(super_user),
+  <%= active_link_to content_tag(:span, "<i class='fa fa-user-tie fa-2x'></i>&nbsp;#{t("settings.staff.sider_label")}".html_safe), settings_user_staffs_path(super_user),
     active: [[
       "settings/staffs",
       params[:working_time_menu_scope] == "staff" && "settings/working_time/staffs"]],

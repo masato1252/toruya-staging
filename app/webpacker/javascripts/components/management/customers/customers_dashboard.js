@@ -6,13 +6,13 @@ import axios from "axios";
 import Rails from "rails-ujs";
 
 import CommonCustomersList from "../common/customers_list.js";
-import ProcessingBar from "../../shared/processing_bar.js";
+import ProcessingBar from "shared/processing_bar.js";
 import CustomerInfoView from "./customer_info_view.js";
 import CustomerInfoEdit from "./customer_info_edit.js";
 import CustomerReservationsView from "./customer_reservations_view.js";
 import CustomersSearchBar from "./search_bar.js";
-import Select from "../../shared/select.js";
-import MessageBar from "../../shared/message_bar.js";
+import Select from "shared/select.js";
+import MessageBar from "shared/message_bar.js";
 
 class CustomersDashboard extends React.Component {
   constructor(props) {
@@ -563,7 +563,7 @@ class CustomersDashboard extends React.Component {
               className={`BTNyellow ${!this._isCustomerDataValid() || this.state.processing ? "disabled" : ""}`}
               >
               <dd id="NAVnewResv">
-                <i className="fa fa-folder-o fa-2x"></i>
+                <i className="fa fa-folder-plus fa-2x"></i>
                 <span>{this.props.saveBtn}</span>
               </dd>
               </a>
@@ -576,7 +576,7 @@ class CustomersDashboard extends React.Component {
                   className={`btn btn-orange ${this.state.processing ? "disabled" : ""}`}
                   data-confirm={this.props.customerDeleteConfirmMessage}
                   >
-                    <i className="fa fa-trash-o"></i>
+                    <i className="fa fa-trash"></i>
                     <span>{this.props.deleteCustomerBtn}</span>
                 </a>
               )
@@ -608,7 +608,7 @@ class CustomersDashboard extends React.Component {
               className="BTNtarco"
               >
               <dd id="NAVnewResv">
-                <i className="fa fa-calendar-plus-o fa-2x"></i>
+                <i className="fa fa-calendar-plus fa-2x"></i>
                 <span>新規予約</span>
               </dd>
             </a>
@@ -622,7 +622,7 @@ class CustomersDashboard extends React.Component {
               data-action="click->modal#popup" data-modal-path={this.props.reservationCreateWarningPath}
               className="BTNtarco" href="#">
               <dd id="NAVnewResv">
-                <i className="fa fa-calendar-plus-o fa-2x"></i>
+                <i className="fa fa-calendar-plus fa-2x"></i>
                 <span>新規予約</span>
               </dd>
             </a>

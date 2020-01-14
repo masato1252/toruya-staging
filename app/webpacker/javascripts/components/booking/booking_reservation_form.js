@@ -14,8 +14,8 @@ import { CSSTransition } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
-import { Radio, Condition, Error, ErrorMessage } from "../shared/components";
-import Calendar from "../shared/calendar/calendar";
+import { Radio, Condition, Error, ErrorMessage } from "shared/components";
+import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
 

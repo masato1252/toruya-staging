@@ -4,7 +4,7 @@ import React from "react";
 import _ from "underscore";
 import "whatwg-fetch";
 import 'url-search-params-polyfill';
-import ProcessingBar from "../../../shared/processing_bar.js";
+import ProcessingBar from "shared/processing_bar.js";
 
 class SettingsStaffFormfields extends React.Component {
   state = {
@@ -124,9 +124,9 @@ class SettingsStaffFormfields extends React.Component {
               <dd>
                 {
                    this.state.shopInvisible[`staff_shop_settings_${option.shop_id}`] ? (
-                     <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                     <i className="fa fa-plus-square" aria-hidden="true"></i>
                    ) : (
-                     <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                     <i className="fa fa-minus-square" aria-hidden="true"></i>
                    )
                 }
               </dd>

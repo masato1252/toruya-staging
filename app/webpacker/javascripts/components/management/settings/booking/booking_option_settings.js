@@ -12,11 +12,11 @@ import moment from "moment-timezone";
 import _ from "lodash";
 
 import { mustBeNumber, requiredValidation, greaterEqualThan, transformValues, composeValidators } from "../../../../libraries/helper";
-import { Input, InputRow, Radio, Error, Condition } from "../../../shared/components";
-import CommonDatepickerField from "../../../shared/datepicker_field";
-import DateFieldAdapter from "../../../shared/date_field_adapter";
-import SelectMultipleInputs from "../../../shared/select_multiple_inputs";
-import { DragHandle } from "../../../shared/components";
+import { Input, InputRow, Radio, Error, Condition } from "shared/components";
+import CommonDatepickerField from "shared/datepicker_field";
+import DateFieldAdapter from "shared/date_field_adapter";
+import SelectMultipleInputs from "shared/select_multiple_inputs";
+import { DragHandle } from "shared/components";
 
 class BookingOptionSettings extends React.Component {
   constructor(props) {

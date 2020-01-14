@@ -133,9 +133,9 @@ class WorkingTimeStaffForm extends React.Component {
                           <dd>
                             {
                               this.state.scheduleDisplaying[`business_schedules_${shop.id}`] ? (
-                                <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                                <i className="fa fa-minus-square" aria-hidden="true"></i>
                               ) : (
-                                <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                                <i className="fa fa-plus-square" aria-hidden="true"></i>
                               )
                             }
                           </dd>
@@ -171,9 +171,9 @@ class WorkingTimeStaffForm extends React.Component {
                           <dd>
                             {
                               this.state.scheduleDisplaying[`temp_working_schedules_${shop.id}`] ? (
-                                <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                                <i className="fa fa-minus-square" aria-hidden="true"></i>
                               ) : (
-                                <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                                <i className="fa fa-plus-square" aria-hidden="true"></i>
                               )
                             }
                           </dd>
@@ -219,9 +219,9 @@ class WorkingTimeStaffForm extends React.Component {
             <dd>
             {
               this.state.scheduleDisplaying["temp_leaving_schedules"] ? (
-                <i className="fa fa-minus-square-o" aria-hidden="true"></i>
+                <i className="fa fa-minus-square" aria-hidden="true"></i>
               ) : (
-                <i className="fa fa-plus-square-o" aria-hidden="true"></i>
+                <i className="fa fa-plus-square" aria-hidden="true"></i>
               )
             }
             </dd>
