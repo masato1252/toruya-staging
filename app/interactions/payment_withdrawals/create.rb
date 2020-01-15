@@ -6,7 +6,9 @@ module PaymentWithdrawals
     def execute
       report_month = Subscription.today.prev_month
       period = report_month.beginning_of_month..report_month.end_of_month.end_of_day
-      payments = user.payments.pending.where(created_at: period)
+      # XXX: Even the period is one month, but try to find all the valid previous pending payments,
+      # just in case missing some legacy pending payments.
+      payments = user.payments.pending.where("created_at <= ?", report_month.end_of_month.end_of_day)
       total_amount = payments.sum(&:amount)
 
       PaymentWithdrawal.transaction do

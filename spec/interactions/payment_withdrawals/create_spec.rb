@@ -7,7 +7,7 @@ RSpec.describe PaymentWithdrawals::Create do
   end
   after { Timecop.return }
   let!(:payment) do
-    Timecop.travel(1.month.ago) do
+    Timecop.travel(2.month.ago) do
       factory.create_payment
     end
   end
