@@ -12,7 +12,7 @@
         <%= t("settings.dashboard.current_plan_is") %>
       </div>
       <div>
-        <strong class="big"><%= current_user.permission_level_name %></strong>
+        <strong class="big"><%= current_user.member_plan_name %></strong>
       </div>
       <div>
         <%= link_to t("settings.dashboard.check_plan"), settings_payments_path, class: "btn btn-yellow" %>

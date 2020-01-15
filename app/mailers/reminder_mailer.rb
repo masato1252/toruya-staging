@@ -21,7 +21,7 @@ class ReminderMailer < ApplicationMailer
 
   def daily_reservations_limit_by_admin_reminder(user)
     @user = user
-    @plan_name = user.permission_level_name
+    @plan_name = user.member_plan_name
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
 
@@ -32,7 +32,7 @@ class ReminderMailer < ApplicationMailer
 
   def daily_reservations_limit_by_staff_reminder(user, reservation)
     @user = user
-    @plan_name = user.permission_level_name
+    @plan_name = user.member_plan_name
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
     @shop_name = reservation.shop.display_name
@@ -44,9 +44,9 @@ class ReminderMailer < ApplicationMailer
 
   def total_reservations_limit_by_admin_reminder(user)
     @user = user
-    @plan_name = user.permission_level_name
+    @plan_name = user.member_plan_name
     @today_reservations_count = user.today_reservations_count
-    @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level_name]
+    @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
 
     mail(to: @user.email,
@@ -56,9 +56,9 @@ class ReminderMailer < ApplicationMailer
 
   def total_reservations_limit_by_staff_reminder(user, reservation)
     @user = user
-    @plan_name = user.member_level_name
+    @plan_name = user.member_plan_name
     @today_reservations_count = user.today_reservations_count
-    @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.member_level]
+    @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
     @shop_name = reservation.shop.display_name
 

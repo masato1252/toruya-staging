@@ -20,7 +20,7 @@
     <% @referrals.each do |referral| %>
       <dl>
         <dt class="rowTTL"><%= referral.referrer.name %></dt>
-        <dd class="rowTTL"><%= referral.active? ? referral.referrer.permission_level_name : t("settings.referrers.state.#{referral.state}") %></dd>
+        <dd class="rowTTL"><%= referral.active? ? referral.referrer.member_plan_name : t("settings.referrers.state.#{referral.state}") %></dd>
         <dd class="updateTime"><%= @charges_by_user_id[referral.referrer_id] %></dd>
     <% end %>
   </div>

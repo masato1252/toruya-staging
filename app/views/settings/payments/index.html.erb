@@ -12,7 +12,7 @@
       <tr>
         <th><%= t("settings.plans.plan_info.current_plan") %></th>
         <td>
-          <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.permission_level_name) %>
+          <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %>
           <%= link_to t("settings.plans.plan_info.change_plan"), settings_plans_path, class: "btn btn-yellow" %>
         </td>
       </tr>

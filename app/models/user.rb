@@ -101,8 +101,8 @@ class User < ApplicationRecord
     Plan.permission_level(member_plan_key)
   end
 
-  def permission_level_name
-    I18n.t("plan.level.#{permission_level}")
+  def member_plan_name
+    I18n.t("plan.level.#{member_plan_key}")
   end
 
   def current_staff_account(super_user)
