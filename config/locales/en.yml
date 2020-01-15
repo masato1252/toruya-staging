@@ -22,6 +22,11 @@ en:
     reservation_setting_redirect_message: Please set your reservation settings
     reservation_setting_warning_message: Please go to %{link} to set your reservation settings
     reservation_setting_warning_link_title: Reservation Settings page
+  invitation:
+    business_member_canceled:
+      title: This page has been discontinued
+      desc_html: This page has been abolished due to the Business member's reason.<br> Please contact your introducer.
+    existing_user_warning_html: This page is for first time sign-up users. <br> Please contact to your introducer for further questions.
   dashboard:
     shops: Shops
     my_shop: My shops
@@ -35,6 +40,9 @@ en:
       free: Free
       basic: Basic
       premium: Premium
+      business: Business
+      child_basic: Basic
+      child_premium: Premium
   notifications:
     pending_reservation_need_confirm: You have %{number} reservation need to be confirm.
     pending_reservation_confirm: Check here
@@ -193,6 +201,12 @@ en:
         dob_in_current_month: Birthday in this Month
         dob_in_next_month: Birthday in Next Month
         checkout_in_a_year: Checked-out within a Year
+  business:
+    title: Business page
+    apply: Apply
+    waiting_review: Waiting review
+    pay_to_be_business_member: Pay registration fee
+    congratulation_html: Congratulations!<br>You are a business member now.
   constants:
     rank:
       regular: "Regular"

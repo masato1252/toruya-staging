@@ -168,6 +168,27 @@ en:
       info_2: You need to complete this setting in order to use Toruya.
       new_info_1: Please enter Toruya account admin informations here.
       new_info_2: You need to complete this setting in order to use Toruya.
+    referrers:
+      info_title: Child Accounts
+      info_desc_html: These are the child accounts you invited.<br>You need your child users to purchase plans in order to get payed referral fees.
+      sider_label: Business
+      referrer_label: Child Accounts
+      invite_button: Invite a User
+      last_charged_on: Last Payment
+      state:
+        pending: signed-up
+        referrer_canceled: Cancelled
+      copy_modal:
+        title: Invitation URL
+        desc: The new users who signed-up from this invitation URL will be your child accounts.
+    withdrawals:
+      withdrawal_label: Referral Fees
+      info_desc_html: You can view your monthly statement of referral fees here.<br>You need your child users to purchase plans in order to get payed referral fees.
+      transfer_date: Issued date
+      amount: Total amount
+      print: Print Statement
+      receipt:
+        issue_date: Day of occurred
     plans:
       info_title: Plans
       info_title1: Plans and Payments
@@ -203,7 +224,7 @@ en:
       free:
         title: Free
         shop_can_set: "1 shop"
-        staff_in_charge: "1 staff/reservation"
+        staff_in_charge: "1 staff"
         max_customer_per_reservation: ⃝
         reservation_restriction: 10 per a day(total limit 1,200)
         private_schedule: ⃝
@@ -215,7 +236,20 @@ en:
       basic:
         title: Basic
         shop_can_set: "1 shop"
-        staff_in_charge: "1 staff/reservation"
+        staff_in_charge: "1 staff"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 3,600)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2
+        customer_filter: preset filters
+        print_address: 1 at a time
+        add_staff: ✕
+      child_basic:
+        title: Basic
+        period: 1 year
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff"
         max_customer_per_reservation: ⃝
         reservation_restriction: 10 per a day(total limit 3,600)
         private_schedule: ⃝
@@ -226,6 +260,32 @@ en:
         add_staff: ✕
       premium:
         title: Premium
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
+      child_premium:
+        title: Premium
+        period: 1 year
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
+      business:
+        title: Premium
+        period: 1 year
         shop_can_set: "unlimited"
         staff_in_charge: "unlimited"
         max_customer_per_reservation: ⃝

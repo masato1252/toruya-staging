@@ -261,7 +261,7 @@ ja:
           amount_tip: 返金合計
     referrers:
       info_title: 子アカウント
-      info_desc_html: あなたが招待した子アカウントの情報です。<br />紹介料の受け取りには子アカウントが支払いを完了する必要があります。
+      info_desc_html: あなたが招待した子アカウントの情報です。<br>紹介料の受け取りには子アカウントが支払いを完了する必要があります。
       sider_label: 代理店
       referrer_label: 子アカウント
       invite_button: 新しく招待する

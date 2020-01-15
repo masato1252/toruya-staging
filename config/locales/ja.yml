@@ -26,7 +26,7 @@ ja:
     business_member_canceled:
       title: 利用が中止されました
       desc_html: 代理店様のご都合により、このページの利用が中止されました。<br>ご紹介者様にご連絡ください。
-    existing_user_warning_html: このページは、初めて登録する方専用です。<br /> 詳細については、代理店会員様にご連絡ください。
+    existing_user_warning_html: このページは、初めて登録する方専用です。<br> 詳細については、代理店会員様にご連絡ください。
   dashboard:
     shops: 店舗
     my_shop: 自分の店舗
@@ -294,7 +294,7 @@ ja:
     apply: 登録申請する
     waiting_review: 承認待ち
     pay_to_be_business_member: 代理店登録料を支払う
-    congratulation_html: おめでとうございます！<br />代理店登録が完了しました。
+    congratulation_html: おめでとうございます！<br>代理店登録が完了しました。
   constants:
     rank:
       regular: "一般"
