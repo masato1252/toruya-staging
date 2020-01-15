@@ -13,7 +13,10 @@
         email: current_user.email,
         locale: I18n.default_locale,
         i18n: {
-          saveAndPay: @presenter.btn_text
+          saveAndPay: @presenter.btn_text,
+          chargeFailedTitle: t("settings.plans.payment.failed_title"),
+          chargeFailedDesc1: t("settings.plans.payment.failed_desc1"),
+          chargeFailedDesc2: t("settings.plans.payment.failed_desc2"),
         }
       }) %>
     <% else %>

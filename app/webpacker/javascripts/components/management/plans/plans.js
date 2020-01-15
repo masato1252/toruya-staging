@@ -2,7 +2,6 @@
 
 import React from "react";
 import SubscriptionModal from "./subscription_modal";
-import ChargeFailedModal from "./charge_failed";
 import PlanCharge from "./charge";
 
 class Plans extends React.Component {
@@ -315,9 +314,6 @@ class Plans extends React.Component {
               />
           )
         }
-        <ChargeFailedModal
-          {...this.props}
-        />
       </div>
     )
   }
