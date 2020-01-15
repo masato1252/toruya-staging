@@ -1,5 +1,5 @@
 module Referrals
-  class Charged < ActiveInteraction::Base
+  class ReferrerCharged < ActiveInteraction::Base
     object :referral
     object :plan
     object :charge, class: SubscriptionCharge, default: nil # when free plan case, charge is nil
@@ -61,7 +61,7 @@ module Referrals
 
     def validate_referral
       if !referral.pending? && !referral.active?
-        errors.add(:referrer, :invald_state)
+        errors.add(:referral, :invald_state)
       end
     end
 

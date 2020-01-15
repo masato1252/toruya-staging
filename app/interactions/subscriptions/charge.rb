@@ -69,7 +69,7 @@ module Subscriptions
         # so Subscriptions::Charge is the place, every charge hehavior will called.
         # So put it here to handle all kind of charge or plan changes.
         if charge.completed? && referral = Referral.enabled.find_by(referrer: user)
-          compose(Referrals::Charged, charge: charge, referral: referral, plan: plan)
+          compose(Referrals::ReferrerCharged, charge: charge, referral: referral, plan: plan)
         end
 
         charge

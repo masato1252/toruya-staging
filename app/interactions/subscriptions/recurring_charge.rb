@@ -12,7 +12,7 @@ module Subscriptions
         subscription.update(plan: charging_plan, next_plan: nil)
 
         if referral = Referral.enabled.find_by(referrer: user)
-          compose(Referrals::Charged, referral: referral, plan: charging_plan)
+          compose(Referrals::ReferrerCharged, referral: referral, plan: charging_plan)
         end
       else
         subscription.with_lock do
