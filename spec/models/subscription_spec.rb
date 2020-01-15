@@ -39,6 +39,17 @@ RSpec.describe Subscription do
           expect(subscription.expired_date).to eq(Date.new(2018, 2, 27))
         end
       end
+
+      context "when plan is an annual plan" do
+        let(:subscription) { FactoryBot.create(:subscription, :business) }
+        let(:charge_date) { Date.new(2018, 1, 31) }
+
+        it "sets the expired date to next charge date" do
+          subscription.set_expire_date
+
+          expect(subscription.expired_date).to eq(Date.new(2019, 1, 31))
+        end
+      end
     end
 
     context "when users never paid their subscription" do

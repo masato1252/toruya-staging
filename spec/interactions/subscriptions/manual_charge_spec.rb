@@ -49,6 +49,36 @@ RSpec.describe Subscriptions::ManualCharge do
       })
     end
 
+    context "when plan is business" do
+      let(:plan) { Plan.business_level.take }
+
+      it "charges subscription and completed charge with different details type and expired date" do
+        outcome
+
+        subscription.reload
+        charge = subscription.user.subscription_charges.last
+
+        expect(subscription.plan).to eq(plan)
+        expect(subscription.next_plan).to be_nil
+        expect(subscription.recurring_day).to eq(Subscription.today.day)
+        expect(subscription.expired_date).to eq(Date.new(2019, 1, 31))
+        expect(charge.expired_date).to eq(Date.new(2019, 1, 31))
+        expect(charge).to be_completed
+        fee = Plans::Fee.run!(user: user, plan: plan)
+        expect(charge.details).to eq({
+          "shop_ids" => user.shop_ids,
+          "shop_fee" => fee.fractional,
+          "shop_fee_format" => fee.format,
+          "type" => SubscriptionCharge::TYPES[:business_member_sign_up],
+          "user_name" => user.name,
+          "user_email" => user.email,
+          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
+          "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+          "plan_name" => plan.name
+        })
+      end
+    end
+
     context "when charge failed" do
       it "create a failed charge and doesn't change subscription" do
         StripeMock.prepare_card_error(:card_declined)

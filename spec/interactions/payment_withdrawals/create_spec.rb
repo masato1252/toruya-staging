@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe PaymentWithdrawals::Create do
   before do
     # It is sunday
-    Timecop.freeze(2019, 11, 10)
+    Timecop.freeze(transfer_date)
   end
   after { Timecop.return }
   let!(:payment) do
@@ -12,6 +12,9 @@ RSpec.describe PaymentWithdrawals::Create do
     end
   end
   let(:user) { payment.receiver }
+  let(:mailer_spy) { spy(monthly_report: mailer_deliver)  }
+  let(:mailer_deliver) { spy(deliver_later: nil)  }
+  let(:transfer_date) { Date.new(2019, 11, described_class::TRANSFER_DAY) } # Sunday
 
   let(:args) do
     {
@@ -22,6 +25,8 @@ RSpec.describe PaymentWithdrawals::Create do
 
   describe "#execute" do
     it "creates a PaymentWithdrawal" do
+      allow(WithdrawalMailer).to receive(:with).and_return(mailer_spy)
+
       expect {
         outcome
       }.to change {
@@ -34,6 +39,18 @@ RSpec.describe PaymentWithdrawals::Create do
       expect(withdrawal.amount).to eq(user.payments.sum(&:amount))
       expect(withdrawal.details["payment_ids"]).to eq([payment.id])
       expect(withdrawal.details["transfer_date"]).to eq(I18n.l(Date.new(2019, 11, 8)))
+      expect(WithdrawalMailer).to have_received(:with).with(withdrawal: withdrawal)
+    end
+
+    context "when today is monday (regular business day)" do
+      let(:transfer_date) { Date.new(2019, 10, described_class::TRANSFER_DAY) } # Thursday
+
+      it "had a correct transfer date" do
+        outcome
+        withdrawal = user.payment_withdrawals.last
+
+        expect(withdrawal.details["transfer_date"]).to eq(I18n.l(transfer_date))
+      end
     end
   end
 end

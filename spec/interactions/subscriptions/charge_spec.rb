@@ -35,56 +35,55 @@ RSpec.describe Subscriptions::Charge do
       expect(charge.order_id).to be_present
     end
 
-    context "when user is a referrer under child plan, its referee is under business plan and charge completed" do
+    context "when user is a referrer and charge completed" do
       let(:referral) { factory.create_referral }
       let(:user) { referral.referrer }
-      let(:plan) { Plan.child_premium_level.take }
 
-      it "calls Payments::ReferralFee" do
-        allow(Payments::ReferralFee).to receive(:run).and_call_original
+      it "calls Referrals::ReferrerCharged" do
+        allow(Referrals::ReferrerCharged).to receive(:run).and_call_original
 
         outcome
 
-        expect(Payments::ReferralFee).to have_received(:run).with(referral: referral, charge: outcome.result)
+        expect(Referrals::ReferrerCharged).to have_received(:run).with(referral: referral, charge: outcome.result, plan: plan)
       end
 
       context "when referee is not under business plan"  do
         let(:referral) { factory.create_referral(referee: FactoryBot.create(:subscription, plan: Plan.premium_level.take).user) }
 
-        it "does NOT call Payments::ReferralFee" do
+        it "does NOT call Referrals::ReferrerCharged" do
           outcome
 
-          expect(Payments::ReferralFee).not_to receive(:run)
+          expect(Referrals::ReferrerCharged).not_to receive(:run)
         end
       end
 
       context "when referral is not active"  do
         let(:referral) { factory.create_referral(state: :referrer_canceled) }
 
-        it "does NOT call Payments::ReferralFee" do
+        it "does NOT call Referrals::ReferrerCharged" do
           outcome
 
-          expect(Payments::ReferralFee).not_to receive(:run)
+          expect(Referrals::ReferrerCharged).not_to receive(:run)
         end
       end
 
       context "when charge is not completed"  do
         let(:charge) { FactoryBot.create(:subscription_charge, :refunded, user: referral.referrer, plan: Plan.business_level.take) }
 
-        it "does NOT call Payments::ReferralFee" do
+        it "does NOT call Referrals::ReferrerCharged" do
           outcome
 
-          expect(Payments::ReferralFee).not_to receive(:run)
+          expect(Referrals::ReferrerCharged).not_to receive(:run)
         end
       end
 
       context "when referrer is not under child plan"  do
         let(:referral) { factory.create_referral(referrer: FactoryBot.create(:subscription, plan: Plan.basic_level.take).user) }
 
-        it "does NOT call Payments::ReferralFee" do
+        it "does NOT call Referrals::ReferrerCharged" do
           outcome
 
-          expect(Payments::ReferralFee).not_to receive(:run)
+          expect(Referrals::ReferrerCharged).not_to receive(:run)
         end
       end
     end
