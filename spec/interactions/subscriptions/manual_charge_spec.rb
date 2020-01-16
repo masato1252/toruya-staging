@@ -53,6 +53,7 @@ RSpec.describe Subscriptions::ManualCharge do
       let(:plan) { Plan.business_level.take }
 
       it "charges subscription and completed charge with different details type and expired date" do
+        allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
         outcome
 
         subscription.reload
