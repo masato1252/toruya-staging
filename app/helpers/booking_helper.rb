@@ -1,5 +1,7 @@
 module BookingHelper
   def customer_info_as_json(customer_with_google_contact)
+    customer_with_google_contact = customer_with_google_contact.with_google_contact
+
     {
       id: customer_with_google_contact&.id,
       first_name: customer_with_google_contact&.first_name,
