@@ -345,7 +345,7 @@ module Booking
     def new_customer_info
       @new_customer_info ||=
         if customer_info&.compact.present?
-          # TODO: if non attributes changed, no data
+          # XXX: if non attributes changed, no data
           Booking::CustomerInfo.new(present_customer_info.changed_deep_diff(customer_info))
         else
           Booking::CustomerInfo.new(

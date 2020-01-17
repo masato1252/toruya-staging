@@ -1,0 +1,15 @@
+module Admin
+  class BusinessApplicationsController < AdminController
+    def approve
+      BusinessApplications::Approve.run!(user: BusinessApplication.find(params[:id]).user)
+
+      redirect_to admin_path
+    end
+
+    def reject
+      BusinessApplications::Reject.run!(user: BusinessApplication.find(params[:id]).user)
+
+      redirect_to admin_path
+    end
+  end
+end

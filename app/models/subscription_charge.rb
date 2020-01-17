@@ -7,7 +7,7 @@
 #  plan_id               :bigint(8)
 #  amount_cents          :decimal(, )
 #  amount_currency       :string
-#  state                 :integer
+#  state                 :integer          default("active"), not null
 #  charge_date           :date
 #  expired_date          :date
 #  manual                :boolean          default(FALSE), not null
@@ -24,10 +24,12 @@
 #  user_state_index                       (user_id,state)
 #
 
+# The model represents the data we charge users
 class SubscriptionCharge < ApplicationRecord
   TYPES = {
     shop_fee: "shop_fee",
-    plan_subscruption: "plan_subscruption"
+    plan_subscruption: "plan_subscruption",
+    business_member_sign_up: "business_member_sign_up",
   }.freeze
   belongs_to :user
   belongs_to :plan

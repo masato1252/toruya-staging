@@ -38,8 +38,6 @@ class Reservation < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
   validate :end_time_larger_than_start_time
-  # validate :duplicate_staff_or_customer
-  # validate :enough_staffs_for_customers
 
   belongs_to :shop
   belongs_to :by_staff, class_name: "Staff", required: false
@@ -83,12 +81,10 @@ class Reservation < ApplicationRecord
     end
   end
 
-  # TODO: handel For multiple same staff case
   def for_staff(staff)
     reservation_staffs.find_by(staff: staff)
   end
 
-  # TODO: handel For multiple same staff case
   def acceptable_by_staff?(staff)
     may_accept? && (
       reservation_staffs.loaded? ? reservation_staffs.find { |rs| rs.staff_id == staff.id }&.pending? : for_staff(staff)&.pending?
@@ -134,32 +130,5 @@ class Reservation < ApplicationRecord
     if start_time && end_time
       end_time > start_time
     end
-  end
-
-  def duplicate_staff_or_customer
-    scoped = Reservation.active.where.not(id: id).joins(:reservation_staffs, :reservation_customers).
-      where("reservations.start_time <= ? AND reservations.end_time >= ?", end_time, start_time)
-
-    if scoped.where("reservation_staffs.staff_id in (?)", staff_ids)
-      .or(
-        scoped.where("reservation_customers.customer_id in (?)", customer_ids)
-      ).exists?
-      errors.add(:base, "This is a duplicated reservation, please check your reservation time, staffs or customers")
-    end
-  end
-
-  # TODO: New rule
-  def enough_staffs_for_customers
-    # min_staffs_number = menu.min_staffs_number
-    # return if min_staffs_number.zero?
-
-    # if staff_ids.size < min_staffs_number
-    #   errors.add(:base, "Not enough staffs for menu")
-    # elsif min_staffs_number == 1 && menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size
-    #   errors.add(:base, "Not enough staffs for customers")
-    # elsif min_staffs_number > 1 &&
-    #   (menu.shop_menus.find_by(shop: shop).max_seat_number < customer_ids.size || menu.staff_menus.where(staff_id: staff_ids).sum(:max_customers) < customer_ids.size)
-    #   errors.add(:base, "Not enough seat for customers")
-    # end
   end
 end

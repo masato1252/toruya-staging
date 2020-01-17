@@ -1,0 +1,393 @@
+en:
+  settings:
+    dashboard:
+      booking_tour:
+        title: Online Booking
+        booking_option_setup: Set a booking price
+        booking_page_setup: Set a booking page
+    shop:
+      info_title: Shop Info
+      new_title: Add a New Shop
+      new_button: Add a New Shop
+      info_1: This is the list of existing shops.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter shops informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      name: Shop Name
+      create_successfully_message: Shop was successfully created.
+      update_successfully_message: Shop was successfully updated.
+      logo_area:
+        title: Shop Logo
+        description_about_logo: It will appear on your booking page.
+        description_about_image: PNG or GIF format of 390x135 pixels, less than 30KB
+        upload_button_text: upload
+        no_image: There's no image
+    business_hours:
+      info_title: Business Hours
+      info_1: Please enter business hours here.
+      info_2: Toruya will accept reservation based on this setting.
+      japan_holidays: Japanese holiday
+      japan_holidays_close_tip: Check to set it closed for Japanese holidays.
+      reason_of_closing: Reason of closing
+      new_closing_btn: Add a Row
+      closing_reason: write your reason(optional)
+      open_time: OPEN
+      close_time: CLOSE
+    reservation_setting:
+      new_title: Add a New Reservation Setting
+      new_button: Add a New Reservation Setting
+      info_1: This is the list of existing reservation frames.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter reservation frame informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      name: Name
+      name_placeholder: Setting name
+      short_name: Short name
+      info_label: Information
+      all_business_days: All Business Days
+      weekly: Weekly
+      monthly: Monthly
+      weekly_setting: Weekly Frame Setting
+      monthly_setting: Monthly Frame Setting
+      number_of_day: Number of the day
+      number_of_week: Number of the week
+      all_business_hours: All Business Hours
+      custom_time: Custom Time
+    menu:
+      info_title: Menu
+      info_label: Information
+      new_title: Add a New Menu
+      new_button: Add a New Menu
+      info_1: This is the list of existing menus.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter menu informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      name: Name
+      staff: Staff
+      reservation_setting_name: Reservation setting name
+      add_new_reservation_setting_btn: ADD a New Reservation Setting
+      reservation_ending_rule_none: None
+      reservation_ending_rule_repeating: After repeating
+      reservation_ending_rule_repeating_setting: Repeat Setting
+      reservation_ending_rule_repeating_times: times
+      reservation_ending_rule_end_date_setting: Ends Date Setting
+      category_label: Category
+      new_category_btn: ADD a New Category
+    category:
+      info_title: Category
+      info_label: Information
+      new_title: Add a New Category
+      new_button: Add a New Category
+      info_1: This is the list of existing menu categories.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter menu categories informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      name: Name
+    staff:
+      info_title: Staff Info
+      new_title: Add a New Staff
+      new_button: Add a New Staff
+      info_label: Display Name
+      info_1: This is the list of existing staffs.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter staffs informations here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      name: Name
+      shop_label: Belonging Shop
+      contact_groups_label: Customer Groups Readability
+      group_reservations_only_readable_label: reservation records only
+      group_details_readable_label: all information
+      delete_confirmation_message: "Are you sure? %{staff_name} will be deleted."
+      work_time: Work Time
+      all_work_time: Staff Working Time
+      holiday_time: Holiday
+    staff_account:
+      info_title: Staff Account
+      using_staff_account: Use staff acccount
+      email: Email
+      capability: Capability
+      staff_capability: Staff
+      manager_capability: Manager
+      gmail_hint: By setting a gmail account as a staff account, you can allow your staff to manage both your shop reservation and personal schedule on Toruya all by own.
+      resend_email: Resend Activation Email
+      sent_message: We sent activation email to staff's Gmail. Please ask your staff to accept staff account from email we send.
+      new_staff_active: You have a new staff account just activated. You can set staff detailed capabilities now.
+      staff_setting: Staff setting
+    staff_working_time:
+      info_1: Here is the list of staff you set.
+      info_2: Toruya will accept reservation based on this setting.
+      in_out_label: Come IN/OUT
+      start_label: Start
+      end_label: End
+      reason_of_closing: Reason of closing
+      closing_reason: Reason of closing
+      setting_title: Working-Day Setting
+      full_time_permission: Full time
+      regular_working_time_permission: Allow staff to set own basic work-day
+      temporary_working_time_permission: Allow staff to set own temporary work-day
+    staff_holiday_time:
+      setting_title: Off-day Setting
+      holiday_permission: Allow staff to set temporary off-day
+    contact:
+      info_title: Contact
+      new_title : Add a New Contact
+      new_button: Add a New Contact
+      info_1: This is the list of existing Toruya contact groups.
+      info_2: Toruya allows you to make reservation based on these settings.
+      new_info_1: Please enter Toruya contact group here.
+      new_info_2: Toruya will accept reservation based on this setting.
+      info_label: Information
+      name: Name
+      sync_google: Sync Google
+      connect_google: Connect Google account
+      reconnect_google: "Reconnect Google account%{email}"
+      reconnect_google_confirmation_message: "WARNING!! Reconnect different google acccount will delete your contact data, Are you sure ?"
+      connected_google_group_title: Connected Google Group
+      connect: Connect
+      sync: Sync
+      google_account_synchronization: Google account synchronization
+      google_account_synchronization_instructions: Please sync your google account and the google group you want here
+      connection_binding_desc: Choose the google group you want to bind.
+      google_group_name: Google Name
+      import_all_titile: Import all contacts from Google
+      bind_all_btn: Import all data
+      import_all_warning_message: "* You can import all contacts only for the very first customer group to avoid duplication on Toruya."
+      bind_btn: Bind
+      binding_confirmation_message: Are you sure binding this google group (%{google_group_name}) with Toruya group (%{contact_group_name}) ?
+      delete_confirmation_message: Google contact group(tag) synced will be deleted when you delete customer group on Toruya. Are you sure you want to delete?
+      importing_message: We are importing your customers, would notify you when the process finished.
+      dont_want_connect_google: "Or you don't want to connect with google group"
+      only_use_toruya_group: Only Use Toruya Google Group
+      only_use_toruya_group_confirmation: "Are you sure?"
+    account:
+      info_title: Account
+      info_title2: Account Info
+    profile:
+      info_title: Let's Setup Your Account and Shop'
+      info_1: This is your Toruya Account setting.
+      info_2: You need to complete this setting in order to use Toruya.
+      new_info_1: Please enter Toruya account admin informations here.
+      new_info_2: You need to complete this setting in order to use Toruya.
+    referrers:
+      info_title: Child Accounts
+      info_desc_html: These are the child accounts you invited.<br>You need your child users to purchase plans in order to get payed referral fees.
+      sider_label: Business
+      referrer_label: Child Accounts
+      invite_button: Invite a User
+      last_charged_on: Last Payment
+      state:
+        pending: signed-up
+        referrer_canceled: Cancelled
+      copy_modal:
+        title: Invitation URL
+        desc: The new users who signed-up from this invitation URL will be your child accounts.
+    withdrawals:
+      withdrawal_label: Referral Fees
+      info_desc_html: You can view your monthly statement of referral fees here.<br>You need your child users to purchase plans in order to get payed referral fees.
+      transfer_date: Issued date
+      amount: Total amount
+      print: Print Statement
+      receipt:
+        issue_date: Day of occurred
+    plans:
+      info_title: Plans
+      info_title1: Plans and Payments
+      info_1: This is your selected plan and payment info for Toruya.
+      info_2: Functions on Toruya will be available based on your plan.
+      plan_info:
+        caption: Plan information
+        current_plan: Your Current Plan
+        plan_member: "%{plan_name} Member"
+        change_plan: Change My Plan
+        join_date: Join Date
+        status: Status
+        next_billing_date: Next Billing Date
+      payment:
+        date: Date
+        amount: Amount
+        plan: Plan
+        receipt: Receipt
+      upgrade:
+        immediately: Change your plan right away(no refund of current term)
+        later: Change your plan on the next term
+      labels:
+        shop_can_set: Shop you can set
+        staff_in_charge: Set staff in charge
+        max_customer_per_reservation: Max customer per reservation
+        reservation_restriction: Reservation you can make
+        private_schedule: Add/Edit private schedule
+        customer_info: Add/Edit Customer Information
+        customer_group_limit: Customer groups you can make
+        customer_filter: Customer filter
+        print_address: Print address
+        add_staff: Add staff
+      free:
+        title: Free
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 1,200)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 1
+        customer_filter: filter by name
+        print_address: 1 at a time
+        add_staff: ✕
+      basic:
+        title: Basic
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 3,600)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2
+        customer_filter: preset filters
+        print_address: 1 at a time
+        add_staff: ✕
+      child_basic:
+        title: Basic
+        period: 1 year
+        shop_can_set: "1 shop"
+        staff_in_charge: "1 staff"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: 10 per a day(total limit 3,600)
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: 2
+        customer_filter: preset filters
+        print_address: 1 at a time
+        add_staff: ✕
+      premium:
+        title: Premium
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
+      child_premium:
+        title: Premium
+        period: 1 year
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
+      business:
+        title: Premium
+        period: 1 year
+        shop_can_set: "unlimited"
+        staff_in_charge: "unlimited"
+        max_customer_per_reservation: ⃝
+        reservation_restriction: unlimited
+        private_schedule: ⃝
+        customer_info: ⃝
+        customer_group_limit: unlimited
+        customer_filter: custom filters
+        print_address: all at once
+        add_staff: ⃝
+    booking_option:
+      sider_label: Online Booking
+      booking_option_label: Booking Prices
+      title: Booking Prices setting
+      info_html: You can set your booking price here.<br />Your customers will book your shop online with this price.
+      name: Price Name
+      menu_for_sale: Menu
+      start_at: Sales start
+      end_at: Sales end
+      new_button: New booking price
+      form:
+        price_name: Price name
+        price_name_hint: Name your booking-price to manage it
+        display_name: Display name
+        display_name_hint: Name your booking-price to show to your customer as menu
+        menu_for_sale_label: Menu for sale
+        menu_restrict_dont_need_order: Staff will be assigned who can respond regardless of menu order.(Recommended)
+        menu_restrict_order: Staff will be assigned who can respond in the menu order.
+        time_span_label: Reservation time
+        total_time: Total time
+        reservation_interval: before and after reservation
+        price_label: Price
+        price: Catalog price
+        tax_label: Tax display
+        tax_include: tax included
+        tax_excluded: tax excluded
+        sale_period: Sales period
+        sale_now: Right now
+        sale_on: On
+        sale_forever: Never
+        sale_start: Sales start
+        sale_end: Sales end
+        overbooking: Double booking
+        not_allow_overbooking_label: Close reservation acceptance with the number of available staff
+        allow_overbooking_label: Accept reservations over the number of staff available
+        note_label: Explanation / Important notes
+        note_hint: The important notes showed to your customer on booking with this price.
+        form_errors:
+          enough_time_for_menu: Please set enough length for the set menu.
+          reached_the_menus_limit: Up to 2 menus can be set
+    booking_page:
+      title: Booking page setting
+      info_html: You can set your booking page here.<br>Your customers will book your shop online from this page.
+      booking_page_label: Booking page
+      name: Page Name
+      start_at: Accept from
+      end_at: Accept to
+      new_button: New Booking Page
+      share_modal_title: Copy codes
+      share_button_label: Booking Button
+      share_button_text: Booking
+      form:
+        name_header: Booking Page
+        page_name: Page name
+        page_name_hint: Name your page to manage it
+        title: Page title
+        title_hint: Page title to show on the booking page
+        greeting: Greeting phrase
+        greeting_placeholder: It will be displayed at the top of the booking page
+        booking_option_header: Booking prices
+        booking_option_hint: Your customer will book with this price
+        booking_option_required_time: Time required
+        shop_header: Available shop
+        booking_dates_header: Reservation calendar
+        booking_dates_hint: Calendar is showing from current setting contents and vacancy situation.
+        booking_dates_calendar_hint: Calendar is showing from current setting contents and vacancy situation.
+        booking_dates_working_date: Business day
+        booking_dates_available_booking_date: Available day
+        default_available_dates_label: Show all available days automatically
+        special_date_label: Available only for specific date
+        interval_header: Starting time of reservation
+        interval_real_booking_time_explanation: The choices from the current settings and availability are displayed.
+        interval_real_booking_time_warning: Actual display may be different based on reservation status and staff availability
+        interval_explanation: The first four choices from 9:00 to 12:00 are displayed.
+        interval_start_time: Start time
+        interval_option: Time choice spacing
+        per_minute: Per minute
+        interval_example_html: 'For example, if the available time is 9:00-12:00 and time choice spacing is set to <strong>"every 30 minutes"</strong>, the choice of reservation start time is "9: 00, 9: 30, 10: 00, 10: 30 ... " will be shown to your customer'
+        open_details: Detail
+        close_details: Close
+        sale_period: Reservation acceptance period
+        sale_now: Right now
+        sale_on: On
+        sale_forever: Never
+        sale_start: Sell start at
+        sale_end: Sell end at
+        overbooking: Overlap Booking
+        not_allow_overbooking_label: Close reservation acceptance with the number of available staff(recommended)
+        allow_overbooking_label: Accept reservations over the number of staff available
+        note_label: Description/Important notes
+        note_hint: Description/Important notes
+        form_errors:
+          start_at_too_late: Based on your setting, it should be before {datetime}
+          end_at_too_early: Based on your setting, it should be after {datetime}
+          unavailable_booking_option: Some prices sells unavailable menu for {shop_name}

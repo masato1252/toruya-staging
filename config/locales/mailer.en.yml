@@ -1,0 +1,11 @@
+en:
+  notification_mailer:
+    duplicate_customers:
+      title: We've found duplicated customer data
+  subscription_mailer:
+    charge_successfully:
+      title: Toruya Payment Notification
+    charge_failed:
+      title: Toruya Payment Failure Notification
+    charge_reminder:
+      title: Toruya Billing Notification

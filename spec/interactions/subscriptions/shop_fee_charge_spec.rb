@@ -1,9 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Subscriptions::ShopFeeCharge do
-  let(:shop) { FactoryBot.create(:shop) }
-  let(:subscription) { FactoryBot.create(:subscription, user: user) }
-  let(:user) { shop.user }
+  let(:shop) { FactoryBot.create(:shop, user: user) }
+  let(:subscription) { FactoryBot.create(:subscription) }
+  let(:user) { subscription.user }
   let(:authorize_token) { SecureRandom.hex }
   let(:stripe_customer_id) do
     Stripe::Customer.create({

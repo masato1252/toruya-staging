@@ -1,0 +1,6 @@
+ja:
+  admin:
+    pending_business_applications:
+      title: 承認待ち登録代理店
+    pending_withdrawals:
+      title: 登録料支払い待ち

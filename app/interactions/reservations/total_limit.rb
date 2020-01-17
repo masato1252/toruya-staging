@@ -9,7 +9,7 @@ module Reservations
     object :user
 
     def execute
-      if user.member_level != Plan::PREMIUM_LEVEL && user.total_reservations_count >= TOTAL_RESERVATIONS_LIMITS[user.member_level]
+      if !user.premium_member? && user.total_reservations_count >= TOTAL_RESERVATIONS_LIMITS[user.permission_level]
         errors.add(:user, :exceed_reservations_total_limit)
       end
     end

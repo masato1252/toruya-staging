@@ -19,7 +19,7 @@ module Reservable
 
       # Menu with customers need to be afforded by staff
       # staff work for menu0 would be available here.
-      # TODO: Find Second largest Value refactor: http://stackoverflow.com/questions/4910930/trying-to-find-the-second-largest-value-in-a-column-postgres-sql
+      # XXX: Find Second largest Value refactor: http://stackoverflow.com/questions/4910930/trying-to-find-the-second-largest-value-in-a-column-postgres-sql
       no_reservation_except_menu0_menus = scoped.select("menus.*, max(shop_menus.max_seat_number) as max_seat_number").group("menus.id").having("
       CASE
         WHEN menus.min_staffs_number = 1 THEN LEAST(max(staff_menus.max_customers), max(shop_menus.max_seat_number)) >= #{number_of_customer}
@@ -35,7 +35,7 @@ module Reservable
         Options::MenuOption.new(id: menu.id, name: menu.display_name, min_staffs_number: menu.min_staffs_number, available_seat: menu.max_seat_number)
       end
 
-      # TODO: this intersection was used now, so below reservation.menus.first is a temporary fix.
+      # XXX: this intersection was used now, so below reservation.menus.first is a temporary fix.
       reservation_menus = overlap_reservations.group_by { |reservation| reservation.menus.first }.map do |menu, reservations|
         menu_max_seat_number = menu.shop_menus.find_by(shop: shop).max_seat_number
         customers_amount_of_reservations = shop.reservations.sum(&:count_of_customers)

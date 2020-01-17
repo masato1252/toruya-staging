@@ -23,30 +23,34 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  contacts_sync_at       :datetime
+#  referral_token         :string
 #
 # Indexes
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_referral_token        (referral_token) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
 class User < ApplicationRecord
+  HARUKO_EMAIL = "haruko_liu@dreamhint.com"
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
-  has_one :subscription
+  has_one :subscription, dependent: :destroy
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
   has_many :customers, -> { active }
   has_many :reservation_settings
   has_many :categories
-  has_many :ranks
+  has_many :ranks, dependent: :destroy
   has_many :contact_groups
   has_many :staff_accounts, foreign_key: :user_id
   has_many :owner_staff_accounts, class_name: "StaffAccount", foreign_key: :owner_id
@@ -61,16 +65,18 @@ class User < ApplicationRecord
   has_many :custom_schedules, dependent: :destroy
   has_many :booking_options
   has_many :booking_pages
+  has_many :referrals, foreign_key: :referee_id
+  has_one :reference, foreign_key: :referrer_id, class_name: "Referral"
+  has_many :payments, foreign_key: :receiver_id
+  has_many :payment_withdrawals, foreign_key: :receiver_id
+  has_one :business_application
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
   delegate :current_plan, to: :subscription
 
-  after_commit :create_default_ranks, on: :create
-  after_commit :create_default_subscription, on: :create
-
   def super_admin?
-    ["lake.ilakela@gmail.com"].include?(email)
+    ["lake.ilakela@gmail.com", HARUKO_EMAIL].include?(email)
   end
 
   # shop owner or staffs
@@ -78,20 +84,25 @@ class User < ApplicationRecord
     true
   end
 
-  def member_level
-    return @level if defined?(@level)
+  def member_plan
+    return @plan if defined?(@plan)
 
-    @level = current_plan.level
+    @plan = current_plan.level
 
-    if @level == Plan::FREE_LEVEL && Subscription.today < trial_expired_date
-      @level = Plan::TRIAL_LEVEL
+    if @plan == Plan::FREE_PLAN && Subscription.today < trial_expired_date
+      @plan = Plan::TRIAL_PLAN
     else
-      @level
+      @plan
     end
   end
+  alias_method :member_plan_key, :member_plan
 
-  def member_level_name
-    I18n.t("plan.level.#{member_level}")
+  def permission_level
+    Plan.permission_level(member_plan_key)
+  end
+
+  def member_plan_name
+    I18n.t("plan.level.#{member_plan_key}")
   end
 
   def current_staff_account(super_user)
@@ -111,11 +122,23 @@ class User < ApplicationRecord
   end
 
   def trial_member?
-    member_level == Plan::TRIAL_LEVEL
+    permission_level == Plan::TRIAL_LEVEL
   end
 
   def premium_member?
-    member_level == Plan::PREMIUM_LEVEL
+    permission_level == Plan::PREMIUM_LEVEL
+  end
+
+  def child_plan_member?
+    reference&.pending? || active_child_member?
+  end
+
+  def active_child_member?
+    Plan::CHILD_PLANS.include?(member_plan_key)
+  end
+
+  def business_member?
+    member_plan == Plan::BUSINESS_PLAN
   end
 
   def trial_expired_date
@@ -146,16 +169,11 @@ class User < ApplicationRecord
     @google_user ||= GoogleContactsApi::User.new(access_token, refresh_token)
   end
 
+  def owner_ability
+    Ability.new(self, self)
+  end
+
   private
-
-  def create_default_ranks
-    ranks.create(name: "VIP", key: Rank::VIP_KEY)
-    ranks.create(name: I18n.t("constants.rank.regular"), key: Rank::REGULAR_KEY)
-  end
-
-  def create_default_subscription
-    create_subscription(plan: Plan.free_level.take)
-  end
 
   def today_reservations
     Reservation.where(shop_id: shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)

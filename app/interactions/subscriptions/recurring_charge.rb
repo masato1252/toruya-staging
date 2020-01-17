@@ -7,10 +7,14 @@ module Subscriptions
 
       charging_plan = subscription.next_plan || subscription.plan
 
-      if charging_plan.cost.zero?
+      if compose(Plans::Price, user: user, plan: charging_plan, with_shop_fee: true).zero?
+        # Downgrade to free plan
         subscription.update(plan: charging_plan, next_plan: nil)
-      else
 
+        if referral = Referral.enabled.find_by(referrer: user)
+          compose(Referrals::ReferrerCharged, referral: referral, plan: charging_plan)
+        end
+      else
         subscription.with_lock do
           charge_outcome = Subscriptions::Charge.run(user: user, plan: charging_plan, manual: false)
 
@@ -30,7 +34,7 @@ module Subscriptions
               type: SubscriptionCharge::TYPES[:plan_subscruption],
               user_name: user.name,
               user_email: user.email,
-              plan_amount: charging_plan.cost_with_currency.format,
+              plan_amount: Plans::Price.run!(user: user, plan: charging_plan).format,
               plan_name: charging_plan.name
             }
             charge.save!

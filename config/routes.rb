@@ -116,6 +116,10 @@ Rails.application.routes.draw do
         get :receipt
       end
     end
+    resources :referrers, only: [:index] do
+      get :copy_modal, on: :collection
+    end
+    resources :withdrawals, only: [:index, :show]
     resource :profile, only: %i[show edit update]
 
     resources :users, only: [] do
@@ -207,8 +211,23 @@ Rails.application.routes.draw do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
 
-    scope path: "admin"do
-      get "as_user", to: "admin#as_user"
+    namespace :admin do
+      get "as_user"
+      get "/", to: "dashboards#index"
+
+      resources :business_applications, only: [] do
+        member do
+          post "approve"
+          post "reject"
+        end
+      end
+
+      resources :withdrawals, only: [] do
+        member do
+          post "mark_paid"
+          get "receipt"
+        end
+      end
     end
   end
 
@@ -220,6 +239,14 @@ Rails.application.routes.draw do
       get "find_customer"
       get "calendar"
       get "booking_times"
+    end
+  end
+
+  resources :referrals, only: [:show], param: :token
+  resource :business, only: [:show] do
+    collection do
+      post :apply
+      post :pay
     end
   end
 end

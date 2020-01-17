@@ -1,10 +1,9 @@
 module PlansHelper
-  def plan_price(plan_level)
+  def plan_price(user, plan_level)
     @plan_prices ||= {}
 
     return @plan_prices[plan_level] if @plan_prices[plan_level]
-
-    @plan_prices[plan_level] = Plan.cost_with_currency(plan_level).format(ja_default_format: true)
+    @plan_prices[plan_level] = Plans::Price.run!(user: user, plan: Plan.find_by!(level: plan_level)).format(ja_default_format: true)
   end
 
   def charge_description(charge)

@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190304143150) do
+ActiveRecord::Schema.define(version: 2019_12_30_084048) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
+  enable_extension "plpgsql"
 
   create_table "access_providers", id: :serial, force: :cascade do |t|
     t.string "access_token"
@@ -26,6 +27,95 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "booking_option_menus", force: :cascade do |t|
+    t.bigint "booking_option_id", null: false
+    t.bigint "menu_id", null: false
+    t.integer "priority"
+    t.integer "required_time"
+    t.index ["booking_option_id"], name: "index_booking_option_menus_on_booking_option_id"
+    t.index ["menu_id"], name: "index_booking_option_menus_on_menu_id"
+  end
+
+  create_table "booking_options", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "display_name"
+    t.integer "minutes", null: false
+    t.decimal "amount_cents", null: false
+    t.string "amount_currency", null: false
+    t.boolean "tax_include", null: false
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "menu_restrict_order", default: false, null: false
+    t.index ["user_id"], name: "index_booking_options_on_user_id"
+  end
+
+  create_table "booking_page_options", force: :cascade do |t|
+    t.bigint "booking_page_id", null: false
+    t.bigint "booking_option_id", null: false
+    t.index ["booking_option_id"], name: "index_booking_page_options_on_booking_option_id"
+    t.index ["booking_page_id"], name: "index_booking_page_options_on_booking_page_id"
+  end
+
+  create_table "booking_page_special_dates", force: :cascade do |t|
+    t.bigint "booking_page_id", null: false
+    t.datetime "start_at", null: false
+    t.datetime "end_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_page_id"], name: "index_booking_page_special_dates_on_booking_page_id"
+  end
+
+  create_table "booking_pages", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "shop_id", null: false
+    t.string "name", null: false
+    t.string "title"
+    t.text "greeting"
+    t.text "note"
+    t.integer "interval"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.boolean "overbooking_restriction", default: true
+    t.boolean "draft", default: true, null: false
+    t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
+    t.index ["user_id"], name: "index_booking_pages_on_user_id"
+  end
+
+  create_table "business_applications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_business_applications_on_user_id"
   end
 
   create_table "business_schedules", id: :serial, force: :cascade do |t|
@@ -71,7 +161,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.boolean "bind_all"
     t.index ["user_id", "bind_all"], name: "index_contact_groups_on_user_id_and_bind_all", unique: true
     t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true
-    t.index ["user_id"], name: "index_contact_groups_on_user_id"
   end
 
   create_table "custom_schedules", id: :serial, force: :cascade do |t|
@@ -109,16 +198,13 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.integer "updated_by_user_id"
     t.string "email_types"
     t.datetime "deleted_at"
-    t.index "first_name gin_trgm_ops", name: "customer_names_on_first_name_idx", using: :gin
-    t.index "last_name gin_trgm_ops", name: "customer_names_on_last_name_idx", using: :gin
-    t.index "phonetic_first_name gin_trgm_ops", name: "customer_names_on_phonetic_first_name_idx", using: :gin
-    t.index "phonetic_last_name gin_trgm_ops", name: "customer_names_on_phonetic_last_name_idx", using: :gin
-    t.index ["contact_group_id"], name: "index_customers_on_contact_group_id"
-    t.index ["rank_id"], name: "index_customers_on_rank_id"
-    t.index ["user_id", "deleted_at"], name: "index_customers_on_user_id_and_deleted_at"
+    t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
+    t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
+    t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin
+    t.index ["phonetic_last_name"], name: "customer_names_on_phonetic_last_name_idx", opclass: :gin_trgm_ops, using: :gin
+    t.index ["user_id", "contact_group_id", "deleted_at"], name: "customers_basic_index"
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index"
-    t.index ["user_id"], name: "index_customers_on_user_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -147,7 +233,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "created_at"
     t.string "name"
     t.index ["user_id", "aasm_state", "outcome_type", "created_at"], name: "filtered_outcome_index"
-    t.index ["user_id"], name: "index_filtered_outcomes_on_user_id"
   end
 
   create_table "menu_categories", id: :serial, force: :cascade do |t|
@@ -180,7 +265,55 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.index ["user_id", "deleted_at"], name: "index_menus_on_user_id_and_deleted_at"
-    t.index ["user_id"], name: "index_menus_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "phone_number"
+    t.text "content"
+    t.integer "customer_id"
+    t.integer "reservation_id"
+    t.boolean "charged", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
+  end
+
+  create_table "payment_withdrawals", force: :cascade do |t|
+    t.integer "receiver_id", null: false
+    t.integer "state", default: 0, null: false
+    t.decimal "amount_cents", null: false
+    t.string "amount_currency", null: false
+    t.string "order_id"
+    t.jsonb "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "payment_withdrawal_order_index", unique: true
+    t.index ["receiver_id", "state", "amount_cents", "amount_currency"], name: "payment_withdrawal_receiver_state_index"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.integer "receiver_id", null: false
+    t.integer "referrer_id"
+    t.integer "payment_withdrawal_id"
+    t.integer "charge_id"
+    t.decimal "amount_cents", null: false
+    t.string "amount_currency", null: false
+    t.jsonb "details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["receiver_id"], name: "payment_receiver_index"
+  end
+
+  create_table "pghero_query_stats", force: :cascade do |t|
+    t.text "database"
+    t.text "user"
+    t.text "query"
+    t.bigint "query_hash"
+    t.float "total_time"
+    t.bigint "calls"
+    t.datetime "captured_at"
+    t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
   end
 
   create_table "plans", force: :cascade do |t|
@@ -226,12 +359,45 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.index ["user_id"], name: "index_ranks_on_user_id"
   end
 
+  create_table "referrals", force: :cascade do |t|
+    t.integer "referrer_id", null: false
+    t.integer "referee_id", null: false
+    t.integer "state", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["referrer_id"], name: "index_referrals_on_referrer_id", unique: true
+  end
+
+  create_table "reservation_booking_options", force: :cascade do |t|
+    t.bigint "reservation_id"
+    t.bigint "booking_option_id"
+    t.index ["booking_option_id"], name: "index_reservation_booking_options_on_booking_option_id"
+    t.index ["reservation_id"], name: "index_reservation_booking_options_on_reservation_id"
+  end
+
   create_table "reservation_customers", id: :serial, force: :cascade do |t|
     t.integer "reservation_id", null: false
     t.integer "customer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "booking_page_id"
+    t.integer "booking_option_id"
+    t.integer "state", default: 0
+    t.string "booking_amount_currency"
+    t.decimal "booking_amount_cents"
+    t.boolean "tax_include"
+    t.datetime "booking_at"
+    t.jsonb "details"
     t.index ["reservation_id", "customer_id"], name: "index_reservation_customers_on_reservation_id_and_customer_id", unique: true
+  end
+
+  create_table "reservation_menus", force: :cascade do |t|
+    t.bigint "reservation_id"
+    t.bigint "menu_id"
+    t.integer "position"
+    t.integer "required_time"
+    t.index ["menu_id"], name: "index_reservation_menus_on_menu_id"
+    t.index ["reservation_id", "menu_id"], name: "reservation_menu_index"
   end
 
   create_table "reservation_setting_menus", id: :serial, force: :cascade do |t|
@@ -263,13 +429,18 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "state", default: 0
-    t.index ["reservation_id", "staff_id"], name: "index_reservation_staffs_on_reservation_id_and_staff_id", unique: true
+    t.integer "menu_id"
+    t.datetime "prepare_time"
+    t.datetime "work_start_at"
+    t.datetime "work_end_at"
+    t.datetime "ready_time"
+    t.index ["reservation_id", "menu_id", "staff_id", "prepare_time", "work_start_at", "work_end_at", "ready_time"], name: "reservation_staff_index"
     t.index ["staff_id", "state"], name: "state_by_staff_id_index"
   end
 
   create_table "reservations", id: :serial, force: :cascade do |t|
     t.integer "shop_id", null: false
-    t.integer "menu_id", null: false
+    t.integer "menu_id"
     t.datetime "start_time", null: false
     t.datetime "end_time", null: false
     t.datetime "ready_time", null: false
@@ -281,6 +452,7 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.boolean "with_warnings", default: false, null: false
     t.integer "by_staff_id"
     t.datetime "deleted_at"
+    t.datetime "prepare_time"
     t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index"
     t.index ["shop_id", "deleted_at"], name: "index_reservations_on_shop_id_and_deleted_at"
   end
@@ -294,7 +466,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "updated_at", null: false
     t.index ["menu_id"], name: "index_shop_menu_repeating_dates_on_menu_id"
     t.index ["shop_id", "menu_id"], name: "index_shop_menu_repeating_dates_on_shop_id_and_menu_id", unique: true
-    t.index ["shop_id"], name: "index_shop_menu_repeating_dates_on_shop_id"
   end
 
   create_table "shop_menus", id: :serial, force: :cascade do |t|
@@ -314,6 +485,7 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.boolean "staff_regular_working_day_permission", default: false, null: false
     t.boolean "staff_temporary_working_day_permission", default: false, null: false
     t.boolean "staff_full_time_permission", default: false, null: false
+    t.integer "level", default: 0, null: false
     t.index ["shop_id", "staff_id"], name: "index_shop_staffs_on_shop_id_and_staff_id", unique: true
   end
 
@@ -331,7 +503,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.index ["user_id", "deleted_at"], name: "index_shops_on_user_id_and_deleted_at"
-    t.index ["user_id"], name: "index_shops_on_user_id"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|
@@ -344,12 +515,22 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.integer "level", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active_uniqueness"
     t.index ["owner_id", "email"], name: "staff_account_email_index"
-    t.index ["owner_id", "user_id"], name: "staff_account_index"
-    t.index ["owner_id"], name: "index_staff_accounts_on_owner_id"
+    t.index ["owner_id", "user_id", "active_uniqueness"], name: "unique_staff_account_index", unique: true
     t.index ["staff_id"], name: "index_staff_accounts_on_staff_id"
     t.index ["token"], name: "staff_account_token_index"
     t.index ["user_id"], name: "index_staff_accounts_on_user_id"
+  end
+
+  create_table "staff_contact_group_relations", force: :cascade do |t|
+    t.bigint "staff_id", null: false
+    t.bigint "contact_group_id", null: false
+    t.integer "contact_group_read_permission", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_group_id"], name: "index_staff_contact_group_relations_on_contact_group_id"
+    t.index ["staff_id", "contact_group_id"], name: "staff_contact_group_unique_index", unique: true
   end
 
   create_table "staff_menus", id: :serial, force: :cascade do |t|
@@ -358,6 +539,7 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.integer "max_customers"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "priority"
     t.index ["staff_id", "menu_id"], name: "index_staff_menus_on_staff_id_and_menu_id", unique: true
   end
 
@@ -372,7 +554,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "deleted_at"
     t.boolean "staff_holiday_permission", default: false, null: false
     t.index ["user_id", "deleted_at"], name: "index_staffs_on_user_id_and_deleted_at"
-    t.index ["user_id"], name: "index_staffs_on_user_id"
   end
 
   create_table "subscription_charges", force: :cascade do |t|
@@ -380,7 +561,7 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.bigint "plan_id"
     t.decimal "amount_cents"
     t.string "amount_currency"
-    t.integer "state"
+    t.integer "state", default: 0, null: false
     t.date "charge_date"
     t.date "expired_date"
     t.boolean "manual", default: false, null: false
@@ -392,7 +573,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.index ["order_id"], name: "order_id_index"
     t.index ["plan_id"], name: "index_subscription_charges_on_plan_id"
     t.index ["user_id", "state"], name: "user_state_index"
-    t.index ["user_id"], name: "index_subscription_charges_on_user_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -405,7 +585,7 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
-    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id", unique: true
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -429,8 +609,10 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "contacts_sync_at"
+    t.string "referral_token"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["referral_token"], name: "index_users_on_referral_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
@@ -445,5 +627,6 @@ ActiveRecord::Schema.define(version: 20190304143150) do
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "profiles", "users"
 end

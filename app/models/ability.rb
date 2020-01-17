@@ -75,11 +75,15 @@ class Ability
     can :manage, BookingOption
     can :manage, BookingPage
 
-    case super_user.member_level
-    when "premium"
-    when "basic", "trial", "free"
+    case super_user.permission_level
+    when Plan::PREMIUM_LEVEL
+    when Plan::BASIC_LEVEL, Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       cannot :create, Staff
       cannot :create, Shop if super_user.shops.exists?
+    end
+
+    if super_user.business_member?
+      can :create, Referral
     end
 
     manager_member_ability
@@ -93,18 +97,18 @@ class Ability
     can :swith_staffs_selector, User
     can :manage, :management_stuffs
 
-    case super_user.member_level
-    when "premium", "trial"
+    case super_user.permission_level
+    when Plan::PREMIUM_LEVEL, Plan::TRIAL_LEVEL
       can :read, :filter
       can :manage, :preset_filter
       can :manage, :saved_filter
       can :read, :shop_dashboard
-    when "basic"
+    when Plan::BASIC_LEVEL
       can :read, :filter
       can :manage, :preset_filter
       cannot :manage, :saved_filter
       cannot :read, :shop_dashboard
-    when "free"
+    when Plan::FREE_LEVEL
       cannot :read, :filter
       cannot :manage, :preset_filter
       cannot :manage, :saved_filter
@@ -220,14 +224,14 @@ class Ability
       can :create, :reservation_with_settings
     end
 
-    case super_user.member_level
-    when "premium"
+    case super_user.permission_level
+    when Plan::PREMIUM_LEVEL
       can :create, :daily_reservations
       can :create, :total_reservations
-    when "trial"
+    when Plan::TRIAL_LEVEL
       reservation_daily_permission
       reservation_total_permission
-    when "free", "basic"
+    when Plan::FREE_LEVEL, Plan::BASIC_LEVEL
       reservation_daily_permission
       reservation_total_permission
     end

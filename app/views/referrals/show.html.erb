@@ -1,0 +1,20 @@
+<div id="login">
+  <h2><%= @user.name %> <%= t"settings.referrers.sider_label" %></h2>
+  <main id="socialLogin">
+    <% if current_user %>
+      <h2 class="warning"><%= t"invitation.existing_user_warning_html" %></h2>
+    <% elsif @user.owner_ability.can?(:create, Referral) %>
+      <p>
+      <%= button_to user_google_oauth2_omniauth_authorize_path(referral_token: @user.referral_token), class: "google-button" do %>
+        <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
+        <span class="google-button__text">
+          Googleでログイン
+        </span>
+      <% end %>
+      </p>
+    <% else %>
+      <h2 class="warning"><%= t"invitation.business_member_canceled.title" %></h2>
+      <p><%= t"invitation.business_member_canceled.desc_html" %></p>
+    <% end %>
+  </main>
+</div>

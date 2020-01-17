@@ -2,22 +2,22 @@ module Plans
   class Subscribe < ActiveInteraction::Base
     object :user
     object :plan
-    string :authorize_token, default: nil # free plan and upgrade later don't need this.
-    boolean :upgrade_immediately, default: true
+    string :authorize_token, default: nil # downgrade plan and upgrade later don't need this.
+    boolean :change_immediately, default: true
 
     def execute
       subscription = user.subscription
 
-      if subscription.active? && subscription.current_plan.become(plan).zero?
+      if subscription.active? && subscription.current_plan == plan
         errors.add(:plan, :already_subscribe_the_same_plan)
         return
       end
 
-      if subscription.current_plan.become(plan).positive? && upgrade_immediately
-        # upgrade immediately
+      # XXX: There is no reasn to downgrade immediately, upgrade or become to same level's plan could be changed immediately
+      if !subscription.current_plan.downgrade?(plan) && change_immediately
         compose(Subscriptions::ManualCharge, subscription: subscription, plan: plan, authorize_token: authorize_token)
       else
-        # downgrade/upgrade later
+        # change plan later
         subscription.update(next_plan: plan)
       end
     end

@@ -1,18 +1,33 @@
 module Users
   class FromOmniauth < ActiveInteraction::Base
     object :auth, class: OmniAuth::AuthHash
+    string :referral_token, default: nil
 
     def execute
       user = User.find_by(email: auth.info.email) ||
         AccessProvider.where(provider: auth[:provider], uid: auth[:uid]).first.try(:user) ||
-        User.where(email: auth.info.email).build
+        User.where(email: auth.info.email).build(password: Devise.friendly_token[0, 20])
 
       user.email = auth.info.email.presence || user.email
-      user.password = Devise.friendly_token[0,20] if user.encrypted_password.blank?
       user.skip_confirmation!
       user.skip_confirmation_notification!
+      user.referral_token ||= Devise.friendly_token[0,10]
 
+      loop do
+        if User.where(referral_token: user.referral_token).where.not(id: user.id).exists?
+          user.referral_token = Devise.friendly_token[0,10]
+        else
+          break
+        end
+      end
+
+      if user.new_record? &&
+          referral_token && (referee = User.find_by(referral_token: referral_token)) &&
+          referee.business_member?
+        compose(Referrals::Build, referee: referee, referrer: user)
+      end
       compose(GoogleOauth::Create, user: user, auth: auth)
+      compose(Users::BuildDefaultData, user: user)
       user.save!
       user
     end

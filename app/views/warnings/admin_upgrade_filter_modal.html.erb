@@ -7,7 +7,7 @@
       </h4>
     </div>
     <div class="modal-body">
-      <%= t("dashboard.modal.filter.admin.upgrade_content_html", basic_plan_price: plan_price(Plan::BASIC_LEVEL), premium_plan_price: plan_price(Plan::PREMIUM_LEVEL)) %>
+      <%= t("dashboard.modal.filter.admin.upgrade_content_html", basic_plan_price: plan_price(current_user, Plan::BASIC_LEVEL), premium_plan_price: plan_price(current_user, Plan::PREMIUM_LEVEL)) %>
     </div>
     <div class="modal-footer centerize">
       <%= link_to t("action.upgrade_to_basic"), settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn BTNtarco" if current_user.current_plan.level == Plan::FREE_LEVEL %>

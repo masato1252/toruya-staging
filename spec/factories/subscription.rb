@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :subscription do
-    association :user
+    user { FactoryBot.create(:user, skip_default_data: true) }
     plan { Plan.free_level.take }
     stripe_customer_id { SecureRandom.hex }
     recurring_day { Subscription.today.day }
@@ -16,6 +16,28 @@ FactoryBot.define do
 
     trait :premium do
       plan { Plan.premium_level.take }
+    end
+
+    trait :business do
+      plan { Plan.business_level.take }
+    end
+
+    trait :child_basic do
+      plan { Plan.child_basic_level.take }
+    end
+
+    trait :child_premium do
+      plan { Plan.child_premium_level.take }
+    end
+
+    trait :with_stripe do
+      stripe_customer_id do
+        Stripe.api_key = Rails.application.secrets.stripe_secret_key
+        Stripe::Customer.create({
+          email: user.email,
+          source: StripeMock.create_test_helper.generate_card_token
+        }).id
+      end
     end
   end
 end

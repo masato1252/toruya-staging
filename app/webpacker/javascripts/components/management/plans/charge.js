@@ -2,6 +2,7 @@
 import React from "react";
 import StripeCheckout from 'react-stripe-checkout';
 import ProcessingBar from "shared/processing_bar";
+import ChargeFailedModal from "./charge_failed";
 
 class PlanCharge extends React.Component {
   static defaultProps = {
@@ -22,8 +23,8 @@ class PlanCharge extends React.Component {
 
       let data = {
         authenticity_token: this.props.formAuthenticityToken,
-        plan: this.props.plan.level,
-        upgrade_immediately: this.props.chargeImmediately
+        plan: this.props.plan.key,
+        change_immediately: this.props.chargeImmediately
       };
 
       // event doesn't have id property.
@@ -76,6 +77,9 @@ class PlanCharge extends React.Component {
           <ProcessingBar
             processing={this.state.processing}
             processingMessage={this.props.processingMessage} />
+          <ChargeFailedModal
+            {...this.props}
+          />
           <div
             className={`btn btn-yellow`} rel="nofollow">
             {this.props.i18n.saveAndPay}

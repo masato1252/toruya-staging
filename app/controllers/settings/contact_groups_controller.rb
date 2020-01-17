@@ -68,7 +68,6 @@ class Settings::ContactGroupsController < SettingsController
                                       google_group_name: params[:google_group_name],
                                       bind_all: params[:bind_all])
 
-    # TODO: Test settings_tour flow
     if outcome.valid?
       if session[:settings_tour]
         redirect_to settings_user_shops_path(super_user)

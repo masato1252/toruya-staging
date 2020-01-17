@@ -6,12 +6,26 @@ class Settings::PaymentsController < SettingsController
   end
 
   def create
-    outcome = Plans::Subscribe.run(
-      user: current_user,
-      plan: Plan.find_by(level: params[:plan]),
-      authorize_token: params[:token],
-      upgrade_immediately: params[:upgrade_immediately]
-    )
+    new_plan = Plan.find_by!(level: params[:plan])
+
+    outcome =
+      if new_plan.business_level?
+        Plans::SubscribeBusinessPlan.run(user: current_user, authorize_token: params[:token])
+      elsif new_plan.is_child?
+        Plans::SubscribeChildPlan.run(
+          user: current_user,
+          plan: new_plan,
+          authorize_token: params[:token],
+          change_immediately: params[:change_immediately]
+        )
+      else
+        Plans::Subscribe.run(
+          user: current_user,
+          plan: new_plan,
+          authorize_token: params[:token],
+          change_immediately: params[:change_immediately]
+        )
+      end
 
     if outcome.invalid?
       render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
@@ -39,6 +53,7 @@ class Settings::PaymentsController < SettingsController
       show_as_html: params.key?('debug'),
       page_width: 210,
       page_height: 297,
+      lowquality: Rails.env.development?,
       margin: {
         top: 22,
         left: 20,

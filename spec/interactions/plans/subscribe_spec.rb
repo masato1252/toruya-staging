@@ -1,22 +1,22 @@
 require "rails_helper"
 
 RSpec.describe Plans::Subscribe do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { subscription.user }
   let(:plan) { Plan.free_level.take }
   let(:authorize_token) { SecureRandom.hex }
-  let(:upgrade_immediately) { true }
+  let(:change_immediately) { true }
   let(:args) do
     {
       user: user,
       plan: plan,
       authorize_token: authorize_token,
-      upgrade_immediately: upgrade_immediately
+      change_immediately: change_immediately
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    let!(:subscription) { FactoryBot.create(:subscription, :free, user: user) }
+    let!(:subscription) { FactoryBot.create(:subscription, :free) }
 
     context "when subscription is active and subscribe the same plan again" do
       let(:plan) { subscription.plan }
@@ -43,7 +43,7 @@ RSpec.describe Plans::Subscribe do
       end
 
       context "user want to upgrade in next charge period" do
-        let(:upgrade_immediately) { false }
+        let(:change_immediately) { false }
 
         it "stays the current plan and updates the next plan" do
           outcome
@@ -57,7 +57,7 @@ RSpec.describe Plans::Subscribe do
     end
 
     context "when users want to downgrade their plans" do
-      let!(:subscription) { FactoryBot.create(:subscription, :premium, user: user) }
+      let!(:subscription) { FactoryBot.create(:subscription, :premium) }
       let(:plan) { Plan.basic_level.take }
 
       it "stays the current plan and updates the next plan" do

@@ -134,64 +134,6 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
     Timecop.freeze(today)
   end
 
-  context "when user signs up 1 month ago" do
-    before do
-      created_date = today.advance(days: -30)
-      Timecop.travel(created_date) { user }
-    end
-
-    context "when user is under free plan" do
-      it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_months_ago_reminder).with(user, 2).and_return(double(deliver_later: true))
-        expect(today).to eq(user.created_at.advance(days: 30).to_date)
-
-        task.execute
-      end
-    end
-
-    context "when user is under basic plan but expired" do
-      before do
-        user.subscription.update_columns(plan_id: 2, expired_date: today.advance(days: -30))
-      end
-
-      it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_months_ago_reminder).with(user, 2).and_return(double(deliver_later: true))
-        expect(today).to eq(user.created_at.advance(days: 30).to_date)
-
-        task.execute
-      end
-    end
-  end
-
-  context "when users sign up after 2 months" do
-    before do
-      created_date = today.advance(days: -60)
-      Timecop.travel(created_date) { user }
-    end
-
-    context "when user is under free plan" do
-      it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_months_ago_reminder).with(user, 1).and_return(double(deliver_later: true))
-        expect(today).to eq(user.created_at.advance(days: 60).to_date)
-
-        task.execute
-      end
-    end
-
-    context "when user is under basic plan but expired" do
-      before do
-        user.subscription.update_columns(plan_id: 2, expired_date: today.advance(days: -30))
-      end
-
-      it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_months_ago_reminder).with(user, 1).and_return(double(deliver_later: true))
-        expect(today).to eq(user.created_at.advance(days: 60).to_date)
-
-        task.execute
-      end
-    end
-  end
-
   context "when users are 1 week ago before trial plan expired" do
     before do
       Timecop.travel(user.trial_expired_date.advance(days: -7))

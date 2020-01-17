@@ -8,8 +8,9 @@ module Subscriptions
 
     def execute
       SubscriptionCharge.transaction do
-        order_id = Digest::SHA1.hexdigest("#{Time.now.to_i}:#{user.id}:#{user.subscription_charges.count}:#{SecureRandom.hex(16)}").first(16).upcase
-        amount = charge_amount || compose(Plans::Price, user: user, plan: plan)
+        order_id = SecureRandom.hex(8).upcase
+        # XXX: business plan charged manually means, it is a registration charge, user need to pay extra signup fee
+        amount = charge_amount || compose(Plans::Price, user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: manual)
         description = charge_description || plan.level
 
         charge = user.subscription_charges.create!(
@@ -26,7 +27,7 @@ module Subscriptions
             currency: Money.default_currency.iso_code,
             customer: user.subscription.stripe_customer_id,
             description: description,
-            statement_descriptor: "Toruya charge #{description}",
+            statement_descriptor: "Toruya #{description}",
             metadata: {
               charge_id: charge.id,
               level: plan.level,
@@ -61,6 +62,14 @@ module Subscriptions
         rescue => e
           Rollbar.error(e)
           errors.add(:plan, :something_wrong)
+        end
+
+        # XXX: Put the fee and referral behviors here is because the of plans changes behaviors
+        # might not happen right away, it might happend in next charge,
+        # so Subscriptions::Charge is the place, every charge hehavior will called.
+        # So put it here to handle all kind of charge or plan changes.
+        if charge.completed? && referral = Referral.enabled.find_by(referrer: user)
+          compose(Referrals::ReferrerCharged, charge: charge, referral: referral, plan: plan)
         end
 
         charge

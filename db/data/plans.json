@@ -13,5 +13,17 @@
   {
     "position": 2,
     "level": "premium"
+  },
+  {
+    "position": 3,
+    "level": "business"
+  },
+  {
+    "position": 4,
+    "level": "child_basic"
+  },
+  {
+    "position": 5,
+    "level": "child_premium"
   }
 ]

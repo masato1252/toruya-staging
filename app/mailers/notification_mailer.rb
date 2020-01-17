@@ -55,4 +55,12 @@ class NotificationMailer < ApplicationMailer
          subject: subject(I18n.t("notification_mailer.duplicate_customers.title")),
          locale: I18n.default_locale)
   end
+
+  def new_referrer(referrer)
+    @referee = referrer.reference.referee
+
+    mail(:to => @referee.email,
+         subject: subject(I18n.t("notification_mailer.new_referrer.title")),
+         locale: I18n.default_locale)
+  end
 end

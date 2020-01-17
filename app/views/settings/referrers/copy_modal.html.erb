@@ -1,0 +1,29 @@
+<div class="modal-dialog booking-page-modal" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">
+        <%= t("settings.referrers.copy_modal.title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <div class="page-url-row">
+        <div class="label-header">
+          <%= t("settings.referrers.copy_modal.desc") %>
+        </div>
+        <div>
+          <%= text_field_tag nil, referral_url(super_user.referral_token), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: referral_url(super_user.referral_token), clipboard_popup_text: t("common.copied") }, id: "page-url", readonly: true %>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer centerize">
+      <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
+        data: {
+        controller: "clipboard",
+        action: "click->clipboard#copy",
+        clipboard_text: referral_url(super_user.referral_token),
+        clipboard_popup_text: t("common.copied")
+      } %>
+  </div>
+  </div>
+</div>

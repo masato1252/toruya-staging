@@ -1,6 +1,6 @@
 module Profiles
   class Create < ActiveInteraction::Base
-    object :user, class_name: "User"
+    object :user
     hash :params do
       string :last_name
       string :first_name
@@ -20,6 +20,10 @@ module Profiles
           errors.merge!(profile.errors)
         else
           compose(Staffs::CreateOwner, user: user)
+
+          if user.reference
+            NotificationMailer.new_referrer(user).deliver_later
+          end
         end
 
         profile

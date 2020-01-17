@@ -63,7 +63,7 @@ RSpec.describe Subscriptions::RecurringCharge do
           "type" => SubscriptionCharge::TYPES[:plan_subscruption],
           "user_name" => user.name,
           "user_email" => user.email,
-          "plan_amount" => plan.cost_with_currency.format,
+          "plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
           "plan_name" => plan.name
         })
       end
@@ -87,6 +87,129 @@ RSpec.describe Subscriptions::RecurringCharge do
           expect(subscription.next_plan).to eq(Plan.premium_level.take)
           expect(subscription.expired_date).to eq(subscription.expired_date)
           expect(charge).to be_auth_failed
+        end
+      end
+    end
+
+    context "when user is an enabled referrer" do
+      before do
+        Time.zone = "Tokyo"
+        Timecop.freeze(Date.new(2018, 1, 31))
+        StripeMock.start
+      end
+
+      after { StripeMock.stop }
+      let!(:referral) { factory.create_referral(referrer: user) }
+      let(:subscription) { FactoryBot.create(:subscription, :child_basic, :with_stripe, next_plan: next_plan) }
+
+      context "when referee was still busienss member" do
+        context "when next plan is a child plan" do
+          let(:next_plan) { Plan.child_premium_level.take }
+
+          it "changes subscription to next plan" do
+            allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+
+            outcome
+
+            subscription.reload
+            expect(subscription.plan).to eq(next_plan)
+            expect(subscription.next_plan).to be_nil
+            expect(referral.reload).to be_active
+
+            charge = subscription.user.subscription_charges.find_by(amount_cents: 49_500, amount_currency: "JPY")
+            expect(subscription.plan).to eq(next_plan)
+            expect(subscription.user.reload.member_plan).to eq(Plan::CHILD_PREMIUM_PLAN)
+            expect(subscription.next_plan).to be_nil
+            expect(subscription.recurring_day).to eq(Subscription.today.day)
+            expect(subscription.expired_date).to eq(Date.new(2019, 1, 31))
+            expect(charge.expired_date).to eq(Date.new(2019, 1, 31))
+            expect(charge).to be_completed
+            expect(charge.manual).to eq(false)
+            expect(charge.amount).to eq(Money.new(49_500, :jpy))
+            fee = Plans::Fee.run!(user: user, plan: next_plan)
+            expect(charge.details).to eq({
+              "shop_ids" => user.shop_ids,
+              "shop_fee" => fee.fractional,
+              "shop_fee_format" => fee.format,
+              "type" => SubscriptionCharge::TYPES[:plan_subscruption],
+              "user_name" => user.name,
+              "user_email" => user.email,
+              "plan_amount" => Plans::Price.run!(user: user, plan: next_plan).format,
+              "plan_name" => next_plan.name
+            })
+
+            payment = user.reference.referee.payments.last
+            expect(payment.payment_withdrawal_id).to be_nil
+            expect(payment.amount).to eq(Money.new(4_950, :jpy))
+            expect(payment.referrer).to eq(user)
+            expect(payment.details).to eq({
+              "type" => Payment::TYPES[:referral_connect]
+            })
+
+            expect(SubscriptionMailer).to have_received(:charge_successfully)
+          end
+        end
+
+        context "when next plan is a free plan" do
+          let(:next_plan) { Plan.free_level.take }
+
+          it "changes subscription to next plan" do
+            outcome
+
+            subscription.reload
+            expect(subscription.plan).to eq(next_plan)
+            expect(subscription.next_plan).to be_nil
+            expect(referral.reload).to be_referrer_canceled
+            expect(referral.referrer.subscription_charges).to be_empty
+            expect(referral.referee.payments).to be_empty
+          end
+        end
+
+        context "when next plan is a busienss plan" do
+          let(:next_plan) { Plan.business_level.take }
+
+          it "changes subscription to next plan" do
+            allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+
+            outcome
+
+            subscription.reload
+            expect(subscription.plan).to eq(next_plan)
+            expect(subscription.next_plan).to be_nil
+
+            charge = subscription.user.subscription_charges.find_by(amount_cents: 55_000, amount_currency: "JPY")
+            expect(subscription.plan).to eq(next_plan)
+            expect(subscription.user.reload.member_plan).to eq(Plan::BUSINESS_PLAN)
+            expect(subscription.next_plan).to be_nil
+            expect(subscription.recurring_day).to eq(Subscription.today.day)
+            expect(subscription.expired_date).to eq(Date.new(2019, 1, 31))
+            expect(charge.expired_date).to eq(Date.new(2019, 1, 31))
+            expect(charge).to be_completed
+            expect(charge.manual).to eq(false)
+            expect(charge.amount).to eq(Money.new(55_000, :jpy))
+            fee = Plans::Fee.run!(user: user, plan: next_plan)
+            expect(charge.details).to eq({
+              "shop_ids" => user.shop_ids,
+              "shop_fee" => fee.fractional,
+              "shop_fee_format" => fee.format,
+              "type" => SubscriptionCharge::TYPES[:plan_subscruption],
+              "user_name" => user.name,
+              "user_email" => user.email,
+              "plan_amount" => Plans::Price.run!(user: user, plan: next_plan).format,
+              "plan_name" => next_plan.name
+            })
+
+            payment = referral.referee.payments.last
+            expect(payment.payment_withdrawal_id).to be_nil
+            expect(payment.amount).to eq(Money.new(5_500, :jpy))
+            expect(payment.referrer).to eq(user)
+            expect(payment.details).to eq({
+              "type" => Payment::TYPES[:referral_disconnect]
+            })
+            expect(referral.reload).to be_referrer_canceled
+
+            expect(SubscriptionMailer).to have_received(:charge_successfully)
+          end
         end
       end
     end

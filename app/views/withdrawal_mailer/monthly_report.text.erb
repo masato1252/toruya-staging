@@ -1,0 +1,17 @@
+■紹介料が確定致しました■
+
+<%= line %>
+
+<%= @user.name %> 様
+
+いつもToruyaをご利用いただき、誠にありがとうございます。
+
+直近の紹介料の確定についてお知らせいたします。
+
+お振込日：<%= @withdrawal.details["transfer_date"] %>
+
+紹介料発生期間：<%= @withdrawal.details["period"] %>
+
+振込金額：<%= @withdrawal.amount.format %>
+
+紹介料の明細は <%= settings_withdrawals_url %> からご確認いただけます。

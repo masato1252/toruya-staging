@@ -2,7 +2,6 @@
 
 import React from "react";
 import SubscriptionModal from "./subscription_modal";
-import ChargeFailedModal from "./charge_failed";
 import PlanCharge from "./charge";
 
 class Plans extends React.Component {
@@ -195,10 +194,13 @@ class Plans extends React.Component {
               <th className="invisible"></th>
               <td className={`${this.isSelectedPlan("free") && "selected-plan"}`}>
                 <label>
+                  <div>{this.freePlan.details.period}</div>
                   <div className="price-amount">無料</div>
                   <div className={`plan-column ${this.isCurrentPlan("free") && "current"}`}>
                     <i className="fa fa-check-circle" aria-hidden="true" />
-                    {this.props.i18n.currentPlan}
+                    <span>
+                      {this.freePlan.selectable ? this.props.i18n.currentPlan : this.props.i18n.unselectable}
+                    </span>
                   </div>
                   <input
                     type="radio"
@@ -213,11 +215,13 @@ class Plans extends React.Component {
               </td>
               <td className={`${this.isSelectedPlan("basic") && "selected-plan"}`}>
                 <label>
-                  <div>月額</div>
+                  <div>{this.basicPlan.details.period}</div>
                   <div className="price-amount">{this.basicPlan.costFormat}</div>
                   <div className={`plan-column ${this.isCurrentPlan("basic") && "current"}`}>
                     <i className="fa fa-check-circle" aria-hidden="true" />
-                    <span>{this.props.i18n.currentPlan}</span>
+                    <span>
+                      {this.basicPlan.selectable ? this.props.i18n.currentPlan : this.props.i18n.unselectable}
+                    </span>
                   </div>
                   <input
                     type="radio"
@@ -232,11 +236,13 @@ class Plans extends React.Component {
               </td>
               <td className={`${this.isSelectedPlan("premium") && "selected-plan"}`}>
                 <label>
-                  <div>月額</div>
+                  <div>{this.premiumPlan.details.period}</div>
                   <div className="price-amount">{this.premiumPlan.costFormat}</div>
                   <div className={`plan-column ${this.isCurrentPlan("premium") && "current"}`}>
                     <i className="fa fa-check-circle" aria-hidden="true" />
-                    <span>{this.props.i18n.currentPlan}</span>
+                    <span>
+                      {this.premiumPlan.selectable ? this.props.i18n.currentPlan : this.props.i18n.unselectable}
+                    </span>
                   </div>
                   <input
                     type="radio"
@@ -308,9 +314,6 @@ class Plans extends React.Component {
               />
           )
         }
-        <ChargeFailedModal
-          {...this.props}
-        />
       </div>
     )
   }
