@@ -1,4 +1,6 @@
 class CallbacksController < Devise::OmniauthCallbacksController
+  BUSINESS_LOGIN = "business_login"
+
   include Devise::Controllers::Rememberable
 
   def google_oauth2
@@ -10,7 +12,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
       remember_me(user)
       sign_in(user)
 
-      redirect_to user.profile ? member_path : new_profile_path
+      if param[BUSINESS_LOGIN]
+        redirect_to business_path
+      else
+        redirect_to user.profile ? member_path : new_profile_path
+      end
     else
       redirect_to new_user_registration_url
     end

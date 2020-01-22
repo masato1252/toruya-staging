@@ -1,8 +1,15 @@
 <div id="login">
   <h2><%= I18n.t("business.title") %></h2>
   <main id="socialLogin">
-    <p>
-    <% if current_user.business_member? %>
+  <p>
+  <% if current_user.nil? %>
+      <%= button_to user_google_oauth2_omniauth_authorize_path(CallbacksController::BUSINESS_LOGIN => true), class: "google-button" do %>
+        <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
+        <span class="google-button__text">
+          Googleでログイン
+        </span>
+      <% end %>
+    <% elsif current_user.business_member? %>
       <h3><%= t("business.congratulation_html") %></h3>
     <% elsif @presenter.approved? %>
       <%= react_component("management/plans/charge", {

@@ -1,4 +1,6 @@
 class BusinessesController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:show]
+
   def show
     @presenter = BusinessApplicationPresenter.new(view_context, current_user)
   end

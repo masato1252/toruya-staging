@@ -4,7 +4,7 @@ class BusinessApplicationPresenter
   def initialize(h, user)
     @h = h
     @user = user
-    @application = user.business_application
+    @application = user&.business_application
   end
 
   def approved?
