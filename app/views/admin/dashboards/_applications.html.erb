@@ -1,0 +1,11 @@
+<ul>
+  <% applications.each do |application| %>
+    <li>
+      <%= application.user.name %>
+      <%= application.user.email %>
+      <%= I18n.l(application.updated_at) %>
+      <%= link_to I18n.t("action.approve"), approve_admin_business_application_path(application), method: :post, class: "btn btn-success" if application.pending? %>
+      <%= link_to I18n.t("action.reject"), reject_admin_business_application_path(application), method: :post, class: "btn btn-danger", data: { confirm: "Are you sure?" } if application.pending? %>
+    </li>
+  <% end %>
+</ul>

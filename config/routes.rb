@@ -215,7 +215,7 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
-      resources :business_applications, only: [] do
+      resources :business_applications, only: [:index] do
         member do
           post "approve"
           post "reject"

@@ -1,5 +1,9 @@
 module Admin
   class BusinessApplicationsController < AdminController
+    def index
+      @applications = BusinessApplication.includes(:user)
+    end
+
     def approve
       BusinessApplications::Approve.run!(user: BusinessApplication.find(params[:id]).user)
 

@@ -1,6 +1,10 @@
 ja:
   admin:
+    dashboard:
+      all: 全て
     pending_business_applications:
       title: 承認待ち登録代理店
+    all_business_applications:
+      title: 全ての代理店申請者
     pending_withdrawals:
-      title: 登録料支払い待ち
+      title: 紹介料振込予定者

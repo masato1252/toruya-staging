@@ -1,6 +1,10 @@
 ja:
   admin:
+    dashboard:
+      all: All
     pending_business_applications:
       title: Pending business applications
+    all_business_applications:
+      title: All business applications
     pending_withdrawals:
-      title: Pending_withdrawals
+      title: Pending withdrawals

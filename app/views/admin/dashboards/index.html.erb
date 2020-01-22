@@ -1,4 +1,6 @@
-<%= render "pending_applications", applications: @pending_applications %>
+<h1><%= I18n.t("admin.pending_business_applications.title") %> (<%= link_to I18n.t("admin.dashboard.all"), admin_business_applications_path %>)</h1>
+<%= render "applications", applications: @pending_applications %>
+
 <br />
 <hr />
 <br />
