@@ -59,29 +59,40 @@ class Settings::MenusController < SettingsController
         redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.create_successfully_message")
       end
     else
-      render :edit
+      Rollbar.warning(
+        "Unexpected menu create failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: params
+      )
+
+      redirect_to new_settings_user_menu_path(super_user), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
   # PATCH/PUT /settings/menus/1
   # PATCH/PUT /settings/menus/1.json
   def update
-    respond_to do |format|
-      outcome = Menus::Update.run(menu: @menu,
-                                  attrs: menu_params.to_h.except(:reservation_setting_id,
-                                                                 :menu_reservation_setting_rule_attributes,
-                                                                 :new_categories),
-                                  new_categories: menu_params[:new_categories],
-                                  reservation_setting_id: menu_params[:reservation_setting_id],
-                                  menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+    outcome = Menus::Update.run(menu: @menu,
+                                attrs: menu_params.to_h.except(:reservation_setting_id,
+                                                               :menu_reservation_setting_rule_attributes,
+                                                               :new_categories),
+                                                               new_categories: menu_params[:new_categories],
+                                                               reservation_setting_id: menu_params[:reservation_setting_id],
+                                                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
 
-      if outcome.valid?
-        format.html { redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message") }
-        format.json { render :show, status: :ok, location: @menu }
-      else
-        format.html { render :edit }
-        format.json { render json: @settings_menu.errors, status: :unprocessable_entity }
-      end
+    if outcome.valid?
+      redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message")
+    else
+      Rollbar.warning(
+        "Unexpected menu update failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        menu_id: @menu.id,
+        params: params
+      )
+
+      redirect_to edit_settings_user_menu_path(super_user, @menu), alert: outcome.errors.full_messages.join(", ")
     end
   end
 
