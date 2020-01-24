@@ -70,6 +70,7 @@ module Reservable
           elsif staff.freelancer?(shop)
             errors.add(:staff_ids, :freelancer, staff_id: staff.id, menu_id: menu_id)
           else
+            # XXX: part time but had business schedule
             errors.add(:staff_ids, :unworking_staff, staff_id: staff.id, menu_id: menu_id)
           end
         end

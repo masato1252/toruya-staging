@@ -1,6 +1,8 @@
 module Booking
   module SharedMethods
     def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction, overlap_restriction = true)
+      @unactive_staff_ids ||= {}
+
       unless Rails.env.test?
         return if date < Subscription.today
       end
@@ -18,6 +20,8 @@ module Booking
 
               menu = booking_option_menu.menu
               active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staff_ids
+              active_staff_ids = active_staff_ids - Array.wrap(@unactive_staff_ids[date])
+
               required_staffs_number = [menu.min_staffs_number, 1].max # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
               menus_count = booking_option.booking_option_menus.count
 
@@ -30,6 +34,12 @@ module Booking
               menu_book_end_at = menu_book_start_at.advance(minutes: booking_option_menu.required_time)
 
               all_possiable_active_staff_ids_groups = active_staff_ids.combination(required_staffs_number).to_a
+
+              # XXX: not enough required staffs
+              if all_possiable_active_staff_ids_groups.blank?
+                throw :next_working_date 
+              end
+
               all_possiable_active_staff_ids_groups.each.with_index do |candidate_staff_ids, candidate_staff_index|
                 reserable_outcome = Reservable::Reservation.run(
                   shop: shop,
@@ -65,6 +75,29 @@ module Booking
                   # XXX: There is staff could handle this menu, so try next menu
                   throw :next_menu
                 else
+                  # reserable_outcome.errors.details
+                  # {:staff_ids=>[{:error=>:ask_for_leave, :staff_id=>44, :menu_id=>186}]}
+                  if reserable_outcome.errors.details[:staff_ids].present? &&
+                      (reserable_outcome.errors.details.values.flatten.map{|h| h[:error]} & [:freelancer, :unworking_staff, :other_shop]).length > 0
+                    reserable_outcome.errors.details[:staff_ids].each do |error|
+                      # error => {:error=>:freelancer, :staff_id=>36, :menu_id=>186}
+                      case error[:error]
+                      when :freelancer
+                        # freelancer but without open schedule today
+                        if !CustomSchedule.opened.where(staff_id: error[:staff_id]).
+                            where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).exists?
+                          @unactive_staff_ids[date] ||= []
+                          @unactive_staff_ids[date] << error[:staff_id]
+                        end
+                      when :other_shop, :unworking_staff
+                        @unactive_staff_ids[date] ||= []
+                        @unactive_staff_ids[date] << error[:staff_id]
+                      end
+                    end
+                  end
+
+                  Rails.logger.info("==error #{reserable_outcome.errors.full_messages.join(", ")}")
+
                   if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index
                     # XXX: prior menu no staff could handle, no need to test the behind menus
                     throw :next_menu_group
