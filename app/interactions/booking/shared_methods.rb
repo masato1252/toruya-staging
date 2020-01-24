@@ -41,6 +41,10 @@ module Booking
               end
 
               all_possiable_active_staff_ids_groups.each.with_index do |candidate_staff_ids, candidate_staff_index|
+                if (Array.wrap(@unactive_staff_ids[date]) & candidate_staff_ids).length > 0
+                  next
+                end
+
                 reserable_outcome = Reservable::Reservation.run(
                   shop: shop,
                   date: date,
@@ -78,14 +82,22 @@ module Booking
                   # reserable_outcome.errors.details
                   # {:staff_ids=>[{:error=>:ask_for_leave, :staff_id=>44, :menu_id=>186}]}
                   if reserable_outcome.errors.details[:staff_ids].present? &&
-                      (reserable_outcome.errors.details.values.flatten.map{|h| h[:error]} & [:freelancer, :unworking_staff, :other_shop]).length > 0
+                      (reserable_outcome.errors.details.values.flatten.map{|h| h[:error]} & [:freelancer, :unworking_staff, :other_shop, :ask_for_leave]).length > 0
                     reserable_outcome.errors.details[:staff_ids].each do |error|
                       # error => {:error=>:freelancer, :staff_id=>36, :menu_id=>186}
                       case error[:error]
                       when :freelancer
-                        # freelancer but without open schedule today
+                        # freelancer(without business schedule) but without open schedule today
                         if !CustomSchedule.opened.where(staff_id: error[:staff_id]).
                             where("start_time >= ? and end_time <= ?", date.beginning_of_day, date.end_of_day).exists?
+                          @unactive_staff_ids[date] ||= []
+                          @unactive_staff_ids[date] << error[:staff_id]
+                        end
+                      when :ask_for_leave
+                        # Staff(User) ask for leave whole day
+                        if CustomSchedule.closed.where(
+                            user_id: Staff.find(error[:staff_id]).staff_account.user.staff_accounts.pluck(:user_id)
+                        ).where("start_time = ? and end_time = ?", date.beginning_of_day, date.end_of_day.change(sec: 0)).exists?
                           @unactive_staff_ids[date] ||= []
                           @unactive_staff_ids[date] << error[:staff_id]
                         end
@@ -96,7 +108,7 @@ module Booking
                     end
                   end
 
-                  Rails.logger.info("==error #{reserable_outcome.errors.full_messages.join(", ")}")
+                  Rails.logger.info("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
 
                   if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index
                     # XXX: prior menu no staff could handle, no need to test the behind menus
