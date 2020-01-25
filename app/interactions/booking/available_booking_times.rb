@@ -21,33 +21,35 @@ module Booking
 
       catch :enough_booking_time do
         special_dates.each do |raw_special_date|
-          json_parsed_date = JSON.parse(raw_special_date)
-          special_date = Date.parse(json_parsed_date["start_at_date_part"])
+          catch :next_working_date do
+            json_parsed_date = JSON.parse(raw_special_date)
+            special_date = Date.parse(json_parsed_date["start_at_date_part"])
 
-          special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
-          special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
+            special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
+            special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
 
-          shop.user.booking_options.where(id: booking_option_ids).includes(:menus).order("booking_options.id").each do |booking_option|
-            available_booking_times = []
-            booking_start_at = special_date_start_at
+            shop.user.booking_options.where(id: booking_option_ids).includes(:menus).order("booking_options.id").each do |booking_option|
+              available_booking_times = []
+              booking_start_at = special_date_start_at
 
-            loop do
-              booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
+              loop do
+                booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
 
-              if booking_end_at > special_date_end_at
-                break
+                if booking_end_at > special_date_end_at
+                  break
+                end
+
+                loop_for_reserable_spot(shop, booking_option, booking_start_at.to_date, booking_start_at, booking_end_at, overbooking_restriction, false) do
+                  available_booking_times << booking_start_at
+
+                  available_booking_time_mapping[booking_start_at] ||= []
+                  available_booking_time_mapping[booking_start_at] << booking_option.id
+
+                  throw :enough_booking_time if limit && available_booking_times.length >= limit
+                end
+
+                booking_start_at = booking_start_at.advance(minutes: interval)
               end
-
-              loop_for_reserable_spot(shop, booking_option, booking_start_at.to_date, booking_start_at, booking_end_at, overbooking_restriction, false) do
-                available_booking_times << booking_start_at
-
-                available_booking_time_mapping[booking_start_at] ||= []
-                available_booking_time_mapping[booking_start_at] << booking_option.id
-
-                throw :enough_booking_time if limit && available_booking_times.length >= limit
-              end
-
-              booking_start_at = booking_start_at.advance(minutes: interval)
             end
           end
         end

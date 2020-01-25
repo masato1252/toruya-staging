@@ -207,65 +207,67 @@ module Booking
 
         catch :booked_reservation do
           unless reservation
-            loop_for_reserable_spot(
-              shop,
-              booking_option,
-              date,
-              booking_start_at,
-              booking_end_at,
-              booking_page.overbooking_restriction
-            ) do |valid_menus_spots, staff_states|
-              # valid_menus_spots likes
-              # [
-              #   {
-              #     menu_id: menu_id,
-              #     position: $position,
-              #     menu_interval_time: 10,
-              #     menu_required_time: 60,
-              #     staff_ids: [
-              #       {
-              #         staff_id: $staff_id
-              #         state: pending/accepted
-              #       },
-              #       ...
-              #     ],
-              #   }
-              # ]
-              # staff_states
-              # [
-              #   {
-              #     staff_id: $staff_id
-              #     state: pending/accepted
-              #   },
-              # ]
-              reservation_outcome = Reservations::Save.run(
-                reservation: shop.reservations.new,
-                params: {
-                  start_time: booking_start_at,
-                  end_time: booking_end_at,
-                  customers_list: [{
-                    customer_id: customer.id,
-                    state: "pending",
-                    booking_page_id: booking_page.id,
-                    booking_option_id: booking_option_id,
-                    booking_amount_cents: booking_option.amount.fractional,
-                    booking_amount_currency: booking_option.amount.currency.to_s,
-                    tax_include: booking_option.tax_include,
-                    booking_at: Time.current,
-                    details: {
-                      new_customer_info: new_customer_info.attributes.compact,
-                    }
-                  }],
-                  menu_staffs_list: valid_menus_spots,
-                  staff_states: staff_states,
-                  memo: "",
-                  with_warnings: false
-                }
-              )
+            catch :next_working_date do
+              loop_for_reserable_spot(
+                shop,
+                booking_option,
+                date,
+                booking_start_at,
+                booking_end_at,
+                booking_page.overbooking_restriction
+              ) do |valid_menus_spots, staff_states|
+                # valid_menus_spots likes
+                # [
+                #   {
+                #     menu_id: menu_id,
+                #     position: $position,
+                #     menu_interval_time: 10,
+                #     menu_required_time: 60,
+                #     staff_ids: [
+                #       {
+                #         staff_id: $staff_id
+                #         state: pending/accepted
+                #       },
+                #       ...
+                #     ],
+                #   }
+                # ]
+                # staff_states
+                # [
+                #   {
+                #     staff_id: $staff_id
+                #     state: pending/accepted
+                #   },
+                # ]
+                reservation_outcome = Reservations::Save.run(
+                  reservation: shop.reservations.new,
+                  params: {
+                    start_time: booking_start_at,
+                    end_time: booking_end_at,
+                    customers_list: [{
+                      customer_id: customer.id,
+                      state: "pending",
+                      booking_page_id: booking_page.id,
+                      booking_option_id: booking_option_id,
+                      booking_amount_cents: booking_option.amount.fractional,
+                      booking_amount_currency: booking_option.amount.currency.to_s,
+                      tax_include: booking_option.tax_include,
+                      booking_at: Time.current,
+                      details: {
+                        new_customer_info: new_customer_info.attributes.compact,
+                      }
+                    }],
+                    menu_staffs_list: valid_menus_spots,
+                    staff_states: staff_states,
+                    memo: "",
+                    with_warnings: false
+                  }
+                )
 
-              if reservation_outcome.valid?
-                reservation = reservation_outcome.result
-                throw :booked_reservation
+                if reservation_outcome.valid?
+                  reservation = reservation_outcome.result
+                  throw :booked_reservation
+                end
               end
             end
           end

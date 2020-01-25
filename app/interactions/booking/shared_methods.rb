@@ -37,7 +37,7 @@ module Booking
 
               # XXX: not enough required staffs
               if all_possiable_active_staff_ids_groups.blank?
-                throw :next_working_date 
+                throw :next_working_date
               end
 
               all_possiable_active_staff_ids_groups.each.with_index do |candidate_staff_ids, candidate_staff_index|
