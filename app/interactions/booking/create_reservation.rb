@@ -119,6 +119,14 @@ module Booking
           end
         end
 
+        # XXX: Don't have to find a available reservation, since customer is invalid
+        if customer.new_record?
+          return {
+            customer: customer,
+            reservation: nil
+          }
+        end
+
         Reservation.where(
           shop: shop,
           start_time: booking_start_at,
