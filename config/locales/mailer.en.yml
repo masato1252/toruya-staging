@@ -9,3 +9,12 @@ en:
       title: Toruya Payment Failure Notification
     charge_reminder:
       title: Toruya Billing Notification
+  business_application_mailer:
+    applicant_applied:
+      title: You have applied for Business membership
+    applicant_approved:
+      title: Business account registration has completed
+    applicant_rejected:
+      title: Business account registration has been rejected
+    applicant_paid:
+      title: Business account registration fee payment confirmed

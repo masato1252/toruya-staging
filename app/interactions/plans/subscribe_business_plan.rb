@@ -8,6 +8,8 @@ module Plans
     def execute
       # XXX: Business plan need to be charged immediately because we need to charge registration fee
       compose(Plans::Subscribe, user: user, plan: Plan.business_level.take, authorize_token: authorize_token)
+
+      BusinessApplicationMailer.with(business_application: user.business_application).applicant_paid.deliver_later
     end
 
     private

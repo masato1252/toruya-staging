@@ -34,3 +34,12 @@ ja:
   withdrawal_mailer:
     monthly_report:
       title: 紹介料の確定のお知らせ
+  business_application_mailer:
+    applicant_applied:
+      title: 代理店ご登録申請が完了しました
+    applicant_approved:
+      title: 代理店の登録申請が承認されました
+    applicant_rejected:
+      title: 代理店登録は拒否されました
+    applicant_paid:
+      title: 代理店登録料のお支払いが確認されました
