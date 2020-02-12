@@ -1,22 +1,5 @@
 <%
-  booking_option_lambda = lambda do |booking_option|
-    tax_type = t("settings.booking_option.form.#{booking_option.tax_include ? "tax_include" : "tax_excluded"}")
-
-    Option.new(
-      id: booking_option.id,
-      name: booking_option.display_name.presence || booking_option.name,
-      minutes: booking_option.minutes,
-      price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
-      start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
-      end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
-      memo: booking_option.memo
-    )
-  end
-
-  page_booking_options = @booking_page.booking_options.active.map do |option|
-    booking_option_lambda.call(option)
-  end
-
+  page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
   customer_info_hash = customer_info_as_json(@customer)
 %>
 <%= react_component("booking/booking_reservation_form", {
