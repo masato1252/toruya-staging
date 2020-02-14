@@ -3,7 +3,6 @@
   customer_info_hash = customer_info_as_json(@customer)
 %>
 <%= react_component("booking/booking_reservation_form", {
-  form_authenticity_token: form_authenticity_token,
   timezone: Time.zone.tzinfo.name,
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({

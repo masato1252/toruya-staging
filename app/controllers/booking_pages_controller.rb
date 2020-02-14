@@ -1,4 +1,5 @@
 class BookingPagesController < ActionController::Base
+  rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
 
   layout "booking"
@@ -223,5 +224,10 @@ class BookingPagesController < ActionController::Base
 
   def month_dates
     date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day
+  end
+
+  def redirect_to_booking_show_page(exception)
+    Rollbar.error(exception)
+    render json: { status: "invalid_authenticity_token" }
   end
 end

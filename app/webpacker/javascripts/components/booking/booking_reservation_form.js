@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import Rails from "rails-ujs";
 import { Form, Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
@@ -1103,7 +1104,6 @@ class BookingReservationForm extends React.Component {
               acceptCharset="UTF-8"
               method="post">
               <input name="utf8" type="hidden" value="✓" />
-              <input type="hidden" name="authenticity_token" value={this.props.form_authenticity_token} />
               {this.renderDraftWarning()}
               {this.renderBookingHeader(pristine)}
               {this.renderBookingFlow()}
@@ -1208,7 +1208,7 @@ class BookingReservationForm extends React.Component {
       method: "POST",
       url: this.props.path.save,
       params: _.merge(
-        { authenticity_token: this.props.form_authenticity_token },
+        { authenticity_token: Rails.csrfToken() },
         _.pick(
           this.booking_reservation_form_values,
           "booking_option_id",
@@ -1248,6 +1248,9 @@ class BookingReservationForm extends React.Component {
         this.booking_reservation_form.change("booking_reservation_form[booking_failed_message]", errors.message)
         setTimeout(() => this.scrollToTarget("footer"), 200)
       }
+    }
+    else if (status === "invalid_authenticity_token") {
+      location.reload()
     }
   };
 
