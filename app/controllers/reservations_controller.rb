@@ -87,7 +87,7 @@ class ReservationsController < DashboardController
         customer = reservation_customer.customer
 
         reservation_customer.attributes.merge!(
-          binding: true,
+          binding: true, # had reservation_customer record
           label: customer.name,
           value: customer.id,
           address: customer.address,

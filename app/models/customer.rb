@@ -137,6 +137,7 @@ class Customer < ApplicationRecord
     self.primary_email = google_contact.primary_email
     # primary_phone format
     # {
+    #   "primary" => true
     #   "type" => :home,
     #   "value" => "12312312"
     # }
