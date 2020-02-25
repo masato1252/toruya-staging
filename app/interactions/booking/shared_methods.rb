@@ -1,6 +1,7 @@
 module Booking
   module SharedMethods
     def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction, overlap_restriction = true)
+      # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
       unless Rails.env.test?
