@@ -122,7 +122,7 @@ module Booking
         # XXX: Don't have to find a available reservation, since customer is invalid
         if customer.new_record?
           return {
-            customer: customer,
+            customer: nil,
             reservation: nil
           }
         end
