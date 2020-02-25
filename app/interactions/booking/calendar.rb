@@ -33,7 +33,7 @@ module Booking
             booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
           )
 
-          # XXX: Heroku keep meeting R14 & R15 memory errors, try does Parallel cause the problem
+          # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           if true || Rails.env.test?
             schedules[:working_dates].map do |date|
               test_available_booking_date(booking_options, date)
