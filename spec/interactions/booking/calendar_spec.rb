@@ -64,6 +64,71 @@ RSpec.describe Booking::Calendar do
       end
     end
 
+    context "when staff is not available for some reason" do
+      context "staff had reservation on other shop" do
+        it "returns expected result" do
+          # work at other shops
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          FactoryBot.create(:reservation,
+                            shop: FactoryBot.create(:shop, user: user), staffs: staff,
+                            start_time: Time.zone.local(2019, 5, 13, 9),
+                            force_end_time: Time.zone.local(2019, 5, 13, 10))
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+      end
+
+      context "when staff is a freelancer and doesn't work on that day" do
+        let(:staff) { FactoryBot.create(:staff, shop: shop, user: user) }
+
+        before do
+          FactoryBot.create(:custom_schedule, :opened, shop: shop, staff: staff,
+                            start_time: Time.zone.local(2019, 5, 20).beginning_of_day, end_time: Time.zone.local(2019, 5, 20).end_of_day)
+          FactoryBot.create(:custom_schedule, :opened, shop: shop, staff: staff,
+                            start_time: Time.zone.local(2019, 5, 27).beginning_of_day, end_time: Time.zone.local(2019, 5, 27).end_of_day)
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+      end
+
+      context "when staff ask for leave on that day" do
+        before do
+          FactoryBot.create(:custom_schedule, :closed, shop: shop, user: staff.staff_account.user,
+                            start_time: Time.zone.local(2019, 5, 13).beginning_of_day, end_time: Time.zone.local(2019, 5, 13).end_of_day.change(sec: 0))
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+        end
+      end
+
+      context "when staff is a part time staff, doesn't work on that day" do
+        let(:staff) { FactoryBot.create(:staff, user: user, shop: shop) }
+        before do
+          # Only work in Tuesday
+          FactoryBot.create(:business_schedule, :opened, staff: staff, shop: shop,
+                            start_time: Time.zone.local(2016, 5, 14, 9, 0, 0),
+                            end_time: Time.zone.local(2016, 5, 14, 17, 0, 0))
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq([])
+        end
+      end
+    end
+
     context "when all day are reserved" do
       context "when reservation was fully occupied" do
         it "returns expected result" do

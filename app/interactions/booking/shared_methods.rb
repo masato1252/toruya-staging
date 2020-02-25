@@ -1,6 +1,7 @@
 module Booking
   module SharedMethods
     def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction, overlap_restriction = true)
+      # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
       unless Rails.env.test?
@@ -12,11 +13,11 @@ module Booking
           menu_position = 0
           valid_menus = []
 
-          Rails.logger.info("==")
-          Rails.logger.info("==group #{candidate_booking_option_menus_group.map(&:required_time).join(", ")}")
+          Rails.logger.debug("==")
+          Rails.logger.debug("==group #{candidate_booking_option_menus_group.map(&:required_time).join(", ")}")
           candidate_booking_option_menus_group.each.with_index do |booking_option_menu, menu_position_index|
             catch :next_menu do
-              Rails.logger.info("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} menu_position_index: #{menu_position_index}")
+              Rails.logger.debug("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} menu_position_index: #{menu_position_index}")
 
               menu = booking_option_menu.menu
               active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staff_ids
@@ -59,7 +60,7 @@ module Booking
                   skip_after_interval_time_validation: skip_after_interval_time_validation
                 )
 
-                Rails.logger.info("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
+                Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
 
                 if reserable_outcome.valid?
                   valid_menus << {
@@ -108,7 +109,7 @@ module Booking
                     end
                   end
 
-                  Rails.logger.info("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
+                  Rails.logger.debug("==error #{reserable_outcome.errors.full_messages.join(", ")} #{reserable_outcome.errors.details.inspect}")
 
                   if all_possiable_active_staff_ids_groups.length - 1 == candidate_staff_index
                     # XXX: prior menu no staff could handle, no need to test the behind menus

@@ -145,6 +145,27 @@ RSpec.describe Booking::CreateReservation do
           email: "example@email.com"
         }))
       end
+
+      context "when customer create failed" do
+        it "records all the data" do
+          customer_info_hash = {
+            customer_last_name: "foo",
+            customer_first_name: "bar",
+            customer_phonetic_last_name: "baz",
+            customer_phonetic_first_name: "qux",
+            customer_phone_number: "123456789",
+            customer_email: "example@email.com"
+          }
+          args.merge!(customer_info_hash)
+
+          result = outcome.result
+          customer = result[:customer]
+          reservation = result[:reservation]
+
+          expect(customer).to be_nil
+          expect(reservation).to be_nil
+        end
+      end
     end
 
     context "when there is same time and menus reservation(menus had the same required time)" do
