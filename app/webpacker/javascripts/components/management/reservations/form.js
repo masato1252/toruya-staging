@@ -1,6 +1,7 @@
 "use strict";
 
 import React from "react";
+import Rails from "rails-ujs";
 import { Form, Field } from "react-final-form";
 import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
@@ -485,20 +486,23 @@ class ManagementReservationForm extends React.Component {
 
     try {
       const response = await axios({
-        method: "GET",
+        method: "POST",
         url: this.props.path.validate_reservation,
-        params: {
-          reservation_form: _.pick(
-            form_values,
-            "reservation_id",
-            "start_time_date_part",
-            "start_time_time_part",
-            "end_time_date_part",
-            "end_time_time_part",
-            "menu_staffs_list",
-            "customers_list"
-          ),
-        },
+        data: _.merge(
+          { authenticity_token: Rails.csrfToken() },
+          {
+            reservation_form: _.pick(
+              form_values,
+              "reservation_id",
+              "start_time_date_part",
+              "start_time_time_part",
+              "end_time_date_part",
+              "end_time_time_part",
+              "menu_staffs_list",
+              "customers_list"
+            ),
+          },
+        ),
         paramsSerializer: (params) => {
           return qs.stringify(params, {arrayFormat: 'brackets'})
         },
@@ -525,21 +529,24 @@ class ManagementReservationForm extends React.Component {
 
   addCustomer = async () => {
     const response = await axios({
-      method: "GET",
+      method: "POST",
       url: this.props.path.add_customer,
-      params: {
-        reservation_form: _.pick(
-          this.reservation_form_values,
-          "reservation_id",
-          "start_time_date_part",
-          "start_time_time_part",
-          "end_time_date_part",
-          "end_time_time_part",
-          "menu_staffs_list",
-          "staff_states",
-          "customers_list"
-        ),
-      },
+      data: _.merge(
+        { authenticity_token: Rails.csrfToken() },
+        {
+          reservation_form: _.pick(
+            this.reservation_form_values,
+            "reservation_id",
+            "start_time_date_part",
+            "start_time_time_part",
+            "end_time_date_part",
+            "end_time_time_part",
+            "menu_staffs_list",
+            "staff_states",
+            "customers_list"
+          ),
+        },
+      ),
       paramsSerializer: (params) => {
         return qs.stringify(params, {arrayFormat: 'brackets'})
       },

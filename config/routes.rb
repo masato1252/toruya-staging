@@ -29,8 +29,8 @@ Rails.application.routes.draw do
     resources :reservations, except: [:edit, :new] do
       get "/:reservation_date", to: "reservations#index", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
       collection do
-        get :validate
-        get :add_customer
+        post :validate
+        post :add_customer
         get "form/(:id)", action: :form, as: :form
       end
 

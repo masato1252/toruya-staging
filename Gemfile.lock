@@ -148,6 +148,7 @@ GEM
     concurrent-ruby (1.0.5)
     connection_pool (2.2.2)
     crass (1.0.4)
+    dalli (2.7.10)
     dante (0.2.0)
     database_cleaner (1.7.0)
     debug_inspector (0.0.3)
@@ -518,6 +519,7 @@ DEPENDENCIES
   cancancan (~> 1.15.0)
   carrierwave
   custom_error_message (~> 1.2.1)!
+  dalli
   database_cleaner
   default_value_for
   delayed-web

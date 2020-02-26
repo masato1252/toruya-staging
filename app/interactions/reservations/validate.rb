@@ -7,7 +7,7 @@ module Reservations
     object :reservation
     hash :params do
       time :start_time
-      time :end_time
+      time :end_time, default: nil
       array :customers_list, default: [] do
         hash do
           string :state

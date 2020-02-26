@@ -83,3 +83,7 @@ group :test do
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
   gem "rspec_junit_formatter"
 end
+
+group :production do
+  gem "dalli"
+end
