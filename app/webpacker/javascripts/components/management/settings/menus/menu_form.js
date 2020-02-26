@@ -190,7 +190,7 @@ class SettingsMenuForm extends React.Component {
 
     selectedStaffOption.checked = !selectedStaffOption.checked
 
-    const newOrderStaffOptions = arrayMove(this.state.menuStaffsOptions, _.findIndex(this.state.menuStaffsOptions, (o) => { return o.staffId == staffId; }), -1)
+    const newOrderStaffOptions = arrayMove(this.state.menuStaffsOptions, _.findIndex(this.state.menuStaffsOptions, (o) => { return o.staffId == staffId; }), this.renderSelectedStaffOptions().length - 1)
 
     let i = 0;
     const newMenuStaffsOptions = newOrderStaffOptions.map((menuStaffsOption) => {
