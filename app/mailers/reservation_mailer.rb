@@ -6,4 +6,11 @@ class ReservationMailer < ApplicationMailer
     mail(:to => @user.email,
          :subject => subject("確認が必要な予約があります"))
   end
+
+  def booked
+    @customer = params[:customer]
+
+    mail(:to => params[:email],
+         :subject => "Reservation Booked")
+  end
 end

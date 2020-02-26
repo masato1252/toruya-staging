@@ -65,6 +65,12 @@ RSpec.describe Reservations::Save do
 
   describe "#execute" do
     describe "when create a new reservation" do
+      it "notfies all customers" do
+        expect(ReservationBookedJob).to receive(:perform_later).exactly(customers_list.length).times
+
+        outcome
+      end
+
       context "when there is only one menu" do
         it "staff's prepare time, work times and ready_time would be equal to reservation" do
           result = outcome.result
@@ -297,6 +303,74 @@ RSpec.describe Reservations::Save do
       it "updates count_of_customers" do
         result = outcome.result
         expect(result.count_of_customers).to eq(2)
+      end
+    end
+
+    context "when update a reservation" do
+      let!(:old_reservation) { described_class.run!(args) }
+
+      context "when nothing changes" do
+        it "notfies no customer" do
+          expect(ReservationBookedJob).to receive(:perform_later).exactly(0).times
+          params[:reservation] = old_reservation.reload
+
+          outcome
+        end
+      end
+
+      context "when start_time change" do
+        it "notfies all customers" do
+          expect(ReservationBookedJob).to receive(:perform_later).exactly(customers_list.length).times
+          params[:reservation] = old_reservation.reload
+          params[:start_time] = Time.zone.local(2016, 1, 1, 14)
+
+          outcome
+        end
+      end
+
+      context "when menu/end_time change" do
+        it "notfies all customers" do
+          expect(ReservationBookedJob).to receive(:perform_later).exactly(1).times
+          params[:reservation] = old_reservation.reload
+          params[:menu_staffs_list] = [
+            {
+              menu_id: menu2.id,
+              position: 1,
+              menu_required_time: menu2.minutes,
+              menu_interval_time: menu2.interval,
+              staff_ids: [
+                staff_id: staff.id.to_s
+              ]
+            }
+          ]
+
+          outcome
+        end
+      end
+
+      context "when customers change" do
+        it "only notfies new customers" do
+          # create new reservation
+          reservation = described_class.run!(args)
+
+          expect(ReservationBookedJob).to receive(:perform_later).exactly(2).times
+          params[:reservation] = reservation.reload
+          params[:customers_list] = [
+            {
+              customer_id: customer.id.to_s,
+              state: "pending"
+            },
+            {
+              customer_id: FactoryBot.create(:customer, user: user).id.to_s,
+              state: "pending"
+            },
+            {
+              customer_id: FactoryBot.create(:customer, user: user).id.to_s,
+              state: "pending"
+            },
+          ]
+          outcome
+        end
       end
     end
   end

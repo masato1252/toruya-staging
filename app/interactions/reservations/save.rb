@@ -53,6 +53,8 @@ module Reservations
         staff_states = params.delete(:staff_states)
 
         reservation.attributes = params
+        previous_reservation_customers = reservation.customers.to_a
+        previous_reservation_menu_ids = reservation.reservation_menus.map(&:menu_id)
 
         reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
@@ -105,12 +107,24 @@ module Reservations
           end
         end
 
+        customers_require_notify =
+          if reservation.saved_change_to_start_time? || reservation.saved_change_to_end_time? || reservation.reservation_menus.map(&:menu_id) != previous_reservation_menu_ids
+            reservation.customers.reload
+          else
+            reservation.customers.reload - previous_reservation_customers
+          end
+
         reservation.try_accept
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
         compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
+
+        customers_require_notify.each do |customer|
+          ReservationBookedJob.perform_later(reservation, customer)
+        end
+
         reservation
       end
     end

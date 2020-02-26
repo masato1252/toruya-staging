@@ -7,4 +7,10 @@ class ApplicationMailer < ActionMailer::Base
   include MailerMethods
 
   layout 'mailer'
+
+  private
+
+  def user
+    @user ||= params[:user]
+  end
 end
