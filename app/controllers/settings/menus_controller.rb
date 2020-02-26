@@ -6,7 +6,7 @@ class Settings::MenusController < SettingsController
   def index
     # XXX: FOR FUN
     # @menus = super_user.menus.left_outer_joins(:active_staffs, :reservation_setting).select("DISTINCT menus.*, MIN(COALESCE(NULLIF(reservation_settings.short_name, ''), reservation_settings.name)) as setting_name, COUNT(DISTINCT(staff_menus.staff_id)) as staffs_count").group("menus.id").order("id")
-    @menus = super_user.menus.includes(:reservation_setting).order("id")
+    @menus = super_user.menus.includes(:reservation_setting, :active_staffs).order("id")
   end
 
   # GET /settings/menus/1
@@ -73,13 +73,17 @@ class Settings::MenusController < SettingsController
   # PATCH/PUT /settings/menus/1
   # PATCH/PUT /settings/menus/1.json
   def update
-    outcome = Menus::Update.run(menu: @menu,
-                                attrs: menu_params.to_h.except(:reservation_setting_id,
-                                                               :menu_reservation_setting_rule_attributes,
-                                                               :new_categories),
-                                                               new_categories: menu_params[:new_categories],
-                                                               reservation_setting_id: menu_params[:reservation_setting_id],
-                                                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+    outcome = Menus::Update.run(
+      menu: @menu,
+      attrs: menu_params.to_h.except(
+        :reservation_setting_id,
+        :menu_reservation_setting_rule_attributes,
+        :new_categories
+      ),
+      new_categories: menu_params[:new_categories],
+      reservation_setting_id: menu_params[:reservation_setting_id],
+      menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h
+    )
 
     if outcome.valid?
       redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message")
