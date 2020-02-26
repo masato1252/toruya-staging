@@ -125,9 +125,9 @@ class ReservationsController < DashboardController
     if params[:customer_id]
       customer = super_user.customers.find(params[:customer_id])
 
-      if @customers_list.map { |c| c["customer_id"] }.exclude?(params[:customer_id].to_i)
+      if @customers_list.map { |c| c["customer_id"].to_i }.exclude?(params[:customer_id].to_i)
         @customers_list << {
-          customer_id: params[:customer_id],
+          customer_id: params[:customer_id].to_i,
           state: "accepted",
           label: customer.name,
           value: customer.id,
