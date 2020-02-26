@@ -46,8 +46,8 @@ class ReservationsController < DashboardController
     @body_class = "resNew"
     all_options
 
-    if cookies[:reservation_form_hash] && params[:from_adding_customer]
-      reservarion_params = JSON.parse(cookies[:reservation_form_hash]).with_indifferent_access
+    if Rails.cache.read(reservation_params_hash_cache_key) && params[:from_adding_customer]
+      reservarion_params = JSON.parse(Rails.cache.read(reservation_params_hash_cache_key)).with_indifferent_access
       menu_staffs_list = reservarion_params.delete(:menu_staffs_list)
       customers_list = reservarion_params.delete(:customers_list)
       reservation_id = reservarion_params.delete(:reservation_id)
@@ -119,6 +119,7 @@ class ReservationsController < DashboardController
       }
     ]
 
+    Rails.cache.delete(reservation_params_hash_cache_key)
     cookies.delete(:reservation_form_hash)
 
     if params[:customer_id]
@@ -218,7 +219,7 @@ class ReservationsController < DashboardController
   end
 
   def add_customer
-    cookies[:reservation_form_hash] = reservation_params_hash.to_json
+    Rails.cache.write(reservation_params_hash_cache_key, reservation_params_hash.to_json)
 
     render json: { redirect_to: user_customers_path(super_user, reservation_id: reservation_params_hash[:reservation_id], from_reservation: true) }
   end
@@ -302,5 +303,9 @@ class ReservationsController < DashboardController
       convert_params(@reservation_params_hash[:menu_staffs_list])
     end
     @reservation_params_hash
+  end
+
+  def reservation_params_hash_cache_key
+    "user_id-#{current_user.id}-reservation_params_hash"
   end
 end
