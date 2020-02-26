@@ -73,13 +73,17 @@ class Settings::MenusController < SettingsController
   # PATCH/PUT /settings/menus/1
   # PATCH/PUT /settings/menus/1.json
   def update
-    outcome = Menus::Update.run(menu: @menu,
-                                attrs: menu_params.to_h.except(:reservation_setting_id,
-                                                               :menu_reservation_setting_rule_attributes,
-                                                               :new_categories),
-                                                               new_categories: menu_params[:new_categories],
-                                                               reservation_setting_id: menu_params[:reservation_setting_id],
-                                                               menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h)
+    outcome = Menus::Update.run(
+      menu: @menu,
+      attrs: menu_params.to_h.except(
+        :reservation_setting_id,
+        :menu_reservation_setting_rule_attributes,
+        :new_categories
+      ),
+      new_categories: menu_params[:new_categories],
+      reservation_setting_id: menu_params[:reservation_setting_id],
+      menu_reservation_setting_rule_attributes: menu_params[:menu_reservation_setting_rule_attributes].to_h
+    )
 
     if outcome.valid?
       redirect_to settings_user_menus_path(super_user), notice: I18n.t("common.update_successfully_message")

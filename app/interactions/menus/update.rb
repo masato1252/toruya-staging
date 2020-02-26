@@ -32,8 +32,12 @@ module Menus
       end
 
       attrs[:category_ids] = (attrs[:category_ids].presence || []).push(*categories.map(&:id)) if categories.present?
+      staff_menus_attributes = attrs.delete(:staff_menus_attributes)
 
       menu.attributes = attrs
+
+      menu.staff_menus.delete_all
+      menu.staff_menus.build(staff_menus_attributes)
 
       unless menu.save
         errors.merge!(menu.errors)

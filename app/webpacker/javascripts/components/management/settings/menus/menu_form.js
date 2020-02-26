@@ -18,11 +18,6 @@ const SortableStaffOption = sortableElement(({value, staffCheckHandler, staffMax
       <input type="hidden" name="menu[staff_menus_attributes][][id]" value={value.id || ""} />
     }
 
-    {
-      value.id && !value.checked ?
-      <input type="hidden" name="menu[staff_menus_attributes][][_destroy]" value="1" /> : null
-    }
-
     <dt className="staff-name">
       <DragHandle />
       {value.name}
@@ -357,11 +352,6 @@ class SettingsMenuForm extends React.Component {
                 <dl className="checkbox" key={`shop-${menuShopOption.shopId}`}>
                   {
                     <input type="hidden" name="menu[shop_menus_attributes][][id]" value={menuShopOption.id || ""} />
-                  }
-
-                  {
-                    menuShopOption.id && !menuShopOption.checked ?
-                    <input type="hidden" name="menu[shop_menus_attributes][][_destroy]" value="1" /> : null
                   }
                   <dd>
                     <input
