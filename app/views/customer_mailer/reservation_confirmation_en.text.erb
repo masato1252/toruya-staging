@@ -1,0 +1,15 @@
+■　Temporary reservation has been made　■
+
+<%= line %>
+
+To <%= @customer.name %>,
+
+Thank you for choosing <%= @shop.display_name %>.
+
+The reservation to <%= @shop.display_name %> has been made as following.
+
+Date and time:
+<%= I18n.l(@reservation.start_time, format: :date) %>
+<%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
+
+Please contact <%= @shop.phone_number %> for changes or cancellations.

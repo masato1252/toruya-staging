@@ -121,8 +121,11 @@ module Reservations
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
         compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
 
-        customers_require_notify.each do |customer|
-          ReservationBookedJob.perform_later(reservation, customer)
+        # XXX: Mean this reservation created by a staff, not customer(from booking page)
+        if params[:by_staff_id].present?
+          customers_require_notify.each do |customer|
+            ReservationBookedJob.perform_later(reservation, customer)
+          end
         end
 
         reservation

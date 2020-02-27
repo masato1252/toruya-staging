@@ -3,7 +3,7 @@ module Bookings
     queue_as :default
 
     def perform(customer, reservation, phone_number)
-      Booking::Notifications::SendCustomerSms.run!(
+      Reservations::Notifications::SendCustomerSms.run!(
         phone_number: phone_number,
         customer: customer,
         reservation: reservation

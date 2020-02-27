@@ -4,12 +4,14 @@ class ReservationBookedJob < ApplicationJob
   def perform(reservation, customer)
     email = customer.with_google_contact.primary_email&.value&.address
 
-    ReservationMailer.with(reservation: reservation, customer: customer, email: email).booked.deliver_now if email
+    if email.present?
+      CustomerMailer.with(reservation: reservation, customer: customer, email: email).reservation_confirmation.deliver_now
+    end
 
     phone_number = customer.with_google_contact.primary_phone&.value
 
-    if phone_number
-      Booking::Notifications::SendCustomerSms.run!(
+    if phone_number.present?
+      Reservations::Notifications::SendCustomerSms.run!(
         phone_number: phone_number,
         customer: customer,
         reservation: reservation

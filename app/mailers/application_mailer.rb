@@ -13,4 +13,12 @@ class ApplicationMailer < ActionMailer::Base
   def user
     @user ||= params[:user]
   end
+
+  def customer_email
+    if Rails.configuration.x.env.staging?
+      User::ADMIN_EMAIL
+    else
+      params[:email]
+    end
+  end
 end

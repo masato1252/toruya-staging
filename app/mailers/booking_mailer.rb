@@ -1,5 +1,5 @@
 class BookingMailer < ApplicationMailer
-  layout false
+  layout "shop_to_customer"
 
   def customer_reservation_notification
     @reservation = params[:reservation]
@@ -12,7 +12,7 @@ class BookingMailer < ApplicationMailer
     @price = "#{@booking_option.amount.format(:ja_default_format)}(#{tax_type})"
 
     mail(
-      to: params[:email],
+      to: customer_email,
       subject: I18n.t("booking_page.booking_mailer.customer_reservation_notification.title", shop_name: @shop.display_name),
       locale: I18n.default_locale
     )

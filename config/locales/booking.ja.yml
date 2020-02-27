@@ -62,6 +62,7 @@ ja:
       message2: 受付を終了いたしました。
     notifications:
       sms: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました\n変更は%{shop_phone_number}まで"
+      noreply: "※返信不可"
     booking_mailer:
       customer_reservation_notification:
         title: "%{shop_name}の仮予約が完了しました"

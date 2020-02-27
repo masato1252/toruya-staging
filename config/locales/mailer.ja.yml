@@ -43,3 +43,6 @@ ja:
       title: 代理店登録は拒否されました
     applicant_paid:
       title: 代理店登録料のお支払いが確認されました
+  customer_mailer:
+    reservation_confirmation:
+      title: "%{shop_name}の予約が完了しました"
