@@ -49,7 +49,7 @@ ja:
       feature3: Remind you for your reservations
       signup_now: Signup Now!
     notifications:
-      sms: "To %{customer_name}\n You just booked %{shop_name} for %{booking_time} remporarily\n Please contact %{shop_phone_number} for changes"
+      sms: "To %{customer_name}\n You just booked %{shop_name} for %{booking_time} temporarily\n Please contact %{shop_phone_number} for changes"
       noreply: "※no reply"
     booking_mailer:
       customer_reservation_notification:
