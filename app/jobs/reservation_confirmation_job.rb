@@ -1,4 +1,4 @@
-class ReservationBookedJob < ApplicationJob
+class ReservationConfirmationJob < ApplicationJob
   queue_as :default
 
   def perform(reservation, customer)

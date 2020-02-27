@@ -66,7 +66,7 @@ RSpec.describe Reservations::Save do
   describe "#execute" do
     describe "when create a new reservation" do
       it "notfies all customers" do
-        expect(ReservationBookedJob).to receive(:perform_later).exactly(customers_list.length).times
+        expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
 
         outcome
       end
@@ -311,7 +311,7 @@ RSpec.describe Reservations::Save do
 
       context "when nothing changes" do
         it "notfies no customer" do
-          expect(ReservationBookedJob).to receive(:perform_later).exactly(0).times
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(0).times
           params[:reservation] = old_reservation.reload
 
           outcome
@@ -320,7 +320,7 @@ RSpec.describe Reservations::Save do
 
       context "when start_time change" do
         it "notfies all customers" do
-          expect(ReservationBookedJob).to receive(:perform_later).exactly(customers_list.length).times
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
           params[:reservation] = old_reservation.reload
           params[:start_time] = Time.zone.local(2016, 1, 1, 14)
 
@@ -330,7 +330,7 @@ RSpec.describe Reservations::Save do
 
       context "when menu/end_time change" do
         it "notfies all customers" do
-          expect(ReservationBookedJob).to receive(:perform_later).exactly(1).times
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(1).times
           params[:reservation] = old_reservation.reload
           params[:menu_staffs_list] = [
             {
@@ -353,7 +353,7 @@ RSpec.describe Reservations::Save do
           # create new reservation
           reservation = described_class.run!(args)
 
-          expect(ReservationBookedJob).to receive(:perform_later).exactly(2).times
+          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(2).times
           params[:reservation] = reservation.reload
           params[:customers_list] = [
             {

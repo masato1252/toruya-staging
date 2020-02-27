@@ -124,7 +124,7 @@ module Reservations
         # XXX: Mean this reservation created by a staff, not customer(from booking page)
         if params[:by_staff_id].present?
           customers_require_notify.each do |customer|
-            ReservationBookedJob.perform_later(reservation, customer)
+            ReservationConfirmationJob.perform_later(reservation, customer)
           end
         end
 
