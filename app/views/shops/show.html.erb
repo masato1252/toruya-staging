@@ -1,0 +1,20 @@
+<% content_for :title do %>
+  <title><%= @shop.name %></title>
+<% end %>
+
+<div class="header">
+  <div class="header-title-part">
+    <h1>
+      <% if logo_url = shop_logo_url(@shop, "390x135")%>
+        <img class="logo" src="<%= logo_url %>" />
+      <% else %>
+        <%= @shop.name %>
+      <% end %>
+    </h1>
+    <h2>
+      リマインダ設定完了
+    </h2>
+  </div>
+
+  <div class="greeting"><%= @shop.name %>の予約通知がオンになりました。<br>ご予約の前に通知をお送りします。</div>
+</div>

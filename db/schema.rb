@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_30_084048) do
+ActiveRecord::Schema.define(version: 2020_02_27_084346) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -198,6 +198,7 @@ ActiveRecord::Schema.define(version: 2019_12_30_084048) do
     t.integer "updated_by_user_id"
     t.string "email_types"
     t.datetime "deleted_at"
+    t.boolean "remind_permission", default: false
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin

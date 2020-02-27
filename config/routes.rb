@@ -183,6 +183,10 @@ Rails.application.routes.draw do
     resources :staff_accounts, only: [] do
       get ":token", to: "staff_accounts#create", on: :collection, as: :user_from # user_from_callbacks_staff_accounts
     end
+
+    resources :remind_permissions, only: [] do
+      get ":encrypted_data", to: "remind_permissions#create", on: :collection, as: :customer_from # customer_from_callbacks_remind_permissions
+    end
   end
 
   resources :calendars, only: [] do
@@ -241,6 +245,7 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
+  resources :shops, only: [:show]
 
   resources :referrals, only: [:show], param: :token
   resource :business, only: [:show] do

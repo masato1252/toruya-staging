@@ -7,9 +7,21 @@ namespace :reservations do
       time_range = current_time.advance(hours: -12)..current_time.advance(seconds: -1)
 
       staff_ids = ReservationStaff.pending.joins(:reservation).where("reservations.aasm_state": :pending, "reservations.created_at": time_range, "reservations.deleted_at": nil).pluck("reservation_staffs.staff_id").uniq
-      StaffAccount.active.where(staff_id: staff_ids).distinct.pluck(:user_id).each do |user_id|
+      StaffAccount.active.where(staff_id: staff_ids).distinct.pluck(:user_id).find_each do |user_id|
         PendingReservationsSummaryJob.perform_later(user_id, time_range.first.to_s, time_range.last.to_s)
       end
+    end
+  end
+
+  task :reminder => :environment do
+    date_before_reservation = Time.zone.now.advance(hours: 24)
+
+    paid_users_shop_ids = Shop.where(user_id: Subscription.charge_required.pluck(:user_id))
+
+    Reservation
+      .where(shop_id: paid_users_shop_ids)
+      .where("start_time >= ? AND start_time <= ?", date_before_reservation.beginning_of_hour, date_before_reservation.end_of_hour).find_each do |reservation|
+      ReservationReminderJob.perform_later(reservation)
     end
   end
 end

@@ -48,8 +48,7 @@ class Subscription < ApplicationRecord
   scope :charge_required, -> { where.not(plan_id: FREE_PLAN_ID) }
 
   def self.today
-    # Use default time zone(Tokyo) currently
-    Time.now.in_time_zone(Rails.configuration.time_zone).to_date
+    Date.jp_today
   end
 
   def charge_required

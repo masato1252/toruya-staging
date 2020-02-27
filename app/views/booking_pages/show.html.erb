@@ -1,3 +1,6 @@
+<% content_for :title do %>
+  <title><%= @booking_page.shop.display_name %> | <%= @booking_page.name %></title>
+<% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
   customer_info_hash = customer_info_as_json(@customer)
