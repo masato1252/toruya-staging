@@ -1,6 +1,7 @@
 <html lang="<%= I18n.locale %>">
   <head>
-    <title>ToruyaーBooking</title>
+    <%= yield :title if content_for?(:title) %>
+    <%= yield :meta_tags if content_for(:meta_tags) %>
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
