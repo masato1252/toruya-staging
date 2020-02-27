@@ -37,4 +37,8 @@ class BookingPage < ApplicationRecord
   def start_time
     start_at || created_at
   end
+
+  def to_param
+    [id, shop.display_name, title].join("-")
+  end
 end
