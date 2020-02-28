@@ -53,6 +53,7 @@ module Reservations
         staff_states = params.delete(:staff_states)
 
         reservation.attributes = params
+        previous_reservation_customers = reservation.customers.to_a
 
         reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
@@ -105,12 +106,27 @@ module Reservations
           end
         end
 
+        customers_require_notify =
+          if reservation.saved_change_to_start_time?
+            reservation.customers.reload
+          else
+            reservation.customers.reload - previous_reservation_customers
+          end
+
         reservation.try_accept
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 
         compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
         compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
+
+        # XXX: Mean this reservation created by a staff, not customer(from booking page)
+        if params[:by_staff_id].present? && reservation.start_time >= Time.zone.now
+          customers_require_notify.each do |customer|
+            ReservationConfirmationJob.perform_later(reservation, customer)
+          end
+        end
+
         reservation
       end
     end

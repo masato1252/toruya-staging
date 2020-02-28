@@ -1,11 +1,19 @@
-module Bookings
-  class CustomerSmsNotificationJob < ApplicationJob
-    queue_as :default
+class ReservationConfirmationJob < ApplicationJob
+  queue_as :default
 
-    def perform(customer, reservation, phone_number)
+  def perform(reservation, customer)
+    email = customer.with_google_contact.primary_email&.value&.address
+
+    if email.present?
+      CustomerMailer.with(reservation: reservation, customer: customer, email: email).reservation_confirmation.deliver_now
+    end
+
+    phone_number = customer.with_google_contact.primary_phone&.value
+
+    if phone_number.present?
       shop = reservation.shop
       message = I18n.t(
-        "customer.notifications.sms.booking",
+        "customer.notifications.sms.confimation",
         customer_name: customer.name,
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,

@@ -9,10 +9,4 @@ class WithdrawalMailer < ApplicationMailer
       locale: I18n.default_locale
     )
   end
-
-  private
-
-  def user
-    @user ||= params[:user]
-  end
 end
