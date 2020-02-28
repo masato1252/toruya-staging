@@ -12,9 +12,9 @@
       <% end %>
     </h1>
     <h2>
-      リマインダ設定完了
+      <%= t("customer.reminder_permissions.approved.title") %>
     </h2>
   </div>
 
-  <div class="greeting"><%= @shop.name %>の予約通知がオンになりました。<br>ご予約の前に通知をお送りします。</div>
+  <div class="greeting"><%= t("customer.reminder_permissions.approved.desc_html", shop_name: @shop.name)%></div>
 </div>

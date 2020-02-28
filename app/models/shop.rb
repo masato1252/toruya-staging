@@ -41,7 +41,6 @@ class Shop < ApplicationRecord
   has_many :business_schedules
   has_many :custom_schedules
   has_many :reservations, -> { active }
-  has_many :booking_pages, -> { active }
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }

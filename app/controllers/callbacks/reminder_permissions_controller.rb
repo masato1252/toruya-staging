@@ -2,6 +2,7 @@ require "message_encryptor"
 
 class Callbacks::ReminderPermissionsController < ActionController::Base
   def create
+    # params[:encrypted_data]
     # {
     #   :shop_id => 1,
     #   :customer_id => 2
