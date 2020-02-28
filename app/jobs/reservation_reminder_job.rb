@@ -3,7 +3,7 @@ class ReservationReminderJob < ApplicationJob
 
   def perform(reservation)
     reservation.customers.each do |customer|
-      next unless customer.remind_permission
+      next unless customer.reminder_permission
 
       email = customer.with_google_contact.primary_email&.value&.address
 
@@ -17,7 +17,7 @@ class ReservationReminderJob < ApplicationJob
         shop = reservation.shop
 
         message = I18n.t(
-          "reminders.sms",
+          "customer.notifications.sms.reminder",
           customer_name: customer.name,
           shop_name: shop.display_name,
           shop_phone_number: shop.phone_number,

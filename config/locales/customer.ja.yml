@@ -1,3 +1,4 @@
+# message from shops to their customers
 ja:
   customer:
     notifications:
@@ -5,3 +6,4 @@ ja:
       sms:
         booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。変更は%{shop_phone_number}まで。"
         confimation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。変更は%{shop_phone_number}まで。"
+        reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。変更は%{shop_phone_number}まで。"

@@ -14,8 +14,8 @@
 
 ご予約内容の変更・キャンセルは <%= @shop.phone_number %> までご連絡ください。
 
-<% unless @customer.remind_permission %>
+<% unless @customer.reminder_permission %>
 ご予約を忘れない為に、以下のアドレスをクリックして予約の通知を受け取りましょう。
 
-<%= customer_from_callbacks_remind_permissions_url(MessageEncryptor.encrypt({shop_id: @shop.id, customer_id: @customer.id })) %>
+<%= customer_from_callbacks_reminder_permissions_url(@encrypted_data) %>
 <% end %>

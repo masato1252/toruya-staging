@@ -578,7 +578,7 @@ CREATE TABLE public.customers (
     updated_by_user_id integer,
     email_types character varying,
     deleted_at timestamp without time zone,
-    remind_permission boolean DEFAULT false
+    reminder_permission boolean DEFAULT false
 );
 
 

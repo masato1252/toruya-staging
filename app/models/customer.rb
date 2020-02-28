@@ -22,7 +22,7 @@
 #  updated_by_user_id       :integer
 #  email_types              :string
 #  deleted_at               :datetime
-#  remind_permission        :boolean          default(FALSE)
+#  reminder_permission      :boolean          default(FALSE)
 #
 # Indexes
 #

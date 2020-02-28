@@ -22,6 +22,7 @@ class CommonCustomerOption extends React.Component {
           <span className={`customer-level-symbol ${this.props.customer.rank && this.props.customer.rank.key}`}>
             <i className="fa fa-address-card"></i>
           </span>
+          <i className={`fa fa-bell ${this.props.customer.reminderPermission ? "reminder-on" : ""}`}></i>
         </dd>
         <dt>
           <p>{this.props.customer.label}</p>

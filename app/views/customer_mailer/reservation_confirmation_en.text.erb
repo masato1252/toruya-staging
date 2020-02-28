@@ -14,8 +14,8 @@ Date and time:
 
 Please contact <%= @shop.phone_number %> for changes or cancellations.
 
-<% unless @customer.remind_permission %>
+<% unless @customer.reminder_permission %>
 Do you want us to remind you? Click the URL bellow and get your reservation reminded.
 
-<%= customer_from_callbacks_remind_permissions_url(MessageEncryptor.encrypt({shop_id: @shop.id, customer_id: @customer.id })) %>
+<%= customer_from_callbacks_reminder_permissions_url(MessageEncryptor.encrypt({shop_id: @shop.id, customer_id: @customer.id })) %>
 <% end %>

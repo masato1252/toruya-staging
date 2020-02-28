@@ -184,8 +184,8 @@ Rails.application.routes.draw do
       get ":token", to: "staff_accounts#create", on: :collection, as: :user_from # user_from_callbacks_staff_accounts
     end
 
-    resources :remind_permissions, only: [] do
-      get ":encrypted_data", to: "remind_permissions#create", on: :collection, as: :customer_from # customer_from_callbacks_remind_permissions
+    resources :reminder_permissions, only: [] do
+      get ":encrypted_data", to: "reminder_permissions#create", on: :collection, as: :customer_from # customer_from_callbacks_reminder_permissions
     end
   end
 
