@@ -1,11 +1,7 @@
 <html lang="<%= I18n.locale %>">
   <head>
     <%= yield :title if content_for?(:title) %>
-    <link rel="shortcut icon" href="https://assets.jable.tv/assets/icon/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://assets.jable.tv/assets/icon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://assets.jable.tv/assets/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://assets.jable.tv/assets/icon/favicon-16x16.png">A
-    <link rel="manifest" href="https://assets.jable.tv/assets/icon/site.webmanifest">
+    <%= yield :meta_tags if content_for(:meta_tags) %>
     <%= csrf_meta_tags %>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

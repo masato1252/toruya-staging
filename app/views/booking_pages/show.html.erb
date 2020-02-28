@@ -1,6 +1,16 @@
 <% content_for :title do %>
   <title><%= @booking_page.shop.display_name %> | <%= @booking_page.name %></title>
 <% end %>
+<%= content_for :meta_tags do %>
+  <meta name="description" content="<%= "#{@booking_page.shop.display_name},#{@booking_page.title},#{@booking_page.greeting.squish}" %>" />
+  <meta name="keywords" content="<%= [
+    "TORUYA SALONS", "美容室", "ヘアサロン", "Hair salon", "ヘアーサロン", "美容室", "Best hair", "The beauty salon", "salon school",
+    @booking_page.shop.display_name,
+    @booking_page.title,
+    @booking_page.greeting.squish,
+    @booking_page.shop.address
+  ].join(", ") %>" />
+<% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
   customer_info_hash = customer_info_as_json(@customer)

@@ -62,6 +62,9 @@ RSpec.describe Reservations::Save do
     }
   end
   let(:outcome) { described_class.run(args) }
+  before do
+    Timecop.travel(start_time.yesterday)
+  end
 
   describe "#execute" do
     describe "when create a new reservation" do
@@ -323,26 +326,6 @@ RSpec.describe Reservations::Save do
           expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
           params[:reservation] = old_reservation.reload
           params[:start_time] = Time.zone.local(2016, 1, 1, 14)
-
-          outcome
-        end
-      end
-
-      context "when menu/end_time change" do
-        it "notfies all customers" do
-          expect(ReservationConfirmationJob).to receive(:perform_later).exactly(1).times
-          params[:reservation] = old_reservation.reload
-          params[:menu_staffs_list] = [
-            {
-              menu_id: menu2.id,
-              position: 1,
-              menu_required_time: menu2.minutes,
-              menu_interval_time: menu2.interval,
-              staff_ids: [
-                staff_id: staff.id.to_s
-              ]
-            }
-          ]
 
           outcome
         end

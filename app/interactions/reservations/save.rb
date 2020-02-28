@@ -54,7 +54,6 @@ module Reservations
 
         reservation.attributes = params
         previous_reservation_customers = reservation.customers.to_a
-        previous_reservation_menu_ids = reservation.reservation_menus.map(&:menu_id)
 
         reservation.reservation_menus.destroy_all
         reservation.reservation_menus.build(
@@ -108,7 +107,7 @@ module Reservations
         end
 
         customers_require_notify =
-          if reservation.saved_change_to_start_time? || reservation.saved_change_to_end_time? || reservation.reservation_menus.map(&:menu_id) != previous_reservation_menu_ids
+          if reservation.saved_change_to_start_time?
             reservation.customers.reload
           else
             reservation.customers.reload - previous_reservation_customers
@@ -122,7 +121,7 @@ module Reservations
         compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
 
         # XXX: Mean this reservation created by a staff, not customer(from booking page)
-        if params[:by_staff_id].present?
+        if params[:by_staff_id].present? && reservation.start_time >= Time.zone.now
           customers_require_notify.each do |customer|
             ReservationConfirmationJob.perform_later(reservation, customer)
           end

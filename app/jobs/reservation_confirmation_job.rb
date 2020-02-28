@@ -13,7 +13,7 @@ class ReservationConfirmationJob < ApplicationJob
     if phone_number.present?
       shop = reservation.shop
       message = I18n.t(
-        "reservation.notifications.sms",
+        "customer.notifications.sms.confimation",
         customer_name: customer.name,
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,
