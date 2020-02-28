@@ -18,7 +18,7 @@ RSpec.describe Booking::CreateReservation do
   let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
   let(:args) do
     {
-      booking_page_id: booking_page.id,
+      booking_page_id: booking_page.to_param.to_i,
       booking_option_id: booking_option.id,
       booking_start_at: booking_start_at
     }
