@@ -5,7 +5,7 @@ module Bookings
     def perform(customer, reservation, phone_number)
       shop = reservation.shop
       message = I18n.t(
-        "booking_page.notifications.sms",
+        "customer.notifications.sms.booking",
         customer_name: customer.name,
         shop_name: shop.display_name,
         shop_phone_number: shop.phone_number,

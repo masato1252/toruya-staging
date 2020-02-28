@@ -22,7 +22,7 @@ module Reservations
         Twilio::REST::Client.new.messages.create(
           from: Rails.application.secrets.twilio_from_phone,
           to: formatted_phone,
-          body: "#{message}#{I18n.t("booking_page.notifications.noreply")}"
+          body: "#{message}#{I18n.t("customer.notifications.noreply")}"
         )
 
         Notification.create!(

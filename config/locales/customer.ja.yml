@@ -1,0 +1,7 @@
+ja:
+  customer:
+    notifications:
+      noreply: "※返信不可"
+      sms:
+        booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。変更は%{shop_phone_number}まで。"
+        confimation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。変更は%{shop_phone_number}まで。"

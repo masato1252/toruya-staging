@@ -144,8 +144,6 @@ ja:
     add_working_schedule: この時間を出勤にする
     other_customers: "他%{other_customers_number}名"
     no_ending_time_message: ※終了時刻は編集できません。予約の終了時刻は、メニューの所要時間から自動的に計算されます。
-    notifications:
-      sms: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました\n変更は%{shop_phone_number}まで"
     modal:
       staff_states:
         title: 予約を承認

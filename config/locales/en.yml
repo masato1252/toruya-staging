@@ -93,8 +93,6 @@ en:
     add_working_schedule: Add working schedule
     other_customers: "other customers: %{other_customers_number}"
     no_ending_time_message: "The end time cannot be edited. The end time will be calculated automatically from the menu required time."
-    notifications:
-      sms: "To %{customer_name}\n Your reservation has made to %{shop_name} for %{booking_time} by shop staff\n Please contact %{shop_phone_number} for changes"
     modal:
       staff_states:
         title: Approve this Reservation
