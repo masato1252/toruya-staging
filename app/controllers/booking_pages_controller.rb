@@ -63,7 +63,7 @@ class BookingPagesController < ActionController::Base
 
   def booking_reservation
     outcome = Booking::CreateReservation.run(
-      booking_page_id: params[:id],
+      booking_page_id: params[:id].to_i,
       booking_option_id: params[:booking_option_id],
       booking_start_at: Time.zone.parse("#{params[:booking_date]} #{params[:booking_at]}"),
       customer_last_name: params[:customer_last_name],
@@ -72,6 +72,7 @@ class BookingPagesController < ActionController::Base
       customer_phonetic_first_name: params[:customer_phonetic_first_name],
       customer_phone_number: params[:customer_phone_number],
       customer_email: params[:customer_email],
+      customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
       customer_info: JSON.parse(params[:customer_info]),
       present_customer_info: JSON.parse(params[:present_customer_info])
     )

@@ -189,6 +189,16 @@ class BookingReservationForm extends React.Component {
               {remember_me}
             </label>
           </div>
+          <div className="remember-me">
+            <label>
+              <Field
+                name="booking_reservation_form[reminder_permission]"
+                component="input"
+                type="checkbox"
+              />
+              Reminder Permission
+            </label>
+          </div>
           <div className="centerize">
             {find_customer_message ? <ErrorMessage error={find_customer_message} /> : null}
             <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
@@ -623,7 +633,7 @@ class BookingReservationForm extends React.Component {
   renderNewCustomerFields = () => {
     if (!this.isBookingFlowEnd()) return;
 
-    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me } = this.props.i18n;
+    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me, reminder_permission } = this.props.i18n;
 
     return (
       <Condition when="booking_reservation_form[regular]" is="no">
@@ -703,6 +713,16 @@ class BookingReservationForm extends React.Component {
               type="checkbox"
             />
             {remember_me}
+          </label>
+        </div>
+        <div className="remember-me">
+          <label>
+            <Field
+              name="booking_reservation_form[reminder_permission]"
+              component="input"
+              type="checkbox"
+            />
+            Reminder Permission
           </label>
         </div>
       </Condition>
@@ -1222,7 +1242,8 @@ class BookingReservationForm extends React.Component {
           "customer_email",
           "customer_info",
           "present_customer_info",
-          "remember_me"
+          "remember_me",
+          "reminder_permission"
         ),
       ),
       responseType: "json"
