@@ -88,6 +88,20 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer.booking_option).to eq(booking_option)
       end
 
+      context "when customer booking the same reservation" do
+        it "updates the existing reservation customer data" do
+          args[:customer_info] = { "id": customer.id }
+          args[:present_customer_info] = { "id": customer.id }
+          reservation = described_class.run!(args)[:reservation]
+          # XXX: Somehow clean the existing reservation customer data
+          reservation_customer = reservation.reservation_customers.find_by(customer: customer)
+          reservation_customer.update(booking_page_id: nil)
+
+          outcome
+          expect(reservation_customer.reload.booking_page_id).to eq(booking_page.id)
+        end
+      end
+
       context "when customer changes their data" do
         it "records the data changes" do
           args[:customer_info] = { "id": customer.id, "last_name": "foo" }
