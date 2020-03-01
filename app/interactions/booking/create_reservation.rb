@@ -189,7 +189,19 @@ module Booking
               )
 
               if present_reservable_reservation_outcome.valid?
-                unless same_time_reservation.reservation_customers.where(customer: customer).exists?
+                if reservation_customer = same_time_reservation.reservation_customers.find_by(customer: customer)
+                  reservation_customer.update(
+                    booking_page_id: booking_page.id,
+                    booking_option_id: booking_option_id,
+                    booking_amount_cents: booking_option.amount.fractional,
+                    booking_amount_currency: booking_option.amount.currency.to_s,
+                    tax_include: booking_option.tax_include,
+                    booking_at: Time.current,
+                    details: {
+                      new_customer_info: new_customer_info.attributes.compact,
+                    }
+                  )
+                else
                   same_time_reservation.reservation_customers.create(
                     customer_id: customer.id,
                     state: "pending",
