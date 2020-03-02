@@ -130,7 +130,7 @@ class BookingReservationForm extends React.Component {
 
     if (found_customer) return;
 
-    const { ever_used, yes_ever_used, no_first_time, name, last_name, first_name, phone_number, remember_me, confirm_customer_info } = this.props.i18n;
+    const { ever_used, yes_ever_used, no_first_time, name, last_name, first_name, phone_number, remember_me, reminder_desc, confirm_customer_info } = this.props.i18n;
     const { shop_name } = this.props.booking_page;
 
     return (
@@ -189,14 +189,14 @@ class BookingReservationForm extends React.Component {
               {remember_me}
             </label>
           </div>
-          <div className="remember-me">
+          <div className="reminder-permission">
             <label>
               <Field
                 name="booking_reservation_form[reminder_permission]"
                 component="input"
                 type="checkbox"
               />
-              Reminder Permission
+              {reminder_desc}
             </label>
           </div>
           <div className="centerize">
@@ -633,7 +633,7 @@ class BookingReservationForm extends React.Component {
   renderNewCustomerFields = () => {
     if (!this.isBookingFlowEnd()) return;
 
-    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me, reminder_permission } = this.props.i18n;
+    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me, reminder_desc } = this.props.i18n;
 
     return (
       <Condition when="booking_reservation_form[regular]" is="no">
@@ -715,14 +715,14 @@ class BookingReservationForm extends React.Component {
             {remember_me}
           </label>
         </div>
-        <div className="remember-me">
+        <div className="reminder-permission">
           <label>
             <Field
               name="booking_reservation_form[reminder_permission]"
               component="input"
               type="checkbox"
             />
-            Reminder Permission
+            {reminder_desc}
           </label>
         </div>
       </Condition>
