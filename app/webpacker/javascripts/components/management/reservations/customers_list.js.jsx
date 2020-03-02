@@ -157,9 +157,9 @@ class CustomerPopup extends React.Component {
 }
 
 const CustomerFields = ({ fields, customer_field, customer_index, all_values, is_editable, reservation_form }) => {
-  const handleCustomerItemClick = () => {
+  const handleCustomerItemClick = async () => {
     const customer_id = _.get(all_values, `${customer_field}customer_id`)
-    reservation_form.change("reservation_form[selected_customer_id]", customer_id)
+    await reservation_form.change("reservation_form[selected_customer_id]", customer_id)
      $("#customer-modal").modal("show")
   }
 
