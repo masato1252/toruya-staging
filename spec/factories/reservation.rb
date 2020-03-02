@@ -3,6 +3,7 @@ require "reservation_menu_time_calculator"
 FactoryBot.define do
   factory :reservation do
     association :shop
+    user { shop.user }
     start_time { Time.zone.now }
     end_time { start_time.advance(hours: 1) }
     prepare_time { start_time - menus.first.interval.minutes }
