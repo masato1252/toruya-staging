@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_30_084048) do
+ActiveRecord::Schema.define(version: 2020_03_02_082812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -453,8 +453,9 @@ ActiveRecord::Schema.define(version: 2019_12_30_084048) do
     t.integer "by_staff_id"
     t.datetime "deleted_at"
     t.datetime "prepare_time"
-    t.index ["shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_index"
-    t.index ["shop_id", "deleted_at"], name: "index_reservations_on_shop_id_and_deleted_at"
+    t.integer "user_id"
+    t.index ["user_id", "shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_query_index"
+    t.index ["user_id", "shop_id", "deleted_at"], name: "reservation_user_shop_index"
   end
 
   create_table "shop_menu_repeating_dates", id: :serial, force: :cascade do |t|

@@ -17,11 +17,12 @@
 #  by_staff_id        :integer
 #  deleted_at         :datetime
 #  prepare_time       :datetime
+#  user_id            :integer
 #
 # Indexes
 #
-#  index_reservations_on_shop_id_and_deleted_at  (shop_id,deleted_at)
-#  reservation_index                             (shop_id,aasm_state,menu_id,start_time,ready_time)
+#  reservation_query_index      (user_id,shop_id,aasm_state,menu_id,start_time,ready_time)
+#  reservation_user_shop_index  (user_id,shop_id,deleted_at)
 #
 
 # ready_time is end_time + menu.interval
@@ -39,6 +40,7 @@ class Reservation < ApplicationRecord
   validates :end_time, presence: true
   validate :end_time_larger_than_start_time
 
+  belongs_to :user
   belongs_to :shop
   belongs_to :by_staff, class_name: "Staff", required: false
   has_one :reservation_booking_option
