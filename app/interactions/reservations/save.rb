@@ -53,6 +53,7 @@ module Reservations
         staff_states = params.delete(:staff_states)
 
         reservation.attributes = params
+        reservation.user = user
         previous_reservation_customers = reservation.customers.to_a
 
         reservation.reservation_menus.destroy_all

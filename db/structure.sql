@@ -1328,7 +1328,8 @@ CREATE TABLE public.reservations (
     with_warnings boolean DEFAULT false NOT NULL,
     by_staff_id integer,
     deleted_at timestamp without time zone,
-    prepare_time timestamp without time zone
+    prepare_time timestamp without time zone,
+    user_id integer
 );
 
 
@@ -2808,13 +2809,6 @@ CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USIN
 
 
 --
--- Name: index_reservations_on_shop_id_and_deleted_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reservations_on_shop_id_and_deleted_at ON public.reservations USING btree (shop_id, deleted_at);
-
-
---
 -- Name: index_shop_menu_repeating_dates_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2997,17 +2991,17 @@ CREATE INDEX personal_schedule_index ON public.custom_schedules USING btree (use
 
 
 --
--- Name: reservation_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX reservation_index ON public.reservations USING btree (shop_id, aasm_state, menu_id, start_time, ready_time);
-
-
---
 -- Name: reservation_menu_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX reservation_menu_index ON public.reservation_menus USING btree (reservation_id, menu_id);
+
+
+--
+-- Name: reservation_query_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reservation_query_index ON public.reservations USING btree (user_id, shop_id, aasm_state, menu_id, start_time, ready_time);
 
 
 --
@@ -3029,6 +3023,13 @@ CREATE INDEX reservation_setting_menus_index ON public.reservation_setting_menus
 --
 
 CREATE INDEX reservation_staff_index ON public.reservation_staffs USING btree (reservation_id, menu_id, staff_id, prepare_time, work_start_at, work_end_at, ready_time);
+
+
+--
+-- Name: reservation_user_shop_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX reservation_user_shop_index ON public.reservations USING btree (user_id, shop_id, deleted_at);
 
 
 --
@@ -3220,6 +3221,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191211162028'),
 ('20191224063600'),
 ('20191230084048'),
-('20200227084346');
+('20200227084346'),
+('20200302082812');
 
 

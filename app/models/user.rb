@@ -45,6 +45,7 @@ class User < ApplicationRecord
   has_one :access_provider, dependent: :destroy
   has_one :profile, dependent: :destroy
   has_one :subscription, dependent: :destroy
+  has_many :reservations, -> { active }
   has_many :shops, -> { active }
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
@@ -177,10 +178,10 @@ class User < ApplicationRecord
   private
 
   def today_reservations
-    Reservation.where(shop_id: shop_ids, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+    reservations.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
   end
 
   def total_reservations
-    Reservation.where(shop_id: shop_ids).active
+    reservations.active
   end
 end
