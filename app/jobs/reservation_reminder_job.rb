@@ -2,9 +2,7 @@ class ReservationReminderJob < ApplicationJob
   queue_as :default
 
   def perform(reservation)
-    reservation.customers.each do |customer|
-      next unless customer.reminder_permission
-
+    reservation.customers.where(reminder_permission: true).each do |customer|
       email = customer.with_google_contact.primary_email&.value&.address
 
       if email.present?
