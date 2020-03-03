@@ -298,7 +298,7 @@ module Booking
 
         if customer.persisted? && reservation
           # XXX: Use the phone_number using at booking time
-          if phone_number.present?
+          if phone_number.present? && customer.user.subscription.charge_required
             ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
           end
 
