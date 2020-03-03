@@ -10,7 +10,7 @@ class ReservationConfirmationJob < ApplicationJob
 
     phone_number = customer.with_google_contact.primary_phone&.value
 
-    if phone_number.present?
+    if phone_number.present? && customer.user.subscription.charge_required
       shop = reservation.shop
       message = I18n.t(
         "customer.notifications.sms.confimation",
