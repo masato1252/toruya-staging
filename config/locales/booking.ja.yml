@@ -14,7 +14,7 @@ ja:
     email: メール
     phone_number: 携帯電話
     remember_me: 次回から入力を省略する
-    reminder_desc: 携帯で通知を受け取る
+    reminder_desc: 予約の通知を受け取る
     confirm_customer_info: 顧客情報を確認する
     confirm_reservation: 仮予約を確定する
     not_me: 様でない場合はこちら
