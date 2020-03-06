@@ -128,6 +128,13 @@ class CustomersController < DashboardController
     head :ok
   end
 
+  def toggle_reminder_premission
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    customer.update(reminder_permission: !customer.reminder_permission)
+
+    head :ok
+  end
+
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.

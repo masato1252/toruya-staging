@@ -53,6 +53,7 @@ class CustomerInfoView extends React.Component {
         <CustomerBasicInfo
           customer={this.props.customer}
           groupBlankOption={this.props.groupBlankOption}
+          switchCustomerReminderPermission={this.props.switchCustomerReminderPermission}
         />
         <div id="tabs" className="tabs">
           <a href="#" className="" onClick={this.props.switchReservationMode}>利用履歴</a>

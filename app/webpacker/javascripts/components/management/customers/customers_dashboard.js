@@ -414,6 +414,34 @@ class CustomersDashboard extends React.Component {
     }
   };
 
+  switchCustomerReminderPermission = (event) => {
+    event.preventDefault();
+    if (this.state.customer.id) {
+      axios({
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": Rails.csrfToken()
+        },
+        url: this.props.toggleReminderPremissionUserCustomersPath,
+        data: { id: this.state.customer.id },
+        responseType: "json"
+      })
+    }
+    let newCustomers = this.state.customers.slice()
+
+    newCustomers.forEach((customer) => {
+      if (customer.id === this.state.customer.id) {
+        customer.reminderPermission = !customer.reminderPermission
+      }
+    });
+
+    this.setState((prevState) => ({
+      customer: { ...this.state.customer, reminderPermission: !this.state.customer.reminderPermission },
+      updated_customer: { ...this.state.updated_customer, reminderPermission: !this.state.updated_customer.reminderPermission },
+      customers: newCustomers
+    }))
+  }
+
   switchProcessing = (callback) => {
     this.setState({ processing: true }, function() {
       if (callback) { callback(); }
@@ -454,6 +482,7 @@ class CustomersDashboard extends React.Component {
           ref={(c) => this.CustomerReservationsView = c }
           customer={this.state.customer}
           switchReservationMode={this.switchReservationMode}
+          switchCustomerReminderPermission={this.switchCustomerReminderPermission}
           customerReservationsPath={this.props.customerReservationsPath}
           switchProcessing={this.switchProcessing}
           forceStopProcessing={this.forceStopProcessing}
@@ -536,6 +565,7 @@ class CustomersDashboard extends React.Component {
         <CustomerInfoView
           customer={this.state.updated_customer}
           switchEditMode={this.switchEditMode}
+          switchCustomerReminderPermission={this.switchCustomerReminderPermission}
           switchReservationMode={this.switchReservationMode}
           addressLabel={this.props.addressLabel}
           phoneLabel={this.props.phoneLabel}
