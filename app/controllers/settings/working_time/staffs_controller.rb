@@ -27,7 +27,8 @@ class Settings::WorkingTime::StaffsController < SettingsController
 
       @full_time_schedules = @staff.business_schedules.full_time
       @wdays_business_schedules_by_shop = @staff.business_schedules.part_time.order(:day_of_week).group_by(&:shop_id)
-      @opened_custom_schedules_by_shop = @staff.custom_schedules.future.opened.order(:start_time).group_by(&:shop_id)
+      # XXX: allow admin could see all the schedules
+      @opened_custom_schedules_by_shop = @staff.custom_schedules.opened.order(start_time: :desc).group_by(&:shop_id)
     else
       shop_staff = ShopStaff.find_by(shop: shop, staff: @staff)
 
