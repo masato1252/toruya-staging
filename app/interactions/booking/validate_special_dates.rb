@@ -29,8 +29,7 @@ module Booking
           special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
           special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
           special_date_time_length = special_date_end_at - special_date_start_at
-          basic_required_minutes = longest_option.minutes + longest_interval_time
-          long_required_minutes = longest_option.minutes + longest_interval_time * 2
+          basic_required_minutes = longest_option.minutes
           special_time_range = "#{I18n.l(special_date_start_at)} ~ #{I18n.l(special_date_end_at, format: :hour_minute)}"
 
           if special_date_start_at < shop_start_at ||
@@ -42,30 +41,11 @@ module Booking
               time_range: special_time_range,
               required_time: basic_required_minutes
             }
-          elsif special_date_start_at == shop_start_at
-            if special_date_time_length < basic_required_minutes.minutes
-              not_enough_time_special_dates << {
-                time_range: special_time_range,
-                required_time: basic_required_minutes
-              }
-            end
-          elsif special_date_start_at.advance(minutes: long_required_minutes) > shop_closed_at
-            # near shop close case
-            required_time_length = shop_closed_at - special_date_start_at
-
-            if special_date_time_length < required_time_length
-              not_enough_time_special_dates << {
-                time_range: special_time_range,
-                required_time: required_time_length / 3_600
-              }
-            end
-          else
-            if special_date_time_length < long_required_minutes.minutes
-              not_enough_time_special_dates << {
-                time_range: special_time_range,
-                required_time: long_required_minutes
-              }
-            end
+          elsif special_date_time_length < basic_required_minutes.minutes
+            not_enough_time_special_dates << {
+              time_range: special_time_range,
+              required_time: basic_required_minutes
+            }
           end
         else
           invalid_special_dates << special_date

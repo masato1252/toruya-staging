@@ -81,23 +81,13 @@ RSpec.describe Booking::ValidateSpecialDates do
       end
     end
 
-    # the reservation starts at 9:00 AM, required time 70 (9:00 to 10:09) => Failed
-    # the reservation starts at 9:00 AM, required time 70 (9:00 to 10:10) => OK
-    # the reservation starts at 9:01 AM, required time 80 (9:01 to 10:20) => Failed
-    # the reservation starts at 9:01 AM, required time 80 (9:01 to 10:21) => OK
-    # the reservation starts at 3:40 PM, required time 80 (3:40 to 5:00) => OK
-    # the reservation starts at 3:41 PM, required time 79 (3:41 to 5:00) => OK
-    # the reservation starts at 3:49 PM, required time 71 (3:49 to 5:00) => OK
-    # the reservation starts at 3:50 PM, required time 70 (3:50 to 5:00) => OK
+    # the reservation starts at 9:00 AM, required time 60 (9:00 to 9:59) => Failed
+    # the reservation starts at 9:00 AM, required time 60 (9:00 to 10:00) => OK
+    # the reservation starts at 4:00 PM, required time 60 (16:00 to 17:00) => OK
     [
-      {  start_at: "09:00", end_at: "10:09", required_time: 70, valid: false },
-      {  start_at: "09:00", end_at: "10:10", required_time: 70, valid: true },
-      {  start_at: "09:01", end_at: "10:20", required_time: 80, valid: false },
-      {  start_at: "09:01", end_at: "10:21", required_time: 80, valid: true },
-      {  start_at: "15:40", end_at: "17:00", required_time: 80, valid: true },
-      {  start_at: "15:41", end_at: "17:00", required_time: 79, valid: true },
-      {  start_at: "15:49", end_at: "17:00", required_time: 71, valid: true },
-      {  start_at: "15:50", end_at: "17:00", required_time: 70, valid: true },
+      {  start_at: "09:00", end_at: "09:59", required_time: 60, valid: false },
+      {  start_at: "09:00", end_at: "10:00", required_time: 60, valid: true },
+      {  start_at: "16:00", end_at: "17:00", required_time: 60, valid: true }
     ].each do |option|
       it_behaves_like "validate time length", option[:start_at], option[:end_at], option[:required_time], option[:valid]
     end
