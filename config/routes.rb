@@ -143,7 +143,6 @@ Rails.application.routes.draw do
         collection do
           get :validate_special_dates
           get :business_time
-          get :booking_times
           get :booking_options
         end
       end
