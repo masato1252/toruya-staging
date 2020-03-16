@@ -41,6 +41,7 @@ class BookingPagesController < ActionController::Base
 
         outcome = Booking::AvailableBookingTimes.run(
           shop: @booking_page.shop,
+          booking_page: booking_page,
           special_dates: booking_dates,
           booking_option_ids: @booking_page.booking_option_ids,
           interval: @booking_page.interval,
@@ -76,34 +77,27 @@ class BookingPagesController < ActionController::Base
       customer_info: JSON.parse(params[:customer_info]),
       present_customer_info: JSON.parse(params[:present_customer_info])
     )
-    result = outcome.result
-    customer = result[:customer]
 
-    if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-      cookies[:booking_customer_id] = customer&.id
-      cookies[:booking_customer_phone_number] = params[:customer_phone_number]
-    else
-      cookies.delete :booking_customer_id
-      cookies.delete :booking_customer_phone_number
-    end
+    if outcome.valid?
+      result = outcome.result
+      customer = result[:customer]
 
-    if result[:reservation] && customer&.persisted?
+      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
+        cookies[:booking_customer_id] = customer&.id
+        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+      else
+        cookies.delete :booking_customer_id
+        cookies.delete :booking_customer_phone_number
+      end
+
       render json: {
         status: "successful"
       }
-    elsif JSON.parse(params[:customer_info])&.present?
-      render json: {
-        status: "failed",
-        errors: {
-          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
-        }
-      }
     else
       render json: {
         status: "failed",
-        customer_info: customer&.persisted? ? view_context.customer_info_as_json(customer) : {},
         errors: {
-          message: customer&.persisted? ? I18n.t("booking_page.message.booking_failed_messsage_html") : I18n.t("booking_page.message.booking_unexpected_failed_message")
+          message: I18n.t("booking_page.message.booking_unexpected_failed_message")
         }
       }
     end
@@ -154,6 +148,7 @@ class BookingPagesController < ActionController::Base
 
     outcome = Booking::Calendar.run(
       shop: booking_page.shop,
+      booking_page: booking_page,
       date_range: month_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       special_dates: special_dates,
@@ -202,6 +197,7 @@ class BookingPagesController < ActionController::Base
 
     outcome = Booking::AvailableBookingTimes.run(
       shop: booking_page.shop,
+      booking_page: booking_page,
       special_dates: booking_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       interval: booking_page.interval,

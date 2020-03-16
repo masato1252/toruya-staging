@@ -3,6 +3,7 @@ module Booking
     include ::Booking::SharedMethods
 
     object :shop
+    object :booking_page
     object :date_range, class: Range
     # booking_option_ids
     # ["1"]
@@ -83,7 +84,7 @@ module Booking
               break
             end
 
-            loop_for_reserable_spot(shop, booking_option, Date.parse(date), booking_start_at, booking_end_at, overbooking_restriction, false) do
+            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: Date.parse(date), booking_start_at: booking_start_at, booking_end_at: booking_end_at, overbooking_restriction: overbooking_restriction) do
               throw :next_working_date, date
             end
 

@@ -1224,53 +1224,63 @@ class BookingReservationForm extends React.Component {
 
     this.bookingReserationLoading = "loading";
 
-    const response = await axios({
-      method: "POST",
-      url: this.props.path.save,
-      params: _.merge(
-        { authenticity_token: Rails.csrfToken() },
-        _.pick(
-          this.booking_reservation_form_values,
-          "booking_option_id",
-          "booking_date",
-          "booking_at",
-          "customer_first_name",
-          "customer_last_name",
-          "customer_phonetic_last_name",
-          "customer_phonetic_first_name",
-          "customer_phone_number",
-          "customer_email",
-          "customer_info",
-          "present_customer_info",
-          "remember_me",
-          "reminder_permission"
+    axios.interceptors.response.use(function (response) {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      return response;
+    }, function (error) {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      console.log(error)
+      return Promise.reject(error);
+    });
+
+    try {
+      const response = await axios({
+        method: "POST",
+        url: this.props.path.save,
+        params: _.merge(
+          { authenticity_token: Rails.csrfToken() },
+          _.pick(
+            this.booking_reservation_form_values,
+            "booking_option_id",
+            "booking_date",
+            "booking_at",
+            "customer_first_name",
+            "customer_last_name",
+            "customer_phonetic_last_name",
+            "customer_phonetic_first_name",
+            "customer_phone_number",
+            "customer_email",
+            "customer_info",
+            "present_customer_info",
+            "remember_me",
+            "reminder_permission"
+          ),
         ),
-      ),
-      responseType: "json"
-    })
+        responseType: "json"
+      })
 
-    this.bookingReserationLoading = null;
+      this.bookingReserationLoading = null;
 
-    const { status, customer_info, errors } = response.data;
+      const { status, errors } = response.data;
 
-    if (status === "successful") {
-      this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
-    }
-    else if (status === "failed") {
-      if (customer_info && Object.keys(customer_info).length) {
-        this.booking_reservation_form.change("booking_reservation_form[customer_info]", customer_info)
-        this.booking_reservation_form.change("booking_reservation_form[present_customer_info]", customer_info)
-        this.booking_reservation_form.change("booking_reservation_form[found_customer]", true)
+      if (status === "successful") {
+        this.booking_reservation_form.change("booking_reservation_form[is_done]", true)
       }
+      else if (status === "failed") {
+        this.booking_reservation_form.change("booking_reservation_form[booking_failed]", true)
 
-      this.booking_reservation_form.change("booking_reservation_form[booking_failed]", true)
-
-      if (errors) {
-        this.booking_reservation_form.change("booking_reservation_form[booking_failed_message]", errors.message)
-        setTimeout(() => this.scrollToTarget("footer"), 200)
+        if (errors) {
+          this.booking_reservation_form.change("booking_reservation_form[booking_failed_message]", errors.message)
+          setTimeout(() => this.scrollToTarget("footer"), 200)
+        }
+      }
+      else if (status === "invalid_authenticity_token") {
+        location.reload()
       }
     }
-    else if (status === "invalid_authenticity_token") {
+    catch(error) {
       location.reload()
     }
   };

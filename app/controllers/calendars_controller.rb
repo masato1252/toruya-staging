@@ -18,14 +18,16 @@ class CalendarsController < DashboardController
 
   def booking_page_settings
     shop = current_user.shops.find_by(id: params[:shop_id])
+    overbooking_restriction = ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction])
 
     outcome = Booking::Calendar.run(
       shop: shop,
+      booking_page: BookingPage.new(overbooking_restriction: overbooking_restriction),
       date_range: month_dates,
       booking_option_ids: params[:booking_option_ids],
       special_dates: ActiveModel::Type::Boolean.new.cast(params[:had_special_date]) ? params[:special_dates] : [],
       interval: params[:interval],
-      overbooking_restriction: ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction])
+      overbooking_restriction: overbooking_restriction
     )
 
     if outcome.valid?

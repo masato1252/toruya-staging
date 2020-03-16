@@ -34,12 +34,6 @@ class BookingPageSettings extends React.Component {
         }
       },
       {
-        field: /had_special_date|shop_id|interval|overbooking_restriction|special_dates|options/, // when a field matching this pattern changes...
-        updates: async (value, name, allValues) => {
-          return await this.calculateBookingTimes(allValues);
-        }
-      },
-      {
         field: /shop_id/,
         updates: async (value, name, allValues) => {
           return await this.fetchAvailableBookingOptions(allValues);
@@ -49,14 +43,7 @@ class BookingPageSettings extends React.Component {
   };
 
   componentDidMount = () => {
-    this.initBookingTimes()
     this.initAvailableBookingOptions()
-  }
-
-  initBookingTimes = async () => {
-    const booking_times = await this.calculateBookingTimes(this.booking_page_settings_values);
-
-    this.booking_page_settings_form.change("booking_page[booking_times]", booking_times["booking_page[booking_times]"])
   }
 
   renderNameFields = () => {
@@ -389,47 +376,6 @@ class BookingPageSettings extends React.Component {
         </div>
       </div>
     );
-  }
-
-  calculateBookingTimes = async (allValues) => {
-    const { shop_id, had_special_date, special_dates, options, overbooking_restriction, interval } = allValues.booking_page;
-
-    if (this.calculateBookingTimesCall) {
-      this.calculateBookingTimesCall.cancel();
-    }
-    this.calculateBookingTimesCall = axios.CancelToken.source();
-
-    if (!(shop_id &&
-      had_special_date === "true" && special_dates && special_dates.length &&
-      options && options.length == 1)) {
-      return {
-        "booking_page[booking_times]": []
-      }
-    }
-
-    const response = await axios({
-      method: "GET",
-      url: this.props.path.booking_times,
-      params: {
-        shop_id: shop_id,
-        special_dates: special_dates,
-        booking_option_ids: options.map((option) => option.id),
-        interval: interval,
-        overbooking_restriction: overbooking_restriction
-      },
-      responseType: "json",
-      cancelToken: this.calculateBookingTimesCall.token
-    })
-
-    if (!response.data.booking_times.length) {
-      return {
-        "booking_page[booking_times]": []
-      }
-    }
-
-    return {
-      "booking_page[booking_times]": response.data.booking_times
-    }
   }
 
   prefillBusinessTime = async (allValues) => {

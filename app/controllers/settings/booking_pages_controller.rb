@@ -81,25 +81,6 @@ class Settings::BookingPagesController < SettingsController
     end
   end
 
-  def booking_times
-    outcome = Booking::AvailableBookingTimes.run(
-      shop: super_user.shops.find(params[:shop_id]),
-      special_dates: params[:special_dates],
-      booking_option_ids: params[:booking_option_ids],
-      interval: params[:interval],
-      overbooking_restriction: ActiveModel::Type::Boolean.new.cast(params[:overbooking_restriction]),
-      limit: 4
-    )
-
-    available_booking_times = outcome.result.keys.map { |time| I18n.l(time, format: :hour_minute) }.uniq.slice(0, 4)
-
-    if outcome.valid?
-      render json: { booking_times: available_booking_times }
-    else
-      render json: { booking_times: [] }
-    end
-  end
-
   def booking_options
     options = BookingPages::AvailableBookingOptions.run!(
       shop: super_user.shops.find(params[:shop_id])
