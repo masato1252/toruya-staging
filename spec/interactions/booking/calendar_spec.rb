@@ -7,12 +7,14 @@ RSpec.describe Booking::Calendar do
   end
 
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
+  let(:booking_page) { FactoryBot.create(:booking_page) }
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
   let(:date_range) { Date.current.beginning_of_month..Date.current.end_of_month  }
   let(:args) do
     {
       shop: shop,
+      booking_page: booking_page,
       date_range: date_range,
     }
   end
