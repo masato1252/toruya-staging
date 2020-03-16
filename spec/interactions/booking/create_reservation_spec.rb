@@ -172,12 +172,13 @@ RSpec.describe Booking::CreateReservation do
           }
           args.merge!(customer_info_hash)
 
-          result = outcome.result
-          customer = result[:customer]
-          reservation = result[:reservation]
+          expect {
+            outcome
+          }.to not_change {
+            user.customers.count
+          }
 
-          expect(customer).to be_nil
-          expect(reservation).to be_nil
+          expect(outcome).to be_invalid
         end
       end
     end
@@ -324,15 +325,11 @@ RSpec.describe Booking::CreateReservation do
                 present_reservation.reload.customers.count
               }.and not_change {
                 present_reservation.aasm_state
+              }.and not_change {
+                user.customers.count
               }
 
-              result = outcome.result
-              customer = result[:customer]
-              reservation = result[:reservation]
-
-              expect(customer).to eq(customer)
-              expect(reservation).not_to eq(present_reservation)
-              expect(reservation).to be_nil
+              expect(outcome).to be_invalid
             end
           end
         end

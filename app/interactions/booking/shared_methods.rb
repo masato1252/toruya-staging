@@ -1,11 +1,18 @@
 module Booking
   module SharedMethods
-    def loop_for_reserable_spot(shop, booking_option, date, booking_start_at, booking_end_at, overbooking_restriction, overlap_restriction = true)
+    def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, booking_end_at:, overbooking_restriction:, overlap_restriction: true)
       # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
       unless Rails.env.test?
         return if date < Subscription.today
+      end
+
+      if same_content_reservation = matched_same_content_reservation(shop: shop, booking_page: booking_page, booking_start_at: booking_start_at, booking_option: booking_option)
+        # yield menus, staffs, reservation(if it is existing)
+        yield booking_option.menus, same_content_reservation.reservation_staffs.map { |reservation_staff|
+          { staff_id: reservation_staff.staff_id, state: reservation_staff.state }
+        }, same_content_reservation
       end
 
       booking_option.possible_menus_order_groups.each do |candidate_booking_option_menus_group|
@@ -60,7 +67,7 @@ module Booking
                   skip_after_interval_time_validation: skip_after_interval_time_validation
                 )
 
-                Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}")
+                Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
 
                 if reserable_outcome.valid?
                   valid_menus << {
@@ -74,7 +81,7 @@ module Booking
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
-                    yield valid_menus, candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } }
+                    yield valid_menus, candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } }, nil
                   end
 
                   # XXX: There is staff could handle this menu, so try next menu
@@ -121,6 +128,80 @@ module Booking
           end
         end
       end
+    end
+
+    def matched_same_content_reservation(shop:, booking_page:, booking_start_at:, booking_option:)
+      reservation = nil
+
+      Reservation.where(
+        shop: shop,
+        start_time: booking_start_at,
+      ).each do |same_time_reservation|
+        same_time_reservation.with_lock do
+          if booking_option.menu_restrict_order
+            if booking_option.menu_relations.order("priority").pluck(:menu_id, :required_time) != same_time_reservation.reservation_menus.pluck(:menu_id, :required_time)
+              next
+            end
+          else
+            if booking_option.menu_relations.order("priority").pluck(:menu_id, :required_time).sort != same_time_reservation.reservation_menus.pluck(:menu_id, :required_time).sort
+              next
+            end
+          end
+
+          menus_count = same_time_reservation.reservation_menus.count
+          select_sql = <<-SELECT_SQL
+              reservation_staffs.menu_id,
+              max(work_start_at) as work_start_at,
+              max(work_end_at) as work_end_at,
+              array_agg(staff_id) as staff_ids,
+              max(reservation_menus.position) as position
+          SELECT_SQL
+
+          same_time_reservation
+            .reservation_staffs
+            .order_by_menu_position
+            .select(select_sql).group("reservation_staffs.menu_id, reservation_menus.position").each.with_index do |reservation_staff_properties, index|
+            # [
+            #   <ReservationStaff:0x00007fcd262ba278> {
+            #     "id" => nil,
+            #     "work_start_at" => Fri, 10 Apr 2015 13:00:00 JST +09:00,
+            #     "work_end_at" => Fri, 10 Apr 2015 15:30:00 JST +09:00,
+            #     "staff_ids" => [
+            #       2
+            #     ],
+            #     "menu_id" => 1,
+            #     "position" => 1
+            #   }
+            # ]
+            skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
+            skip_after_interval_time_validation = (index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
+
+            present_reservable_reservation_outcome = Reservable::Reservation.run(
+              shop: shop,
+              date: booking_start_at.to_date,
+              start_time: reservation_staff_properties.work_start_at,
+              end_time: reservation_staff_properties.work_end_at,
+              menu_id: reservation_staff_properties.menu_id,
+              menu_required_time: booking_option.booking_option_menus.find_by(menu_id: reservation_staff_properties.menu_id).required_time,
+              staff_ids: reservation_staff_properties.staff_ids,
+              reservation_id: same_time_reservation.id,
+              number_of_customer: same_time_reservation.count_of_customers + 1,
+              overbooking_restriction: booking_page.overbooking_restriction,
+              skip_before_interval_time_validation: skip_before_interval_time_validation,
+              skip_after_interval_time_validation: skip_after_interval_time_validation
+            )
+
+            if present_reservable_reservation_outcome.valid?
+              reservation = same_time_reservation
+              break
+            else
+              next
+            end
+          end
+        end
+      end
+
+      reservation
     end
   end
 end

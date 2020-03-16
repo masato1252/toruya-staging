@@ -121,121 +121,22 @@ module Booking
 
         # XXX: Don't have to find a available reservation, since customer is invalid
         if customer.new_record?
-          return {
-            customer: nil,
-            reservation: nil
-          }
-        end
-
-        Reservation.where(
-          shop: shop,
-          start_time: booking_start_at,
-        ).each do |same_time_reservation|
-          same_time_reservation.with_lock do
-            if booking_option.menu_restrict_order
-              if booking_option.menu_relations.order("priority").pluck(:menu_id, :required_time) != same_time_reservation.reservation_menus.pluck(:menu_id, :required_time)
-                next
-              end
-            else
-              if booking_option.menu_relations.order("priority").pluck(:menu_id, :required_time).sort != same_time_reservation.reservation_menus.pluck(:menu_id, :required_time).sort
-                next
-              end
-            end
-
-            menus_count = same_time_reservation.reservation_menus.count
-            select_sql = <<-SELECT_SQL
-              reservation_staffs.menu_id,
-              max(work_start_at) as work_start_at,
-              max(work_end_at) as work_end_at,
-              array_agg(staff_id) as staff_ids,
-              max(reservation_menus.position) as position
-            SELECT_SQL
-
-            same_time_reservation
-              .reservation_staffs
-              .order_by_menu_position
-              .select(select_sql).group("reservation_staffs.menu_id, reservation_menus.position").each.with_index do |reservation_staff_properties, index|
-              # [
-              #   <ReservationStaff:0x00007fcd262ba278> {
-              #     "id" => nil,
-              #     "work_start_at" => Fri, 10 Apr 2015 13:00:00 JST +09:00,
-              #     "work_end_at" => Fri, 10 Apr 2015 15:30:00 JST +09:00,
-              #     "staff_ids" => [
-              #       2
-              #     ],
-              #     "menu_id" => 1,
-              #     "position" => 1
-              #   }
-              # ]
-              skip_before_interval_time_validation = index != 0 # XXX: Only first menu need to validate before interval time
-              skip_after_interval_time_validation = (index != (menus_count - 1)) # XXX: Only last menu need to validate after interval time
-
-              present_reservable_reservation_outcome = Reservable::Reservation.run(
-                shop: shop,
-                date: date,
-                start_time: reservation_staff_properties.work_start_at,
-                end_time: reservation_staff_properties.work_end_at,
-                menu_id: reservation_staff_properties.menu_id,
-                menu_required_time: booking_option.booking_option_menus.find_by(menu_id: reservation_staff_properties.menu_id).required_time,
-                staff_ids: reservation_staff_properties.staff_ids,
-                reservation_id: same_time_reservation.id,
-                number_of_customer: same_time_reservation.count_of_customers + 1,
-                overbooking_restriction: booking_page.overbooking_restriction,
-                skip_before_interval_time_validation: skip_before_interval_time_validation,
-                skip_after_interval_time_validation: skip_after_interval_time_validation
-              )
-
-              if present_reservable_reservation_outcome.valid?
-                if reservation_customer = same_time_reservation.reservation_customers.find_by(customer: customer)
-                  reservation_customer.update(
-                    booking_page_id: booking_page.id,
-                    booking_option_id: booking_option_id,
-                    booking_amount_cents: booking_option.amount.fractional,
-                    booking_amount_currency: booking_option.amount.currency.to_s,
-                    tax_include: booking_option.tax_include,
-                    booking_at: Time.current,
-                    details: {
-                      new_customer_info: new_customer_info.attributes.compact,
-                    }
-                  )
-                else
-                  same_time_reservation.reservation_customers.create(
-                    customer_id: customer.id,
-                    state: "pending",
-                    booking_page_id: booking_page.id,
-                    booking_option_id: booking_option_id,
-                    booking_amount_cents: booking_option.amount.fractional,
-                    booking_amount_currency: booking_option.amount.currency.to_s,
-                    tax_include: booking_option.tax_include,
-                    booking_at: Time.current,
-                    details: {
-                      new_customer_info: new_customer_info.attributes.compact,
-                    }
-                  )
-                  same_time_reservation.count_of_customers = same_time_reservation.reservation_customers.active.count
-                  same_time_reservation.save
-                end
-
-                reservation = same_time_reservation
-                break
-              else
-                next
-              end
-            end
-          end
+          errors.merge!(customer.errors)
+          raise ActiveRecord::Rollback
         end
 
         catch :booked_reservation do
           unless reservation
             catch :next_working_date do
               loop_for_reserable_spot(
-                shop,
-                booking_option,
-                date,
-                booking_start_at,
-                booking_end_at,
-                booking_page.overbooking_restriction
-              ) do |valid_menus_spots, staff_states|
+                shop: shop,
+                booking_page: booking_page,
+                booking_option: booking_option,
+                date: date,
+                booking_start_at: booking_start_at,
+                booking_end_at: booking_end_at,
+                overbooking_restriction: booking_page.overbooking_restriction
+              ) do |valid_menus_spots, staff_states, same_content_reservation|
                 # valid_menus_spots likes
                 # [
                 #   {
@@ -252,6 +153,7 @@ module Booking
                 #     ],
                 #   }
                 # ]
+                #
                 # staff_states
                 # [
                 #   {
@@ -259,12 +161,24 @@ module Booking
                 #     state: pending/accepted
                 #   },
                 # ]
-                reservation_outcome = Reservations::Save.run(
-                  reservation: shop.reservations.new,
-                  params: {
-                    start_time: booking_start_at,
-                    end_time: booking_end_at,
-                    customers_list: [{
+                #
+                # same_content_reservation
+                # A reservation active_record object
+                if same_content_reservation
+                  if reservation_customer = same_content_reservation.reservation_customers.find_by(customer: customer)
+                    reservation_customer.update(
+                      booking_page_id: booking_page.id,
+                      booking_option_id: booking_option_id,
+                      booking_amount_cents: booking_option.amount.fractional,
+                      booking_amount_currency: booking_option.amount.currency.to_s,
+                      tax_include: booking_option.tax_include,
+                      booking_at: Time.current,
+                      details: {
+                        new_customer_info: new_customer_info.attributes.compact,
+                      }
+                    )
+                  else
+                    same_content_reservation.reservation_customers.create(
                       customer_id: customer.id,
                       state: "pending",
                       booking_page_id: booking_page.id,
@@ -276,17 +190,45 @@ module Booking
                       details: {
                         new_customer_info: new_customer_info.attributes.compact,
                       }
-                    }],
-                    menu_staffs_list: valid_menus_spots,
-                    staff_states: staff_states,
-                    memo: "",
-                    with_warnings: false
-                  }
-                )
+                    )
+                    same_content_reservation.count_of_customers = same_content_reservation.reservation_customers.active.count
+                    same_content_reservation.save
+                  end
 
-                if reservation_outcome.valid?
-                  reservation = reservation_outcome.result
+                  reservation = same_content_reservation
                   throw :booked_reservation
+                else
+                  reservation_outcome = Reservations::Save.run(
+                    reservation: shop.reservations.new,
+                    params: {
+                      start_time: booking_start_at,
+                      end_time: booking_end_at,
+                      customers_list: [{
+                        customer_id: customer.id,
+                        state: "pending",
+                        booking_page_id: booking_page.id,
+                        booking_option_id: booking_option_id,
+                        booking_amount_cents: booking_option.amount.fractional,
+                        booking_amount_currency: booking_option.amount.currency.to_s,
+                        tax_include: booking_option.tax_include,
+                        booking_at: Time.current,
+                        details: {
+                          new_customer_info: new_customer_info.attributes.compact,
+                        }
+                      }],
+                      menu_staffs_list: valid_menus_spots,
+                      staff_states: staff_states,
+                      memo: "",
+                      with_warnings: false
+                    }
+                  )
+
+                  if reservation_outcome.valid?
+                    reservation = reservation_outcome.result
+                    throw :booked_reservation
+                  else
+                    errors.merge!(reservation.errors)
+                  end
                 end
               end
             end
@@ -316,6 +258,9 @@ module Booking
             booking_page: booking_page,
             booking_option: booking_option,
           ).shop_owner_reservation_booked_notification.deliver_later
+        else
+          errors.add(:base, :reservation_something_wrong)
+          raise ActiveRecord::Rollback
         end
 
         {
