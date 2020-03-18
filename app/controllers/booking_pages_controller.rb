@@ -41,7 +41,7 @@ class BookingPagesController < ActionController::Base
 
         outcome = Booking::AvailableBookingTimes.run(
           shop: @booking_page.shop,
-          booking_page: booking_page,
+          booking_page: @booking_page,
           special_dates: booking_dates,
           booking_option_ids: @booking_page.booking_option_ids,
           interval: @booking_page.interval,
