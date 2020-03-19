@@ -3,9 +3,16 @@ import clipboardCopy from "clipboard-copy";
 
 export default class ClipboardController extends Controller {
   clipboardSuccessHandler = (event) => {
-    $(this.element).tooltip({
-      title: this.popup_text || "Copied!"
-    }).tooltip("show")
+    const tooltip = $(this.element).tooltip({
+      trigger: "manual",
+      title: this.popup_text || "Copied!",
+    })
+
+    tooltip.tooltip("show")
+
+    setTimeout(function() {
+      tooltip.tooltip("hide")
+    }, 2000);
   };
 
   copy = () => {
