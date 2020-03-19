@@ -24,7 +24,7 @@ class CustomerBasicInfo extends React.Component {
           <dd>
             {
               this.props.customer.detailsReadable && this.props.customer.id ? (
-                <a href="#" onClick={this.props.switchCustomerReminderPermission} className="BTNtarco">
+                <a href="#" onClick={this.props.switchCustomerReminderPermission} className="BTNtarco" data-id="customer-reminder-toggler">
                   <i className={`customer-reminder-permission fa fa-bell fa-2x ${this.props.customer.reminderPermission ? "reminder-on" : ""}`} aria-hidden="true" title="Bell"></i>
                 </a>
               ) : null

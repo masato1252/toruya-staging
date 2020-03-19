@@ -132,7 +132,7 @@ class CustomersController < DashboardController
     customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
     customer.update(reminder_permission: !customer.reminder_permission)
 
-    head :ok
+    render json: { reminder_permission: customer.reminder_permission }
   end
 
   private

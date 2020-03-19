@@ -416,6 +416,11 @@ class CustomersDashboard extends React.Component {
 
   switchCustomerReminderPermission = (event) => {
     event.preventDefault();
+
+    if (this.state.customer.reminderPermission) {
+      if (!confirm(this.props.i18n.reminderConfirmationMessage)) return;
+    }
+
     if (this.state.customer.id) {
       axios({
         method: "POST",
@@ -425,6 +430,17 @@ class CustomersDashboard extends React.Component {
         url: this.props.toggleReminderPremissionUserCustomersPath,
         data: { id: this.state.customer.id },
         responseType: "json"
+      }).then((response) => {
+        const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
+          trigger: "manual",
+          title: `${this.props.i18n.reminderChangedMessage} ${response.data["reminder_permission"] ? "ON" : "OFF"}`
+        })
+
+        tooltip.tooltip("show")
+
+        setTimeout(function() {
+          tooltip.tooltip("destroy")
+        }, 2000);
       })
     }
     let newCustomers = this.state.customers.slice()
