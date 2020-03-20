@@ -19,6 +19,8 @@
 #
 
 class Menu < ApplicationRecord
+  NO_MAN_POWER_STAFF_NUMBER = 0
+
   include ReservationChecking
   include Helpers
 
@@ -93,6 +95,10 @@ class Menu < ApplicationRecord
           where("reservation_settings.day_type = ? and reservation_settings.nth_of_week = ? and
                ? = ANY(reservation_settings.days_of_week)", "monthly", start_time.week_of_month, "#{start_time.wday}")
       )
+  end
+
+  def no_manpower?
+    min_staffs_number == NO_MAN_POWER_STAFF_NUMBER
   end
 
   private

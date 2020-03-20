@@ -53,7 +53,7 @@ module Reservable
         errors.add(:menu_id, :time_not_enough, menu_id: menu_id)
       end
 
-      validate_interval_time if overlap_restriction
+      validate_interval_time if validate_overlap?
       validate_menu_schedules
       validate_seats_for_customers if overbooking_restriction
       validate_required_staffs
@@ -77,7 +77,7 @@ module Reservable
 
         validate_staffs_ability_for_customers(staff) if overbooking_restriction
         validate_other_shop_reservation(staff)
-        validate_same_shop_overlap_reservations(staff) if overlap_restriction
+        validate_same_shop_overlap_reservations(staff) if validate_overlap?
         validate_staff_ability(staff)
       end
     end
@@ -287,6 +287,10 @@ module Reservable
       if Array.wrap(staff_ids).uniq.size < menu.min_staffs_number
         errors.add(:menu_id, :lack_staffs, menu_id: menu_id)
       end
+    end
+
+    def validate_overlap?
+      overlap_restriction && !menu.no_manpower?
     end
 
     def shop_menu
