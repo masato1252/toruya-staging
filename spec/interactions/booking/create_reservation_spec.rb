@@ -2,10 +2,11 @@ require "rails_helper"
 
 RSpec.describe Booking::CreateReservation do
   before do
-    # Monday
-    Timecop.freeze(Time.zone.local(2019, 5, 13))
+    # Sunday, one day before booking date
+    Timecop.freeze(today)
   end
 
+  let(:today) { Time.zone.local(2019, 5, 12) }
   let(:business_schedule) { FactoryBot.create(:business_schedule) } # 9:00 ~ 17:00
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
@@ -86,6 +87,18 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer.details.new_customer_info).to eq({})
 
         expect(reservation_customer.booking_option).to eq(booking_option)
+      end
+
+      context "when today is 2019-05-13" do
+        # Default booking page limit day is 1, that means you couldn't book today, you have to book one day before the reservation day
+        let(:today) { Time.zone.local(2019, 5, 13) }
+
+        it "doesn't allow customers to book" do
+          args[:customer_info] = { "id": customer.id }
+          args[:present_customer_info] = { "id": customer.id }
+
+          expect(outcome).to be_invalid
+        end
       end
 
       context "when customer booking the same reservation" do

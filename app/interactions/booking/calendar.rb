@@ -27,30 +27,28 @@ module Booking
           special_dates.map do |special_date|
             # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
             JSON.parse(special_date)["start_at_date_part"]
-          end
+          end.select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
         else
           booking_options = compose(
             BookingOptions::Prioritize,
             booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
           )
 
+          available_working_dates = schedules[:working_dates].select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
+
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           if true || Rails.env.test?
-            schedules[:working_dates].map do |date|
+            available_working_dates.map do |date|
               test_available_booking_date(booking_options, date)
             end.compact
           else
             # XXX: Parallel doesn't work properly in test mode,
             # some data might be stay in transaction of test thread and would lost in test while using Parallel.
-            Parallel.map(schedules[:working_dates]) do |date|
+            Parallel.map(available_working_dates) do |date|
               test_available_booking_date(booking_options, date)
             end.compact
           end
         end
-
-      unless Rails.env.test?
-        available_booking_dates = available_booking_dates.select { |date| Date.parse(date) >= Subscription.today }
-      end
 
       [
         schedules,

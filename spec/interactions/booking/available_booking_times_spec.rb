@@ -2,10 +2,11 @@ require "rails_helper"
 
 RSpec.describe Booking::AvailableBookingTimes do
   before do
-    # Monday
-    Timecop.freeze(Time.zone.local(2019, 5, 13))
+    # Sunday, one day before booking date
+    Timecop.freeze(today)
   end
 
+  let(:today) { Time.zone.local(2019, 5, 12) }
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
   let(:shop) { business_schedule.shop }
   let(:user) { shop.user }
@@ -43,6 +44,17 @@ RSpec.describe Booking::AvailableBookingTimes do
       Time.zone.local(2019, 5, 13, 12) => [booking_option.id, booking_option2.id],
       Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
     })
+  end
+
+  context "when today is 2019-05-13" do
+    # Default booking page limit day is 1, that means you couldn't book today
+    let(:today) { Time.zone.local(2019, 5, 13) }
+
+    it "returns expected result" do
+      result = outcome.result
+
+      expect(result).to eq({ })
+    end
   end
 
   context "when there is existing reservation" do

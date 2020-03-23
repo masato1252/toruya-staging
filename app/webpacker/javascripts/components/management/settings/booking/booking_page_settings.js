@@ -358,6 +358,36 @@ class BookingPageSettings extends React.Component {
     )
   }
 
+  renderBookingLimitDayField = () => {
+    const { required_label, booking_limit_day_label, booking_limit_day_before, booking_limit_day_example_html } = this.props.i18n;
+
+    return (
+      <div>
+        <h3>{booking_limit_day_label}<strong>{required_label}</strong></h3>
+        <div className="formRow">
+          <dl>
+            <dd>
+              <div>
+                <Field name="booking_page[booking_limit_day]" component="select" className="interval-selector">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                </Field>
+                {booking_limit_day_before}
+              </div>
+              <div dangerouslySetInnerHTML={{ __html: booking_limit_day_example_html }} />
+            </dd>
+          </dl>
+        </div>
+      </div>
+    );
+  }
+
   renderBookingNoteField = () => {
     const { required_label, note_label, note_hint } = this.props.i18n;
 
@@ -569,6 +599,7 @@ class BookingPageSettings extends React.Component {
               {this.renderBookingOptionFields()}
               {this.renderBookingDateFields(values)}
               {this.renderBookingIntervalFields()}
+              {this.renderBookingLimitDayField()}
               {this.renderBookingPeriodFields()}
               {this.renderBookingOverlapRestrictionField()}
               {this.renderBookingNoteField()}
