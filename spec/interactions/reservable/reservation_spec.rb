@@ -761,6 +761,7 @@ RSpec.describe Reservable::Reservation do
       # validate_same_shop_overlap_reservations(staff)
       context "when some staffs already had overlap reservation in the same shop" do
         let!(:reservation) do
+          FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu2)
           FactoryBot.create(:reservation_setting, day_type: "business_days", menu: menu1)
           FactoryBot.create(:reservation, menus: [ menu1 ], shop: shop, staffs: [staff2], start_time: time_range.first, force_end_time: time_range.last)
         end
@@ -768,7 +769,7 @@ RSpec.describe Reservable::Reservation do
         it "is invalid" do
           outcome = Reservable::Reservation.run(
             shop: shop, date: date,
-            menu_id: menu1.id,
+            menu_id: menu2.id,
             menu_required_time: menu1.minutes,
             start_time: start_time,
             end_time: end_time,
@@ -777,7 +778,7 @@ RSpec.describe Reservable::Reservation do
 
           expect(outcome).to be_invalid
           other_shop_error = outcome.errors.details[:staff_ids].find { |error_hash| error_hash[:error] == :overlap_reservations }
-          expect(other_shop_error).to eq(error: :overlap_reservations, staff_id: staff2.id, menu_id: menu1.id)
+          expect(other_shop_error).to eq(error: :overlap_reservations, staff_id: staff2.id, menu_id: menu2.id)
         end
 
         context "when the existing reservation's menu min_staffs_number is 0" do
@@ -786,7 +787,24 @@ RSpec.describe Reservable::Reservation do
           it "is valid" do
             outcome = Reservable::Reservation.run(
               shop: shop, date: date,
-              menu_id: menu1.id,
+              menu_id: menu2.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time,
+              end_time: end_time,
+              staff_ids: [staff2.id]
+            )
+
+            expect(outcome).to be_valid
+          end
+        end
+
+        context "when the reservation's menu try to book its min_staffs_number is 0(no man power menu)" do
+          let(:menu2) { FactoryBot.create(:menu, :no_manpower, shop: shop, minutes: time_minutes) }
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu2.id,
               menu_required_time: menu1.minutes,
               start_time: start_time,
               end_time: end_time,
