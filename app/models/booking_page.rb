@@ -50,4 +50,8 @@ class BookingPage < ApplicationRecord
   def available_booking_start_date
     Subscription.today.advance(days: booking_limit_day)
   end
+
+  def ended?
+    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at)
+  end
 end
