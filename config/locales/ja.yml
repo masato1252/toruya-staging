@@ -89,8 +89,6 @@ ja:
     non_group_customers: "顧客台帳が設定されていない顧客情報が %{number} 個見つかりました。"
     next_non_group_customer: "台帳を設定"
     non_group_customers_alert_message: この顧客に顧客台帳を設定してください。
-  reminders:
-    sms: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています\n変更は%{shop_phone_number}まで"
   filter:
     modal:
       saved_filter:

@@ -232,6 +232,14 @@ class Customer < ApplicationRecord
     h.with_indifferent_access
   end
 
+  def email_address
+    with_google_contact.primary_email&.value&.address
+  end
+
+  def phone_number
+    with_google_contact.primary_phone&.value
+  end
+
   private
 
   def primary_value(values)
