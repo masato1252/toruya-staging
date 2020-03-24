@@ -10,7 +10,7 @@
 スタッフによる承認作業が完了いたしますまでお待ちください。
 
 ご予約日時：
-<%= I18n.l(@reservation.start_time, format: :date) %>
+<%= I18n.l(@reservation.start_time, format: :long_date) %>
 <%= I18n.l(@reservation.start_time, format: :time_only) %> ~ <%= I18n.l(@reservation.end_time, format: :time_only) %>
 
 予約価格：

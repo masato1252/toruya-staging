@@ -734,6 +734,7 @@ class BookingReservationForm extends React.Component {
 
   renderBookingReservationButton = () => {
     const { regular, booking_failed } = this.booking_reservation_form_values;
+    const { reminder_desc } = this.props.i18n;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo() && regular !== "no") return;
@@ -742,6 +743,17 @@ class BookingReservationForm extends React.Component {
       <div className="reservation-confirmation">
         <div className="note">
           {this.props.booking_page.note}
+        </div>
+
+        <div className="reminder-permission">
+          <label>
+            <Field
+              name="booking_reservation_form[reminder_permission]"
+              component="input"
+              type="checkbox"
+            />
+            {reminder_desc}
+          </label>
         </div>
 
         <button
@@ -1234,7 +1246,8 @@ class BookingReservationForm extends React.Component {
             "customer_email",
             "customer_info",
             "present_customer_info",
-            "remember_me"
+            "remember_me",
+            "reminder_permission"
           ),
         ),
         responseType: "json"

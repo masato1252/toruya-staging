@@ -22,6 +22,7 @@
 #  updated_by_user_id       :integer
 #  email_types              :string
 #  deleted_at               :datetime
+#  reminder_permission      :boolean          default(FALSE)
 #
 # Indexes
 #
@@ -229,6 +230,14 @@ class Customer < ApplicationRecord
 
     h.merge!(birthday: birthday.try(:to_s)) if birthday
     h.with_indifferent_access
+  end
+
+  def email_address
+    with_google_contact.primary_email&.value&.address
+  end
+
+  def phone_number
+    with_google_contact.primary_phone&.value
   end
 
   private

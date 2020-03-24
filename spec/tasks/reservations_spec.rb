@@ -71,3 +71,29 @@ RSpec.describe "rake reservations:pending_notifications" do
     end
   end
 end
+
+RSpec.describe "rake reservations:reminder" do
+  let(:current_time) { Time.now }
+  before do
+    Time.zone = "Tokyo"
+    Timecop.freeze(current_time)
+  end
+
+  context "remind paid users' customers before reservations' start time 24 hours" do
+    let(:paid_user) { FactoryBot.create(:subscription, :basic).user }
+    let(:paid_shop) { FactoryBot.create(:shop, user: paid_user) }
+    let!(:paid_reservation_in_time) { FactoryBot.create(:reservation, shop: paid_shop, start_time: current_time.advance(hours: 24)) }
+    let!(:paid_reservation_off_time) { FactoryBot.create(:reservation, shop: paid_shop, start_time: current_time.advance(hours: 25)) }
+    let(:free_user) { FactoryBot.create(:subscription, :free).user }
+    let(:free_shop) { FactoryBot.create(:shop, user: free_user) }
+    let!(:free_reservation_in_time) { FactoryBot.create(:reservation, shop: free_shop, start_time: current_time.advance(hours: 24)) }
+
+    it "reminds expected reservations" do
+      expect(ReservationReminderJob).to receive(:perform_later).with(paid_reservation_in_time).once
+      expect(ReservationReminderJob).not_to receive(:perform_later).with(paid_reservation_off_time)
+      expect(ReservationReminderJob).not_to receive(:perform_later).with(free_reservation_in_time)
+
+      task.execute
+    end
+  end
+end

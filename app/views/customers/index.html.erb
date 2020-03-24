@@ -23,6 +23,7 @@
                       customers_search_path: search_user_customers_path(super_user, format: :json),
                       customers_recent_path: recent_user_customers_path(super_user, format: :json),
                       customer_reservations_path: customer_user_reservations_path(super_user, format: :json),
+                      toggleReminderPremissionUserCustomersPath: toggle_reminder_premission_user_customers_path(super_user),
                       delimiter: Customers::Save::DELIMITER,
                       form_authenticity_token: form_authenticity_token,
                       address_label: I18n.t("common.address"),
@@ -66,6 +67,8 @@
                       groupBlankOption: I18n.t("customer.group_blank_option"),
                       googleContactMissingMessage: I18n.t("customer.google_contact_missing_message_html"),
                       i18n: {
-                        non_group_customers_alert_message: I18n.t("notifications.non_group_customers_alert_message")
+                        non_group_customers_alert_message: I18n.t("notifications.non_group_customers_alert_message"),
+                        reminder_confirmation_message: I18n.t("customer.reminder_confirmation_message"),
+                        reminder_changed_message: I18n.t("customer.reminder_changed_message"),
                       }
 }) %>

@@ -1,0 +1,20 @@
+<% content_for :title do %>
+  <title><%= @shop.name %></title>
+<% end %>
+
+<div class="header">
+  <div class="header-title-part">
+    <h1>
+      <% if logo_url = shop_logo_url(@shop, "390x135")%>
+        <img class="logo" src="<%= logo_url %>" />
+      <% else %>
+        <%= @shop.name %>
+      <% end %>
+    </h1>
+    <h2>
+      <%= t("customer.reminder_permissions.approved.title") %>
+    </h2>
+  </div>
+
+  <div class="greeting"><%= t("customer.reminder_permissions.approved.desc_html", shop_name: @shop.name)%></div>
+</div>

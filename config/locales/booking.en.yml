@@ -11,6 +11,7 @@ ja:
     email: Email
     phone_number: Mobile phone
     remember_me: Remember me
+    reminder_desc: Remind me before my reservation
     confirm_customer_info: Confirm Your Information
     confirm_reservation: Confirm Temporary Reservation
     not_you: is not you?

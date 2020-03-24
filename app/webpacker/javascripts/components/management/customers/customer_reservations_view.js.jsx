@@ -108,6 +108,7 @@ class CustomerReservationsView extends React.Component {
           <CustomerBasicInfo
             customer={this.props.customer}
             groupBlankOption={this.props.groupBlankOption}
+            switchCustomerReminderPermission={this.props.switchCustomerReminderPermission}
           />
 
           <div id="tabs" className="tabs">
