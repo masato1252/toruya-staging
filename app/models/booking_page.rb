@@ -16,6 +16,7 @@
 #  end_at                  :datetime
 #  overbooking_restriction :boolean          default(TRUE)
 #  draft                   :boolean          default(TRUE), not null
+#  booking_limit_day       :integer          default(1), not null
 #
 # Indexes
 #
@@ -23,6 +24,8 @@
 #  index_booking_pages_on_user_id  (user_id)
 #
 
+# When booking page limit day is 1, that means you couldn't book today, you have to book one day before the reservation day
+# When booking page limit day is 0, that means you could book today
 class BookingPage < ApplicationRecord
   include DateTimeAccessor
   date_time_accessor :start_at, :end_at
@@ -34,11 +37,21 @@ class BookingPage < ApplicationRecord
   belongs_to :user
   belongs_to :shop
 
+  validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
+
   def start_time
     start_at || created_at
   end
 
   def to_param
     [id, shop.display_name, title].join("-")
+  end
+
+  def available_booking_start_date
+    Subscription.today.advance(days: booking_limit_day)
+  end
+
+  def ended?
+    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at)
   end
 end

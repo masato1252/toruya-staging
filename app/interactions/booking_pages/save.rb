@@ -5,6 +5,7 @@ module BookingPages
     hash :attrs, default: nil do
       boolean :draft, default: true
       integer :shop_id
+      integer :booking_limit_day, default: 1
       string :name
       string :title, default: nil
       string :greeting, default: nil

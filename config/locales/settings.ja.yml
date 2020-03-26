@@ -524,6 +524,9 @@ ja:
         allow_overbooking_label: 満席数に関わらず予約を受け付ける
         note_label: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
+        booking_limit_day_label: 予約の受付期限
+        booking_limit_day_before: 日前
+        booking_limit_day_example_html: 例えば、<strong>「１日前」</strong>と設定した場合、お客様は明日以降の予約をすることができます。
         form_errors:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません

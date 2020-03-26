@@ -4,9 +4,7 @@ module Booking
       # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
-      unless Rails.env.test?
-        return if date < Subscription.today
-      end
+      return if date < booking_page.available_booking_start_date
 
       if same_content_reservation = matched_same_content_reservation(shop: shop, booking_page: booking_page, booking_start_at: booking_start_at, booking_option: booking_option)
         # yield menus, staffs, reservation(if it is existing)

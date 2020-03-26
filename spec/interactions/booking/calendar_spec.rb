@@ -2,10 +2,11 @@ require "rails_helper"
 
 RSpec.describe Booking::Calendar do
   before do
-    # Monday
-    Timecop.freeze(Time.zone.local(2019, 5, 13))
+    # Sunday, one day before booking date
+    Timecop.freeze(today)
   end
 
+  let(:today) { Time.zone.local(2019, 5, 12) }
   let(:business_schedule) { FactoryBot.create(:business_schedule) }
   let(:booking_page) { FactoryBot.create(:booking_page) }
   let(:shop) { business_schedule.shop }
@@ -18,12 +19,14 @@ RSpec.describe Booking::Calendar do
       date_range: date_range,
     }
   end
-  let(:outcome) { described_class.run(args) }
+  let(:outcome) do
+    described_class.run(args)
+  end
 
   context "when special_dates exists" do
     it "returns expected result" do
       special_dates = [
-        "{\"start_at_date_part\":\"2019-05-06\",\"start_at_time_part\":\"01:00\",\"end_at_date_part\":\"2019-05-06\",\"end_at_time_part\":\"12:59\"}",
+        "{\"start_at_date_part\":\"2019-05-13\",\"start_at_time_part\":\"01:00\",\"end_at_date_part\":\"2019-05-13\",\"end_at_time_part\":\"12:59\"}",
       ]
       args.merge!(special_dates: special_dates)
 
@@ -33,7 +36,27 @@ RSpec.describe Booking::Calendar do
         working_dates: ["2019-05-13", "2019-05-20", "2019-05-27"],
         holiday_dates: ["2019-05-03", "2019-05-04", "2019-05-05", "2019-05-06", "2019-05-12", "2019-05-19", "2019-05-26"]
       })
-      expect(result[1]).to eq(["2019-05-06"])
+      expect(result[1]).to eq(["2019-05-13"])
+    end
+
+    context "when today is 2019-05-13" do
+      # Default booking page limit day is 1, that means you couldn't book today
+      let(:today) { Time.zone.local(2019, 5, 13) }
+
+      it "returns expected result" do
+        special_dates = [
+          "{\"start_at_date_part\":\"2019-05-13\",\"start_at_time_part\":\"01:00\",\"end_at_date_part\":\"2019-05-13\",\"end_at_time_part\":\"12:59\"}",
+        ]
+        args.merge!(special_dates: special_dates)
+
+        result = outcome.result
+
+        expect(result[0]).to eq({
+          working_dates: ["2019-05-13", "2019-05-20", "2019-05-27"],
+          holiday_dates: ["2019-05-03", "2019-05-04", "2019-05-05", "2019-05-06", "2019-05-12", "2019-05-19", "2019-05-26"]
+        })
+        expect(result[1]).to eq([])
+      end
     end
   end
 
@@ -52,6 +75,17 @@ RSpec.describe Booking::Calendar do
       result = outcome.result
 
       expect(result[1]).to eq(["2019-05-13", "2019-05-20", "2019-05-27"])
+    end
+
+    context "when today is 2019-05-13" do
+      # Default booking page limit day is 1, that means you couldn't book today
+      let(:today) { Time.zone.local(2019, 5, 13) }
+
+      it "returns expected result" do
+        result = outcome.result
+
+        expect(result[1]).to eq(["2019-05-20", "2019-05-27"])
+      end
     end
 
     context "when booking option only sells during a period" do
