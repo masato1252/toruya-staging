@@ -2,15 +2,11 @@ class ReservationConfirmationJob < ApplicationJob
   queue_as :default
 
   def perform(reservation, customer)
-    email = customer.with_google_contact.primary_email&.value&.address
-
-    if email.present?
-      CustomerMailer.with(reservation: reservation, customer: customer, email: email).reservation_confirmation.deliver_now
+    if customer.email_address.present?
+      CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email_address).reservation_confirmation.deliver_now
     end
 
-    phone_number = customer.with_google_contact.primary_phone&.value
-
-    if phone_number.present? && customer.user.subscription.charge_required
+    if customer.phone_number.present? && customer.user.subscription.charge_required
       shop = reservation.shop
       message = I18n.t(
         "customer.notifications.sms.confimation",
@@ -21,7 +17,7 @@ class ReservationConfirmationJob < ApplicationJob
       )
 
       Reservations::Notifications::SendCustomerSms.run!(
-        phone_number: phone_number,
+        phone_number: customer.phone_number,
         customer: customer,
         reservation: reservation,
         message: message

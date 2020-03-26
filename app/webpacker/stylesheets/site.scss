@@ -47,3 +47,13 @@ textarea {
   vertical-align: top;
   cursor: row-resize;
 }
+
+.customer-reminder-permission {
+  &.fa-bell {
+    color: $gray5;
+
+    &.reminder-on {
+      color: $palette-color1;
+    }
+  }
+}

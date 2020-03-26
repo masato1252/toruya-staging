@@ -578,7 +578,8 @@ CREATE TABLE public.customers (
     updated_at timestamp without time zone NOT NULL,
     updated_by_user_id integer,
     email_types character varying,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    reminder_permission boolean DEFAULT false
 );
 
 
@@ -3222,6 +3223,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191224063600'),
 ('20191230084048'),
 ('20200227084346'),
+('20200302082812'),
 ('20200320012931');
-
-

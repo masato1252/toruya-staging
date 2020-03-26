@@ -46,3 +46,5 @@ ja:
   customer_mailer:
     reservation_confirmation:
       title: "%{shop_name}の予約が完了しました"
+    reservation_reminder:
+      title: "%{shop_name}次回のご予約確認です"

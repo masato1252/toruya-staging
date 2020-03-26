@@ -732,7 +732,10 @@ input.BTNonoff:checked + label:after {
   display: inline-block;
   vertical-align: middle;
 }
-#customer #resultList dl .customer-symbol, #resNew #customerList dl .customer-symbol { vertical-align: top; }
+#customer #resultList dl .customer-symbol, #resNew #customerList dl .customer-symbol {
+  vertical-align: top;
+
+}
 #customer #resultList dl dt, #resNew #customerList dl dt {
   width: 152px;
 }

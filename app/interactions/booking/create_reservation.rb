@@ -13,6 +13,7 @@ module Booking
     string :customer_phonetic_first_name, default: nil
     string :customer_phone_number, default: nil
     string :customer_email, default: nil
+    boolean :customer_reminder_permission, default: false
     # customer_info format might like
     # {
     #   id: customer_with_google_contact&.id,
@@ -94,6 +95,7 @@ module Booking
         if customer_info&.compact.present?
           # regular customer
           customer = user.customers.find(customer_info["id"])
+          customer.update(reminder_permission: customer_reminder_permission)
         else
           # new customer
           begin
@@ -104,7 +106,8 @@ module Booking
               phonetic_first_name: customer_phonetic_first_name,
               email_types: "mobile",
               emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
-              phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
+              phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
+              reminder_permission: customer_reminder_permission,
             }
 
             customer = user.customers.new(customer_info_hash)

@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 2020_03_20_012931) do
     t.integer "updated_by_user_id"
     t.string "email_types"
     t.datetime "deleted_at"
+    t.boolean "reminder_permission", default: false
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin

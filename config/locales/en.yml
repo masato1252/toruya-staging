@@ -142,6 +142,8 @@ en:
     level_label: Customer Level
     tip_before_new_customer: Search existing data before adding a new customer.
     customer_info_changed_messsage: Customer data change needed
+    reminder_confirmation_message: Are you sure to turn off reminder?
+    reminder_changed_message: Reminder
     filter:
       empty_content: "No reservation found for the filter."
       confirm_message: You're about to leave the filter page to view customer information.

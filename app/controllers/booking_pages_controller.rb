@@ -73,6 +73,7 @@ class BookingPagesController < ActionController::Base
       customer_phonetic_first_name: params[:customer_phonetic_first_name],
       customer_phone_number: params[:customer_phone_number],
       customer_email: params[:customer_email],
+      customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
       customer_info: JSON.parse(params[:customer_info]),
       present_customer_info: JSON.parse(params[:present_customer_info])
     )

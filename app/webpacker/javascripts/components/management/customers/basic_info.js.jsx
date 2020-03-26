@@ -23,9 +23,16 @@ class CustomerBasicInfo extends React.Component {
           </dd>
           <dd>
             {
+              this.props.customer.detailsReadable && this.props.customer.id ? (
+                <a href="#" onClick={this.props.switchCustomerReminderPermission} className="BTNtarco" data-id="customer-reminder-toggler">
+                  <i className={`customer-reminder-permission fa fa-bell fa-2x ${this.props.customer.reminderPermission ? "reminder-on" : ""}`} aria-hidden="true" title="Bell"></i>
+                </a>
+              ) : null
+            }
+            {
               this.props.customer.detailsReadable && this.props.customer.primaryPhone && this.props.customer.primaryPhone.value ? (
                 <a href={`tel:${this.props.customer.primaryPhone.value}`} className="BTNtarco">
-                  <i className={`fa fa-phone fa-2x`}aria-hidden="true" title="call"></i>
+                  <i className={`fa fa-phone fa-2x`} aria-hidden="true" title="call"></i>
                 </a>
               ) : null
             }
