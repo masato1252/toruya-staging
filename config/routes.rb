@@ -189,6 +189,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :webhooks do
+    resource :line, only: [:create]
+  end
+
   resources :calendars, only: [] do
     collection do
       get "working_schedule"
