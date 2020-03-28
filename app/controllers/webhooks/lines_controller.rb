@@ -30,7 +30,7 @@ class Webhooks::LinesController < WebhooksController
   #   }
   # }
   def create
-    params[:events].each do |event|
+    Array.wrap(params[:events]).each do |event|
       case event[:type]
       when "message"
         message = {
