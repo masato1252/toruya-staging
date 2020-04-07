@@ -31,7 +31,7 @@ class Webhooks::LinesController < WebhooksController
   # }]
   def create
     Array.wrap(params[:events]).each do |event|
-      Lines::HandleEvent.run(social_account: SocialAccount.find_by!(channel_id: params[:channel_id]), event: event)
+      Lines::HandleEvent.run(social_account: SocialAccount.find_by!(channel_id: params[:channel_id]), event: event.permit!.to_h)
     end
 
     head :ok
