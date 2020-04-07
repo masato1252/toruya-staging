@@ -1,11 +1,15 @@
-class Lines::FollowEvent < Lines::HandleEvent
+require "line_client"
+
+class Lines::FollowEvent < ActiveInteraction::Base
+  hash :event
+  object :social_customer
+
   def execute
     message = {
       type: 'text',
       text: "hello User #{event[:source][:userId]}"
     }
 
-    reply_token = params['events'][0]['replyToken']
-    client.reply_message(reply_token, message)
+    LineClient.reply(social_customer, events[:replyToken], message)
   end
 end

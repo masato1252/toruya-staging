@@ -33,7 +33,7 @@ class Lines::HandleEvent < ActiveInteraction::Base
   def execute
     social_customer = SocialCustomer.find_or_create_by(
       user_id: social_account.user_id,
-      social_user_id: event[:source][:user_id],
+      social_user_id: event[:source][:userId],
       social_account_id: social_account.id
     )
 
@@ -48,14 +48,5 @@ class Lines::HandleEvent < ActiveInteraction::Base
         event: event
       )
     end
-  end
-
-  private
-
-  def client
-    @client ||= Line::Bot::Client.new { |config|
-      config.channel_token = line_account.channel_token
-      config.channel_secret = line_account.channel_secret
-    }
   end
 end

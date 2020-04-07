@@ -16,4 +16,10 @@
 #
 
 class SocialAccount < ApplicationRecord
+  def client
+    @client ||= Line::Bot::Client.new { |config|
+      config.channel_token = channel_token
+      config.channel_secret = channel_secret
+    }
+  end
 end
