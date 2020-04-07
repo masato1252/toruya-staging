@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_20_012931) do
+ActiveRecord::Schema.define(version: 2020_04_07_053955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -506,6 +506,38 @@ ActiveRecord::Schema.define(version: 2020_03_20_012931) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.index ["user_id", "deleted_at"], name: "index_shops_on_user_id_and_deleted_at"
+  end
+
+  create_table "social_accounts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "channel_id", null: false
+    t.string "channel_token", null: false
+    t.string "channel_secret", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "channel_id"], name: "index_social_accounts_on_user_id_and_channel_id"
+  end
+
+  create_table "social_customers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "customer_id"
+    t.string "social_user_id", null: false
+    t.integer "social_account_id"
+    t.integer "conversation_state", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_social_customers_on_customer_id"
+    t.index ["user_id"], name: "index_social_customers_on_user_id"
+  end
+
+  create_table "social_messages", force: :cascade do |t|
+    t.integer "social_account_id", null: false
+    t.integer "social_customer_id", null: false
+    t.integer "staff_id"
+    t.text "raw_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|
