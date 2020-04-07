@@ -32,6 +32,7 @@ class Lines::HandleEvent < ActiveInteraction::Base
 
   def execute
     social_customer = SocialCustomer.find_or_create_by(
+      user_id: social_account.user_id,
       social_user_id: event[:source][:user_id],
       social_account_id: social_account.id
     )
