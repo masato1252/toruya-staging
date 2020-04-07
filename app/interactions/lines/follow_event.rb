@@ -7,9 +7,9 @@ class Lines::FollowEvent < ActiveInteraction::Base
   def execute
     message = {
       type: 'text',
-      text: "hello User #{event[:source][:userId]}"
+      text: "hello User #{event["source"]["userId"]}"
     }
 
-    LineClient.reply(social_customer, events[:replyToken], message)
+    LineClient.reply(social_customer, events["replyToken"], message)
   end
 end

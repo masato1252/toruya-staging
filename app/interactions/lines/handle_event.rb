@@ -33,15 +33,15 @@ class Lines::HandleEvent < ActiveInteraction::Base
   def execute
     social_customer = SocialCustomer.find_or_create_by(
       user_id: social_account.user_id,
-      social_user_id: event[:source][:userId],
+      social_user_id: event["source"]["userId"],
       social_account_id: social_account.id
     )
 
-    case event[:type]
+    case event["type"]
     when "message", "follow"
       # Lines::MessageEvent
       # Lines::FollowEvent
-      "Lines::#{event[:type].camelize}Event".constantize.run(social_customer: social_customer, event: event)
+      "Lines::#{event["type"].camelize}Event".constantize.run(social_customer: social_customer, event: event)
     else
       Rollbar.warning("Unexpected event type",
         social_account_id: social_account.id,
