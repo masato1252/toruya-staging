@@ -21,11 +21,24 @@ class Lines::MessageEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    message = {
-      type: 'text',
-      text: "hello message #{event["message"]["text"]}"
-    }
+    actions = [
+      {
+        "type": "postback",
+        "label": "All activities",
+        "data": "action=booking_pages"
+      },
+      {
+        "type": "postback",
+        "label": "Shop phone number",
+        "data": "action=shop_phone"
+      },
+    ]
 
-    LineClient.reply(social_customer, event["replyToken"], message)
+    LineClient.button_template(
+      social_customer: social_customer,
+      title: "Welcome to my shops",
+      text: "These are the services we provide",
+      actions: actions
+    )
   end
 end

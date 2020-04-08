@@ -35,8 +35,8 @@ class BookingOption < ApplicationRecord
 
   monetize :amount_cents
 
-  scope :started, -> { where(start_at: nil).or(where("start_at < ?", Time.current)) }
-  scope :end_yet, -> { where(end_at: nil).or(where("end_at >= ?", Time.current)) }
+  scope :started, -> { where(start_at: nil).or(where("booking_options.start_at < ?", Time.current)) }
+  scope :end_yet, -> { where(end_at: nil).or(where("booking_options.end_at >= ?", Time.current)) }
   scope :active, -> { started.end_yet }
 
   def start_time

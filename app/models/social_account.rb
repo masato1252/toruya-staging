@@ -16,6 +16,8 @@
 #
 
 class SocialAccount < ApplicationRecord
+  belongs_to :user
+
   def client
     @client ||= Line::Bot::Client.new { |config|
       config.channel_token = channel_token

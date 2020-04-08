@@ -190,7 +190,7 @@ Rails.application.routes.draw do
   end
 
   namespace :webhooks do
-    post "line/:channel_id", to: "lines#create"
+    post "line/:channel_id", to: "lines#create", as: :line
   end
 
   resources :calendars, only: [] do

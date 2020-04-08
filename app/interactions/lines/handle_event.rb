@@ -27,6 +27,22 @@ class Lines::HandleEvent < ActiveInteraction::Base
   #    }
   #  }
   # },
+  # {
+  #    "type":"postback",
+  #    "replyToken":"b60d432864f44d079f6d8efe86cf404b",
+  #    "source":{
+  #       "userId":"U91eeaf62d...",
+  #       "type":"user"
+  #    },
+  #    "mode": "active",
+  #    "timestamp":1513669370317,
+  #    "postback":{
+  #       "data":"action=buy&itemid=111",
+  #       "params":{
+  #          "datetime":"2017-12-25T01:00"
+  #       }
+  #    }
+  # }
   hash :event, strip: false
   object :social_account
 
@@ -38,10 +54,11 @@ class Lines::HandleEvent < ActiveInteraction::Base
     )
 
     case event["type"]
-    when "message", "follow"
+    when "message", "follow", "postback"
       # Lines::MessageEvent
       # Lines::FollowEvent
-      "Lines::#{event["type"].camelize}Event".constantize.run(social_customer: social_customer, event: event)
+      # Lines::PostbackEvent
+      "Lines::#{event["type"].camelize}Event".constantize.run!(social_customer: social_customer, event: event)
     else
       Rollbar.warning("Unexpected event type",
         social_account_id: social_account.id,
