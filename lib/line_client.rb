@@ -1,19 +1,17 @@
 class LineClient
-  attr_reader :customer
+  attr_reader :social_customer
 
   def initialize(social_customer)
     @social_customer = social_customer
   end
 
-  def send(message)
-    client.push_message(social_customer.social_user_id, {type: "text", text: message})
+  def self.send(social_customer, message)
+    new(social_customer).client.push_message(social_customer.social_user_id, {type: "text", text: message})
   end
 
-  def reply(reply_token, message)
-    client.reply_message(reply_token, message)
+  def self.reply(social_customer, reply_token, message)
+    new(social_customer).client.reply_message(reply_token, message)
   end
-
-  private
 
   def client
     social_customer.social_account.client

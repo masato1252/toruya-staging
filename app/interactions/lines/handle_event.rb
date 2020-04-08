@@ -27,7 +27,7 @@ class Lines::HandleEvent < ActiveInteraction::Base
   #    }
   #  }
   # },
-  hash :event
+  hash :event, strip: false
   object :social_account
 
   def execute
