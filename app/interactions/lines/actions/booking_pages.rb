@@ -52,7 +52,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
       if booking_page.started? && !booking_page.ended?
         {
           "title": booking_page.title,
-          "text": booking_page.title,
+          "text": booking_page.greeting.first(100),
           "defaultAction": {
             "type": "uri",
             "label": "View detail",
