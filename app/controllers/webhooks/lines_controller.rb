@@ -1,6 +1,8 @@
 require "line/bot"
 
 class Webhooks::LinesController < WebhooksController
+  before_action :verify_header
+
   # message
   # {"events"=>[
   #  {
@@ -31,9 +33,29 @@ class Webhooks::LinesController < WebhooksController
   # }]
   def create
     Array.wrap(params[:events]).each do |event|
-      Lines::HandleEvent.run(social_account: SocialAccount.find_by!(channel_id: params[:channel_id]), event: event.permit!.to_h)
+      Lines::HandleEvent.run(social_account: social_account, event: event.permit!.to_h)
     end
 
     head :ok
+  end
+
+  private
+
+  def social_account
+    @social_account ||= SocialAccount.find_by!(channel_id: params[:channel_id])
+  end
+
+  def verify_header
+    channel_secret = social_account.channel_secret # Channel secret string
+    http_request_body = request.raw_post # Request body string
+    hash = OpenSSL::HMAC::digest(OpenSSL::Digest::SHA256.new, channel_secret, http_request_body)
+    signature = Base64.strict_encode64(hash)
+
+    # Compare X-Line-Signature request header string and the signature
+    if signature != request.headers["X-Line-Signature"]
+      Rollbar.warning("Unexpected request", request: http_request_body)
+
+      head :ok
+    end
   end
 end
