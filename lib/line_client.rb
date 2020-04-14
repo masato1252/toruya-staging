@@ -5,13 +5,13 @@ class LineClient
     @social_customer = social_customer
   end
 
-  def self.error_handler(args*)
+  def self.error_handler(*args)
     response = yield
 
     if response.is_a?(Net::HTTPBadRequest)
       Rollbar.warning(
         "Request failed",
-        response: response.body
+        response: response.body,
         args: args
       )
     end
