@@ -15,6 +15,8 @@ class LineClient
         args: args
       )
     end
+
+    response
   end
 
   def self.profile(social_customer)
