@@ -14,14 +14,16 @@
 #
 #  index_social_accounts_on_user_id_and_channel_id  (user_id,channel_id)
 #
+#
+require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
   belongs_to :user
 
   def client
     @client ||= Line::Bot::Client.new { |config|
-      config.channel_token = channel_token
-      config.channel_secret = channel_secret
+      config.channel_token = MessageEncryptor.decrypt(channel_token)
+      config.channel_secret = MessageEncryptor.decrypt(channel_secret)
     }
   end
 end
