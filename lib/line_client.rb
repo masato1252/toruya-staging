@@ -17,6 +17,12 @@ class LineClient
     end
   end
 
+  def self.profile(social_customer)
+    error_handler(__method__, social_customer.id) do
+      new(social_customer).client.get_profile(social_customer.social_user_id)
+    end
+  end
+
   def self.send(social_customer, message)
     error_handler(__method__, social_customer.id, message) do
       new(social_customer).client.push_message(social_customer.social_user_id, {type: "text", text: message})

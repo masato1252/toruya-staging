@@ -3,8 +3,10 @@ class CreateSocialCustomers < ActiveRecord::Migration[5.2]
     create_table :social_customers do |t|
       t.references :user, null: false
       t.references :customer
-      t.string :social_user_id, null: false
       t.integer :social_account_id
+      t.string :social_user_id, null: false
+      t.string :social_user_name
+      t.string :social_user_picture_url
       t.integer :conversation_state, default: 0
 
       t.timestamps

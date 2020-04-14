@@ -1,3 +1,5 @@
+require "line_client"
+
 class Lines::HandleEvent < ActiveInteraction::Base
   # follow event
   # {
@@ -52,6 +54,15 @@ class Lines::HandleEvent < ActiveInteraction::Base
       social_user_id: event["source"]["userId"],
       social_account_id: social_account.id
     )
+
+    if social_customer.social_user_name.blank?
+      response = LineClient.profile(social_customer)
+
+      if response.is_a?(Net::HTTPOK)
+        body = JSON.parse(response.body)
+        social_customer.update(social_user_name: body["displayName"], social_user_picture_url: body["pictureUrl"])
+      end
+    end
 
     case event["type"]
     when "message", "follow", "postback"

@@ -2,14 +2,16 @@
 #
 # Table name: social_customers
 #
-#  id                 :bigint(8)        not null, primary key
-#  user_id            :bigint(8)        not null
-#  customer_id        :bigint(8)
-#  social_user_id     :string           not null
-#  social_account_id  :integer
-#  conversation_state :integer          default(0)
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                      :bigint(8)        not null, primary key
+#  user_id                 :bigint(8)        not null
+#  customer_id             :bigint(8)
+#  social_account_id       :integer
+#  social_user_id          :string           not null
+#  social_user_name        :string
+#  social_user_picture_url :string
+#  conversation_state      :integer          default(0)
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
 #
 # Indexes
 #

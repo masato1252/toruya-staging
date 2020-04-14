@@ -1547,8 +1547,10 @@ CREATE TABLE public.social_customers (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     customer_id bigint,
-    social_user_id character varying NOT NULL,
     social_account_id integer,
+    social_user_id character varying NOT NULL,
+    social_user_name character varying,
+    social_user_picture_url character varying,
     conversation_state integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL

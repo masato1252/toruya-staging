@@ -521,8 +521,10 @@ ActiveRecord::Schema.define(version: 2020_04_07_053955) do
   create_table "social_customers", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "customer_id"
-    t.string "social_user_id", null: false
     t.integer "social_account_id"
+    t.string "social_user_id", null: false
+    t.string "social_user_name"
+    t.string "social_user_picture_url"
     t.integer "conversation_state", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
