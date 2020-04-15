@@ -137,7 +137,6 @@ module Booking
                 booking_option: booking_option,
                 date: date,
                 booking_start_at: booking_start_at,
-                booking_end_at: booking_end_at,
                 overbooking_restriction: booking_page.overbooking_restriction
               ) do |valid_menus_spots, staff_states, same_content_reservation|
                 # valid_menus_spots likes

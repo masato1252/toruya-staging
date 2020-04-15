@@ -40,7 +40,7 @@ module Booking
                   break
                 end
 
-                loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: booking_start_at.to_date, booking_start_at: booking_start_at, booking_end_at: booking_end_at, overbooking_restriction: overbooking_restriction) do
+                loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: booking_start_at.to_date, booking_start_at: booking_start_at, overbooking_restriction: overbooking_restriction) do
                   available_booking_times << booking_start_at
 
                   available_booking_time_mapping[booking_start_at] ||= []
