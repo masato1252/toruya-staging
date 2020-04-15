@@ -137,7 +137,7 @@ class BookingPagesController < ActionController::Base
   def calendar
     booking_page = BookingPage.find(params[:id])
 
-    special_dates = booking_page.booking_page_special_dates.map do |special_date|
+    special_dates = booking_page.booking_page_special_dates.where(start_at: month_dates).map do |special_date|
       {
         start_at_date_part: special_date.start_at_date,
         start_at_time_part: special_date.start_at_time,
