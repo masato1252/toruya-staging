@@ -54,7 +54,8 @@
     reminder_permission: @customer&.reminder_permission,
     customer_info: customer_info_hash,
     present_customer_info: customer_info_hash,
-    last_selected_option_id: @last_selected_option_id
+    last_selected_option_id: @last_selected_option_id,
+    booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : nil,
   },
   path: {
     save: booking_reservation_booking_page_path(@booking_page),

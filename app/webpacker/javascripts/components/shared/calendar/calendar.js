@@ -18,6 +18,7 @@ class Calendar extends React.Component {
     this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
 
     this.state = {
+      loading: true,
       month: this.startDate.clone(),
       selectedDate: this.props.skip_default_date ? null : this.startDate.clone()
     };
