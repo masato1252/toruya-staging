@@ -76,6 +76,10 @@ group :development do
   gem "binding_of_caller"
   gem "bullet"
   gem "awesome_rails_console"
+  gem "derailed_benchmarks"
+  gem "rack-mini-profiler"
+  gem "stackprof"
+  gem "memory_profiler"
 end
 
 group :test do
