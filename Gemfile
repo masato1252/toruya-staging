@@ -57,6 +57,7 @@ gem "parallel"
 gem "active_attr"
 gem "twilio-ruby", "~> 5.25.1"
 gem "phonelib"
+gem "oj"
 
 group :development, :test do
   gem "byebug", platform: :mri
