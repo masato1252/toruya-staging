@@ -28,15 +28,11 @@ module Reservable
     def closed_custom_schedules
       CustomSchedule.
         closed.
-        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time).includes(:staff)
+        where("custom_schedules.start_time < ? and custom_schedules.end_time > ?", end_time, start_time)
     end
 
-    # TODO: [Personal schedule legacy] Remove staff custom off schedule query when it indeed doesn't be used
     def closed_custom_schedules_staff_ids
-      @closed_custom_schedules_staff_ids ||= closed_custom_schedules.
-        where(staff_id: shop.staff_ids).
-        pluck(Arel.sql("DISTINCT custom_schedules.staff_id")) +
-      closed_personal_custom_schedules_staff_ids
+      @closed_custom_schedules_staff_ids ||= closed_personal_custom_schedules_staff_ids
     end
 
     def closed_personal_custom_schedules_staff_ids
