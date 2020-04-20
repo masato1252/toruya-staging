@@ -123,6 +123,8 @@ GEM
       execjs (~> 2.0)
     bcrypt (3.1.12)
     benchmark-ips (2.7.2)
+    benchmark-memory (0.1.2)
+      memory_profiler (~> 0.9)
     better_errors (2.5.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -535,6 +537,7 @@ DEPENDENCIES
   annotate
   awesome_rails_console
   aws-sdk-s3
+  benchmark-memory
   better_errors
   binding_of_caller
   bitly (~> 1.0.0)
