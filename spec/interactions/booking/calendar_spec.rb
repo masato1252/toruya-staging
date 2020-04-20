@@ -113,7 +113,7 @@ RSpec.describe Booking::Calendar do
     context "when staff is not available for some reason" do
       context "staff had reservation on other shop" do
         it "returns expected result" do
-          # work at other shops
+          # other_shop error
           expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
           FactoryBot.create(:reservation,
                             shop: FactoryBot.create(:shop, user: user), staffs: staff,
@@ -126,6 +126,7 @@ RSpec.describe Booking::Calendar do
       end
 
       context "when staff is a freelancer and doesn't work on that day" do
+        # freelancer error
         let(:staff) { FactoryBot.create(:staff, shop: shop, user: user) }
 
         before do
@@ -144,6 +145,7 @@ RSpec.describe Booking::Calendar do
       end
 
       context "when staff ask for leave on that day" do
+        # ask_for_leave error
         before do
           FactoryBot.create(:custom_schedule, :closed, shop: shop, user: staff.staff_account.user,
                             start_time: Time.zone.local(2019, 5, 13).beginning_of_day, end_time: Time.zone.local(2019, 5, 13).end_of_day.change(sec: 0))
@@ -158,6 +160,7 @@ RSpec.describe Booking::Calendar do
       end
 
       context "when staff is a part time staff, doesn't work on that day" do
+        # unworking_staff error
         let(:staff) { FactoryBot.create(:staff, user: user, shop: shop) }
         before do
           # Only work in Tuesday
@@ -171,6 +174,51 @@ RSpec.describe Booking::Calendar do
           result = outcome.result
 
           expect(result[1]).to eq([])
+        end
+      end
+    end
+
+    context "when menu is not available at that day" do
+      # unschedule_menu
+      context "when setting contains day_of_week" do
+        before do
+          # Menu isn't available on Monday
+          booking_option.menus.first.reservation_setting.update_columns(day_type: "weekly", days_of_week: [2, 3, 4, 5])
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq([])
+        end
+      end
+
+      context "when setting contains nth_of_week" do
+        before do
+          # Menu only available on 1st week
+          booking_option.menus.first.reservation_setting.update_columns(day_type: "monthly", nth_of_week: 1)
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq([])
+        end
+      end
+
+      context "when setting contains day" do
+        before do
+          # Menu only available on day 13
+          booking_option.menus.first.reservation_setting.update_columns(day_type: "monthly", day: 13)
+        end
+
+        it "returns expected result" do
+          expect(Reservable::Reservation).to receive(:run).exactly(3).times.and_call_original
+          result = outcome.result
+
+          expect(result[1]).to eq(["2019-05-13"])
         end
       end
     end

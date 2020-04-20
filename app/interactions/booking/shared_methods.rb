@@ -1,5 +1,6 @@
 module Booking
   module SharedMethods
+    # date: Date object
     def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, overbooking_restriction:, overlap_restriction: true)
       # staffs are unavailable all days
       @unactive_staff_ids ||= {}
@@ -111,6 +112,22 @@ module Booking
                       when :other_shop, :unworking_staff
                         @unactive_staff_ids[date] ||= []
                         @unactive_staff_ids[date] << error[:staff_id]
+                      end
+                    end
+                  end
+
+                  if reserable_outcome.errors.details[:menu_id].present? &&
+                      (reserable_outcome.errors.details.values.flatten.map{|h| h[:error]} & [:unschedule_menu]).length > 0
+                    reserable_outcome.errors.details[:menu_id].each do |error|
+                      case error[:error]
+                      when :unschedule_menu
+                        if reservation_setting = Menu.find(error[:menu_id]).reservation_setting
+                          if (reservation_setting.days_of_week.present? && reservation_setting.days_of_week.exclude?(date.wday.to_s)) ||
+                              (reservation_setting.nth_of_week.present? && reservation_setting.nth_of_week != date.week_of_month) ||
+                              (reservation_setting.day.present? && reservation_setting.day != date.day)
+                            throw :next_working_date
+                          end
+                        end
                       end
                     end
                   end
