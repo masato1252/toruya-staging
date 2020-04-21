@@ -11,7 +11,7 @@ module BookingOptions
         menus1 = option1.menus
         menus2 = option2.menus
 
-        menu_number_versus = menus1.length <=> menus2.length
+        menu_number_versus = menus1.size <=> menus2.size
 
         if menu_number_versus == 0
           staff_number_versus = menus1.sum(:min_staffs_number) <=> menus2.sum(:min_staffs_number)

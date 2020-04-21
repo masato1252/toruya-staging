@@ -44,7 +44,7 @@ module Booking
               special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
 
-              test_available_booking_date(booking_options, json_parsed_date["start_at_date_part"], special_date_start_at, special_date_end_at)
+              test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
             end.compact
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
@@ -54,7 +54,8 @@ module Booking
           #   end.compact
           # end
       else
-        available_working_dates = schedules[:working_dates].select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
+        available_working_dates = schedules[:working_dates].map { |date| Date.parse(date) }
+        available_working_dates = available_working_dates.select { |date| date >= booking_page.available_booking_start_date }
 
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
@@ -90,8 +91,8 @@ module Booking
       catch :next_working_date do
         booking_options.each do |booking_option|
           # booking_option doesn't sell on that date
-          if booking_option.start_time.to_date > Date.parse(date) ||
-              booking_option.end_at && booking_option.end_at.to_date < Date.parse(date)
+          if booking_option.start_time.to_date > date ||
+              booking_option.end_at && booking_option.end_at.to_date < date
             next
           end
 
@@ -104,8 +105,8 @@ module Booking
               break
             end
 
-            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: Date.parse(date), booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
-              throw :next_working_date, date
+            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
+              throw :next_working_date, date.to_s
             end
 
             booking_available_start_at = booking_available_start_at.advance(minutes: interval)
