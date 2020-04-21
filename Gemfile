@@ -82,6 +82,7 @@ group :development do
   gem "rack-mini-profiler"
   gem "stackprof"
   gem "memory_profiler"
+  gem "benchmark-memory"
 end
 
 group :test do
