@@ -122,6 +122,9 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    barnes (0.0.8)
+      multi_json (~> 1)
+      statsd-ruby (~> 1.1)
     bcrypt (3.1.12)
     benchmark-ips (2.7.2)
     benchmark-memory (0.1.2)
@@ -365,7 +368,8 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (3.0.3)
-    puma (3.11.4)
+    puma (4.3.3)
+      nio4r (~> 2.0)
     rack (2.0.7)
     rack-mini-profiler (2.0.1)
       rack (>= 1.2.0)
@@ -481,6 +485,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
     stackprof (0.2.15)
+    statsd-ruby (1.4.0)
     strings (0.1.5)
       strings-ansi (~> 0.1)
       unicode-display_width (~> 1.5)
@@ -543,6 +548,7 @@ DEPENDENCIES
   annotate
   awesome_rails_console
   aws-sdk-s3
+  barnes
   benchmark-memory
   better_errors
   binding_of_caller
@@ -587,7 +593,7 @@ DEPENDENCIES
   pg_query (~> 1.1.0)
   pghero (~> 2.2.1)
   phonelib
-  puma (~> 3.11.0)
+  puma (~> 4.3.3)
   rack-mini-profiler
   rails (= 5.2.3)
   react-rails

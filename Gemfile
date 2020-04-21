@@ -35,7 +35,7 @@ gem "hashie", "~> 3.4.4"
 gem "rollbar", "~> 2.15.5"
 gem "sendgrid-rails"
 gem "delayed-web"
-gem "puma", "~> 3.11.0"
+gem "puma", "~> 4.3.3"
 gem "kaminari"
 gem "custom_error_message", "~> 1.2.1", git: "https://github.com/thethanghn/custom-err-msg.git"
 gem "cancancan", "~> 1.15.0"
@@ -60,6 +60,7 @@ gem "phonelib"
 gem "line-bot-api"
 gem "oj"
 gem "scout_apm"
+gem "barnes"
 
 group :development, :test do
   gem "byebug", platform: :mri
