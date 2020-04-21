@@ -79,15 +79,8 @@ class BookingReservationForm extends React.Component {
     const { booking_options, single_booking_time } = this.booking_reservation_form_values
 
     if (is_single_booking_time && is_single_option) {
-      const selected_booking_option = booking_options[0];
-
-      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", selected_booking_option.id)
       this.booking_reservation_form.change("booking_reservation_form[booking_date]", single_booking_time.booking_date)
       this.booking_reservation_form.change("booking_reservation_form[booking_at]", single_booking_time.booking_at)
-    } else if (is_single_option && booking_options.length) {
-      const selected_booking_option = booking_options[0];
-
-      this.booking_reservation_form.change("booking_reservation_form[booking_option_id]", selected_booking_option.id)
     }
   }
 

@@ -1,6 +1,7 @@
 module Booking
   module SharedMethods
-    def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, booking_end_at:, overbooking_restriction:, overlap_restriction: true)
+    # date: Date object
+    def loop_for_reserable_spot(shop:, booking_page:, booking_option:, date:, booking_start_at:, overbooking_restriction:, overlap_restriction: true)
       # staffs are unavailable all days
       @unactive_staff_ids ||= {}
 
@@ -79,6 +80,7 @@ module Booking
 
                   # all menus got staffs to handle
                   if booking_option.menus.count == valid_menus.length
+                    Rails.logger.debug("[GOOD]==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
                     yield valid_menus, candidate_staff_ids.map { |staff_id| { staff_id: staff_id, state: "pending" } }, nil
                   end
 
@@ -110,6 +112,22 @@ module Booking
                       when :other_shop, :unworking_staff
                         @unactive_staff_ids[date] ||= []
                         @unactive_staff_ids[date] << error[:staff_id]
+                      end
+                    end
+                  end
+
+                  if reserable_outcome.errors.details[:menu_id].present? &&
+                      (reserable_outcome.errors.details.values.flatten.map{|h| h[:error]} & [:unschedule_menu]).length > 0
+                    reserable_outcome.errors.details[:menu_id].each do |error|
+                      case error[:error]
+                      when :unschedule_menu
+                        if reservation_setting = Menu.find(error[:menu_id]).reservation_setting
+                          if (reservation_setting.days_of_week.present? && reservation_setting.days_of_week.exclude?(date.wday.to_s)) ||
+                              (reservation_setting.nth_of_week.present? && reservation_setting.nth_of_week != date.week_of_month) ||
+                              (reservation_setting.day.present? && reservation_setting.day != date.day)
+                            throw :next_working_date
+                          end
+                        end
                       end
                     end
                   end

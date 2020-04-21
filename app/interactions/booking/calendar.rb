@@ -22,33 +22,55 @@ module Booking
       schedules = compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
       available_booking_dates = []
 
-      available_booking_dates =
-        if special_dates.present?
-          special_dates.map do |special_date|
-            # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
-            JSON.parse(special_date)["start_at_date_part"]
-          end.select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
-        else
-          booking_options = compose(
-            BookingOptions::Prioritize,
-            booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
-          )
+      booking_options = compose(
+        BookingOptions::Prioritize,
+        booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
+      )
 
-          available_working_dates = schedules[:working_dates].select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
+      if special_dates.present?
+        # available_working_dates = special_dates.map do |special_date|
+        #   # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
+        #   JSON.parse(special_date)["start_at_date_part"]
+        # end.select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
 
+        available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
-          if true || Rails.env.test?
+          # if true || Rails.env.test?
+            special_dates.map do |raw_special_date|
+              json_parsed_date = JSON.parse(raw_special_date)
+              special_date = Date.parse(json_parsed_date["start_at_date_part"])
+              next if special_date < booking_page.available_booking_start_date
+
+              special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
+              special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
+
+              test_available_booking_date(booking_options, json_parsed_date["start_at_date_part"], special_date_start_at, special_date_end_at)
+            end.compact
+          # else
+          #   # XXX: Parallel doesn't work properly in test mode,
+          #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
+          #   Parallel.map(available_working_dates) do |date|
+          #     test_available_booking_date(booking_options, date)
+          #   end.compact
+          # end
+      else
+        available_working_dates = schedules[:working_dates].select { |date| Date.parse(date) >= booking_page.available_booking_start_date }
+
+        available_booking_dates =
+          # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
+          # if true || Rails.env.test?
             available_working_dates.map do |date|
               test_available_booking_date(booking_options, date)
             end.compact
-          else
-            # XXX: Parallel doesn't work properly in test mode,
-            # some data might be stay in transaction of test thread and would lost in test while using Parallel.
-            Parallel.map(available_working_dates) do |date|
-              test_available_booking_date(booking_options, date)
-            end.compact
-          end
-        end
+          # else
+          #   # XXX: Parallel doesn't work properly in test mode,
+          #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
+          #   Parallel.map(available_working_dates) do |date|
+          #     test_available_booking_date(booking_options, date)
+          #   end.compact
+          # end
+      end
+
 
       [
         schedules,
@@ -58,12 +80,12 @@ module Booking
 
     private
 
-    def test_available_booking_date(booking_options, date)
+    def test_available_booking_date(booking_options, date, booking_available_start_at = nil, booking_available_end_at = nil)
       time_range_outcome = Reservable::Time.run(shop: shop, date: date)
       return if time_range_outcome.invalid?
 
       time_range = time_range_outcome.result
-      shop_close_at = time_range.last
+      booking_available_end_at ||= shop_close_at = time_range.last
 
       catch :next_working_date do
         booking_options.each do |booking_option|
@@ -73,20 +95,20 @@ module Booking
             next
           end
 
-          booking_start_at = shop_open_at = time_range.first
+          booking_available_start_at ||= shop_open_at = time_range.first
 
           loop do
-            booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
+            booking_end_at = booking_available_start_at.advance(minutes: booking_option.minutes)
 
-            if booking_end_at > shop_close_at
+            if booking_end_at > booking_available_end_at
               break
             end
 
-            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: Date.parse(date), booking_start_at: booking_start_at, booking_end_at: booking_end_at, overbooking_restriction: overbooking_restriction) do
+            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: Date.parse(date), booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
               throw :next_working_date, date
             end
 
-            booking_start_at = booking_start_at.advance(minutes: interval)
+            booking_available_start_at = booking_available_start_at.advance(minutes: interval)
           end
         end
 

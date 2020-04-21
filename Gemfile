@@ -58,6 +58,8 @@ gem "active_attr"
 gem "twilio-ruby", "~> 5.25.1"
 gem "phonelib"
 gem "line-bot-api"
+gem "oj"
+gem "scout_apm"
 
 group :development, :test do
   gem "byebug", platform: :mri
@@ -77,6 +79,11 @@ group :development do
   gem "binding_of_caller"
   gem "bullet"
   gem "awesome_rails_console"
+  gem "derailed_benchmarks"
+  gem "rack-mini-profiler"
+  gem "stackprof"
+  gem "memory_profiler"
+  gem "benchmark-memory"
 end
 
 group :test do
