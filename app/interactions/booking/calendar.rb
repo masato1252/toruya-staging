@@ -38,11 +38,11 @@ module Booking
           # if true || Rails.env.test?
             special_dates.map do |raw_special_date|
               json_parsed_date = JSON.parse(raw_special_date)
-              special_date = Date.parse(json_parsed_date["start_at_date_part"])
+              special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
               next if special_date < booking_page.available_booking_start_date
 
-              special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
-              special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
+              special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
+              special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
               test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
             end.compact

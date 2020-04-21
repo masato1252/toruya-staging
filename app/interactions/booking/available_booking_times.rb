@@ -24,10 +24,10 @@ module Booking
         special_dates.each do |raw_special_date|
           catch :next_working_date do
             json_parsed_date = JSON.parse(raw_special_date)
-            special_date = Date.parse(json_parsed_date["start_at_date_part"])
+            special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
 
-            special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
-            special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
+            special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
+            special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
             shop.user.booking_options.where(id: booking_option_ids).includes(:menus).order("booking_options.id").each do |booking_option|
               available_booking_times = []
