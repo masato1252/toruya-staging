@@ -56,17 +56,18 @@ class Lines::HandleEvent < ActiveInteraction::Base
   object :social_account
 
   def execute
-    begin
-      SocialCustomer.transaction do
-        social_customer = SocialCustomer.find_or_create_by(
-          user_id: social_account.user_id,
-          social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
-          social_account_id: social_account.id
-        )
+    social_customer =
+      begin
+        SocialCustomer.transaction do
+          SocialCustomer.find_or_create_by(
+            user_id: social_account.user_id,
+            social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
+            social_account_id: social_account.id
+          )
+        end
+      rescue ActiveRecord::RecordNotUnique
+        retry
       end
-    rescue ActiveRecord::RecordNotUnique
-      retry
-    end
 
     if social_customer.social_user_name.blank?
       response = LineClient.profile(social_customer)
