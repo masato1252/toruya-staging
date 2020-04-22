@@ -190,9 +190,7 @@ module Reservable
     end
 
     def validate_staffs_ability_for_customers(staff)
-      staff_menus = StaffMenu.where(staff_id: staff.id, menu_id: menu_id)
-
-      if staff_menu = staff_menus.find { |staff_menu| staff_menu.menu_id == menu.id }
+      if staff_menu = staff.staff_menus.find { |staff_menu| staff_menu.menu_id == menu_id }
         if number_of_customer > staff_menu.max_customers
           errors.add(:staff_ids, :not_enough_ability, staff_id: staff.id, menu_id: menu_id)
         end

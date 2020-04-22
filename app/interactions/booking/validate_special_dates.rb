@@ -20,14 +20,14 @@ module Booking
 
       special_dates.each do |raw_special_date|
         json_parsed_date = JSON.parse(raw_special_date)
-        special_date = Date.parse(json_parsed_date["start_at_date_part"])
+        special_date = Date.parse(json_parsed_date[START_AT_DATE_PART])
         time_outcome = Reservable::Time.run(shop: shop, date: special_date)
 
         if time_outcome.valid?
           shop_start_at = time_outcome.result.first
           shop_closed_at = time_outcome.result.last
-          special_date_start_at = Time.zone.parse("#{json_parsed_date["start_at_date_part"]}-#{json_parsed_date["start_at_time_part"]}")
-          special_date_end_at = Time.zone.parse("#{json_parsed_date["end_at_date_part"]}-#{json_parsed_date["end_at_time_part"]}")
+          special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
+          special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
           special_date_time_length = special_date_end_at - special_date_start_at
           basic_required_minutes = longest_option.minutes
           special_time_range = "#{I18n.l(special_date_start_at)} ~ #{I18n.l(special_date_end_at, format: :hour_minute)}"
