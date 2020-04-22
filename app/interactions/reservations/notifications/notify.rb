@@ -16,15 +16,13 @@ module Reservations
         end
 
 
-        if customer.social_customers.exists?
-          customer.social_customers.each do |social_customer|
-            Reservations::Notifications::SocialMessage.run!(
-              customer: customer,
-              social_customer: social_customer,
-              reservation: reservation,
-              message: message
-            )
-          end
+        customer.social_customers.each do |social_customer|
+          Reservations::Notifications::SocialMessage.run!(
+            customer: customer,
+            social_customer: social_customer,
+            reservation: reservation,
+            message: message
+          )
         end
       end
 

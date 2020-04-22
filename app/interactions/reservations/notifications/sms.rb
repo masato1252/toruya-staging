@@ -1,4 +1,4 @@
-require "sms"
+require "sms_client"
 
 module Reservations
   module Notifications
@@ -9,7 +9,7 @@ module Reservations
       string :message
 
       def execute
-        ::Sms.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
+        SmsClient.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
 
         Notification.create!(
           user: customer.user,
