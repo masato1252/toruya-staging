@@ -12,7 +12,7 @@
 #
 # Indexes
 #
-#  social_message_customer_index  (social_account_id,social_customer_id)
+#  social_message_customer_index  (social_account_id,social_customer_id) UNIQUE
 #
 
 class SocialMessage < ApplicationRecord

@@ -9,6 +9,6 @@ class CreateSocialMessages < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :social_messages, [:social_account_id, :social_customer_id], name: :social_message_customer_index
+    add_index :social_messages, [:social_account_id, :social_customer_id], name: :social_message_customer_index, unique: true
   end
 end

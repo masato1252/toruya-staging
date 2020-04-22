@@ -12,9 +12,9 @@
 #
 # Indexes
 #
-#  index_social_accounts_on_user_id_and_channel_id  (user_id,channel_id)
+#  index_social_accounts_on_user_id_and_channel_id  (user_id,channel_id) UNIQUE
 #
-#
+
 require "message_encryptor"
 
 class SocialAccount < ApplicationRecord

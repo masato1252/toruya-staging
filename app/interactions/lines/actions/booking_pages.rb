@@ -1,6 +1,9 @@
 require "line_client"
 
 class Lines::Actions::BookingPages < ActiveInteraction::Base
+  LINE_COLUMN_DESCRIPTION_LIMIT = 100
+  LINE_COLUMNS_NUMBER_LIMIT = 10
+
   object :social_customer
 
   # {
@@ -52,7 +55,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
       if booking_page.started? && !booking_page.ended?
         {
           "title": booking_page.title,
-          "text": booking_page.greeting.first(100),
+          "text": booking_page.greeting.first(LINE_COLUMN_DESCRIPTION_LIMIT),
           "defaultAction": {
             "type": "uri",
             "label": "View detail",
@@ -67,13 +70,13 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
           ]
         }
       end
-    end.compact.first(10)
+    end.compact.first(LINE_COLUMNS_NUMBER_LIMIT)
 
     # handle 400 error back
     if columns.blank?
-      LineClient.send(social_customer, "Sorry, we don't have any activites now")
+      LineClient.send(social_customer, "Sorry, we don't have any activites now".freeze)
     else
-      LineClient.carousel_template( social_customer: social_customer, title: "Booking pages", text: "There are our active booking activities", columns: columns)
+      LineClient.carousel_template(social_customer: social_customer, title: "Booking pages".freeze, text: "There are our active booking activities".freeze, columns: columns)
     end
 
     Lines::MessageEvent.run(social_customer: social_customer, event: {})

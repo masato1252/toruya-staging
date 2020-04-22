@@ -32,12 +32,12 @@ class Lines::MessageEvent < ActiveInteraction::Base
         "label": "Shop phone number",
         "data": "action=shop_phone"
       },
-    ]
+    ].freeze
 
     LineClient.button_template(
       social_customer: social_customer,
-      title: "Welcome to my shops",
-      text: "These are the services we provide",
+      title: "Welcome to my shops".freeze,
+      text: "These are the services we provide".freeze,
       actions: actions
     )
   end

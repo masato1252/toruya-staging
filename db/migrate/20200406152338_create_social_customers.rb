@@ -11,5 +11,7 @@ class CreateSocialCustomers < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    add_index :social_customers, [:user_id, :social_account_id, :social_user_id], unique: true, name: :social_customer_unique_index
   end
 end

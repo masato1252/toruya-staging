@@ -2998,7 +2998,7 @@ CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (
 -- Name: index_social_accounts_on_user_id_and_channel_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_social_accounts_on_user_id_and_channel_id ON public.social_accounts USING btree (user_id, channel_id);
+CREATE UNIQUE INDEX index_social_accounts_on_user_id_and_channel_id ON public.social_accounts USING btree (user_id, channel_id);
 
 
 --
@@ -3219,10 +3219,17 @@ CREATE INDEX shop_working_time_index ON public.business_schedules USING btree (s
 
 
 --
+-- Name: social_customer_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USING btree (user_id, social_account_id, social_user_id);
+
+
+--
 -- Name: social_message_customer_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
+CREATE UNIQUE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
 
 
 --

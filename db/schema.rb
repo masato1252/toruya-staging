@@ -515,7 +515,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_053955) do
     t.string "channel_secret", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "channel_id"], name: "index_social_accounts_on_user_id_and_channel_id"
+    t.index ["user_id", "channel_id"], name: "index_social_accounts_on_user_id_and_channel_id", unique: true
   end
 
   create_table "social_customers", force: :cascade do |t|
@@ -529,6 +529,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_053955) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["customer_id"], name: "index_social_customers_on_customer_id"
+    t.index ["user_id", "social_account_id", "social_user_id"], name: "social_customer_unique_index", unique: true
     t.index ["user_id"], name: "index_social_customers_on_user_id"
   end
 
@@ -539,7 +540,7 @@ ActiveRecord::Schema.define(version: 2020_04_07_053955) do
     t.text "raw_content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
+    t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index", unique: true
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

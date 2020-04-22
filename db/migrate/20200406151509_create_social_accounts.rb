@@ -9,6 +9,6 @@ class CreateSocialAccounts < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :social_accounts, [:user_id, :channel_id]
+    add_index :social_accounts, [:user_id, :channel_id], unique: true
   end
 end
