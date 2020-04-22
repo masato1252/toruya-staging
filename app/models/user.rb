@@ -71,6 +71,7 @@ class User < ApplicationRecord
   has_one :reference, foreign_key: :referrer_id, class_name: "Referral"
   has_many :payments, foreign_key: :receiver_id
   has_many :payment_withdrawals, foreign_key: :receiver_id
+  has_many :social_accounts
   has_one :business_application
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true

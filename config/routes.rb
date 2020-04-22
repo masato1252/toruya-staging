@@ -189,6 +189,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :webhooks do
+    post "line/:channel_id", to: "lines#create", as: :line
+  end
+
   resources :calendars, only: [] do
     collection do
       get "working_schedule"

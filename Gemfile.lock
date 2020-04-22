@@ -279,6 +279,7 @@ GEM
       addressable (~> 2.3)
     letter_opener (1.4.1)
       launchy (~> 2.2)
+    line-bot-api (1.14.0)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -577,6 +578,7 @@ DEPENDENCIES
   jp_prefecture!
   kaminari
   letter_opener (~> 1.4.1)
+  line-bot-api
   listen
   lograge
   memory_profiler

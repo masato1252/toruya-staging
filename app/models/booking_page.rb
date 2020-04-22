@@ -32,11 +32,12 @@ class BookingPage < ApplicationRecord
 
   has_many :booking_page_options
   has_many :booking_options, through: :booking_page_options
-  has_many :booking_page_special_dates
+  has_many :booking_page_special_dates, -> { order(:start_at) }
 
   belongs_to :user
   belongs_to :shop
 
+  scope :started, -> { where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
 
   def start_time
@@ -49,6 +50,10 @@ class BookingPage < ApplicationRecord
 
   def available_booking_start_date
     Subscription.today.advance(days: booking_limit_day)
+  end
+
+  def started?
+    Time.zone.now >= start_time && booking_options.active.exists?
   end
 
   def ended?

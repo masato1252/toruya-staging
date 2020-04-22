@@ -17,6 +17,8 @@
 #  index_notifications_on_user_id_and_charged  (user_id,charged)
 #
 
+# phone_number presents: SMS Notification
+# phone_number empty: Line Notification
 class Notification < ApplicationRecord
   belongs_to :user
 end

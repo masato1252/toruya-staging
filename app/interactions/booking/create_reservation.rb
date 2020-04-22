@@ -238,28 +238,7 @@ module Booking
         end
 
         if customer.persisted? && reservation
-          # XXX: Use the phone_number using at booking time
-          if phone_number.present? && customer.user.subscription.charge_required
-            ::Bookings::CustomerSmsNotificationJob.perform_later(customer, reservation, phone_number)
-          end
-
-          # XXX: Use the email using at booking time
-          if email.present?
-            BookingMailer.with(
-              customer: customer,
-              reservation: reservation,
-              booking_page: booking_page,
-              booking_option: booking_option,
-              email: email
-            ).customer_reservation_notification.deliver_later
-          end
-
-          BookingMailer.with(
-            customer: customer,
-            reservation: reservation,
-            booking_page: booking_page,
-            booking_option: booking_option,
-          ).shop_owner_reservation_booked_notification.deliver_later
+          ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
         else
           errors.add(:base, :reservation_something_wrong)
           raise ActiveRecord::Rollback

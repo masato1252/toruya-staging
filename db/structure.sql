@@ -1506,6 +1506,111 @@ ALTER SEQUENCE public.shops_id_seq OWNED BY public.shops.id;
 
 
 --
+-- Name: social_accounts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_accounts (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    channel_id character varying NOT NULL,
+    channel_token character varying NOT NULL,
+    channel_secret character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_accounts_id_seq OWNED BY public.social_accounts.id;
+
+
+--
+-- Name: social_customers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_customers (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    customer_id bigint,
+    social_account_id integer,
+    social_user_id character varying NOT NULL,
+    social_user_name character varying,
+    social_user_picture_url character varying,
+    conversation_state integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_customers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_customers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_customers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_customers_id_seq OWNED BY public.social_customers.id;
+
+
+--
+-- Name: social_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_messages (
+    id bigint NOT NULL,
+    social_account_id integer NOT NULL,
+    social_customer_id integer NOT NULL,
+    staff_id integer,
+    raw_content text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_messages_id_seq OWNED BY public.social_messages.id;
+
+
+--
 -- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2088,6 +2193,27 @@ ALTER TABLE ONLY public.shops ALTER COLUMN id SET DEFAULT nextval('public.shops_
 
 
 --
+-- Name: social_accounts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_accounts ALTER COLUMN id SET DEFAULT nextval('public.social_accounts_id_seq'::regclass);
+
+
+--
+-- Name: social_customers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_customers ALTER COLUMN id SET DEFAULT nextval('public.social_customers_id_seq'::regclass);
+
+
+--
+-- Name: social_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_messages ALTER COLUMN id SET DEFAULT nextval('public.social_messages_id_seq'::regclass);
+
+
+--
 -- Name: staff_accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2480,6 +2606,30 @@ ALTER TABLE ONLY public.shops
 
 
 --
+-- Name: social_accounts social_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_accounts
+    ADD CONSTRAINT social_accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: social_customers social_customers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_customers
+    ADD CONSTRAINT social_customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: social_messages social_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_messages
+    ADD CONSTRAINT social_messages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2845,6 +2995,27 @@ CREATE INDEX index_shops_on_user_id_and_deleted_at ON public.shops USING btree (
 
 
 --
+-- Name: index_social_accounts_on_user_id_and_channel_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_social_accounts_on_user_id_and_channel_id ON public.social_accounts USING btree (user_id, channel_id);
+
+
+--
+-- Name: index_social_customers_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_customers_on_customer_id ON public.social_customers USING btree (customer_id);
+
+
+--
+-- Name: index_social_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING btree (user_id);
+
+
+--
 -- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3048,6 +3219,20 @@ CREATE INDEX shop_working_time_index ON public.business_schedules USING btree (s
 
 
 --
+-- Name: social_customer_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USING btree (user_id, social_account_id, social_user_id);
+
+
+--
+-- Name: social_message_customer_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
+
+
+--
 -- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3224,4 +3409,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191230084048'),
 ('20200227084346'),
 ('20200302082812'),
-('20200320012931');
+('20200320012931'),
+('20200406151509'),
+('20200406152338'),
+('20200407053955');
+
+
