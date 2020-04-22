@@ -110,30 +110,4 @@ class ReservationCustomer < ApplicationRecord
   def new_customer_info?
     customer_info.attributes.compact.present?
   end
-
-  def sms_booking_message
-    I18n.t(
-      "customer.notifications.sms.booking",
-      customer_name: customer.name,
-      shop_name: shop.display_name,
-      shop_phone_number: shop.phone_number,
-      booking_time: "#{I18n.l(reservation.start_time, format: :long_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
-      )
-  end
-
-  def sms_reminder_message
-    I18n.t(
-      "customer.notifications.sms.reminder",
-      customer_name: customer.name,
-      shop_name: shop.display_name,
-      shop_phone_number: shop.phone_number,
-      booking_time: "#{I18n.l(reservation.start_time, format: :long_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
-    )
-  end
-
-  private
-
-  def shop
-    @shop ||= reservation.shop
-  end
 end

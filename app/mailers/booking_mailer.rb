@@ -1,6 +1,4 @@
-class BookingMailer < ApplicationMailer
-  layout "shop_to_customer"
-
+class BookingMailer < CustomerMailer
   def customer_reservation_notification
     @reservation = params[:reservation]
     @shop = @reservation.shop

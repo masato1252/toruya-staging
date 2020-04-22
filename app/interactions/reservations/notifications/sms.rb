@@ -1,13 +1,15 @@
+require "sms"
+
 module Reservations
   module Notifications
-    class SendCustomerSms < ActiveInteraction::Base
+    class Sms < ActiveInteraction::Base
       string :phone_number
       object :customer
       object :reservation
       string :message
 
       def execute
-        Sms.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
+        ::Sms.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
 
         Notification.create!(
           user: customer.user,
