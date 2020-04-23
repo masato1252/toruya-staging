@@ -59,8 +59,6 @@ gem "twilio-ruby", "~> 5.25.1"
 gem "phonelib"
 gem "line-bot-api"
 gem "oj"
-gem "scout_apm"
-gem "barnes"
 
 group :development, :test do
   gem "byebug", platform: :mri
