@@ -60,7 +60,6 @@ gem "phonelib"
 gem "line-bot-api"
 gem "oj"
 gem "scout_apm"
-gem "barnes"
 
 group :development, :test do
   gem "byebug", platform: :mri
