@@ -1275,7 +1275,6 @@ class BookingReservationForm extends React.Component {
           _.pick(
             this.booking_reservation_form_values.booking_code,
             "uuid",
-            "code"
           ),
           _.pick(
             this.booking_reservation_form_values,

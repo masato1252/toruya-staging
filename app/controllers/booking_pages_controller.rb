@@ -88,6 +88,10 @@ class BookingPagesController < ActionController::Base
         cookies.delete :booking_customer_phone_number
       end
 
+      if booking_code = booking_page.booking_codes.find_by(uuid: params[:uuid])
+        booking_code.update(customer_id: customer.id, reservation_id: result[:reservation].id)
+      end
+
       render json: {
         status: "successful"
       }
@@ -159,7 +163,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def confirm_code
-    code_passed = booking_page.booking_codes.where(uuid: params[:uuid], code: params[:code]).exists?
+    code_passed = booking_page.booking_codes.where(uuid: params[:uuid], code: params[:code]).where("created_at > ?", Time.zone.now.advance(minutes: -10)).exists?
 
     if code_passed
       render json: {
