@@ -32,6 +32,7 @@ class BookingPage < ApplicationRecord
 
   has_many :booking_page_options
   has_many :booking_options, through: :booking_page_options
+  has_many :booking_codes
   has_many :booking_page_special_dates, -> { order(:start_at) }
 
   belongs_to :user

@@ -43,6 +43,7 @@
   },
   booking_reservation_form: {
     regular: @customer ? "yes" : nil,
+    use_default_customer: @customer ? true : nil,
     found_customer: @customer ? true : nil,
     single_booking_time: @single_booking_time,
     booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
@@ -59,7 +60,9 @@
   },
   path: {
     save: booking_reservation_booking_page_path(@booking_page),
-    find_customer: find_customer_booking_page_path(@booking_page)
+    find_customer: find_customer_booking_page_path(@booking_page),
+    ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
+    confirm_code: confirm_code_booking_page_path(@booking_page)
   },
   i18n: {
     errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),

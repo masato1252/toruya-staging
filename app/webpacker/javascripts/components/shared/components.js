@@ -91,6 +91,10 @@ const Condition = ({ when, is, children, is_not }) => (
       }
       else if (typeof value === "boolean")
         outcome = String(value) === is ? children : null
+      else if (is === "null") {
+
+        outcome = is === "null" ? children : null
+      }
       else {
         outcome = value === is ? children : null
       }

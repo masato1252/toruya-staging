@@ -38,10 +38,16 @@ ja:
     please_select_a_menu: メニューをお選びください
     reset_button: 始めからやり直す
     last_selected_option: 前回ご利用のメニュー
+    booking_code:
+      code: "Confirmation code"
+      confirm: "Confirm"
+      resend: "Resend code"
     message:
       unfound_customer_html: 入力されたお名前・携帯電話の両方に一致する顧客データが見つかりませんでした。<br>店舗スタッフにご連絡ください。
       booking_failed_messsage_html: その時間とメニューは満席です。<br>もう一度お試しください。
       booking_unexpected_failed_message: 何らかの理由で予約に失敗しました。もう一度お試しください。
+      booking_code_message: We already sent the confimation code to you, please fill in to confirm your identity
+      booking_code_failed_message: Your confimation code is incorrect
     done:
       title: 仮予約が完了しました
       message1: ご登録の携帯電話に
