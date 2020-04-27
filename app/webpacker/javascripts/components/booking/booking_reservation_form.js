@@ -144,8 +144,7 @@ class BookingReservationForm extends React.Component {
       booking_code_failed_message,
     } = this.booking_reservation_form_values;
 
-    if (use_default_customer) return;
-    if (found_customer === null) return;
+    if (this.neverTryToFindCustomer()) return;
     if (this.isCustomerTrusted()) return;
 
     const { i18n } = this.props;
@@ -176,7 +175,7 @@ class BookingReservationForm extends React.Component {
             )}
           </button>
           <ErrorMessage error={booking_code_failed_message} />
-          <div>
+          <div className="resend-row">
             <a href="#"
               onClick={this.askConfirmCode}
               disabled={is_confirming_code || is_asking_confirmation_code}
@@ -615,7 +614,6 @@ class BookingReservationForm extends React.Component {
   }
 
   renderNewCustomerFields = () => {
-    if (!this.isBookingFlowEnd()) return;
     if (!this.isCustomerTrusted()) return;
 
     const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me } = this.props.i18n;
@@ -1023,7 +1021,7 @@ class BookingReservationForm extends React.Component {
           {this.renderRegularCustomersOption()}
           {this.renderBookingCode()}
           {this.renderCurrentCustomerInfo()}
-          {this.renderNewCustomerFields()}
+          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1046,10 +1044,10 @@ class BookingReservationForm extends React.Component {
           {this.renderRegularCustomersOption()}
           {this.renderBookingCode()}
           {this.renderCurrentCustomerInfo()}
+          {this.renderNewCustomerFields()}
           {this.renderBookingFlowOptions()}
           {this.renderBookingOptionFirstFlow()}
           {this.renderBookingDateFirstFlow()}
-          {this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1388,7 +1386,7 @@ class BookingReservationForm extends React.Component {
   }
 
   isBookingFlowStart = () => {
-    return this.booking_reservation_form_values.found_customer
+    return this.isEnoughCustomerInfo()
   }
 
   isBookingFlowEnd = () => {
@@ -1403,10 +1401,14 @@ class BookingReservationForm extends React.Component {
     return booking_option_id || (booking_date && booking_at)
   }
 
+  neverTryToFindCustomer = () => {
+    return this.booking_reservation_form_values.found_customer === null
+  }
+
   isCustomerTrusted = () => {
     const { found_customer, use_default_customer, booking_code } = this.booking_reservation_form_values;
 
-    return (found_customer != null && (use_default_customer || (booking_code && booking_code.passed)))
+    return use_default_customer || (found_customer != null && booking_code && booking_code.passed)
   }
 
   isEnoughCustomerInfo = () => {
