@@ -5,8 +5,6 @@ module Booking
     CODE_CHARSET = (1..9).to_a.freeze
 
     object :booking_page
-    string :first_name
-    string :last_name
     string :phone_number
 
     def execute
@@ -18,9 +16,9 @@ module Booking
           uuid: SecureRandom.uuid,
           code: code
         )
-        message = I18n.t("customer.notifications.sms.confirmation_code", customer_name: "#{last_name} #{first_name}", code: code)
+        message = I18n.t("customer.notifications.sms.confirmation_code", code: code)
 
-        SmsClient.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
+        SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})")
 
         Notification.create!(
           user: booking_page.user,
@@ -33,8 +31,6 @@ module Booking
         Rollbar.error(
           e,
           phone_numbers: phone_number,
-          first_name: first_name,
-          last_name: last_name,
           rails_env: Rails.configuration.x.env
         )
       end

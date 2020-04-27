@@ -6,7 +6,7 @@ ja:
       booking: "To %{customer_name}\n You just booked %{shop_name} for %{booking_time} temporarily. Please contact %{shop_phone_number} for changes."
       confirmation: "To %{customer_name}\n Your reservation has made to %{shop_name} for %{booking_time} by shop staff. Please contact %{shop_phone_number} for changes."
       reminder: "Hello, %{customer_name}\n We're looking forward to see you in %{shop_name} on %{booking_time}. Please contact %{shop_phone_number} for changes."
-      confirmation_code: "%{customer_name}\nYour confirmation code is\n%{code}"
+      confirmation_code: "Your confirmation code: %{code}"
     reminder_permissions:
       approved:
         title: Reminder setting completed
