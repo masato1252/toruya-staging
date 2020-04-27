@@ -18,7 +18,15 @@ module Booking
         )
         message = I18n.t("customer.notifications.sms.confirmation_code", code: code)
 
-        SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})")
+        begin
+          SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})")
+        rescue Twilio::REST::RestError => e
+          Rollbar.error(
+            e,
+            phone_numbers: phone_number,
+            rails_env: Rails.configuration.x.env
+          )
+        end
 
         Notification.create!(
           user: booking_page.user,
@@ -27,12 +35,6 @@ module Booking
         )
 
         booking_code
-      rescue Twilio::REST::RestError => e
-        Rollbar.error(
-          e,
-          phone_numbers: phone_number,
-          rails_env: Rails.configuration.x.env
-        )
       end
     end
 
