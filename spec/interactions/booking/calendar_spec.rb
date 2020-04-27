@@ -49,6 +49,21 @@ RSpec.describe Booking::Calendar do
       expect(result[1]).to eq(["2019-05-13"])
     end
 
+    context "when special_dates is empty array" do
+      it "returns expected result" do
+        special_dates = [ ]
+        args.merge!(special_dates: special_dates, special_date_type: true)
+
+        result = outcome.result
+
+        expect(result[0]).to eq({
+          working_dates: ["2019-05-13", "2019-05-20", "2019-05-27"],
+          holiday_dates: ["2019-05-03", "2019-05-04", "2019-05-05", "2019-05-06", "2019-05-12", "2019-05-19", "2019-05-26"]
+        })
+        expect(result[1]).to eq([])
+      end
+    end
+
     context "when today is 2019-05-13" do
       # Default booking page limit day is 1, that means you couldn't book today
       let(:today) { Time.zone.local(2019, 5, 13) }

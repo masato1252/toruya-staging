@@ -197,6 +197,7 @@ class BookingPagesController < ActionController::Base
       date_range: month_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       special_dates: special_dates,
+      special_date_type: booking_page.booking_page_special_dates.exists?,
       interval: booking_page.interval,
       overbooking_restriction: booking_page.overbooking_restriction
     )

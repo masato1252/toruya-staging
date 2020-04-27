@@ -699,6 +699,9 @@ class BookingReservationForm extends React.Component {
     if (!this.isEnoughCustomerInfo()) return;
     if (!this.isCustomerTrusted()) return;
 
+    // Make sure the booking button be seen
+    setTimeout(() => this.scrollToTarget("footer"), 1000)
+
     return (
       <div className="reservation-confirmation">
         <div className="note">
@@ -719,10 +722,7 @@ class BookingReservationForm extends React.Component {
         <a href="#"
           className="btn btn-tarco"
           onClick={(event) => {
-            if (this.booking_reservation_form_errors &&
-              Object.keys(this.booking_reservation_form_errors).length &&
-              this.booking_reservation_form_errors.customer_info &&
-              Object.keys(this.booking_reservation_form_errors.customer_info).length) {
+            if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
             else {
@@ -1431,6 +1431,13 @@ class BookingReservationForm extends React.Component {
       customer_phone_number &&
       customer_email
     )
+  }
+
+  isAnyErrors = () => {
+    return this.booking_reservation_form_errors &&
+      Object.keys(this.booking_reservation_form_errors).length &&
+      this.booking_reservation_form_errors.customer_info &&
+      Object.keys(this.booking_reservation_form_errors.customer_info).length
   }
 
   scrollToSelectedTarget = () => {
