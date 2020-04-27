@@ -152,7 +152,9 @@ class BookingPagesController < ActionController::Base
   def ask_confirmation_code
     booking_code = Booking::Code.run!(
       booking_page: booking_page,
-      phone_number: params[:phone_number]
+      first_name: params[:customer_first_name],
+      last_name: params[:customer_last_name],
+      phone_number: params[:customer_phone_number]
     )
 
     render json: {

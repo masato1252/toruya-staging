@@ -1187,7 +1187,7 @@ class BookingReservationForm extends React.Component {
     if (this.askConfirmCodeCall) {
       return;
     }
-    const { customer_phone_number } = this.booking_reservation_form_values;
+    const { customer_phone_number, customer_last_name, customer_first_name } = this.booking_reservation_form_values;
 
     this.booking_reservation_form.change("booking_reservation_form[is_asking_confirmation_code]", true)
     this.booking_reservation_form.change("booking_reservation_form[booking_code_failed_message]", null)
@@ -1197,7 +1197,9 @@ class BookingReservationForm extends React.Component {
       method: "GET",
       url: this.props.path.ask_confirmation_code,
       params: {
-        phone_number: customer_phone_number
+        customer_phone_number: customer_phone_number,
+        customer_last_name: customer_last_name,
+        customer_first_name: customer_first_name
       },
       responseType: "json"
     })
