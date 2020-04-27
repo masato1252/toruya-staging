@@ -580,7 +580,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderCurrentCustomerInfo = () => {
-    const { found_customer, use_default_customer, booking_code } = this.booking_reservation_form_values;
+    const { found_customer } = this.booking_reservation_form_values;
     const { simple_address, last_name, first_name } = this.booking_reservation_form_values.customer_info;
     const { not_me, edit_info, of, sir, thanks_for_come_back } = this.props.i18n
 
@@ -1173,10 +1173,6 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[booking_code]", booking_code)
     this.booking_reservation_form.change("booking_reservation_form[use_default_customer]", false)
     this.findCustomerCall = null;
-
-    // if (errors) {
-    //   this.booking_reservation_form.change("booking_reservation_form[find_customer_message]", errors.message)
-    // }
   }
 
   askConfirmCode = async (event) => {
@@ -1196,8 +1192,6 @@ class BookingReservationForm extends React.Component {
       url: this.props.path.ask_confirmation_code,
       params: {
         customer_phone_number: customer_phone_number,
-        customer_last_name: customer_last_name,
-        customer_first_name: customer_first_name
       },
       responseType: "json"
     })
