@@ -125,7 +125,7 @@ class BookingReservationForm extends React.Component {
         />
         <Condition when="booking_reservation_form[found_customer]" is="null">
           <div className="centerize">
-            <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
+            <a href="#" className="btn btn-tarco find-customer" onClick={this.findCustomer} disabled={is_finding_customer}>
               {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
@@ -156,6 +156,9 @@ class BookingReservationForm extends React.Component {
           {i18n.booking_code.code}
         </h4>
         <div className="centerize">
+          <div className="desc">
+            {i18n.message.booking_code_message}
+          </div>
           <Field
             className="booking-code"
             name="booking_reservation_form[booking_code][code]"
@@ -169,24 +172,21 @@ class BookingReservationForm extends React.Component {
             {is_confirming_code ? (
               <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
             ) : (
-              i18n.booking_code.confirm
+              i18n.confirm
             )}
           </button>
-
-          <a href="#"
-            onClick={this.askConfirmCode}
-            disabled={is_confirming_code || is_asking_confirmation_code}
-          >
-            {is_asking_confirmation_code ? (
-              <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
-            ) : (
-              i18n.booking_code.resend
-            )}
-          </a>
           <ErrorMessage error={booking_code_failed_message} />
-
-          <div className="desc">
-            {i18n.message.booking_code_message}
+          <div>
+            <a href="#"
+              onClick={this.askConfirmCode}
+              disabled={is_confirming_code || is_asking_confirmation_code}
+            >
+              {is_asking_confirmation_code ? (
+                <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+              ) : (
+                i18n.booking_code.resend
+              )}
+            </a>
           </div>
         </div>
       </div>

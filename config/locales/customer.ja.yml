@@ -7,7 +7,7 @@ ja:
         booking: "%{customer_name}様\n%{shop_name}に%{booking_time}で仮予約を作成しました。変更は%{shop_phone_number}まで。"
         confimation: "%{customer_name}様\n%{shop_name}に%{booking_time}で予約を作成しました。変更は%{shop_phone_number}まで。"
         reminder: "%{customer_name}様\n%{shop_name}に%{booking_time}のご来店お待ちしています。変更は%{shop_phone_number}まで。"
-        confirmation_code: "%{customer_name}様\n確認コード: %{code}"
+        confirmation_code: "%{customer_name}様\n確認コード\n%{code}"
     reminder_permissions:
       approved:
         title: リマインダ設定完了
