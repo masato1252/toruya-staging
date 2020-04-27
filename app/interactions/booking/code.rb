@@ -20,7 +20,7 @@ module Booking
         )
         message = I18n.t("customer.notifications.sms.confirmation_code", customer_name: "#{last_name} #{first_name}", code: code)
 
-        # SmsClient.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
+        SmsClient.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
 
         Notification.create!(
           user: booking_page.user,
