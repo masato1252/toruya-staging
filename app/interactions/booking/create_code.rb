@@ -1,7 +1,7 @@
 require "sms_client"
 
 module Booking
-  class Code < ActiveInteraction::Base
+  class CreateCode < ActiveInteraction::Base
     CODE_CHARSET = (1..9).to_a.freeze
 
     object :booking_page

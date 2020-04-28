@@ -88,9 +88,7 @@ class BookingPagesController < ActionController::Base
         cookies.delete :booking_customer_phone_number
       end
 
-      if booking_code = booking_page.booking_codes.find_by(uuid: params[:uuid])
-        booking_code.update(customer_id: customer.id, reservation_id: result[:reservation].id)
-      end
+      Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 
       render json: {
         status: "successful"
@@ -113,7 +111,7 @@ class BookingPagesController < ActionController::Base
       phone_number: params[:customer_phone_number]
     )
 
-    booking_code = Booking::Code.run!(
+    booking_code = Booking::CreateCode.run!(
       booking_page: booking_page,
       phone_number: params[:customer_phone_number]
     )
@@ -148,7 +146,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def ask_confirmation_code
-    booking_code = Booking::Code.run!(
+    booking_code = Booking::CreateCode.run!(
       booking_page: booking_page,
       phone_number: params[:customer_phone_number]
     )
@@ -161,7 +159,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def confirm_code
-    code_passed = booking_page.booking_codes.where(uuid: params[:uuid], code: params[:code]).where("created_at > ?", Time.zone.now.advance(minutes: -10)).exists?
+    code_passed = Booking::VerifyCode.run!(booking_page: booking_page, uuid: params[:uuid], code: params[:code])
 
     if code_passed
       render json: {
