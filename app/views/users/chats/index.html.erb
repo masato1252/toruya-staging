@@ -1,0 +1,21 @@
+<%= react_component("management/chats", {
+  timezone: Time.zone.tzinfo.name,
+  super_user_id: super_user.id,
+  booking_reservation_form: {
+  },
+  path: {
+    save: "#",
+  },
+  i18n: {
+    errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
+  }.merge!([
+    t("settings.booking_page.form"),
+    t("booking_page"),
+    t("common").slice(:required_label, :select_a_booking_option, :minute, :of, :sir, :date, :start_time),
+    t("action").slice(:save),
+    t("customer").slice(:select_region)
+    ].inject(:merge!)
+ ),
+},
+{ camelize_props: false }
+) %>

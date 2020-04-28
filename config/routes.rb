@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
 
   resource :member, only: [:show] do
@@ -19,6 +20,10 @@ Rails.application.routes.draw do
         get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
         patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
       end
+    end
+
+    scope module: :users do
+      resources :chats, only: [:index]
     end
   end
 

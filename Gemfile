@@ -59,6 +59,7 @@ gem "twilio-ruby", "~> 5.25.1"
 gem "phonelib"
 gem "line-bot-api"
 gem "oj"
+gem "redis"
 
 group :development, :test do
   gem "byebug", platform: :mri
