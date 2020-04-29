@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_07_053955) do
+ActiveRecord::Schema.define(version: 2020_04_26_012331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -48,6 +48,17 @@ ActiveRecord::Schema.define(version: 2020_04_07_053955) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "booking_codes", force: :cascade do |t|
+    t.string "uuid"
+    t.string "code"
+    t.integer "booking_page_id"
+    t.integer "customer_id"
+    t.integer "reservation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_page_id", "uuid", "code"], name: "index_booking_codes_on_booking_page_id_and_uuid_and_code", unique: true
   end
 
   create_table "booking_option_menus", force: :cascade do |t|

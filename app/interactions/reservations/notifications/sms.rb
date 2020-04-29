@@ -22,7 +22,6 @@ module Reservations
         Rollbar.error(
           e,
           phone_numbers: phone_number,
-          formatted_phone: formatted_phone,
           customer_id: customer.id,
           reservation_id: reservation.id,
           rails_env: Rails.configuration.x.env

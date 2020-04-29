@@ -5,10 +5,8 @@ class BookingPagesController < ActionController::Base
   layout "booking"
 
   def show
-    @booking_page = BookingPage.find(params[:id])
-
-    if @booking_page.draft
-      if !current_user || !current_user.current_staff_account(@booking_page.user)
+    if booking_page.draft
+      if !current_user || !current_user.current_staff_account(booking_page.user)
         redirect_to root_path, alert: I18n.t("common.no_permission")
         return
       end
@@ -90,6 +88,8 @@ class BookingPagesController < ActionController::Base
         cookies.delete :booking_customer_phone_number
       end
 
+      Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
+
       render json: {
         status: "successful"
       }
@@ -105,9 +105,14 @@ class BookingPagesController < ActionController::Base
 
   def find_customer
     customer = Booking::FindCustomer.run!(
-      booking_page: BookingPage.find(params[:id]),
+      booking_page: booking_page,
       first_name: params[:customer_first_name],
       last_name: params[:customer_last_name],
+      phone_number: params[:customer_phone_number]
+    )
+
+    booking_code = Booking::CreateCode.run!(
+      booking_page: booking_page,
       phone_number: params[:customer_phone_number]
     )
 
@@ -122,11 +127,17 @@ class BookingPagesController < ActionController::Base
 
       render json: {
         customer_info: view_context.customer_info_as_json(customer),
-        last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+        last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id,
+        booking_code: {
+          uuid: booking_code.uuid
+        }
       }
     else
       render json: {
         customer_info: {},
+        booking_code: {
+          uuid: booking_code.uuid
+        },
         errors: {
           message: I18n.t("booking_page.message.unfound_customer_html")
         }
@@ -134,9 +145,41 @@ class BookingPagesController < ActionController::Base
     end
   end
 
-  def calendar
-    booking_page = BookingPage.find(params[:id])
+  def ask_confirmation_code
+    booking_code = Booking::CreateCode.run!(
+      booking_page: booking_page,
+      phone_number: params[:customer_phone_number]
+    )
 
+    render json: {
+      booking_code: {
+        uuid: booking_code.uuid
+      }
+    }
+  end
+
+  def confirm_code
+    code_passed = Booking::VerifyCode.run!(booking_page: booking_page, uuid: params[:uuid], code: params[:code])
+
+    if code_passed
+      render json: {
+        booking_code: {
+          passed: code_passed
+        }
+      }
+    else
+      render json: {
+        booking_code: {
+          passed: code_passed
+        },
+        errors: {
+          message: I18n.t("booking_page.message.booking_code_failed_message")
+        }
+      }
+    end
+  end
+
+  def calendar
     special_dates = booking_page.booking_page_special_dates.where(start_at: month_dates).map do |special_date|
       {
         start_at_date_part: special_date.start_at_date,
@@ -152,6 +195,7 @@ class BookingPagesController < ActionController::Base
       date_range: month_dates,
       booking_option_ids: params[:booking_option_id] ? [params[:booking_option_id]] : booking_page.booking_option_ids,
       special_dates: special_dates,
+      special_date_type: booking_page.booking_page_special_dates.exists?,
       interval: booking_page.interval,
       overbooking_restriction: booking_page.overbooking_restriction
     )
@@ -164,8 +208,6 @@ class BookingPagesController < ActionController::Base
   end
 
   def booking_times
-    booking_page = BookingPage.find(params[:id])
-
     booking_dates = if booking_page.booking_page_special_dates.exists?
       booking_page.booking_page_special_dates.where(start_at: date.all_day).map do |matched_special_date|
         {
@@ -221,6 +263,10 @@ class BookingPagesController < ActionController::Base
 
   def month_dates
     date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day
+  end
+
+  def booking_page
+    @booking_page ||= BookingPage.find(params[:id])
   end
 
   def redirect_to_booking_show_page(exception)

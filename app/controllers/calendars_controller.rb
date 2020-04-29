@@ -26,6 +26,7 @@ class CalendarsController < DashboardController
       date_range: month_dates,
       booking_option_ids: params[:booking_option_ids],
       special_dates: ActiveModel::Type::Boolean.new.cast(params[:had_special_date]) ? params[:special_dates] : [],
+      special_date_type: ActiveModel::Type::Boolean.new.cast(params[:had_special_date]),
       interval: params[:interval],
       overbooking_restriction: overbooking_restriction
     )

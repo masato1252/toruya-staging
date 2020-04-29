@@ -24,6 +24,9 @@ en:
     ignore: Ignore
     save_changes: Overwrite the data
     add_more: More
+    approve: Approve
+    reject: Reject
+    confirm: Confirm
   common:
     processing: Processing
     date: Date
