@@ -1138,6 +1138,7 @@ class BookingReservationForm extends React.Component {
     }
 
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", true)
+    this.booking_reservation_form.change("booking_reservation_form[booking_code_failed_message]", null)
     this.findCustomerCall = "loading";
 
     const response = await axios({
