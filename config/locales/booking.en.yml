@@ -2,9 +2,6 @@ ja:
   booking_page:
     showing_preview: Showing preview
     time_from: ""
-    ever_used: "have you been used"
-    yes_ever_used: "Yes, I had"
-    no_first_time: "No, it's my first time"
     name: Name
     last_name: Last name
     first_name: First name
@@ -34,10 +31,15 @@ ja:
     please_select_a_menu: Please select a menu
     reset_button: Start Over
     last_selected_option: Last used menu
+    booking_code:
+      code: Confirmation code
+      resend: Resend code
     message:
       unfound_customer_html: No customer data was found that matches both name and mobile number. <br>Please contact shop staff.
       booking_failed_messsage_html: Time and menu you chose is full.<br>Please try another option.
       booking_unexpected_failed_message: Booking failed with some reason. Please try again.
+      booking_code_message: We already sent the confimation code to you, please fill in to confirm your identity
+      booking_code_failed_message: Your confimation code is incorrect
     done:
       title: Temporary reservation has been made
       message1: Reservation detail has been

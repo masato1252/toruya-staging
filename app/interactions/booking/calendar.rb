@@ -14,6 +14,7 @@ module Booking
     # "{\"start_at_date_part\":\"2019-05-23\",\"start_at_time_part\":\"01:00\",\"end_at_date_part\":\"2019-05-23\",\"end_at_time_part\":\"12:59\"}"
     # ]
     array :special_dates, default: nil
+    boolean :special_date_type, default: false
     integer :interval, default: 30
     boolean :overbooking_restriction, default: true
 
@@ -27,7 +28,7 @@ module Booking
         booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
       )
 
-      if special_dates.present?
+      if special_date_type || special_dates.present?
         # available_working_dates = special_dates.map do |special_date|
         #   # {"start_at_date_part"=>"2019-05-06", "start_at_time_part"=>"01:00", "end_at_date_part"=>"2019-05-06", "end_at_time_part"=>"12:59"}
         #   JSON.parse(special_date)["start_at_date_part"]

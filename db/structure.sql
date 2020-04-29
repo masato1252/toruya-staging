@@ -170,6 +170,41 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: booking_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.booking_codes (
+    id bigint NOT NULL,
+    uuid character varying,
+    code character varying,
+    booking_page_id integer,
+    customer_id integer,
+    reservation_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: booking_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.booking_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: booking_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.booking_codes_id_seq OWNED BY public.booking_codes.id;
+
+
+--
 -- Name: booking_option_menus; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1934,6 +1969,13 @@ ALTER TABLE ONLY public.active_storage_blobs ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: booking_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_codes ALTER COLUMN id SET DEFAULT nextval('public.booking_codes_id_seq'::regclass);
+
+
+--
 -- Name: booking_option_menus id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2299,6 +2341,14 @@ ALTER TABLE ONLY public.active_storage_blobs
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: booking_codes booking_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.booking_codes
+    ADD CONSTRAINT booking_codes_pkey PRIMARY KEY (id);
 
 
 --
@@ -2782,6 +2832,13 @@ CREATE UNIQUE INDEX index_active_storage_attachments_uniqueness ON public.active
 --
 
 CREATE UNIQUE INDEX index_active_storage_blobs_on_key ON public.active_storage_blobs USING btree (key);
+
+
+--
+-- Name: index_booking_codes_on_booking_page_id_and_uuid_and_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_booking_codes_on_booking_page_id_and_uuid_and_code ON public.booking_codes USING btree (booking_page_id, uuid, code);
 
 
 --
@@ -3412,6 +3469,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200320012931'),
 ('20200406151509'),
 ('20200406152338'),
-('20200407053955');
+('20200407053955'),
+('20200426012331');
 
 

@@ -26,6 +26,7 @@ ja:
     add_more: 追加
     approve: 承認
     reject: 拒否
+    confirm: 確認
   common:
     processing: 送信中
     date: 日付

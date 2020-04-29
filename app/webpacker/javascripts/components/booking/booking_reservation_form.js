@@ -18,7 +18,7 @@ import { SlideDown } from 'react-slidedown';
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
-import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "../../libraries/helper";
+import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
@@ -32,34 +32,6 @@ class BookingReservationForm extends React.Component {
 
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator(
-      {
-        field: /regular/,
-        updates: async (value, name, allValues) => {
-          if (is_single_option) {
-            return await this.resetValues([
-              "customer_last_name",
-              "customer_first_name",
-              "customer_phone_number",
-              "customer_info",
-              "found_customer",
-              "find_customer_message"
-            ]);
-          } else {
-            return await this.resetValues([
-              "customer_last_name",
-              "customer_first_name",
-              "customer_phone_number",
-              "customer_info",
-              "booking_date",
-              "booking_at",
-              "booking_times",
-              "booking_option_id",
-              "found_customer",
-              "find_customer_message"
-            ]);
-          }
-        }
-      },
       {
         field: /booking_flow/,
         updates: async (value, name, allValues) => {
@@ -118,79 +90,106 @@ class BookingReservationForm extends React.Component {
     const {
       found_customer,
       is_finding_customer,
-      find_customer_message,
     } = this.booking_reservation_form_values;
 
     if (found_customer) return;
 
-    const { ever_used, yes_ever_used, no_first_time, name, last_name, first_name, phone_number, remember_me, confirm_customer_info } = this.props.i18n;
+    const { name, last_name, first_name, phone_number, remember_me, confirm_customer_info } = this.props.i18n;
     const { shop_name } = this.props.booking_page;
 
     return (
       <div className="customer-type-options">
-        <div className="regular-customer-options">
-          <h4>
-            {ever_used}
-          </h4>
-
-          <div className="radios">
-            <div className="radio">
-              <Field name="booking_reservation_form[regular]" type="radio" value="yes" component={Radio}>
-                {yes_ever_used}
-              </Field>
-            </div>
-            <div className="radio">
-              <Field name="booking_reservation_form[regular]" type="radio" value="no" component={Radio}>
-                {no_first_time}
-              </Field>
-            </div>
-          </div>
-        </div>
-
-        <Condition when="booking_reservation_form[regular]" is="yes">
-          <h4>
-            {name}
-          </h4>
-          <Field
-            name="booking_reservation_form[customer_last_name]"
-            component="input"
-            placeholder={last_name}
-            type="text"
-          />
-          <Field
-            name="booking_reservation_form[customer_first_name]"
-            component="input"
-            placeholder={first_name}
-            type="text"
-          />
-          <h4>
-            {phone_number}
-          </h4>
-          <Field
-            name="booking_reservation_form[customer_phone_number]"
-            component="input"
-            placeholder="0123456789"
-            type="tel"
-          />
-          <div className="remember-me">
-            <label>
-              <Field
-                name="booking_reservation_form[remember_me]"
-                component="input"
-                type="checkbox"
-              />
-              {remember_me}
-            </label>
-          </div>
+        <h4>
+          {name}
+        </h4>
+        <Field
+          name="booking_reservation_form[customer_last_name]"
+          component="input"
+          placeholder={last_name}
+          type="text"
+        />
+        <Field
+          name="booking_reservation_form[customer_first_name]"
+          component="input"
+          placeholder={first_name}
+          type="text"
+        />
+        <h4>
+          {phone_number}
+        </h4>
+        <Field
+          name="booking_reservation_form[customer_phone_number]"
+          component="input"
+          placeholder="0123456789"
+          type="tel"
+        />
+        <Condition when="booking_reservation_form[found_customer]" is="null">
           <div className="centerize">
-            {find_customer_message ? <ErrorMessage error={find_customer_message} /> : null}
-            <a href="#" className="btn btn-tarco" onClick={this.findCustomer} disabled={is_finding_customer}>
+            <a href="#" className="btn btn-tarco find-customer" onClick={this.findCustomer} disabled={is_finding_customer}>
               {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
         </Condition>
       </div>
     )
+  }
+
+  renderBookingCode = () => {
+    const {
+      found_customer,
+      is_confirming_code,
+      is_asking_confirmation_code,
+      booking_code,
+      use_default_customer,
+      booking_code_failed_message,
+    } = this.booking_reservation_form_values;
+
+    if (this.neverTryToFindCustomer()) return;
+    if (this.isCustomerTrusted()) return;
+
+    const { i18n } = this.props;
+
+    return (
+      <div className="customer-type-options">
+        <h4>
+          {i18n.booking_code.code}
+        </h4>
+        <div className="centerize">
+          <div className="desc">
+            {i18n.message.booking_code_message}
+          </div>
+          <Field
+            className="booking-code"
+            name="booking_reservation_form[booking_code][code]"
+            component="input"
+            placeholder="012345"
+            type="tel"
+          />
+          <button
+            onClick={this.confirmCode}
+          className="btn btn-tarco" disabled={is_confirming_code || is_asking_confirmation_code}>
+            {is_confirming_code ? (
+              <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+            ) : (
+              i18n.confirm
+            )}
+          </button>
+          <ErrorMessage error={booking_code_failed_message} />
+          <div className="resend-row">
+            <a href="#"
+              onClick={this.askConfirmCode}
+              disabled={is_confirming_code || is_asking_confirmation_code}
+            >
+              {is_asking_confirmation_code ? (
+                <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+              ) : (
+                i18n.booking_code.resend
+              )}
+            </a>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   renderCustomerInfoFieldModel = () => {
@@ -435,7 +434,6 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingFlowOptions = () => {
-    if (!this.isBookingFlowStart()) return;
     if (this.isFlowSelected()) return;
     const { flow_label, date_flow_first, option_flow_first } = this.props.i18n
 
@@ -503,8 +501,6 @@ class BookingReservationForm extends React.Component {
   };
 
   renderBookingOptionFirstFlow = () => {
-    if (!this.isBookingFlowStart()) return;
-
     const {
       booking_options,
       booking_times,
@@ -554,8 +550,6 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDateFirstFlow = () => {
-    if (!this.isBookingFlowStart()) return;
-
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
     const { edit } = this.props.i18n;
 
@@ -582,10 +576,10 @@ class BookingReservationForm extends React.Component {
   renderCurrentCustomerInfo = () => {
     const { found_customer } = this.booking_reservation_form_values;
     const { simple_address, last_name, first_name } = this.booking_reservation_form_values.customer_info;
-
-    if (!found_customer) return;
-
     const { not_me, edit_info, of, sir, thanks_for_come_back } = this.props.i18n
+
+    if (!this.isCustomerTrusted()) return;
+    if (!found_customer) return;
 
     return (
       <div className="customer-found">
@@ -614,35 +608,12 @@ class BookingReservationForm extends React.Component {
   }
 
   renderNewCustomerFields = () => {
-    if (!this.isBookingFlowEnd()) return;
+    if (!this.isCustomerTrusted()) return;
 
     const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me } = this.props.i18n;
 
     return (
-      <Condition when="booking_reservation_form[regular]" is="no">
-        <h4>
-          {name}
-        </h4>
-        <div className="field">
-          <Field
-            name="booking_reservation_form[customer_last_name]"
-            component="input"
-            placeholder={last_name}
-            type="text"
-            validate={(value) => requiredValidation(last_name)(this, value)}
-          />
-          <Error name="booking_reservation_form[customer_last_name]" />
-        </div>
-        <div className="field">
-          <Field
-            name="booking_reservation_form[customer_first_name]"
-            component="input"
-            placeholder={first_name}
-            type="text"
-            validate={(value) => requiredValidation(first_name)(this, value)}
-          />
-          <Error name="booking_reservation_form[customer_first_name]" />
-        </div>
+      <Condition when="booking_reservation_form[found_customer]" is="false">
         <h4>
           {phonetic_name}
         </h4>
@@ -666,17 +637,6 @@ class BookingReservationForm extends React.Component {
           />
           <Error name="booking_reservation_form[customer_phonetic_first_name]" />
         </div>
-        <h4>
-          {phone_number}
-        </h4>
-        <Field
-          name="booking_reservation_form[customer_phone_number]"
-          component="input"
-          placeholder="0123456789"
-          type="number"
-          validate={composeValidators(this, requiredValidation(phone_number), mustBeNumber, lengthValidator(11))}
-        />
-        <Error name="booking_reservation_form[customer_phone_number]" />
         <h4>
           {email}
         </h4>
@@ -726,11 +686,15 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { regular, booking_failed } = this.booking_reservation_form_values;
+    const { booking_failed, booking_code } = this.booking_reservation_form_values;
     const { reminder_desc } = this.props.i18n;
 
     if (!this.isBookingFlowEnd()) return;
-    if (!this.isEnoughCustomerInfo() && regular !== "no") return;
+    if (!this.isEnoughCustomerInfo()) return;
+    if (!this.isCustomerTrusted()) return;
+
+    // Make sure the booking button be seen
+    setTimeout(() => this.scrollToTarget("footer"), 1000)
 
     return (
       <div className="reservation-confirmation">
@@ -749,23 +713,24 @@ class BookingReservationForm extends React.Component {
           </label>
         </div>
 
-        <button
+        <a href="#"
+          className="btn btn-tarco"
           onClick={(event) => {
-            this.handleSubmit(event)
-            if (this.booking_reservation_form_errors &&
-              Object.keys(this.booking_reservation_form_errors).length &&
-              this.booking_reservation_form_errors.customer_info &&
-              Object.keys(this.booking_reservation_form_errors.customer_info).length) {
+            if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
+            else {
+              this.handleSubmit(event)
+            }
           }}
-        className="btn btn-tarco" disabled={this.submitting}>
+          disabled={this.submitting}
+        >
           {this.submitting ? (
             <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
           ) : (
             this.props.i18n.confirm_reservation
           )}
-        </button>
+        </a>
         {this.renderBookingFailedArea()}
       </div>
     )
@@ -1027,7 +992,7 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_single_booking_time, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, regular, is_done } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, is_done } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
     if (is_done) {
@@ -1047,9 +1012,10 @@ class BookingReservationForm extends React.Component {
         <div>
           {this.renderBookingDatetime()}
           {this.renderSelectedBookingOption()}
-          {this.renderRegularCustomersOption()}
-          {this.renderCurrentCustomerInfo()}
-          {this.renderNewCustomerFields()}
+          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
+          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1060,6 +1026,7 @@ class BookingReservationForm extends React.Component {
           {this.renderBookingCalendar()}
           {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "booking_times"])))}
           {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderBookingCode()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
@@ -1068,12 +1035,13 @@ class BookingReservationForm extends React.Component {
     } else {
       return (
         <div>
-          {this.renderRegularCustomersOption()}
-          {this.renderCurrentCustomerInfo()}
           {this.renderBookingFlowOptions()}
           {this.renderBookingOptionFirstFlow()}
           {this.renderBookingDateFirstFlow()}
-          {this.renderNewCustomerFields()}
+          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
+          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1187,6 +1155,7 @@ class BookingReservationForm extends React.Component {
     const {
       customer_info,
       last_selected_option_id,
+      booking_code,
       errors
     } = response.data;
 
@@ -1195,10 +1164,75 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[found_customer]", Object.keys(customer_info).length ? true : false)
     this.booking_reservation_form.change("booking_reservation_form[last_selected_option_id]", last_selected_option_id)
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
+    this.booking_reservation_form.change("booking_reservation_form[booking_code]", booking_code)
+    this.booking_reservation_form.change("booking_reservation_form[use_default_customer]", false)
     this.findCustomerCall = null;
+  }
+
+  askConfirmCode = async (event) => {
+    event.preventDefault();
+
+    if (this.askConfirmCodeCall) {
+      return;
+    }
+    const { customer_phone_number, customer_last_name, customer_first_name } = this.booking_reservation_form_values;
+
+    this.booking_reservation_form.change("booking_reservation_form[is_asking_confirmation_code]", true)
+    this.booking_reservation_form.change("booking_reservation_form[booking_code_failed_message]", null)
+    this.askConfirmCodeCall = "loading";
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.ask_confirmation_code,
+      params: {
+        customer_phone_number: customer_phone_number,
+      },
+      responseType: "json"
+    })
+
+    const {
+      booking_code,
+      errors
+    } = response.data;
+
+    this.booking_reservation_form.change("booking_reservation_form[booking_code]", booking_code)
+    this.booking_reservation_form.change("booking_reservation_form[is_asking_confirmation_code]", false)
+    this.askConfirmCodeCall = null;
+  }
+
+  confirmCode = async (event) => {
+    event.preventDefault();
+
+    if (this.confirmCodeCall) {
+      return;
+    }
+
+    const { uuid, code } = this.booking_reservation_form_values.booking_code;
+
+    this.booking_reservation_form.change("booking_reservation_form[is_confirming_code]", true)
+    this.confirmCodeCall = "loading";
+
+    const response = await axios({
+      method: "GET",
+      url: this.props.path.confirm_code,
+      params: {
+        uuid,
+        code
+      },
+      responseType: "json"
+    })
+
+    const {
+      booking_code,
+      errors
+    } = response.data;
+
+    this.booking_reservation_form.change("booking_reservation_form[booking_code][passed]", booking_code.passed)
+    this.booking_reservation_form.change("booking_reservation_form[is_confirming_code]", false)
+    this.confirmCodeCall = null;
 
     if (errors) {
-      this.booking_reservation_form.change("booking_reservation_form[find_customer_message]", errors.message)
+      this.booking_reservation_form.change("booking_reservation_form[booking_code_failed_message]", errors.message)
     }
   }
 
@@ -1226,6 +1260,10 @@ class BookingReservationForm extends React.Component {
         url: this.props.path.save,
         params: _.merge(
           { authenticity_token: Rails.csrfToken() },
+          _.pick(
+            this.booking_reservation_form_values.booking_code,
+            "uuid",
+          ),
           _.pick(
             this.booking_reservation_form_values,
             "booking_option_id",
@@ -1335,10 +1373,6 @@ class BookingReservationForm extends React.Component {
     return {};
   }
 
-  isBookingFlowStart = () => {
-    return this.booking_reservation_form_values.found_customer || this.booking_reservation_form_values.regular === "no"
-  }
-
   isBookingFlowEnd = () => {
     const { booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values;
 
@@ -1349,6 +1383,16 @@ class BookingReservationForm extends React.Component {
     const { booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values;
 
     return booking_option_id || (booking_date && booking_at)
+  }
+
+  neverTryToFindCustomer = () => {
+    return this.booking_reservation_form_values.found_customer === null
+  }
+
+  isCustomerTrusted = () => {
+    const { found_customer, use_default_customer, booking_code } = this.booking_reservation_form_values;
+
+    return use_default_customer || (found_customer != null && booking_code && booking_code.passed)
   }
 
   isEnoughCustomerInfo = () => {
@@ -1371,6 +1415,13 @@ class BookingReservationForm extends React.Component {
       customer_phone_number &&
       customer_email
     )
+  }
+
+  isAnyErrors = () => {
+    return this.booking_reservation_form_errors &&
+      Object.keys(this.booking_reservation_form_errors).length &&
+      this.booking_reservation_form_errors.customer_info &&
+      Object.keys(this.booking_reservation_form_errors.customer_info).length
   }
 
   scrollToSelectedTarget = () => {

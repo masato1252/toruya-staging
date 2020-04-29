@@ -22,6 +22,7 @@ environment.config.merge({
   resolve: {
     alias: {
       shared: path.resolve(config.source_path, 'javascripts/components/shared'),
+      libraries: path.resolve(config.source_path, 'javascripts/libraries'),
     }
   }
 })

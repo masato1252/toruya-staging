@@ -245,6 +245,8 @@ Rails.application.routes.draw do
     member do
       post "booking_reservation"
       get "find_customer"
+      get "ask_confirmation_code"
+      get "confirm_code"
       get "calendar"
       get "booking_times"
     end
