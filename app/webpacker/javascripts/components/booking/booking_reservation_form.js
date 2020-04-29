@@ -434,9 +434,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingFlowOptions = () => {
-    if (!this.isBookingFlowStart()) return;
     if (this.isFlowSelected()) return;
-    if (!this.isCustomerTrusted()) return;
     const { flow_label, date_flow_first, option_flow_first } = this.props.i18n
 
     return (
@@ -503,8 +501,6 @@ class BookingReservationForm extends React.Component {
   };
 
   renderBookingOptionFirstFlow = () => {
-    if (!this.isBookingFlowStart()) return;
-
     const {
       booking_options,
       booking_times,
@@ -554,8 +550,6 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDateFirstFlow = () => {
-    if (!this.isBookingFlowStart()) return;
-
     const { booking_options, booking_times, booking_date, booking_at, booking_option_id } = this.booking_reservation_form_values;
     const { edit } = this.props.i18n;
 
@@ -1018,9 +1012,9 @@ class BookingReservationForm extends React.Component {
         <div>
           {this.renderBookingDatetime()}
           {this.renderSelectedBookingOption()}
-          {this.renderRegularCustomersOption()}
-          {this.renderBookingCode()}
-          {this.renderCurrentCustomerInfo()}
+          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
           {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
@@ -1041,13 +1035,13 @@ class BookingReservationForm extends React.Component {
     } else {
       return (
         <div>
-          {this.renderRegularCustomersOption()}
-          {this.renderBookingCode()}
-          {this.renderCurrentCustomerInfo()}
-          {this.renderNewCustomerFields()}
           {this.renderBookingFlowOptions()}
           {this.renderBookingOptionFirstFlow()}
           {this.renderBookingDateFirstFlow()}
+          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
+          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1377,10 +1371,6 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[booking_failed]", null)
 
     return {};
-  }
-
-  isBookingFlowStart = () => {
-    return this.isEnoughCustomerInfo()
   }
 
   isBookingFlowEnd = () => {
