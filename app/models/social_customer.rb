@@ -21,5 +21,12 @@
 #
 
 class SocialCustomer < ApplicationRecord
+  has_many :social_messages
   belongs_to :social_account
+  belongs_to :user
+
+  enum conversation_state: {
+    bot: 0,
+    one_on_one: 1,
+  }
 end

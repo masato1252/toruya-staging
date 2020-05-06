@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_26_012331) do
+ActiveRecord::Schema.define(version: 2020_05_07_011209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -526,6 +526,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_012331) do
     t.string "channel_secret", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "label"
     t.index ["user_id", "channel_id"], name: "index_social_accounts_on_user_id_and_channel_id", unique: true
   end
 
@@ -551,7 +552,8 @@ ActiveRecord::Schema.define(version: 2020_04_26_012331) do
     t.text "raw_content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index", unique: true
+    t.datetime "readed_at"
+    t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

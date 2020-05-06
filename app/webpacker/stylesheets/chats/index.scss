@@ -1,0 +1,61 @@
+#chat-box {
+  overflow-y: auto;
+  margin: 20px 0px;
+  background-color: #ffffff;
+  height: calc(90vh - 90px);
+
+  .message {
+    margin: 6px;
+
+    .customer-message {
+      float: right;
+
+      .message-content {
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+        padding: 8px;
+        border-radius: 8px;
+        color: #FFFFFF;
+        float: right;
+      }
+    }
+
+    .staff-message {
+      float: left;
+
+      .message-content {
+        background: #9d9d9d;
+        border-color: #888888;
+        padding: 8px;
+        border-radius: 8px;
+        color: #FFFFFF;
+        float: left;
+      }
+    }
+  }
+}
+
+#customer-box {
+  overflow-y: auto;
+  margin-top: 20px;
+  background-color: #ffffff;
+  height: calc(90vh - 90px);
+
+  .customer {
+    padding: 6px;
+
+    &.selected {
+      background-color: #efefef;
+    }
+  }
+}
+
+#chat-form {
+  .form-group {
+    padding-left: 0;
+  }
+
+  input {
+    width: 100%;
+  }
+}

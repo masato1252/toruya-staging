@@ -9,6 +9,7 @@
 #  channel_secret :string           not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  label          :string
 #
 # Indexes
 #
@@ -18,6 +19,7 @@
 require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
+  has_many :social_customers
   belongs_to :user
 
   def client

@@ -1551,7 +1551,8 @@ CREATE TABLE public.social_accounts (
     channel_token character varying NOT NULL,
     channel_secret character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    label character varying
 );
 
 
@@ -1622,7 +1623,8 @@ CREATE TABLE public.social_messages (
     staff_id integer,
     raw_content text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    readed_at timestamp without time zone
 );
 
 
@@ -3286,7 +3288,7 @@ CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USIN
 -- Name: social_message_customer_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
+CREATE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
 
 
 --
@@ -3470,6 +3472,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200406151509'),
 ('20200406152338'),
 ('20200407053955'),
-('20200426012331');
+('20200426012331'),
+('20200429083046'),
+('20200507011209');
 
 

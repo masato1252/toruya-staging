@@ -1,32 +1,16 @@
 "use strict";
-import React from "react";
-import Consumer from "libraries/consumer";
 
-class ChatChannels extends React.Component {
-  componentDidMount = () => {
-    Consumer.subscriptions.create(
-      {
-        channel: "UserChannel",
-        user_id: this.props.super_user_id
-      },
-      {
-        connected: () => {
-          console.log("User Channel connected")
-        },
-        received: (data) => {
-          console.log(data)
-        },
-        speak: () => {
-        }
-      }
-    )
-  }
+import React, { useEffect, useContext } from "react";
 
-  render() {
-    return (
-      <div />
-    )
-  }
+import { GlobalProvider } from "context/chats/global_state"
+import App from "./app";
+
+export const ChatChannels = (props) => {
+  return (
+    <GlobalProvider className="row">
+      <App props={props} />
+    </GlobalProvider>
+  )
 }
 
 export default ChatChannels;

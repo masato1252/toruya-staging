@@ -9,11 +9,17 @@
 #  raw_content        :text
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  readed_at          :datetime
 #
 # Indexes
 #
-#  social_message_customer_index  (social_account_id,social_customer_id) UNIQUE
+#  social_message_customer_index  (social_account_id,social_customer_id)
 #
 
 class SocialMessage < ApplicationRecord
+  belongs_to :social_account
+  belongs_to :social_customer
+  belongs_to :staff, optional: true
+
+  scope :unread, -> { where(readed_at: nil) }
 end

@@ -60,6 +60,7 @@ gem "phonelib"
 gem "line-bot-api"
 gem "oj"
 gem "redis"
+gem "fast_jsonapi"
 
 group :development, :test do
   gem "byebug", platform: :mri

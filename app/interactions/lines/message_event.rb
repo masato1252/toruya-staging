@@ -1,6 +1,22 @@
 require "line_client"
 
 class Lines::MessageEvent < ActiveInteraction::Base
+  ACTIONS = [
+    {
+      type: "postback",
+      action: "booking_pages",
+    },
+    {
+      type: "postback",
+      action: "shop_phone",
+    },
+    {
+      type: "postback",
+      action: "one_on_one"
+    }
+  ].freeze
+  ACTION_TYPES = ACTIONS.map { |action| action[:action] }.freeze
+
   # message event
   #  {
   #    "type"=>"message", 
@@ -21,24 +37,33 @@ class Lines::MessageEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    actions = [
-      {
-        "type": "postback",
-        "label": "All activities",
-        "data": "action=booking_pages"
-      },
-      {
-        "type": "postback",
-        "label": "Shop phone number",
-        "data": "action=shop_phone"
-      },
-    ].freeze
+    # TODO: need a spec for action_templates
+    if social_customer.bot?
+      LineClient.button_template(
+        social_customer: social_customer,
+        title: "Welcome to my shops".freeze,
+        text: "These are the services we provide".freeze,
+        actions: action_templates
+      )
+    elsif social_customer.one_on_one?
+      # TODO: Change to SocialMessages::Create.perform_later when we had real in time background runner
+      SocialMessages::Create.run!(
+        social_customer: social_customer,
+        content: event["message"]["text"],
+        readed: false
+      )
+    end
+  end
 
-    LineClient.button_template(
-      social_customer: social_customer,
-      title: "Welcome to my shops".freeze,
-      text: "These are the services we provide".freeze,
-      actions: actions
-    )
+  private
+
+  def action_templates
+    ACTIONS.map do |action|
+      {
+        "type": action[:type],
+        "label": I18n.t("line.actions.label.#{action[:action]}"),
+        "data": URI.encode_www_form(action.slice(:action))
+      }
+    end
   end
 end
