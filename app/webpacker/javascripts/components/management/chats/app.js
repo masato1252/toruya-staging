@@ -4,12 +4,13 @@ import React, { useEffect, useContext } from "react";
 
 import { GlobalContext } from "context/chats/global_state"
 import Consumer from "libraries/consumer";
+import NotificationPermission from "./notification_permission"
 import CusomterList from "./customer_list"
 import MessageList from "./message_list"
 import MessageForm from "./message_form"
 
 export default ({ props }) => {
-  const { dispatch, prependMessages, getCustomers } = useContext(GlobalContext)
+  const { dispatch, customerNewMessage, prependMessages, selected_customer_id, messages } = useContext(GlobalContext)
 
   useEffect(() => {
     dispatch({
@@ -46,10 +47,7 @@ export default ({ props }) => {
         received: ({type, data}) => {
           switch (type) {
             case "customer_new_message":
-              dispatch({
-                type: "CUSTOMER_NEW_MESSAGE",
-                payload: data
-              })
+              customerNewMessage({ ...data, selected_customer_id: selected_customer_id })
               break;
             case "prepend_messages":
               prependMessages(data)
@@ -57,10 +55,7 @@ export default ({ props }) => {
             case "append_customers":
               dispatch({
                 type: "APPEND_CUSTOMERS",
-                payload: {
-                  channel_id: data.channel_id,
-                  customers: data.customers
-                }
+                payload: data
               })
               break;
             default:
@@ -79,6 +74,7 @@ export default ({ props }) => {
   return (
     <>
       <div className="col-sm-2">
+        <NotificationPermission />
         <CusomterList />
       </div>
       <div className="col-sm-10">

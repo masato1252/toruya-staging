@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import axios from "axios";
 import AppReducer from "context/chats/app_reducer";
 import messageReducer from "context/chats/message_reducer";
 import customerReducer from "context/chats/customer_reducer";
@@ -10,6 +9,7 @@ import combineReducer from "context/combine_reducer";
 //   <customer_id> => [
 //      {
 //        id: <message_id>,
+//        customer_id: <customer_id>,
 //        customer: true|false,
 //        text: <message content>,
 //        readed: true|false,
@@ -38,6 +38,9 @@ const reducers = combineReducer({
 
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducers, reducers())
+  const { subscription, selected_channel_id } = state.app
+  const { selected_customer_id } = state.customer
+  const { messages } = state.message
   // state = {
   //   app: {...},
   //   message: {...},
@@ -50,9 +53,19 @@ export const GlobalProvider = ({ children }) => {
       payload: customer_with_message
     })
 
-    state.app.subscription.perform("send_message", {
+    subscription.perform("send_message", {
       customer_id: customer_with_message["customer_id"],
       text: customer_with_message["message"]["text"]
+    })
+  }
+
+  const customerNewMessage = ({ customer_id, message }) => {
+    dispatch({
+      type: "CUSTOMER_NEW_MESSAGE",
+      payload: {
+        customer_id,
+        message
+      }
     })
   }
 
@@ -67,17 +80,17 @@ export const GlobalProvider = ({ children }) => {
   }
 
   const getMessages = (customer_id = null) => {
-    if (state.app.subscription) {
-      const messages = state.message.messages[customer_id || state.customer.selected_customer_id]
-      const oldest_message_at = messages ? messages[0].created_at : null
+    if (subscription) {
+      const customer_messages = messages[customer_id || selected_customer_id]
+      const oldest_message_at = customer_messages ? customer_messages[0].created_at : null
 
-      state.app.subscription.perform("get_messages", { customer_id: state.customer.selected_customer_id, oldest_message_at: oldest_message_at });
+      subscription.perform("get_messages", { customer_id: selected_customer_id, oldest_message_at: oldest_message_at });
     }
   }
 
   const getCustomers = () => {
-    if (state.app.subscription) {
-      state.app.subscription.perform("get_customers", { channel_id: state.app.selected_channel_id });
+    if (subscription) {
+      subscription.perform("get_customers", { channel_id: selected_channel_id });
     }
   }
 
@@ -87,6 +100,7 @@ export const GlobalProvider = ({ children }) => {
       ...state.message,
       ...state.customer,
       dispatch,
+      customerNewMessage,
       staffNewMessage,
       getMessages,
       prependMessages,

@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
   scope module: :users do
     resource :profile, only: %i[new create]
+    resources :web_push_subscriptions, only: %i[create]
   end
 
   resources :shops, only: [] do

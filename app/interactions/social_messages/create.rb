@@ -1,4 +1,5 @@
 require "line_client"
+require "webpush_client"
 
 module SocialMessages
   class Create < ActiveInteraction::Base
@@ -19,6 +20,7 @@ module SocialMessages
       if message.errors.present?
         errors.merge!(message.errors)
       elsif staff.nil?
+        # From normal customer
         UserChannel.broadcast_to(
           social_customer.user,
           {
@@ -29,7 +31,28 @@ module SocialMessages
             }
           }
         )
+
+        WebPushSubscription.where(user_id: social_customer.user.owner_staff_accounts.active.pluck(:user_id)).each do |subscription|
+          begin
+            # TODO: select that customer
+            WebpushClient.send(
+              subscription: subscription,
+              message: {
+                title: "#{social_customer.social_user_name} send a message",
+                body: content,
+                url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user)
+              }
+            )
+          rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
+            Rollbar.error(e)
+
+            subscription.destroy
+          rescue => e
+            Rollbar.error(e)
+          end
+        end
       elsif staff
+        # From staff
         LineClient.send(social_customer, content) unless Rails.env.development?
       end
 

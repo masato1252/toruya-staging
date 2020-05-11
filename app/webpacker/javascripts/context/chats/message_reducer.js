@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
-  messages: {},
+  messages: {}
 }
 
 export default (state = initialState, action) => {

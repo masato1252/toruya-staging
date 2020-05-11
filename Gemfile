@@ -61,6 +61,8 @@ gem "line-bot-api"
 gem "oj"
 gem "redis"
 gem "fast_jsonapi"
+gem "serviceworker-rails"
+gem "webpush", require: false
 
 group :development, :test do
   gem "byebug", platform: :mri

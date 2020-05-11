@@ -23,11 +23,12 @@ class UserChannel < ApplicationCable::Channel
   end
 
   def get_messages(data)
-    social_messages = SocialCustomer
-      .find_by!(social_user_id: data["customer_id"])
-      .social_messages
-      .where("created_at < ?", data["oldest_message_at"] ? Date.parse(data["oldest_message_at"]) : Time.now)
-      .order("created_at DESC")
+    social_messages =
+      SocialMessage
+      .includes(:social_customer)
+      .where(social_customers: { social_user_id: data["customer_id"] })
+      .where("social_messages.created_at < ?", data["oldest_message_at"] ? Date.parse(data["oldest_message_at"]) : Time.now)
+      .order("social_messages.created_at DESC")
       .limit(50)
 
     _messages = social_messages.map { |message| MessageSerializer.new(message).serializable_hash[:data][:attributes] }

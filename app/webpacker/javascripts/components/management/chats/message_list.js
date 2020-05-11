@@ -3,9 +3,20 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { GlobalContext } from "context/chats/global_state";
 import Message from "./message";
+import _ from "lodash";
+
+const usePrevious = value => {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+
+  return ref.current;
+};
 
 const MessageList = () => {
-  const { messages, selected_customer_id, getMessages } = useContext(GlobalContext)
+  const { messages, selected_customer_id, getMessages, selected_channel_id, customers } = useContext(GlobalContext)
+
   const customer_messages = messages[selected_customer_id] || []
   const messageListRef = useRef(null);
 
@@ -14,7 +25,7 @@ const MessageList = () => {
   }, [selected_customer_id])
 
   useEffect(() => {
-    messageListRef.current.scrollIntoView({ behavior: "smooth" });
+    messageListRef.current.scrollIntoView({ behavior: "auto" });
   })
 
   return (
