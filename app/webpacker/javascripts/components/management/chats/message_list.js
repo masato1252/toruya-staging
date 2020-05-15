@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { GlobalContext } from "context/chats/global_state";
 import Message from "./message";
 import _ from "lodash";
@@ -24,7 +24,7 @@ const MessageList = () => {
     getMessages(selected_customer_id)
   }, [subscription, selected_customer_id])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
   })
 
