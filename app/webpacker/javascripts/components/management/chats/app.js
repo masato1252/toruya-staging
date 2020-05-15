@@ -1,9 +1,11 @@
 "use strict";
 
 import React, { useEffect, useContext } from "react";
+import _ from "lodash";
 
 import { GlobalContext } from "context/chats/global_state"
 import Consumer from "libraries/consumer";
+import useCustomCompareEffect from "libraries/use_custom_compare_effect";
 import NotificationPermission from "./notification_permission"
 import CusomterList from "./customer_list"
 import MessageList from "./message_list"
@@ -83,7 +85,8 @@ export default ({ props }) => {
     }
   }, [])
 
-  useEffect(() => {
+
+  useCustomCompareEffect(() => {
     const unread_message_count = Object.values(customers) ? Object.values(customers).flat().reduce((sum, customer) => sum + customer.unread_message_count, 0) : 0
 
     if (unread_message_count) {
@@ -92,7 +95,7 @@ export default ({ props }) => {
     else {
       document.title = `Toruyaースモールビジネスの顧客管理ツールー`
     }
-  }, [selected_customer_id, last_notification_message])
+  }, [customers], _.isEqual)
 
   return (
     <>
