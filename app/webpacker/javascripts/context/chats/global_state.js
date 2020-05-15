@@ -21,7 +21,7 @@ import combineReducer from "context/combine_reducer";
 // {
 //   <channel_id> => [
 //      {
-//        id : <customer id>
+//        id : <customer social user id>
 //        name: <message name>,
 //        new_messages_count: 0,
 //        last_message_at: <Datetime>

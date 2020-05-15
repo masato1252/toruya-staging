@@ -1,5 +1,6 @@
 <%= react_component("management/chats", {
-  social_channel_id: @social_accounts&.first&.channel_id,
+  social_channel_id: @selected_social_account&.channel_id,
+  social_customer_id: @selected_social_customer&.social_user_id,
   super_user_id: super_user.id,
   web_push: {
     subscriber_key: Base64.urlsafe_decode64(Rails.application.secrets.web_push_public_key).bytes.to_json,

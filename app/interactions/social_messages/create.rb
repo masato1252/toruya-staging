@@ -34,13 +34,12 @@ module SocialMessages
 
         WebPushSubscription.where(user_id: social_customer.user.owner_staff_accounts.active.pluck(:user_id)).each do |subscription|
           begin
-            # TODO: select that customer
             WebpushClient.send(
               subscription: subscription,
               message: {
                 title: "#{social_customer.social_user_name} send a message",
                 body: content,
-                url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user)
+                url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user, customer_id: social_customer.social_user_id)
               }
             )
           rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e

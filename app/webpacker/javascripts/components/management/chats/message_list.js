@@ -15,14 +15,14 @@ const usePrevious = value => {
 };
 
 const MessageList = () => {
-  const { messages, selected_customer_id, getMessages, selected_channel_id, customers } = useContext(GlobalContext)
+  const { messages, selected_customer_id, getMessages, selected_channel_id, customers, subscription } = useContext(GlobalContext)
 
   const customer_messages = messages[selected_customer_id] || []
   const messageListRef = useRef(null);
 
   useEffect(() => {
     getMessages(selected_customer_id)
-  }, [selected_customer_id])
+  }, [subscription, selected_customer_id])
 
   useEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });

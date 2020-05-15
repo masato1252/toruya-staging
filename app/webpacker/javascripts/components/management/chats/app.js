@@ -24,6 +24,11 @@ export default ({ props }) => {
       type: "SELECT_CHANNEL",
       payload: props.social_channel_id
     })
+
+    dispatch({
+      type: "SELECT_CUSTOMER",
+      payload: props.social_customer_id
+    })
   }, [])
 
   useEffect(() => {
