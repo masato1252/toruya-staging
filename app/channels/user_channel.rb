@@ -23,13 +23,14 @@ class UserChannel < ApplicationCable::Channel
   end
 
   def get_messages(data)
+    scope = SocialMessage.includes(:social_customer).where(social_customers: { social_user_id: data["customer_id"] })
     social_messages =
-      SocialMessage
-      .includes(:social_customer)
-      .where(social_customers: { social_user_id: data["customer_id"] })
-      .where("social_messages.created_at < ?", data["oldest_message_at"] ? Date.parse(data["oldest_message_at"]) : Time.now)
+      scope
+      .where("social_messages.created_at < ?", data["oldest_message_at"] ? Date.parse(data["oldest_message_at"]) : Time.current)
       .order("social_messages.created_at DESC")
       .limit(50)
+
+    scope.where(readed_at: nil).update_all(readed_at: Time.current)
 
     _messages = social_messages.map { |message| MessageSerializer.new(message).serializable_hash[:data][:attributes] }
     _messages.reverse!
@@ -38,10 +39,10 @@ class UserChannel < ApplicationCable::Channel
   end
 
   def get_customers(data)
-    social_customers = SocialAccount
-      .find_by!(channel_id: data["channel_id"], user_id: @super_user.id)
-      .social_customers.includes(:social_messages)
-      .order("created_at ASC")
+    social_customers = SocialCustomer
+      .includes(:social_messages, :social_account)
+      .where(social_accounts: { channel_id: data["channel_id"], user_id: @super_user.id })
+      .order("social_customers.updated_at DESC")
 
     _customers = social_customers.map { |customer| CustomerSerializer.new(customer).serializable_hash[:data][:attributes] }
     Rails.logger.debug("===#{_customers}")

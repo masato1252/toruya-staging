@@ -10,7 +10,14 @@ import MessageList from "./message_list"
 import MessageForm from "./message_form"
 
 export default ({ props }) => {
-  const { dispatch, customerNewMessage, prependMessages, selected_customer_id, messages } = useContext(GlobalContext)
+  const {
+    dispatch,
+    customerNewMessage,
+    prependMessages,
+    selected_customer_id,
+    customers,
+    last_notification_message
+  } = useContext(GlobalContext)
 
   useEffect(() => {
     dispatch({
@@ -27,7 +34,7 @@ export default ({ props }) => {
 
     dispatch({
       type: "SELECT_CUSTOMER",
-      payload: props.social_customer_id
+      payload: props.social_customer
     })
   }, [])
 
@@ -75,6 +82,17 @@ export default ({ props }) => {
       subscription.unsubscribe()
     }
   }, [])
+
+  useEffect(() => {
+    const unread_message_count = Object.values(customers) ? Object.values(customers).flat().reduce((sum, customer) => sum + customer.unread_message_count, 0) : 0
+
+    if (unread_message_count) {
+      document.title = `(${unread_message_count}) Toruyaースモールビジネスの顧客管理ツールー`
+    }
+    else {
+      document.title = `Toruyaースモールビジネスの顧客管理ツールー`
+    }
+  }, [selected_customer_id, last_notification_message])
 
   return (
     <>

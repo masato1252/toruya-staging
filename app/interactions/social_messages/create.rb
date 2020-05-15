@@ -26,7 +26,7 @@ module SocialMessages
           {
             type: "customer_new_message",
             data: {
-              customer_id: social_customer.social_user_id,
+              customer: CustomerSerializer.new(social_customer).serializable_hash[:data][:attributes],
               message: MessageSerializer.new(message).serializable_hash[:data][:attributes]
             }
           }

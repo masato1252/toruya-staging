@@ -6,11 +6,15 @@ class CustomerSerializer
     customer.social_user_id
   end
 
+  attribute :channel_id do |customer|
+    customer.social_account.channel_id
+  end
+
   attribute :name do |customer|
     customer.social_user_name
   end
 
-  attribute :new_messages_count do |customer|
+  attribute :unread_message_count do |customer|
     customer.social_messages.unread.count
   end
 

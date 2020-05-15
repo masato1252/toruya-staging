@@ -11,11 +11,11 @@ export default ({ customer }) => {
       className={`customer ${customer.id === selected_customer_id ? "selected" : ""}`}
       onClick={() => dispatch({
           type: "SELECT_CUSTOMER",
-          payload: customer.id
+          payload: customer
         })
       }
     >
-      { customer.name }
+      { customer.name } { customer.unread_message_count ? `(${customer.unread_message_count})` : "" }
     </div>
   )
 }

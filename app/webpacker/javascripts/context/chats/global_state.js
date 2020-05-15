@@ -22,8 +22,9 @@ import combineReducer from "context/combine_reducer";
 //   <channel_id> => [
 //      {
 //        id : <customer social user id>
+//        channel_id: <channel_id>,
 //        name: <message name>,
-//        new_messages_count: 0,
+//        unread_message_count: 0,
 //        last_message_at: <Datetime>
 //      },
 //   ]
@@ -59,11 +60,11 @@ export const GlobalProvider = ({ children }) => {
     })
   }
 
-  const customerNewMessage = ({ customer_id, message }) => {
+  const customerNewMessage = ({ customer, message }) => {
     dispatch({
       type: "CUSTOMER_NEW_MESSAGE",
       payload: {
-        customer_id,
+        customer,
         message
       }
     })

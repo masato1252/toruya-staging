@@ -18,7 +18,7 @@
 
 class SocialMessage < ApplicationRecord
   belongs_to :social_account
-  belongs_to :social_customer
+  belongs_to :social_customer, touch: true
   belongs_to :staff, optional: true
 
   scope :unread, -> { where(readed_at: nil) }

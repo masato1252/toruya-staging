@@ -1,7 +1,8 @@
 import _ from "lodash";
 
 const initialState = {
-  messages: {}
+  messages: {},
+  last_notification_message: {}
 }
 
 export default (state = initialState, action) => {
@@ -17,13 +18,21 @@ export default (state = initialState, action) => {
         }
       }
     case "STAFF_NEW_MESSAGE":
-    case "CUSTOMER_NEW_MESSAGE":
       return {
         ...state,
         messages: {
           ...state.messages,
           [action.payload.customer_id]: [...(state.messages[action.payload.customer_id] || []), action.payload.message]
         }
+      }
+    case "CUSTOMER_NEW_MESSAGE":
+      return {
+        ...state,
+        messages: {
+          ...state.messages,
+          [action.payload.customer.id]: [...(state.messages[action.payload.customer.id] || []), action.payload.message]
+        },
+        last_notification_message: action.payload.message
       }
     default:
       return state;
