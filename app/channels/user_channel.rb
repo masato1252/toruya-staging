@@ -50,6 +50,11 @@ class UserChannel < ApplicationCable::Channel
     UserChannel.broadcast_to(@super_user, { type: "append_customers", data: { channel_id: data["channel_id"], customers: _customers }.as_json })
   end
 
+  def toggle_customer_conversation_state(data)
+    customer = SocialCustomer.find_by!(social_user_id: data["customer_id"])
+    customer.update_columns(conversation_state: customer.bot? ? :one_on_one : :bot)
+  end
+
   def staff
     @staff ||= current_user.current_staff(@super_user)
   end

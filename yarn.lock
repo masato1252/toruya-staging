@@ -2443,6 +2443,11 @@ css-select@^2.0.0:
     domutils "^1.7.0"
     nth-check "^1.0.2"
 
+css-toggle-switch@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/css-toggle-switch/-/css-toggle-switch-4.1.0.tgz#b4ba42856194bc0bdea610ab37c8d38d44d21d4f"
+  integrity sha512-XdA6fyaQqlBqTmFa6NX58tLPJj4SgDLAxV4Ec73GHQYRTYUTZoEyYHYxWGacLNTP8sTiVycKcAMBrPBKaiIZ9g==
+
 css-tree@1.0.0-alpha.37:
   version "1.0.0-alpha.37"
   resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.0.0-alpha.37.tgz#98bebd62c4c1d9f960ec340cf9f7522e30709a22"

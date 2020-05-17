@@ -4,32 +4,6 @@ import messageReducer from "context/chats/message_reducer";
 import customerReducer from "context/chats/customer_reducer";
 import combineReducer from "context/combine_reducer";
 
-// @messages:
-// {
-//   <customer_id> => [
-//      {
-//        id: <message_id>,
-//        customer_id: <customer_id>,
-//        customer: true|false,
-//        text: <message content>,
-//        readed: true|false,
-//        created_at: <Datetime>
-//      },
-//   ]
-// }
-// @customers:
-// {
-//   <channel_id> => [
-//      {
-//        id : <customer social user id>
-//        channel_id: <channel_id>,
-//        name: <message name>,
-//        unread_message_count: 0,
-//        last_message_at: <Datetime>
-//      },
-//   ]
-// }
-
 export const GlobalContext = createContext()
 const reducers = combineReducer({
   app: AppReducer,
@@ -95,6 +69,15 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  const toggleCustomerConversationState = (customer) => {
+    dispatch({
+      type: "TOGGLE_CUSTOMER_CONVERSATION_STATE",
+      payload: customer
+    })
+
+    subscription.perform("toggle_customer_conversation_state", { customer_id: customer.id });
+  }
+
   return (
     <GlobalContext.Provider value={{
       ...state.app,
@@ -106,6 +89,7 @@ export const GlobalProvider = ({ children }) => {
       getMessages,
       prependMessages,
       getCustomers,
+      toggleCustomerConversationState,
     }}
     >
       {children}

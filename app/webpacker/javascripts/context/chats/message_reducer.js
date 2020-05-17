@@ -1,5 +1,19 @@
 import _ from "lodash";
 
+// @messages:
+// {
+//   <customer_id> => [
+//      {
+//        id: <message_id>,
+//        customer_id: <customer_id>,
+//        customer: true|false,
+//        text: <message content>,
+//        readed: true|false,
+//        created_at: <Datetime>
+//      },
+//   ]
+// }
+
 const initialState = {
   messages: {},
   last_notification_message: {}
