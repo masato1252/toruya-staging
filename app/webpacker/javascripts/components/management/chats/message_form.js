@@ -29,16 +29,17 @@ const MessageForm = () => {
     <div id="chat-form">
       <form className="form-inline" onSubmit={onSubmit}>
         <div className="form-group col-sm-10">
-          <input
+          <textarea
             type="text"
             className="form-control"
-            placeholder="Text..."
+            placeholder="Messages for customers..."
+            rows="3"
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
         </div>
         <div className="form-group col-sm-2">
-          <button type="submit" className="btn btn-success" disabled={!text}>
+          <button type="submit" className="btn btn-success" disabled={!text || !selected_customer.id}>
             Send
           </button>
         </div>

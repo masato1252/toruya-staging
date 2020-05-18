@@ -66,11 +66,13 @@ $room_gap_size: 20px;
 }
 
 #chat-form {
+  margin-top: 6px;
+
   .form-group {
     padding-left: 0;
   }
 
-  input {
+  textarea {
     width: 100%;
   }
 }
