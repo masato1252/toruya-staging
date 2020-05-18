@@ -9,7 +9,7 @@ import useCustomCompareEffect from "libraries/use_custom_compare_effect";
 import NotificationPermission from "./notification_permission"
 import CusomterList from "./customer_list"
 import CusomterInfo from "./customer_info"
-import MessageList from "./message_list"
+import ChatBody from "./body"
 import MessageForm from "./message_form"
 
 export default ({ props }) => {
@@ -110,7 +110,9 @@ export default ({ props }) => {
         <CusomterList />
       </div>
       <div className="col-sm-8">
-        <MessageList />
+        <div id="chat-box">
+          <ChatBody />
+        </div>
         <MessageForm />
       </div>
       <div className="col-sm-2">

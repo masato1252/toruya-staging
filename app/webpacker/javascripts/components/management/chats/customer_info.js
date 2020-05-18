@@ -25,9 +25,7 @@ export default () => {
   }
   else {
     return (
-      <div id="customer-info-box">
-        unselected customer
-      </div>
+      <></>
     )
   }
 }

@@ -29,10 +29,10 @@ const MessageList = () => {
   })
 
   return (
-    <div id="chat-box">
+    <>
       {customer_messages.map((message, index) => <Message message={message} key={`${selected_customer.id}-${index}`} />)}
       <div ref={messageListRef} />
-    </div>
+    </>
   )
 }
 
