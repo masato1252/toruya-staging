@@ -40,7 +40,7 @@ class UserChannel < ApplicationCable::Channel
 
   def get_customers(data)
     social_customers = SocialCustomer
-      .includes(:social_messages, :social_account)
+      .includes(:social_messages, :social_account, :customer)
       .where(social_accounts: { channel_id: data["channel_id"], user_id: @super_user.id })
       .order("social_customers.updated_at DESC")
 
@@ -53,6 +53,28 @@ class UserChannel < ApplicationCable::Channel
   def toggle_customer_conversation_state(data)
     customer = SocialCustomer.find_by!(social_user_id: data["customer_id"])
     customer.update_columns(conversation_state: customer.bot? ? :one_on_one : :bot)
+  end
+
+  def search_shop_customers(data)
+    shop_customers = Customers::Search.run(
+      super_user: @super_user,
+      current_user_staff: staff,
+      keyword: data["keyword"],
+      per_page: 1_000
+    ).result
+
+    UserChannel.broadcast_to(@super_user, {
+      type: "matched_shop_customers",
+      data: shop_customers.map { |shop_customer| CustomerSerializer.new(shop_customer).attributes_hash }.as_json
+    })
+  end
+
+  def connect_customer(data)
+    SocialCustomer.find_by!(social_user_id: data["social_customer_id"]).update_columns(customer_id: data["shop_customer_id"])
+  end
+
+  def disconnect_customer(data)
+    SocialCustomer.find_by!(social_user_id: data["customer_id"]).update_columns(customer_id: nil)
   end
 
   def staff

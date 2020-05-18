@@ -24,6 +24,7 @@ class SocialCustomer < ApplicationRecord
   has_many :social_messages
   belongs_to :social_account
   belongs_to :user
+  belongs_to :customer, optional: true
 
   enum conversation_state: {
     bot: 0,

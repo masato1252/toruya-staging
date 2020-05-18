@@ -8,6 +8,7 @@ import Consumer from "libraries/consumer";
 import useCustomCompareEffect from "libraries/use_custom_compare_effect";
 import NotificationPermission from "./notification_permission"
 import CusomterList from "./customer_list"
+import CusomterInfo from "./customer_info"
 import MessageList from "./message_list"
 import MessageForm from "./message_form"
 
@@ -72,6 +73,11 @@ export default ({ props }) => {
                 payload: data
               })
               break;
+            case "matched_shop_customers":
+              dispatch({
+                type: "MATCHED_SHOP_CUSTOMERS",
+                payload: data
+              })
             default:
               console.error({type, data});
           }
@@ -103,9 +109,12 @@ export default ({ props }) => {
         <NotificationPermission />
         <CusomterList />
       </div>
-      <div className="col-sm-10">
+      <div className="col-sm-8">
         <MessageList />
         <MessageForm />
+      </div>
+      <div className="col-sm-2">
+        <CusomterInfo />
       </div>
     </>
   )

@@ -1,13 +1,12 @@
-import _ from "lodash";
-
 // mapping with
-// app/serializers/customer_serializer.rb
+// app/serializers/social_customer_serializer.rb
 //
 // @customers:
 // {
 //   <channel_id> => [
 //      {
-//        id : <customer social user id>
+//        id : <customer social user id>,
+//        shop_customer: <toruya shop customer object>,
 //        channel_id: <channel_id>,
 //        name: <message name>,
 //        unread_message_count: 0,
@@ -20,9 +19,12 @@ import _ from "lodash";
 const initialState = {
   selected_customer: {},
   customers: {},
+  matched_shop_customers: []
 }
 
 export default (state = initialState, action) => {
+  let channel_customers, social_customer, shop_customer;
+
   switch(action.type) {
     case "APPEND_CUSTOMERS":
       return {
@@ -72,6 +74,41 @@ export default (state = initialState, action) => {
           ...state.customers,
           [action.payload.channel_id]: channel_customers.map(el => (el.id === action.payload.id ? {...el, conversation_state: el.conversation_state === "one_on_one" ? "bot" : "one_on_one"} : el))
         }
+      }
+    case "CONNECT_CUSTOMER":
+      ({shop_customer, social_customer} = action.payload);
+      channel_customers = state.customers[social_customer.channel_id] || []
+
+      return {
+        ...state,
+        selected_customer: {
+          ...state.selected_customer, shop_customer: shop_customer
+        },
+        customers: {
+          ...state.customers,
+          [social_customer.channel_id]: channel_customers.map(el => (el.id === social_customer.id ? {...el, shop_customer: shop_customer} : el))
+        },
+        matched_shop_customers: []
+      }
+    case "DISCONNECT_CUSTOMER":
+      social_customer = action.payload
+      channel_customers = state.customers[social_customer.channel_id] || []
+
+      return {
+        ...state,
+        selected_customer: {
+          ...state.selected_customer, shop_customer: null
+        },
+        customers: {
+          ...state.customers,
+          [social_customer.channel_id]: channel_customers.map(el => (el.id === social_customer.id ? {...el, shop_customer: null} : el))
+        },
+        matched_shop_customers: []
+      }
+    case "MATCHED_SHOP_CUSTOMERS":
+      return {
+        ...state,
+        matched_shop_customers: action.payload
       }
     default:
       return state;
