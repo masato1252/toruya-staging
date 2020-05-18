@@ -15,14 +15,14 @@ const usePrevious = value => {
 };
 
 const MessageList = () => {
-  const { messages, selected_customer_id, getMessages, selected_channel_id, customers, subscription } = useContext(GlobalContext)
+  const { messages, selected_customer, getMessages, selected_channel_id, customers, subscription } = useContext(GlobalContext)
 
-  const customer_messages = messages[selected_customer_id] || []
+  const customer_messages = messages[selected_customer.id] || []
   const messageListRef = useRef(null);
 
   useEffect(() => {
-    getMessages(selected_customer_id)
-  }, [subscription, selected_customer_id])
+    getMessages(selected_customer)
+  }, [subscription, selected_customer.id])
 
   useLayoutEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
@@ -30,7 +30,7 @@ const MessageList = () => {
 
   return (
     <div id="chat-box">
-      {customer_messages.map((message, index) => <Message message={message} key={`${selected_customer_id}-${index}`} />)}
+      {customer_messages.map((message, index) => <Message message={message} key={`${selected_customer.id}-${index}`} />)}
       <div ref={messageListRef} />
     </div>
   )

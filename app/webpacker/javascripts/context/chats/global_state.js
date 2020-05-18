@@ -14,7 +14,7 @@ const reducers = combineReducer({
 export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducers, reducers())
   const { subscription, selected_channel_id } = state.app
-  const { selected_customer_id } = state.customer
+  const { selected_customer } = state.customer
   const { messages } = state.message
   // state = {
   //   app: {...},
@@ -56,10 +56,10 @@ export const GlobalProvider = ({ children }) => {
 
   const getMessages = (customer_id = null) => {
     if (subscription) {
-      const customer_messages = messages[customer_id || selected_customer_id]
+      const customer_messages = messages[customer_id || selected_customer.id]
       const oldest_message_at = customer_messages ? customer_messages[0].created_at : null
 
-      subscription.perform("get_messages", { customer_id: selected_customer_id, oldest_message_at: oldest_message_at });
+      subscription.perform("get_messages", { customer_id: selected_customer.id, oldest_message_at: oldest_message_at });
     }
   }
 

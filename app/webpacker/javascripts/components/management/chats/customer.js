@@ -6,10 +6,10 @@ import { GlobalContext } from "context/chats/global_state";
 import CustomerModeSwitch from "./customer_mode_switch";
 
 export default ({ customer }) => {
-  const { selected_customer_id, dispatch }= useContext(GlobalContext)
+  const { selected_customer, dispatch }= useContext(GlobalContext)
 
   return (
-    <div className={`customer ${customer.id === selected_customer_id ? "selected" : ""}`} >
+    <div className={`customer ${customer.id === selected_customer.id ? "selected" : ""}`} >
       <div
         onClick={() => dispatch({
           type: "SELECT_CUSTOMER",

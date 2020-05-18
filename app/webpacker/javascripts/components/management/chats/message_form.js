@@ -5,13 +5,13 @@ import { GlobalContext } from "context/chats/global_state";
 
 const MessageForm = () => {
   const [text, setText] = useState("")
-  const { selected_customer_id, selected_channel_id, staffNewMessage } = useContext(GlobalContext)
+  const { selected_customer, selected_channel_id, staffNewMessage } = useContext(GlobalContext)
 
   const onSubmit = (e) => {
     e.preventDefault();
 
     const new_message = {
-      customer_id: selected_customer_id,
+      customer_id: selected_customer.id,
       channel_id: selected_channel_id,
       message: {
         customer: false,
@@ -38,7 +38,7 @@ const MessageForm = () => {
           />
         </div>
         <div className="form-group col-sm-2">
-          <button type="submit" className="btn btn-success">
+          <button type="submit" className="btn btn-success" disabled={!text}>
             Send
           </button>
         </div>

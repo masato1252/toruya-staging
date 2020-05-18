@@ -18,7 +18,7 @@ import _ from "lodash";
 // }
 
 const initialState = {
-  selected_customer_id: null,
+  selected_customer: {},
   customers: {},
 }
 
@@ -33,8 +33,8 @@ export default (state = initialState, action) => {
         }
       }
     case "CUSTOMER_NEW_MESSAGE":
-      if (state.selected_customer_id !== action.payload.customer.id) {
-        const channel_customers = state.customers[action.payload.customer.channel_id] || []
+      if (state.selected_customer.id !== action.payload.customer.id) {
+        channel_customers = state.customers[action.payload.customer.channel_id] || []
 
         return {
           ...state,
@@ -49,11 +49,11 @@ export default (state = initialState, action) => {
       }
     case "SELECT_CUSTOMER":
       if (action.payload) {
-        const channel_customers = state.customers[action.payload.channel_id] || []
+        channel_customers = state.customers[action.payload.channel_id] || []
 
         return {
           ...state,
-          selected_customer_id: action.payload.id,
+          selected_customer: action.payload,
           customers: {
             ...state.customers,
             [action.payload.channel_id]: channel_customers.map(el => (el.id === action.payload.id ? {...el, unread_message_count: 0} : el))
@@ -64,7 +64,7 @@ export default (state = initialState, action) => {
         return state
       }
     case "TOGGLE_CUSTOMER_CONVERSATION_STATE":
-      const channel_customers = state.customers[action.payload.channel_id] || []
+      channel_customers = state.customers[action.payload.channel_id] || []
 
       return {
         ...state,

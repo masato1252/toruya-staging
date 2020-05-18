@@ -16,7 +16,7 @@ export default ({ props }) => {
     dispatch,
     customerNewMessage,
     prependMessages,
-    selected_customer_id,
+    selected_customer,
     customers,
     last_notification_message
   } = useContext(GlobalContext)
@@ -61,7 +61,7 @@ export default ({ props }) => {
         received: ({type, data}) => {
           switch (type) {
             case "customer_new_message":
-              customerNewMessage({ ...data, selected_customer_id: selected_customer_id })
+              customerNewMessage(data)
               break;
             case "prepend_messages":
               prependMessages(data)
