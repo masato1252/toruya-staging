@@ -32,7 +32,7 @@ class UserChannel < ApplicationCable::Channel
 
     scope.where(readed_at: nil).update_all(readed_at: Time.current)
 
-    _messages = social_messages.map { |message| MessageSerializer.new(message).serializable_hash[:data][:attributes] }
+    _messages = social_messages.map { |message| MessageSerializer.new(message).attributes_hash }
     _messages.reverse!
 
     UserChannel.broadcast_to(@super_user, { type: "prepend_messages", data: { customer_id: data['customer_id'], messages: _messages }.as_json })
@@ -44,7 +44,7 @@ class UserChannel < ApplicationCable::Channel
       .where(social_accounts: { channel_id: data["channel_id"], user_id: @super_user.id })
       .order("social_customers.updated_at DESC")
 
-    _customers = social_customers.map { |customer| CustomerSerializer.new(customer).serializable_hash[:data][:attributes] }
+    _customers = social_customers.map { |customer| SocialCustomerSerializer.new(customer).attributes_hash }
     Rails.logger.debug("===#{_customers}")
 
     UserChannel.broadcast_to(@super_user, { type: "append_customers", data: { channel_id: data["channel_id"], customers: _customers }.as_json })
