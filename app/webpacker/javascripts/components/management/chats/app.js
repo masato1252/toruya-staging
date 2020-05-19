@@ -18,8 +18,7 @@ export default ({ props }) => {
     customerNewMessage,
     prependMessages,
     selected_customer,
-    customers,
-    last_notification_message
+    customers
   } = useContext(GlobalContext)
 
   useEffect(() => {
@@ -76,6 +75,11 @@ export default ({ props }) => {
             case "matched_shop_customers":
               dispatch({
                 type: "MATCHED_SHOP_CUSTOMERS",
+                payload: data
+              })
+            case "customer_has_messages":
+              dispatch({
+                type: "CUSTOMER_HAS_MESSAGES",
                 payload: data
               })
             default:

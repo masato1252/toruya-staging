@@ -10,7 +10,7 @@
 //        channel_id: <channel_id>,
 //        name: <message name>,
 //        unread_message_count: 0,
-//        last_message_at: <Datetime>,
+//        has_more_messages: true|false|null, // null: never load, true: has more messages, false: has no messages
 //        conversation_state: bot|one_on_one
 //      },
 //   ]
@@ -109,6 +109,19 @@ export default (state = initialState, action) => {
       return {
         ...state,
         matched_shop_customers: action.payload
+      }
+    case "CUSTOMER_HAS_MESSAGES":
+      channel_customers = state.customers[state.selected_customer.channel_id] || []
+
+      return {
+        ...state,
+        selected_customer: {
+          ...state.selected_customer, has_more_messages: action.payload.has_more_messages
+        },
+        customers: {
+          ...state.customers,
+          [state.selected_customer.channel_id]: channel_customers.map(el => (el.id === state.selected_customer.id ? {...el, has_more_messages: action.payload.has_more_messages} : el))
+        }
       }
     default:
       return state;

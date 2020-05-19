@@ -23,10 +23,6 @@ class SocialCustomerSerializer
     customer.social_messages.unread.count
   end
 
-  attribute :last_message_at do |customer|
-    customer.social_messages.last&.created_at
-  end
-
   attribute :picture_url do |customer|
     customer.social_user_picture_url.presence || "https://via.placeholder.com/60"
   end

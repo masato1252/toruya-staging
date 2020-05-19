@@ -15,8 +15,7 @@ import _ from "lodash";
 // }
 
 const initialState = {
-  messages: {},
-  last_notification_message: {}
+  messages: {}
 }
 
 export default (state = initialState, action) => {
@@ -45,8 +44,7 @@ export default (state = initialState, action) => {
         messages: {
           ...state.messages,
           [action.payload.customer.id]: [...(state.messages[action.payload.customer.id] || []), action.payload.message]
-        },
-        last_notification_message: action.payload.message
+        }
       }
     default:
       return state;
