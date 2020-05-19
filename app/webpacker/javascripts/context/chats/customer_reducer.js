@@ -52,10 +52,11 @@ export default (state = initialState, action) => {
     case "SELECT_CUSTOMER":
       if (action.payload) {
         channel_customers = state.customers[action.payload.channel_id] || []
+        const matched_customer = channel_customers.find(customer => customer.id === action.payload.id) || {}
 
         return {
           ...state,
-          selected_customer: action.payload,
+          selected_customer: {...matched_customer, unread_message_count: 0},
           customers: {
             ...state.customers,
             [action.payload.channel_id]: channel_customers.map(el => (el.id === action.payload.id ? {...el, unread_message_count: 0} : el))
@@ -70,6 +71,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
+        selected_customer: action.payload.id !== state.selected_customer.id ? state.selected_customer : { ...state.selected_customer, conversation_state: state.selected_customer.conversation_state === "one_on_one" ? "bot" : "one_on_one" },
         customers: {
           ...state.customers,
           [action.payload.channel_id]: channel_customers.map(el => (el.id === action.payload.id ? {...el, conversation_state: el.conversation_state === "one_on_one" ? "bot" : "one_on_one"} : el))
