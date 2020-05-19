@@ -13,4 +13,8 @@ class MessageSerializer
   attribute :readed do |message|
     message.readed_at.present?
   end
+
+  attribute :formatted_created_at do |message|
+    I18n.l(message.created_at, format: :long_date_with_wday)
+  end
 end

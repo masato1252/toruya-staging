@@ -1,5 +1,8 @@
 $room_height: calc(90vh - 90px);
 $room_gap_size: 20px;
+$staff_message_position: right;
+$customer_message_position: left;
+$message_size: 8px;
 
 .notification-permission {
   margin-top: $room_gap_size;
@@ -20,56 +23,49 @@ $room_gap_size: 20px;
   .message {
     margin: 6px;
 
-    .bot {
-      float: left;
-
-      .message-content {
-        background: $palette-color4;
-        border-color: #888888;
-        padding: 8px;
-        border-radius: 8px;
-        color: #FFFFFF;
-        float: left;
-      }
+    * {
+      padding: $message_size;
+      border-radius: $message_size;
+      color: #ffffff;
     }
 
+    .message-time,
+    i.fa {
+      color: $gray7;
+    }
+
+    .bot,
     .staff {
-      float: left;
+      float: $staff_message_position;
 
-      .message-content {
-        background: #9d9d9d;
-        border-color: #888888;
-        padding: 8px;
-        border-radius: 8px;
-        color: #FFFFFF;
-        float: left;
+      * {
+        float: $staff_message_position;
       }
     }
 
-    .customer {
-      float: right;
-
-      .message-content {
-        background-color: #5cb85c;
-        border-color: #4cae4c;
-        padding: 8px;
-        border-radius: 8px;
-        color: #FFFFFF;
-        float: right;
-      }
-    }
-
+    .customer,
     .customer_reply_bot {
-      float: right;
+      float: $customer_message_position;
 
-      .message-content {
-        background-color: $warning;
-        border-color: #4cae4c;
-        padding: 8px;
-        border-radius: 8px;
-        color: #FFFFFF;
-        float: right;
+      * {
+        float: $customer_message_position;
       }
+    }
+
+    .bot > .message-content {
+      background-color: $palette-color4;
+    }
+
+    .staff > .message-content {
+      background-color: $palette-color10;
+    }
+
+    .customer > .message-content {
+      background-color: $palette-color3;
+    }
+
+    .customer_reply_bot > .message-content {
+      background-color: $warning;
     }
   }
 }
