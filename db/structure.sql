@@ -1624,7 +1624,8 @@ CREATE TABLE public.social_messages (
     raw_content text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    readed_at timestamp without time zone
+    readed_at timestamp without time zone,
+    message_type integer DEFAULT 0
 );
 
 

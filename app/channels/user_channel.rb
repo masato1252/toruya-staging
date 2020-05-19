@@ -16,12 +16,12 @@ class UserChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
-    # TODO: Change to SocialMessages::Create.perform_later when we had real in time background runner
     SocialMessages::Create.run!(
       social_customer: SocialCustomer.find_by!(social_user_id: data["customer_id"]),
       staff: staff,
       content: data["text"],
-      readed: true
+      readed: true,
+      message_type: SocialMessage.message_types[:staff]
     )
   end
 

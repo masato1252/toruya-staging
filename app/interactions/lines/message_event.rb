@@ -37,7 +37,22 @@ class Lines::MessageEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    # TODO: need a spec for action_templates
+    case event["message"]["type"]
+    when "text"
+      SocialMessages::Create.run!(
+        social_customer: social_customer,
+        content: event["message"]["text"],
+        readed: false,
+        message_type: SocialMessage.message_types[:customer]
+      )
+    else
+      Rollbar.warning("Line chat room don't support message type", event: event)
+
+      if social_customer.one_on_one?
+        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+      end
+    end
+
     if social_customer.bot?
       LineClient.button_template(
         social_customer: social_customer,
@@ -45,20 +60,13 @@ class Lines::MessageEvent < ActiveInteraction::Base
         text: "These are the services we provide".freeze,
         actions: action_templates
       )
-    elsif social_customer.one_on_one?
-      # TODO: Change to SocialMessages::Create.perform_later when we had real in time background runner
-      case event["message"]["type"]
-      when "text"
-        SocialMessages::Create.run!(
-          social_customer: social_customer,
-          content: event["message"]["text"],
-          readed: false
-        )
-      else
-        Rollbar.warning("Line chat room don't support message type", event: event)
 
-        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
-      end
+      SocialMessages::Create.run!(
+        social_customer: social_customer,
+        content: "These are the services we provide",
+        readed: true,
+        message_type: SocialMessage.message_types[:bot]
+      )
     end
   end
 

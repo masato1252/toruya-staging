@@ -553,6 +553,7 @@ ActiveRecord::Schema.define(version: 2020_05_12_102635) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "readed_at"
+    t.integer "message_type", default: 0
     t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
   end
 

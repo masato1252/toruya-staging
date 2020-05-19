@@ -7,6 +7,7 @@ module SocialMessages
     object :staff, default: nil
     string :content
     boolean :readed
+    integer :message_type
 
     def execute
       message = SocialMessage.create(
@@ -14,7 +15,8 @@ module SocialMessages
         social_customer: social_customer,
         staff: staff,
         raw_content: content,
-        readed_at: readed ? Time.zone.now : nil
+        readed_at: readed ? Time.zone.now : nil,
+        message_type: message_type
       )
 
       if message.errors.present?

@@ -20,7 +20,33 @@ $room_gap_size: 20px;
   .message {
     margin: 6px;
 
-    .customer-message {
+    .bot {
+      float: left;
+
+      .message-content {
+        background: $palette-color4;
+        border-color: #888888;
+        padding: 8px;
+        border-radius: 8px;
+        color: #FFFFFF;
+        float: left;
+      }
+    }
+
+    .staff {
+      float: left;
+
+      .message-content {
+        background: #9d9d9d;
+        border-color: #888888;
+        padding: 8px;
+        border-radius: 8px;
+        color: #FFFFFF;
+        float: left;
+      }
+    }
+
+    .customer {
       float: right;
 
       .message-content {
@@ -33,16 +59,16 @@ $room_gap_size: 20px;
       }
     }
 
-    .staff-message {
-      float: left;
+    .customer_reply_bot {
+      float: right;
 
       .message-content {
-        background: #9d9d9d;
-        border-color: #888888;
+        background-color: $warning;
+        border-color: #4cae4c;
         padding: 8px;
         border-radius: 8px;
         color: #FFFFFF;
-        float: left;
+        float: right;
       }
     }
   }
