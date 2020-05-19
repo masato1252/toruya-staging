@@ -19,7 +19,8 @@
 const initialState = {
   selected_customer: {},
   customers: {},
-  matched_shop_customers: []
+  matched_shop_customers: [],
+  customers_loaded: false
 }
 
 export default (state = initialState, action) => {
@@ -32,7 +33,8 @@ export default (state = initialState, action) => {
         customers: {
           ...state.customers,
           [action.payload.channel_id]: [...(state.customers[action.payload.channel_id] || []), ...action.payload.customers ]
-        }
+        },
+        customers_loaded: true
       }
     case "CUSTOMER_NEW_MESSAGE":
       if (state.selected_customer.id !== action.payload.customer.id) {

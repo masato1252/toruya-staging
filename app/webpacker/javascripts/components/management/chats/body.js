@@ -6,13 +6,16 @@ import { GlobalContext } from "context/chats/global_state"
 import MessageList from "./message_list"
 
 export default () => {
-  const { selected_channel_id, customers } = useContext(GlobalContext)
+  const { selected_channel_id, customers, customers_loaded, channel_setup } = useContext(GlobalContext)
   const channel_customers = customers[selected_channel_id] || []
+
+  if (!channel_setup) return <></>
+  if (selected_channel_id && !customers_loaded) return <></>
 
   if (selected_channel_id && channel_customers.length !== 0) {
     return <MessageList />
   }
-  else if (selected_channel_id) {
+  else if (selected_channel_id && customers_loaded) {
     return (
       <div className="content-centerize">
         <p className="warning">
@@ -22,7 +25,7 @@ export default () => {
       </div>
     )
   }
-  else {
+  else if (channel_setup && !selected_channel_id) {
     return (
       <div className="content-centerize">
         <p className="warning">

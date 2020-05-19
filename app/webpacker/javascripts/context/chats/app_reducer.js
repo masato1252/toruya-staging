@@ -3,7 +3,8 @@ import _ from "lodash";
 const initialState = {
   selected_channel_id: null,
   subscription: null,
-  props: null
+  props: null,
+  channel_setup: false
 }
 
 export default (state = initialState, action) => {
@@ -21,7 +22,8 @@ export default (state = initialState, action) => {
     case "SELECT_CHANNEL":
       return {
         ...state,
-        selected_channel_id: action.payload
+        selected_channel_id: action.payload,
+        channel_setup: true
       }
     default:
       return state;
