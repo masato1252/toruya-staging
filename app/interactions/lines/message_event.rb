@@ -47,11 +47,18 @@ class Lines::MessageEvent < ActiveInteraction::Base
       )
     elsif social_customer.one_on_one?
       # TODO: Change to SocialMessages::Create.perform_later when we had real in time background runner
-      SocialMessages::Create.run!(
-        social_customer: social_customer,
-        content: event["message"]["text"],
-        readed: false
-      )
+      case event["message"]["type"]
+      when "text"
+        SocialMessages::Create.run!(
+          social_customer: social_customer,
+          content: event["message"]["text"],
+          readed: false
+        )
+      else
+        Rollbar.warning("Line chat room don't support message type", event: event)
+
+        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+      end
     end
   end
 
