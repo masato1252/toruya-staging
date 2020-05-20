@@ -54,7 +54,7 @@ export default (state = initialState, action) => {
     case "SELECT_CUSTOMER":
       if (action.payload) {
         channel_customers = state.customers[action.payload.channel_id] || []
-        const matched_customer = channel_customers.find(customer => customer.id === action.payload.id) || {}
+        const matched_customer = channel_customers.find(customer => customer.id === action.payload.id) || action.payload || {}
 
         return {
           ...state,
