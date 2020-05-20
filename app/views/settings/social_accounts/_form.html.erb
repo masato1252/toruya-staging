@@ -26,13 +26,13 @@
       <dl>
         <dt>Channel token</dt>
         <dd>
-          <%= f.text_field :channel_token %>
+          <%= f.text_field :channel_token, value: social_account.raw_channel_token %>
         </dd>
       </dl>
       <dl>
         <dt>Channel Secret</dt>
         <dd>
-          <%= f.text_field :channel_secret %>
+          <%= f.text_field :channel_secret, value: social_account.raw_channel_secret %>
         </dd>
       </dl>
     </div>

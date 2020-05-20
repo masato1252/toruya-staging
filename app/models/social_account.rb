@@ -29,8 +29,16 @@ class SocialAccount < ApplicationRecord
 
   def client
     @client ||= Line::Bot::Client.new { |config|
-      config.channel_token = MessageEncryptor.decrypt(channel_token)
-      config.channel_secret = MessageEncryptor.decrypt(channel_secret)
+      config.channel_token = raw_channel_token
+      config.channel_secret = raw_channel_secret
     }
+  end
+
+  def raw_channel_token
+    MessageEncryptor.decrypt(channel_token) if channel_token.present?
+  end
+
+  def raw_channel_secret
+    MessageEncryptor.decrypt(channel_secret) if channel_secret.present?
   end
 end
