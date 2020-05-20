@@ -1,9 +1,12 @@
 "use strict";
 
 import React, { useState, useContext } from "react";
+import moment from "moment-timezone";
+
 import { GlobalContext } from "context/chats/global_state";
 
 const MessageForm = () => {
+  moment.locale('ja');
   const [text, setText] = useState("")
   const { selected_customer, selected_channel_id, staffNewMessage } = useContext(GlobalContext)
 
@@ -17,7 +20,9 @@ const MessageForm = () => {
         customer: false,
         text: text,
         readed: true,
-        created_at: Date.now()
+        created_at: Date.now(),
+        formatted_created_at: moment(Date.now()).format("llll"),
+        message_type: "staff"
       }
     }
 
