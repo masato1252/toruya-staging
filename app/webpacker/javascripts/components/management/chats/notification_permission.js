@@ -13,7 +13,7 @@ export default () => {
       data-web-push-subscriber-path={props.web_push.subscriber_path}>
       <div data-target="web-push-subscriber.askArea">
         <div>
-          Turn on Customer Message Notification would improve your user experince, we highly recommend you to turn it on.
+          Turn on Customer Message Notification would notify you when customers have a new message coming, we highly recommend you to turn it on.
         </div>
         <div className="btn btn-success btn-small"
           data-action="click->web-push-subscriber#askPermission">
@@ -21,7 +21,7 @@ export default () => {
         </div>
       </div>
       <div data-target="web-push-subscriber.deniedArea">
-        Turn on Customer Message Notification would improve your user experince, we highly recommend you to turn it on from your browser address.
+        Turn on Customer Message Notification would notify you when customers have a new message coming, we highly recommend you to turn it on from your browser address.
       </div>
     </div>
   )
