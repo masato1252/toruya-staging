@@ -71,17 +71,29 @@ export default ({ props }) => {
                 type: "APPEND_CUSTOMERS",
                 payload: data
               })
+
               break;
             case "matched_shop_customers":
               dispatch({
                 type: "MATCHED_SHOP_CUSTOMERS",
                 payload: data
               })
+
+              break;
             case "customer_has_messages":
               dispatch({
                 type: "CUSTOMER_HAS_MESSAGES",
                 payload: data
               })
+
+              break;
+            case "toggle_customer_conversation_state":
+              dispatch({
+                type: "TOGGLE_CUSTOMER_CONVERSATION_STATE",
+                payload: data
+              })
+
+              break;
             default:
               console.error({type, data});
           }
