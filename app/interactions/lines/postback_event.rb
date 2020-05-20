@@ -26,14 +26,14 @@ class Lines::PostbackEvent < ActiveInteraction::Base
 
     case data[EVENT_ACTION_KEY]
     when *Lines::MessageEvent::ACTION_TYPES
-      "Lines::Actions::#{data[EVENT_ACTION_KEY].camelize}".constantize.run!(social_customer: social_customer)
-
       SocialMessages::Create.run!(
         social_customer: social_customer,
         content: data[EVENT_ACTION_KEY],
         readed: true,
         message_type: SocialMessage.message_types[:customer_reply_bot]
       )
+
+      "Lines::Actions::#{data[EVENT_ACTION_KEY].camelize}".constantize.run!(social_customer: social_customer)
     else
       Rollbar.warning("Unexpected action type".freeze,
         social_customer_id: social_customer.id,

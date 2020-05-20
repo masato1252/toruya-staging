@@ -37,19 +37,21 @@ class Lines::MessageEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    case event["message"]["type"]
-    when "text"
-      SocialMessages::Create.run!(
-        social_customer: social_customer,
-        content: event["message"]["text"],
-        readed: false,
-        message_type: SocialMessage.message_types[:customer]
-      )
-    else
-      Rollbar.warning("Line chat room don't support message type", event: event)
+    if event.present?
+      case event["message"]["type"]
+      when "text"
+        SocialMessages::Create.run!(
+          social_customer: social_customer,
+          content: event["message"]["text"],
+          readed: false,
+          message_type: SocialMessage.message_types[:customer]
+        )
+      else
+        Rollbar.warning("Line chat room don't support message type", event: event)
 
-      if social_customer.one_on_one?
-        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+        if social_customer.one_on_one?
+          LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+        end
       end
     end
 
@@ -63,7 +65,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
       SocialMessages::Create.run!(
         social_customer: social_customer,
-        content: "These are the services we provide",
+        content: "These are the services we provide: #{ACTION_TYPES.join(", ")}",
         readed: true,
         message_type: SocialMessage.message_types[:bot]
       )
