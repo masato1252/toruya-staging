@@ -6,7 +6,7 @@ import { GlobalContext } from "context/chats/global_state"
 import MessageList from "./message_list"
 
 export default () => {
-  const { selected_channel_id, customers, customers_loaded, channel_setup } = useContext(GlobalContext)
+  const { props, selected_channel_id, customers, customers_loaded, channel_setup } = useContext(GlobalContext)
   const channel_customers = customers[selected_channel_id] || []
 
   if (!channel_setup) return <></>
@@ -29,7 +29,7 @@ export default () => {
     return (
       <div className="content-centerize">
         <p className="warning">
-          You haven't set up your line account yet, <br />please set up in your setting page.
+          You haven't set up your line account yet, <br />please set up in your <a href={props.path.settings}>setting page</a>.
         </p>
       </div>
     )
