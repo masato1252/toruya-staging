@@ -113,6 +113,6 @@ Rails.application.configure do
       user_id: controller.current_user.try(:id)
     }
   end
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
   config.assets.css_compressor = :sass
 end
