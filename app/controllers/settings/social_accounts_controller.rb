@@ -24,6 +24,8 @@ class Settings::SocialAccountsController < SettingsController
     if outcome.valid?
       redirect_to settings_user_social_accounts_path(super_user), notice: I18n.t("common.create_successfully_message")
     else
+      @social_account = super_user.social_accounts.new
+      @social_account.errors.merge!(outcome.errors)
       render :new
     end
   end
@@ -41,6 +43,7 @@ class Settings::SocialAccountsController < SettingsController
     if outcome.valid?
       redirect_to settings_user_social_accounts_path(super_user), notice: I18n.t("common.update_successfully_message")
     else
+      @social_account.errors.merge!(outcome.errors)
       render :edit
     end
   end

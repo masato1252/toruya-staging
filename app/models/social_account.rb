@@ -20,7 +20,7 @@ require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
   validates :label, presence: true
-  validates :channel_id, presence: true
+  validates :channel_id, presence: true, uniqueness: true
   validates :channel_token, presence: true
   validates :channel_secret, presence: true
 
