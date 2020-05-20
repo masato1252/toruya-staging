@@ -44,5 +44,11 @@
     input[type="radio"] {
       margin-top: 0;
     }
+
+    &.media-extend {
+      input {
+        width: 400px;
+      }
+    }
   }
 }

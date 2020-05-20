@@ -4,5 +4,6 @@ FactoryBot.define do
     channel_id { SecureRandom.hex }
     channel_token { SecureRandom.hex }
     channel_secret { SecureRandom.hex }
+    label { Faker::Lorem.word }
   end
 end

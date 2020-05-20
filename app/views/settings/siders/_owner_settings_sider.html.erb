@@ -59,6 +59,10 @@
     <%= render "settings/siders/booking" %>
   <% end %>
 
+  <% if basic_settings_presenter.completed? %>
+    <%= render "settings/siders/chats" %>
+  <% end %>
+
   <% if super_user.business_member? %>
     <%= render "settings/siders/agencies" %>
   <% end %>

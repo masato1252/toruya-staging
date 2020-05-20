@@ -1,0 +1,48 @@
+<div id="subNav">
+  <h2><%= t("settings.social_account.info_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.social_account.info_1") %><br /><%= t("settings.social_account.info_2") %></p>
+</div>
+
+<div id="settingForm" class="settings-form">
+  <%= form_for(social_account, url: url) do |f| %>
+    <%= render "settings/form_errors", object: social_account %>
+
+    <h3><%= t("settings.social_account.info_label") %><strong>必須項目</strong></h3>
+    <div id="menuInfo" class="formRow media-extend">
+      <dl>
+        <dt>Label</dt>
+        <dd>
+          <%= f.text_field :label %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Channel Id</dt>
+        <dd>
+          <%= f.text_field :channel_id %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Channel token</dt>
+        <dd>
+          <%= f.text_field :channel_token %>
+        </dd>
+      </dl>
+      <dl>
+        <dt>Channel Secret</dt>
+        <dd>
+          <%= f.text_field :channel_secret %>
+        </dd>
+      </dl>
+    </div>
+    <ul id="footerav">
+      <li>
+        <%= link_to t("action.cancel"), settings_user_social_accounts_path(super_user), class: "BTNtarco" %>
+      </li>
+      <li>
+        <%= f.submit "保存", class: "BTNyellow" %>
+      </li>
+    </ul>
+  <% end %>
+</div>

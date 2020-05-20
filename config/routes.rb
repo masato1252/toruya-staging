@@ -181,6 +181,8 @@ Rails.application.routes.draw do
           get "connections"
         end
       end
+
+      resources :social_accounts, except: [:show]
     end
   end
   resources :custom_schedules, only: [:create, :update, :destroy]
