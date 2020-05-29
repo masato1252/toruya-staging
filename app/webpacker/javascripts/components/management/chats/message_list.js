@@ -3,16 +3,6 @@
 import React, { useState, useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { GlobalContext } from "context/chats/global_state";
 import Message from "./message";
-import _ from "lodash";
-
-const usePrevious = value => {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-
-  return ref.current;
-};
 
 const MessageList = () => {
   const { messages, selected_customer, getMessages, selected_channel_id, customers, subscription } = useContext(GlobalContext)

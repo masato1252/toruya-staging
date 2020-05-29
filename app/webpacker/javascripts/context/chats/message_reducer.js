@@ -1,15 +1,19 @@
 import _ from "lodash";
 
+// mapping with
+// app/serializers/message_serializer.rb
+//
 // @messages:
 // {
 //   <customer_id> => [
 //      {
 //        id: <message_id>,
+//        message_type: bot|staff||customer|customer_reply_bot
 //        customer_id: <customer_id>,
-//        customer: true|false,
 //        text: <message content>,
 //        readed: true|false,
 //        created_at: <Datetime>
+//        formatted_created_at: <String>
 //      },
 //   ]
 // }

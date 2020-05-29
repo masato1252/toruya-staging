@@ -18,8 +18,6 @@
 #
 
 class SocialMessage < ApplicationRecord
-  BOT_STAFF_ID = 0
-
   belongs_to :social_account
   belongs_to :social_customer, touch: true
   belongs_to :staff, optional: true
