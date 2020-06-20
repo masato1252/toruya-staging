@@ -1,21 +1,17 @@
 require "line_client"
 
 class Lines::MessageEvent < ActiveInteraction::Base
+  IDENTIFY_SHOP_CUSTOMER = "identify_shop_customer".freeze
+
   ACTIONS = [
-    {
-      type: "postback",
-      action: "booking_pages",
-    },
-    {
-      type: "postback",
-      action: "shop_phone",
-    },
-    {
-      type: "postback",
-      action: "one_on_one"
-    }
+    LineActions::Postback.new(action: Lines::Actions::BookingPages.class_name, enabled: false),
+    LineActions::Postback.new(action: Lines::Actions::ShopPhone.class_name, enabled: false),
+    LineActions::Postback.new(action: Lines::Actions::OneOnOne.class_name, enabled: false),
+    LineActions::Postback.new(action: Lines::Actions::IncomingReservations.class_name, enabled: true),
   ].freeze
-  ACTION_TYPES = ACTIONS.map { |action| action[:action] }.freeze
+
+  ENABLED_ACTIONS = ACTIONS.select(&:enabled).freeze
+  ACTION_TYPES = ENABLED_ACTIONS.map(&:action).freeze
 
   # message event
   #  {
@@ -59,13 +55,13 @@ class Lines::MessageEvent < ActiveInteraction::Base
       LineClient.button_template(
         social_customer: social_customer,
         title: "Welcome to my shops".freeze,
-        text: "These are the services we provide".freeze,
+        text: desc_template,
         actions: action_templates
       )
 
       SocialMessages::Create.run!(
         social_customer: social_customer,
-        content: "These are the services we provide: #{ACTION_TYPES.join(", ")}",
+        content: chatroom_owner_message_content,
         readed: true,
         message_type: SocialMessage.message_types[:bot]
       )
@@ -74,13 +70,37 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
   private
 
-  def action_templates
-    ACTIONS.map do |action|
-      {
-        "type": action[:type],
-        "label": I18n.t("line.actions.label.#{action[:action]}"),
-        "data": URI.encode_www_form(action.slice(:action))
-      }
+  def desc_template
+    # must not be longer than 60 characters
+    if social_customer.customer
+      "These are the services we provide"
+    else
+      "Please Help us to connect your customer information"
     end
+  end
+
+  def action_templates
+    if social_customer.customer
+      ENABLED_ACTIONS
+    else
+      guest_actions
+    end.map(&:template)
+  end
+
+  def chatroom_owner_message_content
+    if social_customer.customer
+      "These are the services we provide: #{ACTION_TYPES.join(", ")}"
+    else
+      "Customer try to identify themselves"
+    end
+  end
+
+  def guest_actions
+    [
+      LineActions::Uri.new(
+        action: Lines::MessageEvent::IDENTIFY_SHOP_CUSTOMER,
+        url: Rails.application.routes.url_helpers.identify_shop_customer_url(social_user_id: social_customer.social_user_id)
+      )
+    ]
   end
 end

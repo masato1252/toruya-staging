@@ -7,6 +7,10 @@ Rails.application.routes.draw do
   end
   post "member", to: "members#show"
 
+  scope module: :lines, path: :lines do
+    get "/identify_shop_customer/:social_user_id", action: "identify_shop_customer", as: :identify_shop_customer
+  end
+
   resources :users, only: [] do
     resources :customers, only: [:index] do
       collection do
