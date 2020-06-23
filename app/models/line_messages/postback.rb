@@ -1,5 +1,7 @@
-module LineActions
+module LineMessages
   class Postback
+    LABEL_LIMIT = 20
+
     attr_reader :action, :enabled
 
     def initialize(action: , enabled: )
@@ -14,7 +16,7 @@ module LineActions
     def template
       {
         "type": "postback",
-        "label": I18n.t("line.actions.label.#{action}"),
+        "label": I18n.t("line.actions.label.#{action}").first(LABEL_LIMIT),
         "data": URI.encode_www_form({ action: action })
       }
     end

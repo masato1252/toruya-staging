@@ -1,4 +1,6 @@
 class LineClient
+  LINE_COLUMNS_NUMBER_LIMIT = 10
+
   attr_reader :social_customer
 
   def initialize(social_customer)
@@ -57,14 +59,14 @@ class LineClient
     end
   end
 
-  def self.carousel_template(social_customer: , title:, text:, columns:)
-    error_handler(__method__, social_customer.id, title, text, columns) do
+  def self.carousel_template(social_customer: , text:, columns:)
+    error_handler(__method__, social_customer.id, text, columns) do
       new(social_customer).client.push_message(social_customer.social_user_id, {
         "type": "template",
         "altText": text,
         "template": {
           "type": "carousel",
-          "columns": columns
+          "columns": columns.first(LINE_COLUMNS_NUMBER_LIMIT)
         }
       })
     end

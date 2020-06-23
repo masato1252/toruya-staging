@@ -1,5 +1,7 @@
-module LineActions
+module LineMessages
   class Uri
+    LABEL_LIMIT = 20
+
     attr_reader :action, :url
     attr_accessor :social_customer
 
@@ -13,10 +15,9 @@ module LineActions
     end
 
     def template
-      # label` must not be longer than 20 characters`
       {
         "type": "uri",
-        "label": I18n.t("line.actions.label.#{action}"),
+        "label": I18n.t("line.actions.label.#{action}").first(LABEL_LIMIT),
         "uri": url,
       }
     end

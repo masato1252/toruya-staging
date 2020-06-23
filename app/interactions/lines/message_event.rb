@@ -4,10 +4,10 @@ class Lines::MessageEvent < ActiveInteraction::Base
   IDENTIFY_SHOP_CUSTOMER = "identify_shop_customer".freeze
 
   ACTIONS = [
-    LineActions::Postback.new(action: Lines::Actions::BookingPages.class_name, enabled: false),
-    LineActions::Postback.new(action: Lines::Actions::ShopPhone.class_name, enabled: false),
-    LineActions::Postback.new(action: Lines::Actions::OneOnOne.class_name, enabled: false),
-    LineActions::Postback.new(action: Lines::Actions::IncomingReservations.class_name, enabled: true),
+    LineMessages::Postback.new(action: Lines::Actions::BookingPages.class_name, enabled: false),
+    LineMessages::Postback.new(action: Lines::Actions::ShopPhone.class_name, enabled: false),
+    LineMessages::Postback.new(action: Lines::Actions::OneOnOne.class_name, enabled: false),
+    LineMessages::Postback.new(action: Lines::Actions::IncomingReservations.class_name, enabled: true),
   ].freeze
 
   ENABLED_ACTIONS = ACTIONS.select(&:enabled).freeze
@@ -97,7 +97,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
   def guest_actions
     [
-      LineActions::Uri.new(
+      LineMessages::Uri.new(
         action: Lines::MessageEvent::IDENTIFY_SHOP_CUSTOMER,
         url: Rails.application.routes.url_helpers.lines_identify_shop_customer_url(social_user_id: social_customer.social_user_id)
       )
