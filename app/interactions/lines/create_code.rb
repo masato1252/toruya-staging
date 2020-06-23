@@ -1,9 +1,9 @@
 require "sms_client"
 require "random_code"
 
-module Booking
+module Lines
   class CreateCode < ActiveInteraction::Base
-    object :booking_page
+    object :user
     string :phone_number
 
     def execute
@@ -11,14 +11,13 @@ module Booking
         code = RandomCode.generate(6)
 
         booking_code = BookingCode.create!(
-          booking_page_id: booking_page.id,
           uuid: SecureRandom.uuid,
           code: code
         )
         message = I18n.t("customer.notifications.sms.confirmation_code", code: code)
 
         begin
-          SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})")
+          SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}")
         rescue Twilio::REST::RestError => e
           Rollbar.error(
             e,
@@ -28,8 +27,8 @@ module Booking
         end
 
         Notification.create!(
-          user: booking_page.user,
-          phone_number:  phone_number,
+          user: user,
+          phone_number: phone_number,
           content: message
         )
 

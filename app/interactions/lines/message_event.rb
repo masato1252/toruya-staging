@@ -99,7 +99,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
     [
       LineActions::Uri.new(
         action: Lines::MessageEvent::IDENTIFY_SHOP_CUSTOMER,
-        url: Rails.application.routes.url_helpers.identify_shop_customer_url(social_user_id: social_customer.social_user_id)
+        url: Rails.application.routes.url_helpers.lines_identify_shop_customer_url(social_user_id: social_customer.social_user_id)
       )
     ]
   end

@@ -159,7 +159,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def confirm_code
-    code_passed = Booking::VerifyCode.run!(booking_page: booking_page, uuid: params[:uuid], code: params[:code])
+    code_passed = !!IdentificationCodes::Verify.run!(uuid: params[:uuid], code: params[:code])
 
     if code_passed
       render json: {

@@ -1,7 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 
-var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared)/)
+var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(BookingcomponentRequireContext)
 
