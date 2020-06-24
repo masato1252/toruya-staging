@@ -104,3 +104,10 @@ a {
   font-size: 14px;
   color: $gray11;
 }
+
+.whole-page-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

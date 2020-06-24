@@ -1,5 +1,10 @@
 class LineClient
-  LINE_COLUMNS_NUMBER_LIMIT = 10
+  COLUMNS_NUMBER_LIMIT = 10
+  BUTTON_DESC_LIMIT = 60
+  BUTTON_DESC_WITHOUT_IMAGE_LIMIT = 160
+  BUTTON_TITLE_LIMIT = 40
+  BUTTON_ACTIONS_SIZE_LIMIT = 4
+  ALT_TEXT_LIMIT = 400
 
   attr_reader :social_customer
 
@@ -27,6 +32,12 @@ class LineClient
     end
   end
 
+  def self.flex(social_customer, template)
+    error_handler(__method__, social_customer.id, template) do
+      new(social_customer).client.push_message(social_customer.social_user_id, template)
+    end
+  end
+
   def self.send(social_customer, message)
     error_handler(__method__, social_customer.id, message) do
       new(social_customer).client.push_message(social_customer.social_user_id, {type: "text", text: message})
@@ -43,17 +54,12 @@ class LineClient
     error_handler(__method__, social_customer.id, title, text, actions) do
       new(social_customer).client.push_message(social_customer.social_user_id, {
         "type": "template",
-        "altText": text,
+        "altText": text.first(ALT_TEXT_LIMIT),
         "template": {
           "type": "buttons",
-          "title": title,
-          "text": text,
-          "defaultAction": {
-            "type": "uri",
-            "label": "View detail",
-            "uri": Rails.application.routes.url_helpers.webhooks_line_url(channel_id: social_customer.social_account.channel_id)
-          },
-          "actions": actions
+          "title": title.first(BUTTON_TITLE_LIMIT),
+          "text": text.first(BUTTON_DESC_WITHOUT_IMAGE_LIMIT),
+          "actions": actions.first(BUTTON_ACTIONS_SIZE_LIMIT)
         }
       })
     end
@@ -66,7 +72,7 @@ class LineClient
         "altText": text,
         "template": {
           "type": "carousel",
-          "columns": columns.first(LINE_COLUMNS_NUMBER_LIMIT)
+          "columns": columns.first(COLUMNS_NUMBER_LIMIT)
         }
       })
     end

@@ -1,10 +1,25 @@
 ja:
   line:
+    customer_identifications:
+      successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。
     actions:
       label:
         booking_pages: All activities
         shop_phone: Shop phone
         one_on_one: One on one
-        identify_shop_customer: Connect
-        incoming_reservations: Incoming Reservations
-        call: Call
+        identify_shop_customer: 顧客情報を連携する
+        incoming_reservations: 次回の予約
+        call: 電話をかける
+    bot:
+      thanks_follow: お友達登録ありがとうございます。このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。
+      connected_successfuly: ありがとうございます！顧客情報の連携が完了しました。
+      features:
+        connect_customer:
+          title: 顧客情報の連携
+          desc: 顧客情報をあなたのLINEと連携することで、オンライン予約をLINEでご利用いただけます。
+        online_booking:
+          title: オンライン予約の使い方
+          desc: 「予約」とメッセージ送信すると、オンライン予約をご利用いただけます。
+      messages:
+        incoming_reservations:
+          desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"

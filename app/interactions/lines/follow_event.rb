@@ -5,12 +5,7 @@ class Lines::FollowEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    # message = {
-    #   type: 'text',
-    #   text: "hello User #{event["source"]["userId"]}"
-    # }
-    #
-    # LineClient.reply(social_customer, event["replyToken"], message)
-    Lines::MessageEvent.run(social_customer: social_customer, event: {})
+    LineClient.send(social_customer, I18n.t("line.bot.thanks_follow"))
+    Lines::FeaturesButton.run(social_customer: social_customer)
   end
 end

@@ -7,7 +7,7 @@ import { ErrorMessage } from "shared/components";
 
 export const CustomerIdentification = (props) => {
   const { social_user_id, customer_id } = props.social_customer;
-  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm } = props.i18n;
+  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm, successful_message_html } = props.i18n;
 
   const [customer_last_name, setCustomerLastName] = useState("")
   const [customer_first_name, setCustomerFirstName] = useState("")
@@ -174,11 +174,9 @@ export const CustomerIdentification = (props) => {
 
   if (is_customer_identified) {
     return (
-      <>
-        <div className="customer-type-options">
-          Your were identified with your line account, you could start using our bot services.
-        </div>
-      </>
+      <div className="whole-page-center final">
+        <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
+      </div>
     )
   }
 

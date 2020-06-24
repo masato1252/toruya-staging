@@ -29,7 +29,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
   #    }
   #  }
   # },
-  hash :event, strip: false
+  hash :event, strip: false, default: nil
   object :social_customer
 
   def execute
@@ -52,55 +52,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
     end
 
     if social_customer.bot?
-      LineClient.button_template(
-        social_customer: social_customer,
-        title: "Welcome to my shops".freeze,
-        text: desc_template,
-        actions: action_templates
-      )
-
-      SocialMessages::Create.run!(
-        social_customer: social_customer,
-        content: chatroom_owner_message_content,
-        readed: true,
-        message_type: SocialMessage.message_types[:bot]
-      )
+      compose(Lines::FeaturesButton, social_customer: social_customer)
     end
-  end
-
-  private
-
-  def desc_template
-    # must not be longer than 60 characters
-    if social_customer.customer
-      "These are the services we provide"
-    else
-      "Please Help us to connect your customer information"
-    end
-  end
-
-  def action_templates
-    if social_customer.customer
-      ENABLED_ACTIONS
-    else
-      guest_actions
-    end.map(&:template)
-  end
-
-  def chatroom_owner_message_content
-    if social_customer.customer
-      "These are the services we provide: #{ACTION_TYPES.join(", ")}"
-    else
-      "Customer try to identify themselves"
-    end
-  end
-
-  def guest_actions
-    [
-      LineMessages::Uri.new(
-        action: Lines::MessageEvent::IDENTIFY_SHOP_CUSTOMER,
-        url: Rails.application.routes.url_helpers.lines_identify_shop_customer_url(social_user_id: social_customer.social_user_id)
-      )
-    ]
   end
 end

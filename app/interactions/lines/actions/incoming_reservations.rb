@@ -4,35 +4,29 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::LINE_COLUMNS_NUMBER_LIMIT)
+    reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT)
 
-    columns = reservations.map do |reservation|
+    contents = reservations.map do |reservation|
       shop = reservation.shop
 
-      message = I18n.t(
-        "customer.notifications.sms.reminder",
-        customer_name: customer.name,
-        shop_name: shop.display_name,
-        shop_phone_number: shop.phone_number,
-        booking_time: "#{I18n.l(reservation.start_time, format: :long_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}"
-      )
-
-      LineMessages::CarouselColumn.template(
-        title: I18n.t("customer_mailer.reservation_reminder.title", shop_name: shop.display_name),
-        text: message,
-        actions: [
-          LineMessages::Uri.new(
-            action: "call",
-            url: "tel:#{shop.phone_number}"
-          )
-        ]
+      LineMessages::FlexTemplateContent.content1(
+        title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}",
+        title2: reservation.menus.map(&:display_name).join(", "),
+        body: I18n.t("line.bot.messages.incoming_reservations.desc", shop_phone_number: shop.phone_number),
+        action_templates: [LineMessages::Uri.new(action: "call", url: "tel:#{shop.phone_number}").template]
       )
     end
 
-    if columns.blank?
+    if contents.blank?
       LineClient.send(social_customer, "You don't have any incoming reservations".freeze)
     else
-      LineClient.carousel_template(social_customer: social_customer, text: "There are your incoming reservations".freeze, columns: columns)
+      LineClient.flex(
+        social_customer,
+        LineMessages::FlexTemplateContainer.carousel_template(
+          altText: "There are your incoming reservations",
+          contents: contents
+        )
+      )
     end
   end
 
