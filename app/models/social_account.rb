@@ -10,6 +10,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  label          :string
+#  basic_id       :string
 #
 # Indexes
 #
@@ -40,5 +41,9 @@ class SocialAccount < ApplicationRecord
 
   def raw_channel_secret
     MessageEncryptor.decrypt(channel_secret) if channel_secret.present?
+  end
+
+  def add_friend_url
+    "https://line.me/R/ti/p/#{basic_id}" if basic_id.present?
   end
 end

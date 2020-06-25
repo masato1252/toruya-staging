@@ -112,4 +112,13 @@ a.btn {
   }
 }
 
+.line-button {
+  background: #02B901;
+  display: inline-flex !important;
+  align-items: center;
 
+  .fa-line {
+    font-size: 36px;
+    margin-right: 6px;
+  }
+}

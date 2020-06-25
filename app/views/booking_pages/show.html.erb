@@ -24,6 +24,7 @@
 <%= react_component("booking/booking_reservation_form", {
   timezone: Time.zone.tzinfo.name,
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
+  social_account_add_friend_url: @social_account&.add_friend_url,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
     shop_name: @booking_page.shop.name,

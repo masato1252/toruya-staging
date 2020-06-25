@@ -58,6 +58,8 @@ class BookingPagesController < ActionController::Base
         end
       end
     end
+
+    @social_account = @booking_page.user.social_accounts.first
   end
 
   def booking_reservation

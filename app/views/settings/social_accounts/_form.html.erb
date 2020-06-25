@@ -35,6 +35,12 @@
           <%= f.text_field :channel_secret, value: social_account.raw_channel_secret %>
         </dd>
       </dl>
+      <dl>
+        <dt>Basic id</dt>
+        <dd>
+          <%= f.text_field :basic_id, value: social_account.basic_id, placeholder: "@123abcde" %>
+        </dd>
+      </dl>
     </div>
     <ul id="footerav">
       <li>

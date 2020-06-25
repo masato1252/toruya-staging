@@ -19,6 +19,7 @@ class Settings::SocialAccountsController < SettingsController
       channel_token: social_account_params[:channel_token],
       channel_secret: social_account_params[:channel_secret],
       label: social_account_params[:label],
+      basic_id: social_account_params[:basic_id]
     )
 
     if outcome.valid?
@@ -38,6 +39,7 @@ class Settings::SocialAccountsController < SettingsController
       channel_token: social_account_params[:channel_token],
       channel_secret: social_account_params[:channel_secret],
       label: social_account_params[:label],
+      basic_id: social_account_params[:basic_id]
     )
 
     if outcome.valid?
@@ -61,6 +63,6 @@ class Settings::SocialAccountsController < SettingsController
   end
 
   def social_account_params
-    params.require(:social_account).permit(:label, :channel_id, :channel_token, :channel_secret)
+    params.require(:social_account).permit(:label, :channel_id, :channel_token, :channel_secret, :basic_id)
   end
 end

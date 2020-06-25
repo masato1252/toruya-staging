@@ -915,6 +915,12 @@ class BookingReservationForm extends React.Component {
           <br />
           {message2}
         </div>
+        {this.props.social_account_add_friend_url && (
+          <a href={this.props.social_account_add_friend_url} className="btn line-button">
+            <span class="fab fa-line" aria-hidden="true"></span>
+            Add Friend
+          </a>
+        )}
         <div className="desc">
           {this.props.booking_page.shop_name}{desc1}
           <br />

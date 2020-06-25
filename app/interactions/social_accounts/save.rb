@@ -8,6 +8,7 @@ module SocialAccounts
     string :channel_token
     string :channel_secret
     string :label
+    string :basic_id
 
     def execute
       begin
@@ -17,7 +18,8 @@ module SocialAccounts
             channel_token: MessageEncryptor.encrypt(channel_token),
             channel_secret: MessageEncryptor.encrypt(channel_secret),
             channel_id: channel_id,
-            label: label
+            label: label,
+            basic_id: basic_id
           )
 
           if social_account.invalid?
