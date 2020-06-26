@@ -86,6 +86,30 @@ module LineMessages
       }
     end
 
+    def self.content3(body1:, body2:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "xxl",
+          "contents": [
+            {
+              "type": "text",
+              "text": body1,
+              "wrap": true
+            },
+            {
+              "type": "text",
+              "text": body2,
+              "wrap": true
+            }
+          ]
+        }
+      }
+    end
+
     def self.action_template_buttons_contents(action_templates)
       action_templates.map do |action_template|
         {
