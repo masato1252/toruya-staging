@@ -18,7 +18,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     end
 
     if contents.blank?
-      LineClient.send(social_customer, "You don't have any incoming reservations".freeze)
+      LineClient.send(social_customer, I18n.t("line.bot.features.online_booking.no_incoming_messages"))
     else
       LineClient.flex(
         social_customer,
