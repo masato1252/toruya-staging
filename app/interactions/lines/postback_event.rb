@@ -25,7 +25,7 @@ class Lines::PostbackEvent < ActiveInteraction::Base
     data = Rack::Utils.parse_nested_query(event["postback".freeze]["data".freeze])
 
     case data[EVENT_ACTION_KEY]
-    when *Lines::MessageEvent::ACTION_TYPES
+    when *Lines::FeaturesButton::ACTION_TYPES
       SocialMessages::Create.run!(
         social_customer: social_customer,
         content: data[EVENT_ACTION_KEY],

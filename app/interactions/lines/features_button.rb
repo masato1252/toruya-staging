@@ -65,7 +65,7 @@ class Lines::FeaturesButton < ActiveInteraction::Base
   def guest_actions
     [
       LineMessages::Uri.new(
-        action: Lines::MessageEvent::IDENTIFY_SHOP_CUSTOMER,
+        action: Lines::FeaturesButton::IDENTIFY_SHOP_CUSTOMER,
         url: Rails.application.routes.url_helpers.lines_identify_shop_customer_url(social_user_id: social_customer.social_user_id)
       )
     ]
