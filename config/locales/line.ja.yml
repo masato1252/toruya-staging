@@ -11,12 +11,8 @@ ja:
         incoming_reservations: 全ての予約
         call: 電話をかける
     bot:
-      thanks_follow:
-        body1: お友達登録ありがとうございます。
-        body2: このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。
-      connected_successfuly:
-        body1: ありがとうございます！
-        body2: 顧客情報の連携が完了しました。
+      thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
+      connected_successfuly: "ありがとうございます！\n\n 顧客情報の連携が完了しました。"
       features:
         connect_customer:
           title: 顧客情報の連携
@@ -24,7 +20,7 @@ ja:
         online_booking:
           title: オンライン予約
           desc: 以下よりお選びください。
-          no_incoming_messages: 現在、表示できる次回予約は見つかりませんでした。
+          no_incoming_messages: 表示できる予約は見つかりませんでした。
       messages:
         incoming_reservations:
           desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"

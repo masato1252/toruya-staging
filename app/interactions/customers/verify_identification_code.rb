@@ -11,16 +11,7 @@ module Customers
       if identification_code
         social_customer.update!(customer_id: identification_code.customer_id)
 
-        LineClient.flex(
-          social_customer,
-          LineMessages::FlexTemplateContainer.template(
-            altText: I18n.t("line.bot.connected_successfuly.body1"),
-            contents: LineMessages::FlexTemplateContent.content3(
-              body1: I18n.t("line.bot.connected_successfuly.body1"),
-              body2: I18n.t("line.bot.connected_successfuly.body2")
-            )
-          )
-        )
+        LineClient.send(social_customer, I18n.t("line.bot.connected_successfuly"))
         Lines::FeaturesButton.run(social_customer: social_customer)
       end
 
