@@ -24,8 +24,12 @@ class Lines::PostbackEvent < ActiveInteraction::Base
   def execute
     data = Rack::Utils.parse_nested_query(event["postback".freeze]["data".freeze])
 
+    # TODO: Lines::Menus's children's ACTION_TYPES
     case data[EVENT_ACTION_KEY]
-    when *Lines::FeaturesButton::ACTION_TYPES
+    when *[
+      Lines::Menus::AllFeatures::ACTION_TYPES,
+      Lines::Menus::OnlineBookingFeatures::ACTION_TYPES
+    ].flatten
       SocialMessages::Create.run!(
         social_customer: social_customer,
         content: data[EVENT_ACTION_KEY],

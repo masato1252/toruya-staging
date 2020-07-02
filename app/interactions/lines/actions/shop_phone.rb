@@ -10,6 +10,6 @@ class Lines::Actions::ShopPhone < ActiveInteraction::Base
     end.join("\n")
 
     LineClient.send(social_customer, message)
-    Lines::FeaturesButton.run(social_customer: social_customer)
+    Lines::Features.run(social_customer: social_customer)
   end
 end

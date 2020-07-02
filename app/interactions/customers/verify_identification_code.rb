@@ -12,7 +12,7 @@ module Customers
         social_customer.update!(customer_id: identification_code.customer_id)
 
         LineClient.send(social_customer, I18n.t("line.bot.connected_successfuly"))
-        Lines::FeaturesButton.run(social_customer: social_customer)
+        Lines::Features.run(social_customer: social_customer)
       end
 
       identification_code

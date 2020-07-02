@@ -25,7 +25,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
     end
 
     if social_customer.bot?
-      compose(Lines::FeaturesButton, social_customer: social_customer)
+      compose(Lines::Features, social_customer: social_customer)
     end
   end
 end
