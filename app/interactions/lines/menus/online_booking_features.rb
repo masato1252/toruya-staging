@@ -1,5 +1,3 @@
-require "line_client"
-
 module Lines
   module Menus
     class OnlineBookingFeatures < Base

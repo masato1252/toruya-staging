@@ -6,7 +6,6 @@ class Lines::Features < ActiveInteraction::Base
   def execute
     if social_customer.customer
       if Lines::Menus::AllFeatures::ENABLED_ACTIONS.length == 1
-        # TODO: Refactor could choose any single one feature
         compose(Lines::Menus::OnlineBookingFeatures, social_customer: social_customer)
       else
         compose(Lines::Menus::AllFeatures, social_customer: social_customer)
