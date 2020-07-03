@@ -7,7 +7,7 @@ import { ErrorMessage } from "shared/components";
 
 export const CustomerIdentification = (props) => {
   const { social_user_id, customer_id } = props.social_customer;
-  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm, successful_message_html } = props.i18n;
+  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm, successful_message_html, title_html } = props.i18n;
 
   const [customer_last_name, setCustomerLastName] = useState("")
   const [customer_first_name, setCustomerFirstName] = useState("")
@@ -182,6 +182,11 @@ export const CustomerIdentification = (props) => {
 
   return (
     <>
+      <div className="header">
+        <div className="header-title-part centerize">
+          <h3 dangerouslySetInnerHTML={{ __html: title_html }} />
+        </div>
+      </div>
       <div className="customer-type-options">
         <h4>
           {name}
