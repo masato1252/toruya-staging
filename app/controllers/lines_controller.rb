@@ -1,6 +1,6 @@
 class LinesController < ActionController::Base
   protect_from_forgery with: :exception, prepend: true
-  before_action :social_customer, only: %w(identify_shop_customer find_customer identify_code)
+  before_action :social_customer, only: %w(identify_shop_customer find_customer create_customer identify_code ask_identification_code)
 
   layout "booking"
 
@@ -16,6 +16,7 @@ class LinesController < ActionController::Base
 
     if customer
       identification_code = Customers::CreateIdentificationCode.run!(
+        user: social_customer.user,
         customer: customer,
         phone_number: params[:customer_phone_number]
       )
@@ -27,9 +28,45 @@ class LinesController < ActionController::Base
         }
       }
     else
+      identification_code = Customers::CreateIdentificationCode.run!(
+        user: social_customer.user,
+        phone_number: params[:customer_phone_number]
+      )
+
+      render json: {
+        identification_code: {
+          uuid: identification_code.uuid,
+        }
+      }
+    end
+  end
+
+  def create_customer
+    outcome = Customers::Create.run(
+      user: social_customer.user,
+      customer_last_name: params[:customer_last_name],
+      customer_first_name: params[:customer_first_name],
+      customer_phonetic_last_name: params[:customer_phonetic_last_name],
+      customer_phonetic_first_name: params[:customer_phonetic_first_name],
+      customer_phone_number: params[:customer_phone_number],
+      customer_email: params[:customer_email]
+    )
+
+    if outcome.valid?
+      ApplicationRecord.transaction do
+        BookingCode.find_by!(uuid: params[:uuid]).update!(customer_id: outcome.result.id)
+        Customers::VerifyIdentificationCode.run!(
+          social_customer: social_customer,
+          uuid: params[:uuid],
+          code: params[:code]
+        )
+      end
+
+      render json: { customer_id: outcome.result.id }
+    else
       render json: {
         errors: {
-          message: I18n.t("booking_page.message.unfound_customer_html")
+          message: "Something wrong"
         }
       }
     end
@@ -56,6 +93,7 @@ class LinesController < ActionController::Base
 
   def ask_identification_code
     identification_code = Customers::CreateIdentificationCode.run!(
+      user: social_customer.user,
       customer: customer,
       phone_number: params[:customer_phone_number]
     )
@@ -63,7 +101,7 @@ class LinesController < ActionController::Base
     render json: {
       identification_code: {
         uuid: identification_code.uuid,
-        customer_id: customer.id,
+        customer_id: customer&.id,
       }
     }
   end
@@ -75,6 +113,6 @@ class LinesController < ActionController::Base
   end
 
   def customer
-    @customer ||= Customer.find(params[:customer_id])
+    @customer ||= Customer.find_by(id: params[:customer_id])
   end
 end

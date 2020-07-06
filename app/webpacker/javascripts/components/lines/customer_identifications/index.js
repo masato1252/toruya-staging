@@ -1,19 +1,24 @@
 "use strict";
 
 import React, { useState } from "react";
+import Rails from "rails-ujs";
 import axios from "axios";
 
 import { ErrorMessage } from "shared/components";
 
 export const CustomerIdentification = (props) => {
   const { social_user_id, customer_id } = props.social_customer;
-  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm, successful_message_html, title_html } = props.i18n;
+  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm,
+    successful_message_html, title_html, phonetic_name, phonetic_last_name, phonetic_first_name, email } = props.i18n;
 
   const [customer_last_name, setCustomerLastName] = useState("")
   const [customer_first_name, setCustomerFirstName] = useState("")
+  const [customer_phonetic_last_name, setCustomerPhoneticLastName] = useState("")
+  const [customer_phonetic_first_name, setCustomerPhoneticFirstName] = useState("")
   const [customer_phone_number, setCustomerPhoneNumber] = useState("")
+  const [customer_email, setCustomerEmail] = useState("")
   const [is_finding_customer, setFindingCustomer] = useState(false)
-  const [customer_finding_error, setCustomerFindingError] = useState(null)
+  const [is_creating_customer, setCreatingCustomer] = useState(false)
   const [identification_code, setIdentificationCode] = useState({})
   const [is_identifying_code, setIdentifyingCode] = useState(false)
   const [is_asking_identification_code, setAskingIdentificationCode] = useState(false)
@@ -23,6 +28,7 @@ export const CustomerIdentification = (props) => {
   let identifyCodeCall;
   let askIdentificationCodeCall;
   let findCustomerCall;
+  let createCustomerCall;
 
   const _is_customer_found = () => {
     return identification_code && !!identification_code.customer_id;
@@ -30,6 +36,11 @@ export const CustomerIdentification = (props) => {
 
   const _is_fields_filled = () => {
     return customer_first_name && customer_last_name && customer_phone_number;
+  }
+
+  const _is_all_fields_filled = () => {
+    return customer_first_name && customer_last_name && customer_phone_number
+      && customer_phonetic_last_name && customer_phonetic_first_name && customer_email;
   }
 
   const findCustomer = async (event) => {
@@ -40,7 +51,6 @@ export const CustomerIdentification = (props) => {
 
     setFindingCustomer(true);
     setIdentificationCode({});
-    setCustomerFindingError(null);
 
     const response = await axios({
       method: "GET",
@@ -61,8 +71,43 @@ export const CustomerIdentification = (props) => {
     setIdentificationCode(response.data.identification_code)
     setFindingCustomer(false)
     findCustomerCall = null;
+  }
 
-    if (errors) setCustomerFindingError(errors.message);
+  const createCustomer = async (event) => {
+    event.preventDefault();
+
+    if (!(_is_all_fields_filled())) return;
+    if (createCustomerCall) return;
+
+    setCreatingCustomer(true);
+
+    const response = await axios({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: props.path.create_customer,
+      data: {
+        social_user_id: social_user_id,
+        customer_first_name: customer_first_name,
+        customer_last_name: customer_last_name,
+        customer_phone_number: customer_phone_number,
+        customer_phonetic_last_name: customer_phonetic_last_name,
+        customer_phonetic_first_name: customer_phonetic_first_name,
+        customer_email: customer_email,
+        uuid: identification_code.uuid,
+        code: identification_code.code
+      },
+      responseType: "json"
+    })
+
+    const {
+      errors
+    } = response.data;
+
+    setIdentificationCode({...identification_code, customer_id: response.data.customer_id})
+    setCreatingCustomer(false)
+    createCustomerCall = null;
   }
 
   const identifyCode = async (event) => {
@@ -110,6 +155,7 @@ export const CustomerIdentification = (props) => {
       method: "GET",
       url: props.path.ask_identification_code,
       params: {
+        social_user_id,
         customer_id: identification_code.customer_id,
         customer_phone_number: customer_phone_number,
       },
@@ -169,10 +215,46 @@ export const CustomerIdentification = (props) => {
         </div>
       </div>
     )
-
   }
 
-  if (is_customer_identified) {
+  const renderNewCustomerFields = () => {
+    return (
+      <>
+        <h4>
+          {phonetic_name}
+        </h4>
+        <div className="field">
+          <input
+            placeholder={phonetic_last_name}
+            type="text"
+            value={customer_phonetic_last_name}
+            onChange={(e) => setCustomerPhoneticLastName(e.target.value)}
+          />
+        </div>
+        <div className="field">
+          <input
+            placeholder={phonetic_first_name}
+            type="text"
+            value={customer_phonetic_first_name}
+            onChange={(e) => setCustomerPhoneticFirstName(e.target.value)}
+          />
+        </div>
+        <h4>
+          {email}
+        </h4>
+        <div className="field">
+          <input
+            placeholder="mail@domail.com"
+            type="email"
+            value={customer_email}
+            onChange={(e) => setCustomerEmail(e.target.value)}
+          />
+        </div>
+      </>
+    )
+  }
+
+  if (is_customer_identified && identification_code.customer_id) {
     return (
       <div className="whole-page-center final">
         <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
@@ -212,17 +294,23 @@ export const CustomerIdentification = (props) => {
           value={customer_phone_number}
           onChange={(e) => setCustomerPhoneNumber(e.target.value)}
         />
-        {!_is_customer_found() ? (
+        {!_is_customer_found() && !identification_code.uuid ? (
           <div className="centerize">
-            {customer_finding_error ? <ErrorMessage error={customer_finding_error} /> : null}
-
             <a href="#" className="btn btn-tarco find-customer" onClick={findCustomer} disabled={is_finding_customer || !_is_fields_filled()}>
               {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
             </a>
           </div>
         ) : null}
       </div>
-      {_is_customer_found() ?  renderBookingCode() : null}
+      {identification_code.uuid && !is_customer_identified ? renderBookingCode() : null}
+      {!_is_customer_found() && is_customer_identified ? renderNewCustomerFields() : null}
+      {_is_all_fields_filled() && is_customer_identified ? (
+        <div className="centerize">
+          <a href="#" className="btn btn-tarco find-customer" onClick={createCustomer} disabled={is_creating_customer || !_is_all_fields_filled()}>
+            {is_creating_customer? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
+          </a>
+        </div>
+      ) : null}
     </>
   )
 

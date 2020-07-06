@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/:social_user_id", action: "identify_shop_customer", as: :identify_shop_customer
     get :find_customer
+    post :create_customer
     get :identify_code
     get :ask_identification_code
   end

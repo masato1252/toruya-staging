@@ -3,7 +3,8 @@ require "random_code"
 
 module Customers
   class CreateIdentificationCode < ActiveInteraction::Base
-    object :customer
+    object :user
+    object :customer, default: nil
     string :phone_number
 
     def execute
@@ -11,7 +12,7 @@ module Customers
         code = RandomCode.generate(6)
 
         booking_code = BookingCode.create!(
-          customer_id: customer.id,
+          customer_id: customer&.id,
           uuid: SecureRandom.uuid,
           code: code
         )
@@ -28,8 +29,8 @@ module Customers
         end
 
         Notification.create!(
-          user: customer.user,
-          phone_number:  phone_number,
+          user: user,
+          phone_number: phone_number,
           content: message
         )
 

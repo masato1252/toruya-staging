@@ -8,7 +8,8 @@ module Customers
 
     def execute
       identification_code = compose(IdentificationCodes::Verify, uuid: uuid, code: code)
-      if identification_code
+
+      if identification_code && identification_code.customer_id
         social_customer.update!(customer_id: identification_code.customer_id)
 
         LineClient.send(social_customer, I18n.t("line.bot.connected_successfuly"))
