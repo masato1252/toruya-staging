@@ -902,7 +902,9 @@ class BookingReservationForm extends React.Component {
       feature1,
       feature2,
       feature3,
-      signup_now
+      signup_now,
+      add_friend_messages_html,
+      add_friend_btn
     } = this.props.i18n.done
 
     return (
@@ -915,12 +917,17 @@ class BookingReservationForm extends React.Component {
           <br />
           {message2}
         </div>
+
         {this.props.social_account_add_friend_url && (
-          <a href={this.props.social_account_add_friend_url} className="btn line-button">
-            <span class="fab fa-line" aria-hidden="true"></span>
-            Add Friend
-          </a>
+          <div className="message">
+            <div className="desc" dangerouslySetInnerHTML={{ __html: add_friend_messages_html }} />
+            <a href={this.props.social_account_add_friend_url} className="btn line-button">
+              <span class="fab fa-line" aria-hidden="true"></span>
+              {add_friend_btn}
+            </a>
+          </div>
         )}
+
         <div className="desc">
           {this.props.booking_page.shop_name}{desc1}
           <br />
