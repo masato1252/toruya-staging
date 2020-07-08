@@ -4,7 +4,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT)
+    reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT) || []
 
     contents = reservations.map do |reservation|
       shop = reservation.shop
