@@ -18,14 +18,6 @@ module Reservations
           content: message
         )
       end
-
-      private
-
-      def 
-
-      def shop
-        @shop ||= reservation.shop
-      end
     end
   end
 end
