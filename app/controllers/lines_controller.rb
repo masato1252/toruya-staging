@@ -40,7 +40,8 @@ class LinesController < ActionController::Base
     )
 
     ApplicationRecord.transaction do
-      booking_code = BookingCode.find_by!(uuid: params[:uuid]).update!(customer_id: customer.id)
+      booking_code = BookingCode.find_by!(uuid: params[:uuid])
+      booking_code.update!(customer_id: customer.id)
       SocialCustomers::ConnectWithCustomer.run!(social_customer: social_customer, booking_code: booking_code)
     end
 
