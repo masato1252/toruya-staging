@@ -96,12 +96,6 @@ module Booking
           # regular customer
           customer = user.customers.find(customer_info["id"])
           customer.update(reminder_permission: customer_reminder_permission)
-
-          # XXX: Don't have to find a available reservation, since customer is invalid
-          if customer.new_record?
-            errors.merge!(customer.errors)
-            raise ActiveRecord::Rollback
-          end
         else
           # new customer
           customer_outcome = Customers::Create.run(
@@ -117,6 +111,7 @@ module Booking
           # XXX: Don't have to find a available reservation, since customer is invalid
           if customer_outcome.invalid?
             errors.merge!(customer_outcome.errors)
+
             raise ActiveRecord::Rollback
           end
 

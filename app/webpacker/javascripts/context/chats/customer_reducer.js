@@ -28,11 +28,13 @@ export default (state = initialState, action) => {
 
   switch(action.type) {
     case "APPEND_CUSTOMERS":
+      const new_customers = [...(state.customers[action.payload.channel_id] || []), ...action.payload.customers ]
+
       return {
         ...state,
         customers: {
           ...state.customers,
-          [action.payload.channel_id]: [...(state.customers[action.payload.channel_id] || []), ...action.payload.customers ]
+          [action.payload.channel_id]: _.uniqWith(new_customers, (a, b) => a.id === b.id)
         },
         customers_loaded: true
       }

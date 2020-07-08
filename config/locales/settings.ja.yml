@@ -532,10 +532,10 @@ ja:
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
     social_account:
-      sider_label: Chat
+      sider_label: Line
       info_title: Line official account
-      info_1: desc1
-      info_2: desc2
+      info_1: Line official account
+      info_2: Please Fill in your line channel data
       name: Name
       new_button: Set up account
       info_label: Account
