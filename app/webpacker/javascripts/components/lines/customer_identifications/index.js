@@ -23,7 +23,7 @@ export const CustomerIdentification = (props) => {
   const [is_identifying_code, setIdentifyingCode] = useState(false)
   const [is_asking_identification_code, setAskingIdentificationCode] = useState(false)
   const [identification_code_error, setIdentificationCodeError] = useState(null)
-  const [is_customer_identified, setCustomerIdentified] = useState(!!customer_id)
+  const [is_phone_identified, setPhoneIdentified] = useState(!!customer_id)
 
   let identifyCodeCall;
   let askIdentificationCodeCall;
@@ -95,8 +95,7 @@ export const CustomerIdentification = (props) => {
         customer_phonetic_last_name: customer_phonetic_last_name,
         customer_phonetic_first_name: customer_phonetic_first_name,
         customer_email: customer_email,
-        uuid: identification_code.uuid,
-        code: identification_code.code
+        uuid: identification_code.uuid
       },
       responseType: "json"
     })
@@ -134,7 +133,7 @@ export const CustomerIdentification = (props) => {
       errors
     } = response.data;
 
-    setCustomerIdentified(identification_successful)
+    setPhoneIdentified(identification_successful)
     setIdentifyingCode(false)
     identifyCodeCall = null;
 
@@ -173,7 +172,7 @@ export const CustomerIdentification = (props) => {
     if (errors) setAskingIdentificationCode(errors.message)
   }
 
-  const renderBookingCode = () => {
+  const renderIdentificationCode = () => {
     return (
       <div className="customer-type-options">
         <h4>
@@ -254,7 +253,7 @@ export const CustomerIdentification = (props) => {
     )
   }
 
-  if (is_customer_identified && identification_code.customer_id) {
+  if (customer_id || (is_phone_identified && identification_code.customer_id)) {
     return (
       <div className="whole-page-center final">
         <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
@@ -302,9 +301,9 @@ export const CustomerIdentification = (props) => {
           </div>
         ) : null}
       </div>
-      {identification_code.uuid && !is_customer_identified ? renderBookingCode() : null}
-      {!_is_customer_found() && is_customer_identified ? renderNewCustomerFields() : null}
-      {_is_all_fields_filled() && is_customer_identified ? (
+      {identification_code.uuid && !is_phone_identified ? renderIdentificationCode() : null}
+      {!_is_customer_found() && is_phone_identified ? renderNewCustomerFields() : null}
+      {_is_all_fields_filled() && is_phone_identified ? (
         <div className="centerize">
           <a href="#" className="btn btn-tarco find-customer" onClick={createCustomer} disabled={is_creating_customer || !_is_all_fields_filled()}>
             {is_creating_customer? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
