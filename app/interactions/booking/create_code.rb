@@ -1,4 +1,3 @@
-require "sms_client"
 require "random_code"
 
 module Booking
@@ -17,20 +16,11 @@ module Booking
         )
         message = I18n.t("customer.notifications.sms.confirmation_code", code: code)
 
-        begin
-          SmsClient.send(phone_number, "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})")
-        rescue Twilio::REST::RestError => e
-          Rollbar.error(
-            e,
-            phone_numbers: phone_number,
-            rails_env: Rails.configuration.x.env
-          )
-        end
-
-        Notification.create!(
-          user: booking_page.user,
-          phone_number:  phone_number,
-          content: message
+        compose(
+          Sms::Create,
+          user: user,
+          message: "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})",
+          phone_number: phone_number
         )
 
         booking_code

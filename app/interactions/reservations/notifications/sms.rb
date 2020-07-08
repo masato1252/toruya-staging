@@ -1,5 +1,3 @@
-require "sms_client"
-
 module Reservations
   module Notifications
     class Sms < ActiveInteraction::Base
@@ -9,29 +7,14 @@ module Reservations
       string :message
 
       def execute
-        SmsClient.send(phone_number, "#{message}#{I18n.t("customer.notifications.noreply")}")
-
-        Notification.create!(
+        compose(
+          Sms::Create,
           user: customer.user,
-          phone_number:  phone_number,
-          customer_id: customer.id,
-          reservation_id: reservation.id,
-          content: message
+          message: "#{message}#{I18n.t("customer.notifications.noreply")}",
+          phone_number: phone_number,
+          reservation: reservation,
+          customer: customer
         )
-      rescue Twilio::REST::RestError => e
-        Rollbar.error(
-          e,
-          phone_numbers: phone_number,
-          customer_id: customer.id,
-          reservation_id: reservation.id,
-          rails_env: Rails.configuration.x.env
-        )
-      end
-
-      private
-
-      def shop
-        @shop ||= reservation.shop
       end
     end
   end
