@@ -3,6 +3,7 @@ ja:
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。
       title_html: 顧客情報を連携して<br />LINEでオンライン予約をスタート
+      create_customer_info: 保存してLINEと連携する
     actions:
       label:
         booking_pages: All activities

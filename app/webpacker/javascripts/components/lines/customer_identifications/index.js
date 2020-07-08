@@ -9,7 +9,7 @@ import { ErrorMessage } from "shared/components";
 export const CustomerIdentification = (props) => {
   const { social_user_id, customer_id } = props.social_customer;
   const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm,
-    successful_message_html, title_html, phonetic_name, phonetic_last_name, phonetic_first_name, email } = props.i18n;
+    successful_message_html, title_html, phonetic_name, phonetic_last_name, phonetic_first_name, email, create_customer_info } = props.i18n;
 
   const [customer_last_name, setCustomerLastName] = useState("")
   const [customer_first_name, setCustomerFirstName] = useState("")
@@ -306,7 +306,7 @@ export const CustomerIdentification = (props) => {
       {_is_all_fields_filled() && is_phone_identified ? (
         <div className="centerize">
           <a href="#" className="btn btn-tarco find-customer" onClick={createCustomer} disabled={is_creating_customer || !_is_all_fields_filled()}>
-            {is_creating_customer? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
+            {is_creating_customer? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : create_customer_info}
           </a>
         </div>
       ) : null}
