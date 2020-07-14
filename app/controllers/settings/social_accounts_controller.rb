@@ -2,19 +2,35 @@ class Settings::SocialAccountsController < SettingsController
   before_action :set_social_account, only: [:edit, :update, :destroy]
 
   def index
-    @social_accounts = super_user.social_accounts.order("id")
+    if social_account = current_user.social_accounts.first
+      redirect_to settings_user_social_account_path(current_user, social_account)
+    else
+      redirect_to new_settings_user_social_account_path(current_user)
+    end
+  end
+
+  def show
+    @social_account = current_user.social_accounts.first
   end
 
   def new
-    @social_account = super_user.social_accounts.new
+    if social_account = current_user.social_accounts.first
+      redirect_to edit_settings_user_social_account_path(current_user, social_account)
+    end
+
+    @social_account = current_user.social_accounts.new
   end
 
   def edit
   end
 
   def create
+    if social_account = current_user.social_accounts.first
+      redirect_to edit_settings_user_social_account_path(current_user, social_account)
+    end
+
     outcome = SocialAccounts::Save.run(
-      user: super_user,
+      user: current_user,
       channel_id: social_account_params[:channel_id],
       channel_token: social_account_params[:channel_token],
       channel_secret: social_account_params[:channel_secret],
@@ -23,9 +39,9 @@ class Settings::SocialAccountsController < SettingsController
     )
 
     if outcome.valid?
-      redirect_to settings_user_social_accounts_path(super_user), notice: I18n.t("common.create_successfully_message")
+      redirect_to settings_user_social_account_path(current_user, outcome.result), notice: I18n.t("common.create_successfully_message")
     else
-      @social_account = super_user.social_accounts.new
+      @social_account = current_user.social_accounts.new
       @social_account.errors.merge!(outcome.errors)
       render :new
     end
@@ -33,7 +49,7 @@ class Settings::SocialAccountsController < SettingsController
 
   def update
     outcome = SocialAccounts::Save.run(
-      user: super_user,
+      user: current_user,
       social_account: @social_account,
       channel_id: social_account_params[:channel_id],
       channel_token: social_account_params[:channel_token],
@@ -43,7 +59,7 @@ class Settings::SocialAccountsController < SettingsController
     )
 
     if outcome.valid?
-      redirect_to settings_user_social_accounts_path(super_user), notice: I18n.t("common.update_successfully_message")
+      redirect_to settings_user_social_account_path(current_user, outcome.result), notice: I18n.t("common.update_successfully_message")
     else
       @social_account.errors.merge!(outcome.errors)
       render :edit
@@ -53,13 +69,13 @@ class Settings::SocialAccountsController < SettingsController
   def destroy
     @social_account.destroy
 
-    redirect_to settings_user_social_accounts_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    redirect_to settings_user_social_accounts_path(current_user), notice: I18n.t("common.delete_successfully_message")
   end
 
   private
 
   def set_social_account
-    @social_account = super_user.social_accounts.find(params[:id])
+    @social_account = current_user.social_accounts.find(params[:id])
   end
 
   def social_account_params

@@ -389,6 +389,12 @@ ja:
         user: ユーザー
         user_id: ユーザー
         owner_id: ユーザー
+      social_account:
+        channel_id: チャネルID
+        channel_token: チャネルアクセストークン
+        channel_secret: チャネルシークレット
+        label: チャネル名
+        basic_id: ボットのベーシックID
   date:
     abbr_day_names:
     - 日

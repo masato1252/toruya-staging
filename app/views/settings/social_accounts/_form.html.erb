@@ -2,49 +2,78 @@
   <h2><%= t("settings.social_account.info_title") %></h2>
 </div>
 <div id="about">
-  <p><%= t("settings.social_account.info_1") %><br /><%= t("settings.social_account.info_2") %></p>
+  <p><%= t("settings.social_account.info_html") %></p>
 </div>
 
-<div id="settingForm" class="settings-form">
+<div id="settingForm" class="settings-form social-account-settings">
   <%= form_for(social_account, url: url) do |f| %>
     <%= render "settings/form_errors", object: social_account %>
 
-    <h3><%= t("settings.social_account.info_label") %><strong>必須項目</strong></h3>
+    <h3><%= t("settings.social_account.info1_label") %><strong>必須項目</strong></h3>
     <div id="menuInfo" class="formRow media-extend">
       <dl>
-        <dt>Label</dt>
+        <dt><%= t("settings.social_account.form.channel_name") %></dt>
         <dd>
           <%= f.text_field :label %>
+          <br />
+          <%= t("settings.social_account.form.channel_name_tip") %>
         </dd>
       </dl>
+
       <dl>
-        <dt>Channel Id</dt>
+        <dt><%= t("settings.social_account.form.channel_id") %></dt>
         <dd>
           <%= f.text_field :channel_id %>
+          <br />
+          <%= t("settings.social_account.form.channel_id_tip") %>
         </dd>
-      </dl>
-      <dl>
-        <dt>Channel token</dt>
         <dd>
-          <%= f.text_field :channel_token, value: social_account.raw_channel_token %>
+          <%= image_pack_tag "media/assets/management/line_channel_id.png" %>
         </dd>
       </dl>
+
       <dl>
-        <dt>Channel Secret</dt>
+        <dt><%= t("settings.social_account.form.channel_secret") %></dt>
         <dd>
           <%= f.text_field :channel_secret, value: social_account.raw_channel_secret %>
+          <br />
+          <%= t("settings.social_account.form.channel_secret_tip") %>
         </dd>
-      </dl>
-      <dl>
-        <dt>Basic id</dt>
         <dd>
-          <%= f.text_field :basic_id, value: social_account.basic_id, placeholder: "@123abcde" %>
+          <%= image_pack_tag "media/assets/management/line_channel_secret.png" %>
         </dd>
       </dl>
     </div>
+    <h3><%= t("settings.social_account.info2_label") %><strong>必須項目</strong></h3>
+    <div id="menuInfo" class="formRow media-extend">
+      <dl>
+        <dt><%= t("settings.social_account.form.channel_basic_id") %></dt>
+        <dd>
+          <%= f.text_field :basic_id, value: social_account.basic_id, placeholder: "@123abcde" %>
+          <br />
+          <%= t("settings.social_account.form.channel_basic_id_tip") %>
+        </dd>
+        <dd>
+          <%= image_pack_tag "media/assets/management/line_channel_basic_id.png" %>
+        </dd>
+      </dl>
+
+      <dl>
+        <dt><%= t("settings.social_account.form.channel_token") %></dt>
+        <dd>
+          <%= f.text_field :channel_token, value: social_account.raw_channel_token %>
+          <br />
+          <%= t("settings.social_account.form.channel_token_tip") %>
+        </dd>
+        <dd>
+          <%= image_pack_tag "media/assets/management/line_channel_token.png" %>
+        </dd>
+      </dl>
+
+    </div>
     <ul id="footerav">
       <li>
-        <%= link_to t("action.cancel"), settings_user_social_accounts_path(super_user), class: "BTNtarco" %>
+        <%= link_to t("action.delete"), settings_user_social_account_path(super_user, social_account), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
       </li>
       <li>
         <%= f.submit "保存", class: "BTNyellow" %>

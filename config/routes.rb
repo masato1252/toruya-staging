@@ -190,7 +190,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :social_accounts, except: [:show]
+      resources :social_accounts
     end
   end
   resources :custom_schedules, only: [:create, :update, :destroy]

@@ -24,6 +24,7 @@ class SocialAccount < ApplicationRecord
   validates :channel_id, presence: true, uniqueness: true
   validates :channel_token, presence: true
   validates :channel_secret, presence: true
+  validates :basic_id, presence: true
 
   has_many :social_customers
   belongs_to :user
