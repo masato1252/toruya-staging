@@ -8,7 +8,7 @@ module Reservations
 
       def execute
         compose(
-          Sms::Create,
+          ::Sms::Create,
           user: customer.user,
           message: "#{message}#{I18n.t("customer.notifications.noreply")}",
           phone_number: phone_number,

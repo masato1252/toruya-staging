@@ -18,7 +18,7 @@ module Booking
 
         compose(
           Sms::Create,
-          user: user,
+          user: booking_page.user,
           message: "#{message}\n#{I18n.t("customer.notifications.noreply")}(#{booking_page.name})",
           phone_number: phone_number
         )

@@ -23,7 +23,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       LineClient.flex(
         social_customer,
         LineMessages::FlexTemplateContainer.carousel_template(
-          altText: "There are your incoming reservations",
+          altText: I18n.t("line.actions.label.incoming_reservations"),
           contents: contents
         )
       )
