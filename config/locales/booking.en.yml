@@ -51,6 +51,8 @@ ja:
       feature2: Manage arrangement and tasks for friends
       feature3: Remind you for your reservations
       signup_now: Signup Now!
+      add_friend_messages_html: "Add %{shop_name} as a friend in LINE<br>and get notifications in LINE."
+      add_friend_btn: Add Friend
     booking_mailer:
       customer_reservation_notification:
         title: "You've just booked %{shop_name}"

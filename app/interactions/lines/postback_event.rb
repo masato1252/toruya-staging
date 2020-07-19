@@ -1,7 +1,6 @@
 require "line_client"
 
 class Lines::PostbackEvent < ActiveInteraction::Base
-  SUPPORT_ACTIONS = %w(booking_pages shop_phone).freeze
   EVENT_ACTION_KEY = "action".freeze
   # {
   #    "type":"postback",
@@ -26,7 +25,14 @@ class Lines::PostbackEvent < ActiveInteraction::Base
     data = Rack::Utils.parse_nested_query(event["postback".freeze]["data".freeze])
 
     case data[EVENT_ACTION_KEY]
-    when *SUPPORT_ACTIONS
+    when *support_actions
+      SocialMessages::Create.run!(
+        social_customer: social_customer,
+        content: data[EVENT_ACTION_KEY],
+        readed: true,
+        message_type: SocialMessage.message_types[:customer_reply_bot]
+      )
+
       "Lines::Actions::#{data[EVENT_ACTION_KEY].camelize}".constantize.run!(social_customer: social_customer)
     else
       Rollbar.warning("Unexpected action type".freeze,
@@ -34,5 +40,13 @@ class Lines::PostbackEvent < ActiveInteraction::Base
         event: event
       )
     end
+  end
+
+  private
+
+  def support_actions
+    Lines::Menus::Base.descendants.map do |klass|
+      klass.const_get('ACTION_TYPES') if klass.const_defined?('ACTION_TYPES')
+    end.compact.flatten
   end
 end

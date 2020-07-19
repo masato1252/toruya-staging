@@ -1,10 +1,19 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
 
   resource :member, only: [:show] do
     get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
   end
   post "member", to: "members#show"
+
+  scope module: :lines, path: :lines, as: :lines do
+    get "/identify_shop_customer/:social_user_id", action: "identify_shop_customer", as: :identify_shop_customer
+    get :find_customer
+    post :create_customer
+    get :identify_code
+    get :ask_identification_code
+  end
 
   resources :users, only: [] do
     resources :customers, only: [:index] do
@@ -20,10 +29,15 @@ Rails.application.routes.draw do
         patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
       end
     end
+
+    scope module: :users do
+      resources :chats, only: [:index]
+    end
   end
 
   scope module: :users do
     resource :profile, only: %i[new create]
+    resources :web_push_subscriptions, only: %i[create]
   end
 
   resources :shops, only: [] do
@@ -175,6 +189,8 @@ Rails.application.routes.draw do
           get "connections"
         end
       end
+
+      resources :social_accounts
     end
   end
   resources :custom_schedules, only: [:create, :update, :destroy]

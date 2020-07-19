@@ -56,11 +56,6 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
         {
           "title": booking_page.title,
           "text": booking_page.greeting.first(LINE_COLUMN_DESCRIPTION_LIMIT),
-          "defaultAction": {
-            "type": "uri",
-            "label": "View detail",
-            "uri": Rails.application.routes.url_helpers.booking_page_url(booking_page)
-          },
           "actions": [
             {
               "type": "uri",
@@ -76,9 +71,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     if columns.blank?
       LineClient.send(social_customer, "Sorry, we don't have any activites now".freeze)
     else
-      LineClient.carousel_template(social_customer: social_customer, title: "Booking pages".freeze, text: "There are our active booking activities".freeze, columns: columns)
+      LineClient.carousel_template(social_customer: social_customer, text: "There are our active booking activities".freeze, columns: columns)
     end
-
-    Lines::MessageEvent.run(social_customer: social_customer, event: {})
   end
 end

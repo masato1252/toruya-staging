@@ -1,0 +1,21 @@
+<%= react_component("management/chats", {
+  social_channel_id: @selected_social_account&.channel_id,
+  social_customer: @selected_social_customer ? SocialCustomerSerializer.new(@selected_social_customer).attributes_hash : nil,
+  super_user_id: super_user.id,
+  path: {
+    settings: settings_user_social_accounts_path(super_user)
+  },
+  web_push: {
+    subscriber_key: Base64.urlsafe_decode64(Rails.application.secrets.web_push_public_key).bytes.to_json,
+    subscriber_path: web_push_subscriptions_path
+  },
+  i18n: {
+    errors: t("errors.messages").slice(:required, :invalid_email_format, :wrong_length, :not_a_number),
+  }.merge!([
+    t("action").slice(:save),
+    ].inject(:merge!)
+ ),
+},
+{ camelize_props: false }
+) %>
+

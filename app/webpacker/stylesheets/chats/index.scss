@@ -1,0 +1,144 @@
+$room_height: calc(90vh - 90px);
+$room_gap_size: 20px;
+$staff_message_position: right;
+$customer_message_position: left;
+$message_size: 8px;
+
+.notification-permission {
+  margin-top: $room_gap_size;
+}
+
+#chat-box {
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin-top: $room_gap_size;
+  height: $room_height;
+
+  .warning {
+    margin: 0 30px;
+    line-height: 30px;
+    font-size: 24px;
+  }
+
+  .message {
+    margin: 6px;
+
+    * {
+      padding: $message_size;
+      border-radius: $message_size;
+      color: #ffffff;
+    }
+
+    .message-time,
+    i.fa {
+      color: $gray7;
+    }
+
+    .bot,
+    .staff {
+      float: $staff_message_position;
+
+      * {
+        float: $staff_message_position;
+      }
+    }
+
+    .customer,
+    .customer_reply_bot {
+      float: $customer_message_position;
+
+      * {
+        float: $customer_message_position;
+      }
+    }
+
+    .bot > .message-content {
+      background-color: $palette-color4;
+    }
+
+    .staff > .message-content {
+      background-color: $palette-color10;
+    }
+
+    .customer > .message-content {
+      background-color: $palette-color3;
+    }
+
+    .customer_reply_bot > .message-content {
+      background-color: $warning;
+    }
+  }
+}
+
+#customer-box {
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin-top: $room_gap_size;
+  height: $room_height;
+
+  .customer {
+    padding: 6px;
+
+    img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+    }
+
+    &.selected {
+      background-color: #efefef;
+    }
+
+    .actions {
+      margin-top: 3px;
+    }
+  }
+}
+
+#chat-form {
+  margin-top: 6px;
+
+  .form-group {
+    padding-left: 0;
+  }
+
+  textarea {
+    width: 100%;
+  }
+}
+
+#customer-info-box {
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin-top: $room_gap_size;
+  height: $room_height;
+  padding: 6px;
+
+  .info {
+    margin-bottom: 3px;
+  }
+
+  .form-group {
+    margin-top: 6px;
+  }
+
+  .matched-shop-customer-list {
+    overflow-y: auto;
+    height: 50vh;
+    margin-top: 6px;
+    border-top: 1px solid $gray7;
+    border-bottom: 1px solid $gray7;
+    margin-left: -6px;
+    margin-right: -6px;
+
+    .matched-shop-customer-option {
+      display: block;
+      border-bottom: 1px solid $gray7;
+      padding: 12px 15px;
+      color: #444;
+      font-size: 15px;
+      height: 68px;
+    }
+  }
+}

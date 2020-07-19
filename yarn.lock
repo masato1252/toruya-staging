@@ -1104,6 +1104,11 @@ acorn@^6.0.7, acorn@^6.2.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.4.0.tgz#b659d2ffbafa24baf5db1cdbb2c94a983ecd2784"
   integrity sha512-gac8OEcQ2Li1dxIEWGZzsp2BitJxwkwcOm0zHAJLcPJaVvm58FRnk6RkuLRpU1EujipU2ZFODv2P9DLMfnV8mw==
 
+actioncable@^5.2.4-2:
+  version "5.2.4-2"
+  resolved "https://registry.yarnpkg.com/actioncable/-/actioncable-5.2.4-2.tgz#3f58efd0704a68dd3f096810d3d344c0d92ac81c"
+  integrity sha512-tq2WNngBruV7uxCRCHTg+DDdrgG1ynSymV+2m8ocfnD0EiUx8C/BMuf/xsnfKAhNWZsKvcPZsIUGbVSjhGwhuA==
+
 adjust-sourcemap-loader@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/adjust-sourcemap-loader/-/adjust-sourcemap-loader-2.0.0.tgz#6471143af75ec02334b219f54bc7970c52fb29a4"
@@ -2437,6 +2442,11 @@ css-select@^2.0.0:
     css-what "^3.2.1"
     domutils "^1.7.0"
     nth-check "^1.0.2"
+
+css-toggle-switch@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/css-toggle-switch/-/css-toggle-switch-4.1.0.tgz#b4ba42856194bc0bdea610ab37c8d38d44d21d4f"
+  integrity sha512-XdA6fyaQqlBqTmFa6NX58tLPJj4SgDLAxV4Ec73GHQYRTYUTZoEyYHYxWGacLNTP8sTiVycKcAMBrPBKaiIZ9g==
 
 css-tree@1.0.0-alpha.37:
   version "1.0.0-alpha.37"

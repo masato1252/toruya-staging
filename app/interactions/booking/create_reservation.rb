@@ -98,34 +98,24 @@ module Booking
           customer.update(reminder_permission: customer_reminder_permission)
         else
           # new customer
-          begin
-            customer_info_hash = {
-              last_name: customer_last_name,
-              first_name: customer_first_name,
-              phonetic_last_name: customer_phonetic_last_name,
-              phonetic_first_name: customer_phonetic_first_name,
-              email_types: "mobile",
-              emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
-              phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
-              reminder_permission: customer_reminder_permission,
-            }
+          customer_outcome = Customers::Create.run(
+            user: user,
+            customer_last_name: customer_last_name,
+            customer_first_name: customer_first_name,
+            customer_phonetic_last_name: customer_phonetic_last_name,
+            customer_phonetic_first_name: customer_phonetic_first_name,
+            customer_phone_number: customer_phone_number,
+            customer_email: customer_email
+          )
 
-            customer = user.customers.new(customer_info_hash)
-            google_user = user.google_user
-            result = google_user.create_contact(customer.google_contact_attributes)
-            customer.google_contact_id = result.id
-            customer.google_uid = user.uid
-            customer.save
-          rescue => e
-            Rollbar.error(e)
-            errors.add(:base, :google_down)
+          # XXX: Don't have to find a available reservation, since customer is invalid
+          if customer_outcome.invalid?
+            errors.merge!(customer_outcome.errors)
+
+            raise ActiveRecord::Rollback
           end
-        end
 
-        # XXX: Don't have to find a available reservation, since customer is invalid
-        if customer.new_record?
-          errors.merge!(customer.errors)
-          raise ActiveRecord::Rollback
+          customer = customer_outcome.result
         end
 
         catch :booked_reservation do

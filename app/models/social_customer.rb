@@ -9,7 +9,7 @@
 #  social_user_id          :string           not null
 #  social_user_name        :string
 #  social_user_picture_url :string
-#  conversation_state      :integer          default(0)
+#  conversation_state      :integer          default("bot")
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
 #
@@ -21,5 +21,13 @@
 #
 
 class SocialCustomer < ApplicationRecord
+  has_many :social_messages
   belongs_to :social_account
+  belongs_to :user
+  belongs_to :customer, optional: true
+
+  enum conversation_state: {
+    bot: 0,
+    one_on_one: 1,
+  }
 end

@@ -9,6 +9,8 @@
 #  channel_secret :string           not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  label          :string
+#  basic_id       :string
 #
 # Indexes
 #
@@ -18,12 +20,31 @@
 require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
+  validates :label, presence: true
+  validates :channel_id, presence: true, uniqueness: true
+  validates :channel_token, presence: true
+  validates :channel_secret, presence: true
+  validates :basic_id, presence: true
+
+  has_many :social_customers
   belongs_to :user
 
   def client
     @client ||= Line::Bot::Client.new { |config|
-      config.channel_token = MessageEncryptor.decrypt(channel_token)
-      config.channel_secret = MessageEncryptor.decrypt(channel_secret)
+      config.channel_token = raw_channel_token
+      config.channel_secret = raw_channel_secret
     }
+  end
+
+  def raw_channel_token
+    MessageEncryptor.decrypt(channel_token) if channel_token.present?
+  end
+
+  def raw_channel_secret
+    MessageEncryptor.decrypt(channel_secret) if channel_secret.present?
+  end
+
+  def add_friend_url
+    "https://line.me/R/ti/p/#{basic_id}" if basic_id.present?
   end
 end

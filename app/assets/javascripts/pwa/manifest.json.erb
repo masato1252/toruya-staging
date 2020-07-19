@@ -1,0 +1,28 @@
+<% icon_sizes = %w(48 55 80 88 172 192 196 512).freeze %>
+<% suffix = "-#{Rails.configuration.x.env}" unless Rails.configuration.x.env.production? %>
+
+{
+  "name": "Toruya<%= suffix %>",
+  "short_name": "Toruya<%= suffix %>",
+  "start_url": "/",
+  "icons": [
+  <% icon_sizes.map { |s| "#{s}x#{s}" }.each.with_index do |dim, i| %>
+    {
+      "src": "<%= image_path "logos/Toruya-#{dim}.png" %>",
+      "sizes": "<%= dim %>",
+      "type": "image/png"
+    }<%= i == (icon_sizes.length - 1) ? '' : ',' %>
+  <% end %>
+  ],
+  "theme_color": "#000000",
+  "background_color": "#FFFFFF",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.google.samples.apps.iosched"
+    }
+  ]
+}

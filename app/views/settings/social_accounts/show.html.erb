@@ -1,0 +1,53 @@
+<div id="subNav">
+  <h2><%= t("settings.social_account.info_title") %></h2>
+</div>
+<div id="about">
+  <p><%= t("settings.social_account.info_html") %></p>
+</div>
+
+<div id="settingForm" class="social-account-settings">
+  <div class="notification alert alert-info line-webhook-area">
+    <h3>Webhook URL</h3>
+    <p><%= I18n.t("settings.social_account.webhook_desc") %></p>
+    <div>
+      <%= text_field_tag nil, webhooks_line_url(@social_account.channel_id), data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: webhooks_line_url(@social_account.channel_id), clipboard_popup_text: t("common.copied")  }, id: "page-url", readonly: true %>
+    </div>
+    <div>
+      <%= button_tag I18n.t("settings.social_account.copy_webhook_btn"), class: "btn btn-gray", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: webhooks_line_url(@social_account.channel_id), clipboard_popup_text: t("common.copied") } %>
+    </div>
+    <div>
+      <%= image_pack_tag "media/assets/management/line_webhook_instruction.png", class: "line-webhook-instruction" %>
+    </div>
+  </div>
+
+  <h3><%= t("settings.social_account.info1_label") %></h3>
+  <div id="adminInfo" class="formRow">
+    <dl>
+      <dt><%= t("settings.social_account.form.channel_id") %></dt>
+      <dd><%= @social_account.channel_id %></dd>
+    </dl>
+    <dl>
+      <dt><%= t("settings.social_account.form.channel_name") %></dt>
+      <dd><%= @social_account.label %></dd>
+    </dl>
+    <dl>
+      <dt><%= t("settings.social_account.form.channel_secret") %></dt>
+      <dd><%= @social_account.raw_channel_secret %></dd>
+    </dl>
+  </div>
+
+  <h3><%= t("settings.social_account.info2_label") %></h3>
+  <div id="companyInfo" class="formRow">
+    <dl>
+      <dt><%= t("settings.social_account.form.channel_basic_id") %></dt>
+      <dd><%= @social_account.basic_id %></dd>
+    </dl>
+    <dl>
+      <dt><%= t("settings.social_account.form.channel_token") %></dt>
+      <dd><%= @social_account.raw_channel_token %></dd>
+    </dl>
+  </div>
+  <ul id="footerav">
+    <%= link_to t("action.edit"), edit_settings_user_social_account_path(current_user, @social_account), class: "BTNyellow" %>
+  </ul>
+</div>

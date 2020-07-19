@@ -1,0 +1,11 @@
+en:
+  line:
+    customer_identifications:
+      successful_message_html: Thank you!<br/ ><br />Now your customer data and LINE account is connected.
+      title_html: Start online booking with LINE<br />by connect customer data
+      create_customer_info: Save and Connect with LINE
+    actions:
+      label:
+        booking_pages: All activities
+        shop_phone: Shop phone
+        one_on_one: One on one

@@ -1551,7 +1551,9 @@ CREATE TABLE public.social_accounts (
     channel_token character varying NOT NULL,
     channel_secret character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    label character varying,
+    basic_id character varying
 );
 
 
@@ -1622,7 +1624,9 @@ CREATE TABLE public.social_messages (
     staff_id integer,
     raw_content text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    readed_at timestamp without time zone,
+    message_type integer DEFAULT 0
 );
 
 
@@ -1945,6 +1949,40 @@ CREATE SEQUENCE public.versions_id_seq
 --
 
 ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
+
+
+--
+-- Name: web_push_subscriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.web_push_subscriptions (
+    id bigint NOT NULL,
+    user_id bigint,
+    endpoint character varying,
+    p256dh_key character varying,
+    auth_key character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: web_push_subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.web_push_subscriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: web_push_subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.web_push_subscriptions_id_seq OWNED BY public.web_push_subscriptions.id;
 
 
 --
@@ -2309,6 +2347,13 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
+
+
+--
+-- Name: web_push_subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.web_push_subscriptions ALTER COLUMN id SET DEFAULT nextval('public.web_push_subscriptions_id_seq'::regclass);
 
 
 --
@@ -2744,6 +2789,14 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: web_push_subscriptions web_push_subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.web_push_subscriptions
+    ADD CONSTRAINT web_push_subscriptions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contact_groups_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3171,6 +3224,13 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: index_web_push_subscriptions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_web_push_subscriptions_on_user_id ON public.web_push_subscriptions USING btree (user_id);
+
+
+--
 -- Name: jp_name_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3286,7 +3346,7 @@ CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USIN
 -- Name: social_message_customer_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
+CREATE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
 
 
 --
@@ -3470,6 +3530,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200406151509'),
 ('20200406152338'),
 ('20200407053955'),
-('20200426012331');
+('20200426012331'),
+('20200429083046'),
+('20200507011209'),
+('20200512102635'),
+('20200625034702');
 
 

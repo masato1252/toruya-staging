@@ -531,3 +531,25 @@ ja:
           start_at_too_late: 上記の設定内容に基づくと、{datetime}以前の日時しか設定できません
           end_at_too_early: 上記の設定内容に基づくと、{datetime}以後の日時しか設定できません
           unavailable_booking_option: "{shop_name}では販売できないメニューを含む価格が設定されています。"
+    social_account:
+      sider_label: Line
+      settings: 設定
+      info_title: LINEオフィシャルアカウント
+      info_html: LINEを通じてオンライン予約を受け付けることができます。<br><a href='https://developers.line.biz/ja/' target='_blank'>LINEオフィシャルアカウント</a>を設定してWebhook URLをLINEに設定してください。
+      name: Name
+      new_button: Set up account
+      info1_label: チャネル基本設定
+      info2_label: Messaging API設定
+      webhook_desc: 下のURLをコピーしてLINEデベロッパーズのWebhook設定に貼り付けてください。
+      copy_webhook_btn: Webhook URLをコピー
+      form:
+        channel_basic_id: ボットのベーシックID
+        channel_basic_id_tip: LINEデベロッパーズからボットのベーシックIDをコピーして貼り付け
+        channel_token: チャネルアクセストークン
+        channel_token_tip: LINEデベロッパーズからチャネルアクセストークン（長期）をコピーして貼り付け
+        channel_id: チャネルID
+        channel_id_tip: LINEデベロッパーズからチャネルIDをコピーして貼り付け
+        channel_name: チャネル名
+        channel_name_tip: Toruya上で管理する為のラベルを入力
+        channel_secret: チャネルシークレット
+        channel_secret_tip: LINEデベロッパーズからチャネルシークレットをコピーして貼り付け

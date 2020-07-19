@@ -1,0 +1,17 @@
+<%= react_component("lines/customer_identifications", {
+  social_customer: @social_customer.attributes.slice("social_user_id", "customer_id"),
+  path: {
+    find_customer: lines_find_customer_path,
+    create_customer: lines_create_customer_path,
+    identify_code: lines_identify_code_path,
+    ask_identification_code: lines_ask_identification_code_path
+  },
+  i18n: {
+  }.merge!([
+    t("booking_page"),
+    t("line.customer_identifications"),
+    t("action").slice(:save, :confirm),
+  ].inject(:merge!)),
+},
+{ camelize_props: false }
+) %>

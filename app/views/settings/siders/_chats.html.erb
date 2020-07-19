@@ -1,0 +1,15 @@
+<dl class="booking-options-sider">
+  <%= active_link_to settings_user_social_accounts_path(super_user),
+    active: [[ "settings/social_accounts" ]],
+    wrap_tag: :dt, class_active: "here" do %>
+    <span><i class="fa fa-comments fa-2x"></i>&nbsp;<%= t("settings.social_account.sider_label") %></span>
+  <% end %>
+  <dd>
+    <ul>
+      <%= active_link_to t("settings.social_account.settings"), settings_user_social_accounts_path(super_user),
+        active: [[ "settings/booking_options" ]],
+        wrap_tag: :li,
+        class_active: "here" %>
+    </ul>
+  </dd>
+</dl>

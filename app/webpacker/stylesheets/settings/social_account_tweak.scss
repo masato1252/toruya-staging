@@ -1,0 +1,45 @@
+.social-account-settings {
+  .function {
+    width: 800px !important;
+  }
+
+  dd {
+    word-break: break-all;
+  }
+
+  .line-webhook-area {
+    text-align: center;
+
+    input {
+      width: 600px;
+    }
+
+    p,
+    div {
+      margin: 6px 0;
+    }
+
+    .line-webhook-instruction {
+      height: 600px;
+      max-width: initial;
+    }
+  }
+
+  #menuInfo.formRow {
+    dl {
+      dt {
+        width: 200px !important;
+      }
+    }
+  }
+
+  img {
+    border: 1px solid #ddd;
+    max-width: 250px;
+    height: auto;
+  }
+
+  .media-body {
+    vertical-align: middle;
+  }
+}

@@ -1,0 +1,98 @@
+var CACHE_VERSION = 'v1';
+var CACHE_NAME = CACHE_VERSION + ':sw-cache-';
+
+function onInstall(event) {
+  console.log('[Serviceworker]', "Installing!", event);
+}
+
+function onActivate(event) {
+  console.log('[Serviceworker]', "Activating!", event);
+}
+
+function onPush(event) {
+  console.log("Web serviceworker received message", event)
+  let data = {
+    "title": "Demo title",
+    "body": event.data.text(),
+    "url": null
+  }
+
+  try {
+    data = event.data.json()
+  }
+  catch (e) { }
+
+  const { title, body, url } = data
+
+  const promiseChain = isClientFocused()
+  .then((clientIsFocused) => {
+    if (clientIsFocused) {
+      console.log('Don\'t need to show a notification.');
+      return;
+    }
+
+    // Client isn't focused, we need to show a notification.
+    return self.registration.showNotification(
+      title,
+      {
+        body,
+        icon: "toruya_icon.png",
+        data: {
+          url
+        }
+      }
+    )
+  });
+
+  event.waitUntil(promiseChain);
+}
+
+function onClick(event) {
+  event.notification.close();
+
+  if (event.notification.data && event.notification.data.url) {
+    const url = new URL(event.notification.data.url)
+
+    event.waitUntil(
+      clients.matchAll({type: 'window', includeUncontrolled: true}).then( (windowClients) => {
+        for (let i = 0; i < windowClients.length; i++) {
+          const client = windowClients[i];
+          const clientUrl = new URL(client.url)
+
+          if ((clientUrl.origin + clientUrl.pathname) === (url.origin + url.pathname) && 'focus' in client) {
+            return client.focus()
+          }
+        }
+
+        if (clients.openWindow) {
+          return clients.openWindow(url)
+        }
+      })
+    );
+  }
+}
+
+function isClientFocused() {
+  return clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true
+  }).then((windowClients) => {
+    let clientIsFocused = false;
+
+    for (let i = 0; i < windowClients.length; i++) {
+      const windowClient = windowClients[i];
+      if (windowClient.focused) {
+        clientIsFocused = true;
+        break;
+      }
+    }
+
+    return clientIsFocused;
+  });
+}
+
+
+self.addEventListener('install', onInstall);
+self.addEventListener('activate', onActivate);
+self.addEventListener('push', onPush);
+self.addEventListener('notificationclick', onClick);

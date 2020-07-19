@@ -72,7 +72,9 @@ class User < ApplicationRecord
   has_many :payments, foreign_key: :receiver_id
   has_many :payment_withdrawals, foreign_key: :receiver_id
   has_many :social_accounts
+  has_many :social_customers
   has_one :business_application
+  has_many :web_push_subscriptions
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
