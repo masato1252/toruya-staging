@@ -99,9 +99,9 @@ Rails.application.configure do
 
   config.active_record.logger = nil
   config.lograge.enabled = true
-  config.lograge.keep_original_rails_log = false
+  config.lograge.keep_original_rails_log = true
   config.lograge.custom_options = lambda do |event|
-    exceptions = %w(controller action format utf8 authenticity_token)
+    exceptions = %w(format utf8 authenticity_token)
     {
       time: event.time,
       params: event.payload[:params].except(*exceptions)
