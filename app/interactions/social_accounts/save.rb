@@ -13,8 +13,9 @@ module SocialAccounts
     def execute
       begin
         SocialAccount.transaction do
-          social_account ||= user.social_accounts.find_or_initialize_by(channel_id: channel_id)
-          social_account.update(
+          account = social_account || user.social_accounts.new
+
+          account.update(
             channel_token: MessageEncryptor.encrypt(channel_token),
             channel_secret: MessageEncryptor.encrypt(channel_secret),
             channel_id: channel_id,
@@ -22,11 +23,11 @@ module SocialAccounts
             basic_id: basic_id
           )
 
-          if social_account.invalid?
-            errors.merge!(social_account.errors)
+          if account.invalid?
+            errors.merge!(account.errors)
           end
 
-          social_account
+          account
         end
       rescue ActiveRecord::RecordNotUnique
         retry

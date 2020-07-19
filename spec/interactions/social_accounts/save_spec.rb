@@ -8,10 +8,12 @@ RSpec.describe SocialAccounts::Save do
   let(:channel_secret) { "channel_secret".freeze }
   let(:label) { "Label".freeze }
   let(:basic_id) { "Basic id".freeze }
+  let(:social_account) {}
 
   let(:args) do
     {
       user: user,
+      social_account: social_account,
       channel_id: channel_id,
       channel_token: channel_token,
       channel_secret: channel_secret,
@@ -35,7 +37,6 @@ RSpec.describe SocialAccounts::Save do
     context "when there is existing social_account" do
       let!(:social_account) { FactoryBot.create(:social_account) }
       let(:user) { social_account.user }
-      let(:channel_id) { social_account.channel_id }
 
       it "updates existing social_account" do
         expect {
@@ -44,6 +45,8 @@ RSpec.describe SocialAccounts::Save do
           social_account.reload.channel_token
         }.and change {
           social_account.reload.channel_secret
+        }.and change {
+          social_account.reload.channel_id
         }
       end
     end
