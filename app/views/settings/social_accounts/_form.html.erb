@@ -73,7 +73,7 @@
     </div>
     <ul id="footerav">
       <li>
-        <%= link_to t("action.delete"), settings_user_social_account_path(super_user, social_account), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } %>
+        <%= link_to t("action.delete"), settings_user_social_account_path(super_user, social_account), class: "BTNorange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") } if social_account.persisted? %>
       </li>
       <li>
         <%= f.submit "保存", class: "BTNyellow" %>
