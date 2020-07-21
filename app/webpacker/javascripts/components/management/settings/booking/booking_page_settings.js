@@ -185,6 +185,23 @@ class BookingPageSettings extends React.Component {
     );
   }
 
+  renderLineSharingFields = () => {
+    return (
+      <div>
+        <h3>Line Sharing</h3>
+        <div className="formRow">
+          <Field name="booking_page[line_sharing]" type="radio" value="true" component={RadioRow}>
+            Be shared in line bot
+          </Field>
+          <Field name="booking_page[line_sharing]" type="radio" value="false" component={RadioRow}>
+            Don't share in line bot
+          </Field>
+        </div>
+        <Error name="booking_page[line_sharing]" />
+      </div>
+    );
+  }
+
   renderBookingDateFields = (values) => {
     const {
       required_label,
@@ -602,6 +619,7 @@ class BookingPageSettings extends React.Component {
               {this.renderBookingLimitDayField()}
               {this.renderBookingPeriodFields()}
               {this.renderBookingOverlapRestrictionField()}
+              {this.renderLineSharingFields()}
               {this.renderBookingNoteField()}
 
               <ul id="footerav">

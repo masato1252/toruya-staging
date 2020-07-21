@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_25_034702) do
+ActiveRecord::Schema.define(version: 2020_07_21_132204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -118,7 +118,9 @@ ActiveRecord::Schema.define(version: 2020_06_25_034702) do
     t.boolean "overbooking_restriction", default: true
     t.boolean "draft", default: true, null: false
     t.integer "booking_limit_day", default: 1, null: false
+    t.boolean "line_sharing", default: true
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
+    t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
     t.index ["user_id"], name: "index_booking_pages_on_user_id"
   end
 

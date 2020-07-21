@@ -51,7 +51,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
   def execute
     user = social_customer.social_account.user
     # XXX: refactor to better query
-    columns = user.booking_pages.where(draft: false).started.map do |booking_page|
+    columns = user.booking_pages.where(draft: false, line_sharing: true).started.map do |booking_page|
       if booking_page.started? && !booking_page.ended?
         {
           "title": booking_page.title,

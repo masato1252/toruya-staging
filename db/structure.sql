@@ -359,7 +359,8 @@ CREATE TABLE public.booking_pages (
     end_at timestamp without time zone,
     overbooking_restriction boolean DEFAULT true,
     draft boolean DEFAULT true NOT NULL,
-    booking_limit_day integer DEFAULT 1 NOT NULL
+    booking_limit_day integer DEFAULT 1 NOT NULL,
+    line_sharing boolean DEFAULT true
 );
 
 
@@ -2797,6 +2798,13 @@ ALTER TABLE ONLY public.web_push_subscriptions
 
 
 --
+-- Name: booking_page_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX booking_page_index ON public.booking_pages USING btree (user_id, draft, line_sharing, start_at);
+
+
+--
 -- Name: contact_groups_google_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3534,6 +3542,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200429083046'),
 ('20200507011209'),
 ('20200512102635'),
-('20200625034702');
+('20200625034702'),
+('20200721132204');
 
 
