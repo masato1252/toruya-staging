@@ -32,7 +32,7 @@ gem "google_contacts_api", git: "https://github.com/ilake/google_contacts_api.gi
 gem "delayed_job_active_record"
 gem "jp_prefecture", git: "https://github.com/ilake/jp_prefecture.git"
 gem "hashie", "~> 3.4.4"
-gem "rollbar", "~> 2.15.5"
+gem "rollbar", "~> 2.27.0"
 gem "sendgrid-rails"
 gem "delayed-web"
 gem "puma", "~> 4.3.3"
