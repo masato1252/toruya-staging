@@ -106,6 +106,8 @@ class CustomerPopup extends React.Component {
     const selected_customer = this.selected_customer()
     const approved = selected_customer && this.is_selected_customer_approved()
 
+    if (!selected_customer) return <></>
+
     return (
       <div className="modal fade" id="customer-modal" tabIndex="-1" role="dialog">
         <div className="modal-dialog" role="document">
