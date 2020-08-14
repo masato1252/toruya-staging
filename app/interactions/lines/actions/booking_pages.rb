@@ -1,7 +1,6 @@
 require "line_client"
 
 class Lines::Actions::BookingPages < ActiveInteraction::Base
-  LINE_COLUMN_DESCRIPTION_LIMIT = 100
   LINE_COLUMNS_NUMBER_LIMIT = 10
 
   object :social_customer
@@ -53,17 +52,16 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     # XXX: refactor to better query
     columns = user.booking_pages.where(draft: false, line_sharing: true).started.map do |booking_page|
       if booking_page.started? && !booking_page.ended?
-        {
-          "title": booking_page.title,
-          "text": booking_page.greeting.first(LINE_COLUMN_DESCRIPTION_LIMIT),
-          "actions": [
-            {
-              "type": "uri",
-              "label": I18n.t("line.actions.label.book"),
-              "uri": Rails.application.routes.url_helpers.booking_page_url(booking_page)
-            }
+        LineMessages::CarouselColumn.template(
+          title: booking_page.title,
+          text: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
+          actions: [
+            LineMessages::Uri.new(
+              action: "book",
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page)
+            )
           ]
-        }
+        )
       end
     end.compact.first(LINE_COLUMNS_NUMBER_LIMIT)
 
