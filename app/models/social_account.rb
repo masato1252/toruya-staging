@@ -26,7 +26,7 @@ class SocialAccount < ApplicationRecord
   validates :channel_secret, presence: true
   validates :basic_id, presence: true
 
-  has_many :social_customers
+  has_many :social_customers, dependent: :destroy
   belongs_to :user
 
   def client
