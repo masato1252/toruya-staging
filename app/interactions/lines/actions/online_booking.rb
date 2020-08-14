@@ -5,5 +5,6 @@ class Lines::Actions::OnlineBooking < ActiveInteraction::Base
 
   def execute
     compose(Lines::Menus::OnlineBookingFeatures, social_customer: social_customer)
+    compose(Lines::Features, social_customer: social_customer)
   end
 end
