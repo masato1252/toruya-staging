@@ -3,6 +3,7 @@ module Lines
     class OnlineBookingFeatures < Base
       ACTIONS = [
         LineMessages::Postback.new(action: Lines::Actions::IncomingReservations.class_name, enabled: true),
+        LineMessages::Postback.new(action: Lines::Actions::BookingPages.class_name, enabled: true),
       ].freeze
 
       ENABLED_ACTIONS = ACTIONS.select(&:enabled).freeze

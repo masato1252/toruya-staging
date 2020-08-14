@@ -6,13 +6,14 @@ ja:
       create_customer_info: 保存してLINEと連携する
     actions:
       label:
-        booking_pages: All activities
+        booking_pages: 新たに予約する
         shop_phone: Shop phone
         one_on_one: One on one
         identify_shop_customer: 顧客情報を連携する
         incoming_reservations: 全ての予約
         online_booking: オンライン予約
         call: 電話をかける
+        book: 予約ページを表示
     bot:
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
       connected_successfuly: "ありがとうございます！\n\n 顧客情報の連携が完了しました。"

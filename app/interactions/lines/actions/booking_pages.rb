@@ -59,7 +59,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
           "actions": [
             {
               "type": "uri",
-              "label": "View detail",
+              "label": I18n.t("line.actions.label.book"),
               "uri": Rails.application.routes.url_helpers.booking_page_url(booking_page)
             }
           ]
@@ -73,5 +73,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     else
       LineClient.carousel_template(social_customer: social_customer, text: "There are our active booking activities".freeze, columns: columns)
     end
+
+    compose(Lines::Features, social_customer: social_customer)
   end
 end
