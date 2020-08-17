@@ -186,15 +186,21 @@ class BookingPageSettings extends React.Component {
   }
 
   renderLineSharingFields = () => {
+    const {
+      line_sharing,
+      share_in_bot,
+      not_share_in_bot
+    } = this.props.i18n;
+
     return (
       <div>
-        <h3>Line Sharing</h3>
+        <h3>{line_sharing}</h3>
         <div className="formRow">
           <Field name="booking_page[line_sharing]" type="radio" value="true" component={RadioRow}>
-            Be shared in line bot
+            {share_in_bot}
           </Field>
           <Field name="booking_page[line_sharing]" type="radio" value="false" component={RadioRow}>
-            Don't share in line bot
+            {not_share_in_bot}
           </Field>
         </div>
         <Error name="booking_page[line_sharing]" />

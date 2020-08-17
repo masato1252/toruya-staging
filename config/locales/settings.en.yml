@@ -336,6 +336,9 @@ en:
         booking_limit_day_label: Booking limit
         booking_limit_day_before: day/days before
         booking_limit_day_example_html: For example, if you set “1 day before”, your customer can book from tomorrow
+        line_sharing: LINE Sharing
+        share_in_bot: Be shared in line bot
+        not_share_in_bot: Don’t share in line bot
         form_errors:
           enough_time_for_menu: Please set enough length for the set menu.
           reached_the_menus_limit: Up to 2 menus can be set
