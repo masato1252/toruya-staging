@@ -67,9 +67,9 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
 
     # handle 400 error back
     if columns.blank?
-      LineClient.send(social_customer, "Sorry, we don't have any activites now".freeze)
+      LineClient.send(social_customer, I18n.t("line.bot.messages.booking_pages.no_available_pages"))
     else
-      LineClient.carousel_template(social_customer: social_customer, text: "There are our active booking activities".freeze, columns: columns)
+      LineClient.carousel_template(social_customer: social_customer, text: I18n.t("line.bot.messages.booking_pages.available_pages"), columns: columns)
     end
 
     compose(Lines::Features, social_customer: social_customer)

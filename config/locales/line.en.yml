@@ -9,3 +9,10 @@ en:
         booking_pages: All activities
         shop_phone: Shop phone
         one_on_one: One on one
+    bot:
+      messages:
+        incoming_reservations:
+          desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"
+        booking_pages:
+          no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。
+          available_pages: ご利用いただける予約ページをお送りします。
