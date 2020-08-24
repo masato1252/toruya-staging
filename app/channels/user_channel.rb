@@ -82,11 +82,15 @@ class UserChannel < ApplicationCable::Channel
   end
 
   def connect_customer(data)
-    SocialCustomer.find_by!(social_user_id: data["social_customer_id"]).update_columns(customer_id: data["shop_customer_id"])
+    social_customer = SocialCustomer.find_by!(social_user_id: data["social_customer_id"])
+
+    SocialCustomers::ConnectWithCustomer.run(social_customer: social_customer, customer: Customer.find(data["shop_customer_id"]))
   end
 
   def disconnect_customer(data)
-    SocialCustomer.find_by!(social_user_id: data["customer_id"]).update_columns(customer_id: nil)
+    social_customer = SocialCustomer.find_by!(social_user_id: data["customer_id"])
+
+    SocialCustomers::DisconnectWithCustomer.run(social_customer: social_customer)
   end
 
   def staff

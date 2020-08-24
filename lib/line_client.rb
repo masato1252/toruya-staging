@@ -6,12 +6,6 @@ class LineClient
   BUTTON_ACTIONS_SIZE_LIMIT = 4
   ALT_TEXT_LIMIT = 400
 
-  attr_reader :social_customer
-
-  def initialize(social_customer)
-    @social_customer = social_customer
-  end
-
   def self.error_handler(*args)
     response = yield
 
@@ -28,31 +22,31 @@ class LineClient
 
   def self.profile(social_customer)
     error_handler(__method__, social_customer.id) do
-      new(social_customer).client.get_profile(social_customer.social_user_id)
+      social_customer.client.get_profile(social_customer.social_user_id)
     end
   end
 
   def self.flex(social_customer, template)
     error_handler(__method__, social_customer.id, template) do
-      new(social_customer).client.push_message(social_customer.social_user_id, template)
+      social_customer.client.push_message(social_customer.social_user_id, template)
     end
   end
 
   def self.send(social_customer, message)
     error_handler(__method__, social_customer.id, message) do
-      new(social_customer).client.push_message(social_customer.social_user_id, {type: "text", text: message})
+      social_customer.client.push_message(social_customer.social_user_id, {type: "text", text: message})
     end
   end
 
   def self.reply(social_customer, reply_token, message)
     error_handler(__method__, social_customer.id, reply_token, message) do
-      new(social_customer).client.reply_message(reply_token, message)
+      social_customer.client.reply_message(reply_token, message)
     end
   end
 
   def self.button_template(social_customer:, title:, text:, actions:)
     error_handler(__method__, social_customer.id, title, text, actions) do
-      new(social_customer).client.push_message(social_customer.social_user_id, {
+      social_customer.client.push_message(social_customer.social_user_id, {
         "type": "template",
         "altText": text.first(ALT_TEXT_LIMIT),
         "template": {
@@ -67,7 +61,7 @@ class LineClient
 
   def self.carousel_template(social_customer: , text:, columns:)
     error_handler(__method__, social_customer.id, text, columns) do
-      new(social_customer).client.push_message(social_customer.social_user_id, {
+      social_customer.client.push_message(social_customer.social_user_id, {
         "type": "template",
         "altText": text,
         "template": {
@@ -78,11 +72,29 @@ class LineClient
     end
   end
 
-  def social_account
-    @social_account ||= social_customer.social_account
+  def self.create_rich_menu(social_account:, body:)
+    social_account.client.create_rich_menu(body)
   end
 
-  def client
-    @client ||= social_account.client
+  def self.create_rich_menu_image(social_account:, rich_menu_id:, file_path: )
+    File.open(file_path, "r") do |file|
+      social_account.client.create_rich_menu_image(rich_menu_id, file)
+    end
+  end
+
+  def self.set_default_rich_menu(social_rich_menu)
+    social_rich_menu.social_account.client.set_default_rich_menu(social_rich_menu.social_rich_menu_id)
+  end
+
+  def self.delete_rich_menu(social_rich_menu)
+    social_rich_menu.social_account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
+  end
+
+  def self.link_rich_menu(social_customer:, social_rich_menu:)
+    social_customer.client.link_user_rich_menu(social_customer.social_user_id, social_rich_menu.social_rich_menu_id)
+  end
+
+  def self.unlink_rich_menu(social_customer:)
+    social_customer.client.unlink_user_rich_menu(social_customer.social_user_id)
   end
 end

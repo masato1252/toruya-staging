@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_21_132204) do
+ActiveRecord::Schema.define(version: 2020_08_24_140936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -558,6 +558,13 @@ ActiveRecord::Schema.define(version: 2020_07_21_132204) do
     t.datetime "readed_at"
     t.integer "message_type", default: 0
     t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
+  end
+
+  create_table "social_rich_menus", force: :cascade do |t|
+    t.integer "social_account_id"
+    t.string "social_rich_menu_id"
+    t.string "social_name"
+    t.index ["social_account_id", "social_name"], name: "index_social_rich_menus_on_social_account_id_and_social_name"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

@@ -24,6 +24,8 @@ en:
         online_booking:
           title: Online booking
           desc: Please select what you need bellow.
+          rich_menu:
+            bar_text: Reserve
       messages:
         incoming_reservations:
           desc: "If you want to change reservation, please contact with %{shop_phone_number}"
