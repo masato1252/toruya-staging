@@ -9,10 +9,25 @@ en:
         booking_pages: All activities
         shop_phone: Shop phone
         one_on_one: One on one
+        identify_shop_customer: Connect Customer Data
+        incoming_reservations: All reservations
+        online_booking: Online booking
+        call: Call
+        book: Show booking page
     bot:
+      thanks_follow: "Thank you for adding me as a friend.\n\nYou can use our online booking system through this LINE to see or change your reservations."
+      connected_successfuly: "Thank you!\n\nNow your customer data and LINE account is connected."
+      features:
+        connect_customer:
+          title: Connect Customer Data
+          desc: You can start using our online booking system by connecting your LINE account to your customer data.
+        online_booking:
+          title: Online booking
+          desc: Please select what you need bellow.
       messages:
         incoming_reservations:
-          desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"
+          desc: "If you want to change reservation, please contact with %{shop_phone_number}"
+          no_incoming_messages: You don't have any incoming reservations
         booking_pages:
-          no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。
-          available_pages: ご利用いただける予約ページをお送りします。
+          no_available_pages: Sorry, there is not available booking page for now
+          available_pages: These are the available booking pages

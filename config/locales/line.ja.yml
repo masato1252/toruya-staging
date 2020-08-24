@@ -24,10 +24,10 @@ ja:
         online_booking:
           title: オンライン予約
           desc: 以下よりお選びください。
-          no_incoming_messages: 表示できる予約は見つかりませんでした。
       messages:
         incoming_reservations:
           desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"
+          no_incoming_messages: 表示できる予約は見つかりませんでした。
         booking_pages:
           no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。
           available_pages: ご利用いただける予約ページをお送りします。
