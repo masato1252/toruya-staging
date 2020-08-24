@@ -11,7 +11,7 @@ RSpec.describe Lines::Features do
 
   describe "#execute" do
     context "when social_customer connected with customer" do
-      it "calls Lines::Menus::OnlineBookingFeatures" do
+      it "calls Lines::Menus::AllFeatures" do
         expect(Lines::Menus::OnlineBookingFeatures).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
 
         outcome

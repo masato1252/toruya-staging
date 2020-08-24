@@ -18,7 +18,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     end
 
     if contents.blank?
-      LineClient.send(social_customer, I18n.t("line.bot.features.online_booking.no_incoming_messages"))
+      LineClient.send(social_customer, I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"))
     else
       LineClient.flex(
         social_customer,
@@ -28,6 +28,8 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         )
       )
     end
+
+    compose(Lines::Features, social_customer: social_customer)
   end
 
   private

@@ -15,7 +15,6 @@ module Reservations
           )
         end
 
-
         customer.social_customers.each do |social_customer|
           Reservations::Notifications::SocialMessage.run!(
             customer: customer,

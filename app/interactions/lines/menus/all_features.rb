@@ -4,7 +4,6 @@ module Lines
   module Menus
     class AllFeatures < Base
       ACTIONS = [
-        LineMessages::Postback.new(action: Lines::Actions::BookingPages.class_name, enabled: false),
         LineMessages::Postback.new(action: Lines::Actions::ShopPhone.class_name, enabled: false),
         LineMessages::Postback.new(action: Lines::Actions::OneOnOne.class_name, enabled: false),
         LineMessages::Postback.new(action: Lines::Actions::OnlineBooking.class_name, enabled: true),

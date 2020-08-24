@@ -4,6 +4,7 @@ module BookingPages
 
     hash :attrs, default: nil do
       boolean :draft, default: true
+      boolean :line_sharing, default: true
       integer :shop_id
       integer :booking_limit_day, default: 1
       string :name

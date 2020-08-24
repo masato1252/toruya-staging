@@ -1,7 +1,6 @@
 require "line_client"
 
 class Lines::Actions::BookingPages < ActiveInteraction::Base
-  LINE_COLUMN_DESCRIPTION_LIMIT = 100
   LINE_COLUMNS_NUMBER_LIMIT = 10
 
   object :social_customer
@@ -51,27 +50,28 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
   def execute
     user = social_customer.social_account.user
     # XXX: refactor to better query
-    columns = user.booking_pages.where(draft: false).started.map do |booking_page|
+    columns = user.booking_pages.where(draft: false, line_sharing: true).started.map do |booking_page|
       if booking_page.started? && !booking_page.ended?
-        {
-          "title": booking_page.title,
-          "text": booking_page.greeting.first(LINE_COLUMN_DESCRIPTION_LIMIT),
-          "actions": [
-            {
-              "type": "uri",
-              "label": "View detail",
-              "uri": Rails.application.routes.url_helpers.booking_page_url(booking_page)
-            }
+        LineMessages::CarouselColumn.template(
+          title: booking_page.title,
+          text: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
+          actions: [
+            LineMessages::Uri.new(
+              action: "book",
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page)
+            )
           ]
-        }
+        )
       end
     end.compact.first(LINE_COLUMNS_NUMBER_LIMIT)
 
     # handle 400 error back
     if columns.blank?
-      LineClient.send(social_customer, "Sorry, we don't have any activites now".freeze)
+      LineClient.send(social_customer, I18n.t("line.bot.messages.booking_pages.no_available_pages"))
     else
-      LineClient.carousel_template(social_customer: social_customer, text: "There are our active booking activities".freeze, columns: columns)
+      LineClient.carousel_template(social_customer: social_customer, text: I18n.t("line.bot.messages.booking_pages.available_pages"), columns: columns)
     end
+
+    compose(Lines::Features, social_customer: social_customer)
   end
 end
