@@ -17,7 +17,8 @@ module LineMessages
       {
         "type": "postback",
         "label": I18n.t("line.actions.label.#{action}").first(LABEL_LIMIT),
-        "data": URI.encode_www_form({ action: action })
+        "data": URI.encode_www_form({ action: action }),
+        "displayText": I18n.t("line.actions.label.#{action}")
       }
     end
   end
