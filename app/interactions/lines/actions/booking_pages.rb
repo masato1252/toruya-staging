@@ -58,7 +58,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
           actions: [
             LineMessages::Uri.new(
               action: "book",
-              url: Rails.application.routes.url_helpers.booking_page_url(booking_page)
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page, social_user_id: social_customer.social_user_id)
             )
           ]
         )
