@@ -7,8 +7,12 @@ Rails.application.routes.draw do
   end
   post "member", to: "members#show"
 
+  scope module: :liff, path: :liff, as: :liff do
+    get :identify_line_user_for_connecting_shop_customer
+  end
+
   scope module: :lines, path: :lines, as: :lines do
-    get "/identify_shop_customer/:social_user_id", action: "identify_shop_customer", as: :identify_shop_customer
+    get "/identify_shop_customer/(:social_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get :find_customer
     post :create_customer
     get :identify_code
