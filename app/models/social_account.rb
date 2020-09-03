@@ -27,6 +27,7 @@ class SocialAccount < ApplicationRecord
   validates :basic_id, presence: true
 
   has_many :social_customers, dependent: :destroy
+  has_many :social_rich_menus
   belongs_to :user
 
   def client

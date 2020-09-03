@@ -26,6 +26,8 @@ class SocialCustomer < ApplicationRecord
   belongs_to :user
   belongs_to :customer, optional: true
 
+  delegate :client, to: :social_account
+
   enum conversation_state: {
     bot: 0,
     one_on_one: 1,

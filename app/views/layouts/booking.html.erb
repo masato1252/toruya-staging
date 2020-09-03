@@ -8,6 +8,7 @@
     <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name booking.js, booking.scss %>
     <%= stylesheet_packs_with_chunks_tag "booking_stylesheets" %>
     <%= javascript_packs_with_chunks_tag "booking",  "booking_stylesheets" %>
+    <%= yield :script if content_for?(:script) %>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">
   </head>

@@ -8,7 +8,9 @@ module Customers
 
     def execute
       identification_code = compose(IdentificationCodes::Verify, uuid: uuid, code: code)
-      compose(SocialCustomers::ConnectWithCustomer, social_customer: social_customer, booking_code: identification_code)
+      if identification_code && (customer = Customer.find_by(id: identification_code.customer_id))
+        compose(SocialCustomers::ConnectWithCustomer, social_customer: social_customer, customer: customer)
+      end
 
       identification_code
     end

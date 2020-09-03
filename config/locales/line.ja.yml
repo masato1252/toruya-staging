@@ -24,6 +24,8 @@ ja:
         online_booking:
           title: オンライン予約
           desc: 以下よりお選びください。
+          rich_menu:
+            bar_text: 予約する
       messages:
         incoming_reservations:
           desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"

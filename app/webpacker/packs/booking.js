@@ -10,7 +10,7 @@ import { Application } from "stimulus"
 import { definitionsFromContext } from "stimulus/webpack-helpers"
 
 const application = Application.start()
-const context = require.context("../javascripts/controllers", true, /^\.\/(collapse)/)
+const context = require.context("../javascripts/controllers", true, /^\.\/(collapse|line_user_redirector)/)
 application.load(definitionsFromContext(context))
 
 require.context('../assets/booking', true)

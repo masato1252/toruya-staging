@@ -1651,6 +1651,37 @@ ALTER SEQUENCE public.social_messages_id_seq OWNED BY public.social_messages.id;
 
 
 --
+-- Name: social_rich_menus; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_rich_menus (
+    id bigint NOT NULL,
+    social_account_id integer,
+    social_rich_menu_id character varying,
+    social_name character varying
+);
+
+
+--
+-- Name: social_rich_menus_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_rich_menus_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_rich_menus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_rich_menus_id_seq OWNED BY public.social_rich_menus.id;
+
+
+--
 -- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2295,6 +2326,13 @@ ALTER TABLE ONLY public.social_messages ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: social_rich_menus id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_rich_menus ALTER COLUMN id SET DEFAULT nextval('public.social_rich_menus_id_seq'::regclass);
+
+
+--
 -- Name: staff_accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2726,6 +2764,14 @@ ALTER TABLE ONLY public.social_messages
 
 
 --
+-- Name: social_rich_menus social_rich_menus_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_rich_menus
+    ADD CONSTRAINT social_rich_menus_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3131,6 +3177,13 @@ CREATE INDEX index_social_customers_on_customer_id ON public.social_customers US
 --
 
 CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING btree (user_id);
+
+
+--
+-- Name: index_social_rich_menus_on_social_account_id_and_social_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON public.social_rich_menus USING btree (social_account_id, social_name);
 
 
 --
@@ -3543,6 +3596,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200507011209'),
 ('20200512102635'),
 ('20200625034702'),
-('20200721132204');
+('20200721132204'),
+('20200824140936');
 
 
