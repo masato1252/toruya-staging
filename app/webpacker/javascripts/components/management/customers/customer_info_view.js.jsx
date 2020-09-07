@@ -3,6 +3,8 @@
 import React from "react";
 
 import CustomerBasicInfo from "./basic_info.js";
+import CustomerFeaturesTab from "./customer_features_tab.js";
+import CustomersDashboard  from "./customers_dashboard.js";
 
 class CustomerInfoView extends React.Component {
   phoneRender = (phone) => {
@@ -55,10 +57,8 @@ class CustomerInfoView extends React.Component {
           groupBlankOption={this.props.groupBlankOption}
           switchCustomerReminderPermission={this.props.switchCustomerReminderPermission}
         />
-        <div id="tabs" className="tabs">
-          <a href="#" className="" onClick={this.props.switchReservationMode}>利用履歴</a>
-          <a href="#" className="here">顧客情報</a>
-        </div>
+        <CustomerFeaturesTab {...this.props} selected={CustomersDashboard.customerView.customer_info} />
+
         <div id="detailInfo" className="tabBody" style={{height: "425px"}}>
           <ul className="functions">
             <li className="left">

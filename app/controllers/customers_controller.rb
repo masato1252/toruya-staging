@@ -11,14 +11,14 @@ class CustomersController < DashboardController
       super_user
       .customers
       .contact_groups_scope(current_user_staff)
-      .includes(:rank, :contact_group, updated_by_user: :profile)
+      .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC")
       .limit(Customers::Search::PER_PAGE)
     @customer =
       super_user
       .customers
       .contact_groups_scope(current_user_staff)
-      .includes(:rank, :contact_group).find_by(id: params[:customer_id])
+      .includes(:rank, :contact_group, :social_customer).find_by(id: params[:customer_id])
 
     @reservation = ReservationCustomer.find_by(customer_id: params[:customer_id], reservation_id: params[:reservation_id])&.reservation
 
@@ -75,7 +75,7 @@ class CustomersController < DashboardController
       super_user
       .customers
       .contact_groups_scope(current_user_staff)
-      .includes(:rank, :contact_group, updated_by_user: :profile)
+      .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC")
       .page(params[:page].presence || 1)
       .per(Customers::Search::PER_PAGE)

@@ -1,6 +1,5 @@
 class UserChannel < ApplicationCable::Channel
   MESSAGES_PER_PAGE = 50
-  INTEGER_MAX = 4611686018427387903
 
   def subscribed
     @super_user = User.find(params[:user_id])

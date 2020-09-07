@@ -10,11 +10,18 @@ import ProcessingBar from "shared/processing_bar.js";
 import CustomerInfoView from "./customer_info_view.js";
 import CustomerInfoEdit from "./customer_info_edit.js";
 import CustomerReservationsView from "./customer_reservations_view.js";
+import CustomerMessagesView from "./customer_messages_view.js";
 import CustomersSearchBar from "./search_bar.js";
 import Select from "shared/select.js";
 import MessageBar from "shared/message_bar.js";
 
 class CustomersDashboard extends React.Component {
+  static customerView = {
+    customer_info: "customer_info",
+    customer_reservations: "customer_reservations",
+    customer_messages: "customer_messages",
+  }
+
   constructor(props) {
     super(props);
 
@@ -28,8 +35,8 @@ class CustomersDashboard extends React.Component {
       selectedFilterPatternNumber: "",
       customer: this.props.customer,
       updated_customer: this.props.customer,
-      edit_mode: !this.props.reservationMode,
-      reservation_mode: this.props.reservationMode,
+      customer_view: this.props.customerView,
+      edit_mode: this.props.customerView !== CustomersDashboard.customerView.customer_reservations,
       processing: false,
       moreCustomerProcessing: false,
       no_more_customers: false,
@@ -70,7 +77,7 @@ class CustomersDashboard extends React.Component {
       didSearch = true;
     }
 
-    this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, reservation_mode: false, didSearch: didSearch});
+    this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, customer_view: CustomersDashboard.customerView.customer_info, didSearch: didSearch});
 
     if (mode === "manual") {
       // From select user get into new customer mode
@@ -87,7 +94,7 @@ class CustomersDashboard extends React.Component {
       var selected_customer = _.find(this.state.customers, function(customer){ return customer.id == customer_id; })
       this.setState(
         {selected_customer_id: customer_id, customer: selected_customer,
-         processing: true, edit_mode: false, reservation_mode: true,
+         processing: true, edit_mode: false, customer_view: CustomersDashboard.customerView.customer_reservations,
          didSearch: true}, function() {
           if (this.CustomerReservationsView) {
             this.CustomerReservationsView.fetchReservations()
@@ -402,17 +409,16 @@ class CustomersDashboard extends React.Component {
     this.setState({ edit_mode: !this.state.edit_mode });
   };
 
-  switchReservationMode = (event) => {
-    event.preventDefault();
+  selectCustomerView = (customer_view) => {
     if (this.state.processing) { return; }
     if (this.state.customer.id) {
-      if (this.state.customer.googleDown) {
+      if (this.state.customer.googleDown && customer_view === CustomersDashboard.customerView.customer_info) {
         alert(this.props.googleDownMessage);
         return;
       }
-      this.setState({ reservation_mode: !this.state.reservation_mode });
+      this.setState({ "customer_view": customer_view });
     }
-  };
+  }
 
   switchCustomerReminderPermission = (event) => {
     event.preventDefault();
@@ -492,31 +498,7 @@ class CustomersDashboard extends React.Component {
   renderCustomerView = () => {
     var _this = this;
 
-    if (this.state.reservation_mode) {
-      return (
-        <CustomerReservationsView
-          ref={(c) => this.CustomerReservationsView = c }
-          customer={this.state.customer}
-          switchReservationMode={this.switchReservationMode}
-          switchCustomerReminderPermission={this.switchCustomerReminderPermission}
-          customerReservationsPath={this.props.customerReservationsPath}
-          switchProcessing={this.switchProcessing}
-          forceStopProcessing={this.forceStopProcessing}
-          recheckInBtn={this.props.recheckInBtn}
-          checkInBtn={this.props.checkInBtn}
-          checkOutBtn={this.props.checkOutBtn}
-          acceptBtn={this.props.acceptBtn}
-          acceptInCanceledBtn={this.props.acceptInCanceledBtn}
-          pendBtn={this.props.pendBtn}
-          editBtn={this.props.editBtn}
-          cancelBtn={this.props.cancelBtn}
-          withWarningsMessage={this.props.withWarningsMessage}
-          customerDetailsReadable={this.state.customer.detailsReadable}
-          groupBlankOption={this.props.groupBlankOption}
-          />
-      )
-    }
-    else if (this.state.edit_mode) {
+    if (this.state.edit_mode) {
       if (!this.state.selected_customer_id && !this.state.didSearch) {
         return (
           <div className="checking-search-bar">
@@ -550,7 +532,7 @@ class CustomersDashboard extends React.Component {
           switchEditMode={this.switchEditMode}
           switchProcessing={this.switchProcessing}
           forceStopProcessing={this.forceStopProcessing}
-          switchReservationMode={this.switchReservationMode}
+          selectCustomerView={this.selectCustomerView}
           saveCustomerPath={this.props.saveCustomerPath}
           delimiter={this.props.delimiter}
           backWithoutSaveBtn={this.props.backWithoutSaveBtn}
@@ -573,8 +555,50 @@ class CustomersDashboard extends React.Component {
           saveBtn={this.props.saveBtn}
           googleDownMessage={this.props.googleDownMessage}
           groupBlankOption={this.props.groupBlankOption}
+          i18n={this.props.i18n}
           />
       )
+    }
+    else if (this.state.customer_view === CustomersDashboard.customerView.customer_reservations) {
+      return (
+        <CustomerReservationsView
+          ref={(c) => this.CustomerReservationsView = c }
+          customer={this.state.customer}
+          selectCustomerView={this.selectCustomerView}
+          switchCustomerReminderPermission={this.switchCustomerReminderPermission}
+          customerReservationsPath={this.props.customerReservationsPath}
+          switchProcessing={this.switchProcessing}
+          forceStopProcessing={this.forceStopProcessing}
+          recheckInBtn={this.props.recheckInBtn}
+          checkInBtn={this.props.checkInBtn}
+          checkOutBtn={this.props.checkOutBtn}
+          acceptBtn={this.props.acceptBtn}
+          acceptInCanceledBtn={this.props.acceptInCanceledBtn}
+          pendBtn={this.props.pendBtn}
+          editBtn={this.props.editBtn}
+          cancelBtn={this.props.cancelBtn}
+          withWarningsMessage={this.props.withWarningsMessage}
+          customerDetailsReadable={this.state.customer.detailsReadable}
+          groupBlankOption={this.props.groupBlankOption}
+          i18n={this.props.i18n}
+          />
+      )
+    }
+    else if (this.state.customer_view === CustomersDashboard.customerView.customer_messages) {
+      return (
+        <CustomerMessagesView
+          customer={this.state.updated_customer}
+          selectCustomerView={this.selectCustomerView}
+          groupBlankOption={this.props.groupBlankOption}
+          switchCustomerReminderPermission={this.switchCustomerReminderPermission}
+          selectCustomerView={this.selectCustomerView}
+          customerDetailsReadable={this.state.customer.detailsReadable}
+          switchProcessing={this.switchProcessing}
+          forceStopProcessing={this.forceStopProcessing}
+          customerMessagesPath={this.props.customerMessagesPath}
+          i18n={this.props.i18n}
+        />
+      );
     }
     else {
       return (
@@ -582,7 +606,7 @@ class CustomersDashboard extends React.Component {
           customer={this.state.updated_customer}
           switchEditMode={this.switchEditMode}
           switchCustomerReminderPermission={this.switchCustomerReminderPermission}
-          switchReservationMode={this.switchReservationMode}
+          selectCustomerView={this.selectCustomerView}
           addressLabel={this.props.addressLabel}
           phoneLabel={this.props.phoneLabel}
           emailLabel={this.props.emailLabel}
@@ -590,10 +614,10 @@ class CustomersDashboard extends React.Component {
           memoLabel={this.props.memoLabel}
           editBtn={this.props.editBtn}
           groupBlankOption={this.props.groupBlankOption}
+          i18n={this.props.i18n}
           />
       );
     }
-
   };
 
   renderCustomerButtons = () => {

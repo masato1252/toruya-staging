@@ -5,7 +5,7 @@
                     { shop: shop,
                       customers: customer_options(@customers),
                       customer: customer_options([ @customer || super_user.customers.new]).first,
-                      reservation_mode: !!@customer && @customer.contact_group_id,
+                      customer_view: !!@customer && @customer.contact_group_id ? "customer_reservations" : "customer_info",
                       from_reservation: params[:from_reservation],
                       reservationCreatePermission: shop && can?(:create_reservation, shop) && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop),
                       reservationCreateWarningPath: create_reservation_warnings_path(owner_id: super_user.id, shop_id: shop),
@@ -22,6 +22,7 @@
                       customers_filter_path: filter_user_customers_path(super_user, format: :json),
                       customers_search_path: search_user_customers_path(super_user, format: :json),
                       customers_recent_path: recent_user_customers_path(super_user, format: :json),
+                      customer_messages_path: customer_user_messages_path(super_user, format: :json),
                       customer_reservations_path: customer_user_reservations_path(super_user, format: :json),
                       toggleReminderPremissionUserCustomersPath: toggle_reminder_premission_user_customers_path(super_user),
                       delimiter: Customers::Save::DELIMITER,
@@ -70,5 +71,7 @@
                         non_group_customers_alert_message: I18n.t("notifications.non_group_customers_alert_message"),
                         reminder_confirmation_message: I18n.t("customer.reminder_confirmation_message"),
                         reminder_changed_message: I18n.t("customer.reminder_changed_message"),
+                        customer_info_tab: I18n.t("customer.tab.customer_info"),
+                        customer_reservations_tab: I18n.t("customer.tab.customer_reservations")
                       }
 }) %>

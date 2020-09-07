@@ -4,6 +4,8 @@ import React from "react";
 import axios from 'axios';
 
 import CustomerBasicInfo from "./basic_info.js";
+import CustomerFeaturesTab from "./customer_features_tab.js";
+import CustomersDashboard  from "./customers_dashboard.js";
 
 class CustomerReservationsView extends React.Component {
   constructor(props) {
@@ -111,10 +113,7 @@ class CustomerReservationsView extends React.Component {
             switchCustomerReminderPermission={this.props.switchCustomerReminderPermission}
           />
 
-          <div id="tabs" className="tabs">
-            <a href="#" className="here">利用履歴</a>
-            {this.props.customerDetailsReadable && <a href="#" onClick={this.props.switchReservationMode}>顧客情報</a>}
-          </div>
+          <CustomerFeaturesTab {...this.props} selected={CustomersDashboard.customerView.customer_reservations} />
 
           <div id="resList" className="tabBody" style={{height: "425px"}}>
             <dl className="tableTTL">

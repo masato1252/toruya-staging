@@ -126,6 +126,9 @@ en:
     street2: address2
     no_customer: No Data
     no_more_customer: End of Data
+    tab:
+      customer_info: Customer Info
+      customer_reservations: Reservations
     printing_page_size:
       paper_size: Paper size
       a4: A4
