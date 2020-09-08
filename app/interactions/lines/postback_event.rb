@@ -28,7 +28,7 @@ class Lines::PostbackEvent < ActiveInteraction::Base
     when *support_actions
       SocialMessages::Create.run!(
         social_customer: social_customer,
-        content: data[EVENT_ACTION_KEY],
+        content: I18n.t("line.actions.label.#{data[EVENT_ACTION_KEY]}"),
         readed: true,
         message_type: SocialMessage.message_types[:customer_reply_bot]
       )

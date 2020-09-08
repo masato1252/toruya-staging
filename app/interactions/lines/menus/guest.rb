@@ -14,7 +14,7 @@ module Lines
       end
 
       def chatroom_owner_message_content
-        "Customer try to identify themselves"
+        I18n.t("line.bot.features.connect_customer.title")
       end
 
       def actions
