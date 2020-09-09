@@ -104,7 +104,8 @@ module OptionsHelper
         display_address: c.display_address,
         google_down: c.google_down,
         googleContactMissing: c.google_contact_missing,
-        details_readable: details_permission_checking_required && can?(:read_details, c)
+        details_readable: details_permission_checking_required && can?(:read_details, c),
+        social_user_id: c.social_customer&.social_user_id
       ))
     end
   end

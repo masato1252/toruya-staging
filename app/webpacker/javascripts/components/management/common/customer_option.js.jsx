@@ -23,6 +23,7 @@ class CommonCustomerOption extends React.Component {
             <i className="fa fa-address-card"></i>
           </span>
           <i className={`customer-reminder-permission fa fa-bell ${this.props.customer.reminderPermission ? "reminder-on" : ""}`}></i>
+          {this.props.customer.socialUserId  &&  <i className="fa fab fa-line"></i>}
         </dd>
         <dt>
           <p>{this.props.customer.label}</p>

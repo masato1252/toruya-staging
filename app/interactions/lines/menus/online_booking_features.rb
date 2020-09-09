@@ -20,7 +20,7 @@ module Lines
       end
 
       def chatroom_owner_message_content
-        "These are the online booking features we provide: #{ACTION_TYPES.join(", ")}"
+        I18n.t("line.bot.features.online_booking.title")
       end
     end
   end

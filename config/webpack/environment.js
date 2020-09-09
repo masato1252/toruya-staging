@@ -24,6 +24,7 @@ environment.config.merge({
       shared: path.resolve(config.source_path, 'javascripts/components/shared'),
       libraries: path.resolve(config.source_path, 'javascripts/libraries'),
       context: path.resolve(config.source_path, 'javascripts/context'),
+      components: path.resolve(config.source_path, 'javascripts/components'),
     }
   }
 })

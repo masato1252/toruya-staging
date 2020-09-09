@@ -211,6 +211,9 @@ ja:
     no_customer: 該当データなし
     no_more_customer: 該当データ終了
     group_blank_option: 台帳なし
+    tab:
+      customer_info: 顧客情報
+      customer_reservations: 利用履歴
     printing_page_size:
       paper_size: 用紙サイズ
       a4: A4
