@@ -1,0 +1,24 @@
+<html lang="<%= I18n.locale %>">
+  <head>
+    <%= yield :title if content_for?(:title) %>
+    <%= yield :meta_tags if content_for(:meta_tags) %>
+    <%= csrf_meta_tags %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name booking.js, booking.scss %>
+    <%= stylesheet_packs_with_chunks_tag "booking_stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "booking",  "booking_stylesheets" %>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  </head>
+
+  <body>
+    <div class="booking-content">
+      <%= yield %>
+
+    </div>
+    <div class="footer" id="footer">
+      Powered by <%= link_to "Toruya", "https://toruya.com" %>
+    </div>
+  </body>
+</html>

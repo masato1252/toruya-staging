@@ -1,4 +1,11 @@
 ja:
+  toruya_line:
+    bot:
+      thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
+    actions:
+      label:
+        sign_in: "Sign in"
+        sign_up: "Sign up"
   line:
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。

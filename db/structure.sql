@@ -1682,6 +1682,75 @@ ALTER SEQUENCE public.social_rich_menus_id_seq OWNED BY public.social_rich_menus
 
 
 --
+-- Name: social_user_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_user_messages (
+    id bigint NOT NULL,
+    social_user_id integer NOT NULL,
+    admin_user_id integer,
+    message_type integer,
+    readed_at timestamp without time zone,
+    raw_content text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_user_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_user_messages_id_seq OWNED BY public.social_user_messages.id;
+
+
+--
+-- Name: social_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_users (
+    id bigint NOT NULL,
+    user_id bigint,
+    social_service_user_id character varying NOT NULL,
+    social_user_name character varying,
+    social_user_picture_url character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_users_id_seq OWNED BY public.social_users.id;
+
+
+--
 -- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2333,6 +2402,20 @@ ALTER TABLE ONLY public.social_rich_menus ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: social_user_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_user_messages ALTER COLUMN id SET DEFAULT nextval('public.social_user_messages_id_seq'::regclass);
+
+
+--
+-- Name: social_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_users ALTER COLUMN id SET DEFAULT nextval('public.social_users_id_seq'::regclass);
+
+
+--
 -- Name: staff_accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2772,6 +2855,22 @@ ALTER TABLE ONLY public.social_rich_menus
 
 
 --
+-- Name: social_user_messages social_user_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_user_messages
+    ADD CONSTRAINT social_user_messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: social_users social_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_users
+    ADD CONSTRAINT social_users_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3187,6 +3286,13 @@ CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON pub
 
 
 --
+-- Name: index_social_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_user_id ON public.social_users USING btree (user_id);
+
+
+--
 -- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3411,6 +3517,20 @@ CREATE INDEX social_message_customer_index ON public.social_messages USING btree
 
 
 --
+-- Name: social_user_message_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX social_user_message_index ON public.social_user_messages USING btree (social_user_id);
+
+
+--
+-- Name: social_user_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX social_user_unique_index ON public.social_users USING btree (user_id, social_service_user_id);
+
+
+--
 -- Name: staff_account_email_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3597,6 +3717,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200512102635'),
 ('20200625034702'),
 ('20200721132204'),
-('20200824140936');
+('20200824140936'),
+('20200914033218'),
+('20200914041742');
 
 

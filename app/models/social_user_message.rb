@@ -1,0 +1,28 @@
+# == Schema Information
+#
+# Table name: social_user_messages
+#
+#  id             :bigint(8)        not null, primary key
+#  social_user_id :integer          not null
+#  admin_user_id  :integer
+#  message_type   :integer
+#  readed_at      :datetime
+#  raw_content    :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#
+# Indexes
+#
+#  social_user_message_index  (social_user_id)
+#
+
+class SocialUserMessage < ApplicationRecord
+  belongs_to :social_user
+
+  enum message_type: {
+    bot: 0,
+    admin: 1,
+    user: 2,
+    user_reply_bot: 3
+  }
+end

@@ -1,7 +1,7 @@
 module SocialAccounts
   module RichMenus
     class Create < ActiveInteraction::Base
-      object :social_account
+      object :social_account, default: nil
       hash :body, strip: false
       string :key
       boolean :default_menu, default: false

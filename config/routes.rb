@@ -7,16 +7,23 @@ Rails.application.routes.draw do
   end
   post "member", to: "members#show"
 
-  scope module: :liff, path: :liff, as: :liff do
-    get :identify_line_user_for_connecting_shop_customer
-  end
-
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/(:social_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get :find_customer
     post :create_customer
     get :identify_code
     get :ask_identification_code
+
+    scope module: :liff, path: :liff, as: :liff do
+      get "/(:liff_path)", action: "index"
+    end
+
+    scope module: :user_bot, path: :user_bot, as: :user_bot do
+      scope module: :users do
+        get "/connect(/:social_service_user_id)", as: :connect_user, action: "connect"
+        get "/sign_up(/:social_service_user_id)", as: :sign_up, action: "sign_up"
+      end
+    end
   end
 
   resources :users, only: [] do
@@ -212,6 +219,7 @@ Rails.application.routes.draw do
 
   namespace :webhooks do
     post "line/:channel_id", to: "lines#create", as: :line
+    post "user_bot_line", to: "user_bot_lines#create", as: :user_bot_line
   end
 
   resources :calendars, only: [] do

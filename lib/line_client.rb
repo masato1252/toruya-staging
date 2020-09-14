@@ -20,6 +20,7 @@ class LineClient
     response
   end
 
+  # TODO: SocialCustomer or Social User
   def self.profile(social_customer)
     error_handler(__method__, social_customer.id) do
       social_customer.client.get_profile(social_customer.social_user_id)
@@ -73,6 +74,7 @@ class LineClient
   end
 
   def self.create_rich_menu(social_account:, body:)
+    #TODO: handle error response
     social_account.client.create_rich_menu(body)
   end
 
@@ -83,11 +85,11 @@ class LineClient
   end
 
   def self.set_default_rich_menu(social_rich_menu)
-    social_rich_menu.social_account.client.set_default_rich_menu(social_rich_menu.social_rich_menu_id)
+    social_rich_menu.account.client.set_default_rich_menu(social_rich_menu.social_rich_menu_id)
   end
 
   def self.delete_rich_menu(social_rich_menu)
-    social_rich_menu.social_account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
+    social_rich_menu.account.client.delete_rich_menu(social_rich_menu.social_rich_menu_id)
   end
 
   def self.link_rich_menu(social_customer:, social_rich_menu:)

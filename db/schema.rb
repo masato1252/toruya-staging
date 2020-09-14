@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_24_140936) do
+ActiveRecord::Schema.define(version: 2020_09_14_041742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -565,6 +565,28 @@ ActiveRecord::Schema.define(version: 2020_08_24_140936) do
     t.string "social_rich_menu_id"
     t.string "social_name"
     t.index ["social_account_id", "social_name"], name: "index_social_rich_menus_on_social_account_id_and_social_name"
+  end
+
+  create_table "social_user_messages", force: :cascade do |t|
+    t.integer "social_user_id", null: false
+    t.integer "admin_user_id"
+    t.integer "message_type"
+    t.datetime "readed_at"
+    t.text "raw_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["social_user_id"], name: "social_user_message_index"
+  end
+
+  create_table "social_users", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "social_service_user_id", null: false
+    t.string "social_user_name"
+    t.string "social_user_picture_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "social_service_user_id"], name: "social_user_unique_index", unique: true
+    t.index ["user_id"], name: "index_social_users_on_user_id"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

@@ -1,0 +1,14 @@
+require "liff_routing"
+
+class Lines::LiffController < ActionController::Base
+  protect_from_forgery with: :exception, prepend: true
+  layout "booking"
+
+  def index
+    # XXX: the redirected url would bring the line user id, called social_service_user_id from here
+    @liff_id = LiffRouting::LIFF_ID
+    @redirect_to = LiffRouting.url(params[:liff_path] || params["liff.state"])
+
+    render action: "redirect"
+  end
+end
