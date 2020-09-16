@@ -23,6 +23,24 @@ Rails.application.routes.draw do
         get "/connect(/:social_service_user_id)", as: :connect_user, action: "connect"
         get "/sign_up(/:social_service_user_id)", as: :sign_up, action: "sign_up"
       end
+
+      resources :reservations, only: [:index] do
+        collection do
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      resources :customers, only: [:index] do
+        collection do
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      resources :settings, only: [:index] do
+        collection do
+          get "/:social_service_user_id", action: "index"
+        end
+      end
     end
   end
 

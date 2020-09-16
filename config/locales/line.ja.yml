@@ -6,6 +6,9 @@ ja:
       label:
         sign_in: "Sign in"
         sign_up: "Sign up"
+        reservations: "Reservations"
+        customers: "Customers"
+        settings: "Settings"
   line:
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。

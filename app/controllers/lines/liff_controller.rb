@@ -5,14 +5,9 @@ class Lines::LiffController < ActionController::Base
   layout "user_bot"
 
   def index
-    if params["liff.state"]
-      head :ok
-      return
-    end
-
     # XXX: the redirected url would bring the line user id, called social_service_user_id from here
     @liff_id = LiffRouting::LIFF_ID
-    @redirect_to = LiffRouting.url(params[:liff_path])
+    @redirect_to = LiffRouting.url(params[:liff_path] || params["liff.state"])
 
     render action: "redirect"
   end

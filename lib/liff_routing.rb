@@ -5,7 +5,7 @@ class LiffRouting
   class << self
     # mapping to # https://toruya.com/lines/liff/{path}
     def liff_url(path)
-      if liff_mapping.keys.exclude?(path)
+      if @@liff_routing.keys.exclude?(path)
         raise "Unexpect path"
       end
 
@@ -31,4 +31,7 @@ class LiffRouting
   # the liff_path value might be in params[:liff_path] or params["liff.state"]
   map :users_connect, :lines_user_bot_connect_user_url
   map :users_sign_up, :lines_user_bot_sign_up_url
+  map :reservations, :lines_user_bot_reservations_url
+  map :customers, :lines_user_bot_customers_url
+  map :settings, :lines_user_bot_settings_url
 end
