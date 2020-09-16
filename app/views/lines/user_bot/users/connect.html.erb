@@ -1,1 +1,28 @@
-<h1>Connect</h1>
+<div class="header">
+  <div class="header-title-part">
+    <h1>
+      <%= image_pack_tag "media/assets/user_bot/logo.png", class: "logo" %>
+    </h1>
+  </div>
+</div>
+
+<div id="login">
+  <h2>ログイン</h2>
+  <main id="socialLogin">
+    <% if current_user %>
+      <p>
+        Congratulation, logged in successfully.
+      </p>
+    <% else %>
+      <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
+      <p>
+      <%= button_to user_google_oauth2_omniauth_authorize_path(social_service_user_id: social_user.social_service_user_id), class: "google-button" do %>
+        <img class="google-button__icon" src="<%= asset_pack_path("media/assets/user_bot/btn_google_signin.svg") %>" />
+        <span class="google-button__text">
+          Googleでログイン
+        </span>
+      <% end %>
+      </p>
+    <% end %>
+  </main>
+</div>

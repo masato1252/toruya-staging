@@ -11,9 +11,16 @@ class Lines::UserBotController < ActionController::Base
   before_action :authenticate_social_user!
 
   def authenticate_social_user!
-    social_service_user_id = params[:social_service_user_id].presence || user_bot_cookies(:social_service_user_id)
-    write_user_bot_cookies(:social_service_user_id, social_service_user_id)
+    if params[:social_service_user_id]
+      social_service_user_id = params[:social_service_user_id].presence || user_bot_cookies(:social_service_user_id)
+      write_user_bot_cookies(:social_service_user_id, social_service_user_id)
+    end
 
-    @social_user ||= SocialUser.find_by!(social_service_user_id: social_service_user_id)
+    @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
+
+  def current_user
+    @current_user ||= social_user.user
+  end
+  helper_method :current_user
 end

@@ -1,0 +1,114 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  background: $gray10;
+}
+
+.display-hidden {
+  display: none !important;
+}
+
+.mobile-content {
+  background-color: #FFFFFF;
+  min-height: 630px;
+  padding: 12px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  width: 100%; // mobile
+
+  @include media-breakpoint-up(tablet) {
+    width: 500px;
+    margin-top: 36px;
+  }
+}
+
+.footer {
+  width: 100%;
+  background-color: #FFFFFF;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: $gray8;
+
+  @include media-breakpoint-up(tablet) {
+    width: 500px;
+  }
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"] {
+  padding: 10px;
+  color: $black;
+  line-height: 15px;
+  border: 1px solid $gray;
+  background-color: $palette-color6;
+  border-radius: 4px;
+  margin: 0 3px;
+}
+
+select {
+  appearance: none;
+  line-height: 35px;
+  padding: 0 15px;
+  background-color: $palette-color6;
+  border: 1px solid $gray;
+  border-radius: 4px;
+}
+
+h4 {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  color: $black;
+  font-size: 14px;
+}
+
+.centerize {
+  text-align: center;
+}
+
+a {
+  color: $palette-color2;
+}
+
+.warning {
+  color: $warning !important;
+}
+
+.field-error-message {
+  color: $danger;
+  display: block;
+}
+
+.field-warning-message {
+  color: $warning;
+  display: block;
+}
+
+.spinner-loading {
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: $gray11;
+}
+
+.whole-page-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

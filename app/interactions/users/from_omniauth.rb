@@ -2,6 +2,7 @@ module Users
   class FromOmniauth < ActiveInteraction::Base
     object :auth, class: OmniAuth::AuthHash
     string :referral_token, default: nil
+    string :social_service_user_id, default: nil
 
     def execute
       user = User.find_by(email: auth.info.email) ||
@@ -29,6 +30,10 @@ module Users
       compose(GoogleOauth::Create, user: user, auth: auth)
       compose(Users::BuildDefaultData, user: user)
       user.save!
+
+      if social_service_user_id
+        compose(SocialUsers::Connect, user: user, social_user: SocialUser.find_by!(social_service_user_id: social_service_user_id))
+      end
       user
     end
   end
