@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_14_041742) do
+ActiveRecord::Schema.define(version: 2020_09_17_065312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
     t.integer "reservation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["booking_page_id", "uuid", "code"], name: "index_booking_codes_on_booking_page_id_and_uuid_and_code", unique: true
   end
 
@@ -283,7 +284,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.integer "user_id"
     t.string "phone_number"
     t.text "content"
     t.integer "customer_id"
@@ -352,6 +353,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
     t.string "company_zip_code"
     t.string "company_address"
     t.string "company_phone_number"
+    t.string "email"
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
@@ -590,7 +592,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|
-    t.string "email", null: false
+    t.string "email"
     t.integer "user_id"
     t.integer "owner_id", null: false
     t.integer "staff_id", null: false
@@ -600,7 +602,9 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "active_uniqueness"
+    t.string "phone_number"
     t.index ["owner_id", "email"], name: "staff_account_email_index"
+    t.index ["owner_id", "phone_number"], name: "index_staff_accounts_on_owner_id_and_phone_number", unique: true
     t.index ["owner_id", "user_id", "active_uniqueness"], name: "unique_staff_account_index", unique: true
     t.index ["staff_id"], name: "index_staff_accounts_on_staff_id"
     t.index ["token"], name: "staff_account_token_index"
@@ -673,7 +677,7 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email", default: "", null: false
+    t.string "email"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -694,8 +698,10 @@ ActiveRecord::Schema.define(version: 2020_09_14_041742) do
     t.datetime "updated_at", null: false
     t.datetime "contacts_sync_at"
     t.string "referral_token"
+    t.string "phone_number"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
     t.index ["referral_token"], name: "index_users_on_referral_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true

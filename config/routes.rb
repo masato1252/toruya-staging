@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       scope module: :users do
         get "/connect(/:social_service_user_id)", as: :connect_user, action: "connect"
         get "/sign_up(/:social_service_user_id)", as: :sign_up, action: "sign_up"
+        get :generate_code
+        get :identify_code
+        post :create_user
       end
 
       resources :reservations, only: [:index] do

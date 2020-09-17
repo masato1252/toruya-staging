@@ -3,7 +3,7 @@
 # Table name: staff_accounts
 #
 #  id                :integer          not null, primary key
-#  email             :string           not null
+#  email             :string
 #  user_id           :integer
 #  owner_id          :integer          not null
 #  staff_id          :integer          not null
@@ -13,14 +13,16 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  active_uniqueness :boolean
+#  phone_number      :string
 #
 # Indexes
 #
-#  index_staff_accounts_on_staff_id  (staff_id)
-#  index_staff_accounts_on_user_id   (user_id)
-#  staff_account_email_index         (owner_id,email)
-#  staff_account_token_index         (token)
-#  unique_staff_account_index        (owner_id,user_id,active_uniqueness) UNIQUE
+#  index_staff_accounts_on_owner_id_and_phone_number  (owner_id,phone_number) UNIQUE
+#  index_staff_accounts_on_staff_id                   (staff_id)
+#  index_staff_accounts_on_user_id                    (user_id)
+#  staff_account_email_index                          (owner_id,email)
+#  staff_account_token_index                          (token)
+#  unique_staff_account_index                         (owner_id,user_id,active_uniqueness) UNIQUE
 #
 
 class StaffAccount < ApplicationRecord

@@ -181,7 +181,8 @@ CREATE TABLE public.booking_codes (
     customer_id integer,
     reservation_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer
 );
 
 
@@ -824,7 +825,7 @@ ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
 
 CREATE TABLE public.notifications (
     id bigint NOT NULL,
-    user_id integer NOT NULL,
+    user_id integer,
     phone_number character varying,
     content text,
     customer_id integer,
@@ -1012,7 +1013,8 @@ CREATE TABLE public.profiles (
     updated_at timestamp without time zone NOT NULL,
     company_zip_code character varying,
     company_address character varying,
-    company_phone_number character varying
+    company_phone_number character varying,
+    email character varying
 );
 
 
@@ -1756,7 +1758,7 @@ ALTER SEQUENCE public.social_users_id_seq OWNED BY public.social_users.id;
 
 CREATE TABLE public.staff_accounts (
     id integer NOT NULL,
-    email character varying NOT NULL,
+    email character varying,
     user_id integer,
     owner_id integer NOT NULL,
     staff_id integer NOT NULL,
@@ -1765,7 +1767,8 @@ CREATE TABLE public.staff_accounts (
     level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    active_uniqueness boolean
+    active_uniqueness boolean,
+    phone_number character varying
 );
 
 
@@ -1975,7 +1978,7 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
+    email character varying,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -1995,7 +1998,8 @@ CREATE TABLE public.users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contacts_sync_at timestamp without time zone,
-    referral_token character varying
+    referral_token character varying,
+    phone_number character varying
 );
 
 
@@ -3293,6 +3297,13 @@ CREATE INDEX index_social_users_on_user_id ON public.social_users USING btree (u
 
 
 --
+-- Name: index_staff_accounts_on_owner_id_and_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_staff_accounts_on_owner_id_and_phone_number ON public.staff_accounts USING btree (owner_id, phone_number);
+
+
+--
 -- Name: index_staff_accounts_on_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3360,6 +3371,13 @@ CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btre
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
+
+
+--
+-- Name: index_users_on_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_phone_number ON public.users USING btree (phone_number);
 
 
 --
@@ -3719,6 +3737,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200721132204'),
 ('20200824140936'),
 ('20200914033218'),
-('20200914041742');
+('20200914041742'),
+('20200917065312');
 
 

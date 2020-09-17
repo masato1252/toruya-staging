@@ -18,6 +18,7 @@
 #  company_zip_code     :string
 #  company_address      :string
 #  company_phone_number :string
+#  email                :string
 #
 # Indexes
 #
@@ -33,7 +34,4 @@ class Profile < ApplicationRecord
   validates :last_name, presence: true
   validates :phonetic_first_name, presence: true
   validates :phonetic_last_name, presence: true
-  validates :zip_code, presence: true
-  validates :address, presence: true
-  validates :phone_number, presence: true
 end

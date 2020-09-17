@@ -1,2 +1,16 @@
-<h1>Sign up</h1>
-<%= social_user.attributes %>
+<%= react_component("user_bot/user_sign_up", {
+  social_user: social_user.attributes.slice("social_service_user_id", "user_id"),
+  path: {
+    generate_code: lines_user_bot_generate_code_path,
+    identify_code: lines_user_bot_identify_code_path,
+    create_user: lines_user_bot_create_user_path
+  },
+  i18n: {
+  }.merge!([
+    t("booking_page"),
+    t("line.customer_identifications"),
+    t("action").slice(:save, :confirm),
+  ].inject(:merge!)),
+},
+{ camelize_props: false }
+) %>

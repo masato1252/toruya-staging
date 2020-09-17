@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  email                  :string           default(""), not null
+#  email                  :string
 #  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
@@ -24,16 +24,19 @@
 #  updated_at             :datetime         not null
 #  contacts_sync_at       :datetime
 #  referral_token         :string
+#  phone_number           :string
 #
 # Indexes
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_phone_number          (phone_number) UNIQUE
 #  index_users_on_referral_token        (referral_token) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
 
+# @email, @phone_number represent how user sign up our service, @email is from web, @phone_number is from line
 class User < ApplicationRecord
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"

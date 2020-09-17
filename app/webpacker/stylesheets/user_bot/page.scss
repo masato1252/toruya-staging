@@ -15,4 +15,26 @@
       max-height: 45px;
     }
   }
+
+  input[type="text"],
+  input[type="tel"] {
+    width: 45%;
+  }
+
+  input[type="submit"],
+  a.submit {
+    margin-top: 12px;
+  }
+
+  .customer-type-options {
+    margin-top: 40px;
+
+    .desc {
+      margin-bottom: 9px;
+    }
+
+    .resend-row {
+      margin-top: 9px;
+    }
+  }
 }

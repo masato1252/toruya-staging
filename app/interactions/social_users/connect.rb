@@ -8,10 +8,12 @@ module SocialUsers
     def execute
       social_user.update!(user: user)
 
-      LineClient.link_rich_menu(
-        social_customer: social_user,
-        social_rich_menu: SocialRichMenu.find_by!(social_name: UserBotLines::RichMenus::Dashboard::KEY)
-      )
+      if Rails.env.production?
+        LineClient.link_rich_menu(
+          social_customer: social_user,
+          social_rich_menu: SocialRichMenu.find_by!(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+        )
+      end
     end
   end
 end
