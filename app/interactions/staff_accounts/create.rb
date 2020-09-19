@@ -40,8 +40,7 @@ module StaffAccounts
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
 
           if staff_account.save
-            # TODO: for phone
-            NotificationMailer.activate_staff_account(staff_account).deliver_now if staff_account.email.present?
+            Notifiers::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
           end
         end
       end

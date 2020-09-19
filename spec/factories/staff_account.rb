@@ -17,5 +17,13 @@ FactoryBot.define do
       state { :pending }
       active_uniqueness { nil }
     end
+
+    trait :phone_number do
+      phone_number { Faker::PhoneNumber.phone_number }
+    end
+
+    trait :email do
+      email { Faker::Internet.email }
+    end
   end
 end

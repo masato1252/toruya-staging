@@ -1,0 +1,4 @@
+ja:
+  notifier:
+    activate_staff_account:
+      message: "スタッフアカウント認証手続きのお願い %{url}"
