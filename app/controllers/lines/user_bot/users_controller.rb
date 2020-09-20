@@ -24,6 +24,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       phonetic_first_name: params[:phonetic_first_name],
       phone_number: params[:phone_number],
       email: params[:email],
+      referral_token: params[:referral_token],
       social_user: social_user
     )
 

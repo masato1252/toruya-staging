@@ -12,11 +12,11 @@ module Users
       user.email = auth.info.email.presence || user.email
       user.skip_confirmation!
       user.skip_confirmation_notification!
-      user.referral_token ||= Devise.friendly_token[0,10]
+      user.referral_token ||= Devise.friendly_token[0,5]
 
       loop do
         if User.where(referral_token: user.referral_token).where.not(id: user.id).exists?
-          user.referral_token = Devise.friendly_token[0,10]
+          user.referral_token = Devise.friendly_token[0,5]
         else
           break
         end

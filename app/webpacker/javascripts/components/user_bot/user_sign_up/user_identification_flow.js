@@ -78,7 +78,8 @@ export const UserIdentificationFlow = ({props, finalView}) => {
         email: data.email,
         phonetic_last_name: data.phonetic_last_name,
         phonetic_first_name: data.phonetic_first_name,
-        uuid: data.uuid
+        uuid: data.uuid,
+        referral_token: data.referral_token
       },
       responseType: "json"
     })
@@ -196,6 +197,17 @@ export const UserIdentificationFlow = ({props, finalView}) => {
             placeholder="mail@domail.com"
             type="text"
             name="email"
+          />
+        </div>
+        <h4>
+          Referral Code
+        </h4>
+        <div className="field">
+          <input
+            ref={register()}
+            name="referral_token"
+            placeholder="Referral Token"
+            type="text"
           />
         </div>
         {is_phone_identified && (
