@@ -1,13 +1,13 @@
 "use strict";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Rails from "rails-ujs";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { ErrorMessage } from "shared/components";
 
-export const UserIdentificationFlow = ({props, successful_view}) => {
+export const UserIdentificationFlow = ({props, finalView}) => {
   const {
     name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm,
     phonetic_name, phonetic_last_name, phonetic_first_name, email, create_customer_info
@@ -96,18 +96,20 @@ export const UserIdentificationFlow = ({props, successful_view}) => {
         <h4>
           {name}
         </h4>
-        <input
-          ref={register({ required: true })}
-          name="last_name"
-          placeholder={last_name}
-          type="text"
-        />
-        <input
-          ref={register({ required: true })}
-          name="first_name"
-          placeholder={first_name}
-          type="text"
-        />
+        <div className="field">
+          <input
+            ref={register({ required: true })}
+            name="last_name"
+            placeholder={last_name}
+            type="text"
+          />
+          <input
+            ref={register({ required: true })}
+            name="first_name"
+            placeholder={first_name}
+            type="text"
+          />
+        </div>
         <h4>
           {phone_number}
         </h4>
@@ -209,7 +211,7 @@ export const UserIdentificationFlow = ({props, successful_view}) => {
 
   const render = () => {
     if ((watchIsUserMatched && is_phone_identified) || props.social_user.user_id) {
-      return successful_view
+      return finalView;
     }
     else {
       return (
@@ -233,4 +235,3 @@ export const UserIdentificationFlow = ({props, successful_view}) => {
 }
 
 export default UserIdentificationFlow;
-
