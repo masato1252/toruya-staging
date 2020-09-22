@@ -9,6 +9,16 @@ ja:
         reservations: "Reservations"
         customers: "Customers"
         settings: "Settings"
+    page:
+      user_sign_up:
+        shop_info:
+          postcode: 郵便番号
+          region: 都道府県
+          city: 市区町村
+          street1: 続き住所
+          street2: 建物名／部屋番号
+          location: 住所
+          save_btn: Save Shop info
   line:
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。

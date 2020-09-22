@@ -3,6 +3,10 @@ class ChangeLineUserRequiredColumns < ActiveRecord::Migration[5.2]
     add_column :booking_codes, :user_id, :integer
     add_column :users, :phone_number, :string
     add_column :profiles, :email, :string
+    add_column :profiles, :region, :string
+    add_column :profiles, :city, :string
+    add_column :profiles, :street1, :string
+    add_column :profiles, :street2, :string
     add_column :staff_accounts, :phone_number, :string
     change_column_null :notifications, :user_id, true
     change_column_null :users, :email, true

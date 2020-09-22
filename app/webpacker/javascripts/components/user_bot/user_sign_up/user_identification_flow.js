@@ -1,23 +1,31 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Rails from "rails-ujs";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { ErrorMessage } from "shared/components";
 
-export const UserIdentificationFlow = ({props, finalView}) => {
+export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
-    name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm,
+    name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
     phonetic_name, phonetic_last_name, phonetic_first_name, email, create_customer_info
-  } = props.i18n;
+  } = props.i18n.user_connect;
+  const { confirm } = props.i18n;
 
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm();
   const { isSubmitting } = formState;
   const [is_phone_identified, setPhoneIdentified] = useState(!!props.social_user.user_id)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
+
+  useEffect(() => {
+    if (props.social_user.user_id) {
+      next()
+    }
+  }, [])
+
 
   const generateCode = async (data) => {
     setValue("uuid", "");
@@ -189,7 +197,7 @@ export const UserIdentificationFlow = ({props, finalView}) => {
           />
         </div>
         <h4>
-          {phonetic_name}
+          {email}
         </h4>
         <div className="field">
           <input

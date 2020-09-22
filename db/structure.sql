@@ -1014,7 +1014,11 @@ CREATE TABLE public.profiles (
     company_zip_code character varying,
     company_address character varying,
     company_phone_number character varying,
-    email character varying
+    email character varying,
+    region character varying,
+    city character varying,
+    street1 character varying,
+    street2 character varying
 );
 
 

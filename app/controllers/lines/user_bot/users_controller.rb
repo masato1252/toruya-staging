@@ -55,4 +55,19 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       }
     end
   end
+
+  def create_shop_profile
+    user = Profiles::UpdateShopInfo.run!(
+      user: current_user,
+      params: {
+        zip_code: params[:zip_code],
+        region: params[:region],
+        city: params[:city],
+        street1: params[:street1],
+        street2: params[:street2]
+      }
+    )
+
+    head :ok
+  end
 end

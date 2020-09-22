@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get :generate_code
         get :identify_code
         post :create_user
+        post :create_shop_profile
       end
 
       resources :reservations, only: [:index] do

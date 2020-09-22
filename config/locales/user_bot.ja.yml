@@ -1,0 +1,29 @@
+ja:
+  user_bot:
+    user_sign_up:
+      user_connect:
+        name: お名前
+        last_name: 姓
+        first_name: 名
+        phonetic_name: ふりがな
+        phonetic_last_name: せい
+        phonetic_first_name: めい
+        email: メール
+        phone_number: 携帯電話
+        confirm_customer_info: 確認コード送信
+        create_customer_info: 保存してLINEと連携する
+        booking_code:
+          code: 確認コード
+          resend: コード再送
+        message:
+          booking_code_message: 携帯電話にお送りした確認コードを入力してください。
+          booking_code_failed_message: 確認コードが間違っています
+        successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。
+      shop_info:
+        postcode: 郵便番号
+        region: 都道府県
+        city: 市区町村
+        street1: 続き住所
+        street2: 建物名／部屋番号
+        location: 住所
+        save_btn: Save Shop info

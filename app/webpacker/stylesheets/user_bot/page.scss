@@ -19,6 +19,10 @@
   input[type="text"],
   input[type="tel"] {
     width: 45%;
+
+    &.expaned {
+      width: 80%;
+    }
   }
 
   input[type="submit"],
@@ -36,5 +40,9 @@
     .resend-row {
       margin-top: 9px;
     }
+  }
+
+  .field {
+    margin-top: 6px;
   }
 }

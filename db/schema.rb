@@ -354,6 +354,10 @@ ActiveRecord::Schema.define(version: 2020_09_17_065312) do
     t.string "company_address"
     t.string "company_phone_number"
     t.string "email"
+    t.string "region"
+    t.string "city"
+    t.string "street1"
+    t.string "street2"
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 

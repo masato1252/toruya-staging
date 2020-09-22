@@ -19,6 +19,10 @@
 #  company_address      :string
 #  company_phone_number :string
 #  email                :string
+#  region               :string
+#  city                 :string
+#  street1              :string
+#  street2              :string
 #
 # Indexes
 #
