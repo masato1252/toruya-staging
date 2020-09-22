@@ -34,7 +34,7 @@ module Users
         end
         compose(Users::BuildDefaultData, user: user)
         user.save(validate: false)
-        compose(SocialUsers::Connect, user: user, social_user: social_user)
+        compose(SocialUsers::Connect, user: user, social_user: social_user, change_rich_menu: false)
         compose(Profiles::Create, user: user, params: {
           last_name: last_name,
           first_name: first_name,
