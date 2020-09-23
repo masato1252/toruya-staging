@@ -152,7 +152,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             {message.booking_code_message}
           </div>
           <input
-            ref={register({ required: true })}
+            ref={register}
             name="code"
             className="booking-code"
             placeholder="012345"
@@ -245,7 +245,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(generateCode)}>
+    <form>
       {<input ref={register} name="user_id" type="hidden" />}
       {<input ref={register} name="uuid" type="hidden" />}
       {render()}
