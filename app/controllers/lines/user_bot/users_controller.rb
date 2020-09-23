@@ -6,7 +6,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   def sign_up; end
 
   def generate_code
-    identification_code = IdentificationCodes::CreateForUser.run!(
+    identification_code = IdentificationCodes::Create.run!(
       phone_number: params[:phone_number]
     )
 

@@ -182,7 +182,8 @@ CREATE TABLE public.booking_codes (
     reservation_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer
+    user_id integer,
+    phone_number character varying
 );
 
 
@@ -3742,6 +3743,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200824140936'),
 ('20200914033218'),
 ('20200914041742'),
-('20200917065312');
+('20200917065312'),
+('20200923093836');
 
 
