@@ -1,6 +1,8 @@
 require "line_client"
 
 class UserBotLines::MessageEvent < ActiveInteraction::Base
+  USER_SIGN_OUT = "usersignout".freeze
+
   hash :event, strip: false, default: nil
   object :social_user
 
@@ -15,6 +17,11 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
           readed: false,
           message_type: SocialUserMessage.message_types[:user]
         )
+
+        case event["message"]["text"].strip
+        when USER_SIGN_OUT
+          SocialUsers::Disconnect.run(social_user: social_user)
+        end
       else
         Rollbar.warning("Line chat room don't support message type", event: event)
 
