@@ -261,6 +261,9 @@ GEM
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jmespath (1.4.0)
+    js-routes (1.4.9)
+      railties (>= 4)
+      sprockets-rails
     jwt (2.1.0)
     kaminari (1.1.1)
       activesupport (>= 4.1.0)
@@ -575,6 +578,7 @@ DEPENDENCIES
   image_processing (~> 1.2)
   jbuilder
   jp_prefecture!
+  js-routes
   kaminari
   letter_opener (~> 1.4.1)
   line-bot-api

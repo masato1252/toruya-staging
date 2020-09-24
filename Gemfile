@@ -63,6 +63,7 @@ gem "redis"
 gem "fast_jsonapi"
 gem "serviceworker-rails"
 gem "webpush", require: false
+gem "js-routes"
 
 group :development, :test do
   gem "byebug", platform: :mri

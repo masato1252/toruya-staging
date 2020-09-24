@@ -1,10 +1,9 @@
 "use strict";
 
 import React, { useState, useEffect } from "react";
-import Rails from "rails-ujs";
 import { useForm } from "react-hook-form";
 import postal_code from "japan-postal-code";
-import axios from "axios";
+import { users } from "./api";
 
 export const UserShopInfo = ({props}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
@@ -24,22 +23,7 @@ export const UserShopInfo = ({props}) => {
   }
 
   const onSubmit = async (data) => {
-    const response = await axios({
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": Rails.csrfToken()
-      },
-      url: props.path.create_shop_profile,
-      data: {
-        zip_code: data.zip_code,
-        region: data.region,
-        city: data.city,
-        street1: data.street1,
-        street2: data.street2
-      },
-      responseType: "json"
-    })
-
+    const response = await users.createShop(data);
     if (response.status == 200) {
       setShopProfile(true)
     }

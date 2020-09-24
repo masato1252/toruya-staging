@@ -1,12 +1,6 @@
 <%= react_component("user_bot/user_sign_up", {
   social_user: social_user.attributes.slice("social_service_user_id", "user_id"),
   toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
-  path: {
-    generate_code: lines_user_bot_generate_code_path,
-    identify_code: lines_user_bot_identify_code_path,
-    create_user: lines_user_bot_create_user_path,
-    create_shop_profile: lines_user_bot_create_shop_profile_path
-  },
   i18n: {
   }.merge!([
     t("user_bot.user_sign_up"),

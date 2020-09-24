@@ -1,9 +1,8 @@
 "use strict";
 
 import React, { useState, useEffect } from "react";
-import Rails from "rails-ujs";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { identification_codes, users } from "./api";
 
 import { ErrorMessage } from "shared/components";
 
@@ -32,14 +31,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     setValue("code", "");
     clearErrors(["code"]);
 
-    const response = await axios({
-      method: "GET",
-      url: props.path.generate_code,
-      params: {
-        phone_number: data.phone_number
-      },
-      responseType: "json"
-    })
+    const response = await identification_codes.create(data);
 
     setValue("uuid", response.data.uuid)
     setValue("user_id", response.data.user_id)
@@ -48,17 +40,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   const identifyCode = async (data) => {
     clearErrors(["code"])
 
-    const response = await axios({
-      method: "GET",
-      url: props.path.identify_code,
-      params: {
-        phone_number: data.phone_number,
-        uuid: data.uuid,
-        code: data.code
-      },
-      responseType: "json"
-    })
-
+    const response = await identification_codes.identify(data);
     const {
       identification_successful,
     } = response.data;
@@ -73,25 +55,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   const createUser = async (data) => {
-    const response = await axios({
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": Rails.csrfToken()
-      },
-      url: props.path.create_user,
-      data: {
-        first_name: data.first_name,
-        last_name: data.last_name,
-        phone_number: data.phone_number,
-        email: data.email,
-        phonetic_last_name: data.phonetic_last_name,
-        phonetic_first_name: data.phonetic_first_name,
-        uuid: data.uuid,
-        referral_token: data.referral_token
-      },
-      responseType: "json"
-    })
-
+    const response = await users.create(data);
     const {
       user_id
     } = response.data;
