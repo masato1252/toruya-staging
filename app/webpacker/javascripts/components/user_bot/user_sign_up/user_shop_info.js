@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import postal_code from "japan-postal-code";
-import { users } from "./api";
+import { UsersServices } from "user_bot/api";
 
 export const UserShopInfo = ({props}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
@@ -23,7 +23,8 @@ export const UserShopInfo = ({props}) => {
   }
 
   const onSubmit = async (data) => {
-    const response = await users.createShop(data);
+    const [error, response] = await UsersServices.createShop(data);
+
     if (response.status == 200) {
       setShopProfile(true)
     }

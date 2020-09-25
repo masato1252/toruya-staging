@@ -1,10 +1,10 @@
-import axios from "axios";
 import Rails from "rails-ujs";
 import _ from "lodash";
+import request from "libraries/request";
 
-const identification_codes = {
+const IdentificationCodesServices = {
   create: (data) => {
-    return axios({
+    return request({
       method: "GET",
       url: Routes.lines_user_bot_generate_code_path(),
       params: {
@@ -14,7 +14,7 @@ const identification_codes = {
     })
   },
   identify: (data) => {
-    return axios({
+    return request({
       method: "GET",
       url: Routes.lines_user_bot_identify_code_path(),
       params: _.pick(data, ['phone_number', 'uuid', 'code']),
@@ -23,9 +23,9 @@ const identification_codes = {
   }
 }
 
-const users = {
+const UsersServices = {
   create: (data) => {
-    return axios({
+    return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
@@ -36,7 +36,7 @@ const users = {
     })
   },
   createShop: (data) => {
-    return axios({
+    return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
@@ -49,6 +49,6 @@ const users = {
 }
 
 export {
-  identification_codes,
-  users
+  IdentificationCodesServices,
+  UsersServices
 }

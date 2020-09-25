@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { identification_codes, users } from "./api";
+import { IdentificationCodesServices, UsersServices } from "user_bot/api";
 
 import { ErrorMessage } from "shared/components";
 
@@ -31,7 +31,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     setValue("code", "");
     clearErrors(["code"]);
 
-    const response = await identification_codes.create(data);
+    const [error, response] = await IdentificationCodesServices.create(data);
 
     setValue("uuid", response.data.uuid)
     setValue("user_id", response.data.user_id)
@@ -40,7 +40,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   const identifyCode = async (data) => {
     clearErrors(["code"])
 
-    const response = await identification_codes.identify(data);
+    const [error, response] = await IdentificationCodesServices.identify(data);
     const {
       identification_successful,
     } = response.data;
@@ -55,7 +55,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   const createUser = async (data) => {
-    const response = await users.create(data);
+    const [error, response] = await UsersServices.create(data);
     const {
       user_id
     } = response.data;
