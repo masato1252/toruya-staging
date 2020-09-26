@@ -36,6 +36,8 @@ module Booking
 
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
+          # Remember to add more connections for activerecord
+          # https://www.joshbeckman.org/2020/05/09/cleaning-up-ruby-threads-and-activerecord-connections/
           # if true || Rails.env.test?
             special_dates.map do |raw_special_date|
               json_parsed_date = JSON.parse(raw_special_date)
