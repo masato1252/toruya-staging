@@ -49,7 +49,7 @@ export const UserShopInfo = ({props}) => {
             ref={register({ required: true })}
             name="zip_code"
             placeholder={postcode}
-            type="text"
+            type="tel"
             onChange={changeZipCode}
           />
         </div>
