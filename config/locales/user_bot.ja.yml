@@ -26,4 +26,8 @@ ja:
         street1: 続き住所
         street2: 建物名／部屋番号
         location: 住所
-        save_btn: Save Shop info
+        page_title: ユーザー登録
+        save_btn: ユーザー登録を完了
+        successful_message_html: <p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>WEBプロモーションを始めましょう。
+      line:
+        successful_message: "ユーザー登録ありがとうございました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"

@@ -8,8 +8,8 @@ import { UsersServices } from "user_bot/api";
 export const UserShopInfo = ({props}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
   const { isSubmitting } = formState;
-  const [is_shop_profile_created, setShopProfile] = useState(false)
-  const { postcode, region, city, street1, street2, location, save_btn } = props.i18n.shop_info;
+  const [is_shop_profile_created, setShopProfile] = useState(props.is_shop_profile_created)
+  const { postcode, region, city, street1, street2, location, page_title, save_btn, successful_message_html } = props.i18n.shop_info;
 
   const changeZipCode = (e) => {
     setValue("zip_code", e.target.value)
@@ -33,13 +33,16 @@ export const UserShopInfo = ({props}) => {
   if (is_shop_profile_created) {
     return (
       <div className="whole-page-center final">
-        <div>Done</div>
+        <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
       </div>
     )
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h2 className="centerize">
+        {page_title}
+      </h2>
       <div className="customer-type-options">
         <h4>
           {postcode}

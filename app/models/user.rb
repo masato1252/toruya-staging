@@ -77,11 +77,13 @@ class User < ApplicationRecord
   has_many :social_accounts
   has_many :social_customers
   has_one :business_application
+  has_one :social_user
   has_many :web_push_subscriptions
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
   delegate :current_plan, to: :subscription
+  delegate :social_service_user_id, to: :social_user, allow_nil: true
 
   def super_admin?
     ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].include?(email)

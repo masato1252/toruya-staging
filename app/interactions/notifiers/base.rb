@@ -1,6 +1,13 @@
+require "line_client"
+
 module Notifiers
   class Base < ActiveInteraction::Base
     class << self
+      # @deliver_by_priority would try to use one of the way to notify users base on the priority
+      # Note: Need to proivde the mailer and mailer_method option when delivered by email
+      #
+      # Examples:
+      # deliver_by_priority [:sms, :email], mailer: NotificationMailer, mailer_method: :activate_staff_account
       def deliver_by_priority(notifiers, *args)
         options = args.extract_options!
 
@@ -9,6 +16,11 @@ module Notifiers
         self.mailer_method = options[:mailer_method]
       end
 
+      # deliver_by :{deliver_solution} would use the way dine to notify users
+      #
+      # deliver_by :line
+      # deliver_by :sms
+      # deliver_by :email, mailer: NotificationMailer, mailer_method: :activate_staff_account
       def deliver_by(notifier, *args)
         options = args.extract_options!
 
@@ -59,6 +71,7 @@ module Notifiers
     end
 
     def send_line
+      LineClient.send(receiver, message)
     end
 
     def send_sms
@@ -76,6 +89,7 @@ module Notifiers
     end
 
     def line?
+      receiver.try(:social_service_user_id).present?
     end
 
     def sms?

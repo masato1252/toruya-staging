@@ -25,6 +25,12 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (watchIsUserMatched && is_phone_identified) {
+      next()
+    }
+  }, [watchIsUserMatched, is_phone_identified])
+
 
   const generateCode = async (data) => {
     setValue("uuid", "");
@@ -194,18 +200,13 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
   }
 
   const render = () => {
-    if ((watchIsUserMatched && is_phone_identified) || props.social_user.user_id) {
-      return finalView;
-    }
-    else {
-      return (
-        <>
-          {renderUserBasicFields()}
-          {renderIdentificationCode()}
-          {renderNewCustomerFields()}
-        </>
-      )
-    }
+    return (
+      <>
+        {renderUserBasicFields()}
+        {renderIdentificationCode()}
+        {renderNewCustomerFields()}
+      </>
+    )
   }
 
   return (
