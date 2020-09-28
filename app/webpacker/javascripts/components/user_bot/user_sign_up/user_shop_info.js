@@ -8,8 +8,16 @@ import { UsersServices } from "user_bot/api";
 export const UserShopInfo = ({props}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
   const { isSubmitting } = formState;
-  const [is_shop_profile_created, setShopProfile] = useState(props.is_shop_profile_created)
+  const [is_shop_profile_created, setShopProfile] = useState(false)
+  const [is_shop_profile_checked, setCheckShopProfile] = useState(false)
   const { postcode, region, city, street1, street2, location, page_title, save_btn, successful_message_html } = props.i18n.shop_info;
+
+  useEffect(async () => {
+    const [error, response] = await UsersServices.checkShop()
+
+    setShopProfile(response.data.is_shop_profile_created)
+    setCheckShopProfile(true)
+  }, [])
 
   const changeZipCode = (e) => {
     setValue("zip_code", e.target.value)
@@ -28,6 +36,10 @@ export const UserShopInfo = ({props}) => {
     if (response.status == 200) {
       setShopProfile(true)
     }
+  }
+
+  if (!is_shop_profile_checked) {
+    return <></>
   }
 
   if (is_shop_profile_created) {

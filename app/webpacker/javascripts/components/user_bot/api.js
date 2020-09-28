@@ -13,11 +13,11 @@ const IdentificationCodesServices = {
       responseType: "json"
     })
   },
-  identify: (data) => {
+  identify: (params) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_identify_code_path(),
-      params: _.pick(data, ['phone_number', 'uuid', 'code']),
+      params: params,
       responseType: "json"
     })
   }
@@ -43,6 +43,13 @@ const UsersServices = {
       },
       url: Routes.lines_user_bot_create_shop_profile_path(),
       data: _.pick(data, ['zip_code', 'region', 'city', 'street1', 'street2']),
+      responseType: "json"
+    })
+  },
+  checkShop: () => {
+    return request({
+      method: "GET",
+      url: Routes.lines_user_bot_check_shop_profile_path(),
       responseType: "json"
     })
   }

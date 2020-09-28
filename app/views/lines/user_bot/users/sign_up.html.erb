@@ -1,6 +1,5 @@
 <%= react_component("user_bot/user_sign_up", {
   social_user: social_user.attributes.slice("social_service_user_id", "user_id"),
-  is_shop_profile_created: current_user&.profile&.address&.present?,
   toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
   i18n: {
   }.merge!([

@@ -10,9 +10,13 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       phone_number: params[:phone_number]
     )
 
+    # HARUKO_TODO: Need to change the message
     render json: {
       uuid: identification_code.uuid,
-      user_id: User.find_by(phone_number: params[:phone_number])&.id
+      user_id: User.find_by(phone_number: params[:phone_number])&.id,
+      errors: {
+        message: "Couldn't find this phone number"
+      }
     }
   end
 
@@ -70,5 +74,9 @@ class Lines::UserBot::UsersController < Lines::UserBotController
     )
 
     head :ok
+  end
+
+  def check_shop_profile
+    render json: { is_shop_profile_created: current_user&.profile.address&.present? }
   end
 end
