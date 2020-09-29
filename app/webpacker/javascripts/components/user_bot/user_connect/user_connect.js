@@ -22,7 +22,7 @@ export const UserConnect = ({props, next}) => {
   const watchIsIdentificationCodeExists = watch("uuid")
 
   useEffect(() => {
-    if (props.social_user.user_id) {
+    if (props.is_user_logged_in) {
       next()
     }
   }, [])

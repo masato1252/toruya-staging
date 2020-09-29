@@ -37,9 +37,12 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       booking_code.update!(user_id: user.id)
     end
 
+    write_user_bot_cookies(:current_user_id, user.id)
+
     render json: { user_id: user.id }
   end
 
+  # It is login in behavior, either
   def identify_code
     identification_code = IdentificationCodes::VerifyUser.run!(
       social_user: social_user,
@@ -49,6 +52,10 @@ class Lines::UserBot::UsersController < Lines::UserBotController
     )
 
     if identification_code
+      if social_user.user
+        write_user_bot_cookies(:current_user_id, social_user.user_id)
+      end
+
       render json: { identification_successful: true }
     else
       render json: {
@@ -77,6 +84,6 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def check_shop_profile
-    render json: { is_shop_profile_created: current_user&.profile.address&.present? }
+    render json: { is_shop_profile_created: current_user&.profile&.address&.present? }
   end
 end

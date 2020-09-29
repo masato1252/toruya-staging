@@ -1,4 +1,4 @@
-class Lines::UserBot::ReservationsController < Lines::UserBotController
+class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   def index
     head :ok
   end

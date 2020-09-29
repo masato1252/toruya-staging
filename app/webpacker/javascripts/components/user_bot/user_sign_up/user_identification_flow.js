@@ -15,12 +15,12 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
 
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm();
   const { isSubmitting } = formState;
-  const [is_phone_identified, setPhoneIdentified] = useState(!!props.social_user.user_id)
+  const [is_phone_identified, setPhoneIdentified] = useState(!!props.is_user_logged_in)
   const watchIsUserMatched = watch("user_id")
   const watchIsIdentificationCodeExists = watch("uuid")
 
   useEffect(() => {
-    if (props.social_user.user_id) {
+    if (props.is_user_logged_in) {
       next()
     }
   }, [])

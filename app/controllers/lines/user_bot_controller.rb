@@ -20,7 +20,23 @@ class Lines::UserBotController < ActionController::Base
   end
 
   def current_user
-    @current_user ||= social_user.user
+    # XXX: for security, one the user pass the phone number identification able to set the current_user_id,
+    # So even the line user id was stolen, it still useless for our main feature, they only could access
+    # the guest feature(sign in or sign up)
+    @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
+
+    if @current_user && social_user.user && @current_user.id != social_user.user_id
+      Rollbar.warning(
+        "Unmatch user id from user bot",
+        params: {
+          social_service_user_id: @social_user.social_service_user_id,
+          user_id: @current_user&.id,
+          social_user_user_id: social_user.user_id
+        }
+      )
+    end
+
+    @current_user
   end
   helper_method :current_user
 end
