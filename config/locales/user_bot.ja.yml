@@ -1,6 +1,7 @@
 ja:
   user_bot:
     guest:
+      rich_menu_bar: ユーザーメニュー
       user_sign_up:
         page_title: ユーザー登録
         name: お名前

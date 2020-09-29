@@ -3,7 +3,7 @@ module Notifiers
     deliver_by :line
 
     def message
-      I18n.t("user_bot.user_sign_up.line.successful_message")
+      I18n.t("user_bot.guest.user_sign_up.line.successful_message")
     end
   end
 end

@@ -13,7 +13,7 @@ module UserBotLines
           },
           "selected": true,
           "name": KEY,
-          "chatBarText": "Dashboard",
+          "chatBarText": I18n.t("user_bot.guest.rich_menu_bar"),
           "areas": [
             {
               "bounds": {

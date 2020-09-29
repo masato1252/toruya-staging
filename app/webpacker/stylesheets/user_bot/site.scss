@@ -115,6 +115,10 @@ a {
   justify-content: center;
   height: 100%;
   flex-direction: column;
+
+  &.final {
+    height: 50%;
+  }
 }
 
 .required-label {

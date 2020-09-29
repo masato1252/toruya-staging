@@ -6,8 +6,6 @@ module UserBotLines
       KEY = "user_guest".freeze
 
       def execute
-        sentence = I18n.t("toruya_line.actions.label.sign_up")
-
         body = {
           "size": {
             "width": 2500,
@@ -15,7 +13,7 @@ module UserBotLines
           },
           "selected": true,
           "name": KEY,
-          "chatBarText": sentence,
+          "chatBarText": I18n.t("user_bot.guest.rich_menu_bar"),
           "areas": [
             {
               "bounds": {
