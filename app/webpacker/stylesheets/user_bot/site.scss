@@ -7,11 +7,13 @@
 
 html {
   scroll-behavior: smooth;
+  height:100%;
 }
 
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   background: $gray10;
+  height:100%;
 }
 
 .display-hidden {
@@ -20,12 +22,12 @@ body {
 
 .mobile-content {
   background-color: #FFFFFF;
-  min-height: 630px;
   padding: 12px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   width: 100%; // mobile
+  flex: 1 1 auto;
 
   @include media-breakpoint-up(tablet) {
     width: 500px;
@@ -42,6 +44,7 @@ body {
   text-align: center;
   font-size: 12px;
   color: $gray8;
+  flex: 0 1 40px;
 
   @include media-breakpoint-up(tablet) {
     width: 500px;
@@ -112,4 +115,14 @@ a {
   justify-content: center;
   height: 100%;
   flex-direction: column;
+}
+
+.required-label {
+  color: #fff;
+  background: #CF0003;
+  display: inline-block;
+  font-size: 10px;
+  padding: 3px 5px;
+  margin-left: 10px;
+  border-radius: 5px;
 }

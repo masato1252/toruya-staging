@@ -1,48 +1,54 @@
-.user-bot-content {
-  .header {
-    margin-top: 12px;
-    margin-bottom: 12px;
+.responsive-content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
 
-    .header-title-part {
-      h1 {
-        margin: 20px 0 10px;
+  .user-bot-content {
+    .header {
+      margin-top: 12px;
+      margin-bottom: 12px;
+
+      .header-title-part {
+        h1 {
+          margin: 20px 0 10px;
+        }
+      }
+
+      .logo {
+        width: 130px;
+        height: auto;
+        max-height: 45px;
       }
     }
 
-    .logo {
-      width: 130px;
-      height: auto;
-      max-height: 45px;
-    }
-  }
+    input[type="text"],
+    input[type="tel"] {
+      width: 45%;
 
-  input[type="text"],
-  input[type="tel"] {
-    width: 45%;
-
-    &.expaned {
-      width: 80%;
-    }
-  }
-
-  input[type="submit"],
-  a.submit {
-    margin-top: 12px;
-  }
-
-  .customer-type-options {
-    margin-top: 40px;
-
-    .desc {
-      margin-bottom: 9px;
+      &.expaned {
+        width: 80%;
+      }
     }
 
-    .resend-row {
-      margin-top: 9px;
+    input[type="submit"],
+    a.submit {
+      margin-top: 12px;
     }
-  }
 
-  .field {
-    margin-top: 6px;
+    .customer-type-options {
+      margin-top: 40px;
+
+      .desc {
+        margin-bottom: 9px;
+      }
+
+      .resend-row {
+        margin-top: 9px;
+      }
+    }
+
+    .field {
+      margin-top: 6px;
+    }
   }
 }

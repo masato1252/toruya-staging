@@ -17,7 +17,14 @@ export const UserSignUp = (props) => {
       </div>
       <FlowController>
         { (next, _) => <UserIdentificationFlow props={props} next={next} /> }
-        { (_, prev) => <UserShopInfo props={props} /> }
+        { (_, prev) => <UserShopInfo
+          props={props}
+          finalView={
+            <div className="whole-page-center final">
+              <div dangerouslySetInnerHTML={{ __html: props.i18n.user_sign_up.message.successful_message_html }} />
+            </div>}
+          />
+        }
       </FlowController>
     </>
   )

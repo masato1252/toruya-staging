@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IdentificationCodesServices, UsersServices } from "user_bot/api";
 
-import { ErrorMessage } from "shared/components";
+import { ErrorMessage, RequiredLabel } from "shared/components";
 
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
-    name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
-    phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info
-  } = props.i18n.user_connect;
-  const { confirm } = props.i18n;
+    page_title, name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
+    phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder
+  } = props.i18n.user_sign_up;
+  const { confirm, required_label } = props.i18n;
 
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState } = useForm();
   const { isSubmitting } = formState;
@@ -73,7 +73,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     return (
       <div className="customer-type-options">
         <h4>
-          {name}
+          <RequiredLabel label={name} required_label={required_label} />
         </h4>
         <div className="field">
           <input
@@ -90,7 +90,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           />
         </div>
         <h4>
-          {phone_number}
+          <RequiredLabel label={phone_number} required_label={required_label} />
         </h4>
         <input
           ref={register({ required: true })}
@@ -150,7 +150,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     return (
       <>
         <h4>
-          {phonetic_name}
+          <RequiredLabel label={phonetic_name} required_label={required_label} />
         </h4>
         <div className="field">
           <input
@@ -167,13 +167,13 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           />
         </div>
         <h4>
-          Referral Code
+          {referral_code_title}
         </h4>
         <div className="field">
           <input
             ref={register()}
             name="referral_token"
-            placeholder="Referral Token"
+            placeholder={referral_code_placeholder}
             type="text"
           />
         </div>
@@ -202,6 +202,9 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     <form>
       {<input ref={register} name="user_id" type="hidden" />}
       {<input ref={register} name="uuid" type="hidden" />}
+      <h2 className="centerize">
+        {page_title}
+      </h2>
       {render()}
     </form>
   )

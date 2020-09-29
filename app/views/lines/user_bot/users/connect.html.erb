@@ -3,8 +3,9 @@
   toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
   i18n: {
   }.merge!([
-    t("user_bot.user_sign_up"),
+    t("user_bot.guest"),
     t("action").slice(:confirm),
+    t("common").slice(:required_label)
   ].inject(:merge!)),
 },
 { camelize_props: false }

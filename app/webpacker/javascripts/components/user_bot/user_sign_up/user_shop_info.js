@@ -4,19 +4,25 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import postal_code from "japan-postal-code";
 import { UsersServices } from "user_bot/api";
+import { RequiredLabel } from "shared/components";
 
-export const UserShopInfo = ({props}) => {
+export const UserShopInfo = ({props, finalView}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
   const { isSubmitting } = formState;
   const [is_shop_profile_created, setShopProfile] = useState(false)
   const [is_shop_profile_checked, setCheckShopProfile] = useState(false)
   const { postcode, region, city, street1, street2, location, page_title, save_btn, successful_message_html } = props.i18n.shop_info;
+  const { required_label } = props.i18n;
 
-  useEffect(async () => {
-    const [error, response] = await UsersServices.checkShop()
+  useEffect(() => {
+    const checkShop = async () => {
+      const [error, response] = await UsersServices.checkShop()
 
-    setShopProfile(response.data.is_shop_profile_created)
-    setCheckShopProfile(true)
+      setShopProfile(response.data.is_shop_profile_created)
+      setCheckShopProfile(true)
+    }
+
+    checkShop()
   }, [])
 
   const changeZipCode = (e) => {
@@ -43,11 +49,7 @@ export const UserShopInfo = ({props}) => {
   }
 
   if (is_shop_profile_created) {
-    return (
-      <div className="whole-page-center final">
-        <div dangerouslySetInnerHTML={{ __html: successful_message_html }} />
-      </div>
-    )
+    return finalView
   }
 
   return (
@@ -57,7 +59,7 @@ export const UserShopInfo = ({props}) => {
       </h2>
       <div className="customer-type-options">
         <h4>
-          {postcode}
+          <RequiredLabel label={postcode} required_label={required_label} />
         </h4>
         <div className="field">
           <input
@@ -69,7 +71,7 @@ export const UserShopInfo = ({props}) => {
           />
         </div>
         <h4>
-          {location}
+          <RequiredLabel label={location} required_label={required_label} />
         </h4>
         <div className="field">
           <input

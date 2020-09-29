@@ -15,7 +15,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       uuid: identification_code.uuid,
       user_id: User.find_by(phone_number: params[:phone_number])&.id,
       errors: {
-        message: "Couldn't find this phone number"
+        message: I18n.t("user_bot.user_connect.message.unmatch_phone_number")
       }
     }
   end

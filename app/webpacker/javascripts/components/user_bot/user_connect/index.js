@@ -17,7 +17,14 @@ export const UserConnectFlow = (props) => {
       </div>
       <FlowController>
         { (next, _) => <UserConnect props={props} next={next} /> }
-        { (_, prev) => <UserShopInfo props={props} /> }
+        { (_, prev) => <UserShopInfo
+          props={props}
+          finalView={
+            <div className="whole-page-center final">
+              <div dangerouslySetInnerHTML={{ __html: props.i18n.user_connect.message.successful_message_html  }} />
+            </div>}
+          />
+        }
       </FlowController>
     </>
   )

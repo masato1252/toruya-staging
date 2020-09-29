@@ -14,12 +14,14 @@
   </head>
 
   <body>
-    <div class="user-bot-content mobile-content">
-      <%= yield %>
+    <div class="responsive-content">
+      <div class="user-bot-content mobile-content">
+        <%= yield %>
 
-    </div>
-    <div class="footer" id="footer">
-      Powered by <%= link_to "Toruya", "https://toruya.com" %>
+      </div>
+      <div class="footer" id="footer">
+        Powered by <%= link_to "Toruya", "https://toruya.com" %>
+      </div>
     </div>
   </body>
 </html>

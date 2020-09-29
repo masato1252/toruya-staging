@@ -21,7 +21,7 @@ module IdentificationCodes
         compose(
           Sms::Create,
           user: user,
-          message: "#{message}\n#{I18n.t("customer.notifications.noreply")}",
+          message: "Toruya\n#{message}\n#{I18n.t("customer.notifications.noreply")}",
           phone_number: phone_number
         )
 

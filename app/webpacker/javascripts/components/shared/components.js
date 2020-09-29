@@ -115,6 +115,15 @@ const DragHandle = sortableHandle(() => (
   </span>
 ));
 
+const RequiredLabel = ({label, required_label}) => {
+  return (
+    <>
+      <span>{label}</span>
+      <span className="required-label">{required_label}</span>
+    </>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -124,4 +133,5 @@ export {
   Condition,
   ErrorMessage,
   DragHandle,
+  RequiredLabel
 };
