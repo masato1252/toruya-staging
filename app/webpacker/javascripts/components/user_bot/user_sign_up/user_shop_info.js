@@ -65,7 +65,7 @@ export const UserShopInfo = ({props, finalView}) => {
           <input
             ref={register({ required: true })}
             name="zip_code"
-            placeholder={postcode}
+            placeholder="1234567"
             type="tel"
             onChange={changeZipCode}
           />
