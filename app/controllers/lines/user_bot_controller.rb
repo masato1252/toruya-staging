@@ -4,7 +4,7 @@ class Lines::UserBotController < ActionController::Base
   include UserBotCookies
 
   protect_from_forgery with: :exception, prepend: true
-  layout "user_bot"
+  layout "user_bot_guest"
   attr_reader :social_user
   helper_method :social_user
 

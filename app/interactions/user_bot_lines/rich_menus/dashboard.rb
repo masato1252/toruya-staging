@@ -24,7 +24,7 @@ module UserBotLines
               },
               "action": LineMessages::Uri.template(
                 label: I18n.t("toruya_line.actions.label.reservations"),
-                url: LiffRouting.liff_url(:reservations)
+                url: LiffRouting.liff_url(:schedules)
               )
             },
             {

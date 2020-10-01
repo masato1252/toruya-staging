@@ -1,4 +1,13 @@
 module ReservationsHelper
+  def customer_names_sentence(reservation)
+    customer_names = reservation.customers.map(&:name)
+    if customer_names.count > 1
+      "#{customer_names.first} +#{customer_names.count - 1}"
+    else
+      customer_names.first
+    end
+  end
+
   def reservation_staff_sentences(reservation)
     in_future_or_today = reservation.start_time.to_date >= Date.current
     reservation_staffs = reservation.staffs.to_a

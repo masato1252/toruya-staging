@@ -1,3 +1,5 @@
+require "site_routing"
+
 class NotificationsPresenter
   attr_reader :current_user, :h, :reservations_approvement_flow
   delegate :link_to, to: :h
@@ -9,13 +11,22 @@ class NotificationsPresenter
   end
 
   def data
-    Array.wrap(new_pending_reservations) +
-      Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
-      Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
-      new_staff_accounts +
-      empty_reservation_setting_users +
-      empty_menu_shops +
-      Array(basic_settings_tour)
+    if h.from_line_bot
+      Array.wrap(new_pending_reservations) +
+        Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
+        Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
+        new_staff_accounts +
+        empty_reservation_setting_users +
+        empty_menu_shops
+    else
+      Array.wrap(new_pending_reservations) +
+        Notifications::PendingCustomerReservationsPresenter.new(h, current_user).data +
+        Notifications::NonGroupCustomersPresenter.new(h, current_user).data +
+        new_staff_accounts +
+        empty_reservation_setting_users +
+        empty_menu_shops +
+        Array(basic_settings_tour)
+    end
   end
 
   def recent_pending_reservations
@@ -53,17 +64,17 @@ class NotificationsPresenter
         end
 
         if previous_reservation_id
-          previous_path = h.date_member_path(reservations[matched_index - 1].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
+          previous_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index - 1].start_time.to_s(:date), previous_reservation_id, popup_disabled: true)
         end
 
         if next_reservation_id
-          next_path = h.date_member_path(reservations[matched_index + 1].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
+          next_path = SiteRouting.new(h).schedule_date_path(reservations[matched_index + 1].start_time.to_s(:date), next_reservation_id, popup_disabled: true)
         end
       else
         oldest_res = recent_pending_reservations.first&.reservation
 
         text = I18n.t("notifications.pending_reservation_confirm")
-        path = h.date_member_path(oldest_res.start_time.to_s(:date), oldest_res.id, popup_disabled: true)
+        path = SiteRouting.new(h).schedule_date_path(oldest_res.start_time.to_s(:date), oldest_res.id, popup_disabled: true)
       end
 
       if path
@@ -82,7 +93,7 @@ class NotificationsPresenter
 
   def new_staff_accounts
     Staff.where(user: current_user).active_without_data.includes(:staff_account).map do |staff|
-      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), h.edit_settings_user_staff_path(current_user, staff, shop_id: current_user.shop_ids.first))}" if h.ability(staff.user).can?(:edit, staff)
+      "#{I18n.t("settings.staff_account.new_staff_active")} #{link_to(I18n.t("settings.staff_account.staff_setting"), SiteRouting.new(h).edit_settings_user_staff_path(current_user, staff, current_user.shop_ids.first))}" if h.ability(staff.user).can?(:edit, staff)
     end.compact
   end
 

@@ -31,7 +31,7 @@ class LiffRouting
   # the liff_path value might be in params[:liff_path] or params["liff.state"]
   map :users_connect, :lines_user_bot_connect_user_url
   map :users_sign_up, :lines_user_bot_sign_up_url
-  map :reservations, :lines_user_bot_reservations_url
+  map :schedules, :lines_user_bot_schedules_url
   map :customers, :lines_user_bot_customers_url
   map :settings, :lines_user_bot_settings_url
 end

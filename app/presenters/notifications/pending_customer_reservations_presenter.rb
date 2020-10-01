@@ -5,7 +5,7 @@ module Notifications
       oldest_reservation = oldest_customer_reservation&.reservation
 
       oldest_reservation ? [
-        "#{I18n.t("notifications.pending_customer_reservation_need_confirm", number: recent_pending_customer_reservations.count)} #{link_to(I18n.t("notifications.pending_customer_reservation_confirm"), h.form_shop_reservations_path(oldest_reservation.shop, oldest_reservation.id))}"
+        "#{I18n.t("notifications.pending_customer_reservation_need_confirm", number: recent_pending_customer_reservations.count)} #{link_to(I18n.t("notifications.pending_customer_reservation_confirm"), SiteRouting.new(h).reservation_form_path(oldest_reservation))}"
       ] : []
     end
 

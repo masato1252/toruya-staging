@@ -6,7 +6,7 @@ const IdentificationCodesServices = {
   create: (data) => {
     return request({
       method: "GET",
-      url: Routes.lines_user_bot_generate_code_path(),
+      url: Routes.lines_user_bot_generate_code_path({format: "json"}),
       params: {
         phone_number: data.phone_number
       },
@@ -16,7 +16,7 @@ const IdentificationCodesServices = {
   identify: (params) => {
     return request({
       method: "GET",
-      url: Routes.lines_user_bot_identify_code_path(),
+      url: Routes.lines_user_bot_identify_code_path({format: "json"}),
       params: params,
       responseType: "json"
     })
@@ -30,7 +30,7 @@ const UsersServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_create_user_path(),
+      url: Routes.lines_user_bot_create_user_path({format: "json"}),
       data: _.pick(data, ['first_name', 'last_name', 'phone_number', 'email', 'phonetic_last_name', 'phonetic_first_name', 'uuid', 'referral_token']),
       responseType: "json"
     })
@@ -41,7 +41,7 @@ const UsersServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_create_shop_profile_path(),
+      url: Routes.lines_user_bot_create_shop_profile_path({format: "json"}),
       data: _.pick(data, ['zip_code', 'region', 'city', 'street1', 'street2']),
       responseType: "json"
     })
@@ -49,11 +49,12 @@ const UsersServices = {
   checkShop: () => {
     return request({
       method: "GET",
-      url: Routes.lines_user_bot_check_shop_profile_path(),
+      url: Routes.lines_user_bot_check_shop_profile_path({format: "json"}),
       responseType: "json"
     })
   }
 }
+
 
 export {
   IdentificationCodesServices,

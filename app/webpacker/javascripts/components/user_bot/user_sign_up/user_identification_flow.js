@@ -148,7 +148,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
     if (watchIsUserMatched || !is_phone_identified) return;
 
     return (
-      <>
+      <div className="customer-type-options">
         <h4>
           <RequiredLabel label={phonetic_name} required_label={required_label} />
         </h4>
@@ -184,7 +184,7 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
             </a>
           </div>
         )}
-      </>
+      </div>
     )
   }
 

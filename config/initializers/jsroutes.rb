@@ -1,3 +1,3 @@
 JsRoutes.setup do |config|
-  config.default_url_options = { format: "json", protocol: "https" }
+  config.default_url_options = { protocol: "https" }
 end

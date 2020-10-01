@@ -1,12 +1,5 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
-
-  resource :member, only: [:show] do
-    get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
-  end
-  post "member", to: "members#show"
-
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/(:social_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get :find_customer
@@ -29,25 +22,63 @@ Rails.application.routes.draw do
         get :check_shop_profile
       end
 
-      resources :reservations, only: [:index] do
+      resources :schedules, only: [:index] do
         collection do
-          get "/:social_service_user_id", action: "index"
+          get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+        end
+      end
+
+      resources :calendars, only: [] do
+        collection do
+          get "personal_working_schedule"
         end
       end
 
       resources :customers, only: [:index] do
         collection do
-          get "/:social_service_user_id", action: "index"
         end
       end
 
       resources :settings, only: [:index] do
         collection do
-          get "/:social_service_user_id", action: "index"
         end
+      end
+
+      resources :reservations, except: [:index, :edit, :new] do
+        collection do
+          post :validate
+          post :add_customer
+          get "form/(:id)", action: :form, as: :form
+        end
+
+        scope module: "reservations" do
+          resource :states, only: [] do
+            get :pend
+            get :accept
+            get :accept_in_group
+            get :check_in
+            get :check_out
+            get :cancel
+          end
+        end
+      end
+
+      resources :custom_schedules, only: [:create, :update, :destroy]
+
+      namespace :settings do
+        resources :staffs, only: [:edit]
+        resources :reservation_settings, except: [:show]
+        resources :menus, except: [:show]
       end
     end
   end
+
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
+
+  resource :member, only: [:show] do
+    get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+  end
+  post "member", to: "members#show"
 
   resources :users, only: [] do
     resources :customers, only: [:index] do

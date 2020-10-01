@@ -14,6 +14,11 @@ class DashboardController < ActionController::Base
   before_action :set_paper_trail_whodunnit
   before_action :sync_user
 
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
+
   private
 
   def profile_required

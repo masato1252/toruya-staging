@@ -13,6 +13,7 @@ html {
 body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   background: $gray10;
+  color: #555;
   height:100%;
 }
 
@@ -21,6 +22,7 @@ body {
 }
 
 .mobile-content {
+  position: relative;
   background-color: #FFFFFF;
   padding: 12px;
   margin-left: auto;
@@ -28,6 +30,10 @@ body {
   margin-top: 0;
   width: 100%; // mobile
   flex: 1 1 auto;
+
+  &.extend {
+    padding: 0;
+  }
 
   @include media-breakpoint-up(tablet) {
     width: 500px;
@@ -50,11 +56,12 @@ body {
     width: 500px;
   }
 }
-
+input[type="time"],
 input[type="text"],
 input[type="tel"],
 input[type="email"],
-input[type="number"] {
+input[type="number"],
+.DayPickerInput input {
   padding: 10px;
   color: $black;
   line-height: 15px;
@@ -62,6 +69,7 @@ input[type="number"] {
   background-color: $palette-color6;
   border-radius: 4px;
   margin: 0 3px;
+  padding: 8px;
 }
 
 select {
@@ -73,23 +81,21 @@ select {
   border-radius: 4px;
 }
 
-h4 {
-  margin-top: 12px;
-  margin-bottom: 12px;
-  color: $black;
-  font-size: 14px;
-}
-
 .centerize {
   text-align: center;
 }
 
 a {
   color: $palette-color2;
+  text-decoration: none;
 }
 
 .warning {
   color: $warning !important;
+}
+
+.danger {
+  color: $danger !important;
 }
 
 .field-error-message {
@@ -129,4 +135,82 @@ a {
   padding: 3px 5px;
   margin-left: 10px;
   border-radius: 5px;
+}
+
+.state,
+.reservation-state
+{
+  &.reserved {
+    background-color: $palette-color2-1;
+    border-color: $palette-color2-2;
+  }
+
+  &.checked_out {
+    background-color: $gray5;
+    border: 1px solid $gray7;
+  }
+
+  &.checked_in {
+    background-color: $palette-color1;
+    border: 1px $palette-color1-1 solid;
+  }
+
+  &.noshow {
+    background-color: #aecfc8;
+    border: 1px solid #84b3aa;
+  }
+
+  &.canceled {
+    background-color: #da8356;
+    border: 1px solid #c87d56;
+  }
+
+  &.pending {
+    background-color: #ca4e0e;
+    border: 1px #b0450d solid;
+  }
+}
+
+.BTN {
+  font-size: 14px;
+  font-weight: bold;
+  border-width: 1px;
+  border-style: solid;
+  cursor: pointer;
+  text-indent: 0;
+  text-align: center;
+
+  &.BTNyellow {
+    background: #fcbe46;
+    border-color: #e6a21f;
+  }
+
+  &.BTNgray {
+    background: #9D9D9D;
+    border-color: #888;
+  }
+
+  &.BTNorange {
+    background: #ca4e0e;
+    border-color: #b0450d
+  }
+
+  &.BTNtarco {
+    background: #97bfb8;
+    border-color: #60938a;
+  }
+}
+
+.notification {
+  &.alert {
+    &.alert-info {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.responsive-content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
 }

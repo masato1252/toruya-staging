@@ -34,7 +34,8 @@
         </div>
         <div class="modal-footer">
           <div>
-            <%= link_to t("action.delete"), custom_schedule_path(local_assigns[:custom_schedule_id]), class: "btn btn-orange", method: "delete", data: { confirm: I18n.t("common.are_you_sure_message"), disable_with: t("common.processing") } if local_assigns[:custom_schedule_id] %>
+            <%= link_to t("action.delete"),
+              SiteRouting.new(self).custom_schedule_path(local_assigns[:custom_schedule_id]), class: "btn btn-orange", method: "delete", data: { confirm: I18n.t("common.are_you_sure_message"), disable_with: t("common.processing") } if local_assigns[:custom_schedule_id] %>
             <%= submit_tag t("action.save"), class: "btn btn-yellow", data: { disable_with: t("common.processing") } %>
           </div>
         </div>

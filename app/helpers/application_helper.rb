@@ -52,6 +52,7 @@ module ApplicationHelper
         controller: "modal",
         modal_target: "#dummyModal",
         action: "click->modal#popup",
+        class: "modal-link"
       }
     }
 

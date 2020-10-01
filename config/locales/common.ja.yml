@@ -15,6 +15,7 @@ ja:
     upgrade_to_basic: ベーシックにアップグレードする
     cancel_upgrade: キャンセル
     new_reservation: 予約を追加
+    new_off_schedule: 休暇/予定を追加
     create_a_shop: 店舗を設定する
     copy_url: URLコピー
     copy_url2: URLをコピー
@@ -72,3 +73,4 @@ ja:
     responsible_employee: 担当者
     booking_price: 予約価格
     status: ステータス
+    off_schedule: 臨時休暇

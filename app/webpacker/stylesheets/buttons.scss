@@ -29,6 +29,12 @@ a.btn {
     border-radius: 3px;
     height: auto !important;
   }
+
+  &.btn-icon {
+    display: inline-flex !important;
+    justify-items: center;
+    align-items: center;
+  }
 }
 
 .btn-tarco {

@@ -1,0 +1,35 @@
+<%= notification_messages %>
+<%= jump_out_modal(lines_user_bot_schedule_path(@reservation)) if @reservation && params[:popup_disabled].nil? %>
+
+<div class="schedule-dashboard">
+  <div class="schedules-dates">
+    <a href="#" data-toggle="modal" data-target="#calendar-modal" class="btn btn-yellow btn-icon">
+      <i class="fa fa-calendar-alt"></i>
+    </a>
+
+    <%= react_component(
+      "user_bot/dashboards/schedules_dashboard/calendar_modal", {
+        props: {
+          params: params,
+          calendar: {
+            dayNames: I18n.t("date.abbr_day_names"),
+            monthNames: I18n.t("date.abbr_month_names").compact
+          },
+        }
+      },
+      { camelize_props: false }
+    ) %>
+  </div>
+  <div class="schedule-date">
+    <%= I18n.l(@date, format: :long) %>
+  </div>
+
+  <%= render "lines/user_bot/schedules/events", schedules: @schedules, reservations_approvement_flow: @reservations_approvement_flow, date: @date %>
+  <%= render "lines/user_bot/schedules/schedule_modal" %>
+  <%= render "reservations/new_modal", date: @date %>
+  <%= render "reservations/off_date_modal", date: @date %>
+</div>
+
+<a href="#" data-toggle="modal" data-target="#schedule-modal" class="new-schedule-button">
+  <i class="fa fa-plus-circle"></i>
+</a>

@@ -1,0 +1,65 @@
+<div class="events">
+  <% schedules.each do |schedule| %>
+    <% if schedule[:type] == :reservation %>
+      <%= modal_link_to lines_user_bot_reservation_path(schedule[:id], reservations_approvement_flow: reservations_approvement_flow), class: "modal-link event" do %>
+        <div class="state <%= schedule[:state] %>"></div>
+        <div class="time">
+          <div class="start-time">
+            <%= schedule[:start_time] %>
+          </div>
+          <div class="start-time">
+            <%= schedule[:end_time] %>
+          </div>
+        </div>
+        <div class="content">
+          <div class="top">
+            <%= schedule[:menus_name] %>
+          </div>
+          <div class="bottom">
+            <%= schedule[:customer_names_sentence] %>
+          </div>
+        </div>
+        <div class="info">
+          <%= schedule[:shop_name] %>
+        </div>
+        <div class="extra">
+          <% if schedule[:with_warnings] %>
+            <span class="error-status warning"><i class="fa fa-check-circle" aria-hispanen="true"></i></span>
+          <% end %>
+          <% if schedule[:sentences] && schedule[:sentences][:deleted_staffs_sentence] %>
+            <span class="status danger"><i class="fa fa-exclamation-circle" aria-hispanen="true"></i></span>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <a href="#"  data-toggle="modal" data-target=<%= "#off-date-modal-#{schedule[:id]}" %> class="modal-link event">
+        <div class="state"></div>
+        <div class="time">
+          <div class="start-time">
+            <%= schedule[:start_time] %>
+          </div>
+          <div class="start-time">
+            <%= schedule[:end_time] %>
+          </div>
+        </div>
+        <div class="content">
+          <%= schedule[:reason] %>
+        </div>
+        <div class="info"></div>
+        <div class="extra"></div>
+      </a>
+    <% end %>
+  <% end %>
+</div>
+<% #event used css table design, the off_date_modal used, either, that causes some conflict %>
+<% schedules.select{|s| s[:type] == :off_schedule }.each do |schedule| %>
+  <%= render "reservations/off_date_modal",
+    date: date,
+    modal_id: "off-date-modal-#{schedule[:id]}",
+    custom_schedule_id: schedule[:id],
+    start_time_time_part: schedule[:start_time],
+    end_time_time_part: schedule[:end_time],
+    calendarfield_prefix: "temp_leaving_schedule_#{schedule[:id]}",
+    reason: schedule[:reason]
+  %>
+<% end %>

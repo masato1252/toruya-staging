@@ -1,0 +1,25 @@
+<div class="modal fade" id="schedule-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title">
+          予約を追加
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="edit-worktime">
+          <% if working_shop_options(include_user_own: true).present? %>
+            <a href="#" data-toggle="modal" data-target="#new-reservations-modal" class="btn btn-yellow">
+              <%= I18n.t("action.new_reservation") %>
+            </a>
+          <% end %>
+
+          <a href="#" data-toggle="modal" data-target="#off-date-modal" class="btn btn-yellow">
+            <%= I18n.t("action.new_off_schedule") %>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,156 @@
+.schedule-dashboard {
+  .schedule-date {
+    background-color: $gray4;
+    padding: 6px;
+    border-top: 1px solid $gray12;
+    border-bottom: 1px solid $gray12;
+  }
+  .events {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    width: 100%;
+    color: $black;
+    padding: 0 6px;
+
+    .event {
+      display: table-row;
+
+      .state,
+      .time,
+      .content,
+      .info,
+      .extra {
+        display: table-cell;
+        border-top: 1px solid $gray7;
+        border-bottom: 1px solid $gray7;
+        padding: 3px;
+      }
+
+      .extra {
+        border-right: 1px solid $gray7;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
+
+      .state {
+        width: 20px;
+        border: 1px solid $gray7;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+
+      .start-time {
+        margin-left: 6px;
+      }
+    }
+  }
+
+  .modal {
+    .reservation-info-row {
+      margin: 3px 0 6px;
+
+      .fa {
+        margin-right: 6px;
+      }
+
+      p {
+        margin-left: 21px;
+      }
+    }
+  }
+
+  .edit-worktime {
+    .btn {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  }
+
+  #working-date-modal,
+  .off-date-modal {
+    .datetime-field {
+      a.reservationCalendar {
+        padding: 0 !important;
+        color: white !important;
+        width: 38px;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+
+        i.fa-calendar {
+          font-size: 18px;
+        }
+      }
+
+      .date {
+        text-align: left !important;
+        width: initial !important;
+      }
+    }
+
+    #addWorkDay {
+      margin: 30px auto;
+
+      .shops-list {
+        margin-top: 12px;
+      }
+    }
+
+    #addWorkDay dt,
+    #addWorkDay dd {
+      display: block;
+      margin: 6px 0;
+    }
+
+    #addWorkDay dd input[type="time"] {
+      width: 150px;
+    }
+
+    #addWorkDay dd.timeTo {
+      padding: 0 5px;
+    }
+
+    #addWorkDay dt a {
+      margin: 0 10px 0 5px;
+    }
+
+    .closeReason {
+      margin-top: 12px;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .modal-footer {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+
+      .btn {
+        width: 120px;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.new-schedule-button {
+  color: $palette-color1;
+  position: fixed;
+  bottom: 0;
+  right: 12px;
+
+  i.fa-plus-circle {
+    font-size: 60px;
+  }
+}
+
+#new-reservations-modal {
+  .new-shop-reservation {
+    margin-left: 3px;
+  }
+}
