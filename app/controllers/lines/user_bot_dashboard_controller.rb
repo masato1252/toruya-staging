@@ -22,6 +22,11 @@ class Lines::UserBotDashboardController < ActionController::Base
   helper_method :current_user
   alias_method :super_user, :current_user
 
+  def social_user
+    @social_user ||= SocialUser.find_by!(social_service_user_id: user_bot_cookies(:social_service_user_id))
+  end
+  helper_method :social_user
+
   def from_line_bot
     true
   end

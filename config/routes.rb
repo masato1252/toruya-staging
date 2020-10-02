@@ -25,22 +25,26 @@ Rails.application.routes.draw do
       resources :schedules, only: [:index] do
         collection do
           get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+          get "/:social_service_user_id", action: "index"
         end
       end
 
       resources :calendars, only: [] do
         collection do
           get "personal_working_schedule"
+          get "/:social_service_user_id", action: "index"
         end
       end
 
       resources :customers, only: [:index] do
         collection do
+          get "/:social_service_user_id", action: "index"
         end
       end
 
       resources :settings, only: [:index] do
         collection do
+          get "/:social_service_user_id", action: "index"
         end
       end
 
