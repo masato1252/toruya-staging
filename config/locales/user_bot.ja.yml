@@ -31,6 +31,8 @@ ja:
         message:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           successful_message_html: LINEからToruyaを使う準備ができました！<br>ユーザーメニューから<br>WEBプロモーションを始めましょう。
+        line:
+          successful_message: "LINEからToruyaを使う準備ができました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
       shop_info:
         postcode: 郵便番号
         region: 都道府県
