@@ -124,6 +124,19 @@ const RequiredLabel = ({label, required_label}) => {
   )
 }
 
+const DummyModalLink = ({ path, children, klass }) => {
+  return (
+    <div
+      data-controller="modal"
+      data-modal-target="#dummyModal"
+      data-action="click->modal#popup"
+      data-modal-path={path}
+      className={klass}>
+      {children}
+    </div>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -133,5 +146,6 @@ export {
   Condition,
   ErrorMessage,
   DragHandle,
-  RequiredLabel
+  RequiredLabel,
+  DummyModalLink
 };
