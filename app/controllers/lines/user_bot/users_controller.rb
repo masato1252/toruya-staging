@@ -10,7 +10,6 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       phone_number: params[:phone_number]
     )
 
-    # HARUKO_TODO: Need to change the message
     render json: {
       uuid: identification_code.uuid,
       user_id: User.find_by(phone_number: params[:phone_number])&.id,

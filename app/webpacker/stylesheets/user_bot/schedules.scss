@@ -1,10 +1,77 @@
 .schedule-dashboard {
+  .schedule-dates {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px 0;
+
+    .calendar-btn {
+      line-height: 40px !important;
+      height: 40px !important;
+    }
+
+    .dates-list {
+      .prev-dates,
+      .next-dates,
+      .date {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0 3px;
+        border-radius: 6px;
+      }
+
+      .date {
+        padding: 4px;
+        border: 3px solid $gray12;
+        color: $black;
+
+        &.today {
+          font-weight: bold;
+          color: #e6a220;
+        }
+
+        &.selected {
+          background: #fcbe46 !important;
+          border-color: #fcbe46 !important;
+        }
+
+        &.holiday {
+          color: #E00003;
+        }
+
+        &.work-day {
+          border-color: #84b3aa;
+        }
+
+        &.reserved {
+          background: #dedede;
+          border-color: #dedede;
+        }
+
+        &.booking-available {
+          background: #84b3aa;
+          border-color: #84b3aa;
+        }
+      }
+
+      .prev-dates,
+      .next-dates {
+        background-color: gray;
+        padding: 20px 12px;
+        color: #ffffff;
+      }
+    }
+  }
+
   .schedule-date {
     background-color: $gray4;
     padding: 6px;
     border-top: 1px solid $gray12;
     border-bottom: 1px solid $gray12;
   }
+
   .events {
     display: table;
     border-collapse: separate;

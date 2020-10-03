@@ -52,6 +52,13 @@ const UsersServices = {
       url: Routes.lines_user_bot_check_shop_profile_path({format: "json"}),
       responseType: "json"
     })
+  },
+  schedules: (date) => {
+    return request({
+      method: "GET",
+      url: Routes.personal_working_schedule_lines_user_bot_calendars_path({date: date, format: "json"}),
+      responseType: "json"
+    })
   }
 }
 

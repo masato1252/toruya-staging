@@ -1,5 +1,7 @@
 "use strict";
 
+import _ from "lodash";
+
 const composeValidators = (component, ...validators) => value =>
   validators.reduce((error, validator) => error || validator(component, value), undefined)
 
@@ -64,6 +66,22 @@ const setProperListHeight = (component, adjustHeight) => {
   });
 }
 
+const isWorkingDate = (schedules, date) => {
+  return _.includes(schedules.working_dates, date.format("YYYY-MM-DD"));
+};
+
+const isHoliday = (schedules, date) => {
+  return _.includes(schedules.holiday_dates, date.format("YYYY-MM-DD"));
+};
+
+const isReservedDate = (schedules, date) => {
+  return _.includes(schedules.reservation_dates, date.format("YYYY-MM-DD"));
+};
+
+const isAvailableBookingDate = (schedules, date) => {
+  return _.includes(schedules.available_booking_dates, date.format("YYYY-MM-DD"));
+};
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -73,4 +91,8 @@ export {
   mustBeNumber,
   greaterEqualThan,
   setProperListHeight,
+  isWorkingDate,
+  isHoliday,
+  isReservedDate,
+  isAvailableBookingDate,
 };
