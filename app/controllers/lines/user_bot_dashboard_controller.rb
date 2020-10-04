@@ -9,6 +9,9 @@ class Lines::UserBotDashboardController < ActionController::Base
 
   include UserBotCookies
   include ViewHelpers
+  include ParameterConverters
+  include Locale
+  include UserBotExceptionHandler
 
   def authenticate_current_user!
     unless current_user

@@ -8,7 +8,6 @@ class DashboardController < ActionController::Base
   include Locale
   include ExceptionHandler
   include Sentry
-  include ParameterConverters
 
   before_action :profile_required
   before_action :set_paper_trail_whodunnit

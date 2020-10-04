@@ -4,10 +4,10 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         <h4 class="modal-title" id="myModalLabel">
-          休暇/予定を追加
+          <%= I18n.t("action.new_off_schedule") %>
         </h4>
       </div>
-      <%= form_with url: local_assigns[:custom_schedule_id] ? custom_schedule_path(local_assigns[:custom_schedule_id]) : custom_schedules_path,
+      <%= form_with url: local_assigns[:custom_schedule_id] ? SiteRouting.new(self).custom_schedule_path(local_assigns[:custom_schedule_id]) : SiteRouting.new(self).custom_schedules_path,
         local: true,
         method: local_assigns[:custom_schedule_id] ? :patch : :post do %>
         <div class="modal-body">

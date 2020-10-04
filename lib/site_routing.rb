@@ -58,6 +58,10 @@ class SiteRouting
     from_line_bot ? h.lines_user_bot_custom_schedule_path(*args) : h.custom_schedule_path(*args)
   end
 
+  def custom_schedules_path(*args)
+    from_line_bot ? h.lines_user_bot_custom_schedules_path(*args) : h.custom_schedules_path(*args)
+  end
+
   private
 
   def from_line_bot
