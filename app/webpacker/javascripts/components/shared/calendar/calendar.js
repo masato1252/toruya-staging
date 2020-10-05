@@ -125,7 +125,9 @@ class Calendar extends React.Component {
       this.props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
     }
     else if (this.props.dateSelectedCallbackPath) {
-      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
+      let params = new URLSearchParams(location.search)
+      params.set("schedule_display_start_date", day.date.clone().add(-1, "day").format("YYYY-MM-DD"))
+      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}?${params.toString()}`;
     }
   };
 

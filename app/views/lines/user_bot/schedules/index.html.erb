@@ -21,7 +21,8 @@
     <%= react_component(
       "user_bot/dashboards/schedules_dashboard/dates_list", {
         props: {
-          date: @date
+          selectedDate: @date,
+          startDate: params[:schedule_display_start_date] || @date
         }
       },
       { camelize_props: false }

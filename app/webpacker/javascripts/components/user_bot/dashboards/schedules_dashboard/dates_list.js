@@ -12,8 +12,8 @@ const DatesList = ({props}) => {
   moment.locale('ja');
 
   const period = 4;
-  const [startDate, setStartDate] = useState(moment(props.date))
-  const [endDate, setEndDate] = useState(moment(props.date).add(period, "day"))
+  const [startDate, setStartDate] = useState(moment(props.startDate))
+  const [endDate, setEndDate] = useState(moment(props.startDate).add(period, "day"))
   const schedules1 = useSchedules(startDate);
   const schedules2 = useSchedules(endDate);
 
@@ -30,14 +30,14 @@ const DatesList = ({props}) => {
         <a
           className={
             "date" + (day.isSame(new Date(), "day") ? " today" : "") +
-              (day.isSame(props.date) ? " selected" : "") +
+              (day.isSame(props.selectedDate) ? " selected" : "") +
               (isHoliday(schedules, day) ? " holiday" : "") +
               (isWorkingDate(schedules, day) ? " work-day" : "") +
               (isReservedDate(schedules, day) ? " reserved" : "") +
               (isAvailableBookingDate(schedules, day) ? " booking-available" : "")
           }
           key={day}
-          href={Routes.date_lines_user_bot_schedules_path(day.format("YYYY-MM-DD"))}
+          href={Routes.date_lines_user_bot_schedules_path(day.format("YYYY-MM-DD"), { schedule_display_start_date: startDate.format("YYYY-MM-DD") })}
         >
           <div>
             <b>{day.format("MM/DD")}</b>
@@ -51,13 +51,13 @@ const DatesList = ({props}) => {
   }
 
   const onPrevDates = () => {
-    setStartDate(startDate.clone().add(-period, "day"));
-    setEndDate(endDate.clone().add(-period, "day"));
+    setStartDate(startDate.clone().add(-1, "day"));
+    setEndDate(endDate.clone().add(-1, "day"));
   }
 
   const onNextDates = () => {
-    setStartDate(startDate.clone().add(period, "day"));
-    setEndDate(endDate.clone().add(period, "day"));
+    setStartDate(startDate.clone().add(1, "day"));
+    setEndDate(endDate.clone().add(1, "day"));
   }
 
   return (
