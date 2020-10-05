@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 import { UsersServices } from "user_bot/api";
 import useSchedules from "libraries/use_schedules";
 import { isWorkingDate, isHoliday, isReservedDate, isAvailableBookingDate } from "libraries/helper";
+import mergeArrayOfObjects from "libraries/merge_array_of_objects";
 import _ from "lodash";
 
 const DatesList = ({props}) => {
@@ -18,6 +19,7 @@ const DatesList = ({props}) => {
 
   const renderDatesList = () => {
     let list = [startDate]
+    let schedules = mergeArrayOfObjects(schedules1, schedules2)
 
     for (var i = 1; i < period; i++) {
       list.push(startDate.clone().add(i, "day"))
@@ -58,11 +60,6 @@ const DatesList = ({props}) => {
     setEndDate(endDate.clone().add(period, "day"));
   }
 
-  const schedules = useMemo(() => {
-    return _.merge({}, schedules1, schedules2)
-  },
-    [schedules1, schedules2]
-  )
   return (
     <div className="dates-list">
       <div className="prev-dates" onClick={onPrevDates}><i className="fa fa-angle-left"></i></div>
