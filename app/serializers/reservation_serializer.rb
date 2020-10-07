@@ -2,7 +2,7 @@ class ReservationSerializer
   include FastJsonapi::ObjectSerializer
 
   # TODO: Form bug, it won't send with_warnings https://github.com/ilake/kasaike/commit/bc56b28579e6e74a04cc746c0253c18699f27361
-  attributes :id, :with_warnings
+  attributes :id, :with_warnings, :shop
 
   attribute :state, &:aasm_state
 

@@ -37,7 +37,7 @@ module ViewHelpers
   end
 
   def shop
-    @shop ||= Shop.find_by(id: session[:current_shop_id])
+    @shop ||= Shop.find_by(id: from_line_bot ? user_bot_cookies(:current_shop_id) : session[:current_shop_id])
   end
 
   def staffs
@@ -57,7 +57,7 @@ module ViewHelpers
   end
 
   def super_user
-    @super_user ||= User.find_by(id: session[:current_super_user_id])
+    @super_user ||= User.find_by(id: from_line_bot ? user_bot_cookies(:current_super_user_id) : session[:current_super_user_id])
   end
 
   def current_ability

@@ -48,21 +48,23 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :reservations, except: [:index, :edit, :new] do
-        collection do
-          post :validate
-          post :add_customer
-          get "form/(:id)", action: :form, as: :form
-        end
+      resources :shops, only: [] do
+        resources :reservations, except: [:index, :edit, :new] do
+          collection do
+            post :validate
+            post :add_customer
+            get "form/(:id)", action: :form, as: :form
+          end
 
-        scope module: "reservations" do
-          resource :states, only: [] do
-            get :pend
-            get :accept
-            get :accept_in_group
-            get :check_in
-            get :check_out
-            get :cancel
+          scope module: "reservations" do
+            resource :states, only: [] do
+              get :pend
+              get :accept
+              get :accept_in_group
+              get :check_in
+              get :check_out
+              get :cancel
+            end
           end
         end
       end

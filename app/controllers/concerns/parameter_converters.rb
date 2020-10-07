@@ -21,7 +21,7 @@ module ParameterConverters
       obj.map! do |array_element|
         convert_params(array_element)
       end
-    elsif obj.is_a?(Hash)
+    elsif obj.is_a?(Hash) || obj.is_a?(ActionController::Parameters)
       obj.each do |k, v|
         convert_params(v) if v.is_a?(Array)
 

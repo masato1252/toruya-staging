@@ -35,6 +35,13 @@ a.btn {
     justify-items: center;
     align-items: center;
   }
+
+  &.btn-circle {
+    padding: 10px !important;
+    width: initial;
+    height: initial !important;
+    border-radius: 50%;
+  }
 }
 
 .btn-tarco {

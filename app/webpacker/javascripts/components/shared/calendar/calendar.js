@@ -28,7 +28,7 @@ class Calendar extends React.Component {
     this.throttleFetchSchedule();
 
     if (this.props.dateSelectedCallback && !this.props.skip_default_date) {
-      this.props.dateSelectedCallback(moment().format("YYYY-MM-DD"))
+      this.props.dateSelectedCallback(this.startDate.format("YYYY-MM-DD"))
     }
   };
 

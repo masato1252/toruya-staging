@@ -42,3 +42,6 @@ ja:
         location: 住所
         page_title: ユーザー登録
         save_btn: ユーザー登録を完了
+    dashboards:
+      reservation:
+        no_ending_time_message: ※終了時刻自動計算

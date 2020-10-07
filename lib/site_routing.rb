@@ -24,20 +24,19 @@ class SiteRouting
   end
 
   # TODO: controller and view required
-  def customer_path(customer)
+  def customers_path(*args)
     if from_line_bot
-      h.lines_user_bot_customers_path(customer_id: customer.id)
+      h.lines_user_bot_customers_path(*args)
     else
-      h.user_customers_path(customer.user, customer_id: customer.id)
+      h.user_customers_path(*args)
     end
   end
 
-  # TODO: controller and view required
-  def reservation_form_path(reservation)
+  def reservation_form_path(reservation, *args)
     if from_line_bot
-      h.form_lines_user_bot_reservations_path(reservation)
+      h.form_lines_user_bot_shop_reservations_path(reservation.shop, reservation, *args)
     else
-      h.form_shop_reservations_path(reservation.shop, reservation)
+      h.form_shop_reservations_path(reservation.shop, reservation, *args)
     end
   end
 

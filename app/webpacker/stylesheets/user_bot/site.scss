@@ -70,6 +70,12 @@ input[type="number"],
   border-radius: 4px;
   margin: 0 3px;
   padding: 8px;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
 }
 
 select {
@@ -79,6 +85,12 @@ select {
   background-color: $palette-color6;
   border: 1px solid $gray;
   border-radius: 4px;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
 }
 
 .centerize {
@@ -106,6 +118,10 @@ a {
 .field-warning-message {
   color: $warning;
   display: block;
+}
+
+.field-warning {
+  border: 2px solid $warning !important;
 }
 
 .spinner-loading {
@@ -171,7 +187,7 @@ a {
   }
 }
 
-.BTN {
+.btn.enhanced {
   font-size: 14px;
   font-weight: bold;
   border-width: 1px;
@@ -213,4 +229,23 @@ a {
   display: flex;
   flex-flow: column;
   height: 100%;
+}
+
+.drag-handler {
+  padding: 8px 16px;
+  vertical-align: top;
+  cursor: row-resize;
+}
+
+.processing-bar {
+  text-align: center;
+  width: 300px;
+  height: 100px;
+  line-height: 100px;
+  position: absolute;
+  top: 20%;
+  left: calc(50% - 150px);;
+  background: #def5ff;
+  border: 1px solid #7dd2f9;
+  z-index: 999;
 }

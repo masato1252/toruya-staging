@@ -4,7 +4,7 @@ module Notifications
       first_non_group_customer = recent_non_group_customers.first
 
       first_non_group_customer ? [
-        "#{I18n.t("notifications.non_group_customers", number: recent_non_group_customers.count)} #{link_to(I18n.t("notifications.next_non_group_customer"), SiteRouting.new(h).customer_path(first_non_group_customer))}"
+        "#{I18n.t("notifications.non_group_customers", number: recent_non_group_customers.count)} #{link_to(I18n.t("notifications.next_non_group_customer"), SiteRouting.new(h).customers_path(first_non_group_customer.user, customer_id: first_non_group_customer))}"
       ] : []
     end
 

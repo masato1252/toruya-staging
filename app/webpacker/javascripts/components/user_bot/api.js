@@ -62,8 +62,44 @@ const UsersServices = {
   }
 }
 
+const ReservationServices = {
+  create: (shop_id, data) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_shop_reservations_path(shop_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+  update: (shop_id, reservation_id, data) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_shop_reservation_path(shop_id, reservation_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+  validate: (shop_id, reservation_id = null, data) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.validate_lines_user_bot_shop_reservations_path(shop_id, reservation_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  }
+}
 
 export {
   IdentificationCodesServices,
-  UsersServices
+  UsersServices,
+  ReservationServices
 }

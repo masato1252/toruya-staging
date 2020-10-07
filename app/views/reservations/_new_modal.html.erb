@@ -20,7 +20,7 @@
             <div class="shop-cell">
               <% if user_ability.can?(:create_reservation, option.shop) %>
                 <%= link_to_new_reservation(
-                  form_shop_reservations_path(option.shop, start_time_date_part: @date),
+                  SiteRouting.new(self).reservation_form_path(option.shop.reservations.new, start_time_date_part: @date),
                   option.shop.display_name,
                   class: from_line_bot ? "btn btn-tarco" : "BTNtarco"
                 )%>
@@ -45,11 +45,13 @@
                   user_ability.cannot?(:create, :reservation_with_settings) ||
                   user_ability.cannot?(:create_shop_reservations_with_menu, option.shop)
             ) %>
+          <%# TODO: FIX URL %>
           <%= modal_link_to(create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: "BTNtarco") do %>
             <i class="fa fa-calendar-plus fa-2x"></i>
             <span class="new-shop-reservation"><%= option.shop.display_name %></span>
           <% end %>
         <% else %>
+          <%# TODO: FIX URL %>
           <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
         <% end %>
       <% end %>
