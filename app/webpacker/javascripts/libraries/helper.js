@@ -83,6 +83,10 @@ const isAvailableBookingDate = (schedules, date) => {
   return _.includes(schedules.available_booking_dates, date.format("YYYY-MM-DD"));
 };
 
+const isPersonalScheduleDate = (schedules, date) => {
+  return _.includes(schedules.personal_schedule_dates, date.format("YYYY-MM-DD"));
+};
+
 const arrayWithLength = (size, default_value) => {
   return Array.from({length: size}, (v, i) => default_value)
 }
@@ -142,6 +146,7 @@ export {
   isHoliday,
   isReservedDate,
   isAvailableBookingDate,
+  isPersonalScheduleDate,
   arrayWithLength,
   displayErrors
 };

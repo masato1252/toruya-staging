@@ -33,15 +33,18 @@
         }
 
         &.selected {
-          background: #fcbe46 !important;
-          border-color: #fcbe46 !important;
+          background: $palette-color1 !important;
+          border-color: $palette-color1-1 !important;
+          color: #ffffff;
+          font-weight: bold;
         }
 
         &.holiday {
           color: #E00003;
         }
 
-        &.work-day {
+        &.work-day,
+        &.personal-schedule {
           border-color: #84b3aa;
         }
 
@@ -170,10 +173,16 @@
     #addWorkDay dd {
       display: block;
       margin: 6px 0;
+
+      &.startTime,
+      &.timeTo,
+      &.endTime {
+        display: inline-block;
+      }
     }
 
     #addWorkDay dd input[type="time"] {
-      width: 150px;
+      width: 140px;
     }
 
     #addWorkDay dd.timeTo {
@@ -208,8 +217,8 @@
 .new-schedule-button {
   color: $palette-color1;
   position: fixed;
-  bottom: 0;
-  right: 12px;
+  bottom: 15px;
+  right: 15px;
 
   i.fa-plus-circle {
     font-size: 60px;

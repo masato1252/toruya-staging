@@ -20,6 +20,10 @@ class Week extends React.Component {
     return _.contains(this.props.availableBookingDates, date.format("YYYY-MM-DD"));
   };
 
+  isPersonalScheduleDate = (date) => {
+    return _.contains(this.props.personalScheduleDates, date.format("YYYY-MM-DD"));
+  };
+
   render() {
     var days = [],
         date = this.props.date,
@@ -35,6 +39,7 @@ class Week extends React.Component {
         isWorkingDate: this.isWorkingDate(date),
         isReservedDate: this.isReservedDate(date),
         isAvailableBookingDate: this.isAvailableBookingDate(date),
+        isPersonalScheduleDate: this.isPersonalScheduleDate(date),
         date: date
       };
 
@@ -47,7 +52,8 @@ class Week extends React.Component {
               (day.isHoliday ? " holiday" : "") +
               (day.isWorkingDate ? " workDay" : "") +
               (day.isReservedDate ? " reserved" : "") +
-              (day.isAvailableBookingDate ? " booking-available" : "")
+              (day.isAvailableBookingDate ? " booking-available" : "") +
+              (day.isPersonalScheduleDate ? " personal-schedule" : "")
           }
           onClick={this.props.select.bind(null, day)}>
           <span className="number">

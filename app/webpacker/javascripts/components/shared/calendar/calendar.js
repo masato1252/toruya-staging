@@ -93,7 +93,8 @@ class Calendar extends React.Component {
             holidayDates: result["holiday_dates"],
             workingDates: result["working_dates"],
             reservationDates: result["reservation_dates"],
-            availableBookingDates: result["available_booking_dates"]
+            availableBookingDates: result["available_booking_dates"],
+            personalScheduleDates: result["personal_schedule_dates"]
           });
         })
         .then(() => {
@@ -215,6 +216,7 @@ class Calendar extends React.Component {
               holidayDates={this.state.holidayDates}
               workingDates={this.state.workingDates}
               availableBookingDates={this.state.availableBookingDates}
+              personalScheduleDates={this.state.personalScheduleDates}
               reservationDates={this.state.reservationDates}
             />
           );

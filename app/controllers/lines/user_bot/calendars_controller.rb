@@ -1,6 +1,6 @@
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
-    @schedules, @reservation_dates =
+    @schedules, @reservation_dates, @personal_schedule_dates =
       PersonalCalendar.run!(
         user: current_user,
         working_shop_options: member_shops_options,

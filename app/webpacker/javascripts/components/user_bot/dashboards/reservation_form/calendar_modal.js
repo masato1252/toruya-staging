@@ -3,13 +3,13 @@
 import React from "react";
 import Calendar from "shared/calendar/calendar";
 
-const CalendarModal = ({calendar, dateSelectedCallback, selectedDate}) => {
+const CalendarModal = ({i18n, calendar, dateSelectedCallback, selectedDate}) => {
   return (
     <div className="modal fade" id="calendar-modal" tabIndex="-1" role="dialog">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            Calendar
+            {i18n.calendar}
           </div>
           <div className="modal-body">
             <Calendar

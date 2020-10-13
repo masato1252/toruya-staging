@@ -311,6 +311,7 @@ const UserBotReservationForm = ({props}) => {
         calendar={props.calendar}
         dateSelectedCallback={onSelectStartDate}
         selectedDate={start_time_date_part}
+        i18n={i18n}
       />
     </div>
   )

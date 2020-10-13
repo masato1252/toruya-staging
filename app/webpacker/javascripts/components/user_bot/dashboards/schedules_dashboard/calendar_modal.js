@@ -9,7 +9,7 @@ const CalendarModal = ({props}) => {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            Calendar
+            {props.i18n.calendar}
           </div>
           <div className="modal-body">
             <Calendar

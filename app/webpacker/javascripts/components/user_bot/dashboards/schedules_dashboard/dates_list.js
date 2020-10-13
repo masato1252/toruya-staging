@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import moment from "moment-timezone";
 import { UsersServices } from "user_bot/api";
 import useSchedules from "libraries/use_schedules";
-import { isWorkingDate, isHoliday, isReservedDate, isAvailableBookingDate } from "libraries/helper";
+import { isWorkingDate, isHoliday, isReservedDate, isAvailableBookingDate, isPersonalScheduleDate } from "libraries/helper";
 import mergeArrayOfObjects from "libraries/merge_array_of_objects";
 import _ from "lodash";
 
@@ -34,7 +34,8 @@ const DatesList = ({props}) => {
               (isHoliday(schedules, day) ? " holiday" : "") +
               (isWorkingDate(schedules, day) ? " work-day" : "") +
               (isReservedDate(schedules, day) ? " reserved" : "") +
-              (isAvailableBookingDate(schedules, day) ? " booking-available" : "")
+              (isAvailableBookingDate(schedules, day) ? " booking-available" : "") +
+              (isPersonalScheduleDate(schedules, day) ? " personal-schedule" : "")
           }
           key={day}
           href={Routes.date_lines_user_bot_schedules_path(day.format("YYYY-MM-DD"), { schedule_display_start_date: startDate.format("YYYY-MM-DD") })}

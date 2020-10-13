@@ -32,7 +32,7 @@
     }.merge!([
       t("reservation"),
       t("user_bot.dashboards.reservation"),
-      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo),
+      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo, :calendar),
       t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
     ].inject(:merge!))
   }

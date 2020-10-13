@@ -8,7 +8,8 @@ const useSchedules = (date) => {
     available_booking_dates: [],
     holiday_dates: [],
     reservation_dates: [],
-    working_dates: []
+    working_dates: [],
+    personal_schedule_dates: []
   })
 
   useEffect(() => {

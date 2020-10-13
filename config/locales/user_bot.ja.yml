@@ -45,3 +45,4 @@ ja:
     dashboards:
       reservation:
         no_ending_time_message: ※終了時刻自動計算
+        schedule_modal_title: 新しい予約・予定を追加
