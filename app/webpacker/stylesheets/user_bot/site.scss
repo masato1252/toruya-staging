@@ -249,3 +249,33 @@ a {
   border: 1px solid #7dd2f9;
   z-index: 999;
 }
+
+.top-navigation-bar {
+  position: fixed;
+  background-color: $gray4;
+  width: 100%;
+  height: $bar-height;
+  top: 0;
+  padding-left: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bottom-navigation-bar {
+  background: $gray4;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: $bar-height;
+
+  &.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .actions {
+    position: relative;
+  }
+}

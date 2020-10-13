@@ -47,6 +47,8 @@ $gray12: #cccccc;
 
 $black: #333333;
 
+$bar-height: 35px;
+
 @mixin clearfix {
   &:before, &:after {
     content: " ";   /* 1 */

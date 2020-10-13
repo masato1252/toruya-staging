@@ -137,6 +137,26 @@ const DummyModalLink = ({ path, children, klass }) => {
   )
 }
 
+const TopNavigationBar = ({leading, title, action}) => {
+  return (
+    <div className="top-navigation-bar">
+      {leading}
+      <span>{title}</span>
+      {action || <i></i>}
+    </div>
+  )
+}
+
+const BottomNavigationBar = ({ klassName, children }) => {
+  return (
+    <div className={`bottom-navigation-bar ${klassName}`}>
+      <div className="actions">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -147,5 +167,7 @@ export {
   ErrorMessage,
   DragHandle,
   RequiredLabel,
-  DummyModalLink
+  DummyModalLink,
+  TopNavigationBar,
+  BottomNavigationBar
 };

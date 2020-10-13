@@ -9,6 +9,7 @@ import _ from "lodash";
 import { ReservationServices } from "user_bot/api";
 import useCustomCompareEffect from "libraries/use_custom_compare_effect";
 import ProcessingBar from "shared/processing_bar.js"
+import { TopNavigationBar, BottomNavigationBar } from "shared/components"
 import CalendarModal from "./calendar_modal";
 import MenuStaffsList from "./menu_staffs_list";
 import StaffStates from "./staff_states";
@@ -205,11 +206,10 @@ const UserBotReservationForm = ({props}) => {
   return (
     <div className="reservation-form">
       <ProcessingBar processing={processing}  />
-      <div className="top-prev-page-bar">
-        <a href={props.from}><i className="fa fa-angle-left fa-2x"></i></a>
-        <span>{props.reservation_form.reservation_id ? i18n.edit_reservation : i18n.new_reservation}</span>
-        <i></i>
-      </div>
+      <TopNavigationBar
+        leading={<a href={props.from}><i className="fa fa-angle-left fa-2x"></i></a>}
+        title={props.reservation_form.reservation_id ? i18n.edit_reservation : i18n.new_reservation}
+      />
       <div className="form-body">
         <div className="field-header">{i18n.reservation_time}</div>
         <div className="field-row"
@@ -286,8 +286,8 @@ const UserBotReservationForm = ({props}) => {
           placeholder={i18n.memo}
         />
       </div>
-      <div className="bottom-save-bar">
-        <div className="actions">
+      <BottomNavigationBar>
+        <>
           {props.reservation_form.reservation_id && (
             <a className="btn btn-orange btn-circle btn-delete"
               data-confirm={i18n.delete_confirmation_message}
@@ -305,8 +305,8 @@ const UserBotReservationForm = ({props}) => {
           >
             <i className="fa fa-save fa-2x"></i>
           </button>
-        </div>
-      </div>
+        </>
+      </BottomNavigationBar>
       <CalendarModal
         calendar={props.calendar}
         dateSelectedCallback={onSelectStartDate}

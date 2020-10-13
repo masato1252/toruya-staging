@@ -1,5 +1,5 @@
 <%= notification_messages %>
-<%= jump_out_modal(lines_user_bot_schedule_path(@reservation)) if @reservation && params[:popup_disabled].nil? %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation)) if @reservation && params[:popup_disabled].nil? %>
 
 <div class="schedule-dashboard">
   <div class="schedule-dates">
