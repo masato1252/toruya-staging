@@ -38,6 +38,8 @@ Rails.application.routes.draw do
 
       resources :customers, only: [:index] do
         collection do
+          get :recent
+          get :search
           get "/:social_service_user_id", action: "index"
         end
       end

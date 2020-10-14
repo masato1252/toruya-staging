@@ -1,5 +1,5 @@
 class Customers::Search < ActiveInteraction::Base
-  PER_PAGE = 50
+  PER_PAGE = 200
 
   object :super_user, class: User
   object :current_user_staff, class: Staff

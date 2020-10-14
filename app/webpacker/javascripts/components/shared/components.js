@@ -157,6 +157,18 @@ const BottomNavigationBar = ({ klassName, children }) => {
   )
 }
 
+const InputWithEnter = React.forwardRef((props, ref) => {
+  const { onHandleEnter, ...rest } = props;
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      onHandleEnter()
+    }
+  }
+
+  return <input ref={ref} type="text" onKeyDown={handleKeyDown} {...rest} />
+})
+
 export {
   Input,
   InputRow,
@@ -169,5 +181,6 @@ export {
   RequiredLabel,
   DummyModalLink,
   TopNavigationBar,
-  BottomNavigationBar
+  BottomNavigationBar,
+  InputWithEnter
 };

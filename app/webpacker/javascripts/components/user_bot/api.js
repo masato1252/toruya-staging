@@ -98,8 +98,34 @@ const ReservationServices = {
   }
 }
 
+const CustomerServices = {
+  recent: (last_updated_id = null, last_updated_at = null) => {
+    return request({
+      method: "GET",
+      url: Routes.recent_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        last_updated_at,
+        last_updated_id
+      },
+      responseType: "json"
+    })
+  },
+  search: ({page, keyword}) => {
+    return request({
+      method: "GET",
+      url: Routes.search_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        page,
+        keyword
+      },
+      responseType: "json"
+    })
+  }
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
-  ReservationServices
+  ReservationServices,
+  CustomerServices
 }
