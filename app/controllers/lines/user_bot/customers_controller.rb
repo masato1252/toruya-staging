@@ -27,6 +27,17 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     # Notifications END
   end
 
+  def filter
+    @customers = Customers::CharFilter.run(
+      super_user: super_user,
+      current_user_staff: current_user_staff,
+      pattern_number: params[:pattern_number],
+      page: params[:page].presence || 1
+    ).result
+
+    render template: "customers/query"
+  end
+
   def recent
     @customers =
       super_user

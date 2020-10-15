@@ -137,7 +137,7 @@ const DummyModalLink = ({ path, children, klass }) => {
   )
 }
 
-const TopNavigationBar = ({leading, title, action}) => {
+const TopNavigationBar = ({leading, title, action, ...rest}) => {
   return (
     <div className="top-navigation-bar">
       {leading}
@@ -169,6 +169,26 @@ const InputWithEnter = React.forwardRef((props, ref) => {
   return <input ref={ref} type="text" onKeyDown={handleKeyDown} {...rest} />
 })
 
+const NotificationMessages = ({notification_messages, dispatch}) => {
+  return (
+    <>
+      {notification_messages.map((message, i) => {
+        return (
+          <div className="notification alert alert-info fade in" key={`notification-message-${i}`}>
+            <span key={`message-${i}`} dangerouslySetInnerHTML={{ __html: message }} />
+            <button className="close" onClick={() => dispatch({
+              type: "REMOVE_NOTIFICATION",
+              payload: {
+                index: i
+              }
+            })}>x</button>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -182,5 +202,6 @@ export {
   DummyModalLink,
   TopNavigationBar,
   BottomNavigationBar,
-  InputWithEnter
+  InputWithEnter,
+  NotificationMessages
 };

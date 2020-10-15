@@ -1,81 +1,180 @@
 .customers-dashboard {
-  padding-top: $bar-height;
+  padding-top: $bar-height * 2;
 
-  .customer-option {
-    width: 50%;
-    display: inline-flex;
-    border: 1px solid $gray7;
-    padding: 12px 15px;
-    color: #444;
-    font-size: 15px;
-    height: 68px;
+  .customers-list {
+    .customer-option {
+      width: 50%;
+      display: inline-flex;
+      border: 1px solid $gray7;
+      padding: 12px 15px;
+      color: #444;
+      font-size: 15px;
+      height: 68px;
 
-    &.here {
-      background-color: $palette-color11;
-    }
-
-    .customer-symbol {
-      width: 30%;
-
-      i {
-        margin-right: 3px;
+      &.here {
+        background-color: $palette-color11;
       }
 
-      .customer-level-symbol {
-        font-size: 17px;
-        display: inline-block;
-        margin-right: 3px;
+      .customer-symbol {
+        width: 30%;
 
-        &.regular {
-          color: $gray7;
+        i {
+          margin-right: 3px;
         }
 
-        &.vip {
-          color: $palette-color4-1;
+        .customer-level-symbol {
+          font-size: 17px;
+          display: inline-block;
+          margin-right: 3px;
+
+          &.regular {
+            color: $gray7;
+          }
+
+          &.vip {
+            color: $palette-color4-1;
+          }
         }
-      }
 
-      .customer-reminder-permission {
-        &.fa-bell {
-          color: $gray5;
+        .customer-reminder-permission {
+          &.fa-bell {
+            color: $gray5;
 
-          &.reminder-on {
-            color: $palette-color1;
+            &.reminder-on {
+              color: $palette-color1;
+            }
           }
         }
       }
-    }
 
-    .customer-info {
-      width: 70%;
+      .customer-info {
+        width: 70%;
 
-      .place {
-        text-align: right;
-        font-size: 12px;
+        .place {
+          text-align: right;
+          font-size: 12px;
+        }
       }
     }
-  }
 
-  .no-more-customer {
-    text-align: center;
-    display: block;
-    border-color: #cb845f;
-    background-color: #dc8a5f;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    line-height: 50px;
+    .no-more-customer {
+      text-align: center;
+      display: block;
+      border-color: #cb845f;
+      background-color: #dc8a5f;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      line-height: 50px;
+    }
   }
 }
 
 .input-group {
+  position: fixed;
+  top: $bar-height;
+  z-index: 999;
+
   .input-group-addon {
-    background-color: #fffef5;
+    background-color: $palette-color6;
     color: #666666;
+    border-radius: 0;
+    border: 0;
   }
 
   input.form-control {
     border-left: 0;
     margin-left: 0;
+    border: 0;
+    border-radius: 0;
+    width: 95%;
+  }
+}
+
+.filter-character-action {
+  .current-filter-character {
+    color: $link;
+  }
+}
+
+.filter-character-list {
+  .filter-character-element {
+    color: $palette-color2;
+    border: 1px solid $gray7;
+    background-color: $gray4;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+  }
+}
+
+$indent: 12px;
+
+.customer-view {
+  .customer-basic-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: $indent;
+    background-color: $basic-gray-background;
+
+    .customer-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .customer-data {
+      .group-rank {
+        span {
+          padding: 5px;
+          background-color: $gray-background-1;
+          border: 1px solid $gray-border-1;
+          margin-right: 6px;
+          border-radius: 3px;
+          display: inline-flex;
+          width: 60px;
+          justify-content: center;
+          line-height: 1.3333333;
+
+          &.vip {
+            background-color: $orange-background-1;
+            border: 1px solid $orange-border-1;
+            color: #ffffff;
+          }
+        }
+      }
+
+      .phonetic-name {
+        span {
+          display: inline-flex;
+          margin: 20px 6px 6px;
+        }
+      }
+
+      .name {
+        font-size: 22px;
+
+        span {
+          display: inline-flex;
+          margin: 6px 3px;
+        }
+      }
+
+      .notifiers {
+        margin-top: 12px;
+
+        i {
+          background-color: $tarco-background-1;
+          border: 1px solid $tarco-border-1;
+          padding: 6px;
+          border-radius: 50%;
+          color: #ffffff;
+          margin: 0 6px;
+        }
+      }
+    }
   }
 }

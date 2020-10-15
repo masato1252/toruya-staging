@@ -1,23 +1,21 @@
-<div class="customers-dashboard">
-  <%= notification_messages %>
-  <%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation, from_customer_id: params[:customer_id])) if @reservation %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation, from_customer_id: params[:customer_id])) if @reservation %>
 
-  <%= react_component("user_bot/dashboards/customers_dashboard", {
-    props: {
-      from: "",
-      customer: customer_options([ @customer || super_user.customers.new]).first,
-      i18n: {
-      }.merge!([
-        t("reservation"),
-        t("customer"),
-        t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo),
-        t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
-      ].inject(:merge!))
-    }
-  },
-  { camelize_props: false }
-  ) %>
-</div>
+<%= react_component("user_bot/dashboards/customers_dashboard", {
+  props: {
+    from: "",
+    customer: customer_options([ @customer || super_user.customers.new]).first,
+    notification_messages: @notification_messages,
+    i18n: {
+    }.merge!([
+      t("reservation"),
+      t("customer"),
+      t("common").slice(:processing, :select_a_menu, :select_a_staff, :date, :start_time, :end_time, :content, :minute, :number, :required_time, :menu, :responsible_employee, :memo),
+      t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
+    ].inject(:merge!))
+  }
+},
+{ camelize_props: false }
+                   ) %>
 
 <%#= react_component("management/customers/customers_dashboard",
                     { shop: shop,

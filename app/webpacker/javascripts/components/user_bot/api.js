@@ -120,6 +120,17 @@ const CustomerServices = {
       },
       responseType: "json"
     })
+  },
+  filter: ({page, pattern_number}) => {
+    return request({
+      method: "GET",
+      url: Routes.filter_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        page,
+        pattern_number: pattern_number || 0
+      },
+      responseType: "json"
+    })
   }
 }
 

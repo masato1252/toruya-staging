@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         collection do
           get :recent
           get :search
+          get :filter
           get "/:social_service_user_id", action: "index"
         end
       end

@@ -9,8 +9,6 @@ const CustomerSearchBar = ()  => {
   const { searchCustomers } = useContext(GlobalContext)
 
   const onHandleEnter = () => {
-    console.log(searchInput.current.value)
-
     if (searchInput.current.value) {
       searchCustomers(searchInput.current.value)
       searchInput.current.blur()
@@ -24,12 +22,17 @@ const CustomerSearchBar = ()  => {
         <span className="input-group-addon" id="basic-addon1">
           <i className="fa fa-search search-symbol" aria-hidden="true"></i>
         </span>
-        <InputWithEnter
-          ref={searchInput}
-          className="form-control"
-          placeholder="Search"
-          onHandleEnter={onHandleEnter}
-        />
+        <form action="">
+          <InputWithEnter
+            type="search"
+            ref={searchInput}
+            className="form-control"
+            placeholder="Search"
+            name="search"
+            id="search"
+            onHandleEnter={onHandleEnter}
+          />
+        </form>
       </div>
     </>
   )
