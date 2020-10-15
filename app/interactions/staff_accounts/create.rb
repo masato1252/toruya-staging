@@ -29,7 +29,12 @@ module StaffAccounts
       staff_account.mark_pending unless staff_account.active?
 
       if resend || staff_account.email_changed? || staff_account.phone_number_changed?
-        staff_account.user = User.find_by(email: staff_account.email) || User.find_by(phone_number: staff_account.phone_number)
+        staff_account.user =
+          if staff_account.phone_number.present?
+            User.find_by(phone_number: staff_account.phone_number)
+          elsif staff_account.email.present?
+            User.find_by(email: staff_account.email)
+          end
 
         # Owner staff account only be created after user login, so it is definitely active
         if staff_account.owner?

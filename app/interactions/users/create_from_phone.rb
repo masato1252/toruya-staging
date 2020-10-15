@@ -25,7 +25,6 @@ module Users
         end
       end
 
-
       ApplicationRecord.transaction do
         if user.new_record? &&
             referral_token && (referee = User.find_by(referral_token: referral_token)) &&
