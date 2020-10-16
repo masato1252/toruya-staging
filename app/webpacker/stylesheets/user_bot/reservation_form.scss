@@ -142,4 +142,71 @@
       margin-right: 3px;
     }
   }
+
+  .customers-list {
+    .customer-option {
+      display: flex;
+      border: 1px solid $gray7;
+      padding: 12px 15px;
+      color: #444;
+      font-size: 15px;
+      height: 68px;
+
+      &.here {
+        background-color: $palette-color11;
+      }
+
+      .customer-symbol {
+        width: 30%;
+
+        i {
+          margin-right: 3px;
+        }
+
+        .customer-level-symbol {
+          font-size: 17px;
+          display: inline-block;
+          margin-right: 3px;
+
+          &.regular {
+            color: $gray7;
+          }
+
+          &.vip {
+            color: $palette-color4-1;
+          }
+        }
+
+        .customer-reminder-permission {
+          &.fa-bell {
+            color: $gray5;
+
+            &.reminder-on {
+              color: $palette-color1;
+            }
+          }
+        }
+      }
+
+      .customer-info {
+        width: 70%;
+
+        .place {
+          text-align: right;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .no-more-customer {
+      text-align: center;
+      display: block;
+      border-color: #cb845f;
+      background-color: #dc8a5f;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      line-height: 50px;
+    }
+  }
 }

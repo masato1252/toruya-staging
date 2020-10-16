@@ -5,6 +5,7 @@ import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
+import Popup from 'reactjs-popup';
 
 import { ReservationServices } from "user_bot/api";
 import useCustomCompareEffect from "libraries/use_custom_compare_effect";
@@ -12,16 +13,46 @@ import ProcessingBar from "shared/processing_bar.js"
 import { TopNavigationBar, BottomNavigationBar } from "shared/components"
 import CalendarModal from "./calendar_modal";
 import MenuStaffsList from "./menu_staffs_list";
+import ReservationCustomersList from "./customers_list";
 import StaffStates from "./staff_states";
 import { displayErrors } from "libraries/helper.js"
+
+const CustomerPopup = ({props, selected_customer, open, closeModal}) => {
+  const {
+    is_editable,
+    current_staff_name,
+    reservation_staff_states: {
+      pending_state,
+      accepted_state,
+    }
+  } = props.reservation_properties
+
+  return (
+    <div className="modal fade" id="customer-modal" tabIndex="-1" role="dialog">
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div className="modal-body">
+            {selected_customer?.id}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const UserBotReservationForm = ({props}) => {
   moment.locale('ja');
 
-  // TODO: disable, view tip, helper, review old form
+  // TODO: add customer
   const i18n = props.i18n
   const [menu_staffs_list, setMenuStaffsList] = useState(props.reservation_form.menu_staffs_list)
   const [staff_states, setStaffStates] = useState(props.reservation_form.staff_states)
+  const [customers_list, setCustomersList] = useState(props.reservation_form.customers_list)
+  const [selected_customer, setSelectedCustomer] = useState()
+  const [customerModalopen, setCustomerModalOpen] = useState(false);
   const [processing, setProcessing] = useState(false)
   const [reservation_errors, setReservationErrors] = useState({})
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState, getValues, control } = useForm({
@@ -279,6 +310,14 @@ const UserBotReservationForm = ({props}) => {
             setMenuStaffsList(arrayMove([...menu_staffs_list], oldIndex, newIndex) )
           }}
         />
+        <div className="field-header">Customers List</div>
+        <ReservationCustomersList
+          props={props}
+          customers_list={customers_list}
+          setCustomersList={setCustomersList}
+          setSelectedCustomer={setSelectedCustomer}
+          setCustomerModalOpen={setCustomerModalOpen}
+        />
         <div className="field-header">{i18n.memo}</div>
         <textarea
           ref={register}
@@ -312,6 +351,12 @@ const UserBotReservationForm = ({props}) => {
         dateSelectedCallback={onSelectStartDate}
         selectedDate={start_time_date_part}
         i18n={i18n}
+      />
+      <CustomerPopup
+        props={props}
+        selected_customer={selected_customer}
+        open={customerModalopen}
+        closeModal={() => setCustomerModalOpen(false)}
       />
     </div>
   )

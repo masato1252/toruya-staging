@@ -7,6 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { TopNavigationBar, BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerSearchBar from "./customer_search_bar"
+import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
   const { customers } = useContext(GlobalContext)
@@ -94,35 +95,21 @@ const UserBotCustomersList = ({}) => {
           }
         >
           {customers.map((customer) => {
-            return (
-              <div
-                key={customer.id}
-                className={`customer-option ${selected_customer?.id == customer.value ? "here" : ""}`}
-                onClick={() => {
-                  dispatch({
-                    type: "SELECT_CUSTOMER",
-                    payload: { customer }
-                  })
-                  dispatch({
-                    type: "CHANGE_VIEW",
-                    payload: { view: "customer_info_view" }
-                  })
-                }}
-              >
-                <div className="customer-symbol">
-                  <span className={`customer-level-symbol ${customer.rank && customer.rank.key}`}>
-                    <i className="fa fa-address-card"></i>
-                  </span>
-                  <i className={`customer-reminder-permission fa fa-bell ${customer.reminderPermission ? "reminder-on" : ""}`}></i>
-                  {customer.socialUserId  &&  <i className="fa fab fa-line"></i>}
-                </div>
+            return <CustomerElement
+              customer={customer}
+              selected={selected_customer?.id == customer.value}
+              onHandleClick={() => {
+                dispatch({
+                  type: "SELECT_CUSTOMER",
+                  payload: { customer }
+                })
 
-                <div className="customer-info">
-                  <p>{customer.label}</p>
-                  <p className="place">{customer.address}</p>
-                </div>
-              </div>
-            )
+                dispatch({
+                  type: "CHANGE_VIEW",
+                  payload: { view: "customer_info_view" }
+                })
+              }}
+            />
           })}
         </InfiniteScroll>
         <BottomBar />
