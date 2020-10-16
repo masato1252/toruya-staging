@@ -1,14 +1,17 @@
 "use strict";
 
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import ReactSelect from "react-select";
 import { sortableContainer, sortableElement } from "react-sortable-hoc";
 
 import { selectCustomStyles } from "libraries/styles";
 import { displayErrors, arrayWithLength } from "libraries/helper";
 import { DragHandle } from "shared/components";
+import { GlobalContext } from "context/user_bots/reservation_form/global_state";
 
-const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, props, menu_staffs_fields, menu_index, reservation_errors}) => {
+const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => {
+  const { menu_staffs_list, dispatch, props, reservation_errors } = useContext(GlobalContext)
+
   return (
     <div
       className="menu-option-field"
@@ -46,7 +49,10 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
             data[menu_index]["menu_interval_time"] = option.interval
             data[menu_index]["staff_ids"] = arrayWithLength(Math.max(option.min_staffs_number, 1), { staff_id: "" })
 
-            setMenuStaffsList([...data])
+            dispatch({
+              type: "UPDATE_MENU_STAFFS_LIST",
+              payload: [...data]
+            })
           }}
           isDisabled={false}
         />
@@ -63,7 +69,10 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
                 const data = [...menu_staffs_list];
                 data[menu_index]["menu_required_time"] = event.target.value
 
-                setMenuStaffsList([...data])
+                dispatch({
+                  type: "UPDATE_MENU_STAFFS_LIST",
+                  payload: [...data]
+                })
               })}
             />
           </div>
@@ -77,7 +86,10 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
                   const data = [...menu_staffs_list];
                   data[menu_index]["staff_ids"][staff_index] = { staff_id: event.target.value }
 
-                  setMenuStaffsList([...data])
+                  dispatch({
+                    type: "UPDATE_MENU_STAFFS_LIST",
+                    payload: [...data]
+                  })
                 }}
                 value={staff_field?.staff_id || ""}
               >
@@ -99,7 +111,10 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
                     ...menu_staffs_list[menu_index]["staff_ids"].slice(staff_index + 1)
                   ]
 
-                  setMenuStaffsList([...data])
+                  dispatch({
+                    type: "UPDATE_MENU_STAFFS_LIST",
+                    payload: [...data]
+                  })
                 }}>
 
                 <button className="btn btn-orange">
@@ -118,7 +133,11 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
               const data = [...menu_staffs_list];
 
               data[menu_index]["staff_ids"] = [...data[menu_index]["staff_ids"], {staff_id: null}]
-              setMenuStaffsList([...data])
+
+              dispatch({
+                type: "UPDATE_MENU_STAFFS_LIST",
+                payload: [...data]
+              })
             }}>
             <button className="btn btn-yellow">
               <i className="fa fa-user-plus" aria-hidden="true"></i>{props.i18n.responsible_employee}
@@ -129,7 +148,10 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
           <div
             className="remove-menu-block"
             onClick={() => {
-              setMenuStaffsList([...menu_staffs_list.slice(0, menu_index), ...menu_staffs_list.slice(menu_index + 1)])
+              dispatch({
+                type: "UPDATE_MENU_STAFFS_LIST",
+                payload: [...menu_staffs_list.slice(0, menu_index), ...menu_staffs_list.slice(menu_index + 1)]
+              })
             }}>
             <button className="btn btn-orange"><i className="fa fa-minus"></i></button>
             <span>{props.i18n.delete}</span>
@@ -140,17 +162,15 @@ const MenuOptionField = sortableElement(({menu_staffs_list, setMenuStaffsList, p
   )
 })
 
-const MenuStaffsList = sortableContainer(({props, menu_staffs_list, setMenuStaffsList, staff_states, setStaffStates, all_staff_ids, reservation_errors}) => {
+const MenuStaffsList = sortableContainer(() => {
+  const { menu_staffs_list, dispatch, props } = useContext(GlobalContext)
+
   return (
     <div>
       {menu_staffs_list.map((menu_staffs_fields, menu_index) => {
         return (
           <MenuOptionField
             key={`menu-index-${menu_index}`}
-            menu_staffs_list={menu_staffs_list}
-            reservation_errors={reservation_errors}
-            setMenuStaffsList={setMenuStaffsList}
-            props={props}
             menu_staffs_fields={menu_staffs_fields}
             menu_index={menu_index}
             index={menu_index}
@@ -161,8 +181,12 @@ const MenuStaffsList = sortableContainer(({props, menu_staffs_list, setMenuStaff
       <div
         className="add-menu-block"
         onClick={() => {
-        const data = [...menu_staffs_list]
-          setMenuStaffsList([...menu_staffs_list, {staff_ids: [{staff_id: null}]}])
+          const data = [...menu_staffs_list]
+
+          dispatch({
+            type: "UPDATE_MENU_STAFFS_LIST",
+            payload: [...menu_staffs_list, {staff_ids: [{staff_id: null}]}]
+          })
         }}>
         <button className="btn btn-yellow">
           <i className="fa fa-plus" aria-hidden="true" ></i>

@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import arrayMove from "array-move";
 import moment from "moment-timezone";
@@ -8,25 +8,27 @@ import _ from "lodash";
 import Popup from 'reactjs-popup';
 
 import { ReservationServices } from "user_bot/api";
+import useCustomCompareEffect from "libraries/use_custom_compare_effect";
 import ProcessingBar from "shared/processing_bar.js"
 import { TopNavigationBar, BottomNavigationBar } from "shared/components"
 import CalendarModal from "./calendar_modal";
-import CustomerModal from "./customer_modal";
 import MenuStaffsList from "./menu_staffs_list";
 import ReservationCustomersList from "./customers_list";
 import StaffStates from "./staff_states";
 import { displayErrors } from "libraries/helper.js"
 
-import { GlobalProvider, GlobalContext } from "context/user_bots/reservation_form/global_state"
-
-const Form = () => {
+const UserBotReservationForm = ({props}) => {
   moment.locale('ja');
-  const { reservation_errors, menu_staffs_list, staff_states, props, dispatch, all_staff_ids, all_menu_ids } = useContext(GlobalContext)
-
-  const { i18n } = props
 
   // TODO: add customer
+  const i18n = props.i18n
+  const [menu_staffs_list, setMenuStaffsList] = useState(props.reservation_form.menu_staffs_list)
+  const [staff_states, setStaffStates] = useState(props.reservation_form.staff_states)
+  const [customers_list, setCustomersList] = useState(props.reservation_form.customers_list)
+  const [selected_customer, setSelectedCustomer] = useState()
+  const [customerModalopen, setCustomerModalOpen] = useState(false);
   const [processing, setProcessing] = useState(false)
+  const [reservation_errors, setReservationErrors] = useState({})
   const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState, getValues, control } = useForm({
     defaultValues: {
       start_time_date_part: props.reservation_form.start_time_date_part,
@@ -51,9 +53,19 @@ const Form = () => {
       return;
     }
 
-    const total_required_time = menu_staffs_list.reduce((sum, menu_fields) => sum + Number(menu_fields.menu_required_time || 0), 0)
+    const total_required_time = menu_staffs_list.reduce((sum, menu_fields) => sum + Number(menu_fields.menu?.required_time || 0), 0)
 
     return start_at().add(total_required_time, "minutes")
+  }
+
+  const _all_staff_ids = () => {
+    return _.uniq(
+      _.compact(
+        _.flatMap(
+          menu_staffs_list, (menu_mapping) => menu_mapping.staff_ids
+        ).map((staff_element) => staff_element.staff_id)
+      )
+    )
   }
 
   const onSelectStartDate = (date) => {
@@ -72,7 +84,7 @@ const Form = () => {
       }
     } = props.reservation_properties;
 
-    const new_staff_states = all_staff_ids().map((staff_id) => {
+    const new_staff_states = _all_staff_ids().map((staff_id) => {
       let state;
       let existing_staff_state = staff_states.find(staff_state => String(staff_state.staff_id) === String(staff_id))
       existing_staff_state = existing_staff_state || existing_staff_states.find(staff_state => String(staff_state.staff_id) === String(staff_id))
@@ -95,10 +107,7 @@ const Form = () => {
       )
     })
 
-    dispatch({
-      type: "UPDATE_STAFF_STATES",
-      payload: new_staff_states
-    })
+    setStaffStates(new_staff_states)
   }, [menu_staffs_list])
 
   useEffect(() => {
@@ -123,21 +132,26 @@ const Form = () => {
     const [error, response] = await ReservationServices.validate(props.reservation_form.shop.id, props.reservation_form.reservation_id, params)
 
     if (response?.data) {
-      dispatch({
-        type: "UPDATE_RESERVATION_ERRORS",
-        payload: response.data
-      })
+      setReservationErrors(response.data)
     }
 
     setProcessing(false)
   }
   const debounceValidateReservation = _.debounce(validateReservation, 500, true)
 
+  const _all_menu_ids = () => {
+    return _.uniq(
+      _.compact(
+        _.flatMap(menu_staffs_list, (menu_mapping) => menu_mapping.menu_id)
+      )
+    )
+  }
+
   const _isValidToReserve = () => {
     return (
       menu_staffs_list.length &&
-      all_menu_ids().length &&
-      all_staff_ids().length
+      _all_menu_ids().length &&
+      _all_staff_ids().length
     )
   }
 
@@ -196,7 +210,7 @@ const Form = () => {
 
   return (
     <div className="reservation-form">
-      <ProcessingBar processing={processing} />
+      <ProcessingBar processing={processing}  />
       <TopNavigationBar
         leading={<a href={props.from}><i className="fa fa-angle-left fa-2x"></i></a>}
         title={props.reservation_form.reservation_id ? i18n.edit_reservation : i18n.new_reservation}
@@ -246,21 +260,38 @@ const Form = () => {
         <div className="field-row" >
           <span>staff states</span>
           <span>
-            <StaffStates />
+            <StaffStates
+              menu_staffs_list={menu_staffs_list}
+              setMenuStaffsList={setMenuStaffsList}
+              staff_states={staff_states}
+              setStaffStates={setStaffStates}
+              all_staff_ids={_all_staff_ids()}
+              props={props}
+            />
           </span>
         </div>
         <div className="field-header">{i18n.reservation_content}</div>
         <MenuStaffsList
+          props={props}
+          staff_states={staff_states}
+          setStaffStates={setStaffStates}
+          menu_staffs_list={menu_staffs_list}
+          setMenuStaffsList={setMenuStaffsList}
+          reservation_errors={reservation_errors}
+          all_staff_ids={_all_staff_ids()}
           useDragHandle
           onSortEnd = {({oldIndex, newIndex}) => {
-            dispatch({
-              type: "UPDATE_MENU_STAFFS_LIST",
-              payload: arrayMove([...menu_staffs_list], oldIndex, newIndex)
-            })
+            setMenuStaffsList(arrayMove([...menu_staffs_list], oldIndex, newIndex) )
           }}
         />
         <div className="field-header">Customers List</div>
-        <ReservationCustomersList />
+        <ReservationCustomersList
+          props={props}
+          customers_list={customers_list}
+          setCustomersList={setCustomersList}
+          setSelectedCustomer={setSelectedCustomer}
+          setCustomerModalOpen={setCustomerModalOpen}
+        />
         <div className="field-header">{i18n.memo}</div>
         <textarea
           ref={register}
@@ -295,16 +326,13 @@ const Form = () => {
         selectedDate={start_time_date_part}
         i18n={i18n}
       />
-      <CustomerModal />
+      <CustomerPopup
+        props={props}
+        selected_customer={selected_customer}
+        open={customerModalopen}
+        closeModal={() => setCustomerModalOpen(false)}
+      />
     </div>
-  )
-}
-
-const UserBotReservationForm = ({props}) => {
-  return (
-    <GlobalProvider props={props}>
-      <Form />
-    </GlobalProvider>
   )
 }
 

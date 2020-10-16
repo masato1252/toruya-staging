@@ -1,9 +1,13 @@
 "use strict"
 
-import React, { useState } from "react";
+import React, { useContext } from "react";
+
+import { GlobalContext } from "context/user_bots/reservation_form/global_state";
 import CustomerElement from "user_bot/dashboards/customers_dashboard/customer_element";
 
-const ReservationCustomersList = ({props, customers_list, setCustomersList, setSelectedCustomer, setCustomerModalOpen}) =>  {
+const ReservationCustomersList = () =>  {
+  const { customers_list, dispatch, props } = useContext(GlobalContext)
+
   return (
     <div className="customers-list">
       {customers_list.map((customer) => {
@@ -12,7 +16,11 @@ const ReservationCustomersList = ({props, customers_list, setCustomersList, setS
             key={customer.id}
             customer={customer}
             onHandleClick={() => {
-              setSelectedCustomer(customer)
+              dispatch({
+                type: "SELECT_CUSTOMER",
+                payload: customer
+              })
+
               $("#customer-modal").modal("show")
             }}
           />

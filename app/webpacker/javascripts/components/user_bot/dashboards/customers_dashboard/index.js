@@ -5,7 +5,6 @@ import UserBotCustomersList from "./customers_list"
 import UserBotCustomerInfoView from "./customer_info_view"
 import { GlobalProvider, GlobalContext } from "context/user_bots/customers_dashboard/global_state"
 
-
 const DashboardView = () => {
   const { view } = useContext(GlobalContext)
   let customerView

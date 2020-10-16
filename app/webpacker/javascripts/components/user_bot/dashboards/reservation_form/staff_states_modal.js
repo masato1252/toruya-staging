@@ -1,8 +1,12 @@
 "use strict";
 
-import React from "react";
+import React, { useContext } from "react";
 
-const StaffStatesModal = ({staff_states, menu_staffs_list, setStaffStates, setMenuStaffsList, props, total_staffs_number, accepted_staffs_number}) => {
+import { GlobalContext } from "context/user_bots/reservation_form/global_state";
+
+const StaffStatesModal = ({total_staffs_number, accepted_staffs_number}) => {
+  const { staff_states, props, all_staff_ids, dispatch } = useContext(GlobalContext)
+
   const {
     title,
     message,
@@ -46,7 +50,10 @@ const StaffStatesModal = ({staff_states, menu_staffs_list, setStaffStates, setMe
     if (_is_current_staff_responsible()) {
       new_staff_states[current_staff_state_index]["state"] = _is_current_staff_approved() ? pending_state : accepted_state
 
-      setStaffStates(new_staff_states)
+      dispatch({
+        type: "UPDATE_STAFF_STATES",
+        payload: new_staff_states
+      })
     }
 
     $("#staff-states-modal").modal("hide")
