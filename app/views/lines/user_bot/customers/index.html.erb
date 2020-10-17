@@ -2,7 +2,9 @@
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
-    from: "",
+    from: params[:from],
+    reservation_id: params[:reservation_id],
+    shop: shop,
     customer: customer_options([ @customer || super_user.customers.new]).first,
     notification_messages: @notification_messages,
     i18n: {
@@ -15,7 +17,7 @@
   }
 },
 { camelize_props: false }
-                   ) %>
+) %>
 
 <%#= react_component("management/customers/customers_dashboard",
                     { shop: shop,

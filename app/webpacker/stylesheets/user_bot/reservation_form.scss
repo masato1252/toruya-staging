@@ -186,6 +186,16 @@
             }
           }
         }
+
+        .customer-reservation-state {
+          &.accepted {
+            color: $palette-color2-2;
+          }
+
+          &.pending {
+            color: $palette-color4-1;
+          }
+        }
       }
 
       .customer-info {

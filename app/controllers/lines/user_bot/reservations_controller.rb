@@ -16,10 +16,9 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def form
-    @body_class = "resNew"
     all_options
 
-    if Rails.cache.read(reservation_params_hash_cache_key) && params[:from_adding_customer]
+    if Rails.cache.read(reservation_params_hash_cache_key) && params[:from] == "adding_customer"
       reservarion_params = JSON.parse(Rails.cache.read(reservation_params_hash_cache_key)).with_indifferent_access
       menu_staffs_list = reservarion_params.delete(:menu_staffs_list)
       customers_list = reservarion_params.delete(:customers_list)
@@ -32,7 +31,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       @staff_states = staff_states.presence || []
       @customers_list = Array.wrap(customers_list).map {|h| h.merge!(details: h[:details]&.to_json ) }
     else
-      @reservation = shop.reservations.find_by(id: params[:id])
+      @reservation = shop.reservations.find_by(id: params[:id] || params[:reservation_id])
       @reservation ||= shop.reservations.new(
         start_time_date_part: params[:start_time_date_part] || Time.zone.now.to_s(:date),
         start_time_time_part: Time.zone.now.to_s(:time),
@@ -196,7 +195,13 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   def add_customer
     Rails.cache.write(reservation_params_hash_cache_key, reservation_params_hash.to_json)
 
-    render json: { redirect_to: user_customers_path(super_user, reservation_id: reservation_params_hash[:reservation_id], from_reservation: true) }
+    render json: {
+      redirect_to: SiteRouting.new(view_context).customers_path(
+        user_id: super_user.id,
+        reservation_id: reservation_params_hash[:reservation_id],
+        from: "reservation"
+      )
+    }
   end
 
   private
@@ -270,10 +275,15 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
       convert_params(@reservation_params_hash[:menu_staffs_list])
     end
 
+    @reservation_params_hash.delete(:controller)
+    @reservation_params_hash.delete(:action)
+    @reservation_params_hash.delete(:format)
+    @reservation_params_hash.delete(:reservation)
+
     @reservation_params_hash
   end
 
   def reservation_params_hash_cache_key
-    "user_id-#{current_user.id}-reservation_params_hash"
+    "user-bot-user_id-#{current_user.id}-reservation_params_hash"
   end
 end

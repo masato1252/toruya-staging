@@ -2,7 +2,7 @@
 
 import React from "react";
 
-const CustomerElement = ({customer, selected, onHandleClick}) => {
+const CustomerElement = ({customer, selected, onHandleClick, stateIcon}) => {
   return (
     <div
       key={customer.id}
@@ -10,6 +10,7 @@ const CustomerElement = ({customer, selected, onHandleClick}) => {
       onClick={onHandleClick}
     >
       <div className="customer-symbol">
+        {stateIcon}
         <span className={`customer-level-symbol ${customer.rank && customer.rank.key}`}>
           <i className="fa fa-address-card"></i>
         </span>

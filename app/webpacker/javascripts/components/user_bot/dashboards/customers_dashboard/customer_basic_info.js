@@ -6,6 +6,21 @@ import { GlobalContext } from "context/user_bots/customers_dashboard/global_stat
 import { NotificationMessages } from "shared/components"
 import { CustomerTopActions } from "./top_actions";
 
+const CustomerTopRightAction = () => {
+  const { selected_customer, props } = useContext(GlobalContext)
+
+  if (!selected_customer?.id) { return <span></span>; }
+
+  switch(props.from) {
+    case "reservation":
+      return <a href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
+          Add this customer
+        </a>
+    default:
+      return <span>EDIT</span>
+  }
+}
+
 const CustomerBasicInfo = () => {
   const { dispatch, selected_customer, notification_messages } = useContext(GlobalContext)
 
@@ -28,9 +43,7 @@ const CustomerBasicInfo = () => {
             >
             </i>
           }
-          tail={
-            <span>EDIT</span>
-          }
+          tail={<CustomerTopRightAction />}
         />
         <div className="customer-data">
           <div className="group-rank">

@@ -1,5 +1,7 @@
-import React, { createContext, useReducer, useRef, useMemo } from "react";
+import React, { createContext, useReducer, useRef, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import _ from "lodash";
+import moment from "moment-timezone";
 
 import combineReducer from "context/combine_reducer";
 import reservationReducer from "context/user_bots/reservation_form/reservation_reducer";
@@ -26,6 +28,16 @@ export const GlobalProvider = ({ props, children }) => {
   }, [])
 
   const [state, dispatch] = useReducer(reducers, initialValue)
+  const [processing, setProcessing] = useState(false)
+  const hook_form_methods = useForm({
+    defaultValues: {
+      start_time_date_part: props.reservation_form.start_time_date_part,
+      start_time_time_part: props.reservation_form.start_time_time_part,
+      end_time_date_part: props.reservation_form.end_time_date_part,
+      end_time_time_part: props.reservation_form.end_time_time_part,
+      memo: props.reservation_form.memo
+    }
+  });
 
   const { menu_staffs_list } = state.reservation_states
 
@@ -47,13 +59,41 @@ export const GlobalProvider = ({ props, children }) => {
     )
   }
 
+  const start_time_date_part = hook_form_methods.watch("start_time_date_part")
+  const start_time_time_part = hook_form_methods.watch("start_time_time_part")
+
+  const start_at = () => {
+    if (!start_time_date_part || !start_time_time_part) {
+      return;
+    }
+
+    return moment.tz(`${start_time_date_part} ${start_time_time_part}`, "YYYY-MM-DD HH:mm", props.timezone)
+  }
+
+  const end_at = () => {
+    if (!start_at() || !_.filter(menu_staffs_list, (menu_fields) => !!menu_fields.menu?.value).length) {
+      return;
+    }
+
+    const total_required_time = menu_staffs_list.reduce((sum, menu_fields) => sum + Number(menu_fields.menu_required_time || 0), 0)
+
+    return start_at().add(total_required_time, "minutes")
+  }
+
   return (
     <GlobalContext.Provider value={{
       props,
+      ...hook_form_methods,
       ...state.reservation_states,
       dispatch,
       all_staff_ids,
-      all_menu_ids
+      all_menu_ids,
+      processing,
+      setProcessing,
+      start_time_date_part,
+      start_time_time_part,
+      start_at,
+      end_at
     }}
     >
       {children}

@@ -21,13 +21,13 @@ module UserBotAuthorization
   end
 
   def where_user_are
-    if params[:user_id] && params[:shop_id]
+    if params[:user_id].present? && params[:shop_id].present?
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
-    elsif params[:shop_id]
+    elsif params[:shop_id].present?
       write_user_bot_cookies(:current_shop_id, params[:shop_id])
-      write_user_bot_cookies(:current_super_user_id, shop.user_id)
-    elsif params[:user_id]
+      write_user_bot_cookies(:current_super_user_id, Shop.find(params[:shop_id]).user_id)
+    elsif params[:user_id].present?
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
       write_user_bot_cookies(:current_shop_id, nil) if super_user.shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
     else

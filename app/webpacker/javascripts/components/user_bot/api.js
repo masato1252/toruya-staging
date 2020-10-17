@@ -95,6 +95,17 @@ const ReservationServices = {
       data: data,
       responseType: "json"
     })
+  },
+  addCustomer: ({shop_id, data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.add_customer_lines_user_bot_shop_reservations_path(shop_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
   }
 }
 

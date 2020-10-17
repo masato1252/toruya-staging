@@ -1,7 +1,7 @@
 "use strict"
 
-import React, { useEffect, useState, useContext } from "react";
-import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import React, { useEffect, useState, useContext, useCallback } from "react";
+import { useForm } from "react-hook-form";
 import arrayMove from "array-move";
 import moment from "moment-timezone";
 import _ from "lodash";
@@ -21,40 +21,14 @@ import { GlobalProvider, GlobalContext } from "context/user_bots/reservation_for
 
 const Form = () => {
   moment.locale('ja');
-  const { reservation_errors, menu_staffs_list, staff_states, props, dispatch, all_staff_ids, all_menu_ids } = useContext(GlobalContext)
+  const {
+    reservation_errors, menu_staffs_list, staff_states, customers_list, props, dispatch, all_staff_ids, all_menu_ids,
+    processing, setProcessing,
+    register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState, getValues, control,
+    start_time_date_part, start_time_time_part, start_at, end_at
+  } = useContext(GlobalContext)
 
   const { i18n } = props
-
-  // TODO: add customer
-  const [processing, setProcessing] = useState(false)
-  const { register, handleSubmit, watch, setValue, clearErrors, setError, errors, formState, getValues, control } = useForm({
-    defaultValues: {
-      start_time_date_part: props.reservation_form.start_time_date_part,
-      start_time_time_part: props.reservation_form.start_time_time_part,
-      end_time_date_part: props.reservation_form.end_time_date_part,
-      end_time_time_part: props.reservation_form.end_time_time_part
-    }
-  });
-  const start_time_date_part = watch("start_time_date_part")
-  const start_time_time_part = watch("start_time_time_part")
-
-  const start_at = () => {
-    if (!start_time_date_part || !start_time_time_part) {
-      return;
-    }
-
-    return moment.tz(`${start_time_date_part} ${start_time_time_part}`, "YYYY-MM-DD HH:mm", props.timezone)
-  }
-
-  const end_at = () => {
-    if (!start_at() || !_.filter(menu_staffs_list, (menu_fields) => !!menu_fields.menu?.value).length) {
-      return;
-    }
-
-    const total_required_time = menu_staffs_list.reduce((sum, menu_fields) => sum + Number(menu_fields.menu_required_time || 0), 0)
-
-    return start_at().add(total_required_time, "minutes")
-  }
 
   const onSelectStartDate = (date) => {
     setValue("start_time_date_part", date)
@@ -131,7 +105,7 @@ const Form = () => {
 
     setProcessing(false)
   }
-  const debounceValidateReservation = _.debounce(validateReservation, 500, true)
+  const debounceValidateReservation = useCallback(_.debounce(validateReservation, 500, true), [])
 
   const _isValidToReserve = () => {
     return (
@@ -146,6 +120,7 @@ const Form = () => {
 
     let error, response;
 
+    setProcessing(true)
     const params = _.merge(
       data,
       {
@@ -153,7 +128,8 @@ const Form = () => {
         end_time_time_part: end_at().format("HH:mm"),
         by_staff_id: props.reservation_form.by_staff_id,
         menu_staffs_list,
-        staff_states
+        staff_states,
+        customers_list
       }
     )
 
@@ -167,6 +143,7 @@ const Form = () => {
     if (response?.data?.redirect_to) {
       window.location = response.data.redirect_to
     }
+    setProcessing(false)
   }
 
   const startTimeError = () => {

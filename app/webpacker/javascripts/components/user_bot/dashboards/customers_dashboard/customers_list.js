@@ -96,6 +96,7 @@ const UserBotCustomersList = ({}) => {
         >
           {customers.map((customer) => {
             return <CustomerElement
+              key={`customer-element-${customer.id}`}
               customer={customer}
               selected={selected_customer?.id == customer.value}
               onHandleClick={() => {
