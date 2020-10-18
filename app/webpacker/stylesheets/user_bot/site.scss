@@ -283,3 +283,24 @@ a {
     position: relative;
   }
 }
+
+.nav-tabs {
+  li {
+    width: 33.3%;
+
+    a {
+      margin-right: 0;
+      border-color: $gray-border-1;
+      border-radius: 0;
+      background-color: $gray-background-1;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    &.active {
+      a {
+        color: $gray-word-1;
+      }
+    }
+  }
+}

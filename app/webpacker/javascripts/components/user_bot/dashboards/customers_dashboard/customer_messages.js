@@ -5,14 +5,14 @@ import { GlobalContext } from "context/user_bots/customers_dashboard/global_stat
 import CustomerBasicInfo from "./customer_basic_info";
 import CustomerNav from "./customer_nav";
 
-const UserBotCustomerInfoView = () => {
+const UserBotCustomerMessages = () => {
   return (
     <div className="customer-view">
       <CustomerBasicInfo />
       <CustomerNav />
-      view
+      messages
     </div>
   )
 }
 
-export default UserBotCustomerInfoView;
+export default UserBotCustomerMessages;

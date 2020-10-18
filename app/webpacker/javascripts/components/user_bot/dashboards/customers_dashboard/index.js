@@ -3,25 +3,25 @@
 import React, { useState, useContext } from "react";
 import UserBotCustomersList from "./customers_list"
 import UserBotCustomerInfoView from "./customer_info_view"
+import UserBotCustomerReservations from "./customer_reservations"
+import UserBotCustomerMessages from "./customer_messages"
 import { GlobalProvider, GlobalContext } from "context/user_bots/customers_dashboard/global_state"
 
 const DashboardView = () => {
   const { view } = useContext(GlobalContext)
-  let customerView
 
   switch (view) {
     case "list":
-      customerView = <UserBotCustomersList />
-      break;
+      return <UserBotCustomersList />
     case "customer_info_view":
-      customerView = <UserBotCustomerInfoView />
-      break;
+      return <UserBotCustomerInfoView />
+    case "customer_reservations":
+      return <UserBotCustomerReservations />
+    case "customer_messages":
+      return <UserBotCustomerMessages />
     default:
-      customerView = <UserBotCustomersList />
-      break;
+      return <UserBotCustomersList />
   }
-
-  return customerView;
 }
 
 const UserBotCustomersDashboard = ({props}) => {
