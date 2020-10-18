@@ -45,6 +45,16 @@ Rails.application.routes.draw do
         end
       end
 
+      scope module: "customers", as: "customer", path: "customer" do
+        resources :reservations, only: [:index] do
+          collection do
+            get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
+            get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
+            get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+          end
+        end
+      end
+
       resources :settings, only: [:index] do
         collection do
           get "/:social_service_user_id", action: "index"

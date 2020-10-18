@@ -17,11 +17,6 @@
       </div>
       <%= render "reservations/show_modal/reservation_info", reservation: @reservation, sentences: @sentences, user_ability: @user_ability %>
     </div>
-
-    <% if from_line_bot %>
-      <%= render "reservations/show_modal/user_bot_buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
-    <% else %>
-      <%= render "reservations/show_modal/buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
-    <% end %>
+    <%= render "reservations/show_modal/buttons", reservation: @reservation, user_ability: @user_ability, shop_user: @shop_user %>
   </div>
 </div>

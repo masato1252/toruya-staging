@@ -1,3 +1,7 @@
+# params[:from]
+# customer_dashboard: customer dashboard -> reservation form(let reservation form know, it is from customer dashboard, for something like update)
+# adding_customer: customer dashboard -> reservation form(let reservation form know, it is from customer dashboard, for adding customer)
+# reservation: reservation form -> customer dashboard(let Customer dashboard know, it is from reservation)
 require "site_routing"
 
 class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
@@ -9,10 +13,10 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @sentences = view_context.reservation_staff_sentences(@reservation)
     @shop_user = @reservation.shop.user
     @user_ability = ability(@shop_user, @reservation.shop)
-    @customer = Customer.find_by(id: params[:from_customer_id])
-    @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:from_customer_id])
+    @customer = Customer.find_by(id: params[:customer_id])
+    @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
 
-    render template: params[:from_customer_id] ? "reservations/customer_reservation_show" : "reservations/show", layout: false
+    render template: params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show", layout: false
   end
 
   def form
@@ -136,9 +140,11 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     outcome = ::Reservations::Save.run(reservation: @reservation, params: reservation_params_hash)
 
     if outcome.valid?
-      if params[:from_customer_id].present?
-        # TODO: Fix routing
-        redirect_to user_customers_path(shop.user, customer_id: params[:from_customer_id])
+      if params[:from] == "customer_dashboard" && params[:customer_id].present?
+        render json: {
+          status: "successful",
+          redirect_to: SiteRouting.new(view_context).customers_path(@reservation.shop.user_id, customer_id: params[:customer_id], reservation_id: @reservation.id)
+        }
       else
         render json: {
           status: "successful",
@@ -160,9 +166,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
 
     Reservations::Delete.run!(reservation: @reservation)
 
-    if params[:from_customer_id].present?
-      # TODO: Fix routing
-      redirect_to user_customers_path(shop.user, shop_id: params[:shop_id], customer_id: params[:from_customer_id])
+    if params[:from] == "customer_dashboard" && params[:customer_id].present?
+      redirect_to SiteRouting.new(view_context).customers_path(shop.user_id, shop_id: params[:shop_id], customer_id: params[:customer_id])
     else
       redirect_to SiteRouting.new(view_context).member_path, notice: I18n.t("reservation.delete_successfully_message")
     end
@@ -197,7 +202,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
 
     render json: {
       redirect_to: SiteRouting.new(view_context).customers_path(
-        user_id: super_user.id,
+        super_user.id,
         reservation_id: reservation_params_hash[:reservation_id],
         from: "reservation"
       )

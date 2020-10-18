@@ -142,6 +142,16 @@ const CustomerServices = {
       },
       responseType: "json"
     })
+  },
+  reservations: ({customer_id}) => {
+    return request({
+      method: "GET",
+      url: Routes.lines_user_bot_customer_reservations_path({format: "json"}),
+      params: {
+        customer_id,
+      },
+      responseType: "json"
+    })
   }
 }
 

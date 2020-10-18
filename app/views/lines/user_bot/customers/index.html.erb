@@ -1,4 +1,4 @@
-<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation, from_customer_id: params[:customer_id])) if @reservation %>
+<%= jump_out_modal(lines_user_bot_shop_reservation_path(@reservation.shop, @reservation, customer_id: params[:customer_id], from: "customer_dashboard")) if @reservation %>
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {

@@ -129,7 +129,9 @@ const Form = () => {
         by_staff_id: props.reservation_form.by_staff_id,
         menu_staffs_list,
         staff_states,
-        customers_list
+        customers_list,
+        from: props.params.from,
+        customer_id: props.params.customer_id
       }
     )
 

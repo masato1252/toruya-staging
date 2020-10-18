@@ -1,5 +1,6 @@
 <%= react_component("user_bot/dashboards/reservation_form", {
   props: {
+    params: params,
     from: request.referrer,
     timezone: Time.zone.tzinfo.name,
     calendar: {
@@ -17,7 +18,6 @@
       },
     },
     reservation_form: @reservation.attributes.slice("id", "memo").merge!({
-      from_customer_id: params[:from_customer_id],
       shop: @reservation.shop.attributes,
       reservation_id: @reservation.id,
       start_time_date_part: @reservation.start_time_date || @reservation.start_time_date_part,

@@ -24,11 +24,13 @@ class SiteRouting
   end
 
   # TODO: controller and view required
-  def customers_path(*args)
+  def customers_path(user_id, *args)
+    options = args.extract_options!
+
     if from_line_bot
-      h.lines_user_bot_customers_path(*args)
+      h.lines_user_bot_customers_path(options.merge(user_id: user_id))
     else
-      h.user_customers_path(*args)
+      h.user_customers_path(options.merge(user_id: user_id))
     end
   end
 
@@ -59,6 +61,42 @@ class SiteRouting
 
   def custom_schedules_path(*args)
     from_line_bot ? h.lines_user_bot_custom_schedules_path(*args) : h.custom_schedules_path(*args)
+  end
+
+  def check_out_shop_reservation_states_path(*args)
+    from_line_bot ? h.check_out_lines_user_bot_shop_reservation_states_path(*args) : h.check_out_shop_reservation_states_path(*args)
+  end
+
+  def check_in_shop_reservation_states_path(*args)
+    from_line_bot ? h.check_in_lines_user_bot_shop_reservation_states_path(*args) : h.check_in_shop_reservation_states_path(*args)
+  end
+
+  def accept_in_group_shop_reservation_states_path(*args)
+    from_line_bot ? h.accept_in_group_lines_user_bot_shop_reservation_states_path(*args) : h.accept_in_group_shop_reservation_states_path(*args)
+  end
+
+  def accept_shop_reservation_states_path(*args)
+    from_line_bot ? h.accept_lines_user_bot_shop_reservation_states_path(*args) : h.accept_shop_reservation_states_path(*args)
+  end
+
+  def pend_shop_reservation_states_path(*args)
+    from_line_bot ? h.pend_lines_user_bot_shop_reservation_states_path(*args) : h.pend_shop_reservation_states_path(*args)
+  end
+
+  def cancel_shop_reservation_states_path(*args)
+    from_line_bot ? h.cancel_lines_user_bot_shop_reservation_states_path(*args) : h.cancel_shop_reservation_states_path(*args)
+  end
+
+  def accept_customer_user_reservations_path(reservation, customer)
+    from_line_bot ? h.accept_lines_user_bot_customer_reservations_path(reservation, customer) : h.accept_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+  end
+
+  def pend_customer_user_reservations_path(reservation, customer)
+    from_line_bot ? h.pend_lines_user_bot_customer_reservations_path(reservation, customer) : h.pend_customer_user_reservations_path(reservation.shop.user, reservation, customer)
+  end
+
+  def cancel_customer_user_reservations_path(reservation, customer)
+    from_line_bot ? h.cancel_lines_user_bot_customer_reservations_path(reservation, customer) : h.cancel_customer_user_reservations_path(reservation.shop.user, reservation, customer)
   end
 
   private

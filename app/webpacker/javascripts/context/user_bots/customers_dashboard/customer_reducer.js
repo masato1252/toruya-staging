@@ -5,7 +5,8 @@ const initialState = {
   customers: [],
   is_all_customers_loaded: false,
   query_type: "recent",
-  filter_pattern_number: null
+  filter_pattern_number: null,
+  reservations: []
 }
 
 export default (state = initialState, action) => {
@@ -27,6 +28,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selected_customer: action.payload.customer,
+      }
+    case "ASSIGN_CUSTOMER_CUSTOMERS":
+      return {
+        ...state,
+        reservations: action.payload.reservations,
       }
     default:
       return state;

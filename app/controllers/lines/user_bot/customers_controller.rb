@@ -9,7 +9,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       .contact_groups_scope(current_user_staff)
       .includes(:social_customer, :rank, :contact_group, updated_by_user: :profile)
       .order("updated_at DESC")
-      .limit(Customers::Search::PER_PAGE)
+      .limit(::Customers::Search::PER_PAGE)
     @customer =
       super_user
       .customers
@@ -50,13 +50,13 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
         (customers.updated_at = :last_updated_at AND customers.id < :last_updated_id)",
         last_updated_at: params["last_updated_at"] ? Time.parse(params["last_updated_at"]) : Time.current,
         last_updated_id: params["last_updated_id"] || INTEGER_MAX)
-      .limit(Customers::Search::PER_PAGE)
+      .limit(::Customers::Search::PER_PAGE)
 
     render template: "customers/query"
   end
 
   def search
-    @customers = Customers::Search.run(
+    @customers = ::Customers::Search.run(
       super_user: super_user,
       current_user_staff: current_user_staff,
       keyword: params[:keyword],
