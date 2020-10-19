@@ -177,4 +177,13 @@ $indent: 12px;
       }
     }
   }
+
+  .customer-info {
+    dl {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid $gray-border-1;
+    }
+  }
 }
