@@ -14,17 +14,17 @@ const CustomerTopRightAction = () => {
   switch(props.from) {
     case "reservation":
       return <a href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
-          Add this customer
+          <i className="fa fa-user-plus"></i>{props.i18n.decide_customer}
         </a>
     default:
-      return <span onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})}>
-        EDIT
-      </span>
+      return <a onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})}>
+        {props.i18n.edit}
+        </a>
   }
 }
 
 const CustomerBasicInfo = () => {
-  const { dispatch, selected_customer, notification_messages } = useContext(GlobalContext)
+  const { dispatch, selected_customer, notification_messages, props } = useContext(GlobalContext)
 
   return (
     <div>
@@ -32,29 +32,30 @@ const CustomerBasicInfo = () => {
       <div className="customer-basic-info">
         <CustomerTopActions
           leading={
-            <i
-              className="fa fa-angle-left fa-2x"
-              onClick={() => {
-                dispatch({
-                  type: "CHANGE_VIEW",
-                  payload: {
-                    view: "customers_list"
-                  }
-                })
-              }}
-            >
-            </i>
+            <a onClick={() => {
+              dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
+              dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+            }} >
+              <i className="fa fa-angle-left fa-2x"></i>
+            </a>
           }
           tail={<CustomerTopRightAction />}
         />
         <div className="customer-data">
           <div className="group-rank">
-            <span>
-              {selected_customer.groupName}
-            </span>
-            <span className={selected_customer.rank?.key}>
-              {selected_customer.rank?.name}
-            </span>
+            {
+              selected_customer.groupName ? (
+                <span>{selected_customer.groupName}</span>
+              ) : (
+                <span className="field-error-border">{props.i18n.group_blank_option}</span>
+              )
+            }
+
+            {
+              selected_customer.rank && (
+                <span className={selected_customer.rank.key}>{selected_customer.rank.name}</span>
+              )
+            }
           </div>
           <div className="phonetic-name">
             <span>
@@ -73,9 +74,17 @@ const CustomerBasicInfo = () => {
             </span>
           </div>
           <div className="notifiers">
-            <i className="fa fa-bell"></i>
-            <i className="fa fa-phone"></i>
-            <i className="fa fa-envelope"></i>
+            <a href="#" onClick={() => {
+              //TODO: switch permission
+            }}>
+              <i className={`customer-reminder-permission fa fa-bell  ${selected_customer.reminderPermission ? "reminder-on" : ""}`}></i>
+            </a>
+            {selected_customer.primaryPhoneDetails?.value && (
+              <a href={`tel:${selected_customer.primaryPhoneDetails.value}`}><i className="fa fa-phone"></i></a>
+            )}
+            {selected_customer.primaryEmailDetails?.value && (
+              <a href={`mail:${selected_customer.primaryEmailDetails.value}`}><i className="fa fa-envelope"></i></a>
+            )}
           </div>
         </div>
       </div>

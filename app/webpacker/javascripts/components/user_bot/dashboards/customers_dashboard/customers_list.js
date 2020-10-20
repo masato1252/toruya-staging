@@ -11,14 +11,18 @@ import CustomerSearchBar from "./customer_search_bar"
 import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
-  const { customers, dispatch } = useContext(GlobalContext)
+  const { customers, dispatch, props } = useContext(GlobalContext)
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>{customers.length}</span>
+      <span>{props.i18n.count}{customers.length}{props.i18n.unit}</span>
       <button
         className="btn btn-yellow btn-circle btn-save"
-        onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
+        onClick={() => {
+          dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
+          dispatch({type: "SELECT_CUSTOMER", payload: { customer: {} } })
+        }
+        } >
         <i className="fa fa-plus fa-2x"></i>
       </button>
     </BottomNavigationBar>
@@ -63,10 +67,13 @@ const CustomerFilterCharacter = () =>{
 }
 
 const TopBar = () => {
+  const { props } = useContext(GlobalContext)
+  let leading;
+
   return (
     <TopNavigationBar
-      leading={<i className="fa fa-angle-left fa-2x"></i>}
-      title={"title"}
+      leading={props.from == "reservation" ? <a href={props.referrer}><i className="fa fa-angle-left fa-2x" ></i></a> : <i></i>}
+      title={props.i18n.title}
       action={<CustomerFilterCharacter />}
     />
   )
@@ -97,7 +104,7 @@ const UserBotCustomersList = ({}) => {
           }
           endMessage={
             <p>
-              <strong className="no-more-customer">該当データ終了</strong>
+              <strong className="no-more-customer">{props.i18n.no_more_customer}</strong>
             </p>
           }
         >
@@ -117,7 +124,7 @@ const UserBotCustomersList = ({}) => {
                   payload: { view: "customer_info_view" }
                 })
 
-                history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, user_id: props.shop.user_id}));
+                history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, user_id: props?.shop?.user_id}));
               }}
             />
           })}

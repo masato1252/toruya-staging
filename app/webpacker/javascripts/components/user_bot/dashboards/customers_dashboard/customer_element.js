@@ -20,7 +20,10 @@ const CustomerElement = ({customer, selected, onHandleClick, stateIcon}) => {
 
       <div className="customer-info">
         <p>{customer.label}</p>
-        <p className="place">{customer.address}</p>
+        <p className="place">
+          {customer.addressDetails?.region}
+          {customer.addressDetails?.city}
+        </p>
       </div>
     </div>
   )

@@ -44,6 +44,10 @@ ja:
     birthday: 生年月日
     memo: メモ
     name: 氏名
+    last_name: 姓
+    first_name: 名
+    phonetic_last_name: せい
+    phonetic_first_name: めい
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
     delete_successfully_message: 削除完了
@@ -75,3 +79,4 @@ ja:
     status: ステータス
     off_schedule: 臨時休暇
     calendar: カレンダー
+    others: その他

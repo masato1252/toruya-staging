@@ -7,11 +7,11 @@ import { BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerNav from "./customer_nav";
 
 const BottomBar = () => {
-  const { selected_customer } = useContext(GlobalContext)
+  const { selected_customer, props } = useContext(GlobalContext)
 
   return (
     <BottomNavigationBar klassName="center">
-      <span>更新日 {selected_customer.lastUpdatedAt}</span>
+      <span>{props.i18n.updated_date} {selected_customer.lastUpdatedAt}</span>
     </BottomNavigationBar>
   )
 }

@@ -56,7 +56,9 @@ body {
     width: 500px;
   }
 }
+
 input[type="time"],
+input[type="date"],
 input[type="text"],
 input[type="tel"],
 input[type="email"],
@@ -119,6 +121,10 @@ a {
 .field-warning-message {
   color: $warning;
   display: block;
+}
+
+.field-error-border {
+  border: 2px solid $danger !important;
 }
 
 .field-warning {

@@ -123,7 +123,8 @@ $indent: 12px;
     .customer-top-actions {
       display: flex;
       justify-content: space-between;
-      align-items: center
+      align-items: center;
+      margin-bottom: 12px;
     }
 
     .customer-data {
@@ -135,7 +136,7 @@ $indent: 12px;
           margin-right: 6px;
           border-radius: 3px;
           display: inline-flex;
-          width: 60px;
+          min-width: 60px;
           justify-content: center;
           line-height: 1.3333333;
 
@@ -173,9 +174,23 @@ $indent: 12px;
           border-radius: 50%;
           color: #ffffff;
           margin: 0 6px;
+
+          &.customer-reminder-permission {
+            &.fa-bell {
+              color: $gray5;
+
+              &.reminder-on {
+                color: $palette-color1;
+              }
+            }
+          }
         }
       }
     }
+  }
+
+  .nav-tabs {
+    background-color: $basic-gray-background;
   }
 
   .customer-info {

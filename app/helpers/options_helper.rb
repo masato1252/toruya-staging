@@ -101,6 +101,8 @@ module OptionsHelper
         primary_email: c.primary_email || {},
         primary_phone: c.primary_phone || {},
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
+        primary_email_details: c.emails_details&.first || {},
+        primary_phone_details: c.phone_numbers_details&.first || {},
         display_address: c.display_address,
         google_down: c.google_down,
         googleContactMissing: c.google_contact_missing,

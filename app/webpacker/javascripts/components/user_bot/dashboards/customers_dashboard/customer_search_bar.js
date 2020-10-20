@@ -6,7 +6,7 @@ import { GlobalContext } from "context/user_bots/customers_dashboard/global_stat
 
 const CustomerSearchBar = ()  => {
   const searchInput = useRef()
-  const { searchCustomers } = useContext(GlobalContext)
+  const { searchCustomers, props } = useContext(GlobalContext)
 
   const onHandleEnter = () => {
     if (searchInput.current.value) {
@@ -27,7 +27,7 @@ const CustomerSearchBar = ()  => {
             type="search"
             ref={searchInput}
             className="form-control"
-            placeholder="Search"
+            placeholder={props.i18n.search_placeholder}
             name="search"
             id="search"
             onHandleEnter={onHandleEnter}

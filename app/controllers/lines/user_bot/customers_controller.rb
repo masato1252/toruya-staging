@@ -67,7 +67,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def save
-    outcome = ::Customers::Store.run(user: super_user, current_user: current_user, params: params.permit!.to_h)
+    outcome = ::Customers::Store.run(user: super_user, current_user: current_user, params: convert_params(params.permit!.to_h))
 
     if outcome.valid?
       customer = outcome.result

@@ -46,3 +46,11 @@ ja:
       reservation:
         no_ending_time_message: ※終了時刻自動計算
         schedule_modal_title: 新しい予約・予定を追加
+      customer:
+        title: 顧客台帳
+        search_placeholder: 名前で検索
+        count: 計
+        unit: 件
+        decide_customer: この顧客で決定
+        updated_date: 更新日
+        form_title: 顧客情報を編集

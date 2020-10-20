@@ -3,6 +3,7 @@
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
     from: params[:from],
+    referrer: request.referrer,
     reservation_id: params[:reservation_id],
     shop: shop,
     customer: customer_options([ @customer || super_user.customers.new]).first,
@@ -13,8 +14,9 @@
     }.merge!([
       t("reservation"),
       t("customer"),
-      t("common").slice(:processing, :address, :phone_number, :email, :birthday),
-      t("action").slice(:save, :save_pending, :delete_reservation, :delete, :add_a_menu),
+      t("user_bot.dashboards.customer"),
+      t("common").slice(:processing, :address, :phone_number, :email, :birthday, :name, :others, :memo, :last_name, :first_name, :phonetic_last_name, :phonetic_first_name, :zip_code),
+      t("action").slice(:save, :edit, :delete),
     ].inject(:merge!))
   }
 },
