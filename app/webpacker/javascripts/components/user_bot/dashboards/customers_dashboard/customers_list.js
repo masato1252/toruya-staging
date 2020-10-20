@@ -3,6 +3,7 @@
 import React, { useContext, useEffect } from "react";
 import Popup from "reactjs-popup";
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useHistory } from "react-router-dom";
 
 import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { TopNavigationBar, BottomNavigationBar, NotificationMessages } from "shared/components"
@@ -71,7 +72,8 @@ const TopBar = () => {
   )
 }
 const UserBotCustomersList = ({}) => {
-  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages } = useContext(GlobalContext)
+  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props } = useContext(GlobalContext)
+  let history = useHistory();
 
   useEffect(() => {
     getCustomers()
@@ -114,6 +116,8 @@ const UserBotCustomersList = ({}) => {
                   type: "CHANGE_VIEW",
                   payload: { view: "customer_info_view" }
                 })
+
+                history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, user_id: props.shop.user_id}));
               }}
             />
           })}

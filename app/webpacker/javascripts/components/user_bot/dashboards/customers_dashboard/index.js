@@ -6,6 +6,7 @@ import UserBotCustomerInfoView from "./customer_info_view"
 import UserBotCustomerInfoForm from "./customer_info_form"
 import UserBotCustomerReservations from "./customer_reservations"
 import UserBotCustomerMessages from "./customer_messages"
+import { BrowserRouter as Router } from "react-router-dom";
 import { GlobalProvider, GlobalContext } from "context/user_bots/customers_dashboard/global_state"
 
 const DashboardView = () => {
@@ -48,7 +49,9 @@ const DashboardView = () => {
 const UserBotCustomersDashboard = ({props}) => {
   return (
     <GlobalProvider props={props}>
-      <DashboardView />
+      <Router>
+        <DashboardView />
+      </Router>
     </GlobalProvider>
   )
 }
