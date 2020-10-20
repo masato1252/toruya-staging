@@ -31,7 +31,7 @@ const PhoneIcon = ({phone}) => {
       break;
   }
   return (
-    <a href={`tel:${phone.value}`} className="BTNtarco">
+    <a href={`tel:${phone.value}`} className="btn btn-tarco btn-icon">
       <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={phone.type}></i>
     </a>
   )
@@ -52,7 +52,7 @@ const EmailIcon = ({email}) => {
       break;
   }
   return (
-    <a href={`mail:${email.value.address}`} className="BTNtarco">
+    <a href={`mail:${email.value}`} className="btn btn-tarco btn-icon">
       <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
     </a>
   )
@@ -70,18 +70,18 @@ const UserBotCustomerInfoView = () => {
       <div className="customer-info">
         <dl className="address">
           <dt>{i18n.address}</dt>
-          <dd>{selected_customer.address}</dd>
+          <dd>{selected_customer.addressDetails?.city}</dd>
         </dl>
         <dl className="phone">
           <dt>{i18n.phone_number}</dt>
           <dd>
-            {(selected_customer.phoneNumbers || []).map((phoneNumber) => <PhoneIcon key={phoneNumber.value} phone={phoneNumber} />)}
+            {(selected_customer.phoneNumbersDetails || []).map((phoneNumber) => <PhoneIcon key={phoneNumber.value} phone={phoneNumber} />)}
           </dd>
         </dl>
         <dl className="email">
           <dt>{i18n.email}</dt>
           <dd>
-            {(selected_customer.emails || []).map((email) => <EmailIcon key={email.value.address} email={email} />)}
+            {(selected_customer.emailsDetails || []).map((email) => <EmailIcon key={email.value} email={email} />)}
           </dd>
         </dl>
         <dl className="customerID">
@@ -91,7 +91,7 @@ const UserBotCustomerInfoView = () => {
         <dl className="dob">
           <dt>{i18n.birthday}</dt>
           <dd>
-            {selected_customer.birthday ? `${selected_customer.birthday.year}年${selected_customer.birthday.month}月${selected_customer.birthday.day}日` : null }
+            {selected_customer.birthday ? selected_customer.birthday : null }
           </dd>
         </dl>
         <dl className="memo">

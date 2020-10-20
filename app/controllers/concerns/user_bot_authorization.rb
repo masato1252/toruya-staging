@@ -29,7 +29,7 @@ module UserBotAuthorization
       write_user_bot_cookies(:current_super_user_id, Shop.find(params[:shop_id]).user_id)
     elsif params[:user_id].present?
       write_user_bot_cookies(:current_super_user_id, params[:user_id])
-      write_user_bot_cookies(:current_shop_id, nil) if super_user.shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
+      write_user_bot_cookies(:current_shop_id, nil) if User.find(params[:user_id]).shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)
     else
       write_user_bot_cookies(:current_super_user_id, current_user.id)
       write_user_bot_cookies(:current_shop_id, nil) if super_user.shop_ids.exclude?(user_bot_cookies(:current_shop_id).to_i)

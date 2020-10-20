@@ -174,7 +174,7 @@ const Form = () => {
   }
 
   return (
-    <div className="reservation-form">
+    <div className="reservation-form form">
       <ProcessingBar processing={processing} />
       <TopNavigationBar
         leading={<a href={props.from}><i className="fa fa-angle-left fa-2x"></i></a>}

@@ -271,6 +271,7 @@ a {
   bottom: 0;
   width: 100%;
   height: $bar-height;
+  line-height: $bar-height;
   z-index: 998;
 
   &.center {
@@ -281,6 +282,18 @@ a {
 
   .actions {
     position: relative;
+
+    .btn-save {
+      position: absolute;
+      right: 10px;
+      top: -24px;
+    }
+
+    .btn-delete {
+      position: absolute;
+      left: 14px;
+      top: -24px;
+    }
   }
 }
 

@@ -189,6 +189,12 @@ const NotificationMessages = ({notification_messages, dispatch}) => {
   )
 }
 
+const SelectOptions = ({ options }) => {
+  return <>
+    {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+  </>
+}
+
 export {
   Input,
   InputRow,
@@ -203,5 +209,6 @@ export {
   TopNavigationBar,
   BottomNavigationBar,
   InputWithEnter,
-  NotificationMessages
+  NotificationMessages,
+  SelectOptions
 };

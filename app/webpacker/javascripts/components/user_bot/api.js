@@ -152,6 +152,17 @@ const CustomerServices = {
       },
       responseType: "json"
     })
+  },
+  save: (data) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.save_lines_user_bot_customers_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
   }
 }
 

@@ -1,5 +1,6 @@
 require "user_bot_cookies"
 require "liff_routing"
+require "site_routing"
 
 class Lines::UserBotDashboardController < ActionController::Base
   abstract!

@@ -617,7 +617,10 @@ CREATE TABLE public.customers (
     updated_by_user_id integer,
     email_types character varying,
     deleted_at timestamp without time zone,
-    reminder_permission boolean DEFAULT false
+    reminder_permission boolean DEFAULT false,
+    phone_numbers_details jsonb,
+    emails_details jsonb,
+    address_details jsonb
 );
 
 
@@ -3744,6 +3747,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200914033218'),
 ('20200914041742'),
 ('20200917065312'),
-('20200923093836');
+('20200923093836'),
+('20201019072951');
 
 

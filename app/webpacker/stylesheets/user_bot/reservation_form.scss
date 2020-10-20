@@ -1,22 +1,6 @@
 .reservation-form {
   padding-top: $bar-height;
 
-  .bottom-navigation-bar {
-    .actions {
-      .btn-save {
-        position: absolute;
-        right: 10px;
-        top: -24px;
-      }
-
-      .btn-delete {
-        position: absolute;
-        left: 14px;
-        top: -24px;
-      }
-    }
-  }
-
   .form-body {
     .business-hours {
       padding: 6px;
@@ -28,18 +12,6 @@
         border: 1px solid $palette-color4-1;
         color: #ffffff;
       }
-    }
-
-    .field-header {
-      padding: 6px;
-      background-color: $gray5;
-    }
-
-    .field-row {
-      padding: 12px;
-      border-bottom: 1px solid $gray;
-      display: flex;
-      justify-content: space-between;
     }
 
     .delete-staff-block {

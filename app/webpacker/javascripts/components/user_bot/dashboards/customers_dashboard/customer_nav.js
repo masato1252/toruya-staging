@@ -20,7 +20,7 @@ const CustomerNav = () => {
       <li className={view == "customer_messages" ? "active" : ""}>
         <a onClick={() => onHandleClick("customer_messages")}>Line</a>
       </li>
-      <li className={view == "customer_info_view" || view == "customer_info_edit" ? "active" : ""}>
+      <li className={view == "customer_info_view" || view == "customer_info_form" ? "active" : ""}>
         <a onClick={() => onHandleClick("customer_info_view")}>Info</a>
       </li>
     </ul>

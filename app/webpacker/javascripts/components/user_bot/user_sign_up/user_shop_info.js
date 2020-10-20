@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import postal_code from "japan-postal-code";
 import { UsersServices } from "user_bot/api";
 import { RequiredLabel } from "shared/components";
+import useAddress from "libraries/use_address";
 
 export const UserShopInfo = ({props, finalView}) => {
   const { register, handleSubmit, watch, setValue, formState } = useForm();
+  const address = useAddress(watch("zip_code"))
   const { isSubmitting } = formState;
   const [is_shop_profile_created, setShopProfile] = useState(false)
   const [is_shop_profile_checked, setCheckShopProfile] = useState(false)
@@ -25,16 +26,10 @@ export const UserShopInfo = ({props, finalView}) => {
     checkShop()
   }, [])
 
-  const changeZipCode = (e) => {
-    setValue("zip_code", e.target.value)
-
-    if (e.target.value && e.target.value.length >= 7) {
-      postal_code.get(e.target.value, (address) => {
-        setValue("region", address.prefecture)
-        setValue("city", address.city)
-      });
-    }
-  }
+  useEffect(() => {
+    setValue("region", address?.prefecture)
+    setValue("city", address?.city)
+  }, [address.city])
 
   const onSubmit = async (data) => {
     const [error, response] = await UsersServices.createShop(data);
@@ -67,7 +62,6 @@ export const UserShopInfo = ({props, finalView}) => {
             name="zip_code"
             placeholder="1234567"
             type="tel"
-            onChange={changeZipCode}
           />
         </div>
         <h4>

@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
-  selected_customer: null,
+  selected_customer: {},
   customers: [],
   is_all_customers_loaded: false,
   query_type: "recent",

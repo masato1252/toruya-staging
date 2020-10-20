@@ -65,4 +65,20 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
     render template: "customers/query"
   end
+
+  def save
+    outcome = ::Customers::Store.run(user: super_user, current_user: current_user, params: params.permit!.to_h)
+
+    if outcome.valid?
+      customer = outcome.result
+
+      render json: {
+        status: "successful",
+        redirect_to: SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id)
+      }
+
+    else
+      head :unprocessable_entity
+    end
+  end
 end

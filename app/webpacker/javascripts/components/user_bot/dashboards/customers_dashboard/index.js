@@ -3,6 +3,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import UserBotCustomersList from "./customers_list"
 import UserBotCustomerInfoView from "./customer_info_view"
+import UserBotCustomerInfoForm from "./customer_info_form"
 import UserBotCustomerReservations from "./customer_reservations"
 import UserBotCustomerMessages from "./customer_messages"
 import { GlobalProvider, GlobalContext } from "context/user_bots/customers_dashboard/global_state"
@@ -35,6 +36,8 @@ const DashboardView = () => {
       return <UserBotCustomerInfoView />
     case "customer_reservations":
       return <UserBotCustomerReservations />
+    case "customer_info_form":
+      return <UserBotCustomerInfoForm />
     case "customer_messages":
       return <UserBotCustomerMessages />
     default:

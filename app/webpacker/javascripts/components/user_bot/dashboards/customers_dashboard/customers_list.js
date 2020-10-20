@@ -10,11 +10,16 @@ import CustomerSearchBar from "./customer_search_bar"
 import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
-  const { customers } = useContext(GlobalContext)
+  const { customers, dispatch } = useContext(GlobalContext)
 
   return (
-    <BottomNavigationBar klassName="center">
+    <BottomNavigationBar klassName="centerize">
       <span>{customers.length}</span>
+      <button
+        className="btn btn-yellow btn-circle btn-save"
+        onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
+        <i className="fa fa-plus fa-2x"></i>
+      </button>
     </BottomNavigationBar>
   )
 }

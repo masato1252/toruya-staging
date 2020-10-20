@@ -1,12 +1,52 @@
 class Customers::Save < ActiveInteraction::Base
   DELIMITER = "-=-".freeze
 
+  # {"id"=>"637",
+  #  "contact_group_id"=>"18",
+  #  "rank_id"=>"2",
+  #  "phonetic_last_name"=>"886910819086",
+  #  "phonetic_first_name"=>"vvv",
+  #  "last_name"=>"zhang",
+  #  "first_name"=>"guorong",
+  #  "primary_phone"=>"home-=-886910819086",
+  #  "primary_email"=>"home-=-lake.ilakela@gmail.com",
+  #  "primary_address"=>{
+  #    "type"=>"home",
+  #    "postcode1"=>"111",
+  #    "postcode2"=>"111",
+  #    "region"=>"北海道",
+  #    "city"=>"",
+  #    "street1"=>"4F.-3",
+  #    "street2"=>" No.125, Sinsing St, No.125, Sinsing St, fffTainan 7107108" 
+  #  },
+  #  "phone_numbers"=>[
+  #    {"type"=>"mobile",
+  #     "value"=>"q weq we qaa"},
+  #     {"type"=>"home",
+  #      "value"=>"886910819086"},
+  #      {"type"=>"home",
+  #       "value"=>"1234566"}
+  #  ],
+  #  "emails"=>[
+  #    {"type"=>"home",
+  #     "value"=>{"address"=>"lake.ilakela@gmail.com"}},
+  #  {"type"=>"mobile",
+  #   "value"=>{"address"=>"qweqqqqqq"}},
+  #  {"type"=>"work",
+  #   "value"=>{"address"=>"qweqwewqewqeeqw"}}
+  #  ],
+  #  "custom_id"=>"",
+  #  "dob"=>{"year"=>"1916",
+  #          "month"=>"1",
+  #          "day"=>"1"},
+  #          "memo"=>""}
+
   set_callback :type_check, :before do
     # if params[:primary_address] && (params[:primary_address][:region].present? || params[:primary_address][:city].present?)
     params[:address] = [params[:primary_address][:region], params[:primary_address][:city]].reject(&:blank?).join(" ")
     params[:primary_address] = {
         type: params[:primary_address][:type],
-        value: {
+          value: {
           postcode: "#{params[:primary_address][:postcode1]}#{params[:primary_address][:postcode2]}",
           region: params[:primary_address][:region],
           city: params[:primary_address][:city],

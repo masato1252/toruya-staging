@@ -7,6 +7,8 @@
     shop: shop,
     customer: customer_options([ @customer || super_user.customers.new]).first,
     notification_messages: @notification_messages,
+    contact_groups: contact_group_options,
+    ranks: rank_options,
     i18n: {
     }.merge!([
       t("reservation"),

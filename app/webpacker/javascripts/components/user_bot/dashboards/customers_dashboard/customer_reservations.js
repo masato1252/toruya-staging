@@ -38,7 +38,7 @@ const UserBotCustomerReservations = () =>{
         if (reservation.year != previousYear) {
           previousYear = reservation.year;
           divider = (
-            <div className="event">
+            <div className="event" key={`year-${reservation.year}`}>
               <div className="cell">
               </div>
               <div className="cell"></div>
@@ -83,12 +83,12 @@ const UserBotCustomerReservations = () =>{
               <div className="extra">
                 {
                   reservation.withWarnings ? (
-                    <span className="error-status warning"><i className="fa fa-check-circle" aria-hispanen="true"></i></span>
+                    <span className="error-status warning"><i className="fa fa-check-circle"></i></span>
                   ) : null
                 }
                 {
                   reservation.deletedStaffs ? (
-                    <span className="status danger"><i className="fa fa-exclamation-circle" aria-hispanen="true"></i></span>
+                    <span className="status danger"><i className="fa fa-exclamation-circle"></i></span>
                   ) : null
                 }
               </div>

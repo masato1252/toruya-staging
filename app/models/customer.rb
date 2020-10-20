@@ -23,6 +23,9 @@
 #  email_types              :string
 #  deleted_at               :datetime
 #  reminder_permission      :boolean          default(FALSE)
+#  phone_numbers_details    :jsonb
+#  emails_details           :jsonb
+#  address_details          :jsonb
 #
 # Indexes
 #
@@ -98,7 +101,7 @@ class Customer < ApplicationRecord
     # }
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
-    self.address = primary_part_address(google_contact.addresses)
+    self.address = address_details.presence || primary_part_address(google_contact.addresses)
     # [Read]
     # customer.emails
     #

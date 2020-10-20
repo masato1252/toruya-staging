@@ -7,7 +7,7 @@ import { NotificationMessages } from "shared/components"
 import { CustomerTopActions } from "./top_actions";
 
 const CustomerTopRightAction = () => {
-  const { selected_customer, props } = useContext(GlobalContext)
+  const { selected_customer, props, dispatch } = useContext(GlobalContext)
 
   if (!selected_customer?.id) { return <span></span>; }
 
@@ -17,7 +17,9 @@ const CustomerTopRightAction = () => {
           Add this customer
         </a>
     default:
-      return <span>EDIT</span>
+      return <span onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})}>
+        EDIT
+      </span>
   }
 }
 
