@@ -163,7 +163,17 @@ const CustomerServices = {
       data: data,
       responseType: "json"
     })
-  }
+  },
+  messages: (id) => {
+    return request({
+      method: "GET",
+      url: Routes.lines_user_bot_customer_messages_path({format: "json"}),
+      params: {
+        id,
+      },
+      responseType: "json"
+    })
+  },
 }
 
 export {

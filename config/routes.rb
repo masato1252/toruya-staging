@@ -54,6 +54,7 @@ Rails.application.routes.draw do
             get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
           end
         end
+        resources :messages, only: [:index]
       end
 
       resources :settings, only: [:index] do

@@ -22,6 +22,7 @@ $message_size: 8px;
 
   .message {
     margin: 6px;
+    @include clearfix;
 
     * {
       padding: $message_size;

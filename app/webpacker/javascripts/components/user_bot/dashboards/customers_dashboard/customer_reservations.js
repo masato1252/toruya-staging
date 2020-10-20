@@ -53,10 +53,11 @@ const UserBotCustomerReservations = () =>{
         }
 
         return (
-          <>
+          <React.Fragment
+            key={`reservation-${reservation.id}`}
+          >
             {divider}
             <div
-              key={`reservation-${reservation.id}`}
               className="event"
               data-controller="modal"
               data-modal-target="#dummyModal"
@@ -93,7 +94,7 @@ const UserBotCustomerReservations = () =>{
                 }
               </div>
             </div>
-          </>
+          </React.Fragment>
         )
       })}
       </div>
