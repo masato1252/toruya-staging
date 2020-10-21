@@ -238,7 +238,6 @@ const Form = () => {
             })
           }}
         />
-        <div className="field-header">Customers List</div>
         <ReservationCustomersList />
         <div className="field-header">{i18n.memo}</div>
         <textarea

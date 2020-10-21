@@ -2,6 +2,11 @@
   .field-header {
     padding: 6px;
     background-color: $gray5;
+    display: flex;
+
+    &.space-between {
+      justify-content: space-between;
+    }
   }
 
   .field-row {
