@@ -6,7 +6,7 @@ module UserBotCookies
   end
 
   def write_user_bot_cookies(key, value)
-    cookies[prepend_key(key)] = value
+    cookies.permanent[prepend_key(key)] = value
   end
 
   def prepend_key(key)
