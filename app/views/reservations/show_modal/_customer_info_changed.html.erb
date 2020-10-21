@@ -3,7 +3,7 @@
     <i class="fa fa-database"></i><span><%= I18n.t("customer.customer_info_changed_messsage") %>:</span>
     <% if can?(:edit, Customer) %>
       <% if reservation_customer.customer_data_changed? %>
-        <%= link_to t("dashboard.modal.customer.check_change_requests"), "#", data: { controller: "modal", modal_target:  "#dummyModal2", action: "click->modal#popup", modal_path: data_changed_user_customers_path(reservation_customer.customer.user, reservation_customer) } %>
+        <%= link_to t("dashboard.modal.customer.check_change_requests"), "#", data: { controller: "modal", modal_target:  "#dummyModal2", action: "click->modal#popup", modal_path: site_routing_helper.data_changed_user_customers_path(reservation_customer) } %>
       <% else %>
         <%= t("dashboard.modal.customer.overwrite_complete") %>
       <% end %>

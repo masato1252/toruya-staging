@@ -85,7 +85,7 @@ const UserBotCustomerInfoView = () => {
           </dd>
         </dl>
         <dl className="customerID">
-          <dt>顧客ID</dt>
+          <dt>{i18n.customer_id}</dt>
           <dd>{selected_customer.customId}</dd>
         </dl>
         <dl className="dob">

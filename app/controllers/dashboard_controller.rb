@@ -35,4 +35,9 @@ class DashboardController < ActionController::Base
   def sync_user
     Users::ContactsSync.run!(user: super_user) if super_user
   end
+
+  def site_routing_helper
+    @site_routing_helper ||= SiteRouting.new(view_context)
+  end
+  helper_method :site_routing_helper
 end

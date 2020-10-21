@@ -82,6 +82,33 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     end
   end
 
+  def data_changed
+    authorize! :edit, Customer
+
+    @reservation_customer = ReservationCustomer.find(params[:reservation_customer_id])
+    @customer = @reservation_customer.customer
+    @reservation = @reservation_customer.reservation
+
+    render template: "customers/data_changed", layout: false
+  end
+
+  def save_changes
+    authorize! :edit, Customer
+
+    outcome = ::Customers::RequestUpdate.run(reservation_customer: ReservationCustomer.find(params[:reservation_customer_id]))
+
+    if outcome.invalid?
+      Rollbar.warning("Update customer changed data failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: params
+      )
+    end
+
+    head :ok
+  end
+
+
   def toggle_reminder_premission
     customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
     customer.update(reminder_permission: !customer.reminder_permission)

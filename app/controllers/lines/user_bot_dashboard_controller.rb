@@ -28,4 +28,9 @@ class Lines::UserBotDashboardController < ActionController::Base
     true
   end
   helper_method :from_line_bot
+
+  def site_routing_helper
+    @site_routing_helper ||= SiteRouting.new(view_context)
+  end
+  helper_method :site_routing_helper
 end

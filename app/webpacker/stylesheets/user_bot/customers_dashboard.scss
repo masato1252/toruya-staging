@@ -199,10 +199,28 @@ $indent: 12px;
       justify-content: space-between;
       padding: 12px;
       border-bottom: 1px solid $gray-border-1;
+
+      dd {
+        a {
+          margin-left: 10px;
+        }
+      }
     }
   }
 }
 
 .customer-edit {
   padding-top: $bar-height;
+}
+
+.booking-from {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 14px;
+  margin-top: 10px !important;
+
+  .fa-clock {
+    margin-right: 3px;
+    margin-top: 3px;
+  }
 }

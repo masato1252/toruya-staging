@@ -2,7 +2,7 @@
 # The key has value when it was changed, otherwise, it is nil.
 #
 # {
-#   "last_name" => nil,
+#   "last_name" => "foo",
 #   "first_name" => "guorong1",
 #   "phonetic_last_name" => nil,
 #   "phonetic_first_name" => "wqeqwe2",

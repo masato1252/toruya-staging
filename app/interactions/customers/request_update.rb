@@ -5,16 +5,10 @@ class Customers::RequestUpdate < ActiveInteraction::Base
     customer.attributes = new_customer_info.name_attributes
     assign_emails
     assign_phone_numbers
-    assign_addresses
+    assign_address
 
     if customer.valid?
-      google_user = user.google_user
-      google_contact_attributes = customer.google_contact_attributes
-      google_user.update_contact(customer.google_contact_id, google_contact_attributes)
-
-      # XXX:
-      # Handle some dirty data, to convert 携帯 to mobile
-      customer.email_types = Array.wrap(customer.emails).map { |email| email[:type].to_s == "携帯" ? "mobile" : email[:type].to_s }.uniq.sort.join(",")
+      customer.email_types = Array.wrap(customer.emails_details).map{|email| email["type"] }.uniq.sort.join(",")
       customer.save
     end
   end
@@ -22,7 +16,7 @@ class Customers::RequestUpdate < ActiveInteraction::Base
   private
 
   def customer
-    @customer ||= reservation_customer.customer.with_google_contact
+    @customer ||= reservation_customer.customer
   end
 
   def new_customer_info
@@ -34,177 +28,40 @@ class Customers::RequestUpdate < ActiveInteraction::Base
   end
 
   def assign_emails
-    # XXX:
-    # The format read and write emails in customer is different
-    #
-    # [Read]
-    # customer.emails
-    #
-    # [
-    #   {
-    #     "type" => :mobile,
-    #     "value" => {
-    #       "address" => "lake.ilakela@gmail.com",
-    #       "primary" => true,
-    #       "label" => "mobile"
-    #     },
-    #     "primary" => true
-    #   }
-    # ]
-    #
-    # [Write]
-    # customer.emails = new_emails
-    #
-    # [
-    #   {
-    #     "type"=> "mobile",
-    #     "value"=> {
-    #       "address" => "lake.ilakela@gmail.com4"
-    #     },
-    #     "primary"=>true
-    #   }
-    # ]
     if new_customer_info.email
-      emails = customer.emails.map do |email_hash|
-        Hashie::Mash.new({
-          type: email_hash.type,
-          value: {
-            address: email_hash.value.address
-          },
-          primary: email_hash.value.primary
-        })
-      end
+      current_emails = customer.emails_details
 
-      primary_email_index = emails.find_index { |email_hash| email_hash.primary }
+      primary_email = current_emails[0]
+      primary_email["value"]= new_customer_info.email
+      current_emails[0] = primary_email
 
-      if primary_email_index
-        primary_email = emails[primary_email_index]
-        primary_email.value.address = new_customer_info.email
-        emails[primary_email_index] = primary_email
-      else
-        emails.push({
-          "type" => :mobile,
-          "value" => {
-            "address" => new_customer_info.email,
-          },
-          "primary" => true,
-        })
-      end
-
-      customer.emails = emails
+      customer.emails_details = current_emails
     end
   end
 
   def assign_phone_numbers
-    # XXX:
-    # The format read and write addresses in customer is different
-    #
-    # [Read]
-    # customer.phone_numbers
-    # [
-    #   {
-    #     "type" => :home,
-    #     "value" => "12312312",
-    #     "primary" => true
-    #   }
-    # ]
-    #
-    # [Write]
-    # customer.phone_numbers = new_phone_numbers
-    #
-    # [
-    #   {
-    #     "type"=> "mobile",
-    #     "value"=> "12312312",
-    #     "primary" => true
-    #   }
-    # ]
     if new_customer_info.phone_number
-      phone_numbers = customer.phone_numbers
+      current_phones = customer.phone_numbers_details
 
-      primary_phone_index = phone_numbers.find_index { |phone_hash| phone_hash.primary }
+      primary_phone = current_phones[0]
+      primary_phone["value"] = new_customer_info.phone_number
+      current_phones[0] = primary_phone
 
-      if primary_phone_index
-        primary_phone = phone_numbers[primary_phone_index]
-        primary_phone.value = new_customer_info.phone_number
-        phone_numbers[primary_phone_index] = primary_phone
-      else
-        phone_numbers.push({
-          "type" => :mobile,
-          "value" => new_customer_info.phone_number,
-          "primary" => true
-        })
-      end
-
-      customer.phone_numbers = phone_numbers
+      customer.phone_numbers_details = current_phones
     end
   end
 
-  def assign_addresses
-    # XXX:
-    # The format read and write addresses in customer is different
-    #
-    # [Read]
-    # customer.addresses
-    #
-    # [
-    #   {
-    #     "primary" => true,
-    #     "type" => :home,
-    #     "value" => {
-    #       "primary" => true,
-    #       "formatted_address" => "4F.-3, No.125, Sinsing StTainan\n岩手県",
-    #       "street" => "4F.-3, No.125, Sinsing StTainan",
-    #       "region" => "岩手県"
-    #     }
-    #   }
-    # ]
-    #
-    # [Write]
-    # customer.addresses = new_addresses
-    #
-    # [
-    #   {
-    #     "primary" => true,
-    #     "type" => "home",
-    #     "value" => {
-    #       "postcode" => "",
-    #       "region" => "岩手県",
-    #       "city" => "",
-    #       "street" => "4F.-3, No.125, Sinsing StTainan"
-    #     },
-    #   }
-    # ]
+  def assign_address
     if new_customer_info.sorted_address_details.present?
-      addresses = customer.addresses
+      current_address = customer.address_details
 
-      primary_address_index = addresses.find_index { |address_hash| address_hash.primary }
-
-      if primary_address_index
-        primary_address = addresses[primary_address_index]
-        primary_address.value = {
-          postcode: new_customer_info.address_details.postcode.presence || primary_address.value.postcode,
-          region: new_customer_info.address_details.region.presence || primary_address.value.region,
-          city: new_customer_info.address_details.city.presence || primary_address.value.city,
-          street: [new_customer_info.address_details.street1, new_customer_info.address_details.street2].reject(&:blank?).join(",").presence || primary_address.value.street
-        }
-
-        addresses[primary_address_index] = primary_address
-        customer.address = [primary_address.value[:region], primary_address.value[:city]].reject(&:blank?).join(" ")
-      else
-        addresses.push({
-          "type" => :home,
-          "primary" => true,
-          "value" => {
-            postcode: new_customer_info.address_details.postcode,
-            region: new_customer_info.address_details.region,
-            city: new_customer_info.address_details.city,
-            street: [new_customer_info.address_details.street1, new_customer_info.address_details.street2].reject(&:blank?).join(",")
-          }
-        })
-      end
-
-      customer.addresses = addresses
+      customer.address_details = {
+        zip_code: new_customer_info.address_details.postcode.presence || current_address.dig("zip_code"),
+        region: new_customer_info.address_details.region.presence || current_address.dig("region"),
+        city: new_customer_info.address_details.city.presence || current_address.dig("city"),
+        street1: new_customer_info.address_details.street1.presence || current_address.dig("street1"),
+        street2: new_customer_info.address_details.street2.presence || current_address.dig("street2")
+      }
     end
   end
 end

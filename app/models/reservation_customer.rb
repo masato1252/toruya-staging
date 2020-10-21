@@ -47,36 +47,37 @@ class ReservationCustomer < ApplicationRecord
     customer_data_changes.present?
   end
 
+  # TODO
+  # TODO: NotificationMessages beside setting
+  #
+  # The data that customer request to changes
   def customer_data_changes
     if new_customer_info?
       changes_data = []
-      current_customer = customer_info.google_data_attributes.present? ? customer.with_google_contact : customer
 
       customer_info.name_attributes.each do |changed_attr, value|
-        if current_customer.public_send(changed_attr) != value
+        if customer.public_send(changed_attr) != value
           changes_data << changed_attr.to_s
         end
       end
 
-      if customer_info.phone_number && current_customer.primary_phone&.value != customer_info.phone_number
+      if customer_info.phone_number && customer.phone_number != customer_info.phone_number
         changes_data << "phone_number"
       end
 
-      if customer_info.email && current_customer.primary_email&.value&.address != customer_info.email
+      if customer_info.email && customer.email != customer_info.email
         changes_data << "email"
       end
 
       if customer_info.sorted_address_details.present?
         customer_info.sorted_address_details.each do |attr, value|
           case attr
-          when "postcode", "region", "city"
-            if current_customer.primary_address&.value&.public_send(attr).presence != value
+          when "postcode"
+            if customer.address_details["zip_code"].presence != value
               changes_data << attr
             end
-          when "street1", "street2"
-            new_street = [customer_info.address_details.street1, customer_info.address_details.street2].reject(&:blank?).join(",")
-
-            if current_customer.primary_address&.value&.street.presence != new_street
+          when "region", "city", "street1", "street2"
+            if customer.address_details[attr].presence != value
               changes_data << attr
             end
           end
@@ -94,14 +95,14 @@ class ReservationCustomer < ApplicationRecord
   def display_changed_address
     if new_customer_info? && customer_info.sorted_address_details.present?
       address_details = customer_info.sorted_address_details
-      customer_with_google_contact = customer.with_google_contact
-      current_customer_address = customer_with_google_contact.primary_formatted_address.value
+      # customer_with_google_contact = customer.with_google_contact
+      # current_customer_address = customer_with_google_contact.primary_formatted_address.value
 
-      zipcode = address_details.postcode ? "〒#{address_details.postcode.first(4)}-#{address_details.postcode.last(3)}" : customer_with_google_contact.zipcode
-      region = address_details.region.presence || current_customer_address.region
-      city = address_details.city.presence || current_customer_address.city
-      street1 = address_details.street1.presence || current_customer_address.street1
-      street2 = address_details.street2.presence || current_customer_address.street2
+      zipcode = address_details.postcode ? "〒#{address_details.postcode.first(4)}-#{address_details.postcode.last(3)}" : customer.zipcode
+      region = address_details.region.presence || customer.address_details.dig("region")
+      city = address_details.city.presence || customer.address_details.dig("city")
+      street1 = address_details.street1.presence || customer.address_details.dig("street1")
+      street2 = address_details.street2.presence || customer.address_details.dig("street2")
 
       "#{zipcode} #{region}#{city}#{street1}#{street2}"
     end
