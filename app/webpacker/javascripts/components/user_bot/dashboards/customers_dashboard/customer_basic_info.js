@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { NotificationMessages } from "shared/components"
 import { CustomerTopActions } from "./top_actions";
+import { CustomerServices } from "user_bot/api";
 
 const CustomerTopRightAction = () => {
   const { selected_customer, props, dispatch } = useContext(GlobalContext)
@@ -74,8 +75,28 @@ const CustomerBasicInfo = () => {
             </span>
           </div>
           <div className="notifiers">
-            <a href="#" onClick={() => {
-              //TODO: switch permission
+            <a href="#"
+              data-id="customer-reminder-toggler"
+              onClick={async () => {
+                const [error, response] = await CustomerServices.toggle_reminder_premission(selected_customer.id)
+
+                const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
+                  trigger: "manual",
+                  title: `${props.i18n.reminder_changed_message} ${response.data.reminder_permission ? "ON" : "OFF"}`
+                })
+
+                tooltip.tooltip("show")
+
+                setTimeout(function() {
+                  tooltip.tooltip("destroy")
+                }, 2000);
+
+                dispatch({
+                  type: "UPDATE_CUSTOMER_REMINDER_PERMISSION",
+                  payload: {
+                    reminderPermission: response.data.reminder_permission
+                  }
+                })
             }}>
               <i className={`customer-reminder-permission fa fa-bell  ${selected_customer.reminderPermission ? "reminder-on" : ""}`}></i>
             </a>

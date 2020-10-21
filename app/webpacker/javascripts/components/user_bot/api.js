@@ -174,6 +174,19 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  toggle_reminder_premission: (customer_id) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.toggle_reminder_premission_lines_user_bot_customers_path({format: "json"}),
+      data: {
+        id: customer_id,
+      },
+      responseType: "json"
+    })
+  }
 }
 
 export {

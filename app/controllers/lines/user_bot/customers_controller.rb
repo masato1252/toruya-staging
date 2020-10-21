@@ -81,4 +81,11 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       head :unprocessable_entity
     end
   end
+
+  def toggle_reminder_premission
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    customer.update(reminder_permission: !customer.reminder_permission)
+
+    render json: { reminder_permission: customer.reminder_permission }
+  end
 end

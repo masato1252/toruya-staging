@@ -29,6 +29,11 @@ export default (state = initialState, action) => {
         ...state,
         selected_customer: action.payload.customer,
       }
+    case "UPDATE_CUSTOMER_REMINDER_PERMISSION":
+      return {
+        ...state,
+        selected_customer: {...state.selected_customer, reminderPermission: action.payload.reminderPermission},
+      }
     case "ASSIGN_CUSTOMER_CUSTOMERS":
       return {
         ...state,

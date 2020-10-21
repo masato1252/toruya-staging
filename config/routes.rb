@@ -42,6 +42,7 @@ Rails.application.routes.draw do
           get :search
           get :filter
           post :save
+          post :toggle_reminder_premission
           get "/:social_service_user_id", action: "index"
         end
       end
