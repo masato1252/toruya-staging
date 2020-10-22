@@ -71,15 +71,8 @@ class ReservationCustomer < ApplicationRecord
 
       if customer_info.sorted_address_details.present?
         customer_info.sorted_address_details.each do |attr, value|
-          case attr
-          when "postcode"
-            if customer.address_details["zip_code"].presence != value
-              changes_data << attr
-            end
-          when "region", "city", "street1", "street2"
-            if customer.address_details[attr].presence != value
-              changes_data << attr
-            end
+          if customer.address_details&.dig(attr).presence != value
+            changes_data << attr
           end
         end
       end
@@ -95,10 +88,8 @@ class ReservationCustomer < ApplicationRecord
   def display_changed_address
     if new_customer_info? && customer_info.sorted_address_details.present?
       address_details = customer_info.sorted_address_details
-      # customer_with_google_contact = customer.with_google_contact
-      # current_customer_address = customer_with_google_contact.primary_formatted_address.value
 
-      zipcode = address_details.postcode ? "〒#{address_details.postcode.first(4)}-#{address_details.postcode.last(3)}" : customer.zipcode
+      zipcode = address_details.zip_code ? "〒#{address_details.zip_code.first(4)}-#{address_details.zip_code.last(3)}" : customer.zipcode
       region = address_details.region.presence || customer.address_details.dig("region")
       city = address_details.city.presence || customer.address_details.dig("city")
       street1 = address_details.street1.presence || customer.address_details.dig("street1")

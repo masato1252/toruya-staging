@@ -1,21 +1,19 @@
 module BookingHelper
-  def customer_info_as_json(customer_with_google_contact)
-    customer_with_google_contact = customer_with_google_contact&.with_google_contact
-
+  def customer_info_as_json(customer)
     {
-      id: customer_with_google_contact&.id,
-      first_name: customer_with_google_contact&.first_name,
-      last_name: customer_with_google_contact&.last_name,
-      phonetic_first_name: customer_with_google_contact&.phonetic_first_name,
-      phonetic_last_name: customer_with_google_contact&.phonetic_last_name,
-      phone_number: params[:customer_phone_number] || cookies[:booking_customer_phone_number],
-      phone_numbers: customer_with_google_contact&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
-      email: customer_with_google_contact&.primary_email&.value&.address,
-      emails: customer_with_google_contact&.emails&.map { |email| email.value.address },
-      simple_address: customer_with_google_contact&.address,
-      full_address: customer_with_google_contact&.display_address,
-      address_details: customer_with_google_contact&.primary_formatted_address&.value,
-      original_address_details: customer_with_google_contact&.primary_address&.value
+      id: customer&.id,
+      first_name: customer&.first_name,
+      last_name: customer&.last_name,
+      phonetic_first_name: customer&.phonetic_first_name,
+      phonetic_last_name: customer&.phonetic_last_name,
+      phone_number: params[:customer_phone_number]&.presence || cookies[:booking_customer_phone_number]&.presence || customer&.phone_number,
+      phone_numbers: customer&.phone_numbers_details&.map { |phone| phone.dig("value").gsub(/[^0-9]/, '') },
+      email: customer&.email,
+      emails: customer&.emails_details&.map { |email| email["value"] },
+      simple_address: customer&.simple_address,
+      full_address: customer&.display_address,
+      address_details: customer&.address_details,
+      original_address_details: customer&.address_details
     }
   end
 end

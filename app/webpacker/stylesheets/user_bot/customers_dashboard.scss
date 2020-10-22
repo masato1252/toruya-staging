@@ -224,3 +224,21 @@ $indent: 12px;
     margin-top: 3px;
   }
 }
+
+.customer-reservation-state {
+  &.accepted {
+    color: $palette-color2-2;
+  }
+
+  &.pending {
+    color: $palette-color4-1;
+  }
+}
+
+.reservation-info-row {
+  margin: 3px 0 6px;
+
+  .fa {
+    margin-right: 6px;
+  }
+}

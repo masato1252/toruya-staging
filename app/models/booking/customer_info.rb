@@ -2,14 +2,14 @@
 # The key has value when it was changed, otherwise, it is nil.
 #
 # {
-#   "last_name" => "foo",
+#   "last_name" => nil,
 #   "first_name" => "guorong1",
 #   "phonetic_last_name" => nil,
 #   "phonetic_first_name" => "wqeqwe2",
 #   "phone_number" => "88691081903",
 #   "email" => "lake.ilakela@gmail.com4",
 #   "address_details" => {
-#     "postcode" => "5555555",
+#     "zip_code" => "5555555",
 #     "region" => "岩手県6",
 #     "city" => "7",
 #     "street1" => "4F.-38",
@@ -19,7 +19,7 @@
 
 module Booking
   class CustomerInfo
-    ADDRESS_DETAILS_ORDER = %w(postcode region city street1 street2).freeze
+    ADDRESS_DETAILS_ORDER = %w(zip_code region city street1 street2).freeze
     include ActiveAttr::MassAssignment
     include ActiveAttr::Attributes
 

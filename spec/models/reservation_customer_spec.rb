@@ -11,7 +11,7 @@ RSpec.describe ReservationCustomer, type: :model do
       "phonetic_first_name",
       "phone_number",
       "email",
-      "postcode",
+      "zip_code",
       "region",
       "city",
       "street1",
@@ -27,7 +27,7 @@ RSpec.describe ReservationCustomer, type: :model do
         primary_phone: double(value: "phone_number"),
         primary_email: double(value: double(address: "email")),
         primary_address: double(value: spy(
-          postcode: "postcode",
+          zip_code: "zip_code",
           city: "city",
           street: "street"
         ))

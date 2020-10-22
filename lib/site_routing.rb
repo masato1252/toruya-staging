@@ -23,7 +23,6 @@ class SiteRouting
     end
   end
 
-  # TODO: controller and view required
   def customers_path(user_id, *args)
     options = args.extract_options!
 

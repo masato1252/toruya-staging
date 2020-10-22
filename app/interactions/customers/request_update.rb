@@ -56,11 +56,11 @@ class Customers::RequestUpdate < ActiveInteraction::Base
       current_address = customer.address_details
 
       customer.address_details = {
-        zip_code: new_customer_info.address_details.postcode.presence || current_address.dig("zip_code"),
-        region: new_customer_info.address_details.region.presence || current_address.dig("region"),
-        city: new_customer_info.address_details.city.presence || current_address.dig("city"),
-        street1: new_customer_info.address_details.street1.presence || current_address.dig("street1"),
-        street2: new_customer_info.address_details.street2.presence || current_address.dig("street2")
+        zip_code: new_customer_info.address_details.zip_code.presence || current_address&.dig("zip_code"),
+        region: new_customer_info.address_details.region.presence || current_address&.dig("region"),
+        city: new_customer_info.address_details.city.presence || current_address&.dig("city"),
+        street1: new_customer_info.address_details.street1.presence || current_address&.dig("street1"),
+        street2: new_customer_info.address_details.street2.presence || current_address&.dig("street2")
       }
     end
   end

@@ -102,7 +102,7 @@ class Customer < ApplicationRecord
     # }
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
-    self.address = address_details.presence || primary_part_address(google_contact.addresses)
+    self.address = primary_part_address(google_contact.addresses)
     # ===
     # XXX:
     # The format read and write emails in customer is different
@@ -329,6 +329,12 @@ class Customer < ApplicationRecord
 
   def phone_number
     main_phone&.dig("value")
+  end
+
+  def simple_address
+    if address_details.present?
+      [address_details["region"], address_details["city"]].compact.join(" ")
+    end
   end
 
   private
