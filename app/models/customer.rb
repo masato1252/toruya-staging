@@ -68,7 +68,6 @@ class Customer < ApplicationRecord
       end
   end
 
-  # TODO: review all the primary phone, email and address and with_google_contact
   def build_by_google_contact(google_contact)
     # Fetch from google fail
     if google_contact.is_a?(Customer)

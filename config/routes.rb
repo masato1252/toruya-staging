@@ -94,6 +94,12 @@ Rails.application.routes.draw do
         resources :reservation_settings, except: [:show]
         resources :menus, except: [:show]
       end
+
+      resources :warnings, only: [], constraints: ::XhrConstraint do
+        collection do
+          get :create_reservation
+        end
+      end
     end
   end
 

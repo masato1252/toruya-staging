@@ -20,9 +20,9 @@
     <div class="modal-footer centerize">
       <% if can?(:manage, Settings) && shop %>
         <%= link_to t("reservation.modal.admin.empty_reservation_setting_user.button_text"),
-          new_settings_user_reservation_setting_path(super_user, shop_id: shop.id), class: "btn BTNyellow" %>
+          new_settings_user_reservation_setting_path(super_user, shop_id: shop.id), class: "btn btn-yellow" %>
       <% else %>
-        <%= link_to t("action.cancel"), "#", class: "btn BTNtarco", data: { dismiss: "modal" } %>
+        <%= link_to t("action.cancel"), "#", class: "btn btn-tarco", data: { dismiss: "modal" } %>
       <% end %>
     </div>
   </div>

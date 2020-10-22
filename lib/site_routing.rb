@@ -106,6 +106,10 @@ class SiteRouting
     from_line_bot ? h.save_changes_lines_user_bot_customers_path(reservation_customer) : h.save_changes_user_customers_path(reservation_customer.customer.user, reservation_customer)
   end
 
+  def create_reservation_warnings_path(*args)
+    from_line_bot ? h.create_reservation_lines_user_bot_warnings_path(*args) : h.create_reservation_warnings_path(*args)
+  end
+
   private
 
   def from_line_bot

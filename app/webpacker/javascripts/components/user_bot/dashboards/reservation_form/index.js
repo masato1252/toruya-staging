@@ -178,7 +178,7 @@ const Form = () => {
       <ProcessingBar processing={processing} />
       <TopNavigationBar
         leading={<a href={props.from}><i className="fa fa-angle-left fa-2x"></i></a>}
-        title={props.reservation_form.reservation_id ? i18n.edit_reservation : i18n.new_reservation}
+        title={props.reservation_form.reservation_id ? `${i18n.edit_reservation} - ${props.reservation_form.shop.short_name}` : `${i18n.new_reservation} - ${props.reservation_form.shop.short_name}`}
       />
       <div className="form-body">
         <div className="field-header">{i18n.reservation_time}</div>

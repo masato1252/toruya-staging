@@ -26,6 +26,9 @@ a.modal-link {
     line-height: 40px;
   }
 
+  .modal-footer .btn + .btn {
+    margin: 5px
+  }
 }
 
 .toruya-modal {

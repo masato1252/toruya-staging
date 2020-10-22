@@ -1,28 +1,8 @@
-class WarningsController < ApplicationController
-  include Authorization
+class Lines::UserBot::WarningsController < ActionController::Base
+  include UserBotAuthorization
   include ViewHelpers
+  include UserBotCookies
   layout false
-  before_action :set_warning_shop, only: [:shop_dashboard_for_staff, :shop_dashboard_for_admin, :read_settings_dashboard_for_staff]
-
-  def shop_dashboard_for_staff; end
-
-  def shop_dashboard_for_admin; end
-
-  def customer_dashboard_for_staff
-    @owner = User.find(params[:owner_id])
-  end
-
-  def filter_dashboard_for_staff
-    @owner = User.find(params[:owner_id])
-  end
-
-  def read_settings_dashboard_for_staff; end
-
-  def edit_staff_for_admin; end
-
-  def new_staff_for_admin; end
-
-  def admin_upgrade_filter_modal;end
 
   def create_reservation
     @owner = User.find(params[:owner_id])
@@ -43,7 +23,7 @@ class WarningsController < ApplicationController
              "default_creation_reservation_warning"
            end
 
-    render view
+    render template: "warnings/#{view}"
   end
 
   private
@@ -52,8 +32,4 @@ class WarningsController < ApplicationController
     true
   end
   helper_method :from_line_bot
-
-  def set_warning_shop
-    @warning_shop ||= Shop.find(params[:warning_shop_id])
-  end
 end

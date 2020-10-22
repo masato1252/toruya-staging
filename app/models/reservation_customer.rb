@@ -47,9 +47,6 @@ class ReservationCustomer < ApplicationRecord
     customer_data_changes.present?
   end
 
-  # TODO
-  # TODO: NotificationMessages beside setting
-  #
   # The data that customer request to changes
   def customer_data_changes
     if new_customer_info?
