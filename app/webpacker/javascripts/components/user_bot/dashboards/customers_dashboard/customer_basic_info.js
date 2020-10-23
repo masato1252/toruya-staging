@@ -14,13 +14,11 @@ const CustomerTopRightAction = () => {
 
   switch(props.from) {
     case "reservation":
-      return <a href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
+      return <a className="btn btn-yellow" href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
           <i className="fa fa-user-plus"></i>{props.i18n.decide_customer}
         </a>
     default:
-      return <a onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})}>
-        {props.i18n.edit}
-        </a>
+      return <></>
   }
 }
 
@@ -104,7 +102,7 @@ const CustomerBasicInfo = () => {
               <a href={`tel:${selected_customer.primaryPhoneDetails.value}`}><i className="fa fa-phone"></i></a>
             )}
             {selected_customer.primaryEmailDetails?.value && (
-              <a href={`mail:${selected_customer.primaryEmailDetails.value}`}><i className="fa fa-envelope"></i></a>
+              <a href={`mailto:${selected_customer.primaryEmailDetails.value}`}><i className="fa fa-envelope"></i></a>
             )}
           </div>
         </div>

@@ -7,11 +7,16 @@ import { BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerNav from "./customer_nav";
 
 const BottomBar = () => {
-  const { selected_customer, props } = useContext(GlobalContext)
+  const { selected_customer, props, dispatch } = useContext(GlobalContext)
 
   return (
-    <BottomNavigationBar klassName="center">
+    <BottomNavigationBar klassName="centerize">
       <span>{props.i18n.updated_date} {selected_customer.lastUpdatedAt}</span>
+      <button
+        className="btn btn-yellow btn-circle btn-save"
+        onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
+        <i className="fa fa-user-edit fa-2x"></i>
+      </button>
     </BottomNavigationBar>
   )
 }
@@ -52,7 +57,7 @@ const EmailIcon = ({email}) => {
       break;
   }
   return (
-    <a href={`mail:${email.value}`} className="btn btn-tarco btn-icon">
+    <a href={`mailto:${email.value}`} className="btn btn-tarco btn-icon">
       <i className={`fa fa-${icon_type} fa-2x`} aria-hidden="true" title={email.type}></i>
     </a>
   )

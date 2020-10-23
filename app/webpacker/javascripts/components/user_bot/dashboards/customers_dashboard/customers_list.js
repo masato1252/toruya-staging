@@ -12,6 +12,7 @@ import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
   const { customers, dispatch, props } = useContext(GlobalContext)
+  let history = useHistory();
 
   return (
     <BottomNavigationBar klassName="centerize">
@@ -21,6 +22,7 @@ const BottomBar = () => {
         onClick={() => {
           dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
           dispatch({type: "SELECT_CUSTOMER", payload: { customer: {} } })
+          history.push(Routes.lines_user_bot_customers_path({user_id: props?.shop?.user_id}));
         }
         } >
         <i className="fa fa-plus fa-2x"></i>
@@ -79,7 +81,7 @@ const TopBar = () => {
   )
 }
 const UserBotCustomersList = ({}) => {
-  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props } = useContext(GlobalContext)
+  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props, selectCustomer } = useContext(GlobalContext)
   let history = useHistory();
 
   useEffect(() => {
@@ -114,16 +116,7 @@ const UserBotCustomersList = ({}) => {
               customer={customer}
               selected={selected_customer?.id == customer.value}
               onHandleClick={() => {
-                dispatch({
-                  type: "SELECT_CUSTOMER",
-                  payload: { customer }
-                })
-
-                dispatch({
-                  type: "CHANGE_VIEW",
-                  payload: { view: "customer_info_view" }
-                })
-
+                selectCustomer(customer)
                 history.push(Routes.lines_user_bot_customers_path({customer_id: customer.id, user_id: props?.shop?.user_id}));
               }}
             />

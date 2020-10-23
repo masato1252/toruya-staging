@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         collection do
           get :recent
           get :search
+          get :find_duplicate_customers
           get :filter
           post :save
           post :toggle_reminder_premission

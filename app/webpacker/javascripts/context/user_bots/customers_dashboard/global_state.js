@@ -4,6 +4,7 @@ import combineReducer from "context/combine_reducer";
 import customerReducer from "context/user_bots/customers_dashboard/customer_reducer";
 import appReducer from "context/user_bots/customers_dashboard/app_reducer";
 import notificationReducer from "context/notification_reducer";
+import { useHistory } from "react-router-dom";
 
 import { CustomerServices } from "user_bot/api";
 
@@ -138,6 +139,18 @@ export const GlobalProvider = ({ props, children }) => {
     })
   }
 
+  const selectCustomer = (customer) => {
+    dispatch({
+      type: "SELECT_CUSTOMER",
+      payload: { customer }
+    })
+
+    dispatch({
+      type: "CHANGE_VIEW",
+      payload: { view: "customer_info_view" }
+    })
+  }
+
   return (
     <GlobalContext.Provider value={{
       props,
@@ -147,7 +160,8 @@ export const GlobalProvider = ({ props, children }) => {
       dispatch,
       getCustomers,
       searchCustomers,
-      filterCustomers
+      filterCustomers,
+      selectCustomer
     }}
     >
       {children}

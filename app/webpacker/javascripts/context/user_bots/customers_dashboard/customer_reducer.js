@@ -30,9 +30,13 @@ export default (state = initialState, action) => {
         selected_customer: action.payload.customer,
       }
     case "UPDATE_CUSTOMER_REMINDER_PERMISSION":
+      const new_selected_customer = {...state.selected_customer, reminderPermission: action.payload.reminderPermission}
+      const new_customers = state.customers.map(customer => customer.id == new_selected_customer.id ? new_selected_customer : customer)
+
       return {
         ...state,
-        selected_customer: {...state.selected_customer, reminderPermission: action.payload.reminderPermission},
+        selected_customer: new_selected_customer,
+        customers: new_customers
       }
     case "ASSIGN_CUSTOMER_CUSTOMERS":
       return {

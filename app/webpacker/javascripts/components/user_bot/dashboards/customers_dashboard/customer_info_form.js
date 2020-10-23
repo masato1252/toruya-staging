@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import _ from "lodash";
 
 import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
@@ -37,7 +38,7 @@ const BottomBar = ({handleSubmit, onSubmit}) => {
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>{props.i18n.updated_date} {selected_customer.lastUpdatedAt}</span>
+      <span>{selected_customer?.id ? props.i18n.updated_date : props.i18n.unsave } {selected_customer.lastUpdatedAt}</span>
 
       <button
         className="btn btn-yellow btn-circle btn-save"
@@ -49,8 +50,10 @@ const BottomBar = ({handleSubmit, onSubmit}) => {
 }
 
 const UserBotCustomerInfoForm = () => {
-  const { selected_customer, props } = useContext(GlobalContext)
+  const { selected_customer, props, selectCustomer } = useContext(GlobalContext)
   const { i18n } = props
+  const [similarCustomers, setSimilarCustomers] = useState([])
+  let history = useHistory();
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
@@ -60,7 +63,7 @@ const UserBotCustomerInfoForm = () => {
       phonetic_last_name: selected_customer.phoneticLastName,
       phonetic_first_name: selected_customer.phoneticFirstName,
       contact_group_id: selected_customer.contactGroupId,
-      rank_id: selected_customer.rankId || props.ranks[props.ranks.length - 1].value,
+      rank_id: selected_customer.rankId || props.ranks[0].value,
       address_details: _.merge(selected_customer.addressDetails, { zip_code: selected_customer.addressDetails?.zipCode }),
       phone_numbers_details: selected_customer.phoneNumbersDetails,
       emails_details: selected_customer.emailsDetails,
@@ -72,6 +75,8 @@ const UserBotCustomerInfoForm = () => {
 
   const { isSubmitting } = formState;
   const address = useAddress(watch("address_details[zip_code]"))
+  const firstNameWatched = watch("first_name")
+  const lastNameWatched = watch("last_name")
 
   const phone_number_fields = useFieldArray({
     control: control,
@@ -87,6 +92,19 @@ const UserBotCustomerInfoForm = () => {
     setValue("address_details[region]", address?.prefecture)
     setValue("address_details[city]", address?.city)
   }, [address.city])
+
+  const find_duplicate_customers = async () => {
+    setSimilarCustomers([])
+    const [error, response] = await CustomerServices.find_duplicate_customers({last_name: lastNameWatched, first_name: firstNameWatched})
+
+    setSimilarCustomers(response.data.customers)
+  }
+
+  useEffect(() => {
+    if (!selected_customer?.id && firstNameWatched && lastNameWatched) {
+      find_duplicate_customers()
+    }
+  }, [firstNameWatched, lastNameWatched] )
 
   const itemOptions = (items) => {
     var options = [
@@ -160,6 +178,21 @@ const UserBotCustomerInfoForm = () => {
             />
           </span>
         </div>
+        {similarCustomers.length > 0 && (
+          <div className="field-row similar-customers-warnings" >
+            <h3>There are similar customers, Are they the same customer you try to create? If not, please ignore them.</h3>
+            {similarCustomers.map((similarCustomer) => {
+              return (
+                <div key={similarCustomer.id} className="warning" onClick={() => {
+                  selectCustomer(similarCustomer)
+                  history.push(Routes.lines_user_bot_customers_path({customer_id: similarCustomer.id, user_id: props?.shop?.user_id}));
+                }}>
+                  {similarCustomer.lastName} { similarCustomer.firstName } { similarCustomer.simpleAddress }
+                </div>
+              )
+            })}
+          </div>
+        )}
         <div className="field-row" >
           <span>{i18n.phonetic_last_name}</span>
           <span>

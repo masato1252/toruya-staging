@@ -108,11 +108,23 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     head :ok
   end
 
-
   def toggle_reminder_premission
     customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
     customer.update(reminder_permission: !customer.reminder_permission)
 
     render json: { reminder_permission: customer.reminder_permission }
+  end
+
+  def find_duplicate_customers
+    @customers = super_user
+      .customers
+      .contact_groups_scope(current_user_staff)
+      .where("
+      (phonetic_last_name ilike :last_name AND
+      phonetic_first_name ilike :first_name) OR
+      (last_name ilike :last_name AND
+      first_name ilike :first_name)", last_name: "%#{params[:last_name].strip}%", first_name: "%#{params[:first_name].strip}%")
+
+    render template: "customers/query"
   end
 end

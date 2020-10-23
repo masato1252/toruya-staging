@@ -186,6 +186,17 @@ const CustomerServices = {
       },
       responseType: "json"
     })
+  },
+  find_duplicate_customers: ({last_name, first_name}) => {
+    return request({
+      method: "GET",
+      url: Routes.find_duplicate_customers_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        last_name,
+        first_name
+      },
+      responseType: "json"
+    })
   }
 }
 
