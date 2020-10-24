@@ -1,10 +1,10 @@
 "use strict";
 
-import React, { useContext } from "react";
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import React from "react";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 
 const CustomerNav = () => {
-  const { view, dispatch, props, selected_customer } = useContext(GlobalContext)
+  const { view, dispatch, props, selected_customer } = useGlobalContext()
 
   const onHandleClick = (target) => {
     if (target == view) return;

@@ -1,12 +1,12 @@
 "use strict";
 
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { InputWithEnter } from "shared/components";
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 
 const CustomerSearchBar = ()  => {
   const searchInput = useRef()
-  const { searchCustomers, props } = useContext(GlobalContext)
+  const { searchCustomers, props } = useGlobalContext()
 
   const onHandleEnter = () => {
     if (searchInput.current.value) {

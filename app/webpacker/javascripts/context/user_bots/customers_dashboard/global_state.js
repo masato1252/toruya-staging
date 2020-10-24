@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useRef, useMemo } from "react";
+import React, { createContext, useReducer, useRef, useMemo, useContext } from "react";
 
 import combineReducer from "context/combine_reducer";
 import customerReducer from "context/user_bots/customers_dashboard/customer_reducer";
@@ -9,6 +9,10 @@ import { useHistory } from "react-router-dom";
 import { CustomerServices } from "user_bot/api";
 
 export const GlobalContext = createContext()
+
+export const useGlobalContext = () => {
+  return useContext(GlobalContext)
+}
 
 const reducers = combineReducer({
   notification_states: notificationReducer,

@@ -1,14 +1,14 @@
 "use strict"
 
-import React, { useContext, useEffect } from "react";
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import React, { useEffect } from "react";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
 import CustomerNav from "./customer_nav";
 
 import { CustomerServices } from "user_bot/api"
 
 const UserBotCustomerReservations = () =>{
-  const { selected_customer, reservations, dispatch } = useContext(GlobalContext)
+  const { selected_customer, reservations, dispatch } = useGlobalContext()
   let previousYear;
   let divider;
 

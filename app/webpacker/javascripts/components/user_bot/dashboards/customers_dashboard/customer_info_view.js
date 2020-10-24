@@ -1,13 +1,13 @@
 "use strict"
 
-import React, { useContext } from "react";
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import React from "react";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
 import { BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerNav from "./customer_nav";
 
 const BottomBar = () => {
-  const { selected_customer, props, dispatch } = useContext(GlobalContext)
+  const { selected_customer, props, dispatch } = useGlobalContext()
 
   return (
     <BottomNavigationBar klassName="centerize">
@@ -64,7 +64,7 @@ const EmailIcon = ({email}) => {
 };
 
 const UserBotCustomerInfoView = () => {
-  const { selected_customer, props } = useContext(GlobalContext)
+  const { selected_customer, props } = useGlobalContext()
   const { i18n } = props
 
   return (

@@ -1,18 +1,18 @@
 "use strict"
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import _ from "lodash";
 
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { BottomNavigationBar, TopNavigationBar, SelectOptions } from "shared/components"
 import { CustomerServices } from "user_bot/api"
 import useAddress from "libraries/use_address";
 import ProcessingBar from "shared/processing_bar.js"
 
 const TopBar = () => {
-  const { dispatch, props, selected_customer } = useContext(GlobalContext)
+  const { dispatch, props, selected_customer } = useGlobalContext()
 
   return (
     <TopNavigationBar
@@ -34,7 +34,7 @@ const TopBar = () => {
 }
 
 const BottomBar = ({handleSubmit, onSubmit}) => {
-  const { selected_customer, props } = useContext(GlobalContext)
+  const { selected_customer, props } = useGlobalContext()
 
   return (
     <BottomNavigationBar klassName="centerize">
@@ -50,7 +50,7 @@ const BottomBar = ({handleSubmit, onSubmit}) => {
 }
 
 const UserBotCustomerInfoForm = () => {
-  const { selected_customer, props, selectCustomer } = useContext(GlobalContext)
+  const { selected_customer, props, selectCustomer } = useGlobalContext()
   const { i18n } = props
   const [similarCustomers, setSimilarCustomers] = useState([])
   let history = useHistory();

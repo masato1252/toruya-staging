@@ -1,17 +1,17 @@
 "use strict";
 
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import Popup from "reactjs-popup";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useHistory } from "react-router-dom";
 
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { TopNavigationBar, BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerSearchBar from "./customer_search_bar"
 import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
-  const { customers, dispatch, props } = useContext(GlobalContext)
+  const { customers, dispatch, props } = useGlobalContext()
   let history = useHistory();
 
   return (
@@ -32,7 +32,7 @@ const BottomBar = () => {
 }
 
 const CustomerFilterCharacter = () =>{
-  const { filter_pattern_number, filterCustomers } = useContext(GlobalContext)
+  const { filter_pattern_number, filterCustomers } = useGlobalContext()
   const characters = ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "A"]
 
   return (
@@ -69,7 +69,7 @@ const CustomerFilterCharacter = () =>{
 }
 
 const TopBar = () => {
-  const { props } = useContext(GlobalContext)
+  const { props } = useGlobalContext()
   let leading;
 
   return (
@@ -81,7 +81,7 @@ const TopBar = () => {
   )
 }
 const UserBotCustomersList = ({}) => {
-  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props, selectCustomer } = useContext(GlobalContext)
+  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props, selectCustomer } = useGlobalContext()
   let history = useHistory();
 
   useEffect(() => {

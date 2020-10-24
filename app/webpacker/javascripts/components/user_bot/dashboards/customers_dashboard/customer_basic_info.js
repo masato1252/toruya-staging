@@ -1,14 +1,14 @@
 "use strict"
 
-import React, { useContext } from "react";
+import React from "react";
 
-import { GlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { NotificationMessages } from "shared/components"
 import { CustomerTopActions } from "./top_actions";
 import { CustomerServices } from "user_bot/api";
 
 const CustomerTopRightAction = () => {
-  const { selected_customer, props, dispatch } = useContext(GlobalContext)
+  const { selected_customer, props, dispatch } = useGlobalContext()
 
   if (!selected_customer?.id) { return <span></span>; }
 
@@ -23,7 +23,7 @@ const CustomerTopRightAction = () => {
 }
 
 const CustomerBasicInfo = () => {
-  const { dispatch, selected_customer, notification_messages, props } = useContext(GlobalContext)
+  const { dispatch, selected_customer, notification_messages, props } = useGlobalContext()
 
   return (
     <div>
