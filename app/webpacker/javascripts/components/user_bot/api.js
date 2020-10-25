@@ -110,56 +110,60 @@ const ReservationServices = {
 }
 
 const CustomerServices = {
-  recent: (last_updated_id = null, last_updated_at = null) => {
+  recent: (user_id, last_updated_id = null, last_updated_at = null) => {
     return request({
       method: "GET",
       url: Routes.recent_lines_user_bot_customers_path({format: "json"}),
       params: {
+        user_id,
         last_updated_at,
         last_updated_id
       },
       responseType: "json"
     })
   },
-  search: ({page, keyword}) => {
+  search: ({user_id, page, keyword}) => {
     return request({
       method: "GET",
       url: Routes.search_lines_user_bot_customers_path({format: "json"}),
       params: {
+        user_id,
         page,
         keyword
       },
       responseType: "json"
     })
   },
-  filter: ({page, pattern_number}) => {
+  filter: ({user_id, page, pattern_number}) => {
     return request({
       method: "GET",
       url: Routes.filter_lines_user_bot_customers_path({format: "json"}),
       params: {
+        user_id,
         page,
         pattern_number: pattern_number || 0
       },
       responseType: "json"
     })
   },
-  reservations: ({customer_id}) => {
+  reservations: ({user_id, customer_id}) => {
     return request({
       method: "GET",
       url: Routes.lines_user_bot_customer_reservations_path({format: "json"}),
       params: {
+        user_id,
         customer_id,
       },
       responseType: "json"
     })
   },
-  save: (data) => {
+  save: (user_id, data) => {
     return request({
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.save_lines_user_bot_customers_path({format: "json"}),
+      url: Routes.save_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -174,7 +178,7 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  toggle_reminder_premission: (customer_id) => {
+  toggle_reminder_premission: (user_id, customer_id) => {
     return request({
       method: "POST",
       headers: {
@@ -182,16 +186,18 @@ const CustomerServices = {
       },
       url: Routes.toggle_reminder_premission_lines_user_bot_customers_path({format: "json"}),
       data: {
+        user_id,
         id: customer_id,
       },
       responseType: "json"
     })
   },
-  find_duplicate_customers: ({last_name, first_name}) => {
+  find_duplicate_customers: ({user_id, last_name, first_name}) => {
     return request({
       method: "GET",
       url: Routes.find_duplicate_customers_lines_user_bot_customers_path({format: "json"}),
       params: {
+        user_id,
         last_name,
         first_name
       },

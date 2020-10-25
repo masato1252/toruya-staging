@@ -96,7 +96,6 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     ]
 
     Rails.cache.delete(reservation_params_hash_cache_key)
-    cookies.delete(:reservation_form_hash)
 
     if params[:customer_id]
       customer = super_user.customers.find(params[:customer_id])

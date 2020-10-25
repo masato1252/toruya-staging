@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-family: Arial,"Regular",sans-serif;
   background: $gray10;
   color: #555;
   height:100%;
@@ -96,6 +96,10 @@ select {
   }
 }
 
+textarea {
+  min-height: 150px;
+}
+
 .centerize {
   text-align: center;
 }
@@ -163,7 +167,8 @@ a {
 .state,
 .reservation-state
 {
-  &.reserved {
+  &.reserved,
+  &.accepted {
     background-color: $palette-color2-1;
     border-color: $palette-color2-2;
   }

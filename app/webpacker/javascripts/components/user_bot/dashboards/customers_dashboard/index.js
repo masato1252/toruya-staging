@@ -24,7 +24,7 @@ const DashboardView = () => {
       dispatch({
         type: "CHANGE_VIEW",
         payload: {
-          view: "customer_reservations"
+          view: "customer_info_view"
         }
       })
     }

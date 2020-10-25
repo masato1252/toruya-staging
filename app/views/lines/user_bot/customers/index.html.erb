@@ -2,6 +2,7 @@
 
 <%= react_component("user_bot/dashboards/customers_dashboard", {
   props: {
+    super_user_id: super_user.id,
     from: params[:from],
     referrer: request.referrer,
     reservation_id: params[:reservation_id],

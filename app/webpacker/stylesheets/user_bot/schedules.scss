@@ -6,8 +6,29 @@
     margin: 3px 0;
 
     .calendar-btn {
-      line-height: 40px !important;
-      height: 40px !important;
+      line-height: 56px !important;
+      height: 56px !important;
+      width: 56px;
+      background-color: $gray2;
+      border: 3px solid $gray7;
+      padding: 10px !important;
+      display: block !important;
+      position: relative;
+
+      i.fa-calendar-alt {
+        color: $black2;
+      }
+
+      .calendar-hint {
+        line-height: 12px;
+        color: black;
+        font-size: 7pt;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     .dates-list {
@@ -174,8 +195,8 @@
 .new-schedule-button {
   color: $palette-color1;
   position: fixed;
-  bottom: 15px;
-  right: 15px;
+  bottom: 14px;
+  right: 10px;
 
   i.fa-plus-circle {
     font-size: 60px;
@@ -185,5 +206,11 @@
 #new-reservations-modal {
   .new-shop-reservation {
     margin-left: 3px;
+  }
+
+  .shop-cell {
+    .btn {
+      margin-bottom: 6px;
+    }
   }
 }

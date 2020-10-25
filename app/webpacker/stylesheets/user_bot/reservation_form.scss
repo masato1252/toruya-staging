@@ -1,5 +1,6 @@
 .reservation-form {
   padding-top: $bar-height;
+  padding-bottom: $bar-height;
 
   .form-body {
     .business-hours {
@@ -40,10 +41,14 @@
       }
 
       .menu-option-content {
-        border: 1px solid $gray;
+        border: 1px solid $gray-border-1;
         border-radius: 6px;
         padding-bottom: 6px;
-        margin-bottom: 6px;
+        margin: 0px 3px 6px 3px;
+
+        input[type="tel"].extend {
+          width: 98%;
+        }
 
         .menu-field-row {
           display: flex;
@@ -189,6 +194,15 @@
       font-weight: bold;
       text-align: center;
       line-height: 50px;
+    }
+  }
+}
+
+#customer-modal {
+  .modal-title {
+    .reservation-state {
+      margin-right: 6px;
+      padding: 0 3px;
     }
   }
 }

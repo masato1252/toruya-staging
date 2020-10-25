@@ -126,7 +126,6 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
           )
         })}
 
-        <div>
           <div
             className="add-staff-block"
             onClick={() => {
@@ -140,11 +139,9 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
               })
             }}>
             <button className="btn btn-yellow">
-              <i className="fa fa-user-plus" aria-hidden="true"></i>{props.i18n.responsible_employee}
+              <i className="fa fa-user-plus" aria-hidden="true"></i> <span>{props.i18n.add_a_staff}</span>
             </button>
           </div>
-        </div>
-        <div>
           <div
             className="remove-menu-block"
             onClick={() => {
@@ -153,10 +150,10 @@ const MenuOptionField = sortableElement(({ menu_staffs_fields, menu_index }) => 
                 payload: [...menu_staffs_list.slice(0, menu_index), ...menu_staffs_list.slice(menu_index + 1)]
               })
             }}>
-            <button className="btn btn-orange"><i className="fa fa-minus"></i></button>
-            <span>{props.i18n.delete}</span>
+            <button className="btn btn-orange">
+              <i className="fa fa-minus"></i> <span>{props.i18n.delete_a_menu}</span>
+            </button>
           </div>
-        </div>
       </div>
     </div>
   )
@@ -189,8 +186,7 @@ const MenuStaffsList = sortableContainer(() => {
           })
         }}>
         <button className="btn btn-yellow">
-          <i className="fa fa-plus" aria-hidden="true" ></i>
-          {props.i18n.add_a_menu}
+          <i className="fa fa-plus" aria-hidden="true" ></i> <span>{props.i18n.add_a_menu}</span>
         </button>
       </div>
     </div>

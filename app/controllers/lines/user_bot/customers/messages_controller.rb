@@ -30,6 +30,6 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
   private
 
   def set_customer
-    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    @customer = Customer.find(params[:id])
   end
 end

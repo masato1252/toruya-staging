@@ -28,6 +28,11 @@ class SettingsController < ActionController::Base
     authorize! :manage, Settings
   end
 
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
+
   private
 
   def enable_tour_warning

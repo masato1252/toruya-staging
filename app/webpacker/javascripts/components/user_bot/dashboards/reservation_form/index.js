@@ -190,11 +190,6 @@ const Form = () => {
           <span>{i18n.date}</span>
           <span>
             {moment(start_time_date_part).format("YYYY/MM/DD(dd)")}
-            {reservation_errors.start_time_restriction && reservation_errors.end_time_restriction ? (
-              <div className="business-hours">{reservation_errors.start_time_restriction}〜{reservation_errors.end_time_restriction}</div>
-            ) : (
-              <div className="business-hours closed">CLOSED</div>
-            )}
             <span className="errors">
               {dateErrors()}
             </span>
@@ -223,7 +218,7 @@ const Form = () => {
         </div>
 
         <div className="field-row" >
-          <span>staff states</span>
+          <span>{i18n.staff_states_title}</span>
           <span>
             <StaffStates />
           </span>

@@ -22,7 +22,7 @@
                 <%= link_to_new_reservation(
                   SiteRouting.new(self).reservation_form_path(option.shop.reservations.new, start_time_date_part: @date),
                   option.shop.display_name,
-                  class: from_line_bot ? "btn btn-tarco" : "BTNtarco"
+                  class: from_line_bot ? "btn btn-tweak btn-tarco btn-big btn-extend" : "BTNtarco"
                 )%>
               <% else %>
                 <%

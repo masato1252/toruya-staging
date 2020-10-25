@@ -1,7 +1,6 @@
 class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def index
     authorize! :read, :customers_dashboard
-    @body_class = "customer"
 
     @customers =
       super_user

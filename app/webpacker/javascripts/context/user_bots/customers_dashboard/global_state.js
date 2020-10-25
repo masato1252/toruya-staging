@@ -36,7 +36,9 @@ export const GlobalProvider = ({ props, children }) => {
   const last_updated_customer = customers[customers.length - 1]
 
   // state = {
-  //   customer_states: {...}
+  //   notification_states: [],
+  //   app_states: {...},
+  //   customer_states: {...},
   // }
   const getCustomers = () => {
     switch (query_type) {
@@ -54,6 +56,7 @@ export const GlobalProvider = ({ props, children }) => {
 
   const recentCustomers = async () => {
     const [error, response] = await CustomerServices.recent(
+      props.super_user_id,
       last_updated_customer?.id,
       last_updated_customer?.updatedAt
     )
@@ -81,6 +84,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     if (firstQuery) {
       [error, response] = await CustomerServices.filter({
+        user_id: props.super_user_id,
         pattern_number: new_filter_pattern_number || filter_pattern_number
       })
     }
@@ -88,6 +92,7 @@ export const GlobalProvider = ({ props, children }) => {
       currentPageRef.current += 1;
 
       [error, response] = await CustomerServices.filter({
+        user_id: props.super_user_id,
         page: currentPageRef.current,
         pattern_number: new_filter_pattern_number || filter_pattern_number
       })
@@ -120,6 +125,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     if (firstQuery) {
       [error, response] = await CustomerServices.search({
+        user_id: props.super_user_id,
         keyword: keywordRef.current
       })
     }
@@ -127,6 +133,7 @@ export const GlobalProvider = ({ props, children }) => {
       currentPageRef.current += 1;
 
       [error, response] = await CustomerServices.search({
+        user_id: props.super_user_id,
         page: currentPageRef.current,
         keyword: keywordRef.current
       })
@@ -151,7 +158,7 @@ export const GlobalProvider = ({ props, children }) => {
 
     dispatch({
       type: "CHANGE_VIEW",
-      payload: { view: "customer_info_view" }
+      payload: { view: "customer_reservations" }
     })
   }
 

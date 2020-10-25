@@ -5,6 +5,9 @@
   <div class="schedule-dates">
     <a href="#" data-toggle="modal" data-target="#calendar-modal" class="btn btn-yellow btn-icon calendar-btn">
       <i class="fa fa-calendar-alt fa-2x"></i>
+      <div class="calendar-hint">
+        <%= I18n.t("user_bot.dashboards.schedules.calendar_hint") %>
+      </div>
     </a>
     <%= react_component(
       "user_bot/dashboards/schedules_dashboard/calendar_modal", {
@@ -39,6 +42,6 @@
   <%= render "reservations/off_date_modal", date: @date %>
 </div>
 
-<a href="#" data-toggle="modal" data-target="#schedule-modal" class="new-schedule-button">
-  <i class="fa fa-plus-circle"></i>
+<a href="#" data-toggle="modal" data-target="#schedule-modal" class="new-schedule-button btn btn-yellow btn-circle btn-tweak btn-big">
+  <i class="fa fa-plus fa-2x"></i>
 </a>

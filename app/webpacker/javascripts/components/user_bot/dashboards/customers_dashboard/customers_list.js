@@ -18,7 +18,7 @@ const BottomBar = () => {
     <BottomNavigationBar klassName="centerize">
       <span>{props.i18n.count}{customers.length}{props.i18n.unit}</span>
       <button
-        className="btn btn-yellow btn-circle btn-save"
+        className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => {
           dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
           dispatch({type: "SELECT_CUSTOMER", payload: { customer: {} } })
@@ -33,12 +33,11 @@ const BottomBar = () => {
 
 const CustomerFilterCharacter = () =>{
   const { filter_pattern_number, filterCustomers } = useGlobalContext()
-  const characters = ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "A"]
 
   return (
     <div className="filter-character-action">
       <Popup
-        trigger={<span className="current-filter-character">{characters[filter_pattern_number || 0]}</span>}
+        trigger={<span className="current-filter-character">{CustomerFilterCharacter.characters[filter_pattern_number || 0]}</span>}
         position="bottom"
         on="click"
         closeOnDocumentClick
@@ -50,7 +49,7 @@ const CustomerFilterCharacter = () =>{
         {close => (
           <div className="filter-character-list">
             {
-              characters.map((symbol, i) => {
+              CustomerFilterCharacter.characters.map((symbol, i) => {
                 return (
                   <div key={symbol} onClick={() => {
                     filterCustomers(i)
@@ -67,6 +66,8 @@ const CustomerFilterCharacter = () =>{
     </div>
   )
 }
+
+CustomerFilterCharacter.characters = ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "A"]
 
 const TopBar = () => {
   const { props } = useGlobalContext()

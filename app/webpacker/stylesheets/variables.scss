@@ -56,8 +56,10 @@ $tarco-background-1: $palette-color2;
 $tarco-border-1: $palette-color2-1;
 
 $black: #333333;
+$black2: #454443;
 
 $bar-height: 35px;
+$big-circle-button-size: 45px;
 
 @mixin clearfix {
   &:before, &:after {

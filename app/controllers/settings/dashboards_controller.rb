@@ -44,4 +44,9 @@ class Settings::DashboardsController < ActionController::Base
 
     redirect_to booking_settings_presenter.last_step_task_path
   end
+
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
 end

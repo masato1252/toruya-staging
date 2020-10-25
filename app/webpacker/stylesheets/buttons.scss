@@ -41,6 +41,12 @@ a.btn {
     width: initial;
     height: initial !important;
     border-radius: 50%;
+
+    &.btn-big {
+      height: $big-circle-button-size !important;
+      width: $big-circle-button-size !important;
+      padding: initial !important;
+    }
   }
 
   &.btn-tweak {
@@ -49,8 +55,12 @@ a.btn {
     align-items: center;
 
     &.btn-big {
-      height: 50px !important;
+      height: $big-circle-button-size !important;
     }
+  }
+
+  &.btn-extend {
+    width: 100%;
   }
 }
 

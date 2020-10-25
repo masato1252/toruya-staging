@@ -82,8 +82,7 @@ const ReservationCustomersList = () =>  {
           className="add-menu-block"
           onClick={addCustomer}>
           <button className="btn btn-yellow">
-            <i className="fa fa-plus" aria-hidden="true" ></i>
-            {i18n.add_customer_btn}
+            <i className="fa fa-plus" aria-hidden="true" ></i> <span>{i18n.add_customer_btn}</span>
           </button>
           {warning_content()}
         </div>

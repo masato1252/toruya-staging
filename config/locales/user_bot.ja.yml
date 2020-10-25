@@ -43,10 +43,15 @@ ja:
         page_title: ユーザー登録
         save_btn: ユーザー登録を完了
     dashboards:
+      schedules:
+        calendar_hint: カレンダー
       reservation:
         no_ending_time_message: ※終了時刻自動計算
         schedule_modal_title: 新しい予約・予定を追加
         reservation_customers_title: 予約顧客
+        delete_a_menu: メニューを削除
+        add_a_staff: スタッフを追加
+        staff_states_title: ステータス
       customer:
         title: 顧客台帳
         search_placeholder: 名前で検索

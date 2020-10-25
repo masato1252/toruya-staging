@@ -76,7 +76,7 @@ const CustomerBasicInfo = () => {
             <a href="#"
               data-id="customer-reminder-toggler"
               onClick={async () => {
-                const [error, response] = await CustomerServices.toggle_reminder_premission(selected_customer.id)
+                const [error, response] = await CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
 
                 const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
                   trigger: "manual",

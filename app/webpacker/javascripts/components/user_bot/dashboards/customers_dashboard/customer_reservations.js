@@ -8,12 +8,12 @@ import CustomerNav from "./customer_nav";
 import { CustomerServices } from "user_bot/api"
 
 const UserBotCustomerReservations = () =>{
-  const { selected_customer, reservations, dispatch } = useGlobalContext()
+  const { selected_customer, reservations, dispatch, props } = useGlobalContext()
   let previousYear;
   let divider;
 
   const fetchReservations = async () => {
-    const [error, response] = await CustomerServices.reservations({ customer_id: selected_customer.id })
+    const [error, response] = await CustomerServices.reservations({ user_id: props.super_user_id, customer_id: selected_customer.id })
 
     dispatch({
       type: "ASSIGN_CUSTOMER_CUSTOMERS",

@@ -95,7 +95,7 @@ const UserBotCustomerInfoForm = () => {
 
   const find_duplicate_customers = async () => {
     setSimilarCustomers([])
-    const [error, response] = await CustomerServices.find_duplicate_customers({last_name: lastNameWatched, first_name: firstNameWatched})
+    const [error, response] = await CustomerServices.find_duplicate_customers({user_id: props.super_user_id, last_name: lastNameWatched, first_name: firstNameWatched})
 
     setSimilarCustomers(response.data.customers)
   }
@@ -129,7 +129,7 @@ const UserBotCustomerInfoForm = () => {
 
     let error, response;
 
-    [error, response] = await CustomerServices.save(data)
+    [error, response] = await CustomerServices.save(props.super_user_id, data)
 
     window.location = response.data.redirect_to
   }

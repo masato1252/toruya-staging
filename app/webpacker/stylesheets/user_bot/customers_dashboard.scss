@@ -1,5 +1,14 @@
 .customers-dashboard {
-  padding-top: $bar-height * 2;
+  // Make top bar and search bar don't cover the customer list
+  padding-top: $bar-height * 2 + 6px;
+
+  .customers-list-dashboard {
+    padding-bottom: $bar-height;
+
+    #search {
+      line-height: 25px;
+    }
+  }
 
   .customers-list {
     .customer-option {
@@ -112,6 +121,8 @@
 $indent: 12px;
 
 .customer-view {
+  padding-bottom:  $bar-height * 2;
+
   .customer-basic-info {
     position: relative;
     display: flex;
@@ -174,6 +185,8 @@ $indent: 12px;
           border-radius: 50%;
           color: #ffffff;
           margin: 0 6px;
+          width: 30px;
+          height: 30px;
 
           &.customer-reminder-permission {
             &.fa-bell {
@@ -203,6 +216,10 @@ $indent: 12px;
       dd {
         a {
           margin-left: 10px;
+          width: 46px;
+          height: 46px;
+          justify-content: center;
+          align-items: center
         }
       }
     }
@@ -219,6 +236,12 @@ $indent: 12px;
           width: 100%;
         }
       }
+    }
+  }
+
+  .bottom-navigation-bar {
+    .fa-user-edit {
+      font-size: 1.4em;
     }
   }
 }

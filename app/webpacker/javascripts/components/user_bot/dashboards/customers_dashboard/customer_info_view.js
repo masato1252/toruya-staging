@@ -1,6 +1,8 @@
 "use strict"
 
 import React from "react";
+import moment from "moment-timezone";
+
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
 import { BottomNavigationBar, NotificationMessages } from "shared/components"
@@ -13,7 +15,7 @@ const BottomBar = () => {
     <BottomNavigationBar klassName="centerize">
       <span>{props.i18n.updated_date} {selected_customer.lastUpdatedAt}</span>
       <button
-        className="btn btn-yellow btn-circle btn-save"
+        className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
         <i className="fa fa-user-edit fa-2x"></i>
       </button>
@@ -25,8 +27,10 @@ const PhoneIcon = ({phone}) => {
   var icon_type;
   switch (phone.type) {
     case "home":
-    case "mobile":
       icon_type = phone.type;
+      break;
+    case "mobile":
+      icon_type = "mobile-alt";
       break;
     case "work":
       icon_type = "building";
@@ -46,8 +50,10 @@ const EmailIcon = ({email}) => {
   var icon_type;
   switch (email.type) {
     case "home":
-    case "mobile":
       icon_type = email.type;
+      break;
+    case "mobile":
+      icon_type = "mobile-alt";
       break;
     case "work":
       icon_type = "building";
@@ -64,6 +70,7 @@ const EmailIcon = ({email}) => {
 };
 
 const UserBotCustomerInfoView = () => {
+  moment.locale('ja');
   const { selected_customer, props } = useGlobalContext()
   const { i18n } = props
 
@@ -80,13 +87,13 @@ const UserBotCustomerInfoView = () => {
         <dl className="phone">
           <dt>{i18n.phone_number}</dt>
           <dd>
-            {(selected_customer.phoneNumbersDetails || []).map((phoneNumber) => <PhoneIcon key={phoneNumber.value} phone={phoneNumber} />)}
+            {(selected_customer.phoneNumbersDetails || []).map((phoneNumber, index) => <PhoneIcon key={`${phoneNumber.value}-${index}`} phone={phoneNumber} />)}
           </dd>
         </dl>
         <dl className="email">
           <dt>{i18n.email}</dt>
           <dd>
-            {(selected_customer.emailsDetails || []).map((email) => <EmailIcon key={email.value} email={email} />)}
+            {(selected_customer.emailsDetails || []).map((email, index) => <EmailIcon key={`${email.value}-${index}`} email={email} />)}
           </dd>
         </dl>
         <dl className="customerID">
@@ -96,7 +103,7 @@ const UserBotCustomerInfoView = () => {
         <dl className="dob">
           <dt>{i18n.birthday}</dt>
           <dd>
-            {selected_customer.birthday ? selected_customer.birthday : null }
+            {selected_customer.birthday ? moment(selected_customer.birthday).format('LL') : null }
           </dd>
         </dl>
         <dl className="memo">
