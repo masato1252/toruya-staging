@@ -26,6 +26,9 @@ RSpec.describe SocialAccounts::Save do
   describe "#execute" do
     context "when there is no social_accounts before" do
       it "creates a new social_account" do
+        expect(SocialAccounts::RichMenus::CustomerGuest).to receive(:run).and_return(double(invalid?: false, result: double))
+        expect(SocialAccounts::RichMenus::CustomerReservations).to receive(:run).and_return(double(invalid?: false, result: double))
+
         expect {
           outcome
         }.to change {
@@ -39,6 +42,9 @@ RSpec.describe SocialAccounts::Save do
       let(:user) { social_account.user }
 
       it "updates existing social_account" do
+        expect(SocialAccounts::RichMenus::CustomerGuest).to receive(:run).with(social_account: social_account).and_return(double(invalid?: false, result: double))
+        expect(SocialAccounts::RichMenus::CustomerReservations).to receive(:run).with(social_account: social_account).and_return(double(invalid?: false, result: double))
+
         expect {
           outcome
         }.to change {

@@ -1,13 +1,11 @@
 require "rails_helper"
 
-RSpec.describe Customers::CreateIdentificationCode do
-  let(:user) { customer.user }
-  let(:customer) { FactoryBot.create(:customer) }
+RSpec.describe IdentificationCodes::Create do
+  let(:user) { FactoryBot.create(:user) }
   let(:phone_number) { Faker::PhoneNumber.phone_number }
   let(:args) do
     {
       user: user,
-      customer: customer,
       phone_number: phone_number
     }
   end
@@ -20,7 +18,7 @@ RSpec.describe Customers::CreateIdentificationCode do
       expect {
         outcome
       }.to change {
-        BookingCode.where(customer_id: customer.id).count
+        BookingCode.count
       }.by(1)
     end
 
@@ -31,7 +29,7 @@ RSpec.describe Customers::CreateIdentificationCode do
         expect {
           outcome
         }.not_to change {
-          BookingCode.where(customer_id: customer.id).count
+          BookingCode.count
         }
       end
     end

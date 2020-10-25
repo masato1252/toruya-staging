@@ -618,9 +618,9 @@ CREATE TABLE public.customers (
     email_types character varying,
     deleted_at timestamp without time zone,
     reminder_permission boolean DEFAULT false,
-    phone_numbers_details jsonb,
-    emails_details jsonb,
-    address_details jsonb
+    phone_numbers_details jsonb DEFAULT '[]'::jsonb,
+    emails_details jsonb DEFAULT '[]'::jsonb,
+    address_details jsonb DEFAULT '{}'::jsonb
 );
 
 

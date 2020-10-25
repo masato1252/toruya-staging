@@ -215,9 +215,9 @@ ActiveRecord::Schema.define(version: 2020_10_19_072951) do
     t.string "email_types"
     t.datetime "deleted_at"
     t.boolean "reminder_permission", default: false
-    t.jsonb "phone_numbers_details"
-    t.jsonb "emails_details"
-    t.jsonb "address_details"
+    t.jsonb "phone_numbers_details", default: []
+    t.jsonb "emails_details", default: []
+    t.jsonb "address_details", default: {}
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin
