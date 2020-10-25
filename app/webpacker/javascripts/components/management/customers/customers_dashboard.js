@@ -36,7 +36,7 @@ class CustomersDashboard extends React.Component {
       customer: this.props.customer,
       updated_customer: this.props.customer,
       customer_view: this.props.customerView,
-      edit_mode: this.props.customerView !== CustomersDashboard.customerView.customer_reservations,
+      edit_mode: false,
       processing: false,
       moreCustomerProcessing: false,
       no_more_customers: false,
@@ -77,7 +77,7 @@ class CustomersDashboard extends React.Component {
       didSearch = true;
     }
 
-    this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: true, customer_view: CustomersDashboard.customerView.customer_info, didSearch: didSearch});
+    this.setState({selected_customer_id: "", customer: {}, processing: false, edit_mode: false, customer_view: CustomersDashboard.customerView.customer_info, didSearch: didSearch});
 
     if (mode === "manual") {
       // From select user get into new customer mode
@@ -406,7 +406,7 @@ class CustomersDashboard extends React.Component {
 
   switchEditMode = () => {
     if (this.state.processing) { return; }
-    this.setState({ edit_mode: !this.state.edit_mode });
+    this.setState({ edit_mode: false });
   };
 
   selectCustomerView = (customer_view) => {
@@ -736,17 +736,6 @@ class CustomersDashboard extends React.Component {
               processing={this.state.processing}
               />
             <ProcessingBar processing={this.state.moreCustomerProcessing} processingMessage={this.props.processingMessage} />
-            {
-              this.state.selected_customer_id ? (
-                <button
-                  id="new-customer-btn"
-                  className="BTNtarco"
-                  onClick={this.newCustomerMode.bind(null, 'manual')}
-                  disabled={this.state.processing} >
-                  新規データ作成
-                </button>
-              ) : null
-            }
           </div>
 
           {this.renderCustomerView()}

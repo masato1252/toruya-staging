@@ -61,12 +61,6 @@ class CustomerInfoView extends React.Component {
 
         <div id="detailInfo" className="tabBody" style={{height: "425px"}}>
           <ul className="functions">
-            <li className="left">
-            <a href="#" onClick={this.props.switchEditMode}>
-              <i className="fa fa-pencil" aria-hidden="true"></i>
-              {this.props.editBtn}
-            </a>
-            </li>
             <li className="right">
               更新日 {this.props.customer.lastUpdatedAt} {this.props.customer.updatedByUserName}
             </li>
