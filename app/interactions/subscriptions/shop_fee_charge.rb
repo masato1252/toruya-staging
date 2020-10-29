@@ -21,7 +21,11 @@ module Subscriptions
       }
       charge.save!
 
-      SubscriptionMailer.charge_shop_fee(user.subscription, charge).deliver_later
+      Notifiers::Subscriptions::ChargeShopFee.perform_later(
+        receiver: user,
+        user: user,
+        subscription_charge: charge
+      )
       charge
     end
   end

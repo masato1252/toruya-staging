@@ -45,7 +45,7 @@ module StaffAccounts
           staff_account.token = Digest::SHA1.hexdigest("#{staff_account.id}-#{Time.now.to_i}-#{SecureRandom.random_number}")
 
           if staff_account.save
-            Notifiers::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
+            Notifiers::Notifications::ActivateStaffAccount.run(receiver: staff_account, user: staff_account.owner)
           end
         end
       end

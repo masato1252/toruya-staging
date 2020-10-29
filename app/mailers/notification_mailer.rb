@@ -1,4 +1,5 @@
 class NotificationMailer < ApplicationMailer
+  # TODO: MESSAGE TBD
   def customers_import_finished(contact_group)
     @contact_group = contact_group
     @user = contact_group.user
@@ -7,6 +8,7 @@ class NotificationMailer < ApplicationMailer
          :subject => subject("顧客台帳のGoogle同期作業が完了しました。"))
   end
 
+  # TODO: MESSAGE TBD
   def customers_printing_finished(filtered_outcome)
     @filtered_outcome = filtered_outcome
     @user = filtered_outcome.user
@@ -15,6 +17,7 @@ class NotificationMailer < ApplicationMailer
          :subject => subject("宛名印刷用ファイルの準備ができました。"))
   end
 
+  # TODO: MESSAGE TBD
   def activate_staff_account(staff_account)
     @staff_account = staff_account
     @staff = @staff_account.staff
@@ -34,6 +37,7 @@ class NotificationMailer < ApplicationMailer
          :subject => subject("#{@owner.name} の店舗にスタッフとして設定されました。"))
   end
 
+  # TODO: MESSAGE TBD
   def staff_deleted(staff)
     @admin = staff.user
     @staff = staff
@@ -44,6 +48,7 @@ class NotificationMailer < ApplicationMailer
          :subject => subject("スタッフが削除されました。"))
   end
 
+  # TODO: MESSAGE TBD
   def duplicate_customers(booking_page, customers, booking_customer, phone_number)
     @booking_page = booking_page
     @user = booking_page.user
@@ -56,8 +61,8 @@ class NotificationMailer < ApplicationMailer
          locale: I18n.default_locale)
   end
 
-  def new_referrer(referrer)
-    @referee = referrer.reference.referee
+  def new_referrer(referee)
+    @referee = referee
 
     mail(:to => @referee.email,
          subject: subject(I18n.t("notification_mailer.new_referrer.title")),

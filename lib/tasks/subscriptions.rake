@@ -13,7 +13,11 @@ namespace :subscriptions do
     seven_days_later = Subscription.today.advance(days: 7)
 
     Subscription.charge_required.recurring_chargeable_at(seven_days_later).chargeable(seven_days_later).find_each do |subscription|
-      SubscriptionMailer.charge_reminder(subscription).deliver_later
+      Notifiers::Subscriptions::ChargeReminder.perform_later(
+        receiver: subscription.user,
+        user: subscription.user,
+        subscription: subscription
+      )
     end
 
     Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge reminder task") if Rails.configuration.x.env.production?
@@ -31,9 +35,9 @@ namespace :subscriptions do
 
       case before_trial_expired_days
       when 7
-        ReminderMailer.trial_member_week_ago_reminder(user).deliver_later
+        Notifiers::Reminders::TrialMemberWeekAgoReminder.perform_later(receiver: user, user: user)
       when 1
-        ReminderMailer.trial_member_day_ago_reminder(user).deliver_later
+        Notifiers::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
       end
     end
 

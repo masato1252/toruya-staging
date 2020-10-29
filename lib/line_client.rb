@@ -20,7 +20,7 @@ class LineClient
     response
   end
 
-  # TODO: SocialCustomer or Social User
+  # TODO: SocialCustomer or Social User or User
   def self.profile(social_customer)
     error_handler(__method__, social_customer.id) do
       social_customer.client.get_profile(social_customer.social_user_id)

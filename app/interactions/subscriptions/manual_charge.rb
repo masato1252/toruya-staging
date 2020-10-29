@@ -34,7 +34,7 @@ module Subscriptions
           }
           charge.save!
 
-          SubscriptionMailer.charge_successfully(subscription).deliver_now
+          Notifiers::Subscriptions::ChargeSuccessfully.run(receiver: subscription.user, user: subscription.user)
         else
           errors.merge!(charge_outcome.errors)
         end

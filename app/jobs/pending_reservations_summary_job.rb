@@ -6,9 +6,11 @@ class PendingReservationsSummaryJob < ApplicationJob
     end_time = Time.zone.parse(end_time)
     user = User.find(user_id)
 
-    staff_ids = user.staff_accounts.active.pluck(:staff_id)
-    reservations = Reservation.active.where(aasm_state: :pending, created_at: start_time..end_time).joins(:reservation_staffs).where("reservation_staffs.staff_id": staff_ids, "reservation_staffs.state": ReservationStaff.states[:pending]).to_a
-
-    ReservationMailer.pending_summary(reservations, user).deliver_now
+    Notifiers::PendingReservationsSummary.run(
+      receiver: user,
+      user: user,
+      start_time: start_time,
+      end_time: end_time
+    )
   end
 end

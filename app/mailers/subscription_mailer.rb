@@ -1,6 +1,6 @@
 class SubscriptionMailer < ApplicationMailer
-  def charge_successfully(subscription)
-    @user = subscription.user
+  def charge_successfully(user)
+    @user = user
 
     mail(to: @user.email,
          subject: subject(I18n.t("subscription_mailer.charge_successfully.title")),

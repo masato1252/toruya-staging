@@ -1,4 +1,5 @@
 class BusinessApplicationMailer < ApplicationMailer
+  # TODO: MESSAGE TBD
   def applicant_applied
     mail(
       to: user.email,
@@ -7,6 +8,7 @@ class BusinessApplicationMailer < ApplicationMailer
     )
   end
 
+  # TODO: MESSAGE TBD
   def applicant_approved
     mail(
       to: user.email,
@@ -15,6 +17,7 @@ class BusinessApplicationMailer < ApplicationMailer
     )
   end
 
+  # TODO: MESSAGE TBD
   def applicant_rejected
     mail(
       to: user.email,
@@ -23,6 +26,7 @@ class BusinessApplicationMailer < ApplicationMailer
     )
   end
 
+  # TODO: MESSAGE TBD
   def applicant_paid
     mail(
       to: user.email,

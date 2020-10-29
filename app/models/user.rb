@@ -37,6 +37,8 @@
 #
 
 # @email, @phone_number represent how user sign up our service, @email is from web, @phone_number is from line
+require "user_bot_social_account"
+
 class User < ApplicationRecord
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
@@ -84,6 +86,7 @@ class User < ApplicationRecord
   delegate :name, to: :profile, allow_nil: true
   delegate :current_plan, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
+  delegate :client, to: UserBotSocialAccount
 
   def super_admin?
     ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].include?(email)

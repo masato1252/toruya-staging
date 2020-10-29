@@ -23,12 +23,12 @@ RSpec.describe Subscriptions::ManualCharge do
 
   describe "#execute" do
     it "charges subscription and completed charge" do
-      allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+      allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
       outcome
 
       subscription.reload
       charge = subscription.user.subscription_charges.last
-      expect(SubscriptionMailer).to have_received(:charge_successfully).with(subscription)
+      expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
       expect(subscription.plan).to eq(plan)
       expect(subscription.next_plan).to be_nil
       expect(subscription.recurring_day).to eq(Subscription.today.day)
@@ -53,7 +53,7 @@ RSpec.describe Subscriptions::ManualCharge do
       let(:plan) { Plan.business_level.take }
 
       it "charges subscription and completed charge with different details type and expired date" do
-        allow(SubscriptionMailer).to receive(:charge_successfully).with(subscription).and_return(double(deliver_now: true))
+        allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
         outcome
 
         subscription.reload
@@ -84,7 +84,7 @@ RSpec.describe Subscriptions::ManualCharge do
       it "create a failed charge and doesn't change subscription" do
         StripeMock.prepare_card_error(:card_declined)
 
-        expect(SubscriptionMailer).not_to receive(:charge_successfully)
+        expect(Notifiers::Subscriptions::ChargeSuccessfully).not_to receive(:run)
         old_expired_date = subscription.expired_date
 
         expect(outcome).to be_invalid

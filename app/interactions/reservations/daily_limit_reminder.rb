@@ -6,9 +6,16 @@ module Reservations
     def execute
       if Reservations::DailyLimit.run(user: user).invalid?
         if created_by_admin?
-          ReminderMailer.daily_reservations_limit_by_admin_reminder(user).deliver_later
+          Notifiers::Reminders::DailyReservationsLimitByAdminReminder.perform_later(
+            receiver: user,
+            user: user
+          )
         else
-          ReminderMailer.daily_reservations_limit_by_staff_reminder(user, reservation).deliver_later
+          Notifiers::Reminders::DailyReservationsLimitByStaffReminder.perform_later(
+            receiver: user,
+            user: user,
+            shop: reservation.shop
+          )
         end
       end
     end

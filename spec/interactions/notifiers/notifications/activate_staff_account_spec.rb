@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Notifiers::ActivateStaffAccount do
+RSpec.describe Notifiers::Notifications::ActivateStaffAccount do
   let(:user) { receiver.owner }
 
   let(:args) do
@@ -21,7 +21,7 @@ RSpec.describe Notifiers::ActivateStaffAccount do
         }.to change {
           Notification.where(
             user: user,
-            content: I18n.t("notifier.activate_staff_account.message", url: url_helpers.user_from_callbacks_staff_accounts_url(token: receiver.token))
+            content: I18n.t("notifier.notifications.activate_staff_account.message")
           ).count
         }.by(1)
       end

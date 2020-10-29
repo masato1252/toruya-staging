@@ -23,7 +23,10 @@ module Profiles
           compose(Staffs::CreateOwner, user: user)
 
           if user.reference
-            NotificationMailer.new_referrer(user).deliver_later
+            Notifiers::Notifications::NewReferrer.perform_later(
+              receiver: user.reference.referee,
+              user: user.reference.referee
+            )
           end
         end
 

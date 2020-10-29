@@ -25,7 +25,7 @@ RSpec.describe PaymentWithdrawals::Create do
 
   describe "#execute" do
     it "creates a PaymentWithdrawal" do
-      allow(WithdrawalMailer).to receive(:with).and_return(mailer_spy)
+      allow(Notifiers::WithdrawalMonthlyReport).to receive(:perform_later).and_return(mailer_spy)
 
       expect {
         outcome
@@ -39,7 +39,7 @@ RSpec.describe PaymentWithdrawals::Create do
       expect(withdrawal.amount).to eq(user.payments.sum(&:amount))
       expect(withdrawal.details["payment_ids"]).to eq([payment.id])
       expect(withdrawal.details["transfer_date"]).to eq(I18n.l(Date.new(2019, 11, 8)))
-      expect(WithdrawalMailer).to have_received(:with).with(withdrawal: withdrawal)
+      expect(Notifiers::WithdrawalMonthlyReport).to have_received(:perform_later).with(receiver: withdrawal.receiver, user: withdrawal.receiver, withdrawal: withdrawal)
     end
 
     context "when today is monday (regular business day)" do

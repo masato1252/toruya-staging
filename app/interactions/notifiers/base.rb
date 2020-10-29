@@ -36,8 +36,10 @@ module Notifiers
     class_attribute :deliver_by_email, instance_writer: false
     class_attribute :mailer, instance_writer: false
     class_attribute :mailer_method, instance_writer: false
-    delegate :email, :phone_number, to: :receiver
+    delegate :email, to: :target_email_user
+    delegate :phone_number, to: :target_phone_user
 
+    # User, StaffAccount, SocialUser
     object :receiver, class: ApplicationRecord
     object :user, default: nil
     object :customer, default: nil
@@ -66,12 +68,35 @@ module Notifiers
       end
     end
 
+    def target_line_user
+      case receiver
+      when User
+        receiver.social_user
+      when Customer
+        receiver.social_customer
+      else
+        receiver
+      end
+    end
+
+    def target_email_user
+      case receiver
+      when SocialUser
+        receiver.user
+      when SocialCustomer
+        receiver.customer
+      else
+        receiver
+      end
+    end
+    alias_method :target_phone_user, :target_email_user
+
     def message
       raise NotImplementedError, "Subclass must implement this method"
     end
 
     def send_line
-      LineClient.send(receiver, message)
+      LineClient.send(target_line_user, message)
     end
 
     def send_sms
@@ -85,7 +110,7 @@ module Notifiers
     end
 
     def send_email
-      mailer.public_send(mailer_method, receiver).deliver_now
+      mailer.public_send(mailer_method, target_email_user).deliver_now
     end
 
     def line?
