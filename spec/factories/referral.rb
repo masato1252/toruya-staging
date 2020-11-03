@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :referral do
-    association :referrer
-    association :user
+    referrer { FactoryBot.create(:user) }
+    referee { FactoryBot.create(:user) }
     state { :active }
   end
 end

@@ -1,34 +1,36 @@
 ja:
   notifier:
     pending_reservations_summary:
-      message: "%{user_name} 様\n\n誰かが、%{user_name} さんによる確認が必要な予約を作成しました。\n\n以下のご予約について、速やかにご確認をお願いします。\n\n%{reservation_messages}"
-      reservation_by: "%{staff_name}が%{created_at}に作成"
+      message: "%{user_name} 様\n\n確認が必要な予約を作成しました。\n\nカレンダーメニューからご確認ください。\n\nToruya"
+    withdrawal_monthly_report:
+      message:  "%{user_name} 様\n\n直近の紹介料の確定いたしました。\n\n詳細は設定画面からご確認ください。\n\nToruya"
     notifications:
       new_referrer:
-        message: "%{user_name} 様\n\nいつもToruyaをご利用いただき、誠にありがとうございます。\n\nあなたの代理店アカウントに、子アカウントが追加されましたのでお知らせいたします。\n\nからご確認いただけます。"
+        message: "%{user_name} 様\n\nあなたの代理店アカウントに、子アカウントが追加されました。\n\n設定画面からご確認ください。\n\nToruya"
       activate_staff_account:
         message: "スタッフアカウント認証手続きのお願い"
-    withdrawal_monthly_report:
-      message:  "%{user_name} 様\n\nいつもToruyaをご利用いただき、誠にありがとうございます。\n\n直近の紹介料の確定についてお知らせいたします。\n\nお振込日：%{transfer_date}\n\n紹介料発生期間：%{period}\n\n振込金額：%{amount}"
+    booking:
+      shop_owner_reservation_booked_notification:
+        message: "%{user_name} 様\n\n%{booking_page_title}より新しいご予約が入りました。\n\n予約カレンダーよりご確認ください。\n\nToruya"
     reminders:
       trial_member_week_ago_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、試用期間の終了日が７日後に迫ってまいりましたことをご連絡差し上げます。\n\n登録日：%{signup_date}\n\n試用期間終了予定日：%{trial_expired_date}\n\n試用期間終了日までに有料プランへご変更がされていませんでしたため、自動的にフリーメンバーに切り替えさせていただきました。\n\n今後も引き続き同じ機能をご利用いただくためにも、料金のお支払い手続きをお済ませください。"
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\nToruya"
       trial_member_day_ago_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、試用期間が終了いたしましたことをご連絡差し上げます。\n\n登録日：%{signup_date}\n\n試用期間終了予定日：%{trial_expired_date}\n\n試用期間終了日までに有料プランへご変更が完了しない場合、自動的にフリーメンバーに切り替えとなります。\n\n試用期間終了後にも引き続きご利用いただくためにも、料金のお支払い手続きをお済ませください。"
+        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間が終了いたしました。\n\n設定画面からプラン変更をすることで、引き続き同じ機能をご利用いただけます。\n\nToruya"
       daily_reservations_limit_by_admin_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、ご利用プランに基づいた今日の予約上限数に達しました。\n\nご利用プラン：%{plan_name}\n\n今日の予約上限数：%{reservation_daily_limit}件\n\n今日の予約作成数：%{reservation_daily_limit}件\n\n累計の予約上限数：%{total_reservations_limit}件\n\n累計の予約作成数：%{total_reservations_count}件\n\nらプレミアムプランへご変更いただきますと、日々の予約上限数はもちろん、累計の予約上限数も無制限でご利用いただくことができます。"
+        message: "%{user_name} 様\n\nご利用プランに基づいた今日の予約上限数に達しました。\n\n設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
       daily_reservations_limit_by_staff_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n先ほど、%{shop_name}のスタッフが今日の予約上限数を超えて予約を作成しようとしました。\n\nご利用プラン：%{plan_name}\n\n今日の予約上限数：%{reservation_daily_limit}件\n\n今日の予約作成数：%{reservation_daily_limit}件\n\n累計の予約上限数：%{total_reservations_limit}件\n\n累計の予約作成数：%{total_reservations_count}件\n\nらプレミアムプランへご変更いただきますと、日々の予約上限数はもちろん、累計の予約上限数も無制限でご利用いただくことができます。"
+        message: "%{user_name} 様\n\n先ほど、%{shop_name}のスタッフが今日の予約上限数を超えて予約を作成しようとしました。設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
       total_reservations_limit_by_admin_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、ご利用プランに基づいた累計の予約上限数に達しました。\n\nご利用プラン：%{plan_name}\n\n今日の予約上限数：%{reservation_daily_limit}件\n\n今日の予約作成数：%{today_reservations_count}件\n\n累計の予約上限数：%{total_reservations_limit}件\n\n累計の予約作成数：%{total_reservations_count}件\n\nからプレミアムプランへご変更いただきますと、日々の予約上限数はもちろん、累計の予約上限数も無制限でご利用いただくことができます。"
+        message: "%{user_name} 様\n\nご利用プランに基づいた累計の予約上限数に達しました。設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
       total_reservations_limit_by_staff_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n先ほど、%{shop_name}のスタッフが累計の予約上限数を超えて予約を作成しようとしました。\n\nご利用プラン：%{plan_name}\n\n今日の予約上限数：%{reservation_daily_limit}件\n\n今日の予約作成数：%{today_reservations_count}件\n\n累計の予約上限数：%{total_reservations_limit}件\n\n累計の予約作成数：%{total_reservations_count}件\n\nからプレミアムプランへご変更いただきますと、日々の予約上限数はもちろん、累計の予約上限数も無制限でご利用いただくことができます。"
+        message: "%{user_name} 様\n\n先ほど、%{shop_name}のスタッフが累計の予約上限数を超えて予約を作成しようとしました。\n\n設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけす。\n\nToruya"
     subscriptions:
       charge_successfully:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n本日、Toruyaご利用料金のご請求が完了いたしましたのでご連絡差し上げます。\n\n今後ともご愛顧の程よろしくお願い申し上げます。"
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n本日、ご利用料金のご請求が完了いたしました。\n\n今後ともご愛顧の程よろしくお願い申し上げます。\n\nToruya"
       charge_failed:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、お客様のクレジットカードにToruyaご利用料金のご請求をさせていただきましたが、お支払いにご指定いただいたカードの利用承認が得られませんでしたのでお知らせします。\n\nご利用プラン：%{plan_name}\n\n請求年月日：%{charge_date}\n\nご利用期間：%{period_start}〜%{period_end}\n\n請求金額：%{cost}（税込）\n\n決済が完了するまで、フリーメンバーに切り替えさせていただきます。\n\nより、お支払い方法をご変更いただくかカード情報を正しく修正してください。変更後のお支払い方法に問題がなければ、決済完了日よりご利用を再開できます。また、その場合のご利用期間はお支払い完了日より起算されます。\n\n※カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます。"
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\nお客様のクレジットカードにご利用料金を請求させていただきましたが、ご指定のカードの利用承認が得られませんでした。\n\nカード情報の変更はアカウント設定画面より行えます\n\n決済が完了するまで、フリーメンバーに切り替えさせていただきますのでご了承ください。\n\nToruya"
       charge_shop_fee:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、お客様のクレジットカードに追加店舗分のご利用料金をご請求をさせていただきました。\n\nご利用プラン：追加店舗\n\n請求年月日：%{charge_date}請求金額：%{charge_amount}（税込）\n\nつきましては、次回以降のToruyaご利用料金のご請求は以下の通り変更されます。\n\n請求年月日：%{charge_date_at}\n\nご利用期間：%{period_start}〜%{period_end}\n\n請求金額：%{cost}（税込）\n\n"
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n以お客様のクレジットカードにご利用料金をご請求をさせていただきました。\n\nご請求の明細は、設定画面よりご確認ください。\n\nToruya"
       charge_reminder:
-        message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n以下の通り、お客様のクレジットカードにToruyaご利用料金のご請求をさせていただきます。\n\nご利用プラン：%{plan_name}\n\n請求年月日：%{charge_date}\n\nご利用期間：%{period_start}〜%{period_end}\n\n請求金額：%{cost}（税込）\n\n※請求年月日にお支払いが完了しない場合、自動的にフリーメンバーに切り替えとなりますのでご了承ください。"
+        message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n%{charge_date}にご利用料金の請求をさせていただきます。\n\n詳細なご利用料金、及びお支払い方法の変更は設定画面よりご確認ください。\n\nToruya"

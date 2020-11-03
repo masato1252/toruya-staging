@@ -12,6 +12,23 @@ RSpec.describe Notifiers::Notifications::ActivateStaffAccount do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when staff account's user got social user" do
+      let(:receiver) { FactoryBot.create(:staff_account, :phone_number, user: FactoryBot.create(:social_user).user) }
+
+      it "sends line" do
+        expect(LineClient).to receive(:send).with(receiver.user.social_user, I18n.t("notifier.notifications.activate_staff_account.message"))
+
+        expect {
+          outcome
+        }.to change {
+          SocialUserMessage.where(
+            social_user: receiver.user.social_user,
+            raw_content: I18n.t("notifier.notifications.activate_staff_account.message")
+          ).count
+        }.by(1)
+      end
+    end
+
     context "when staff account got phone_number" do
       let(:receiver) { FactoryBot.create(:staff_account, :phone_number) }
 

@@ -39,7 +39,7 @@ module Notifiers
     delegate :email, to: :target_email_user
     delegate :phone_number, to: :target_phone_user
 
-    # User, StaffAccount, SocialUser
+    # User, StaffAccount, SocialUser, Customer, SocialCustomer
     object :receiver, class: ApplicationRecord
     object :user, default: nil
     object :customer, default: nil
@@ -74,6 +74,8 @@ module Notifiers
         receiver.social_user
       when Customer
         receiver.social_customer
+      when StaffAccount
+        receiver&.user&.social_user
       else
         receiver
       end
@@ -96,12 +98,28 @@ module Notifiers
     end
 
     def send_line
-      LineClient.send(target_line_user, message)
+      case target_line_user
+      when SocialUser
+        SocialUserMessages::Create.run(
+          social_user: target_line_user,
+          content: message,
+          message_type: SocialMessage.message_types[:bot],
+          readed: false
+        )
+      when SocialCustomer
+        SocialMessages::Create.run(
+          social_customer: target_line_user,
+          content: message,
+          message_type: SocialMessage.message_types[:bot],
+          readed: false
+        )
+      else
+        LineClient.send(target_line_user, message)
+      end
     end
 
     def send_sms
-      compose(
-        Sms::Create,
+      Sms::Create.run(
         user: user,
         customer: customer,
         message: message,
@@ -114,7 +132,7 @@ module Notifiers
     end
 
     def line?
-      receiver.try(:social_service_user_id).present?
+      target_line_user.try(:social_user_id).present?
     end
 
     def sms?

@@ -49,7 +49,7 @@ class WarningsController < ApplicationController
   private
 
   def from_line_bot
-    true
+    false
   end
   helper_method :from_line_bot
 

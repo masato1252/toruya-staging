@@ -13,7 +13,6 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.update_successfully_message")
   end
 
-  # TODO: TEST required
   def accept_in_group
     outcome = Reservations::Accept.run!(reservation: reservation, current_staff: current_user_staff)
 

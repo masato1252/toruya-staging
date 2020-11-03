@@ -17,8 +17,7 @@
 #  index_notifications_on_user_id_and_charged  (user_id,charged)
 #
 
-# @phone_number presents: SMS Notification
-# @phone_number empty: Line Notification
+# For record SMS sent
 # @user_id presents: Send the notification for the user
 # @user_id is null: Send the notification for Toruya
 class Notification < ApplicationRecord

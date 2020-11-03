@@ -18,6 +18,8 @@ module SocialUserMessages
 
       if message.errors.present?
         errors.merge!(message.errors)
+      elsif message_type == SocialMessage.message_types[:bot] || message_type == SocialMessage.message_types[:admin]
+        LineClient.send(social_user, content)
       end
 
       message

@@ -17,9 +17,7 @@ module Reservations
 
         if customer.social_customer
           Reservations::Notifications::SocialMessage.run!(
-            customer: customer,
             social_customer: customer.social_customer,
-            reservation: reservation,
             message: message
           )
         end
