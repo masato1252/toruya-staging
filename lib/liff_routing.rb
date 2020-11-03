@@ -1,6 +1,5 @@
 class LiffRouting
-  LIFF_ID = "1654876625-YjjDvq4a".freeze
-  USER_BOT_LIFF_ENDPOINT = "https://liff.line.me/#{LIFF_ID}".freeze
+  USER_BOT_LIFF_ENDPOINT = "https://liff.line.me/#{Rails.application.secrets.toruya_liff_id}".freeze
 
   class << self
     # mapping to # https://toruya.com/lines/liff/{path}
