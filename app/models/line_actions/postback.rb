@@ -1,4 +1,4 @@
-module LineMessages
+module LineActions
   class Postback
     LABEL_LIMIT = 20
 

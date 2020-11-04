@@ -19,7 +19,7 @@ module Lines
 
       def actions
         [
-          LineMessages::Uri.new(
+          LineActions::Uri.new(
             action: IDENTIFY_SHOP_CUSTOMER,
             url: Rails.application.routes.url_helpers.lines_identify_shop_customer_url(social_user_id: social_customer.social_user_id)
           )

@@ -10,8 +10,8 @@ module SocialCustomers
 
       LineClient.send(social_customer, I18n.t("line.bot.connected_successfuly"))
       compose(Lines::Features, social_customer: social_customer)
-      LineClient.link_rich_menu(
-        social_customer: social_customer,
+      RichMenus::Connect.run(
+        social_target: social_customer,
         social_rich_menu: social_customer.social_account.social_rich_menus.find_by!(social_name: SocialAccounts::RichMenus::CustomerReservations::KEY)
       )
     end

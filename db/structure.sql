@@ -1601,7 +1601,8 @@ CREATE TABLE public.social_customers (
     social_user_picture_url character varying,
     conversation_state integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    social_rich_menu_key character varying
 );
 
 
@@ -1737,7 +1738,8 @@ CREATE TABLE public.social_users (
     social_user_name character varying,
     social_user_picture_url character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    social_rich_menu_key character varying
 );
 
 
@@ -3284,6 +3286,13 @@ CREATE INDEX index_social_customers_on_customer_id ON public.social_customers US
 
 
 --
+-- Name: index_social_customers_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_customers_on_social_rich_menu_key ON public.social_customers USING btree (social_rich_menu_key);
+
+
+--
 -- Name: index_social_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3295,6 +3304,13 @@ CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING 
 --
 
 CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON public.social_rich_menus USING btree (social_account_id, social_name);
+
+
+--
+-- Name: index_social_users_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_social_rich_menu_key ON public.social_users USING btree (social_rich_menu_key);
 
 
 --
@@ -3748,6 +3764,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200914041742'),
 ('20200917065312'),
 ('20200923093836'),
-('20201019072951');
+('20201019072951'),
+('20201104073111');
 
 

@@ -22,7 +22,7 @@ module UserBotLines
                 "width": 1250,
                 "height": 843
               },
-              "action": LineMessages::Uri.template(
+              "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.sign_in"),
                 url: LiffRouting.liff_url(:users_connect)
               )
@@ -34,7 +34,7 @@ module UserBotLines
                 "width": 1250,
                 "height": 843
               },
-              "action": LineMessages::Uri.template(
+              "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.signup"),
                 url: LiffRouting.liff_url(:users_sign_up)
               )

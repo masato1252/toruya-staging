@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_19_072951) do
+ActiveRecord::Schema.define(version: 2020_11_04_073111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -553,7 +553,9 @@ ActiveRecord::Schema.define(version: 2020_10_19_072951) do
     t.integer "conversation_state", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "social_rich_menu_key"
     t.index ["customer_id"], name: "index_social_customers_on_customer_id"
+    t.index ["social_rich_menu_key"], name: "index_social_customers_on_social_rich_menu_key"
     t.index ["user_id", "social_account_id", "social_user_id"], name: "social_customer_unique_index", unique: true
     t.index ["user_id"], name: "index_social_customers_on_user_id"
   end
@@ -595,6 +597,8 @@ ActiveRecord::Schema.define(version: 2020_10_19_072951) do
     t.string "social_user_picture_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "social_rich_menu_key"
+    t.index ["social_rich_menu_key"], name: "index_social_users_on_social_rich_menu_key"
     t.index ["user_id", "social_service_user_id"], name: "social_user_unique_index", unique: true
     t.index ["user_id"], name: "index_social_users_on_user_id"
   end

@@ -1,4 +1,4 @@
-module LineMessages
+module LineActions
   class Uri
     LABEL_LIMIT = 20
 

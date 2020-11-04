@@ -22,7 +22,7 @@ module UserBotLines
                 "width": 833,
                 "height": 843
               },
-              "action": LineMessages::Uri.template(
+              "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.reservations"),
                 url: LiffRouting.liff_url(:schedules)
               )
@@ -34,7 +34,7 @@ module UserBotLines
                 "width": 833,
                 "height": 843
               },
-              "action": LineMessages::Uri.template(
+              "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.customers"),
                 url: LiffRouting.liff_url(:customers)
               )
@@ -46,9 +46,8 @@ module UserBotLines
                 "width": 833,
                 "height": 843
               },
-              "action": LineMessages::Uri.template(
-                label: I18n.t("toruya_line.actions.label.settings"),
-                url: LiffRouting.liff_url(:settings)
+              "action": LineActions::Message.template(
+                text: UserBotLines::MessageEvent::SETTINGS
               )
             }
           ]
