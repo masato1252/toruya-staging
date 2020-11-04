@@ -61,10 +61,8 @@ Rails.application.routes.draw do
         resources :messages, only: [:index]
       end
 
-      resources :settings, only: [:index] do
-        collection do
-          get "/:social_service_user_id", action: "index"
-        end
+      namespace :settings do
+        get :dashboard, to: "dashboards#index", as: :dashboard
       end
 
       resources :shops, only: [] do

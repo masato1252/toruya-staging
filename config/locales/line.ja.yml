@@ -1,5 +1,7 @@
 ja:
   toruya_line:
+    keywords:
+      settings: 設定
     bot:
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
     actions:

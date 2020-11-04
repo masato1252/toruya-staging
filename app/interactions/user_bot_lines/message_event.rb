@@ -2,10 +2,12 @@ require "line_client"
 
 class UserBotLines::MessageEvent < ActiveInteraction::Base
   USER_SIGN_OUT = "usersignout".freeze
-  SETTINGS = "settings".freeze
+  SETTINGS = I18n.t("toruya_line.keywords.settings").freeze
 
   hash :event, strip: false, default: nil
   object :social_user
+
+  delegate :link_to, to: :helpers
 
   def execute
     if event.present?
@@ -25,7 +27,7 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
         when SETTINGS
           SocialUserMessages::Create.run(
             social_user: social_user,
-            content: "settings",
+            content: settings_message,
             readed: true,
             message_type: SocialUserMessage.message_types[:bot]
           )
@@ -36,5 +38,21 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
         LineClient.send(social_user, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
       end
     end
+  end
+
+  private
+
+  def settings_message
+    [
+      "#{SETTINGS}: #{url_helpers.lines_user_bot_settings_dashboard_url}"
+    ].join("\n\n")
+  end
+
+  def url_helpers
+    Rails.application.routes.url_helpers
+  end
+
+  def helpers
+    ApplicationController.helpers
   end
 end
