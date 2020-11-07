@@ -1,0 +1,58 @@
+.settings-dashboard {
+  height: 100%;
+  background-color: $basic-gray-background;
+
+  h3 {
+    text-align: center;
+    padding: 6px;
+  }
+
+  .dashboard {
+    display: flex;
+    background-color: #ffffff;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid $gray;
+    margin: 0 12px 12px 12px;
+    font-size: 14px;
+
+    .cell {
+      justify-content: center;
+      align-items: center;
+      display: inline-flex;
+      width: 50%;
+      flex-direction: column;
+      padding: 6px;
+
+      > div {
+        margin: 6px 0;
+      }
+
+      .big {
+        font-size: 28px;
+      }
+
+      strong {
+        display: flex;
+        align-items: baseline;
+      }
+
+      &:first-child {
+        border-right: 1px solid $gray;
+      }
+
+      &:last-child {
+        border-left: 1px solid $gray;
+      }
+    }
+  }
+
+  .setting-feature {
+    display: flex;
+    padding: 12px;
+    background-color: #ffffff;
+    justify-content: space-between;
+    border-bottom: 1px solid #dfdfdf;
+    color: $black;
+  }
+}
