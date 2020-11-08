@@ -1,0 +1,281 @@
+.customers-dashboard {
+  // Make top bar and search bar don't cover the customer list
+  padding-top: $bar-height * 2 + 6px;
+
+  .customers-list-dashboard {
+    padding-bottom: $bar-height;
+
+    #search {
+      line-height: 25px;
+    }
+  }
+
+  .customers-list {
+    .customer-option {
+      width: 50%;
+      display: inline-flex;
+      border: 1px solid $gray7;
+      padding: 12px 15px;
+      color: #444;
+      font-size: 15px;
+      height: 68px;
+
+      &.here {
+        background-color: $palette-color11;
+      }
+
+      .customer-symbol {
+        width: 30%;
+
+        i {
+          margin-right: 3px;
+        }
+
+        .customer-level-symbol {
+          font-size: 17px;
+          display: inline-block;
+          margin-right: 3px;
+
+          &.regular {
+            color: $gray7;
+          }
+
+          &.vip {
+            color: $palette-color4-1;
+          }
+        }
+
+        .customer-reminder-permission {
+          &.fa-bell {
+            color: $gray5;
+
+            &.reminder-on {
+              color: $palette-color1;
+            }
+          }
+        }
+      }
+
+      .customer-info {
+        width: 70%;
+
+        .place {
+          text-align: right;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .no-more-customer {
+      text-align: center;
+      display: block;
+      border-color: #cb845f;
+      background-color: #dc8a5f;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      line-height: 50px;
+    }
+  }
+}
+
+.input-group {
+  position: fixed;
+  top: $bar-height;
+  z-index: 999;
+
+  .input-group-addon {
+    background-color: $palette-color6;
+    color: #666666;
+    border-radius: 0;
+    border: 0;
+  }
+
+  input.form-control {
+    border-left: 0;
+    margin-left: 0;
+    border: 0;
+    border-radius: 0;
+    width: 95%;
+  }
+}
+
+.filter-character-action {
+  .current-filter-character {
+    color: $link;
+  }
+}
+
+.filter-character-list {
+  .filter-character-element {
+    color: $palette-color2;
+    border: 1px solid $gray7;
+    background-color: $gray4;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+  }
+}
+
+$indent: 12px;
+
+.customer-view {
+  padding-bottom:  $bar-height * 2;
+
+  .customer-basic-info {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: $indent;
+    background-color: $basic-gray-background;
+
+    .customer-top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .customer-data {
+      .group-rank {
+        span {
+          padding: 5px;
+          background-color: $gray-background-1;
+          border: 1px solid $gray-border-1;
+          margin-right: 6px;
+          border-radius: 3px;
+          display: inline-flex;
+          min-width: 60px;
+          justify-content: center;
+          line-height: 1.3333333;
+
+          &.vip {
+            background-color: $orange-background-1;
+            border: 1px solid $orange-border-1;
+            color: #ffffff;
+          }
+        }
+      }
+
+      .phonetic-name {
+        span {
+          display: inline-flex;
+          margin: 20px 6px 6px;
+        }
+      }
+
+      .name {
+        font-size: 22px;
+
+        span {
+          display: inline-flex;
+          margin: 6px 3px;
+        }
+      }
+
+      .notifiers {
+        margin-top: 12px;
+
+        i {
+          background-color: $tarco-background-1;
+          border: 1px solid $tarco-border-1;
+          padding: 6px;
+          border-radius: 50%;
+          color: #ffffff;
+          margin: 0 6px;
+          width: 30px;
+          height: 30px;
+
+          &.customer-reminder-permission {
+            &.fa-bell {
+              color: $gray5;
+
+              &.reminder-on {
+                color: $palette-color1;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .nav-tabs {
+    background-color: $basic-gray-background;
+  }
+
+  .customer-info {
+    dl {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid $gray-border-1;
+
+      dd {
+        a {
+          margin-left: 10px;
+          width: 46px;
+          height: 46px;
+          justify-content: center;
+          align-items: center
+        }
+      }
+    }
+  }
+
+  &.form {
+    .field-row {
+      &.similar-customers-warnings {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .warning {
+          padding: 6px;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .bottom-navigation-bar {
+    .fa-user-edit {
+      font-size: 1.4em;
+    }
+  }
+}
+
+.customer-edit {
+  padding-top: $bar-height;
+}
+
+.booking-from {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 14px;
+  margin-top: 10px !important;
+
+  .fa-clock {
+    margin-right: 3px;
+    margin-top: 3px;
+  }
+}
+
+.customer-reservation-state {
+  &.accepted {
+    color: $palette-color2-2;
+  }
+
+  &.pending {
+    color: $palette-color4-1;
+  }
+}
+
+.reservation-info-row {
+  margin: 3px 0 6px;
+
+  .fa {
+    margin-right: 6px;
+  }
+}

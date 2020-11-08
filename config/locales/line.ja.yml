@@ -1,4 +1,24 @@
 ja:
+  toruya_line:
+    bot:
+      thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
+    actions:
+      label:
+        sign_in: "Sign in"
+        sign_up: "Sign up"
+        reservations: "Reservations"
+        customers: "Customers"
+        settings: "Settings"
+    page:
+      user_sign_up:
+        shop_info:
+          postcode: 郵便番号
+          region: 都道府県
+          city: 市区町村
+          street1: 続き住所
+          street2: 建物名／部屋番号
+          location: 住所
+          save_btn: Save Shop info
   line:
     customer_identifications:
       successful_message_html: ありがとうございます！<br/ ><br />顧客情報の連携が完了しました。

@@ -12,9 +12,16 @@
 #working-date-modal, .off-date-modal {
   .datetime-field {
     a.reservationCalendar {
-      display: inline-block !important; 
       padding: 0 !important;
       color: white !important;
+      width: 38px;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+
+      i.fa-calendar {
+        font-size: 18px;
+      }
     }
 
     .date {

@@ -48,7 +48,13 @@ module Subscriptions
           charge.auth_failed!
           errors.add(:plan, :auth_failed)
 
-          SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
+          unless manual
+            Notifiers::Subscriptions::ChargeFailed.run(
+              receiver: user,
+              user: user,
+              subscription_charge: charge
+            )
+          end
 
           Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
         rescue Stripe::StripeError => error
@@ -56,7 +62,13 @@ module Subscriptions
           charge.processor_failed!
           errors.add(:plan, :processor_failed)
 
-          SubscriptionMailer.charge_failed(user.subscription, charge).deliver_now unless manual
+          unless manual
+            Notifiers::Subscriptions::ChargeFailed.run(
+              receiver: user,
+              user: user,
+              subscription_charge: charge
+            )
+          end
 
           Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
         rescue => e

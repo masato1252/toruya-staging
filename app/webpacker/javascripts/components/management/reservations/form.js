@@ -15,7 +15,7 @@ import DateFieldAdapter from "shared/date_field_adapter";
 import { Input } from "shared/components";
 import MultipleMenuInput from "./multiple_menu_input.js"
 import ReservationCustomersList from "./customers_list.js"
-import { displayErrors } from "./helpers.js"
+import { displayErrors } from "libraries/helper.js"
 import WorkingSchedulesModal from "../schedules/working_schedules_modal.js"
 import StaffStatesModal from "./staff_states_modal.js"
 import ProcessingBar from "shared/processing_bar.js"

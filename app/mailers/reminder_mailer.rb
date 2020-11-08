@@ -30,12 +30,12 @@ class ReminderMailer < ApplicationMailer
          locale: I18n.default_locale)
   end
 
-  def daily_reservations_limit_by_staff_reminder(user, reservation)
+  def daily_reservations_limit_by_staff_reminder(user, shop)
     @user = user
     @plan_name = user.member_plan_name
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
-    @shop_name = reservation.shop.display_name
+    @shop_name = shop.display_name
 
     mail(to: @user.email,
          subject: subject(I18n.t("reminder_mailer.daily_reservations_limit_by_staff_reminder.title")),
@@ -54,13 +54,13 @@ class ReminderMailer < ApplicationMailer
          locale: I18n.default_locale)
   end
 
-  def total_reservations_limit_by_staff_reminder(user, reservation)
+  def total_reservations_limit_by_staff_reminder(user, shop)
     @user = user
     @plan_name = user.member_plan_name
     @today_reservations_count = user.today_reservations_count
     @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[user.permission_level]
     @total_reservations_count = user.total_reservations_count
-    @shop_name = reservation.shop.display_name
+    @shop_name = shop.display_name
 
     mail(to: @user.email,
          subject: subject(I18n.t("reminder_mailer.total_reservations_limit_by_staff_reminder.title")),

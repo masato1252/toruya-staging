@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                     :integer          not null, primary key
-#  email                  :string           default(""), not null
+#  email                  :string
 #  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
@@ -24,15 +24,20 @@
 #  updated_at             :datetime         not null
 #  contacts_sync_at       :datetime
 #  referral_token         :string
+#  phone_number           :string
 #
 # Indexes
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
 #  index_users_on_email                 (email) UNIQUE
+#  index_users_on_phone_number          (phone_number) UNIQUE
 #  index_users_on_referral_token        (referral_token) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
 #
+
+# @email, @phone_number represent how user sign up our service, @email is from web, @phone_number is from line
+require "user_bot_social_account"
 
 class User < ApplicationRecord
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
@@ -74,11 +79,14 @@ class User < ApplicationRecord
   has_many :social_accounts
   has_many :social_customers
   has_one :business_application
+  has_one :social_user
   has_many :web_push_subscriptions
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
   delegate :current_plan, to: :subscription
+  delegate :social_service_user_id, to: :social_user, allow_nil: true
+  delegate :client, to: UserBotSocialAccount
 
   def super_admin?
     ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].include?(email)

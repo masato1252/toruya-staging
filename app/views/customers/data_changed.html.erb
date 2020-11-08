@@ -17,11 +17,11 @@
           <% end %>
 
           <% if @reservation_customer.customer_info.phone_number %>
-            <%= Customer.human_attribute_name("phone_number") %>: <%= @customer.primary_phone&.value.presence || "No-data" %><br />
+            <%= Customer.human_attribute_name("phone_number") %>: <%= @customer.phone_number.presence || "No-data" %><br />
           <% end %>
 
           <% if @reservation_customer.customer_info.email %>
-            <%= Customer.human_attribute_name("email") %>: <%= @customer.primary_email&.value&.address.presence || "No-data" %><br />
+            <%= Customer.human_attribute_name("email") %>: <%= @customer.email.presence || "No-data" %><br />
           <% end %>
 
           <% if @reservation_customer.customer_info.sorted_address_details.present? %>
@@ -46,7 +46,7 @@
     </div>
     <div class="modal-footer">
       <%= link_to t("action.save_changes"),
-        save_changes_user_customers_path(@reservation_customer.customer.user, @reservation_customer),
+        site_routing_helper.save_changes_user_customers_path(@reservation_customer),
         class: "btn btn-yellow",
         remote: true,
         method: :patch,

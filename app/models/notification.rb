@@ -3,7 +3,7 @@
 # Table name: notifications
 #
 #  id             :bigint(8)        not null, primary key
-#  user_id        :integer          not null
+#  user_id        :integer
 #  phone_number   :string
 #  content        :text
 #  customer_id    :integer
@@ -17,8 +17,9 @@
 #  index_notifications_on_user_id_and_charged  (user_id,charged)
 #
 
-# phone_number presents: SMS Notification
-# phone_number empty: Line Notification
+# For record SMS sent
+# @user_id presents: Send the notification for the user
+# @user_id is null: Send the notification for Toruya
 class Notification < ApplicationRecord
-  belongs_to :user
+  belongs_to :user, optional: true
 end

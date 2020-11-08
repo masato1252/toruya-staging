@@ -48,6 +48,11 @@ class WarningsController < ApplicationController
 
   private
 
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
+
   def set_warning_shop
     @warning_shop ||= Shop.find(params[:warning_shop_id])
   end

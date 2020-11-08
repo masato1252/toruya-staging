@@ -11,7 +11,7 @@ RSpec.describe ReservationCustomer, type: :model do
       "phonetic_first_name",
       "phone_number",
       "email",
-      "postcode",
+      "zip_code",
       "region",
       "city",
       "street1",
@@ -22,23 +22,22 @@ RSpec.describe ReservationCustomer, type: :model do
   context "some info are the same" do
     it "only shows the differences" do
       customer = reservation_customer.customer
-      allow(customer).to receive(:with_google_contact).and_return(spy(
+      customer.update_columns({
         first_name: "first_name",
-        primary_phone: double(value: "phone_number"),
-        primary_email: double(value: double(address: "email")),
-        primary_address: double(value: spy(
-          postcode: "postcode",
+        phone_numbers_details: [{type: "mobile", value: "phone_number"}],
+        emails_details: [{type: "mobile", value: "email"}],
+        address_details: {
+          zip_code: "zip_code",
           city: "city",
-          street: "street"
-        ))
-      ))
+          street1: "street1"
+        }
+      })
 
       expect(reservation_customer.customer_data_changes).to eq([
         "last_name",
         "phonetic_last_name",
         "phonetic_first_name",
         "region",
-        "street1",
         "street2"
       ])
     end

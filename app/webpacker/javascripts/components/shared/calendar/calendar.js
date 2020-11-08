@@ -28,7 +28,7 @@ class Calendar extends React.Component {
     this.throttleFetchSchedule();
 
     if (this.props.dateSelectedCallback && !this.props.skip_default_date) {
-      this.props.dateSelectedCallback(moment().format("YYYY-MM-DD"))
+      this.props.dateSelectedCallback(this.startDate.format("YYYY-MM-DD"))
     }
   };
 
@@ -93,7 +93,8 @@ class Calendar extends React.Component {
             holidayDates: result["holiday_dates"],
             workingDates: result["working_dates"],
             reservationDates: result["reservation_dates"],
-            availableBookingDates: result["available_booking_dates"]
+            availableBookingDates: result["available_booking_dates"],
+            personalScheduleDates: result["personal_schedule_dates"]
           });
         })
         .then(() => {
@@ -125,7 +126,9 @@ class Calendar extends React.Component {
       this.props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
     }
     else if (this.props.dateSelectedCallbackPath) {
-      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}${location.search}`;
+      let params = new URLSearchParams(location.search)
+      params.set("schedule_display_start_date", day.date.clone().add(-1, "day").format("YYYY-MM-DD"))
+      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}?${params.toString()}`;
     }
   };
 
@@ -213,6 +216,7 @@ class Calendar extends React.Component {
               holidayDates={this.state.holidayDates}
               workingDates={this.state.workingDates}
               availableBookingDates={this.state.availableBookingDates}
+              personalScheduleDates={this.state.personalScheduleDates}
               reservationDates={this.state.reservationDates}
             />
           );

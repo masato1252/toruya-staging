@@ -53,6 +53,7 @@ class ReservationDatetimeFields extends React.Component {
             dataName="startTimeDatePart"
             handleChange={this._handleDateChange}
             calendarfieldPrefix={this.props.calendarfieldPrefix}
+            hideCalendar={this.props.hideCalendar}
           />
         </dt>
         <dd className="startTime">

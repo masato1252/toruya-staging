@@ -1,0 +1,19 @@
+.form {
+  .field-header {
+    padding: 6px;
+    background-color: $gray5;
+    display: flex;
+
+    &.space-between {
+      justify-content: space-between;
+    }
+  }
+
+  .field-row {
+    padding: 12px;
+    border-bottom: 1px solid $gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

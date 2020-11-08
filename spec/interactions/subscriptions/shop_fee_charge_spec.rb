@@ -28,7 +28,7 @@ RSpec.describe Subscriptions::ShopFeeCharge do
   describe "#execute" do
     it "create a charge with expected details" do
       allow(Payments::StoreStripeCustomer).to receive(:run).and_return(spy(invalid?: false, result: stripe_customer_id))
-      allow(SubscriptionMailer).to receive(:charge_shop_fee).and_return(double(deliver_later: true))
+      allow(Notifiers::Subscriptions::ChargeShopFee).to receive(:perform_later).and_return(double(deliver_later: true))
       result = outcome.result
 
       expect(result.amount).to eq(Money.new(Plans::Fee::PER_SHOP_FEE, Money.default_currency.id))
@@ -39,7 +39,7 @@ RSpec.describe Subscriptions::ShopFeeCharge do
         "user_email" => user.email,
       })
       expect(Payments::StoreStripeCustomer).to have_received(:run).with(user: subscription.user, authorize_token: authorize_token)
-      expect(SubscriptionMailer).to have_received(:charge_shop_fee)
+      expect(Notifiers::Subscriptions::ChargeShopFee).to have_received(:perform_later)
     end
   end
 end

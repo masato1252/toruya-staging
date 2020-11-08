@@ -6,9 +6,10 @@ module Profiles
       string :first_name
       string :phonetic_last_name
       string :phonetic_first_name
-      string :address
-      string :phone_number
-      string :zip_code
+      string :address, default: nil
+      string :phone_number, default: nil
+      string :email, default: nil
+      string :zip_code, default: nil
     end
 
     def execute
@@ -22,7 +23,10 @@ module Profiles
           compose(Staffs::CreateOwner, user: user)
 
           if user.reference
-            NotificationMailer.new_referrer(user).deliver_later
+            Notifiers::Notifications::NewReferrer.perform_later(
+              receiver: user.reference.referee,
+              user: user.reference.referee
+            )
           end
         end
 

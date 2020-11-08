@@ -1,0 +1,32 @@
+<html lang="<%= I18n.locale %>">
+  <head>
+    <% if content_for?(:title) %>
+      <%= yield :title %>
+    <% else %>
+      <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+    <% end %>
+    <%= yield :meta_tags if content_for(:meta_tags) %>
+    <%= csrf_meta_tags %>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name user_bot.js, user_bot.scss %>
+    <%= stylesheet_packs_with_chunks_tag "user_bot_stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "user_bot",  "user_bot_stylesheets" %>
+    <%= yield :script if content_for?(:script) %>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+  </head>
+
+  <body>
+    <div class="responsive-content">
+      <div class="user-bot-guest-content mobile-content">
+        <%= yield %>
+
+      </div>
+      <div class="footer" id="footer">
+        Powered by <%= link_to "Toruya", "https://toruya.com" %>
+      </div>
+    </div>
+    <div class="modal fade" id="dummyModal" tabindex="-1" role="dialog"></div>
+  </body>
+</html>

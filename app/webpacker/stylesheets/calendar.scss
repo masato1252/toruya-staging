@@ -167,11 +167,12 @@
   }
 
   span.day.selected {
-    background: #fcbe46 !important;
-    border-color: #fcbe46 !important;
+    background: $palette-color1 !important;
+    border-color: $palette-color1-1 !important;
   }
 
-  span.day.workDay {
+  span.day.workDay,
+  span.day.personal-schedule {
     border-color: #84b3aa;
   }
 

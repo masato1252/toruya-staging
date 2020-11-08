@@ -2,9 +2,9 @@ require "sms_client"
 
 module Sms
   class Create < ActiveInteraction::Base
-    object :user
     string :phone_number
     string :message
+    object :user, default: nil
     object :customer, default: nil
     object :reservation, default: nil
 
@@ -22,6 +22,7 @@ module Sms
       Rollbar.error(
         e,
         phone_numbers: phone_number,
+        user_id: user&.id,
         customer_id: customer&.id,
         reservation_id: reservation&.id,
         rails_env: Rails.configuration.x.env

@@ -8,11 +8,15 @@ class DashboardController < ActionController::Base
   include Locale
   include ExceptionHandler
   include Sentry
-  include ParameterConverters
 
   before_action :profile_required
   before_action :set_paper_trail_whodunnit
   before_action :sync_user
+
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
 
   private
 
@@ -31,4 +35,9 @@ class DashboardController < ActionController::Base
   def sync_user
     Users::ContactsSync.run!(user: super_user) if super_user
   end
+
+  def site_routing_helper
+    @site_routing_helper ||= SiteRouting.new(view_context)
+  end
+  helper_method :site_routing_helper
 end

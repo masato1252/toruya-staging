@@ -36,11 +36,17 @@ RSpec.describe Profiles::Create do
       end
 
       it "has a new_referrer mail" do
-        allow(NotificationMailer).to receive(:new_referrer).with(user).and_return(spy(deliver_later: true))
+        allow(Notifiers::Notifications::NewReferrer).to receive(:perform_later).with(
+          receiver: user.reference.referee,
+          user: user.reference.referee
+        ).and_return(spy(deliver_later: true))
 
         outcome
 
-        expect(NotificationMailer).to have_received(:new_referrer).with(user)
+        expect(Notifiers::Notifications::NewReferrer).to have_received(:perform_later).with(
+          receiver: user.reference.referee,
+          user: user.reference.referee
+        )
       end
     end
   end

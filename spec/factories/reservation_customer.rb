@@ -27,7 +27,7 @@ FactoryBot.define do
             "phone_number" => "phone_number",
             "email" => "email",
             "address_details" => {
-              "postcode" => "postcode",
+              "zip_code" => "zip_code",
               "city" => "city",
               "region" => "region",
               "street1" => "street1",

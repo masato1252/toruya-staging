@@ -23,6 +23,9 @@
 #  email_types              :string
 #  deleted_at               :datetime
 #  reminder_permission      :boolean          default(FALSE)
+#  phone_numbers_details    :jsonb
+#  emails_details           :jsonb
+#  address_details          :jsonb
 #
 # Indexes
 #
@@ -99,6 +102,10 @@ class Customer < ApplicationRecord
     self.primary_address = primary_value(google_contact.addresses)
     self.other_addresses = (self.addresses - [self.primary_address]).map(&:to_h)
     self.address = primary_part_address(google_contact.addresses)
+    # ===
+    # XXX:
+    # The format read and write emails in customer is different
+    #
     # [Read]
     # customer.emails
     #
@@ -114,7 +121,21 @@ class Customer < ApplicationRecord
     #   }
     # ]
     #
-    self.emails = google_contact.emails
+    # [Write]
+    # customer.emails = new_emails
+    #
+    # [
+    #   {
+    #     "type"=> "mobile",
+    #     "value"=> {
+    #       "address" => "lake.ilakela@gmail.com4"
+    #     },
+    #     "primary"=>true
+    #   }
+    # ]
+    # XXX:
+    # The format read and write addresses in customer is different
+    #
     # [Read]
     # customer.phone_numbers
     # [
@@ -125,6 +146,52 @@ class Customer < ApplicationRecord
     #   }
     # ]
     #
+    # [Write]
+    # customer.phone_numbers = new_phone_numbers
+    #
+    # [
+    #   {
+    #     "type"=> "mobile",
+    #     "value"=> "12312312",
+    #     "primary" => true
+    #   }
+    # ]
+    # XXX:
+    # The format read and write addresses in customer is different
+    #
+    # [Read]
+    # customer.addresses
+    #
+    # [
+    #   {
+    #     "primary" => true,
+    #     "type" => :home,
+    #     "value" => {
+    #       "primary" => true,
+    #       "formatted_address" => "4F.-3, No.125, Sinsing StTainan\n岩手県",
+    #       "street" => "4F.-3, No.125, Sinsing StTainan",
+    #       "region" => "岩手県"
+    #     }
+    #   }
+    # ]
+    #
+    # [Write]
+    # customer.addresses = new_addresses
+    #
+    # [
+    #   {
+    #     "primary" => true,
+    #     "type" => "home",
+    #     "value" => {
+    #       "postcode" => "",
+    #       "region" => "岩手県",
+    #       "city" => "",
+    #       "street" => "4F.-3, No.125, Sinsing StTainan"
+    #     },
+    #   }
+    # ]
+    # ===
+    self.emails = google_contact.emails
     self.phone_numbers = google_contact.phone_numbers
     # primary_email format:
     # {
@@ -147,24 +214,38 @@ class Customer < ApplicationRecord
     self
   end
 
-  def display_address
-    if primary_address && primary_address["value"].present?
-      _address = primary_formatted_address
+  # def display_address
+  #   if primary_address && primary_address["value"].present?
+  #     _address = primary_formatted_address
+  #
+  #     "#{zipcode}#{_address.value.region}#{_address.value.city}#{_address.value.street1}#{_address.value.street2}"
+  #   else
+  #     address
+  #   end
+  # end
 
-      "#{zipcode}#{_address.value.region}#{_address.value.city}#{_address.value.street1}#{_address.value.street2}"
-    else
-      address
+  def display_address
+    if address_details.present?
+      "#{address_details[:zip_code]}#{address_details[:region]}#{address_details[:city]}#{address_details[:street1]}#{address_details[:street2]}"
     end
   end
 
+  # def zipcode
+  #   if primary_address && primary_address["value"].present?
+  #     _address = primary_formatted_address
+  #     postcode = [_address.value.postcode1.presence, _address.value.postcode2.presence].compact.join("-")
+  #
+  #     zipcode = if postcode.present?
+  #                 "〒#{postcode} "
+  #               end
+  #   end
+  # end
   def zipcode
-    if primary_address && primary_address["value"].present?
-      _address = primary_formatted_address
-      postcode = [_address.value.postcode1.presence, _address.value.postcode2.presence].compact.join("-")
+    if postcode = address_details.dig("zip_code")
 
-      zipcode = if postcode.present?
-                  "〒#{postcode} "
-                end
+      if postcode.present?
+        "〒#{postcode} "
+      end
     end
   end
 
@@ -233,12 +314,26 @@ class Customer < ApplicationRecord
     h.with_indifferent_access
   end
 
-  def email_address
-    with_google_contact.primary_email&.value&.address
+  def main_email
+    emails_details.first
+  end
+
+  def main_phone
+    phone_numbers_details.first
+  end
+
+  def email
+    main_email&.dig("value")
   end
 
   def phone_number
-    with_google_contact.primary_phone&.value
+    main_phone&.dig("value")
+  end
+
+  def simple_address
+    if address_details.present?
+      [address_details["region"], address_details["city"]].compact.join(" ")
+    end
   end
 
   private

@@ -144,6 +144,10 @@ ja:
     add_working_schedule: この時間を出勤にする
     other_customers: "他%{other_customers_number}名"
     no_ending_time_message: ※終了時刻は編集できません。予約の終了時刻は、メニューの所要時間から自動的に計算されます。
+    reservation_time: 予約日時
+    reservation_content: 予約內容
+    new_reservation: 新規予約
+    edit_reservation: 予約編集
     modal:
       staff_states:
         title: 予約を承認

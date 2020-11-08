@@ -1,0 +1,13 @@
+<%= react_component("user_bot/user_connect", {
+  social_user: social_user.attributes.slice("social_service_user_id"),
+  is_user_logged_in: current_user&.id&.present? && social_user.user_id.present?,
+  toruya_logo_url: asset_pack_path("media/assets/user_bot/logo.png"),
+  i18n: {
+  }.merge!([
+    t("user_bot.guest"),
+    t("action").slice(:confirm),
+    t("common").slice(:required_label)
+  ].inject(:merge!)),
+},
+{ camelize_props: false }
+) %>

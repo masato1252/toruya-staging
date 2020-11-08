@@ -2,6 +2,7 @@ module Users
   class FromOmniauth < ActiveInteraction::Base
     object :auth, class: OmniAuth::AuthHash
     string :referral_token, default: nil
+    string :social_service_user_id, default: nil
 
     def execute
       user = User.find_by(email: auth.info.email) ||
@@ -11,11 +12,11 @@ module Users
       user.email = auth.info.email.presence || user.email
       user.skip_confirmation!
       user.skip_confirmation_notification!
-      user.referral_token ||= Devise.friendly_token[0,10]
+      user.referral_token ||= Devise.friendly_token[0,5]
 
       loop do
         if User.where(referral_token: user.referral_token).where.not(id: user.id).exists?
-          user.referral_token = Devise.friendly_token[0,10]
+          user.referral_token = Devise.friendly_token[0,5]
         else
           break
         end
@@ -29,6 +30,10 @@ module Users
       compose(GoogleOauth::Create, user: user, auth: auth)
       compose(Users::BuildDefaultData, user: user)
       user.save!
+
+      if social_service_user_id
+        compose(SocialUsers::Connect, user: user, social_user: SocialUser.find_by!(social_service_user_id: social_service_user_id))
+      end
       user
     end
   end

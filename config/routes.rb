@@ -1,23 +1,115 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
-  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
-
-  resource :member, only: [:show] do
-    get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
-  end
-  post "member", to: "members#show"
-
-  scope module: :liff, path: :liff, as: :liff do
-    get :identify_line_user_for_connecting_shop_customer
-  end
-
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/(:social_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get :find_customer
     post :create_customer
     get :identify_code
     get :ask_identification_code
+
+    scope module: :liff, path: :liff, as: :liff do
+      get "/(:liff_path)", action: "index"
+    end
+
+    scope module: :user_bot, path: :user_bot, as: :user_bot do
+      scope module: :users do
+        get "/connect(/:social_service_user_id)", as: :connect_user, action: "connect"
+        get "/sign_up(/:social_service_user_id)", as: :sign_up, action: "sign_up"
+        get :generate_code
+        get :identify_code
+        post :create_user
+        post :create_shop_profile
+        get :check_shop_profile
+      end
+
+      resources :schedules, only: [:index] do
+        collection do
+          get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      resources :calendars, only: [] do
+        collection do
+          get "personal_working_schedule"
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      resources :customers, only: [:index] do
+        collection do
+          get :recent
+          get :search
+          get :find_duplicate_customers
+          get :filter
+          post :save
+          post :toggle_reminder_premission
+          get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
+          patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      scope module: "customers", as: "customer", path: "customer" do
+        resources :reservations, only: [:index] do
+          collection do
+            get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
+            get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
+            get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+          end
+        end
+        resources :messages, only: [:index]
+      end
+
+      resources :settings, only: [:index] do
+        collection do
+          get "/:social_service_user_id", action: "index"
+        end
+      end
+
+      resources :shops, only: [] do
+        resources :reservations, except: [:index, :edit, :new] do
+          collection do
+            post :validate
+            post :add_customer
+            get "form/(:id)", action: :form, as: :form
+          end
+
+          scope module: "reservations" do
+            resource :states, only: [] do
+              get :pend
+              get :accept
+              get :accept_in_group
+              get :check_in
+              get :check_out
+              get :cancel
+            end
+          end
+        end
+      end
+
+      resources :custom_schedules, only: [:create, :update, :destroy]
+
+      namespace :settings do
+        resources :staffs, only: [:edit]
+        resources :reservation_settings, except: [:show]
+        resources :menus, except: [:show]
+      end
+
+      resources :warnings, only: [], constraints: ::XhrConstraint do
+        collection do
+          get :create_reservation
+        end
+      end
+    end
   end
+
+  devise_for :users, :controllers => { omniauth_callbacks: "callbacks", sessions: "users/sessions", passwords: "users/passwords" }
+
+  resource :member, only: [:show] do
+    get "/:reservation_date(/r/:reservation_id)", to: "members#show", on: :collection, constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
+  end
+  post "member", to: "members#show"
 
   resources :users, only: [] do
     resources :customers, only: [:index] do
@@ -212,6 +304,7 @@ Rails.application.routes.draw do
 
   namespace :webhooks do
     post "line/:channel_id", to: "lines#create", as: :line
+    post "user_bot_line", to: "user_bot_lines#create", as: :user_bot_line
   end
 
   resources :calendars, only: [] do

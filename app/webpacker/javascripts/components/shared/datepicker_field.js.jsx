@@ -51,9 +51,10 @@ class CommonDatepickerField extends React.Component {
           value={this.props.date}
         />
         { this.props.date && !this.props.hiddenWeekDate ? <span>({moment(this.props.date).format("dd")})</span> : null }
-        <a href="#" onClick={this.openDayPickerCalendar} className={`BTNtarco reservationCalendar ${this.props.isDisabled && "disabled"}`}>
-          <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
-        </a>
+        { !this.props.hideCalendar &&
+          <a href="#" onClick={this.openDayPickerCalendar} className={`btn btn-tarco reservationCalendar ${this.props.isDisabled && "disabled"}`}>
+            <i className="fa fa-calendar fa-2" aria-hidden="true"></i>
+          </a>}
       </div>
     );
   }

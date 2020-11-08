@@ -1,0 +1,208 @@
+.reservation-form {
+  padding-top: $bar-height;
+  padding-bottom: $bar-height;
+
+  .form-body {
+    .business-hours {
+      padding: 6px;
+      border: 1px solid $gray7;
+      background-color: $gray5;
+
+      &.closed {
+        background-color: $palette-color4;
+        border: 1px solid $palette-color4-1;
+        color: #ffffff;
+      }
+    }
+
+    .delete-staff-block {
+      display: inline-block;
+    }
+
+    .menu-option-field {
+      .menu-option-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid $gray;
+        padding: 6px 6px 6px 12px;
+        background-color: $gray4;
+
+        .menu-option-details-toggler {
+          a.toggler-link {
+            padding: 0 10px;
+            margin-left: 5px;
+            height: 35px;
+            line-height: 35px;
+            font-size: 18px;
+            color: $black;
+          }
+        }
+      }
+
+      .menu-option-content {
+        border: 1px solid $gray-border-1;
+        border-radius: 6px;
+        padding-bottom: 6px;
+        margin: 0px 3px 6px 3px;
+
+        input[type="tel"].extend {
+          width: 98%;
+        }
+
+        .menu-field-row {
+          display: flex;
+          justify-content: space-between;
+
+          .menu-field-label {
+            padding: 6px;
+          }
+        }
+      }
+
+      .add-staff-block,
+      .remove-menu-block {
+        display: inline-block;
+        margin-top: 6px;
+        margin-left: 6px;
+      }
+    }
+
+    .add-menu-block {
+      margin: 6px;
+      display: inline-block;
+    }
+
+    .btn {
+      margin: 0 6px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+  }
+
+  .reservation-state-btn {
+    margin-left: 32px;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    position: relative;
+
+    &.pending {
+      background: #fcd0ce;
+      border-color: #f97a68;
+      color: #f42c00 !important;
+    }
+
+    &.accepted {
+      background: #def5ff;
+      border-color: #9bd1ef;
+      color: #7ed1f9 !important;
+    }
+
+    .fa-pencil {
+      position: absolute;
+      right: 12px;
+      top: 8px;
+    }
+  }
+
+  #staff-states-modal {
+    .fa-calendar-check {
+      color: $palette-color2;
+      margin-right: 3px;
+    }
+
+    .fa-calendar {
+      color: $palette-color4;
+      margin-right: 3px;
+    }
+  }
+
+  .customers-list {
+    .customer-option {
+      display: flex;
+      border: 1px solid $gray7;
+      padding: 12px 15px;
+      color: #444;
+      font-size: 15px;
+      height: 68px;
+
+      &.here {
+        background-color: $palette-color11;
+      }
+
+      .customer-symbol {
+        width: 30%;
+
+        i {
+          margin-right: 3px;
+        }
+
+        .customer-level-symbol {
+          font-size: 17px;
+          display: inline-block;
+          margin-right: 3px;
+
+          &.regular {
+            color: $gray7;
+          }
+
+          &.vip {
+            color: $palette-color4-1;
+          }
+        }
+
+        .customer-reminder-permission {
+          &.fa-bell {
+            color: $gray5;
+
+            &.reminder-on {
+              color: $palette-color1;
+            }
+          }
+        }
+
+        .customer-reservation-state {
+          &.accepted {
+            color: $palette-color2-2;
+          }
+
+          &.pending {
+            color: $palette-color4-1;
+          }
+        }
+      }
+
+      .customer-info {
+        width: 70%;
+
+        .place {
+          text-align: right;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .no-more-customer {
+      text-align: center;
+      display: block;
+      border-color: #cb845f;
+      background-color: #dc8a5f;
+      color: #fff;
+      font-weight: bold;
+      text-align: center;
+      line-height: 50px;
+    }
+  }
+}
+
+#customer-modal {
+  .modal-title {
+    .reservation-state {
+      margin-right: 6px;
+      padding: 0 3px;
+    }
+  }
+}

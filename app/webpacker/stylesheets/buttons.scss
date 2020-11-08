@@ -29,6 +29,39 @@ a.btn {
     border-radius: 3px;
     height: auto !important;
   }
+
+  &.btn-icon {
+    display: inline-flex !important;
+    justify-items: center;
+    align-items: center;
+  }
+
+  &.btn-circle {
+    padding: 10px !important;
+    width: initial;
+    height: initial !important;
+    border-radius: 50%;
+
+    &.btn-big {
+      height: $big-circle-button-size !important;
+      width: $big-circle-button-size !important;
+      padding: initial !important;
+    }
+  }
+
+  &.btn-tweak {
+    display: inline-flex !important;
+    justify-content: center;
+    align-items: center;
+
+    &.btn-big {
+      height: $big-circle-button-size !important;
+    }
+  }
+
+  &.btn-extend {
+    width: 100%;
+  }
 }
 
 .btn-tarco {

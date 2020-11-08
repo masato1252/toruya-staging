@@ -1,4 +1,5 @@
 const { environment, config } = require('@rails/webpacker')
+const erb = require('./loaders/erb')
 const webpack = require('webpack')
 
 environment.plugins.prepend(
@@ -25,9 +26,11 @@ environment.config.merge({
       libraries: path.resolve(config.source_path, 'javascripts/libraries'),
       context: path.resolve(config.source_path, 'javascripts/context'),
       components: path.resolve(config.source_path, 'javascripts/components'),
+      user_bot: path.resolve(config.source_path, 'javascripts/components/user_bot'),
     }
   }
 })
 
 environment.splitChunks()
+environment.loaders.prepend('erb', erb)
 module.exports = environment

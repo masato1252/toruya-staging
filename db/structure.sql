@@ -181,7 +181,9 @@ CREATE TABLE public.booking_codes (
     customer_id integer,
     reservation_id integer,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer,
+    phone_number character varying
 );
 
 
@@ -615,7 +617,10 @@ CREATE TABLE public.customers (
     updated_by_user_id integer,
     email_types character varying,
     deleted_at timestamp without time zone,
-    reminder_permission boolean DEFAULT false
+    reminder_permission boolean DEFAULT false,
+    phone_numbers_details jsonb DEFAULT '[]'::jsonb,
+    emails_details jsonb DEFAULT '[]'::jsonb,
+    address_details jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -824,7 +829,7 @@ ALTER SEQUENCE public.menus_id_seq OWNED BY public.menus.id;
 
 CREATE TABLE public.notifications (
     id bigint NOT NULL,
-    user_id integer NOT NULL,
+    user_id integer,
     phone_number character varying,
     content text,
     customer_id integer,
@@ -1012,7 +1017,12 @@ CREATE TABLE public.profiles (
     updated_at timestamp without time zone NOT NULL,
     company_zip_code character varying,
     company_address character varying,
-    company_phone_number character varying
+    company_phone_number character varying,
+    email character varying,
+    region character varying,
+    city character varying,
+    street1 character varying,
+    street2 character varying
 );
 
 
@@ -1591,7 +1601,8 @@ CREATE TABLE public.social_customers (
     social_user_picture_url character varying,
     conversation_state integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    social_rich_menu_key character varying
 );
 
 
@@ -1682,12 +1693,82 @@ ALTER SEQUENCE public.social_rich_menus_id_seq OWNED BY public.social_rich_menus
 
 
 --
+-- Name: social_user_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_user_messages (
+    id bigint NOT NULL,
+    social_user_id integer NOT NULL,
+    admin_user_id integer,
+    message_type integer,
+    readed_at timestamp without time zone,
+    raw_content text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: social_user_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_user_messages_id_seq OWNED BY public.social_user_messages.id;
+
+
+--
+-- Name: social_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.social_users (
+    id bigint NOT NULL,
+    user_id bigint,
+    social_service_user_id character varying NOT NULL,
+    social_user_name character varying,
+    social_user_picture_url character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    social_rich_menu_key character varying
+);
+
+
+--
+-- Name: social_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.social_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: social_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.social_users_id_seq OWNED BY public.social_users.id;
+
+
+--
 -- Name: staff_accounts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.staff_accounts (
     id integer NOT NULL,
-    email character varying NOT NULL,
+    email character varying,
     user_id integer,
     owner_id integer NOT NULL,
     staff_id integer NOT NULL,
@@ -1696,7 +1777,8 @@ CREATE TABLE public.staff_accounts (
     level integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    active_uniqueness boolean
+    active_uniqueness boolean,
+    phone_number character varying
 );
 
 
@@ -1906,7 +1988,7 @@ ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
+    email character varying,
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
@@ -1926,7 +2008,8 @@ CREATE TABLE public.users (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contacts_sync_at timestamp without time zone,
-    referral_token character varying
+    referral_token character varying,
+    phone_number character varying
 );
 
 
@@ -2330,6 +2413,20 @@ ALTER TABLE ONLY public.social_messages ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.social_rich_menus ALTER COLUMN id SET DEFAULT nextval('public.social_rich_menus_id_seq'::regclass);
+
+
+--
+-- Name: social_user_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_user_messages ALTER COLUMN id SET DEFAULT nextval('public.social_user_messages_id_seq'::regclass);
+
+
+--
+-- Name: social_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_users ALTER COLUMN id SET DEFAULT nextval('public.social_users_id_seq'::regclass);
 
 
 --
@@ -2772,6 +2869,22 @@ ALTER TABLE ONLY public.social_rich_menus
 
 
 --
+-- Name: social_user_messages social_user_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_user_messages
+    ADD CONSTRAINT social_user_messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: social_users social_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.social_users
+    ADD CONSTRAINT social_users_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: staff_accounts staff_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3173,6 +3286,13 @@ CREATE INDEX index_social_customers_on_customer_id ON public.social_customers US
 
 
 --
+-- Name: index_social_customers_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_customers_on_social_rich_menu_key ON public.social_customers USING btree (social_rich_menu_key);
+
+
+--
 -- Name: index_social_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3184,6 +3304,27 @@ CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING 
 --
 
 CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON public.social_rich_menus USING btree (social_account_id, social_name);
+
+
+--
+-- Name: index_social_users_on_social_rich_menu_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_social_rich_menu_key ON public.social_users USING btree (social_rich_menu_key);
+
+
+--
+-- Name: index_social_users_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_users_on_user_id ON public.social_users USING btree (user_id);
+
+
+--
+-- Name: index_staff_accounts_on_owner_id_and_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_staff_accounts_on_owner_id_and_phone_number ON public.staff_accounts USING btree (owner_id, phone_number);
 
 
 --
@@ -3254,6 +3395,13 @@ CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btre
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
+
+
+--
+-- Name: index_users_on_phone_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_phone_number ON public.users USING btree (phone_number);
 
 
 --
@@ -3408,6 +3556,20 @@ CREATE UNIQUE INDEX social_customer_unique_index ON public.social_customers USIN
 --
 
 CREATE INDEX social_message_customer_index ON public.social_messages USING btree (social_account_id, social_customer_id);
+
+
+--
+-- Name: social_user_message_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX social_user_message_index ON public.social_user_messages USING btree (social_user_id);
+
+
+--
+-- Name: social_user_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX social_user_unique_index ON public.social_users USING btree (user_id, social_service_user_id);
 
 
 --
@@ -3597,6 +3759,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200512102635'),
 ('20200625034702'),
 ('20200721132204'),
-('20200824140936');
+('20200824140936'),
+('20200914033218'),
+('20200914041742'),
+('20200917065312'),
+('20200923093836'),
+('20201019072951'),
+('20201104073111');
 
 

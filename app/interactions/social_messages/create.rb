@@ -21,7 +21,7 @@ module SocialMessages
 
       if message.errors.present?
         errors.merge!(message.errors)
-      elsif staff.nil?
+      elsif message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
         # From normal customer
         UserChannel.broadcast_to(
           social_customer.user,
@@ -52,8 +52,8 @@ module SocialMessages
             Rollbar.error(e)
           end
         end
-      elsif staff
-        # From staff
+      else
+        # From staff or bot
         LineClient.send(social_customer, content) unless Rails.env.development?
       end
 

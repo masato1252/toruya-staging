@@ -7,15 +7,15 @@
         <% if @customer.deleted_at || @user_ability.cannot?(:read, @customer) %>
           <span><%= @customer.name %></span>
         <% else %>
-          <%= link_to @customer.name, user_customers_path(@shop_user, shop_id: @reservation.shop_id, customer_id: @customer.id), class: "customer-link" %>
+          <%= link_to @customer.name, site_routing_helper.customers_path(@shop_user.id, shop_id: @reservation.shop_id, customer_id: @customer.id), class: "customer-link" %>
         <% end %>
 
         <% if @reservation.count_of_customers > 1 %>
           <% other_customers_text = I18n.t("reservation.other_customers", other_customers_number: @reservation.count_of_customers - 1) %>
 
-          <% if in_personal_dashboard? %>
+          <% if in_personal_dashboard? || from_line_bot %>
             , <%= link_to other_customers_text,
-              date_member_path(reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
+              site_routing_helper.schedule_date_path(reservation_date: @reservation.start_time.to_s(:date), reservation_id: @reservation.id)
             %>
           <% else %>
           , <%= link_to other_customers_text,
@@ -35,9 +35,9 @@
         <% if @reservation_customer.pending? && @reservation.responsible_by_staff?(current_user.current_staff(@shop_user)) %>
           <dd>
             <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.accept_customer"), accept_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNtarco" %>
+              <%= link_to t("reservation.accept_customer"), site_routing_helper.accept_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNtarco" %>
             <% else %>
-              <%= link_to t("reservation.accept_customer"), "#", class: "btn BTNtarco disabled" %>
+              <%= link_to t("reservation.accept_customer"), "#", class: "btn enhanced BTNtarco disabled" %>
             <% end %>
           </dd>
         <% end %>
@@ -45,9 +45,9 @@
         <% if @reservation_customer.accepted? %>
           <dd>
             <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.pend"), pend_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNgray" %>
+              <%= link_to t("reservation.pend"), site_routing_helper.pend_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNgray" %>
             <% else %>
-              <%= link_to t("reservation.pend"), "#", class: "btn BTNgray disabled" %>
+              <%= link_to t("reservation.pend"), "#", class: "btn enhanced BTNgray disabled" %>
             <% end %>
           </dd>
         <% end %>
@@ -55,18 +55,18 @@
         <% if !@reservation_customer.canceled? %>
           <dd>
             <% if @user_ability.can?(:edit, @reservation) %>
-              <%= link_to t("reservation.customer_cancel"), cancel_customer_user_reservations_path(super_user, @reservation, @customer), class: "btn BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
+              <%= link_to t("reservation.customer_cancel"), site_routing_helper.cancel_customer_user_reservations_path(@reservation, @customer), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
             <% else %>
-              <%= link_to t("reservation.customer_cancel"), "#", class: "btn BTNorange disabled" %>
+              <%= link_to t("reservation.customer_cancel"), "#", class: "btn enhanced BTNorange disabled" %>
             <% end %>
           </dd>
         <% end %>
 
         <dd>
           <% if @user_ability.can?(:manage_shop_reservations, @reservation.shop) && @user_ability.can?(:edit, @reservation) %>
-            <%= link_to t("action.details"), form_shop_reservations_path(@reservation.shop, @reservation.id, from_customer_id: params[:from_customer_id]), class: "btn BTNtarco" %>
+            <%= link_to t("action.details"), site_routing_helper.reservation_form_path(@reservation, from: "customer_dashboard", from_customer_id: @customer.id, customer_id: @customer.id), class: "btn enhanced BTNtarco" %>
           <% else %>
-            <%= link_to t("action.details"), "#", class: "btn BTNtarco disabled" %>
+            <%= link_to t("action.details"), "#", class: "btn BTNtarco enhanced disabled" %>
           <% end %>
         </dd>
       </dl>

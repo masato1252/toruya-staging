@@ -84,7 +84,7 @@ RSpec.describe "rake subscriptions:charge_reminder" do
     let(:today) { Date.new(2018, 2, 21) }
 
     it "reminds users" do
-      expect(SubscriptionMailer).to receive(:charge_reminder).with(subscription).and_return(double(deliver_later: true))
+      expect(Notifiers::Subscriptions::ChargeReminder).to receive(:perform_later).with(receiver: subscription.user, user: subscription.user, subscription: subscription).and_return(double(deliver_later: true))
 
       task.execute
     end
@@ -93,7 +93,7 @@ RSpec.describe "rake subscriptions:charge_reminder" do
       let!(:subscription) { FactoryBot.create(:subscription, :free, expired_date: expired_date, recurring_day: recurring_day) }
 
       it "does nothing" do
-        expect(SubscriptionMailer).not_to receive(:charge_reminder)
+        expect(Notifiers::Subscriptions::ChargeReminder).not_to receive(:perform_later)
 
         task.execute
       end
@@ -108,7 +108,7 @@ RSpec.describe "rake subscriptions:charge_reminder" do
       let(:today) { Date.new(2018, 2, 20) }
 
       it "does nothing" do
-        expect(SubscriptionMailer).not_to receive(:charge_reminder)
+        expect(Notifiers::Subscriptions::ChargeReminder).not_to receive(:perform_later)
 
         task.execute
       end
@@ -118,7 +118,7 @@ RSpec.describe "rake subscriptions:charge_reminder" do
       let(:today) { Date.new(2018, 2, 22) }
 
       it "does nothing" do
-        expect(SubscriptionMailer).not_to receive(:charge_reminder)
+        expect(Notifiers::Subscriptions::ChargeReminder).not_to receive(:perform_later)
 
         task.execute
       end
@@ -141,7 +141,7 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
 
     context "when user is under free plan" do
       it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_week_ago_reminder).with(user).and_return(double(deliver_later: true))
+        expect(Notifiers::Reminders::TrialMemberWeekAgoReminder).to receive(:perform_later).with(receiver: user, user: user).and_return(double(deliver_later: true))
         expect(Subscription.today).to eq(user.trial_expired_date.advance(days: -7))
 
         task.execute
@@ -156,7 +156,7 @@ RSpec.describe "rake subscriptions:trial_member_reminder" do
 
     context "when user is under free plan" do
       it "send trial_member_months_ago_reminder email" do
-        expect(ReminderMailer).to receive(:trial_member_day_ago_reminder).with(user).and_return(double(deliver_later: true))
+        expect(Notifiers::Reminders::TrialMemberDayAgoReminder).to receive(:perform_later).with(receiver: user, user: user).and_return(double(deliver_later: true))
         expect(Subscription.today).to eq(user.trial_expired_date.yesterday)
 
         task.execute

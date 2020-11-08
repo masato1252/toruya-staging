@@ -91,7 +91,7 @@ module OptionsHelper
         updated_by_user_name: c.updated_by_user.try(:name) || "",
         last_updated_at: c.updated_at ? I18n.l(c.updated_at.to_date, format: :year_month_date) : "",
         rank: c.rank,
-        birthday: (c.birthday ? { year: c.birthday.year, month: c.birthday.month, day: c.birthday.day } : ""),
+        birthday: from_line_bot ? c.birthday : (c.birthday ? { year: c.birthday.year, month: c.birthday.month, day: c.birthday.day } : ""),
         emails: c.emails || [],
         emails_original: c.emails || [],
         phone_numbers: c.phone_numbers || [],
@@ -101,11 +101,14 @@ module OptionsHelper
         primary_email: c.primary_email || {},
         primary_phone: c.primary_phone || {},
         primary_address: c.primary_address.present? ? c.primary_formatted_address : {},
+        primary_email_details: c.emails_details&.first || {},
+        primary_phone_details: c.phone_numbers_details&.first || {},
         display_address: c.display_address,
         google_down: c.google_down,
         googleContactMissing: c.google_contact_missing,
         details_readable: details_permission_checking_required && can?(:read_details, c),
-        social_user_id: c.social_customer&.social_user_id
+        social_user_id: c.social_customer&.social_user_id,
+        simple_address: c.simple_address
       ))
     end
   end

@@ -1,0 +1,68 @@
+$room_height: calc(50vh - 90px);
+$room_gap_size: 20px;
+$staff_message_position: right;
+$customer_message_position: left;
+$message_size: 8px;
+
+#chat-box {
+  overflow-y: auto;
+  background-color: #ffffff;
+  margin-top: $room_gap_size;
+  height: $room_height;
+
+  .warning {
+    margin: 0 30px;
+    line-height: 30px;
+    font-size: 24px;
+  }
+
+  .message {
+    margin: 6px;
+    @include clearfix;
+
+    * {
+      padding: $message_size;
+      border-radius: $message_size;
+      color: #ffffff;
+    }
+
+    .message-time,
+    i.fa {
+      color: $gray7;
+    }
+
+    .bot,
+    .staff {
+      float: $staff_message_position;
+
+      * {
+        float: $staff_message_position;
+      }
+    }
+
+    .customer,
+    .customer_reply_bot {
+      float: $customer_message_position;
+
+      * {
+        float: $customer_message_position;
+      }
+    }
+
+    .bot > .message-content {
+      background-color: $palette-color4;
+    }
+
+    .staff > .message-content {
+      background-color: $palette-color10;
+    }
+
+    .customer > .message-content {
+      background-color: $palette-color3;
+    }
+
+    .customer_reply_bot > .message-content {
+      background-color: $warning;
+    }
+  }
+}

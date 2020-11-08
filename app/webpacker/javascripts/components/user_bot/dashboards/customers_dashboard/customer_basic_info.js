@@ -1,0 +1,114 @@
+"use strict"
+
+import React from "react";
+
+import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
+import { NotificationMessages } from "shared/components"
+import { CustomerTopActions } from "./top_actions";
+import { CustomerServices } from "user_bot/api";
+
+const CustomerTopRightAction = () => {
+  const { selected_customer, props, dispatch } = useGlobalContext()
+
+  if (!selected_customer?.id) { return <span></span>; }
+
+  switch(props.from) {
+    case "reservation":
+      return <a className="btn btn-yellow" href={Routes.form_lines_user_bot_shop_reservations_path({shop_id: props.shop.id, reservation_id: props.reservation_id, from: "adding_customer", customer_id: selected_customer.id})}>
+          <i className="fa fa-user-plus"></i>{props.i18n.decide_customer}
+        </a>
+    default:
+      return <></>
+  }
+}
+
+const CustomerBasicInfo = () => {
+  const { dispatch, selected_customer, notification_messages, props } = useGlobalContext()
+
+  return (
+    <div>
+      <NotificationMessages notification_messages={notification_messages} dispatch={dispatch} />
+      <div className="customer-basic-info">
+        <CustomerTopActions
+          leading={
+            <a onClick={() => {
+              dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
+              dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+            }} >
+              <i className="fa fa-angle-left fa-2x"></i>
+            </a>
+          }
+          tail={<CustomerTopRightAction />}
+        />
+        <div className="customer-data">
+          <div className="group-rank">
+            {
+              selected_customer.groupName ? (
+                <span>{selected_customer.groupName}</span>
+              ) : (
+                <span className="field-error-border">{props.i18n.group_blank_option}</span>
+              )
+            }
+
+            {
+              selected_customer.rank && (
+                <span className={selected_customer.rank.key}>{selected_customer.rank.name}</span>
+              )
+            }
+          </div>
+          <div className="phonetic-name">
+            <span>
+              {selected_customer.phoneticLastName}
+            </span>
+            <span>
+              {selected_customer.phoneticFirstName}
+            </span>
+          </div>
+          <div className="name">
+            <span>
+              {selected_customer.lastName}
+            </span>
+            <span>
+              {selected_customer.firstName}
+            </span>
+          </div>
+          <div className="notifiers">
+            <a href="#"
+              data-id="customer-reminder-toggler"
+              onClick={async () => {
+                const [error, response] = await CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
+
+                const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
+                  trigger: "manual",
+                  title: `${props.i18n.reminder_changed_message} ${response.data.reminder_permission ? "ON" : "OFF"}`
+                })
+
+                tooltip.tooltip("show")
+
+                setTimeout(function() {
+                  tooltip.tooltip("destroy")
+                }, 2000);
+
+                dispatch({
+                  type: "UPDATE_CUSTOMER_REMINDER_PERMISSION",
+                  payload: {
+                    reminderPermission: response.data.reminder_permission
+                  }
+                })
+            }}>
+              <i className={`customer-reminder-permission fa fa-bell  ${selected_customer.reminderPermission ? "reminder-on" : ""}`}></i>
+            </a>
+            {selected_customer.primaryPhoneDetails?.value && (
+              <a href={`tel:${selected_customer.primaryPhoneDetails.value}`}><i className="fa fa-phone"></i></a>
+            )}
+            {selected_customer.primaryEmailDetails?.value && (
+              <a href={`mailto:${selected_customer.primaryEmailDetails.value}`}><i className="fa fa-envelope"></i></a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CustomerBasicInfo;

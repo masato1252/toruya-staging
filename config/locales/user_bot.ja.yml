@@ -1,0 +1,62 @@
+ja:
+  user_bot:
+    guest:
+      rich_menu_bar: ユーザーメニュー
+      user_sign_up:
+        page_title: ユーザー登録
+        name: お名前
+        last_name: 姓
+        first_name: 名
+        phonetic_name: ふりがな
+        phonetic_last_name: せい
+        phonetic_first_name: めい
+        email: メール
+        phone_number: 携帯電話
+        referral_code_title: 紹介コード
+        referral_code_placeholder: ある場合は入力
+        confirm_customer_info: 確認コード送信
+        create_customer_info: 保存してLINEと連携する
+        booking_code:
+          code: 確認コード
+          resend: コード再送
+        message:
+          successful_message_html: <p>ユーザー登録ありがとうございました！</p><p>LINEのユーザーメニューから<br>WEBプロモーションを始めましょう。
+          unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
+          booking_code_message: 携帯電話にお送りした確認コードを入力してください。
+          booking_code_failed_message: 確認コードが間違っています
+        line:
+          successful_message: "ユーザー登録ありがとうございました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
+      user_connect:
+        page_title: ユーザーログイン
+        message:
+          unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
+          successful_message_html: LINEからToruyaを使う準備ができました！<br>ユーザーメニューから<br>WEBプロモーションを始めましょう。
+        line:
+          successful_message: "LINEからToruyaを使う準備ができました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
+      shop_info:
+        postcode: 郵便番号
+        region: 都道府県
+        city: 市区町村
+        street1: 続き住所
+        street2: 建物名／部屋番号
+        location: 住所
+        page_title: ユーザー登録
+        save_btn: ユーザー登録を完了
+    dashboards:
+      schedules:
+        calendar_hint: カレンダー
+      reservation:
+        no_ending_time_message: ※終了時刻自動計算
+        schedule_modal_title: 新しい予約・予定を追加
+        reservation_customers_title: 予約顧客
+        delete_a_menu: メニューを削除
+        add_a_staff: スタッフを追加
+        staff_states_title: ステータス
+      customer:
+        title: 顧客台帳
+        search_placeholder: 名前で検索
+        count: 計
+        unit: 件
+        decide_customer: この顧客で決定
+        updated_date: 更新日
+        form_title: 顧客情報を編集

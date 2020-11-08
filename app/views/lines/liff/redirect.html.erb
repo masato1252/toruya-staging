@@ -1,0 +1,16 @@
+<% content_for :title do %>
+  <title>Toruyaースモールビジネスの顧客管理ツールー</title>
+<% end %>
+
+<% content_for :script do %>
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/versions/2.3.1/sdk.js"></script>
+<% end %>
+
+<div
+  id="line-user-redirector"
+  data-controller="line-user-redirector"
+  data-line-user-redirector-liff-id=<%= @liff_id %>
+  data-line-user-redirector-url=<%= @redirect_to %>
+>
+  Loading
+</div>

@@ -12,7 +12,7 @@ class PersonalCalendar < ActiveInteraction::Base
       staff_working_wdays: [],
       working_dates: [],
       off_dates: [],
-      holidays: []
+      holidays: [],
     }
 
     date_range = date.beginning_of_month.beginning_of_day..date.end_of_month.end_of_day
@@ -41,7 +41,8 @@ class PersonalCalendar < ActiveInteraction::Base
 
     return [
       compose(CalendarSchedules::Create, rules: working_dates, date_range: date_range),
-      reservation_dates.uniq
+      reservation_dates.uniq,
+      user.custom_schedules.where(start_time: date_range).pluck(:start_time).map(&:to_date)
     ]
   end
 end

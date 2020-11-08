@@ -33,7 +33,7 @@ module SocialAccounts
         }
 
         compose(
-          SocialAccounts::RichMenus::Create,
+          ::RichMenus::Create,
           social_account: social_account,
           body: body,
           key: KEY

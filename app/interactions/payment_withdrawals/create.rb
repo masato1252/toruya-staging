@@ -29,7 +29,11 @@ module PaymentWithdrawals
         if withdrawal.valid?
           payments.update_all(payment_withdrawal_id: withdrawal.id)
 
-          WithdrawalMailer.with(withdrawal: withdrawal).monthly_report.deliver_later
+          Notifiers::WithdrawalMonthlyReport.perform_later(
+            receiver: withdrawal.receiver,
+            user: withdrawal.receiver,
+            withdrawal: withdrawal
+          )
         else
           errors.merge!(withdrawal.errors)
         end

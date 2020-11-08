@@ -1,0 +1,216 @@
+.schedule-dashboard {
+  .schedule-dates {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 3px 0;
+
+    .calendar-btn {
+      line-height: 56px !important;
+      height: 56px !important;
+      width: 56px;
+      background-color: $gray2;
+      border: 3px solid $gray7;
+      padding: 10px !important;
+      display: block !important;
+      position: relative;
+
+      i.fa-calendar-alt {
+        color: $black2;
+      }
+
+      .calendar-hint {
+        line-height: 12px;
+        color: black;
+        font-size: 7pt;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .dates-list {
+      .prev-dates,
+      .next-dates,
+      .date {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0 3px;
+        border-radius: 6px;
+      }
+
+      .date {
+        padding: 4px;
+        border: 3px solid $gray12;
+        color: $black;
+
+        &.today {
+          font-weight: bold;
+          color: #e6a220;
+        }
+
+        &.selected {
+          background: $palette-color1 !important;
+          border-color: $palette-color1-1 !important;
+          color: #ffffff;
+          font-weight: bold;
+        }
+
+        &.holiday {
+          color: #E00003;
+        }
+
+        &.work-day,
+        &.personal-schedule {
+          border-color: #84b3aa;
+        }
+
+        &.reserved {
+          background: #dedede;
+          border-color: #dedede;
+        }
+
+        &.booking-available {
+          background: #84b3aa;
+          border-color: #84b3aa;
+        }
+      }
+
+      .prev-dates,
+      .next-dates {
+        background-color: gray;
+        padding: 20px 12px;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .schedule-date {
+    background-color: $gray4;
+    padding: 6px;
+    border-top: 1px solid $gray12;
+    border-bottom: 1px solid $gray12;
+  }
+
+  .modal {
+    .reservation-info-row {
+      margin: 3px 0 6px;
+
+      .fa {
+        margin-right: 6px;
+      }
+
+      p {
+        margin-left: 21px;
+      }
+    }
+  }
+
+  .edit-worktime {
+    .btn {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+  }
+
+  #working-date-modal,
+  .off-date-modal {
+    .datetime-field {
+      a.reservationCalendar {
+        padding: 0 !important;
+        color: white !important;
+        width: 38px;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+
+        i.fa-calendar {
+          font-size: 18px;
+        }
+      }
+
+      .date {
+        text-align: left !important;
+        width: initial !important;
+      }
+    }
+
+    #addWorkDay {
+      margin: 30px auto;
+
+      .shops-list {
+        margin-top: 12px;
+      }
+    }
+
+    #addWorkDay dt,
+    #addWorkDay dd {
+      display: block;
+      margin: 6px 0;
+
+      &.startTime,
+      &.timeTo,
+      &.endTime {
+        display: inline-block;
+      }
+    }
+
+    #addWorkDay dd input[type="time"] {
+      width: 140px;
+    }
+
+    #addWorkDay dd.timeTo {
+      padding: 0 5px;
+    }
+
+    #addWorkDay dt a {
+      margin: 0 10px 0 5px;
+    }
+
+    .closeReason {
+      margin-top: 12px;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .modal-footer {
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+
+      .btn {
+        width: 120px;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.new-schedule-button {
+  color: $palette-color1;
+  position: fixed;
+  bottom: 14px;
+  right: 10px;
+
+  i.fa-plus-circle {
+    font-size: 60px;
+  }
+}
+
+#new-reservations-modal {
+  .new-shop-reservation {
+    margin-left: 3px;
+  }
+
+  .shop-cell {
+    .btn {
+      margin-bottom: 6px;
+    }
+  }
+}

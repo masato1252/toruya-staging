@@ -14,7 +14,7 @@ class LinesController < ActionController::Base
       phone_number: params[:customer_phone_number]
     )[:found_customer]
 
-    identification_code = Customers::CreateIdentificationCode.run!(
+    identification_code = IdentificationCodes::Create.run!(
       user: social_customer.user,
       customer: customer,
       phone_number: params[:customer_phone_number]
@@ -68,7 +68,7 @@ class LinesController < ActionController::Base
   end
 
   def ask_identification_code
-    identification_code = Customers::CreateIdentificationCode.run!(
+    identification_code = IdentificationCodes::Create.run!(
       user: social_customer.user,
       customer: customer,
       phone_number: params[:customer_phone_number]

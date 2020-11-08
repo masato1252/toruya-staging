@@ -4,18 +4,14 @@ module Reservations
   module Notifications
     class SocialMessage < ActiveInteraction::Base
       object :social_customer
-      object :customer
-      object :reservation
       string :message
 
       def execute
-        LineClient.send(social_customer, message)
-
-        Notification.create!(
-          user: customer.user,
-          customer_id: customer.id,
-          reservation_id: reservation.id,
-          content: message
+        SocialMessages::Create.run(
+          social_customer: social_customer,
+          content: message,
+          message_type: SocialMessage.message_types[:bot],
+          readed: false
         )
       end
     end

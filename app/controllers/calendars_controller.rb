@@ -9,10 +9,16 @@ class CalendarsController < DashboardController
   end
 
   def personal_working_schedule
-    @schedules, @reservation_dates = PersonalCalendar.run!(user: current_user,
-                                                           working_shop_options: member_shops_options,
-                                                           all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
-                                                           date: date)
+    @schedules,
+      @reservation_dates,
+      @personal_schedule_dates =
+      PersonalCalendar.run!(
+        user: current_user,
+        working_shop_options: member_shops_options,
+        all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
+        date: date
+      )
+
     render action: :working_schedule
   end
 
@@ -41,7 +47,7 @@ class CalendarsController < DashboardController
   private
 
   def date
-    @date ||= Time.zone.parse(params[:date]).to_date
+    @date ||= params[:date].present? ? Time.zone.parse(params[:date]).to_date : Time.zone.now.to_date
   end
 
   def month_dates

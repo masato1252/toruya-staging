@@ -115,6 +115,86 @@ const DragHandle = sortableHandle(() => (
   </span>
 ));
 
+const RequiredLabel = ({label, required_label}) => {
+  return (
+    <>
+      <span>{label}</span>
+      <span className="required-label">{required_label}</span>
+    </>
+  )
+}
+
+const DummyModalLink = ({ path, children, klass }) => {
+  return (
+    <div
+      data-controller="modal"
+      data-modal-target="#dummyModal"
+      data-action="click->modal#popup"
+      data-modal-path={path}
+      className={klass}>
+      {children}
+    </div>
+  )
+}
+
+const TopNavigationBar = ({leading, title, action, ...rest}) => {
+  return (
+    <div className="top-navigation-bar">
+      {leading}
+      <span>{title}</span>
+      {action || <i></i>}
+    </div>
+  )
+}
+
+const BottomNavigationBar = ({ klassName, children }) => {
+  return (
+    <div className={`bottom-navigation-bar ${klassName}`}>
+      <div className="actions">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+const InputWithEnter = React.forwardRef((props, ref) => {
+  const { onHandleEnter, ...rest } = props;
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      onHandleEnter()
+    }
+  }
+
+  return <input ref={ref} type="text" onKeyDown={handleKeyDown} {...rest} />
+})
+
+const NotificationMessages = ({notification_messages, dispatch}) => {
+  return (
+    <>
+      {notification_messages.map((message, i) => {
+        return (
+          <div className="notification alert alert-info fade in" key={`notification-message-${i}`}>
+            <span key={`message-${i}`} dangerouslySetInnerHTML={{ __html: message }} />
+            <button className="close" onClick={() => dispatch({
+              type: "REMOVE_NOTIFICATION",
+              payload: {
+                index: i
+              }
+            })}>x</button>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
+const SelectOptions = ({ options }) => {
+  return <>
+    {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+  </>
+}
+
 export {
   Input,
   InputRow,
@@ -124,4 +204,11 @@ export {
   Condition,
   ErrorMessage,
   DragHandle,
+  RequiredLabel,
+  DummyModalLink,
+  TopNavigationBar,
+  BottomNavigationBar,
+  InputWithEnter,
+  NotificationMessages,
+  SelectOptions
 };

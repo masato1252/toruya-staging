@@ -5,7 +5,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
   def google_oauth2
     param = request.env["omniauth.params"]
-    outcome = ::Users::FromOmniauth.run(auth: request.env["omniauth.auth"], referral_token: param["referral_token"])
+    outcome = ::Users::FromOmniauth.run(
+      auth: request.env["omniauth.auth"],
+      referral_token: param["referral_token"],
+      social_service_user_id: param["social_service_user_id"]
+    )
 
     if outcome.valid?
       user = outcome.result
@@ -14,6 +18,8 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
       if param[BUSINESS_LOGIN]
         redirect_to business_path
+      elsif param["social_service_user_id"]
+        redirect_to lines_user_bot_connect_user_path(param["social_service_user_id"])
       else
         redirect_to user.profile ? member_path : new_profile_path
       end

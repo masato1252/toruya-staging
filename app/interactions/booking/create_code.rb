@@ -10,6 +10,7 @@ module Booking
         code = RandomCode.generate(6)
 
         booking_code = BookingCode.create!(
+          phone_number: phone_number,
           booking_page_id: booking_page.id,
           uuid: SecureRandom.uuid,
           code: code

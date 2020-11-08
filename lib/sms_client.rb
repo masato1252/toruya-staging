@@ -3,6 +3,8 @@ class SmsClient
   HARUKO_PHONE = "08036238534".freeze
 
   def self.send(phone_number, message)
+    return if Rails.env.test?
+
     # XXX: Japan dependency
     formatted_phone =
       if Rails.env.development?
