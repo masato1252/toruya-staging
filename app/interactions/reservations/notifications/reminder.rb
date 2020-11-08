@@ -2,8 +2,8 @@ module Reservations
   module Notifications
     class Reminder < Notify
       def execute
-        if customer.email_address.present?
-          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email_address).reservation_reminder.deliver_now
+        if customer.email.present?
+          CustomerMailer.with(reservation: reservation, customer: customer, email: customer.email).reservation_reminder.deliver_now
         end
 
         super
