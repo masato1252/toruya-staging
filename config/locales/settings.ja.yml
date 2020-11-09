@@ -234,6 +234,8 @@ ja:
       info_title: アカウント
       info_title2: アカウント情報
     profile:
+      user_info: 管理者情報
+      company_info: 企業情報
       info_title: まずはアカウント設定
       info_1: Toruyaアカウントの登録情報です。
       info_2: Toruyaをしようするにはこの設定を完了する必要があります。

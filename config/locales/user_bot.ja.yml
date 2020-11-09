@@ -60,3 +60,7 @@ ja:
         decide_customer: この顧客で決定
         updated_date: 更新日
         form_title: 顧客情報を編集
+      settings:
+        dashboard:
+          title: アカウント設定
+          info_label: アカウント登録情報

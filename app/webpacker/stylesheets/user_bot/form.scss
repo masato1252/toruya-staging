@@ -1,6 +1,6 @@
 .form {
   .field-header {
-    padding: 6px;
+    padding: 7px;
     background-color: $gray5;
     display: flex;
 
@@ -10,10 +10,16 @@
   }
 
   .field-row {
-    padding: 12px;
-    border-bottom: 1px solid $gray;
     display: flex;
+    padding: 12px;
+    background-color: #ffffff;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid $gray;
+    color: $black;
+  }
+
+  &.with-top-bar {
+    padding-top: $bar-height;
   }
 }

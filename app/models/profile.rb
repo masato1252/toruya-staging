@@ -38,4 +38,12 @@ class Profile < ApplicationRecord
   validates :last_name, presence: true
   validates :phonetic_first_name, presence: true
   validates :phonetic_last_name, presence: true
+
+  def personal_full_address
+    "〒#{zip_code} #{address}" if address.present?
+  end
+
+  def company_full_address
+    "〒#{company_zip_code} #{company_address}" if company_address.present?
+  end
 end

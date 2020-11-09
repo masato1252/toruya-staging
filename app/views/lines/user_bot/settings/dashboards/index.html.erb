@@ -1,5 +1,5 @@
 <div class="settings-dashboard form">
-  <h3>アカウント設定</h3>
+  <h3><%= I18n.t("user_bot.dashboards.settings.dashboard.title") %></h3>
 
   <div class="dashboard">
     <div class="cell">
@@ -26,18 +26,12 @@
     </div>
   </div>
 
-  <div class="field-header">User information</div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.dashboard.info_label") %></div>
 
-  <%= link_to "#", class: "setting-feature" do %>
-    <span>User Info</span><i class="fa fa-angle-right"></i>
+  <%= link_to lines_user_bot_settings_profile_path, class: "field-row" do %>
+    <span><%= t("settings.profile.user_info") %></span><i class="fa fa-angle-right"></i>
   <% end %>
-  <%= link_to "#", class: "setting-feature" do %>
-    <span>Shop Info</span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header">Plan</div>
-
-  <%= link_to "#", class: "setting-feature" do %>
-    <span>Plan</span><i class="fa fa-angle-right"></i>
+  <%= link_to company_lines_user_bot_settings_profile_path, class: "field-row" do %>
+    <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
   <% end %>
 </div>
