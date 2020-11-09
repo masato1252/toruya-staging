@@ -51,7 +51,7 @@
                   <span class="new-shop-reservation"><%= option.shop.display_name %></span>
                 <% end %>
               <% else %>
-                <%= link_to_new_reservation("#", option.shop.display_name, class: "BTNtarco disabled") %>
+                <%= link_to_new_reservation("#", option.shop.display_name, class: "#{from_line_bot ? "btn btn-tweak btn-tarco btn-big btn-extend" : "BTNtarco"} disabled") %>
               <% end %>
             <% end %>
             </div>
