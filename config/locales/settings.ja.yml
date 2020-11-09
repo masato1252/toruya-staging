@@ -291,7 +291,7 @@ ja:
       save_and_pay: 変更を保存して支払う
       plan_info:
         caption: ご利用プラン
-        current_plan: ご利用中プラン
+        current_plan: ご利用中
         unselectable: 選択できません
         plan_member: "%{plan_name} メンバー"
         change_plan: プラン変更

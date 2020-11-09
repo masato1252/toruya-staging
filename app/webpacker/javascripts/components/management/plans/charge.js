@@ -64,8 +64,8 @@ class PlanCharge extends React.Component {
       return (
         <StripeCheckout
           token={this.onCharge}
-          stripeKey={this.props.stripeKey}
-          amount={this.props.plan.costWithFee}
+          stripeKey={this.props.stripeKey || this.props.stripe_key}
+          amount={this.props.plan?.costWithFee || this.props.plan.cost_with_fee}
           currency="JPY"
           email={this.props.email}
           panelLabel="Pay"
@@ -82,7 +82,7 @@ class PlanCharge extends React.Component {
           />
           <div
             className={`btn btn-yellow`} rel="nofollow">
-            {this.props.i18n.saveAndPay}
+            {this.props.i18n.saveAndPay || this.props.i18n.save_and_pay}
           </div>
         </StripeCheckout>
       )
@@ -91,7 +91,7 @@ class PlanCharge extends React.Component {
     if (this.props.downgrade) {
       return (
         <div className="btn btn-orange" onClick={this.onCharge}>
-          {this.props.i18n.downgradeConfirmBtn}
+          {this.props.i18n.downgradeConfirmBtn || this.props.i18n.downgrade.confirm_btn}
         </div>
       )
     }

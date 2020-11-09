@@ -11,13 +11,13 @@ const ChargeFailedModal = (props) => {
               <span aria-hidden="true">×</span>
             </button>
             <h4 className="modal-title" id="myModalLabel">
-              {props.i18n.chargeFailedTitle}
+              {props.i18n.chargeFailedTitle || props.i18n.payment.failed_title}
             </h4>
           </div>
           <div className="modal-body">
-            {props.i18n.chargeFailedDesc1}
+            {props.i18n.chargeFailedDesc1 || props.i18n.payment.failed_desc1}
             <br />
-            {props.i18n.chargeFailedDesc2}
+            {props.i18n.chargeFailedDesc2 || props.i18n.payment.failed_desc2}
           </div>
           <div className="modal-footer">
             <div

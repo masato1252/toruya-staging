@@ -63,9 +63,22 @@ Rails.application.routes.draw do
 
       namespace :settings do
         get :dashboard, to: "dashboards#index", as: :dashboard
+
         resource :profile, only: %i[show] do
           collection do
             get :company
+          end
+        end
+
+        resources :plans, only: [:index]
+        resources :payments, only: [:index, :create] do
+          collection do
+            get :refund
+            get :downgrade
+          end
+
+          member do
+            get :receipt
           end
         end
       end

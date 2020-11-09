@@ -10,19 +10,19 @@ class SubscriptionModal extends React.Component {
       <div className="downgrade-area">
         <div className="modal-body">
           <div>
-            {this.isSpecialDowngradeLevel() ? this.props.i18n.specialDowngradeContent : this.props.i18n.downgradeDesc}
+            {this.isSpecialDowngradeLevel() ? this.props.i18n.specialDowngradeContent : (this.props.i18n.downgradeDesc || this.props.i18n.downgrade.desc)}
           </div>
           <div className="downgrade-label">
-            {this.props.i18n.downgradeLabel1}
+            {this.props.i18n.downgradeLabel1 || this.props.i18n.downgrade.label1}
           </div>
           <div>
-            {this.props.i18n.downgradeDesc1}
+            {this.props.i18n.downgradeDesc1 || this.props.i18n.downgrade_desc1}
           </div>
           <div className="downgrade-label">
-            {this.props.i18n.downgradeLabel1}
+            {this.props.i18n.downgradeLabel1 || this.props.i18n.downgrade.label1}
           </div>
           <div>
-            {this.props.i18n.downgradeDesc2}
+            {this.props.i18n.downgradeDesc2 || this.props.i18n.downgrade_desc2}
           </div>
         </div>
         <div className="modal-footer">
@@ -30,7 +30,7 @@ class SubscriptionModal extends React.Component {
            className={`btn btn-tarco`}
            onClick={() => { $("#subscription-modal").modal("hide"); }}
            >
-            {this.props.i18n.downgradeCancelBtn}
+            {this.props.i18n.downgradeCancelBtn || this.props.i18n.downgrade.cancel_btn}
           </div>
           <PlanCharge
             {...this.props}
@@ -44,7 +44,7 @@ class SubscriptionModal extends React.Component {
   };
 
   isSpecialDowngradeLevel = () => {
-    return _.includes(this.props.specialDowngradeLevels, this.props.selectedPlan.level)
+    return _.includes(this.props.specialDowngradeLevels, this.props.selectedPlan?.level)
   }
 
   render() {
@@ -57,7 +57,7 @@ class SubscriptionModal extends React.Component {
                 <span aria-hidden="true">×</span>
               </button>
               <h4 className="modal-title" id="myModalLabel">
-                {this.isSpecialDowngradeLevel() ? this.props.i18n.specialDowngradeTitle : this.props.i18n.downgradeTitle}
+                {this.isSpecialDowngradeLevel() ? (this.props.i18n.specialDowngradeTitle) : (this.props.i18n.downgradeTitle || this.props.i18n.downgrade.modal_title)}
               </h4>
             </div>
             {this.renderContent()}

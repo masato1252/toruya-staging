@@ -137,9 +137,9 @@ const DummyModalLink = ({ path, children, klass }) => {
   )
 }
 
-const TopNavigationBar = ({leading, title, action, ...rest}) => {
+const TopNavigationBar = ({leading, title, action, sticky, ...rest}) => {
   return (
-    <div className="top-navigation-bar">
+    <div className={`top-navigation-bar ${sticky ? "react-sticky" : ""}`}>
       {leading}
       <span>{title}</span>
       {action || <i></i>}

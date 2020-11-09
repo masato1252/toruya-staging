@@ -64,3 +64,7 @@ ja:
         dashboard:
           title: アカウント設定
           info_label: アカウント登録情報
+          payments_label: ご利用履歴
+        plans:
+          save: 選択する
+          save_and_pay: 選択する

@@ -34,4 +34,26 @@
   <%= link_to company_lines_user_bot_settings_profile_path, class: "field-row" do %>
     <span><%= t("settings.profile.company_info") %></span><i class="fa fa-angle-right"></i>
   <% end %>
+
+  <div class="field-header"><%= t("settings.plans.plan_info.caption") %></div>
+
+  <%= link_to lines_user_bot_settings_plans_path, class: "field-row" do %>
+    <div>
+      <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %><br />
+      <div class="subscription-desc">
+        <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
+        <% if current_user.trial_member? %>
+          <%= l(current_user.created_at.advance(months: 3).to_date) %>
+        <% else %>
+          <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
+          <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>
+        <% end %>
+      </div>
+    </div>
+    <i class="fa fa-angle-right"></i>
+  <% end %>
+
+  <%= link_to lines_user_bot_settings_payments_path, class: "field-row" do %>
+    <span><%= t("user_bot.dashboards.settings.dashboard.payments_label") %></span><i class="fa fa-angle-right"></i>
+  <% end %>
 </div>

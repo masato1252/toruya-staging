@@ -1,0 +1,5 @@
+<%
+    shop_number_over_charge_threshold = current_user.shops.count - Plans::Fee::SHOP_NUMBER_CHARGE_THRESHOLD
+    exceeded_staff_number = current_user.staffs.count - 1
+%>
+<%= render "regular", shop_number_over_charge_threshold: shop_number_over_charge_threshold, exceeded_staff_number: exceeded_staff_number %>
