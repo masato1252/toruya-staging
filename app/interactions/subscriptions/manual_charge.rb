@@ -59,7 +59,7 @@ module Subscriptions
     private
 
     def validate_plan_downgraade
-      if subscription.plan.downgrade?(plan)
+      if subscription.current_plan.downgrade?(plan)
         # XXX: Downgrade behavior shouldn't happen manually,
         # it should be executed until the expired date.
         errors.add(:plan, :unable_to_downgrade_manually)
