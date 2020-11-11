@@ -16,5 +16,12 @@ FactoryBot.define do
     trait :refunded do
       state { SubscriptionCharge.states[:refunded] }
     end
+
+    trait :plan_subscruption do
+      after(:create) do |charge, _|
+        charge.details = { type: SubscriptionCharge::TYPES[:plan_subscruption] }
+        charge.save!
+      end
+    end
   end
 end

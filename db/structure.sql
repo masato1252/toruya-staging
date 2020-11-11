@@ -3615,6 +3615,13 @@ CREATE INDEX state_by_staff_id_index ON public.reservation_staffs USING btree (s
 
 
 --
+-- Name: subscription_charge_type_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX subscription_charge_type_index ON public.subscription_charges USING btree (((details ->> 'type'::text)));
+
+
+--
 -- Name: unique_staff_account_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3765,6 +3772,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200917065312'),
 ('20200923093836'),
 ('20201019072951'),
-('20201104073111');
+('20201104073111'),
+('20201111121423');
 
 

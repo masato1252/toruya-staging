@@ -21,6 +21,7 @@
 class Subscription < ApplicationRecord
   FREE_PLAN_ID = 1
   REFUNDABLE_DAYS = 8
+  BASIC_PERIOD_DAYS = 30
 
   belongs_to :plan, required: false
   belongs_to :next_plan, class_name: "Plan", required: false
@@ -57,6 +58,10 @@ class Subscription < ApplicationRecord
 
   def current_plan
     @current_plan ||= active? ? plan : Plan.free_level.take
+  end
+
+  def in_paid_plan
+    charge_required && expired_date && expired_date >= self.class.today
   end
 
   def active?

@@ -43,7 +43,7 @@ class SubscriptionCharge < ApplicationRecord
     refund_failed: 5
   }
 
-  monetize :amount_cents
+  monetize :amount_cents, numericality: { greater_than: 0 }
   validates :order_id, uniqueness: true
 
   scope :manual, -> { where(manual: true) }

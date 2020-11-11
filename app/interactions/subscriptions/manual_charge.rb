@@ -4,12 +4,25 @@ module Subscriptions
     object :plan
     string :authorize_token
 
+    validate :validate_plan_downgraade
+
     def execute
       user = subscription.user
 
       subscription.with_lock do
         compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
-        charge_outcome = Subscriptions::Charge.run(user: user, plan: plan, manual: true)
+
+        new_plan_price = compose(Plans::Price, user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: true)
+        residual_value = compose(Subscriptions::ResidualValue, user: user)
+
+        charge_amount = new_plan_price - residual_value
+
+        charge_outcome = Subscriptions::Charge.run(
+          user: user,
+          plan: plan,
+          manual: true,
+          charge_amount: charge_amount
+        )
 
         if charge_outcome.valid?
           charge = charge_outcome.result
@@ -30,7 +43,9 @@ module Subscriptions
             user_email: user.email,
             pure_plan_amount: compose(Plans::Price, user: user, plan: plan).format,
             plan_amount: compose(Plans::Price, user: user, plan: plan, with_business_signup_fee: true).format,
-            plan_name: plan.name
+            plan_name: plan.name,
+            charge_amount: charge_amount.format,
+            residual_value: residual_value.format
           }
           charge.save!
 
@@ -38,6 +53,16 @@ module Subscriptions
         else
           errors.merge!(charge_outcome.errors)
         end
+      end
+    end
+
+    private
+
+    def validate_plan_downgraade
+      if subscription.plan.downgrade?(plan)
+        # XXX: Downgrade behavior shouldn't happen manually,
+        # it should be executed until the expired date.
+        errors.add(:plan, :unable_to_downgrade_manually)
       end
     end
   end

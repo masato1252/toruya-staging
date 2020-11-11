@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_04_073111) do
+ActiveRecord::Schema.define(version: 2020_11_11_121423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -670,6 +670,7 @@ ActiveRecord::Schema.define(version: 2020_11_04_073111) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "details"
+    t.index "((details ->> 'type'::text))", name: "subscription_charge_type_index"
     t.index ["order_id"], name: "order_id_index"
     t.index ["plan_id"], name: "index_subscription_charges_on_plan_id"
     t.index ["user_id", "state"], name: "user_state_index"
