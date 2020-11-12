@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { StickyContainer, Sticky  } from 'react-sticky';
 
+import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import { TopNavigationBar } from "shared/components"
 import PlanCharge from "components/management/plans/charge";
 import SubscriptionModal from "components/management/plans/subscription_modal";
@@ -20,6 +21,12 @@ const Plans = ({props}) => {
 
   const selectedPlan = () => {
     return props.plans[selected_plan_level]
+  };
+
+  const onPay = (planLevel) => {
+    seletePlan(planLevel)
+
+    $("#checkout-modal").modal("show");
   };
 
   const onSubscribe = (planLevel) => {
@@ -43,11 +50,11 @@ const Plans = ({props}) => {
 
     if (isUpgrade) {
       return (
-        <PlanCharge
-          {...props}
-          chargeImmediately={true}
-          plan={props.plans[planLevel]}
-        />
+        <div
+          className={`btn btn-yellow`}
+          onClick={() => onPay(planLevel)} >
+          {props.i18n.save}
+        </div>
       )
     } else if (!isUpgrade) {
       // downgrade
@@ -177,6 +184,15 @@ const Plans = ({props}) => {
       <SubscriptionModal
         {...props}
         selectedPlan={selectedPlan()}
+      />
+      <StripeCheckoutModal
+        stripe_key={props.stripe_key}
+        header="Trouya"
+        plan_key={selectedPlan()?.key}
+        desc={selectedPlan()?.name}
+        pay_btn={`Pay ${selectedPlan()?.costFormat}`}
+        payment_path={Routes.lines_user_bot_settings_payments_path()}
+        props={props}
       />
     </StickyContainer>
   )
