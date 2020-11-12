@@ -19,12 +19,15 @@ RSpec.describe Subscriptions::ResidualValue do
       end
     end
 
-    context "when user is subscribing paid plan" do
+    context "when user is subscribing paid plan and want to subscribe another plan" do
       let(:subscription) { FactoryBot.create(:subscription, :basic) }
+      let(:user) { subscription.user }
       let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :plan_subscruption, :manual, :completed, user: user) }
 
       it "returns expected amount" do
-        expect(outcome.result).to eq(Money.new(2200) * Rational(1, 30))
+        Timecop.travel(subscription.expired_date.advance(days: -1))
+
+        expect(outcome.result).to eq(Money.new(2200) * Rational(1, user.subscription.expired_date - user.subscription.created_at.to_date))
       end
     end
   end

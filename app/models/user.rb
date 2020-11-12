@@ -69,7 +69,6 @@ class User < ApplicationRecord
       where(state: :completed).order("updated_at").last
     end
 
-    # TODO: Add index
     def last_plan_charged
       where("details ->> 'type' = ?", SubscriptionCharge::TYPES[:plan_subscruption]).last_completed
     end

@@ -51,7 +51,7 @@ RSpec.describe UserBotLines::MessageEvent do
         end
       end
 
-      context "message is SETTINGS" do
+      xcontext "message is SETTINGS" do
         let(:content) { described_class::SETTINGS }
 
         it "sends settings message" do

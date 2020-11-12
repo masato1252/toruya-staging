@@ -28,6 +28,13 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
       end
 
     if outcome.invalid?
+      Rollbar.warning(
+        "Payment create failed",
+        errors_messages: outcome.errors.full_messages.join(", "),
+        errors_details: outcome.errors.details,
+        params: params
+      )
+
       render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
     else
       render json: { redirect_path: lines_user_bot_settings_path }

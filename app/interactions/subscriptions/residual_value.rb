@@ -3,8 +3,8 @@ module Subscriptions
     object :user
 
     def execute
-      if user.subscription.in_paid_plan && user.subscription_charges.last_plan_charged
-        user.subscription_charges.last_plan_charged.amount * Rational(user.subscription.expired_date - Subscription.today, Subscription::BASIC_PERIOD_DAYS)
+      if user.subscription.in_paid_plan && (last_charge = user.subscription_charges.last_plan_charged)
+        last_charge.amount * Rational(last_charge.expired_date - Subscription.today, last_charge.expired_date - last_charge.charge_date)
       else
         Money.zero
       end

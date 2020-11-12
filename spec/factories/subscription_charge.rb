@@ -4,6 +4,7 @@ FactoryBot.define do
     plan { Plan.second } # basic plan
     amount { plan.cost.is_a?(Array) ? plan.cost.first : plan.cost }
     charge_date { Subscription.today }
+    expired_date { Subscription.today.advance(months: 1) }
 
     trait :manual do
       manual { true }

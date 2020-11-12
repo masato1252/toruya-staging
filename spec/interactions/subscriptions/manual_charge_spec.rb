@@ -60,9 +60,9 @@ RSpec.describe Subscriptions::ManualCharge do
         outcome
 
         charge = subscription.user.subscription_charges.last
-        residual_value = (Money.new(2200) * Rational(1, 30))
+        residual_value = (Money.new(2200) * Rational(charge.expired_date - Subscription.today, charge.expired_date - charge.charge_date))
 
-        expect(charge.amount).to eq(Money.new(plan.cost) - residual_value)
+        expect(charge.amount).to eq(Plans::Price.run!(user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: true) - residual_value)
         fee = Plans::Fee.run!(user: user, plan: plan)
         expect(charge.details).to eq({
           "shop_ids" => user.shop_ids,

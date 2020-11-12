@@ -4,7 +4,7 @@ FactoryBot.define do
     plan { Plan.free_level.take }
     stripe_customer_id { SecureRandom.hex }
     recurring_day { Subscription.today.day }
-    expired_date { Subscription.today.tomorrow }
+    expired_date { Subscription.today.advance(months: 1) }
 
     trait :free do
       plan { Plan.free_level.take }
