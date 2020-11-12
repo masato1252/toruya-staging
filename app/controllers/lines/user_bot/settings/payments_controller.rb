@@ -30,7 +30,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
     if outcome.invalid?
       render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
     else
-      render json: { redirect_path: lines_user_bot_settings_dashboard_path }
+      render json: { redirect_path: lines_user_bot_settings_path }
     end
   end
 
@@ -71,6 +71,6 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   def downgrade
     current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID)
 
-    redirect_to lines_user_bot_settings_dashboard_path
+    redirect_to lines_user_bot_settings_path
   end
 end

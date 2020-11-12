@@ -32,4 +32,5 @@ class LiffRouting
   map :users_sign_up, :lines_user_bot_sign_up_url
   map :schedules, :lines_user_bot_schedules_url
   map :customers, :lines_user_bot_customers_url
+  map :settings, :lines_user_bot_settings_url
 end

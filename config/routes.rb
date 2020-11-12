@@ -62,8 +62,6 @@ Rails.application.routes.draw do
       end
 
       namespace :settings do
-        get :dashboard, to: "dashboards#index", as: :dashboard
-
         resource :profile, only: %i[show] do
           collection do
             get :company
@@ -80,6 +78,12 @@ Rails.application.routes.draw do
           member do
             get :receipt
           end
+        end
+      end
+
+      resources :settings, only: [:index] do
+        collection do
+          get "/:social_service_user_id", action: "index"
         end
       end
 

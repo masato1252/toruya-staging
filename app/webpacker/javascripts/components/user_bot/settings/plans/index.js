@@ -69,7 +69,7 @@ const Plans = ({props}) => {
         }) => (
           <div style={style}>
             <TopNavigationBar
-              leading={<a href={Routes.lines_user_bot_settings_dashboard_path()}><i className="fa fa-angle-left fa-2x"></i></a>}
+              leading={<a href={Routes.lines_user_bot_settings_path()}><i className="fa fa-angle-left fa-2x"></i></a>}
               title={props.i18n.plan_info.caption}
               sticky={true}
             />

@@ -2,7 +2,6 @@ require "line_client"
 
 class UserBotLines::MessageEvent < ActiveInteraction::Base
   USER_SIGN_OUT = "usersignout".freeze
-  SETTINGS = I18n.t("toruya_line.keywords.settings").freeze
 
   hash :event, strip: false, default: nil
   object :social_user
@@ -24,13 +23,6 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
         case event["message"]["text"].strip
         when USER_SIGN_OUT
           SocialUsers::Disconnect.run(social_user: social_user)
-        when SETTINGS
-          SocialUserMessages::Create.run(
-            social_user: social_user,
-            content: settings_message,
-            readed: true,
-            message_type: SocialUserMessage.message_types[:bot]
-          )
         end
       else
         Rollbar.warning("Line chat room don't support message type", event: event)
@@ -41,12 +33,6 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
   end
 
   private
-
-  def settings_message
-    [
-      "#{SETTINGS}: #{url_helpers.lines_user_bot_settings_dashboard_url}"
-    ].join("\n\n")
-  end
 
   def url_helpers
     Rails.application.routes.url_helpers
