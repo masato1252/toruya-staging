@@ -46,7 +46,7 @@ RSpec.describe Notifiers::Notifications::NewReferrer do
     end
 
     context "when referee got email" do
-      before { referee.update_columns(email: Faker::Internet.email) }
+      before { referee.update_columns(email: Faker::Internet.email, phone_number: nil) }
 
       it "sends email" do
         expect(NotificationMailer).to receive(:new_referrer).with(referee).and_return(double(deliver_now: true))

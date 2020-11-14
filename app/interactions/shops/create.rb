@@ -1,7 +1,16 @@
 module Shops
   class Create < ActiveInteraction::Base
     object :user
-    hash :params, strip: false
+    hash :params, strip: false do
+      string :name
+      string :short_name
+      string :zip_code
+      string :phone_number, default: nil
+      string :email, default: nil
+      string :address
+      string :website, default: nil
+      boolean :holiday_working, default: false
+    end
     string :authorize_token, default: nil
 
     def execute

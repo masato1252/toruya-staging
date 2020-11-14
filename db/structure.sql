@@ -1521,8 +1521,8 @@ CREATE TABLE public.shops (
     name character varying NOT NULL,
     short_name character varying NOT NULL,
     zip_code character varying NOT NULL,
-    phone_number character varying NOT NULL,
-    email character varying NOT NULL,
+    phone_number character varying,
+    email character varying,
     address character varying NOT NULL,
     website character varying,
     holiday_working boolean,
@@ -3773,6 +3773,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200923093836'),
 ('20201019072951'),
 ('20201104073111'),
-('20201111121423');
+('20201111121423'),
+('20201114011120');
 
 

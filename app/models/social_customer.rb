@@ -12,12 +12,14 @@
 #  conversation_state      :integer          default("bot")
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  social_rich_menu_key    :string
 #
 # Indexes
 #
-#  index_social_customers_on_customer_id  (customer_id)
-#  index_social_customers_on_user_id      (user_id)
-#  social_customer_unique_index           (user_id,social_account_id,social_user_id) UNIQUE
+#  index_social_customers_on_customer_id           (customer_id)
+#  index_social_customers_on_social_rich_menu_key  (social_rich_menu_key)
+#  index_social_customers_on_user_id               (user_id)
+#  social_customer_unique_index                    (user_id,social_account_id,social_user_id) UNIQUE
 #
 
 class SocialCustomer < ApplicationRecord

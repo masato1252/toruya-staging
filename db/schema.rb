@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_11_121423) do
+ActiveRecord::Schema.define(version: 2020_11_14_011120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -520,8 +520,8 @@ ActiveRecord::Schema.define(version: 2020_11_11_121423) do
     t.string "name", null: false
     t.string "short_name", null: false
     t.string "zip_code", null: false
-    t.string "phone_number", null: false
-    t.string "email", null: false
+    t.string "phone_number"
+    t.string "email"
     t.string "address", null: false
     t.string "website"
     t.boolean "holiday_working"

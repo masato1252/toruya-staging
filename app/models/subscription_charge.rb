@@ -21,6 +21,7 @@
 #
 #  index_subscription_charges_on_plan_id  (plan_id)
 #  order_id_index                         (order_id)
+#  subscription_charge_type_index         (((details ->> 'type'::text)))
 #  user_state_index                       (user_id,state)
 #
 

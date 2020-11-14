@@ -21,7 +21,7 @@ const BottomBar = () => {
         className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => {
           dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})
-          dispatch({type: "SELECT_CUSTOMER", payload: { customer: {} } })
+          dispatch({type: "SELECT_CUSTOMER", payload: { customer: { contactGroupId: props.contact_groups[0]?.value } } })
           history.push(Routes.lines_user_bot_customers_path({user_id: props?.shop?.user_id}));
         }
         } >

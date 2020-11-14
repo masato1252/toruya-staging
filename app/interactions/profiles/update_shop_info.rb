@@ -12,9 +12,22 @@ module Profiles
 
     def execute
       ApplicationRecord.transaction do
-        user.profile.update!(params.merge!(address: "#{params[:region]}#{params[:city]}#{params[:street1]}#{params[:street2]}"))
+        address = "#{params[:region]}#{params[:city]}#{params[:street1]}#{params[:street2]}"
+
+        user.profile.update!(
+          params.merge!(
+            address: address,
+            company_address: address,
+            company_zip_code: params[:zip_code],
+            phone_number: user.phone_number,
+            company_phone_number: user.phone_number,
+            email: user.email,
+            company_name: "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
+          )
+        )
         # XXX: The user and social_user was connected, what I want to do is change_rich_menu here
         compose(SocialUsers::Connect, user: user, social_user: social_user, change_rich_menu: true)
+        Users::CreateDefaultSettings.run(user: user)
         Notifiers::LineUserSignedUp.run(receiver: social_user)
       end
     end

@@ -22,6 +22,7 @@
 
 class ReservationSetting < ApplicationRecord
   include Helpers
+  BUSINESS_DAYS = "business_days".freeze
 
   default_value_for :day_type, "business_days"
 

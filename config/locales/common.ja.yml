@@ -57,6 +57,7 @@ ja:
     no_label: 無し
     close: 閉じる
     print: 印刷
+    shop: 店鋪
     select_a_shop: 店鋪選択
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
@@ -81,3 +82,7 @@ ja:
     calendar: カレンダー
     others: その他
     unsave: 未保存
+    full_working_time: 全営業日時
+    category_default_name: デフォルト
+    menu_temporary_name: 仮予約
+    customer_default_group_name: 顧客

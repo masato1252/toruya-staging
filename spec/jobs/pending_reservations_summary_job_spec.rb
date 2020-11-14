@@ -18,9 +18,11 @@ RSpec.describe PendingReservationsSummaryJob do
     let!(:same_user_before_time_range_reservation) { FactoryBot.create(:reservation, :pending, staff_ids: [same_user_staff.id], created_at: Time.zone.local(2018, 6, 19, 7, 59, 59)) }
     let!(:in_time_range_different_user_reservation) { FactoryBot.create(:reservation, :pending, created_at: Time.zone.local(2018, 6, 19, 8, 0, 0)) }
     let!(:same_user_after_time_range_reservation) { FactoryBot.create(:reservation, :pending, staff_ids: [same_user_staff.id], created_at: Time.zone.local(2018, 6, 19, 20, 0, 0)) }
+    before { user.update_columns(phone_number: nil) }
 
     it "send a pending reservation summary mail" do
       # Pending reservations between today 8:00AM ~ today 7:59PM summary email
+      expect(Notifiers::PendingReservationsSummary).to receive(:run).and_call_original
       expect(ReservationMailer).to receive(:pending_summary).with([matched_pending_reservation1, matched_pending_reservation2], user).and_return(double(deliver_now: true))
 
       described_class.perform_now(user.id, time_range.first.to_s, time_range.last.to_s)
