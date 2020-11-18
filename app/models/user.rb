@@ -68,6 +68,10 @@ class User < ApplicationRecord
     def last_completed
       where(state: :completed).order("updated_at").last
     end
+
+    def last_plan_charged
+      where("details ->> 'type' = ?", SubscriptionCharge::TYPES[:plan_subscruption]).last_completed
+    end
   end
   has_many :custom_schedules, dependent: :destroy
   has_many :booking_options

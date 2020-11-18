@@ -61,6 +61,26 @@ Rails.application.routes.draw do
         resources :messages, only: [:index]
       end
 
+      namespace :settings do
+        resource :profile, only: %i[show] do
+          collection do
+            get :company
+          end
+        end
+
+        resources :plans, only: [:index]
+        resources :payments, only: [:index, :create] do
+          collection do
+            get :refund
+            get :downgrade
+          end
+
+          member do
+            get :receipt
+          end
+        end
+      end
+
       resources :settings, only: [:index] do
         collection do
           get "/:social_service_user_id", action: "index"

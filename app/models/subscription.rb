@@ -59,6 +59,10 @@ class Subscription < ApplicationRecord
     @current_plan ||= active? ? plan : Plan.free_level.take
   end
 
+  def in_paid_plan
+    charge_required && expired_date && expired_date >= self.class.today
+  end
+
   def active?
     plan_id == FREE_PLAN_ID || expired_date >= self.class.today
   end

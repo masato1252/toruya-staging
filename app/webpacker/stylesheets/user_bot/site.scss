@@ -264,6 +264,11 @@ a {
 
 .top-navigation-bar {
   position: fixed;
+
+  &.react-sticky {
+    position: static;
+  }
+
   background-color: $gray4;
   width: 100%;
   height: $bar-height;

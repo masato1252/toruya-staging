@@ -45,8 +45,48 @@ RSpec.describe Subscriptions::ManualCharge do
         "user_email" => user.email,
         "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
         "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
-        "plan_name" => plan.name
+        "plan_name" => plan.name,
+        "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+        "residual_value" => Money.zero.format
       })
+    end
+
+    context "when user upgrade plan" do
+      let(:subscription) { FactoryBot.create(:subscription, :with_stripe, :basic) }
+      let!(:subscription_charge) { FactoryBot.create(:subscription_charge, :plan_subscruption, :manual, :completed, user: user) }
+      let(:plan) { Plan.premium_level.take }
+
+      it "charges expected amount" do
+        outcome
+
+        charge = subscription.user.subscription_charges.last
+        residual_value = (Money.new(2200) * Rational(charge.expired_date - Subscription.today, charge.expired_date - charge.charge_date))
+
+        expect(charge.amount).to eq(Plans::Price.run!(user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: true) - residual_value)
+        fee = Plans::Fee.run!(user: user, plan: plan)
+        expect(charge.details).to eq({
+          "shop_ids" => user.shop_ids,
+          "shop_fee" => fee.fractional,
+          "shop_fee_format" => fee.format,
+          "type" => SubscriptionCharge::TYPES[:plan_subscruption],
+          "user_name" => user.name,
+          "user_email" => user.email,
+          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
+          "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+          "plan_name" => plan.name,
+          "charge_amount" => charge.amount.format,
+          "residual_value" => residual_value.format
+        })
+      end
+    end
+
+    context "when user downgrade plan" do
+      let(:subscription) { FactoryBot.create(:subscription, :with_stripe, :basic) }
+      let(:plan) { Plan.free_level.take }
+
+      it "is invalid" do
+        expect(outcome).to be_invalid
+      end
     end
 
     context "when plan is business" do
@@ -75,7 +115,9 @@ RSpec.describe Subscriptions::ManualCharge do
           "user_email" => user.email,
           "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
           "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
-          "plan_name" => plan.name
+          "plan_name" => plan.name,
+          "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+          "residual_value" => Money.zero.format
         })
       end
     end

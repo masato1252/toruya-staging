@@ -6,7 +6,7 @@
 </div>
 
 <div id="settingForm">
-  <h3>管理者情報<strong>必須項目</strong></h3>
+  <h3><%= t("settings.profile.user_info") %><strong>必須項目</strong></h3>
   <div id="adminInfo" class="formRow">
     <dl>
       <dt><%= t("common.name") %></dt>
@@ -30,7 +30,7 @@
     </dl>
   </div>
 
-  <h3>企業情報</h3>
+  <h3><%= t("settings.profile.company_info") %></h3>
   <div id="companyInfo" class="formRow">
     <dl>
       <dt><%= Profile.human_attribute_name(:company_name) %></dt>
@@ -49,7 +49,7 @@
       <dd><%= @profile.company_phone_number %></dd>
     </dl>
     <dl>
-      <dt>Website</dt>
+      <dt><%= Profile.human_attribute_name(:website) %></dt>
       <dd><%= @profile.website %></dd>
     </dl>
   </div>

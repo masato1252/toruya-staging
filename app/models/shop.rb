@@ -7,8 +7,8 @@
 #  name            :string           not null
 #  short_name      :string           not null
 #  zip_code        :string           not null
-#  phone_number    :string           not null
-#  email           :string           not null
+#  phone_number    :string
+#  email           :string
 #  address         :string           not null
 #  website         :string
 #  holiday_working :boolean
@@ -28,8 +28,6 @@ class Shop < ApplicationRecord
   validates :name, presence: true, format: { without: /\// }
   validates :short_name, presence: true
   validates :zip_code, presence: true
-  validates :phone_number, presence: true
-  validates :email, presence: true
   validates :address, presence: true
 
   has_one_attached :logo

@@ -1,0 +1,158 @@
+.plans {
+  input.BTNselect {
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  .privacy-and-term {
+    text-align: center;
+  }
+
+  .actions {
+    margin-top: 32px;
+    text-align: center;
+
+    .btn {
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+  }
+
+  .thead .col,
+  .tbody .col,
+  .tfoot .col {
+    padding: 8px;
+    border-right: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    flex-direction: column;
+
+    &.selected-plan {
+      background-color: #fcf8df;
+    }
+
+    flex: 1;
+
+    &.th {
+      font-weight: bold;
+    }
+  }
+
+  .thead {
+    font-size: $normal-font-size;
+  }
+
+  .thead,
+  .tfoot {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+
+    .col {
+      background-color: #ffffff;
+      border-top: 1px solid #dddddd;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    .free {
+      background-color: $palette-color3;
+      border-color: $palette-color3-1;
+      color: #ffffff;
+    }
+
+    .basic {
+      background-color: $palette-color2;
+      border-color: $palette-color2-1;
+      color: #ffffff;
+    }
+
+    .premium {
+      background-color: $palette-color1;
+      border-color: $palette-color1-1;
+      color: #ffffff;
+    }
+
+    .price-amount {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .select-plan {
+      &.current-plan {
+        display: none;
+      }
+    }
+
+    .plan-column {
+      display: none;
+
+      &.current {
+        display: block;
+        color: $danger;
+      }
+    }
+  }
+
+  .tbody,
+  .tfoot {
+    text-align: center;
+    border-top: 1px solid #dddddd;
+    display: flex;
+    flex-direction: column;
+
+    .table-row {
+      flex-direction: row;
+      display: flex;
+
+      .col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      &:first-child {
+        & > .col.th {
+          border-top: 1px solid #dddddd;
+          border-top-left-radius: 10px;
+        }
+
+        & > .col {
+          border-top: 1px solid #dddddd;
+        }
+      }
+
+      &:last-child {
+        & > .col {
+          border-bottom: 1px solid #dddddd;
+        }
+      }
+    }
+  }
+
+  .tfoot {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+
+    .table-row {
+      .col {
+        background-color: $gray2;
+        border: 1px solid $gray-border-1;
+        border-radius: 0;
+        justify-content: flex-end;
+        padding: 5px;
+      }
+    }
+  }
+
+  div.downgrade-area {
+    .downgrade-label {
+      font-weight: bold;
+      margin-top: 12px;
+    }
+  }
+}

@@ -234,6 +234,8 @@ ja:
       info_title: アカウント
       info_title2: アカウント情報
     profile:
+      user_info: 管理者情報
+      company_info: 企業情報
       info_title: まずはアカウント設定
       info_1: Toruyaアカウントの登録情報です。
       info_2: Toruyaをしようするにはこの設定を完了する必要があります。
@@ -289,7 +291,7 @@ ja:
       save_and_pay: 変更を保存して支払う
       plan_info:
         caption: ご利用プラン
-        current_plan: ご利用中プラン
+        current_plan: ご利用中
         unselectable: 選択できません
         plan_member: "%{plan_name} メンバー"
         change_plan: プラン変更

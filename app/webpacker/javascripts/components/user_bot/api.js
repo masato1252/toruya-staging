@@ -206,9 +206,27 @@ const CustomerServices = {
   }
 }
 
+const PaymentServices = {
+  payPlan: ({token, plan}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_payments_path({format: "json"}),
+      data: {
+        token,
+        plan
+      },
+      responseType: "json"
+    })
+  }
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
   ReservationServices,
-  CustomerServices
+  CustomerServices,
+  PaymentServices
 }

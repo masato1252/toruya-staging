@@ -46,8 +46,9 @@ module UserBotLines
                 "width": 833,
                 "height": 843
               },
-              "action": LineActions::Message.template(
-                text: UserBotLines::MessageEvent::SETTINGS
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.settings"),
+                url: LiffRouting.liff_url(:settings)
               )
             }
           ]

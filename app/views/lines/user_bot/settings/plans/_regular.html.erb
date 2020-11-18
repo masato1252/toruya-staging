@@ -1,0 +1,24 @@
+<%=
+  react_component "user_bot/settings/plans", {
+    props: {
+      formAuthenticityToken: form_authenticity_token,
+      paymentPath: lines_user_bot_settings_payments_path,
+      stripe_key: Rails.application.secrets.stripe_publishable_key,
+      locale: I18n.default_locale,
+      email: current_user.email,
+      current_plan_level: Plan.permission_level(current_user.subscription.current_plan.level),
+      plan_labels: @plan_labels,
+      plans: @plans_properties,
+      i18n: {
+      }.merge!([
+        t("settings.plans"),
+        t("user_bot.dashboards.settings.plans"),
+        {
+          downgrade_desc1: t("settings.plans.downgrade.desc1", expired_date: l(current_user.subscription&.expired_date || Date.current)),
+          downgrade_desc2: t("settings.plans.downgrade.desc2", after_expired_date: l(current_user.subscription&.expired_date&.tomorrow || Date.current)),
+        }
+      ].inject(:merge!))
+    }
+  },
+  { camelize_props: false }
+%>

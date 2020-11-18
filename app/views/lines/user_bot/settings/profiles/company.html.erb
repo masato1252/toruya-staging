@@ -1,0 +1,29 @@
+<div class="settings-dashboard form with-top-bar">
+  <div class="top-navigation-bar">
+    <%= link_to lines_user_bot_settings_path do %>
+      <i class="fa fa-angle-left fa-2x"></i>
+    <% end %>
+    <span><%= t("settings.profile.company_info") %></span>
+    <i></i>
+  </div>
+
+  <div class="field-header"><%= Profile.human_attribute_name(:company_name) %></div>
+  <%= link_to "#", class: "field-row" do %>
+    <span><%= @profile.company_name %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+
+  <div class="field-header"><%= Profile.human_attribute_name(:address) %></div>
+  <%= link_to "#", class: "field-row" do %>
+    <span><%= @profile.company_full_address %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+
+  <div class="field-header"><%= Profile.human_attribute_name(:phone_number) %></div>
+  <%= link_to "#", class: "field-row" do %>
+    <span><%= @profile.company_phone_number %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+
+  <div class="field-header"><%= Profile.human_attribute_name(:website) %></div>
+  <%= link_to "#", class: "field-row" do %>
+    <span><%= @profile.website %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+</div>

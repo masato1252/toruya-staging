@@ -1,0 +1,63 @@
+.payments {
+  padding-top: $bar-height;
+
+  table.history {
+    text-align: left;
+    border-spacing: 0;
+    border-collapse: separate;
+    width: 100%;
+    max-width: 100%;
+
+    & > thead {
+      & > tr {
+        & > th {
+          padding: 6px;
+          border: 1px solid #dddddd;
+          background-color: #dddddd;
+
+          &.charge-date,
+          &.charge-amount,
+          &.charge-plan {
+            width: 25%;
+          }
+        }
+      }
+    }
+
+    & > tbody {
+      border-top: 1px solid #dddddd;
+      text-align: left;
+
+      tr {
+        & > td {
+          padding: 6px;
+
+          &:first-child {
+            border-left: 1px solid #dddddd;
+          }
+
+          &:last-child {
+            border-right: 1px solid #dddddd;
+          }
+        }
+      }
+
+      & > tr:nth-of-type(odd) {
+        background-color: #f9f9f9;
+      }
+
+      & > tr:last-child {
+        & > td {
+          border-bottom: 1px solid #dddddd;
+        }
+      }
+    }
+  }
+
+  div.refund-area {
+    .refund-label {
+      font-weight: bold;
+      margin-top: 12px;
+    }
+  }
+}

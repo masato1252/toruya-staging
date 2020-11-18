@@ -392,6 +392,7 @@ ja:
         zip_code: 郵便番号
         address: 住所
         phone_number: 電話番号
+        website: Webサイト
       staff_account:
         user: ユーザー
         user_id: ユーザー
