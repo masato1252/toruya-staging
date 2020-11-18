@@ -6,8 +6,6 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
   hash :event, strip: false, default: nil
   object :social_user
 
-  delegate :link_to, to: :helpers
-
   def execute
     if event.present?
       case event["message"]["type"]
