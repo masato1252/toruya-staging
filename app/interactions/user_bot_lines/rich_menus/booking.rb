@@ -33,6 +33,19 @@ module UserBotLines
                 displayText: false
               )
             },
+            {
+              # 3
+              "bounds": {
+                "x": 0,
+                "y": 843,
+                "width": 1250,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.booking"),
+                url: LiffRouting.liff_url(:booking)
+              )
+            },
           ]
         }
 

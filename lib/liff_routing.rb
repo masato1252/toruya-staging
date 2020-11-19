@@ -33,4 +33,5 @@ class LiffRouting
   map :schedules, :lines_user_bot_schedules_url
   map :customers, :lines_user_bot_customers_url
   map :settings, :lines_user_bot_settings_url
+  map :booking, :lines_user_bot_booking_pages_url
 end

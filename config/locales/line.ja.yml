@@ -11,6 +11,7 @@ ja:
         reservations: "Reservations"
         customers: "Customers"
         settings: "Settings"
+        booking_pages: "Booking pages"
     page:
       user_sign_up:
         shop_info:
@@ -35,7 +36,7 @@ ja:
         incoming_reservations: 全ての予約
         online_booking: オンライン予約
         call: 電話をかける
-        book: 予約ページを表示,
+        book: 予約ページを表示
         switch_rich_menu: Switch
     bot:
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
