@@ -6,6 +6,7 @@ class Customers::Create < ActiveInteraction::Base
   string :customer_phonetic_first_name
   string :customer_phone_number
   string :customer_email
+  boolean :customer_reminder_permission, default: false
 
   def execute
     begin
@@ -16,7 +17,10 @@ class Customers::Create < ActiveInteraction::Base
         phonetic_first_name: customer_phonetic_first_name,
         email_types: "mobile",
         emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
-        phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
+        phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
+        emails_details: [{ type: "mobile", value: customer_email }],
+        phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+        reminder_permission: customer_reminder_permission
       }
 
       customer = user.customers.new(customer_info_hash)

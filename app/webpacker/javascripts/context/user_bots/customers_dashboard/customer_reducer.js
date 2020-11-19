@@ -10,6 +10,8 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+  let new_selected_customer, new_customers;
+
   switch(action.type) {
     case "RESET_CUSTOMERS":
       return {
@@ -29,9 +31,19 @@ export default (state = initialState, action) => {
         ...state,
         selected_customer: action.payload.customer,
       }
+    case "UPDATE_CUSTOMER":
+      const payload_customer = action.payload.customer
+      new_selected_customer = payload_customer.id == state.selected_customer.id ? payload_customer : state.selected_customer
+      new_customers = state.customers.map(customer => customer.id == payload_customer.id ? payload_customer : customer)
+
+      return {
+        ...state,
+        selected_customer: new_selected_customer,
+        customers: new_customers
+      }
     case "UPDATE_CUSTOMER_REMINDER_PERMISSION":
-      const new_selected_customer = {...state.selected_customer, reminderPermission: action.payload.reminderPermission}
-      const new_customers = state.customers.map(customer => customer.id == new_selected_customer.id ? new_selected_customer : customer)
+      new_selected_customer = {...state.selected_customer, reminderPermission: action.payload.reminderPermission}
+      new_customers = state.customers.map(customer => customer.id == new_selected_customer.id ? new_selected_customer : customer)
 
       return {
         ...state,

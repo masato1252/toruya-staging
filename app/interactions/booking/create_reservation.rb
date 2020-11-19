@@ -105,7 +105,8 @@ module Booking
             customer_phonetic_last_name: customer_phonetic_last_name,
             customer_phonetic_first_name: customer_phonetic_first_name,
             customer_phone_number: customer_phone_number,
-            customer_email: customer_email
+            customer_email: customer_email,
+            customer_reminder_permission: customer_reminder_permission
           )
 
           # XXX: Don't have to find a available reservation, since customer is invalid

@@ -110,6 +110,17 @@ const ReservationServices = {
 }
 
 const CustomerServices = {
+  details: (user_id, customer_id) => {
+    return request({
+      method: "GET",
+      url: Routes.details_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        user_id,
+        customer_id
+      },
+      responseType: "json"
+    })
+  },
   recent: (user_id, last_updated_id = null, last_updated_at = null) => {
     return request({
       method: "GET",

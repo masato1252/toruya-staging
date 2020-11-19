@@ -11,5 +11,13 @@ export default class SaveCustomerChangesController extends Controller {
 
   ajaxCompleteHandler = () => {
     $('#dummyModal2').modal('hide');
+    $('#dummyModal').modal('hide');
+
+    window.dispatchEvent(new CustomEvent("customer:data-changed", {
+      detail: {
+        customer_id: this.data.get("customerId")
+      },
+      bubbles: true
+    }));
   };
 }

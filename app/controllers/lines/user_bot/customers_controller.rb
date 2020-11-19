@@ -26,6 +26,13 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     # Notifications END
   end
 
+  def details
+    @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    authorize! :read, @customer
+
+    render template: "customers/show"
+  end
+
   def filter
     @customers = Customers::CharFilter.run(
       super_user: super_user,
