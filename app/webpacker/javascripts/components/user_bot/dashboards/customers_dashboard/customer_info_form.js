@@ -65,8 +65,8 @@ const UserBotCustomerInfoForm = () => {
       contact_group_id: selected_customer.contactGroupId,
       rank_id: selected_customer.rankId || props.ranks[0].value,
       address_details: _.merge(selected_customer.addressDetails, { zip_code: selected_customer.addressDetails?.zipCode }),
-      phone_numbers_details: selected_customer.phoneNumbersDetails,
-      emails_details: selected_customer.emailsDetails,
+      phone_numbers_details: selected_customer.phoneNumbersDetails || [],
+      emails_details: selected_customer.emailsDetails || [],
       custom_id: selected_customer.customId,
       birthday: selected_customer.birthday,
       memo: selected_customer.memo

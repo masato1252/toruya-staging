@@ -10,6 +10,7 @@ class Customers::RequestUpdate < ActiveInteraction::Base
     if customer.valid?
       customer.email_types = Array.wrap(customer.emails_details).map{|email| email["type"] }.uniq.sort.join(",")
       customer.save
+      customer
     end
   end
 
@@ -29,25 +30,33 @@ class Customers::RequestUpdate < ActiveInteraction::Base
 
   def assign_emails
     if new_customer_info.email
-      current_emails = customer.emails_details
+      if customer.emails_details.blank?
+        customer.emails_details = [{ type: "mobile", value: new_customer_info.email }]
+      else
+        current_emails = customer.emails_details
 
-      primary_email = current_emails[0]
-      primary_email["value"]= new_customer_info.email
-      current_emails[0] = primary_email
+        primary_email = current_emails[0]
+        primary_email["value"]= new_customer_info.email
+        current_emails[0] = primary_email
 
-      customer.emails_details = current_emails
+        customer.emails_details = current_emails
+      end
     end
   end
 
   def assign_phone_numbers
     if new_customer_info.phone_number
-      current_phones = customer.phone_numbers_details
+      if customer.phone_numbers_details.blank?
+        customer.phone_numbers_details = [{ type: "mobile", value: new_customer_info.phone_number }]
+      else
+        current_phones = customer.phone_numbers_details
 
-      primary_phone = current_phones[0]
-      primary_phone["value"] = new_customer_info.phone_number
-      current_phones[0] = primary_phone
+        primary_phone = current_phones[0]
+        primary_phone["value"] = new_customer_info.phone_number
+        current_phones[0] = primary_phone
 
-      customer.phone_numbers_details = current_phones
+        customer.phone_numbers_details = current_phones
+      end
     end
   end
 

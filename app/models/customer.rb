@@ -315,11 +315,11 @@ class Customer < ApplicationRecord
   end
 
   def main_email
-    emails_details.first
+    emails_details&.first
   end
 
   def main_phone
-    phone_numbers_details.first
+    phone_numbers_details&.first
   end
 
   def email
