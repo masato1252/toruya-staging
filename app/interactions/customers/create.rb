@@ -6,6 +6,7 @@ class Customers::Create < ActiveInteraction::Base
   string :customer_phonetic_first_name
   string :customer_phone_number
   string :customer_email
+  boolean :customer_reminder_permission, default: false
 
   def execute
     begin
@@ -16,14 +17,25 @@ class Customers::Create < ActiveInteraction::Base
         phonetic_first_name: customer_phonetic_first_name,
         email_types: "mobile",
         emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
-        phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }]
+        phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
+        emails_details: [{ type: "mobile", value: customer_email }],
+        phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+        reminder_permission: customer_reminder_permission
       }
 
       customer = user.customers.new(customer_info_hash)
       google_user = user.google_user
-      result = google_user.create_contact(customer.google_contact_attributes)
-      customer.google_contact_id = result.id
-      customer.google_uid = user.uid
+
+      if google_user
+        result = google_user.create_contact(customer.google_contact_attributes)
+        customer.google_contact_id = result.id
+        customer.google_uid = user.uid
+      end
+
+      if user.contact_groups.count == 1
+        customer.contact_group_id = user.contact_groups.first.id
+      end
+
       customer.save
     rescue => e
       Rollbar.error(e)

@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import CustomerBasicInfo from "./customer_basic_info";
 import CustomerNav from "./customer_nav";
@@ -8,9 +8,21 @@ import CustomerNav from "./customer_nav";
 import { CustomerServices } from "user_bot/api"
 
 const UserBotCustomerReservations = () =>{
-  const { selected_customer, reservations, dispatch, props } = useGlobalContext()
+  const { selected_customer, reservations, dispatch, props, updateCustomer } = useGlobalContext()
   let previousYear;
   let divider;
+
+  const customerDataChangedHandler = event => {
+    updateCustomer(event.detail.customer_id)
+  }
+
+  useEffect(() => {
+    window.addEventListener("customer:data-changed", customerDataChangedHandler);
+
+    return () => {
+      window.removeEventListener("customer:data-changed", customerDataChangedHandler)
+    }
+  }, [])
 
   const fetchReservations = async () => {
     const [error, response] = await CustomerServices.reservations({ user_id: props.super_user_id, customer_id: selected_customer.id })

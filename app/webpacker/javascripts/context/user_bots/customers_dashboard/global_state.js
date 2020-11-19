@@ -54,6 +54,17 @@ export const GlobalProvider = ({ props, children }) => {
     }
   }
 
+  const updateCustomer = async (customer_id) => {
+    const [error, response] = await CustomerServices.details(props.super_user_id, customer_id)
+
+    dispatch({
+      type: "UPDATE_CUSTOMER",
+      payload: {
+        customer: response.data.customer
+      }
+    })
+  }
+
   const recentCustomers = async () => {
     const [error, response] = await CustomerServices.recent(
       props.super_user_id,
@@ -170,6 +181,7 @@ export const GlobalProvider = ({ props, children }) => {
       ...state.customer_states,
       dispatch,
       getCustomers,
+      updateCustomer,
       searchCustomers,
       filterCustomers,
       selectCustomer

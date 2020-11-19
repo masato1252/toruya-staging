@@ -50,7 +50,7 @@
         class: "btn btn-yellow",
         remote: true,
         method: :patch,
-        data: { controller: "save-customer-changes" }
+        data: { controller: "save-customer-changes", save_customer_changes_customer_id: @reservation_customer.customer_id }
       %>
       <%= link_to t("action.ignore"), "#", class: "btn btn-gray", data: { dismiss: "modal" } %>
     </div>
