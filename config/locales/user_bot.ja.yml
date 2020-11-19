@@ -68,3 +68,8 @@ ja:
         plans:
           save: 選択する
           save_and_pay: 選択する
+      booking_pages:
+        index:
+          title: オンライン予約ページ
+          field_header: 予約ページ
+          line_status: LINE予約
