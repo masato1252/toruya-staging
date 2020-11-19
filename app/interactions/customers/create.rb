@@ -21,9 +21,17 @@ class Customers::Create < ActiveInteraction::Base
 
       customer = user.customers.new(customer_info_hash)
       google_user = user.google_user
-      result = google_user.create_contact(customer.google_contact_attributes)
-      customer.google_contact_id = result.id
-      customer.google_uid = user.uid
+
+      if google_user
+        result = google_user.create_contact(customer.google_contact_attributes)
+        customer.google_contact_id = result.id
+        customer.google_uid = user.uid
+      end
+
+      if user.contact_groups.count == 1
+        customer.contact_group_id = user.contact_groups.first.id
+      end
+
       customer.save
     rescue => e
       Rollbar.error(e)
