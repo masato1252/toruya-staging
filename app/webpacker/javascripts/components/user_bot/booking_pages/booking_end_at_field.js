@@ -9,14 +9,18 @@ import DatePickerField from "shared/date_picker_field"
 const BookingEndAtField = ({i18n, register, watch, control}) => {
   return (
     <>
-      <label className="field-row flex-start">
-        <input name="end_at_type" type="radio" value="now" ref={register({ required: true })} />
-        {i18n.sale_forever}
-      </label>
-      <label className="field-row flex-start">
-        <input name="end_at_type" type="radio" value="date" ref={register({ required: true })} />
-        {i18n.sale_on}
-      </label>
+      <div className="field-row">
+        <label>
+          <input name="end_at_type" type="radio" value="now" ref={register({ required: true })} />
+          {i18n.sale_forever}
+        </label>
+      </div>
+      <div className="field-row">
+        <label>
+          <input name="end_at_type" type="radio" value="date" ref={register({ required: true })} />
+          {i18n.sale_on}
+        </label>
+      </div>
       {watch("end_at_type") == "date" &&
         <div className="field-row flex-start">
           <Controller

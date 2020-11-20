@@ -47,14 +47,18 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
 
   return (
     <div>
-      <label className="field-row flex-start">
-        <input name="had_special_date" type="radio" value="false" ref={register({ required: true })} />
-        {i18n.default_available_dates_label}
-      </label>
-      <label className="field-row flex-start">
-        <input name="had_special_date" type="radio" value="true" ref={register({ required: true })} />
-        {i18n.special_date_label}
-      </label>
+      <div className="field-row">
+        <label>
+          <input name="had_special_date" type="radio" value="false" ref={register({ required: true })} />
+          {i18n.default_available_dates_label}
+        </label>
+      </div>
+      <div className="field-row">
+        <label>
+          <input name="had_special_date" type="radio" value="true" ref={register({ required: true })} />
+          {i18n.special_date_label}
+        </label>
+      </div>
       {watch("had_special_date") == "true" &&
         <>
           <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} />
