@@ -46,7 +46,7 @@
                     user_ability.cannot?(:create_shop_reservations_with_menu, option.shop)
               ) %>
 
-                <%= modal_link_to(site_routing_helper.create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: "BTNtarco") do %>
+                <%= modal_link_to(site_routing_helper.create_reservation_warnings_path(owner_id: option.owner.id, shop_id: option.shop.id), class: from_line_bot ? "btn btn-tweak btn-tarco btn-big btn-extend" : "BTNtarco") do %>
                   <i class="fa fa-calendar-plus fa-2x"></i>
                   <span class="new-shop-reservation"><%= option.shop.display_name %></span>
                 <% end %>

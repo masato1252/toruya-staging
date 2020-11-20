@@ -1,14 +1,10 @@
 <div class="booking-pages form with-top-bar">
-  <div class="top-navigation-bar">
-    <i></i>
-    <span><%= I18n.t("user_bot.dashboards.booking_pages.index.title") %></span>
-    <i></i>
-  </div>
+  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.booking_pages.index.title") %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.booking_pages.index.field_header") %></div>
   <div class="booking-pages-list">
     <% @booking_pages.each do |booking_page| %>
-      <%= link_to lines_user_bot_booking_page_path(booking_page), class: "field-row" do %>
+      <%= link_to lines_user_bot_booking_page_path(booking_page), class: "field-row with-next-arrow" do %>
         <div>
           <h3><%= booking_page.title %></h3>
           <div class="desc"><%= booking_page.booking_options.pluck(:name).join(", ")%></div>

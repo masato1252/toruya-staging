@@ -1,0 +1,109 @@
+<div class="booking-page-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_booking_pages_path, title: @booking_page.name %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("settings.booking_page.form.name_header") %></div>
+  <div class="field-header"><%= I18n.t("settings.booking_page.form.page_name") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :name), title: @booking_page.name %>
+
+  <div class="field-header" id="title"><%= I18n.t("settings.booking_page.form.title") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :title), title: @booking_page.title %>
+
+  <div class="field-header" id="greeting"><%= I18n.t("settings.booking_page.form.greeting") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :greeting), title: @booking_page.greeting %>
+
+  <div class="field-header" id="shop_id"><%= I18n.t("settings.booking_page.form.shop_header") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :shop_id), title: @booking_page.shop.name %>
+
+  <div class="field-group-header" id="new_option"><%= I18n.t("settings.booking_page.form.booking_option_header") %></div>
+  <% @booking_page.booking_options.includes(:menus).each do |booking_option| %>
+    <div class="field-row option-row">
+      <div class="option-info">
+        <%= booking_option.name %><br />
+        <div class="desc">
+          <%= booking_option.menus.pluck(:name).join(", ") %><br />
+          <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>
+        </div>
+      </div>
+      <div class="option-action">
+        <%= link_to delete_option_lines_user_bot_booking_page_path(@booking_page, booking_option), class: "btn btn-orange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message")  } do %>
+          <i class="fa fa-minus"></i> <%= I18n.t("action.delete") %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="action-block">
+    <%= link_to edit_lines_user_bot_booking_page_path(@booking_page, attribute: :new_option), class: "btn btn-yellow" do %>
+      <i class="fa fa-plus"></i> <span><%= I18n.t("settings.booking_page.form.add_new_option") %></span>
+    <% end %>
+  </div>
+
+  <div class="field-group-header" id="special_dates"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_datetime") %></div>
+  <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_dates_available_booking_date") %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :special_dates),
+    title: @booking_page.only_specail_dates_booking? ? I18n.t("settings.booking_page.form.special_date_label") : I18n.t("settings.booking_page.form.default_available_dates_label")  %>
+  <% @booking_page.booking_page_special_dates.future.each do |date| %>
+    <%= render "lines/user_bot/field_row", title: "#{I18n.l(date.start_at, format: :long_date_with_wday)} ~ #{I18n.l(date.end_at, format: :time_only)}" %>
+  <% end %>
+
+  <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :interval), title: "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
+
+  <div class="field-group-header" id="booking_limit_day"><%= I18n.t("settings.booking_page.form.booking_limit_day_header") %></div>
+  <div class="field-header"><%= I18n.t("settings.booking_page.form.booking_limit_day_period") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :booking_limit_day), title: "#{@booking_page.booking_limit_day}#{I18n.t("settings.booking_page.form.booking_limit_day_before")}" %>
+
+  <div class="field-header" id="start_at"><%= I18n.t("settings.booking_page.form.sale_start") %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :start_at),
+    title: @booking_page.start_at ? I18n.t("settings.booking_page.form.sale_on") : I18n.t("settings.booking_page.form.sale_now")
+  %>
+  <% if @booking_page.start_at %>
+    <%= render "lines/user_bot/field_row", title: I18n.l(@booking_page.start_at, format: :long_date_with_wday) %>
+  <% end %>
+
+  <div class="field-header" id="end_at"><%= I18n.t("settings.booking_page.form.sale_end") %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :end_at),
+    title: @booking_page.end_at ? I18n.t("settings.booking_page.form.sale_on") : I18n.t("settings.booking_page.form.sale_forever")
+  %>
+  <% if @booking_page.end_at %>
+    <%= render "lines/user_bot/field_row", title: I18n.l(@booking_page.end_at, format: :long_date_with_wday) %>
+  <% end %>
+
+  <div class="field-group-header" id="overbooking_restriction"><%= I18n.t("settings.booking_page.form.overbooking") %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :overbooking_restriction),
+    title: @booking_page.overbooking_restriction ? I18n.t("settings.booking_page.form.not_allow_overbooking_label") : I18n.t("settings.booking_page.form.allow_overbooking_label")
+  %>
+
+  <div class="field-group-header" id="line_sharing"><%= I18n.t("settings.booking_page.form.line_sharing") %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :line_sharing),
+    title: @booking_page.line_sharing ? I18n.t("settings.booking_page.form.share_in_bot") : I18n.t("settings.booking_page.form.not_share_in_bot")
+  %>
+
+  <div class="field-group-header" id="note"><%= I18n.t("settings.booking_page.form.note_label") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :note), title: @booking_page.note %>
+
+  <div class="field-group-header" id="draft"><%= I18n.t("settings.booking_page.form.privacy_status") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :draft), title: @booking_page.draft ? I18n.t("settings.booking_page.form.private") : I18n.t("settings.booking_page.form.public") %>
+
+  <div class="action-block">
+    <%= link_to lines_user_bot_booking_page_path(@booking_page), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
+      <i class="fa fa-minus"></i> <span><%= I18n.t("settings.booking_page.form.delete_page") %></span>
+    <% end %>
+  </div>
+
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@booking_page.updated_at, format: :long_date) %></span>
+
+    <% if @booking_page.booking_options.exists? %>
+      <%= modal_link_to preview_modal_lines_user_bot_booking_page_path(@booking_page), class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+        <i class="fa fa-share-square fa-2x"></i>
+        <div class="word"><%= I18n.t("action.share") %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

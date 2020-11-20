@@ -1,11 +1,5 @@
 <div class="settings-dashboard form with-top-bar">
-  <div class="top-navigation-bar">
-    <%= link_to lines_user_bot_settings_path do %>
-      <i class="fa fa-angle-left fa-2x"></i>
-    <% end %>
-    <span><%= t("settings.profile.company_info") %></span>
-    <i></i>
-  </div>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("settings.profile.company_info") %>
 
   <div class="field-header"><%= Profile.human_attribute_name(:company_name) %></div>
   <%= link_to "#", class: "field-row" do %>

@@ -98,6 +98,12 @@ select {
 
 textarea {
   min-height: 150px;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
 }
 
 .centerize {
@@ -139,6 +145,10 @@ a {
   width: 100%;
   text-align: center;
   font-size: 14px;
+  color: $gray11;
+}
+
+.hint {
   color: $gray11;
 }
 
@@ -289,6 +299,11 @@ a {
   height: $bar-height;
   line-height: $bar-height;
   z-index: 998;
+  box-shadow: 0px -3px 6px #00000029;
+
+  &.sticky {
+    position: sticky;
+  }
 
   &.center {
     display: flex;
@@ -338,4 +353,10 @@ a {
       }
     }
   }
+}
+
+.dotdotdot {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

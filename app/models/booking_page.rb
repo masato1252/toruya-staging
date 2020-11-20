@@ -30,7 +30,7 @@
 # When booking page limit day is 0, that means you could book today
 class BookingPage < ApplicationRecord
   include DateTimeAccessor
-  date_time_accessor :start_at, :end_at
+  date_time_accessor :start_at, :end_at, accessor_only: true
 
   has_many :booking_page_options
   has_many :booking_options, through: :booking_page_options
@@ -61,5 +61,9 @@ class BookingPage < ApplicationRecord
 
   def ended?
     (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at)
+  end
+
+  def only_specail_dates_booking?
+    booking_page_special_dates.exists?
   end
 end
