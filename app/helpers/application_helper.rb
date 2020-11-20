@@ -79,4 +79,12 @@ module ApplicationHelper
 
     content_tag(:template, nil, data: data)
   end
+
+  def translation_resuce
+    begin
+      yield
+    rescue
+      ""
+    end
+  end
 end

@@ -195,6 +195,15 @@ const SelectOptions = ({ options }) => {
   </>
 }
 
+const CiricleButtonWithWord = ({onHandle, icon, word}) => (
+  <button
+    className="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word"
+    onClick={onHandle}>
+    {icon}
+    <div className="word">{word}</div>
+  </button>
+)
+
 export {
   Input,
   InputRow,
@@ -210,5 +219,6 @@ export {
   BottomNavigationBar,
   InputWithEnter,
   NotificationMessages,
-  SelectOptions
+  SelectOptions,
+  CiricleButtonWithWord
 };

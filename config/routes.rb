@@ -96,7 +96,12 @@ Rails.application.routes.draw do
 
       resources :booking_pages do
         collection do
-          get "/:social_service_user_id", action: "index"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+
+        member do
+          delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
+          get :preview_modal
         end
       end
 

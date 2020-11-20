@@ -40,7 +40,7 @@
   <%= link_to lines_user_bot_settings_plans_path, class: "field-row" do %>
     <div>
       <%= t("settings.plans.plan_info.plan_member", plan_name: current_user.member_plan_name) %><br />
-      <div class="subscription-desc">
+      <div class="desc">
         <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
         <% if current_user.trial_member? %>
           <%= l(current_user.created_at.advance(months: 3).to_date) %>

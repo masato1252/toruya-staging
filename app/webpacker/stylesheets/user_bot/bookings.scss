@@ -9,3 +9,84 @@
     }
   }
 }
+
+.booking-page-show {
+  .action-block {
+    text-align: center;
+    padding: 10px 0 20px;
+  }
+
+  .with-format {
+    white-space: pre-wrap;
+  }
+}
+
+.booking-option-field {
+  border: 1px solid $gray9;
+  border-radius: 6px;
+  display: inline-block;
+  width: 320px;
+  font-size: 90%;
+
+  .booking-option-info {
+    padding: 10px 10px 6px 10px;
+
+    .booking-option-name {
+      font-size: 18px;
+      color: $black;
+      margin-bottom: 3px;
+    }
+  }
+
+  .booking-option-row {
+    border-top: 1px solid $gray9;
+    padding: 6px 10px 6px 10px;
+    position: relative;
+    white-space: pre-wrap;
+  }
+}
+
+.booking-preview-modal {
+  .header {
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+    .header-title-part {
+      h1 {
+        margin: 20px 0 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .preview-mark {
+        background-color: $pink-background;
+        border: 1px solid $pink-border;
+        color: $pink-color;
+        font-size: 10px;
+        padding: 4px 6px;
+        height: 24px;
+      }
+    }
+
+    .page-title {
+      font-size: 24px;
+    }
+
+    .logo {
+      width: 130px;
+      height: auto;
+      max-height: 45px;
+    }
+
+    .greeting {
+      margin: 12px 0 20px;
+      white-space: pre-wrap;
+    }
+  }
+
+  .others-options {
+    margin-top: 10px;
+    text-align: center;
+    color: $gray12;
+  }
+}
