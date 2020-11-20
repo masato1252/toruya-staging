@@ -13,8 +13,8 @@ Rails.application.routes.draw do
 
     scope module: :user_bot, path: :user_bot, as: :user_bot do
       scope module: :users do
-        get "/connect(/:social_service_user_id)", as: :connect_user, action: "connect"
-        get "/sign_up(/:social_service_user_id)", as: :sign_up, action: "sign_up"
+        get "/connect(/social_service_user_id/:social_service_user_id)", as: :connect_user, action: "connect"
+        get "/sign_up(/social_service_user_id/:social_service_user_id)", as: :sign_up, action: "sign_up"
         get :generate_code
         get :identify_code
         post :create_user
@@ -25,14 +25,14 @@ Rails.application.routes.draw do
       resources :schedules, only: [:index] do
         collection do
           get ":reservation_date(/r/:reservation_id)", to: "schedules#index", constraints: { reservation_date: /\d{4}-\d{1,2}-\d{1,2}/ }, as: :date
-          get "/:social_service_user_id", action: "index"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
 
       resources :calendars, only: [] do
         collection do
           get "personal_working_schedule"
-          get "/:social_service_user_id", action: "index"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
 
@@ -47,7 +47,7 @@ Rails.application.routes.draw do
           post :toggle_reminder_premission
           get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
           patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
-          get "/:social_service_user_id", action: "index"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
 
@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
       resources :settings, only: [:index] do
         collection do
-          get "/:social_service_user_id", action: "index"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
 
