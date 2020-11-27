@@ -5,6 +5,10 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     @booking_options = super_user.booking_options.includes(:menu_relations).order("id")
   end
 
+  def show
+    @booking_option = super_user.booking_options.find(params[:id])
+  end
+
   # def new
   #   @booking_option = super_user.booking_options.new
   #   @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
