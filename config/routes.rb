@@ -105,6 +105,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :booking_options do
+        collection do
+          get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+      end
+
       resources :shops, only: [] do
         resources :reservations, except: [:index, :edit, :new] do
           collection do
