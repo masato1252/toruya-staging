@@ -449,16 +449,24 @@ ja:
       new_button: 新規作成
       form:
         price_name: 価格名
+        name_title: 価格名
         price_name_hint: あなたが予約価格を管理する際に使用する名前です。
+        name_hint: あなたが予約価格を管理する際に使用する名前です。
         display_name: 表示名
+        display_name_title: 表示名
         display_name_hint: あなたのお客様がご予約の際にメニューとして表示される名前です。
         menu_for_sale_label: 販売メニュー
+        menu_restrict_order_label: メニュー順序
+        menu_restrict_order_title: メニュー順序
         menu_restrict_dont_need_order: メニュー順序にこだわらず対応できるスタッフを割り振る。（推奨）
         menu_restrict_order: 設定されたメニュー順序で対応できるスタッフを割り振る。
+        new_menu: メニューを追加
+        new_menu_title: メニューを追加
         time_span_label: 予約時間
         total_time: 合計時間
         reservation_interval: 予約の前後
         price_label: 販売予定価格
+        price_title: 販売予定価格
         price: 定価
         tax_label: 税表示
         tax_include: 内税
@@ -468,9 +476,13 @@ ja:
         sale_on: 指定日
         sale_forever: 終了しない
         sale_start: 販売開始
+        start_at_title: 販売開始
         sale_end: 販売終了
+        end_at_title: 販売終了
         note_label: 説明・注意事項
+        memo_title: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
+        delete_option: 価格を削除
         form_errors:
           enough_time_for_menu: 設定メニューに十分な長さを設定してください。
           reached_the_menus_limit: メニューは２つまで設定できます

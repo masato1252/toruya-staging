@@ -1,6 +1,6 @@
 "use strict"
 
-import React, { useState } from "react";
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import _ from "lodash";

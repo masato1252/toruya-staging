@@ -59,7 +59,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     if booking_page.destroy
       redirect_to lines_user_bot_booking_pages_path(super_user), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to settings_user_booking_pages_path(super_user)
+      redirect_to lines_user_bot_booking_pages_path(super_user)
     end
   end
 

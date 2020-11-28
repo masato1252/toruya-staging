@@ -61,7 +61,7 @@ module BookingPages
             end
           end
         when "new_option"
-          booking_page.update(booking_option_ids: booking_page.booking_options.pluck(:id).push(new_option).uniq )
+          booking_page.update(booking_option_ids: booking_page.booking_option_ids.push(new_option).uniq )
         when "options"
           booking_page.update(booking_option_ids: booking_options&.values&.pluck(:value) )
         when "start_at"

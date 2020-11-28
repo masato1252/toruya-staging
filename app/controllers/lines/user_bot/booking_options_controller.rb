@@ -7,6 +7,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
 
   def show
     @booking_option = super_user.booking_options.find(params[:id])
+    @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
   end
 
   # def new
@@ -32,35 +33,32 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   #   end
   # end
   #
-  # def edit
-  #   @booking_option = super_user.booking_options.find(params[:id])
-  #   @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
-  #
-  #   render :form
-  # end
-  #
-  # def update
-  #   @booking_option = super_user.booking_options.find(params[:id])
-  #
-  #   outcome = BookingOptions::Save.run(booking_option: @booking_option, attrs: params[:booking_option].permit!.to_h)
-  #
-  #   if outcome.valid?
-  #     redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
-  #   else
-  #     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
-  #     render :form
-  #   end
-  # end
-  #
-  # def destroy
-  #   booking_option = super_user.booking_options.find(params[:id])
-  #
-  #   if booking_option.destroy
-  #     redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.delete_successfully_message")
-  #   else
-  #     redirect_to settings_user_booking_options_path(super_user)
-  #   end
-  # end
+  def edit
+    @booking_option = super_user.booking_options.find(params[:id])
+    @attribute = params[:attribute]
+    @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
+  end
+
+  def update
+    @booking_option = super_user.booking_options.find(params[:id])
+
+    outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+
+    render json: {
+      status: "successful",
+      redirect_to: lines_user_bot_booking_option_path(@booking_option.id, anchor: params[:attribute])
+    }
+  end
+
+  def destroy
+    booking_option = super_user.booking_options.find(params[:id])
+
+    if booking_option.destroy
+      redirect_to lines_user_bot_booking_options_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    else
+      redirect_to lines_user_bot_booking_options_path(super_user)
+    end
+  end
 
   private
 

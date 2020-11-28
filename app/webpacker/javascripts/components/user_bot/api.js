@@ -248,11 +248,26 @@ const BookingPageServices = {
   },
 }
 
+const BookingOptionServices = {
+  update: ({booking_option_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_booking_option_path(booking_option_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
   ReservationServices,
   CustomerServices,
   PaymentServices,
-  BookingPageServices
+  BookingPageServices,
+  BookingOptionServices
 }
