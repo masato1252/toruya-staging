@@ -11,6 +11,9 @@
         <div class="header-title-part">
           <h1>
             <%= shop_logo(@booking_page.shop, 130) || @booking_page.shop.name %>
+            <span class="preview-mark">
+              <%= I18n.t("common.preview") %>
+            </span>
           </h1>
           <h2 class="page-title"><%= @booking_page.title %></h2>
         </div>
