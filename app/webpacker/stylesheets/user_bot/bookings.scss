@@ -24,6 +24,22 @@
   }
 }
 
+.menu-block {
+  width: 77% !important;
+  display: flex;
+  justify-content: inherit;
+  align-items: center;
+  color: $black;
+
+  .drag-handler {
+    padding-left: 0;
+  }
+
+  .menu-info {
+    display: flex;
+  }
+}
+
 .booking-option-field {
   border: 1px solid $gray9;
   border-radius: 6px;

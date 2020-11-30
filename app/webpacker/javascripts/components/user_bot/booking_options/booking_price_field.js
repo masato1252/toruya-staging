@@ -10,18 +10,14 @@ const BookingPriceField = ({i18n, register}) => {
         <input name="amount_currency" type="hidden" defaultValue="JPY" ref={register({ required: true })} />
       </div>
       <div className="field-header">{i18n.tax_label}</div>
-      <div className="field-row">
-        <label>
-          <input name="tax_include" type="radio" value="true" ref={register({ required: true })} />
-          {i18n.tax_include}
-        </label>
-      </div>
-      <div className="field-row">
-        <label>
-          <input name="tax_include" type="radio" value="false" ref={register({ required: true })} />
-          {i18n.tax_excluded}
-        </label>
-      </div>
+      <label className="field-row flex-start">
+        <input name="tax_include" type="radio" value="true" ref={register({ required: true })} />
+        {i18n.tax_include}
+      </label>
+      <label className="field-row flex-start">
+        <input name="tax_include" type="radio" value="false" ref={register({ required: true })} />
+        {i18n.tax_excluded}
+      </label>
     </>
   )
 }

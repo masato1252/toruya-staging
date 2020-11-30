@@ -462,6 +462,7 @@ ja:
         menu_restrict_order: 設定されたメニュー順序で対応できるスタッフを割り振る。
         new_menu: メニューを追加
         new_menu_title: メニューを追加
+        menu_required_time_title: 所要時間
         time_span_label: 予約時間
         total_time: 合計時間
         reservation_interval: 予約の前後

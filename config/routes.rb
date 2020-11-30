@@ -109,6 +109,11 @@ Rails.application.routes.draw do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
+
+        member do
+          delete "/menus/:menu_id", action: "delete_menu", as: :delete_menu
+          patch :reorder_menu_priority
+        end
       end
 
       resources :shops, only: [] do

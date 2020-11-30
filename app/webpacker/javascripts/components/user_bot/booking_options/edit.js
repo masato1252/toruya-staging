@@ -19,6 +19,8 @@ const BookingOptionEdit =({props}) => {
       ...props.booking_option,
       menu_restrict_order: String(props.booking_option.menu_restrict_order),
       tax_include: String(props.booking_option.tax_include),
+      menu_required_time: props.selected_menu?.required_time,
+      menu_id: props.selected_menu?.menu_id
     }
   });
 
@@ -59,6 +61,20 @@ const BookingOptionEdit =({props}) => {
           <div className="field-row column-direction">
             <textarea autoFocus={true} ref={register} name={props.attribute} placeholder={i18n.note_hint} rows="4" colos="40" className="extend" />
           </div>
+        );
+        break;
+      case "menu_required_time":
+        return (
+          <>
+            <div className="field-row">
+              {props.selected_menu?.label}
+            </div>
+            <div className="field-row flex-start">
+              <input ref={register({ required: true })} name="menu_required_time" type="tel" />
+              <input ref={register({ required: true })} name="menu_id" type="hidden" />
+              {i18n.minute}
+            </div>
+          </>
         );
         break;
       case "new_menu":

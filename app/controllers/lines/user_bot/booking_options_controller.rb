@@ -36,6 +36,12 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def edit
     @booking_option = super_user.booking_options.find(params[:id])
     @attribute = params[:attribute]
+    option_menu = @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])
+
+    if option_menu
+      @selected_menu = option_menu.attributes.slice("priority", "required_time", "menu_id").merge!(label: option_menu.menu.name)
+    end
+
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
   end
 
@@ -48,6 +54,23 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
       status: "successful",
       redirect_to: lines_user_bot_booking_option_path(@booking_option.id, anchor: params[:attribute])
     }
+  end
+
+  def reorder_menu_priority
+    @booking_option = super_user.booking_options.find(params[:id])
+
+    outcome = BookingOptions::Update.run(booking_option: @booking_option, attrs: params.permit!.to_h, update_attribute: "menus_priority")
+
+    head :ok
+  end
+
+  def delete_menu
+    @booking_option = super_user.booking_options.find(params[:id])
+
+    @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id]).destroy
+    @booking_option.update(minutes: @booking_option.booking_option_menus.sum(:required_time))
+
+    redirect_to lines_user_bot_booking_option_path(@booking_option.id, anchor: "new_menu")
   end
 
   def destroy

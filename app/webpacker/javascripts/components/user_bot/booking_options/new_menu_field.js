@@ -9,8 +9,8 @@ const NewMenuField = ({i18n, register, watch, menu_group_options, control, setVa
     <>
       <Controller
         control={control}
-        name="new_menu"
-        defaultValue={watch("new_menu")}
+        name="new_menu_id"
+        defaultValue={watch("new_menu_id")}
         render={({ onChange, value }) => (
           <ReactSelect
             placeholder={i18n.select_a_menu}
