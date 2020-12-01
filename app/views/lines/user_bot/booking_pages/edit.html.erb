@@ -20,14 +20,16 @@
         }
       end
     ),
-    title: t("settings.booking_page.form.#{@attribute}"),
     attribute: @attribute,
-    hint: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_hint", raise: true) },
     shop_options: shop_options(super_user.shops.order("id")),
     i18n: {
     }.merge!([
       t("settings.booking_page.form"),
       t("action").slice(:save),
+      {
+        title: t("settings.booking_page.form.#{@attribute}"),
+        hint: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_hint", raise: true) },
+      }
     ].inject(:merge!))
   }
 },

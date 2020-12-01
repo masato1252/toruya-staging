@@ -2,7 +2,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   before_action :authorize_booking_option
 
   def index
-    @booking_options = super_user.booking_options.includes(:menu_relations).order("id")
+    @booking_options = super_user.booking_options.includes(:menus).order("id")
   end
 
   def show
@@ -39,7 +39,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     option_menu = @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])
 
     if option_menu
-      @selected_menu = option_menu.attributes.slice("priority", "required_time", "menu_id").merge!(label: option_menu.menu.name)
+      @editing_menu = option_menu.attributes.slice("priority", "required_time", "menu_id").merge!(label: option_menu.menu.name)
     end
 
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)

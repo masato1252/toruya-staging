@@ -54,7 +54,7 @@ const BookingPageEdit =({props}) => {
             <div className="field-row">
               <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
             </div>
-            <div className="field-row hint"> {props.hint} </div>
+            <div className="field-row hint"> {i18n.hint} </div>
           </>
         );
         break
@@ -116,9 +116,9 @@ const BookingPageEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={props.title}
+        title={i18n.title}
       />
-      <div className="field-header">{props.title}</div>
+      <div className="field-header">{i18n.title}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize">
         <span></span>

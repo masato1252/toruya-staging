@@ -1,0 +1,143 @@
+require "rails_helper"
+
+RSpec.describe BookingOptions::Update do
+  let(:user) { FactoryBot.create(:user) }
+  let(:booking_option) { FactoryBot.create(:booking_option, user: user) }
+  let(:menu) { FactoryBot.create(:menu, user: user) }
+  let(:args) do
+    {
+      booking_option: booking_option,
+      update_attribute: update_attribute,
+      attrs: {}
+    }
+  end
+  let(:outcome) { described_class.run(args) }
+
+
+  RSpec.shared_examples "updates normal attribute" do |attribute, value|
+    let(:update_attribute) { attribute }
+    before { args[:attrs][attribute] = value }
+
+    it "updates #{attribute} to #{value}" do
+      outcome
+
+      expect(booking_option.public_send(attribute)).to eq(value)
+    end
+  end
+
+  describe "#execute" do
+    context "update_attribute is name" do
+      it_behaves_like "updates normal attribute", "name", "foo"
+    end
+
+    context "update_attribute is display_name" do
+      it_behaves_like "updates normal attribute", "display_name", "foo"
+    end
+
+    context "update_attribute is menu_restrict_order" do
+      it_behaves_like "updates normal attribute", "menu_restrict_order", true
+      it_behaves_like "updates normal attribute", "menu_restrict_order", false
+    end
+
+    context "update_attribute is memo" do
+      it_behaves_like "updates normal attribute", "memo", "foo"
+    end
+
+    context "update_attribute is new_menu" do
+      let(:update_attribute) { "new_menu" }
+      let(:new_menu) { FactoryBot.create(:menu, user: user) }
+      before do
+        args[:attrs][:new_menu_id] = new_menu.id
+        args[:attrs][:new_menu_required_time] = 200
+      end
+
+      it "creates a new booking_option_menus" do
+        outcome
+
+        last_booking_menu = booking_option.booking_option_menus.last
+
+        expect(last_booking_menu.menu_id).to eq(new_menu.id)
+        expect(last_booking_menu.required_time).to eq(200)
+        expect(last_booking_menu.priority).to eq(booking_option.booking_option_menus.count - 1)
+      end
+    end
+
+    context "update_attribute is start_at" do
+      let(:update_attribute) { "start_at" }
+      before do
+        args[:attrs][:start_at_date_part] = "2020-12-01"
+        args[:attrs][:start_at_time_part] = "16:00"
+      end
+
+      it "updates start_at" do
+        outcome
+
+        expect(booking_option.start_at).to eq(Time.zone.local(2020, 12, 1, 16, 00))
+      end
+    end
+
+    context "update_attribute is end_at" do
+      let(:update_attribute) { "end_at" }
+      before do
+        args[:attrs][:end_at_date_part] = "2020-12-01"
+        args[:attrs][:end_at_time_part] = "16:00"
+      end
+
+      it "updates end_at" do
+        outcome
+
+        expect(booking_option.end_at).to eq(Time.zone.local(2020, 12, 1, 16, 00))
+      end
+    end
+
+    context "update_attribute is price" do
+      let(:update_attribute) { "price" }
+      before do
+        args[:attrs][:amount_cents] = 100
+        args[:attrs][:amount_currency] = "JPY"
+        args[:attrs][:tax_include] = true
+      end
+
+      it "updates price" do
+        outcome
+
+        expect(booking_option.amount).to eq(Money.new(100, "JPY"))
+        expect(booking_option.tax_include).to eq(true)
+      end
+    end
+
+    context "update_attribute is menus_priority" do
+      let(:update_attribute) { "menus_priority" }
+      let(:booking_option) { FactoryBot.create(:booking_option, :multiple_menus, user: user) }
+      let(:new_menu_ids_order) { booking_option.menu_ids.reverse }
+
+      before do
+        args[:attrs][:sorted_menus_ids] = new_menu_ids_order
+      end
+
+      it "updates menus order" do
+        outcome
+
+        expect(booking_option.booking_option_menus.order("priority").pluck(:menu_id)).to eq(new_menu_ids_order)
+      end
+    end
+
+    context "update_attribute is menu_required_time" do
+      let(:update_attribute) { "menu_required_time" }
+
+      before do
+        args[:attrs][:menu_id] = booking_option.menus.first.id
+        args[:attrs][:menu_required_time] = 200
+      end
+
+      it "updates menu required_time" do
+        outcome
+
+        booking_option_menu = booking_option.booking_option_menus.first
+
+        expect(booking_option_menu.menu_id).to eq(booking_option.menus.first.id)
+        expect(booking_option_menu.required_time).to eq(200)
+      end
+    end
+  end
+end

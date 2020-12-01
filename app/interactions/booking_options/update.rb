@@ -6,16 +6,18 @@ module BookingOptions
     hash :attrs, default: nil do
       string :name, default: nil
       string :display_name, default: nil
-      integer :minutes, default: nil
+      string :memo, default: nil
+      boolean :menu_restrict_order, default: false
+
       integer :amount_cents, default: nil
       string :amount_currency, default: "JPY"
-      boolean :menu_restrict_order, default: false
       boolean :tax_include, default: false
+
       string :start_at_date_part, default: nil
       string :start_at_time_part, default: nil
+
       string :end_at_date_part, default: nil
       string :end_at_time_part, default: nil
-      string :memo, default: nil
 
       # For adding a new menu
       integer :new_menu_id, default: nil
