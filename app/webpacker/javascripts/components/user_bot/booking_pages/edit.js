@@ -54,7 +54,7 @@ const BookingPageEdit =({props}) => {
             <div className="field-row">
               <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
             </div>
-            <div className="field-row hint"> {i18n.hint} </div>
+            <div className="field-row hint no-border"> {i18n.hint} </div>
           </>
         );
         break
@@ -120,7 +120,7 @@ const BookingPageEdit =({props}) => {
       />
       <div className="field-header">{i18n.title}</div>
       {renderCorrespondField()}
-      <BottomNavigationBar klassName="centerize">
+      <BottomNavigationBar klassName="centerize transparent">
         <span></span>
         <CiricleButtonWithWord
           onHandle={handleSubmit(onSubmit)}

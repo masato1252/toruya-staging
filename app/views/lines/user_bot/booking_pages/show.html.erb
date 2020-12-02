@@ -57,20 +57,14 @@
   <div class="field-header" id="start_at"><%= I18n.t("settings.booking_page.form.sale_start") %></div>
   <%= render "lines/user_bot/field_row",
     path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :start_at),
-    title: @booking_page.start_at ? I18n.t("settings.booking_page.form.sale_on") : I18n.t("settings.booking_page.form.sale_now")
+    title: @booking_page.start_at ? I18n.l(@booking_page.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
   %>
-  <% if @booking_page.start_at %>
-    <%= render "lines/user_bot/field_row", title: I18n.l(@booking_page.start_at, format: :long_date_with_wday) %>
-  <% end %>
 
   <div class="field-header" id="end_at"><%= I18n.t("settings.booking_page.form.sale_end") %></div>
   <%= render "lines/user_bot/field_row",
     path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :end_at),
-    title: @booking_page.end_at ? I18n.t("settings.booking_page.form.sale_on") : I18n.t("settings.booking_page.form.sale_forever")
+    title: @booking_page.end_at ? I18n.l(@booking_page.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
   %>
-  <% if @booking_page.end_at %>
-    <%= render "lines/user_bot/field_row", title: I18n.l(@booking_page.end_at, format: :long_date_with_wday) %>
-  <% end %>
 
   <div class="field-group-header" id="overbooking_restriction"><%= I18n.t("settings.booking_page.form.overbooking") %></div>
   <%= render "lines/user_bot/field_row",

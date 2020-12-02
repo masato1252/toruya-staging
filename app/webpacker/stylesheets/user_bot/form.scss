@@ -2,12 +2,15 @@
   .field-group-header {
     background-color: $gray4;
     padding: 28px 7px 7px 7px;
+    font-size: $normal-font-size;
   }
 
   .field-header {
     padding: 7px;
-    background-color: $gray5;
+    background-color: $gray2;
+    border: 1px solid $gray-border-1;
     display: flex;
+    font-size: $normal-font-size;
 
     &.space-between {
       justify-content: space-between;
@@ -41,6 +44,30 @@
 
   &.flex-start {
     justify-content: flex-start;
+  }
+
+  &.no-border {
+    border-bottom: 0;
+  }
+
+  &.date-row {
+    padding: 12px 2px;
+  }
+
+  &.radio-row {
+    align-items: baseline;
+
+    > :first-child {
+      flex: 1;
+    }
+
+    > :nth-child(2) {
+      flex: 20;
+    }
+  }
+
+  &.hint {
+    font-size: 14px;
   }
 
   .desc {

@@ -7,10 +7,10 @@ import moment from "moment-timezone";
 import useDatetimeFieldsRow from "shared/use_datetime_fields_row"
 import DatePickerField from "shared/date_picker_field"
 
-const SpecialDatesFields = ({special_dates_fields, register, control, setValue}) => {
+const SpecialDatesFields = ({special_dates_fields, register, control, setValue, i18n}) => {
   return (
     special_dates_fields.fields.map((field, index) => (
-      <div key={field.id} className="field-row flex-start">
+      <div key={field.id} className="field-row flex-start date-row">
         <Controller
           control={control}
           name={`special_dates[${index}].start_at_date_part`}
@@ -31,6 +31,7 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue})
         <input type="time" name={`special_dates[${index}].end_at_time_part`} ref={register({ required: true })} defaultValue={field.end_at_time_part} />
         <button className="btn btn-orange" onClick={() => special_dates_fields.remove(index)}>
           <i className="fa fa-minus"></i>
+          <span>{i18n.delete}</span>
         </button>
       </div>
     ))
@@ -51,14 +52,13 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
         <input name="had_special_date" type="radio" value="false" ref={register({ required: true })} />
         {i18n.default_available_dates_label}
       </label>
-      <label className="field-row flex-start">
+      <label className="field-row flex-start no-border">
         <input name="had_special_date" type="radio" value="true" ref={register({ required: true })} />
         {i18n.special_date_label}
       </label>
       {watch("had_special_date") == "true" &&
         <>
-          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} />
-          <div className="field-row">
+          <div className="field-row date-row flex-start">
             {DateTimeFieldsRow}
             <button className="btn btn-yellow" onClick={() => {
               if (
@@ -69,10 +69,12 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
               ) {
                 special_dates_fields.append(newSpecialDatePeriod)
               }
-            }}>
+              }}>
               <i className="fa fa-plus"></i>
+              <span>{i18n.add_more}</span>
             </button>
           </div>
+          <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
         </>
       }
     </div>

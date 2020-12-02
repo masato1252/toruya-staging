@@ -25,7 +25,7 @@
     i18n: {
     }.merge!([
       t("settings.booking_page.form"),
-      t("action").slice(:save),
+      t("action").slice(:save, :delete, :add_more),
       {
         title: t("settings.booking_page.form.#{@attribute}"),
         hint: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_hint", raise: true) },

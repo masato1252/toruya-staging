@@ -25,8 +25,6 @@ const BookingOptionEdit =({props}) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
-
     let error, response;
 
     [error, response] = await BookingOptionServices.update({
@@ -46,7 +44,7 @@ const BookingOptionEdit =({props}) => {
             <div className="field-row">
               <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
             </div>
-            <div className="field-row hint"> {i18n.hint} </div>
+            <div className="field-row hint no-border"> {i18n.hint} </div>
           </>
         );
         break
@@ -65,16 +63,12 @@ const BookingOptionEdit =({props}) => {
         break;
       case "menu_required_time":
         return (
-          <>
-            <div className="field-row">
-              {props.editing_menu?.label}
-            </div>
-            <div className="field-row flex-start">
-              <input ref={register({ required: true })} name="menu_required_time" type="tel" />
-              <input ref={register({ required: true })} name="menu_id" type="hidden" />
-              {i18n.minute}
-            </div>
-          </>
+          <div className="field-row flex-start">
+            {props.editing_menu?.label}
+            <input ref={register({ required: true })} name="menu_required_time" type="tel" />
+            <input ref={register({ required: true })} name="menu_id" type="hidden" />
+            {i18n.minute}
+          </div>
         );
         break;
       case "new_menu":
@@ -102,7 +96,7 @@ const BookingOptionEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={i18n.page_title}
+        title={i18n.top_bar_header || i18n.page_title}
       />
       <div className="field-header">{i18n.page_title}</div>
       {renderCorrespondField()}

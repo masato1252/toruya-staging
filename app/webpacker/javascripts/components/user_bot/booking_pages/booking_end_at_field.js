@@ -13,7 +13,7 @@ const BookingEndAtField = ({i18n, register, watch, control}) => {
         <input name="end_at_type" type="radio" value="now" ref={register({ required: true })} />
         {i18n.sale_forever}
       </label>
-      <label className="field-row flex-start">
+      <label className="field-row flex-start no-border">
         <input name="end_at_type" type="radio" value="date" ref={register({ required: true })} />
         {i18n.sale_on}
       </label>

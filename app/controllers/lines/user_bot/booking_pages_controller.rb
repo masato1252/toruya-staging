@@ -2,7 +2,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   before_action :authorize_booking_page
 
   def index
-    @booking_pages = super_user.booking_pages.includes(:booking_options).order("id DESC")
+    @booking_pages = super_user.booking_pages.includes(:booking_options, :shop).order("id DESC")
   end
 
   def show
