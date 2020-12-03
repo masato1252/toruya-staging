@@ -27,7 +27,11 @@ module BookingOptions
       menus = attrs.delete(:menus)
 
       booking_option.with_lock do
-        if booking_option.update(attrs)
+        if booking_option.update(
+            attrs.merge!(
+              start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
+              end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
+            ))
           booking_option.booking_option_menus.destroy_all
           booking_option.booking_option_menus.create(
             menus&.values&.map do |menu|

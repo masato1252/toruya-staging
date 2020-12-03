@@ -5,8 +5,7 @@ FactoryBot.define do
     minutes { 60 }
     amount { 1000.to_money(:jpy) }
     tax_include { true }
-    start_at_date_part { "2016-06-08" }
-    start_at_time_part { "00:00" }
+    start_at { Time.new(2016, 6, 8) }
     end_at { nil }
     menu_restrict_order { false }
 

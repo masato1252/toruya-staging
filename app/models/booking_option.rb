@@ -24,7 +24,7 @@
 
 class BookingOption < ApplicationRecord
   include DateTimeAccessor
-  date_time_accessor :start_at, :end_at
+  date_time_accessor :start_at, :end_at, accessor_only: true
 # attr_accessor :start_at_date_part, :start_at_time_part
 
   belongs_to :user

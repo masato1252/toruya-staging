@@ -18,5 +18,7 @@ class BookingPageSpecialDate < ApplicationRecord
   include DateTimeAccessor
   date_time_accessor :start_at, :end_at
 
+  scope :future, -> { where("booking_page_special_dates.start_at > ?", Time.current) }
+
   belongs_to :booking_page
 end

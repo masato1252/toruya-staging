@@ -88,6 +88,34 @@ Rails.application.routes.draw do
         end
       end
 
+      namespace :settings do
+        resources :staffs, only: [:edit]
+        resources :reservation_settings, except: [:show]
+        resources :menus, except: [:show]
+      end
+
+      resources :booking_pages do
+        collection do
+          get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+
+        member do
+          delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
+          get :preview_modal
+        end
+      end
+
+      resources :booking_options do
+        collection do
+          get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+
+        member do
+          delete "/menus/:menu_id", action: "delete_menu", as: :delete_menu
+          patch :reorder_menu_priority
+        end
+      end
+
       resources :shops, only: [] do
         resources :reservations, except: [:index, :edit, :new] do
           collection do
@@ -110,13 +138,6 @@ Rails.application.routes.draw do
       end
 
       resources :custom_schedules, only: [:create, :update, :destroy]
-
-      namespace :settings do
-        resources :staffs, only: [:edit]
-        resources :reservation_settings, except: [:show]
-        resources :menus, except: [:show]
-      end
-
       resources :warnings, only: [], constraints: ::XhrConstraint do
         collection do
           get :create_reservation

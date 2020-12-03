@@ -54,12 +54,16 @@ $orange-background-1: $palette-color4;
 $orange-border-1: $palette-color4-1;
 $tarco-background-1: $palette-color2;
 $tarco-border-1: $palette-color2-1;
+$pink-background: #fcecf3;
+$pink-border: #eec7da;
+$pink-color: #f7c5db;
 
 $black: #333333;
 $black2: #454443;
 
 $bar-height: 35px;
 $big-circle-button-size: 45px;
+$line-green: #02b901;
 
 @mixin clearfix {
   &:before, &:after {

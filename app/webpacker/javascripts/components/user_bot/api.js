@@ -234,10 +234,51 @@ const PaymentServices = {
   }
 }
 
+const BookingPageServices = {
+  update: ({booking_page_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_booking_page_path(booking_page_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
+const BookingOptionServices = {
+  update: ({booking_option_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_booking_option_path(booking_option_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+  reorder: ({booking_option_id, data}) => {
+    return request({
+      method: "PATCH",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.reorder_menu_priority_lines_user_bot_booking_option_path(booking_option_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
   ReservationServices,
   CustomerServices,
-  PaymentServices
+  PaymentServices,
+  BookingPageServices,
+  BookingOptionServices
 }

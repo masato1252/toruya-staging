@@ -15,6 +15,8 @@
 #
 
 class BookingOptionMenu < ApplicationRecord
+  default_value_for :priority, 0
+
   belongs_to :menu
   belongs_to :booking_option
 end

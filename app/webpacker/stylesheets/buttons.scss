@@ -48,6 +48,17 @@ a.btn {
       width: $big-circle-button-size !important;
       padding: initial !important;
     }
+
+    &.btn-with-word {
+      height: 55px !important;
+      width: 55px !important;
+      flex-direction: column;
+
+      .word {
+        font-size: 10px;
+        line-height: 13px;
+      }
+    }
   }
 
   &.btn-tweak {
@@ -147,7 +158,7 @@ a.btn {
 }
 
 .line-button {
-  background: #02B901;
+  background: $line-green;
   display: inline-flex !important;
   align-items: center;
 

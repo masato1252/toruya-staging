@@ -1,0 +1,12 @@
+<div class="top-navigation-bar">
+  <% if local_assigns[:previous_path] %>
+    <%= link_to local_assigns[:previous_path] do %>
+      <i class="fa fa-angle-left fa-2x"></i>
+    <% end %>
+  <% else %>
+    <i></i>
+  <% end %>
+
+  <span class="dotdotdot"><%= local_assigns[:title] %></span>
+  <i></i>
+</div>

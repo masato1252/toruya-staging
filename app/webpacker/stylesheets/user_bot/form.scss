@@ -1,4 +1,9 @@
 .form {
+  .field-group-header {
+    background-color: $gray4;
+    padding: 28px 7px 7px 7px;
+  }
+
   .field-header {
     padding: 7px;
     background-color: $gray5;
@@ -9,18 +14,38 @@
     }
   }
 
-  .field-row {
-    display: flex;
-    padding: 12px;
-    background-color: #ffffff;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid $gray;
-    color: $black;
-  }
-
   &.with-top-bar {
     padding-top: $bar-height;
+  }
+}
+
+.field-row {
+  display: flex;
+  padding: 12px;
+  background-color: #ffffff;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $gray;
+  color: $black;
+  flex-wrap: wrap;
+
+  &.with-next-arrow {
+    > :first-child {
+      width: 95%;
+    }
+  }
+
+  &.column-direction {
+    flex-direction: column;
+  }
+
+  &.flex-start {
+    justify-content: flex-start;
+  }
+
+  .desc {
+    font-size: 12px;
+    color: $gray11;
   }
 }
 

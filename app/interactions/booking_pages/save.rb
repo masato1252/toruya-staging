@@ -38,7 +38,11 @@ module BookingPages
       attrs.merge!(booking_option_ids: booking_options&.values&.pluck(:value) )
 
       booking_page.transaction do
-        if booking_page.update(attrs)
+        if booking_page.update(
+            attrs.merge!(
+              start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil,
+              end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil
+            ))
           booking_page.booking_page_special_dates.destroy_all
 
           if special_dates

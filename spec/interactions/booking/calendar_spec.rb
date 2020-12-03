@@ -115,8 +115,8 @@ RSpec.describe Booking::Calendar do
 
     context "when booking option only sells during a period" do
       let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user,
-                                               start_at_date_part: "2019-05-14", start_at_time_part: "00:00",
-                                               end_at_date_part: "2019-05-26", end_at_time_part: "00:00") }
+                                               start_at: Time.new(2019, 5, 14),
+                                               end_at: Time.new(2019, 5, 26)) }
 
       it "returns expected result" do
         result = outcome.result

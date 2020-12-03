@@ -28,6 +28,7 @@ ja:
     approve: 承認
     reject: 拒否
     confirm: 確認
+    share: シェア
   common:
     processing: 送信中
     date: 日付
@@ -86,3 +87,5 @@ ja:
     category_default_name: デフォルト
     menu_temporary_name: 仮予約
     customer_default_group_name: 顧客
+    updated_date: 更新日
+    preview: プレビュー
