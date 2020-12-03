@@ -40,8 +40,8 @@ export const UserConnectFlow = (props) => {
         </div>
       </div>
       <FlowController>
-        { (next, _) => <UserConnect props={props} next={next} /> }
-        { (_, prev) => <UserShopInfo
+        { ({next}) => <UserConnect props={props} next={next} /> }
+        { () => <UserShopInfo
           props={props}
           finalView={<SignInSuccessfulView props={props} />}
           />

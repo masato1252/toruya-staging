@@ -273,6 +273,31 @@ const BookingOptionServices = {
   },
 }
 
+const BookingServices = {
+  available_options: ({super_user_id, shop_id}) => {
+    return request({
+      method: "GET",
+      url: Routes.available_options_lines_user_bot_bookings_path({format: "json"}),
+      params: {
+        super_user_id,
+        shop_id,
+      },
+      responseType: "json"
+    })
+  },
+  create_booking_page: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.page_lines_user_bot_bookings_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -280,5 +305,6 @@ export {
   CustomerServices,
   PaymentServices,
   BookingPageServices,
-  BookingOptionServices
+  BookingOptionServices,
+  BookingServices
 }

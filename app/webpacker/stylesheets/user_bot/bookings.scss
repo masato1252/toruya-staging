@@ -18,11 +18,6 @@
 
 .booking-page-show,
 .booking-option-show {
-  .action-block {
-    text-align: center;
-    padding: 10px 0 20px;
-  }
-
   .with-format {
     white-space: pre-wrap;
   }
@@ -48,7 +43,7 @@
   border: 1px solid $gray9;
   border-radius: 6px;
   display: inline-block;
-  width: 320px;
+  width: 100%;
   font-size: 90%;
 
   .booking-option-info {
@@ -58,6 +53,9 @@
       font-size: 18px;
       color: $black;
       margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   }
 
@@ -66,10 +64,22 @@
     padding: 6px 10px 6px 10px;
     position: relative;
     white-space: pre-wrap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
 .booking-preview-modal {
+
+  .others-options {
+    margin-top: 10px;
+    text-align: center;
+    color: $gray12;
+  }
+}
+
+.booking-page-preview {
   .header {
     margin-top: 12px;
     margin-bottom: 12px;
@@ -107,9 +117,80 @@
     }
   }
 
-  .others-options {
-    margin-top: 10px;
+  .edit-mark {
+    margin: 0 !important;
+  }
+}
+
+$booking-flow-padding: 12px;
+
+.booking-creation-flow {
+  padding: $booking-flow-padding;
+
+  .flow-step-indicator {
+    margin: 24px 32px;
+  }
+
+  .booking-page-preview {
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid $gray-border-1;
+  }
+
+  h3.header {
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    margin: 6px;
+  }
+
+  .shop-info {
+    text-align: left;
+    padding: 0 30px;
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      width: 130px;
+      height: auto;
+      max-height: 45px;
+    }
+  }
+
+  .menu-info {
+    font-weight: bold;
+    margin-bottom: 30px;
     text-align: center;
-    color: $gray12;
+
+    .menu-data {
+      display: flex;
+      justify-content: space-between;
+      margin: 9px 100px;
+    }
+  }
+
+  .booking-tax-types {
+    margin-top: 12px;
+
+    label {
+      margin: 0 12px;
+    }
+  }
+
+  textarea {
+    width: 72%;
+  }
+
+  .field-header {
+    margin-top: 30px;
+  }
+
+  .field-header,
+  .field-row {
+    margin-left: -$booking-flow-padding;
+    margin-right: -$booking-flow-padding;
   }
 }

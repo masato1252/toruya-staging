@@ -94,6 +94,14 @@ Rails.application.routes.draw do
         resources :menus, except: [:show]
       end
 
+      resources :bookings, only: [:new] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+          get :available_options
+          post :page
+        end
+      end
+
       resources :booking_pages do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"

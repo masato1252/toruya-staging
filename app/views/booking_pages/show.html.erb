@@ -2,12 +2,12 @@
   <title><%= @booking_page.shop.display_name %> | <%= @booking_page.name %></title>
 <% end %>
 <%= content_for :meta_tags do %>
-  <meta name="description" content="<%= "#{@booking_page.shop.display_name},#{@booking_page.title},#{@booking_page.greeting.squish}" %>" />
+  <meta name="description" content="<%= "#{@booking_page.shop.display_name},#{@booking_page.title},#{@booking_page.greeting&.squish}" %>" />
   <meta name="keywords" content="<%= [
     "TORUYA SALONS", "美容室", "ヘアサロン", "Hair salon", "ヘアーサロン", "美容室", "Best hair", "The beauty salon", "salon school",
     @booking_page.shop.display_name,
     @booking_page.title,
-    @booking_page.greeting.squish,
+    @booking_page.greeting&.squish,
     @booking_page.shop.address
   ].join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
@@ -15,7 +15,7 @@
   <meta property="og:url" content="<%= booking_page_url(@booking_page) %>">
   <meta property="og:description" content="<%= @booking_page.name %>
   <%= booking_page_url(@booking_page) %>
-  <%= @booking_page.greeting.squish %>
+  <%= @booking_page.greeting&.squish %>
 <% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }

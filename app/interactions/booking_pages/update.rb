@@ -1,5 +1,7 @@
 module BookingPages
   class Update < ActiveInteraction::Base
+    validate :validate_booking_option
+
     object :booking_page, class: "BookingPage"
     string :update_attribute
 
@@ -66,6 +68,23 @@ module BookingPages
         end
 
         booking_page
+      end
+    end
+
+    private
+
+    def validate_booking_option
+      if update_attribute == "shop_id"
+        shop = Shop.find(attrs[:shop_id])
+
+        new_shop_available_booking_options = compose(BookingPages::AvailableBookingOptions, shop: shop)
+
+        booking_page.booking_options.each do |booking_option|
+          if new_shop_available_booking_options.map(&:id).exclude?(booking_option.id)
+            errors.add(:attrs, :unavailable_booking_option_exists)
+            break
+          end
+        end
       end
     end
   end

@@ -42,7 +42,8 @@ module SettingsHelper
       price: "#{booking_option.amount.format(:ja_default_format)}(#{tax_type})",
       start_at: booking_option.start_at ? l(booking_option.start_at) : l(booking_option.created_at),
       end_at: booking_option.end_at ? l(booking_option.end_at) : t("settings.booking_option.form.sale_forever"),
-      memo: booking_option.memo
+      memo: booking_option.memo,
+      menu_ids: booking_option.menu_relations.pluck(:menu_id)
     )
   end
 end

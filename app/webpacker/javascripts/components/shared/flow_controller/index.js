@@ -18,8 +18,12 @@ export const FlowController = ({ children }) => {
     })
   }
 
+  const jump = (step) => {
+    setStep(step)
+  }
+
   return (
-    childrenArray[step](next, prev)
+    childrenArray[step]({next, prev, jump, step})
   )
 }
 
