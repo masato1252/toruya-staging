@@ -5,7 +5,6 @@ import { StickyContainer, Sticky  } from 'react-sticky';
 
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import { TopNavigationBar } from "shared/components"
-import PlanCharge from "components/management/plans/charge";
 import SubscriptionModal from "components/management/plans/subscription_modal";
 
 const Plans = ({props}) => {
@@ -190,7 +189,8 @@ const Plans = ({props}) => {
         header="Trouya"
         plan_key={selectedPlan()?.key}
         desc={selectedPlan()?.name}
-        pay_btn={`Pay ${selectedPlan()?.costFormat}`}
+        details_desc={`${premiumPlan.details.period}: ${selectedPlan()?.costFormat}`}
+        pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path()}
         props={props}
       />

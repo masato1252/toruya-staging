@@ -13,7 +13,7 @@ const CARD_ELEMENT_OPTIONS = {
   hidePostalCode: true
 };
 
-const CheckoutForm = ({header, desc, pay_btn, payment_path, handleToken, handleFailure}) => {
+const CheckoutForm = ({header, desc, pay_btn, details_desc, payment_path, handleToken, handleFailure}) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -40,6 +40,9 @@ const CheckoutForm = ({header, desc, pay_btn, payment_path, handleToken, handleF
         <h1>{header}</h1>
         <h2>{desc}</h2>
       </header>
+      <div className="details">
+        {details_desc}
+      </div>
       <CardElement options={CARD_ELEMENT_OPTIONS} />
       <button type="submit" disabled={!stripe} className="btn btn-success btn-extend btn-large">
         {pay_btn}

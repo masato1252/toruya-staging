@@ -13,6 +13,7 @@
       }.merge!([
         t("settings.plans"),
         t("user_bot.dashboards.settings.plans"),
+        t("action").slice(:pay),
         {
           downgrade_desc1: t("settings.plans.downgrade.desc1", expired_date: l(current_user.subscription&.expired_date || Date.current)),
           downgrade_desc2: t("settings.plans.downgrade.desc2", after_expired_date: l(current_user.subscription&.expired_date&.tomorrow || Date.current)),
