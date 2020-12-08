@@ -64,12 +64,12 @@
           color: #E00003;
         }
 
-        &.work-day,
-        &.personal-schedule {
-          border-color: #84b3aa;
+        &.work-day {
+          // border-color: #84b3aa;
         }
 
-        &.reserved {
+        &.reserved,
+        &.personal-schedule {
           background: #dedede;
           border-color: #dedede;
         }

@@ -161,7 +161,9 @@
     background-position: center center;
   }
 
-  span.day.reserved {
+  span.day.reserved,
+  span.day.personal-schedule
+  {
     background: #dedede;
     border-color: #dedede;
   }
@@ -171,9 +173,8 @@
     border-color: $palette-color1-1 !important;
   }
 
-  span.day.workDay,
-  span.day.personal-schedule {
-    border-color: #84b3aa;
+  span.day.workDay {
+    // border-color: #84b3aa;
   }
 
   .week span.different-month {
