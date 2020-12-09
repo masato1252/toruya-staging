@@ -42,10 +42,6 @@ RSpec.describe BookingPages::Update do
       it_behaves_like "updates normal attribute", "line_sharing", false
     end
 
-    context "update_attribute is shop_id" do
-      it_behaves_like "updates normal attribute", "shop_id", 1
-    end
-
     context "update_attribute is booking_limit_day" do
       it_behaves_like "updates normal attribute", "booking_limit_day", 3
     end
@@ -65,6 +61,28 @@ RSpec.describe BookingPages::Update do
     context "update_attribute is overbooking_restriction" do
       it_behaves_like "updates normal attribute", "overbooking_restriction", true
       it_behaves_like "updates normal attribute", "overbooking_restriction", false
+    end
+
+    context "update_attribute is shop_id" do
+      let(:new_shop) { FactoryBot.create(:shop, user: user) }
+      let(:update_attribute) { "shop_id" }
+      before do
+        args[:attrs][:shop_id] = new_shop.id
+      end
+
+      it "updates shop_id" do
+        outcome
+
+        expect(booking_page.shop_id).to eq(new_shop.id)
+      end
+
+      context "when there is some booking_options, new shop doesn't support" do
+        let!(:booking_option) { FactoryBot.create(:booking_option, booking_pages: [booking_page]) }
+
+        it "adds a error" do
+          expect(outcome.errors.details[:attrs].first[:error]).to eq(:unavailable_booking_option_exists)
+        end
+      end
     end
 
     context "update_attribute is new_option" do

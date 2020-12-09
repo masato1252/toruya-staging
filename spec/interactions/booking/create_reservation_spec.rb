@@ -138,6 +138,7 @@ RSpec.describe Booking::CreateReservation do
       end
 
       it "records all the data" do
+        FactoryBot.create(:access_provider, user: user)
         google_user = spy(create_contact: spy(id: "google_contact_id"))
         allow(GoogleContactsApi::User).to receive(:new).and_return(google_user)
 
@@ -171,28 +172,6 @@ RSpec.describe Booking::CreateReservation do
           phone_number: "123456789",
           email: "example@email.com"
         }))
-      end
-
-      context "when customer create failed" do
-        it "records all the data" do
-          customer_info_hash = {
-            customer_last_name: "foo",
-            customer_first_name: "bar",
-            customer_phonetic_last_name: "baz",
-            customer_phonetic_first_name: "qux",
-            customer_phone_number: "123456789",
-            customer_email: "example@email.com"
-          }
-          args.merge!(customer_info_hash)
-
-          expect {
-            outcome
-          }.to not_change {
-            user.customers.count
-          }
-
-          expect(outcome).to be_invalid
-        end
       end
     end
 

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Customers::Save do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, with_google_user: true) }
   let(:customer) { FactoryBot.create(:customer, user: user, contact_group: contact_group) }
   let(:contact_group) { FactoryBot.create(:contact_group, user: user) }
   let(:contact_group2) { FactoryBot.create(:contact_group, user: user) }
