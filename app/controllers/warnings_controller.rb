@@ -24,6 +24,8 @@ class WarningsController < ApplicationController
 
   def admin_upgrade_filter_modal;end
 
+  def create_booking_page;end
+
   def create_reservation
     @owner = User.find(params[:owner_id])
     @shop = Shop.find_by(id: params[:shop_id])

@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StickyContainer, Sticky  } from 'react-sticky';
 
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
@@ -22,6 +22,12 @@ const Plans = ({props}) => {
     return props.plans[selected_plan_level]
   };
 
+  useEffect(() => {
+    if (isUpgrade(props.default_upgrade_plan)) {
+      onPay(props.default_upgrade_plan)
+    }
+  })
+
   const onPay = (planLevel) => {
     seletePlan(planLevel)
 
@@ -34,12 +40,12 @@ const Plans = ({props}) => {
     $("#subscription-modal").modal("show");
   };
 
-  const renderSaveOrPayButton = (planLevel) => {
-    const subscriptionPlanIndex = Plans.planOrder.indexOf(planLevel);
-    const currentPlanIndex = Plans.planOrder.indexOf(props.current_plan_level);
-    const isUpgrade = subscriptionPlanIndex > currentPlanIndex;
+  const subscriptionPlanIndex = (planLevel) => Plans.planOrder.indexOf(planLevel)
+  const currentPlanIndex = () => Plans.planOrder.indexOf(props.current_plan_level)
+  const isUpgrade = (planLevel) => subscriptionPlanIndex(planLevel) > currentPlanIndex()
 
-    if (subscriptionPlanIndex == currentPlanIndex) {
+  const renderSaveOrPayButton = (planLevel) => {
+    if (subscriptionPlanIndex(planLevel) == currentPlanIndex()) {
       return (
         <div className={`btn btn-yellow disabled`} >
           {props.i18n.save}
@@ -47,7 +53,7 @@ const Plans = ({props}) => {
       )
     };
 
-    if (isUpgrade) {
+    if (isUpgrade(planLevel)) {
       return (
         <div
           className={`btn btn-yellow`}
@@ -55,7 +61,7 @@ const Plans = ({props}) => {
           {props.i18n.save}
         </div>
       )
-    } else if (!isUpgrade) {
+    } else if (!isUpgrade(planLevel)) {
       // downgrade
       return (
         <div

@@ -5,6 +5,8 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   end
 
   def page
+    authorize! :create, BookingPage
+
     outcome = BookingPages::SmartCreate.run(attrs: params[:booking].permit!.to_h)
 
     render json: json_response(outcome, { booking_page_id: outcome.result&.id })

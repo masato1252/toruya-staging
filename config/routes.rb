@@ -149,6 +149,7 @@ Rails.application.routes.draw do
       resources :warnings, only: [], constraints: ::XhrConstraint do
         collection do
           get :create_reservation
+          get :create_booking_page
         end
       end
     end
@@ -376,6 +377,7 @@ Rails.application.routes.draw do
       get :new_staff_for_admin
       get :create_reservation
       get :admin_upgrade_filter_modal
+      get :create_booking_page
     end
   end
 

@@ -1,5 +1,12 @@
 class Ability
   include CanCan::Ability
+
+  BOOKING_PAGE_LIMIT = {
+    Plan::PREMIUM_LEVEL => nil,
+    Plan::BASIC_LEVEL => 3,
+    Plan::FREE_LEVEL => 1
+  }
+
   attr_accessor :current_user, :super_user, :shop
 
   def initialize(current_user, super_user, shop = nil)
@@ -72,14 +79,18 @@ class Ability
     can :manage, Profile
     can :manage_staff_temporary_working_day_permission, ShopStaff
     can :manage_staff_holiday_permission, ShopStaff
-    can :manage, BookingOption
     can :manage, BookingPage
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
-    when Plan::BASIC_LEVEL, Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+    when Plan::BASIC_LEVEL
       cannot :create, Staff
-      cannot :create, Shop if super_user.shops.exists?
+      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
+      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL]
+    when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+      cannot :create, Staff
+      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
+      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::FREE_LEVEL]
     end
 
     if super_user.business_member?

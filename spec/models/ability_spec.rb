@@ -197,6 +197,33 @@ RSpec.describe Ability do
           end
         end
       end
+
+      context "create Booking Page" do
+        context "when users don't have any booking page" do
+          it_behaves_like "permission management", "free", :create, BookingPage, true
+          it_behaves_like "permission management", "trial", :create, BookingPage, true
+          it_behaves_like "permission management", "basic", :create, BookingPage, true
+          it_behaves_like "permission management", "premium", :create, BookingPage, true
+        end
+
+        context "when users only had a booking page" do
+          before { FactoryBot.create(:booking_page, user: current_user) }
+
+          it_behaves_like "permission management", "free", :create, BookingPage, false
+          it_behaves_like "permission management", "trial", :create, BookingPage, false
+          it_behaves_like "permission management", "basic", :create, BookingPage, true
+          it_behaves_like "permission management", "premium", :create, BookingPage, true
+        end
+
+        context "when users only had 3 booking pages" do
+          before { FactoryBot.create_list(:booking_page, 3, user: current_user) }
+
+          it_behaves_like "permission management", "free", :create, BookingPage, false
+          it_behaves_like "permission management", "trial", :create, BookingPage, false
+          it_behaves_like "permission management", "basic", :create, BookingPage, false
+          it_behaves_like "permission management", "premium", :create, BookingPage, true
+        end
+      end
     end
 
     context "staff level" do

@@ -1,0 +1,8 @@
+ja:
+  warnings:
+    create_booking_page:
+      upgrade_title: 予約ページはこれ以上追加できません
+      number_wording1: 合計%{booking_page_number}つの
+      number_wording2: "%{booking_page_number}つ以上の"
+      upgrade_all_content_html: 予約ページを作成しました。<br /><br /> さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br /> 月額%{basic_plan_price}でベーシックにアップグレードすることで、さらに%{extra_basic_limit}つの予約ページを作成することができます。<br /><br /> 月額%{premium_plan_price}でプレミアムにアップグレードすることで、無制限で予約ページを作成することができます。<br /><br /> アカウントはいつでもダウングレードすることができます。
+      upgrade_premium_content_html: 予約ページを作成しました。<br /><br /> さらに予約を作成するにはアカウントのアップグレードが必要です。<br /><br /> 月額%{premium_plan_price}でプレミアムにアップグレードすることで、無制限で予約ページを作成することができます。<br /><br /> アカウントはいつでもダウングレードすることができます。

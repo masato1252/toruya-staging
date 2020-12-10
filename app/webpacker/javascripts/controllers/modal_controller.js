@@ -6,6 +6,13 @@ export default class Modal extends Controller {
     this.popupModal = $(`${this.modalTarget}`);
     this.popupModal.on("hidden.bs.modal", this.modalHideHandler);
 
+    if (this.isStatic) {
+      this.popupModal.modal({
+        backdrop: 'static',
+        keyboard: false
+      })
+    }
+
     if (this.jumpOut) {
       this.popup();
     }
@@ -42,5 +49,9 @@ export default class Modal extends Controller {
 
   get jumpOut() {
     return this.data.get("jumpOut");
+  }
+
+  get isStatic() {
+    return this.data.get("static");
   }
 }

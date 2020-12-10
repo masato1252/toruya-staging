@@ -70,12 +70,16 @@ module ApplicationHelper
     end
   end
 
-  def jump_out_modal(path)
+  def jump_out_modal(path, options={})
     data = {}
     data[:controller] = "modal"
     data[:modal_target] = "#dummyModal"
     data[:modal_jump_out] = true
     data[:modal_path] = path
+
+    if options[:static]
+      data[:modal_static] = true
+    end
 
     content_tag(:template, nil, data: data)
   end

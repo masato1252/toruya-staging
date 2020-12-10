@@ -4,6 +4,12 @@ class Lines::UserBot::WarningsController < ActionController::Base
   include UserBotCookies
   layout false
 
+  def create_booking_page
+    flash[:redirect_to] = request.referrer
+
+    render template: "warnings/create_booking_page"
+  end
+
   def create_reservation
     @owner = User.find(params[:owner_id])
     @shop = Shop.find_by(id: params[:shop_id])
@@ -23,6 +29,7 @@ class Lines::UserBot::WarningsController < ActionController::Base
              "default_creation_reservation_warning"
            end
 
+    flash[:redirect_to] = request.referrer
     render template: "warnings/#{view}"
   end
 

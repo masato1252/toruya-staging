@@ -1,9 +1,10 @@
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) unless ability(super_user).can?(:create, BookingPage) %>
+
 <%= react_component("user_bot/bookings/creation_flow", {
   props: {
     super_user_id: super_user.id,
     selected_shop: @shop ? react_attribute(@shop.attributes.merge!(logo_url: shop_logo_url(shop, "390x135"))) : {},
     shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| react_attribute(s.attributes.merge(logo_url: shop_logo_url(s, "390x135"))) },
-    initial_step: 0,
     i18n: {
     }.merge!([
       t("activerecord.attributes.menu"),
