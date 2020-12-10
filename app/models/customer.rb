@@ -36,7 +36,18 @@
 #  customers_basic_index                      (user_id,contact_group_id,deleted_at)
 #  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
 #  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
+
+# attributes format:
 #
+# phone_numbers_details: [{"type" => "mobile", "value" => "1234567"}]
+# email_details: [{"type" => "mobile", "value" => "email@email.com"}]
+# address_details: {
+#   zip_code: "zip_code",
+#   region: "region",
+#   city: "city"
+#   street1: "street1"
+#   street2: "street2"
+# }
 
 class Customer < ApplicationRecord
   include NormalizeName
