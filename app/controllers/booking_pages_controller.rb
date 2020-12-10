@@ -86,8 +86,8 @@ class BookingPagesController < ActionController::Base
       customer = result[:customer]
 
       if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies[:booking_customer_id] = customer&.id
-        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+        cookies.permanent[:booking_customer_id] = customer&.id
+        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
       else
         cookies.delete :booking_customer_id
         cookies.delete :booking_customer_phone_number
@@ -123,8 +123,8 @@ class BookingPagesController < ActionController::Base
 
     if customer
       if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies[:booking_customer_id] = customer.id
-        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+        cookies.permanent[:booking_customer_id] = customer.id
+        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
       else
         cookies.delete :booking_customer_id
         cookies.delete :booking_customer_phone_number
