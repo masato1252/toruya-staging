@@ -28,8 +28,6 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         )
       )
     end
-
-    compose(Lines::Features, social_customer: social_customer)
   end
 
   private
