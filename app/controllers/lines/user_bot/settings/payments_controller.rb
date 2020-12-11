@@ -37,7 +37,10 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
 
       render json: { message: outcome.errors.full_messages.join("") }, status: :unprocessable_entity
     else
-      render json: { redirect_path: flash[:redirect_to] || lines_user_bot_settings_path }
+      redirect_path = user_bot_cookies(:redirect_to)
+      delete_user_bot_cookies(:redirect_to)
+
+      render json: { redirect_path: redirect_path || lines_user_bot_settings_path }
     end
   end
 
