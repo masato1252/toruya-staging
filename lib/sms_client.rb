@@ -5,6 +5,8 @@ class SmsClient
   def self.send(phone_number, message)
     return if Rails.env.test?
 
+    phone_number.gsub!(/[^0-9]/, '')
+
     # XXX: Japan dependency
     formatted_phone =
       if Rails.env.development?
