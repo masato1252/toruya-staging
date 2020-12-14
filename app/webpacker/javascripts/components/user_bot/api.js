@@ -298,6 +298,20 @@ const BookingServices = {
   },
 }
 
+const SocialAccountServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_social_account_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -306,5 +320,6 @@ export {
   PaymentServices,
   BookingPageServices,
   BookingOptionServices,
-  BookingServices
+  BookingServices,
+  SocialAccountServices,
 }

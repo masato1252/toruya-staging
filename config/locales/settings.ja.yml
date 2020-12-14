@@ -526,7 +526,7 @@ ja:
         booking_dates_available_booking_date: 予約可能日
         special_dates: 予約可能日
         booking_dates_available_booking_datetime: 予約可能な日時
-        default_available_dates_label: 全ての予約可能日に受付ける
+        default_available_dates_label: 全ての予約可能日に受付ける(推奨)
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_period_header: 予約時間の選択肢
@@ -587,12 +587,22 @@ ja:
       copy_webhook_btn: Webhook URLをコピー
       form:
         channel_basic_id: ボットのベーシックID
+        basic_id_title: ボットのベーシックID
         channel_basic_id_tip: LINEデベロッパーズからボットのベーシックIDをコピーして貼り付け
+        basic_id_hint: LINEデベロッパーズからボットのベーシックIDをコピーして貼り付け
         channel_token: チャネルアクセストークン
+        channel_token_title: チャネルアクセストークン
         channel_token_tip: LINEデベロッパーズからチャネルアクセストークン（長期）をコピーして貼り付け
+        channel_token_hint: LINEデベロッパーズからチャネルアクセストークン（長期）をコピーして貼り付け
         channel_id: チャネルID
+        channel_id_title: チャネルID
         channel_id_tip: LINEデベロッパーズからチャネルIDをコピーして貼り付け
+        channel_id_hint: LINEデベロッパーズからチャネルIDをコピーして貼り付け
         channel_name: チャネル名
+        label_title: チャネル名
         channel_name_tip: Toruya上で管理する為のラベルを入力
+        label_hint: Toruya上で管理する為のラベルを入力
         channel_secret: チャネルシークレット
+        channel_secret_title: チャネルシークレット
         channel_secret_tip: LINEデベロッパーズからチャネルシークレットをコピーして貼り付け
+        channel_secret_hint: LINEデベロッパーズからチャネルシークレットをコピーして貼り付け

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_14_011120) do
+ActiveRecord::Schema.define(version: 2020_12_14_063121) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -533,9 +533,9 @@ ActiveRecord::Schema.define(version: 2020_11_14_011120) do
 
   create_table "social_accounts", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.string "channel_id", null: false
-    t.string "channel_token", null: false
-    t.string "channel_secret", null: false
+    t.string "channel_id"
+    t.string "channel_token"
+    t.string "channel_secret"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "label"

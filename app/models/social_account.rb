@@ -4,9 +4,9 @@
 #
 #  id             :bigint(8)        not null, primary key
 #  user_id        :integer          not null
-#  channel_id     :string           not null
-#  channel_token  :string           not null
-#  channel_secret :string           not null
+#  channel_id     :string
+#  channel_token  :string
+#  channel_secret :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  label          :string
@@ -20,12 +20,6 @@
 require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
-  validates :label, presence: true
-  validates :channel_id, presence: true, uniqueness: true
-  validates :channel_token, presence: true
-  validates :channel_secret, presence: true
-  validates :basic_id, presence: true
-
   has_many :social_customers, dependent: :destroy
   has_many :social_rich_menus
   belongs_to :user
@@ -35,6 +29,10 @@ class SocialAccount < ApplicationRecord
       config.channel_token = raw_channel_token
       config.channel_secret = raw_channel_secret
     }
+  end
+
+  def data_finished?
+    attributes.all? { |attribute, value| value.present? }
   end
 
   def raw_channel_token

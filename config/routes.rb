@@ -80,6 +80,12 @@ Rails.application.routes.draw do
             get :receipt
           end
         end
+
+        resource :social_account do
+          member do
+            get :webhook_modal
+          end
+        end
       end
 
       resources :settings, only: [:index] do

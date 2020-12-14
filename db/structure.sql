@@ -1558,9 +1558,9 @@ ALTER SEQUENCE public.shops_id_seq OWNED BY public.shops.id;
 CREATE TABLE public.social_accounts (
     id bigint NOT NULL,
     user_id integer NOT NULL,
-    channel_id character varying NOT NULL,
-    channel_token character varying NOT NULL,
-    channel_secret character varying NOT NULL,
+    channel_id character varying,
+    channel_token character varying,
+    channel_secret character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     label character varying,
@@ -3774,6 +3774,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201019072951'),
 ('20201104073111'),
 ('20201111121423'),
-('20201114011120');
+('20201114011120'),
+('20201214063121');
 
 

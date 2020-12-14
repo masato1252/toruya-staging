@@ -1,4 +1,5 @@
 require "user_bot_social_account"
+require "line_client"
 
 module RichMenus
   class Create < ActiveInteraction::Base
@@ -19,7 +20,7 @@ module RichMenus
           end
         end
 
-        response = LineClient.create_rich_menu(
+        response = ::LineClient.create_rich_menu(
           social_account: social_account_object,
           body: body
         )
@@ -28,7 +29,7 @@ module RichMenus
           rich_menu_id = JSON.parse(response.body)["richMenuId"]
           # Note: You cannot replace an image attached to a rich menu. To update your rich menu image,
           # create a new rich menu object and upload another image.
-          LineClient.create_rich_menu_image(social_account: social_account_object, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
+          ::LineClient.create_rich_menu_image(social_account: social_account_object, rich_menu_id: rich_menu_id, file_path: rich_menu_file_path)
 
           rich_menu = SocialRichMenu.create(
             social_account: social_account,
@@ -37,7 +38,7 @@ module RichMenus
           )
 
           if default_menu
-            LineClient.set_default_rich_menu(rich_menu)
+            ::LineClient.set_default_rich_menu(rich_menu)
           end
 
           # Link rich menu to social users or social customer
