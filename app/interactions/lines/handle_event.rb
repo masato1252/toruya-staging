@@ -59,11 +59,12 @@ class Lines::HandleEvent < ActiveInteraction::Base
     social_customer =
       begin
         SocialCustomer.transaction do
-          SocialCustomer.find_or_create_by(
-            user_id: social_account.user_id,
-            social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
-            social_account_id: social_account.id
-          )
+          SocialCustomer
+            .create_with(social_rich_menu_key: SocialAccounts::RichMenus::CustomerGuest::KEY)
+            .find_or_create_by(
+              user_id: social_account.user_id,
+              social_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
+              social_account_id: social_account.id)
         end
       rescue ActiveRecord::RecordNotUnique
         retry

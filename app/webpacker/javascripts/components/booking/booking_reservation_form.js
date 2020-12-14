@@ -693,9 +693,6 @@ class BookingReservationForm extends React.Component {
     if (!this.isEnoughCustomerInfo()) return;
     if (!this.isCustomerTrusted()) return;
 
-    // Make sure the booking button be seen
-    setTimeout(() => this.scrollToTarget("footer"), 1000)
-
     return (
       <div className="reservation-confirmation">
         <div className="note">

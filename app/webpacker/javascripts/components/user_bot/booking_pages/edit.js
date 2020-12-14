@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import _ from "lodash";
 
-import { BottomNavigationBar, TopNavigationBar, SelectOptions, CiricleButtonWithWord } from "shared/components"
+import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, CiricleButtonWithWord } from "shared/components"
 import DateTimeFieldsRow from "shared/datetime_fields_row";
 import { BookingPageServices } from "user_bot/api"
 
@@ -32,10 +32,18 @@ const BookingPageEdit =({props}) => {
       data: _.assign( data, { special_dates: data.had_special_date == "true" ? data.special_dates : [] }, { attribute: props.attribute })
     })
 
-    window.location = response.data.redirect_to
+    if (response.data.status == "successful") {
+      window.location = response.data.redirect_to
+    } else {
+      console.error(response.data.error_message)
+
+      setError(props.attribute, {
+        message: response.data.error_message
+      })
+    }
   }
 
-  const { register, watch, setValue, control, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, setError, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.booking_page,
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
@@ -73,7 +81,12 @@ const BookingPageEdit =({props}) => {
             );
         break;
       case "shop_id":
-        return <ShopField shop_options={props.shop_options} i18n={i18n} register={register} />
+        return (
+          <>
+            <ShopField shop_options={props.shop_options} i18n={i18n} register={register} />
+            <ErrorMessage error={errors.shop_id?.message} />
+          </>
+        )
         break;
       case "new_option":
         return (

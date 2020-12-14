@@ -94,6 +94,14 @@ Rails.application.routes.draw do
         resources :menus, except: [:show]
       end
 
+      resources :bookings, only: [:new] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+          get :available_options
+          post :page
+        end
+      end
+
       resources :booking_pages do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"
@@ -141,6 +149,7 @@ Rails.application.routes.draw do
       resources :warnings, only: [], constraints: ::XhrConstraint do
         collection do
           get :create_reservation
+          get :create_booking_page
         end
       end
     end
@@ -368,6 +377,7 @@ Rails.application.routes.draw do
       get :new_staff_for_admin
       get :create_reservation
       get :admin_upgrade_filter_modal
+      get :create_booking_page
     end
   end
 

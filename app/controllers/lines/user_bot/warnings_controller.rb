@@ -1,8 +1,11 @@
-class Lines::UserBot::WarningsController < ActionController::Base
-  include UserBotAuthorization
-  include ViewHelpers
-  include UserBotCookies
+class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
   layout false
+
+  def create_booking_page
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/create_booking_page"
+  end
 
   def create_reservation
     @owner = User.find(params[:owner_id])
@@ -23,6 +26,7 @@ class Lines::UserBot::WarningsController < ActionController::Base
              "default_creation_reservation_warning"
            end
 
+    write_user_bot_cookies(:redirect_to, request.referrer)
     render template: "warnings/#{view}"
   end
 

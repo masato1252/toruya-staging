@@ -7,6 +7,7 @@ module SocialAccounts
 
       def execute
         sentence = I18n.t("line.bot.features.online_booking.rich_menu.bar_text")
+
         body = {
           "size": {
             "width": 2500,
@@ -20,13 +21,26 @@ module SocialAccounts
               "bounds": {
                 "x": 0,
                 "y": 0,
-                "width": 2500,
+                "width": 1250,
                 "height": 843
               },
               "action": {
                 "type": "message",
-                "label": sentence,
-                "text": sentence
+                "label": I18n.t("line.bot.keywords.incoming_reservations"),
+                "text": I18n.t("line.bot.keywords.incoming_reservations")
+              }
+            },
+            {
+              "bounds": {
+                "x": 1250,
+                "y": 0,
+                "width": 1250,
+                "height": 843
+              },
+              "action": {
+                "type": "message",
+                "label": I18n.t("line.bot.keywords.booking_pages"),
+                "text": I18n.t("line.bot.keywords.booking_pages")
               }
             }
           ]

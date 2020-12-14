@@ -133,6 +133,15 @@ const _displayErrors = (form_values, error_reasons) => {
   return _.compact(error_messages);
 };
 
+// "%{key}foobar" => "valuefoobar"
+const Translator = (template, options) => {
+  Object.entries(options).forEach(([key, value]) => {
+    template = template.replace(new RegExp('%?{' + key + '}' ,'g'), value)
+  });
+
+  return template
+}
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -148,5 +157,6 @@ export {
   isAvailableBookingDate,
   isPersonalScheduleDate,
   arrayWithLength,
-  displayErrors
+  displayErrors,
+  Translator
 };

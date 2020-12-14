@@ -10,8 +10,19 @@
       <%= t("dashboard.modal.filter.admin.upgrade_content_html", basic_plan_price: plan_price(current_user, Plan::BASIC_LEVEL), premium_plan_price: plan_price(current_user, Plan::PREMIUM_LEVEL)) %>
     </div>
     <div class="modal-footer centerize">
-      <%= link_to t("action.upgrade_to_basic"), settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" if current_user.current_plan.level == Plan::FREE_LEVEL %>
-      <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% if current_user.current_plan.level == Plan::FREE_LEVEL %>
+        <% if from_line_bot %>
+          <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
+        <% else %>
+          <%= link_to t("action.upgrade_to_basic"), settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
+        <% end %>
+      <% end %>
+
+      <% if from_line_bot %>
+        <%= link_to t("action.upgrade_to_premium"), lines_user_bot_settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% else %>
+        <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% end %>
     </div>
   </div>
 </div>

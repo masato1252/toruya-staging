@@ -1,8 +1,6 @@
 class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardController
-  before_action :authorize_booking_option
-
   def index
-    @booking_options = super_user.booking_options.includes(:menus).order("id")
+    @booking_options = super_user.booking_options.includes(:menus).order("updated_at DESC")
   end
 
   def show
@@ -10,29 +8,6 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
   end
 
-  # def new
-  #   @booking_option = super_user.booking_options.new
-  #   @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
-  #   render :form
-  # end
-  #
-  # def create
-  #   outcome = BookingOptions::Save.run(booking_option: super_user.booking_options.new, attrs: params[:booking_option].permit!.to_h)
-  #
-  #   if outcome.valid?
-  #     if session[:booking_settings_tour]
-  #       redirect_to settings_user_booking_pages_path(super_user)
-  #     else
-  #       redirect_to settings_user_booking_options_path(super_user), notice: I18n.t("common.create_successfully_message")
-  #     end
-  #   else
-  #     @booking_option = super_user.booking_options.new
-  #     @menu_result = Menus::CategoryGroup.run!(menu_options: menu_options)
-  #
-  #     render :form
-  #   end
-  # end
-  #
   def edit
     @booking_option = super_user.booking_options.find(params[:id])
     @attribute = params[:attribute]
@@ -89,9 +64,5 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     super_user.menus.map do |menu|
       ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
     end
-  end
-
-  def authorize_booking_option
-    authorize! :manage, BookingOption
   end
 end

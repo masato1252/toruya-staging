@@ -183,7 +183,10 @@ class User < ApplicationRecord
   end
 
   def google_user
-    @google_user ||= GoogleContactsApi::User.new(access_token, refresh_token)
+    @google_user ||=
+      if access_token && refresh_token
+        GoogleContactsApi::User.new(access_token, refresh_token)
+      end
   end
 
   def owner_ability

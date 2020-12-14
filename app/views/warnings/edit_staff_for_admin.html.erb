@@ -10,7 +10,11 @@
       <%= t("settings.staff.modal.upgrade_edit_content_html", premium_plan_price: plan_price(current_user, Plan::PREMIUM_LEVEL)) %>
     </div>
     <div class="modal-footer centerize">
-      <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% if from_line_bot %>
+        <%= link_to t("action.upgrade_to_premium"), lines_user_bot_settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% else %>
+        <%= link_to t("action.upgrade_to_premium"), settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+      <% end %>
     </div>
   </div>
 </div>

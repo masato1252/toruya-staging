@@ -1,5 +1,5 @@
 class Options::MenuOption < Option
-  attr_reader :id, :name, :min_staffs_number, :available_seat, :minutes, :interval
+  attr_reader :id, :name, :min_staffs_number, :available_seat, :minutes, :interval, :shop_ids
 
   def initialize(attributes = {})
     @id = attributes[:id]
@@ -8,6 +8,7 @@ class Options::MenuOption < Option
     @available_seat = attributes[:available_seat]
     @minutes = attributes[:minutes]
     @interval = attributes[:interval]
+    @shop_ids = attributes[:shop_ids]
     super
   end
 end

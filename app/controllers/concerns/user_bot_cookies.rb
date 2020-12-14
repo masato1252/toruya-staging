@@ -9,6 +9,10 @@ module UserBotCookies
     cookies.permanent[prepend_key(key)] = value
   end
 
+  def delete_user_bot_cookies(key)
+    cookies.delete(prepend_key(key))
+  end
+
   def prepend_key(key)
     "#{PREPEND}_#{key}"
   end

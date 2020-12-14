@@ -32,15 +32,17 @@ class Customers::Create < ActiveInteraction::Base
         customer.google_uid = user.uid
       end
 
-      if user.contact_groups.count == 1
-        customer.contact_group_id = user.contact_groups.first.id
-      end
-
-      customer.save
     rescue => e
+      # XXX: Even google is down, we still support the customer creation process
       Rollbar.error(e)
-      errors.add(:base, :google_down)
+      # errors.add(:base, :google_down)
     end
+
+    if user.contact_groups.count == 1
+      customer.contact_group_id = user.contact_groups.first.id
+    end
+
+    customer.save
 
     if customer.new_record?
       errors.merge!(customer.errors)

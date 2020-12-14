@@ -1,0 +1,27 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("warnings.create_booking_page.upgrade_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= current_user.booking_pages.count > Ability::BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL] ? t("warnings.create_booking_page.number_wording2", booking_page_number: Ability::BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL]) : t("warnings.create_booking_page.number_wording1", booking_page_number: current_user.booking_pages.count) %>
+      <% if current_user.booking_pages.count > Ability::BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL] %>
+        <%= t("warnings.create_booking_page.upgrade_premium_content_html",
+              premium_plan_price: plan_price(current_user, Plan::PREMIUM_LEVEL)) %>
+      <% else %>
+        <%= t("warnings.create_booking_page.upgrade_all_content_html",
+              basic_plan_price: plan_price(current_user, Plan::BASIC_LEVEL),
+              extra_basic_limit: Ability::BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL] - 1,
+              premium_plan_price: plan_price(current_user, Plan::PREMIUM_LEVEL)) %>
+         <% end %>
+    </div>
+    <div class="modal-footer centerize">
+      <% if current_user.current_plan.upgrade?(Plan.basic_level.take) && current_user.booking_pages.count < Ability::BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL] %>
+        <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
+      <% end %>
+      <%= link_to t("action.upgrade_to_premium"), lines_user_bot_settings_plans_path(upgrade: Plan::PREMIUM_LEVEL), class: "btn btn-yellow" %>
+    </div>
+  </div>
+</div>

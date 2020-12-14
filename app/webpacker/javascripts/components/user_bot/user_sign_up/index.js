@@ -39,8 +39,8 @@ export const UserSignUp = (props) => {
         </div>
       </div>
       <FlowController>
-        { (next, _) => <UserIdentificationFlow props={props} next={next} /> }
-        { (_, prev) => <UserShopInfo
+        { ({next}) => <UserIdentificationFlow props={props} next={next} /> }
+        { ({prev}) => <UserShopInfo
           props={props}
           finalView={<SignUpSuccessfulView props={props} />}
           />

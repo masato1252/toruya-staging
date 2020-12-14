@@ -71,7 +71,5 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
     else
       LineClient.carousel_template(social_customer: social_customer, text: I18n.t("line.bot.messages.booking_pages.available_pages"), columns: columns)
     end
-
-    compose(Lines::Features, social_customer: social_customer)
   end
 end

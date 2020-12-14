@@ -33,4 +33,25 @@ class Lines::UserBotDashboardController < ActionController::Base
     @site_routing_helper ||= SiteRouting.new(view_context)
   end
   helper_method :site_routing_helper
+
+  def shop_menus_options
+    @shop_menus_options ||=
+      ShopMenu.includes(:menu).where(shop: shop).map do |shop_menu|
+        ::Options::MenuOption.new(
+          id: shop_menu.menu_id,
+          name: shop_menu.menu.display_name,
+          min_staffs_number: shop_menu.menu.min_staffs_number,
+          available_seat: shop_menu.max_seat_number,
+          minutes: shop_menu.menu.minutes,
+          interval: shop_menu.menu.interval
+        )
+      end
+  end
+
+  def json_response(outcome, data)
+    {
+      status: outcome.valid? ? "successful" : "failed",
+      error_message: outcome.errors.full_messages.join(", ")
+    }.merge!(data)
+  end
 end

@@ -39,6 +39,9 @@ ja:
         book: 予約ページを表示
         switch_rich_menu: Switch
     bot:
+      keywords:
+        incoming_reservations: 全ての予約
+        booking_pages: 新たに予約する
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
       connected_successfuly: "ありがとうございます！\n\n 顧客情報の連携が完了しました。"
       features:

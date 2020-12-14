@@ -31,17 +31,15 @@ RSpec.describe Customers::Find do
 
     context "when only one customer matched" do
       it "returns expected result" do
-        customer = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-        query = spy(to_a: [customer])
-        expected_customer = spy(phone_numbers: [spy(value: phone_number)])
-        allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
-        allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
-        allow(customer).to receive(:with_google_contact).and_return(expected_customer)
+        customer = FactoryBot.create(
+          :customer, user: user, first_name: first_name, last_name: last_name,
+          phone_numbers_details: ["type" => "mobile", "value" => phone_number]
+        )
 
         result = outcome.result
 
         expect(result).to eq({
-          found_customer: expected_customer,
+          found_customer: customer,
           matched_customers: [customer]
         })
       end
@@ -50,20 +48,17 @@ RSpec.describe Customers::Find do
     context "when multiple customers matched" do
       context "when no reservations" do
         it "returns the recent reservation's customer" do
-          customer1 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          customer2 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          query = spy(to_a: [customer1, customer2])
-          expected_customer1 = spy(phone_numbers: [spy(value: phone_number)])
-          expected_customer2 = spy(phone_numbers: [spy(value: phone_number)])
-          allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
-          allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
-          allow(customer1).to receive(:with_google_contact).and_return(expected_customer1)
-          allow(customer2).to receive(:with_google_contact).and_return(expected_customer2)
+          customer1 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
+          customer2 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
 
           result = outcome.result
 
           expect(result).to eq({
-            found_customer: expected_customer2,
+            found_customer: customer2,
             matched_customers: [customer1, customer2]
           })
         end
@@ -71,22 +66,19 @@ RSpec.describe Customers::Find do
 
       context "when these customer ever had reservations" do
         it "returns the recent reservation's customer" do
-          customer1 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          customer2 = FactoryBot.create(:customer, user: user, first_name: first_name, last_name: last_name)
-          query = spy(to_a: [customer1, customer2])
-          expected_customer1 = spy(phone_numbers: [spy(value: phone_number)])
-          expected_customer2 = spy(phone_numbers: [spy(value: phone_number)])
-          allow(user.customers).to receive(:where).with(phonetic_last_name: last_name, phonetic_first_name: first_name).and_return(query)
-          allow(user.customers).to receive(:where).with(last_name: last_name, first_name: first_name).and_return(spy(or: query))
-          allow(customer1).to receive(:with_google_contact).and_return(expected_customer1)
-          allow(customer2).to receive(:with_google_contact).and_return(expected_customer2)
+          customer1 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
+          customer2 = FactoryBot.create(
+            :customer, user: user, first_name: first_name, last_name: last_name,
+            phone_numbers_details: ["type" => "mobile", "value" => phone_number])
           FactoryBot.create(:reservation_customer, customer: customer1)
           FactoryBot.create(:reservation_customer, customer: customer2)
 
           result = outcome.result
 
           expect(result).to eq({
-            found_customer: expected_customer2,
+            found_customer: customer2,
             matched_customers: [customer1, customer2]
           })
         end

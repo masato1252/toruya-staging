@@ -204,6 +204,45 @@ const CiricleButtonWithWord = ({onHandle, icon, word}) => (
   </button>
 )
 
+const BookingOptionElement = ({onClick, booking_option, i18n}) => (
+  <div className="field-row with-next-arrow" onClick={onClick}>
+    <div>
+      <h3>{booking_option.name}</h3>
+      <div className="desc">
+        {i18n.booking_option_required_time}{booking_option.minutes}{i18n.minute}<br />
+        {booking_option.price}
+      </div>
+    </div>
+    <i className="fa fa-angle-right"></i>
+  </div>
+)
+
+const BookingPageUrlCopyBtn = ({booking_page_url}) => {
+  return (
+    <button
+      className="btn btn-tarco"
+      data-controller="clipboard"
+      data-action="click->clipboard#copy"
+      data-clipboard-text={booking_page_url}
+      data-clipboard-popup-text="コピー完了">
+      URLをコピー
+    </button>
+  )
+}
+
+const BookingPageButtonCopyBtn = ({booking_page_url}) => {
+  return (
+    <button
+      className="btn btn-tarco"
+      data-controller="clipboard"
+      data-action="click->clipboard#copy"
+      data-clipboard-text={`<a style="display: inline-block;background-color: #aecfc8;border: 1px solid #84b3aa;border-radius: 6px;-moz-border-radius: 6px;-webkit-border-radius: 6px;-o-border-radius: 6px;-ms-border-radius: 6px;line-height: 40px;color: #fff;font-size: 14px;font-weight: bold;text-decoration: none;padding: 0 10px;" target="_blank" href="${booking_page_url}">予約する</a>`}
+      data-clipboard-popup-text="コピー完了">
+      コードをコピー
+    </button>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -220,5 +259,8 @@ export {
   InputWithEnter,
   NotificationMessages,
   SelectOptions,
-  CiricleButtonWithWord
+  CiricleButtonWithWord,
+  BookingOptionElement,
+  BookingPageUrlCopyBtn,
+  BookingPageButtonCopyBtn,
 };

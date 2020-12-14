@@ -58,9 +58,9 @@ class UserBotLines::HandleEvent < ActiveInteraction::Base
     social_user =
       begin
         SocialUser.transaction do
-          SocialUser.find_or_create_by(
-            social_service_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY],
-          )
+          SocialUser
+            .create_with(social_rich_menu_key: UserBotLines::RichMenus::Guest::KEY)
+            .find_or_create_by(social_service_user_id: event[EVENT_SOURCE_KEY][EVENT_USER_ID_KEY])
         end
       rescue ActiveRecord::RecordNotUnique
         retry

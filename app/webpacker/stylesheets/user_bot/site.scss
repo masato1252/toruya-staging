@@ -111,6 +111,13 @@ select {
 
 textarea {
   min-height: 150px;
+  color: $black;
+  border: 1px solid $gray;
+  background-color: $palette-color6;
+  line-height: 18px;
+  margin: 0 3px;
+  padding: 8px;
+  font-size: $normal-font-size;
 
   &.extend {
     width: 100%;
@@ -382,4 +389,80 @@ a {
 
 .drag-handler {
   color: $gray11;
+}
+
+.flow-step-indicator {
+  display: flex;
+  justify-content: space-evenly;
+
+  .btn {
+    margin: 0 !important;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+
+    i.fa {
+      text-indent: 0;
+      display: inline-block !important;
+      color: #ffffff !important;
+      line-height: 35px !important;
+      height: 35px !important;
+      padding: 0 10px !important;
+      font-size: 18px;
+      border-radius: 3px;
+
+      &.active {
+        background-color: $palette-color2-1 !important;
+        opacity: 0.35;
+      }
+
+      &.current {
+        background-color: $palette-color2-1 !important;
+      }
+
+      &.inactive {
+        background: $palette-color3;
+      }
+    }
+
+    .wording {
+      font-size: 10px;
+      position: absolute;
+      bottom: -12px;
+      white-space: nowrap;
+
+      &.active {
+        color: $palette-color2-1 !important;
+        opacity: 0.35;
+      }
+
+      &.current {
+        color: $palette-color2-1 !important;
+      }
+
+      &.inactive {
+        color: $palette-color3;
+      }
+    }
+  }
+
+  .line {
+    width: 100%;
+    border-top: 3px solid $tarco-border-1;
+    margin: 18px 0;
+
+    &.active,
+    &.current {
+      border-color: $palette-color2-1 !important;
+      opacity: 0.35;
+    }
+
+    &.inactive {
+      border-color: $palette-color3;
+    }
+  }
 }

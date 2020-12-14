@@ -13,10 +13,10 @@ class BookingPagesController < ActionController::Base
     end
 
     @customer =
-      if cookies[:booking_customer_id]
-        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
-      elsif params[:social_user_id]
+      if params[:social_user_id]
         SocialCustomer.find_by!(social_user_id: params[:social_user_id]).customer
+      elsif cookies[:booking_customer_id]
+        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
       end
 
     if @customer
@@ -86,8 +86,8 @@ class BookingPagesController < ActionController::Base
       customer = result[:customer]
 
       if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies[:booking_customer_id] = customer&.id
-        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+        cookies.permanent[:booking_customer_id] = customer&.id
+        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
       else
         cookies.delete :booking_customer_id
         cookies.delete :booking_customer_phone_number
@@ -123,8 +123,8 @@ class BookingPagesController < ActionController::Base
 
     if customer
       if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies[:booking_customer_id] = customer.id
-        cookies[:booking_customer_phone_number] = params[:customer_phone_number]
+        cookies.permanent[:booking_customer_id] = customer.id
+        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
       else
         cookies.delete :booking_customer_id
         cookies.delete :booking_customer_phone_number

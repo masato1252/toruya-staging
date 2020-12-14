@@ -18,7 +18,7 @@ RSpec.describe Lines::HandleEvent do
       }
     }
   end
-  let(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:social_account) { FactoryBot.create(:social_account) }
 
   let(:args) do
     {
@@ -30,6 +30,24 @@ RSpec.describe Lines::HandleEvent do
 
   describe "#execute" do
     context "when message_type is message" do
+      it "creates expected social_customer and executes expected event" do
+        response = Net::HTTPOK.new(1.0, "200", "OK")
+        expect(LineClient).to receive(:profile).and_return(response)
+        expect(response).to receive(:body) { {displayName: "foo", pictureUrl: "bar"}.to_json }
+        expect(Lines::MessageEvent).to receive(:run!)
+
+        expect {
+          outcome
+        }.to change {
+          SocialCustomer.where(
+            social_account: social_account,
+            user_id: social_account.user_id,
+            social_user_name: "foo",
+            social_user_picture_url: "bar",
+            social_rich_menu_key: SocialAccounts::RichMenus::CustomerGuest::KEY
+          ).count
+        }.by(1)
+      end
     end
   end
 end

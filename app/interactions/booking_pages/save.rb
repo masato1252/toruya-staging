@@ -55,6 +55,8 @@ module BookingPages
           errors.merge!(booking_page.errors)
         end
       end
+
+      booking_page
     end
   end
 end

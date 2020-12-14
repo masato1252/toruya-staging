@@ -35,4 +35,5 @@ class LiffRouting
   map :settings, :lines_user_bot_settings_url
   map :booking_pages, :lines_user_bot_booking_pages_url
   map :booking_options, :lines_user_bot_booking_options_url
+  map :new_booking_setting, :new_lines_user_bot_booking_url
 end

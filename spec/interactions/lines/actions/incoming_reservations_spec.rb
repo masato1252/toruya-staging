@@ -15,7 +15,6 @@ RSpec.describe Lines::Actions::IncomingReservations do
     context "when there is no incoming_reservations" do
       it "sends expected message" do
         expect(LineClient).to receive(:send).with(social_customer, I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"))
-        expect(Lines::Features).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
 
         outcome
       end
@@ -25,7 +24,6 @@ RSpec.describe Lines::Actions::IncomingReservations do
       let!(:reservation) { FactoryBot.create(:reservation, customers: [customer], start_time: Time.current.advance(days: 1)) }
 
       it "sends expected message" do
-        expect(Lines::Features).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
         expect(LineClient).to receive(:flex).with(
           social_customer,
           {

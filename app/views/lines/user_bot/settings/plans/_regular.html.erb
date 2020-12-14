@@ -9,6 +9,7 @@
       current_plan_level: Plan.permission_level(current_user.subscription.current_plan.level),
       plan_labels: @plan_labels,
       plans: @plans_properties,
+      default_upgrade_plan: @default_upgrade_plan,
       i18n: {
       }.merge!([
         t("settings.plans"),
