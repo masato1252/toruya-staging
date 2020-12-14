@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 
 import { useGlobalContext } from "context/user_bots/bookings/global_state";
@@ -9,6 +9,8 @@ import { Translator } from "libraries/helper";
 import BookingFlowStepIndicator from "./booking_flow_step_indicator";
 
 const ConfirmationStep = ({next, jump, step}) => {
+  const [submitting, setSubmitting] = useState(false)
+
   const {
     props, i18n, createBookingPage,
     selected_shop,
@@ -55,12 +57,21 @@ const ConfirmationStep = ({next, jump, step}) => {
       <div className="action-block">
         <button
           className="btn btn-yellow"
+          disabled={submitting}
           onClick={async () => {
+            if (submitting) return;
+            setSubmitting(true)
+
             if (await createBookingPage()) {
               next()
             }
+            setSubmitting(false)
           }}>
-          {i18n.use_these_settings_create_this_page}
+            {submitting ? (
+              <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+            ) : (
+              i18n.use_these_settings_create_this_page
+            )}
         </button>
       </div>
     </div>
