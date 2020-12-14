@@ -338,7 +338,11 @@ class Customer < ApplicationRecord
   end
 
   def phone_number
-    main_phone&.dig("value")
+    main_mobile_phone&.dig("value")
+  end
+
+  def main_mobile_phone
+    phone_numbers_details&.find{|h| h["type"] == "mobile"} || main_phone
   end
 
   def simple_address
