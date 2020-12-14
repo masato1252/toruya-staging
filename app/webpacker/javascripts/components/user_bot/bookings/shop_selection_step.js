@@ -59,7 +59,7 @@ const ShopSelectionStep = ({next, step}) => {
                   }
                 })
               }}
-              className="btn btn-tarco">
+              className="btn btn-tarco btn-extend btn-tall">
               {shop.name}
             </button>
           </div>

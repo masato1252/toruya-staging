@@ -72,7 +72,11 @@ a.btn {
   }
 
   &.btn-extend {
-    width: 100%;
+    width: 90%;
+  }
+
+  &.btn-tall {
+    min-height:50px;
   }
 }
 

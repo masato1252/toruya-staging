@@ -6,7 +6,7 @@ import { useGlobalContext } from "context/user_bots/bookings/global_state";
 import BookingFlowStepIndicator from "./booking_flow_step_indicator";
 
 const NoteSetupStep = ({next, step}) => {
-  const { props, i18n, dispatch } = useGlobalContext()
+  const { props, i18n, dispatch, note } = useGlobalContext()
 
   return (
     <div className="booking-creation-flow centerize">
@@ -14,6 +14,7 @@ const NoteSetupStep = ({next, step}) => {
       <h3 className="header centerize">{i18n.note_for_this_option}</h3>
       <textarea
         placeholder={i18n.enter_note_policy}
+        value={note}
         onChange={
           (event) => {
             dispatch({

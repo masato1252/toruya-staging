@@ -3,14 +3,27 @@
     background-color: $gray4;
     padding: 28px 7px 7px 7px;
     font-size: $normal-font-size;
+    border-style: solid;
+    border-color: $gray;
+    border-width: 0 0 1px 0;
+
+    &:first-child {
+      border-width: 1px 0 1px 0;
+    }
   }
 
   .field-header {
     padding: 7px;
     background-color: $gray2;
-    border: 1px solid $gray-border-1;
     display: flex;
     font-size: $normal-font-size;
+    border-style: solid;
+    border-color: $gray;
+    border-width: 0 0 1px 0;
+
+    &:first-child {
+      border-width: 1px 0 1px 0;
+    }
 
     &.space-between {
       justify-content: space-between;
