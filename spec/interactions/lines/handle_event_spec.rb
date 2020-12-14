@@ -44,7 +44,7 @@ RSpec.describe Lines::HandleEvent do
             user_id: social_account.user_id,
             social_user_name: "foo",
             social_user_picture_url: "bar",
-            social_rich_menu_key: SocialAccounts::RichMenus::CustomerGuest::KEY
+            social_rich_menu_key: SocialAccounts::RichMenus::CustomerReservations::KEY
           ).count
         }.by(1)
       end
