@@ -91,4 +91,5 @@ module ApplicationHelper
       ""
     end
   end
+  alias_method :image_rescue, :translation_resuce
 end

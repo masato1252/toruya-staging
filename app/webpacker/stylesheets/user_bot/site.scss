@@ -35,6 +35,14 @@ body {
     padding: 0;
   }
 
+  &.booking_pages,
+  &.booking_options,
+  &.social_accounts,
+  &.profiles,
+  &.payments {
+    background-color: $basic-gray-background;
+  }
+
   @include media-breakpoint-up(tablet) {
     width: 500px;
     margin-top: 36px;

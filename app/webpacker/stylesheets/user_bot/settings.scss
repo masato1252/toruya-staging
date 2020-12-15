@@ -1,7 +1,4 @@
 .settings-dashboard {
-  height: 100%;
-  background-color: $basic-gray-background;
-
   h3 {
     text-align: center;
     padding: 6px;
@@ -45,5 +42,25 @@
         border-left: 1px solid $gray;
       }
     }
+  }
+
+}
+
+.social_accounts {
+  img.demo {
+    border: 1px solid $gray;
+    max-width: 250px;
+    height: auto;
+  }
+
+}
+
+.line-webhook-modal {
+  .line-webhook-area div {
+    margin: 6px 0;
+  }
+
+  img.line-webhook-instruction {
+    width: 100%;
   }
 }

@@ -65,6 +65,8 @@ ja:
           title: アカウント設定
           info_label: アカウント登録情報
           payments_label: ご利用履歴
+          line_label: 販促用LINE
+          line_official_account: LINEオフィシャルアカウント
         plans:
           save: 選択する
           save_and_pay: 選択する
