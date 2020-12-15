@@ -5,7 +5,7 @@ module SocialCustomers
     object :social_customer
 
     def execute
-      social_customer.update!(customer_id: nil, social_rich_menu_key: SocialAccounts::RichMenus::CustomerGuest::KEY)
+      social_customer.update!(customer_id: nil)
 
       LineClient.unlink_rich_menu(social_customer: social_customer)
     end

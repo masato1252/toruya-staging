@@ -50,7 +50,8 @@ module SocialAccounts
           ::RichMenus::Create,
           social_account: social_account,
           body: body,
-          key: KEY
+          key: KEY,
+          default_menu: true
         )
       end
     end

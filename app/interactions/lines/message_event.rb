@@ -16,22 +16,22 @@ class Lines::MessageEvent < ActiveInteraction::Base
           message_type: SocialMessage.message_types[:customer]
         )
 
-        case event["message"]["text"].strip
-        when I18n.t("line.bot.keywords.booking_pages")
-          Lines::Actions::BookingPages.run(social_customer: social_customer)
-        when I18n.t("line.bot.keywords.incoming_reservations")
-          Lines::Actions::IncomingReservations.run(social_customer: social_customer)
-        else
-          if social_customer.bot?
+        if social_customer.customer
+          case event["message"]["text"].strip
+          when I18n.t("line.bot.keywords.booking_pages")
+            Lines::Actions::BookingPages.run(social_customer: social_customer)
+          when I18n.t("line.bot.keywords.incoming_reservations")
+            Lines::Actions::IncomingReservations.run(social_customer: social_customer)
+          else
             compose(Lines::Features, social_customer: social_customer)
           end
+        else
+          compose(Lines::Features, social_customer: social_customer)
         end
       else
         Rollbar.warning("Line chat room don't support message type", event: event)
 
-        if social_customer.one_on_one?
-          LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
-        end
+        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
       end
     end
   end

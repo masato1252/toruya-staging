@@ -4,10 +4,6 @@ FactoryBot.define do
     social_rich_menu_id { SecureRandom.hex }
     social_name { Faker::Lorem.word }
 
-    trait :guest do
-      social_name { SocialAccounts::RichMenus::CustomerGuest::KEY }
-    end
-
     trait :reservations do
       social_name { SocialAccounts::RichMenus::CustomerReservations::KEY }
     end

@@ -26,7 +26,6 @@ module SocialAccounts
           if account.invalid?
             errors.merge!(account.errors)
           else
-            compose(SocialAccounts::RichMenus::CustomerGuest, social_account: account)
             compose(SocialAccounts::RichMenus::CustomerReservations, social_account: account)
           end
 
