@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime";
 import 'jquery'
 import 'bootstrap-sass/assets/javascripts/bootstrap'
 import Routes from '../js-routes.js';
+import I18n from 'i18n-js/index.js.erb';
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(user_bot|management|shared)/)
 var ReactRailsUJS = require("react_ujs")
@@ -19,6 +20,7 @@ application.load(definitionsFromContext(context))
 require.context('../assets/user_bot', true)
 
 window.Routes = Routes;
+window.I18n = I18n;
 
 import Rails from 'rails-ujs';
 Rails.start();
