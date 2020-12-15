@@ -81,6 +81,7 @@ class User < ApplicationRecord
   has_many :payments, foreign_key: :receiver_id
   has_many :payment_withdrawals, foreign_key: :receiver_id
   has_many :social_accounts
+  has_one :social_account, -> { order("id") }
   has_many :social_customers
   has_one :business_application
   has_one :social_user

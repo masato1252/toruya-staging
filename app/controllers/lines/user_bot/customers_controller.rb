@@ -121,6 +121,20 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     render json: { reminder_permission: customer.reminder_permission }
   end
 
+  def reply_message
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+
+    outcome = SocialMessages::Create.run(
+      social_customer: customer.social_customer,
+      staff: current_user_staff,
+      content: params[:message],
+      readed: true,
+      message_type: SocialMessage.message_types[:staff]
+    )
+
+    render json: json_response(outcome)
+  end
+
   def find_duplicate_customers
     @customers = super_user
       .customers

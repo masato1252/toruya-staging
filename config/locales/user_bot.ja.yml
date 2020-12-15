@@ -60,6 +60,8 @@ ja:
         decide_customer: この顧客で決定
         updated_date: 更新日
         form_title: 顧客情報を編集
+        customer_message_reply_title: 返信内容を送信します
+        customer_message_reply_placeholder: お問合せ内容を入力
       settings:
         dashboard:
           title: アカウント設定
@@ -100,3 +102,6 @@ ja:
         use_these_settings_create_this_page: この設定で予約ページ作成
         share_your_booking_page: 作成した予約ページをシェアしましょう
         check_this_page: プレビュー
+      notifications:
+        title: 以下の新着データがあります
+        unread_message_label: お問合せメッセージ

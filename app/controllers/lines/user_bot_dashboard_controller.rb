@@ -48,7 +48,7 @@ class Lines::UserBotDashboardController < ActionController::Base
       end
   end
 
-  def json_response(outcome, data)
+  def json_response(outcome, data = {})
     {
       status: outcome.valid? ? "successful" : "failed",
       error_message: outcome.errors.full_messages.join(", ")

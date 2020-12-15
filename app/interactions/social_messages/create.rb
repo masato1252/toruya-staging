@@ -22,6 +22,13 @@ module SocialMessages
       if message.errors.present?
         errors.merge!(message.errors)
       elsif message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
+        if !readed && message_type == SocialMessage.message_types[:customer] && social_customer.customer
+          UserBotLines::Actions::SwitchRichMenu.run(
+            social_user: social_customer.user.social_user,
+            rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY
+          )
+        end
+
         # From normal customer
         UserChannel.broadcast_to(
           social_customer.user,

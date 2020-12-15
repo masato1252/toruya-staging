@@ -110,6 +110,46 @@ module LineMessages
       }
     end
 
+    def self.content4(title1: , body1:, action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": title1,
+              "weight": "bold",
+              "size": "lg",
+              "align": "center",
+              "contents": []
+            }
+          ]
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": body1,
+              "align": "start",
+              "wrap": true,
+              "contents": []
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "sm",
+          "contents": action_template_buttons_contents(action_templates)
+        }
+      }
+    end
+
     def self.action_template_buttons_contents(action_templates)
       action_templates.map do |action_template|
         {

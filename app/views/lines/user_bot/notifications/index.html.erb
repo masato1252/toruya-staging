@@ -1,0 +1,22 @@
+<div class="booking-pages form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", title: I18n.t("user_bot.dashboards.notifications.title") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.notifications.unread_message_label") %></div>
+  <div class="booking-pages-list">
+    <% @messages.each do |message| %>
+      <% next unless message.social_customer.customer %>
+
+      <%= link_to lines_user_bot_customers_path(
+        customer_id: message.social_customer.customer_id,
+        target_view: "customer_messages",
+        previous_path: lines_user_bot_notifications_path
+      ), class: "field-row with-next-arrow" do %>
+        <div>
+          <h3><%= message.social_customer.customer.name %></h3>
+          <div class="desc dotdotdot"><%= message.raw_content %></div>
+        </div>
+        <i class="fa fa-angle-right"></i>
+      <% end %>
+    <% end %>
+  </div>
+</div>

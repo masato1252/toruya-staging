@@ -32,8 +32,13 @@ const CustomerBasicInfo = () => {
         <CustomerTopActions
           leading={
             <a onClick={() => {
-              dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
-              dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+              if (props.previous_path) {
+                window.location = props.previous_path
+              }
+              else {
+                dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
+                dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+              }
             }} >
               <i className="fa fa-angle-left fa-2x"></i>
             </a>
@@ -44,36 +49,38 @@ const CustomerBasicInfo = () => {
           <div className="group-rank">
             {
               selected_customer.groupName ? (
-                <span>{selected_customer.groupName}</span>
+                <div>{selected_customer.groupName}</div>
               ) : (
-                <span className="field-error-border">{props.i18n.group_blank_option}</span>
+                <div className="field-error-border">{props.i18n.group_blank_option}</div>
               )
             }
 
             {
               selected_customer.rank && (
-                <span className={selected_customer.rank.key}>{selected_customer.rank.name}</span>
+                <div className={selected_customer.rank.key}>{selected_customer.rank.name}</div>
               )
             }
           </div>
-          <div className="phonetic-name">
-            <span>
-              {selected_customer.phoneticLastName}
-            </span>
-            <span>
-              {selected_customer.phoneticFirstName}
-            </span>
-          </div>
-          <div className="name">
-            <span>
-              {selected_customer.lastName}
-            </span>
-            <span>
-              {selected_customer.firstName}
-            </span>
+          <div className="names">
+            <div className="phonetic-name">
+              <span>
+                {selected_customer.phoneticLastName}
+              </span>
+              <span>
+                {selected_customer.phoneticFirstName}
+              </span>
+            </div>
+            <div className="name">
+              <span>
+                {selected_customer.lastName}
+              </span>
+              <span>
+                {selected_customer.firstName}
+              </span>
+            </div>
           </div>
           <div className="notifiers">
-            <a href="#"
+            <a
               data-id="customer-reminder-toggler"
               onClick={async () => {
                 const [error, response] = await CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)

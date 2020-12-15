@@ -12,6 +12,7 @@ ja:
         customers: "Customers"
         settings: "Settings"
         booking_pages: "Booking pages"
+        notifications: "Notifications"
     page:
       user_sign_up:
         shop_info:

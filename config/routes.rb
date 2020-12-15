@@ -45,6 +45,7 @@ Rails.application.routes.draw do
           get :filter
           post :save
           post :toggle_reminder_premission
+          post :reply_message
           get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
           patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
           get "/social_service_user_id/:social_service_user_id", action: "index"
@@ -156,6 +157,12 @@ Rails.application.routes.draw do
         collection do
           get :create_reservation
           get :create_booking_page
+        end
+      end
+
+      resources :notifications, only: [:index] do
+        collection do
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
     end

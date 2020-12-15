@@ -19,7 +19,15 @@ class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardCon
       .order("social_messages.created_at DESC, social_messages.id DESC")
       .limit(MESSAGES_PER_PAGE + 1)
 
+    # TODO: refactor
     scope.where(readed_at: nil).update_all(readed_at: Time.current)
+
+    unless current_user.social_account.social_messages.includes(social_customer: :customer).unread.exists?
+      UserBotLines::Actions::SwitchRichMenu.run(
+        social_user: current_user.social_user,
+        rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
+      )
+    end
 
     _messages = social_messages[0...MESSAGES_PER_PAGE].map { |message| MessageSerializer.new(message).attributes_hash }
     _messages.reverse!

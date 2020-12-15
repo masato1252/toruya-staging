@@ -31,8 +31,6 @@ RSpec.describe Lines::MessageEvent do
   describe "#execute" do
     context "when event exists" do
       it "creates a social messages" do
-        expect(Lines::Features).to receive(:run).with(social_customer: social_customer).and_return(double(invalid?: false, result: nil))
-
         expect {
           outcome
         }.to change {
