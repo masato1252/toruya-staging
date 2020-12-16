@@ -10,7 +10,7 @@ const SocialAccountEdit =({props}) => {
   const i18n = props.i18n;
 
   const onSubmit = async (data) => {
-    if (isSubmitting.submitting) return;
+    if (formState.isSubmitting) return;
 
     let error, response;
 
@@ -64,6 +64,7 @@ const SocialAccountEdit =({props}) => {
       <BottomNavigationBar klassName="centerize transparent">
         <span></span>
         <CiricleButtonWithWord
+          disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
           icon={<i className="fa fa-save fa-2x"></i>}
           word={i18n.save}
