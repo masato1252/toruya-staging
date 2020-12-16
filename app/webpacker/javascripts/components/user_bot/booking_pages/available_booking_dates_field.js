@@ -26,7 +26,7 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
             />
           )}
         />
-        <input type="hidden" name={`special_dates[${index}].end_at_date_part`} ref={register({ required: true })} defaultValue={field.end_at_time_part} />
+        <input type="hidden" name={`special_dates[${index}].end_at_date_part`} ref={register({ required: true })} defaultValue={field.end_at_date_part} />
         <input type="time" name={`special_dates[${index}].start_at_time_part`} ref={register({ required: true })} defaultValue={field.start_at_time_part} />
         <input type="time" name={`special_dates[${index}].end_at_time_part`} ref={register({ required: true })} defaultValue={field.end_at_time_part} />
         <button className="btn btn-orange" onClick={() => special_dates_fields.remove(index)}>

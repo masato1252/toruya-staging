@@ -224,8 +224,8 @@ const BookingPageUrlCopyBtn = ({booking_page_url}) => {
       data-controller="clipboard"
       data-action="click->clipboard#copy"
       data-clipboard-text={booking_page_url}
-      data-clipboard-popup-text="コピー完了">
-      URLをコピー
+      data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
+      {I18n.t("action.copy_code")}
     </button>
   )
 }
@@ -237,8 +237,8 @@ const BookingPageButtonCopyBtn = ({booking_page_url}) => {
       data-controller="clipboard"
       data-action="click->clipboard#copy"
       data-clipboard-text={`<a style="display: inline-block;background-color: #aecfc8;border: 1px solid #84b3aa;border-radius: 6px;-moz-border-radius: 6px;-webkit-border-radius: 6px;-o-border-radius: 6px;-ms-border-radius: 6px;line-height: 40px;color: #fff;font-size: 14px;font-weight: bold;text-decoration: none;padding: 0 10px;" target="_blank" href="${booking_page_url}">予約する</a>`}
-      data-clipboard-popup-text="コピー完了">
-      コードをコピー
+      data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
+      {I18n.t("action.copy_code")}
     </button>
   )
 }

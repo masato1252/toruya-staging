@@ -43,9 +43,6 @@
   <%= render "lines/user_bot/field_row",
     path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :special_dates),
     title: @booking_page.only_specail_dates_booking? ? I18n.t("settings.booking_page.form.special_date_label") : I18n.t("settings.booking_page.form.default_available_dates_label")  %>
-  <% @booking_page.booking_page_special_dates.future.each do |date| %>
-    <%= render "lines/user_bot/field_row", title: "#{I18n.l(date.start_at, format: :long_date_with_wday)} ~ #{I18n.l(date.end_at, format: :time_only)}" %>
-  <% end %>
 
   <div class="field-header" id="interval"><%= I18n.t("settings.booking_page.form.interval_period_header") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :interval), title: "#{@booking_page.interval} #{I18n.t("settings.booking_page.form.per_minute")}" %>
