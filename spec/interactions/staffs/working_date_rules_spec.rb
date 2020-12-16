@@ -23,7 +23,7 @@ RSpec.describe Staffs::WorkingDateRules do
         staff_working_wdays: [],
         working_dates: [],
         off_dates: [],
-        holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+        holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
       })
     end
 
@@ -40,7 +40,7 @@ RSpec.describe Staffs::WorkingDateRules do
           staff_working_wdays: [],
           working_dates: [],
           off_dates: [],
-          holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+          holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
         })
       end
 
@@ -58,7 +58,7 @@ RSpec.describe Staffs::WorkingDateRules do
             staff_working_wdays: [],
             working_dates: [],
             off_dates: [],
-            holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+            holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
           })
         end
       end
@@ -79,7 +79,7 @@ RSpec.describe Staffs::WorkingDateRules do
             staff_working_wdays: [day_of_week],
             working_dates: [],
             off_dates: [],
-            holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+            holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
           })
         end
       end
@@ -98,7 +98,7 @@ RSpec.describe Staffs::WorkingDateRules do
             staff_working_wdays: [],
             working_dates: [particular_date],
             off_dates: [],
-            holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+            holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
           })
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe Staffs::WorkingDateRules do
           staff_working_wdays: [],
           working_dates: [],
           off_dates: [particular_date],
-          holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+          holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
         })
       end
     end
@@ -147,7 +147,7 @@ RSpec.describe Staffs::WorkingDateRules do
             staff_working_wdays: [],
             working_dates: [],
             off_dates: [particular_date],
-            holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+            holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
           })
         end
       end
@@ -168,7 +168,7 @@ RSpec.describe Staffs::WorkingDateRules do
             staff_working_wdays: [],
             working_dates: [],
             off_dates: [],
-            holidays: Holidays.between(date_range.first, date_range.last).map { |holiday| holiday[:date] }
+            holidays: Holidays.between(date_range.first, date_range.last, :jp).map { |holiday| holiday[:date] }
           })
         end
       end

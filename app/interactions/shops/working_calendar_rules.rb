@@ -14,7 +14,7 @@ module Shops
         full_time: true,
         shop_working_on_holiday: !!shop.holiday_working,
         shop_working_wdays: shop.business_schedules.for_shop.opened.map(&:day_of_week),
-        holidays: Holidays.between(start_date, end_date).map { |holiday| holiday[:date] },
+        holidays: Holidays.between(start_date, end_date, :jp).map { |holiday| holiday[:date] },
         off_dates: shop_closed_dates
       }
     end
