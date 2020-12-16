@@ -225,7 +225,7 @@ const BookingPageUrlCopyBtn = ({booking_page_url}) => {
       data-action="click->clipboard#copy"
       data-clipboard-text={booking_page_url}
       data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
-      {I18n.t("action.copy_code")}
+      {I18n.t("action.copy_url2")}
     </button>
   )
 }
