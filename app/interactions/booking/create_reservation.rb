@@ -13,6 +13,7 @@ module Booking
     string :customer_phonetic_first_name, default: nil
     string :customer_phone_number, default: nil
     string :customer_email, default: nil
+    string :social_user_id, default: nil
     boolean :customer_reminder_permission, default: false
     # customer_info format might like
     # {
@@ -96,6 +97,7 @@ module Booking
           # regular customer
           customer = user.customers.find(customer_info["id"])
           customer.update(reminder_permission: customer_reminder_permission)
+
         else
           # new customer
           customer_outcome = Customers::Create.run(
@@ -117,6 +119,10 @@ module Booking
           end
 
           customer = customer_outcome.result
+        end
+
+        if social_customer
+          social_customer.update!(customer_id: customer.id)
         end
 
         catch :booked_reservation do
@@ -312,6 +318,10 @@ module Booking
       else
         customer_email
       end
+    end
+
+    def social_customer
+      SocialCustomer.find_by(social_user_id: social_user_id) if social_user_id
     end
   end
 end

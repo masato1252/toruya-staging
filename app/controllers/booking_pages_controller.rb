@@ -14,8 +14,11 @@ class BookingPagesController < ActionController::Base
 
     @customer =
       if params[:social_user_id]
-        SocialCustomer.find_by!(social_user_id: params[:social_user_id]).customer
-      elsif cookies[:booking_customer_id]
+        SocialCustomer.find_by!(social_user_id: params[:social_user_id])&.customer
+      end
+
+    @customer ||=
+      if cookies[:booking_customer_id]
         @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
       end
 
@@ -78,7 +81,8 @@ class BookingPagesController < ActionController::Base
       customer_email: params[:customer_email],
       customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
       customer_info: JSON.parse(params[:customer_info]),
-      present_customer_info: JSON.parse(params[:present_customer_info])
+      present_customer_info: JSON.parse(params[:present_customer_info]),
+      social_user_id: params[:social_user_id]
     )
 
     if outcome.valid?

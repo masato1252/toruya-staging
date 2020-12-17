@@ -4,6 +4,12 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
   object :social_customer
 
   def execute
+    unless customer
+      LineClient.send(social_customer, I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"))
+
+      return
+    end
+
     reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT) || []
 
     contents = reservations.map do |reservation|

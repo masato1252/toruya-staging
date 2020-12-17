@@ -1289,7 +1289,8 @@ class BookingReservationForm extends React.Component {
             "customer_info",
             "present_customer_info",
             "remember_me",
-            "reminder_permission"
+            "reminder_permission",
+            "social_user_id"
           ),
         ),
         responseType: "json"
