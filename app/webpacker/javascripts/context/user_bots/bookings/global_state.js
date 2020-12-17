@@ -26,7 +26,7 @@ export const GlobalProvider = ({ props, children }) => {
     )
   }, [])
   const [state, dispatch] = useReducer(reducers, initialValue)
-  const { selected_shop, selected_menu, selected_booking_option, new_booking_option_price, new_booking_option_tax_include, note } = state.booking_creation_states;
+  const { selected_shop, selected_menu, selected_booking_option, new_booking_option_price, new_booking_option_tax_include, note, new_menu_name, new_menu_minutes } = state.booking_creation_states;
 
   const fetchShopMenus = async () => {
     const shop_id = state.booking_creation_states.selected_shop.id
@@ -60,6 +60,8 @@ export const GlobalProvider = ({ props, children }) => {
           booking_option_id: selected_booking_option.id,
           new_booking_option_price: new_booking_option_price || 0,
           new_booking_option_tax_include: new_booking_option_tax_include,
+          new_menu_name: new_menu_name,
+          new_menu_minutes: new_menu_minutes,
           note: note
         }
       }

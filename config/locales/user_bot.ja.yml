@@ -78,6 +78,7 @@ ja:
       booking_page_creation:
         default_label: "%{menu_name}予約ページ"
         default_greeting: "%{menu_name}の予約を受付ます。"
+        default_category_name: "オンライン予約"
         booking_shop: 予約店舗
         booking_options: 予約メニュー
         booking_price: 予約価格
@@ -89,7 +90,10 @@ ja:
         shop_without_logo: 店舗ロゴがありません
         create_page_from_this_shop: この店舗で作成する
         choose_which_option: どのメニューの予約を受付ますか？
-        current_booking_options_label: 既存の予約価格
+        what_is_menu_name: メニュー名は何ですか？
+        input_menu_name: メニュー名を入力
+        what_is_menu_time: メニューの所用時間は何分ですか？
+        current_booking_options_label: 既存の予約価格から選択
         create_new_booking_option: 新しい価格を作成する
         how_much_of_this_price: 幾らで販売しますか？
         enter_price: 価格を入力

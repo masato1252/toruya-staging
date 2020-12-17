@@ -17,12 +17,15 @@ const ConfirmationStep = ({next, jump, step}) => {
     selected_booking_option,
     selected_menu,
     new_booking_option_price,
-    new_booking_option_tax_include
+    new_booking_option_tax_include,
+    new_menu_name,
+    new_menu_minutes,
+    dispatch
   } = useGlobalContext()
 
   const option = selected_booking_option.id ? selected_booking_option : {
-    name: selected_menu.label,
-    minutes: selected_menu.minutes,
+    name: selected_menu?.label || new_menu_name,
+    minutes: selected_menu?.minutes || new_menu_minutes,
     price: `${(parseInt(new_booking_option_price || 0)).toLocaleString()}${i18n.unit}(${new_booking_option_tax_include ? i18n.tax_include : i18n.tax_excluded})`
   }
 
@@ -41,7 +44,10 @@ const ConfirmationStep = ({next, jump, step}) => {
             shop={selected_shop}
             booking_page={booking_page}
             booking_option={option}
-            edit_option={() => jump(1)}
+            edit_option={() => {
+              dispatch({type: "RESET_OPTION"})
+              jump(1)
+            }}
             edit_price={() => jump(2)}
           />
         ) : (
@@ -63,9 +69,11 @@ const ConfirmationStep = ({next, jump, step}) => {
             setSubmitting(true)
 
             if (await createBookingPage()) {
+              setSubmitting(false)
               next()
+            } else  {
+              setSubmitting(false)
             }
-            setSubmitting(false)
           }}>
             {submitting ? (
               <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>

@@ -39,7 +39,7 @@ const ShopSelectionStep = ({next, step}) => {
               <button
                 className="btn btn-yellow"
                 onClick={next}>
-                {i18n.create_page_from_this_shop}
+                {I18n.t("action.next_step")}
               </button>
             </div>
           </div>
