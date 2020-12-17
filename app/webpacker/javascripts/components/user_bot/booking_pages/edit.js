@@ -129,9 +129,9 @@ const BookingPageEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={i18n.title}
+        title={i18n.top_bar_header || i18n.page_title}
       />
-      <div className="field-header">{i18n.title}</div>
+      <div className="field-header">{i18n.page_title}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <span></span>

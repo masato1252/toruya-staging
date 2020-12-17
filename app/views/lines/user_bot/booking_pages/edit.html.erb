@@ -27,7 +27,8 @@
       t("settings.booking_page.form"),
       t("action").slice(:save, :delete, :add_more),
       {
-        title: t("settings.booking_page.form.#{@attribute}"),
+        page_title: t("settings.booking_page.form.#{@attribute}"),
+        top_bar_header: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_top_bar_header", raise: true) },
         hint: translation_resuce { I18n.t("settings.booking_page.form.#{@attribute}_hint", raise: true) },
       }
     ].inject(:merge!))

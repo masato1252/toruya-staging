@@ -506,9 +506,12 @@ ja:
         name_header: ページヘッダ
         page_name: ページ名
         name: ページ名
+        name_top_bar_header: ページヘッダ
         page_name_hint: あなたが予約ページを管理する際に使用する名前です。
         name_hint: あなたが予約ページを管理する際に使用する名前です。
         title: ページタイトル
+        title_header: ページタイトル
+        title_top_bar_header: ページヘッダ
         title_hint: 予約ページのタイトルとして表示されます。
         greeting: 挨拶文
         greeting_placeholder: 予約ページ上部に表示されるます。
