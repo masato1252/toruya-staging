@@ -70,6 +70,8 @@ ja:
         plans:
           save: 選択する
           save_and_pay: 選択する
+        social_account:
+          line_developer: LINEデベロッパーズ
       booking_pages:
         index:
           title: オンライン予約ページ
