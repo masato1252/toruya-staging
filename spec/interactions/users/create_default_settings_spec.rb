@@ -26,6 +26,8 @@ RSpec.describe Users::CreateDefaultSettings do
         user.menus.count
       }.by(1).and change {
         user.contact_groups.count
+      }.by(1).and change {
+        BusinessSchedule.where(shop: user.shops.first, staff: user.current_staff(user)).count
       }.by(1)
     end
   end

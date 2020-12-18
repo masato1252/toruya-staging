@@ -45,6 +45,15 @@ module Users
             )
           end
         end
+
+        if staff && !staff.business_schedules.where(shop: shop).exists?
+          BusinessSchedules::Create.run(
+            shop: shop,
+            staff: staff, attrs: {
+              full_time: true
+            }
+          )
+        end
       end
 
       unless user.reservation_settings.exists?
@@ -58,8 +67,6 @@ module Users
       if user.shops.exists? && !user.menus.exists?
         menu = user.menus.new
         category = user.categories.find_or_create_by(name: I18n.t("common.category_default_name"))
-        first_shop = user.shops.first
-        staff = user.staffs.first
 
         outcome = Menus::Update.run(
           menu: menu,
@@ -97,6 +104,15 @@ module Users
 
     def profile
       @profile ||= user.profile
+    end
+
+    def staff
+      # user themself
+      @staff ||= user.staffs.first
+    end
+
+    def first_shop
+      @first_shop ||= user.shops.first
     end
   end
 end
