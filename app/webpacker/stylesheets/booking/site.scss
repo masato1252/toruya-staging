@@ -17,19 +17,35 @@ body {
   display: none !important;
 }
 
-.booking-content {
+.responsive-content {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.mobile-content {
+  position: relative;
   background-color: #FFFFFF;
-  min-height: 630px;
   padding: 12px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
   width: 100%; // mobile
+  flex: 1 1 auto;
+
+  &.extend {
+    padding: 0;
+  }
 
   @include media-breakpoint-up(tablet) {
     width: 500px;
     margin-top: 36px;
   }
+}
+
+.action-block {
+  text-align: center;
+  padding: 10px 0 20px;
 }
 
 .footer {
@@ -67,6 +83,27 @@ select {
   background-color: $palette-color6;
   border: 1px solid $gray;
   border-radius: 4px;
+}
+
+textarea {
+  min-height: 150px;
+  color: $black;
+  border: 1px solid $gray;
+  background-color: $palette-color6;
+  line-height: 18px;
+  margin: 0 3px;
+  padding: 8px;
+  font-size: $normal-font-size;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
+
+  &.with-border {
+    border: 1px solid $gray !important;
+  }
 }
 
 h4 {

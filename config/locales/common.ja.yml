@@ -32,6 +32,8 @@ ja:
     pay: 支払う
     reply: 返信
     send: 送信する
+    call: 電話する
+    send_message: メッセージ送信する
   common:
     processing: 送信中
     date: 日付
@@ -48,6 +50,7 @@ ja:
     birthday: 生年月日
     memo: メモ
     name: 氏名
+    name2: お名前
     last_name: 姓
     first_name: 名
     phonetic_last_name: せい
@@ -94,4 +97,5 @@ ja:
     preview: プレビュー
     unit: 円
     person_unit: 人
+    message_content_placholder: お問合せ内容を入力
 

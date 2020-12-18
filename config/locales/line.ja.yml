@@ -43,6 +43,7 @@ ja:
       keywords:
         incoming_reservations: 全ての予約
         booking_pages: 新たに予約する
+        contacts: お問い合わせ
       thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
       connected_successfuly: "ありがとうございます！\n\n 顧客情報の連携が完了しました。"
       features:
@@ -53,7 +54,7 @@ ja:
           title: オンライン予約
           desc: 以下よりお選びください。
           rich_menu:
-            bar_text: 予約する
+            bar_text: "予約する↓"
       messages:
         incoming_reservations:
           desc: "ご予約の変更・キャンセルは %{shop_phone_number} までご連絡ください。"
@@ -61,3 +62,6 @@ ja:
         booking_pages:
           no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。
           available_pages: ご利用いただける予約ページをお送りします。
+        contact:
+          contact_us: お問い合わせ
+          contact_us_with_text_or_phone: メッセージ送信、またはお電話にてお問い合わせください。

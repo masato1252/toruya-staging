@@ -2,10 +2,10 @@ class Customers::Create < ActiveInteraction::Base
   object :user
   string :customer_last_name
   string :customer_first_name
-  string :customer_phonetic_last_name
-  string :customer_phonetic_first_name
-  string :customer_phone_number
-  string :customer_email
+  string :customer_phonetic_last_name, default: nil
+  string :customer_phonetic_first_name, default: nil
+  string :customer_phone_number, default: nil
+  string :customer_email, default: nil
   boolean :customer_reminder_permission, default: false
 
   def execute
@@ -15,13 +15,23 @@ class Customers::Create < ActiveInteraction::Base
         first_name: customer_first_name,
         phonetic_last_name: customer_phonetic_last_name,
         phonetic_first_name: customer_phonetic_first_name,
-        email_types: "mobile",
-        emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
-        phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
-        emails_details: [{ type: "mobile", value: customer_email }],
-        phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
         reminder_permission: customer_reminder_permission
       }
+
+      if customer_email
+        customer_info_hash.merge!(
+          email_types: "mobile",
+          emails: [{ type: "mobile", value: { address: customer_email }, primary: true }],
+          emails_details: [{ type: "mobile", value: customer_email }],
+        )
+      end
+
+      if customer_phone_number
+        customer_info_hash.merge!(
+          phone_numbers: [{ type: "mobile", value: customer_phone_number, primary: true }],
+          phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+        )
+      end
 
       customer = user.customers.new(customer_info_hash)
       google_user = user.google_user

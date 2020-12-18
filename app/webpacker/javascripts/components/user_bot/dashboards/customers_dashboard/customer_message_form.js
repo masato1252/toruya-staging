@@ -28,6 +28,8 @@ const CustomerMessageForm = () => {
           }
         }
       })
+
+      ref.current.value = null;
     }
   }
 
@@ -35,7 +37,7 @@ const CustomerMessageForm = () => {
     <div className="centerize messsage-form">
       <h4>{I18n.t("user_bot.dashboards.customer.customer_message_reply_title")}</h4>
       <div>
-        <textarea ref={ref} className="extend with-border" placeholder={I18n.t("user_bot.dashboards.customer.customer_message_reply_placeholder")}/>
+        <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
       </div>
       <div>
         <button type="button" className="btn btn-yellow" onClick={handleSubmit} disabled={submitting}>

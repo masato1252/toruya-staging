@@ -68,7 +68,8 @@ RSpec.describe Lines::Actions::IncomingReservations do
                     :contents => [
                       {
                         :action => {:label => I18n.t("line.actions.label.call"), :type => "uri", :uri => "tel:#{reservation.shop.phone_number}"},
-                        :type => "button"
+                        :type => "button",
+                        :style=>"secondary"
                       }
                     ],
                     :layout => "horizontal",

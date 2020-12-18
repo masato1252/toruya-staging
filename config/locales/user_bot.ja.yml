@@ -61,7 +61,6 @@ ja:
         updated_date: 更新日
         form_title: 顧客情報を編集
         customer_message_reply_title: 返信内容を送信します
-        customer_message_reply_placeholder: お問合せ内容を入力
       settings:
         dashboard:
           title: アカウント設定

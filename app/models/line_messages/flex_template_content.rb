@@ -38,7 +38,7 @@ module LineMessages
         "footer": {
           "type": "box",
           "layout": "horizontal",
-          "contents": action_template_buttons_contents(action_templates)
+          "contents": action_templates
         },
         "styles": {
           "body": {
@@ -76,7 +76,7 @@ module LineMessages
         "body": {
           "type": "box",
           "layout": "vertical",
-          "contents": action_template_buttons_contents(action_templates)
+          "contents": action_templates
         },
         "styles": {
           "body": {
@@ -144,19 +144,49 @@ module LineMessages
         "footer": {
           "type": "box",
           "layout": "vertical",
-          "spacing": "sm",
-          "contents": action_template_buttons_contents(action_templates)
+          "spacing": "md",
+          "contents": action_templates
         }
       }
     end
 
-    def self.action_template_buttons_contents(action_templates)
-      action_templates.map do |action_template|
-        {
-          "type": "button",
-          "action": action_template
+    def self.content5(title1: ,title2:, action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": title1,
+              "size": "lg",
+              "align": "start",
+              "weight": "bold"
+            },
+            {
+              "type": "text",
+              "text": title2,
+              "align": "start",
+              "weight": "regular",
+              "color": "#727272",
+              "wrap": true
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "md",
+          "contents": action_templates
+        },
+        "styles": {
+          "body": {
+            "separator": true
+          }
         }
-      end
+      }
     end
   end
 end

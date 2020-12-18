@@ -12,11 +12,12 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
 
     menu_key ||= rich_menu_key
 
-    # TODO: don't switch if the same
-    compose(
-      RichMenus::Connect,
-      social_target: social_user,
-      social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key)
-    )
+    if social_user.social_rich_menu_key != menu_key && !Rails.env.development?
+      compose(
+        ::RichMenus::Connect,
+        social_target: social_user,
+        social_rich_menu: ::SocialRichMenu.find_by!(social_name: menu_key)
+      )
+    end
   end
 end

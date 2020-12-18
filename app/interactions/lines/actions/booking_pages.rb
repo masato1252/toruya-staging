@@ -50,26 +50,33 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
   def execute
     user = social_customer.social_account.user
     # XXX: refactor to better query
-    columns = user.booking_pages.where(draft: false, line_sharing: true).started.map do |booking_page|
+    contents = user.booking_pages.where(draft: false, line_sharing: true).started.map do |booking_page|
       if booking_page.started? && !booking_page.ended?
-        LineMessages::CarouselColumn.template(
-          title: booking_page.title,
-          text: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
-          actions: [
+        LineMessages::FlexTemplateContent.content4(
+          title1: booking_page.title,
+          body1: (booking_page.greeting.presence || booking_page.note.presence || booking_page.title),
+          action_templates: [
             LineActions::Uri.new(
               action: "book",
-              url: Rails.application.routes.url_helpers.booking_page_url(booking_page, social_user_id: social_customer.social_user_id)
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page, social_user_id: social_customer.social_user_id),
+              btn: "primary"
             )
-          ]
+          ].map(&:template)
         )
       end
     end.compact.first(LINE_COLUMNS_NUMBER_LIMIT)
 
     # handle 400 error back
-    if columns.blank?
+    if contents.blank?
       LineClient.send(social_customer, I18n.t("line.bot.messages.booking_pages.no_available_pages"))
     else
-      LineClient.carousel_template(social_customer: social_customer, text: I18n.t("line.bot.messages.booking_pages.available_pages"), columns: columns)
+      LineClient.flex(
+        social_customer,
+        LineMessages::FlexTemplateContainer.carousel_template(
+          altText: I18n.t("line.bot.messages.booking_pages.available_pages"),
+          contents: contents
+        )
+      )
     end
   end
 end

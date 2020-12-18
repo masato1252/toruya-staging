@@ -13,7 +13,9 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}",
         title2: reservation.menus.map(&:display_name).join(", "),
         body: I18n.t("line.bot.messages.incoming_reservations.desc", shop_phone_number: shop.phone_number),
-        action_templates: [LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}").template]
+        action_templates: [
+          LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
+        ]
       )
     end
 

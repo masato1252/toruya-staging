@@ -326,6 +326,20 @@ const SocialAccountServices = {
   },
 }
 
+const ContactServices = {
+  make_contact: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_make_contact_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -336,4 +350,5 @@ export {
   BookingOptionServices,
   BookingServices,
   SocialAccountServices,
+  ContactServices
 }

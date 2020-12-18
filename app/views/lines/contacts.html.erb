@@ -1,0 +1,7 @@
+<%= react_component("lines/contacts", {
+  props: {
+    social_customer: @social_customer.attributes.slice("social_user_id", "customer_id"),
+  }
+},
+{ camelize_props: false }
+) %>

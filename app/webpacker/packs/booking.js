@@ -1,5 +1,7 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import Routes from '../js-routes.js';
+import I18n from 'i18n-js/index.js.erb';
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines)/)
 var ReactRailsUJS = require("react_ujs")
@@ -14,6 +16,9 @@ const context = require.context("../javascripts/controllers", true, /^\.\/(colla
 application.load(definitionsFromContext(context))
 
 require.context('../assets/booking', true)
+
+window.Routes = Routes;
+window.I18n = I18n;
 
 import Rails from 'rails-ujs';
 Rails.start();
