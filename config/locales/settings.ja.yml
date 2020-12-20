@@ -505,35 +505,39 @@ ja:
       form:
         name_header: ページヘッダ
         page_name: ページ名
-        name: ページ名
+        name_title: ページ名
         name_top_bar_header: ページヘッダ
         page_name_hint: あなたが予約ページを管理する際に使用する名前です。
         name_hint: あなたが予約ページを管理する際に使用する名前です。
         title: ページタイトル
-        title_header: ページタイトル
+        title_title: ページタイトル
         title_top_bar_header: ページヘッダ
         title_hint: 予約ページのタイトルとして表示されます。
         greeting: 挨拶文
+        greeting_title: 挨拶文
         greeting_placeholder: 予約ページ上部に表示されるます。
         booking_option_header: 予約価格
         new_option: 予約価格
+        new_option_title: 予約価格
         add_new_option: 価格を追加
         booking_option_hint: あなたのお客様はこの価格で予約をします。
         booking_option_required_time: 所要時間
         shop_header: 予約可能な店舗
-        shop_id: 予約可能な店舗
+        shop_id_title: 予約可能な店舗
         booking_dates_header: 予約カレンダー
         booking_dates_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         booking_dates_calendar_hint: 現在の設定内容と空席状況からカレンダーを表示しています。
         booking_dates_working_date: 営業日
         booking_dates_available_booking_date: 予約可能日
         special_dates: 予約可能日
+        special_dates_title: 予約可能日
         booking_dates_available_booking_datetime: 予約可能な日時
         default_available_dates_label: 全ての予約可能日に受付ける(推奨)
         special_date_label: 指定日のみ受付ける
         interval_header: 予約の開始時間
         interval_period_header: 予約時間の選択肢
         interval: 予約時間の選択肢
+        interval_title: 予約時間の選択肢
         interval_real_booking_time_explanation: 現在の設定内容と空席状況から、始めの４つ選択肢を表示しています。
         interval_real_booking_time_warning: 予約状況やスタッフの空き状況によって、実際の表示は異なる場合があります
         interval_explanation: 9:00〜12:00までの、始めの４つ選択肢を表示しています。
@@ -550,26 +554,34 @@ ja:
         sale_forever: 終了しない
         sale_start: 販売開始
         start_at: 販売開始
+        start_at_title: 販売開始
         sale_end: 販売終了
+        sale_end_title: 販売終了
         end_at: 販売終了
+        end_at_title: 販売終了
         overbooking: 重複予約
         overbooking_restriction: 重複予約
+        overbooking_restriction_title: 重複予約
         not_allow_overbooking_label: 満席数に達した時点で予約を締め切る(推奨)
         allow_overbooking_label: 満席数に関わらず予約を受け付ける
         note_label: 説明・注意事項
         note: 説明・注意事項
+        note_title: 説明・注意事項
         note_hint: この価格で予約する際の注意事項などをお客様に表示します。
         booking_limit_day_header: 予約の受付
         booking_limit_day_period: 受付期限
         booking_limit_day_label: 予約の受付期限
         booking_limit_day: 予約の受付期限
+        booking_limit_day_title: 予約の受付期限
         booking_limit_day_before: 日前
         booking_limit_day_example_html: 例えば、<strong>「１日前」</strong>と設定した場合、お客様は明日以降の予約をすることができます。
         line_sharing: LINEオンライン予約
+        line_sharing_title: LINEオンライン予約
         share_in_bot: 表示する
         not_share_in_bot: 表示しない
         privacy_status: ページステータス
         draft: ページステータス
+        draft_title: ページステータス
         public: 公開
         private: 非公開
         delete_page: ページを削除
