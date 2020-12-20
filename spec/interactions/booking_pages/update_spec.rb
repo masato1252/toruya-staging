@@ -12,7 +12,7 @@ RSpec.describe BookingPages::Update do
   end
   let(:outcome) { described_class.run(args) }
 
-  RSpec.shared_examples "updates normal attribute" do |attribute, value|
+  RSpec.shared_examples "updates booking page normal attribute" do |attribute, value|
     let(:update_attribute) { attribute }
     before { args[:attrs][attribute] = value }
 
@@ -25,42 +25,42 @@ RSpec.describe BookingPages::Update do
 
   describe "#execute" do
     context "update_attribute is name" do
-      it_behaves_like "updates normal attribute", "name", "foo"
+      it_behaves_like "updates booking page normal attribute", "name", "foo"
     end
 
     context "update_attribute is title" do
-      it_behaves_like "updates normal attribute", "title", "foo"
+      it_behaves_like "updates booking page normal attribute", "title", "foo"
     end
 
     context "update_attribute is draft" do
-      it_behaves_like "updates normal attribute", "draft", true
-      it_behaves_like "updates normal attribute", "draft", false
+      it_behaves_like "updates booking page normal attribute", "draft", true
+      it_behaves_like "updates booking page normal attribute", "draft", false
     end
 
     context "update_attribute is line_sharing" do
-      it_behaves_like "updates normal attribute", "line_sharing", true
-      it_behaves_like "updates normal attribute", "line_sharing", false
+      it_behaves_like "updates booking page normal attribute", "line_sharing", true
+      it_behaves_like "updates booking page normal attribute", "line_sharing", false
     end
 
     context "update_attribute is booking_limit_day" do
-      it_behaves_like "updates normal attribute", "booking_limit_day", 3
+      it_behaves_like "updates booking page normal attribute", "booking_limit_day", 3
     end
 
     context "update_attribute is greeting" do
-      it_behaves_like "updates normal attribute", "greeting", "foo"
+      it_behaves_like "updates booking page normal attribute", "greeting", "foo"
     end
 
     context "update_attribute is note" do
-      it_behaves_like "updates normal attribute", "note", "foo"
+      it_behaves_like "updates booking page normal attribute", "note", "foo"
     end
 
     context "update_attribute is interval" do
-      it_behaves_like "updates normal attribute", "interval", 60
+      it_behaves_like "updates booking page normal attribute", "interval", 60
     end
 
     context "update_attribute is overbooking_restriction" do
-      it_behaves_like "updates normal attribute", "overbooking_restriction", true
-      it_behaves_like "updates normal attribute", "overbooking_restriction", false
+      it_behaves_like "updates booking page normal attribute", "overbooking_restriction", true
+      it_behaves_like "updates booking page normal attribute", "overbooking_restriction", false
     end
 
     context "update_attribute is shop_id" do

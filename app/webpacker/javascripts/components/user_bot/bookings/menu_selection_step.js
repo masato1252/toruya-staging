@@ -131,10 +131,10 @@ const MenuSelectionStep = ({next, jump, step}) => {
           />
 
           {renderMenuBlock()}
-          <h3 className="header centerize">新しいメニューが必要ですか？</h3>
+          <h3 className="header centerize">{I18n.t("user_bot.dashboards.booking_page_creation.want_to_create_a_new_menu")}</h3>
           <div className="centerize">
             <button className="btn btn-orange" onClick={() => { setCreatingNewMenu(true) }}>
-              新しいメニューを作成する
+              {I18n.t("user_bot.dashboards.booking_page_creation.create_a_new_menu")}
             </button>
           </div>
 
