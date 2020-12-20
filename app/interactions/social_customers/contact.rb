@@ -14,7 +14,7 @@ module SocialCustomers
         ApplicationRecord.transaction do
           customer = compose(
             Customers::Create,
-            user: social_customer.social_account.user,
+            user: social_customer.user,
             customer_last_name: last_name,
             customer_first_name: first_name
           )

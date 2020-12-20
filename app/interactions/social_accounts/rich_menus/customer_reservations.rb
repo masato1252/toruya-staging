@@ -15,7 +15,7 @@ module SocialAccounts
           },
           "selected": true,
           "name": KEY,
-          "chatBarText": sentence,
+            "chatBarText": sentence,
           "areas": [
             {
               "bounds": {

@@ -17,11 +17,14 @@ RSpec.describe Booking::CreateReservation do
   let(:booking_end_at) { booking_start_at.advance(minutes: booking_option.minutes) }
   let(:staff) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
   let(:staff2) { FactoryBot.create(:staff, :full_time, shop: shop, user: user) }
+  let(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:social_user_id) { social_customer.social_user_id }
   let(:args) do
     {
       booking_page_id: booking_page.to_param.to_i,
       booking_option_id: booking_option.id,
-      booking_start_at: booking_start_at
+      booking_start_at: booking_start_at,
+      social_user_id: social_user_id
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -87,6 +90,8 @@ RSpec.describe Booking::CreateReservation do
         expect(reservation_customer.details.new_customer_info).to eq({})
 
         expect(reservation_customer.booking_option).to eq(booking_option)
+
+        expect(customer.social_customer).to eq(social_customer)
       end
 
       context "when today is 2019-05-13" do
@@ -172,6 +177,8 @@ RSpec.describe Booking::CreateReservation do
           phone_number: "123456789",
           email: "example@email.com"
         }))
+
+        expect(customer.social_customer).to eq(social_customer)
       end
     end
 

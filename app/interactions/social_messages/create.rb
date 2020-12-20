@@ -1,5 +1,5 @@
 require "line_client"
-require "webpush_client"
+# require "webpush_client"
 
 module SocialMessages
   class Create < ActiveInteraction::Base
@@ -31,35 +31,35 @@ module SocialMessages
         end
 
         # From normal customer
-        UserChannel.broadcast_to(
-          social_customer.user,
-          {
-            type: "customer_new_message",
-            data: {
-              customer: SocialCustomerSerializer.new(social_customer).attributes_hash,
-              message: MessageSerializer.new(message).attributes_hash
-            }
-          }
-        )
+        # UserChannel.broadcast_to(
+        #   social_customer.user,
+        #   {
+        #     type: "customer_new_message",
+        #     data: {
+        #       customer: SocialCustomerSerializer.new(social_customer).attributes_hash,
+        #       message: MessageSerializer.new(message).attributes_hash
+        #     }
+        #   }
+        # )
 
-        WebPushSubscription.where(user_id: social_customer.user.owner_staff_accounts.active.pluck(:user_id)).each do |subscription|
-          begin
-            WebpushClient.send(
-              subscription: subscription,
-              message: {
-                title: "#{social_customer.social_user_name} send a message",
-                body: content,
-                url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user, customer_id: social_customer.social_user_id)
-              }
-            )
-          rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
-            Rollbar.error(e)
-
-            subscription.destroy
-          rescue => e
-            Rollbar.error(e)
-          end
-        end
+        # WebPushSubscription.where(user_id: social_customer.user.owner_staff_accounts.active.pluck(:user_id)).each do |subscription|
+        #   begin
+        #     WebpushClient.send(
+        #       subscription: subscription,
+        #       message: {
+        #         title: "#{social_customer.social_user_name} send a message",
+        #         body: content,
+        #         url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user, customer_id: social_customer.social_user_id)
+        #       }
+        #     )
+        #   rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
+        #     Rollbar.error(e)
+        #
+        #     subscription.destroy
+        #   rescue => e
+        #     Rollbar.error(e)
+        #   end
+        # end
       else
         # From staff or bot
         LineClient.send(social_customer, content) unless Rails.env.development?

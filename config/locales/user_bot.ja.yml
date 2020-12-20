@@ -24,6 +24,7 @@ ja:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           booking_code_message: 携帯電話にお送りした確認コードを入力してください。
           booking_code_failed_message: 確認コードが間違っています
+          redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
         line:
           successful_message: "ユーザー登録ありがとうございました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
       user_connect:
@@ -31,6 +32,7 @@ ja:
         message:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           successful_message_html: LINEからToruyaを使う準備ができました！<br>ユーザーメニューから<br>WEBプロモーションを始めましょう。
+          redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
         line:
           successful_message: "LINEからToruyaを使う準備ができました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
       shop_info:

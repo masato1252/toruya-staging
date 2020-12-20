@@ -58,11 +58,13 @@ $message_size: 8px;
     }
 
     .staff > .message-content {
-      background-color: $palette-color10;
+      background-color: $line-self-message;
+      color: $black;
     }
 
     .customer > .message-content {
-      background-color: $palette-color3;
+      background-color: $line-other-message;
+      color: $black;
     }
 
     .customer_reply_bot > .message-content {

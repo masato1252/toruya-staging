@@ -14,11 +14,12 @@ RSpec.describe Lines::MessageEvent do
       "message"=>{
         "type"=> message_type,
         "id"=>"8521501055275",
-        "text"=>"??"
+        "text"=> text
       }
     }
   end
   let(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:text) { I18n.t("line.bot.keywords").values.sample }
 
   let(:args) do
     {
@@ -29,25 +30,15 @@ RSpec.describe Lines::MessageEvent do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when event exists" do
+    context "when event text match keyowrd" do
       it "creates a social messages" do
+        allow(LineClient).to receive(:send)
+
         expect {
           outcome
         }.to change {
-          SocialMessage.where(social_customer: social_customer, message_type: SocialMessage.message_types[:customer]).count
+          SocialMessage.where(social_customer: social_customer, message_type: SocialMessage.message_types[:customer_reply_bot]).count
         }.by(1)
-      end
-    end
-
-    context "when social_customer is one_on_one" do
-      let(:message_type) { "image" }
-      let(:social_customer) { FactoryBot.create(:social_customer, :one_on_one) }
-
-      it "doesn't call Lines::Features" do
-        expect(Lines::Features).not_to receive(:run)
-        expect(LineClient).to receive(:send)
-
-        outcome
       end
     end
   end
