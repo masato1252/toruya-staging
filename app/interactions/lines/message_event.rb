@@ -55,6 +55,8 @@ class Lines::MessageEvent < ActiveInteraction::Base
               )
             )
           )
+        else
+          LineClient.send(social_customer, I18n.t("line.bot.please_use_contact_feature"))
         end
 
         compose(
@@ -67,7 +69,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
       else
         Rollbar.warning("Line chat room don't support message type", event: event)
 
-        LineClient.send(social_customer, "Sorry, we don't support this type of message yet, only support text for now.".freeze)
+        LineClient.send(social_customer, I18n.t("line.bot.please_use_contact_feature"))
       end
     end
   end
