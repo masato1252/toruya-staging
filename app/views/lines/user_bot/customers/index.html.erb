@@ -7,6 +7,8 @@
     referrer: request.referrer,
     reservation_id: params[:reservation_id],
     shop: shop,
+    target_view: params[:target_view],
+    previous_path: params[:previous_path],
     customer: customer_options([ @customer || super_user.customers.new]).first,
     notification_messages: @notification_messages,
     contact_groups: default_options(current_user_staff.readable_contact_groups),

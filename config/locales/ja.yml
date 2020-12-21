@@ -676,4 +676,4 @@ ja:
         booking_pages/update:
           attributes:
             attrs:
-              unavailable_booking_option_exists: "^There is booking option doesn't belongs to this shop."
+              unavailable_booking_option_exists: "^この店舗では利用できない予約価格が設定されています。"

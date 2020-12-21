@@ -1,4 +1,5 @@
 require "line_client"
+require "message_encryptor"
 
 class UserBotLines::MessageEvent < ActiveInteraction::Base
   USER_SIGN_OUT = "usersignout".freeze

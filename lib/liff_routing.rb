@@ -19,7 +19,7 @@ class LiffRouting
 
     def map(liff_path, url)
       @@liff_routing ||= {}
-      @@liff_routing[liff_path] = Rails.application.routes.url_helpers.public_send(url)
+      @@liff_routing[liff_path] = Rails.application.routes.url_helpers.public_send(url) if Rails.env.production?
     end
   end
 
@@ -36,4 +36,5 @@ class LiffRouting
   map :booking_pages, :lines_user_bot_booking_pages_url
   map :booking_options, :lines_user_bot_booking_options_url
   map :new_booking_setting, :new_lines_user_bot_booking_url
+  map :notifications, :lines_user_bot_notifications_url
 end

@@ -21,6 +21,7 @@ require "message_encryptor"
 
 class SocialAccount < ApplicationRecord
   has_many :social_customers, dependent: :destroy
+  has_many :social_messages, dependent: :destroy
   has_many :social_rich_menus
   belongs_to :user
 

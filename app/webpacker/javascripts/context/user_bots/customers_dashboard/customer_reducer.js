@@ -6,7 +6,8 @@ const initialState = {
   is_all_customers_loaded: false,
   query_type: "recent",
   filter_pattern_number: null,
-  reservations: []
+  reservations: [],
+  temp_new_messages: []
 }
 
 export default (state = initialState, action) => {
@@ -30,6 +31,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selected_customer: action.payload.customer,
+        temp_new_messages: []
       }
     case "UPDATE_CUSTOMER":
       const payload_customer = action.payload.customer
@@ -54,6 +56,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         reservations: action.payload.reservations,
+      }
+    case "APPEND_NEW_MESSAGE":
+      return {
+        ...state,
+        temp_new_messages: [...state.temp_new_messages, action.payload.message],
       }
     default:
       return state;

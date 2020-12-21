@@ -24,6 +24,7 @@ ja:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           booking_code_message: 携帯電話にお送りした確認コードを入力してください。
           booking_code_failed_message: 確認コードが間違っています
+          redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
         line:
           successful_message: "ユーザー登録ありがとうございました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
       user_connect:
@@ -31,6 +32,7 @@ ja:
         message:
           unmatch_phone_number: この番号によるユーザーが見つかりませんでした。
           successful_message_html: LINEからToruyaを使う準備ができました！<br>ユーザーメニューから<br>WEBプロモーションを始めましょう。
+          redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
         line:
           successful_message: "LINEからToruyaを使う準備ができました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
       shop_info:
@@ -60,6 +62,7 @@ ja:
         decide_customer: この顧客で決定
         updated_date: 更新日
         form_title: 顧客情報を編集
+        customer_message_reply_title: 返信内容を送信します
       settings:
         dashboard:
           title: アカウント設定
@@ -108,3 +111,6 @@ ja:
         check_this_page: プレビュー
         want_to_create_a_new_menu: 新しいメニューが必要ですか？
         create_a_new_menu: 新しいメニューを作成する
+      notifications:
+        title: 以下の新着データがあります
+        unread_message_label: お問合せメッセージ

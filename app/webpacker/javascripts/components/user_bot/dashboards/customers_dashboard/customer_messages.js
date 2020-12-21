@@ -7,15 +7,18 @@ import CustomerNav from "./customer_nav";
 
 import useCustomerMessages from "libraries/use_customer_messages"
 import Message from "components/management/chats/message";
+import { BottomNavigationBar, CiricleButtonWithWord } from "shared/components"
+
+import CustomerMessageForm from "./customer_message_form"
 
 const UserBotCustomerMessages = () => {
-  const { selected_customer } = useGlobalContext()
+  const { selected_customer, temp_new_messages } = useGlobalContext()
   const messages = useCustomerMessages(selected_customer)
   const messageListRef = useRef(null);
 
   useLayoutEffect(() => {
     messageListRef.current.scrollIntoView({ behavior: "auto" });
-  }, [messages])
+  }, [messages, temp_new_messages])
 
   return (
     <div className="customer-view">
@@ -23,8 +26,9 @@ const UserBotCustomerMessages = () => {
       <CustomerNav />
 
       <div id="chat-box">
-        {messages.map((message, index) => <Message message={message} key={`${message.id}-${index}`} />)}
+        {[...messages, ...temp_new_messages].map((message, index) => <Message message={message} key={`${message.id}-${index}`} />)}
         <div ref={messageListRef} />
+        <CustomerMessageForm />
       </div>
     </div>
   )

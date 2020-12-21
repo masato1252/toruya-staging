@@ -70,3 +70,10 @@ ja:
         title: "%{shop_name}の仮予約が完了しました"
       shop_owner_reservation_booked_notification:
         title: 新しいオンライン予約があります
+  contact_page:
+    message_form:
+      title: お問合せ内容を入力して送信してください
+    message_sent:
+      title: 送信されました
+      content_html: メッセージが送信されました。<br>担当者からの返信をお待ちください。
+      line_content: "メッセージが送信されました。\n\n担当者からの返信をお待ちください。"

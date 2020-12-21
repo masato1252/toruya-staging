@@ -22,7 +22,7 @@ const SignInSuccessfulView = ({props}) => {
         <br />
         <i className="fa fa-spinner fa-spin fa-fw fa-2x"></i>
         <div className="centerize">
-          Page would redirect to dashboard page automatically
+          {props.i18n.user_connect.message.redirect_to_schedule_page}
         </div>
       </div>
     </div>

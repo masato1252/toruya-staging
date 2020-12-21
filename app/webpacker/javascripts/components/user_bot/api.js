@@ -214,7 +214,21 @@ const CustomerServices = {
       },
       responseType: "json"
     })
-  }
+  },
+  reply_message: ({customer_id, message}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.reply_message_lines_user_bot_customers_path({format: "json"}),
+      data: {
+        customer_id,
+        message,
+      },
+      responseType: "json"
+    })
+  },
 }
 
 const PaymentServices = {
@@ -312,6 +326,20 @@ const SocialAccountServices = {
   },
 }
 
+const ContactServices = {
+  make_contact: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_make_contact_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -322,4 +350,5 @@ export {
   BookingOptionServices,
   BookingServices,
   SocialAccountServices,
+  ContactServices
 }

@@ -11,15 +11,20 @@
     <%= yield :script if content_for?(:script) %>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <script type="text/javascript">
+      I18n.defaultLocale = "<%= I18n.default_locale %>";
+      I18n.locale = "<%= I18n.locale %>";
+    </script>
   </head>
 
   <body>
-    <div class="booking-content">
-      <%= yield %>
-
-    </div>
-    <div class="footer" id="footer">
-      Powered by <%= link_to "Toruya", "https://toruya.com" %>
+    <div class="responsive-content">
+      <div class="mobile-content booking-content <%= controller_name %>">
+        <%= yield %>
+      </div>
+      <div class="footer" id="footer">
+        Powered by <%= link_to "Toruya", "https://toruya.com" %>
+      </div>
     </div>
   </body>
 </html>

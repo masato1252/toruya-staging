@@ -13,6 +13,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   include ParameterConverters
   include Locale
   include UserBotExceptionHandler
+  include ControllerHelpers
 
   def current_user
     @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
@@ -46,12 +47,5 @@ class Lines::UserBotDashboardController < ActionController::Base
           interval: shop_menu.menu.interval
         )
       end
-  end
-
-  def json_response(outcome, data)
-    {
-      status: outcome.valid? ? "successful" : "failed",
-      error_message: outcome.errors.full_messages.join(", ")
-    }.merge!(data)
   end
 end

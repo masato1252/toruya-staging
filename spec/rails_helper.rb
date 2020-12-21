@@ -6,6 +6,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 require "seeders/plan"
+require "seeders/social_rich_menu"
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -54,6 +55,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.before(:suite) do
     Seeders::Plan.seed!
+    Seeders::SocialRichMenu.seed!
   end
 end
 
