@@ -14,7 +14,7 @@ RSpec.describe BookingOptions::Update do
   let(:outcome) { described_class.run(args) }
 
 
-  RSpec.shared_examples "updates normal attribute" do |attribute, value|
+  RSpec.shared_examples "updates booking option normal attribute" do |attribute, value|
     let(:update_attribute) { attribute }
     before { args[:attrs][attribute] = value }
 
@@ -27,20 +27,20 @@ RSpec.describe BookingOptions::Update do
 
   describe "#execute" do
     context "update_attribute is name" do
-      it_behaves_like "updates normal attribute", "name", "foo"
+      it_behaves_like "updates booking option normal attribute", "name", "foo"
     end
 
     context "update_attribute is display_name" do
-      it_behaves_like "updates normal attribute", "display_name", "foo"
+      it_behaves_like "updates booking option normal attribute", "display_name", "foo"
     end
 
     context "update_attribute is menu_restrict_order" do
-      it_behaves_like "updates normal attribute", "menu_restrict_order", true
-      it_behaves_like "updates normal attribute", "menu_restrict_order", false
+      it_behaves_like "updates booking option normal attribute", "menu_restrict_order", true
+      it_behaves_like "updates booking option normal attribute", "menu_restrict_order", false
     end
 
     context "update_attribute is memo" do
-      it_behaves_like "updates normal attribute", "memo", "foo"
+      it_behaves_like "updates booking option normal attribute", "memo", "foo"
     end
 
     context "update_attribute is new_menu" do

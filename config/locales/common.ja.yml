@@ -34,6 +34,7 @@ ja:
     send: 送信する
     call: 電話する
     send_message: メッセージ送信する
+    next_step: 次　へ
   common:
     processing: 送信中
     date: 日付

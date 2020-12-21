@@ -72,6 +72,8 @@ module Menus
         else
           ShopMenuRepeatingDate.where(menu: menu).delete_all
         end
+
+        menu
       end
     end
   end

@@ -7,6 +7,8 @@ module BookingPages
       integer :booking_option_id, default: nil
       integer :new_booking_option_price, default: nil
       boolean :new_booking_option_tax_include, default: nil
+      string :new_menu_name, default: nil
+      integer :new_menu_minutes, default: nil
       string :note, default: nil
     end
 
@@ -58,7 +60,46 @@ module BookingPages
     end
 
     def menu
-      @menu ||= shop.menus.find_by(id: attrs[:menu_id])
+      @menu ||= new_menu || shop.menus.find_by(id: attrs[:menu_id])
+    end
+
+    def new_menu
+      if attrs[:new_menu_name] && attrs[:new_menu_minutes]
+        category = super_user.categories.find_or_create_by(name: I18n.t("user_bot.dashboards.booking_page_creation.default_category_name"))
+
+        Menus::Update.run!(
+          menu: super_user.menus.new,
+          attrs: {
+            name: attrs[:new_menu_name],
+            short_name: attrs[:new_menu_name],
+            minutes: attrs[:new_menu_minutes],
+            interval: 0,
+            min_staffs_number: 1,
+            category_ids: [category.id],
+            shop_menus_attributes: [
+              shop_id: shop.id,
+              max_seat_number: 1
+            ],
+            staff_menus_attributes: [
+              staff_id: super_user.current_staff(super_user).id,
+              priority: 0,
+              max_customers: 1
+            ],
+          },
+          reservation_setting_id: reservation_setting.id,
+          menu_reservation_setting_rule_attributes: {
+            start_date: Date.today
+          }
+        )
+      end
+    end
+
+    def reservation_setting
+      super_user.reservation_settings.where(day_type: ReservationSetting::BUSINESS_DAYS).first ||
+        super_user.reservation_settings.create(
+          name: I18n.t("common.full_working_time"),
+          short_name: I18n.t("common.full_working_time"),
+          day_type: ReservationSetting::BUSINESS_DAYS)
     end
 
     def booking_option
