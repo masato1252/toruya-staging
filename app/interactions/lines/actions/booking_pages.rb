@@ -68,8 +68,23 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
 
     # handle 400 error back
     if contents.blank?
-      LineClient.send(social_customer, I18n.t("line.bot.messages.booking_pages.no_available_pages"))
+      compose(
+        SocialMessages::Create,
+        social_customer: social_customer,
+        content: I18n.t("line.bot.messages.booking_pages.no_available_pages"),
+        readed: true,
+        message_type: SocialMessage.message_types[:bot]
+      )
     else
+      compose(
+        SocialMessages::Create,
+        social_customer: social_customer,
+        content: I18n.t("line.bot.messages.booking_pages.available_pages"),
+        readed: true,
+        message_type: SocialMessage.message_types[:bot],
+        send_line: false
+      )
+
       LineClient.flex(
         social_customer,
         LineMessages::FlexTemplateContainer.carousel_template(

@@ -5,7 +5,13 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
   def execute
     unless customer
-      LineClient.send(social_customer, I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"))
+      compose(
+        SocialMessages::Create,
+        social_customer: social_customer,
+        content: I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"),
+        readed: true,
+        message_type: SocialMessage.message_types[:bot]
+      )
 
       return
     end
@@ -26,8 +32,23 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     end
 
     if contents.blank?
-      LineClient.send(social_customer, I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"))
+      compose(
+        SocialMessages::Create,
+        social_customer: social_customer,
+        content: I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"),
+        readed: true,
+        message_type: SocialMessage.message_types[:bot]
+      )
     else
+      compose(
+        SocialMessages::Create,
+        social_customer: social_customer,
+        content: I18n.t("line.actions.label.incoming_reservations"),
+        readed: true,
+        message_type: SocialMessage.message_types[:bot],
+        send_line: false
+      )
+
       LineClient.flex(
         social_customer,
         LineMessages::FlexTemplateContainer.carousel_template(

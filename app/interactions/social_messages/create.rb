@@ -8,6 +8,7 @@ module SocialMessages
     string :content
     boolean :readed
     integer :message_type
+    boolean :send_line, default: true
 
     def execute
       message = SocialMessage.create(
@@ -60,9 +61,9 @@ module SocialMessages
         #     Rollbar.error(e)
         #   end
         # end
-      else
+      elsif !Rails.env.development? && send_line
         # From staff or bot
-        LineClient.send(social_customer, content) unless Rails.env.development?
+        LineClient.send(social_customer, content)
       end
 
       message
