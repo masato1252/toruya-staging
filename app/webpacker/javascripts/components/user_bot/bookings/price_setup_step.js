@@ -69,7 +69,7 @@ const PriceSetupStep = ({next, step}) => {
         <button
           className="btn btn-yellow"
           onClick={next}>
-          {i18n.sell_this_price}
+          {I18n.t("action.next_step")}
         </button>
       </div>
     </div>

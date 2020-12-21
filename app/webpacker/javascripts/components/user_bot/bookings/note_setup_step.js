@@ -14,7 +14,7 @@ const NoteSetupStep = ({next, step}) => {
       <h3 className="header centerize">{i18n.note_for_this_option}</h3>
       <textarea
         placeholder={i18n.enter_note_policy}
-        value={note}
+        value={note || ""}
         onChange={
           (event) => {
             dispatch({
@@ -31,7 +31,7 @@ const NoteSetupStep = ({next, step}) => {
         <button
           className="btn btn-yellow"
           onClick={next}>
-          {i18n.use_this_page_note}
+          {I18n.t("action.next_step")}
         </button>
       </div>
     </div>
