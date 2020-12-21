@@ -19,7 +19,7 @@ class LiffRouting
 
     def map(liff_path, url)
       @@liff_routing ||= {}
-      @@liff_routing[liff_path] = Rails.application.routes.url_helpers.public_send(url)
+      @@liff_routing[liff_path] = Rails.application.routes.url_helpers.public_send(url) if Rails.env.production?
     end
   end
 

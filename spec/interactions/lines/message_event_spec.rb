@@ -33,6 +33,7 @@ RSpec.describe Lines::MessageEvent do
     context "when event text match keyowrd" do
       it "creates a social messages" do
         allow(LineClient).to receive(:send)
+        allow(LineClient).to receive(:flex)
 
         expect {
           outcome
