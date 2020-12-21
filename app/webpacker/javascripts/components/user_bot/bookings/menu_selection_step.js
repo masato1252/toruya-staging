@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import ReactSelect from "react-select";
+import _ from "lodash";
 
 import { BookingOptionElement } from "shared/components";
 import { useGlobalContext } from "context/user_bots/bookings/global_state";
@@ -62,7 +63,7 @@ const MenuSelectionStep = ({next, jump, step}) => {
           <div className="centerize">
             <h3 className="header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_name")}</h3>
             <div>
-              <input ref={menuNameInpuRef} type="text" placeholder={I18n.t("user_bot.dashboards.booking_page_creation.input_menu_name")}/>
+              <input className="extend with-border" ref={menuNameInpuRef} type="text" placeholder={I18n.t("user_bot.dashboards.booking_page_creation.input_menu_name")}/>
             </div>
 
             <button
@@ -116,7 +117,7 @@ const MenuSelectionStep = ({next, jump, step}) => {
           <h3 className="header centerize">{i18n.choose_which_option}</h3>
           <ReactSelect
             placeholder={i18n.select_a_menu}
-            value={selected_menu}
+            value={ _.isEmpty(selected_menu) ? "" : selected_menu}
             options={menus}
             onChange={
               (menu) => {
