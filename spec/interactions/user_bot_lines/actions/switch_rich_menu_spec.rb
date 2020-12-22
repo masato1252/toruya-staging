@@ -12,6 +12,20 @@ RSpec.describe UserBotLines::Actions::SwitchRichMenu do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when social user doesn't set up social account(line official account) yet" do
+      let(:rich_menu_key) { UserBotLines::RichMenus::Dashboard::KEY }
+      let(:social_user) { FactoryBot.create(:social_user) }
+
+      it "switch to expected rich_menu" do
+        expect(RichMenus::Connect).to receive(:run).with(
+          social_target: social_user,
+          social_rich_menu: SocialRichMenu.find_by(social_name: UserBotLines::RichMenus::Dashboard::KEY)
+        ).and_return(double(invalid?: false, result: double))
+
+        outcome
+      end
+    end
+
     context "when try to switch normal dashboard rich menu" do
       let(:rich_menu_key) { UserBotLines::RichMenus::Dashboard::KEY }
 

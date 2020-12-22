@@ -6,6 +6,7 @@ class UserBotLines::Actions::SwitchRichMenu < ActiveInteraction::Base
 
   def execute
     if rich_menu_key == UserBotLines::RichMenus::Dashboard::KEY &&
+        social_user.user.social_account &&
         social_user.user.social_account.social_messages.includes(social_customer: :customer).unread.exists?
       menu_key = UserBotLines::RichMenus::DashboardWithNotifications::KEY
     end
