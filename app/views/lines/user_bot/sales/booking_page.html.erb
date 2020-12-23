@@ -1,0 +1,11 @@
+<%= react_component("user_bot/sales/booking_page_creation_flow", {
+  props: {
+    booking_pages: super_user.booking_pages.includes(:shop).map { |b|
+      { label: b.name,
+        value: react_attribute(b.attributes.merge(logo_url: shop_logo_url(b.shop, "390x135")))
+      }
+    }
+  }
+},
+{ camelize_props: false }
+) %>
