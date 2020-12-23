@@ -113,6 +113,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :sales, only: [:new] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+        end
+      end
+
       resources :booking_pages do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"
