@@ -2,6 +2,11 @@ import _ from "lodash";
 
 const initialState = {
   selected_booking_page: null,
+  template_variables: {
+    target: "セラピスト",
+    problem: "ありきたり",
+    result: "技術を 世界に一つだけの技術"
+  }
 }
 
 export default (state = initialState, action) => {
@@ -10,6 +15,13 @@ export default (state = initialState, action) => {
       return {
         ...state,
         [action.payload.attribute]: action.payload.value,
+      }
+    case "SET_TEMPLATE_VARIABLES":
+      return {
+        ...state,
+        template_variables: {
+          ...state.template_variables, [action.payload.attribute]: action.payload.value,
+        }
       }
     // case "RESET_OPTION":
     //   return {
