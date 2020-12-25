@@ -9,4 +9,15 @@
   .flow-step-indicator {
     margin: 24px 80px
   }
+
+  .fileUploader {
+    .uploadPictureContainer {
+      width: 100%;
+    }
+
+    .chooseFileButton {
+      position: absolute;
+      z-index: 999;
+    }
+  }
 }

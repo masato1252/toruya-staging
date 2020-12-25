@@ -1,6 +1,9 @@
 "use strict";
 
 import React from "react";
+import AutosizeInput from 'react-input-autosize';
+import { SwatchesPicker } from 'react-color';
+import Popup from 'reactjs-popup';
 
 const data = {
   edit: [
@@ -20,22 +23,22 @@ const data = {
     { _uid: "BUY6Drn9e3", component: "word", name: "problem" },
     { _uid: "BUY9e4", component: "word", content: "を", tag: "span" },
     { _uid: "Drn9e2", component: "br", },
-    { _uid: "rn9e3", component: "word", name: "result", color: "#C6A654", font_size: "22px" },
+    { _uid: "rn9e3", component: "word", name: "result", color: "#C6A654", font_size: "22px", color_editable: true },
     { _uid: "BUY6n9e4", component: "word", content: "にする", tag: "span" },
     { _uid: "BUY6Drn9e2", component: "br", },
-      { _uid: "B6n9e4", component: "word", tag: "h4", name: "product_name", color: "#64B14D", font_size: "24px" },
+    { _uid: "B6n9e4", component: "word", tag: "h4", name: "product_name", color: "#64B14D", font_size: "24px", color_editable: true },
   ]
 }
 
 const Input = ({block, onChange, onFocus, onBlur, ...rest}) => {
   const { name, placeholder } =  block
   return (
-    <input
+    <AutosizeInput
       type={block.type || "text"}
       name={name}
       placeholder={placeholder}
       defaultValue={rest[name]}
-      onBlur={(event) => onBlur(name, event.target.value)}
+      onChange={(event) => onBlur(name, event.target.value)}
       onFocus={() => {
         onFocus(name)
       }}
@@ -102,9 +105,46 @@ const HintTitle = ({focus_field}) => {
   )
 }
 
+const ColorPopup = ({handleColorChange, block, ...rest}) => {
+  return (
+    <Popup
+      trigger={
+        <button
+          className="btn"
+          style={{backgroundColor: rest[`${block.name}_color`] || block.color}}
+        >
+          {rest[`${block.name}_color`] || block.color}
+        </button>
+      }
+      position="bottom center">
+      <div>
+        <SwatchesPicker onChange={handleColorChange} />
+      </div>
+    </Popup>
+  )
+}
+
+const WordColorPickers = ({onChange, ...rest}) => {
+  return (
+    <div className="word-color-pickers">
+      {data.view.filter(block => block.color_editable).map(editable_block => (
+        <ColorPopup
+          {...rest}
+          block={editable_block}
+          key={editable_block._uid}
+          handleColorChange={(color) => {
+            onChange(`${editable_block.name}_color`, color.hex)
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export {
   EditTemplate,
   ViewTemplate,
   data,
-  HintTitle
+  HintTitle,
+  WordColorPickers
 }

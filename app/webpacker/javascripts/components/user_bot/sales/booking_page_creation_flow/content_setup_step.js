@@ -1,17 +1,32 @@
 "use strict";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
+import ImageUploader from "react-images-upload";
 
 const ContentSetupStep = ({step, next, prev}) => {
   const { props, watch } = useGlobalContext()
+  const [pictures, setPictures] = useState([]);
+
+  const onDrop = picture => {
+    setPictures([...pictures, picture]);
+  }
 
   return (
     <div className="form">
       <SalesFlowStepIndicator step={step} />
-      ContentSetupStep
+      <ImageUploader
+        {...props}
+        withIcon={false}
+        withPreview={true}
+        withLabel={false}
+        singleImage={true}
+        onChange={onDrop}
+        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+        maxFileSize={5242880}
+      />
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}

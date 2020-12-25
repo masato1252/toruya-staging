@@ -4,7 +4,7 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
-import { ViewTemplate, HintTitle } from "shared/builders"
+import { ViewTemplate, HintTitle, WordColorPickers } from "shared/builders"
 
 const HeaderColorEditStep= ({step, next, prev}) => {
   const { props, selected_booking_page, dispatch, template_variables, focus_field } = useGlobalContext()
@@ -16,6 +16,20 @@ const HeaderColorEditStep= ({step, next, prev}) => {
         {...template_variables}
         product_name={selected_booking_page?.name}
       />
+      <div className="centerize">
+        <WordColorPickers
+          {...template_variables}
+          onChange={(name, value) => {
+            dispatch({
+              type: "SET_TEMPLATE_VARIABLES",
+              payload: {
+                attribute: name,
+                value: value
+              }
+            })
+          }}
+        />
+      </div>
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
