@@ -3,7 +3,7 @@
 <div class="settings-dashboard form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.dashboard.line_official_account") %>
   <div class="centerize action-block">
-    <%= link_to  "https://developers.line.biz/ja/", class: "btn btn-tarco", target: "_blank" do %>
+    <%= link_to "https://developers.line.biz/ja/?openExternalBrowser=1", class: "btn btn-tarco", target: "_blank" do %>
       <i class="fa fa-share-square"></i>
       <span><%= I18n.t("user_bot.dashboards.settings.social_account.line_developer") %></span>
     <% end %>
