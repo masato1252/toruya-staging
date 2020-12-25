@@ -144,8 +144,6 @@ RSpec.describe Booking::CreateReservation do
 
       it "records all the data" do
         FactoryBot.create(:access_provider, user: user)
-        google_user = spy(create_contact: spy(id: "google_contact_id"))
-        allow(GoogleContactsApi::User).to receive(:new).and_return(google_user)
 
         customer_info_hash = {
           customer_last_name: "foo",
@@ -165,8 +163,6 @@ RSpec.describe Booking::CreateReservation do
         expect(customer.first_name).to eq("bar")
         expect(customer.phonetic_last_name).to eq("baz")
         expect(customer.phonetic_first_name).to eq("qux")
-        expect(customer.google_contact_id).to eq("google_contact_id")
-        expect(customer.google_uid).to eq(user.uid)
 
         reservation_customer = reservation.reservation_customers.first
         expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({

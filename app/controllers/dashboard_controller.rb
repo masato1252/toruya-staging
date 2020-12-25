@@ -11,7 +11,6 @@ class DashboardController < ActionController::Base
 
   before_action :profile_required
   before_action :set_paper_trail_whodunnit
-  before_action :sync_user
 
   def from_line_bot
     false
@@ -30,10 +29,6 @@ class DashboardController < ActionController::Base
 
   def contact_group_required
     redirect_to settings_dashboard_path unless Tours::BasicSettingsPresenter.new(view_context, super_user).customers_settings_completed?
-  end
-
-  def sync_user
-    Users::ContactsSync.run!(user: super_user) if super_user
   end
 
   def site_routing_helper

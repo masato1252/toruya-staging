@@ -11,6 +11,7 @@ class Customers::SyncData < ActiveInteraction::Base
       # and we would use our toruya customer data as first priority, so postpone this until we
       # needd to sync data to google at one day.
     else
+      # Google to Toruya
       customer_with_google_contact = customer.with_google_contact
       return if customer_with_google_contact.google_contact_id.blank? || customer_with_google_contact.google_down
 

@@ -34,13 +34,13 @@ class Customers::Create < ActiveInteraction::Base
       end
 
       customer = user.customers.new(customer_info_hash)
-      google_user = user.google_user
-
-      if google_user
-        result = google_user.create_contact(customer.google_contact_attributes)
-        customer.google_contact_id = result.id
-        customer.google_uid = user.uid
-      end
+      # google_user = user.google_user
+      #
+      # if google_user
+      #   result = google_user.create_contact(customer.google_contact_attributes)
+      #   customer.google_contact_id = result.id
+      #   customer.google_uid = user.uid
+      # end
 
     rescue => e
       # XXX: Even google is down, we still support the customer creation process
