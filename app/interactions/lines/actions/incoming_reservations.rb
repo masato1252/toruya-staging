@@ -16,7 +16,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
       return
     end
 
-    reservations = customer.reservations.includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT) || []
+    reservations = customer.reservations.where(aasm_state: %w(pending reserved)).includes(:shop).where("start_time > ?", Time.current).order("start_time").limit(LineClient::COLUMNS_NUMBER_LIMIT) || []
 
     contents = reservations.map do |reservation|
       shop = reservation.shop
