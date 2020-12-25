@@ -37,15 +37,7 @@ const CustomerContactForm = ({props}) => {
 
   return (
     <div className="messsage-form">
-      <div className="centerize">
-        <h3>{I18n.t("contact_page.message_form.title")}</h3>
-        <textarea
-          name="content"
-          ref={register({ required: true })}
-          className="extend with-border"
-          placeholder={I18n.t("common.message_content_placholder")}
-        />
-      </div>
+      <h3>{I18n.t("contact_page.message_form.title")}</h3>
       {!props.social_customer.customer_id && (
         <div>
           <h4>{I18n.t("common.name2")}</h4>
@@ -63,6 +55,14 @@ const CustomerContactForm = ({props}) => {
           />
         </div>
       )}
+      <div className="centerize">
+        <textarea
+          name="content"
+          ref={register({ required: true })}
+          className="extend with-border"
+          placeholder={I18n.t("common.message_content_placholder")}
+        />
+      </div>
       <div className="centerize action-block">
         <button type="button" className="btn btn-yellow" onClick={handleSubmit(onSubmit)} disabled={formState.isSubmitting}>
           {formState.isSubmitting ? (
