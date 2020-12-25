@@ -20,7 +20,8 @@ export const GlobalProvider = ({ props, children }) => {
       reducers(),
       {
         booking_creation_states: {
-          selected_shop: props.selected_shop
+          selected_shop: props.selected_shop,
+          note: props.note
         }
       }
     )

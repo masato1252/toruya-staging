@@ -1,6 +1,5 @@
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def new
-    @booking_page = super_user.booking_pages.new
     @shop = super_user.shops.count == 1 ? super_user.shops.first : nil
   end
 
