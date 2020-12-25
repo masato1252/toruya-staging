@@ -18,6 +18,7 @@ module Notifications
         .includes(reservation: [:shop, :reservation_staffs])
         .where("reservation_staffs.staff_id": staff_ids)
         .where("customers.deleted_at": nil)
+        .where("reservations.deleted_at": nil)
         .order("reservation_customers.created_at ASC")
     end
   end
