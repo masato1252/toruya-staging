@@ -38,14 +38,10 @@ module Booking
       string :phonetic_last_name, default: nil
       string :phonetic_first_name, default: nil
       string :phone_number, default: nil
-      array :phone_numbers, default: nil do
-        string
-      end
+      array :phone_numbers, default: nil
 
       string :email, default: nil
-      array :emails, default: nil do
-        string
-      end
+      array :emails, default: nil
 
       string :simple_address, default: nil
       string :full_address, default: nil
@@ -97,7 +93,30 @@ module Booking
           # regular customer
           customer = user.customers.find(customer_info["id"])
           customer.update(reminder_permission: customer_reminder_permission)
+        end
 
+        if customer ||= social_customer&.customer
+          if customer_phonetic_last_name && customer_phonetic_first_name
+            customer_outcome = Customers::Store.run(
+              user: user,
+              current_user: user,
+              params: {
+                id: customer.id.to_s,
+                last_name: customer_last_name,
+                first_name: customer_first_name,
+                phonetic_last_name: customer_phonetic_last_name,
+                phonetic_first_name: customer_phonetic_first_name,
+                phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+                emails_details: [{ type: "mobile", value: customer_email }],
+              }.compact
+            )
+
+            if customer_outcome.valid?
+              customer = customer_outcome.result
+            end
+          end
+
+          customer.update(reminder_permission: customer_reminder_permission)
         else
           # new customer
           customer_outcome = Customers::Create.run(

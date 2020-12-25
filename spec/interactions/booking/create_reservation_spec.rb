@@ -134,7 +134,7 @@ RSpec.describe Booking::CreateReservation do
       end
     end
 
-    context "when customer_info doesn't exist(a new customer)" do
+    context "when customer_info doesn't exist" do
       context "when some new customer data miss(customer_last_name, customer_first_name etc...)" do
         it "is invalid" do
           expect(outcome).to be_invalid
@@ -142,39 +142,133 @@ RSpec.describe Booking::CreateReservation do
         end
       end
 
-      it "records all the data" do
-        FactoryBot.create(:access_provider, user: user)
+      context "when social_customer with customer" do
+        let(:existing_cusomter) { FactoryBot.create(:customer, user: user) }
+        let(:social_customer) { FactoryBot.create(:social_customer, customer: existing_cusomter) }
 
-        customer_info_hash = {
-          customer_last_name: "foo",
-          customer_first_name: "bar",
-          customer_phonetic_last_name: "baz",
-          customer_phonetic_first_name: "qux",
-          customer_phone_number: "123456789",
-          customer_email: "example@email.com"
-        }
-        args.merge!(customer_info_hash)
+        it "updates social_customer's customer's info" do
+          customer_info_hash = {
+            customer_last_name: "foo",
+            customer_first_name: "bar",
+            customer_phonetic_last_name: "baz",
+            customer_phonetic_first_name: "qux",
+            customer_phone_number: "123456789",
+            customer_email: "example@email.com"
+          }
+          args.merge!(customer_info_hash)
 
-        result = outcome.result
-        customer = result[:customer]
-        reservation = result[:reservation]
+          expect {
+            outcome
+          }.not_to change {
+            user.customers.count
+          }
 
-        expect(customer.last_name).to eq("foo")
-        expect(customer.first_name).to eq("bar")
-        expect(customer.phonetic_last_name).to eq("baz")
-        expect(customer.phonetic_first_name).to eq("qux")
+          result = outcome.result
+          customer = result[:customer]
+          reservation = result[:reservation]
 
-        reservation_customer = reservation.reservation_customers.first
-        expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
-          last_name: "foo",
-          first_name: "bar",
-          phonetic_last_name: "baz",
-          phonetic_first_name: "qux",
-          phone_number: "123456789",
-          email: "example@email.com"
-        }))
+          expect(customer.id).to eq(existing_cusomter.id)
+          expect(customer.last_name).to eq("foo")
+          expect(customer.first_name).to eq("bar")
+          expect(customer.phonetic_last_name).to eq("baz")
+          expect(customer.phonetic_first_name).to eq("qux")
 
-        expect(customer.social_customer).to eq(social_customer)
+          reservation_customer = reservation.reservation_customers.first
+          expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+            last_name: "foo",
+            first_name: "bar",
+            phonetic_last_name: "baz",
+            phonetic_first_name: "qux",
+            phone_number: "123456789",
+            email: "example@email.com"
+          }))
+
+          expect(customer.social_customer).to eq(social_customer)
+        end
+      end
+
+      context "when social_customer without customer(a new customer)" do
+        let(:social_customer) { FactoryBot.create(:social_customer, customer: nil) }
+
+        it "records all the data" do
+          customer_info_hash = {
+            customer_last_name: "foo",
+            customer_first_name: "bar",
+            customer_phonetic_last_name: "baz",
+            customer_phonetic_first_name: "qux",
+            customer_phone_number: "123456789",
+            customer_email: "example@email.com"
+          }
+          args.merge!(customer_info_hash)
+
+          expect {
+            outcome
+          }.to change {
+            user.customers.count
+          }.by(1)
+          result = outcome.result
+          customer = result[:customer]
+          reservation = result[:reservation]
+
+          expect(customer.last_name).to eq("foo")
+          expect(customer.first_name).to eq("bar")
+          expect(customer.phonetic_last_name).to eq("baz")
+          expect(customer.phonetic_first_name).to eq("qux")
+
+          reservation_customer = reservation.reservation_customers.first
+          expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+            last_name: "foo",
+            first_name: "bar",
+            phonetic_last_name: "baz",
+            phonetic_first_name: "qux",
+            phone_number: "123456789",
+            email: "example@email.com"
+          }))
+
+          expect(customer.social_customer).to eq(social_customer)
+        end
+      end
+
+      context "when customer without social_customer(a new customer)" do
+        let(:social_user_id) { nil }
+
+        it "records all the data" do
+          customer_info_hash = {
+            customer_last_name: "foo",
+            customer_first_name: "bar",
+            customer_phonetic_last_name: "baz",
+            customer_phonetic_first_name: "qux",
+            customer_phone_number: "123456789",
+            customer_email: "example@email.com"
+          }
+          args.merge!(customer_info_hash)
+
+          expect {
+            outcome
+          }.to change {
+            user.customers.count
+          }.by(1)
+          result = outcome.result
+          customer = result[:customer]
+          reservation = result[:reservation]
+
+          expect(customer.last_name).to eq("foo")
+          expect(customer.first_name).to eq("bar")
+          expect(customer.phonetic_last_name).to eq("baz")
+          expect(customer.phonetic_first_name).to eq("qux")
+
+          reservation_customer = reservation.reservation_customers.first
+          expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+            last_name: "foo",
+            first_name: "bar",
+            phonetic_last_name: "baz",
+            phonetic_first_name: "qux",
+            phone_number: "123456789",
+            email: "example@email.com"
+          }))
+
+          expect(customer.social_customer).to be_nil
+        end
       end
     end
 

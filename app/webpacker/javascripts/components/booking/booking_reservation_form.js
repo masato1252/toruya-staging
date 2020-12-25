@@ -919,7 +919,7 @@ class BookingReservationForm extends React.Component {
           <div className="message">
             <div className="desc" dangerouslySetInnerHTML={{ __html: add_friend_messages_html }} />
             <a href={this.props.social_account_add_friend_url} className="btn line-button">
-              <span class="fab fa-line" aria-hidden="true"></span>
+              <span className="fab fa-line" aria-hidden="true"></span>
               {add_friend_btn}
             </a>
           </div>

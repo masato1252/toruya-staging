@@ -45,7 +45,7 @@
   booking_reservation_form: {
     regular: @customer ? "yes" : nil,
     use_default_customer: @customer ? true : nil,
-    found_customer: @customer ? true : nil,
+    found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.phone_number ? true : nil,
     single_booking_time: @single_booking_time,
     booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
     remember_me: true,
