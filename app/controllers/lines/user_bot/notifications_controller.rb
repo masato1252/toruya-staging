@@ -1,6 +1,6 @@
 class Lines::UserBot::NotificationsController < Lines::UserBotDashboardController
   def index
-    @messages = current_user.social_account.social_messages.includes(social_customer: :customer).unread
+    @messages = current_user.social_account.social_messages.handleable.unread
 
     if @messages.empty?
       UserBotLines::Actions::SwitchRichMenu.run(

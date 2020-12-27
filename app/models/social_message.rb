@@ -23,6 +23,7 @@ class SocialMessage < ApplicationRecord
   belongs_to :staff, optional: true
 
   scope :unread, -> { where(readed_at: nil) }
+  scope :handleable, -> { includes(social_customer: :customer).where.not(social_customers: { customer_id: nil }) }
 
   enum message_type: {
     bot: 0,

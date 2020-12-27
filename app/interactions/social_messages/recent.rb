@@ -18,12 +18,10 @@ module SocialMessages
 
       scope.where(readed_at: nil).update_all(readed_at: Time.current)
 
-      unless customer.user.social_account.social_messages.includes(social_customer: :customer).unread.exists?
-        UserBotLines::Actions::SwitchRichMenu.run(
-          social_user: customer.user.social_user,
-          rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
-        )
-      end
+      UserBotLines::Actions::SwitchRichMenu.run(
+        social_user: customer.user.social_user,
+        rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY
+      )
 
       _messages = social_messages[0...MESSAGES_PER_PAGE].map { |message| MessageSerializer.new(message).attributes_hash }
       _messages.reverse!
