@@ -15,6 +15,8 @@
 require "user_bot_social_account"
 
 class SocialRichMenu < ApplicationRecord
+  LINE_OFFICIAL_RICH_MENU_KEY = "line_official"
+
   belongs_to :social_account, required: false
 
   def account

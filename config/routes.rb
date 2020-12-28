@@ -88,6 +88,8 @@ Rails.application.routes.draw do
           member do
             get :webhook_modal
           end
+
+          resource :rich_menu, only: [:edit, :create, :destroy]
         end
       end
 

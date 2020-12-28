@@ -1,0 +1,26 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.rich_menu.title") %>
+  <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></div>
+  <%= render "lines/user_bot/field_row",
+    title: @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
+
+  <div class="action-block">
+    <% if @social_account.using_line_official_account? %>
+      <p>
+      <%= t("user_bot.dashboards.settings.rich_menu.auto_description_html") %>
+      </p>
+    <% else %>
+      <p>
+      <%= t("user_bot.dashboards.settings.rich_menu.manual_description_html") %>
+      </p>
+    <% end %>
+  </div>
+  <div class="action-block">
+    <% if @social_account.using_line_official_account? %>
+      <%= button_to t("user_bot.dashboards.settings.rich_menu.auto_switch_btn"),
+        lines_user_bot_settings_social_account_rich_menu_path, method: :post, class: "btn btn-orange" %>
+    <% else %>
+      <%= button_to t("user_bot.dashboards.settings.rich_menu.manual_switch_btn"), lines_user_bot_settings_social_account_rich_menu_path, method: :delete, class: "btn btn-orange" %>
+    <% end %>
+  </div>
+</div>

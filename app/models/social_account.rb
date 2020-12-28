@@ -47,4 +47,8 @@ class SocialAccount < ApplicationRecord
   def add_friend_url
     "https://line.me/R/ti/p/#{basic_id}" if basic_id.present?
   end
+
+  def using_line_official_account?
+    social_rich_menus.where(social_name: SocialRichMenu::LINE_OFFICIAL_RICH_MENU_KEY).exists?
+  end
 end

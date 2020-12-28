@@ -61,4 +61,16 @@
   <%= link_to lines_user_bot_settings_social_account_path, class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.dashboard.line_official_account") %></span><i class="fa fa-angle-right"></i>
   <% end %>
+
+  <% if @social_account %>
+    <%= link_to edit_lines_user_bot_settings_social_account_rich_menu_path, class: "field-row" do %>
+      <span><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></span>
+      <span>
+        <span>
+          <%= @social_account.using_line_official_account? ? t("user_bot.dashboards.settings.rich_menu.manual") : t("user_bot.dashboards.settings.rich_menu.auto") %>
+        </span>
+        <i class="fa fa-angle-right"></i>
+      </span>
+    <% end %>
+  <% end %>
 </div>
