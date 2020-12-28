@@ -39,7 +39,8 @@ body {
   &.booking_options,
   &.social_accounts,
   &.profiles,
-  &.payments {
+  &.payments,
+  &.rich_menus {
     background-color: $basic-gray-background;
   }
 

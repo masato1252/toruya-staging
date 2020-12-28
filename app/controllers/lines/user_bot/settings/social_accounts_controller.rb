@@ -1,10 +1,10 @@
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def show
-    @social_account = current_user.social_accounts.first || current_user.social_accounts.new
+    @social_account = current_user.social_account || current_user.social_accounts.new
   end
 
   def edit
-    @social_account = current_user.social_accounts.first || current_user.social_accounts.new
+    @social_account = current_user.social_account || current_user.social_accounts.new
     @attribute = params[:attribute]
   end
 
