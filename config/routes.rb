@@ -113,10 +113,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :sales, only: [:new] do
+      resource :sales, only: [:new] do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
-          get :booking_page
+        end
+
+        scope module: :sales do
+          resources :booking_pages, only: [:new, :create]
         end
       end
 

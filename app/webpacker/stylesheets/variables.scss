@@ -51,6 +51,9 @@ $basic-gray-background: #f2f2f2;
 $gray-background-1: $gray5;
 $gray-border-1: $gray7;
 $gray-word-1: $gray8;
+$gray-background: $basic-gray-background;
+$gray-border: $gray-border-1;
+$gray-word: $gray-word-1;
 $orange-background-1: $palette-color4;
 $orange-border-1: $palette-color4-1;
 $tarco-background-1: $palette-color2;
@@ -68,6 +71,8 @@ $black2: #454443;
 $bar-height: 35px;
 $big-circle-button-size: 45px;
 $line-green: #02b901;
+
+$red: #b0450d;
 
 @mixin clearfix {
   &:before, &:after {

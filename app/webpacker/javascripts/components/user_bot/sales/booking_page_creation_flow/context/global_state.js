@@ -1,8 +1,10 @@
 import React, { createContext, useReducer, useRef, useMemo, useContext } from "react";
 import { useForm } from "react-hook-form";
+import _ from "lodash";
 
 import combineReducer from "context/combine_reducer";
 import BookingCreationReducer from "./booking_creation_reducer";
+import { SaleServices } from "user_bot/api";
 
 export const GlobalContext = createContext()
 
@@ -28,30 +30,20 @@ export const GlobalProvider = ({ props, children }) => {
   const [state, dispatch] = useReducer(reducers, initialValue)
   const hook_form_methods = useForm({});
 
-  const createSales = async () => {
-    // const params = _.merge(
-    //   data,
-    //   {
-    //     end_time_date_part: data.start_time_date_part,
-    //     end_time_time_part: end_at().format("HH:mm"),
-    //     by_staff_id: props.reservation_form.by_staff_id,
-    //     menu_staffs_list,
-    //     staff_states,
-    //     customers_list,
-    //     from: props.params.from,
-    //     customer_id: props.params.customer_id
-    //   }
-    // )
-    // const [error, response] = await SalesServices.create_sales_booking_page(
-    //   {
-    //     data: {
-    //     }
-    //   }
-    // )
+  const createSalesBookingPage = async () => {
+    const [error, response] = await SaleServices.create_sales_booking_page(
+      {
+        data: {
+          ...state.sales_creation_states,
+          selected_booking_page: state.sales_creation_states.selected_booking_page.id,
+          selected_template: state.sales_creation_states.selected_template.id,
+          product_content: _.pick(state.sales_creation_states.product_content, ["picture", "desc1", "desc2"]),
+          selected_staff: _.pick(state.sales_creation_states.selected_staff, ["id", "picture", "introduction"])
+        }
+      }
+    )
 
-    if (response?.data?.status == "successful") {
-    }
-    else {
+    if (error) {
       alert(error?.message || response.data.error_message)
     }
 
@@ -64,7 +56,7 @@ export const GlobalProvider = ({ props, children }) => {
       ...hook_form_methods,
       ...state.sales_creation_states,
       dispatch,
-      createSales
+      createSalesBookingPage
     }}
     >
       {children}

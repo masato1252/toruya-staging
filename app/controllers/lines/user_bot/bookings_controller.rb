@@ -6,14 +6,14 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def page
     authorize! :create, BookingPage
 
-    outcome = BookingPages::SmartCreate.run(attrs: params[:booking].permit!.to_h)
+    outcome = ::BookingPages::SmartCreate.run(attrs: params[:booking].permit!.to_h)
 
     render json: json_response(outcome, { booking_page_id: outcome.result&.id })
   end
 
   def available_options
     menu_result = ::Menus::CategoryGroup.run!(menu_options: shop_menus_options)
-    outcome = BookingPages::AvailableBookingOptions.run(shop: shop)
+    outcome = ::BookingPages::AvailableBookingOptions.run(shop: shop)
 
     shop_booking_options = outcome.result.map do |option|
       view_context.custom_option(view_context.booking_option_item(option))

@@ -5,32 +5,7 @@ import AutosizeInput from 'react-input-autosize';
 import { SwatchesPicker } from 'react-color';
 import Popup from 'reactjs-popup';
 
-const data = {
-  edit: [
-    { _uid: "BUY6Drn9e1", component: "input", name: "target", placeholder: "ターゲット", title: "この販売ページのターゲットは誰ですか？", type: "text" },
-    { _uid: "BUY6Drn9e4", component: "word", content: "の" },
-    { _uid: "BUY6Drn9e3", component: "input", type: "text", name: "problem", placeholder: "悩み", title: "ターゲットの悩みは何ですか？" },
-    { _uid: "BUY9e4", component: "word", content: "を" },
-    { _uid: "Drn9e2", component: "br", },
-    { _uid: "BUY6Dreh", component: "input", type: "text", name: "result", placeholder: "解決後の状態", title: "この予約メニューを利用することで 悩みが解決されたターゲットは どんな未来を手に入れられますか？" },
-    { _uid: "BUY6n9e4", component: "word", content: "にする" },
-    { _uid: "BUY6Drn9e2", component: "br", },
-    { _uid: "B6n9e4", component: "word", tag: "h4", name: "product_name", },
-  ],
-  view: [
-    { _uid: "BUY6Drn9e1", component: "word", name: "target" },
-    { _uid: "BUY6Drn9e4", component: "word", content: "の", tag: "span" },
-    { _uid: "BUY6Drn9e3", component: "word", name: "problem" },
-    { _uid: "BUY9e4", component: "word", content: "を", tag: "span" },
-    { _uid: "Drn9e2", component: "br", },
-    { _uid: "rn9e3", component: "word", name: "result", color: "#C6A654", font_size: "22px", color_editable: true },
-    { _uid: "BUY6n9e4", component: "word", content: "にする", tag: "span" },
-    { _uid: "BUY6Drn9e2", component: "br", },
-    { _uid: "B6n9e4", component: "word", tag: "h4", name: "product_name", color: "#64B14D", font_size: "24px", color_editable: true },
-  ]
-}
-
-const Input = ({block, onChange, onFocus, onBlur, ...rest}) => {
+const Input = ({block, onChange, onFocus, onBlur, inputDisabled, ...rest}) => {
   const { name, placeholder } =  block
   return (
     <AutosizeInput
@@ -39,9 +14,8 @@ const Input = ({block, onChange, onFocus, onBlur, ...rest}) => {
       placeholder={placeholder}
       defaultValue={rest[name]}
       onChange={(event) => onBlur(name, event.target.value)}
-      onFocus={() => {
-        onFocus(name)
-      }}
+      onFocus={() => onFocus(name)}
+      disabled={inputDisabled}
     />
   )
 }
@@ -70,44 +44,39 @@ const SupportComponents = {
   word: Word,
 };
 
-const Components = ({block, ...props})=> {
+const Components = ({block, index, ...props})=> {
   // component does exist
   if (typeof SupportComponents[block.component] !== "undefined") {
     return React.createElement(SupportComponents[block.component], {
-      key: block._uid,
+      key: `${block.component}-${block.name}-${index}`,
       block,
       ...props
     });
   }
 }
 
-const EditTemplate = ({...props}) => {
+const Template = ({template, onClick, klass, ...props}) => {
   return (
-    <div className="sales-template">
-      {data.edit.map(block => Components({block, ...props}))}
+    <div
+      className={klass || "sale-template-content"}
+      onClick={onClick}>
+      {template.map((block, index) => Components({block, index, ...props}))}
     </div>
   )
 }
 
-const ViewTemplate = ({...props}) => {
+const HintTitle = ({template,  focus_field}) => {
   return (
-    <div className="sales-template">
-      {data.view.map(block => Components({block, ...props}))}
-    </div>
-  )
-}
-
-const HintTitle = ({focus_field}) => {
-  return (
-    <h3>
-      {data.edit.find(block => block.name == focus_field)?.title}
-    </h3>
+    <h4 className="centerize">
+      {template.find(block => block.name == focus_field)?.title}
+    </h4>
   )
 }
 
 const ColorPopup = ({handleColorChange, block, ...rest}) => {
   return (
     <Popup
+      modal={true}
       trigger={
         <button
           className="btn"
@@ -115,36 +84,41 @@ const ColorPopup = ({handleColorChange, block, ...rest}) => {
         >
           {rest[`${block.name}_color`] || block.color}
         </button>
-      }
-      position="bottom center">
-      <div>
-        <SwatchesPicker onChange={handleColorChange} />
-      </div>
+      }>
+      {close => (
+        <div>
+          <SwatchesPicker onChange={(color) => {
+            handleColorChange(color)
+            close()
+          }}
+        />
+        </div>
+      )}
     </Popup>
   )
 }
 
-const WordColorPickers = ({onChange, ...rest}) => {
+const WordColorPickers = ({template, onChange, ...rest}) => {
   return (
     <div className="word-color-pickers">
-      {data.view.filter(block => block.color_editable).map(editable_block => (
-        <ColorPopup
-          {...rest}
-          block={editable_block}
-          key={editable_block._uid}
-          handleColorChange={(color) => {
-            onChange(`${editable_block.name}_color`, color.hex)
-          }}
-        />
+      {template.filter(block => block.color_editable).map((editable_block, index) => (
+        <label key={`${editable_block.component}-${editable_block.name}-${index}`}>
+          <b>{editable_block.color_editable_label}</b>
+          <ColorPopup
+            {...rest}
+            block={editable_block}
+            handleColorChange={(color) => {
+              onChange(`${editable_block.name}_color`, color.hex)
+            }}
+          />
+        </label>
       ))}
     </div>
   )
 }
 
 export {
-  EditTemplate,
-  ViewTemplate,
-  data,
+  Template,
   HintTitle,
   WordColorPickers
 }

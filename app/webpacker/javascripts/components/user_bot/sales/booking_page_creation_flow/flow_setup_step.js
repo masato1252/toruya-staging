@@ -1,17 +1,60 @@
 "use strict";
 
 import React from "react";
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
 const FlowSetupStep = ({step, next, prev}) => {
-  const { props, watch } = useGlobalContext()
+  const { props, flow, dispatch } = useGlobalContext()
 
   return (
     <div className="form">
       <SalesFlowStepIndicator step={step} />
-      FlowSetupStep
+      <h4 className="header centerize"
+        dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_introduction_html") }} />
+
+      <div className="product-content-deails centerize">
+        <h3 className="header centerize">
+          {I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_header")}
+        </h3>
+        {flow.map((flowStep, index) => {
+          return (
+            <div className="flow-step" key={`flow-step-${index}`}>
+              <div className="number-step-header">
+                <i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+                <div className="number-step">{index + 1}</div>
+                <button className="btn btn-orange" onClick={() => dispatch({ type: "REMOVE_FLOW", payload: { index } }) }>
+                  <i className="fa fa-minus"></i>
+                </button>
+              </div>
+
+              <TextareaAutosize
+                className="centerize extend with-border"
+                placeholder={props.flow_tips[`tip${index + 1}`]}
+                rows={1}
+                value={flowStep}
+                onChange={(event) => {
+                  dispatch({
+                    type: "SET_FLOW",
+                    payload: {
+                      index: index,
+                      value: event.target.value
+                    }
+                  })
+                }}
+              />
+            </div>
+          )
+        })}
+        <div className="action-block">
+          <button className="btn btn-yellow" onClick={() => dispatch({ type: "ADD_FLOW" }) }>
+            {I18n.t("action.add_step")}
+          </button>
+        </div>
+      </div>
+
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}

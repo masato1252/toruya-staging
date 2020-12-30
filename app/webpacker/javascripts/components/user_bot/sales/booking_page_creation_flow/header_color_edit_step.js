@@ -4,20 +4,29 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
-import { ViewTemplate, HintTitle, WordColorPickers } from "shared/builders"
+import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
+import { Template, HintTitle, WordColorPickers } from "shared/builders"
 
 const HeaderColorEditStep= ({step, next, prev}) => {
-  const { props, selected_booking_page, dispatch, template_variables, focus_field } = useGlobalContext()
+  const { props, selected_booking_page, selected_template, dispatch, template_variables, focus_field } = useGlobalContext()
 
   return (
     <div className="form">
       <SalesFlowStepIndicator step={step} />
-      <ViewTemplate
-        {...template_variables}
-        product_name={selected_booking_page?.name}
-      />
+      <h4 className="header centerize"
+        dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.select_color_html") }} />
+      <SaleTemplateContainer
+        shop={props.shops[selected_booking_page.shop_id]}
+        product={selected_booking_page}>
+        <Template
+          template={selected_template.view_body}
+          {...template_variables}
+          product_name={selected_booking_page?.name}
+        />
+      </SaleTemplateContainer>
       <div className="centerize">
         <WordColorPickers
+          template={selected_template.view_body}
           {...template_variables}
           onChange={(name, value) => {
             dispatch({
@@ -29,6 +38,9 @@ const HeaderColorEditStep= ({step, next, prev}) => {
             })
           }}
         />
+      </div>
+      <div className="action-block">
+        {I18n.t("user_bot.dashboards.sales.booking_page_creation.color_tip")}
       </div>
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">
