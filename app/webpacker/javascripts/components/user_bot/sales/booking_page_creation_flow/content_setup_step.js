@@ -60,7 +60,7 @@ const ContentSetupStep = ({step, next, prev}) => {
             defaultImages={product_content.picture_url.length ? [product_content.picture_url] : []}
             withIcon={true}
             withPreview={true}
-            withLabel={false}
+            withLabel={true}
             buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
             singleImage={true}
             onChange={onDrop}
