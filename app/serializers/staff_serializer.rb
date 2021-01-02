@@ -6,7 +6,7 @@ class StaffSerializer
     staff.name
   end
 
-  attribute :picture_url do |shop|
-    ApplicationController.helpers.staff_picture_url(shop, "180x180")
+  attribute :picture_url do |staff|
+    ApplicationController.helpers.staff_picture_url(staff, "360")
   end
 end
