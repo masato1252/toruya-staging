@@ -444,6 +444,8 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
+  resources :sale_pages, only: [:show]
+
   resources :shops, only: [:show]
 
   resources :referrals, only: [:show], param: :token

@@ -2,6 +2,10 @@ class BookingPageSerializer
   include FastJsonapi::ObjectSerializer
   attribute :id, :name, :shop_id
 
+  attribute :url do |booking_page|
+     Rails.application.routes.url_helpers.booking_page_url(booking_page)
+  end
+
   attribute :price_number do |booking_page|
     booking_page.booking_options.order(amount_cents: :asc).first.amount.fractional
   end

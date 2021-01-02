@@ -17,7 +17,7 @@ const PriceBlock = ({product, demo}) => {
           <i className="fas fa-calendar-check"></i> {I18n.t("action.book_now")}
         </button>
       ) :(
-        <a href={product.url} className="btn btn-tarco">
+        <a href={product.url} className="btn btn-tarco" target="_blank">
           <i className="fas fa-calendar-check"></i> {I18n.t("action.book_now")}
         </a>
       )}

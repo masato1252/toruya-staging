@@ -33,7 +33,8 @@ body {
   width: 100%; // mobile
   flex: 1 1 auto;
 
-  &.extend {
+  &.extend,
+  &.sale_pages {
     padding: 0;
   }
 

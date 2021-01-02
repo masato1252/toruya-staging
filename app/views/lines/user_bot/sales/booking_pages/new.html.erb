@@ -7,7 +7,10 @@
       }
     },
     staffs: super_user.staffs.includes(picture_attachment: :blob).map { |staff|
-      { label: staff.name, value: staff.attributes.slice("id", "introduction").merge(name: staff.name, picture_url: staff_picture_url(staff, "390x135")) }
+      {
+        label: staff.name,
+        value: StaffSerializer.new(staff).attributes_hash
+      }
     },
     sale_templates: @sale_templates.map {|template| template.attributes.slice("id", "edit_body", "view_body")},
     flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),

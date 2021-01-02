@@ -9,9 +9,11 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
   return (
     <div className="sale-page centerize">
       <SaleTemplateContainer shop={shop} product={product}>
-        <span className="btn btn-yellow edit-mark" onClick={() => jump(1)}>
-          <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
-        </span>
+        {demo && (
+          <span className="btn btn-yellow edit-mark" onClick={() => jump(1)}>
+            <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
+          </span>
+        )}
         <Template
           template={template}
           {...template_variables}
@@ -22,10 +24,12 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
       </SaleTemplateContainer>
 
       <div className="product-content content">
-        <span className="btn btn-yellow edit-mark" onClick={() => jump(4)}>
-          <i className="fa fa-pencil-alt"></i>
-          {I18n.t("action.edit")}
-        </span>
+        {demo && (
+          <span className="btn btn-yellow edit-mark" onClick={() => jump(4)}>
+            <i className="fa fa-pencil-alt"></i>
+            {I18n.t("action.edit")}
+          </span>
+        )}
         <h3 className="header centerize">
           {content.desc1}
         </h3>
@@ -36,10 +40,12 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
       </div>
 
       <div className="staff-content content">
-        <span className="btn btn-yellow edit-mark" onClick={() => jump(5)}>
-          <i className="fa fa-pencil-alt"></i>
-          {I18n.t("action.edit")}
-        </span>
+        {demo && (
+          <span className="btn btn-yellow edit-mark" onClick={() => jump(5)}>
+            <i className="fa fa-pencil-alt"></i>
+            {I18n.t("action.edit")}
+          </span>
+        )}
         <img className="staff-picture" src={staff.picture_url} />
         <b className="name">{staff.name}</b>
         <p>
@@ -48,10 +54,12 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
       </div>
 
       <div className="flow-content content">
-        <span className="btn btn-yellow edit-mark" onClick={() => jump(6)}>
-          <i className="fa fa-pencil-alt"></i>
-          {I18n.t("action.edit")}
-        </span>
+        {demo && (
+          <span className="btn btn-yellow edit-mark" onClick={() => jump(6)}>
+            <i className="fa fa-pencil-alt"></i>
+            {I18n.t("action.edit")}
+          </span>
+        )}
         <h3 className="header centerize">
           {I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_header")}
         </h3>
