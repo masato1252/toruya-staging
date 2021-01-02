@@ -60,11 +60,11 @@ const ContentSetupStep = ({step, next, prev}) => {
             defaultImages={product_content.picture_url.length ? [product_content.picture_url] : []}
             withIcon={true}
             withPreview={true}
-            withLabel={true}
+            withLabel={false}
             buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
             singleImage={true}
             onChange={onDrop}
-            imgExtension={[".jpg", ".png"]}
+            imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
             maxFileSize={5242880}
           />
           {focus_field == "what_buyer_future_tip" && <p className="centerize">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_buyer_future_tip`)}</p>}

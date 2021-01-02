@@ -45,7 +45,7 @@ const StaffSetupStep = ({step, next, prev}) => {
           singleImage={true}
           buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_picture_requirement_tip")}
           onChange={onDrop}
-          imgExtension={[".jpg", ".png"]}
+          imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
           maxFileSize={5242880}
         />
         <ReactSelect
