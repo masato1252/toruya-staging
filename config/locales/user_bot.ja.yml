@@ -148,6 +148,7 @@ ja:
           sale_page_like_this: 販売ページは以下の様に表示されます
           sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
           create_this_sale_page: この設定で販売ページを作成する
+          share_sale_page: 作成した販売ページをシェアしましょう
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

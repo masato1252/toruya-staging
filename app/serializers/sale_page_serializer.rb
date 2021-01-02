@@ -1,9 +1,18 @@
 class SalePageSerializer
   include FastJsonapi::ObjectSerializer
-  attribute :content, :flow
+  attribute :flow
 
   attribute :product do |sale_page|
     BookingPageSerializer.new(sale_page.product).attributes_hash
+  end
+
+  attribute :content  do |sale_page|
+    sale_page.content.merge(
+      picture_url: Rails.application.routes.url_helpers.url_for(sale_page.picture.variant(combine_options: {
+        resize: "335",
+        flatten: true
+      }))
+    )
   end
 
   attribute :shop do |sale_page|

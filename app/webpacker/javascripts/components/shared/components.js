@@ -217,13 +217,13 @@ const BookingOptionElement = ({onClick, booking_option, i18n}) => (
   </div>
 )
 
-const BookingPageUrlCopyBtn = ({booking_page_url}) => {
+const UrlCopyBtn = ({url}) => {
   return (
     <button
       className="btn btn-tarco"
       data-controller="clipboard"
       data-action="click->clipboard#copy"
-      data-clipboard-text={booking_page_url}
+      data-clipboard-text={url}
       data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
       {I18n.t("action.copy_url2")}
     </button>
@@ -261,6 +261,6 @@ export {
   SelectOptions,
   CiricleButtonWithWord,
   BookingOptionElement,
-  BookingPageUrlCopyBtn,
+  UrlCopyBtn,
   BookingPageButtonCopyBtn,
 };

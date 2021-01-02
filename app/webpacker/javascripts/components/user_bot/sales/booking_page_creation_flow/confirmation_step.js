@@ -29,6 +29,7 @@ const ConfirmationStep = ({step, next, jump}) => {
         flow={flow}
         jump={jump}
         dispatch={dispatch}
+        demo={true}
       />
       <div className="action-block confirm-block">
         <button

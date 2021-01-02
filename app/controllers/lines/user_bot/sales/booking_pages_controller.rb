@@ -14,6 +14,6 @@ class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardCon
       flow: params[:flow]
     )
 
-    return_json_response(outcome)
+    return_json_response(outcome, { sale_page_id: outcome.result&.id })
   end
 end

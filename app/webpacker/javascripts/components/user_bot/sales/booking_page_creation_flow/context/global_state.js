@@ -43,7 +43,15 @@ export const GlobalProvider = ({ props, children }) => {
       }
     )
 
-    if (error) {
+    if (response?.data?.status == "successful") {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "sale_page_id",
+          value: response.data.sale_page_id
+        }
+      })
+    } else {
       alert(error?.message || response.data.error_message)
     }
 

@@ -38,7 +38,10 @@ module Sales
             errors.merge!(sale_page.errors)
           end
 
-          responsible_staff.picture = staff[:picture] if staff[:picture]
+          if staff[:picture]
+            responsible_staff.picture.purge
+            responsible_staff.picture = staff[:picture]
+          end
           responsible_staff.introduction = staff[:introduction]
           responsible_staff.save!
 
