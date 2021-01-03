@@ -26,7 +26,7 @@
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
   social_account_add_friend_url: @social_account&.add_friend_url,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
-    shop_logo_url: shop_logo_url(@booking_page.shop, "390x135"),
+    shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
     shop_name: @booking_page.shop.name,
     is_single_booking_time: !!@single_booking_time,
     is_single_option: @is_single_booking_option,

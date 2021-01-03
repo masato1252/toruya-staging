@@ -3,7 +3,7 @@ class ShopSerializer
   attribute :id, :email, :phone_number
 
   attribute :logo_url do |shop|
-    ApplicationController.helpers.shop_logo_url(shop, "390x135")
+    ApplicationController.helpers.shop_logo_url(shop, "260")
   end
 
   attribute :name do |shop|

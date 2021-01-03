@@ -3,9 +3,9 @@
 <%= react_component("user_bot/bookings/creation_flow", {
   props: {
     super_user_id: super_user.id,
-    selected_shop: @shop ? react_attribute(@shop.attributes.merge!(logo_url: shop_logo_url(shop, "390x135"))) : {},
+    selected_shop: @shop ? react_attribute(@shop.attributes.merge!(logo_url: shop_logo_url(shop, "260"))) : {},
     note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
-    shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| react_attribute(s.attributes.merge(logo_url: shop_logo_url(s, "390x135"))) },
+    shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| react_attribute(s.attributes.merge(logo_url: shop_logo_url(s, "260"))) },
     i18n: {
     }.merge!([
       t("activerecord.attributes.menu"),
