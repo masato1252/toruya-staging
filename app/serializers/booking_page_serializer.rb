@@ -1,5 +1,5 @@
 class BookingPageSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :id, :name, :shop_id
 
   attribute :url do |booking_page|

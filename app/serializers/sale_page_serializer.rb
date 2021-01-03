@@ -1,5 +1,5 @@
 class SalePageSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :flow
 
   attribute :product do |sale_page|

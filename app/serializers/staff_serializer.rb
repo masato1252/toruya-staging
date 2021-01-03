@@ -1,5 +1,5 @@
 class StaffSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :id, :introduction
 
   attribute :name do |staff|

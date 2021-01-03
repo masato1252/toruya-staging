@@ -1,5 +1,5 @@
 class ShopSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :id, :email, :phone_number
 
   attribute :logo_url do |shop|
