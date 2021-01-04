@@ -172,3 +172,9 @@ a.btn {
     margin-right: 6px;
   }
 }
+
+.btn-flexible {
+  height: auto !important;
+  line-height: initial !important;
+  padding: 10px !important;
+}

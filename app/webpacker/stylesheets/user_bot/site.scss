@@ -485,10 +485,6 @@ a {
 }
 
 .settings-flow {
-  h3.header {
-    margin: 20px 0;
-  }
-
   .item-container {
     font-weight: bold;
     margin-bottom: 30px;
@@ -518,4 +514,12 @@ a {
   .btn {
     font-family: "Courier New", Courier, monospace;
   }
+}
+
+p.description {
+  white-space: pre-wrap;
+}
+
+h3.header {
+  margin: 20px 0;
 }

@@ -1,6 +1,12 @@
 $image-btn-background: $gray9;
 
 .sales {
+  .btn-flexible {
+    h4 {
+      margin-top: 12px;
+    }
+  }
+
   .flow-step-indicator {
     margin: 24px 80px
   }

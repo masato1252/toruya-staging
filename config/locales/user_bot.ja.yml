@@ -122,6 +122,12 @@ ja:
         want_to_create_a_new_menu: 新しいメニューが必要ですか？
         create_a_new_menu: 新しいメニューを作成する
       sales:
+        new:
+          what_to_sale: この販売ページの目的は何ですか？
+          online_booking: オンライン予約募集
+          add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
+          online_service: オンラインサービス利用者募集
+          online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容
