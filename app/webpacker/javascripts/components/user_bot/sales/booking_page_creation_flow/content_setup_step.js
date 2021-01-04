@@ -89,7 +89,9 @@ const ContentSetupStep = ({step, next, prev}) => {
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
           </button>
-          <button onClick={next} className="btn btn-yellow">
+          <button onClick={next} className="btn btn-yellow"
+            disabled={product_content.picture_url.length == 0 || product_content.desc1 == "" || product_content.desc2 == ""}
+          >
             {I18n.t("action.next_step")}
           </button>
         </div>

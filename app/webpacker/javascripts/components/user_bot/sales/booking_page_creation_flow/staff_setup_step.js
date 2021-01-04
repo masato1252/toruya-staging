@@ -37,17 +37,19 @@ const StaffSetupStep = ({step, next, prev}) => {
       <h4 className="header centerize"
         dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.introduce_who_do_this") }} />
       <div className="product-content-deails">
-        <ImageUploader
-          defaultImages={selected_staff?.picture_url?.length ? [selected_staff.picture_url] : []}
-          withIcon={true}
-          withPreview={true}
-          withLabel={false}
-          singleImage={true}
-          buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_picture_requirement_tip")}
-          onChange={onDrop}
-          imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
-          maxFileSize={5242880}
-        />
+        {selected_staff && (
+          <ImageUploader
+            defaultImages={selected_staff?.picture_url?.length ? [selected_staff.picture_url] : []}
+            withIcon={true}
+            withPreview={true}
+            withLabel={false}
+            singleImage={true}
+            buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_picture_requirement_tip")}
+            onChange={onDrop}
+            imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
+            maxFileSize={5242880}
+          />
+        )}
         <ReactSelect
           Value={selected_staff ? { label: selected_staff.name } : ""}
           defaultValue={selected_staff ?  { label: selected_staff.name } : ""}
@@ -86,7 +88,9 @@ const StaffSetupStep = ({step, next, prev}) => {
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
           </button>
-          <button onClick={next} className="btn btn-yellow">
+          <button onClick={next} className="btn btn-yellow"
+            disabled={!selected_staff || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == ""}
+          >
             {I18n.t("action.next_step")}
           </button>
         </div>
