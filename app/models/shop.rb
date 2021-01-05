@@ -42,4 +42,8 @@ class Shop < ApplicationRecord
   belongs_to :user
 
   scope :active, -> { where(deleted_at: nil) }
+
+  def staff_users
+    staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user }
+  end
 end

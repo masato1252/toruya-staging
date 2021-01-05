@@ -47,7 +47,9 @@ module Booking
               special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
-              test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
+              Rails.cache.fetch(cache_key(special_date), expires_in: 6.hours) do
+                test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
+              end
             end.compact
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
@@ -64,7 +66,9 @@ module Booking
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           # if true || Rails.env.test?
             available_working_dates.map do |date|
-              test_available_booking_date(booking_options, date)
+              Rails.cache.fetch(cache_key(date), expires_in: 6.hours) do
+                test_available_booking_date(booking_options, date)
+              end
             end.compact
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
@@ -83,6 +87,19 @@ module Booking
     end
 
     private
+
+    def cache_key(date)
+      [
+        booking_page,
+        date,
+        shop.reservations.in_date(date),
+        CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids)
+      ]
+    end
+
+    def staff_user_ids
+      @staff_user_ids ||= shop.staff_users.pluck(:id)
+    end
 
     def test_available_booking_date(booking_options, date, booking_available_start_at = nil, booking_available_end_at = nil)
       time_range_outcome = Reservable::Time.run(shop: shop, date: date)
