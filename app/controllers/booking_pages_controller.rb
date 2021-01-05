@@ -267,7 +267,7 @@ class BookingPagesController < ActionController::Base
   private
 
   def date
-    @date ||= Time.zone.parse(params[:date]).to_date
+    @date ||= params[:date].present? ? Time.zone.parse(params[:date]).to_date : Time.zone.now.to_date
   end
 
   def month_dates

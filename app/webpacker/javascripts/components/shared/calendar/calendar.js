@@ -1,150 +1,76 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import _ from "lodash";
+import moment from "moment-timezone"
 
 import DayNames from "./day_names.js";
 import Week from "./week.js";
 import Select from "../select.js";
-var moment = require('moment-timezone');
+import useSchedule from "./use_schedule";
 
-class Calendar extends React.Component {
-  constructor(props) {
-    super(props);
-    moment.locale('ja');
+const Calendar = ({...props}) => {
+  moment.locale('ja');
+  let staff_id;
+  const startDate = props.selectedDate ? moment(props.selectedDate) : moment().startOf("day");
 
-    this.throttleFetchSchedule = _.throttle(this._fetchSchedule, 200);
-    this.startDate = this.props.selectedDate ? moment(this.props.selectedDate) : moment().startOf("day");
-
-    this.state = {
-      loading: true,
-      month: this.startDate.clone(),
-      selectedDate: this.props.skip_default_date ? null : this.startDate.clone()
-    };
-  };
-
-  componentDidMount = () => {
-    this.throttleFetchSchedule();
-
-    if (this.props.dateSelectedCallback && !this.props.skip_default_date) {
-      this.props.dateSelectedCallback(this.startDate.format("YYYY-MM-DD"))
-    }
-  };
-
-  componentDidUpdate = (prevProps) => {
-    if (!_.isEqual(this.props.scheduleParams, prevProps.scheduleParams)) {
-      this.throttleFetchSchedule();
-    }
+  if (location.search.length) {
+    staff_id = location.search.replace(/\?staff_id=/, '');
   }
 
-  previous = () => {
-    var month = this.state.month.clone();
+  const [state, setState] = useState({
+    month: startDate.clone(),
+    selectedDate: props.skip_default_date ? null : startDate.clone()
+  })
+
+  const scheduleParams = _.merge({ date: state.month.clone().startOf('month').format("YYYY-MM-DD"), staff_id: staff_id }, props.scheduleParams || {})
+  const { isLoading, schedules } = useSchedule({url: props.schedulePath, scheduleParams: scheduleParams});
+
+  useEffect(() => {
+    if (props.dateSelectedCallback && !props.skip_default_date) {
+      props.dateSelectedCallback(startDate.format("YYYY-MM-DD"))
+    }
+  }, [])
+
+  const previous = () => {
+    var month = state.month.clone();
     month.add(-1, "M");
-    this.setState({ month: month }, this.throttleFetchSchedule);
+    setState({ ...state, month: month })
   };
 
-  next = () => {
-    var month = this.state.month.clone();
+  const next = () => {
+    var month = state.month.clone();
     month.add(1, "M");
-    this.setState({ month: month }, this.throttleFetchSchedule);
+    setState({ ...state, month: month })
   };
 
-  _fetchSchedule = () => {
-    var staff_id;
+  const select = (day) => {
+    setState({...state, month: day.date, selectedDate: day.date });
 
-    if (this.fetchScheduleCall) {
-      this.fetchScheduleCall.cancel();
+    if (props.dateSelectedCallback) {
+      props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
     }
-    this.fetchScheduleCall = axios.CancelToken.source();
-
-    if (location.search.length) {
-      staff_id = location.search.replace(/\?staff_id=/, '');
-    }
-
-    const scheduleParams = _.merge({ date: this.state.month.format("YYYY-MM-DD"), staff_id: staff_id }, this.props.scheduleParams || {})
-
-    axios.interceptors.response.use(function (response) {
-      // Any status code that lie within the range of 2xx cause this function to trigger
-      // Do something with response data
-      return response;
-    }, function (error) {
-      // Any status codes that falls outside the range of 2xx cause this function to trigger
-      // Do something with response error
-      console.log(error)
-      return Promise.reject(error);
-    });
-
-
-    this.setState({
-      loading: true
-    }, () => {
-      axios({
-        method: "GET",
-        url: this.props.schedulePath,
-        params: scheduleParams,
-        responseType: "json",
-        cancelToken: this.fetchScheduleCall.token
-      })
-        .then((response) => {
-          var result = response.data;
-
-          this.setState({
-            holidayDates: result["holiday_dates"],
-            workingDates: result["working_dates"],
-            reservationDates: result["reservation_dates"],
-            availableBookingDates: result["available_booking_dates"],
-            personalScheduleDates: result["personal_schedule_dates"]
-          });
-        })
-        .then(() => {
-          this.setState({
-            loading: false
-          })
-        })
-        .catch((error) => {
-          // XXX: No request is running
-          if (!this.fetchScheduleCall) {
-            this.setState({
-              loading: false
-            })
-          }
-        })
-        .finally(() => {
-          this.setState({
-            loading: false
-          })
-        })
-      ;
-    })
-  };
-
-  select = (day) => {
-    this.setState({ month: day.date, selectedDate: day.date });
-
-    if (this.props.dateSelectedCallback) {
-      this.props.dateSelectedCallback(day.date.format("YYYY-MM-DD"))
-    }
-    else if (this.props.dateSelectedCallbackPath) {
+    else if (props.dateSelectedCallbackPath) {
       let params = new URLSearchParams(location.search)
       params.set("schedule_display_start_date", day.date.clone().add(-1, "day").format("YYYY-MM-DD"))
-      location = `${this.props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}?${params.toString()}`;
+      location = `${props.dateSelectedCallbackPath}/${day.date.format("YYYY-MM-DD")}?${params.toString()}`;
     }
   };
 
-  handleCalendarSelect = (event) => {
+  const handleCalendarSelect = (event) => {
     event.preventDefault();
-    this.setState({month: moment(event.target.value)}, this.throttleFetchSchedule);
+    setState({...state, month: moment(event.target.value)});
   };
 
-  renderYearSelector = () => {
+  const renderYearSelector = () => {
     var years = [];
 
-    var yearStart = this.state.month.clone().add(-3, "Y").startOf('year')
+    var yearStart = state.month.clone().add(-3, "Y").startOf('year')
 
     for (var i = 0; i <= 6; i++) {
       var newYear = yearStart.clone().add(i, "Y");
-      var newYearMonth = moment({year: newYear.year(), month: this.state.month.month()});
+      var newYearMonth = moment({year: newYear.year(), month: state.month.month()});
 
       years.push({value: newYearMonth.format("YYYY-MM"), label: newYearMonth.format("YYYY")})
     }
@@ -152,16 +78,16 @@ class Calendar extends React.Component {
     return (
       <Select
         options={years}
-        value={this.state.month.format("YYYY-MM")}
-        onChange={this.handleCalendarSelect}
+        value={state.month.format("YYYY-MM")}
+        onChange={handleCalendarSelect}
       />);
   };
 
-  renderMonthSelector = () => {
+  const renderMonthSelector = () => {
     var months = [];
-    var yearStart = this.state.month.clone().startOf('year')
+    var yearStart = state.month.clone().startOf('year')
 
-    this.props.monthNames.forEach(function(month, i) {
+    props.monthNames.forEach(function(month, i) {
       var newMonth = yearStart.clone().add(i, "M");
       months.push({value: newMonth.format("YYYY-MM"), label: month})
     })
@@ -169,64 +95,62 @@ class Calendar extends React.Component {
     return (
       <Select
         options={months}
-        value={this.state.month.format("YYYY-MM")}
-        onChange={this.handleCalendarSelect}
+        value={state.month.format("YYYY-MM")}
+        onChange={handleCalendarSelect}
       />);
   };
 
-  render() {
-    if (this.state.loading) {
-      return (
-        <div className="calendar-loading">
-          <i className="fa fa-spinner fa-spin fa-fw fa-3x" aria-hidden="true"></i>
-        </div>
+  const renderWeeks = () => {
+    var weeks = [],
+      done = false,
+      date = state.month.clone().startOf("month").add("w" -1).day("Sunday"),
+      monthIndex = date.month(),
+      count = 0;
+
+    while (!done) {
+      weeks.push(
+        <Week
+          key={date.toString()}
+          date={date.clone()}
+          month={state.month}
+          select={select}
+          selected={state.month}
+          selectedDate={state.selectedDate}
+          holidayDates={schedules.holiday_dates}
+          workingDates={schedules.working_dates}
+          availableBookingDates={schedules.available_booking_dates}
+          personalScheduleDates={schedules.personal_schedule_dates}
+          reservationDates={schedules.reservation_dates}
+        />
       );
+      date.add(1, "w");
+      done = count++ > 2 && monthIndex !== date.month();
+      monthIndex = date.month();
     }
 
+    return weeks;
+  }
+
+  if (isLoading) {
     return (
-      <div className="calendar">
-        <div className="header">
-          <i className="fa fa-angle-left fa-2x" onClick={this.previous}></i>
-          {this.renderYearSelector()}
-          {this.renderMonthSelector()}
-          <i className="fa fa-angle-right fa-2x" onClick={this.next}></i>
-        </div>
-        <DayNames dayNames={this.props.dayNames} />
-        {this.renderWeeks()}
+      <div className="calendar-loading">
+        <i className="fa fa-spinner fa-spin fa-fw fa-3x" aria-hidden="true"></i>
       </div>
     );
-  };
-
-  renderWeeks = () => {
-    var weeks = [],
-        done = false,
-        date = this.state.month.clone().startOf("month").add("w" -1).day("Sunday"),
-        monthIndex = date.month(),
-        count = 0;
-
-        while (!done) {
-          weeks.push(
-            <Week
-              key={date.toString()}
-              date={date.clone()}
-              month={this.state.month}
-              select={this.select}
-              selected={this.state.month}
-              selectedDate={this.state.selectedDate}
-              holidayDates={this.state.holidayDates}
-              workingDates={this.state.workingDates}
-              availableBookingDates={this.state.availableBookingDates}
-              personalScheduleDates={this.state.personalScheduleDates}
-              reservationDates={this.state.reservationDates}
-            />
-          );
-          date.add(1, "w");
-          done = count++ > 2 && monthIndex !== date.month();
-          monthIndex = date.month();
-        }
-
-        return weeks;
   }
+
+  return (
+    <div className="calendar">
+      <div className="header">
+        <i className="fa fa-angle-left fa-2x" onClick={previous}></i>
+        {renderYearSelector()}
+        {renderMonthSelector()}
+        <i className="fa fa-angle-right fa-2x" onClick={next}></i>
+      </div>
+      <DayNames dayNames={props.dayNames} />
+      {renderWeeks()}
+    </div>
+  );
 };
 
 export default Calendar;
