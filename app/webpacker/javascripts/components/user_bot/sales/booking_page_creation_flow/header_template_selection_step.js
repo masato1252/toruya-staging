@@ -25,7 +25,7 @@ const HeaderTemplateSelectionStep = ({step, next, prev}) => {
             <Template
               template={template.edit_body}
               inputDisabled={true}
-              product_name={selected_booking_page.name}
+              product_name={selected_booking_page.product_name}
               onClick={() => {
                 console.log(template)
 

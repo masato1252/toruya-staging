@@ -40,7 +40,7 @@ const StaffSetupStep = ({step, next, prev}) => {
         {selected_staff && (
           <ImageUploader
             defaultImages={selected_staff?.picture_url?.length ? [selected_staff.picture_url] : []}
-            withIcon={true}
+            withIcon={false}
             withPreview={true}
             withLabel={false}
             singleImage={true}

@@ -22,7 +22,7 @@ const HeaderSetupStep = ({step, next, prev}) => {
         <Template
           {...template_variables}
           template={selected_template.edit_body}
-          product_name={selected_booking_page.name}
+          product_name={selected_booking_page.product_name}
           onBlur={(name, value) => {
             dispatch({
               type: "SET_TEMPLATE_VARIABLES",

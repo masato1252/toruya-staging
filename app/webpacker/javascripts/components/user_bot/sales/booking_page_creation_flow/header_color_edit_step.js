@@ -21,7 +21,7 @@ const HeaderColorEditStep= ({step, next, prev}) => {
         <Template
           template={selected_template.view_body}
           {...template_variables}
-          product_name={selected_booking_page?.name}
+          product_name={selected_booking_page?.product_name}
         />
       </SaleTemplateContainer>
       <div className="centerize">

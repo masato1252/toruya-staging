@@ -494,6 +494,10 @@ a {
       display: flex;
       justify-content: space-between;
       margin: 9px 60px;
+
+      .item-data {
+        font-weight: normal;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ class SalePageSerializer
     BookingPageSerializer.new(sale_page.product).attributes_hash
   end
 
-  attribute :content  do |sale_page|
+  attribute :content do |sale_page|
     sale_page.content.merge(
       picture_url: Rails.application.routes.url_helpers.url_for(sale_page.picture.variant(combine_options: {
         resize: "750",

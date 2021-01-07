@@ -11,7 +11,11 @@ const initialState = {
     desc2: ""
   },
   selected_staff: null,
-  flow: [""]
+  flow: [
+    I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_default_steps.step1"),
+    I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_default_steps.step2"),
+    I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_default_steps.step3")
+  ]
 }
 
 export default (state = initialState, action) => {

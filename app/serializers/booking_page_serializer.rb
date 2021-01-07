@@ -10,6 +10,11 @@ class BookingPageSerializer
     booking_page.booking_options.order(amount_cents: :asc).first.amount.fractional
   end
 
+  attribute :product_name do |booking_page|
+    option = booking_page.booking_options.order(amount_cents: :asc).first
+    option.display_name.presence || option.name.presence || booking_page.name
+  end
+
   attribute :price do |booking_page|
     booking_page.booking_options.order(amount_cents: :asc).first.amount.format(:ja_default_format)
   end

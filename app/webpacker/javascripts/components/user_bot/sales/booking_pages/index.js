@@ -17,7 +17,7 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
         <Template
           template={template}
           {...template_variables}
-          product_name={product.name}
+          product_name={product.product_name}
         />
 
         <PriceBlock product={product} demo={demo} />

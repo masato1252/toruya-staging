@@ -58,7 +58,7 @@ const ContentSetupStep = ({step, next, prev}) => {
           />
           <ImageUploader
             defaultImages={product_content.picture_url.length ? [product_content.picture_url] : []}
-            withIcon={true}
+            withIcon={false}
             withPreview={true}
             withLabel={false}
             buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}

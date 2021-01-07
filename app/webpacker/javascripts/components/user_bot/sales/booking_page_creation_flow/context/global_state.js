@@ -22,7 +22,6 @@ export const GlobalProvider = ({ props, children }) => {
       reducers(),
       {
         sales_creation_states: {
-          selected_booking_page: props.selected_booking_page
         }
       }
     )

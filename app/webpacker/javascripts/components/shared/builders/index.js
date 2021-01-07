@@ -16,6 +16,7 @@ const Input = ({block, onChange, onFocus, onBlur, inputDisabled, ...rest}) => {
       onChange={(event) => onBlur(name, event.target.value)}
       onFocus={() => onFocus(name)}
       disabled={inputDisabled}
+      inputStyle={ { fontSize: block.font_size } }
     />
   )
 }

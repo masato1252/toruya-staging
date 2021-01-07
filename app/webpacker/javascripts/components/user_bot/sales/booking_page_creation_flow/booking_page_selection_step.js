@@ -13,36 +13,38 @@ const BookingPageSelectionStep = ({next, step}) => {
     <div className="form settings-flow">
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.booking_page_creation.sell_what_page")}</h3>
-      <ReactSelect
-        Value={selected_booking_page || ""}
-        defaultValue={selected_booking_page || ""}
-        placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.select_booking_page")}
-        options={props.booking_pages}
-        onChange={
-          (booking_page_option)=> {
-            dispatch({
-              type: "SET_ATTRIBUTE",
-              payload: {
-                attribute: "selected_booking_page",
-                value: booking_page_option.value
-              }
-            })
+      <div className="margin-around">
+        <ReactSelect
+          Value={selected_booking_page || ""}
+          defaultValue={selected_booking_page || ""}
+          placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.select_booking_page")}
+          options={props.booking_pages}
+          onChange={
+            (booking_page_option)=> {
+              dispatch({
+                type: "SET_ATTRIBUTE",
+                payload: {
+                  attribute: "selected_booking_page",
+                  value: booking_page_option.value
+                }
+              })
+            }
           }
-        }
-      />
+        />
+      </div>
       {selected_booking_page && (
         <div className="item-container">
           <div className="item-element">
             <span>{I18n.t("user_bot.dashboards.booking_page_creation.booking_price")}</span>
-            <span>{selected_booking_page?.price}</span>
+            <span className="item-data">{selected_booking_page?.price}</span>
           </div>
           <div className="item-element">
             <span>{I18n.t("settings.booking_page.form.sale_start")}</span>
-            <span>{selected_booking_page?.start_time}</span>
+            <span className="item-data">{selected_booking_page?.start_time}</span>
           </div>
           <div className="item-element">
             <span>{I18n.t("settings.booking_page.form.sale_end")}</span>
-            <span>{selected_booking_page?.end_time}</span>
+            <span className="item-data">{selected_booking_page?.end_time}</span>
           </div>
         </div>
       )}
