@@ -13,9 +13,7 @@
   <meta property="og:site_name" content="Toruya">
   <meta property="og:title" content="<%= @booking_page.shop.display_name %> | <%= @booking_page.name %>">
   <meta property="og:url" content="<%= booking_page_url(@booking_page) %>">
-  <meta property="og:description" content="<%= @booking_page.name %>
-  <%= booking_page_url(@booking_page) %>
-  <%= @booking_page.greeting&.squish %>
+  <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page) %> <%= @booking_page.greeting&.squish %>">
 <% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
