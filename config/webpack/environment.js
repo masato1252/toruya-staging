@@ -2,6 +2,8 @@ const { environment, config } = require('@rails/webpacker')
 const erb = require('./loaders/erb')
 const webpack = require('webpack')
 
+const notServerRendering = name => name !== 'server_rendering'
+
 environment.plugins.prepend(
   'Provide',
   new webpack.ProvidePlugin({
@@ -31,6 +33,20 @@ environment.config.merge({
   }
 })
 
-environment.splitChunks()
+const splitChunksConfig = {
+  optimization: {
+    splitChunks: {
+      chunks(chunk) {
+        return notServerRendering(chunk.name);
+      }
+    }
+  }
+};
+
+// environment.splitChunks()
+environment.config.merge(splitChunksConfig)
+environment.config.set('output.filename', 'js/[name].js')
+environment.config.set('output.chunkFilename', 'js/[name].js')
 environment.loaders.prepend('erb', erb)
+
 module.exports = environment

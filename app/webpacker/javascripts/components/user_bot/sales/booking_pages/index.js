@@ -3,6 +3,7 @@
 import React from "react";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
 import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
+import I18n from 'i18n-js/index.js.erb';
 import { Template } from "shared/builders"
 
 const SaleBookingPage = ({shop, product, template, template_variables, content, staff, flow, demo, dispatch, jump}) => {

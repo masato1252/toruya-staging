@@ -17,6 +17,8 @@
   <meta property="og:description" content="<%= @main_product.name %> <%= sale_page_url(@sale_page) %> <%= @main_product.greeting&.squish %>">
 <% end %>
 
-<%= react_component("user_bot/sales/booking_pages", SalePageSerializer.new(@sale_page).attributes_hash.merge(demo: false),
-{ camelize_props: false }
+<%= react_component(
+  "user_bot/sales/booking_pages",
+  SalePageSerializer.new(@sale_page).attributes_hash.merge(demo: false),
+  { camelize_props: false, prerender: true }
 ) %>
