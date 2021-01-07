@@ -23,7 +23,7 @@
 
   <body>
     <div class="responsive-content">
-      <div class="mobile-content extend <%= controller_name %>">
+      <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
         <%= yield %>
       </div>
     </div>

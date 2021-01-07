@@ -1,0 +1,21 @@
+<%= react_component("user_bot/sales/booking_page_creation_flow", {
+  props: {
+    booking_pages: super_user.booking_pages.map { |b|
+      {
+        label: b.name,
+        value: BookingPageSerializer.new(b).attributes_hash
+      }
+    },
+    staffs: super_user.staffs.includes(picture_attachment: :blob).map { |staff|
+      {
+        label: staff.name,
+        value: StaffSerializer.new(staff).attributes_hash
+      }
+    },
+    sale_templates: @sale_templates.map {|template| template.attributes.slice("id", "edit_body", "view_body")},
+    flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),
+    shops: super_user.shops.includes({ logo_attachment: :blob }).inject({}) { |h, s| h[s.id] = ShopSerializer.new(s).attributes_hash; h }
+  }
+},
+{ camelize_props: false }
+) %>

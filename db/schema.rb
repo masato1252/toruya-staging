@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_14_063121) do
+ActiveRecord::Schema.define(version: 2020_12_28_140930) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -483,6 +483,30 @@ ActiveRecord::Schema.define(version: 2020_12_14_063121) do
     t.index ["user_id", "shop_id", "deleted_at"], name: "reservation_user_shop_index"
   end
 
+  create_table "sale_pages", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "staff_id"
+    t.string "product_type", null: false
+    t.bigint "product_id", null: false
+    t.bigint "sale_template_id"
+    t.json "sale_template_variables"
+    t.json "content"
+    t.json "flow"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
+    t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
+    t.index ["staff_id"], name: "index_sale_pages_on_staff_id"
+    t.index ["user_id"], name: "index_sale_pages_on_user_id"
+  end
+
+  create_table "sale_templates", force: :cascade do |t|
+    t.json "edit_body"
+    t.json "view_body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "shop_menu_repeating_dates", id: :serial, force: :cascade do |t|
     t.integer "shop_id", null: false
     t.integer "menu_id", null: false
@@ -653,6 +677,7 @@ ActiveRecord::Schema.define(version: 2020_12_14_063121) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.boolean "staff_holiday_permission", default: false, null: false
+    t.text "introduction"
     t.index ["user_id", "deleted_at"], name: "index_staffs_on_user_id_and_deleted_at"
   end
 

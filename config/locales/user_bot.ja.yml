@@ -121,6 +121,44 @@ ja:
         check_this_page: プレビュー
         want_to_create_a_new_menu: 新しいメニューが必要ですか？
         create_a_new_menu: 新しいメニューを作成する
+      sales:
+        new:
+          what_to_sale: この販売ページの目的は何ですか？
+          online_booking: オンライン予約募集
+          add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
+          online_service: オンラインサービス利用者募集
+          online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
+        booking_page_creation:
+          booking_step: 予約ページ
+          content_step: 内容
+          preview_step: プレビュー
+          select_booking_page: 予約ページを選択
+          sell_what_page: どの予約ページを販売しますか？
+          select_header_template: どんなヘッドラインを使用しますか？
+          select_color_html: "文字のサイズや色を変更すると<br />より魅力的なヘッドラインになります。"
+          color_tip: ※この情報は、店舗設定に反映されます。
+          why_user_buy_html: "この予約メニューの購入理由になる<br />メニューの売りや購入者の未来像は何ですか？"
+          what_user_get: キャッチフレーズを入力
+          what_user_get_tip: :※１行１５文字前後・最高３行がお勧め
+          what_buyer_future: 予約メニューの売りや購入者の未来像を、文章で入力
+          what_buyer_future_tip: ※改行１回で行替え、改行２回で段落替え
+          staff_introduction: 主に担当するスタッフのプロフィール
+          introduce_who_do_this: 主に担当するスタッフを紹介してください
+          content_picture_requirement_tip: "画像を設定 幅335px以上、高185px以上"
+          staff_picture_requirement_tip: "画像を設定 幅180px以上 高さ180px以上"
+          flow_introduction_html: "予約からご利用までの<br />流れを説明してください。"
+          flow_header: サービスの流れ
+          flow_tips:
+            tip1: まずは予約カレンダーから ご希望の日時を 仮予約してください。
+            tip2: 予約からご利用までの 最初のステップを 説明してください。
+          flow_default_steps:
+            step1: "予約カレンダーから\n希望日時を選んで仮予約"
+            step2: "予約が承認されたら予約完了"
+            step3: "ご予約の当日は\n余裕をもってご来店ください"
+          sale_page_like_this: 販売ページは以下の様に表示されます
+          sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
+          create_this_sale_page: この設定で販売ページを作成する
+          share_sale_page: 作成した販売ページをシェアしましょう
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

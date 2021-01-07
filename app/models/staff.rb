@@ -12,6 +12,7 @@
 #  updated_at               :datetime         not null
 #  deleted_at               :datetime
 #  staff_holiday_permission :boolean          default(FALSE), not null
+#  introduction             :text
 #
 # Indexes
 #
@@ -22,6 +23,7 @@ class Staff < ApplicationRecord
   include NormalizeName
   include ReservationChecking
 
+  has_one_attached :picture
   belongs_to :user
   has_many :staff_menus, dependent: :destroy
   has_many :menus, -> { active }, through: :staff_menus

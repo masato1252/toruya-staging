@@ -9,6 +9,10 @@ const FlowStepIndicator = ({steps, current_step}) => {
   return (
     <div className="flow-step-indicator">
       {steps.map((step, index) => {
+        if (step.steps && step.steps.includes(current_step)) {
+          current_step = index;
+        }
+
         if (index < current_step) step_status = "active"
         else if (index == current_step) step_status = "current"
         else step_status = "inactive"

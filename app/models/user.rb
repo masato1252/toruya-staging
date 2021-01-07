@@ -86,6 +86,7 @@ class User < ApplicationRecord
   has_one :business_application
   has_one :social_user
   has_many :web_push_subscriptions
+  has_many :sale_pages
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true

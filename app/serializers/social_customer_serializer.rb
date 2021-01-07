@@ -1,5 +1,5 @@
 class SocialCustomerSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :created_at, :conversation_state
 
   attribute :id do |customer|

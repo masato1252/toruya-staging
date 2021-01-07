@@ -60,7 +60,7 @@ gem "phonelib"
 gem "line-bot-api"
 gem "oj"
 gem "redis"
-gem "fast_jsonapi"
+gem "jsonapi-serializer"
 gem "serviceworker-rails"
 gem "webpush", require: false
 gem "js-routes"

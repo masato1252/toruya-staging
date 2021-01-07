@@ -1,5 +1,5 @@
 class MessageSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
   attribute :id, :created_at, :message_type
 
   attribute :customer_id do |message|

@@ -483,3 +483,47 @@ a {
     }
   }
 }
+
+.settings-flow {
+  .item-container {
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+
+    .item-element {
+      display: flex;
+      justify-content: space-between;
+      margin: 9px 60px;
+
+      .item-data {
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.word-color-pickers {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 40px;
+
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 6px;
+  }
+
+  .btn {
+    font-family: "Courier New", Courier, monospace;
+  }
+}
+
+p.description {
+  white-space: pre-wrap;
+}
+
+h3.header {
+  margin: 20px 0;
+}

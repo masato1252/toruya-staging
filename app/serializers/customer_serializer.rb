@@ -1,5 +1,5 @@
 class CustomerSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
 
   attribute :id, :name, :address
 end

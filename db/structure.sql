@@ -1400,6 +1400,76 @@ ALTER SEQUENCE public.reservations_id_seq OWNED BY public.reservations.id;
 
 
 --
+-- Name: sale_pages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sale_pages (
+    id bigint NOT NULL,
+    user_id bigint,
+    staff_id bigint,
+    product_type character varying NOT NULL,
+    product_id bigint NOT NULL,
+    sale_template_id bigint,
+    sale_template_variables json,
+    content json,
+    flow json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sale_pages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sale_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sale_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sale_pages_id_seq OWNED BY public.sale_pages.id;
+
+
+--
+-- Name: sale_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sale_templates (
+    id bigint NOT NULL,
+    edit_body json,
+    view_body json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sale_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.sale_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sale_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.sale_templates_id_seq OWNED BY public.sale_templates.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1882,7 +1952,8 @@ CREATE TABLE public.staffs (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
-    staff_holiday_permission boolean DEFAULT false NOT NULL
+    staff_holiday_permission boolean DEFAULT false NOT NULL,
+    introduction text
 );
 
 
@@ -2360,6 +2431,20 @@ ALTER TABLE ONLY public.reservations ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: sale_pages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_pages ALTER COLUMN id SET DEFAULT nextval('public.sale_pages_id_seq'::regclass);
+
+
+--
+-- Name: sale_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_templates ALTER COLUMN id SET DEFAULT nextval('public.sale_templates_id_seq'::regclass);
+
+
+--
 -- Name: shop_menu_repeating_dates id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2794,6 +2879,22 @@ ALTER TABLE ONLY public.reservation_staffs
 
 ALTER TABLE ONLY public.reservations
     ADD CONSTRAINT reservations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sale_pages sale_pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_pages
+    ADD CONSTRAINT sale_pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sale_templates sale_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sale_templates
+    ADD CONSTRAINT sale_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -3234,6 +3335,34 @@ CREATE UNIQUE INDEX index_reservation_customers_on_reservation_id_and_customer_i
 --
 
 CREATE INDEX index_reservation_menus_on_menu_id ON public.reservation_menus USING btree (menu_id);
+
+
+--
+-- Name: index_sale_pages_on_product_type_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sale_pages_on_product_type_and_product_id ON public.sale_pages USING btree (product_type, product_id);
+
+
+--
+-- Name: index_sale_pages_on_sale_template_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sale_pages_on_sale_template_id ON public.sale_pages USING btree (sale_template_id);
+
+
+--
+-- Name: index_sale_pages_on_staff_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sale_pages_on_staff_id ON public.sale_pages USING btree (staff_id);
+
+
+--
+-- Name: index_sale_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_sale_pages_on_user_id ON public.sale_pages USING btree (user_id);
 
 
 --
@@ -3775,6 +3904,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201104073111'),
 ('20201111121423'),
 ('20201114011120'),
-('20201214063121');
+('20201214063121'),
+('20201228084743'),
+('20201228140930');
 
 

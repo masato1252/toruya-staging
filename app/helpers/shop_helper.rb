@@ -17,9 +17,25 @@ module ShopHelper
   end
 
   def shop_logo_url(shop, size)
+    @shop_logo_urls ||= {}
+
     if shop.logo.attached?
-      @shop_logo_url ||=
-        url_for(shop.logo.variant(
+      @shop_logo_urls[shop.id] ||=
+        Rails.application.routes.url_helpers.url_for(shop.logo.variant(
+          combine_options: {
+            resize: "#{size}",
+            flatten: true
+          }
+      ))
+    end
+  end
+
+  def staff_picture_url(staff, size)
+    @staff_picture_urls ||= {}
+
+    if staff.picture.attached?
+      @staff_picture_urls[staff.id] ||=
+        Rails.application.routes.url_helpers.url_for(staff.picture.variant(
           combine_options: {
             resize: "#{size}",
             flatten: true

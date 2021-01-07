@@ -1,6 +1,7 @@
 import Rails from "rails-ujs";
 import _ from "lodash";
 import request from "libraries/request";
+import { serialize } from 'object-to-formdata';
 
 const IdentificationCodesServices = {
   create: (data) => {
@@ -340,6 +341,21 @@ const ContactServices = {
   },
 }
 
+const SaleServices = {
+  create_sales_booking_page: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.lines_user_bot_sales_booking_pages_path({format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -350,5 +366,6 @@ export {
   BookingOptionServices,
   BookingServices,
   SocialAccountServices,
-  ContactServices
+  ContactServices,
+  SaleServices
 }

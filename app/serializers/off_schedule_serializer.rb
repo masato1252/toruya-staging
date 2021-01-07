@@ -1,5 +1,5 @@
 class OffScheduleSerializer
-  include FastJsonapi::ObjectSerializer
+  include JSONAPI::Serializer
 
   attributes :id, :reason
 

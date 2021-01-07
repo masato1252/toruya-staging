@@ -1,4 +1,5 @@
 require "seeders/plan"
+require "seeders/sale_template"
 
 def create(*args)
   FactoryBot.create(*args) do |obj|
@@ -41,3 +42,4 @@ create(:user, email: "superadmin@email.com", password: "password123", confirmed_
 end
 
 Seeders::Plan.seed!
+Seeders::SaleTemplate.seed!

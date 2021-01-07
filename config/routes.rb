@@ -113,6 +113,16 @@ Rails.application.routes.draw do
         end
       end
 
+      resource :sales, only: [:new] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+        end
+
+        scope module: :sales do
+          resources :booking_pages, only: [:new, :create]
+        end
+      end
+
       resources :booking_pages do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"
@@ -434,6 +444,8 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
+  resources :sale_pages, only: [:show]
+
   resources :shops, only: [:show]
 
   resources :referrals, only: [:show], param: :token

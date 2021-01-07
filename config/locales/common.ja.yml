@@ -35,6 +35,9 @@ ja:
     call: 電話する
     send_message: メッセージ送信する
     next_step: 次　へ
+    prev_step: 戻　る
+    add_step: ステップを追加
+    book_now: 今すぐ予約する
   common:
     processing: 送信中
     date: 日付
@@ -99,4 +102,5 @@ ja:
     unit: 円
     person_unit: 人
     message_content_placholder: お問合せ内容を入力
-
+    tax: 税
+    apply_now: お申し込みは今すぐ

@@ -76,7 +76,8 @@ a.btn {
   }
 
   &.btn-tall {
-    min-height:50px;
+    min-height: 50px;
+    line-height: 50px !important;
   }
 }
 
@@ -170,4 +171,10 @@ a.btn {
     font-size: 36px;
     margin-right: 6px;
   }
+}
+
+.btn-flexible {
+  height: auto !important;
+  line-height: initial !important;
+  padding: 10px !important;
 }

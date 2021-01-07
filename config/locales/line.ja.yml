@@ -13,6 +13,7 @@ ja:
         settings: "Settings"
         booking_pages: "Booking pages"
         notifications: "Notifications"
+        sales: "Sales"
     page:
       user_sign_up:
         shop_info:

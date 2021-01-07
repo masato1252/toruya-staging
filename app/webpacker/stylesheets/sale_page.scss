@@ -1,0 +1,160 @@
+.sale-page {
+  .edit-mark {
+    position: absolute;
+    right: 0;
+  }
+
+  .content {
+    padding: 24px 12px;
+    border-top: 1px solid $gray-border;
+
+    .header {
+      color: black;
+      margin: 0 0 24px;
+    }
+  }
+
+  .sale-template-container {
+    background-color: $gray-background;
+    border: 0;
+    margin: 0;
+    padding-bottom: 20px;
+
+    .sale-template-header {
+      background-color: #ffffff;
+    }
+  }
+
+  .product-price-block {
+    color: $red;
+    font-weight: bold;
+    margin: 10px 0 20px;
+
+    .price {
+      font-size: 24px;
+
+      .price-with-tax {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .product-content {
+    h4 {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 24px 0;
+      word-break: keep-all;
+    }
+
+    img.product-picture {
+      width: 100%;
+    }
+
+    p {
+      text-align: left;
+      margin-top: 12px;
+    }
+  }
+
+  .staff-content {
+    img.staff-picture {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid $black;
+    }
+
+    b.name {
+      margin: 12px;
+      display: block;
+      color: black;
+    }
+
+    p {
+      text-align: left;
+      margin-top: 12px;
+    }
+  }
+
+  .flow-content {
+    .number-step-header {
+      justify-content: center;
+    }
+  }
+
+  .shop-content {
+    text-align: left;
+    padding-left: 30px;
+  }
+
+  .apply-content {
+    background-color: $gray-background;
+  }
+}
+
+.sale-template-container {
+  border: 1px solid #333333;
+  border-radius: 6px;
+  margin: 24px 12px;
+
+  .logo {
+    width: 130px;
+    height: auto;
+    max-height: 45px;
+  }
+
+  .sale-template-header {
+    border-bottom: 1px solid #dfdfdf;
+    padding: 6px;
+    display: flex;
+    justify-content: space-between;
+    min-height: 45px;
+  }
+
+  .sale-template-content {
+    font-size: $big-font-size;
+    color: $black;
+    text-align: center;
+    font-weight: bold;
+    padding: 12px;
+
+    input {
+      font-size: 18px;
+    }
+  }
+
+  .template-version-mark {
+    background-color: $gray9;
+    color: #ffffff;
+    font-size: 10px;
+    padding: 4px 6px;
+    height: 24px;
+  }
+}
+
+
+.flow-step {
+  margin-bottom: 30px;
+
+  .number-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 12px 0;
+  }
+
+  .number-step {
+    display: inline-flex;
+    width: 60px;
+    height: 60px;
+    background-color: $gray11;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 42px;
+    font-weight: bold;
+  }
+}
