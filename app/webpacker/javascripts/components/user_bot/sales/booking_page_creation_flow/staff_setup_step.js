@@ -89,7 +89,7 @@ const StaffSetupStep = ({step, next, prev}) => {
             {I18n.t("action.prev_step")}
           </button>
           <button onClick={next} className="btn btn-yellow"
-            disabled={!selected_staff || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == ""}
+            disabled={!selected_staff || !selected_staff?.picture_url || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == ""}
           >
             {I18n.t("action.next_step")}
           </button>
