@@ -15,6 +15,14 @@ const FinalStep = ({step}) => {
       <h3 className="header centerize">{i18n.share_your_booking_page}</h3>
       <UrlCopyBtn url={Routes.booking_page_url(booking_page_id || 0)} />
       <BookingPageButtonCopyBtn booking_page_url={Routes.booking_page_url(booking_page_id || 0)} />
+      <div className="action-block">
+        <h4 className="margin-around">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page")}</h4>
+
+        <a href={Routes.new_lines_user_bot_sales_booking_page_url({booking_page_id: booking_page_id})} className="btn btn-yellow btn-flexible">
+          <i class="fa fa-cart-arrow-down fa-4x"></i>
+          <h4>{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page_btn")}</h4>
+        </a>
+      </div>
     </div>
   )
 }

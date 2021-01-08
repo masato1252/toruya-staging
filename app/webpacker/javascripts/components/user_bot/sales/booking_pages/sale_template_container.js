@@ -6,7 +6,7 @@ const SaleTemplateContainer = ({shop, product, template_id, children}) => {
   return (
     <div className="sale-template-container">
       <div className="sale-template-header">
-        { shop.logo_url ?  <img className="logo" src={shop.logo_url} /> : <span>{shop.name}</span>}
+        { shop.logo_url ?  <img className="logo" src={shop.logo_url} /> : <h2>{shop.name}</h2> }
         { template_id ? <span className="template-version-mark">{`テンプレート${template_id}`}</span> : "" }
       </div>
       {children}

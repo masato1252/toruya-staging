@@ -36,10 +36,10 @@ const ContentSetupStep = ({step, next, prev}) => {
       <SalesFlowStepIndicator step={step} />
       <h4 className="header centerize"
         dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.why_user_buy_html") }} />
-        {focus_field == "what_user_get_tip" && (
-          <p className="centerize">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_user_get_tip`)}</p>
-        )}
         <div className="product-content-deails">
+          {focus_field == "what_user_get_tip" && (
+            <p className="centerize">{I18n.t(`user_bot.dashboards.sales.booking_page_creation.what_user_get_tip`)}</p>
+          )}
           <TextareaAutosize
             className="what-user-get-tip extend with-border"
             value={product_content.desc1}

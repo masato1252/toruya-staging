@@ -15,8 +15,8 @@ const BookingPageSelectionStep = ({next, step}) => {
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.booking_page_creation.sell_what_page")}</h3>
       <div className="margin-around">
         <ReactSelect
-          Value={selected_booking_page || ""}
-          defaultValue={selected_booking_page || ""}
+          Value={selected_booking_page ? { label: selected_booking_page.name } : ""}
+          defaultValue={selected_booking_page ? { label: selected_booking_page.name } : ""}
           placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.select_booking_page")}
           options={props.booking_pages}
           onChange={
