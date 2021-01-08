@@ -121,6 +121,8 @@ ja:
         check_this_page: プレビュー
         want_to_create_a_new_menu: 新しいメニューが必要ですか？
         create_a_new_menu: 新しいメニューを作成する
+        create_a_sale_page: 販売ページを使うと ネットで予約募集できます
+        create_a_sale_page_btn: 販売ページを作成
       sales:
         new:
           what_to_sale: この販売ページの目的は何ですか？

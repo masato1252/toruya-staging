@@ -1,5 +1,6 @@
 <%= react_component("user_bot/sales/booking_page_creation_flow", {
   props: {
+    selected_booking_page: @selected_booking_page,
     booking_pages: super_user.booking_pages.map { |b|
       {
         label: b.name,
