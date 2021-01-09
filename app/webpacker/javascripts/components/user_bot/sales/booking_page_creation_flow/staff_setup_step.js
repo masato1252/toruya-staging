@@ -68,21 +68,28 @@ const StaffSetupStep = ({step, next, prev}) => {
           }
         />
 
-        <TextareaAutosize
-          className="extend with-border"
-          value={selected_staff?.introduction || ""}
-          placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_introduction")}
-          onChange={(event) => {
-            dispatch({
-              type: "SET_NESTED_ATTRIBUTE",
-              payload: {
-                parent_attribute: "selected_staff",
-                attribute: "introduction",
-                value: event.target.value
-              }
-            })
-          }}
-        />
+        {selected_staff?.editable ? (
+          <TextareaAutosize
+            className="extend with-border"
+            value={selected_staff?.introduction || ""}
+            placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_introduction")}
+            onChange={(event) => {
+              dispatch({
+                type: "SET_NESTED_ATTRIBUTE",
+                payload: {
+                  parent_attribute: "selected_staff",
+                  attribute: "introduction",
+                  value: event.target.value
+                }
+              })
+            }}
+          />
+
+        ) : (
+          <p className="description">
+            {selected_staff?.introduction}
+          </p>
+        )}
 
         <div className="action-block">
           <button onClick={prev} className="btn btn-tarco">
