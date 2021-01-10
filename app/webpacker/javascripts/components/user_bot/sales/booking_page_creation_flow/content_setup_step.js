@@ -7,9 +7,9 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const ContentSetupStep = ({step, next, prev}) => {
+const ContentSetupStep = ({step, next, prev, jump}) => {
   const [focus_field, setFocusField] = useState()
-  const { dispatch, product_content } = useGlobalContext()
+  const { dispatch, product_content, isContentSetup, isReadyForPreview } = useGlobalContext()
 
   const onDrop = (picture, pictureDataUrl)=> {
     dispatch({
@@ -89,8 +89,8 @@ const ContentSetupStep = ({step, next, prev}) => {
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
           </button>
-          <button onClick={next} className="btn btn-yellow"
-            disabled={product_content.picture_url.length == 0 || product_content.desc1 == "" || product_content.desc2 == ""}
+          <button onClick={() => {(isReadyForPreview()) ? jump(7) : next()}} className="btn btn-yellow"
+            disabled={!isContentSetup()}
           >
             {I18n.t("action.next_step")}
           </button>

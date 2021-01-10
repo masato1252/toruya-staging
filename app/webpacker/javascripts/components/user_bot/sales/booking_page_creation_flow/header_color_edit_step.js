@@ -8,8 +8,8 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
 import { Template, HintTitle, WordColorPickers } from "shared/builders"
 
-const HeaderColorEditStep= ({step, next, prev}) => {
-  const { props, selected_booking_page, selected_template, dispatch, template_variables, focus_field } = useGlobalContext()
+const HeaderColorEditStep= ({step, next, prev, jump}) => {
+    const { props, selected_booking_page, selected_template, dispatch, template_variables, focus_field, isReadyForPreview } = useGlobalContext()
   const shop = props.shops[selected_booking_page.shop_id]
 
   return (
@@ -48,7 +48,7 @@ const HeaderColorEditStep= ({step, next, prev}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={next} className="btn btn-yellow">
+        <button onClick={() => {(isReadyForPreview()) ? jump(7) : next()}} className="btn btn-yellow">
           {I18n.t("action.next_step")}
         </button>
       </div>
