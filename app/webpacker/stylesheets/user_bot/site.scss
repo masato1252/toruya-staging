@@ -520,8 +520,9 @@ a {
   }
 }
 
-p.description {
+.break-line-content {
   white-space: pre-wrap;
+  word-break: keep-all;
 }
 
 h3.header {

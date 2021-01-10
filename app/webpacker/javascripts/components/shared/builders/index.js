@@ -68,7 +68,7 @@ const Template = ({template, onClick, klass, ...props}) => {
 
 const HintTitle = ({template,  focus_field}) => {
   return (
-    <h4 className="centerize">
+    <h4 className="centerize break-line-content">
       {template.find(block => block.name == focus_field)?.title}
     </h4>
   )

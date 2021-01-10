@@ -86,7 +86,7 @@ const StaffSetupStep = ({step, next, prev}) => {
           />
 
         ) : (
-          <p className="description">
+          <p className="break-line-content">
             {selected_staff?.introduction}
           </p>
         )}
