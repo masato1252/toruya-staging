@@ -34,6 +34,8 @@ module Sales
             staff: responsible_staff
           )
 
+          sale_page.product.shop.update!(template_variables: template_variables)
+
           if sale_page.errors.present?
             errors.merge!(sale_page.errors)
           end
