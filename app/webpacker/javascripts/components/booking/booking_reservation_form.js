@@ -16,6 +16,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
+import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo } from "shared/booking";
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
@@ -915,15 +916,7 @@ class BookingReservationForm extends React.Component {
           {message2}
         </div>
 
-        {this.props.social_account_add_friend_url && (
-          <div className="message">
-            <div className="desc" dangerouslySetInnerHTML={{ __html: add_friend_messages_html }} />
-            <a href={this.props.social_account_add_friend_url} className="btn line-button">
-              <span className="fab fa-line" aria-hidden="true"></span>
-              {add_friend_btn}
-            </a>
-          </div>
-        )}
+        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
 
         <div className="desc">
           {this.props.booking_page.shop_name}{desc1}
@@ -957,46 +950,20 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingStartedYetView = () => {
-    const {
-      title,
-      message1,
-      message2
-    } = this.props.i18n.start_yet
-
     return (
-      <div className="start-yet-view">
-        <h3 className="title">
-          {title}
-        </h3>
-        <div className="message">
-          {message1}
-          <br />
-          <strong>{this.props.booking_page.start_at}～</strong>
-          <br />
-          {message2}
-        </div>
-      </div>
+      <>
+        <BookingStartInfo start_at={this.props.booking_page.start_at} />
+        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
+      </>
     )
   }
 
   renderBookingEndedView = () => {
-    const {
-      title,
-      message1,
-      message2
-    } = this.props.i18n.ended
-
     return (
-      <div className="ended-view">
-        <h3 className="title">
-          {title}
-        </h3>
-        <div className="message">
-          {message1}
-          <br />
-          {message2}
-        </div>
-      </div>
+      <>
+        <BookingEndInfo />
+        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
+      </>
     )
   }
 

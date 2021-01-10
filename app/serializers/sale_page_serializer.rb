@@ -30,4 +30,8 @@ class SalePageSerializer
   attribute :template_variables do |sale_page|
     sale_page.sale_template_variables
   end
+
+  attribute :social_account_add_friend_url do |sale_page|
+    sale_page.product.user.social_accounts.first.add_friend_url
+  end
 end

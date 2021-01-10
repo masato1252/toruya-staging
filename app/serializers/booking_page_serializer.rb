@@ -26,4 +26,12 @@ class BookingPageSerializer
   attribute :end_time do |booking_page|
     booking_page.end_at ? I18n.l(booking_page.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
   end
+
+  attribute :is_started do |booking_page|
+    booking_page.started?
+  end
+
+  attribute :is_ended do |booking_page|
+    booking_page.ended?
+  end
 end

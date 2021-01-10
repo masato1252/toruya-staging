@@ -25,6 +25,7 @@ const ConfirmationStep = ({step, next, jump}) => {
       </div>
       <SaleBookingPage
         shop={props.shops[selected_booking_page.shop_id]}
+        social_account_add_friend_url={props.social_account_add_friend_url}
         product={selected_booking_page}
         template={selected_template.view_body}
         template_variables={template_variables}
