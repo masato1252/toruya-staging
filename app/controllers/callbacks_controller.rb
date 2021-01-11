@@ -27,4 +27,22 @@ class CallbacksController < Devise::OmniauthCallbacksController
       redirect_to new_user_registration_url
     end
   end
+
+  def line
+    param = request.env["omniauth.params"]
+
+    outcome = ::SocialCustomers::FromOmniauth.run(
+      auth: request.env["omniauth.auth"],
+      param: param,
+    )
+
+    uri = URI.parse(param['oauth_redirect_to_url'])
+    queries = {
+      status: outcome.valid?,
+      social_user_id: outcome.result.social_user_id
+    }
+    uri.query = URI.encode_www_form(queries)
+
+    redirect_to uri.to_s
+  end
 end

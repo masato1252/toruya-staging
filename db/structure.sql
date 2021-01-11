@@ -1635,7 +1635,9 @@ CREATE TABLE public.social_accounts (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     label character varying,
-    basic_id character varying
+    basic_id character varying,
+    login_channel_id character varying,
+    login_channel_secret character varying
 );
 
 
@@ -3908,6 +3910,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201214063121'),
 ('20201228084743'),
 ('20201228140930'),
-('20210109234255');
+('20210109234255'),
+('20210111070239');
 
 
