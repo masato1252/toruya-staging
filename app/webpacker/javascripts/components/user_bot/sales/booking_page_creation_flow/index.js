@@ -20,9 +20,9 @@ const SalesBookingPageCreationFlow = ({props}) => {
         { ({next, step}) => <BookingPageSelectionStep step={step} next={next} /> }
         { ({next, prev, step}) => <HeaderTemplateSelectionStep step={step} next={next} prev={prev} /> }
         { ({next, prev, step}) => <HeaderSetupStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step}) => <HeaderColorEditStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step}) => <ContentSetupStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step}) => <StaffSetupStep step={step} next={next} prev={prev} /> }
+        { ({next, prev, step, jump}) => <HeaderColorEditStep step={step} next={next} prev={prev} jump={jump} /> }
+        { ({next, prev, step, jump}) => <ContentSetupStep step={step} next={next} prev={prev} jump={jump} /> }
+        { ({next, prev, step, jump}) => <StaffSetupStep step={step} next={next} prev={prev} jump={jump} /> }
         { ({next, prev, step}) => <FlowSetupStep step={step} next={next} prev={prev} /> }
         { ({jump, next, step}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
         { ({step}) => <FinalStep step={step} /> }

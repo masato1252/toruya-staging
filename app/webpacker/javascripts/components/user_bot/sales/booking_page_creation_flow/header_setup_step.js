@@ -9,7 +9,7 @@ import { Template, HintTitle } from "shared/builders"
 
 const HeaderSetupStep = ({step, next, prev}) => {
   const [focus_field, setFocusField] = useState()
-  const { props, selected_booking_page, selected_template, dispatch, template_variables } = useGlobalContext()
+  const { props, selected_booking_page, selected_template, dispatch, template_variables, isHeaderSetup } = useGlobalContext()
 
   return (
     <div className="form">
@@ -43,7 +43,7 @@ const HeaderSetupStep = ({step, next, prev}) => {
         <button
           onClick={next}
           className="btn btn-yellow"
-          disabled={!selected_template.edit_body.filter(block => block.component === "input").every(filterBlock => template_variables?.[filterBlock.name] != null)}>
+          disabled={!isHeaderSetup()}>
           {I18n.t("action.next_step")}
         </button>
         </div>

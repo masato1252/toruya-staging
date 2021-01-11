@@ -1,6 +1,6 @@
 class ShopSerializer
   include JSONAPI::Serializer
-  attribute :id, :email, :phone_number
+  attribute :id, :email, :phone_number, :template_variables
 
   attribute :logo_url do |shop|
     ApplicationController.helpers.shop_logo_url(shop, "260")

@@ -55,7 +55,7 @@ ja:
       feature2: お友達毎で約束やタスクを管理
       feature3: 各種店舗の予約をカレンダーで確認
       signup_now: 今すぐ登録
-      add_friend_messages_html: "LINEでお友達登録すると<br>%{shop_name}のご予約のお知らせを<br>LINEで受け取れます。"
+      add_friend_messages_html: "LINEでお友達登録すると<br>次の募集開始のお知らせを受け取る"
       add_friend_btn: 友だち追加
     start_yet:
       title: 受付開始前です

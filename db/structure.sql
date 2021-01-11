@@ -1598,7 +1598,8 @@ CREATE TABLE public.shops (
     holiday_working boolean,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    template_variables json
 );
 
 
@@ -3906,6 +3907,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201114011120'),
 ('20201214063121'),
 ('20201228084743'),
-('20201228140930');
+('20201228140930'),
+('20210109234255');
 
 

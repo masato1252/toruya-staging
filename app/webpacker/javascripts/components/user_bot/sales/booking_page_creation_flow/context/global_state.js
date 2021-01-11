@@ -29,17 +29,22 @@ export const GlobalProvider = ({ props, children }) => {
   }, [])
   const [state, dispatch] = useReducer(reducers, initialValue)
   const hook_form_methods = useForm({});
+  const { selected_booking_page, product_content, selected_template, template_variables, selected_staff } = state.sales_creation_states
+
+  const _salePageData = () => {
+    return {
+      ...state.sales_creation_states,
+      selected_booking_page: selected_booking_page.id,
+      selected_template: selected_template.id,
+      product_content: _.pick(product_content, ["picture", "desc1", "desc2"]),
+      selected_staff: _.pick(selected_staff, ["id", "picture", "introduction"])
+    }
+  }
 
   const createSalesBookingPage = async () => {
     const [error, response] = await SaleServices.create_sales_booking_page(
       {
-        data: {
-          ...state.sales_creation_states,
-          selected_booking_page: state.sales_creation_states.selected_booking_page.id,
-          selected_template: state.sales_creation_states.selected_template.id,
-          product_content: _.pick(state.sales_creation_states.product_content, ["picture", "desc1", "desc2"]),
-          selected_staff: _.pick(state.sales_creation_states.selected_staff, ["id", "picture", "introduction"])
-        }
+        data: _salePageData()
       }
     )
 
@@ -58,13 +63,33 @@ export const GlobalProvider = ({ props, children }) => {
     return response?.data?.status == "successful"
   }
 
+  const isStaffSetup = () => {
+    return !(!selected_staff || !selected_staff?.picture_url || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == "")
+  }
+
+  const isContentSetup = () => {
+    return product_content.picture_url.length && product_content.desc1 !== "" && product_content.desc2 !== ""
+  }
+
+  const isHeaderSetup = () => {
+    return selected_template.edit_body.filter(block => block.component === "input").every(filterBlock => template_variables?.[filterBlock.name] != null)
+  }
+
+  const isReadyForPreview = () => {
+    return selected_booking_page && isHeaderSetup() && isContentSetup() && isStaffSetup()
+  }
+
   return (
     <GlobalContext.Provider value={{
       props,
       ...hook_form_methods,
       ...state.sales_creation_states,
       dispatch,
-      createSalesBookingPage
+      createSalesBookingPage,
+      isHeaderSetup,
+      isContentSetup,
+      isStaffSetup,
+      isReadyForPreview
     }}
     >
       {children}

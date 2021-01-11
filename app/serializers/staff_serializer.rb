@@ -9,4 +9,8 @@ class StaffSerializer
   attribute :picture_url do |staff|
     ApplicationController.helpers.staff_picture_url(staff, "360")
   end
+
+  attribute :editable do |staff|
+    staff.introduction.blank?
+  end
 end

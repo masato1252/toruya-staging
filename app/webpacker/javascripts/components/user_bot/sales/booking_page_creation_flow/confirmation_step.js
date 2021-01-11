@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
@@ -9,6 +9,10 @@ import SaleBookingPage from "components/user_bot/sales/booking_pages"
 const ConfirmationStep = ({step, next, jump}) => {
   const [submitting, setSubmitting] = useState(false)
   const { props, selected_booking_page, selected_template, template_variables, product_content, selected_staff, flow, dispatch, createSalesBookingPage } = useGlobalContext()
+
+  useLayoutEffect(() => {
+    $("body").scrollTop(0)
+  }, [])
 
   return (
     <div className="form">
@@ -21,6 +25,7 @@ const ConfirmationStep = ({step, next, jump}) => {
       </div>
       <SaleBookingPage
         shop={props.shops[selected_booking_page.shop_id]}
+        social_account_add_friend_url={props.social_account_add_friend_url}
         product={selected_booking_page}
         template={selected_template.view_body}
         template_variables={template_variables}

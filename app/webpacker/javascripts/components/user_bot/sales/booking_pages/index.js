@@ -6,7 +6,7 @@ import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import I18n from 'i18n-js/index.js.erb';
 import { Template } from "shared/builders"
 
-const SaleBookingPage = ({shop, product, template, template_variables, content, staff, flow, demo, dispatch, jump}) => {
+const SaleBookingPage = ({shop, product, social_account_add_friend_url, template, template_variables, content, staff, flow, demo, dispatch, jump}) => {
   return (
     <div className="sale-page centerize">
       <SaleTemplateContainer shop={shop} product={product}>
@@ -21,7 +21,11 @@ const SaleBookingPage = ({shop, product, template, template_variables, content, 
           product_name={product.product_name}
         />
 
-        <PriceBlock product={product} demo={demo} />
+        <PriceBlock
+          product={product}
+          demo={demo}
+          social_account_add_friend_url={social_account_add_friend_url}
+        />
       </SaleTemplateContainer>
 
       <div className="product-content content">

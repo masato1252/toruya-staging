@@ -8,8 +8,8 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const StaffSetupStep = ({step, next, prev}) => {
-  const { props, selected_staff, dispatch } = useGlobalContext()
+const StaffSetupStep = ({step, next, prev, jump}) => {
+  const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview } = useGlobalContext()
 
   const onDrop = (picture, pictureDataUrl) => {
     dispatch({
@@ -68,28 +68,35 @@ const StaffSetupStep = ({step, next, prev}) => {
           }
         />
 
-        <TextareaAutosize
-          className="extend with-border"
-          value={selected_staff?.introduction || ""}
-          placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_introduction")}
-          onChange={(event) => {
-            dispatch({
-              type: "SET_NESTED_ATTRIBUTE",
-              payload: {
-                parent_attribute: "selected_staff",
-                attribute: "introduction",
-                value: event.target.value
-              }
-            })
-          }}
-        />
+        {selected_staff?.editable ? (
+          <TextareaAutosize
+            className="extend with-border"
+            value={selected_staff?.introduction || ""}
+            placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_introduction")}
+            onChange={(event) => {
+              dispatch({
+                type: "SET_NESTED_ATTRIBUTE",
+                payload: {
+                  parent_attribute: "selected_staff",
+                  attribute: "introduction",
+                  value: event.target.value
+                }
+              })
+            }}
+          />
+
+        ) : (
+          <p className="break-line-content">
+            {selected_staff?.introduction}
+          </p>
+        )}
 
         <div className="action-block">
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
           </button>
-          <button onClick={next} className="btn btn-yellow"
-            disabled={!selected_staff || !selected_staff?.picture_url || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == ""}
+          <button onClick={() => {(isReadyForPreview()) ? jump(7) : next()}} className="btn btn-yellow"
+            disabled={!isStaffSetup()}
           >
             {I18n.t("action.next_step")}
           </button>
