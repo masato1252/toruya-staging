@@ -264,6 +264,7 @@ GEM
     js-routes (1.4.9)
       railties (>= 4)
       sprockets-rails
+    json (2.5.1)
     jsonapi-serializer (2.1.0)
       activesupport (>= 4.2)
     jwt (2.1.0)
@@ -344,6 +345,9 @@ GEM
       jwt (>= 2.0)
       omniauth (>= 1.1.1)
       omniauth-oauth2 (>= 1.5)
+    omniauth-line (0.0.5)
+      json (>= 2.3.0)
+      omniauth-oauth2 (~> 1.3)
     omniauth-oauth2 (1.6.0)
       oauth2 (~> 1.1)
       omniauth (~> 1.9)
@@ -592,6 +596,7 @@ DEPENDENCIES
   nokogiri
   oj
   omniauth-google-oauth2 (~> 0.7.0)
+  omniauth-line
   omniauth-rails_csrf_protection
   paper_trail
   parallel

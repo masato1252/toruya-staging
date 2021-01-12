@@ -1,3 +1,5 @@
+require 'omniauth_setup'
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -279,6 +281,7 @@ Devise.setup do |config|
       select_account: true,
       scope: "userinfo.email,userinfo.profile,contacts" }
 
+  config.omniauth :line, setup: OmniauthSetup
 end
 
 Devise::Mailer.layout "mailer"
