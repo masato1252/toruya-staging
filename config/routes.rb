@@ -115,6 +115,7 @@ Rails.application.routes.draw do
           post :page
         end
       end
+      resources :services, only: [:new, :create]
 
       resource :sales, only: [:new] do
         collection do

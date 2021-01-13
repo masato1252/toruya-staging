@@ -91,6 +91,12 @@ ja:
           title: オンライン予約ページ
           field_header: 予約ページ
           line_status: LINE予約
+      service_creation:
+        goal_step: 目的
+        content_step: コンテンツ
+        time_step: 利用期限
+        upsell_step: アップセル
+        check_step: プレビュー
       booking_page_creation:
         default_label: "%{menu_name}予約ページ"
         default_greeting: "%{menu_name}の予約を受付ます。"
