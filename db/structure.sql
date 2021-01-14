@@ -66,7 +66,8 @@ CREATE TABLE public.access_providers (
     user_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    email character varying
+    email character varying,
+    publishable_key character varying
 );
 
 
@@ -3911,6 +3912,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228084743'),
 ('20201228140930'),
 ('20210109234255'),
-('20210111070239');
+('20210111070239'),
+('20210113140743');
 
 

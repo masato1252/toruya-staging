@@ -17,6 +17,12 @@
 #  index_access_providers_on_provider_and_uid  (provider,uid)
 #
 
+require "message_encryptor"
+
 class AccessProvider < ApplicationRecord
   belongs_to :user
+
+  def raw_access_token
+    provider == "stripe_connect" ? MessageEncryptor.decrypt(access_token) : access_token
+  end
 end

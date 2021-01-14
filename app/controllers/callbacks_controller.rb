@@ -2,6 +2,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
 
   include Devise::Controllers::Rememberable
+  include UserBotCookies
 
   def google_oauth2
     param = request.env["omniauth.params"]
@@ -26,6 +27,22 @@ class CallbacksController < Devise::OmniauthCallbacksController
     else
       redirect_to new_user_registration_url
     end
+  end
+
+  def stripe_connect
+    current_user = User.find_by(id: user_bot_cookies(:current_user_id))
+    param = request.env["omniauth.params"]
+
+    outcome = Users::FromStripeOmniauth.run(
+      user: current_user,
+      auth: request.env["omniauth.auth"]
+    )
+
+    uri = URI.parse(param['oauth_redirect_to_url'])
+    queries = { status: outcome.valid? }
+    uri.query = URI.encode_www_form(queries)
+
+    redirect_to uri.to_s
   end
 
   def line

@@ -282,6 +282,11 @@ Devise.setup do |config|
       scope: "userinfo.email,userinfo.profile,contacts" }
 
   config.omniauth :line, setup: OmniauthSetup
+  config.omniauth :stripe_connect,
+    Rails.application.secrets.stripe_connect_id,
+    Rails.application.secrets.stripe_secret_key,
+    scope: "read_write",
+    stripe_landing: "login"
 end
 
 Devise::Mailer.layout "mailer"
