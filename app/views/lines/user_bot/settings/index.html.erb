@@ -73,4 +73,9 @@
       </span>
     <% end %>
   <% end %>
+
+    <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path),
+      class: "btn-stripe-connect" do %>
+      Connect with Stripe
+    <% end %>
 </div>
