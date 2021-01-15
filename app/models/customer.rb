@@ -51,6 +51,7 @@
 
 class Customer < ApplicationRecord
   include NormalizeName
+  include SayHi
 
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
@@ -352,6 +353,10 @@ class Customer < ApplicationRecord
   end
 
   private
+
+  def hi_message
+    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}"
+  end
 
   def primary_value(values)
     return unless values
