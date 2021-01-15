@@ -47,10 +47,6 @@ class BookingPage < ApplicationRecord
     start_at || created_at
   end
 
-  def to_param
-    [id, shop.display_name, title].join("-")
-  end
-
   def available_booking_start_date
     Subscription.today.advance(days: booking_limit_day)
   end
