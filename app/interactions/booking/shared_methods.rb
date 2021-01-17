@@ -149,7 +149,7 @@ module Booking
     def matched_same_content_reservation(shop:, booking_page:, booking_start_at:, booking_option:)
       reservation = nil
 
-      Reservation.where(
+      Reservation.uncanceled.where(
         shop: shop,
         start_time: booking_start_at,
       ).each do |same_time_reservation|
