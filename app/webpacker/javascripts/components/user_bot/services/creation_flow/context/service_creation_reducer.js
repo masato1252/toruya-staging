@@ -1,16 +1,10 @@
 import _ from "lodash";
 
 const initialState = {
-  selected_booking_page: null,
-  selected_template: null,
-  template_variables: {},
-  product_content: {
-    picture: null,
-    picture_url: [],
-    desc1: "",
-    desc2: ""
-  },
-  selected_staff: null,
+  selected_goal: null,
+  selected_solution: null,
+  end_time: {},
+  upsell: {},
 }
 
 export default (state = initialState, action) => {
