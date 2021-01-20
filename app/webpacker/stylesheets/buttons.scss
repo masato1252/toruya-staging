@@ -172,9 +172,18 @@ a.btn {
     font-size: 40px;
   }
 
+  &.with-logo {
+    padding: 0 !important;
+    border: 0 !important;
+    margin-right: -5px;
+    margin-bottom: 0.05em;
+  }
+
   &.with-wording {
     background-color: $line-green !important;
     color: #ffffff !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 

@@ -898,15 +898,6 @@ class BookingReservationForm extends React.Component {
       title,
       message1,
       message2,
-      desc1,
-      desc2,
-      desc3,
-      feature1,
-      feature2,
-      feature3,
-      signup_now,
-      add_friend_messages_html,
-      add_friend_btn
     } = this.props.i18n.done
 
     return (

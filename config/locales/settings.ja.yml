@@ -596,13 +596,12 @@ ja:
       info_html: LINEを通じてオンライン予約を受け付けることができます。<br><a href='https://developers.line.biz/ja/' target='_blank'>LINEオフィシャルアカウント</a>を設定してWebhook URLをLINEに設定してください。
       name: Name
       new_button: Set up account
-      info1_label: チャネル基本設定
+      info1_label: LINEチャネル基本設定
       info2_label: Messaging API設定
-      info3_label: Line Login API設定
       webhook_desc: 下のURLをコピーしてLINEデベロッパーズのWebhook設定に貼り付けてください。
-      copy_webhook_btn: Callback URLをコピー
-      callback_desc: 下のURLをコピーしてLINEデベロッパーズのWebhook設定に貼り付けてください。
-      copy_callback_btn: Callback URLをコピー
+      copy_webhook_btn: Webhook URLをコピー
+      callback_desc: 下のURLをコピーしてLINEディベロッパーズのコールバックURL設定に貼り付けてください。
+      copy_callback_btn: コールバック URLをコピー
       form:
         channel_basic_id: ボットのベーシックID
         basic_id_title: ボットのベーシックID
