@@ -163,13 +163,18 @@ a.btn {
 }
 
 .line-button {
-  background: $line-green;
+  color: $line-green !important;
+  background: transparent;
   display: inline-flex !important;
   align-items: center;
 
   .fa-line {
-    font-size: 36px;
-    margin-right: 6px;
+    font-size: 40px;
+  }
+
+  &.with-wording {
+    background-color: $line-green !important;
+    color: #ffffff !important;
   }
 }
 

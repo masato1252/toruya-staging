@@ -16,7 +16,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
-import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo } from "shared/booking";
+import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, LineLoginBtn } from "shared/booking";
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
@@ -83,6 +83,25 @@ class BookingReservationForm extends React.Component {
         </div>
 
         {pristine && !this.booking_reservation_form_values.is_done && <div className="greeting">{greeting}</div>}
+      </div>
+    )
+  }
+
+  renderSocialCustomerLogin = () => {
+    const { social_user_id, customer_without_social_account, booking_option_id, booking_date, booking_at } = this.booking_reservation_form_values
+
+    return (
+      <div className="social-login-block centerize">
+        <LineLoginBtn
+          social_account_login_url={`${this.props.social_account_login_url}&booking_option_id=${booking_option_id}&booking_date=${booking_date}&booking_at=${booking_at}`}
+        />
+
+        <div
+          onClick={() => this.booking_reservation_form.change("booking_reservation_form[customer_without_social_account]", true)}
+          className="btn btn-gray skip"
+        >
+          {I18n.t("booking_page.i_dont_use_line")}
+        </div>
       </div>
     )
   }
@@ -627,7 +646,10 @@ class BookingReservationForm extends React.Component {
             {this.renderCustomerInfoModal()}
           </div>
           <div className="not-me">
-            <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
+            <a href="#" onClick={() => {
+              this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)
+              this.booking_reservation_form.change("booking_reservation_form[use_default_customer]", false)
+            }}>
               {last_name} {first_name} {not_me}
             </a>
           </div>
@@ -899,34 +921,6 @@ class BookingReservationForm extends React.Component {
         </div>
 
         <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
-
-        <div className="desc">
-          {this.props.booking_page.shop_name}{desc1}
-          <br />
-          {desc2}
-          <br />
-          {desc3}
-        </div>
-        <div>
-          <img className="toruya-logo" src={this.props.toruya_logo} />
-        </div>
-        <div className="feature-list">
-          <div>
-            <i className="fa fa-check-square"></i>
-            {feature1}
-          </div>
-          <div>
-            <i className="fa fa-check-square"></i>
-            {feature2}
-          </div>
-          <div>
-            <i className="fa fa-check-square"></i>
-            {feature3}
-          </div>
-        </div>
-        <div>
-          <a href="https://toruya.com" className="btn btn-gray">{signup_now}</a>
-        </div>
       </div>
     )
   }
@@ -971,10 +965,11 @@ class BookingReservationForm extends React.Component {
         <div>
           {this.renderBookingDatetime()}
           {this.renderSelectedBookingOption()}
-          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
-          {this.isBookingFlowEnd() && this.renderBookingCode()}
-          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.renderBookingReservationButton()}
+          {this.isBookingFlowEnd() && !this.isSocialLoginChecked() && this.renderSocialCustomerLogin()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderCurrentCustomerInfo()}
+          {this.isSocialLoginChecked() && this.renderBookingReservationButton()}
         </div>
       )
     } else if (is_single_option) {
@@ -983,10 +978,11 @@ class BookingReservationForm extends React.Component {
           {this.renderSelectedBookingOption()}
           {this.renderBookingCalendar()}
           {this.renderBookingDatetime(this.isBookingFlowEnd() && (() => this.resetValues(["booking_date", "booking_at", "booking_times"])))}
-          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
-          {this.isBookingFlowEnd() && this.renderBookingCode()}
-          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.renderBookingReservationButton()}
+          {this.isBookingFlowEnd() && !this.isSocialLoginChecked() && this.renderSocialCustomerLogin()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderCurrentCustomerInfo()}
+          {this.isSocialLoginChecked() && this.renderBookingReservationButton()}
         </div>
       )
     } else {
@@ -995,10 +991,11 @@ class BookingReservationForm extends React.Component {
           {this.renderBookingFlowOptions()}
           {this.renderBookingOptionFirstFlow()}
           {this.renderBookingDateFirstFlow()}
-          {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
-          {this.isBookingFlowEnd() && this.renderBookingCode()}
-          {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.renderBookingReservationButton()}
+          {this.isBookingFlowEnd() && !this.isSocialLoginChecked() && this.renderSocialCustomerLogin()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderRegularCustomersOption()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderBookingCode()}
+          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderCurrentCustomerInfo()}
+          {this.isSocialLoginChecked() && this.renderBookingReservationButton()}
         </div>
       )
     }
@@ -1326,6 +1323,12 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[booking_failed]", null)
 
     return {};
+  }
+
+  isSocialLoginChecked = () => {
+    const { social_user_id, customer_without_social_account } = this.booking_reservation_form_values
+
+    return !this.props.social_account_login_required || social_user_id || customer_without_social_account
   }
 
   isBookingFlowEnd = () => {
