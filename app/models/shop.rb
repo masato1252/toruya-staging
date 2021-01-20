@@ -2,19 +2,20 @@
 #
 # Table name: shops
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  name            :string           not null
-#  short_name      :string           not null
-#  zip_code        :string           not null
-#  phone_number    :string
-#  email           :string
-#  address         :string           not null
-#  website         :string
-#  holiday_working :boolean
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  deleted_at      :datetime
+#  id                 :integer          not null, primary key
+#  user_id            :integer
+#  name               :string           not null
+#  short_name         :string           not null
+#  zip_code           :string           not null
+#  phone_number       :string
+#  email              :string
+#  address            :string           not null
+#  website            :string
+#  holiday_working    :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  deleted_at         :datetime
+#  template_variables :json
 #
 # Indexes
 #

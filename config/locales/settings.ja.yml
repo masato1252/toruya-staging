@@ -598,8 +598,11 @@ ja:
       new_button: Set up account
       info1_label: チャネル基本設定
       info2_label: Messaging API設定
+      info3_label: Line Login API設定
       webhook_desc: 下のURLをコピーしてLINEデベロッパーズのWebhook設定に貼り付けてください。
-      copy_webhook_btn: Webhook URLをコピー
+      copy_webhook_btn: Callback URLをコピー
+      callback_desc: 下のURLをコピーしてLINEデベロッパーズのWebhook設定に貼り付けてください。
+      copy_callback_btn: Callback URLをコピー
       form:
         channel_basic_id: ボットのベーシックID
         basic_id_title: ボットのベーシックID
@@ -621,3 +624,5 @@ ja:
         channel_secret_title: チャネルシークレット
         channel_secret_tip: LINEデベロッパーズからチャネルシークレットをコピーして貼り付け
         channel_secret_hint: LINEデベロッパーズからチャネルシークレットをコピーして貼り付け
+        login_channel_id_title: チャネルID
+        login_channel_secret_title: チャネルシークレット

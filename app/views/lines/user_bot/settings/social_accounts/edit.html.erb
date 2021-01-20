@@ -2,10 +2,12 @@
   props: {
     social_account: @social_account.attributes.merge!(
       channel_secret: @social_account.raw_channel_secret,
-      channel_token: @social_account.raw_channel_token
+      channel_token: @social_account.raw_channel_token,
+      login_channel_secret: @social_account.raw_login_channel_secret
     ),
     attribute: @attribute,
     image_path: image_rescue { asset_pack_path("media/assets/management/line_#{@attribute}.png") },
+    previous_path: @previous_path,
     i18n: {
     }.merge!([
       t("settings.social_account.form"),
