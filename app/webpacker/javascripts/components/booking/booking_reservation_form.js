@@ -94,8 +94,9 @@ class BookingReservationForm extends React.Component {
     } = this.booking_reservation_form_values;
 
     if (found_customer) return;
+    if (this.isCustomerTrusted()) return;
 
-    const { name, last_name, first_name, phone_number, remember_me, confirm_customer_info } = this.props.i18n;
+    const { name, last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, confirm_customer_info } = this.props.i18n;
     const { shop_name } = this.props.booking_page;
 
     return (
@@ -103,18 +104,43 @@ class BookingReservationForm extends React.Component {
         <h4>
           {name}
         </h4>
-        <Field
-          name="booking_reservation_form[customer_last_name]"
-          component="input"
-          placeholder={last_name}
-          type="text"
-        />
-        <Field
-          name="booking_reservation_form[customer_first_name]"
-          component="input"
-          placeholder={first_name}
-          type="text"
-        />
+        <div>
+          <Field
+            name="booking_reservation_form[customer_last_name]"
+            component="input"
+            placeholder={last_name}
+            type="text"
+            validate={(value) => requiredValidation(phonetic_last_name)(this, value)}
+          />
+          <Error name="booking_reservation_form[customer_last_name]" />
+          <Field
+            name="booking_reservation_form[customer_first_name]"
+            component="input"
+            placeholder={first_name}
+            type="text"
+            validate={(value) => requiredValidation(phonetic_first_name)(this, value)}
+          />
+          <Error name="booking_reservation_form[customer_first_name]" />
+        </div>
+        <br />
+        <div>
+          <Field
+            name="booking_reservation_form[customer_phonetic_last_name]"
+            component="input"
+            placeholder={phonetic_last_name}
+            type="text"
+            validate={(value) => requiredValidation(phonetic_last_name)(this, value)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_last_name]" />
+          <Field
+            name="booking_reservation_form[customer_phonetic_first_name]"
+            component="input"
+            placeholder={phonetic_first_name}
+            type="text"
+            validate={(value) => requiredValidation(phonetic_first_name)(this, value)}
+          />
+          <Error name="booking_reservation_form[customer_phonetic_first_name]" />
+        </div>
         <h4>
           {phone_number}
         </h4>
@@ -577,90 +603,46 @@ class BookingReservationForm extends React.Component {
   renderCurrentCustomerInfo = () => {
     const { found_customer } = this.booking_reservation_form_values;
     const { simple_address, last_name, first_name } = this.booking_reservation_form_values.customer_info;
+    const { customer_last_name, customer_first_name } = this.booking_reservation_form_values;
     const { not_me, edit_info, of, sir, thanks_for_come_back } = this.props.i18n
 
     if (!this.isCustomerTrusted()) return;
-    if (!found_customer) return;
 
-    return (
-      <div className="customer-found">
-        <div>
-          {thanks_for_come_back}
-        </div>
-        <div>
-          <div className="simple-address">
-            {simple_address}{of}
+    if (found_customer) {
+      return (
+        <div className="customer-found">
+          <div>
+            {thanks_for_come_back}
           </div>
+          <div>
+            <div className="simple-address">
+              {simple_address}{of}
+            </div>
+            <div className="customer-full-name">
+              {last_name} {first_name} {sir}
+            </div>
+          </div>
+          <div className="edit-customer-info">
+            <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>{edit_info}</a>
+            {this.renderCustomerInfoModal()}
+          </div>
+          <div className="not-me">
+            <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
+              {last_name} {first_name} {not_me}
+            </a>
+          </div>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div className="customer-found">
           <div className="customer-full-name">
-            {last_name} {first_name} {sir}
+            {customer_last_name} {customer_first_name} {sir}
           </div>
         </div>
-        <div className="edit-customer-info">
-          <a href="#" onClick={() => $("#customer-info-modal").modal("show")}>{edit_info}</a>
-          {this.renderCustomerInfoModal()}
-        </div>
-        <div className="not-me">
-          <a href="#" onClick={() => this.booking_reservation_form.change("booking_reservation_form[found_customer]", null)}>
-            {last_name} {first_name} {not_me}
-          </a>
-        </div>
-      </div>
-    )
-  }
-
-  renderNewCustomerFields = () => {
-    if (!this.isCustomerTrusted()) return;
-
-    const { name, last_name, first_name, phonetic_name, phonetic_last_name, phonetic_first_name, phone_number, email, remember_me } = this.props.i18n;
-
-    return (
-      <Condition when="booking_reservation_form[found_customer]" is="false">
-        <h4>
-          {phonetic_name}
-        </h4>
-        <div className="field">
-          <Field
-            name="booking_reservation_form[customer_phonetic_last_name]"
-            component="input"
-            placeholder={phonetic_last_name}
-            type="text"
-            validate={(value) => requiredValidation(phonetic_last_name)(this, value)}
-          />
-          <Error name="booking_reservation_form[customer_phonetic_last_name]" />
-        </div>
-        <div className="field">
-          <Field
-            name="booking_reservation_form[customer_phonetic_first_name]"
-            component="input"
-            placeholder={phonetic_first_name}
-            type="text"
-            validate={(value) => requiredValidation(phonetic_first_name)(this, value)}
-          />
-          <Error name="booking_reservation_form[customer_phonetic_first_name]" />
-        </div>
-        <h4>
-          {email}
-        </h4>
-        <Field
-          name="booking_reservation_form[customer_email]"
-          component="input"
-          placeholder="mail@domail.com"
-          type="email"
-          validate={composeValidators(this, requiredValidation(email), emailFormatValidator)}
-        />
-        <Error name="booking_reservation_form[customer_email]" />
-        <div className="remember-me">
-          <label>
-            <Field
-              name="booking_reservation_form[remember_me]"
-              component="input"
-              type="checkbox"
-            />
-            {remember_me}
-          </label>
-        </div>
-      </Condition>
-    )
+      )
+    }
   }
 
   renderBookingFailedArea = () => {
@@ -992,7 +974,6 @@ class BookingReservationForm extends React.Component {
           {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderBookingCode()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1005,7 +986,6 @@ class BookingReservationForm extends React.Component {
           {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderBookingCode()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1018,7 +998,6 @@ class BookingReservationForm extends React.Component {
           {this.isBookingFlowEnd() && this.renderRegularCustomersOption()}
           {this.isBookingFlowEnd() && this.renderBookingCode()}
           {this.isBookingFlowEnd() && this.renderCurrentCustomerInfo()}
-          {this.isBookingFlowEnd() && this.renderNewCustomerFields()}
           {this.renderBookingReservationButton()}
         </div>
       )
@@ -1104,7 +1083,7 @@ class BookingReservationForm extends React.Component {
   findCustomer = async (event) => {
     event.preventDefault();
 
-    const { customer_first_name, customer_last_name, customer_phone_number, remember_me } = this.booking_reservation_form_values;
+    const { customer_first_name, customer_last_name, customer_phone_number } = this.booking_reservation_form_values;
 
     if (!(customer_first_name && customer_last_name && customer_phone_number)) {
       return;
@@ -1125,7 +1104,6 @@ class BookingReservationForm extends React.Component {
         customer_first_name: customer_first_name,
         customer_last_name: customer_last_name,
         customer_phone_number: customer_phone_number,
-        remember_me: remember_me
       },
       responseType: "json"
     })
@@ -1252,10 +1230,8 @@ class BookingReservationForm extends React.Component {
             "customer_phonetic_last_name",
             "customer_phonetic_first_name",
             "customer_phone_number",
-            "customer_email",
             "customer_info",
             "present_customer_info",
-            "remember_me",
             "reminder_permission",
             "social_user_id"
           ),
@@ -1382,7 +1358,6 @@ class BookingReservationForm extends React.Component {
       customer_phonetic_last_name,
       customer_phonetic_first_name,
       customer_phone_number,
-      customer_email,
       found_customer
     } = this.booking_reservation_form_values;
 
@@ -1391,8 +1366,7 @@ class BookingReservationForm extends React.Component {
       customer_first_name &&
       customer_phonetic_last_name &&
       customer_phonetic_first_name &&
-      customer_phone_number &&
-      customer_email
+      customer_phone_number
     )
   }
 
