@@ -9,7 +9,6 @@ module SocialCustomers
       social_customer.update!(customer_id: customer.id)
 
       LineClient.send(social_customer, I18n.t("line.bot.connected_successfuly"))
-      compose(Lines::Features, social_customer: social_customer)
 
       # XXX: Don't need to link to Toruya's rich menu if it is a official rich menu now.
       if rich_menu = social_customer.social_account.social_rich_menus.find_by(social_name: SocialAccounts::RichMenus::CustomerReservations::KEY)

@@ -6,6 +6,5 @@ class Lines::FollowEvent < ActiveInteraction::Base
 
   def execute
     LineClient.send(social_customer, I18n.t("line.bot.thanks_follow"))
-    compose(Lines::Features, social_customer: social_customer)
   end
 end
