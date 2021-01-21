@@ -84,9 +84,12 @@ Rails.application.routes.draw do
           end
         end
 
-        resource :social_account do
+        resource :social_account, only: [:edit, :update] do
           member do
+            get :message_api
+            get :login_api
             get :webhook_modal
+            get :callback_modal
           end
 
           resource :rich_menu, only: [:edit, :create, :destroy]

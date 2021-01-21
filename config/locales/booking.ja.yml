@@ -35,6 +35,7 @@ ja:
     please_select_a_menu: メニューをお選びください
     reset_button: 始めからやり直す
     last_selected_option: 前回ご利用のメニュー
+    i_dont_use_line: LINEは使っていません
     booking_code:
       code: 確認コード
       resend: コード再送
@@ -44,9 +45,10 @@ ja:
       booking_unexpected_failed_message: 何らかの理由で予約に失敗しました。もう一度お試しください。
       booking_code_message: 携帯電話にお送りした確認コードを入力してください。
       booking_code_failed_message: 確認コードが間違っています
+      line_reminder_messages_html: "ご予約の前日に<br>LINEでお知らせします"
     done:
       title: 仮予約が完了しました
-      message1: ご登録の携帯電話に
+      message1: LINEまたは携帯電話に
       message2: ご予約内容を送信しました
       desc1: の予約情報を
       desc2: あなたの予定と一緒に管理できる
@@ -55,8 +57,8 @@ ja:
       feature2: お友達毎で約束やタスクを管理
       feature3: 各種店舗の予約をカレンダーで確認
       signup_now: 今すぐ登録
-      add_friend_messages_html: "LINEでお友達登録すると<br>次の募集開始のお知らせを受け取る"
-      add_friend_btn: 友だち追加
+      add_friend_messages_html: "LINEでお友だち登録して<br>最新情報を受け取る"
+      add_friend_btn: LINEログイン
     start_yet:
       title: 受付開始前です
       message1: このページからのご予約は

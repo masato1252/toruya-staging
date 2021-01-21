@@ -2,15 +2,17 @@
 #
 # Table name: social_accounts
 #
-#  id             :bigint(8)        not null, primary key
-#  user_id        :integer          not null
-#  channel_id     :string
-#  channel_token  :string
-#  channel_secret :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  label          :string
-#  basic_id       :string
+#  id                   :bigint(8)        not null, primary key
+#  user_id              :integer          not null
+#  channel_id           :string
+#  channel_token        :string
+#  channel_secret       :string
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  label                :string
+#  basic_id             :string
+#  login_channel_id     :string
+#  login_channel_secret :string
 #
 # Indexes
 #
@@ -36,16 +38,26 @@ class SocialAccount < ApplicationRecord
     login_channel_id && login_channel_secret
   end
 
-  def data_finished?
-    attributes.all? { |attribute, value| value.present? }
+  def bot_data_finished?
+    attributes.slice("channel_id", "channel_token", "channel_secret", "basic_id", "label").all? { |attribute, value| value.present? }
   end
 
   def raw_channel_token
     MessageEncryptor.decrypt(channel_token) if channel_token.present?
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
   end
 
   def raw_channel_secret
     MessageEncryptor.decrypt(channel_secret) if channel_secret.present?
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
+  end
+
+  def raw_login_channel_secret
+    MessageEncryptor.decrypt(login_channel_secret) if login_channel_secret.present?
+  rescue ActiveSupport::MessageVerifier::InvalidSignature
+    nil
   end
 
   def add_friend_url

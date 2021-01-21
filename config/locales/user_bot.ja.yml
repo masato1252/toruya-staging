@@ -69,7 +69,8 @@ ja:
           info_label: アカウント登録情報
           payments_label: ご利用履歴
           line_label: 販促用LINE
-          line_official_account: LINEオフィシャルアカウント
+          line_message_api_label: Messaging API設定
+          line_login_api_label: LINEログイン設定
           line_rich_menu: リッチメニュー
         plans:
           save: 選択する

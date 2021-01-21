@@ -163,13 +163,27 @@ a.btn {
 }
 
 .line-button {
-  background: $line-green;
+  color: $line-green !important;
+  background: transparent;
   display: inline-flex !important;
   align-items: center;
 
   .fa-line {
-    font-size: 36px;
-    margin-right: 6px;
+    font-size: 40px;
+  }
+
+  &.with-logo {
+    padding: 0 !important;
+    border: 0 !important;
+    margin-right: -5px;
+    margin-bottom: 0.05em;
+  }
+
+  &.with-wording {
+    background-color: $line-green !important;
+    color: #ffffff !important;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 }
 

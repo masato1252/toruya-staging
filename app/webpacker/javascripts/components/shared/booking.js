@@ -34,8 +34,24 @@ export const AddLineFriendInfo = ({social_account_add_friend_url}) => (
   social_account_add_friend_url ? (
     <div className="message centerize">
       <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.add_friend_messages_html") }} />
-      <a href={social_account_add_friend_url} className="btn line-button">
+      <a href={social_account_add_friend_url} className="btn line-button with-logo">
         <span className="fab fa-line" aria-hidden="true"></span>
+      </a>
+      <a href={social_account_add_friend_url} className="btn line-button with-wording">
+        {I18n.t("booking_page.done.add_friend_btn")}
+      </a>
+    </div>
+  ) : <></>
+)
+
+export const LineLoginBtn = ({social_account_login_url}) => (
+  social_account_login_url ? (
+    <div className="message centerize">
+      <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.message.line_reminder_messages_html") }} />
+      <a href={social_account_login_url} className="btn line-button with-logo" data-method="post">
+        <span className="fab fa-line" aria-hidden="true"></span>
+      </a>
+      <a href={social_account_login_url} className="btn line-button with-wording" data-method="post">
         {I18n.t("booking_page.done.add_friend_btn")}
       </a>
     </div>

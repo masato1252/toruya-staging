@@ -299,8 +299,7 @@ module Booking
           !customer_first_name ||
           !customer_phonetic_last_name ||
           !customer_phonetic_first_name ||
-          !customer_phone_number ||
-          !customer_email
+          !customer_phone_number
           errors.add(:customer_info, :not_enough_customer_data)
         end
       end

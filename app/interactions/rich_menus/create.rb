@@ -9,6 +9,8 @@ module RichMenus
     boolean :default_menu, default: false
 
     def execute
+      return unless Rails.env.production?
+
       SocialRichMenu.transaction do
         if social_account
           if rich_menu = social_account.social_rich_menus.find_by(social_name: key)
