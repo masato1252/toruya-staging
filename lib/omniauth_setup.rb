@@ -23,7 +23,7 @@ class OmniauthSetup
 
     {
       client_id: account.login_channel_id,
-      client_secret: account.login_channel_secret
+      client_secret: account.raw_login_channel_secret
     }
   end
 end
