@@ -13,11 +13,11 @@ module RichMenus
 
       SocialRichMenu.transaction do
         if social_account
-          if rich_menu = social_account.social_rich_menus.find_by(social_name: key)
+          social_account.social_rich_menus.where(social_name: key).each do |rich_menu|
             compose(RichMenus::Delete, social_rich_menu: rich_menu)
           end
         else
-          if rich_menu = SocialRichMenu.find_by(social_name: key)
+          SocialRichMenu.where(social_name: key).each do |rich_menu|
             compose(RichMenus::Delete, social_rich_menu: rich_menu)
           end
         end
