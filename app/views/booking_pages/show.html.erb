@@ -24,7 +24,7 @@
   timezone: Time.zone.tzinfo.name,
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
   social_account_add_friend_url: @social_account&.add_friend_url,
-  social_account_login_url: @social_account&.is_login_available? ? user_line_omniauth_authorize_path(oauth_social_account_id: @social_account&.id, oauth_redirect_to_url: booking_page_url(@booking_page), customer_id: @custome&.id) : nil,
+  social_account_login_url: @social_account&.is_login_available? ? user_line_omniauth_authorize_path(prompt: "consent", bot_prompt: "aggressive", oauth_social_account_id: @social_account&.id, oauth_redirect_to_url: booking_page_url(@booking_page), customer_id: @custome&.id) : nil,
   social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
