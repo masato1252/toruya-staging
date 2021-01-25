@@ -11,7 +11,7 @@ module Reservations
           social_customer: social_customer,
           content: message,
           message_type: ::SocialMessage.message_types[:bot],
-          readed: false
+          readed: true
         )
       end
     end
