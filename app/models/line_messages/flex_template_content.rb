@@ -48,6 +48,77 @@ module LineMessages
       }
     end
 
+    def self.content6(asset_url: ,title1: ,title2:, title3:, body:, action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "image",
+                  "url": asset_url,
+                  "size": "xxs"
+                },
+                {
+                  "type": "text",
+                  "text": title1,
+                  "weight": "bold",
+                  "size": "lg",
+                  "flex": 10,
+                  "align": "center",
+                  "contents": []
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": title2,
+              "size": "md",
+              "align": "center",
+              "weight": "regular",
+              "color": "#727272"
+            },
+            {
+              "type": "text",
+              "text": title3,
+              "size": "sm",
+              "align": "center",
+              "weight": "regular",
+              "color": "#727272"
+            }
+          ]
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": body,
+              "wrap": true
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "md",
+          "contents": action_templates
+        },
+        "styles": {
+          "body": {
+            "separator": true
+          }
+        }
+      }
+    end
+
     def self.content2(title1: ,title2:, action_templates:)
       {
         "type": "bubble",

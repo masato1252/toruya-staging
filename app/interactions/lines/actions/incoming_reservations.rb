@@ -1,6 +1,9 @@
 require "line_client"
 
 class Lines::Actions::IncomingReservations < ActiveInteraction::Base
+  PENDING_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/reservation_pending.png"
+  ACCEPTED_ASSET_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/reservation_reserved.png"
+
   object :social_customer
 
   def execute
@@ -21,11 +24,18 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
     contents = reservations.map do |reservation|
       shop = reservation.shop
 
-      LineMessages::FlexTemplateContent.content1(
-        title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)} ~ #{I18n.l(reservation.end_time, format: :time_only)}",
+      LineMessages::FlexTemplateContent.content6(
+        asset_url: reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL,
+        title1: "#{I18n.l(reservation.start_time, format: :short_date_with_wday)}~",
         title2: reservation.menus.map(&:display_name).join(", "),
+        title3: shop.display_name,
         body: I18n.t("line.bot.messages.incoming_reservations.desc", shop_phone_number: shop.phone_number),
         action_templates: [
+          LineActions::Uri.new(
+            label: I18n.t("action.send_message"),
+            url: Rails.application.routes.url_helpers.lines_contacts_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
+            btn: "secondary"
+          ).template,
           LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
         ]
       )
