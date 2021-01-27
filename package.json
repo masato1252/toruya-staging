@@ -47,6 +47,7 @@
     "react-images-upload": "^1.2.8",
     "react-infinite-scroll-component": "^5.1.0",
     "react-input-autosize": "^3.0.0",
+    "react-player": "^2.8.1",
     "react-router-dom": "^5.2.0",
     "react-select": "^2.0.0",
     "react-slidedown": "^2.4.3",

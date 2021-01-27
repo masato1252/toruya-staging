@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
@@ -299,6 +300,22 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
+  end
+
+  create_table "online_services", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.string "goal_type", null: false
+    t.string "solution_type", null: false
+    t.datetime "end_at"
+    t.integer "end_on_days"
+    t.integer "upsell_sale_page_id"
+    t.json "content"
+    t.string "company_type", null: false
+    t.bigint "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_online_services_on_user_id"
   end
 
   create_table "payment_withdrawals", force: :cascade do |t|

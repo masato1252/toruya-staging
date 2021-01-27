@@ -33,16 +33,17 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   end
 
   def create
-    # outcome = ::Sales::BookingPages::Create.run(
-    #   user: current_user,
-    #   selected_booking_page: params[:selected_booking_page],
-    #   selected_template: params[:selected_template],
-    #   template_variables: params[:template_variables].permit!.to_h,
-    #   product_content: params[:product_content].permit!.to_h,
-    #   staff: params[:selected_staff].permit!.to_h,
-    #   flow: params[:flow]
-    # )
-    #
-    # return_json_response(outcome, { sale_page_id: outcome.result&.id })
+    outcome = ::OnlineServices::Create.run(
+      user: current_user,
+      name: params[:name],
+      selected_goal: params[:selected_goal],
+      selected_solution: params[:selected_solution],
+      end_time: params[:end_time].permit!.to_h,
+      upsell: params[:upsell].permit!.to_h,
+      content: params[:content].permit!.to_h,
+      selected_company: params[:selected_company].permit!.to_h,
+    )
+
+    return_json_response(outcome, { online_service_id: outcome.result&.id })
   end
 end

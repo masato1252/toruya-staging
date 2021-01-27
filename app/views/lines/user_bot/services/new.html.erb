@@ -4,7 +4,14 @@
     companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| ShopSerializer.new(s).attributes_hash.merge!(type: "Shop") }.push(
       ShopProfileSerializer.new(super_user.profile).attributes_hash.merge!(type: "Profile")
     ),
-    upsell_services: super_user.sale_pages.includes(:product).map {|sale_page| SalePageOptionSerializer.new(sale_page).attributes_hash }
+    upsell_sales: super_user.sale_pages.includes({ product: [:shop, :user] }, :sale_template).map do |sale_page|
+      hash = SalePageOptionSerializer.new(sale_page).attributes_hash
+
+      {
+        label: hash[:label],
+        value: hash
+      }
+    end
   }
 },
 { camelize_props: false }

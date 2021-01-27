@@ -5,6 +5,7 @@ import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
+import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 
 const UpsellStep = ({next, prev, step}) => {
   const { props, dispatch, upsell } = useGlobalContext()
@@ -34,7 +35,7 @@ const UpsellStep = ({next, prev, step}) => {
       </div>
 
       <div>
-        <label className="">
+        <label className="text-align-left">
           <input name="upsell" type="radio" value="yes"
             checked={upsell.type === "yes"}
             onChange={() => {
@@ -53,17 +54,17 @@ const UpsellStep = ({next, prev, step}) => {
           {upsell.type === "yes" && (
             <ReactSelect
               placeholder={'|セールスページを選択'}
-              value={ _.isEmpty(upsell.service) ? "" : upsell.service}
-              options={props.upsell_services}
+              value={ _.isEmpty(upsell.sale_page) ? "" : { label: upsell.sale_page.label }}
+              options={props.upsell_sales}
               onChange={
-                (service) => {
+                (sale_page) => {
                   dispatch({
                     type: "SET_ATTRIBUTE",
                     payload: {
                       attribute: "upsell",
                       value: {
                         type: "yes",
-                        service: service
+                        sale_page: sale_page.value
                       }
                     }
                   })
@@ -74,12 +75,19 @@ const UpsellStep = ({next, prev, step}) => {
         </label>
 
         {
-          !_.isEmpty(upsell.service) && (
-            <>
-              {upsell.service.type}
-              {upsell.service.start_time}
-              {upsell.service.end_time}
-            </>
+          !_.isEmpty(upsell.sale_page) && (
+            <div className="sale-page">
+              {upsell.sale_page.start_time}
+              {upsell.sale_page.end_time}
+
+              <SaleTemplateView
+                shop={upsell.sale_page.shop}
+                product={upsell.sale_page.product}
+                template={upsell.sale_page.template}
+                template_variables={upsell.sale_page.template_variables}
+                social_account_add_friend_url={upsell.sale_page.social_account_add_friend_url}
+              />
+            </div>
           )
         }
       </div>

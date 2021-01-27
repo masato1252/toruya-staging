@@ -27,37 +27,36 @@ export const GlobalProvider = ({ props, children }) => {
   }, [])
   const [state, dispatch] = useReducer(reducers, initialValue)
 
-  // const _salePageData = () => {
-  //   return {
-  //     ...state.sales_creation_states,
-  //     selected_booking_page: selected_booking_page.id,
-  //     selected_template: selected_template.id,
-  //     product_content: _.pick(product_content, ["picture", "desc1", "desc2"]),
-  //     selected_staff: _.pick(selected_staff, ["id", "picture", "introduction"])
-  //   }
-  // }
+  const serviceData = () => {
+    return {
+      ...state.services_creation_states,
+      upsell: {
+        sale_page_id: state.services_creation_states.upsell?.sale_page?.id
+      }
+    }
+  }
   //
-  // const createSalesBookingPage = async () => {
-  //   const [error, response] = await SaleServices.create_sales_booking_page(
-  //     {
-  //       data: _salePageData()
-  //     }
-  //   )
-  //
-  //   if (response?.data?.status == "successful") {
-  //     dispatch({
-  //       type: "SET_ATTRIBUTE",
-  //       payload: {
-  //         attribute: "sale_page_id",
-  //         value: response.data.sale_page_id
-  //       }
-  //     })
-  //   } else {
-  //     alert(error?.message || response.data.error_message)
-  //   }
-  //
-  //   return response?.data?.status == "successful"
-  // }
+  const createService = async () => {
+    const [error, response] = await OnlineServices.create_service(
+      {
+        data: serviceData()
+      }
+    )
+
+    if (response?.data?.status == "successful") {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "online_service_id",
+          value: response.data.online_service_id
+        }
+      })
+    } else {
+      alert(error?.message || response.data?.error_message)
+    }
+
+    return response?.data?.status == "successful"
+  }
 
   // const isStaffSetup = () => {
   //   return !(!selected_staff || !selected_staff?.picture_url || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == "")
@@ -80,6 +79,7 @@ export const GlobalProvider = ({ props, children }) => {
       props,
       ...state.services_creation_states,
       dispatch,
+      createService
     }}
     >
       {children}

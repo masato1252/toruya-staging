@@ -356,6 +356,20 @@ const SaleServices = {
   },
 }
 
+const OnlineServices = {
+  create_service: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_services_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -367,5 +381,6 @@ export {
   BookingServices,
   SocialAccountServices,
   ContactServices,
-  SaleServices
+  SaleServices,
+  OnlineServices
 }
