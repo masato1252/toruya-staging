@@ -66,6 +66,7 @@ gem "serviceworker-rails"
 gem "webpush", require: false
 gem "js-routes"
 gem "i18n-js"
+gem "platform-api"
 
 group :development, :test do
   gem "byebug", platform: :mri
