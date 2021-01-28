@@ -218,6 +218,9 @@ ja:
         no_upsell: アップセルはない
         want_upsell: アップセルがある
         select_upsell_product: セールスページを選択
+        below_is_what_you_want: 以下のサービスを作成してよろしいですか？
+        create_by_this_setting: この設定でサービスを作成する
+        create_sale_page: 作成したサービスページをシェアしましょう
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

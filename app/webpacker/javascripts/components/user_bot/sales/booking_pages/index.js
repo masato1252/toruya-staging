@@ -2,6 +2,7 @@
 
 import React from "react";
 import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
+import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = ({shop, product, social_account_add_friend_url, template, template_variables, content, staff, flow, demo, dispatch, jump}) => {

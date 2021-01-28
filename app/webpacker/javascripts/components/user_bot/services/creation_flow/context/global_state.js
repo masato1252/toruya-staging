@@ -70,9 +70,14 @@ export const GlobalProvider = ({ props, children }) => {
   //   return selected_template.edit_body.filter(block => block.component === "input").every(filterBlock => template_variables?.[filterBlock.name] != null)
   // }
   //
-  // const isReadyForPreview = () => {
-  //   return selected_booking_page && isHeaderSetup() && isContentSetup() && isStaffSetup()
-  // }
+  const isReadyForPreview = () => {
+    return selected_goal &&
+      selected_solution &&
+      !_.isEmpty(content) &&
+      end_type.end_type &&
+      name &&
+      selected_company
+  }
 
   return (
     <GlobalContext.Provider value={{

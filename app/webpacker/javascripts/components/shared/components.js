@@ -271,6 +271,16 @@ const SubmitButton = ({handleSubmit, submitCallback, btnWord}) => {
   )
 }
 
+const DemoEditButton = ({demo, jump}) => {
+  if (!demo) return <></>
+
+  return (
+    <span className="btn btn-yellow edit-mark" onClick={jump}>
+      <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
+    </span>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -291,5 +301,6 @@ export {
   BookingOptionElement,
   UrlCopyBtn,
   BookingPageButtonCopyBtn,
-  SubmitButton
+  SubmitButton,
+  DemoEditButton
 };

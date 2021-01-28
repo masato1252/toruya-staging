@@ -18,6 +18,12 @@ class SalePageOptionSerializer
     booking_page.end_at ? I18n.l(booking_page.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
   end
 
+  attribute :end_at do |sale_page|
+    booking_page = sale_page.product
+
+    booking_page.end_at ? booking_page.end_at.iso8601 : nil
+  end
+
   attribute :product do |sale_page|
     BookingPageSerializer.new(sale_page.product).attributes_hash
   end

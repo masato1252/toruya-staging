@@ -1,0 +1,35 @@
+.online-service-page {
+  .edit-mark {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }
+
+  .online-service-header {
+    margin-bottom: 6px;
+  }
+
+  .online-service-body {
+    border: 1px solid #dfdfdf;
+    padding: 12px;
+
+    .name {
+      margin-bottom: 12px;
+    }
+  }
+
+  .upsell {
+    color: $red;
+    font-weight: bold;
+  }
+}
+
+.countdown {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  .number {
+    font-size: 24px;
+  }
+}
