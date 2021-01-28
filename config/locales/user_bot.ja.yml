@@ -169,6 +169,55 @@ ja:
           sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
           create_this_sale_page: この設定で販売ページを作成する
           share_sale_page: 作成した販売ページをシェアしましょう
+      online_service_creation:
+        goals:
+          collection:
+            title: リスト集め
+            description: あなたのサービスに興味がある人の連絡先を集める為のサービスページを作成
+          customers:
+            title: リストの顧客化
+            description: 興味がある人にあなたのサービスを試してもらう為のサービスページを作成
+          price:
+            title: リピート・単価アップ
+            description: 既存客のリピート回数や客単価を上げる為のサービスページを作成
+          upsell:
+            title: 継続購入
+            description: あなたから購入し続けてもらう為の定額制サービスページを作成
+        solutions:
+          video:
+            title: 動画セミナー
+            description: サービス購入・登録することで、動画セミナーを視聴できるようにする
+          audio:
+            title: 音声配信
+            description: サービス購入・登録することで、音声ポッドキャストを視聴できるようにする
+          pdf:
+            title: PDFダウンロード
+            description: サービス購入・登録することで、PDFファイルをダウンロードできるようにする
+          questionnaire:
+            title: アンケート
+            description: 自動メッセージを利用したアンケートの回答をキッカケに、LINEお友だち登録を促すサービス
+          diagnosis:
+            title: 診断
+            description: LINE自動メッセージを利用した診断の回答結果から、アップセルサービスの購入を促すサービス
+        what_is_your_goal: このサービスの目的は何ですか？
+        what_is_your_solution: このサービスで提供する内容は何ですか？
+        what_is_this_video_provide: どの動画をサービス提供しますか？
+        what_is_video_url: YouTube等のURLを入力
+        video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
+        what_is_service_name: サービス名は何ですか？
+        this_is_company_info: 以下の店舗のサービスとして作成します
+        edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。
+        what_company_info: サービス名どの店舗として提供しますか？
+        what_is_end_time: このサービスは、利用期限がありますか？
+        expire_after_n_days: 購入後X日後まで
+        expire_at: 決まった日時まで
+        never_expire: ずっと利用可能
+        after_bought: 購入後
+        after_n_days: 日後まで
+        what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？
+        no_upsell: アップセルはない
+        want_upsell: アップセルがある
+        select_upsell_product: セールスページを選択
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

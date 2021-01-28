@@ -8,7 +8,7 @@ import VideoContentSetup from "./contents/video_content_setup";
 
 const SolutionStep = ({next, prev, step}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
-  const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions.filter(solution => solution.enabled)
+  const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions
 
   if (selected_solution) {
     switch (selected_solution) {
@@ -25,11 +25,13 @@ const SolutionStep = ({next, prev, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">このサービスで提供する内容は何ですか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_solution")}</h3>
       {solutions.map((solution) => {
         return (
           <button
             onClick={() => {
+              if (!solution.enabled) return;
+
               dispatch({
                 type: "SET_ATTRIBUTE",
                 payload: {
@@ -38,24 +40,17 @@ const SolutionStep = ({next, prev, step}) => {
                 }
               })
             }}
-            className="btn btn-tarco btn-extend btn-flexible margin-around"
+            className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+            disabled={!solution.enabled}
             key={solution.key}>
             <h4>{solution.name}</h4>
-            <p className="break-line-content">
+            <p className="break-line-content text-align-left">
               {solution.description}
             </p>
+            {!solution.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
           </button>
         )
       })}
-
-      <div className="action-block">
-        <button onClick={prev} className="btn btn-yellow" disabled={false}>
-          {I18n.t("action.prev_step")}
-        </button>
-        <button onClick={next} className="btn btn-yellow" disabled={false}>
-          {I18n.t("action.next_step")}
-        </button>
-      </div>
     </div>
   )
 

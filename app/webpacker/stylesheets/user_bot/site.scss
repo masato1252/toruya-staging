@@ -523,8 +523,25 @@ a {
 .break-line-content {
   white-space: pre-wrap;
   word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 h3.header {
   margin: 20px 0;
+}
+
+.preparing {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #ffffff;
+  background-color: $gray11;
+  padding: 3px 6px;
+  font-size: 10px;
+}
+
+.logo {
+  width: 130px;
+  height: auto;
+  max-height: 45px;
 }

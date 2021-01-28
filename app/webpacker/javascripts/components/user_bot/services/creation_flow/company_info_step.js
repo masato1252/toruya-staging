@@ -14,25 +14,30 @@ const CompanyInfoStep = ({next, step}) => {
     return (
       <div className="form settings-flow">
         <ServiceFlowStepIndicator step={step} />
-        <h3 className="header centerize">以下の店舗のサービスとして作成します</h3>
+        <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.this_is_company_info")}</h3>
 
 
-        <h3 className="header">短縮店舗名</h3>
-        <p>
-          {company_info.short_name}
-        </p>
+        <div className="margin-around">
+          <h3 className="header">{I18n.t("common.short_shop_name")}</h3>
+          <p>
+            {company_info.short_name}
+          </p>
 
-        <h3 className="header">会社情報</h3>
-        <p>{company_info.name}</p>
-        <p>{company_info.address}</p>
-        <p>{company_info.phone_number}</p>
+          <h3 className="header">{I18n.t("common.company_info")}</h3>
+          <p>{company_info.name}</p>
+          <p>{company_info.address}</p>
+          <p>{company_info.phone_number}</p>
 
-        {company_info.logo_url && <img className="logo" src={company_info.logo_url} />}
+          {company_info.logo_url && <img className="logo" src={company_info.logo_url} />}
 
-        <div className="action-block">
-          <button onClick={next} className="btn btn-yellow" disabled={false}>
-            {I18n.t("action.next_step")}
-          </button>
+          <div className="action-block">
+            <button onClick={next} className="btn btn-yellow" disabled={false}>
+              {I18n.t("action.next_step")}
+            </button>
+          </div>
+          <p className="margin-around">
+            {I18n.t("user_bot.dashboards.online_service_creation.edit_shop_in_setting_page")}
+          </p>
         </div>
       </div>
     )
@@ -41,7 +46,7 @@ const CompanyInfoStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">サービス名どの店舗として提供しますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_company_info")}</h3>
       {props.companies.map(company => (
         <button
           key={company.label}
@@ -57,7 +62,7 @@ const CompanyInfoStep = ({next, step}) => {
               }
             })
           }}
-          className="btn btn-tarco btn-extend btn-tall margin-around"
+          className="btn btn-tarco btn-extend btn-tall margin-around m10"
         >
           {company.label}
         </button>

@@ -1,25 +1,78 @@
 class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   VIDEO_SOLUTION = {
     key: "video",
-    name: "video",
-    description: "solution_description",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.description"),
     enabled: true
   }
+
+  AUDIO_SOLUTION = {
+    key: "audio",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.description"),
+    enabled: false
+  }
+
+  PDF_SOLUTION = {
+    key: "pdf",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
+    enabled: false
+  }
+
+  QUESTIONNAIRE_SOLUTION = {
+    key: "questionnaire",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.description"),
+    enabled: false
+  }
+
+  DIAGNOSIS_SOLUTION = {
+    key: "diagnosis",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.description"),
+    enabled: false
+  }
+
   GOALS = [
     {
-      key: "name1",
-      name: "name1",
-      description: "description1",
+      key: "collection",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
       enabled: true,
       solutions: [
-        VIDEO_SOLUTION
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION,
+        PDF_SOLUTION,
+        QUESTIONNAIRE_SOLUTION,
+        DIAGNOSIS_SOLUTION
       ]
     },
     {
-      key: "name2",
-      name: "name2",
-      description: "description2",
+      key: "customers",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.description"),
       enabled: true,
+      solutions: [
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION
+      ]
+    },
+    {
+      key: "price",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.price.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.price.description"),
+      enabled: true,
+      solutions: [
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION
+      ]
+    },
+    {
+      key: "upsell",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.description"),
+      enabled: false,
       solutions: [
         VIDEO_SOLUTION
       ]

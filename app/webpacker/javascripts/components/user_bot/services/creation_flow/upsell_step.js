@@ -13,8 +13,8 @@ const UpsellStep = ({next, prev, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？</h3>
-      <div>
+      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.what_want_to_upsell")}</h3>
+      <div className="margin-around">
         <label className="">
           <input name="upsell" type="radio" value="no"
             checked={upsell.type === "no"}
@@ -30,7 +30,7 @@ const UpsellStep = ({next, prev, step}) => {
               })
             }}
           />
-          アップセルはない
+          {I18n.t("user_bot.dashboards.online_service_creation.no_upsell")}
         </label>
       </div>
 
@@ -50,10 +50,10 @@ const UpsellStep = ({next, prev, step}) => {
               })
             }}
           />
-          アップセルがある
+          {I18n.t("user_bot.dashboards.online_service_creation.want_upsell")}
           {upsell.type === "yes" && (
             <ReactSelect
-              placeholder={'|セールスページを選択'}
+              placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_upsell_product")}
               value={ _.isEmpty(upsell.sale_page) ? "" : { label: upsell.sale_page.label }}
               options={props.upsell_sales}
               onChange={
@@ -76,27 +76,27 @@ const UpsellStep = ({next, prev, step}) => {
 
         {
           !_.isEmpty(upsell.sale_page) && (
-            <div className="sale-page">
+            <>
               {upsell.sale_page.start_time}
               {upsell.sale_page.end_time}
 
-              <SaleTemplateView
-                shop={upsell.sale_page.shop}
-                product={upsell.sale_page.product}
-                template={upsell.sale_page.template}
-                template_variables={upsell.sale_page.template_variables}
-                social_account_add_friend_url={upsell.sale_page.social_account_add_friend_url}
-              />
-            </div>
+              <div className="sale-page margin-around">
+                <SaleTemplateView
+                  shop={upsell.sale_page.shop}
+                  product={upsell.sale_page.product}
+                  template={upsell.sale_page.template}
+                  template_variables={upsell.sale_page.template_variables}
+                  no_action={true}
+                />
+              </div>
+            </>
           )
         }
       </div>
 
       <div className="action-block">
-        <button onClick={prev} className="btn btn-yellow" disabled={false}>
-          {I18n.t("action.prev_step")}
-        </button>
-        <button onClick={next} className="btn btn-yellow" disabled={false}>
+        <button onClick={next} className="btn btn-yellow"
+          disabled={!upsell.type || (upsell.type === "yes" && _.isEmpty(upsell.sale_page))}>
           {I18n.t("action.next_step")}
         </button>
       </div>

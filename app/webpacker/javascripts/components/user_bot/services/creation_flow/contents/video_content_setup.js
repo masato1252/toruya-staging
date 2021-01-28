@@ -12,8 +12,9 @@ const VideoContentSetup = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">どの動画をサービス提供しますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_this_video_provide")}</h3>
       <input
+        placeholder={I18n.t("user_bot.dashboards.online_service_creation.what_is_video_url")}
         onChange={(event) =>
             dispatch({
               type: "SET_ATTRIBUTE",
@@ -28,6 +29,10 @@ const VideoContentSetup = ({next, step}) => {
         type="text"
         className="extend with-border"
       />
+      <p className="margin-around text-align-left">
+        {I18n.t("user_bot.dashboards.online_service_creation.video_hint")}
+      </p>
+
       <div className='video-player-wrapper'>
         <ReactPlayer
           className='react-player'
@@ -37,12 +42,13 @@ const VideoContentSetup = ({next, step}) => {
           height='100%'
         />
       </div>
-
-      <div className="action-block">
-        <button onClick={next} className="btn btn-yellow" disabled={false}>
-          {I18n.t("action.next_step")}
-        </button>
-      </div>
+      {content?.url && ReactPlayer.canPlay(content.url) && (
+        <div className="action-block">
+          <button onClick={next} className="btn btn-yellow" disabled={false}>
+            {I18n.t("action.next_step")}
+          </button>
+        </div>
+      )}
     </div>
   )
 
