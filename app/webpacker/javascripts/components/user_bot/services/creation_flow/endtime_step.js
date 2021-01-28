@@ -38,6 +38,7 @@ const EndtimeStep = ({next, prev, step}) => {
             {I18n.t("user_bot.dashboards.online_service_creation.after_bought")}
             <input
               type="tel"
+              value={end_time.end_on_days || ""}
               onChange={(event) => {
                 dispatch({
                   type: "SET_ATTRIBUTE",
@@ -79,6 +80,7 @@ const EndtimeStep = ({next, prev, step}) => {
             <input
               name="end_time_date_part"
               type="date"
+              value={end_time.end_at || ""}
               onChange={(event) => {
                 dispatch({
                   type: "SET_ATTRIBUTE",

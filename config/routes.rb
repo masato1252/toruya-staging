@@ -449,6 +449,7 @@ Rails.application.routes.draw do
     end
   end
   resources :sale_pages, only: [:show]
+  resources :online_services, param: :slug, only: [:show]
 
   resources :shops, only: [:show]
 

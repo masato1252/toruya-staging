@@ -313,8 +313,10 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.json "content"
     t.string "company_type", null: false
     t.bigint "company_id", null: false
+    t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_online_services_on_slug"
     t.index ["user_id"], name: "index_online_services_on_user_id"
   end
 

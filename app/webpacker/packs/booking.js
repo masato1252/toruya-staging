@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import Routes from '../js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 
-var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines|user_bot\/sales)/)
+var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines|user_bot\/sales|user_bot\/services)/)
 var ReactRailsUJS = require("react_ujs")
 ReactRailsUJS.useContext(BookingcomponentRequireContext)
 

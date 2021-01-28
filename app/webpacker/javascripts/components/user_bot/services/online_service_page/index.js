@@ -2,6 +2,7 @@
 
 import React from "react";
 import I18n from 'i18n-js/index.js.erb';
+import Routes from 'js-routes.js';
 import Countdown from 'shared/countdown';
 import { DemoEditButton } from 'shared/components';
 
@@ -38,6 +39,12 @@ const OnlineServicePage = ({company_info, name, solution, content, upsell_sale_p
             <Countdown end_at={upsell_sale_page.end_at} />
           </div>
         )}
+
+        <div className="margin-around">
+          <a href={Routes.sale_page_url(upsell_sale_page?.slug)} className="btn btn-tarco btn-icon" target="_blank">
+            <i className="fa fa-credit-card"></i>{I18n.t("online_service_page.register_now")}
+          </a>
+        </div>
       </div>
     </div>
   )

@@ -10,6 +10,7 @@ class CreateOnlineServices < ActiveRecord::Migration[5.2]
       t.integer :upsell_sale_page_id
       t.json :content
       t.references :company, polymorphic: true, null: false, index: false
+      t.string :slug, index: true
       t.timestamps
     end
   end

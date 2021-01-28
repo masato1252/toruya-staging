@@ -3,17 +3,6 @@
     margin: 24px 40px
   }
 
-  .video-player-wrapper {
-    position: relative;
-    padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
-
-    .react-player {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-
   .sale-page {
     border: 1px solid $black;
     border-radius: 6px;

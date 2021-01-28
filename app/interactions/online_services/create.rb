@@ -31,6 +31,7 @@ module OnlineServices
           upsell_sale_page_id: upsell[:sale_page_id],
           company_type: selected_company[:type],
           company_id: selected_company[:id],
+          slug: SecureRandom.alphanumeric(10)
         )
 
         if online_service.errors.present?

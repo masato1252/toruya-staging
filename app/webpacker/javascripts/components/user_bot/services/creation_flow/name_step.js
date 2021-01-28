@@ -14,7 +14,7 @@ const NameStep = ({next, prev, step}) => {
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_service_name")}</h3>
       <input
         type="text"
-        value={name}
+        value={name || ""}
         onChange={(event) =>
             dispatch({
               type: "SET_ATTRIBUTE",

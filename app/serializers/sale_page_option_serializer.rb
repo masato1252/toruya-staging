@@ -1,6 +1,6 @@
 class SalePageOptionSerializer
   include JSONAPI::Serializer
-  attribute :id
+  attribute :id, :slug
 
   attribute :label do |sale_page|
     sale_page.product.name

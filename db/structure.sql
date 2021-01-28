@@ -877,6 +877,7 @@ CREATE TABLE public.online_services (
     content json,
     company_type character varying NOT NULL,
     company_id bigint NOT NULL,
+    slug character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -3343,6 +3344,13 @@ CREATE INDEX index_notifications_on_user_id_and_charged ON public.notifications 
 
 
 --
+-- Name: index_online_services_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_online_services_on_slug ON public.online_services USING btree (slug);
+
+
+--
 -- Name: index_online_services_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3994,4 +4002,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210113140743'),
 ('20210127073815'),
 ('20210129122718');
+
 
