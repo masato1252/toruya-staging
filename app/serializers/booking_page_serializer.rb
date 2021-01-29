@@ -3,7 +3,7 @@ class BookingPageSerializer
   attribute :id, :name, :shop_id
 
   attribute :url do |booking_page|
-     Rails.application.routes.url_helpers.booking_page_url(booking_page)
+    Rails.application.routes.url_helpers.booking_page_url(booking_page.slug)
   end
 
   attribute :price_number do |booking_page|

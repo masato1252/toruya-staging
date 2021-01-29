@@ -2,7 +2,7 @@ class SalePagesController < ActionController::Base
   layout "booking"
 
   def show
-    @sale_page ||= SalePage.find(params[:id])
+    @sale_page ||= SalePage.find_by(slug: params[:id]) || SalePage.find(params[:id])
     @main_product = @sale_page.product
 
     product = @main_product.booking_options.order(amount_cents: :asc).first

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_11_070239) do
+ActiveRecord::Schema.define(version: 2021_01_29_122718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -121,7 +121,9 @@ ActiveRecord::Schema.define(version: 2021_01_11_070239) do
     t.boolean "draft", default: true, null: false
     t.integer "booking_limit_day", default: 1, null: false
     t.boolean "line_sharing", default: true
+    t.string "slug"
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
+    t.index ["slug"], name: "index_booking_pages_on_slug", unique: true
     t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
     t.index ["user_id"], name: "index_booking_pages_on_user_id"
   end
@@ -494,8 +496,10 @@ ActiveRecord::Schema.define(version: 2021_01_11_070239) do
     t.json "flow"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
+    t.index ["slug"], name: "index_sale_pages_on_slug", unique: true
     t.index ["staff_id"], name: "index_sale_pages_on_staff_id"
     t.index ["user_id"], name: "index_sale_pages_on_user_id"
   end

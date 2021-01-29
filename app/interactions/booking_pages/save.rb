@@ -35,7 +35,7 @@ module BookingPages
       booking_options = attrs.delete(:options)
       special_dates = attrs.delete(:special_dates)
 
-      attrs.merge!(booking_option_ids: booking_options&.values&.pluck(:value) )
+      attrs.merge!(booking_option_ids: booking_options&.values&.pluck(:value), slug: SecureRandom.alphanumeric(10))
 
       booking_page.transaction do
         if booking_page.update(
