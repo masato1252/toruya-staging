@@ -40,6 +40,8 @@
 require "user_bot_social_account"
 
 class User < ApplicationRecord
+  include SayHi
+
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
 
@@ -196,6 +198,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def hi_message
+    "👩 New user joined, user_id: #{id}"
+  end
 
   def today_reservations
     reservations.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
