@@ -68,6 +68,7 @@ gem "js-routes"
 gem "i18n-js"
 gem "platform-api"
 gem "skylight"
+gem "newrelic_rpm"
 
 group :development, :test do
   gem "byebug", platform: :mri
