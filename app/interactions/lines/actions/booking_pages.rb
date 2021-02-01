@@ -58,7 +58,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
           action_templates: [
             LineActions::Uri.new(
               action: "book",
-              url: Rails.application.routes.url_helpers.booking_page_url(booking_page, social_user_id: social_customer.social_user_id),
+              url: Rails.application.routes.url_helpers.booking_page_url(booking_page.slug, social_user_id: social_customer.social_user_id),
               btn: "primary"
             )
           ].map(&:template)

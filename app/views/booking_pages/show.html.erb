@@ -12,8 +12,8 @@
   ].join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
   <meta property="og:title" content="<%= @booking_page.shop.display_name %> | <%= @booking_page.name %>">
-  <meta property="og:url" content="<%= booking_page_url(@booking_page) %>">
-  <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page) %> <%= @booking_page.greeting&.squish %>">
+  <meta property="og:url" content="<%= booking_page_url(@booking_page.slug) %>">
+  <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page.slug) %> <%= @booking_page.greeting&.squish %>">
 <% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
@@ -24,7 +24,7 @@
   timezone: Time.zone.tzinfo.name,
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
   social_account_add_friend_url: @social_account&.add_friend_url,
-  social_account_login_url: @social_account&.is_login_available? ? user_line_omniauth_authorize_path(prompt: "consent", bot_prompt: "aggressive", oauth_social_account_id: @social_account&.id, oauth_redirect_to_url: booking_page_url(@booking_page), customer_id: @custome&.id) : nil,
+  social_account_login_url: @social_account&.is_login_available? ? user_line_omniauth_authorize_path(prompt: "consent", bot_prompt: "aggressive", oauth_social_account_id: @social_account&.id, oauth_redirect_to_url: booking_page_url(@booking_page.slug), customer_id: @custome&.id) : nil,
   social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),

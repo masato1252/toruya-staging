@@ -278,7 +278,7 @@ module Booking
     end
 
     def booking_page
-      @booking_page ||= BookingPage.find(booking_page_id)
+      @booking_page ||= BookingPage.find_by(slug: booking_page_id) || BookingPage.find(booking_page_id)
     end
 
     def booking_option

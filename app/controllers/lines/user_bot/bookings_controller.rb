@@ -8,7 +8,7 @@ class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
 
     outcome = ::BookingPages::SmartCreate.run(attrs: params[:booking].permit!.to_h)
 
-    render json: json_response(outcome, { booking_page_id: outcome.result&.id })
+    render json: json_response(outcome, { booking_page_id: outcome.result&.slug })
   end
 
   def available_options

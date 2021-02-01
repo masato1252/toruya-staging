@@ -31,7 +31,8 @@ module Sales
             picture: picture,
             content: product_content,
             flow: flow,
-            staff: responsible_staff
+            staff: responsible_staff,
+            slug: SecureRandom.alphanumeric(10)
           )
 
           sale_page.product.shop.update!(template_variables: template_variables)

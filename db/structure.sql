@@ -362,7 +362,8 @@ CREATE TABLE public.booking_pages (
     overbooking_restriction boolean DEFAULT true,
     draft boolean DEFAULT true NOT NULL,
     booking_limit_day integer DEFAULT 1 NOT NULL,
-    line_sharing boolean DEFAULT true
+    line_sharing boolean DEFAULT true,
+    slug character varying
 );
 
 
@@ -1414,7 +1415,8 @@ CREATE TABLE public.sale_pages (
     content json,
     flow json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    slug character varying
 );
 
 
@@ -3215,6 +3217,13 @@ CREATE INDEX index_booking_pages_on_shop_id ON public.booking_pages USING btree 
 
 
 --
+-- Name: index_booking_pages_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_booking_pages_on_slug ON public.booking_pages USING btree (slug);
+
+
+--
 -- Name: index_booking_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3352,6 +3361,13 @@ CREATE INDEX index_sale_pages_on_product_type_and_product_id ON public.sale_page
 --
 
 CREATE INDEX index_sale_pages_on_sale_template_id ON public.sale_pages USING btree (sale_template_id);
+
+
+--
+-- Name: index_sale_pages_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sale_pages_on_slug ON public.sale_pages USING btree (slug);
 
 
 --
@@ -3911,6 +3927,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228084743'),
 ('20201228140930'),
 ('20210109234255'),
-('20210111070239');
+('20210111070239'),
+('20210129122718');
 
 
