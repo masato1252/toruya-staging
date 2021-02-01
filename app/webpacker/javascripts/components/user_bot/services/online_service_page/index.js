@@ -40,11 +40,13 @@ const OnlineServicePage = ({company_info, name, solution, content, upsell_sale_p
           </div>
         )}
 
-        <div className="margin-around">
-          <a href={Routes.sale_page_url(upsell_sale_page?.slug)} className="btn btn-tarco btn-icon" target="_blank">
-            <i className="fa fa-credit-card"></i>{I18n.t("online_service_page.register_now")}
-          </a>
-        </div>
+        {upsell_sale_page?.slug && (
+          <div className="margin-around">
+            <a href={Routes.sale_page_url(upsell_sale_page?.slug)} className="btn btn-tarco btn-icon" target="_blank">
+              <i className="fa fa-credit-card"></i>{I18n.t("online_service_page.register_now")}
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )

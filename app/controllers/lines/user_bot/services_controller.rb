@@ -93,6 +93,6 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       selected_company: params[:selected_company].permit!.to_h,
     )
 
-    return_json_response(outcome, { online_service_id: outcome.result&.id })
+    return_json_response(outcome, { online_service_slug: outcome.result&.slug })
   end
 end

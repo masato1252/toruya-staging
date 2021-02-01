@@ -23,6 +23,6 @@
 
 class OnlineService < ApplicationRecord
   belongs_to :user
-  belongs_to :sale_page, foreign_key: :upsell_sale_page_id
+  belongs_to :sale_page, foreign_key: :upsell_sale_page_id, required: false
   belongs_to :company, polymorphic: true
 end

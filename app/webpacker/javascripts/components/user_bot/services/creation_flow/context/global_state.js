@@ -35,7 +35,7 @@ export const GlobalProvider = ({ props, children }) => {
       }
     }
   }
-  //
+
   const createService = async () => {
     const [error, response] = await OnlineServices.create_service(
       {
@@ -47,8 +47,8 @@ export const GlobalProvider = ({ props, children }) => {
       dispatch({
         type: "SET_ATTRIBUTE",
         payload: {
-          attribute: "online_service_id",
-          value: response.data.online_service_id
+          attribute: "online_service_slug",
+          value: response.data.online_service_slug
         }
       })
     } else {
@@ -58,18 +58,6 @@ export const GlobalProvider = ({ props, children }) => {
     return response?.data?.status == "successful"
   }
 
-  // const isStaffSetup = () => {
-  //   return !(!selected_staff || !selected_staff?.picture_url || selected_staff?.picture_url?.length == 0 || selected_staff?.introduction == "")
-  // }
-  //
-  // const isContentSetup = () => {
-  //   return product_content.picture_url.length && product_content.desc1 !== "" && product_content.desc2 !== ""
-  // }
-  //
-  // const isHeaderSetup = () => {
-  //   return selected_template.edit_body.filter(block => block.component === "input").every(filterBlock => template_variables?.[filterBlock.name] != null)
-  // }
-  //
   const isReadyForPreview = () => {
     return selected_goal &&
       selected_solution &&

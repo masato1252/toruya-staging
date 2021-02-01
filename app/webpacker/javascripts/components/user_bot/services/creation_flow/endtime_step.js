@@ -80,7 +80,7 @@ const EndtimeStep = ({next, prev, step}) => {
             <input
               name="end_time_date_part"
               type="date"
-              value={end_time.end_at || ""}
+              value={end_time.end_time_date_part || ""}
               onChange={(event) => {
                 dispatch({
                   type: "SET_ATTRIBUTE",

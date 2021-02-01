@@ -8,8 +8,8 @@ module OnlineServices
       integer :end_on_days, default: nil
       string :end_time_date_part, default: nil
     end
-    hash :upsell do
-      integer :sale_page_id
+    hash :upsell, default: nil do
+      integer :sale_page_id, default: nil
     end
     hash :content do
       string :url, default: nil
@@ -25,7 +25,7 @@ module OnlineServices
           name: name,
           goal_type: selected_goal,
           solution_type: selected_solution,
-          end_at: end_time[:end_time_date_part] ? Time.zone.parse(end_time[:end_time][:end_time_date_part]).end_of_day : nil,
+          end_at: end_time[:end_time_date_part] ? Time.zone.parse(end_time[:end_time_date_part]).end_of_day : nil,
           end_on_days: end_time[:end_on_days],
           content: content,
           upsell_sale_page_id: upsell[:sale_page_id],

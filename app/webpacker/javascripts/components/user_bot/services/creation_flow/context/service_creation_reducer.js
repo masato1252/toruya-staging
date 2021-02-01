@@ -3,8 +3,11 @@ import _ from "lodash";
 const initialState = {
   selected_goal: null,
   selected_solution: null,
+  selected_company: null,
   end_time: {},
   upsell: {},
+  name: null,
+  content: null
 }
 
 export default (state = initialState, action) => {
