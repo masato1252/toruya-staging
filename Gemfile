@@ -67,6 +67,7 @@ gem "webpush", require: false
 gem "js-routes"
 gem "i18n-js"
 gem "platform-api"
+gem "skylight"
 
 group :development, :test do
   gem "byebug", platform: :mri
