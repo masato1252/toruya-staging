@@ -16,12 +16,12 @@ const CreationFlow = ({props}) => {
     <GlobalProvider props={props}>
       <FlowController>
         { ({next, step}) => <GoalSelectionStep step={step} next={next} /> }
-        { ({next, step, prev}) => <SolutionStep step={step} next={next} prev={prev} /> }
-        { ({next, step, prev}) => <NameStep step={step} next={next} prev={prev} /> }
-        { ({next, step, prev}) => <CompanyInfoStep step={step} next={next} prev={prev} /> }
-        { ({next, step, prev}) => <EndtimeStep step={step} next={next} prev={prev} /> }
-        { ({next, step, prev}) => <UpsellStep step={step} next={next} prev={prev} /> }
-        { ({next, step, prev, jump}) => <ConfirmationStep step={step} next={next} prev={prev} jump={jump} /> }
+        { ({next, step}) => <SolutionStep step={step} next={next} /> }
+        { ({next, step}) => <NameStep step={step} next={next} /> }
+        { ({next, step}) => <CompanyInfoStep step={step} next={next} /> }
+        { ({next, step}) => <EndtimeStep step={step} next={next} /> }
+        { ({next, step}) => <UpsellStep step={step} next={next} /> }
+        { ({next, step, jump}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
         { ({step}) => <FinalStep step={step} /> }
       </FlowController>
     </GlobalProvider>

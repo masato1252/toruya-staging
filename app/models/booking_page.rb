@@ -18,11 +18,13 @@
 #  draft                   :boolean          default(TRUE), not null
 #  booking_limit_day       :integer          default(1), not null
 #  line_sharing            :boolean          default(TRUE)
+#  slug                    :string
 #
 # Indexes
 #
 #  booking_page_index              (user_id,draft,line_sharing,start_at)
 #  index_booking_pages_on_shop_id  (shop_id)
+#  index_booking_pages_on_slug     (slug) UNIQUE
 #  index_booking_pages_on_user_id  (user_id)
 #
 

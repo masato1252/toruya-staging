@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
-    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 

@@ -3,7 +3,7 @@ class ShopProfileSerializer
   attribute :id
 
   attribute :label do
-    "企業情報"
+    I18n.t("common.company_info")
   end
 
   attribute :name do |profile|

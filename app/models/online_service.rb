@@ -13,11 +13,13 @@
 #  content             :json
 #  company_type        :string           not null
 #  company_id          :bigint(8)        not null
+#  slug                :string
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #
 # Indexes
 #
+#  index_online_services_on_slug     (slug)
 #  index_online_services_on_user_id  (user_id)
 #
 

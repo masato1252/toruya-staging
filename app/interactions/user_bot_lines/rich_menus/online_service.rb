@@ -35,7 +35,7 @@ module UserBotLines
             {
               # 2
               "bounds": {
-                "x": 844,
+                "x": 834,
                 "y": 0,
                 "width": 833,
                 "height": 843

@@ -6,7 +6,7 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import VideoContentSetup from "./contents/video_content_setup";
 
-const SolutionStep = ({next, prev, step}) => {
+const SolutionStep = ({next, step}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
   const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions
 
