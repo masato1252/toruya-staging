@@ -115,6 +115,11 @@ Rails.application.routes.draw do
           post :page
         end
       end
+      resources :services, only: [:new, :create] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+        end
+      end
 
       resource :sales, only: [:new] do
         collection do
@@ -448,6 +453,7 @@ Rails.application.routes.draw do
     end
   end
   resources :sale_pages, only: [:show]
+  resources :online_services, param: :slug, only: [:show]
 
   resources :shops, only: [:show]
 

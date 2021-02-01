@@ -1,32 +1,22 @@
 "use strict";
 
 import React from "react";
-import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_template_container";
+import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import I18n from 'i18n-js/index.js.erb';
-import { Template } from "shared/builders"
 
 const SaleBookingPage = ({shop, product, social_account_add_friend_url, template, template_variables, content, staff, flow, demo, dispatch, jump}) => {
   return (
     <div className="sale-page centerize">
-      <SaleTemplateContainer shop={shop} product={product}>
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(1)}>
-            <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
-          </span>
-        )}
-        <Template
-          template={template}
-          {...template_variables}
-          product_name={product.product_name}
-        />
-
-        <PriceBlock
-          product={product}
-          demo={demo}
-          social_account_add_friend_url={social_account_add_friend_url}
-        />
-      </SaleTemplateContainer>
+      <SaleTemplateView
+        shop={shop}
+        product={product}
+        demo={demo}
+        template={template}
+        template_variables={template_variables}
+        social_account_add_friend_url={social_account_add_friend_url}
+        jump={jump}
+      />
 
       <div className="product-content content">
         {demo && (

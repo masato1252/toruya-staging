@@ -1,0 +1,5 @@
+<%= react_component(
+  "user_bot/services/online_service_page",
+  OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false),
+  { camelize_props: false, prerender: true }
+) %>

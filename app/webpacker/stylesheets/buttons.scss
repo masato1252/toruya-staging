@@ -85,7 +85,7 @@ a.btn {
   background: $palette-color2;
   border-color: $palette-color2-1 !important;
 
-  &:hover {
+  &:enabled:hover {
     background: $palette-color2-1;
     border-color: $palette-color2-2 !important;
   }
@@ -95,7 +95,7 @@ a.btn {
   background: $palette-color4;
   border-color: $palette-color4-1 !important;
 
-  &:hover {
+  &:enabled:hover {
     background: $palette-color4-1;
     border-color: $palette-color4-2 !important;
     opacity: 0.7;
@@ -106,7 +106,7 @@ a.btn {
   background: $palette-color1;
   border-color: $palette-color1-1 !important;
 
-  &:hover {
+  &:enabled:hover {
     background: $palette-color1-1;
     border-color: $palette-color1-2 !important;
     opacity: 0.7;
@@ -117,7 +117,7 @@ a.btn {
   background: $palette-color3;
   border-color: $palette-color3-1 !important;
 
-  &:hover {
+  &:enabled:hover {
     background: $gray5;
     border-color: $gray7;
     opacity: 0.7;

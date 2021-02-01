@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import I18n from 'i18n-js/index.js.erb'
 import { Field } from "react-final-form";
 import _ from "lodash";
 import { sortableHandle } from "react-sortable-hoc";
@@ -243,6 +244,43 @@ const BookingPageButtonCopyBtn = ({booking_page_url}) => {
   )
 }
 
+const SubmitButton = ({handleSubmit, submitCallback, btnWord}) => {
+  const [submitting, setSubmitting] = useState(false)
+
+  return (
+    <button
+      className="btn btn-yellow"
+      disabled={submitting}
+      onClick={async () => {
+        if (submitting) return;
+        setSubmitting(true)
+
+        if (await handleSubmit()) {
+          setSubmitting(false)
+          submitCallback()
+        } else  {
+          setSubmitting(false)
+        }
+      }}>
+        {submitting ? (
+          <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i>
+        ) : (
+          btnWord
+        )}
+      </button>
+  )
+}
+
+const DemoEditButton = ({demo, jump}) => {
+  if (!demo) return <></>
+
+  return (
+    <span className="btn btn-yellow edit-mark" onClick={jump}>
+      <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
+    </span>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -263,4 +301,6 @@ export {
   BookingOptionElement,
   UrlCopyBtn,
   BookingPageButtonCopyBtn,
+  SubmitButton,
+  DemoEditButton
 };

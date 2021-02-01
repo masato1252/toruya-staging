@@ -1,0 +1,18 @@
+<%= react_component("user_bot/services/creation_flow", {
+  props: {
+    service_goals: Lines::UserBot::ServicesController::GOALS,
+    companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| ShopSerializer.new(s).attributes_hash.merge!(type: "Shop") }.push(
+      ShopProfileSerializer.new(super_user.profile).attributes_hash.merge!(type: "Profile")
+    ),
+    upsell_sales: super_user.sale_pages.includes({ product: [:shop] }, :sale_template).map do |sale_page|
+      hash = SalePageOptionSerializer.new(sale_page).attributes_hash
+
+      {
+        label: hash[:label],
+        value: hash
+      }
+    end
+  }
+},
+{ camelize_props: false }
+) %>

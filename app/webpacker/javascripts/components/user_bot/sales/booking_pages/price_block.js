@@ -4,8 +4,10 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({product, demo, social_account_add_friend_url}) => {
+const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) => {
   const renderActions = () => {
+    if (no_action) return <></>
+
     if (!product.is_started) {
       return (
         <>

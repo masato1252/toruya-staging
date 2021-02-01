@@ -72,6 +72,9 @@ ja:
         title: "%{shop_name}の仮予約が完了しました"
       shop_owner_reservation_booked_notification:
         title: 新しいオンライン予約があります
+  online_service_page:
+    special_price_time: 特別価格の購入期限まで
+    register_now: 今すぐ登録する
   contact_page:
     message_form:
       title: お問合せ内容を入力して送信してください

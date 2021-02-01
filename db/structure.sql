@@ -861,6 +861,47 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: online_services; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.online_services (
+    id bigint NOT NULL,
+    user_id bigint,
+    name character varying NOT NULL,
+    goal_type character varying NOT NULL,
+    solution_type character varying NOT NULL,
+    end_at timestamp without time zone,
+    end_on_days integer,
+    upsell_sale_page_id integer,
+    content json,
+    company_type character varying NOT NULL,
+    company_id bigint NOT NULL,
+    slug character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: online_services_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.online_services_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: online_services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.online_services_id_seq OWNED BY public.online_services.id;
+
+
+--
 -- Name: payment_withdrawals; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2331,6 +2372,13 @@ ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: online_services id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_services ALTER COLUMN id SET DEFAULT nextval('public.online_services_id_seq'::regclass);
+
+
+--
 -- Name: payment_withdrawals id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2764,6 +2812,14 @@ ALTER TABLE ONLY public.menus
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: online_services online_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_services
+    ADD CONSTRAINT online_services_pkey PRIMARY KEY (id);
 
 
 --
@@ -3284,6 +3340,20 @@ CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (
 --
 
 CREATE INDEX index_notifications_on_user_id_and_charged ON public.notifications USING btree (user_id, charged);
+
+
+--
+-- Name: index_online_services_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_online_services_on_slug ON public.online_services USING btree (slug);
+
+
+--
+-- Name: index_online_services_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_online_services_on_user_id ON public.online_services USING btree (user_id);
 
 
 --
@@ -3928,6 +3998,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228140930'),
 ('20210109234255'),
 ('20210111070239'),
+('20210127073815'),
 ('20210129122718');
 
 

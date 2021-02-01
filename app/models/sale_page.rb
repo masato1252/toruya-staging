@@ -13,11 +13,13 @@
 #  flow                    :json
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
+#  slug                    :string
 #
 # Indexes
 #
 #  index_sale_pages_on_product_type_and_product_id  (product_type,product_id)
 #  index_sale_pages_on_sale_template_id             (sale_template_id)
+#  index_sale_pages_on_slug                         (slug) UNIQUE
 #  index_sale_pages_on_staff_id                     (staff_id)
 #  index_sale_pages_on_user_id                      (user_id)
 #

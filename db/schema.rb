@@ -301,6 +301,24 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
   end
 
+  create_table "online_services", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.string "goal_type", null: false
+    t.string "solution_type", null: false
+    t.datetime "end_at"
+    t.integer "end_on_days"
+    t.integer "upsell_sale_page_id"
+    t.json "content"
+    t.string "company_type", null: false
+    t.bigint "company_id", null: false
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_online_services_on_slug"
+    t.index ["user_id"], name: "index_online_services_on_user_id"
+  end
+
   create_table "payment_withdrawals", force: :cascade do |t|
     t.integer "receiver_id", null: false
     t.integer "state", default: 0, null: false
