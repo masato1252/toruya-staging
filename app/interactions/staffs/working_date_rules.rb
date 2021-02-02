@@ -15,11 +15,12 @@ module Staffs
 
       # working dates
       unless is_staff_full_time
-        staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff_id).map(&:day_of_week)
+        staff_working_wdays = shop.business_schedules.opened.where(staff_id: staff_id).pluck(:day_of_week)
         working_dates = shop.custom_schedules.opened.where(staff_id: staff_id, start_time: date_range).
           select("start_time").
           order("start_time").
-          map{ |d| d.start_time.to_date }
+          pluck(:start_time).
+          map { |start_time| start_time.to_date }
       end
 
       # off dates

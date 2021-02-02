@@ -12,7 +12,8 @@ module Users
         .where(shop_id: all_shop_ids)
         .where("reservation_staffs.staff_id" => user.staff_accounts.active.pluck(:staff_id))
         .uncanceled.where("reservations.start_time" => date_range)
-        .map{ |d| d.start_time.to_date }
+        .pluck(:start_time)
+        .map{ |start_time| start_time.to_date }
     end
   end
 end
