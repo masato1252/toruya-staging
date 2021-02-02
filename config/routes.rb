@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # mount ActionCable.server => '/cable'
+  mount ActionCable.server => '/cable'
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get "/contacts/social_service_user_id/:encrypted_social_service_user_id", action: "contacts", as: :contacts
