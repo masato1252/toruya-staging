@@ -15,7 +15,6 @@ ja:
         notifications: "Notifications"
         sales: "Sales"
         online_service: "Online Service"
-        identify_shop_customer: "Connect customer"
     page:
       user_sign_up:
         shop_info:
