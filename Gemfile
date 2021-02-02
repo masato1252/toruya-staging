@@ -71,6 +71,7 @@ gem "i18n-js"
 gem "platform-api"
 gem "skylight"
 gem "newrelic_rpm"
+gem "scout_apm"
 
 group :development, :test do
   gem "byebug", platform: :mri
