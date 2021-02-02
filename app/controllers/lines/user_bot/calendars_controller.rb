@@ -2,7 +2,7 @@
 
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
-    working_shop_ids = member_shops_options.pluck(:shop_id)
+    working_shop_ids = member_shops_options.map(&:shop_id).uniq
     all_shop_ids = working_shop_options(include_user_own: true).map(&:shop_id).uniq
 
     @schedules, @reservation_dates, @personal_schedule_dates =
