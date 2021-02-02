@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "line_client"
+require "message_encryptor"
 
 class Lines::Actions::Contact < ActiveInteraction::Base
   object :social_customer

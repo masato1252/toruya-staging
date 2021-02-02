@@ -56,7 +56,7 @@ export const CustomerIdentification = (props) => {
       method: "GET",
       url: props.path.find_customer,
       params: {
-        social_user_id: social_user_id,
+        social_service_user_id: social_user_id,
         customer_first_name: customer_first_name,
         customer_last_name: customer_last_name,
         customer_phone_number: customer_phone_number
@@ -88,7 +88,7 @@ export const CustomerIdentification = (props) => {
       },
       url: props.path.create_customer,
       data: {
-        social_user_id: social_user_id,
+        social_service_user_id: social_user_id,
         customer_first_name: customer_first_name,
         customer_last_name: customer_last_name,
         customer_phone_number: customer_phone_number,
@@ -121,7 +121,7 @@ export const CustomerIdentification = (props) => {
       method: "GET",
       url: props.path.identify_code,
       params: {
-        social_user_id,
+        social_service_user_id: social_user_id,
         uuid: identification_code.uuid,
         code: identification_code.code
       },
@@ -154,7 +154,7 @@ export const CustomerIdentification = (props) => {
       method: "GET",
       url: props.path.ask_identification_code,
       params: {
-        social_user_id,
+        social_service_user_id: social_user_id,
         customer_id: identification_code.customer_id,
         customer_phone_number: customer_phone_number,
       },

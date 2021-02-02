@@ -10,13 +10,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
   def execute
     unless customer
-      compose(
-        SocialMessages::Create,
-        social_customer: social_customer,
-        content: I18n.t("line.bot.messages.incoming_reservations.no_incoming_messages"),
-        readed: true,
-        message_type: SocialMessage.message_types[:bot]
-      )
+      compose(Lines::Menus::Guest, social_customer: social_customer)
 
       return
     end

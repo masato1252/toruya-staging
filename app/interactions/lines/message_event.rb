@@ -15,7 +15,11 @@ class Lines::MessageEvent < ActiveInteraction::Base
         when I18n.t("line.bot.keywords.booking_pages")
           Lines::Actions::BookingPages.run(social_customer: social_customer)
         when I18n.t("line.bot.keywords.incoming_reservations")
-          Lines::Actions::IncomingReservations.run(social_customer: social_customer)
+          if social_customer.customer
+            Lines::Actions::IncomingReservations.run(social_customer: social_customer)
+          else
+            compose(Lines::Menus::Guest, social_customer: social_customer)
+          end
         when I18n.t("line.bot.keywords.contacts")
           Lines::Actions::Contact.run(social_customer: social_customer)
         else
