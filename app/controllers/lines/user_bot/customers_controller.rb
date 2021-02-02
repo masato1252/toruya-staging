@@ -34,7 +34,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def filter
-    @customers = Customers::CharFilter.run(
+    @customers = ::Customers::CharFilter.run(
       super_user: super_user,
       current_user_staff: current_user_staff,
       pattern_number: params[:pattern_number],

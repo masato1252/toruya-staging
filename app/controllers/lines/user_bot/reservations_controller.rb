@@ -64,9 +64,9 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
 
         reservation_customer.attributes.merge!(
           binding: true, # had reservation_customer record
-          label: customer.name,
-          value: customer.id,
-          address: customer.address,
+          label: customer&.name,
+          value: customer&.id,
+          address: customer&.address,
           details: reservation_customer.details.to_json,
           booking_price: render_to_string(partial: "reservations/show_modal/booking_price", locals: { reservation_customer: reservation_customer }),
           booking_from: render_to_string(

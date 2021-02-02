@@ -24,7 +24,7 @@ class Customers::CharFilter < ActiveInteraction::Base
       super_user
       .customers
       .contact_groups_scope(current_user_staff)
-      .jp_chars_order.includes(:rank, :contact_group, updated_by_user: :profile).page(page).per(pre_page)
+      .jp_chars_order.includes(:social_customer, :rank, :contact_group, updated_by_user: :profile).page(page).per(pre_page)
 
     scoped.where("phonetic_last_name ~* ?", "^(#{regexp_pattern}).*$")
   end
