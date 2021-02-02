@@ -34,7 +34,7 @@ module Reservations
       end
 
       def phone
-        @phone ||= phone_number.presence || customer.phone_number
+        @phone ||= phone_number.presence || customer.mobile_phone_number
       end
     end
   end
