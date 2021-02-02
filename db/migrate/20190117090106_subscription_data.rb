@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionData < ActiveRecord::Migration[5.1]
   def change
     # https://github.com/ilake/kasaike/pull/360

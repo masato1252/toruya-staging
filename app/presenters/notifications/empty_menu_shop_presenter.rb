@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Notifications
   class EmptyMenuShopPresenter < ::NotificationsPresenter
     def data(owner:, shop:, in_shop_dashboard: false)

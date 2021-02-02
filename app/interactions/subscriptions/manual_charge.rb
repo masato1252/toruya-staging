@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Subscriptions
   class ManualCharge < ActiveInteraction::Base
     object :subscription

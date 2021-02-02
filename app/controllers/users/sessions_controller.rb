@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::SessionsController < Devise::SessionsController
   prepend_before_action :verify_user, only: [:destroy]
 

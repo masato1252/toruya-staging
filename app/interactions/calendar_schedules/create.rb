@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CalendarSchedules
   class Create < ActiveInteraction::Base
     # full_time: is_staff_full_time,

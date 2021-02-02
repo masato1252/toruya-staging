@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class FromOmniauth < ActiveInteraction::Base
     object :auth, class: OmniAuth::AuthHash

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FilteredOutcomeFileUploader < CarrierWave::Uploader::Base
   storage :fog
 

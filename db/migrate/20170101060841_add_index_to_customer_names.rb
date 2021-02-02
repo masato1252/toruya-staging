@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIndexToCustomerNames < ActiveRecord::Migration[5.0]
   # An index can be created concurrently only outside of a transaction.
   disable_ddl_transaction!

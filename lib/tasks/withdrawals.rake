@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :withdrawals do
   task :create => :environment do
     today = Subscription.today

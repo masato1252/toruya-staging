@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CustomSchedules
   class Change < ActiveInteraction::Base
     object :owner, class: ApplicationRecord

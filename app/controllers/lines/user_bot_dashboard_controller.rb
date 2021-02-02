@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "user_bot_cookies"
 require "liff_routing"
 require "site_routing"

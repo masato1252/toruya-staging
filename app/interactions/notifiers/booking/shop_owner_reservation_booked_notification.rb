@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Notifiers
   module Booking
     class ShopOwnerReservationBookedNotification < Base

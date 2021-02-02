@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Reservations::Filter < ActiveInteraction::Base
   object :super_user, class: User
   hash :reservation, default: nil do

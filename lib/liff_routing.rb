@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LiffRouting
   USER_BOT_LIFF_ENDPOINT = "https://liff.line.me/#{Rails.application.secrets.toruya_liff_id}".freeze
 

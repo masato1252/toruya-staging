@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TweakCustomersIndex < ActiveRecord::Migration[5.1]
   def change
     add_index :customers, [:user_id, :contact_group_id, :deleted_at], name: :customers_basic_index

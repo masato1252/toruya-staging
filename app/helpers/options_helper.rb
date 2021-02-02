@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OptionsHelper
   def custom_option(item)
     item.attributes.merge({

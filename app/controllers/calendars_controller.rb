@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CalendarsController < DashboardController
   def working_schedule
     @schedules = CalendarSchedules::Create.run!(

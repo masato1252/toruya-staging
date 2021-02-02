@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingHelper
   def customer_info_as_json(customer)
     {

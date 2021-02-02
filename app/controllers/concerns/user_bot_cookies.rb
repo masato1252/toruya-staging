@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserBotCookies
   PREPEND = "user_bot".freeze
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BookingMailer < CustomerMailer
   def customer_reservation_notification
     @reservation = params[:reservation]

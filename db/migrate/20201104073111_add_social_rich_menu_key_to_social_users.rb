@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddSocialRichMenuKeyToSocialUsers < ActiveRecord::Migration[5.2]
   def change
     add_column :social_users, :social_rich_menu_key, :string

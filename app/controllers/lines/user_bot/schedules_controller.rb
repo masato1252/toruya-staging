@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
   def index
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date

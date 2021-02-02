@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shops
   class WorkingCalendarRules < ActiveInteraction::Base
     object :shop

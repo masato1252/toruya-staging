@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.messages(@messages) do |message|
   json.customer message.staff_id.nil?
   json.text message.raw_content

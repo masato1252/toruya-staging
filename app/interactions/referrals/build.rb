@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Referrals
   class Build < ActiveInteraction::Base
     object :referee, class: User

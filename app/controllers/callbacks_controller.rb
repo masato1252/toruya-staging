@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
 

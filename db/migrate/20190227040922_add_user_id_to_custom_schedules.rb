@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserIdToCustomSchedules < ActiveRecord::Migration[5.1]
   def change
     remove_index :custom_schedules, name: :shop_custom_schedules_index

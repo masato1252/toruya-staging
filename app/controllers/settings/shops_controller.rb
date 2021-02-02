@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::ShopsController < SettingsController
   before_action :set_shop, only: [:show, :edit, :update, :destroy]
 

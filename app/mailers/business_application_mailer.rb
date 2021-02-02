@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BusinessApplicationMailer < ApplicationMailer
   # TODO: MESSAGE TBD
   def applicant_applied

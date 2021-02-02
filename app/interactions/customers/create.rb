@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Create < ActiveInteraction::Base
   object :user
   string :customer_last_name

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShopSerializer
   include JSONAPI::Serializer
   attribute :id, :short_name, :email, :phone_number, :template_variables

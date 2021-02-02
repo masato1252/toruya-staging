@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   def index
     authorize! :read, :customers_dashboard

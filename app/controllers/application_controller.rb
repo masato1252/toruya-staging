@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   layout "home"
   protect_from_forgery with: :exception, prepend: true

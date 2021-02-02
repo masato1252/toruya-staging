@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Payments
   class StoreStripeCustomer < ActiveInteraction::Base
     object :user

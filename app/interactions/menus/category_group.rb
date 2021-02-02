@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Menus
   class CategoryGroup < ActiveInteraction::Base
     array :menu_options

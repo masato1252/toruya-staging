@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationMailer < ApplicationMailer
   # TODO: MESSAGE TBD
   def customers_import_finished(contact_group)

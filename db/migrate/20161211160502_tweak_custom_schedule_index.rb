@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TweakCustomScheduleIndex < ActiveRecord::Migration[5.0]
   def change
     remove_index :custom_schedules, column: [:shop_id, :staff_id, :start_time, :end_time], name: :custom_schedules_index

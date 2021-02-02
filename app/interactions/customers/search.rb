@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Search < ActiveInteraction::Base
   PER_PAGE = 200
 

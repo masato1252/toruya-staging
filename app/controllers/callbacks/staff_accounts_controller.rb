@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Callbacks::StaffAccountsController < ActionController::Base
   include Devise::Controllers::Rememberable
 

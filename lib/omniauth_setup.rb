@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OmniauthSetup
   # OmniAuth expects the class passed to setup to respond to the #call method.
   # env - Rack environment

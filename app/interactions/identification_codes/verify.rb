@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IdentificationCodes::Verify < ActiveInteraction::Base
   VALID_TIME_PERIOD = 10
 

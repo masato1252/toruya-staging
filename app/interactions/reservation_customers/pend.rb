@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReservationCustomers
   class Pend < ActiveInteraction::Base
     integer :reservation_id

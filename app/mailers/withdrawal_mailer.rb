@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WithdrawalMailer < ApplicationMailer
   def monthly_report
     @withdrawal = params[:withdrawal]

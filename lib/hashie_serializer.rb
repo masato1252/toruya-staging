@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class HashieSerializer
   def self.dump(hash)
     hash

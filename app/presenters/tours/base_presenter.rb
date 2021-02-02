@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tours
   class BasePresenter
     attr_reader :user, :h

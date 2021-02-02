@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shops
   class Update < ActiveInteraction::Base
     CONTENT_TYPES = %w[image/png image/gif].freeze

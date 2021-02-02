@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Staffs
   class Update < ActiveInteraction::Base
     USER_LEVELS = %w(admin manager staff)

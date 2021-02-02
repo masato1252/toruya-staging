@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MessageSerializer
   include JSONAPI::Serializer
   attribute :id, :created_at, :message_type

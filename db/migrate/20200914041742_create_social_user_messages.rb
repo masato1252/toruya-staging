@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSocialUserMessages < ActiveRecord::Migration[5.2]
   def change
     create_table :social_user_messages do |t|

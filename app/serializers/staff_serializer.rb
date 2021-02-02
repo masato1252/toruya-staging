@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StaffSerializer
   include JSONAPI::Serializer
   attribute :id, :introduction

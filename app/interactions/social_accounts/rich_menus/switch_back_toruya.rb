@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SocialAccounts
   module RichMenus
     class SwitchBackToruya < ActiveInteraction::Base

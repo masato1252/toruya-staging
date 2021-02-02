@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Customers::MessagesController < Lines::UserBotDashboardController
   before_action :set_customer, only: [:index]
 

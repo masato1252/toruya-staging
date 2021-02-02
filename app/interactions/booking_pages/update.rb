@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingPages
   class Update < ActiveInteraction::Base
     validate :validate_booking_option

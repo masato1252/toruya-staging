@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MessageEncryptor
   def self.encrypt(message)
     crypt.encrypt_and_sign(message)

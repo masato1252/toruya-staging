@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMaxSeatNumberToShopMenus < ActiveRecord::Migration[5.0]
   def up
     add_column :shop_menus, :max_seat_number, :integer, default: nil

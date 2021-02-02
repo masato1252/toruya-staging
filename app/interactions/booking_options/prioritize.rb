@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingOptions
   class Prioritize < ActiveInteraction::Base
     array :booking_options

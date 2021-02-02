@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OnlineServiceSerializer
   include JSONAPI::Serializer
   attribute :name, :content

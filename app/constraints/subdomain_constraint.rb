@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubdomainConstraint
   def self.[](subdomain)
     new(subdomain)

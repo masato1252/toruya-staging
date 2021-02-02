@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://github.com/kazasiki/omniauth-line/pull/26
 module LineOAuth2
   def callback_url

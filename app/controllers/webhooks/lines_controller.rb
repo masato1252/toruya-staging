@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "line/bot"
 
 class Webhooks::LinesController < WebhooksController

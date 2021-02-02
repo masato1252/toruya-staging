@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :subscriptions do
   task :charge => :environment do
     today = Subscription.today

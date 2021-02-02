@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Option
   include ActiveModel::Serializers::JSON
   attr_accessor :attrs

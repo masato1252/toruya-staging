@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Reservations::StatesController < DashboardController
   before_action :authorize_reservation
 

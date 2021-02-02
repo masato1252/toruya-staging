@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://developers.google.com/google-apps/calendar/v3/reference/
 class GoogleCalendarWrapper
   def initialize(current_user)

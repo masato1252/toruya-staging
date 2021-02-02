@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::RetrieveGoogleContact < ActiveInteraction::Base
   object :customer, class: Customer
 

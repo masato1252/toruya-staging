@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :reservations do
   task :pending_notifications => :environment do
     current_time = Time.now.in_time_zone('Tokyo').beginning_of_hour

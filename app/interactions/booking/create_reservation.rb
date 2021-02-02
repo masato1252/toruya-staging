@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "hash_deep_diff"
 
 module Booking

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineActions
   class Uri
     LABEL_LIMIT = 20

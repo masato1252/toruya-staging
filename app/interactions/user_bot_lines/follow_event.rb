@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "line_client"
 
 class UserBotLines::FollowEvent < ActiveInteraction::Base

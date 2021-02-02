@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingPages
   class SmartCreate < ActiveInteraction::Base
     hash :attrs do

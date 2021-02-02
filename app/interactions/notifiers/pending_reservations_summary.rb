@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Notifiers
   class PendingReservationsSummary < Base
     deliver_by_priority [:line, :sms, :email]

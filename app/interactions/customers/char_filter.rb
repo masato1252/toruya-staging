@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::CharFilter < ActiveInteraction::Base
   PATTERN = [
     %w(あ ア い イ う ウ え エ お オ),

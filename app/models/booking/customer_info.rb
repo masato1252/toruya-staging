@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # customer_info#attributes
 # The key has value when it was changed, otherwise, it is nil.
 #

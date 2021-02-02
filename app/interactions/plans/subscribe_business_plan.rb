@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Plans
   class SubscribeBusinessPlan < ActiveInteraction::Base
     object :user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::NotificationsController < Lines::UserBotDashboardController
   def index
     @messages = current_user.social_account.social_messages.handleable.unread

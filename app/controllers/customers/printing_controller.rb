@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::PrintingController < DashboardController
   def new
     @customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id]).with_google_contact

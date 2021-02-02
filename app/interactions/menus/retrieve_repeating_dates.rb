@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Menus
   class RetrieveRepeatingDates < ActiveInteraction::Base
     DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"].freeze

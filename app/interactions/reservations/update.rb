@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservations
   class Update < ActiveInteraction::Base
     set_callback :type_check, :before do

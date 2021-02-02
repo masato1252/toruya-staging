@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source "http://rubygems.org"
 
 ruby "2.5.7"
@@ -93,6 +95,7 @@ group :development do
   gem "stackprof"
   gem "memory_profiler"
   gem "benchmark-memory"
+  gem "magic_frozen_string_literal"
 end
 
 group :test do

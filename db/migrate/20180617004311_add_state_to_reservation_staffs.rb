@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddStateToReservationStaffs < ActiveRecord::Migration[5.1]
   def change
     add_column :reservation_staffs, :state, :integer, default: 0

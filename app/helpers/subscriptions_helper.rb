@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SubscriptionsHelper
   def subscription_status(subscription)
     if subscription.active?

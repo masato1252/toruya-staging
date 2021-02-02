@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservations
   class DailyLimit < ActiveInteraction::Base
     RESERVATION_DAILY_LIMIT = 10

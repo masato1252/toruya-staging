@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::PaymentsController < SettingsController
   def index
     @subscription = current_user.subscription

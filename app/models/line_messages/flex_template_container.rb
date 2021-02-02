@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineMessages
   class FlexTemplateContainer
     def self.template(altText:, contents: )

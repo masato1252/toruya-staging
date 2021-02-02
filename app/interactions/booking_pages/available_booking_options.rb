@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # XXX: filter out the booking_options that contains some menus doesn't belongs_to the shop
 
 module BookingPages

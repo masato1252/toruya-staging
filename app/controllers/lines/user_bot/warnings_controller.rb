@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
   layout false
 

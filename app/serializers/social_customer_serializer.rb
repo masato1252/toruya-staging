@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SocialCustomerSerializer
   include JSONAPI::Serializer
   attribute :created_at, :conversation_state

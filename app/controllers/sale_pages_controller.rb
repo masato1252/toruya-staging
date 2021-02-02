@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SalePagesController < ActionController::Base
   layout "booking"
 

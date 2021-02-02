@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateStaffContactGroupRelations < ActiveRecord::Migration[5.1]
   def change
     create_table :staff_contact_group_relations do |t|

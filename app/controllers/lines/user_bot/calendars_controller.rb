@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
     @schedules, @reservation_dates, @personal_schedule_dates =

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReservationReminderJob < ApplicationJob
   queue_as :default
 

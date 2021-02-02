@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StaffContactGroupRelations
   class Create < ActiveInteraction::Base
     object :staff

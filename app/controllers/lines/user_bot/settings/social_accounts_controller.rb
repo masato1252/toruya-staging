@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def message_api
     @social_account = current_user.social_account || current_user.social_accounts.new

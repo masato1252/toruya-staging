@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::ContactGroupsController < SettingsController
   before_action :set_contact_group, only: [:edit, :update, :sync, :connections, :bind, :destroy]
   before_action :require_shop_owner

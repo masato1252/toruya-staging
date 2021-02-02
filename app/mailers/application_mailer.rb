@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "mailer_methods"
 
 class ApplicationMailer < ActionMailer::Base

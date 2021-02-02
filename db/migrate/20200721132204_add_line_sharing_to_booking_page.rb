@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLineSharingToBookingPage < ActiveRecord::Migration[5.2]
   def change
     add_column :booking_pages, :line_sharing, :boolean, default: true

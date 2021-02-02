@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "liff_routing"
 
 class Lines::LiffController < ActionController::Base

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddBookingPageReleatedColumnToReservations < ActiveRecord::Migration[5.2]
   def change
     add_column :reservation_customers, :booking_page_id, :integer

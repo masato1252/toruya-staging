@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BusinessSchedules
   class Create < ActiveInteraction::Base
     set_callback :type_check, :before do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Filter < ActiveInteraction::Base
   object :super_user, class: User
   object :current_user_staff, class: Staff

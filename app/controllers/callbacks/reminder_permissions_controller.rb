@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "message_encryptor"
 
 class Callbacks::ReminderPermissionsController < ActionController::Base

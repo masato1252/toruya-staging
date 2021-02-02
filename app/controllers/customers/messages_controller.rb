@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::MessagesController < DashboardController
   MESSAGES_PER_PAGE = 50
   before_action :set_customer, only: [:index]

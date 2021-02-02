@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "reservation_menu_time_calculator"
 
 FactoryBot.define do

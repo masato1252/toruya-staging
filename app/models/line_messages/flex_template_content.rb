@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineMessages
   class FlexTemplateContent
     def self.content1(title1: ,title2:, body:, action_templates:)

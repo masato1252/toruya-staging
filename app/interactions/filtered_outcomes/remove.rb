@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FilteredOutcomes::Remove < ActiveInteraction::Base
   object :filtered_outcome
 

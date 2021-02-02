@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ShopProfileSerializer
   include JSONAPI::Serializer
   attribute :id

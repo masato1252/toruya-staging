@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "seeders/sale_template"
 
 class CreateSaleRelatedTables < ActiveRecord::Migration[5.2]

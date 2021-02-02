@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDetailsColumnsToCustomers < ActiveRecord::Migration[5.2]
   def change
     add_column :customers, :phone_numbers_details, :jsonb, default: []

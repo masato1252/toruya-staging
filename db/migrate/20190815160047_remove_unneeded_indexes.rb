@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUnneededIndexes < ActiveRecord::Migration[5.2]
   def change
     remove_index :contact_groups, name: "index_contact_groups_on_user_id"

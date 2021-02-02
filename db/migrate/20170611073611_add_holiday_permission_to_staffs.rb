@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddHolidayPermissionToStaffs < ActiveRecord::Migration[5.0]
   def change
     add_column :staffs, :staff_holiday_permission, :boolean, null: false, default: false

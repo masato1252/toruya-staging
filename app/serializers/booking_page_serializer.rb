@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BookingPageSerializer
   include JSONAPI::Serializer
   attribute :id, :name, :shop_id

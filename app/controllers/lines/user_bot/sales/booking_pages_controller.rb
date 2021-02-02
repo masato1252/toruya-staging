@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardController
   def new
     @sale_templates = SaleTemplate.all

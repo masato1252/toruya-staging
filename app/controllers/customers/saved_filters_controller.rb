@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::SavedFiltersController < DashboardController
   def fetch
     authorize! :read, :filter

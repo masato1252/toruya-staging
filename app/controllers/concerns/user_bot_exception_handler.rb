@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserBotExceptionHandler
   extend ActiveSupport::Concern
 

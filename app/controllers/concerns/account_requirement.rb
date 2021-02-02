@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AccountRequirement
   extend ActiveSupport::Concern
   ALLOWED_ACCESS_CONTROLLERS = ["settings/menus", "settings/reservation_settings", "settings/working_time/staffs", "settings/business_schedules", "settings/shops", "settings/contact_groups"].freeze

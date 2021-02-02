@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::BookingsController < Lines::UserBotDashboardController
   def new
     @shop = super_user.shops.count == 1 ? super_user.shops.first : nil

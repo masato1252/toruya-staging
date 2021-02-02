@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Menus
   class Delete < ActiveInteraction::Base
     object :menu

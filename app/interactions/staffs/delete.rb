@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Staffs
   class Delete < ActiveInteraction::Base
     object :staff

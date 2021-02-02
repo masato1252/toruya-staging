@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPrepareTimeToReservation < ActiveRecord::Migration[5.2]
   def change
     add_column :reservations, :prepare_time, :datetime

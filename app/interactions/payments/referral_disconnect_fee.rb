@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Payments
   class ReferralDisconnectFee < ActiveInteraction::Base
     FEE = { jpy: 5_500 }.freeze

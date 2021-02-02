@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReferralsController < ActionController::Base
   layout "home"
 

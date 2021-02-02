@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Subscriptions
   class Refund < ActiveInteraction::Base
     object :user

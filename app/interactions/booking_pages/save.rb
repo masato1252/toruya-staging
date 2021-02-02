@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingPages
   class Save < ActiveInteraction::Base
     object :booking_page, class: "BookingPage"

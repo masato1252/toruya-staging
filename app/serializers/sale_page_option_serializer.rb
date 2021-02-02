@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SalePageOptionSerializer
   include JSONAPI::Serializer
   attribute :id, :slug

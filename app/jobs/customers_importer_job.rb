@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomersImporterJob < ApplicationJob
   queue_as :default
 

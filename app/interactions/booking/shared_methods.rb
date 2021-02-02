@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booking
   module SharedMethods
     # date: Date object

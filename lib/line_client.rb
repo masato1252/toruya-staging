@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LineClient
   COLUMNS_NUMBER_LIMIT = 10
   BUTTON_DESC_LIMIT = 60

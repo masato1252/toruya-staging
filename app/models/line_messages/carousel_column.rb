@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineMessages
   class CarouselColumn
     TITLE_LIMIT = 40

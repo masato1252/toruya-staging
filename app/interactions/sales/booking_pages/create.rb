@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sales
   module BookingPages
     class Create < ActiveInteraction::Base

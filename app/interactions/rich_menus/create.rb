@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "user_bot_social_account"
 require "line_client"
 

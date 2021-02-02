@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Groups::Delete < ActiveInteraction::Base
   object :contact_group, class: ContactGroup
 

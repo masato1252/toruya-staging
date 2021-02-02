@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservable
   class CalculateCapabilityForCustomers < ActiveInteraction::Base
     object :shop

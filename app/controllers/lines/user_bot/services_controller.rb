@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   VIDEO_SOLUTION = {
     key: "video",

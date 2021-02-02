@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PlansHelper
   def plan_price(user, plan_level)
     @plan_prices ||= {}

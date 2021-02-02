@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # params[:from]
 # customer_dashboard: customer dashboard -> reservation form(let reservation form know, it is from customer dashboard, for something like update)
 # adding_customer: customer dashboard -> reservation form(let reservation form know, it is from customer dashboard, for adding customer)

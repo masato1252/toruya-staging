@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateMenuReservationSettingRules < ActiveRecord::Migration[5.0]
   def change
     create_table :menu_reservation_setting_rules do |t|

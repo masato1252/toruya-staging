@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ShopHelper
   def shops_select_component
     react_component("management/header_selector",

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SocialMessages
   class Recent < ActiveInteraction::Base
     MESSAGES_PER_PAGE = 50

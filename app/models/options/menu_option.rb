@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Options::MenuOption < Option
   attr_reader :id, :name, :min_staffs_number, :available_seat, :minutes, :interval, :shop_ids
 

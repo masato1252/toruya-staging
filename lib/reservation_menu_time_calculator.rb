@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReservationMenuTimeCalculator
   def self.calculate(reservation, reservation_menus, position)
     is_first_menu = position == 0

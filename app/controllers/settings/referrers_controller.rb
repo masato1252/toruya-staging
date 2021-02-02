@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::ReferrersController < SettingsController
   def index
     @referrals = current_user.referrals.includes(:referrer)

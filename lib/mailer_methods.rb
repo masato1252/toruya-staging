@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MailerMethods
   protected
   def named_email(user)

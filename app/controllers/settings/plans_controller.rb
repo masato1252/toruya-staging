@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::PlansController < SettingsController
   def index
     @plans_properties = Plans::Properties.run!(user: current_user)
