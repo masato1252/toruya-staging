@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_29_122718) do
+ActiveRecord::Schema.define(version: 2021_02_02_020409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -125,7 +125,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
     t.index ["slug"], name: "index_booking_pages_on_slug", unique: true
     t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
-    t.index ["user_id"], name: "index_booking_pages_on_user_id"
   end
 
   create_table "business_applications", force: :cascade do |t|
@@ -606,7 +605,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.index ["customer_id"], name: "index_social_customers_on_customer_id"
     t.index ["social_rich_menu_key"], name: "index_social_customers_on_social_rich_menu_key"
     t.index ["user_id", "social_account_id", "social_user_id"], name: "social_customer_unique_index", unique: true
-    t.index ["user_id"], name: "index_social_customers_on_user_id"
   end
 
   create_table "social_messages", force: :cascade do |t|
@@ -649,7 +647,6 @@ ActiveRecord::Schema.define(version: 2021_01_29_122718) do
     t.string "social_rich_menu_key"
     t.index ["social_rich_menu_key"], name: "index_social_users_on_social_rich_menu_key"
     t.index ["user_id", "social_service_user_id"], name: "social_user_unique_index", unique: true
-    t.index ["user_id"], name: "index_social_users_on_user_id"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

@@ -3280,13 +3280,6 @@ CREATE UNIQUE INDEX index_booking_pages_on_slug ON public.booking_pages USING bt
 
 
 --
--- Name: index_booking_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_booking_pages_on_user_id ON public.booking_pages USING btree (user_id);
-
-
---
 -- Name: index_business_applications_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3511,13 +3504,6 @@ CREATE INDEX index_social_customers_on_social_rich_menu_key ON public.social_cus
 
 
 --
--- Name: index_social_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING btree (user_id);
-
-
---
 -- Name: index_social_rich_menus_on_social_account_id_and_social_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3529,13 +3515,6 @@ CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON pub
 --
 
 CREATE INDEX index_social_users_on_social_rich_menu_key ON public.social_users USING btree (social_rich_menu_key);
-
-
---
--- Name: index_social_users_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_social_users_on_user_id ON public.social_users USING btree (user_id);
 
 
 --
@@ -3999,6 +3978,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210109234255'),
 ('20210111070239'),
 ('20210127073815'),
-('20210129122718');
+('20210129122718'),
+('20210202020409');
 
 
