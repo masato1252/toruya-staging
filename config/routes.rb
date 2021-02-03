@@ -6,8 +6,6 @@ Rails.application.routes.draw do
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get "/contacts/social_service_user_id/:encrypted_social_service_user_id", action: "contacts", as: :contacts
     post :make_contact
-    get :find_customer
-    post :create_customer
     get :identify_code
     get :ask_identification_code
 

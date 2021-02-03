@@ -12,48 +12,6 @@ class LinesController < ActionController::Base
 
   def identify_shop_customer; end
 
-  def find_customer
-    customer = Customers::Find.run!(
-      user: social_customer.user,
-      first_name: params[:customer_first_name],
-      last_name: params[:customer_last_name],
-      phone_number: params[:customer_phone_number]
-    )[:found_customer]
-
-    identification_code = IdentificationCodes::Create.run!(
-      user: social_customer.user,
-      customer: customer,
-      phone_number: params[:customer_phone_number]
-    )
-
-    render json: {
-      identification_code: {
-        uuid: identification_code.uuid,
-        customer_id: customer&.id
-      }
-    }
-  end
-
-  def create_customer
-    customer = Customers::Create.run!(
-      user: social_customer.user,
-      customer_last_name: params[:customer_last_name],
-      customer_first_name: params[:customer_first_name],
-      customer_phonetic_last_name: params[:customer_phonetic_last_name],
-      customer_phonetic_first_name: params[:customer_phonetic_first_name],
-      customer_phone_number: params[:customer_phone_number],
-      customer_email: params[:customer_email]
-    )
-
-    ApplicationRecord.transaction do
-      booking_code = BookingCode.find_by!(uuid: params[:uuid])
-      booking_code.update!(customer_id: customer.id)
-      SocialCustomers::ConnectWithCustomer.run!(social_customer: social_customer, customer: customer)
-    end
-
-    render json: { customer_id: customer.id }
-  end
-
   def identify_code
     identification_code = Customers::VerifyIdentificationCode.run!(
       social_customer: social_customer,
@@ -62,7 +20,32 @@ class LinesController < ActionController::Base
     )
 
     if identification_code
-      render json: { identification_successful: true }
+      unless customer = Customers::Find.run!(
+          user: social_customer.user,
+          first_name: params[:customer_first_name],
+          last_name: params[:customer_last_name],
+          phone_number: params[:customer_phone_number]
+      )[:found_customer]
+        customer = Customers::Create.run!(
+          user: social_customer.user,
+          customer_last_name: params[:customer_last_name],
+          customer_first_name: params[:customer_first_name],
+          customer_phonetic_last_name: params[:customer_phonetic_last_name],
+          customer_phonetic_first_name: params[:customer_phonetic_first_name],
+          customer_phone_number: params[:customer_phone_number]
+        )
+      end
+
+      ApplicationRecord.transaction do
+        booking_code = BookingCode.find_by!(uuid: params[:uuid])
+        booking_code.update!(customer_id: customer.id)
+        SocialCustomers::ConnectWithCustomer.run!(social_customer: social_customer, customer: customer)
+      end
+
+      render json: {
+        identification_successful: true,
+        customer_id: customer.id
+      }
     else
       render json: {
         identification_successful: false,
