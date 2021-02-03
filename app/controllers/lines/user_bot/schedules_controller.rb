@@ -15,11 +15,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
     end
 
     # Mix off custom schedules and reservations
-    close_schedule_scope = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day)
-    off_schedules =
-      close_schedule_scope.where(staff_id: working_shop_options(include_user_own: true).map(&:staff_id).uniq).or(
-        close_schedule_scope.where(user_id: current_user.id)
-    ).to_a
+    off_schedules = CustomSchedule.closed.where("start_time >= ? and end_time <= ?", @date.beginning_of_day, @date.end_of_day).where(user_id: current_user.id)
 
     @schedules = (reservations + off_schedules).each_with_object([]) do |reservation_and_off_schedule, schedules|
       if reservation_and_off_schedule.is_a?(Reservation)
@@ -27,7 +23,7 @@ class Lines::UserBot::SchedulesController < Lines::UserBotDashboardController
       else
         schedules << OffScheduleSerializer.new(reservation_and_off_schedule).attributes_hash
       end
-    end.sort_by { |option| option[:time] }
+    end.sort_by! { |option| option[:time] }
 
     notification_presenter = NotificationsPresenter.new(view_context, current_user, params)
     @notification_messages = notification_presenter.data
