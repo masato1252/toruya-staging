@@ -6,14 +6,12 @@ class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
     all_shop_ids = working_shop_options(include_user_own: true).map(&:shop_id).uniq
 
     @schedules, @reservation_dates, @personal_schedule_dates =
-      Rails.cache.fetch([current_user.id, working_shop_ids, all_shop_ids, date.year, date.month], expires_in: 10.minutes) do
-        PersonalCalendar.run!(
-          user: current_user,
-          working_shop_options: member_shops_options,
-          all_shop_ids: all_shop_ids,
-          date: date
-        )
-      end
+      PersonalCalendar.run!(
+        user: current_user,
+        working_shop_options: member_shops_options,
+        all_shop_ids: all_shop_ids,
+        date: date
+    )
 
     render template: "calendars/working_schedule"
   end
