@@ -17,8 +17,8 @@ module Payments
           return stripe_customer_id
         rescue => e
           Rollbar.error(e)
-          errors.add(:base, e.message)
-          return
+          # errors.add(:base, e.message)
+          # return
           # raise e if e.code != "resource_missing"
         end
       end

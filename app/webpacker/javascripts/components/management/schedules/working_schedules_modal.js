@@ -63,7 +63,7 @@ class WorkingSchedulesModal extends React.Component {
                     endTimeTimePart={this.props.end_time_time_part}
                     calendarfieldPrefix="temp_working_schedules"
                   />
-                  <div className="shops-list">
+                  <div className="shops-list centerize">
                     {this.props.shops.map((shop) => {
                       return (
                         <div className="shop-cell" key={`shop-${shop.id}`}>
