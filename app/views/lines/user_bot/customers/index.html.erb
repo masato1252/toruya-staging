@@ -9,10 +9,11 @@
     shop: shop,
     target_view: params[:target_view],
     previous_path: params[:previous_path],
-    customer: customer_options([ @customer || super_user.customers.new]).first,
+    customer: CustomerOptionSerializer.new(@customer || super_user.customers.new).attributes_hash,
     notification_messages: @notification_messages,
     contact_groups: default_options(current_user_staff.readable_contact_groups),
     ranks: rank_options,
+    total_customers_number: @total_customers_number,
     i18n: {
     }.merge!([
       t("reservation"),

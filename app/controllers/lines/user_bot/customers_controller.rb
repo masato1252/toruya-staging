@@ -23,6 +23,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       @add_reservation_path = form_shop_reservations_path(shop, params[:reservation_id])
     end
 
+    @total_customers_number = super_user.customers.count
+
     # Notifications START
     @notification_messages = Notifications::PendingCustomerReservationsPresenter.new(view_context, current_user).data.compact + Notifications::NonGroupCustomersPresenter.new(view_context, current_user).data.compact
     # Notifications END
@@ -36,18 +38,18 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def filter
-    @customers = ::Customers::CharFilter.run(
+    customers = ::Customers::CharFilter.run(
       super_user: super_user,
       current_user_staff: current_user_staff,
       pattern_number: params[:pattern_number],
       page: params[:page].presence || 1
     ).result
 
-    render template: "customers/query"
+    render_customers_json(customers)
   end
 
   def recent
-    @customers =
+    customers =
       super_user
       .customers
       .contact_groups_scope(current_user_staff)
@@ -60,18 +62,18 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
         last_updated_id: params["last_updated_id"] || INTEGER_MAX)
       .limit(::Customers::Search::PER_PAGE)
 
-    render template: "customers/query"
+    render_customers_json(customers)
   end
 
   def search
-    @customers = ::Customers::Search.run(
+    customers = ::Customers::Search.run(
       super_user: super_user,
       current_user_staff: current_user_staff,
       keyword: params[:keyword],
       page: params[:page].presence || 1
     ).result
 
-    render template: "customers/query"
+    render_customers_json(customers)
   end
 
   def save
@@ -138,7 +140,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def find_duplicate_customers
-    @customers = super_user
+    customers = super_user
       .customers
       .contact_groups_scope(current_user_staff)
       .where("
@@ -147,6 +149,12 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       (last_name ilike :last_name AND
       first_name ilike :first_name)", last_name: "%#{params[:last_name].strip}%", first_name: "%#{params[:first_name].strip}%")
 
-    render template: "customers/query"
+    render_customers_json(customers)
+  end
+
+  private
+
+  def render_customers_json(customers)
+    render json: { customers: customers.map { |customer| CustomerOptionSerializer.new(customer).attributes_hash } }
   end
 end

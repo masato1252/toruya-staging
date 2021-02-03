@@ -16,7 +16,7 @@ const BottomBar = () => {
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>{props.i18n.count}{customers.length}{props.i18n.unit}</span>
+      <span>{props.i18n.count}{props.total_customers_number}{props.i18n.unit}</span>
       <button
         className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => {
@@ -82,12 +82,21 @@ const TopBar = () => {
   )
 }
 const UserBotCustomersList = ({}) => {
-  const { customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props, selectCustomer } = useGlobalContext()
+  const { view, customers, selected_customer, is_all_customers_loaded, getCustomers, dispatch, notification_messages, props, selectCustomer } = useGlobalContext()
   let history = useHistory();
 
   useEffect(() => {
     getCustomers()
   }, [])
+
+  if (view !== "customers_list") {
+    return (
+      <div className="customers-dashboard">
+        <div className="customers-list-dashboard">
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="customers-dashboard">

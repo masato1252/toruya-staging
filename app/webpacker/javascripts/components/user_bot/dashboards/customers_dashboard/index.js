@@ -13,11 +13,11 @@ const DashboardView = () => {
   const { view, props, dispatch, customers } = useContext(GlobalContext)
 
   useEffect(() => {
-    if (props.customer?.id && customers.length) {
+    if (props.customer?.id) {
       dispatch({
         type: "SELECT_CUSTOMER",
         payload: {
-          customer: customers.find(customer => customer.id == props.customer.id)
+          customer: props.customer
         }
       })
 
@@ -28,11 +28,9 @@ const DashboardView = () => {
         }
       })
     }
-  }, [customers.length])
+  }, [])
 
   switch (view) {
-    case "list":
-      return <UserBotCustomersList />
     case "customer_info_view":
       return <UserBotCustomerInfoView />
     case "customer_reservations":
@@ -42,7 +40,7 @@ const DashboardView = () => {
     case "customer_messages":
       return <UserBotCustomerMessages />
     default:
-      return <UserBotCustomersList />
+      return <></>
   }
 }
 
@@ -51,6 +49,7 @@ const UserBotCustomersDashboard = ({props}) => {
     <GlobalProvider props={props}>
       <Router>
         <DashboardView />
+        <UserBotCustomersList />
       </Router>
     </GlobalProvider>
   )
