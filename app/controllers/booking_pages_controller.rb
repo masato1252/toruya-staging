@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "mixpanel_tracker"
+
 class BookingPagesController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
@@ -26,6 +28,16 @@ class BookingPagesController < ActionController::Base
 
     if @customer
       @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+    end
+
+    if @customer
+      if params[:social_user_id]
+        MixpanelTracker.track @customer.id, "view_booking_page", { from: "customer_bot" }
+      else
+        MixpanelTracker.track @customer.id, "view_booking_page", { from: "directly" }
+      end
+    else
+      MixpanelTracker.track params[:social_user_id] || SecureRandom.uuid, "view_booking_page", { from: params[:from], from_id: params[:from_id] }
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count

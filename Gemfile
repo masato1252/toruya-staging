@@ -72,6 +72,7 @@ gem "platform-api"
 gem "skylight"
 gem "newrelic_rpm"
 gem "scout_apm"
+gem "mixpanel-ruby"
 
 group :development, :test do
   gem "byebug", platform: :mri

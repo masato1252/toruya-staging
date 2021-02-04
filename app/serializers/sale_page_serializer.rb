@@ -5,7 +5,9 @@ class SalePageSerializer
   attribute :flow
 
   attribute :product do |sale_page|
-    BookingPageSerializer.new(sale_page.product).attributes_hash
+    BookingPageSerializer.new(sale_page.product).attributes_hash.merge!(
+      url: Rails.application.routes.url_helpers.booking_page_url(sale_page.product.slug, from: "sale_page", from_id: sale_page.id)
+    )
   end
 
   attribute :content do |sale_page|
