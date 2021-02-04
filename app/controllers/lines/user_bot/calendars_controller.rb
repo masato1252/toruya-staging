@@ -2,14 +2,11 @@
 
 class Lines::UserBot::CalendarsController < Lines::UserBotDashboardController
   def personal_working_schedule
-    working_shop_ids = member_shops_options.map(&:shop_id).uniq
-    all_shop_ids = working_shop_options(include_user_own: true).map(&:shop_id).uniq
-
     @schedules, @reservation_dates, @personal_schedule_dates =
       PersonalCalendar.run!(
         user: current_user,
         working_shop_options: member_shops_options,
-        all_shop_ids: all_shop_ids,
+        all_shop_ids: working_shop_options(include_user_own: true).map(&:shop_id).uniq,
         date: date
     )
 

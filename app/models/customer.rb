@@ -241,7 +241,7 @@ class Customer < ApplicationRecord
 
   def display_address
     if address_details.present?
-      "#{address_details[:zip_code]}#{address_details[:region]}#{address_details[:city]}#{address_details[:street1]}#{address_details[:street2]}"
+      "#{address_details["zip_code"]}#{address_details["region"]}#{address_details["city"]}#{address_details["street1"]}#{address_details["street2"]}"
     end
   end
 
