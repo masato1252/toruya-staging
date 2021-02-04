@@ -2,26 +2,14 @@
 
 class CustomerOptionSerializer
   include JSONAPI::Serializer
+  set_key_transform :camel_lower
 
   attribute :id, :memo, :address, :birthday
-  attribute :userId, &:user_id
-  attribute :contactGroupId, &:contact_group_id
-  attribute :rankId, &:rank_id
-  attribute :lastName, &:last_name
-  attribute :firstName, &:first_name
-  attribute :phoneticLastName, &:phonetic_last_name
-  attribute :phoneticFirstName, &:phonetic_first_name
-  attribute :customId, &:custom_id
-  attribute :updatedAt, &:updated_at
-  attribute :reminderPermission, &:reminder_permission
-  attribute :phoneNumbersDetails, &:phone_numbers_details
-  attribute :emailsDetails, &:emails_details
-  attribute :addressDetails, &:address_details
+  attribute :user_id, :contact_group_id, :rank_id, :last_name, :first_name,
+    :phonetic_last_name, :phonetic_first_name, :custom_id, :updated_at, :reminder_permission,
+    :phone_numbers_details, :emails_details, :address_details, :rank, :simple_address
   attribute :label, &:name
   attribute :value, &:id
-  attribute :rank, &:rank
-  attribute :displayAddress, &:display_address
-  attribute :simpleAddress, &:simple_address
 
   attribute :groupName do |c|
     c.contact_group&.name
