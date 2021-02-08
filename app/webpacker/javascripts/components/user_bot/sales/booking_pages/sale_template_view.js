@@ -23,6 +23,7 @@ const SaleTemplateView = ({shop, product, demo, template, template_variables, so
       product={product}
       demo={demo}
       no_action={no_action}
+      social_account_add_friend_url={social_account_add_friend_url}
     />
   </SaleTemplateContainer>
 )
