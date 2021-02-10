@@ -34,7 +34,7 @@ module SocialAccounts
           end
 
           if account.bot_data_finished?
-            compose(SocialAccounts::RichMenus::CustomerReservations, social_account: account)
+            SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: account)
           end
 
           account

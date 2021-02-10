@@ -68,7 +68,7 @@ const SocialAccountEdit =({props}) => {
         <CiricleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
-          icon={<i className="fa fa-save fa-2x"></i>}
+          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
           word={i18n.save}
         />
       </BottomNavigationBar>
