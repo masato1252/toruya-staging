@@ -66,21 +66,19 @@ module Booking
 
         available_booking_dates =
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
-          if Rails.env.test?
+          # if true || Rails.env.test?
             available_working_dates.map do |date|
               Rails.cache.fetch(cache_key(date)) do
                 test_available_booking_date(booking_options, date)
               end
             end.compact
-          else
-            # XXX: Parallel doesn't work properly in test mode,
-            # some data might be stay in transaction of test thread and would lost in test while using Parallel.
-            Parallel.map(available_working_dates) do |date|
-              Rails.cache.fetch(cache_key(date)) do
-                test_available_booking_date(booking_options, date)
-              end
-            end.compact
-          end
+          # else
+          #   # XXX: Parallel doesn't work properly in test mode,
+          #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
+          #   Parallel.map(available_working_dates) do |date|
+          #     test_available_booking_date(booking_options, date)
+          #   end.compact
+          # end
       end
 
 
