@@ -18,7 +18,7 @@ class Lines::UserBotDashboardController < ActionController::Base
   include ControllerHelpers
 
   def current_user
-    @current_user ||= User.find_by(id: user_bot_cookies(:current_user_id))
+    @current_user ||= User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
   end
   helper_method :current_user
 
