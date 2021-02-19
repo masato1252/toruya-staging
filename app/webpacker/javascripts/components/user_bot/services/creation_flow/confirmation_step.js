@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React, { useLayoutEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
@@ -10,6 +10,10 @@ import OnlineServicePage from "user_bot/services/online_service_page";
 const ConfirmationStep = ({next, prev, jump, step}) => {
   const { props, dispatch, createService, selected_company, name, selected_solution, content, upsell } = useGlobalContext()
   const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
+
+  useLayoutEffect(() => {
+    $("body").scrollTop(0)
+  }, [])
 
   return (
     <div className="form settings-flow">

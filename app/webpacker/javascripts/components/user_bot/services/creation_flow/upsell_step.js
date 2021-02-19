@@ -65,7 +65,19 @@ const UpsellStep = ({next, prev, step}) => {
       </div>
 
       <div className="action-block">
-        <button onClick={next} className="btn btn-tarco">
+        <button onClick={() => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "upsell",
+              value: {
+                type: "no",
+              }
+            }
+          })
+
+          next()
+        }} className="btn btn-tarco">
           {I18n.t("action.skip_step")}
         </button>
       </div>
