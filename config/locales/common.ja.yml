@@ -35,6 +35,7 @@ ja:
     call: 電話する
     send_message: メッセージ送信する
     next_step: 次　へ
+    skip_step: 設定せずに次へ
     prev_step: 戻　る
     add_step: ステップを追加
     book_now: 今すぐ予約する

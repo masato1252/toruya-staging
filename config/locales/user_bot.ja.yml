@@ -215,8 +215,6 @@ ja:
         after_bought: 購入後
         after_n_days: 日後まで
         what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？
-        no_upsell: アップセルはない
-        want_upsell: アップセルがある
         select_upsell_product: セールスページを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
