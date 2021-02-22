@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: profiles
@@ -25,6 +24,7 @@
 #  city                 :string
 #  street1              :string
 #  street2              :string
+#  template_variables   :json
 #
 # Indexes
 #

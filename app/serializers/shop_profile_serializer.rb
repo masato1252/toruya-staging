@@ -2,7 +2,7 @@
 
 class ShopProfileSerializer
   include JSONAPI::Serializer
-  attribute :id
+  attribute :id, :template_variables
 
   attribute :label do
     I18n.t("common.company_info")

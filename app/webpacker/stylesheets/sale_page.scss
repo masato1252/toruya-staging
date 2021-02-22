@@ -2,6 +2,7 @@
   .edit-mark {
     position: absolute;
     right: 0;
+    z-index: 1;
   }
 
   .content {
@@ -29,13 +30,46 @@
   .product-price-block {
     color: $red;
     font-weight: bold;
-    margin: 10px 0 20px;
+    margin: 15px 0 20px;
 
     .price {
       font-size: 24px;
 
+      .fa-arrow-right {
+        margin: 0 12px;
+      }
+
       .price-with-tax {
         font-size: 14px;
+        vertical-align: text-bottom;
+      }
+
+      .normal-price {
+        font-weight: normal;
+        display: inline-flex;
+        flex-direction: column;
+
+        .label {
+          font-size: 16px;
+        }
+
+        .amount {
+          text-decoration: line-through;
+        }
+      }
+
+      .special-price {
+        font-size: 32px;
+        display: inline-flex;
+        flex-direction: column;
+
+        .label {
+          font-size: 20px;
+        }
+
+        .price-with-tax {
+          font-size: 14px;
+        }
       }
     }
   }
@@ -92,6 +126,12 @@
 
   .apply-content {
     background-color: $gray-background;
+  }
+
+  button.watch {
+    .fas {
+      margin-right: 6px;
+    }
   }
 }
 

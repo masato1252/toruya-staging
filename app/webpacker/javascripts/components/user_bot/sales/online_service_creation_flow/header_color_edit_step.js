@@ -9,27 +9,27 @@ import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_
 import { Template, HintTitle, WordColorPickers } from "shared/builders"
 
 const HeaderColorEditStep= ({step, next, prev, jump}) => {
-  const { props, selected_booking_page, selected_template, dispatch, template_variables, isReadyForPreview } = useGlobalContext()
-  const shop = props.shops[selected_booking_page.shop_id]
+  const { props, selected_online_service, selected_template, dispatch, template_variables, isReadyForPreview } = useGlobalContext()
 
   return (
-    <div className="form">
+    <div className="form settings-flow">
       <SalesFlowStepIndicator step={step} />
       <h4 className="header centerize"
         dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.select_color_html") }} />
+
       <SaleTemplateContainer
-        shop={shop}
-        product={selected_booking_page}>
+        shop={selected_online_service.company_info}
+        product={selected_online_service}>
         <Template
           template={selected_template.view_body}
-          {...(_.merge(shop.template_variables, template_variables))}
-          product_name={selected_booking_page?.product_name}
+          {...(_.merge(selected_online_service.company_info.template_variables, template_variables))}
+          product_name={selected_online_service?.product_name}
         />
       </SaleTemplateContainer>
       <div className="centerize">
         <WordColorPickers
           template={selected_template.view_body}
-          {...(_.merge(shop.template_variables, template_variables))}
+          {...(_.merge(selected_online_service.company_info.template_variables, template_variables))}
           onChange={(name, value) => {
             dispatch({
               type: "SET_TEMPLATE_VARIABLES",
@@ -48,12 +48,13 @@ const HeaderColorEditStep= ({step, next, prev, jump}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={() => {(isReadyForPreview()) ? jump(7) : next()}} className="btn btn-yellow">
+        <button onClick={() => {(isReadyForPreview()) ? jump(11) : next()}} className="btn btn-yellow">
           {I18n.t("action.next_step")}
         </button>
       </div>
     </div>
   )
+
 }
 
 export default HeaderColorEditStep

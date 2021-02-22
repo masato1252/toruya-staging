@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: social_users
@@ -16,7 +15,6 @@
 # Indexes
 #
 #  index_social_users_on_social_rich_menu_key  (social_rich_menu_key)
-#  index_social_users_on_user_id               (user_id)
 #  social_user_unique_index                    (user_id,social_service_user_id) UNIQUE
 #
 

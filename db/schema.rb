@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_02_020409) do
+ActiveRecord::Schema.define(version: 2021_02_23_140239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -28,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_020409) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
@@ -383,6 +382,7 @@ ActiveRecord::Schema.define(version: 2021_02_02_020409) do
     t.string "city"
     t.string "street1"
     t.string "street2"
+    t.json "template_variables"
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
@@ -516,6 +516,12 @@ ActiveRecord::Schema.define(version: 2021_02_02_020409) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
+    t.string "introduction_video_url"
+    t.integer "quantity"
+    t.datetime "selling_end_at"
+    t.datetime "selling_start_at"
+    t.decimal "normal_price_amount_cents"
+    t.decimal "selling_price_amount_cents"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
     t.index ["slug"], name: "index_sale_pages_on_slug", unique: true

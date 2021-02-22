@@ -138,6 +138,12 @@ ja:
           add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
           online_service: オンラインサービス利用者募集
           online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
+        online_service_creation:
+          service_step: 商品
+          price_step: 販売価格
+          limitation_step: 限定販売
+          content_step: 内容
+          preview_step: プレビュー
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容

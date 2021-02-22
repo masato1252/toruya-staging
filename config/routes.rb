@@ -128,6 +128,7 @@ Rails.application.routes.draw do
 
         scope module: :sales do
           resources :booking_pages, only: [:new, :create]
+          resources :online_services, only: [:new, :create]
         end
       end
 
