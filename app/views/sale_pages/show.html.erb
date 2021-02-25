@@ -10,6 +10,7 @@
   <meta property="og:title" content="<%= @product_name %>">
   <meta property="og:url" content="<%= sale_page_url(@sale_page.slug) %>">
   <meta property="og:description" content="<%= @product_name %> <%= @sale_page.content["desc1"] %> <%= @sale_page.content["desc2"] %>">
+  <meta property="og:image" content="<%= Rails.application.routes.url_helpers.url_for(@sale_page.picture.variant(combine_options: { resize: "750", flatten: true })) %>">
 <% end %>
 
 <%= react_component(
