@@ -1,18 +1,17 @@
 "use strict";
 
 import React from "react";
-import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const SellingPriceStep = ({step, next, prev, jump}) => {
-  const { props, dispatch, price } = useGlobalContext()
+const SellingPriceStep = ({step, next, prev}) => {
+  const { price } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">この販売ページでは、幾らで販売しますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_price")}</h3>
 
       <div className="margin-around">
         <label className="">
@@ -41,7 +40,7 @@ const SellingPriceStep = ({step, next, prev, jump}) => {
               value="free"
               defaultChecked={price.price_type === "free"}
             />
-            無料で提供
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_free_price")}
           </div>
         </label>
       </div>

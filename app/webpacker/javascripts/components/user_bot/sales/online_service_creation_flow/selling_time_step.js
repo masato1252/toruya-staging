@@ -1,18 +1,17 @@
 "use strict";
 
 import React from "react";
-import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const SellingTimeStep = ({step, next, prev, jump}) => {
-  const { props, dispatch, end_time, isEndTimeSetup, isReadyForPreview } = useGlobalContext()
+const SellingTimeStep = ({step, next, prev, lastStep}) => {
+  const { dispatch, end_time, isEndTimeSetup, isReadyForPreview } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">いつまで販売しますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.what_selling_end_at")}</h3>
 
       <div className="margin-around">
         <label className="">
@@ -31,7 +30,7 @@ const SellingTimeStep = ({step, next, prev, jump}) => {
                 })
               }}
             />
-            指定日まで販売する(推奨)
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_end_on")}
           </div>
           {end_time.end_type === "end_at" && (
             <input
@@ -71,7 +70,7 @@ const SellingTimeStep = ({step, next, prev, jump}) => {
               })
             }}
           />
-          ずっと販売する
+          {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_forever")}
         </label>
       </div>
 
@@ -79,7 +78,7 @@ const SellingTimeStep = ({step, next, prev, jump}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={() => {(isReadyForPreview()) ? jump(11) : next()}} className="btn btn-yellow"
+        <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"
             disabled={!isEndTimeSetup()}>
           {I18n.t("action.next_step")}
         </button>

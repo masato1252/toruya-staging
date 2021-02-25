@@ -6,13 +6,13 @@ import ReactPlayer from 'react-player';
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const IntroductionSetupStep = ({step, next, prev, jump}) => {
+const IntroductionSetupStep = ({step, next, prev, lastStep}) => {
   const { props, dispatch, introduction_video, isReadyForPreview } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_this_video_provide")}</h3>
+      <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.sales.online_service_creation.what_introduction_video")}</h3>
       <input
         placeholder={I18n.t("user_bot.dashboards.online_service_creation.what_is_video_url")}
         value={introduction_video?.url || ""}
@@ -31,7 +31,7 @@ const IntroductionSetupStep = ({step, next, prev, jump}) => {
         className="extend with-border"
       />
       <p className="margin-around text-align-left">
-        {I18n.t("user_bot.dashboards.online_service_creation.video_hint")}
+        {I18n.t("user_bot.dashboards.sales.online_service_creation.introduction_video_hint")}
       </p>
 
       <div className='video-player-wrapper'>
@@ -48,7 +48,7 @@ const IntroductionSetupStep = ({step, next, prev, jump}) => {
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
           </button>
-          <button onClick={() => {(isReadyForPreview()) ? jump(11) : next()}} className="btn btn-yellow">
+          <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow">
             {I18n.t("action.next_step")}
           </button>
         </div>

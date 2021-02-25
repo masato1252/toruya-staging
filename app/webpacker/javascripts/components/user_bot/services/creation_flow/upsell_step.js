@@ -5,10 +5,12 @@ import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
-import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
+import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
+import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
 const UpsellStep = ({next, prev, step}) => {
   const { props, dispatch, upsell } = useGlobalContext()
+  const sale_page = upsell.sale_page;
 
   return (
     <div className="form settings-flow centerize">
@@ -18,17 +20,17 @@ const UpsellStep = ({next, prev, step}) => {
         <label className="text-align-left">
           <ReactSelect
             placeholder={I18n.t("user_bot.dashboards.online_service_creation.select_upsell_product")}
-            value={ _.isEmpty(upsell.sale_page) ? "" : { label: upsell.sale_page.label }}
+            value={ _.isEmpty(sale_page) ? "" : { label: sale_page.label }}
             options={props.upsell_sales}
             onChange={
-              (sale_page) => {
+              (page) => {
                 dispatch({
                   type: "SET_ATTRIBUTE",
                   payload: {
                     attribute: "upsell",
                     value: {
                       type: "yes",
-                      sale_page: sale_page.value
+                      sale_page: page.value
                     }
                   }
                 })
@@ -38,19 +40,34 @@ const UpsellStep = ({next, prev, step}) => {
         </label>
 
         {
-          !_.isEmpty(upsell.sale_page) && (
+          !_.isEmpty(sale_page) && (
             <>
-              {upsell.sale_page.start_time}<br />
-              {upsell.sale_page.end_time}
+              {sale_page.start_time}<br />
+              {sale_page.end_time}
 
               <div className="sale-page margin-around">
-                <SaleTemplateView
-                  shop={upsell.sale_page.shop}
-                  product={upsell.sale_page.product}
-                  template={upsell.sale_page.template}
-                  template_variables={upsell.sale_page.template_variables}
-                  no_action={true}
-                />
+                {
+                  sale_page.product_type === 'BookingPage' ? (
+                    <BookingSaleTemplateView
+                      shop={sale_page.shop}
+                      product={sale_page.product}
+                      template={sale_page.template}
+                      template_variables={sale_page.template_variables}
+                      no_action={true}
+                    />
+                  ) : (
+                    <ServiceSaleTemplateView
+                      company_info={sale_page.product.company_info}
+                      product={sale_page.product}
+                      template={sale_page.template}
+                      template_variables={sale_page.template_variables}
+                      introduction_video={sale_page.introduction_video}
+                      price={sale_page.price}
+                      normal_price={sale_page.normal_price}
+                      no_action={true}
+                    />
+                  )
+                }
               </div>
             </>
           )

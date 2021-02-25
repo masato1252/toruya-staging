@@ -2,7 +2,7 @@
 
 import React from "react";
 import FlowController from "shared/flow_controller";
-import { GlobalProvider, GlobalContext } from "./context/global_state"
+import { GlobalProvider } from "./context/global_state"
 import OnlineServiceSelectionStep from "./online_service_selection_step";
 import SellingPriceStep from "./selling_price_step";
 import NormalPriceStep from "./normal_price_step";
@@ -20,20 +20,20 @@ import FinalStep from "./final_step";
 const SalesOnlineServiceCreationFlow = ({props}) => {
   return (
     <GlobalProvider props={props}>
-      <FlowController>
-        { ({next, step, jump}) => <OnlineServiceSelectionStep step={step} next={next} jump={jump} /> }
-        { ({next, prev, step, jump}) => <SellingPriceStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <NormalPriceStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <SellingTimeStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <SellingNumberStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <HeaderTemplateSelectionStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step, jump}) => <HeaderSetupStep step={step} next={next} prev={prev} /> }
-        { ({next, prev, step, jump}) => <HeaderColorEditStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <IntroductionSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <ContentSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({next, prev, step, jump}) => <StaffSetupStep step={step} next={next} prev={prev} jump={jump} /> }
-        { ({jump, next, step}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
-        { ({step}) => <FinalStep step={step} /> }
+      <FlowController new_version={true}>
+        <OnlineServiceSelectionStep />
+        <SellingPriceStep />
+        <NormalPriceStep />
+        <SellingTimeStep />
+        <SellingNumberStep />
+        <HeaderTemplateSelectionStep />
+        <HeaderSetupStep />
+        <HeaderColorEditStep />
+        <IntroductionSetupStep />
+        <ContentSetupStep />
+        <StaffSetupStep />
+        <ConfirmationStep />
+        <FinalStep />
       </FlowController>
     </GlobalProvider>
   )

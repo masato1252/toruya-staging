@@ -5,10 +5,7 @@ class SalePageSerializer
 
   attribute :content do |sale_page|
     sale_page.content.merge(
-      picture_url: Rails.application.routes.url_helpers.url_for(sale_page.picture.variant(combine_options: {
-        resize: "750",
-        flatten: true
-      }))
+      picture_url: Rails.application.routes.url_helpers.url_for(sale_page.picture.variant(combine_options: { resize: "750", flatten: true }))
     )
   end
 

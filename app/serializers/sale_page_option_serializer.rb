@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+# This seralizer is for sale page selection view, so it only needs some product, time data,
+# don't need whole page data
 class SalePageOptionSerializer
   include JSONAPI::Serializer
-  attribute :id, :slug
+  include SalePages::OnlineServiceProductPart
+
+  attribute :id, :slug, :product_type
 
   attribute :label do |sale_page|
     sale_page.product.name
@@ -25,10 +29,6 @@ class SalePageOptionSerializer
     end_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.end_at : sale_page.selling_end_at
 
     end_at ? end_at.iso8601 : nil
-  end
-
-  attribute :product do |sale_page|
-    sale_page.product.is_a?(BookingPage) ? BookingPageSerializer.new(sale_page.product).attributes_hash : OnlineServiceSerializer.new(sale_page.product).attributes_hash
   end
 
   attribute :shop do |sale_page|

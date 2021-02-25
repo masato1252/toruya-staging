@@ -1,18 +1,17 @@
 "use strict";
 
 import React from "react";
-import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const SellingNumberStep = ({step, next, prev, jump}) => {
-  const { props, dispatch, quantity, isQuantitySetup, isReadyForPreview } = useGlobalContext()
+const SellingNumberStep = ({step, next, prev, lastStep}) => {
+  const { dispatch, quantity, isQuantitySetup, isReadyForPreview } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">販売個数を限定しますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_number")}</h3>
 
       <div className="margin-around">
         <label className="">
@@ -31,7 +30,7 @@ const SellingNumberStep = ({step, next, prev, jump}) => {
                 })
               }}
             />
-            限定数を販売する(推奨)
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_limit_number")}
           </div>
           {quantity.quantity_type === "limited" && (
             <>
@@ -52,7 +51,7 @@ const SellingNumberStep = ({step, next, prev, jump}) => {
                   })
                 }}
               />
-              人まで
+              {I18n.t("user_bot.dashboards.sales.online_service_creation.until_people_number")}
             </>
           )}
         </label>
@@ -74,7 +73,7 @@ const SellingNumberStep = ({step, next, prev, jump}) => {
               })
             }}
           />
-          ずっと販売する
+          {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_unlimit_number")}
         </label>
       </div>
 
@@ -82,7 +81,7 @@ const SellingNumberStep = ({step, next, prev, jump}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={() => {(isReadyForPreview()) ? jump(11) : next()}} className="btn btn-yellow"
+        <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"
             disabled={!isQuantitySetup()}>
           {I18n.t("action.next_step")}
         </button>

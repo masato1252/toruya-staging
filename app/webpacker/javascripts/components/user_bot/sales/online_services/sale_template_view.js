@@ -34,6 +34,7 @@ const SaleTemplateView = ({company_info, product, demo, template, template_varia
     <div>
       <DemoEditButton demo={demo} jump={() => jump(1)} />
       <PriceBlock
+        solution_type={product.solution_type}
         demo={demo}
         no_action={no_action}
         social_account_add_friend_url={social_account_add_friend_url}

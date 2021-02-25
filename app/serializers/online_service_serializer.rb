@@ -2,17 +2,12 @@
 
 class OnlineServiceSerializer
   include JSONAPI::Serializer
-  attribute :id, :name, :content
+  attribute :id, :name, :content, :solution_type
   attribute :solution, &:solution_type
   attribute :product_name, &:name
 
   attribute :company_info do |service|
-    case service.company
-    when Shop
-      ShopSerializer.new(service.company).attributes_hash
-    when Profile
-      ShopProfileSerializer.new(service.company).attributes_hash
-    end
+    CompanyInfoSerializer.new(service.company).attributes_hash
   end
 
   attribute :upsell_sale_page do |service|

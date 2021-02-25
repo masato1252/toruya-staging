@@ -38,4 +38,7 @@ class SalePage < ApplicationRecord
   belongs_to :user
 
   has_one_attached :picture # content picture
+
+  monetize :selling_price_amount_cents, allow_nil: true
+  monetize :normal_price_amount_cents, allow_nil: true
 end

@@ -60,6 +60,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>
 
         <PriceBlock
+          solution_type={product.solution_type}
           demo={demo}
           social_account_add_friend_url={social_account_add_friend_url}
           selling_price={price?.price_amount}

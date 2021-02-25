@@ -15,8 +15,8 @@
     },
     sale_templates: @sale_templates.map { |template| SaleTemplateSerializer.new(template).attributes_hash },
     flow_tips: I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_tips"),
-    companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| ShopSerializer.new(s).attributes_hash.merge!(type: "Shop") }.push(
-      ShopProfileSerializer.new(super_user.profile).attributes_hash.merge!(type: "Profile")
+    companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
+      CompanyInfoSerializer.new(super_user.profile).attributes_hash
     ),
   }
 },

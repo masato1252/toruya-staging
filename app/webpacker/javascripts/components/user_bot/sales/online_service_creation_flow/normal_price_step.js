@@ -1,18 +1,17 @@
 "use strict";
 
 import React from "react";
-import ReactSelect from "react-select";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
-const NormalPriceStep = ({step, next, prev, jump}) => {
-  const { props, dispatch, normal_price, isNormalPriceSetup, isReadyForPreview } = useGlobalContext()
+const NormalPriceStep = ({step, next, prev, lastStep}) => {
+  const { dispatch, normal_price, isNormalPriceSetup, isReadyForPreview } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">先ほど入力した価格とは別に 通常価格がありますか？</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}</h3>
 
       <div className="margin-around">
         <label className="">
@@ -32,7 +31,7 @@ const NormalPriceStep = ({step, next, prev, jump}) => {
                 })
               }}
             />
-            はい、あります
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.normal_price_cost")}
             <br />
             {normal_price.price_type === "cost" && (
               <>
@@ -78,7 +77,7 @@ const NormalPriceStep = ({step, next, prev, jump}) => {
                 })
               }}
             />
-            いいえ、ありません
+            {I18n.t("user_bot.dashboards.sales.online_service_creation.normal_price_free")}
           </div>
         </label>
       </div>
@@ -87,7 +86,7 @@ const NormalPriceStep = ({step, next, prev, jump}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={() => {(isReadyForPreview()) ? jump(11) : next()}} className="btn btn-yellow"
+        <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"
             disabled={!isNormalPriceSetup()}>
           {I18n.t("action.next_step")}
         </button>

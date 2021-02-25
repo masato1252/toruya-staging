@@ -144,6 +144,23 @@ ja:
           limitation_step: 限定販売
           content_step: 内容
           preview_step: プレビュー
+          sell_what_service: どのサービスを販売しますか？
+          service_start: 利用開始
+          service_end: 利用終了
+          sell_what_price: この販売ページでは、幾らで販売しますか？
+          sell_free_price: 無料で提供
+          what_normal_price: 先ほど入力した価格とは別に 通常価格がありますか？
+          normal_price_cost: はい、あります
+          normal_price_free: いいえ、ありません
+          what_selling_end_at: いつまで販売しますか？
+          selling_end_on: 指定日まで販売する(推奨)
+          selling_forever: ずっと販売する
+          sell_what_number: 販売個数を限定しますか？
+          sell_limit_number: 限定数を販売する(推奨)
+          until_people_number: 人まで
+          sell_unlimit_number: ずっと販売する
+          what_introduction_video: ヘッドラインに動画を使用すると 動画セミナーが売れやすくなります。
+          introduction_video_hint: YouTubeご利用の場合は「公開」に設定してください。
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容

@@ -16,15 +16,15 @@ const initialState = {
     price_amount: null
   },
   normal_price: {
-    price_type: null, // free/cost
+    price_type: "cost", // free/cost
     price_amount: null
   },
   end_time: {
-    end_type: null, // never/end_at,
+    end_type: "end_at", // never/end_at,
     end_time_date_part: null
   },
   quantity: {
-    quantity_type: null, // limited, unlimited
+    quantity_type: "limited", // limited, unlimited
     quantity_value: null
   },
   introduction_video: {

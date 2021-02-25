@@ -39,6 +39,12 @@ ja:
     prev_step: 戻　る
     add_step: ステップを追加
     book_now: 今すぐ予約する
+    sales:
+      video: 今すぐ視聴する
+      audio: 今すぐ視聴する
+      pdf: 今すぐダウンロード
+      questionnaire: アンケートに答える
+      diagnosis: 今すぐ登録する
   common:
     processing: 送信中
     date: 日付
@@ -74,6 +80,8 @@ ja:
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
     select_a_booking_option: 予約価格を選択
+    select_a_service: サービスを選択
+    content: コンテンツ
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
     no_permission: 権限がありません
@@ -112,3 +120,6 @@ ja:
     hour_word: 時間
     minute_word: 分
     second_word: 秒
+    free_price: 無料
+    normal_price_label: 通常
+    today_price_label: 今なら
