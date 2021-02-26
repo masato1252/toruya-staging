@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_23_140239) do
+ActiveRecord::Schema.define(version: 2021_02_26_134008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -299,6 +299,20 @@ ActiveRecord::Schema.define(version: 2021_02_23_140239) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
+  end
+
+  create_table "online_service_customer_relations", force: :cascade do |t|
+    t.integer "online_service_id", null: false
+    t.integer "sale_page_id", null: false
+    t.integer "customer_id", null: false
+    t.integer "payment_state", default: 0, null: false
+    t.integer "permission_state", default: 0, null: false
+    t.datetime "paid_at"
+    t.json "product_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["online_service_id", "customer_id", "permission_state"], name: "online_service_relation_index"
+    t.index ["online_service_id", "customer_id"], name: "online_service_relation_unique_index", unique: true
   end
 
   create_table "online_services", force: :cascade do |t|

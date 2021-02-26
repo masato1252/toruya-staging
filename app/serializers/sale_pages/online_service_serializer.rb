@@ -13,7 +13,7 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
     object.selling_end_at && Time.current > object.selling_end_at
   end
 
-  attribute :purchase_url do
-    "#"
+  attribute :purchase_url do |object|
+    Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug)
   end
 end

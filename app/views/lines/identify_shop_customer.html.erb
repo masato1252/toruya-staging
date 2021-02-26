@@ -1,9 +1,5 @@
 <%= react_component("lines/customer_identifications", {
   social_customer: @social_customer.attributes.slice("social_user_id", "customer_id"),
-  path: {
-    identify_code: lines_identify_code_path,
-    ask_identification_code: lines_ask_identification_code_path
-  },
   i18n: {
   }.merge!([
     t("booking_page"),

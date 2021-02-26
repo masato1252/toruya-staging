@@ -20,7 +20,7 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
     }
     else {
       return (
-        <a href={purchase_url || "#"} className="btn btn-tarco" target="_blank">
+        <a href={purchase_url || "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
           <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
         </a>
       )

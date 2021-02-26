@@ -25,7 +25,7 @@ const SaleTemplateView = ({company_info, product, demo, template, template_varia
     <div>
       <DemoEditButton demo={demo} jump={() => jump(8)} />
       <OnlineServiceSolution
-        solution="video"
+        solution_type="video"
         content={introduction_video}
         light={true}
       />

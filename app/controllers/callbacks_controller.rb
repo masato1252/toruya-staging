@@ -38,7 +38,11 @@ class CallbacksController < Devise::OmniauthCallbacksController
       param: param,
     )
 
-    uri = URI.parse(param['oauth_redirect_to_url'])
+    param.delete("bot_prompt")
+    param.delete("prompt")
+    oauth_redirect_to_url = param.delete("oauth_redirect_to_url")
+
+    uri = URI.parse(oauth_redirect_to_url)
     queries = {
       status: outcome.valid?,
       social_user_id: outcome.result.social_user_id

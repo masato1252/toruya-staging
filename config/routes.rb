@@ -9,6 +9,14 @@ Rails.application.routes.draw do
     get :identify_code
     get :ask_identification_code
 
+    scope module: :customers, path: :customers, as: :customers do
+      resources :online_service_purchases, only: [:create], param: :slug do
+        collection do
+          get "/:slug/new", action: "new", as: :new
+        end
+      end
+    end
+
     scope module: :liff, path: :liff, as: :liff do
       get "/(:liff_path)", action: "index"
     end
@@ -453,7 +461,7 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
-  resources :sale_pages, only: [:show]
+  resources :sale_pages, param: :slug, only: [:show]
   resources :online_services, param: :slug, only: [:show]
 
   resources :shops, only: [:show]

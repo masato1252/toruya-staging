@@ -18,7 +18,7 @@ class BookingPagesController < ActionController::Base
 
     @customer =
       if params[:social_user_id] || cookies[:line_social_user_id_of_customer]
-        SocialCustomer.find_by(social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer])&.customer
+        @booking_page.user.social_customers.find_by(social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer])&.customer
       end
 
     @customer ||=

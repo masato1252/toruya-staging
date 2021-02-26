@@ -3,7 +3,6 @@
 class OnlineServiceSerializer
   include JSONAPI::Serializer
   attribute :id, :name, :content, :solution_type
-  attribute :solution, &:solution_type
   attribute :product_name, &:name
 
   attribute :company_info do |service|

@@ -861,6 +861,43 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: online_service_customer_relations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.online_service_customer_relations (
+    id bigint NOT NULL,
+    online_service_id integer NOT NULL,
+    sale_page_id integer NOT NULL,
+    customer_id integer NOT NULL,
+    payment_state integer DEFAULT 0 NOT NULL,
+    permission_state integer DEFAULT 0 NOT NULL,
+    paid_at timestamp without time zone,
+    product_details json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: online_service_customer_relations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.online_service_customer_relations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: online_service_customer_relations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.online_service_customer_relations_id_seq OWNED BY public.online_service_customer_relations.id;
+
+
+--
 -- Name: online_services; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2379,6 +2416,13 @@ ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: online_service_customer_relations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_service_customer_relations ALTER COLUMN id SET DEFAULT nextval('public.online_service_customer_relations_id_seq'::regclass);
+
+
+--
 -- Name: online_services id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2819,6 +2863,14 @@ ALTER TABLE ONLY public.menus
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: online_service_customer_relations online_service_customer_relations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_service_customer_relations
+    ADD CONSTRAINT online_service_customer_relations_pkey PRIMARY KEY (id);
 
 
 --
@@ -3658,6 +3710,20 @@ CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_set
 
 
 --
+-- Name: online_service_relation_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX online_service_relation_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id, permission_state);
+
+
+--
+-- Name: online_service_relation_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX online_service_relation_unique_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id);
+
+
+--
 -- Name: order_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3988,6 +4054,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210129122718'),
 ('20210202020409'),
 ('20210222071432'),
-('20210223140239');
+('20210223140239'),
+('20210226134008');
 
 
