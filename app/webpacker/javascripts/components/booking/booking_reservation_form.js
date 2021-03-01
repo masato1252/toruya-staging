@@ -895,6 +895,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDownView = () => {
+    const { social_user_id } = this.booking_reservation_form_values
     const {
       title,
       message1,
@@ -912,7 +913,9 @@ class BookingReservationForm extends React.Component {
           {message2}
         </div>
 
-        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
+        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url}>
+          <></>
+        </AddLineFriendInfo>
       </div>
     )
   }
@@ -1342,7 +1345,7 @@ class BookingReservationForm extends React.Component {
   isCustomerTrusted = () => {
     const { found_customer, use_default_customer, booking_code } = this.booking_reservation_form_values;
 
-    return use_default_customer || (found_customer != null && booking_code && booking_code.passed)
+    return (use_default_customer && this.isEnoughCustomerInfo()) || (found_customer != null && booking_code && booking_code.passed)
   }
 
   isEnoughCustomerInfo = () => {

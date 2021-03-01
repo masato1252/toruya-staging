@@ -104,7 +104,6 @@ class BookingPagesController < ActionController::Base
       customer = result[:customer]
 
       cookies.permanent[:booking_customer_id] = customer&.id
-      cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 
@@ -136,7 +135,6 @@ class BookingPagesController < ActionController::Base
 
     if customer
       cookies.permanent[:booking_customer_id] = customer.id
-      cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
 
       render json: {
         customer_info: view_context.customer_info_as_json(customer),
