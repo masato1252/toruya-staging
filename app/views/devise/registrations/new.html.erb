@@ -2,16 +2,11 @@
   <h2><%= t("devise.registrations.signup_title") %></h2>
 
   <main id="socialLogin">
-    <p>Toruyaのご利用にはGoogleアカウントが必要です。既にお持ちのGoogleアカウントを使うことで、より安全にToruyaをご利用いただけます。</p>
+    <p>Toruyaのご利用にはLineアカウントが必要です。既にお持ちのLineアカウントを使うことで、より安全にToruyaをご利用いただけます。</p>
 
-    <p>
-      <%= button_to user_google_oauth2_omniauth_authorize_path, class: "google-button" do %>
-        <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
-        <span class="google-button__text">
-          Googleで登録
-        </span>
-      <% end %>
-    </p>
+    <a href=<%= "https://line.me/R/ti/p/@#{Rails.application.secrets.toruya_user_bot_basic_id}" %> class="btn line-button with-wording only-word">
+      <%= I18n.t("common.line_login_btn_word") %>
+    </a>
   </main>
   <aside id="signup">
     <p>登録ユーザーさんは<%= link_to "ログイン", new_user_session_path %>してください。</p>
