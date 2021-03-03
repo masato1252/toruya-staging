@@ -10,6 +10,6 @@ module MessageEncryptor
   end
 
   def self.crypt
-    ActiveSupport::MessageEncryptor.new(Rails.application.secrets.secret_key_base[0..31])
+    ActiveSupport::MessageEncryptor.new(Rails.application.secrets.message_encryptor_key[0..31])
   end
 end
