@@ -37,11 +37,11 @@ class SocialAccount < ApplicationRecord
   end
 
   def is_login_available?
-    login_channel_id && login_channel_secret
+    login_channel_id && login_channel_secret && raw_login_channel_secret
   end
 
   def bot_data_finished?
-    attributes.slice("channel_id", "channel_token", "channel_secret", "basic_id", "label").all? { |attribute, value| value.present? }
+    attributes.slice("channel_id", "channel_token", "channel_secret", "basic_id", "label").all? { |attribute, value| value.present? } && raw_channel_token.present? && raw_channel_secret.present?
   end
 
   def raw_channel_token
