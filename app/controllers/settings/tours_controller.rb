@@ -23,4 +23,9 @@ class Settings::ToursController < ActionController::Base
   def working_time; end
   def reservation_setting; end
   def menu; end
+
+  def from_line_bot
+    false
+  end
+  helper_method :from_line_bot
 end

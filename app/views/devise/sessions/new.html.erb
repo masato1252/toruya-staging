@@ -3,14 +3,20 @@
   <main id="socialLogin">
     <p>Toruyaのユーザー登録がお済の方は、こちらからログインしてください。</p>
 
-    <p>
-      <%= button_to user_google_oauth2_omniauth_authorize_path, class: "google-button" do %>
-        <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
-        <span class="google-button__text">
-          Googleでログイン
-        </span>
-      <% end %>
-    </p>
+    <a href=<%= "https://line.me/R/ti/p/@#{Rails.application.secrets.toruya_user_bot_basic_id}" %> class="btn line-button with-wording only-word">
+      <%= I18n.t("common.line_login_btn_word") %>
+    </a>
+
+    <% if params[:_higoogle] %>
+      <p>
+        <%= button_to user_google_oauth2_omniauth_authorize_path, class: "google-button" do %>
+          <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
+          <span class="google-button__text">
+            Googleでログイン
+          </span>
+        <% end %>
+      </p>
+    <% end %>
   </main>
   <aside id="signup">
     <p>初めての方は<%= link_to "ユーザー登録", new_user_registration_path %>してください。</p>
