@@ -528,6 +528,9 @@ a {
 
 h3.header {
   margin: 20px 0;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .preparing {
