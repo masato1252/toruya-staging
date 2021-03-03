@@ -8,7 +8,7 @@ import { DemoEditButton } from 'shared/components';
 
 import OnlineServiceSolution from "./solution";
 
-const OnlineServicePage = ({company_info, name, solution_type, content, upsell_sale_page, demo, jump}) => {
+const OnlineServicePage = ({company_info, name, solution_type, content, upsell_sale_page, demo, jump, light}) => {
   return (
     <div className="online-service-page">
       <div className="online-service-header">
@@ -24,7 +24,7 @@ const OnlineServicePage = ({company_info, name, solution_type, content, upsell_s
           <OnlineServiceSolution
             solution_type={solution_type}
             content={content}
-            light={true}
+            light={light}
           />
         </div>
         <h3 className="margin-around">
