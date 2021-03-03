@@ -308,6 +308,7 @@ ActiveRecord::Schema.define(version: 2021_02_26_134008) do
     t.integer "payment_state", default: 0, null: false
     t.integer "permission_state", default: 0, null: false
     t.datetime "paid_at"
+    t.datetime "expire_at"
     t.json "product_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

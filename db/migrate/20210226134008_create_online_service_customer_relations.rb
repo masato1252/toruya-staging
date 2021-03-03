@@ -7,6 +7,7 @@ class CreateOnlineServiceCustomerRelations < ActiveRecord::Migration[5.2]
       t.integer :payment_state, null: false, default: 0
       t.integer :permission_state, null: false, default: 0
       t.datetime :paid_at
+      t.datetime :expire_at
       t.json :product_details
       t.timestamps
     end

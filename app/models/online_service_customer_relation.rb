@@ -9,6 +9,7 @@
 #  payment_state     :integer          default("pending"), not null
 #  permission_state  :integer          default("pending"), not null
 #  paid_at           :datetime
+#  expire_at         :datetime
 #  product_details   :json
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null

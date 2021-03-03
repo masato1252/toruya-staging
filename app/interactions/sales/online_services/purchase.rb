@@ -21,6 +21,7 @@ module Sales
 
         relation.payment_state = :free
         relation.permission_state = :active
+        relation.expire_at = product.current_expire_time
         persisted_record = relation.persisted?
 
         if relation.save

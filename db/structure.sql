@@ -872,6 +872,7 @@ CREATE TABLE public.online_service_customer_relations (
     payment_state integer DEFAULT 0 NOT NULL,
     permission_state integer DEFAULT 0 NOT NULL,
     paid_at timestamp without time zone,
+    expire_at timestamp without time zone,
     product_details json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
