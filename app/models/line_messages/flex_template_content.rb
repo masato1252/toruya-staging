@@ -301,7 +301,7 @@ module LineMessages
                   "contents": [
                     {
                       "type": "text",
-                      "text": label || "担当",
+                      "text": label,
                       "size": "sm",
                       "color": "#AAAAAA",
                       "flex": 1,
@@ -309,7 +309,7 @@ module LineMessages
                     },
                     {
                       "type": "text",
-                      "text": context || "加藤 琉魅子",
+                      "text": context,
                       "size": "sm",
                       "color": "#666666",
                       "flex": 5,

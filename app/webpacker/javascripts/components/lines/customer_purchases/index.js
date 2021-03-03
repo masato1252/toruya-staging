@@ -6,6 +6,7 @@ import LineIdentificationView from "components/lines/customer_identifications/sh
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
 import { SaleServices } from "user_bot/api";
 import { AddLineFriendInfo } from "shared/booking";
+import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
   useEffect(() => {
@@ -15,14 +16,14 @@ const FinalPaidPage = ({props, purcahse_data}) => {
   return (
     <div className="done-view">
       <h3 className="title">
-        ご利用ありがとうございます
+        {I18n.t('common.thanks')}
       </h3>
 
       <AddLineFriendInfo social_account_add_friend_url={props.add_friend_url}>
         <div className="message">
-          サービスコンテンツを
+          {I18n.t("online_service_purchases.service_content")}
           <br />
-          LINEでお届けしましたので ご確認ください
+          {I18n.t("online_service_purchases.please_check_in_line")}
         </div>
       </AddLineFriendInfo>
     </div>
@@ -30,7 +31,6 @@ const FinalPaidPage = ({props, purcahse_data}) => {
 }
 
 export const CustomerPurchases = ({props}) => {
-  const { successful_message_html } = props.i18n;
   const { social_user_id, customer_id } = props.social_customer;
   const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
 
