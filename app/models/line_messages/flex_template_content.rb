@@ -50,77 +50,6 @@ module LineMessages
       }
     end
 
-    def self.content6(asset_url: ,title1: ,title2:, title3:, body:, action_templates:)
-      {
-        "type": "bubble",
-        "direction": "ltr",
-        "header": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "box",
-              "layout": "horizontal",
-              "contents": [
-                {
-                  "type": "image",
-                  "url": asset_url,
-                  "size": "xxs"
-                },
-                {
-                  "type": "text",
-                  "text": title1,
-                  "weight": "bold",
-                  "size": "lg",
-                  "flex": 10,
-                  "align": "center",
-                  "contents": []
-                }
-              ]
-            },
-            {
-              "type": "text",
-              "text": title2,
-              "size": "md",
-              "align": "center",
-              "weight": "regular",
-              "color": "#727272"
-            },
-            {
-              "type": "text",
-              "text": title3,
-              "size": "sm",
-              "align": "center",
-              "weight": "regular",
-              "color": "#727272"
-            }
-          ]
-        },
-        "body": {
-          "type": "box",
-          "layout": "vertical",
-          "contents": [
-            {
-              "type": "text",
-              "text": body,
-              "wrap": true
-            }
-          ]
-        },
-        "footer": {
-          "type": "box",
-          "layout": "vertical",
-          "spacing": "md",
-          "contents": action_templates
-        },
-        "styles": {
-          "body": {
-            "separator": true
-          }
-        }
-      }
-    end
-
     def self.content2(title1: ,title2:, action_templates:)
       {
         "type": "bubble",
@@ -258,6 +187,147 @@ module LineMessages
           "body": {
             "separator": true
           }
+        }
+      }
+    end
+
+    def self.content6(asset_url: ,title1: ,title2:, title3:, body:, action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "image",
+                  "url": asset_url,
+                  "size": "xxs"
+                },
+                {
+                  "type": "text",
+                  "text": title1,
+                  "weight": "bold",
+                  "size": "lg",
+                  "flex": 10,
+                  "align": "center",
+                  "contents": []
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "text": title2,
+              "size": "md",
+              "align": "center",
+              "weight": "regular",
+              "color": "#727272"
+            },
+            {
+              "type": "text",
+              "text": title3,
+              "size": "sm",
+              "align": "center",
+              "weight": "regular",
+              "color": "#727272"
+            }
+          ]
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": body,
+              "wrap": true
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "md",
+          "contents": action_templates
+        },
+        "styles": {
+          "body": {
+            "separator": true
+          }
+        }
+      }
+    end
+
+    def self.content7(picture_url: , content_url: ,title1: ,label:, context:, action_templates:)
+      {
+        "type": "bubble",
+        "hero": {
+          "type": "image",
+          "url": picture_url,
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "uri",
+            "label": title1,
+            "uri": content_url
+          }
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": title1,
+              "weight": "bold",
+              "size": "lg",
+              "contents": []
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "margin": "lg",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "spacing": "sm",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": label || "担当",
+                      "size": "sm",
+                      "color": "#AAAAAA",
+                      "flex": 1,
+                      "contents": []
+                    },
+                    {
+                      "type": "text",
+                      "text": context || "加藤 琉魅子",
+                      "size": "sm",
+                      "color": "#666666",
+                      "flex": 5,
+                      "wrap": true,
+                      "contents": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "flex": 0,
+          "spacing": "sm",
+          "contents": action_templates
         }
       }
     end

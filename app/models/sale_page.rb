@@ -39,6 +39,8 @@ class SalePage < ApplicationRecord
 
   has_one_attached :picture # content picture
 
+  validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
+
   monetize :selling_price_amount_cents, allow_nil: true
   monetize :normal_price_amount_cents, allow_nil: true
 end

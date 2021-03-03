@@ -556,6 +556,9 @@ GEM
       enumerable-statistics (>= 2.0.1)
     unicode_utils (1.4.0)
     uniform_notifier (1.12.1)
+    video_thumb (0.1.6)
+      json (~> 2.1)
+      nokogiri (~> 1.8)
     warden (1.2.8)
       rack (>= 2.0.6)
     webpacker (4.2.2)
@@ -661,6 +664,7 @@ DEPENDENCIES
   timecop (~> 0.8.0)
   twilio-ruby (~> 5.25.1)
   uglifier (>= 1.3.0)
+  video_thumb
   webpacker (~> 4.2)
   webpush
   week_of_month

@@ -45,6 +45,7 @@ ja:
       pdf: 今すぐダウンロード
       questionnaire: アンケートに答える
       diagnosis: 今すぐ登録する
+    watch: 視聴する
   common:
     processing: 送信中
     date: 日付
@@ -96,6 +97,7 @@ ja:
     required_time: 所要時間
     menu: メニュー
     responsible_employee: 担当者
+    responsible_by: 担当
     booking_price: 予約価格
     status: ステータス
     off_schedule: 臨時休暇

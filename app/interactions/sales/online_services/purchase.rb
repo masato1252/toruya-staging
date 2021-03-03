@@ -20,15 +20,44 @@ module Sales
 
         relation.payment_state = :free
         relation.permission_state = :active
-        relation.save
+        persisted_record = relation.persisted?
 
-        ::LineClient.send(customer.social_customer, Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug))
+        if relation.save
+          unless persisted_record
+            ::LineClient.send(social_customer, I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name))
+          end
+
+          ::LineClient.flex(
+            social_customer,
+            LineMessages::FlexTemplateContainer.template(
+              altText: I18n.t("line.bot.messages.contact.contact_us"),
+              contents: LineMessages::FlexTemplateContent.content7(
+                picture_url: VideoThumb::get(sale_page.product.content["url"], "medium"),
+                content_url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug),
+                title1: sale_page.product.name,
+                label: I18n.t("common.responsible_by"),
+                context: sale_page.staff.name,
+                action_templates: [
+                  LineActions::Uri.new(
+                    label: I18n.t("action.watch"),
+                    url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug),
+                    btn: "primary"
+                  )
+                ].map(&:template)
+              )
+            )
+          )
+        end
       end
 
       private
 
       def product
         @product ||= sale_page.product
+      end
+
+      def social_customer
+        @social_customer ||= customer.social_customer
       end
 
       def validate_product
