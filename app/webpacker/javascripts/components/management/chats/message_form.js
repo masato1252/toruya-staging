@@ -30,8 +30,6 @@ const MessageForm = () => {
     setText("")
   }
 
-  if (selected_customer.conversation_state !== "one_on_one") return <></>
-
   return (
     <div id="chat-form">
       <form className="form-inline" onSubmit={onSubmit}>

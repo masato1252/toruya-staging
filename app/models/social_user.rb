@@ -24,6 +24,7 @@ require "user_bot_social_account"
 
 class SocialUser < ApplicationRecord
   belongs_to :user, optional: true
+  has_many :social_user_messages
 
   def client
     UserBotSocialAccount.client

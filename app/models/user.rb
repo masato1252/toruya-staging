@@ -46,6 +46,7 @@ class User < ApplicationRecord
 
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
+  ADMIN_EMAILS = ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -99,8 +100,10 @@ class User < ApplicationRecord
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
 
+  scope :admin, -> { where(email: ADMIN_EMAILS) }
+
   def super_admin?
-    ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].include?(email)
+    ADMIN_EMAILS.include?(email)
   end
 
   # shop owner or staffs

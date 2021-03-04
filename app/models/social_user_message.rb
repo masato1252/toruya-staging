@@ -21,6 +21,8 @@
 class SocialUserMessage < ApplicationRecord
   belongs_to :social_user
 
+  scope :unread, -> { where(readed_at: nil) }
+
   enum message_type: {
     bot: 0,
     admin: 1,
