@@ -19,7 +19,7 @@
 #
 
 class SocialUserMessage < ApplicationRecord
-  belongs_to :social_user
+  belongs_to :social_user, touch: true
 
   scope :unread, -> { where(readed_at: nil) }
 
