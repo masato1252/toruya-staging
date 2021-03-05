@@ -20,8 +20,38 @@ module SocialUserMessages
 
       if message.errors.present?
         errors.merge!(message.errors)
-      elsif message_type == SocialMessage.message_types[:bot] || message_type == SocialMessage.message_types[:admin]
+      elsif message_type == SocialUserMessage.message_types[:bot] || message_type == SocialUserMessage.message_types[:admin]
         LineClient.send(social_user, content)
+      elsif !readed && message_type == SocialUserMessage.message_types[:user]
+        AdminChannel.broadcast_to(
+          AdminChannel::CHANNEL_NAME,
+          {
+            type: "customer_new_message",
+            data: {
+              customer: SocialUserSerializer.new(social_user).attributes_hash,
+              message: SocialUserMessageSerializer.new(message).attributes_hash
+            }
+          }
+        )
+
+        WebPushSubscription.where(user_id: User.admin.pluck(:id)).each do |subscription|
+          begin
+            WebpushClient.send(
+              subscription: subscription,
+              message: {
+                title: "#{social_user.social_user_name} send a message",
+                body: content,
+                url: Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_user_id)
+              }
+            )
+          rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
+            Rollbar.error(e)
+
+            subscription.destroy
+          rescue => e
+            Rollbar.error(e)
+          end
+        end
       end
 
       message

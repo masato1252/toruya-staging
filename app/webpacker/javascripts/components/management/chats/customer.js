@@ -3,8 +3,6 @@
 import React, { useContext } from "react";
 import { GlobalContext } from "context/chats/global_state";
 
-import CustomerModeSwitch from "./customer_mode_switch";
-
 export default ({ customer }) => {
   const { selected_customer, dispatch }= useContext(GlobalContext)
 
@@ -26,9 +24,6 @@ export default ({ customer }) => {
           { customer.shop_customer ? `(${customer.shop_customer.name})` : ""}
           { customer.unread_message_count ? `(${customer.unread_message_count})` : "" }
         </div>
-      </div>
-      <div className="actions">
-        <CustomerModeSwitch customer={customer} />
       </div>
     </div>
   )
