@@ -49,7 +49,7 @@ module Booking
               special_date_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{json_parsed_date[START_AT_TIME_PART]}")
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
-              Rails.cache.fetch(cache_key(special_date), expires_in: 1.day) do
+              Rails.cache.fetch(cache_key(special_date)) do
                 test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
               end
             end.compact
@@ -68,7 +68,7 @@ module Booking
           # XXX: Heroku keep meeting R14 & R15 memory errors, Parallel cause the problem
           # if true || Rails.env.test?
             available_working_dates.map do |date|
-              Rails.cache.fetch(cache_key(date), expires_in: 1.day) do
+              Rails.cache.fetch(cache_key(date)) do
                 test_available_booking_date(booking_options, date)
               end
             end.compact
