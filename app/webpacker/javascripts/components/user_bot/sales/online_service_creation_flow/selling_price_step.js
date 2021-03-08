@@ -17,7 +17,7 @@ const SellingPriceStep = ({step, next, prev}) => {
         <label className="">
           <div>
             <input name="selling_type" type="radio" value="one_time" disabled={true} />
-            １回払い(準備中)
+            <span className="line-through">１回払い</span>(準備中)
           </div>
         </label>
       </div>
@@ -26,7 +26,7 @@ const SellingPriceStep = ({step, next, prev}) => {
         <label className="">
           <div>
             <input name="selling_type" type="radio" value="multiple_time" disabled={true} />
-            分割払い(準備中)
+            <span className="line-through">分割払い</span>(準備中)
           </div>
         </label>
       </div>

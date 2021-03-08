@@ -158,7 +158,7 @@ ja:
           sell_what_number: 販売個数を限定しますか？
           sell_limit_number: 限定数を販売する(推奨)
           until_people_number: 人まで
-          sell_unlimit_number: ずっと販売する
+          sell_unlimit_number: 限定せずに販売する
           what_introduction_video: ヘッドラインに動画を使用すると 動画セミナーが売れやすくなります。
           introduction_video_hint: YouTubeご利用の場合は「公開」に設定してください。
         booking_page_creation:
