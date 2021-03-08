@@ -14,6 +14,7 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
             url={content.url}
             width='100%'
             height='100%'
+            controls={true}
             {...rest}
           />
         </div>
