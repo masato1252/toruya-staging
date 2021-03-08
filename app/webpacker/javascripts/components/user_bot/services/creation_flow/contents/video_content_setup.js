@@ -37,7 +37,7 @@ const VideoContentSetup = ({next, step}) => {
       <div className='video-player-wrapper'>
         <ReactPlayer
           className='react-player'
-          light={true}
+          light={false}
           url={content?.url}
           width='100%'
           height='100%'

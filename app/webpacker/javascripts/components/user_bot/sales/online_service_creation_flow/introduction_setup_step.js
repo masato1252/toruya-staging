@@ -37,7 +37,7 @@ const IntroductionSetupStep = ({step, next, prev, lastStep}) => {
       <div className='video-player-wrapper'>
         <ReactPlayer
           className='react-player'
-          light={true}
+          light={false}
           url={introduction_video?.url}
           width='100%'
           height='100%'
