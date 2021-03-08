@@ -241,7 +241,7 @@ const Form = () => {
           placeholder={i18n.memo}
         />
       </div>
-      <BottomNavigationBar>
+      <BottomNavigationBar klassName="centerize">
         <>
           {props.reservation_form.reservation_id && (
             <a className="btn btn-orange btn-circle btn-delete"
@@ -251,7 +251,10 @@ const Form = () => {
               href={Routes.lines_user_bot_shop_reservation_path(props.reservation_form.shop.id, props.reservation_form.reservation_id, { from_customer_id: props.reservation_form.from_customer_id || "" })}>
               <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
             </a>
-          )}
+)}
+          <span>
+            {props.reservation_form.reservation_id}
+          </span>
           <button
 
             disabled={!_isValidToReserve() || processing}
