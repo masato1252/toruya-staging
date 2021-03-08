@@ -19,14 +19,14 @@
       <h2 class="title">
         <%= @online_service_hash[:name] %>
       </h2>
-        <h3 class="reminder-mark desc">
-        登録者専用ページです
+      <h3 class="reminder-mark desc">
+        <%= I18n.t("common.only_for_login_user") %>
       </h3>
-      <div class="message break-line-content centerize">このページの閲覧には サービスへの登録が必要です</div>
+      <div class="message break-line-content centerize"><%= I18n.t("common.read_required_login_user") %></div>
 
       <% if current_owner.social_account&.add_friend_url %>
         <div class="message centerize">
-          <h3 class="desc break-line-content">登録をご希望の方は LINEでお問合せください</h3>
+          <h3 class="desc break-line-content"><%= I18n.t("common.login_add_friend_to_follow_information") %></h3>
 
           <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording only-word">
             <%= I18n.t("booking_page.done.add_friend_btn") %>
@@ -50,14 +50,14 @@
       <h2 class="title">
         <%= @online_service_hash[:name] %>
       </h2>
-        <h3 class="reminder-mark desc">
-        登録者専用ページです
+      <h3 class="reminder-mark desc">
+        <%= I18n.t("common.only_for_login_user") %>
       </h3>
-      <div class="message break-line-content centerize">このページの閲覧には サービスへの登録が必要です</div>
+      <div class="message break-line-content centerize"><%= I18n.t("common.read_required_login_user") %></div>
 
       <% if line_login_url(current_owner.social_account, request.url) %>
         <div class="message centerize">
-          <h3 class="desc break-line-content">既に登録済みの方は ログインすると閲覧できます</h3>
+          <h3 class="desc break-line-content"><%= I18n.t("common.login_to_watch") %></h3>
 
           <a href="<%= line_login_url(current_owner.social_account, request.url) %>" class="btn line-button with-wording only-word" data-method="post">
             <%= I18n.t("common.line_login_btn_word") %>
@@ -67,10 +67,10 @@
 
       <% if current_owner.social_account&.add_friend_url %>
         <div class="message centerize">
-          <h3 class="desc break-line-content">LINEでお友だち登録して 次回募集のお知らせを受け取る</h3>
+          <h3 class="desc break-line-content"><%= I18n.t("common.add_friend_to_follow_information") %></h3>
 
           <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording only-word">
-            お友だち登録
+            <%= I18n.t("action.add_as_friend") %>
           </a>
         </div>
       <% end %>
