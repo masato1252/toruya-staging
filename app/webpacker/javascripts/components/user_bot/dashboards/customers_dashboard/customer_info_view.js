@@ -13,7 +13,9 @@ const BottomBar = () => {
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>{props.i18n.updated_date} {selected_customer.lastUpdatedAt}</span>
+      <span>
+        {props.i18n.updated_date} {selected_customer.lastUpdatedAt}({selected_customer?.id})
+      </span>
       <button
         className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => dispatch({type: "CHANGE_VIEW", payload: { view: "customer_info_form" }})} >
