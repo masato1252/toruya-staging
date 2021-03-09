@@ -7,6 +7,7 @@ import { useGlobalContext } from "context/user_bots/customers_dashboard/global_s
 import CustomerBasicInfo from "./customer_basic_info";
 import { BottomNavigationBar, NotificationMessages } from "shared/components"
 import CustomerNav from "./customer_nav";
+import { zeroPad } from "libraries/helper";
 
 const BottomBar = () => {
   const { selected_customer, props, dispatch } = useGlobalContext()
@@ -14,7 +15,7 @@ const BottomBar = () => {
   return (
     <BottomNavigationBar klassName="centerize">
       <span>
-        {props.i18n.updated_date} {selected_customer.lastUpdatedAt}({selected_customer?.id})
+        {props.i18n.updated_date} {selected_customer.lastUpdatedAt}({zeroPad(selected_customer?.id || 0, 7)})
       </span>
       <button
         className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
