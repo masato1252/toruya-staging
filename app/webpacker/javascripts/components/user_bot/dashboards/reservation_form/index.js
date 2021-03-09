@@ -15,7 +15,7 @@ import CustomerModal from "./customer_modal";
 import MenuStaffsList from "./menu_staffs_list";
 import ReservationCustomersList from "./customers_list";
 import StaffStates from "./staff_states";
-import { displayErrors } from "libraries/helper.js"
+import { displayErrors, zeroPad } from "libraries/helper.js"
 
 import { GlobalProvider, GlobalContext } from "context/user_bots/reservation_form/global_state"
 
@@ -253,7 +253,7 @@ const Form = () => {
             </a>
 )}
           <span>
-            {props.reservation_form.reservation_id}
+            {zeroPad(props.reservation_form.reservation_id, 7)}
           </span>
           <button
 
