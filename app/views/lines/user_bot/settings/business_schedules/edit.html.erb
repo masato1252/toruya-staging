@@ -1,0 +1,7 @@
+<%= react_component("user_bot/settings/business_schedules/edit", {
+  props: {
+    business_schedule: BusinessScheduleSerializer.new(@business_schedule).attributes_hash,
+  }
+},
+{ camelize_props: false }
+) %>

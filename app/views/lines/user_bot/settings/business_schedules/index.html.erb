@@ -1,0 +1,35 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: shops_lines_user_bot_settings_business_schedules_path, title: t("user_bot.dashboards.settings.business_schedules.business_time") %>
+
+  <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.base_business_time") %></div>
+  <% (1..7).each do |wday| %>
+    <% business_schedule = @wdays_business_schedules.find {|schedule| schedule.day_of_week == wday % 7} %>
+
+    <%= link_to edit_lines_user_bot_settings_business_schedules_path(shop_id: business_schedule.shop_id, id: business_schedule.id), class: "field-row" do %>
+      <span><%= I18n.t("date.day_names").at(wday % 7) %></span>
+      <span>
+        <% if business_schedule.start_time || business_schedule.end_time %>
+          <%= I18n.l(business_schedule.start_time, format: :time_only) if business_schedule.start_time %> 〜 <%= I18n.l(business_schedule.end_time, format: :time_only) if business_schedule.end_time %>
+        <% else %>
+          <span class="danger">CLOSE</span>
+        <% end %>
+        <i class="fa fa-angle-right"></i>
+      </span>
+    <% end %>
+  <% end %>
+
+  <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.holiday_label") %></div>
+  <%= link_to edit_lines_user_bot_settings_shops_path(shop_id: @shop.id, attribute: "holiday_working"), class: "field-row" do %>
+    <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
+    <span>
+      <%= @shop.holiday_working ? content_tag(:span, "OPEN", class: 'successful') : content_tag(:span, "CLOSE", class: 'danger') %>
+      <i class="fa fa-angle-right"></i>
+    </span>
+  <% end %>
+
+  <div class="margin-around centerize">
+    <div class="break-line-content"><%= t("user_bot.dashboards.settings.business_schedules.business_time_introduction1") %></div>
+    <br />
+    <div class="break-line-content"><%= t("user_bot.dashboards.settings.business_schedules.business_time_introduction2") %></div>
+  </div>
+</div>
