@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: shops
@@ -18,6 +17,7 @@
 #  updated_at         :datetime         not null
 #  deleted_at         :datetime
 #  template_variables :json
+#  address_details    :jsonb
 #
 # Indexes
 #
@@ -48,5 +48,13 @@ class Shop < ApplicationRecord
 
   def staff_users
     staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user }
+  end
+
+  def company_full_address
+    if address_details.present?
+      Address.new(address_details).display_address
+    elsif address.present?
+      "〒#{zip_code} #{address}"
+    end
   end
 end

@@ -12,19 +12,21 @@ module Profiles
       string :street2, default: nil
     end
 
+    validate :validate_address
+
     def execute
       ApplicationRecord.transaction do
-        address = "#{params[:region]}#{params[:city]}#{params[:street1]}#{params[:street2]}"
-
         user.profile.update!(
           params.merge!(
-            address: address,
-            company_address: address,
+            address: address.pure_address,
+            company_address: address.pure_address,
             company_zip_code: params[:zip_code],
             phone_number: user.phone_number,
             company_phone_number: user.phone_number,
             email: user.email,
-            company_name: "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
+            company_name: "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}",
+            company_address_details: address.as_json,
+            personal_address_details: address.as_json
           )
         )
         # XXX: The user and social_user was connected, what I want to do is change_rich_menu here
@@ -33,6 +35,18 @@ module Profiles
         Notifiers::LineUserSignedUp.perform_later(receiver: social_user)
         Notifiers::VideoForUserCreatedShop.perform_later(receiver: social_user)
       end
+    end
+
+    private
+
+    def validate_address
+      if address.invalid?
+        errors.add(:params, :address_invalid)
+      end
+    end
+
+    def address
+      @address ||= Address.new(params)
     end
   end
 end

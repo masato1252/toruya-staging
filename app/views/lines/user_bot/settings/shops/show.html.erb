@@ -1,0 +1,22 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_shops_path, title: "店舗情報" %>
+  <div class="field-header">店名</div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: :name) do %>
+    <div>
+      <%= @shop.name %><br />
+      <%= @shop.short_name %>
+    </div>
+  <% end %>
+
+  <div class="field-header">店舗住所</div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: :address), title: @shop.company_full_address %>
+
+  <div class="field-header">電話番号</div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: :phone_number), title: @shop.phone_number %>
+
+  <div class="field-header">Eメール</div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: :email), title: @shop.email %>
+
+  <div class="field-header">Webサイト</div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: :website), title: @shop.website %>
+  </div>

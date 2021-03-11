@@ -8,7 +8,7 @@
     @booking_page.shop.display_name,
     @booking_page.title,
     @booking_page.greeting&.squish,
-    @booking_page.shop.address
+    @booking_page.shop.company_full_address
   ].join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
   <meta property="og:title" content="<%= @booking_page.shop.display_name %> | <%= @booking_page.name %>">

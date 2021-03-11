@@ -1064,7 +1064,9 @@ CREATE TABLE public.profiles (
     region character varying,
     city character varying,
     street1 character varying,
-    street2 character varying
+    street2 character varying,
+    personal_address_details jsonb,
+    company_address_details jsonb
 );
 
 
@@ -1642,7 +1644,8 @@ CREATE TABLE public.shops (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
-    template_variables json
+    template_variables json,
+    address_details jsonb
 );
 
 
@@ -3979,6 +3982,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210111070239'),
 ('20210127073815'),
 ('20210129122718'),
-('20210202020409');
+('20210202020409'),
+('20210311112133');
 
 
