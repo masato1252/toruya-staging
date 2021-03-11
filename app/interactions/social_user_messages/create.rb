@@ -5,10 +5,17 @@ require "webpush_client"
 
 module SocialUserMessages
   class Create < ActiveInteraction::Base
+    TEXT_TYPE = "text"
+    VIDEO_TYPE = "video"
+    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE].freeze
+
     object :social_user
     string :content
+    string :content_type, default: TEXT_TYPE
     boolean :readed
     integer :message_type
+
+    validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
 
     def execute
       message = SocialUserMessage.create(
@@ -21,7 +28,11 @@ module SocialUserMessages
       if message.errors.present?
         errors.merge!(message.errors)
       elsif message_type == SocialUserMessage.message_types[:bot] || message_type == SocialUserMessage.message_types[:admin]
-        LineClient.send(social_user, content)
+        if content_type == TEXT_TYPE
+          LineClient.send(social_user, content)
+        else
+          LineClient.send_video(social_user, content)
+        end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         AdminChannel.broadcast_to(
           AdminChannel::CHANNEL_NAME,

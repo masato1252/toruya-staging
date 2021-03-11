@@ -99,12 +99,17 @@ module Notifiers
       raise NotImplementedError, "Subclass must implement this method"
     end
 
+    def content_type
+      SocialUserMessages::Create::TEXT_TYPE
+    end
+
     def send_line
       case target_line_user
       when SocialUser
         SocialUserMessages::Create.run(
           social_user: target_line_user,
           content: message,
+          content_type: content_type,
           message_type: SocialMessage.message_types[:bot],
           readed: true
         )
