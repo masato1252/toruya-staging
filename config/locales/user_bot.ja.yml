@@ -86,6 +86,20 @@ ja:
           manual_switch_btn: 手動に切り替える
           auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューが<br />自動的に表示されます。"
           auto_switch_btn: 自動に切り替える
+        business_schedules:
+          reservation_management: 予約管理
+          business_time: 営業日時
+          base_business_time: 基本営業日時
+          holiday_label: 祝日
+          japanese_holiday_label: 日本の祝日
+          business_time_introduction1: この設定は、オンライン予約ページでの 予約受付時間の設定です。
+          business_time_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+          open_shop_time: 開店時間
+          close_shop_time: 閉店時間
+          shop_open_introduction1: オンライン予約ページから 設定された営業時間内で 予約を受け付けることができます。
+          shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
+          shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
+          shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
       booking_pages:
         index:
           title: オンライン予約ページ
