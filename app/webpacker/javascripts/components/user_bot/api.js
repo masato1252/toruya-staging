@@ -391,7 +391,7 @@ const ShopServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.lines_user_bot_settings_shops_path({format: "json"}),
+      url: Routes.lines_user_bot_settings_shop_path(data['id'], {format: "json"}),
       data: data,
       responseType: "json"
     })

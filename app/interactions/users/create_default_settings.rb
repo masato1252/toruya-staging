@@ -13,11 +13,12 @@ module Users
           params: {
             name: shop_name,
             short_name: shop_name,
-            zip_code: profile.company_zip_code || profile.zip_code,
             phone_number: profile.company_phone_number.presence || user.phone_number || profile.phone_number,
             email: user.email.presence || profile.email,
-            address: profile.company_full_address.presence || profile.personal_full_address,
-            website: profile.website
+            website: profile.website,
+            zip_code: profile.company_zip_code || profile.zip_code,
+            address: profile.company_address.presence || profile.address,
+            address_details: profile.company_address_details || profile.personal_address_details
           }
         )
       end

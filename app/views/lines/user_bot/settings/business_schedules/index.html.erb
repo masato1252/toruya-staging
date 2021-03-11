@@ -19,7 +19,7 @@
   <% end %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.holiday_label") %></div>
-  <%= link_to edit_lines_user_bot_settings_shops_path(shop_id: @shop.id, attribute: "holiday_working"), class: "field-row" do %>
+  <%= link_to edit_lines_user_bot_settings_shop_path(id: @shop.id, attribute: "holiday_working"), class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.business_schedules.japanese_holiday_label") %></span>
     <span>
       <%= @shop.holiday_working ? content_tag(:span, "OPEN", class: 'successful') : content_tag(:span, "CLOSE", class: 'danger') %>

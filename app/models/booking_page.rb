@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: booking_pages
@@ -27,7 +26,6 @@
 #  booking_page_index              (user_id,draft,line_sharing,start_at)
 #  index_booking_pages_on_shop_id  (shop_id)
 #  index_booking_pages_on_slug     (slug) UNIQUE
-#  index_booking_pages_on_user_id  (user_id)
 #
 
 # When booking page limit day is 1, that means you couldn't book today, you have to book one day before the reservation day

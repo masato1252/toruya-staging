@@ -9,7 +9,7 @@
     @main_product.shop.display_name,
     @main_product.title,
     @main_product.greeting&.squish,
-    @main_product.shop.address
+    @main_product.shop.company_full_address
   ].join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
   <meta property="og:title" content="<%= @main_product.shop.display_name %> | <%= @main_product.name %> | <%= @product_name %>">

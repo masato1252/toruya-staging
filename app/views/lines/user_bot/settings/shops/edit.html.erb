@@ -1,7 +1,10 @@
 <%= react_component("user_bot/settings/shops/edit", {
   props: {
-    shop: @shop.attributes.slice("id", "holiday_working"),
-    attribute: params[:attribute]
+    shop: @shop.attributes.slice("id", "holiday_working", "name", "short_name", "address_details", "phone_number", "email", "website"),
+    attribute: params[:attribute],
+    previous_path: @previous_path,
+    title: @title,
+    header: @header
   }
 },
 { camelize_props: false }

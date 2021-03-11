@@ -26,7 +26,6 @@ const ShopSelectionStep = ({next, step}) => {
 
             <b>{i18n.company_info}</b>
             <p>
-              〒{selected_shop.zipCode}<br />
               {selected_shop.address}<br />
               {selected_shop.phoneNumber}
             </p>

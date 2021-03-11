@@ -1,8 +1,47 @@
 # frozen_string_literal: true
 
 class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardController
+  def index
+    @shops = current_user.shops
+  end
+
+  def show
+    @shop = current_user.shops.find(params[:id])
+  end
+
   def edit
-    @shop = current_user.shops.find(params[:shop_id])
+    @shop = current_user.shops.find(params[:id])
+    @title =
+      case params[:attribute]
+      when "holiday_working"
+        I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+      else
+        "店舗情報"
+      end
+
+    @previous_path =
+      case params[:attribute]
+      when "holiday_working"
+        index_lines_user_bot_settings_business_schedules_path(shop_id: params[:id])
+      else
+        lines_user_bot_settings_shop_path(params[:id])
+      end
+
+    @header =
+      case params[:attribute]
+      when "holiday_working"
+        I18n.t("user_bot.dashboards.settings.business_schedules.holiday_label")
+      when "name"
+        "店名"
+      when "address"
+        "店舗住所"
+      when "phone_number"
+        "電話番号"
+      when "email"
+        "Eメール"
+      when "website"
+        "Webサイト"
+      end
   end
 
   def update
@@ -13,12 +52,13 @@ class Lines::UserBot::Settings::ShopsController < Lines::UserBotDashboardControl
     when "holiday_working"
       render json: json_response(outcome, { redirect_to: index_lines_user_bot_settings_business_schedules_path(shop_id: shop_params[:id]) })
     else
+      render json: json_response(outcome, { redirect_to: lines_user_bot_settings_shop_path(shop_id: shop_params[:id]) })
     end
   end
 
   private
 
   def shop_params
-    params.require(:shop).permit(:id, :holiday_working)
+    params.require(:shop).permit(:id, :holiday_working, :name, :short_name, :phone_number, :website, :email, address_details: [:zip_code, :region, :city, :street1, :street2])
   end
 end

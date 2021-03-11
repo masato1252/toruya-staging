@@ -14,6 +14,6 @@ class ShopSerializer
   end
 
   attribute :address do |shop|
-    "〒#{shop.zip_code} #{shop.address}" if shop.address.present?
+    shop.company_full_address
   end
 end
