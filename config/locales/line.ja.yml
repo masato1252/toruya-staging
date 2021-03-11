@@ -3,7 +3,7 @@ ja:
     keywords:
       settings: 設定
     bot:
-      thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
+      thanks_follow: "お友達登録ありがとうございます。\n\n今日から%{trial_days}日間、予約管理や顧客管理を無料でご利用いただけます。\n\nまずは店舗設定から始めましょう。"
     actions:
       label:
         sign_in: "Sign in"
