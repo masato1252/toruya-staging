@@ -281,6 +281,21 @@ const DemoEditButton = ({demo, jump}) => {
   )
 }
 
+const SwitchButton = ({checked, onChange, name, offWord, onWord}) => {
+  return (
+    <>
+      <input
+        id={name}
+        type="checkbox"
+        className="checkbox-button-box"
+        checked={checked}
+        onChange={onChange}
+      />
+      <label className="checkbox-button-label" htmlFor={name} data-before-content={offWord} data-after-content={onWord}></label>
+    </>
+  )
+}
+
 export {
   Input,
   InputRow,
@@ -302,5 +317,6 @@ export {
   UrlCopyBtn,
   BookingPageButtonCopyBtn,
   SubmitButton,
-  DemoEditButton
+  DemoEditButton,
+  SwitchButton
 };

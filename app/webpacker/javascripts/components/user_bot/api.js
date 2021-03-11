@@ -393,6 +393,34 @@ const OnlineServices = {
   },
 }
 
+const BusinessScheduleServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_business_schedule_path(data['id'], {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
+const ShopServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_shops_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -405,5 +433,7 @@ export {
   SocialAccountServices,
   ContactServices,
   SaleServices,
-  OnlineServices
+  OnlineServices,
+  BusinessScheduleServices,
+  ShopServices
 }

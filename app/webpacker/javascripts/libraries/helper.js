@@ -142,6 +142,8 @@ const Translator = (template, options) => {
   return template
 }
 
+const zeroPad = (num, places) => String(num).padStart(places, '0')
+
 export {
   requiredValidation,
   emailFormatValidator,
@@ -158,5 +160,6 @@ export {
   isPersonalScheduleDate,
   arrayWithLength,
   displayErrors,
-  Translator
+  Translator,
+  zeroPad
 };

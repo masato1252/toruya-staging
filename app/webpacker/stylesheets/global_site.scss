@@ -21,3 +21,55 @@
   overflow-wrap: break-word;
 }
 
+.checkbox-button-box {
+  display: none;
+}
+
+.checkbox-button-box:checked + label:before {
+  background: #60938a;
+  color: #60938a;
+}
+
+.checkbox-button-box:checked + label:after {
+  background: #96bfb8;
+  color: #FFFFFF;
+}
+
+.checkbox-button-label {
+  background-image: none;
+  padding-left: 0;
+
+  &::before {
+    content: attr(data-before-content);
+    display: inline-block;
+    padding: .2em .5em;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1.5;
+    font-size: 14px;
+    padding: 5px;
+    background: #DEDEDE;
+    color: #000000;
+    border-top-left-radius: .3em;
+    border-bottom-left-radius: .3em;
+    width: 4em;
+  }
+
+  &::after {
+    content: attr(data-after-content);
+    display: inline-block;
+    padding: .2em .5em;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1.5;
+    font-size: 14px;
+    padding: 5px;
+    background: #ABABAB;
+    color: #ABABAB;
+    border-top-right-radius: .3em;
+    border-bottom-right-radius: .3em;
+    width: 4em;
+  }
+}

@@ -17,7 +17,7 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
           SocialUserMessages::Create,
           social_user: social_user,
           content: event["message"]["text"],
-          readed: true,
+          readed: false,
           message_type: SocialUserMessage.message_types[:user]
         )
 

@@ -36,7 +36,8 @@ $message_size: 8px;
     }
 
     .bot,
-    .staff {
+    .staff,
+    .admin {
       float: $staff_message_position;
 
       * {
@@ -45,7 +46,9 @@ $message_size: 8px;
     }
 
     .customer,
-    .customer_reply_bot {
+    .customer_reply_bot,
+    .user,
+    .user_reply_bot {
       float: $customer_message_position;
 
       * {
@@ -57,15 +60,18 @@ $message_size: 8px;
       background-color: $palette-color4;
     }
 
-    .staff > .message-content {
+    .staff > .message-content,
+    .admin > .message-content {
       background-color: $palette-color10;
     }
 
-    .customer > .message-content {
+    .customer > .message-content,
+    .user > .message-content {
       background-color: $palette-color3;
     }
 
-    .customer_reply_bot > .message-content {
+    .customer_reply_bot > .message-content,
+    .user_reply_bot > .message-content {
       background-color: $warning;
     }
   }

@@ -102,6 +102,20 @@ Rails.application.routes.draw do
 
           resource :rich_menu, only: [:edit, :create, :destroy]
         end
+
+        resources :business_schedules, only: [:update] do
+          collection do
+            get :shops
+            get "/shop/:shop_id", action: :index, as: :index
+            get "/shop/:shop_id/edit/:id", action: :edit, as: :edit
+          end
+        end
+
+        resource :shops, only: [:update] do
+          collection do
+            get "/:shop_id/edit", action: :edit, as: :edit
+          end
+        end
       end
 
       resources :settings, only: [:index] do
@@ -433,6 +447,7 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
+      resources :chats, only: [:index]
       resources :business_applications, only: [:index] do
         member do
           post "approve"

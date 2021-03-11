@@ -43,7 +43,7 @@ export default ({ props }) => {
   useEffect(() => {
     const subscription = Consumer.subscriptions.create(
       {
-        channel: "UserChannel",
+        channel: props.channel_name || "UserChannel",
         user_id: props.super_user_id
       },
       {

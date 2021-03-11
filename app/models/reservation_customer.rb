@@ -29,7 +29,7 @@ class ReservationCustomer < ApplicationRecord
   ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
 
-  belongs_to :reservation
+  belongs_to :reservation, touch: true
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false

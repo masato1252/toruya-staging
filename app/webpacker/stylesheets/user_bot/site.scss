@@ -38,6 +38,8 @@ body {
   &.booking_pages,
   &.booking_options,
   &.social_accounts,
+  &.business-schedules,
+  &.shops,
   &.profiles,
   &.payments,
   &.rich_menus {
@@ -150,6 +152,10 @@ textarea {
 a {
   color: $palette-color2;
   text-decoration: none;
+}
+
+.successful {
+  color: $successful !important;
 }
 
 .warning {
