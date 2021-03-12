@@ -49,6 +49,10 @@ ja:
     end_time: 終了時間
     updated_time: 更新時間
     zip_code: 郵便番号
+    address_region: 都道府県
+    address_city: 市区町村
+    address_street1: 続き住所
+    address_street2: 建物名／部屋番号
     address: 住所
     phone_number: 電話番号
     email: メール
@@ -106,6 +110,7 @@ ja:
     tax: 税
     apply_now: お申し込みは今すぐ
     preparing: 準備中
+    shop_name: 店舗名
     short_shop_name: 短縮店舗名
     company_info: 会社情報
     day_word: 日

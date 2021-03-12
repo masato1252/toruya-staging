@@ -21,7 +21,7 @@ const SocialAccountEdit =({props}) => {
     let error, response;
 
     [error, response] = await ShopServices.update({
-      data: _.assign( data, { attribute: props.attribute })
+      data: _.assign( data, { attribute: props.attribute, logo: data["logo"]?.[0] })
     })
 
     window.location = response.data.redirect_to
@@ -29,11 +29,25 @@ const SocialAccountEdit =({props}) => {
 
   const zip_code = watch("address_details[zip_code]");
   const address = useAddress(zip_code)
+  const logo_url = watch("logo_url")
 
   useEffect(() => {
     setValue("address_details[region]", address?.prefecture)
     setValue("address_details[city]", address?.city)
   }, [address.city])
+
+  const _handleImageChange = (e) => {
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      setValue("logo_url", reader.result)
+    }
+
+    reader.readAsDataURL(file)
+  }
 
   const renderCorrespondField = () => {
     switch(props.attribute) {
@@ -46,15 +60,29 @@ const SocialAccountEdit =({props}) => {
           </div>
         );
       break;
+      case "logo":
+        return (
+          <div className="field-row justify-center">
+            <div className="margin-around">
+              <input type="hidden" name="logo_url" ref={register} />
+              <img src={logo_url} className="logo" />
+            </div>
+            <input ref={register} onChange={_handleImageChange} type="file" name="logo" accept="image/png,image/gif" />
+            <p className="margin-around desc centerize">
+              {I18n.t("user_bot.dashboards.settings.shop.logo_limit_description")}
+            </p>
+          </div>
+        )
+        break;
       case "name":
         return (
           <>
             <div className="field-row">
-              店舗名
+              {I18n.t("common.shop_name")}
               <input ref={register({ required: true })} name="name" type="text" />
             </div>
             <div className="field-row">
-              短縮店舗名
+              {I18n.t("common.short_shop_name")}
               <input ref={register({ required: true })} name="short_name" type="text" />
             </div>
           </>
@@ -64,7 +92,7 @@ const SocialAccountEdit =({props}) => {
         return (
           <>
             <div className="field-row">
-              郵便番号
+              {I18n.t("common.zip_code")}
               <input
                 ref={register({ required: true })}
                 name="address_details[zip_code]"
@@ -73,7 +101,7 @@ const SocialAccountEdit =({props}) => {
               />
             </div>
             <div className="field-row">
-              都道府県
+              {I18n.t("common.address_region")}
               <input
                 ref={register({ required: true })}
                   name="address_details[region]"
@@ -81,7 +109,7 @@ const SocialAccountEdit =({props}) => {
               />
             </div>
             <div className="field-row">
-              市区町村
+              {I18n.t("common.address_city")}
               <input
                 ref={register({ required: true })}
                 name="address_details[city]"
@@ -89,7 +117,7 @@ const SocialAccountEdit =({props}) => {
               />
             </div>
             <div className="field-row">
-              続き住所
+              {I18n.t("common.address_street1")}
               <input
                 ref={register}
                 name="address_details[street1]"
@@ -97,7 +125,7 @@ const SocialAccountEdit =({props}) => {
               />
             </div>
             <div className="field-row">
-              建物名／部屋番号
+              {I18n.t("common.address_street2")}
               <input
                 ref={register}
                 name="address_details[street2]"

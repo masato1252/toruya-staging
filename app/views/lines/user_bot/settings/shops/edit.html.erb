@@ -1,6 +1,6 @@
 <%= react_component("user_bot/settings/shops/edit", {
   props: {
-    shop: @shop.attributes.slice("id", "holiday_working", "name", "short_name", "address_details", "phone_number", "email", "website"),
+    shop: ShopFormSerializer.new(@shop).attributes_hash,
     attribute: params[:attribute],
     previous_path: @previous_path,
     title: @title,
