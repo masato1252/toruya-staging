@@ -18,7 +18,7 @@ class SalePagesController < ActionController::Base
           @main_product.shop.display_name,
           @main_product.title,
           @main_product.greeting&.squish,
-          @main_product.shop.address
+          @main_product.shop.company_full_address
       ].compact
 
       @serializer = SalePages::BookingPageSerializer

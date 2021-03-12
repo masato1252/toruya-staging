@@ -44,12 +44,7 @@ class CompanyInfoSerializer
   end
 
   attribute :address do |object|
-    case object
-    when Shop
-      "〒#{object.zip_code} #{object.address}" if object.address.present?
-    when Profile
-      object.company_full_address
-    end
+    object.company_full_address
   end
 
   attribute :phone_number do |object|
