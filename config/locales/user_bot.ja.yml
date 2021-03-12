@@ -100,6 +100,16 @@ ja:
           shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+        shop:
+          shop_management: 店舗管理
+          shop_info_label: 店舗情報
+          name_label: 店名
+          address_label: 店舗住所
+          phone_number_label: 電話番号
+          email_label: Eメール
+          website_label: Webサイト
+          logo_label: 店舗ロゴ
+          logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
       booking_pages:
         index:
           title: オンライン予約ページ

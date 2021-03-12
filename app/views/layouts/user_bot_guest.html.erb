@@ -15,6 +15,7 @@
     <%= yield :script if content_for?(:script) %>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= render "layouts/google_analytics" %>
   </head>
 
   <body>

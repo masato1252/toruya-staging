@@ -412,10 +412,11 @@ const ShopServices = {
     return request({
       method: "PUT",
       headers: {
-        "X-CSRF-Token": Rails.csrfToken()
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
-      url: Routes.lines_user_bot_settings_shops_path({format: "json"}),
-      data: data,
+      url: Routes.lines_user_bot_settings_shop_path(data['id'], {format: "json"}),
+      data: serialize(data),
       responseType: "json"
     })
   },

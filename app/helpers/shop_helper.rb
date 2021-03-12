@@ -18,17 +18,26 @@ module ShopHelper
                     { id: "staff" })
   end
 
-  def shop_logo_url(shop, size)
+  def shop_logo_url(shop, size, latest = false)
     @shop_logo_urls ||= {}
 
     if shop.logo.attached?
-      @shop_logo_urls[shop.id] ||=
+      if latest
         Rails.application.routes.url_helpers.url_for(shop.logo.variant(
           combine_options: {
             resize: "#{size}",
             flatten: true
           }
-      ))
+        ))
+      else
+        @shop_logo_urls[shop.id] ||=
+          Rails.application.routes.url_helpers.url_for(shop.logo.variant(
+            combine_options: {
+              resize: "#{size}",
+              flatten: true
+            }
+        ))
+      end
     end
   end
 

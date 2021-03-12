@@ -111,10 +111,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resource :shops, only: [:update] do
-          collection do
-            get "/:shop_id/edit", action: :edit, as: :edit
-          end
+        resources :shops, only: [:index, :show, :update, :edit] do
         end
       end
 

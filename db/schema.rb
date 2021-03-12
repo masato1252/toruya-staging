@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_26_134008) do
+ActiveRecord::Schema.define(version: 2021_03_11_112133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -398,6 +398,8 @@ ActiveRecord::Schema.define(version: 2021_02_26_134008) do
     t.string "street1"
     t.string "street2"
     t.json "template_variables"
+    t.jsonb "personal_address_details"
+    t.jsonb "company_address_details"
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
@@ -597,6 +599,7 @@ ActiveRecord::Schema.define(version: 2021_02_26_134008) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.json "template_variables"
+    t.jsonb "address_details"
     t.index ["user_id", "deleted_at"], name: "index_shops_on_user_id_and_deleted_at"
   end
 
