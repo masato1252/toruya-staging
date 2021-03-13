@@ -29,7 +29,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
         content={content}
         upsell_sale_page={upsell.sale_page}
         demo={true}
-        light={true}
+        light={false}
         jump={jump}
       />
 

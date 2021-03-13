@@ -27,7 +27,7 @@ const SaleTemplateView = ({company_info, product, demo, template, template_varia
       <OnlineServiceSolution
         solution_type="video"
         content={introduction_video}
-        light={true}
+        light={false}
       />
     </div>
 
