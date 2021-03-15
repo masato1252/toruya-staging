@@ -79,7 +79,7 @@ ja:
     free_service:
       purchased_notification_message: "この度は、%{service_title}のご購入ありがとうございました。\n\n「試聴する」ボタンからご覧ください。"
     service_content: サービスコンテンツを
-    please_check_in_line: LINEでお届けしましたので ご確認ください
+    please_check_in_line: LINEでお届けしましたので<br>ご確認ください
   contact_page:
     message_form:
       title: お問合せ内容を入力して送信してください

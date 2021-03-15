@@ -20,10 +20,10 @@ const FinalPaidPage = ({props, purcahse_data}) => {
       </h3>
 
       <AddLineFriendInfo social_account_add_friend_url={props.add_friend_url}>
-        <div className="message">
+        <div className="message break-line-content">
           {I18n.t("online_service_purchases.service_content")}
           <br />
-          {I18n.t("online_service_purchases.please_check_in_line")}
+          <div dangerouslySetInnerHTML={{ __html: I18n.t("online_service_purchases.please_check_in_line")  }} />
         </div>
       </AddLineFriendInfo>
     </div>

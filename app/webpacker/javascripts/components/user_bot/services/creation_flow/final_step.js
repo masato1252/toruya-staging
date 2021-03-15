@@ -11,9 +11,9 @@ const FinalStep = ({step}) => {
   return (
     <div className="form settings-flow">
       <ServiceFlowStepIndicator step={step} />
-      <div className="action-block">
-        <h4 className="margin-around break-line-content">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page")}</h4>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page")}</h3>
 
+      <div className="action-block">
         <a href={Routes.new_lines_user_bot_sales_online_service_url({slug: online_service_slug})} className="btn btn-yellow btn-flexible">
           <i className="fa fa-cart-arrow-down fa-4x"></i>
           <h4>{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page_btn")}</h4>
