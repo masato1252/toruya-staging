@@ -105,15 +105,17 @@ const Plans = ({props}) => {
                   </span>
                 </div>
               </div>
-              <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
-                {premiumPlan.details.title}
-                <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
-                  <i className="fa fa-check-circle" aria-hidden="true" />
-                  <span>
-                    {basicPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
-                  </span>
+              {premiumPlan?.details && (
+                <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
+                  {premiumPlan.details.title}
+                  <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
+                    <i className="fa fa-check-circle" aria-hidden="true" />
+                    <span>
+                      {basicPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}
@@ -141,9 +143,11 @@ const Plans = ({props}) => {
                 <div className={`col`}>
                   {basicPlan.details[labelName]}
                 </div>
-                <div className={`col`}>
-                  {premiumPlan.details[labelName]}
-                </div>
+                {premiumPlan?.details?.[labelName] && (
+                  <div className={`col`}>
+                    {premiumPlan.details[labelName]}
+                  </div>
+                )}
               </div>
             )
           })
@@ -166,13 +170,15 @@ const Plans = ({props}) => {
             </label>
             {renderSaveOrPayButton("basic")}
           </div>
-          <div className={`col`}>
-            <label>
-              <div>{premiumPlan.details.period}</div>
-              <div className="price-amount">{premiumPlan.costFormat}</div>
-            </label>
-            {renderSaveOrPayButton("premium")}
-          </div>
+          {premiumPlan?.details && (
+            <div className={`col`}>
+              <label>
+                <div>{premiumPlan.details.period}</div>
+                <div className="price-amount">{premiumPlan.costFormat}</div>
+              </label>
+              {renderSaveOrPayButton("premium")}
+            </div>
+          ) }
         </div>
         <div className="table-row">
           <div className="col">
@@ -195,7 +201,7 @@ const Plans = ({props}) => {
         header="Trouya"
         plan_key={selectedPlan()?.key}
         desc={selectedPlan()?.name}
-        details_desc={`${premiumPlan.details.period}: ${selectedPlan()?.costFormat}`}
+        details_desc={`${basicPlan.details.period}: ${selectedPlan()?.costFormat}`}
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path()}
         props={props}

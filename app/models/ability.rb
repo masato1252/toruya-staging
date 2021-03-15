@@ -3,10 +3,16 @@
 class Ability
   include CanCan::Ability
 
-  BOOKING_PAGE_LIMIT = {
+  SALE_PAGE_LIMIT = {
     Plan::PREMIUM_LEVEL => nil,
-    Plan::BASIC_LEVEL => 3,
-    Plan::FREE_LEVEL => 1
+    Plan::BASIC_LEVEL => nil,
+    Plan::FREE_LEVEL => 3
+  }
+
+  CUSTOMER_LIMIT = {
+    Plan::PREMIUM_LEVEL => nil,
+    Plan::BASIC_LEVEL => nil,
+    Plan::FREE_LEVEL => 50
   }
 
   attr_accessor :current_user, :super_user, :shop
@@ -86,13 +92,9 @@ class Ability
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
     when Plan::BASIC_LEVEL
-      cannot :create, Staff
-      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
-      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL]
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
-      cannot :create, Staff
-      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
-      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::FREE_LEVEL]
+      cannot :create, Customer if super_user.customers.count >= CUSTOMER_LIMIT[Plan::FREE_LEVEL]
+      cannot :create, SalePage if super_user.sale_pages.count >= SALE_PAGE_LIMIT[Plan::FREE_LEVEL]
     end
 
     if super_user.business_member?
@@ -116,34 +118,17 @@ class Ability
       can :manage, :preset_filter
       can :manage, :saved_filter
       can :read, :shop_dashboard
-    when Plan::BASIC_LEVEL
+    when Plan::BASIC_LEVEL, Plan::FREE_LEVEL
       can :read, :filter
       can :manage, :preset_filter
-      cannot :manage, :saved_filter
-      cannot :read, :shop_dashboard
-    when Plan::FREE_LEVEL
-      cannot :read, :filter
-      cannot :manage, :preset_filter
-      cannot :manage, :saved_filter
-      cannot :read, :shop_dashboard
+      can :manage, :saved_filter
+      can :read, :shop_dashboard
     end
 
     staff_member_ability
   end
 
   def staff_member_ability
-    can :create_reservation, Shop do |shop|
-      shop &&
-      super_user.valid_shop_ids.include?(shop.id) &&
-      (super_user.premium_member? || admin?) &&
-      Reservations::DailyLimit.run(user: super_user).valid? &&
-      Reservations::TotalLimit.run(user: super_user).valid? &&
-      super_user.reservation_settings.exists? &&
-      shop.menus.exists?
-    end
-
-    can :create, :daily_reservations
-    can :create, :total_reservations
     can :edit, Staff do |staff|
       if staff.user_id == super_user.id
         if super_user.premium_member?
@@ -235,30 +220,6 @@ class Ability
 
     if super_user.reservation_settings.exists?
       can :create, :reservation_with_settings
-    end
-
-    case super_user.permission_level
-    when Plan::PREMIUM_LEVEL
-      can :create, :daily_reservations
-      can :create, :total_reservations
-    when Plan::TRIAL_LEVEL
-      reservation_daily_permission
-      reservation_total_permission
-    when Plan::FREE_LEVEL, Plan::BASIC_LEVEL
-      reservation_daily_permission
-      reservation_total_permission
-    end
-  end
-
-  def reservation_daily_permission
-    if Reservations::DailyLimit.run(user: super_user).invalid?
-      cannot :create, :daily_reservations
-    end
-  end
-
-  def reservation_total_permission
-    if Reservations::TotalLimit.run(user: super_user).invalid?
-      cannot :create, :total_reservations
     end
   end
 end

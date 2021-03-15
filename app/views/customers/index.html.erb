@@ -7,7 +7,7 @@
                       customer: customer_options([ @customer || super_user.customers.new]).first,
                       customer_view: !!@customer && @customer.contact_group_id ? "customer_reservations" : "customer_info",
                       from_reservation: params[:from_reservation],
-                      reservationCreatePermission: shop && can?(:create_reservation, shop) && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop),
+                      reservationCreatePermission: shop && can?(:create, :reservation_with_settings) && can?(:create_shop_reservations_with_menu, shop),
                       reservationCreateWarningPath: create_reservation_warnings_path(owner_id: super_user.id, shop_id: shop),
                       add_reservation_path: @add_reservation_path,
                       contact_groups: contact_group_options,
