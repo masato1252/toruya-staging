@@ -20,6 +20,7 @@ import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, CheckInLineBtn, Li
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
+import I18n from 'i18n-js/index.js.erb';
 
 class BookingReservationForm extends React.Component {
   constructor(props) {
