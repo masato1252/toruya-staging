@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import LineIdentificationView from "components/lines/customer_identifications/shared/line_identification_view"
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
 import { SaleServices } from "user_bot/api";
-import { AddLineFriendInfo } from "shared/booking";
+import { CheckInLineBtn } from "shared/booking";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
@@ -19,13 +19,13 @@ const FinalPaidPage = ({props, purcahse_data}) => {
         {I18n.t('common.thanks')}
       </h3>
 
-      <AddLineFriendInfo social_account_add_friend_url={props.add_friend_url}>
+      <CheckInLineBtn social_account_add_friend_url={props.add_friend_url}>
         <div className="message break-line-content">
           {I18n.t("online_service_purchases.service_content")}
           <br />
           <div dangerouslySetInnerHTML={{ __html: I18n.t("online_service_purchases.please_check_in_line")  }} />
         </div>
-      </AddLineFriendInfo>
+      </CheckInLineBtn>
     </div>
   )
 }

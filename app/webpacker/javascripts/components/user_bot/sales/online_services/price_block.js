@@ -2,20 +2,26 @@
 
 import React from "react";
 import I18n from 'i18n-js/index.js.erb';
-import { AddLineFriendInfo } from "shared/booking";
+import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, is_ended, purchase_url, social_account_add_friend_url, no_action}) => {
+const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action}) => {
   const renderActions = () => {
     if (no_action) return <></>
 
     if (!is_started) {
       return (
-        <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+        <>
+          <ServiceStartInfo start_at={start_at} />
+          <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+        </>
       )
     }
     else if (is_ended) {
       return (
-        <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+        <>
+          <ServiceEndInfo />
+          <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+        </>
       )
     }
     else {

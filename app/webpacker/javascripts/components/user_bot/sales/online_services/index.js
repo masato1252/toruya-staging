@@ -6,7 +6,7 @@ import PriceBlock from "components/user_bot/sales/online_services/price_block";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video, is_started, is_ended, purchase_url}) => {
+  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url}) => {
   return (
     <div className="sale-page centerize">
       <SaleTemplateView
@@ -21,6 +21,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         price={price}
         normal_price={normal_price}
         quantity={quantity}
+        start_at={start_at}
         is_started={is_started}
         is_ended={is_ended}
         purchase_url={purchase_url}

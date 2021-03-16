@@ -58,7 +58,8 @@ ja:
       feature3: 各種店舗の予約をカレンダーで確認
       signup_now: 今すぐ登録
       add_friend_messages_html: "LINEでお友だち登録して<br>最新情報を受け取る"
-      add_friend_btn: LINEで確認
+      add_friend_btn: お友だち登録
+      check_in_line_btn: LINEで確認
     start_yet:
       title: 受付開始前です
       message1: このページからのご予約は

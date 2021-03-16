@@ -16,7 +16,7 @@ export const BookingStartInfo = ({start_at}) => (
   </div>
 )
 
-export const BookingEndInfo = ({start_at}) => (
+export const BookingEndInfo = () => (
   <div className="booking-info">
     <div className="ended-view">
       <h3 className="title">
@@ -29,6 +29,41 @@ export const BookingEndInfo = ({start_at}) => (
       </div>
     </div>
   </div>
+)
+
+export const ServiceStartInfo = () => (
+  <div className="start-yet-view">
+    <div className="ended-view">
+      <h3 className="title">
+        {I18n.t("booking_page.start_yet.title")}
+      </h3>
+    </div>
+  </div>
+)
+
+export const ServiceEndInfo = () => (
+  <div className="booking-info">
+    <div className="ended-view">
+      <h3 className="title">
+        {I18n.t("booking_page.ended.title")}
+      </h3>
+    </div>
+  </div>
+)
+
+
+export const CheckInLineBtn = ({social_account_add_friend_url, children}) => (
+  social_account_add_friend_url ? (
+    <div className="message centerize">
+      {children}
+      <a href={social_account_add_friend_url} className="btn line-button with-logo">
+        <span className="fab fa-line" aria-hidden="true"></span>
+      </a>
+      <a href={social_account_add_friend_url} className="btn line-button with-wording">
+        {I18n.t("booking_page.done.check_in_line_btn")}
+      </a>
+    </div>
+  ) : <></>
 )
 
 export const AddLineFriendInfo = ({social_account_add_friend_url, children}) => (

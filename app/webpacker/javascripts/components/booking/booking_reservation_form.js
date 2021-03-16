@@ -16,7 +16,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
-import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, LineLoginBtn } from "shared/booking";
+import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
@@ -913,9 +913,7 @@ class BookingReservationForm extends React.Component {
           {message2}
         </div>
 
-        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url}>
-          <></>
-        </AddLineFriendInfo>
+        <CheckInLineBtn social_account_add_friend_url={this.props.social_account_add_friend_url} />
       </div>
     )
   }

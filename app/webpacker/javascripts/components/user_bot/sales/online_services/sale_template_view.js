@@ -9,7 +9,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 import OnlineServiceSolution from "components/user_bot/services/online_service_page/solution";
 
-const SaleTemplateView = ({company_info, product, demo, template, template_variables, social_account_add_friend_url, jump, no_action, price, normal_price, quantity, introduction_video, is_started, is_ended, purchase_url}) => (
+const SaleTemplateView = ({company_info, product, demo, template, template_variables, social_account_add_friend_url, jump, no_action, price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url}) => (
   <SaleTemplateContainer shop={company_info} product={product}>
     {demo && (
       <span className="btn btn-yellow edit-mark" onClick={() => jump(5)}>
@@ -41,6 +41,7 @@ const SaleTemplateView = ({company_info, product, demo, template, template_varia
         selling_price={price?.price_amount}
         normal_price={normal_price?.price_amount}
         quantity={quantity}
+        start_at={start_at}
         is_started={is_started}
         is_ended={is_ended}
         purchase_url={purchase_url}
