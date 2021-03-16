@@ -53,7 +53,7 @@
     booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,
     customer_last_name: @customer&.last_name,
-    customer_phone_number: @customer.mobile_phone_number,
+    customer_phone_number: @customer&.mobile_phone_number,
     reminder_permission: @customer&.reminder_permission,
     customer_info: customer_info_hash,
     present_customer_info: customer_info_hash,
