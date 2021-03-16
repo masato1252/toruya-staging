@@ -123,33 +123,47 @@ const Plans = ({props}) => {
       <div className="tbody">
         {
           [
+            {header: "預約管理"},
             "shop_can_set",
             "staff_in_charge",,
-            "max_customer_per_reservation",
             "reservation_restriction",
-            "private_schedule",
-            "customer_info",
-            "customer_group_limit",
-            "customer_filter",
-            "print_address",
-            "add_staff"
+            {header: "顧客管理"},
+            "customer_number",
+            {header: "WEB予約"},
+            "booking_page_number",
+            {header: "WEBサービス"},
+            "online_service_number",
+            {header: "販売促進"},
+            "sale_page_number",
+            "message_template",
+            {header: "サポート"},
+            "support"
           ].map((labelName) => {
-            return (
-              <div className="table-row" key={labelName}>
-                <div className="col th">{props.plan_labels[labelName]}</div>
-                <div className={`col`}>
-                  {freePlan.details[labelName]}
+            if (typeof(labelName) === 'object') {
+              return (
+                <div className="table-row" key={labelName.header}>
+                  <div className="col th header">{labelName.header}</div>
                 </div>
-                <div className={`col`}>
-                  {basicPlan.details[labelName]}
-                </div>
-                {premiumPlan?.details?.[labelName] && (
+              )
+            }
+            else {
+              return (
+                <div className="table-row" key={labelName}>
+                  <div className="col th">{props.plan_labels[labelName]}</div>
                   <div className={`col`}>
-                    {premiumPlan.details[labelName]}
+                    {freePlan.details[labelName]}
                   </div>
-                )}
-              </div>
+                  <div className={`col`}>
+                    {basicPlan.details[labelName]}
+                  </div>
+                  {premiumPlan?.details?.[labelName] && (
+                    <div className={`col`}>
+                      {premiumPlan.details[labelName]}
+                    </div>
+                  )}
+                </div>
             )
+            }
           })
         }
       </div>

@@ -34,6 +34,12 @@
 
     &.th {
       font-weight: bold;
+      align-items: flex-start !important;
+
+      &.header {
+        background-color: $gray2;
+        font-weight: normal;
+      }
     }
   }
 

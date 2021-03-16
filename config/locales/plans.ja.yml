@@ -1,0 +1,36 @@
+ja:
+  plans:
+    labels:
+      shop_can_set: 店舗数
+      staff_in_charge: スタッフ数
+      reservation_restriction: 予約件数
+      customer_number: 顧客データ
+      booking_page_number: 予約ページ
+      online_service_number: サービス
+      sale_page_number: 販売ページ
+      message_template: メッセージ テンプレート
+      support: 個別サポート
+    free:
+      title: フリー
+      period: ""
+      shop_can_set: 無制限
+      staff_in_charge: 無制限
+      reservation_restriction: 無制限
+      customer_number: "%{customer_limit}人まで"
+      booking_page_number: 無制限
+      online_service_number: 無制限
+      sale_page_number: "%{sale_page_limit}ページ"
+      message_template: プリセット
+      support: なし
+    basic:
+      title: ベーシック
+      period: 月額
+      shop_can_set: 無制限
+      staff_in_charge: 無制限
+      reservation_restriction: 無制限
+      customer_number: 無制限
+      booking_page_number: 無制限
+      online_service_number: 無制限
+      sale_page_number: 無制限
+      message_template: プリセット
+      support: あり

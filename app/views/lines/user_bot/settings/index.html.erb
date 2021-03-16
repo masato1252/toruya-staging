@@ -4,13 +4,13 @@
   <div class="dashboard">
     <div class="cell">
       <div>
-        <%= t("settings.dashboard.today_had_created") %>
+        <%= "あなたは現在" %>
       </div>
       <div>
-        <strong><span class="big"><%= @today_reservations_count %></span><span> / <%= current_user.premium_member? ? t("settings.dashboard.no_limit") : "Reservations::DailyLimit::RESERVATION_DAILY_LIMIT" %></span></strong>
+        <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
       </div>
       <div class="desc">
-        <%= t("settings.dashboard.do_reservations_created") %>
+        <%= "顧客情報があります" %>
       </div>
     </div>
     <div class="cell">
@@ -18,10 +18,10 @@
         <%= t("settings.dashboard.total_had_created") %>
       </div>
       <div>
-        <strong><span class="big"><%= @total_reservations_count %></span><span> / <%= @total_reservations_limit || t("settings.dashboard.no_limit") %></span></strong>
+        <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
       </div>
       <div class="desc">
-        <%= t("settings.dashboard.reservations_created") %>
+        <%= "販売ページがあります" %>
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@
       <div class="desc">
         <%= t("settings.plans.plan_info.status") %>: <%= subscription_status(@subscription) %><br />
         <% if current_user.trial_member? %>
-          <%= l(current_user.created_at.advance(months: 3).to_date) %>
+          <%= l(current_user.trial_expired_date) %>
         <% else %>
           <%= @subscription.expired_date && l(@subscription.expired_date) if @subscription.active? && @subscription.charge_required %>
           <%= " (#{@subscription.next_plan.name}変更予定)" if @subscription.active? && @subscription.next_plan %>

@@ -3,9 +3,10 @@
 class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
   def index
     @subscription = current_user.subscription
-    @today_reservations_count = current_user.today_reservations_count
-    @total_reservations_limit = "TOTAL_RESERVATIONS_LIMITS[current_user.permission_level]"
-    @total_reservations_count = current_user.total_reservations_count
+    @total_customer_count = current_user.customers.count
+    @total_customer_limit = Ability::CUSTOMER_LIMIT[current_user.current_plan.level] || I18n.t("settings.dashboard.no_limit")
+    @total_sale_page_count = current_user.sale_pages.count
+    @total_sale_page_limit = Ability::SALE_PAGE_LIMIT[current_user.current_plan.level] || I18n.t("settings.dashboard.no_limit")
     @social_account = current_user.social_account
   end
 end

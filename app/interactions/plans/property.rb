@@ -17,6 +17,11 @@ module Plans
           true
         end
 
+      details = I18n.t("plans")[plan.level.to_sym].merge!(
+        customer_number: I18n.t("plans.#{plan.level}.customer_number", customer_limit: Ability::CUSTOMER_LIMIT[plan.level]),
+        sale_page_number: I18n.t("plans.#{plan.level}.sale_page_number", sale_page_limit: Ability::SALE_PAGE_LIMIT[plan.level])
+      )
+
       Hashie::Mash.new({
         level: plan_level,
         key: plan.level,
@@ -25,7 +30,7 @@ module Plans
         costWithFee: cost_with_shop_fee.fractional,
         costFormat: cost.format,
         name: plan.name,
-        details: I18n.t("settings.plans")[plan.level.to_sym]
+        details: details
       })
     end
   end
