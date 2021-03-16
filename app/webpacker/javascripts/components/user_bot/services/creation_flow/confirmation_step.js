@@ -25,10 +25,11 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
       <OnlineServicePage
         company_info={company_info}
         name={name}
-        solution={selected_solution}
+        solution_type={selected_solution}
         content={content}
         upsell_sale_page={upsell.sale_page}
         demo={true}
+        light={false}
         jump={jump}
       />
 

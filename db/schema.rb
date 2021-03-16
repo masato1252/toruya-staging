@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -28,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
@@ -302,6 +301,21 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
   end
 
+  create_table "online_service_customer_relations", force: :cascade do |t|
+    t.integer "online_service_id", null: false
+    t.integer "sale_page_id", null: false
+    t.integer "customer_id", null: false
+    t.integer "payment_state", default: 0, null: false
+    t.integer "permission_state", default: 0, null: false
+    t.datetime "paid_at"
+    t.datetime "expire_at"
+    t.json "product_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["online_service_id", "customer_id", "permission_state"], name: "online_service_relation_index"
+    t.index ["online_service_id", "customer_id"], name: "online_service_relation_unique_index", unique: true
+  end
+
   create_table "online_services", force: :cascade do |t|
     t.bigint "user_id"
     t.string "name", null: false
@@ -383,6 +397,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.string "city"
     t.string "street1"
     t.string "street2"
+    t.json "template_variables"
     t.jsonb "personal_address_details"
     t.jsonb "company_address_details"
     t.index ["user_id"], name: "index_profiles_on_user_id"
@@ -518,6 +533,12 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
+    t.string "introduction_video_url"
+    t.integer "quantity"
+    t.datetime "selling_end_at"
+    t.datetime "selling_start_at"
+    t.decimal "normal_price_amount_cents"
+    t.decimal "selling_price_amount_cents"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
     t.index ["slug"], name: "index_sale_pages_on_slug", unique: true

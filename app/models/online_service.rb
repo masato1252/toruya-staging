@@ -29,4 +29,14 @@ class OnlineService < ApplicationRecord
   belongs_to :user
   belongs_to :sale_page, foreign_key: :upsell_sale_page_id, required: false
   belongs_to :company, polymorphic: true
+
+  has_many :online_service_customer_relations
+
+  def current_expire_time
+    if end_at
+      end_at
+    elsif end_on_days
+      Time.current.advance(days: end_on_days)
+    end
+  end
 end

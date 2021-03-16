@@ -1,0 +1,16 @@
+<%= react_component("lines/customer_purchases", {
+  props: {
+    social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id },
+    sale_page_slug: @sale_page.slug,
+    line_login_url: line_login_url(current_owner.social_account, request.url),
+    add_friend_url: current_owner.social_accounts.first&.add_friend_url,
+    i18n: {
+    }.merge!([
+      t("booking_page"),
+      t("line.customer_identifications"),
+      t("action").slice(:save, :confirm),
+    ].inject(:merge!)),
+  }
+},
+{ camelize_props: false }
+) %>

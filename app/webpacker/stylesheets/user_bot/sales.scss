@@ -7,8 +7,16 @@ $image-btn-background: $gray9;
     }
   }
 
-  .flow-step-indicator {
-    margin: 24px 80px
+  &.online-services {
+    .flow-step-indicator {
+      margin: 24px 20px;
+    }
+  }
+
+  &.booking-pages {
+    .flow-step-indicator {
+      margin: 24px 80px;
+    }
   }
 
   .product-content-deails {

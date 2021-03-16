@@ -32,9 +32,15 @@
 #
 
 class SalePage < ApplicationRecord
-  belongs_to :product, polymorphic: true
+  belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff
   belongs_to :sale_template
+  belongs_to :user
 
-  has_one_attached :picture
+  has_one_attached :picture # content picture
+
+  validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
+
+  monetize :selling_price_amount_cents, allow_nil: true
+  monetize :normal_price_amount_cents, allow_nil: true
 end

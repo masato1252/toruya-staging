@@ -13,6 +13,6 @@ class StaffSerializer
   end
 
   attribute :editable do |staff|
-    staff.introduction.blank?
+    true
   end
 end

@@ -9,7 +9,7 @@ import SaleTemplateContainer from "components/user_bot/sales/booking_pages/sale_
 import { Template, HintTitle, WordColorPickers } from "shared/builders"
 
 const HeaderColorEditStep= ({step, next, prev, jump}) => {
-    const { props, selected_booking_page, selected_template, dispatch, template_variables, focus_field, isReadyForPreview } = useGlobalContext()
+  const { props, selected_booking_page, selected_template, dispatch, template_variables, isReadyForPreview } = useGlobalContext()
   const shop = props.shops[selected_booking_page.shop_id]
 
   return (

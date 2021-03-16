@@ -16,7 +16,7 @@ export const BookingStartInfo = ({start_at}) => (
   </div>
 )
 
-export const BookingEndInfo = ({start_at}) => (
+export const BookingEndInfo = () => (
   <div className="booking-info">
     <div className="ended-view">
       <h3 className="title">
@@ -31,10 +31,45 @@ export const BookingEndInfo = ({start_at}) => (
   </div>
 )
 
-export const AddLineFriendInfo = ({social_account_add_friend_url}) => (
+export const ServiceStartInfo = () => (
+  <div className="start-yet-view">
+    <div className="ended-view">
+      <h3 className="title">
+        {I18n.t("booking_page.start_yet.title")}
+      </h3>
+    </div>
+  </div>
+)
+
+export const ServiceEndInfo = () => (
+  <div className="booking-info">
+    <div className="ended-view">
+      <h3 className="title">
+        {I18n.t("booking_page.ended.title")}
+      </h3>
+    </div>
+  </div>
+)
+
+
+export const CheckInLineBtn = ({social_account_add_friend_url, children}) => (
   social_account_add_friend_url ? (
     <div className="message centerize">
-      <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.add_friend_messages_html") }} />
+      {children}
+      <a href={social_account_add_friend_url} className="btn line-button with-logo">
+        <span className="fab fa-line" aria-hidden="true"></span>
+      </a>
+      <a href={social_account_add_friend_url} className="btn line-button with-wording">
+        {I18n.t("booking_page.done.check_in_line_btn")}
+      </a>
+    </div>
+  ) : <></>
+)
+
+export const AddLineFriendInfo = ({social_account_add_friend_url, children}) => (
+  social_account_add_friend_url ? (
+    <div className="message centerize">
+      {children || <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.done.add_friend_messages_html") }} />}
       <a href={social_account_add_friend_url} className="btn line-button with-logo">
         <span className="fab fa-line" aria-hidden="true"></span>
       </a>
@@ -45,10 +80,10 @@ export const AddLineFriendInfo = ({social_account_add_friend_url}) => (
   ) : <></>
 )
 
-export const LineLoginBtn = ({social_account_login_url}) => (
+export const LineLoginBtn = ({social_account_login_url, children}) => (
   social_account_login_url ? (
     <div className="message centerize">
-      <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.message.line_reminder_messages_html") }} />
+      {children}
       <a href={social_account_login_url} className="btn line-button with-logo" data-method="post">
         <span className="fab fa-line" aria-hidden="true"></span>
       </a>

@@ -26,7 +26,7 @@ const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) =
     }
     else {
       return (
-        <a href={product.url} className="btn btn-tarco" target="_blank">
+        <a href={product.url} className="btn btn-tarco btn-large btn-tall" target="_blank">
           <i className="fas fa-calendar-check"></i> {I18n.t("action.book_now")}
         </a>
       )

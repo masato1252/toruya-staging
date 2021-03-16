@@ -1,37 +1,38 @@
 # frozen_string_literal: true
 
+# This seralizer is for sale page selection view, so it only needs some product, time data,
+# don't need whole page data
 class SalePageOptionSerializer
   include JSONAPI::Serializer
-  attribute :id, :slug
+  include SalePages::OnlineServiceProductPart
+
+  attribute :id, :slug, :product_type
 
   attribute :label do |sale_page|
     sale_page.product.name
   end
 
   attribute :start_time do |sale_page|
-    booking_page = sale_page.product
+    start_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.start_at : sale_page.selling_start_at
 
-    booking_page.start_at ? I18n.l(booking_page.start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
+
+    start_at ? I18n.l(start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
   end
 
   attribute :end_time do |sale_page|
-    booking_page = sale_page.product
+    end_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.end_at : sale_page.selling_end_at
 
-    booking_page.end_at ? I18n.l(booking_page.end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
+    end_at ? I18n.l(end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
   end
 
   attribute :end_at do |sale_page|
-    booking_page = sale_page.product
+    end_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.end_at : sale_page.selling_end_at
 
-    booking_page.end_at ? booking_page.end_at.iso8601 : nil
-  end
-
-  attribute :product do |sale_page|
-    BookingPageSerializer.new(sale_page.product).attributes_hash
+    end_at ? end_at.iso8601 : nil
   end
 
   attribute :shop do |sale_page|
-    ShopSerializer.new(sale_page.product.shop).attributes_hash
+    sale_page.product.is_a?(BookingPage) ? CompanyInfoSerializer.new(sale_page.product.shop).attributes_hash : CompanyInfoSerializer.new(sale_page.product.company).attributes_hash
   end
 
   attribute :template do |sale_page|

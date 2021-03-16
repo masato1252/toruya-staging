@@ -79,7 +79,7 @@ module UserBotLines
                 "x": 0,
                 "y": 843,
                 "width": 833,
-                "height": 958
+                "height": 728
               },
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
@@ -89,12 +89,27 @@ module UserBotLines
               )
             },
             {
+              # 5
+              "bounds": {
+                "x": 834,
+                "y": 843,
+                "width": 833,
+                "height": 728
+              },
+              "action": LineActions::Postback.template(
+                action: UserBotLines::Actions::SwitchRichMenu.class_name,
+                enabled: true,
+                params: { rich_menu_key: UserBotLines::RichMenus::OnlineService::KEY },
+                displayText: false
+              )
+            },
+            {
               # 6
               "bounds": {
                 "x": 1667,
                 "y": 843,
                 "width": 833,
-                "height": 843
+                "height": 728
               },
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,

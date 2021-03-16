@@ -39,6 +39,15 @@ ja:
     prev_step: 戻　る
     add_step: ステップを追加
     book_now: 今すぐ予約する
+    sales:
+      video: 今すぐ視聴する
+      audio: 今すぐ視聴する
+      pdf: 今すぐダウンロード
+      questionnaire: アンケートに答える
+      diagnosis: 今すぐ登録する
+    watch: 視聴する
+    open_sale_page: 販売ページを開く
+    add_as_friend: お友だち登録
   common:
     processing: 送信中
     date: 日付
@@ -78,6 +87,8 @@ ja:
     select_a_menu: メニューを選択
     select_a_staff: スタッフを選択
     select_a_booking_option: 予約価格を選択
+    select_a_service: サービスを選択
+    content: コンテンツ
     google_down: 現在Googleとの接続ができません。しばらく経ってから再度アクセスしてください。ログインし直すことで問題が解決する場合もあります。
     pending: 承認待ち
     no_permission: 権限がありません
@@ -92,6 +103,7 @@ ja:
     required_time: 所要時間
     menu: メニュー
     responsible_employee: 担当者
+    responsible_by: 担当
     booking_price: 予約価格
     status: ステータス
     off_schedule: 臨時休暇
@@ -117,5 +129,14 @@ ja:
     hour_word: 時間
     minute_word: 分
     second_word: 秒
+    free_price: 無料
+    normal_price_label: 通常
+    today_price_label: 今なら
+    thanks: ご利用ありがとうございます
     line_login_btn_word: LINEログイン
+    only_for_login_user: 登録者専用ページです
+    read_required_login_user: このページの閲覧には サービスへの登録が必要です
+    login_add_friend_to_follow_information: 登録をご希望の方は LINEでお問合せください
+    login_to_watch: 既に登録済みの方は ログインすると閲覧できます
+    add_friend_to_follow_information:  LINEでお友だち登録して 次回募集のお知らせを受け取る
     shop_label: 店舗

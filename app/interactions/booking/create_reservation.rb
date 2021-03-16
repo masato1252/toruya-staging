@@ -24,7 +24,7 @@ module Booking
     #   last_name: customer_with_google_contact&.last_name,
     #   phonetic_first_name: customer_with_google_contact&.phonetic_first_name,
     #   phonetic_last_name: customer_with_google_contact&.phonetic_last_name,
-    #   phone_number: params[:customer_phone_number] || cookies[:booking_customer_phone_number],
+    #   phone_number: params[:customer_phone_number]
     #   phone_numbers: customer_with_google_contact&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
     #   email: customer_with_google_contact&.primary_email&.value&.address,
     #   emails: customer_with_google_contact&.emails&.map { |email| email.value.address },

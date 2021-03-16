@@ -527,14 +527,11 @@ a {
   }
 }
 
-.break-line-content {
+h3.header {
+  margin: 20px 0;
   white-space: pre-wrap;
   word-break: keep-all;
   overflow-wrap: break-word;
-}
-
-h3.header {
-  margin: 20px 0;
 }
 
 .preparing {

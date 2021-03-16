@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  vertical-align: middle;
 }
 
 html {
@@ -148,4 +149,10 @@ a {
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+
+.reminder-mark {
+  background-color: $pink-background;
+  border: 1px solid $pink-border;
+  padding: 20px;
 }

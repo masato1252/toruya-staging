@@ -354,6 +354,29 @@ const SaleServices = {
       responseType: "json"
     })
   },
+  create_sales_online_service: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.lines_user_bot_sales_online_services_path({format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
+  purchase: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_customers_online_service_purchases_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
 }
 
 const OnlineServices = {

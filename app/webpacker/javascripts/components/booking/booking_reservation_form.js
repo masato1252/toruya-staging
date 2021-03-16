@@ -16,7 +16,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
-import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, LineLoginBtn } from "shared/booking";
+import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
@@ -93,8 +93,9 @@ class BookingReservationForm extends React.Component {
     return (
       <div className="social-login-block centerize">
         <LineLoginBtn
-          social_account_login_url={`${this.props.social_account_login_url}&booking_option_id=${booking_option_id}&booking_date=${booking_date}&booking_at=${booking_at}`}
-        />
+          social_account_login_url={`${this.props.social_account_login_url}&booking_option_id=${booking_option_id}&booking_date=${booking_date}&booking_at=${booking_at}`}>
+          <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.message.line_reminder_messages_html") }} />
+        </LineLoginBtn>
 
         <div
           onClick={() => this.booking_reservation_form.change("booking_reservation_form[customer_without_social_account]", true)}
@@ -894,6 +895,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingDownView = () => {
+    const { social_user_id } = this.booking_reservation_form_values
     const {
       title,
       message1,
@@ -911,7 +913,7 @@ class BookingReservationForm extends React.Component {
           {message2}
         </div>
 
-        <AddLineFriendInfo social_account_add_friend_url={this.props.social_account_add_friend_url} />
+        <CheckInLineBtn social_account_add_friend_url={this.props.social_account_add_friend_url} />
       </div>
     )
   }
@@ -1341,7 +1343,7 @@ class BookingReservationForm extends React.Component {
   isCustomerTrusted = () => {
     const { found_customer, use_default_customer, booking_code } = this.booking_reservation_form_values;
 
-    return use_default_customer || (found_customer != null && booking_code && booking_code.passed)
+    return (use_default_customer && this.isEnoughCustomerInfo()) || (found_customer != null && booking_code && booking_code.passed)
   }
 
   isEnoughCustomerInfo = () => {

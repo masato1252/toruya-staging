@@ -73,6 +73,7 @@ gem "skylight"
 gem "newrelic_rpm"
 gem "scout_apm"
 gem "mixpanel-ruby"
+gem "video_thumb"
 
 group :development, :test do
   gem "byebug", platform: :mri

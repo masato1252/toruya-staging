@@ -96,7 +96,7 @@ ja:
           business_time_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
           open_shop_time: 開店時間
           close_shop_time: 閉店時間
-          shop_open_introduction1: オンライン予約ページから 設定された営業時間内で 予約を受け付けることができます。
+          shop_open_introduction1: 設定された営業時間内で オンライン予約ページから 予約を受け付けることができます。
           shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
           shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
           shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
@@ -162,6 +162,29 @@ ja:
           add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
           online_service: オンラインサービス利用者募集
           online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
+        online_service_creation:
+          service_step: 商品
+          price_step: 販売価格
+          limitation_step: 限定販売
+          content_step: 内容
+          preview_step: プレビュー
+          sell_what_service: どのサービスを販売しますか？
+          service_start: 利用開始
+          service_end: 利用終了
+          sell_what_price: この販売ページでは、幾らで販売しますか？
+          sell_free_price: 無料で提供
+          what_normal_price: 先ほど入力した価格とは別に 通常価格がありますか？
+          normal_price_cost: はい、あります
+          normal_price_free: いいえ、ありません
+          what_selling_end_at: いつまで販売しますか？
+          selling_end_on: 指定日まで販売する(推奨)
+          selling_forever: ずっと販売する
+          sell_what_number: 販売個数を限定しますか？
+          sell_limit_number: 限定数を販売する(推奨)
+          until_people_number: 人まで
+          sell_unlimit_number: 限定せずに販売する
+          what_introduction_video: ヘッドラインに動画を使用すると 動画セミナーが売れやすくなります。
+          introduction_video_hint: YouTubeご利用の場合は「公開」に設定してください。
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容
@@ -177,6 +200,7 @@ ja:
           what_buyer_future: 予約メニューの売りや購入者の未来像を、文章で入力
           what_buyer_future_tip: ※改行１回で行替え、改行２回で段落替え
           staff_introduction: 主に担当するスタッフのプロフィール
+          staff_change_tip: ※この情報は、全ての予約ページに反映されます。
           introduce_who_do_this: 主に担当するスタッフを紹介してください
           content_picture_requirement_tip: "画像を設定\n 幅335px以上、高185px以上"
           staff_picture_requirement_tip: "画像を設定\n 幅180px以上 高さ180px以上"
