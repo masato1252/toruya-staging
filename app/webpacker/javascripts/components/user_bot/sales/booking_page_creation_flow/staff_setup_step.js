@@ -91,6 +91,9 @@ const StaffSetupStep = ({step, next, prev, jump}) => {
           </p>
         )}
 
+        <p className="message margin-around centerize">
+          {I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_change_tip")}
+        </p>
         <div className="action-block">
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}
