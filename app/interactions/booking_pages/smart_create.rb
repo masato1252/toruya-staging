@@ -47,11 +47,14 @@ module BookingPages
           draft: false
         }
 
-        compose(
+        booking_page = compose(
           BookingPages::Save,
           booking_page: super_user.booking_pages.new,
           attrs: default_booking_page_attrs
         )
+
+        ::BookingPageCacheJob.perform_later(booking_page)
+        booking_page
       end
     end
 
