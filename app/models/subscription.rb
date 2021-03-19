@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: subscriptions
@@ -13,6 +12,7 @@
 #  expired_date       :date
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  rank_level         :integer          default(0)
 #
 # Indexes
 #

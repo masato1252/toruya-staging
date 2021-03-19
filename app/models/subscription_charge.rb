@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: subscription_charges
@@ -18,6 +17,7 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  details               :jsonb
+#  rank_level            :integer          default(0)
 #
 # Indexes
 #

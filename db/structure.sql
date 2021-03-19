@@ -66,8 +66,7 @@ CREATE TABLE public.access_providers (
     user_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    email character varying,
-    publishable_key character varying
+    email character varying
 );
 
 
@@ -2089,7 +2088,8 @@ CREATE TABLE public.subscription_charges (
     order_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    details jsonb
+    details jsonb,
+    rank_level integer DEFAULT 0
 );
 
 
@@ -2125,7 +2125,8 @@ CREATE TABLE public.subscriptions (
     recurring_day integer,
     expired_date date,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    rank_level integer DEFAULT 0
 );
 
 
@@ -4055,12 +4056,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228140930'),
 ('20210109234255'),
 ('20210111070239'),
-('20210113140743'),
 ('20210127073815'),
 ('20210129122718'),
 ('20210202020409'),
 ('20210222071432'),
 ('20210223140239'),
 ('20210226134008'),
-('20210311112133');
+('20210311112133'),
+('20210318082320');
+
 
