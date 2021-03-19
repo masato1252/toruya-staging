@@ -3,9 +3,11 @@
 require "rails_helper"
 
 RSpec.describe Plans::Price do
+  let(:free_customer_limit) { 1 }
+  let(:basic_customer_limit) { 2 }
+  let(:basic_customer_max_limit) { 5 }
   let(:subscription) { FactoryBot.create(:subscription, :free) }
   let(:user) { subscription.user }
-  let(:plan) { Plan.free_level.take }
   let(:args) do
     {
       user: user,
@@ -14,39 +16,98 @@ RSpec.describe Plans::Price do
   end
   let(:outcome) { described_class.run(args) }
 
-  describe "#execute" do
-    context "when plan is child basic plan" do
-      let(:plan) { Plan.child_basic_level.take }
+  before do
+    stub_const("Plan::DETAILS", {
+      Plan::FREE_LEVEL => [
+        {
+          rank: 0,
+          max_customers_limit: free_customer_limit,
+          max_sale_pages_limit: 3,
+          cost: 0
+        },
+        {
+          rank: 0,
+          max_customers_limit: Float::INFINITY,
+        }
+      ],
+      Plan::BASIC_LEVEL => [
+        {
+          rank: 0,
+          max_customers_limit: basic_customer_limit,
+          cost: 2_500,
+        },
+        {
+          rank: 1,
+          max_customers_limit: basic_customer_max_limit,
+          cost: 3_000,
+        },
+        {
+          rank: 2,
+          max_customers_limit: Float::INFINITY
+        },
+      ]
+    })
+  end
 
-      context "when it is first time charge" do
-        it "returns 19,800 yen" do
-          expect(outcome.result).to eq(Money.new(Plan.cost(Plan::CHILD_BASIC_PLAN).first, :jpy))
-        end
+  describe "#execute" do
+    context "when plan is free" do
+      let(:plan) { Plan.free_level.take }
+
+      it "returns expected cost" do
+        expect(outcome.result).to eq(Money.zero)
       end
 
-      context "when it is NOT first time charge" do
-        before { FactoryBot.create(:subscription_charge, :completed, plan: plan, user: user) }
+      context "when user's customers more than the limit" do
+        it "returns expected cost" do
+          FactoryBot.create_list(:customer, free_customer_limit + 1, user: user)
 
-        it "returns 22,000 yen" do
-          expect(outcome.result).to eq(Money.new(Plan.cost(Plan::CHILD_BASIC_PLAN).second, :jpy))
+          expect(outcome.result).to eq(Money.zero)
         end
       end
     end
 
-    context "when plan is child premium plan" do
-      let(:plan) { Plan.child_premium_level.take }
+    context "when plan is basic" do
+      let(:plan) { Plan.basic_level.take }
 
-      context "when it is first time charge" do
-        it "returns 49,500 yen" do
-          expect(outcome.result).to eq(Money.new(Plan.cost(Plan::CHILD_PREMIUM_PLAN).first, :jpy))
+      context "when user's customers fewer than the limit" do
+        it "returns expected cost" do
+          FactoryBot.create_list(:customer, basic_customer_limit - 1, user: user)
+
+          expect(outcome.result).to eq(2_500.to_money(:jpy))
         end
       end
 
-      context "when it is NOT first time charge" do
-        before { FactoryBot.create(:subscription_charge, :completed, plan: plan, user: user) }
+      context "when user's customers equal the limit" do
+        it "returns expected cost" do
+          FactoryBot.create_list(:customer, basic_customer_limit, user: user)
 
-        it "returns 55,000 yen" do
-          expect(outcome.result).to eq(Money.new(Plan.cost(Plan::CHILD_PREMIUM_PLAN).second, :jpy))
+          expect(outcome.result).to eq(2_500.to_money(:jpy))
+        end
+      end
+
+      context "when user's customers more than the limit" do
+        it "returns expected cost" do
+          FactoryBot.create_list(:customer, basic_customer_limit + 1, user: user)
+
+          expect(outcome.result).to eq(3_000.to_money(:jpy))
+        end
+      end
+
+      context "when user's current plan rank is higher than the new one" do
+        let(:subscription) { FactoryBot.create(:subscription, :basic, rank: 1) }
+
+        it "returns expected cost" do
+          FactoryBot.create_list(:customer, basic_customer_limit - 1, user: user)
+
+          expect(outcome.result).to eq(3_000.to_money(:jpy))
+        end
+      end
+
+      context "when rank is highest" do
+        it "returns error" do
+          FactoryBot.create_list(:customer, basic_customer_max_limit+ 1, user: user)
+
+          expect(outcome.errors.details[:plan].first[:error]).to eq(:invalid_price)
         end
       end
     end

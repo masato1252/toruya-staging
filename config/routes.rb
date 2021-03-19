@@ -208,6 +208,8 @@ Rails.application.routes.draw do
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
+
+      resources :social_user_messages, only: [:create]
     end
   end
 

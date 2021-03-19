@@ -17,6 +17,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
         Plans::SubscribeChildPlan.run(
           user: current_user,
           plan: new_plan,
+          rank: params[:rank],
           authorize_token: params[:token],
           change_immediately: params[:change_immediately]
         )
@@ -24,6 +25,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
         Plans::Subscribe.run(
           user: current_user,
           plan: new_plan,
+          rank: params[:rank],
           authorize_token: params[:token],
           change_immediately: params[:change_immediately]
         )
@@ -81,7 +83,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def downgrade
-    current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID)
+    current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID, rank: 0)
 
     redirect_to lines_user_bot_settings_path
   end

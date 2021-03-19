@@ -2,31 +2,31 @@
 
 module Plans
   class Price < ActiveInteraction::Base
-    BUSINESS_SIGNUP_FEE = { jpy: 8_800 }.freeze
-
     object :user
     object :plan
-    boolean :with_shop_fee, default: false
-    boolean :with_business_signup_fee, default: false
+    integer :rank, default: nil
 
     def execute
-      plan_cost =
-        if plan.is_child?
-          user.subscription_charges.completed.exists? ? plan.cost_with_currency.second : plan.cost_with_currency.first
-        else
-          plan.cost_with_currency
-        end
+      plan_cost = plan.cost_with_currency(rank || charging_rank)
 
-
-      if plan.business_level? && with_business_signup_fee
-        plan_cost = plan_cost + Money.new(BUSINESS_SIGNUP_FEE[Money.default_currency.id], Money.default_currency.id)
-      end
-
-      if with_shop_fee
-        plan_cost = plan_cost + compose(Plans::Fee, user: user, plan: plan)
+      if !plan.free_level? && !plan_cost.positive?
+        errors.add(:plan, :invalid_price)
       end
 
       plan_cost
+    end
+
+    private
+
+    def charging_rank
+      current_rank = Plan.rank(plan.level, user.customers.count)
+      paying_rank = user.subscription.rank
+
+      if user.subscription.plan == plan && current_rank < paying_rank
+        current_rank = paying_rank
+      end
+
+      current_rank
     end
   end
 end

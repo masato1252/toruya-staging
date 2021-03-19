@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: subscriptions
@@ -13,6 +12,7 @@
 #  expired_date       :date
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  rank               :integer          default(0)
 #
 # Indexes
 #
@@ -118,7 +118,15 @@ class Subscription < ApplicationRecord
       if Plan::ANNUAL_CHARGE_PLANS.include?(plan.level)
         user.subscription_charges.last_completed.charge_date.next_year
       else
-        user.subscription_charges.last_completed.charge_date.next_month
+        # XXX: If before subscription expired, # we did charged, then extend the subscription expired date further, not from the charge date
+        last_charged_record = user.subscription_charges.where.not(expired_date: nil).last_completed
+        current_charged_record = user.subscription_charges.last_completed
+
+        if last_charged_record.expired_date > Date.today
+          last_charged_record.expired_date.next_month
+        else
+          current_charged_record.charge_date.next_month
+        end
       end
 
     recurring_date(date.year, date.month)

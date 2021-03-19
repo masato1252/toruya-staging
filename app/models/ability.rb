@@ -3,17 +3,17 @@
 class Ability
   include CanCan::Ability
 
-  SALE_PAGE_LIMIT = {
-    Plan::PREMIUM_LEVEL => nil,
-    Plan::BASIC_LEVEL => nil,
-    Plan::FREE_LEVEL => 3
-  }
-
-  CUSTOMER_LIMIT = {
-    Plan::PREMIUM_LEVEL => nil,
-    Plan::BASIC_LEVEL => nil,
-    Plan::FREE_LEVEL => 50
-  }
+  # SALE_PAGE_LIMIT = {
+  #   Plan::PREMIUM_LEVEL => nil,
+  #   Plan::BASIC_LEVEL => nil,
+  #   Plan::FREE_LEVEL => 3
+  # }
+  #
+  # CUSTOMER_LIMIT = {
+  #   Plan::PREMIUM_LEVEL => nil,
+  #   Plan::BASIC_LEVEL => nil,
+  #   Plan::FREE_LEVEL => Plan::DETAILS[Plan::FREE_LEVEL[0][:max_customers_limit]]
+  # }
 
   attr_accessor :current_user, :super_user, :shop
 
@@ -93,8 +93,8 @@ class Ability
     when Plan::PREMIUM_LEVEL
     when Plan::BASIC_LEVEL
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
-      cannot :create, Customer if super_user.customers.count >= CUSTOMER_LIMIT[Plan::FREE_LEVEL]
-      cannot :create, SalePage if super_user.sale_pages.count >= SALE_PAGE_LIMIT[Plan::FREE_LEVEL]
+      cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
+      cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)
     end
 
     if super_user.business_member?
