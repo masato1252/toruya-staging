@@ -363,7 +363,8 @@ CREATE TABLE public.booking_pages (
     overbooking_restriction boolean DEFAULT true,
     draft boolean DEFAULT true NOT NULL,
     booking_limit_day integer DEFAULT 1 NOT NULL,
-    line_sharing boolean DEFAULT true
+    line_sharing boolean DEFAULT true,
+    slug character varying
 );
 
 
@@ -861,6 +862,85 @@ ALTER SEQUENCE public.notifications_id_seq OWNED BY public.notifications.id;
 
 
 --
+-- Name: online_service_customer_relations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.online_service_customer_relations (
+    id bigint NOT NULL,
+    online_service_id integer NOT NULL,
+    sale_page_id integer NOT NULL,
+    customer_id integer NOT NULL,
+    payment_state integer DEFAULT 0 NOT NULL,
+    permission_state integer DEFAULT 0 NOT NULL,
+    paid_at timestamp without time zone,
+    expire_at timestamp without time zone,
+    product_details json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: online_service_customer_relations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.online_service_customer_relations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: online_service_customer_relations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.online_service_customer_relations_id_seq OWNED BY public.online_service_customer_relations.id;
+
+
+--
+-- Name: online_services; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.online_services (
+    id bigint NOT NULL,
+    user_id bigint,
+    name character varying NOT NULL,
+    goal_type character varying NOT NULL,
+    solution_type character varying NOT NULL,
+    end_at timestamp without time zone,
+    end_on_days integer,
+    upsell_sale_page_id integer,
+    content json,
+    company_type character varying NOT NULL,
+    company_id bigint NOT NULL,
+    slug character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: online_services_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.online_services_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: online_services_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.online_services_id_seq OWNED BY public.online_services.id;
+
+
+--
 -- Name: payment_withdrawals; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1023,7 +1103,10 @@ CREATE TABLE public.profiles (
     region character varying,
     city character varying,
     street1 character varying,
-    street2 character varying
+    street2 character varying,
+    template_variables json,
+    personal_address_details jsonb,
+    company_address_details jsonb
 );
 
 
@@ -1415,7 +1498,14 @@ CREATE TABLE public.sale_pages (
     content json,
     flow json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    slug character varying,
+    introduction_video_url character varying,
+    quantity integer,
+    selling_end_at timestamp without time zone,
+    selling_start_at timestamp without time zone,
+    normal_price_amount_cents numeric,
+    selling_price_amount_cents numeric
 );
 
 
@@ -1600,7 +1690,8 @@ CREATE TABLE public.shops (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
-    template_variables json
+    template_variables json,
+    address_details jsonb
 );
 
 
@@ -2330,6 +2421,20 @@ ALTER TABLE ONLY public.notifications ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: online_service_customer_relations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_service_customer_relations ALTER COLUMN id SET DEFAULT nextval('public.online_service_customer_relations_id_seq'::regclass);
+
+
+--
+-- Name: online_services id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_services ALTER COLUMN id SET DEFAULT nextval('public.online_services_id_seq'::regclass);
+
+
+--
 -- Name: payment_withdrawals id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2763,6 +2868,22 @@ ALTER TABLE ONLY public.menus
 
 ALTER TABLE ONLY public.notifications
     ADD CONSTRAINT notifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: online_service_customer_relations online_service_customer_relations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_service_customer_relations
+    ADD CONSTRAINT online_service_customer_relations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: online_services online_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.online_services
+    ADD CONSTRAINT online_services_pkey PRIMARY KEY (id);
 
 
 --
@@ -3216,10 +3337,10 @@ CREATE INDEX index_booking_pages_on_shop_id ON public.booking_pages USING btree 
 
 
 --
--- Name: index_booking_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_booking_pages_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_booking_pages_on_user_id ON public.booking_pages USING btree (user_id);
+CREATE UNIQUE INDEX index_booking_pages_on_slug ON public.booking_pages USING btree (slug);
 
 
 --
@@ -3276,6 +3397,20 @@ CREATE INDEX index_menus_on_user_id_and_deleted_at ON public.menus USING btree (
 --
 
 CREATE INDEX index_notifications_on_user_id_and_charged ON public.notifications USING btree (user_id, charged);
+
+
+--
+-- Name: index_online_services_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_online_services_on_slug ON public.online_services USING btree (slug);
+
+
+--
+-- Name: index_online_services_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_online_services_on_user_id ON public.online_services USING btree (user_id);
 
 
 --
@@ -3356,6 +3491,13 @@ CREATE INDEX index_sale_pages_on_sale_template_id ON public.sale_pages USING btr
 
 
 --
+-- Name: index_sale_pages_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sale_pages_on_slug ON public.sale_pages USING btree (slug);
+
+
+--
 -- Name: index_sale_pages_on_staff_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3426,13 +3568,6 @@ CREATE INDEX index_social_customers_on_social_rich_menu_key ON public.social_cus
 
 
 --
--- Name: index_social_customers_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_social_customers_on_user_id ON public.social_customers USING btree (user_id);
-
-
---
 -- Name: index_social_rich_menus_on_social_account_id_and_social_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3444,13 +3579,6 @@ CREATE INDEX index_social_rich_menus_on_social_account_id_and_social_name ON pub
 --
 
 CREATE INDEX index_social_users_on_social_rich_menu_key ON public.social_users USING btree (social_rich_menu_key);
-
-
---
--- Name: index_social_users_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_social_users_on_user_id ON public.social_users USING btree (user_id);
 
 
 --
@@ -3584,6 +3712,20 @@ CREATE INDEX jp_name_index ON public.customers USING btree (user_id, phonetic_la
 --
 
 CREATE INDEX menu_reservation_setting_rules_index ON public.menu_reservation_setting_rules USING btree (menu_id, reservation_type, start_date, end_date);
+
+
+--
+-- Name: online_service_relation_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX online_service_relation_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id, permission_state);
+
+
+--
+-- Name: online_service_relation_unique_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX online_service_relation_unique_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id);
 
 
 --
@@ -3913,6 +4055,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228140930'),
 ('20210109234255'),
 ('20210111070239'),
-('20210113140743');
-
+('20210113140743'),
+('20210127073815'),
+('20210129122718'),
+('20210202020409'),
+('20210222071432'),
+('20210223140239'),
+('20210226134008'),
+('20210311112133');
 

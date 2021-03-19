@@ -2,4 +2,20 @@ $line-margin: 20px;
 
 .margin-around {
   margin: $line-margin;
+
+  &.m10 {
+    margin: 10px;
+  }
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.relative {
+  position: relative;
+}
+
+.line-through {
+  text-decoration: line-through;
 }

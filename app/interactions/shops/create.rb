@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shops
   class Create < ActiveInteraction::Base
     object :user
@@ -8,6 +10,7 @@ module Shops
       string :phone_number, default: nil
       string :email, default: nil
       string :address
+      hash :address_details, strip: false, default: nil
       string :website, default: nil
       boolean :holiday_working, default: false
     end

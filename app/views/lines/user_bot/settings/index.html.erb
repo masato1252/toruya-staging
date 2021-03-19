@@ -58,8 +58,11 @@
   <% end %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_label") %></div>
-  <%= link_to lines_user_bot_settings_social_account_path, class: "field-row" do %>
-    <span><%= t("user_bot.dashboards.settings.dashboard.line_official_account") %></span><i class="fa fa-angle-right"></i>
+  <%= link_to message_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
+    <span><%= t("user_bot.dashboards.settings.dashboard.line_message_api_label") %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+  <%= link_to login_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
+    <span><%= t("user_bot.dashboards.settings.dashboard.line_login_api_label") %></span><i class="fa fa-angle-right"></i>
   <% end %>
 
   <% if @social_account %>
@@ -78,4 +81,15 @@
       class: "btn-stripe-connect" do %>
       Connect with Stripe
     <% end %>
+  <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
+  <%= link_to lines_user_bot_settings_shops_path, class: "field-row" do %>
+    <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+  <%= link_to shops_lines_user_bot_settings_business_schedules_path, class: "field-row" do %>
+    <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
+  <% end %>
+
+  <div class="bottom-navigation-bar centerize">
+    <%= sprintf("%07d", current_user.id) %>
+  </div>
 </div>

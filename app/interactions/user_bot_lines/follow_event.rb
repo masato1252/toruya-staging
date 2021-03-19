@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "line_client"
 
 class UserBotLines::FollowEvent < ActiveInteraction::Base
@@ -5,6 +7,7 @@ class UserBotLines::FollowEvent < ActiveInteraction::Base
   object :social_user
 
   def execute
-    LineClient.send(social_user, I18n.t("toruya_line.bot.thanks_follow"))
+    LineClient.send(social_user, I18n.t("toruya_line.bot.thanks_follow", trial_days: Plan::TRIAL_PLAN_THRESHOLD_DAYS))
+    Notifiers::VideoForUserFollowing.perform_later(receiver: social_user)
   end
 end

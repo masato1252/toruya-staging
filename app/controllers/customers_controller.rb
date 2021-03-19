@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomersController < DashboardController
   before_action :contact_group_required
 

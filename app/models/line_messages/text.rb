@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineMessages
   class Text
     TEXT_LIMIT = 5_000

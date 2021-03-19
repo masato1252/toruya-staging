@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::SocialAccountsController < SettingsController
   before_action :set_social_account, only: [:edit, :update, :destroy]
 

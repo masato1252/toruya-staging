@@ -1,20 +1,23 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: shops
 #
-#  id              :integer          not null, primary key
-#  user_id         :integer
-#  name            :string           not null
-#  short_name      :string           not null
-#  zip_code        :string           not null
-#  phone_number    :string
-#  email           :string
-#  address         :string           not null
-#  website         :string
-#  holiday_working :boolean
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  deleted_at      :datetime
+#  id                 :integer          not null, primary key
+#  user_id            :integer
+#  name               :string           not null
+#  short_name         :string           not null
+#  zip_code           :string           not null
+#  phone_number       :string
+#  email              :string
+#  address            :string           not null
+#  website            :string
+#  holiday_working    :boolean
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  deleted_at         :datetime
+#  template_variables :json
+#  address_details    :jsonb
 #
 # Indexes
 #
@@ -45,5 +48,13 @@ class Shop < ApplicationRecord
 
   def staff_users
     staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user }
+  end
+
+  def company_full_address
+    if address_details.present?
+      Address.new(address_details).display_address
+    elsif address.present?
+      "〒#{zip_code} #{address}"
+    end
   end
 end

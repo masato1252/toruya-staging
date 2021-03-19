@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :subscriptions do
   task :charge => :environment do
     today = Subscription.today
@@ -26,7 +28,7 @@ namespace :subscriptions do
   task :trial_member_reminder => :environment do
     today = Subscription.today
 
-    scope = User.joins(:subscription).where("users.created_at >= ?", Plan::TRIAL_PLAN_THRESHOLD_MONTHS.months.ago)
+    scope = User.joins(:subscription).where("users.created_at >= ?", Plan::TRIAL_PLAN_THRESHOLD_DAYS.days.ago)
     scope.where("subscriptions.plan_id = ?", Subscription::FREE_PLAN_ID).or(
       scope.where("subscriptions.expired_date < ?", today)
     ).find_each do |user|

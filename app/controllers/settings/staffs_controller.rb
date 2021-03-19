@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::StaffsController < SettingsController
   before_action :set_staff, only: [:show, :edit, :update, :destroy, :resend_activation_email]
   skip_before_action :authorize_manager_level_permission, only: [:edit, :update]

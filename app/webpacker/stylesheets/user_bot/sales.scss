@@ -7,8 +7,16 @@ $image-btn-background: $gray9;
     }
   }
 
-  .flow-step-indicator {
-    margin: 24px 80px
+  &.online-services {
+    .flow-step-indicator {
+      margin: 24px 20px;
+    }
+  }
+
+  &.booking-pages {
+    .flow-step-indicator {
+      margin: 24px 80px;
+    }
   }
 
   .product-content-deails {
@@ -147,12 +155,5 @@ $image-btn-background: $gray9;
     .chooseFileButton:hover {
       background-color: $image-btn-background;
     }
-  }
-
-  .preview-hint {
-    background-color: $pink-background;
-    border: 1px solid $pink-border;
-    margin: 30px 0;
-    padding: 10px;
   }
 }

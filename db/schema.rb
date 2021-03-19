@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_13_140743) do
+ActiveRecord::Schema.define(version: 2021_03_11_112133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -122,9 +122,10 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.boolean "draft", default: true, null: false
     t.integer "booking_limit_day", default: 1, null: false
     t.boolean "line_sharing", default: true
+    t.string "slug"
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
+    t.index ["slug"], name: "index_booking_pages_on_slug", unique: true
     t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
-    t.index ["user_id"], name: "index_booking_pages_on_user_id"
   end
 
   create_table "business_applications", force: :cascade do |t|
@@ -300,6 +301,39 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.index ["user_id", "charged"], name: "index_notifications_on_user_id_and_charged"
   end
 
+  create_table "online_service_customer_relations", force: :cascade do |t|
+    t.integer "online_service_id", null: false
+    t.integer "sale_page_id", null: false
+    t.integer "customer_id", null: false
+    t.integer "payment_state", default: 0, null: false
+    t.integer "permission_state", default: 0, null: false
+    t.datetime "paid_at"
+    t.datetime "expire_at"
+    t.json "product_details"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["online_service_id", "customer_id", "permission_state"], name: "online_service_relation_index"
+    t.index ["online_service_id", "customer_id"], name: "online_service_relation_unique_index", unique: true
+  end
+
+  create_table "online_services", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.string "goal_type", null: false
+    t.string "solution_type", null: false
+    t.datetime "end_at"
+    t.integer "end_on_days"
+    t.integer "upsell_sale_page_id"
+    t.json "content"
+    t.string "company_type", null: false
+    t.bigint "company_id", null: false
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_online_services_on_slug"
+    t.index ["user_id"], name: "index_online_services_on_user_id"
+  end
+
   create_table "payment_withdrawals", force: :cascade do |t|
     t.integer "receiver_id", null: false
     t.integer "state", default: 0, null: false
@@ -363,6 +397,9 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.string "city"
     t.string "street1"
     t.string "street2"
+    t.json "template_variables"
+    t.jsonb "personal_address_details"
+    t.jsonb "company_address_details"
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
@@ -495,8 +532,16 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.json "flow"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug"
+    t.string "introduction_video_url"
+    t.integer "quantity"
+    t.datetime "selling_end_at"
+    t.datetime "selling_start_at"
+    t.decimal "normal_price_amount_cents"
+    t.decimal "selling_price_amount_cents"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
+    t.index ["slug"], name: "index_sale_pages_on_slug", unique: true
     t.index ["staff_id"], name: "index_sale_pages_on_staff_id"
     t.index ["user_id"], name: "index_sale_pages_on_user_id"
   end
@@ -554,6 +599,7 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.json "template_variables"
+    t.jsonb "address_details"
     t.index ["user_id", "deleted_at"], name: "index_shops_on_user_id_and_deleted_at"
   end
 
@@ -585,7 +631,6 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.index ["customer_id"], name: "index_social_customers_on_customer_id"
     t.index ["social_rich_menu_key"], name: "index_social_customers_on_social_rich_menu_key"
     t.index ["user_id", "social_account_id", "social_user_id"], name: "social_customer_unique_index", unique: true
-    t.index ["user_id"], name: "index_social_customers_on_user_id"
   end
 
   create_table "social_messages", force: :cascade do |t|
@@ -628,7 +673,6 @@ ActiveRecord::Schema.define(version: 2021_01_13_140743) do
     t.string "social_rich_menu_key"
     t.index ["social_rich_menu_key"], name: "index_social_users_on_social_rich_menu_key"
     t.index ["user_id", "social_service_user_id"], name: "social_user_unique_index", unique: true
-    t.index ["user_id"], name: "index_social_users_on_user_id"
   end
 
   create_table "staff_accounts", id: :serial, force: :cascade do |t|

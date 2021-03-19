@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserChannel < ApplicationCable::Channel
   MESSAGES_PER_PAGE = 50
 

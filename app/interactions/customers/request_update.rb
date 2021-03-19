@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::RequestUpdate < ActiveInteraction::Base
   object :reservation_customer
 

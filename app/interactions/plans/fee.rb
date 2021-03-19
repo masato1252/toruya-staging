@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Plans
   class Fee < ActiveInteraction::Base
     SHOP_NUMBER_CHARGE_THRESHOLD = 2

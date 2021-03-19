@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::BookingPagesController < SettingsController
   before_action :authorize_booking_page
 

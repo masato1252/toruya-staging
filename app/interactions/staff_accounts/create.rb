@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StaffAccounts
   class Create < ActiveInteraction::Base
     object :staff

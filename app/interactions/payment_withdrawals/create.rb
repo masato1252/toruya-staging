@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PaymentWithdrawals
   class Create < ActiveInteraction::Base
     TRANSFER_DAY = 10

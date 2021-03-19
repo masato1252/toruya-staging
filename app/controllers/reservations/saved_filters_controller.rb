@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Reservations::SavedFiltersController < DashboardController
   def fetch
     @filter = super_user.reservation_query_filters.find(params[:id])

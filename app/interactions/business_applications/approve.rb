@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BusinessApplications
   class Approve < ActiveInteraction::Base
     object :user

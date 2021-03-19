@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "message_encryptor"
 
 module SocialAccounts
@@ -11,6 +13,8 @@ module SocialAccounts
       string :channel_secret, default: nil
       string :label, default: nil
       string :basic_id, default: nil
+      string :login_channel_id, default: nil
+      string :login_channel_secret, default: nil
     end
 
     def execute
@@ -19,16 +23,18 @@ module SocialAccounts
           account = user.social_accounts.first || user.social_accounts.new
 
           case update_attribute
-          when "channel_id", "label", "basic_id"
+          when "channel_id", "label", "basic_id", "login_channel_id"
             account.update(attrs.slice(update_attribute))
           when "channel_token"
             account.update(channel_token: MessageEncryptor.encrypt(attrs[:channel_token]))
           when "channel_secret"
             account.update(channel_secret: MessageEncryptor.encrypt(attrs[:channel_secret]))
+          when "login_channel_secret"
+            account.update(login_channel_secret: MessageEncryptor.encrypt(attrs[:login_channel_secret]))
           end
 
-          if account.data_finished?
-            compose(SocialAccounts::RichMenus::CustomerReservations, social_account: account)
+          if account.bot_data_finished?
+            SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: account)
           end
 
           account

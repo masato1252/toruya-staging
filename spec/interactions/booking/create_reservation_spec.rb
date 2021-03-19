@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 RSpec.describe Booking::CreateReservation do
@@ -21,7 +23,7 @@ RSpec.describe Booking::CreateReservation do
   let(:social_user_id) { social_customer.social_user_id }
   let(:args) do
     {
-      booking_page_id: booking_page.to_param.to_i,
+      booking_page_id: booking_page.id,
       booking_option_id: booking_option.id,
       booking_start_at: booking_start_at,
       social_user_id: social_user_id

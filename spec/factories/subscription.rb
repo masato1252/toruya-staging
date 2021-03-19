@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :subscription do
     user { FactoryBot.create(:user, skip_default_data: true) }

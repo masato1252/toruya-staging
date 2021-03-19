@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: social_users
@@ -14,7 +15,6 @@
 # Indexes
 #
 #  index_social_users_on_social_rich_menu_key  (social_rich_menu_key)
-#  index_social_users_on_user_id               (user_id)
 #  social_user_unique_index                    (user_id,social_service_user_id) UNIQUE
 #
 
@@ -22,6 +22,7 @@ require "user_bot_social_account"
 
 class SocialUser < ApplicationRecord
   belongs_to :user, optional: true
+  has_many :social_user_messages
 
   def client
     UserBotSocialAccount.client

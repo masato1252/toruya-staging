@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shops
   class HolidayWorkingUpdate < ActiveInteraction::Base
     object :shop

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPriorityToBookingOptionMenus < ActiveRecord::Migration[5.2]
   def change
     add_column :booking_option_menus, :priority, :integer

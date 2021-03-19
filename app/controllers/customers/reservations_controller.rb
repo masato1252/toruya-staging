@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::ReservationsController < DashboardController
   before_action :set_customer, only: [:index, :state]
 

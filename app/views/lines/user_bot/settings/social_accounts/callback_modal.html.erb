@@ -1,0 +1,22 @@
+<div class="modal-dialog line-webhook-modal" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">Callback URL</h4>
+    </div>
+    <div class="modal-body">
+      <div class="notification alert alert-info line-webhook-area">
+        <p><%= I18n.t("settings.social_account.callback_desc") %></p>
+        <div>
+          <%= text_field_tag nil, user_line_omniauth_callback_url, data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: user_line_omniauth_callback_url, clipboard_popup_text: t("common.copied")  }, id: "page-url", readonly: true, class: "extend" %>
+        </div>
+        <div class="centerize">
+          <%= button_tag I18n.t("settings.social_account.copy_callback_btn"), class: "btn btn-gray btn-extend", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: user_line_omniauth_callback_url, clipboard_popup_text: t("common.copied") } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer centerize">
+    </div>
+  </div>
+</div>

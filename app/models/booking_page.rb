@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: booking_pages
@@ -18,12 +19,13 @@
 #  draft                   :boolean          default(TRUE), not null
 #  booking_limit_day       :integer          default(1), not null
 #  line_sharing            :boolean          default(TRUE)
+#  slug                    :string
 #
 # Indexes
 #
 #  booking_page_index              (user_id,draft,line_sharing,start_at)
 #  index_booking_pages_on_shop_id  (shop_id)
-#  index_booking_pages_on_user_id  (user_id)
+#  index_booking_pages_on_slug     (slug) UNIQUE
 #
 
 # When booking page limit day is 1, that means you couldn't book today, you have to book one day before the reservation day
@@ -45,10 +47,6 @@ class BookingPage < ApplicationRecord
 
   def start_time
     start_at || created_at
-  end
-
-  def to_param
-    [id, shop.display_name, title].join("-")
   end
 
   def available_booking_start_date

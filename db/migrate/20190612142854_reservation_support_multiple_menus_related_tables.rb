@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReservationSupportMultipleMenusRelatedTables < ActiveRecord::Migration[5.2]
   def change
     change_column :reservations, :menu_id, :integer, null: true

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservable
   class Reservation < ActiveInteraction::Base
     include SharedMethods

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddWorkingPermissionToShopStaffs < ActiveRecord::Migration[5.0]
   def change
     add_column :shop_staffs, :staff_regular_working_day_permission, :boolean, null: false, default: false

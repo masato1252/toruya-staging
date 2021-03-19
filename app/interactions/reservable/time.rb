@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservable
   class Time < ActiveInteraction::Base
     include SharedMethods

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReservationsHelper
   def customer_names_sentence(reservation)
     customer_names = reservation.customers.map(&:name)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::ProfilesController < SettingsController
   before_action :set_profile, only: [:show, :edit, :update, :destroy]
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateQueryFilters < ActiveRecord::Migration[5.0]
   def change
     create_table :query_filters do |t|

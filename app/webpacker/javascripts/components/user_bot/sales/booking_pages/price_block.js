@@ -4,8 +4,10 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({product, demo, social_account_add_friend_url}) => {
+const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) => {
   const renderActions = () => {
+    if (no_action) return <></>
+
     if (!product.is_started) {
       return (
         <>
@@ -24,7 +26,7 @@ const PriceBlock = ({product, demo, social_account_add_friend_url}) => {
     }
     else {
       return (
-        <a href={product.url} className="btn btn-tarco" target="_blank">
+        <a href={product.url} className="btn btn-tarco btn-large btn-tall" target="_blank">
           <i className="fas fa-calendar-check"></i> {I18n.t("action.book_now")}
         </a>
       )

@@ -38,6 +38,8 @@ body {
   &.booking_pages,
   &.booking_options,
   &.social_accounts,
+  &.business-schedules,
+  &.shops,
   &.profiles,
   &.payments,
   &.rich_menus {
@@ -73,6 +75,7 @@ input[type="tel"],
 input[type="email"],
 input[type="number"],
 input[type="search"],
+input[type="file"],
 .DayPickerInput input {
   padding: 10px;
   color: $black;
@@ -150,6 +153,10 @@ textarea {
 a {
   color: $palette-color2;
   text-decoration: none;
+}
+
+.successful {
+  color: $successful !important;
 }
 
 .warning {
@@ -520,11 +527,26 @@ a {
   }
 }
 
-.break-line-content {
-  white-space: pre-wrap;
-  word-break: keep-all;
-}
-
 h3.header {
   margin: 20px 0;
+  white-space: pre-wrap;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.preparing {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #ffffff;
+  background-color: $gray11;
+  padding: 3px 6px;
+  font-size: 10px;
+}
+
+.preview-hint {
+  background-color: $pink-background;
+  border: 1px solid $pink-border;
+  margin: 30px 0;
+  padding: 10px;
 }

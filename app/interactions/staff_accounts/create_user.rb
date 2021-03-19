@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module StaffAccounts
   class CreateUser < ActiveInteraction::Base
     string :token

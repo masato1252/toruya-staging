@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Delete < ActiveInteraction::Base
   object :customer
   boolean :soft_delete, default: true

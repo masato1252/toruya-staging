@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 source "http://rubygems.org"
 
-ruby "2.5.7"
+ruby "2.6.6"
 
 gem "rails", "5.2.3"
 gem "pg", "~> 1.1.4"
@@ -35,7 +37,7 @@ gem "delayed_job_active_record"
 gem "jp_prefecture", git: "https://github.com/ilake/jp_prefecture.git"
 gem "hashie", "~> 3.4.4"
 gem "rollbar", "~> 2.27.0"
-gem "sendgrid-rails"
+gem "sendgrid-actionmailer"
 gem "delayed-web"
 gem "puma", "~> 4.3.3"
 gem "kaminari"
@@ -67,6 +69,12 @@ gem "serviceworker-rails"
 gem "webpush", require: false
 gem "js-routes"
 gem "i18n-js"
+gem "platform-api"
+gem "skylight"
+gem "newrelic_rpm"
+gem "scout_apm"
+gem "mixpanel-ruby"
+gem "video_thumb"
 
 group :development, :test do
   gem "byebug", platform: :mri
@@ -91,6 +99,7 @@ group :development do
   gem "stackprof"
   gem "memory_profiler"
   gem "benchmark-memory"
+  gem "magic_frozen_string_literal"
 end
 
 group :test do

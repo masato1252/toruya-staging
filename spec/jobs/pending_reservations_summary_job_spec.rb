@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "pending_reservations_summary_job"
 

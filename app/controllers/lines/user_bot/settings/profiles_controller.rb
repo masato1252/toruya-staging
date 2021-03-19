@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Settings::ProfilesController < Lines::UserBotDashboardController
   def show
     @profile = current_user.profile

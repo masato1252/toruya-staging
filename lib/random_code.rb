@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RandomCode
   CODE_CHARSET = (1..9).to_a.freeze
 

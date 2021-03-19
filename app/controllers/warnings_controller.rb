@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WarningsController < ApplicationController
   include Authorization
   include ViewHelpers

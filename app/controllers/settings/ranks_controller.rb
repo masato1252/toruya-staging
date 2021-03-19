@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::RanksController < SettingsController
   before_action :set_rank, only: [:edit, :update, :destroy]
 

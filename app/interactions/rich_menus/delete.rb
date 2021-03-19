@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RichMenus
   class Delete < ActiveInteraction::Base
     object :social_rich_menu

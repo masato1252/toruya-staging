@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SmsClient
   LAKE_PHONE = "886910819086".freeze
   HARUKO_PHONE = "08036238534".freeze

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tours
   class BookingSettingsPresenter < BasePresenter
     ALLOWED_ACCESS_CONTROLLERS = ["settings/booking_options", "settings/booking_pages"].freeze

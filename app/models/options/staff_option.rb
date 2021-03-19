@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Options::StaffOption < Option
   attr_reader :id, :name, :handable_customers
 

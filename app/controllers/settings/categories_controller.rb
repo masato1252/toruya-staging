@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::CategoriesController < SettingsController
   before_action :set_category, only: [:edit, :update, :destroy]
 

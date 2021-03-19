@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::WithdrawalsController < SettingsController
   def index
     @withdrawals = current_user.payment_withdrawals.non_zero.order("id DESC")

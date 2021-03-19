@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PersonalCalendar < ActiveInteraction::Base
   array :working_shop_options
   array :all_shop_ids

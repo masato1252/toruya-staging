@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BusinessApplicationPresenter
   attr_reader :user, :h, :application
 

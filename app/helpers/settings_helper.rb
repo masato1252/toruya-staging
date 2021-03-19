@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SettingsHelper
   def synced_with(google_group, contact_groups)
     contact_groups.find { |contact_group| contact_group.google_group_id == google_group.id }
@@ -8,7 +10,7 @@ module SettingsHelper
   end
 
   def booking_url(page)
-    booking_page_url(page)
+    booking_page_url(page.slug)
   end
 
   def booking_page_share_button_link(page)

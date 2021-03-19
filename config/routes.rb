@@ -1,13 +1,21 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
-  # mount ActionCable.server => '/cable'
+  mount ActionCable.server => '/cable'
   scope module: :lines, path: :lines, as: :lines do
     get "/identify_shop_customer/(:social_service_user_id)", action: "identify_shop_customer", as: :identify_shop_customer
     get "/contacts/social_service_user_id/:encrypted_social_service_user_id", action: "contacts", as: :contacts
     post :make_contact
-    get :find_customer
-    post :create_customer
     get :identify_code
     get :ask_identification_code
+
+    scope module: :customers, path: :customers, as: :customers do
+      resources :online_service_purchases, only: [:create], param: :slug do
+        collection do
+          get "/:slug/new", action: "new", as: :new
+        end
+      end
+    end
 
     scope module: :liff, path: :liff, as: :liff do
       get "/(:liff_path)", action: "index"
@@ -84,12 +92,26 @@ Rails.application.routes.draw do
           end
         end
 
-        resource :social_account do
+        resource :social_account, only: [:edit, :update] do
           member do
+            get :message_api
+            get :login_api
             get :webhook_modal
+            get :callback_modal
           end
 
           resource :rich_menu, only: [:edit, :create, :destroy]
+        end
+
+        resources :business_schedules, only: [:update] do
+          collection do
+            get :shops
+            get "/shop/:shop_id", action: :index, as: :index
+            get "/shop/:shop_id/edit/:id", action: :edit, as: :edit
+          end
+        end
+
+        resources :shops, only: [:index, :show, :update, :edit] do
         end
       end
 
@@ -112,6 +134,11 @@ Rails.application.routes.draw do
           post :page
         end
       end
+      resources :services, only: [:new, :create] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+        end
+      end
 
       resource :sales, only: [:new] do
         collection do
@@ -120,6 +147,7 @@ Rails.application.routes.draw do
 
         scope module: :sales do
           resources :booking_pages, only: [:new, :create]
+          resources :online_services, only: [:new, :create]
         end
       end
 
@@ -416,6 +444,7 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
+      resources :chats, only: [:index]
       resources :business_applications, only: [:index] do
         member do
           post "approve"
@@ -444,7 +473,8 @@ Rails.application.routes.draw do
       get "booking_times"
     end
   end
-  resources :sale_pages, only: [:show]
+  resources :sale_pages, param: :slug, only: [:show]
+  resources :online_services, param: :slug, only: [:show]
 
   resources :shops, only: [:show]
 

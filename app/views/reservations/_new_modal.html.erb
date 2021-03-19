@@ -14,7 +14,7 @@
         </h4>
       </div>
       <div class="modal-body">
-        <div class="shops-list">
+        <div class="shops-list centerize">
           <% working_shop_options(include_user_own: true).each do |option| %>
             <% user_ability = ability(option.owner, option.shop) %>
             <div class="shop-cell">

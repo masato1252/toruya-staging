@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Subscriptions
   class ResidualValue < ActiveInteraction::Base
     object :user

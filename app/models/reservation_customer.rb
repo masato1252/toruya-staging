@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: reservation_customers
@@ -25,8 +27,9 @@ require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
   ACTIVE_STATES = %w[pending accepted].freeze
+  include SayHi
 
-  belongs_to :reservation
+  belongs_to :reservation, touch: true
   belongs_to :customer, touch: true
   belongs_to :booking_page, required: false
   belongs_to :booking_option, required: false
@@ -98,5 +101,9 @@ class ReservationCustomer < ApplicationRecord
 
   def new_customer_info?
     customer_info.attributes.compact.present?
+  end
+
+  def hi_message
+    "🗓 New reservation, reservation_id: #{reservation_id}, customer_id: #{customer_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}"
   end
 end

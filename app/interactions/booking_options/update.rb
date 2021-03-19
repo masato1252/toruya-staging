@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BookingOptions
   class Update < ActiveInteraction::Base
     object :booking_option, class: "BookingOption"

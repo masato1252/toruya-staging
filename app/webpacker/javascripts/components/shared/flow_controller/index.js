@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-export const FlowController = ({ children }) => {
+export const FlowController = ({ new_version, children }) => {
   const [step, setStep] = useState(0)
   const childrenArray = Array.isArray(children) ? children : Array.of(children)
 
@@ -22,8 +22,19 @@ export const FlowController = ({ children }) => {
     setStep(step)
   }
 
+  const lastStep = (pre = 1) => {
+    setStep(childrenArray.length - pre)
+  }
+
+
+  if (new_version) {
+    return (
+      React.cloneElement(childrenArray[step], {next, prev, jump, step, lastStep})
+    )
+  }
+
   return (
-    childrenArray[step]({next, prev, jump, step})
+    childrenArray[step]({next, prev, jump, step, lastStep})
   )
 }
 

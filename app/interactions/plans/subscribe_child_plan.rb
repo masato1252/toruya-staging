@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Plans
   class SubscribeChildPlan < ActiveInteraction::Base
     object :user

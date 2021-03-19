@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.menu do
   json.partial! "selected_option", menu_option: @menu
 end

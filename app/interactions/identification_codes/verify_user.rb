@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module IdentificationCodes
   class VerifyUser < ActiveInteraction::Base
     object :social_user

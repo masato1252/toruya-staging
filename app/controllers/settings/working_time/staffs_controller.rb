@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::WorkingTime::StaffsController < SettingsController
   before_action :set_staff, only: [:update, :working_schedules]
   skip_before_action :authorize_manager_level_permission, only: [:working_schedules, :update]

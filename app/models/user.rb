@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -40,8 +42,11 @@
 require "user_bot_social_account"
 
 class User < ApplicationRecord
+  include SayHi
+
   HARUKO_EMAIL = "haruko_liu@dreamhint.com"
   ADMIN_EMAIL = "info@dreamhint.com"
+  ADMIN_EMAILS = ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].freeze
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -88,6 +93,7 @@ class User < ApplicationRecord
   has_one :social_user
   has_many :web_push_subscriptions
   has_many :sale_pages
+  has_many :online_services
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
@@ -95,8 +101,10 @@ class User < ApplicationRecord
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
 
+  scope :admin, -> { where(email: ADMIN_EMAILS) }
+
   def super_admin?
-    ["lake.ilakela@gmail.com", ADMIN_EMAIL, HARUKO_EMAIL].include?(email)
+    ADMIN_EMAILS.include?(email)
   end
 
   # shop owner or staffs
@@ -162,7 +170,7 @@ class User < ApplicationRecord
   end
 
   def trial_expired_date
-    @trial_expired_date ||= created_at.advance(months: Plan::TRIAL_PLAN_THRESHOLD_MONTHS).to_date
+    @trial_expired_date ||= created_at.advance(days: Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
   end
 
   def valid_shop_ids
@@ -197,6 +205,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def hi_message
+    "👩 New user joined, user_id: #{id}"
+  end
 
   def today_reservations
     reservations.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)

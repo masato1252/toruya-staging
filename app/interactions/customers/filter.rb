@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Filter < ActiveInteraction::Base
   object :super_user, class: User
   object :current_user_staff, class: Staff
@@ -30,7 +32,7 @@ class Customers::Filter < ActiveInteraction::Base
   end
 
   def execute
-    scoped = super_user.customers.includes(:rank, :contact_group, updated_by_user: :profile)
+    scoped = super_user.customers.includes(:rank, :contact_group, :updated_by_user)
     scoped = if group_ids.present?
                scoped.where(contact_group_id: group_ids & current_user_staff.readable_contact_group_ids.map(&:to_s))
              else

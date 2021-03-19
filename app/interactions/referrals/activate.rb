@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Referrals
   class Activate < ActiveInteraction::Base
     object :referral

@@ -26,7 +26,7 @@ ja:
           booking_code_failed_message: 確認コードが間違っています
           redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
         line:
-          successful_message: "ユーザー登録ありがとうございました！\n\nユーザーメニューから\nWEBプロモーションを始めましょう。\n　↓　　↓　　↓　　↓"
+          successful_message: "店舗設定が完了しました！\n\nこのトーク画面下のユーザーメニューから、予約管理を始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や、LINE集客の方法を解説しています。\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1\n\n🏫サポートルーム\nToruyaユーザー様のサポート用Facebookグループです。登録申請していただければ、使い方や操作方法などを直接ご質問いただけます。\nhttps://www.facebook.com/groups/toruya?openExternalBrowser=1"
       user_connect:
         page_title: ユーザーログイン
         message:
@@ -69,13 +69,15 @@ ja:
           info_label: アカウント登録情報
           payments_label: ご利用履歴
           line_label: 販促用LINE
-          line_official_account: LINEオフィシャルアカウント
+          line_message_api_label: Messaging API設定
+          line_login_api_label: LINEログイン設定
           line_rich_menu: リッチメニュー
         plans:
           save: 選択する
           save_and_pay: 選択する
         social_account:
           line_developer: LINEデベロッパーズ
+          copy_url_btn: コピーURL
         rich_menu:
           auto: 自動
           manual: 手動
@@ -84,11 +86,41 @@ ja:
           manual_switch_btn: 手動に切り替える
           auto_description_html: "自動に切り替えることで<br />Toruyaの機能と連動させたリッチメニューが<br />自動的に表示されます。"
           auto_switch_btn: 自動に切り替える
+        business_schedules:
+          reservation_management: 予約管理
+          business_time: 営業日時
+          base_business_time: 基本営業日時
+          holiday_label: 祝日
+          japanese_holiday_label: 日本の祝日
+          business_time_introduction1: この設定は、オンライン予約ページでの 予約受付時間の設定です。
+          business_time_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+          open_shop_time: 開店時間
+          close_shop_time: 閉店時間
+          shop_open_introduction1: 設定された営業時間内で オンライン予約ページから 予約を受け付けることができます。
+          shop_open_introduction2: 予約カレンダーからは 休業時間外でも予約を作成できます。
+          shop_close_introduction1: CLOSE設定されている日は オンライン予約ページで 休業日として表示されます。
+          shop_close_introduction2: 予約カレンダーからは 休業日でも予約を作成できます。
+        shop:
+          shop_management: 店舗管理
+          shop_info_label: 店舗情報
+          name_label: 店名
+          address_label: 店舗住所
+          phone_number_label: 電話番号
+          email_label: Eメール
+          website_label: Webサイト
+          logo_label: 店舗ロゴ
+          logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
       booking_pages:
         index:
           title: オンライン予約ページ
           field_header: 予約ページ
           line_status: LINE予約
+      service_creation:
+        goal_step: 目的
+        content_step: コンテンツ
+        time_step: 利用期限
+        upsell_step: アップセル
+        check_step: プレビュー
       booking_page_creation:
         default_label: "%{menu_name}予約ページ"
         default_greeting: "%{menu_name}の予約を受付ます。"
@@ -130,6 +162,29 @@ ja:
           add_sale_page_to_sell_more: オンライン予約ページからの予約を増やす為の販売ページを作成
           online_service: オンラインサービス利用者募集
           online_service_to_sell_more: オンラインサービスの利用者を増やす為の販売ページを作成
+        online_service_creation:
+          service_step: 商品
+          price_step: 販売価格
+          limitation_step: 限定販売
+          content_step: 内容
+          preview_step: プレビュー
+          sell_what_service: どのサービスを販売しますか？
+          service_start: 利用開始
+          service_end: 利用終了
+          sell_what_price: この販売ページでは、幾らで販売しますか？
+          sell_free_price: 無料で提供
+          what_normal_price: 先ほど入力した価格とは別に 通常価格がありますか？
+          normal_price_cost: はい、あります
+          normal_price_free: いいえ、ありません
+          what_selling_end_at: いつまで販売しますか？
+          selling_end_on: 指定日まで販売する(推奨)
+          selling_forever: ずっと販売する
+          sell_what_number: 販売個数を限定しますか？
+          sell_limit_number: 限定数を販売する(推奨)
+          until_people_number: 人まで
+          sell_unlimit_number: 限定せずに販売する
+          what_introduction_video: ヘッドラインに動画を使用すると 動画セミナーが売れやすくなります。
+          introduction_video_hint: YouTubeご利用の場合は「公開」に設定してください。
         booking_page_creation:
           booking_step: 予約ページ
           content_step: 内容
@@ -145,6 +200,7 @@ ja:
           what_buyer_future: 予約メニューの売りや購入者の未来像を、文章で入力
           what_buyer_future_tip: ※改行１回で行替え、改行２回で段落替え
           staff_introduction: 主に担当するスタッフのプロフィール
+          staff_change_tip: ※この情報は、全ての予約ページに反映されます。
           introduce_who_do_this: 主に担当するスタッフを紹介してください
           content_picture_requirement_tip: "画像を設定\n 幅335px以上、高185px以上"
           staff_picture_requirement_tip: "画像を設定\n 幅180px以上 高さ180px以上"
@@ -161,6 +217,56 @@ ja:
           sale_page_confirm_title_html: "最低限の設定ができましたので<br />設定内容を確認してください"
           create_this_sale_page: この設定で販売ページを作成する
           share_sale_page: 作成した販売ページをシェアしましょう
+      online_service_creation:
+        goals:
+          collection:
+            title: リスト集め
+            description: あなたのサービスに興味がある人の連絡先を集める為のサービスページを作成
+          customers:
+            title: リストの顧客化
+            description: 興味がある人にあなたのサービスを試してもらう為のサービスページを作成
+          price:
+            title: リピート・単価アップ
+            description: 既存客のリピート回数や客単価を上げる為のサービスページを作成
+          upsell:
+            title: 継続購入
+            description: あなたから購入し続けてもらう為の定額制サービスページを作成
+        solutions:
+          video:
+            title: 動画セミナー
+            description: サービス購入・登録することで、動画セミナーを視聴できるようにする
+          audio:
+            title: 音声配信
+            description: サービス購入・登録することで、音声ポッドキャストを視聴できるようにする
+          pdf:
+            title: PDFダウンロード
+            description: サービス購入・登録することで、PDFファイルをダウンロードできるようにする
+          questionnaire:
+            title: アンケート
+            description: 自動メッセージを利用したアンケートの回答をキッカケに、LINEお友だち登録を促すサービス
+          diagnosis:
+            title: 診断
+            description: LINE自動メッセージを利用した診断の回答結果から、アップセルサービスの購入を促すサービス
+        what_is_your_goal: このサービスの目的は何ですか？
+        what_is_your_solution: このサービスで提供する内容は何ですか？
+        what_is_this_video_provide: どの動画をサービス提供しますか？
+        what_is_video_url: YouTube等のURLを入力
+        video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
+        what_is_service_name: サービス名は何ですか？
+        this_is_company_info: 以下の店舗のサービスとして作成します
+        edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。
+        what_company_info: サービス名どの店舗として提供しますか？
+        what_is_end_time: このサービスは、利用期限がありますか？
+        expire_after_n_days: 購入後X日後まで
+        expire_at: 決まった日時まで
+        never_expire: ずっと利用可能
+        after_bought: 購入後
+        after_n_days: 日後まで
+        what_want_to_upsell: このサービス利用後に購入をお勧めしたい アップセル販売ページはありますか？
+        select_upsell_product: セールスページを選択
+        below_is_what_you_want: 以下のサービスを作成してよろしいですか？
+        create_by_this_setting: この設定でサービスを作成する
+        create_sale_page: 作成したサービスページをシェアしましょう
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

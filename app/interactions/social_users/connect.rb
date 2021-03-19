@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SocialUsers
   class Connect < ActiveInteraction::Base
     object :user

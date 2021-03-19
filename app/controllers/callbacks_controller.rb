@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
 
@@ -53,12 +55,20 @@ class CallbacksController < Devise::OmniauthCallbacksController
       param: param,
     )
 
-    uri = URI.parse(param['oauth_redirect_to_url'])
+    param.delete("bot_prompt")
+    param.delete("prompt")
+    oauth_redirect_to_url = param.delete("oauth_redirect_to_url")
+
+    uri = URI.parse(oauth_redirect_to_url)
     queries = {
       status: outcome.valid?,
       social_user_id: outcome.result.social_user_id
-    }
+    }.merge(param)
     uri.query = URI.encode_www_form(queries)
+
+    if outcome.result.social_user_id.present?
+      cookies.permanent[:line_social_user_id_of_customer] = outcome.result.social_user_id
+    end
 
     redirect_to uri.to_s
   end

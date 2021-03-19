@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::SyncData < ActiveInteraction::Base
   object :customer
   # toruya_base

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReservationCustomers
   class Cancel < ActiveInteraction::Base
     integer :reservation_id

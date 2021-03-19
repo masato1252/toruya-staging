@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionChargeJob < ApplicationJob
   queue_as :urgent
 

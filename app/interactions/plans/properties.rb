@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Plans
   class Properties < ActiveInteraction::Base
     object :user

@@ -8,10 +8,12 @@
           <% customer = reservation_customer.customer %>
 
           <i class="fa fa-user customer-reservation-state <%= reservation_customer.state %>"></i>
-          <% if customer.deleted_at || @user_ability.cannot?(:read, customer) %>
-            <span><%= customer.name %></span>
-          <% else %>
-            <%= link_to customer.name, user_customers_path(@shop_user, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+          <% if customer %>
+            <% if customer.deleted_at || @user_ability.cannot?(:read, customer) %>
+              <span><%= customer.name %></span>
+            <% else %>
+              <%= link_to customer.name, SiteRouting.new(self).customer_show_path(user_id: @shop_user.id, shop_id: @reservation.shop_id, customer_id: customer.id), class: "customer-link" %>
+            <% end %>
           <% end %>
         <% end %>
       </div>

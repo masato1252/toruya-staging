@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Notifiers
   module Subscriptions
     class ChargeFailed < Base

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCustomersCountToReservations < ActiveRecord::Migration[5.0]
   def up
     add_column :reservations, :count_of_customers, :integer, default: 0

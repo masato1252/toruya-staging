@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require "mixpanel_tracker"
+
 class BookingPagesController < ActionController::Base
   rescue_from ActionController::InvalidAuthenticityToken, with: :redirect_to_booking_show_page
   protect_from_forgery with: :exception, prepend: true
@@ -13,8 +17,8 @@ class BookingPagesController < ActionController::Base
     end
 
     @customer =
-      if params[:social_user_id]
-        SocialCustomer.find_by!(social_user_id: params[:social_user_id])&.customer
+      if params[:social_user_id] || cookies[:line_social_user_id_of_customer]
+        @booking_page.user.social_customers.find_by(social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer])&.customer
       end
 
     @customer ||=
@@ -24,6 +28,16 @@ class BookingPagesController < ActionController::Base
 
     if @customer
       @last_selected_option_id = @customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id
+    end
+
+    if @customer
+      if params[:social_user_id]
+        MixpanelTracker.track @customer.id, "view_booking_page", { from: "customer_bot" }
+      else
+        MixpanelTracker.track @customer.id, "view_booking_page", { from: "directly" }
+      end
+    else
+      MixpanelTracker.track params[:social_user_id] || SecureRandom.uuid, "view_booking_page", { from: params[:from], from_id: params[:from_id] }
     end
 
     active_booking_options_number = @booking_page.booking_options.active.count
@@ -89,13 +103,7 @@ class BookingPagesController < ActionController::Base
       result = outcome.result
       customer = result[:customer]
 
-      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies.permanent[:booking_customer_id] = customer&.id
-        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
-      else
-        cookies.delete :booking_customer_id
-        cookies.delete :booking_customer_phone_number
-      end
+      cookies.permanent[:booking_customer_id] = customer&.id
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 
@@ -126,13 +134,7 @@ class BookingPagesController < ActionController::Base
     )
 
     if customer
-      if ActiveModel::Type::Boolean.new.cast(params[:remember_me])
-        cookies.permanent[:booking_customer_id] = customer.id
-        cookies.permanent[:booking_customer_phone_number] = params[:customer_phone_number]
-      else
-        cookies.delete :booking_customer_id
-        cookies.delete :booking_customer_phone_number
-      end
+      cookies.permanent[:booking_customer_id] = customer.id
 
       render json: {
         customer_info: view_context.customer_info_as_json(customer),
@@ -275,7 +277,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def booking_page
-    @booking_page ||= BookingPage.find(params[:id])
+    @booking_page ||= BookingPage.find_by(slug: params[:id]) || BookingPage.find(params[:id])
   end
 
   def redirect_to_booking_show_page(exception)

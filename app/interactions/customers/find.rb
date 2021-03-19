@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Customers
   class Find < ActiveInteraction::Base
     object :user

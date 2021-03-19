@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MembersController < DashboardController
   before_action :set_current_dashboard_mode
 

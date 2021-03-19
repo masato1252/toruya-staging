@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "hash_deep_diff"
 
 module Booking
@@ -22,7 +24,7 @@ module Booking
     #   last_name: customer_with_google_contact&.last_name,
     #   phonetic_first_name: customer_with_google_contact&.phonetic_first_name,
     #   phonetic_last_name: customer_with_google_contact&.phonetic_last_name,
-    #   phone_number: params[:customer_phone_number] || cookies[:booking_customer_phone_number],
+    #   phone_number: params[:customer_phone_number]
     #   phone_numbers: customer_with_google_contact&.phone_numbers&.map { |phone| phone.value.gsub(/[^0-9]/, '') },
     #   email: customer_with_google_contact&.primary_email&.value&.address,
     #   emails: customer_with_google_contact&.emails&.map { |email| email.value.address },
@@ -278,7 +280,7 @@ module Booking
     end
 
     def booking_page
-      @booking_page ||= BookingPage.find(booking_page_id)
+      @booking_page ||= BookingPage.find_by(slug: booking_page_id) || BookingPage.find(booking_page_id)
     end
 
     def booking_option
@@ -299,8 +301,7 @@ module Booking
           !customer_first_name ||
           !customer_phonetic_last_name ||
           !customer_phonetic_first_name ||
-          !customer_phone_number ||
-          !customer_email
+          !customer_phone_number
           errors.add(:customer_info, :not_enough_customer_data)
         end
       end

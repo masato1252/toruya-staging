@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Groups::UpdateGroup < ActiveInteraction::Base
   object :contact_group, class: ContactGroup
   hash :params do

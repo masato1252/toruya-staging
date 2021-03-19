@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GoogleOauth
   class Create < ActiveInteraction::Base
     object :user

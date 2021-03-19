@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardController
   def index
     @booking_options = super_user.booking_options.includes(:menus).order("updated_at DESC")

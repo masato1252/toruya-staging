@@ -34,6 +34,8 @@ const SocialAccountEdit =({props}) => {
       case "channel_secret":
       case "basic_id":
       case "channel_token":
+      case "login_channel_id":
+      case "login_channel_secret":
         return (
           <>
             <div className="field-row">
@@ -53,7 +55,7 @@ const SocialAccountEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_settings_social_account_path()}>
+          <a href={props.previous_path}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
@@ -66,7 +68,7 @@ const SocialAccountEdit =({props}) => {
         <CiricleButtonWithWord
           disabled={formState.isSubmitting}
           onHandle={handleSubmit(onSubmit)}
-          icon={<i className="fa fa-save fa-2x"></i>}
+          icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
           word={i18n.save}
         />
       </BottomNavigationBar>

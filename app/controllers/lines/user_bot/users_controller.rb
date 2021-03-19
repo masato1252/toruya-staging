@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::UsersController < Lines::UserBotController
   protect_from_forgery with: :exception, prepend: true
 
@@ -83,6 +85,6 @@ class Lines::UserBot::UsersController < Lines::UserBotController
   end
 
   def check_shop_profile
-    render json: { is_shop_profile_created: current_user&.profile&.address&.present? }
+    render json: { is_shop_profile_created: current_user&.profile&.company_address_details&.present? }
   end
 end

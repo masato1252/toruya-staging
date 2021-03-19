@@ -1,24 +1,20 @@
 <% content_for :title do %>
-  <title><%= @main_product.shop.display_name %> | <%= @main_product.name %> | <%= @product_name %></title>
+  <title><%= @product_name %></title>
 <% end %>
 <%= content_for :meta_tags do %>
-  <meta name="description" content="<%= "#{@main_product.shop.display_name},#{@main_product.title},#{@main_product.greeting&.squish}" %>" />
+  <meta name="description" content="<%= @product_name %> <%= @sale_page.content["desc1"] %> <%= @sale_page.content["desc2"] %>" />
   <meta name="keywords" content="<%= [
     "TORUYA SALONS", "美容室", "ヘアサロン", "Hair salon", "ヘアーサロン", "美容室", "Best hair", "The beauty salon", "salon school",
-    @product_name,
-    @main_product.shop.display_name,
-    @main_product.title,
-    @main_product.greeting&.squish,
-    @main_product.shop.address
-  ].join(", ") %>" />
+  ].concat(@keywords).join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
-  <meta property="og:title" content="<%= @main_product.shop.display_name %> | <%= @main_product.name %> | <%= @product_name %>">
-  <meta property="og:url" content="<%= sale_page_url(@sale_page) %>">
-  <meta property="og:description" content="<%= @main_product.name %> <%= sale_page_url(@sale_page) %> <%= @main_product.greeting&.squish %>">
+  <meta property="og:title" content="<%= @product_name %>">
+  <meta property="og:url" content="<%= sale_page_url(@sale_page.slug) %>">
+  <meta property="og:description" content="<%= @product_name %> <%= @sale_page.content["desc1"] %> <%= @sale_page.content["desc2"] %>">
+  <meta property="og:image" content="<%= Rails.application.routes.url_helpers.url_for(@sale_page.picture.variant(combine_options: { resize: "750", flatten: true })) %>">
 <% end %>
 
 <%= react_component(
-  "user_bot/sales/booking_pages",
-  SalePageSerializer.new(@sale_page).attributes_hash.merge(demo: false),
+  "user_bot/sales/#{@main_product.class.table_name}",
+  @serializer.new(@sale_page).attributes_hash.merge(demo: false),
   { camelize_props: false, prerender: true }
 ) %>

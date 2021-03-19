@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddCompanyProfile < ActiveRecord::Migration[5.1]
   def change
     add_column :profiles, :company_zip_code, :string

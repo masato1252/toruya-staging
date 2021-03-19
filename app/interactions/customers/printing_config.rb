@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::PrintingConfig < ActiveInteraction::Base
   PAGE_SIZE = {
     "a4" =>         { name: I18n.t("customer.printing_page_size.a4"),         width: 210, height: 297, top: 22, left: 20 },

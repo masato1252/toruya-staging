@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # From google to Toruya
 class Groups::RetrieveGroups < ActiveInteraction::Base
   object :user, class: User

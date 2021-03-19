@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "liff_routing"
 
 module UserBotLines
@@ -69,6 +71,21 @@ module UserBotLines
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
                 enabled: true,
                 params: { rich_menu_key: UserBotLines::RichMenus::Booking::KEY },
+                displayText: false
+              )
+            },
+            {
+              # 5
+              "bounds": {
+                "x": 834,
+                "y": 843,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Postback.template(
+                action: UserBotLines::Actions::SwitchRichMenu.class_name,
+                enabled: true,
+                params: { rich_menu_key: UserBotLines::RichMenus::OnlineService::KEY },
                 displayText: false
               )
             },

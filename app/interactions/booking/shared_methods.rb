@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booking
   module SharedMethods
     # date: Date object
@@ -26,7 +28,7 @@ module Booking
               Rails.logger.debug("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} menu_position_index: #{menu_position_index}")
 
               menu = booking_option_menu.menu
-              active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staff_ids
+              active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staffs.pluck(:id)
               active_staff_ids = active_staff_ids - Array.wrap(@unactive_staff_ids[date])
 
               required_staffs_number = [menu.min_staffs_number, 1].max # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs
@@ -58,7 +60,7 @@ module Booking
                   start_time: menu_book_start_at,
                   end_time: menu_book_end_at,
                   menu_id: menu.id,
-                  menu_required_time: booking_option.booking_option_menus.find_by(menu_id: menu.id).required_time,
+                  menu_required_time: booking_option_menu.required_time,
                   staff_ids: candidate_staff_ids,
                   overlap_restriction: overlap_restriction,
                   overbooking_restriction: overbooking_restriction,
@@ -149,7 +151,7 @@ module Booking
     def matched_same_content_reservation(shop:, booking_page:, booking_start_at:, booking_option:)
       reservation = nil
 
-      Reservation.where(
+      Reservation.uncanceled.where(
         shop: shop,
         start_time: booking_start_at,
       ).each do |same_time_reservation|
@@ -198,7 +200,7 @@ module Booking
               start_time: reservation_staff_properties.work_start_at,
               end_time: reservation_staff_properties.work_end_at,
               menu_id: reservation_staff_properties.menu_id,
-              menu_required_time: booking_option.booking_option_menus.find_by(menu_id: reservation_staff_properties.menu_id).required_time,
+              menu_required_time: menu_required_time(booking_option, reservation_staff_properties.menu_id),
               staff_ids: reservation_staff_properties.staff_ids,
               reservation_id: same_time_reservation.id,
               number_of_customer: same_time_reservation.count_of_customers + 1,
@@ -218,6 +220,12 @@ module Booking
       end
 
       reservation
+    end
+
+    def menu_required_time(booking_option, menu_id)
+      @menu_required_time ||= {}
+      @menu_required_time[booking_option.id] ||= {}
+      @menu_required_time[booking_option.id][menu_id] ||= booking_option.booking_option_menus.where(menu_id: menu_id).first.required_time
     end
   end
 end

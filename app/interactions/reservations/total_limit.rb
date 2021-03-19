@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservations
   class TotalLimit < ActiveInteraction::Base
     TOTAL_RESERVATIONS_LIMITS = {

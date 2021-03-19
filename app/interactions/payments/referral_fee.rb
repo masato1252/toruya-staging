@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Payments
   class ReferralFee < ActiveInteraction::Base
     BONUS_FEE_RATIO = 0.1

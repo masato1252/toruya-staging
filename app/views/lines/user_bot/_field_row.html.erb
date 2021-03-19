@@ -1,14 +1,18 @@
 <% if local_assigns[:path] %>
   <%= link_to local_assigns[:path], class: "field-row with-next-arrow with-format" do %>
-    <span class="dotdotdot"><%= local_assigns[:title] %></span>
+    <% if local_assigns[:title] %>
+      <span class="dotdotdot"><%= local_assigns[:title] %></span>
+    <% else %>
+      <%= yield %>
+    <% end %>
     <i class="fa fa-angle-right"></i>
   <% end %>
-<% elsif local_assigns[:title] %>
+<% else  %>
   <div class="field-row with-format">
-    <span class="dotdotdot"><%= local_assigns[:title] %></span>
-  </div>
-<% else %>
-  <div class="field-row with-format">
-    <%= yield %>
+    <% if local_assigns[:title] %>
+      <span class="dotdotdot"><%= local_assigns[:title] %></span>
+    <% else %>
+      <%= yield %>
+    <% end %>
   </div>
 <% end %>

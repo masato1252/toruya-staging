@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LiffRouting
   USER_BOT_LIFF_ENDPOINT = "https://liff.line.me/#{Rails.application.secrets.toruya_liff_id}".freeze
 
@@ -37,5 +39,6 @@ class LiffRouting
   map :booking_options, :lines_user_bot_booking_options_url
   map :new_booking_setting, :new_lines_user_bot_booking_url
   map :new_sales, :new_lines_user_bot_sales_url
+  map :new_online_service, :new_lines_user_bot_service_url
   map :notifications, :lines_user_bot_notifications_url
 end

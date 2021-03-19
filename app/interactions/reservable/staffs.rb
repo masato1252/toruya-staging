@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservable
   class Staffs < ActiveInteraction::Base
     include SharedMethods

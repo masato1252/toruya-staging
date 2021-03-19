@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Handle Filenames and unicode chars
 CarrierWave::SanitizedFile.sanitize_regexp = /[^[:word:]\.\-\+]/
 

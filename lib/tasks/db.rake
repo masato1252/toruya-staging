@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "seeders/plan"
 
 namespace :db do
@@ -50,7 +52,7 @@ namespace :db do
     task :dump do
       Seeders::Plan.dump!
       Rake::Task["db:schema:dump"].invoke
-      `annotate -i -e tests, serializers`
+      `annotate -i -e tests,serializers`
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Store < ActiveInteraction::Base
   object :user
   object :current_user, class: User

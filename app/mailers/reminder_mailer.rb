@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReminderMailer < ApplicationMailer
   def trial_member_week_ago_reminder(user)
     @user = user

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: social_customers
@@ -18,7 +19,6 @@
 #
 #  index_social_customers_on_customer_id           (customer_id)
 #  index_social_customers_on_social_rich_menu_key  (social_rich_menu_key)
-#  index_social_customers_on_user_id               (user_id)
 #  social_customer_unique_index                    (user_id,social_account_id,social_user_id) UNIQUE
 #
 

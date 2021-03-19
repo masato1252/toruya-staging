@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservations
   class Pend < ActiveInteraction::Base
     object :current_staff, class: Staff

@@ -1,0 +1,79 @@
+<%= content_for :meta_tags do %>
+  <meta name="robots" content="noindex">
+  <meta name="googlebot" content="noindex">
+<% end %>
+<% if @is_service_member %>
+  <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+<% elsif current_customer %>
+  <div class="booking-content">
+    <div class="header">
+      <div class="header-title-part">
+        <% if @online_service_hash[:logo_url] %>
+          <img class="logo" src='<%= @online_service_hash[:logo_url] %>' />
+        <% else %>
+          <h2><%= @online_service_hash[:company_info][:name] %></h2>
+        <% end %>
+      </div>
+    </div>
+    <div class="done-view">
+      <h2 class="title">
+        <%= @online_service_hash[:name] %>
+      </h2>
+      <h3 class="reminder-mark desc">
+        <%= I18n.t("common.only_for_login_user") %>
+      </h3>
+      <div class="message break-line-content centerize"><%= I18n.t("common.read_required_login_user") %></div>
+
+      <% if current_owner.social_account&.add_friend_url %>
+        <div class="message centerize">
+          <h3 class="desc break-line-content"><%= I18n.t("common.login_add_friend_to_follow_information") %></h3>
+
+          <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording only-word">
+            <%= I18n.t("booking_page.done.add_friend_btn") %>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="booking-content">
+    <div class="header">
+      <div class="header-title-part">
+        <% if @online_service_hash[:logo_url] %>
+          <img class="logo" src='<%= @online_service_hash[:logo_url] %>' />
+        <% else %>
+          <h2><%= @online_service_hash[:company_info][:name] %></h2>
+        <% end %>
+      </div>
+    </div>
+    <div class="done-view">
+      <h2 class="title">
+        <%= @online_service_hash[:name] %>
+      </h2>
+      <h3 class="reminder-mark desc">
+        <%= I18n.t("common.only_for_login_user") %>
+      </h3>
+      <div class="message break-line-content centerize"><%= I18n.t("common.read_required_login_user") %></div>
+
+      <% if line_login_url(current_owner.social_account, request.url) %>
+        <div class="message centerize">
+          <h3 class="desc break-line-content"><%= I18n.t("common.login_to_watch") %></h3>
+
+          <a href="<%= line_login_url(current_owner.social_account, request.url) %>" class="btn line-button with-wording only-word" data-method="post">
+            <%= I18n.t("common.line_login_btn_word") %>
+          </a>
+        </div>
+      <% end %>
+
+      <% if current_owner.social_account&.add_friend_url %>
+        <div class="message centerize">
+          <h3 class="desc break-line-content"><%= I18n.t("common.add_friend_to_follow_information") %></h3>
+
+          <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording only-word">
+            <%= I18n.t("action.add_as_friend") %>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

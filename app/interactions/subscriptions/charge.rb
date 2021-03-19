@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Subscriptions
   class Charge < ActiveInteraction::Base
     object :user

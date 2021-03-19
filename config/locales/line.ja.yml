@@ -3,7 +3,7 @@ ja:
     keywords:
       settings: 設定
     bot:
-      thanks_follow: "お友達登録ありがとうございます。\n\n このLINEでは、予約確認や変更など、オンライン予約をご利用いただけます。"
+      thanks_follow: "お友達登録ありがとうございます。\n\n今日から%{trial_days}日間、予約管理や顧客管理を無料でご利用いただけます。\n\nまずは店舗設定から始めましょう。"
     actions:
       label:
         sign_in: "Sign in"
@@ -14,6 +14,7 @@ ja:
         booking_pages: "Booking pages"
         notifications: "Notifications"
         sales: "Sales"
+        online_service: "Online Service"
     page:
       user_sign_up:
         shop_info:
@@ -51,7 +52,7 @@ ja:
       features:
         connect_customer:
           title: 顧客情報の連携
-          desc: 顧客情報をあなたのLINEと連携することで、オンライン予約をLINEでご利用いただけます。
+          desc: 既存の予約を表示するために、顧客情報を連携してください。
         online_booking:
           title: オンライン予約
           desc: 以下よりお選びください。

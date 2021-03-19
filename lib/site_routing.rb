@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SiteRouting
   attr_reader :h
 
@@ -108,6 +110,10 @@ class SiteRouting
 
   def create_reservation_warnings_path(*args)
     from_line_bot ? h.create_reservation_lines_user_bot_warnings_path(*args) : h.create_reservation_warnings_path(*args)
+  end
+
+  def customer_show_path(*args)
+    from_line_bot ? h.lines_user_bot_customers_path(*args) : h.user_customers_path(*args)
   end
 
   private

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardController
   def new
     @sale_templates = SaleTemplate.all
-    if booking_page = BookingPage.find_by(id: params[:booking_page_id])
+    if booking_page = BookingPage.find_by(slug: params[:booking_page_id]) || BookingPage.find_by(id: params[:booking_page_id])
       @selected_booking_page = BookingPageSerializer.new(booking_page).attributes_hash
     end
   end
@@ -17,6 +19,6 @@ class Lines::UserBot::Sales::BookingPagesController < Lines::UserBotDashboardCon
       flow: params[:flow]
     )
 
-    return_json_response(outcome, { sale_page_id: outcome.result&.id })
+    return_json_response(outcome, { sale_page_id: outcome.result&.slug })
   end
 end

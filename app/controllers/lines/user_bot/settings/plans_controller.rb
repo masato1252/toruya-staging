@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardController
   def index
     @plans_properties = Plans::Properties.run!(user: current_user)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::ReservationSettingsController < SettingsController
   before_action :set_reservation_setting, only: [:edit, :update, :destroy]
 

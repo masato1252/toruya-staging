@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "random_code"
 
@@ -23,7 +25,6 @@ RSpec.describe Customers::VerifyIdentificationCode do
 
       it "returns the matched booking code object and connect with social_customer" do
         expect(LineClient).to receive(:send).with(social_customer, I18n.t("line.bot.connected_successfuly"))
-        expect(Lines::Features).to receive(:run).with(social_customer: social_customer).and_return(spy(invalid?: false))
         expect(LineClient).to receive(:link_rich_menu).with(social_customer: social_customer, social_rich_menu: social_rich_menu).and_return(spy(invalid?: false))
 
         expect(outcome.result).to eq(booking_code)

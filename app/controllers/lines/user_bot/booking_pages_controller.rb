@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   before_action :authorize_booking_page
 

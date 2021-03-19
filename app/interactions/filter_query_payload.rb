@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FilterQueryPayload < ActiveInteraction::Base
   hash :param, strip: false
 

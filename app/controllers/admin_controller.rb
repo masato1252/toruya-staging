@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdminController < ApplicationController
   include Devise::Controllers::Rememberable
   before_action :super_admin_required

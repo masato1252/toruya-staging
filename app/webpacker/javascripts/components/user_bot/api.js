@@ -354,6 +354,72 @@ const SaleServices = {
       responseType: "json"
     })
   },
+  create_sales_online_service: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.lines_user_bot_sales_online_services_path({format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
+  purchase: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_customers_online_service_purchases_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
+const OnlineServices = {
+  create_service: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_services_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
+const BusinessScheduleServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_business_schedule_path(data['id'], {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
+const ShopServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.lines_user_bot_settings_shop_path(data['id'], {format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
 }
 
 export {
@@ -367,5 +433,8 @@ export {
   BookingServices,
   SocialAccountServices,
   ContactServices,
-  SaleServices
+  SaleServices,
+  OnlineServices,
+  BusinessScheduleServices,
+  ShopServices
 }

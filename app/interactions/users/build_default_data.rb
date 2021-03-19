@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class BuildDefaultData < ActiveInteraction::Base
     object :user

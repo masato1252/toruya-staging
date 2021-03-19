@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Groups::CreateGroup < ActiveInteraction::Base
   object :contact_group, class: ContactGroup
   string :google_group_id, default: nil

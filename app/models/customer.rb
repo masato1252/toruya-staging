@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: customers
@@ -36,6 +38,7 @@
 #  customers_basic_index                      (user_id,contact_group_id,deleted_at)
 #  customers_google_index                     (user_id,google_uid,google_contact_id) UNIQUE
 #  jp_name_index                              (user_id,phonetic_last_name,phonetic_first_name)
+#
 
 # attributes format:
 #
@@ -51,6 +54,7 @@
 
 class Customer < ApplicationRecord
   include NormalizeName
+  include SayHi
 
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
@@ -237,7 +241,7 @@ class Customer < ApplicationRecord
 
   def display_address
     if address_details.present?
-      "#{address_details[:zip_code]}#{address_details[:region]}#{address_details[:city]}#{address_details[:street1]}#{address_details[:street2]}"
+      "#{address_details["zip_code"]}#{address_details["region"]}#{address_details["city"]}#{address_details["street1"]}#{address_details["street2"]}"
     end
   end
 
@@ -338,11 +342,15 @@ class Customer < ApplicationRecord
   end
 
   def phone_number
+    (main_mobile_phone || main_phone)&.dig("value")
+  end
+
+  def mobile_phone_number
     main_mobile_phone&.dig("value")
   end
 
   def main_mobile_phone
-    phone_numbers_details&.find{|h| h["type"] == "mobile"} || main_phone
+    phone_numbers_details&.find{|h| h["type"] == "mobile"}
   end
 
   def simple_address
@@ -352,6 +360,10 @@ class Customer < ApplicationRecord
   end
 
   private
+
+  def hi_message
+    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}"
+  end
 
   def primary_value(values)
     return unless values

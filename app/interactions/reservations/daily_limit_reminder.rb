@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservations
   class DailyLimitReminder < ActiveInteraction::Base
     object :user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.menu do
   if @result[:category_menu_options].present?
     json.group_options menu_group_options(@result[:category_menu_options])

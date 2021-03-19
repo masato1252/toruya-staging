@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateAccessProviders < ActiveRecord::Migration[5.0]
   def change
     create_table :access_providers do |t|

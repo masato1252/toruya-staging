@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Customers::Save < ActiveInteraction::Base
   DELIMITER = "-=-".freeze
 

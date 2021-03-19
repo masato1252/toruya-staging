@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Settings::BusinessSchedulesController < SettingsController
   def index
     @shops = if admin?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # config.react.server_renderer_pool_size ||= 1  # ExecJS doesn't allow more than one on MRI
   # config.react.server_renderer_timeout ||= 20 # seconds

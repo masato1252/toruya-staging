@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddActiveUniquenessToStaffAccounts < ActiveRecord::Migration[5.1]
   def change
     add_column :staff_accounts, :active_uniqueness, :boolean, null: true

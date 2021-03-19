@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if @schedules
   json.working_dates @schedules[:working_dates]
   json.holiday_dates @schedules[:holiday_dates]

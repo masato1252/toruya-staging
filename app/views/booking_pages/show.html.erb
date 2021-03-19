@@ -8,21 +8,24 @@
     @booking_page.shop.display_name,
     @booking_page.title,
     @booking_page.greeting&.squish,
-    @booking_page.shop.address
+    @booking_page.shop.company_full_address
   ].join(", ") %>" />
   <meta property="og:site_name" content="Toruya">
   <meta property="og:title" content="<%= @booking_page.shop.display_name %> | <%= @booking_page.name %>">
-  <meta property="og:url" content="<%= booking_page_url(@booking_page) %>">
-  <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page) %> <%= @booking_page.greeting&.squish %>">
+  <meta property="og:url" content="<%= booking_page_url(@booking_page.slug) %>">
+  <meta property="og:description" content="<%= @booking_page.name %> <%= booking_page_url(@booking_page.slug) %> <%= @booking_page.greeting&.squish %>">
 <% end %>
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
   customer_info_hash = customer_info_as_json(@customer)
+  cookies[:oauth_social_account_id] = @social_account&.id
 %>
 <%= react_component("booking/booking_reservation_form", {
   timezone: Time.zone.tzinfo.name,
   toruya_logo: asset_pack_path("media/assets/booking/logo.png"),
   social_account_add_friend_url: @social_account&.add_friend_url,
+  social_account_login_url: @social_account&.is_login_available? ? user_line_omniauth_authorize_path(prompt: "consent", bot_prompt: "aggressive", oauth_social_account_id: @social_account&.id, oauth_redirect_to_url: booking_page_url(@booking_page.slug), customer_id: @customer&.id) : nil,
+  social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
     shop_name: @booking_page.shop.name,
@@ -42,21 +45,23 @@
   },
   booking_reservation_form: {
     regular: @customer ? "yes" : nil,
-    use_default_customer: @customer ? true : nil,
-    found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.phone_number ? true : nil,
+    use_default_customer: !!(@customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number),
+    found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number ? true : nil,
     single_booking_time: @single_booking_time,
     booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
     remember_me: true,
     booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,
     customer_last_name: @customer&.last_name,
-    customer_phone_number: cookies[:booking_customer_phone_number],
+    customer_phone_number: @customer&.mobile_phone_number,
     reminder_permission: @customer&.reminder_permission,
     customer_info: customer_info_hash,
     present_customer_info: customer_info_hash,
     last_selected_option_id: @last_selected_option_id,
-    booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : nil,
-    social_user_id: params[:social_user_id]
+    booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : params[:booking_option_id],
+    booking_date: params[:booking_date],
+    booking_at: params[:booking_at],
+    social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id
   },
   path: {
     save: booking_reservation_booking_page_path(@booking_page),

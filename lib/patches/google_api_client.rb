@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # XXX: ruby after 2.5 don't allow don't support multiline headers, that break google-api-client https://github.com/googleapis/google-api-ruby-client/pull/648
 # But google_contacts_api only support google_api_client 0.8.6, so fix the header by this patch
 module Google

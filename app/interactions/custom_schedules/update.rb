@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CustomSchedules
   class Update < ActiveInteraction::Base
     object :custom_schedule

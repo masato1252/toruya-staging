@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Users::ProfilesController < DashboardController
   before_action :profile_checking
   skip_before_action :profile_required

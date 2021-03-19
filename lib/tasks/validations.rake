@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :validations do
   task :google_contact_api => :environment do
     begin

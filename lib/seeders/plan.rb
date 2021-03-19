@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Seeders
   class Plan
     PLANS_FILE = Rails.root.join("db/data/plans.json")

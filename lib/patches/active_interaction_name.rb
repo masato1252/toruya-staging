@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveInteraction::Base
   class << self
     def class_name

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OmniauthSetup
   # OmniAuth expects the class passed to setup to respond to the #call method.
   # env - Rack environment
@@ -23,7 +25,7 @@ class OmniauthSetup
 
     {
       client_id: account.login_channel_id,
-      client_secret: account.login_channel_secret
+      client_secret: account.raw_login_channel_secret
     }
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # example:
 # date_time_accessor :start_time, :end_time
 # will generate below code

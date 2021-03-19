@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: social_user_messages
@@ -17,7 +19,9 @@
 #
 
 class SocialUserMessage < ApplicationRecord
-  belongs_to :social_user
+  belongs_to :social_user, touch: true
+
+  scope :unread, -> { where(readed_at: nil) }
 
   enum message_type: {
     bot: 0,

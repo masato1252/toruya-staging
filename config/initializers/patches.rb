@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Load on patches in lib/patches.
 
 Dir[Rails.root.join("lib", "patches", "**", "*.rb")].each do |patch_file|

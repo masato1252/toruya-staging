@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 query.each do |key, value|
   case key
   when "has_email"

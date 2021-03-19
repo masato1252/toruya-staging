@@ -1,4 +1,6 @@
 .settings-dashboard {
+  padding-bottom: $bar-height;
+
   h3 {
     text-align: center;
     padding: 6px;
@@ -46,13 +48,12 @@
 
 }
 
-.social_accounts {
+.social-accounts {
   img.demo {
     border: 1px solid $gray;
     max-width: 250px;
     height: auto;
   }
-
 }
 
 .line-webhook-modal {

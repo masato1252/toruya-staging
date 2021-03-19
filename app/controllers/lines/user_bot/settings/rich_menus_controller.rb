@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::Settings::RichMenusController < Lines::UserBotDashboardController
   def edit
     @social_account = current_user.social_account

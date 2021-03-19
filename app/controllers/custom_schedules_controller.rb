@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomSchedulesController < DashboardController
   def create
     if params[:shop_ids].present?

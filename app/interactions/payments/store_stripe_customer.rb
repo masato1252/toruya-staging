@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Payments
   class StoreStripeCustomer < ActiveInteraction::Base
     object :user
@@ -15,8 +17,8 @@ module Payments
           return stripe_customer_id
         rescue => e
           Rollbar.error(e)
-          errors.add(:base, e.message)
-          return
+          # errors.add(:base, e.message)
+          # return
           # raise e if e.code != "resource_missing"
         end
       end

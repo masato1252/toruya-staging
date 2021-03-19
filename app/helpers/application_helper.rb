@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
  BOOTSTRAP_FLASH_MSG = {
     'success' => 'alert-success',
@@ -92,4 +94,20 @@ module ApplicationHelper
     end
   end
   alias_method :image_rescue, :translation_resuce
+
+  # line_login_url(current_owner.social_account, request.url, foo: "bar"),
+  def line_login_url(social_account, oauth_redirect_to_url, *args)
+    options = args.extract_options!
+    cookies[:oauth_social_account_id] = social_account&.id
+
+    if social_account&.is_login_available?
+      options.merge!(
+        prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, oauth_social_account_id: social_account&.id
+      )
+
+      user_line_omniauth_authorize_path(options)
+    else
+      nil
+    end
+  end
 end

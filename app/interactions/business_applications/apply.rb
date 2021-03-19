@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BusinessApplications
   class Apply < ActiveInteraction::Base
     object :user

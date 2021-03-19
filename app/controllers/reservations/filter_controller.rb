@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Reservations::FilterController < DashboardController
   def index
     authorize! :read, :filter

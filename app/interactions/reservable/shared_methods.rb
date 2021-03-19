@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Reservable
   module SharedMethods
     def reserved_staff_ids(menu=nil)

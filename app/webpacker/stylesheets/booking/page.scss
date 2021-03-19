@@ -39,12 +39,6 @@
       font-size: 24px;
     }
 
-    .logo {
-      width: 130px;
-      height: auto;
-      max-height: 45px;
-    }
-
     .greeting {
       margin: 12px 0 20px;
       white-space: pre-wrap;
@@ -209,6 +203,16 @@
   .booking-options {
     .result-field {
       margin-top: 15px;
+    }
+  }
+
+  .social-login-block {
+    .btn {
+      margin-top: 20px;
+    }
+
+    .skip {
+      margin-top: 60px;
     }
   }
 

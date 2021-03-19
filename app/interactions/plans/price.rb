@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Plans
   class Price < ActiveInteraction::Base
     BUSINESS_SIGNUP_FEE = { jpy: 8_800 }.freeze

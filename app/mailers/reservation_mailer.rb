@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReservationMailer < ApplicationMailer
   def pending_summary(reservations, user)
     @reservations = reservations

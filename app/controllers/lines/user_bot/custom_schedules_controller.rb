@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::CustomSchedulesController < Lines::UserBotDashboardController
   def create
     # create from personal schedule

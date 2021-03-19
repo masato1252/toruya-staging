@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "line_client"
 
 module Lines
@@ -22,7 +24,8 @@ module Lines
           social_customer: social_customer,
           content: chatroom_owner_message_content,
           readed: true,
-          message_type: SocialMessage.message_types[:bot]
+          message_type: SocialMessage.message_types[:bot],
+          send_line: false
         )
       end
 

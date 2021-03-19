@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Notifications
   class NonGroupCustomersPresenter < ::NotificationsPresenter
     def data

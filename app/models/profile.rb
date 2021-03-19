@@ -1,28 +1,32 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: profiles
 #
-#  id                   :integer          not null, primary key
-#  user_id              :integer
-#  first_name           :string
-#  last_name            :string
-#  phonetic_first_name  :string
-#  phonetic_last_name   :string
-#  company_name         :string
-#  zip_code             :string
-#  address              :string
-#  phone_number         :string
-#  website              :string
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  company_zip_code     :string
-#  company_address      :string
-#  company_phone_number :string
-#  email                :string
-#  region               :string
-#  city                 :string
-#  street1              :string
-#  street2              :string
+#  id                       :integer          not null, primary key
+#  user_id                  :integer
+#  first_name               :string
+#  last_name                :string
+#  phonetic_first_name      :string
+#  phonetic_last_name       :string
+#  company_name             :string
+#  zip_code                 :string
+#  address                  :string
+#  phone_number             :string
+#  website                  :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  company_zip_code         :string
+#  company_address          :string
+#  company_phone_number     :string
+#  email                    :string
+#  region                   :string
+#  city                     :string
+#  street1                  :string
+#  street2                  :string
+#  template_variables       :json
+#  personal_address_details :jsonb
+#  company_address_details  :jsonb
 #
 # Indexes
 #
@@ -40,10 +44,18 @@ class Profile < ApplicationRecord
   validates :phonetic_last_name, presence: true
 
   def personal_full_address
-    "〒#{zip_code} #{address}" if address.present?
+    if personal_address_details.present?
+      Address.new(personal_address_details).display_address
+    elsif address.present?
+      "〒#{zip_code} #{address}"
+    end
   end
 
   def company_full_address
-    "〒#{company_zip_code} #{company_address}" if company_address.present?
+    if company_address_details.present?
+      Address.new(company_address_details).display_address
+    elsif company_address.present?
+      "〒#{company_zip_code} #{company_address}"
+    end
   end
 end

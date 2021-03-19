@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionMailer < ApplicationMailer
   def charge_successfully(user)
     @user = user

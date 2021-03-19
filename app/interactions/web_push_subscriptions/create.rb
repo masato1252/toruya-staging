@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WebPushSubscriptions
   class Create < ActiveInteraction::Base
     object :user

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Lines::UserBot::SettingsController < Lines::UserBotDashboardController
   def index
     @subscription = current_user.subscription

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MigrateStaffOffScheduleToPersonalSchedule < ActiveRecord::Migration[5.1]
   def change
     CustomSchedule.transaction do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "seeders/plan"
 require "seeders/sale_template"
 

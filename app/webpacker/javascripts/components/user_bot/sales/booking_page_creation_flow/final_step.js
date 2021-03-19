@@ -14,7 +14,12 @@ const FinalStep = ({step}) => {
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.booking_page_creation.share_sale_page")}</h3>
       <div className="action-block">
-        <UrlCopyBtn url={Routes.sale_page_url(sale_page_id || 0)} />
+        <a
+          className="btn btn-tarco"
+          target="_blank"
+          href={Routes.sale_page_url(sale_page_id || 0)}>
+          {I18n.t("action.open_sale_page")}
+        </a>
       </div>
     </div>
   )

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FixBookingOptionRequiredTemporaryInStaging < ActiveRecord::Migration[5.2]
   def change
     # add_column :booking_option_menus, :required_time, :integer

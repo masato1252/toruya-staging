@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LineClient
   COLUMNS_NUMBER_LIMIT = 10
   BUTTON_DESC_LIMIT = 60
@@ -34,8 +36,25 @@ class LineClient
   end
 
   def self.send(social_customer, message)
+    return unless Rails.env.production?
+
     error_handler(__method__, social_customer.id, message) do
       social_customer.client.push_message(social_customer.social_user_id, {type: "text", text: message})
+    end
+  end
+
+  def self.send_video(social_customer, raw_message)
+    error_handler(__method__, social_customer.id, raw_message) do
+      message = JSON.parse(raw_message)
+
+      social_customer.client.push_message(
+        social_customer.social_user_id,
+        {
+          type: "video",
+          originalContentUrl: message["originalContentUrl"],
+          previewImageUrl: message["previewImageUrl"]
+        }
+      )
     end
   end
 
