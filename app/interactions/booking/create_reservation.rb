@@ -94,7 +94,7 @@ module Booking
         if customer_info&.compact.present?
           # regular customer
           customer = user.customers.find(customer_info["id"])
-          customer.update(reminder_permission: customer_reminder_permission)
+          customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
         end
 
         if customer ||= social_customer&.customer

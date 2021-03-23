@@ -26,7 +26,7 @@ class SocialCustomer < ApplicationRecord
   has_many :social_messages
   belongs_to :social_account
   belongs_to :user
-  belongs_to :customer, optional: true
+  belongs_to :customer, optional: true, touch: true
 
   delegate :client, to: :social_account
 
