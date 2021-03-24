@@ -122,7 +122,7 @@ class Subscription < ApplicationRecord
         last_charged_record = user.subscription_charges.where.not(expired_date: nil).last_completed
         current_charged_record = user.subscription_charges.last_completed
 
-        if last_charged_record.expired_date > Date.today
+        if last_charged_record && last_charged_record.expired_date > Date.today
           last_charged_record.expired_date.next_month
         else
           current_charged_record.charge_date.next_month

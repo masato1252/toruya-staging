@@ -4,19 +4,19 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
   before_action :authorize_reservation
 
   def pend
-    outcome = Reservations::Pend.run(reservation: reservation, current_staff: current_user_staff)
+    outcome = ::Reservations::Pend.run(reservation: reservation, current_staff: current_user_staff)
 
     redirect_back fallback_location: lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
   end
 
   def accept
-    outcome = Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
+    outcome = ::Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
 
     redirect_back fallback_location: lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
   end
 
   def accept_in_group
-    outcome = Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
+    outcome = ::Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
 
     if outcome.valid?
       recent_pending_reservations = NotificationsPresenter.new(view_context, current_user).recent_pending_reservations

@@ -200,6 +200,7 @@ Rails.application.routes.draw do
         collection do
           get :create_reservation
           get :create_booking_page
+          get :check_reservation_content
         end
       end
 

@@ -7,5 +7,6 @@ class Lines::UserBot::Settings::PlansController < Lines::UserBotDashboardControl
 
     @charge_directly = current_user.subscription.current_plan.free_level?
     @default_upgrade_plan = params[:upgrade]
+    @default_upgrade_rank = Plan.rank(@default_upgrade_plan, current_user.customers.size) if @default_upgrade_plan
   end
 end

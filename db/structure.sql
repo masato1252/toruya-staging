@@ -2176,7 +2176,8 @@ CREATE TABLE public.users (
     updated_at timestamp without time zone NOT NULL,
     contacts_sync_at timestamp without time zone,
     referral_token character varying,
-    phone_number character varying
+    phone_number character varying,
+    customers_count integer DEFAULT 0
 );
 
 
@@ -4063,6 +4064,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210223140239'),
 ('20210226134008'),
 ('20210311112133'),
-('20210318082320');
+('20210318082320'),
+('20210323133210');
 
 

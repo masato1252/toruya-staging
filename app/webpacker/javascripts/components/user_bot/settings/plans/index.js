@@ -14,7 +14,7 @@ const Plans = ({props}) => {
   const premiumPlan = props.plans["premium"];
 
   const [selected_plan_level, seletePlan] = useState()
-  const [selected_rank, seleteRank] = useState(props.current_rank)
+  const [selected_rank, seleteRank] = useState(props.default_upgrade_rank || props.current_rank)
 
   const isCurrentPlan = (planLevel) => {
     return props.current_plan_level === planLevel;

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_18_082320) do
+ActiveRecord::Schema.define(version: 2021_03_23_133210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -786,6 +786,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.datetime "contacts_sync_at"
     t.string "referral_token"
     t.string "phone_number"
+    t.integer "customers_count", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true

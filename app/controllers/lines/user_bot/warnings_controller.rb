@@ -9,6 +9,12 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/create_booking_page"
   end
 
+  def check_reservation_content
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/check_reservation_content"
+  end
+
   def create_reservation
     @owner = User.find(params[:owner_id])
     @shop = Shop.find_by(id: params[:shop_id])

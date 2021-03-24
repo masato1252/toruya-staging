@@ -19,7 +19,7 @@ module Plans
     private
 
     def charging_rank
-      current_rank = Plan.rank(plan.level, user.customers.count)
+      current_rank = Plan.rank(plan.level, user.customers.size)
       paying_rank = user.subscription.rank
 
       if user.subscription.plan == plan && current_rank < paying_rank

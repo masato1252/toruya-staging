@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -27,6 +26,7 @@
 #  contacts_sync_at       :datetime
 #  referral_token         :string
 #  phone_number           :string
+#  customers_count        :integer          default(0)
 #
 # Indexes
 #

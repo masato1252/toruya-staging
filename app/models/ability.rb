@@ -148,6 +148,14 @@ class Ability
       )
     end
 
+    can :check_content, Reservation do |reservation|
+      check_customers_limit(reservation.customer_ids)
+    end
+
+    can :check_content, Customer do |customer|
+      check_customers_limit([customer.id])
+    end
+
     can :see, Reservation do |reservation|
       admin? || manager? || responsible_for_reservation(reservation)
     end
@@ -220,6 +228,18 @@ class Ability
 
     if super_user.reservation_settings.exists?
       can :create, :reservation_with_settings
+    end
+  end
+
+  def check_customers_limit(customer_ids)
+    case super_user.permission_level
+    when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+      customers_count = super_user.customers.size
+      free_max_customers_limit = Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
+
+      customers_count <= free_max_customers_limit || (super_user.customers.last(customers_count - free_max_customers_limit).pluck(:id) & customer_ids).length == 0
+    else
+      true
     end
   end
 end

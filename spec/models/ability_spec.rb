@@ -380,6 +380,60 @@ RSpec.describe Ability do
       end
     end
 
+    context "check_content Reservation" do
+      let(:shop) { FactoryBot.create(:shop, user: super_user) }
+      let!(:reservation) { FactoryBot.create(:reservation, shop: shop) }
+
+      context "when user is under paid plan" do
+        let(:current_user) { FactoryBot.create(:subscription, :basic).user }
+
+        it "returns true" do
+          expect(ability.can?(:check_content, reservation)).to eq(true)
+        end
+      end
+
+      context "when user is under free plan" do
+        let(:free_customer_limit) { 1 }
+        before do
+          stub_const("Plan::DETAILS", {
+            Plan::FREE_LEVEL => [
+              {
+                rank: 0,
+                max_customers_limit: free_customer_limit,
+                max_sale_pages_limit: 3,
+                cost: 0
+              }
+            ],
+          })
+        end
+
+        context "when user has fewer than free_customer_limit customers" do
+          it "returns true" do
+            expect(ability.can?(:check_content, reservation)).to eq(true)
+          end
+        end
+
+        context "when user has more than free_customer_limit customers" do
+          context "when this reservation contains the latest customers data" do
+            it "returns false" do
+              FactoryBot.create_list(:customer, free_customer_limit + 1, user: current_user)
+              FactoryBot.create(:reservation_customer, reservation: reservation, customer: super_user.customers.last)
+
+              expect(ability.can?(:check_content, reservation)).to eq(false)
+            end
+          end
+
+          context "when this reservation does Not contain the latest customers data" do
+            it "returns true" do
+              FactoryBot.create_list(:customer, free_customer_limit + 1, user: current_user)
+
+              expect(ability.can?(:check_content, reservation)).to eq(true)
+            end
+          end
+        end
+      end
+    end
+
     context "see reservation" do
       context "when user is owner in reservation's shop" do
         let(:shop) { FactoryBot.create(:shop, user: super_user) }
