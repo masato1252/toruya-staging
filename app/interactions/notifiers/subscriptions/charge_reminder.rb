@@ -34,7 +34,7 @@ module Notifiers
       end
 
       def cost
-        @cost ||= Plans::Price.run!(user: user, plan: charging_plan, with_shop_fee: true).format
+        @cost ||= Plans::Price.run!(user: user, plan: charging_plan).format
       end
     end
   end

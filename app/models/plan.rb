@@ -67,34 +67,49 @@ class Plan < ApplicationRecord
       {
         rank: 0,
         max_customers_limit: 200,
-        cost: 2_500,
+        cost: 2_200,
       },
       {
         rank: 1,
         max_customers_limit: 300,
-        cost: 3_000,
+        cost: 2_750,
       },
       {
         rank: 2,
-        max_customers_limit: 400,
-        cost: 3_500
+        max_customers_limit: 500,
+        cost: 3_300
       },
       {
         rank: 3,
-        max_customers_limit: 500,
-        cost: 4_000
+        max_customers_limit: 800,
+        cost: 4_400
       },
       {
         rank: 4,
         max_customers_limit: 1000,
-        cost: 5_000
+        cost: 4_950
       },
       {
         rank: 5,
+        max_customers_limit: 1500,
+        cost: 6_600
+      },
+      {
+        rank: 6,
+        max_customers_limit: 2000,
+        cost: 8_250
+      },
+      {
+        rank: 7,
         max_customers_limit: Float::INFINITY
+        cost: 8_250
       }
     ]
   }.freeze
+
+  def self.max_legal_rank
+    Plan::DETAILS[Plan::BASIC_LEVEL].max{ |a, b| a[:rank] <=> b[:rank] } - 1
+  end
 
   def self.rank(plan_level, customers_count)
     DETAILS[plan_level].each do |context|

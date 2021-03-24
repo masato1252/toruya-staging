@@ -45,19 +45,19 @@ RSpec.describe Plan do
 
       context "when customers is 499" do
         it "returns rank 3" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 499)).to eq(3)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 499)).to eq(2)
         end
       end
 
       context "when customers is 500" do
         it "returns rank 3" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 500)).to eq(3)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 500)).to eq(2)
         end
       end
 
       context "when customers is 501" do
         it "returns rank 4" do
-          expect(Plan.rank(Plan::BASIC_LEVEL, 501)).to eq(4)
+          expect(Plan.rank(Plan::BASIC_LEVEL, 501)).to eq(3)
         end
       end
     end
@@ -87,19 +87,19 @@ RSpec.describe Plan do
 
       context "when rank is 2" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 2)).to eq(400)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 2)).to eq(500)
         end
       end
 
       context "when rank is 3" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 3)).to eq(500)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 3)).to eq(800)
         end
       end
 
-      context "when rank is 4" do
+      context "when rank is 7" do
         it "returns expected max_customers_limit" do
-          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 4)).to eq(Float::INFINITY)
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 7)).to eq(Float::INFINITY)
         end
       end
     end
@@ -125,12 +125,7 @@ RSpec.describe Plan do
 
   describe ".cost_with_currency" do
     it "returns expected cost" do
-      expect(Plan.cost_with_currency(Plan::BASIC_PLAN)).to eq(Money.new(2_200, :jpy))
-
-      expect(Plan.cost_with_currency(Plan::CHILD_BASIC_PLAN)).to eq([
-        Money.new(19_800, :jpy),
-        Money.new(22_000, :jpy),
-      ])
+      expect(Plan.cost_with_currency(Plan::BASIC_PLAN, 0)).to eq(Money.new(2_200, :jpy))
     end
 
     context "when plan is basic" do
@@ -142,7 +137,7 @@ RSpec.describe Plan do
 
       context "when rank is 5" do
         it "returns expected cost" do
-          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 5)).to eq(Money.zero)l
+          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 5)).to eq(Money.zero)
         end
       end
     end

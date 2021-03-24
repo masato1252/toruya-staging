@@ -58,6 +58,8 @@ class Customers::Create < ActiveInteraction::Base
 
     if customer.new_record?
       errors.merge!(customer.errors)
+    else
+      CustomersLimitReminderJob.perform_later(user)
     end
 
     customer
