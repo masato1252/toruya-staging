@@ -152,6 +152,15 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     render_customers_json(customers)
   end
 
+  def delete
+    authorize! :edit, Customer
+
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:id])
+    outcome = Customers::Delete.run(customer: customer)
+
+    render json: json_response(outcome)
+  end
+
   private
 
   def render_customers_json(customers)
