@@ -101,7 +101,7 @@ class Plan < ApplicationRecord
       },
       {
         rank: 7,
-        max_customers_limit: Float::INFINITY
+        max_customers_limit: Float::INFINITY,
         cost: 8_250
       }
     ]
