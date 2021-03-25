@@ -52,12 +52,10 @@ const Plans = ({props}) => {
     }
 
     if (subscriptionPlanIndex(planLevel) == currentPlanIndex()) {
-      return <SupportModal />
       return (
-        <div className={`btn btn-yellow`}
-          onClick={() => onUnSubscribe()} >
-          Unsubscribe
-        </div>
+        <SupportModal
+          trigger_btn={<button className="btn btn-orange">Unsubscribe</button>}
+        />
       )
     };
 

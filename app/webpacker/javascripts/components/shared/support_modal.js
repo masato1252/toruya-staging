@@ -5,8 +5,9 @@ import Popup from 'reactjs-popup';
 import { useForm  } from "react-hook-form";
 
 import { SocialUserMessagesServices } from "user_bot/api";
+import { SubmitButton } from "shared/components";
 
-const SupportModal = () => {
+const SupportModal = ({trigger_btn}) => {
   const [submitted, setSubmitted] = useState(false)
   const { formState, register, handleSubmit} = useForm({})
 
@@ -23,16 +24,10 @@ const SupportModal = () => {
 
   return (
     <Popup
-      trigger={
-        <button className="button"> Open Modal </button>}
+      trigger={trigger_btn}
         modal
       >
         <>
-          <div className="modal-header">
-            <h4 className="modal-title">
-              Title
-            </h4>
-          </div>
           {submitted ? (
             <div className="modal-body">
               Thanks for your message, we would reply u asap.
@@ -47,9 +42,10 @@ const SupportModal = () => {
               <textarea name="content" ref={register({required: true})} className="extend" autoFocus={true} />
             </div>
             <div className="modal-footer centerize">
-              <button onClick={handleSubmit(onSubmit)} type="submit" className="btn btn-yellow" disabled={formState.submitting}>
-                Submit
-              </button>
+              <SubmitButton
+                handleSubmit={handleSubmit(onSubmit)}
+                btnWord="Submit"
+              />
             </div>
           </>
           )}
