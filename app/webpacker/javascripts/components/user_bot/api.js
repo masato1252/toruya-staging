@@ -190,6 +190,16 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  delete: (user_id, id) => {
+    return request({
+      method: "DELETE",
+      url: Routes.delete_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
+      params: {
+        id,
+      },
+      responseType: "json"
+    })
+  },
   toggle_reminder_premission: (user_id, customer_id) => {
     return request({
       method: "POST",

@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
+  total_customers_number: 0,
   selected_customer: {},
   customers: [],
   is_all_customers_loaded: false,
@@ -42,6 +43,15 @@ export default (state = initialState, action) => {
         ...state,
         selected_customer: new_selected_customer,
         customers: new_customers
+      }
+    case "DELETE_CUSTOMER":
+      new_customers = state.customers.filter(customer => customer.id !== action.payload.customer_id)
+
+      return {
+        ...state,
+        selected_customer: {},
+        customers: new_customers,
+        total_customers_number: state.total_customers_number - 1
       }
     case "UPDATE_CUSTOMER_REMINDER_PERMISSION":
       new_selected_customer = {...state.selected_customer, reminderPermission: action.payload.reminderPermission}

@@ -1,6 +1,7 @@
 ja:
   action:
     delete: 削除
+    delete2: "削　除"
     delete_reservation: 予約を削除
     edit: 編集
     details: 詳細

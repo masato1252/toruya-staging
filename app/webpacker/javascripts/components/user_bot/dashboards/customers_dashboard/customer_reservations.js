@@ -30,7 +30,7 @@ const UserBotCustomerReservations = () =>{
     dispatch({
       type: "ASSIGN_CUSTOMER_CUSTOMERS",
       payload: {
-        reservations: response.data.reservations
+        reservations: response?.data?.reservations
       }
     })
   }

@@ -63,6 +63,7 @@ ja:
         updated_date: 更新日
         form_title: 顧客情報を編集
         customer_message_reply_title: 返信内容を送信します
+        delete_confirmation_message: 顧客データは削除したら元には戻せません。
       settings:
         dashboard:
           title: アカウント設定

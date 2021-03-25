@@ -54,6 +54,7 @@ Rails.application.routes.draw do
           get :find_duplicate_customers
           get :filter
           post :save
+          delete :delete
           post :toggle_reminder_premission
           post :reply_message
           get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed

@@ -11,12 +11,12 @@ import CustomerSearchBar from "./customer_search_bar"
 import CustomerElement from "./customer_element"
 
 const BottomBar = () => {
-  const { customers, dispatch, props } = useGlobalContext()
+  const { customers, dispatch, props, total_customers_number } = useGlobalContext()
   let history = useHistory();
 
   return (
     <BottomNavigationBar klassName="centerize">
-      <span>{props.i18n.count}{props.total_customers_number}{props.i18n.unit}</span>
+      <span>{props.i18n.count}{total_customers_number}{props.i18n.unit}</span>
       <button
         className="btn btn-yellow btn-circle btn-save btn-tweak btn-big"
         onClick={() => {
