@@ -104,6 +104,48 @@ class Plan < ApplicationRecord
         max_customers_limit: Float::INFINITY,
         cost: 8_250
       }
+    ],
+    Plan::PREMIUM_LEVEL => [
+      {
+        rank: 0,
+        max_customers_limit: 200,
+        cost: 5_500,
+      },
+      {
+        rank: 1,
+        max_customers_limit: 300,
+        cost: 6_270,
+      },
+      {
+        rank: 2,
+        max_customers_limit: 500,
+        cost: 7_040
+      },
+      {
+        rank: 3,
+        max_customers_limit: 800,
+        cost: 8_580
+      },
+      {
+        rank: 4,
+        max_customers_limit: 1000,
+        cost: 9_350
+      },
+      {
+        rank: 5,
+        max_customers_limit: 1500,
+        cost: 11_660
+      },
+      {
+        rank: 6,
+        max_customers_limit: 2000,
+        cost: 13_970
+      },
+      {
+        rank: 7,
+        max_customers_limit: Float::INFINITY,
+        cost: 13_970
+      }
     ]
   }.freeze
 

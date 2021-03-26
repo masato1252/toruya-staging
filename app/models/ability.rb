@@ -88,8 +88,8 @@ class Ability
     can :manage_staff_temporary_working_day_permission, ShopStaff
     can :manage_staff_holiday_permission, ShopStaff
     can :manage, BookingPage
-    can :manage, SalePage
-    can :manage, Customer
+    can :create, Customer
+    can :create, SalePage
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL

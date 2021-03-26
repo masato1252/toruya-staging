@@ -23,7 +23,7 @@ RSpec.describe Subscription do
       let!(:last_completed_charge) { FactoryBot.create(:subscription_charge, :completed, charge_date: charge_date, user: subscription.user) }
 
       context "when the recurring_day is over the end of month" do
-        let(:charge_date) { Date.new(2018, 1, 31) }
+        let(:charge_date) { Date.new(2017, 12, 31) }
 
         it "sets the expired date to last charge date's end of next month" do
           subscription.set_expire_date
@@ -33,7 +33,7 @@ RSpec.describe Subscription do
       end
 
       context "when the recurring_day is less or equal than the end of month" do
-        let(:charge_date) { Date.new(2018, 1, 27) }
+        let(:charge_date) { Date.new(2017, 12, 27) }
 
         it "sets the expired date to next charge date" do
           subscription.set_expire_date
