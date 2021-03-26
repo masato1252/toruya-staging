@@ -54,7 +54,10 @@ const Plans = ({props}) => {
     if (subscriptionPlanIndex(planLevel) == currentPlanIndex()) {
       return (
         <SupportModal
-          trigger_btn={<button className="btn btn-orange">Unsubscribe</button>}
+          trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
+          content={props.i18n.unsubscribe_modal_content}
+          btn={props.i18n.unsubscribe_modal_button}
+          reply={props.i18n.unsubscribe_modal_reply_html}
         />
       )
     };
@@ -105,6 +108,9 @@ const Plans = ({props}) => {
             />
 
             <div className="padding-around centerize customers-number-selection">
+              <div>
+                {props.i18n.how_many_customers_do_you_have}
+              </div>
               <select name="plan_rank" onChange={(event) => seleteRank(event.target.value)} value={selected_rank}>
                 {props.plans["basic"].details["ranks"].map(plan_context => {
                   const customer_number_contexts = props.plans["basic"].details["ranks"]
@@ -187,7 +193,7 @@ const Plans = ({props}) => {
                     {freePlan.details[labelName]}
                   </div>
                   <div className={`col`}>
-                    Up to {customer_number_limit_info("basic")}人
+                    {customer_number_limit_info("basic")}{props.i18n.up_to_customers_limit}
                   </div>
                 </div>
               )

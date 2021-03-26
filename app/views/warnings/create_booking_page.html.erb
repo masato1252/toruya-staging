@@ -6,8 +6,7 @@
       </h4>
     </div>
     <div class="modal-body">
-      You already got over <%= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0) %> sale pages, we are glad that you love our services.
-      so now, we need your help to upgrade your plan to let us help you keep growing your business.
+      <%= t("warnings.create_booking_page.upgrade_content_html", sale_page_limit: Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)) %>
     </div>
     <div class="modal-footer centerize">
       <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>

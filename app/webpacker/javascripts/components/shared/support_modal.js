@@ -7,7 +7,7 @@ import { useForm  } from "react-hook-form";
 import { SocialUserMessagesServices } from "user_bot/api";
 import { SubmitButton } from "shared/components";
 
-const SupportModal = ({trigger_btn}) => {
+const SupportModal = ({trigger_btn, content, btn, reply}) => {
   const [submitted, setSubmitted] = useState(false)
   const { formState, register, handleSubmit} = useForm({})
 
@@ -30,21 +30,21 @@ const SupportModal = ({trigger_btn}) => {
         <>
           {submitted ? (
             <div className="modal-body">
-              Thanks for your message, we would reply u asap.
+              <div dangerouslySetInnerHTML={{ __html: reply }} />
             </div>
           )
            : (
           <>
             <div className="modal-body">
               <p className="margin-around">
-                Please contact us to help you do that, write down your requirement.
+                {content}
               </p>
               <textarea name="content" ref={register({required: true})} className="extend" autoFocus={true} />
             </div>
             <div className="modal-footer centerize">
               <SubmitButton
                 handleSubmit={handleSubmit(onSubmit)}
-                btnWord="Submit"
+                btnWord={btn}
               />
             </div>
           </>

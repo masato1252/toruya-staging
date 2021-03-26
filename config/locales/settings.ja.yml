@@ -289,6 +289,11 @@ ja:
       info_2: ご利用プランによってToruyaの様々な機能が利用可能になります。
       save: 変更を保存
       save_and_pay: 変更を保存して支払う
+      how_many_customers_do_you_have: 何名くらい顧客がいらっしゃいますか？
+      up_to_customers_limit: 人まで
+      unsubscribe_modal_content: 解約を処理させていただく前に、現在Toruyaのサービスで発生している問題をお聞かせください。
+      unsubscribe_modal_button: 解約願いを送信する
+      unsubscribe_modal_reply_html: 解約願いの送信ありがとうございます。<br>サポートチームよりできるだけ早くご連絡差し上げます。
       plan_info:
         caption: ご利用プラン
         current_plan: ご利用中
