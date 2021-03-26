@@ -97,4 +97,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
 
     return_json_response(outcome, { online_service_slug: outcome.result&.slug })
   end
+
+  def index
+  end
 end
