@@ -94,7 +94,11 @@ class Ability
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
     when Plan::BASIC_LEVEL
+      cannot :create, Shop if super_user.shops.exists?
+      cannot :create, Staff
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+      cannot :create, Staff
+      cannot :create, Shop if super_user.shops.exists?
       cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
       cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)
     end
@@ -120,11 +124,16 @@ class Ability
       can :manage, :preset_filter
       can :manage, :saved_filter
       can :read, :shop_dashboard
-    when Plan::BASIC_LEVEL, Plan::FREE_LEVEL
+    when Plan::BASIC_LEVEL
       can :read, :filter
       can :manage, :preset_filter
-      can :manage, :saved_filter
-      can :read, :shop_dashboard
+      cannot :manage, :saved_filter
+      cannot :read, :shop_dashboard
+    when Plan::FREE_LEVEL
+      cannot :read, :filter
+      cannot :manage, :preset_filter
+      cannot :manage, :saved_filter
+      cannot :read, :shop_dashboard
     end
 
     staff_member_ability

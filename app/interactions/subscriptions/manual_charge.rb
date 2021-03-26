@@ -51,11 +51,8 @@ module Subscriptions
           subscription.save!
 
           charge.expired_date = subscription.expired_date
-          fee = compose(Plans::Fee, user: user, plan: plan)
           charge.details = {
             shop_ids: user.shop_ids,
-            shop_fee: fee.fractional,
-            shop_fee_format: fee.format,
             type: plan.business_level? ? SubscriptionCharge::TYPES[:business_member_sign_up] : SubscriptionCharge::TYPES[:plan_subscruption],
             user_name: user.name,
             user_email: user.email,
@@ -63,7 +60,8 @@ module Subscriptions
             plan_amount: compose(Plans::Price, user: user, plan: plan).format,
             plan_name: plan.name,
             charge_amount: charge_amount.format,
-            residual_value: residual_value.format
+            residual_value: residual_value.format,
+            rank: rank
           }
           charge.save!
 

@@ -24,7 +24,7 @@ RSpec.describe Plans::SubscribeChildPlan do
   end
   let(:outcome) { described_class.run(args) }
 
-  describe "#execute" do
+  xdescribe "#execute" do
     it "creates charge cost 19,800 yen annual plan fee and referee got 1,980 yen bonus" do
       allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
       expect(user.reference).to be_pending

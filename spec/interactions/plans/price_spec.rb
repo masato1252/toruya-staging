@@ -34,7 +34,7 @@ RSpec.describe Plans::Price do
         {
           rank: 0,
           max_customers_limit: basic_customer_limit,
-          cost: 2_500,
+          cost: 2_200,
         },
         {
           rank: 1,
@@ -73,7 +73,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit - 1, user: user)
 
-          expect(outcome.result).to eq(2_500.to_money(:jpy))
+          expect(outcome.result).to eq(2_200.to_money(:jpy))
         end
       end
 
@@ -81,7 +81,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit, user: user)
 
-          expect(outcome.result).to eq(2_500.to_money(:jpy))
+          expect(outcome.result).to eq(2_200.to_money(:jpy))
         end
       end
 
