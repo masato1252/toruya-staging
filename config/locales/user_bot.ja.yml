@@ -111,6 +111,25 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+      services:
+        online_service: オンラインサービス
+        service_page: サービスページ
+        service_about: サービス概要
+        name: サービス名
+        shop: 提供店舗
+        content: サービス内容
+        provided_content: 提供コンテンツ
+        upsell: アップセル
+        available_period: サービス利用期間
+        start_time: 利用開始
+        end_time: 利用終了
+        form:
+          name_title: サービス名
+          company_title: 提供店舗
+          content_url_title: 提供コンテンツ
+          upsell_sale_page_title: アップセル
+          start_time_title: 利用開始
+          end_time_title: 利用終了
       booking_pages:
         index:
           title: オンライン予約ページ

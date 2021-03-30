@@ -135,10 +135,15 @@ Rails.application.routes.draw do
           post :page
         end
       end
-      resources :services, only: [:new, :create, :index] do
+
+      resources :services, only: [:new, :create, :index, :show, :edit, :update] do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+
+        member do
+          get :preview_modal
         end
       end
 

@@ -2,7 +2,6 @@
 
 require "line_client"
 require "message_encryptor"
-require "thumbnail_of_video"
 
 module Sales
   module OnlineServices
@@ -35,7 +34,7 @@ module Sales
             LineMessages::FlexTemplateContainer.template(
               altText: I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name),
               contents: LineMessages::FlexTemplateContent.content7(
-                picture_url: VideoThumb::get(sale_page.product.content["url"], "medium") || ThumbnailOfVideo.get(sale_page.product.content["url"]) || sale_page.introduction_video_url,
+                picture_url: sale_page.product.thumbnail_url || sale_page.introduction_video_url,
                 content_url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug),
                 title1: sale_page.product.name,
                 label: I18n.t("common.responsible_by"),

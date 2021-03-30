@@ -2,7 +2,7 @@
   <meta name="robots" content="noindex">
   <meta name="googlebot" content="noindex">
 <% end %>
-<% if @is_service_member %>
+<% if @is_service_member || @is_owner %>
   <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
 <% elsif current_customer %>
   <div class="booking-content">
