@@ -193,6 +193,9 @@ const CustomerServices = {
   delete: (user_id, id) => {
     return request({
       method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
       url: Routes.delete_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
       params: {
         id,

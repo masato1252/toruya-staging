@@ -13,10 +13,5 @@ class Customers::Delete < ActiveInteraction::Base
         customer.destroy
       end
     end
-    # Google contact delete response 200 and 404 return true
-    # if customer.user.google_user.delete_contact(customer.google_contact_id)
-    # else
-    #   errors.add(:customer, :delete_google_contact_failed)
-    # end
   end
 end
