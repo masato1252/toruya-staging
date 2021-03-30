@@ -5,13 +5,11 @@ class Customers::Delete < ActiveInteraction::Base
   boolean :soft_delete, default: true
 
   def execute
-    Customer.transaction do
-      if soft_delete
-        customer.update_columns(deleted_at: Time.current)
-        customer.user.update_columns(customers_count: customer.user.customers.count)
-      else
-        customer.destroy
-      end
+    if soft_delete
+      customer.update_columns(deleted_at: Time.current)
+      User.reset_counters(customer.user_id, :customers)
+    else
+      customer.destroy
     end
   end
 end
