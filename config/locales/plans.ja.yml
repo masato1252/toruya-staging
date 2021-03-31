@@ -10,6 +10,13 @@ ja:
       sale_page_number: 販売ページ
       message_template: メッセージ テンプレート
       support: 個別サポート
+    headers:
+      customer_management: 顧客管理
+      reservation_management: 予約管理
+      online_booking: WEB予約
+      online_service: WEBサービス
+      sale_promotion: 販売促進
+      support: サポート
     free:
       title: フリー
       period: ""

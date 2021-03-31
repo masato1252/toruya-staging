@@ -7,6 +7,7 @@ import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import { TopNavigationBar } from "shared/components"
 import SubscriptionModal from "components/management/plans/subscription_modal";
 import SupportModal from "shared/support_modal";
+import I18n from 'i18n-js/index.js.erb';
 
 const Plans = ({props}) => {
   const freePlan = props.plans["free"];
@@ -121,7 +122,7 @@ const Plans = ({props}) => {
                     </option>
                   )
                 })}
-              </select>
+              </select>{I18n.t("common.person_unit")}
             </div>
 
             <div className="thead">
@@ -162,20 +163,20 @@ const Plans = ({props}) => {
       <div className="tbody">
         {
           [
-            {header: "預約管理"},
+            {header: I18n.t("plans.headers.customer_management")},
+            "customer_number",
+            {header: I18n.t("plans.headers.reservation_management")},
             "shop_can_set",
             "staff_in_charge",,
             "reservation_restriction",
-            {header: "顧客管理"},
-            "customer_number",
-            {header: "WEB予約"},
+            {header: I18n.t("plans.headers.online_booking")},
             "booking_page_number",
-            {header: "WEBサービス"},
+            {header: I18n.t("plans.headers.online_service")},
             "online_service_number",
-            {header: "販売促進"},
+            {header: I18n.t("plans.headers.sale_promotion")},
             "sale_page_number",
             "message_template",
-            {header: "サポート"},
+            {header: I18n.t("plans.headers.support")},
             "support"
           ].map((labelName) => {
             if (typeof(labelName) === 'object') {
@@ -225,7 +226,7 @@ const Plans = ({props}) => {
           <div className={`col`}>
             <label>
               <div>{freePlan.details.period}</div>
-              <div className="price-amount">無料</div>
+              <div className="price-amount">{I18n.t("common.free_price")}</div>
             </label>
             {renderSaveOrPayButton("free")}
           </div>
