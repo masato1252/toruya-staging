@@ -23,7 +23,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   def update
     @booking_page = super_user.booking_pages.find(params[:id])
 
-    outcome = BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = ::BookingPages::Update.run(booking_page: @booking_page, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     render json: json_response(outcome, { redirect_to: lines_user_bot_booking_page_path(@booking_page.id, anchor: params[:attribute]) })
   end

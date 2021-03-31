@@ -801,7 +801,8 @@ CREATE TABLE public.menus (
     min_staffs_number integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    online boolean DEFAULT false
 );
 
 
@@ -1459,7 +1460,8 @@ CREATE TABLE public.reservations (
     by_staff_id integer,
     deleted_at timestamp without time zone,
     prepare_time timestamp without time zone,
-    user_id integer
+    user_id integer,
+    online boolean DEFAULT false
 );
 
 
@@ -4061,5 +4063,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210223140239'),
 ('20210226134008'),
 ('20210311112133');
+('20210329094612'),
+('20210331134109');
 
 

@@ -239,7 +239,8 @@ module Booking
                       menu_staffs_list: valid_menus_spots,
                       staff_states: staff_states,
                       memo: "",
-                      with_warnings: false
+                      with_warnings: false,
+                      online: booking_option.online?
                     }
                   )
 

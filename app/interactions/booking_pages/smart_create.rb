@@ -11,6 +11,7 @@ module BookingPages
       boolean :new_booking_option_tax_include, default: nil
       string :new_menu_name, default: nil
       integer :new_menu_minutes, default: nil
+      boolean :new_menu_online, default: false
       string :note, default: nil
     end
 
@@ -78,6 +79,7 @@ module BookingPages
             name: attrs[:new_menu_name],
             short_name: attrs[:new_menu_name],
             minutes: attrs[:new_menu_minutes],
+            online: attrs[:new_menu_online],
             interval: 0,
             min_staffs_number: 1,
             category_ids: [category.id],

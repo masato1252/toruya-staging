@@ -45,6 +45,7 @@ module Reservations
       end
       string :memo, default: nil
       boolean :with_warnings, default: false
+      boolean :online, default: false
       integer :by_staff_id, default: nil
     end
 
