@@ -99,8 +99,8 @@ class Ability
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       cannot :create, Staff
       cannot :create, Shop if super_user.shops.exists?
-      cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
-      cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)
+      cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
+      cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
     end
 
     if super_user.business_member?
@@ -246,7 +246,7 @@ class Ability
     case super_user.permission_level
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       customers_count = super_user.customers.size
-      free_max_customers_limit = Plan.max_customers_limit(Plan::FREE_LEVEL, 0)
+      free_max_customers_limit = Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
 
       customers_count <= free_max_customers_limit || (super_user.customers.last(customers_count - free_max_customers_limit).pluck(:id) & customer_ids).length == 0
     else

@@ -59,7 +59,13 @@ class Plan < ApplicationRecord
         cost: 0
       },
       {
-        rank: 0,
+        rank: 1,
+        max_customers_limit: 100,
+        max_sale_pages_limit: 3,
+        cost: 0
+      },
+      {
+        rank: 1,
         max_customers_limit: Float::INFINITY,
       }
     ],
