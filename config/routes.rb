@@ -141,10 +141,6 @@ Rails.application.routes.draw do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
-
-        member do
-          get :preview_modal
-        end
       end
 
       resource :sales, only: [:new] do
