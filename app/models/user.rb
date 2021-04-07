@@ -203,11 +203,11 @@ class User < ApplicationRecord
     Ability.new(self, self)
   end
 
-  private
-
   def hi_message
     "👩 New user joined, user_id: #{id}"
   end
+
+  private
 
   def today_reservations
     reservations.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)

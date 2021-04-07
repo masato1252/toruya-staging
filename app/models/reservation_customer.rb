@@ -104,6 +104,6 @@ class ReservationCustomer < ApplicationRecord
   end
 
   def hi_message
-    "🗓 New reservation, reservation_id: #{reservation_id}, customer_id: #{customer_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}"
+    "🗓 New reservation, reservation_id: #{reservation_id}, customer_id: #{customer_id}, booking_page_id: #{booking_page_id}, booking_option_id: #{booking_option_id}, user_id: #{customer.user_id}"
   end
 end

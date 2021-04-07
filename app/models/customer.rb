@@ -359,11 +359,11 @@ class Customer < ApplicationRecord
     end
   end
 
-  private
-
   def hi_message
-    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}"
+    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}, customers count: #{user.customers.size}"
   end
+
+  private
 
   def primary_value(values)
     return unless values
