@@ -3,4 +3,7 @@
 class Lines::UserBot::SalesController < Lines::UserBotDashboardController
   def new
   end
+
+  def index
+  end
 end
