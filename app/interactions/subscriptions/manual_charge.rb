@@ -4,6 +4,7 @@ module Subscriptions
   class ManualCharge < ActiveInteraction::Base
     object :subscription
     object :plan
+    integer :rank
     string :authorize_token
 
     validate :validate_plan_downgraade
@@ -14,7 +15,7 @@ module Subscriptions
       subscription.with_lock do
         compose(Payments::StoreStripeCustomer, user: user, authorize_token: authorize_token)
 
-        new_plan_price = compose(Plans::Price, user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: true)
+        new_plan_price, charging_rank = compose(Plans::Price, user: user, plan: plan, rank: rank)
         residual_value = compose(Subscriptions::ResidualValue, user: user)
 
         charge_amount = new_plan_price - residual_value
@@ -23,6 +24,7 @@ module Subscriptions
             "Unexpected charge amount",
             user_id: user.id,
             plan_id: plan.id,
+            rank: charging_rank,
             new_plan_price: new_plan_price.format,
             residual_value: residual_value.format,
             authorize_token: authorize_token
@@ -34,6 +36,7 @@ module Subscriptions
         charge_outcome = Subscriptions::Charge.run(
           user: user,
           plan: plan,
+          rank: charging_rank,
           manual: true,
           charge_amount: charge_amount
         )
@@ -41,25 +44,24 @@ module Subscriptions
         if charge_outcome.valid?
           charge = charge_outcome.result
           subscription.plan = plan
+          subscription.rank = charging_rank
           subscription.next_plan = nil
           subscription.set_recurring_day
           subscription.set_expire_date
           subscription.save!
 
           charge.expired_date = subscription.expired_date
-          fee = compose(Plans::Fee, user: user, plan: plan)
           charge.details = {
             shop_ids: user.shop_ids,
-            shop_fee: fee.fractional,
-            shop_fee_format: fee.format,
             type: plan.business_level? ? SubscriptionCharge::TYPES[:business_member_sign_up] : SubscriptionCharge::TYPES[:plan_subscruption],
             user_name: user.name,
             user_email: user.email,
-            pure_plan_amount: compose(Plans::Price, user: user, plan: plan).format,
-            plan_amount: compose(Plans::Price, user: user, plan: plan, with_business_signup_fee: true).format,
+            pure_plan_amount: compose(Plans::Price, user: user, plan: plan)[0].format,
+            plan_amount: compose(Plans::Price, user: user, plan: plan)[0].format,
             plan_name: plan.name,
             charge_amount: charge_amount.format,
-            residual_value: residual_value.format
+            residual_value: residual_value.format,
+            rank: charging_rank
           }
           charge.save!
 

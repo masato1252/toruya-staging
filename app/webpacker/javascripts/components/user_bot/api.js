@@ -246,7 +246,7 @@ const CustomerServices = {
 }
 
 const PaymentServices = {
-  payPlan: ({token, plan}) => {
+  payPlan: ({token, plan, rank}) => {
     return request({
       method: "POST",
       headers: {
@@ -255,7 +255,8 @@ const PaymentServices = {
       url: Routes.lines_user_bot_settings_payments_path({format: "json"}),
       data: {
         token,
-        plan
+        plan,
+        rank
       },
       responseType: "json"
     })
@@ -435,6 +436,20 @@ const ShopServices = {
   },
 }
 
+const SocialUserMessagesServices = {
+  create: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_social_user_messages_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -449,5 +464,6 @@ export {
   SaleServices,
   OnlineServices,
   BusinessScheduleServices,
-  ShopServices
+  ShopServices,
+  SocialUserMessagesServices
 }

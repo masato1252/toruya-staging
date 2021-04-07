@@ -120,9 +120,6 @@ module Reservations
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
 
-        compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
-        compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
-
         # XXX: Mean this reservation created by a staff, not customer(from booking page)
         if params[:by_staff_id].present? && reservation.start_time >= Time.zone.now
           customers_require_notify.each do |customer|

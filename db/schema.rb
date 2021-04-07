@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_11_112133) do
+ActiveRecord::Schema.define(version: 2021_03_23_133210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
-    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
@@ -743,6 +742,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "details"
+    t.integer "rank", default: 0
     t.index "((details ->> 'type'::text))", name: "subscription_charge_type_index"
     t.index ["order_id"], name: "order_id_index"
     t.index ["plan_id"], name: "index_subscription_charges_on_plan_id"
@@ -758,6 +758,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.date "expired_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "rank", default: 0
     t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id", unique: true
   end
@@ -785,6 +786,7 @@ ActiveRecord::Schema.define(version: 2021_03_11_112133) do
     t.datetime "contacts_sync_at"
     t.string "referral_token"
     t.string "phone_number"
+    t.integer "customers_count", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true

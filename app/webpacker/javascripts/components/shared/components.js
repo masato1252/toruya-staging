@@ -257,7 +257,9 @@ const SubmitButton = ({handleSubmit, submitCallback, btnWord}) => {
 
         if (await handleSubmit()) {
           setSubmitting(false)
-          submitCallback()
+          if (submitCallback) {
+            submitCallback()
+          }
         } else  {
           setSubmitting(false)
         }

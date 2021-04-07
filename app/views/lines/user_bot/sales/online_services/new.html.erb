@@ -1,3 +1,5 @@
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) if !ability(current_user).can?(:create, SalePage) %>
+
 <%= react_component("user_bot/sales/online_service_creation_flow", {
   props: {
     selected_online_service: @selected_online_service,

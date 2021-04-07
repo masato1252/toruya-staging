@@ -10,10 +10,12 @@ RSpec.describe Subscriptions::Charge do
   let(:user) { subscription.user }
   let!(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
   let(:manual) { true }
+  let(:rank) { 0 }
   let(:args) do
     {
       user: user,
       plan: plan,
+      rank: rank,
       manual: manual
     }
   end
@@ -25,7 +27,7 @@ RSpec.describe Subscriptions::Charge do
 
       charge = user.subscription_charges.where(
         plan: plan,
-        amount_cents: plan.cost,
+        amount_cents: plan.cost(rank),
         amount_currency: Money.default_currency.to_s,
         charge_date: Subscription.today,
         manual: true
@@ -98,7 +100,7 @@ RSpec.describe Subscriptions::Charge do
 
         charge = user.subscription_charges.where(
           plan: plan,
-          amount_cents: plan.cost,
+          amount_cents: plan.cost(rank),
           amount_currency: Money.default_currency.to_s,
           charge_date: Subscription.today,
           manual: true
