@@ -53,7 +53,7 @@ class OnlineService < ApplicationRecord
     if start_at
       I18n.l(start_at, format: :date_with_wday)
     else
-      "購入後すぐ"
+      I18n.t("sales.sale_now")
     end
   end
 

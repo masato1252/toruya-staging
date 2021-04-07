@@ -37,7 +37,7 @@
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
       <i class="fa fa-share-square fa-2x"></i>
-      <div class="word"><%= I18n.t("action.share") %></div>
+      <div class="word"><%= I18n.t("action.preview") %></div>
     <% end %>
   <% end %>
 </div>
@@ -48,7 +48,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
-          <%= t("settings.booking_page.preview_title") %>
+          <%= t("user_bot.dashboards.services.preview_the_service") %>
         </h4>
       </div>
       <div class="modal-body">
@@ -60,14 +60,7 @@
         <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
       </div>
       <div class="modal-footer centerize">
-        <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
-          data: {
-          controller: "clipboard",
-          action: "click->clipboard#copy",
-          clipboard_text: online_service_url(slug: @service.slug),
-          clipboard_popup_text: t("common.copied")
-        } %>
-      <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @service.slug), class: "btn btn-tarco" %>
+        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @service.slug), class: "btn btn-tarco" %>
       </div>
     </div>
   </div>

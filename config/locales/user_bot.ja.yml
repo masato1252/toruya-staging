@@ -126,7 +126,8 @@ ja:
         available_period: サービス利用期間
         start_time: 利用開始
         end_time: 利用終了
-        show_the_service: サービスを表示
+        show_the_service: ページを表示
+        preview_the_service: サービスページを確認
         form:
           name_title: サービス名
           company_title: 提供店舗
