@@ -19,7 +19,7 @@ RSpec.describe Plan do
 
       context "when customers is 51" do
         it "returns rank 0" do
-          expect(Plan.rank(Plan::FREE_LEVEL, 51)).to eq(0)
+          expect(Plan.rank(Plan::FREE_LEVEL, 51)).to eq(1)
         end
       end
     end

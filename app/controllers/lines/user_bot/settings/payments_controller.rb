@@ -83,7 +83,7 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
   end
 
   def downgrade
-    current_user.subscription.update_columns(plan_id: Subscription::FREE_PLAN_ID, rank: 0)
+    Subscriptions::Unsubscribe.run(user: current_user)
 
     redirect_to lines_user_bot_settings_path
   end

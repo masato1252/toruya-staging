@@ -45,13 +45,49 @@ RSpec.describe Subscriptions::ManualCharge do
         "type" => SubscriptionCharge::TYPES[:plan_subscruption],
         "user_name" => user.name,
         "user_email" => user.email,
-        "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
-        "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+        "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan)[0].format,
+        "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true)[0].format,
         "plan_name" => plan.name,
-        "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+        "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true)[0].format,
         "residual_value" => Money.zero.format,
         "rank" => rank
       })
+    end
+
+    context "when user choose a lower rank than they had" do
+      let(:basic_customer_limit) { 2 }
+      let(:basic_customer_max_limit) { 5 }
+      before do
+        stub_const("Plan::DETAILS", {
+          Plan::BASIC_LEVEL => [
+            {
+              rank: 0,
+              max_customers_limit: basic_customer_limit,
+              cost: 2_200,
+            },
+            {
+              rank: 1,
+              max_customers_limit: basic_customer_max_limit,
+              cost: 3_000,
+            },
+            {
+              rank: 2,
+              max_customers_limit: Float::INFINITY
+            },
+          ]
+        })
+      end
+
+      it "charges expected rank" do
+        FactoryBot.create_list(:customer, basic_customer_limit + 1, user: user)
+
+        outcome
+
+        charge = subscription.user.subscription_charges.last
+
+        expect(charge.rank).to eq(1)
+        expect(subscription.rank).to eq(1)
+      end
     end
 
     context "when user upgrade plan" do
@@ -65,15 +101,15 @@ RSpec.describe Subscriptions::ManualCharge do
         charge = subscription.user.subscription_charges.last
         residual_value = (Money.new(2200) * Rational(charge.expired_date - Subscription.today, charge.expired_date - charge.charge_date))
 
-        expect(charge.amount).to eq(Plans::Price.run!(user: user, plan: plan) - residual_value)
+        expect(charge.amount).to eq(Plans::Price.run!(user: user, plan: plan)[0] - residual_value)
         fee = Plans::Fee.run!(user: user, plan: plan)
         expect(charge.details).to eq({
           "shop_ids" => user.shop_ids,
           "type" => SubscriptionCharge::TYPES[:plan_subscruption],
           "user_name" => user.name,
           "user_email" => user.email,
-          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
-          "plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
+          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan)[0].format,
+          "plan_amount" => Plans::Price.run!(user: user, plan: plan)[0].format,
           "plan_name" => plan.name,
           "charge_amount" => charge.amount.format,
           "residual_value" => residual_value.format,
@@ -115,10 +151,10 @@ RSpec.describe Subscriptions::ManualCharge do
           "type" => SubscriptionCharge::TYPES[:business_member_sign_up],
           "user_name" => user.name,
           "user_email" => user.email,
-          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
-          "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+          "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan)[0].format,
+          "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true)[0].format,
           "plan_name" => plan.name,
-          "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+          "charge_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true)[0].format,
           "residual_value" => Money.zero.format
         })
       end

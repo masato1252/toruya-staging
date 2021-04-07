@@ -26,7 +26,7 @@ RSpec.describe Plans::Price do
           cost: 0
         },
         {
-          rank: 0,
+          rank: 1,
           max_customers_limit: Float::INFINITY,
         }
       ],
@@ -54,14 +54,14 @@ RSpec.describe Plans::Price do
       let(:plan) { Plan.free_level.take }
 
       it "returns expected cost" do
-        expect(outcome.result).to eq(Money.zero)
+        expect(outcome.result).to eq([Money.zero, 0])
       end
 
       context "when user's customers more than the limit" do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, free_customer_limit + 1, user: user)
 
-          expect(outcome.result).to eq(Money.zero)
+          expect(outcome.result).to eq([Money.zero, 1])
         end
       end
     end
@@ -73,7 +73,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit - 1, user: user)
 
-          expect(outcome.result).to eq(2_200.to_money(:jpy))
+          expect(outcome.result).to eq([2_200.to_money(:jpy), 0])
         end
       end
 
@@ -81,7 +81,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit, user: user)
 
-          expect(outcome.result).to eq(2_200.to_money(:jpy))
+          expect(outcome.result).to eq([2_200.to_money(:jpy), 0])
         end
       end
 
@@ -89,7 +89,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit + 1, user: user)
 
-          expect(outcome.result).to eq(3_000.to_money(:jpy))
+          expect(outcome.result).to eq([3_000.to_money(:jpy), 1])
         end
       end
 
@@ -99,7 +99,7 @@ RSpec.describe Plans::Price do
         it "returns expected cost" do
           FactoryBot.create_list(:customer, basic_customer_limit - 1, user: user)
 
-          expect(outcome.result).to eq(3_000.to_money(:jpy))
+          expect(outcome.result).to eq([3_000.to_money(:jpy), 1])
         end
       end
 

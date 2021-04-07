@@ -47,8 +47,8 @@ RSpec.describe Plans::SubscribeBusinessPlan do
         "type" => SubscriptionCharge::TYPES[:business_member_sign_up],
         "user_name" => user.name,
         "user_email" => user.email,
-        "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan).format,
-        "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true).format,
+        "pure_plan_amount" => Plans::Price.run!(user: user, plan: plan)[0].format,
+        "plan_amount" => Plans::Price.run!(user: user, plan: plan, with_business_signup_fee: true)[0].format,
         "plan_name" => plan.name,
         "charge_amount" => Money.new(63_800).format,
         "residual_value" => Money.zero.format

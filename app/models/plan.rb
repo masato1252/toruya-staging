@@ -34,22 +34,6 @@ class Plan < ApplicationRecord
     child_premium: 5,
   }, _suffix: true
 
-  # COST = {
-  #   jpy: {
-  #     "free" => 0,
-  #     "basic" => 2_200,
-  #     "premium" => 5_500,
-  #   },
-  # }.freeze
-
-  # ANNUAL_COST = {
-  #   jpy: {
-  #     "business" => 55_000,
-  #     "child_basic" => [19_800, 22_000],
-  #     "child_premium" => [49_500, 55_000],
-  #   }
-  # }.freeze
-
   DETAILS = {
     Plan::FREE_LEVEL => [
       {
@@ -65,7 +49,7 @@ class Plan < ApplicationRecord
         cost: 0
       },
       {
-        rank: 1,
+        rank: 2,
         max_customers_limit: Float::INFINITY,
       }
     ],
@@ -156,7 +140,7 @@ class Plan < ApplicationRecord
   }.freeze
 
   def self.max_legal_rank
-    Plan::DETAILS[Plan::BASIC_LEVEL].max{ |a, b| a[:rank] <=> b[:rank] } - 1
+    Plan::DETAILS[Plan::BASIC_LEVEL].max{ |a, b| a[:rank] <=> b[:rank] }[:rank] - 1 #6
   end
 
   def self.rank(plan_level, customers_count)

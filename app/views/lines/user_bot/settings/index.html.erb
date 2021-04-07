@@ -4,24 +4,24 @@
   <div class="dashboard">
     <div class="cell">
       <div>
-        <%= "あなたは現在" %>
+        <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
       </div>
       <div>
         <strong><span class="big"><%= @total_customer_count %></span><span> / <%= @total_customer_limit %></span></strong>
       </div>
       <div class="desc">
-        <%= "顧客情報があります" %>
+        <%= I18n.t("user_bot.dashboards.settings.dashboard.customer_info_state") %>
       </div>
     </div>
     <div class="cell">
       <div>
-        <%= t("settings.dashboard.total_had_created") %>
+        <%= I18n.t("user_bot.dashboards.settings.dashboard.now_state") %>
       </div>
       <div>
         <strong><span class="big"><%= @total_sale_page_count %></span><span> / <%= @total_sale_page_limit %></span></strong>
       </div>
       <div class="desc">
-        <%= "販売ページがあります" %>
+        <%= I18n.t("user_bot.dashboards.settings.dashboard.sale_page_state") %>
       </div>
     </div>
   </div>

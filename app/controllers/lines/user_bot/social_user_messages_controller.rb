@@ -9,6 +9,6 @@ class Lines::UserBot::SocialUserMessagesController < Lines::UserBotDashboardCont
       message_type: SocialUserMessage.message_types[:user]
     )
 
-    render json: json_response(outcome)
+    return_json_response(outcome)
   end
 end

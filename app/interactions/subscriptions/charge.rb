@@ -4,21 +4,27 @@ module Subscriptions
   class Charge < ActiveInteraction::Base
     object :user
     object :plan
-    integer :rank
     boolean :manual
     object :charge_amount, class: Money, default: nil
+    integer :rank, default: nil
     string :charge_description, default: nil
 
     def execute
       SubscriptionCharge.transaction do
         order_id = SecureRandom.hex(8).upcase
         # XXX: business plan charged manually means, it is a registration charge, user need to pay extra signup fee
-        amount = charge_amount || compose(Plans::Price, user: user, plan: plan, rank: rank)
+        amount, charging_rank =
+          if charge_amount && rank
+            [charge_amount, rank]
+          else
+            compose(Plans::Price, user: user, plan: plan, rank: rank)
+          end
+
         description = charge_description || plan.level
 
         charge = user.subscription_charges.create!(
           plan: plan,
-          rank: rank,
+          rank: charging_rank,
           amount: amount,
           charge_date: Subscription.today,
           manual: manual,
@@ -35,7 +41,7 @@ module Subscriptions
             metadata: {
               charge_id: charge.id,
               level: plan.level,
-              rank: rank,
+              rank: charging_rank,
               user_id: user.id,
               order_id: order_id
             }

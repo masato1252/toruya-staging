@@ -3,18 +3,6 @@
 class Ability
   include CanCan::Ability
 
-  # SALE_PAGE_LIMIT = {
-  #   Plan::PREMIUM_LEVEL => nil,
-  #   Plan::BASIC_LEVEL => nil,
-  #   Plan::FREE_LEVEL => 3
-  # }
-  #
-  # CUSTOMER_LIMIT = {
-  #   Plan::PREMIUM_LEVEL => nil,
-  #   Plan::BASIC_LEVEL => nil,
-  #   Plan::FREE_LEVEL => Plan::DETAILS[Plan::FREE_LEVEL[0][:max_customers_limit]]
-  # }
-
   attr_accessor :current_user, :super_user, :shop
 
   def initialize(current_user, super_user, shop = nil)

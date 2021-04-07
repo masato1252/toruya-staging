@@ -9,9 +9,9 @@ module Subscriptions
 
       charging_plan = subscription.next_plan || subscription.plan
 
-      if compose(Plans::Price, user: user, plan: charging_plan).zero?
+      if compose(Plans::Price, user: user, plan: charging_plan)[0].zero?
         # Downgrade to free plan
-        subscription.update(plan: charging_plan, next_plan: nil, rank: 0)
+        Subscriptions::Unsubscribe.run(user: user)
 
         if referral = Referral.enabled.find_by(referrer: user)
           compose(Referrals::ReferrerCharged, referral: referral, plan: charging_plan)
@@ -37,7 +37,7 @@ module Subscriptions
               type: SubscriptionCharge::TYPES[:plan_subscruption],
               user_name: user.name,
               user_email: user.email,
-              plan_amount: Plans::Price.run!(user: user, plan: charging_plan).format,
+              plan_amount: Plans::Price.run!(user: user, plan: charging_plan)[0].format,
               plan_name: charging_plan.name,
               rank: subscription.rank
             }
