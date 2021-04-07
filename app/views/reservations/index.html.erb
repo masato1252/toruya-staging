@@ -21,23 +21,7 @@
 
       <div class="staffDashboard">
         <div class="edit-worktime">
-          <% if can?(:create_reservation, shop) %>
-            <%= link_to t("action.new_reservation"), form_shop_reservations_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
-          <% else %>
-            <% if current_user == shop.user && can?(:manage_shop_reservations, shop) &&
-                    (
-                      cannot?(:create, :daily_reservations) ||
-                      cannot?(:create, :total_reservations) ||
-                      cannot?(:create, :reservation_with_settings) ||
-                      cannot?(:create_shop_reservations_with_menu, shop)
-                ) %>
-              <%= modal_link_to(create_reservation_warnings_path(owner_id: shop.user_id, shop_id: shop.id), class: "BTNyellow") do %>
-                <%= t("action.new_reservation") %>
-              <% end %>
-            <% else %>
-              <%= link_to(t("action.new_reservation"), "#", class: "BTNyellow disabled") %>
-            <% end %>
-          <% end %>
+          <%= link_to t("action.new_reservation"), form_shop_reservations_path(shop, start_time_date_part: params[:reservation_date]), class: "BTNyellow" %>
 
           <% if staff_schedule_requirement_condition %>
             <% if can? :manage_staff_temporary_working_day_permission, shop_staff %>

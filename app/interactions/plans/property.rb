@@ -6,8 +6,6 @@ module Plans
     object :plan
 
     def execute
-      cost = Plans::Price.run!(user: user, plan: plan)
-      cost_with_shop_fee = Plans::Price.run!(user: user, plan: plan, with_shop_fee: true, with_business_signup_fee: true)
       plan_level = Plan.permission_level(plan.level)
 
       selectable =
@@ -17,15 +15,24 @@ module Plans
           true
         end
 
+      details = I18n.t("plans")[plan.level.to_sym].merge!(
+        customer_number: I18n.t("plans.#{plan.level}.customer_number", customer_limit:  Plan.max_customers_limit(Plan::FREE_LEVEL, 0)),
+        sale_page_number: I18n.t("plans.#{plan.level}.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0))
+      )
+
+      if plan.level != "free"
+        details.merge!(
+          ranks: Plan::DETAILS[plan.level]
+          .map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
+        )
+      end
+
       Hashie::Mash.new({
         level: plan_level,
         key: plan.level,
         selectable: selectable,
-        cost: cost.fractional,
-        costWithFee: cost_with_shop_fee.fractional,
-        costFormat: cost.format,
         name: plan.name,
-        details: I18n.t("settings.plans")[plan.level.to_sym]
+        details: details
       })
     end
   end

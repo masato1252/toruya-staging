@@ -3,12 +3,6 @@
 class Ability
   include CanCan::Ability
 
-  BOOKING_PAGE_LIMIT = {
-    Plan::PREMIUM_LEVEL => nil,
-    Plan::BASIC_LEVEL => 3,
-    Plan::FREE_LEVEL => 1
-  }
-
   attr_accessor :current_user, :super_user, :shop
 
   def initialize(current_user, super_user, shop = nil)
@@ -82,17 +76,19 @@ class Ability
     can :manage_staff_temporary_working_day_permission, ShopStaff
     can :manage_staff_holiday_permission, ShopStaff
     can :manage, BookingPage
+    can :create, Customer
+    can :create, SalePage
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
     when Plan::BASIC_LEVEL
+      cannot :create, Shop if super_user.shops.exists?
       cannot :create, Staff
-      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
-      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::BASIC_LEVEL]
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       cannot :create, Staff
-      cannot :create, Shop if super_user.shops.exists? # only premium users could have multiple shops
-      cannot :create, BookingPage if super_user.booking_pages.count >= BOOKING_PAGE_LIMIT[Plan::FREE_LEVEL]
+      cannot :create, Shop if super_user.shops.exists?
+      cannot :create, Customer if super_user.customers.count >= Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
+      cannot :create, SalePage if super_user.sale_pages.count >= Plan.max_sale_pages_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
     end
 
     if super_user.business_member?
@@ -132,18 +128,6 @@ class Ability
   end
 
   def staff_member_ability
-    can :create_reservation, Shop do |shop|
-      shop &&
-      super_user.valid_shop_ids.include?(shop.id) &&
-      (super_user.premium_member? || admin?) &&
-      Reservations::DailyLimit.run(user: super_user).valid? &&
-      Reservations::TotalLimit.run(user: super_user).valid? &&
-      super_user.reservation_settings.exists? &&
-      shop.menus.exists?
-    end
-
-    can :create, :daily_reservations
-    can :create, :total_reservations
     can :edit, Staff do |staff|
       if staff.user_id == super_user.id
         if super_user.premium_member?
@@ -161,6 +145,14 @@ class Ability
           (reservation.staff_ids.length == 0 || (reservation.staff_ids.uniq.length == 1 && reservation.staff_ids.uniq.first == current_user_staff.try(:id)))
         )
       )
+    end
+
+    can :check_content, Reservation do |reservation|
+      check_customers_limit(reservation.customer_ids)
+    end
+
+    can :check_content, Customer do |customer|
+      check_customers_limit([customer.id])
     end
 
     can :see, Reservation do |reservation|
@@ -236,29 +228,17 @@ class Ability
     if super_user.reservation_settings.exists?
       can :create, :reservation_with_settings
     end
+  end
 
+  def check_customers_limit(customer_ids)
     case super_user.permission_level
-    when Plan::PREMIUM_LEVEL
-      can :create, :daily_reservations
-      can :create, :total_reservations
-    when Plan::TRIAL_LEVEL
-      reservation_daily_permission
-      reservation_total_permission
-    when Plan::FREE_LEVEL, Plan::BASIC_LEVEL
-      reservation_daily_permission
-      reservation_total_permission
-    end
-  end
+    when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+      customers_count = super_user.customers.size
+      free_max_customers_limit = Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
 
-  def reservation_daily_permission
-    if Reservations::DailyLimit.run(user: super_user).invalid?
-      cannot :create, :daily_reservations
-    end
-  end
-
-  def reservation_total_permission
-    if Reservations::TotalLimit.run(user: super_user).invalid?
-      cannot :create, :total_reservations
+      customers_count <= free_max_customers_limit || (super_user.customers.last(customers_count - free_max_customers_limit).pluck(:id) & customer_ids).length == 0
+    else
+      true
     end
   end
 end

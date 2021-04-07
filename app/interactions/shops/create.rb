@@ -23,10 +23,6 @@ module Shops
         if shop.new_record?
           errors.merge!(shop.errors)
         else
-          if authorize_token.present?
-            compose(Subscriptions::ShopFeeCharge, user: user, shop: shop, authorize_token: authorize_token)
-          end
-
           staff = compose(Staffs::CreateOwner, user: user).staff
 
           # Owner staff manage the same shops with User

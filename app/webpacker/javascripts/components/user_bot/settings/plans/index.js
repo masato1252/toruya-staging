@@ -6,6 +6,8 @@ import { StickyContainer, Sticky  } from 'react-sticky';
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import { TopNavigationBar } from "shared/components"
 import SubscriptionModal from "components/management/plans/subscription_modal";
+import SupportModal from "shared/support_modal";
+import I18n from 'i18n-js/index.js.erb';
 
 const Plans = ({props}) => {
   const freePlan = props.plans["free"];
@@ -13,6 +15,7 @@ const Plans = ({props}) => {
   const premiumPlan = props.plans["premium"];
 
   const [selected_plan_level, seletePlan] = useState()
+  const [selected_rank, seleteRank] = useState(props.default_upgrade_rank || props.current_rank)
 
   const isCurrentPlan = (planLevel) => {
     return props.current_plan_level === planLevel;
@@ -45,11 +48,18 @@ const Plans = ({props}) => {
   const isUpgrade = (planLevel) => subscriptionPlanIndex(planLevel) > currentPlanIndex()
 
   const renderSaveOrPayButton = (planLevel) => {
+    if (planLevel == "free") {
+      return <></>
+    }
+
     if (subscriptionPlanIndex(planLevel) == currentPlanIndex()) {
       return (
-        <div className={`btn btn-yellow disabled`} >
-          {props.i18n.save}
-        </div>
+        <SupportModal
+          trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
+          content={props.i18n.unsubscribe_modal_content}
+          btn={props.i18n.unsubscribe_modal_button}
+          reply={props.i18n.unsubscribe_modal_reply_html}
+        />
       )
     };
 
@@ -73,6 +83,18 @@ const Plans = ({props}) => {
     }
   };
 
+  const seletedPlanCustomerContext = (plan_level = "basic") => {
+    return props.plans[plan_level].details["ranks"].find(plan_context => plan_context.rank === parseInt(selected_rank))
+  }
+
+  const customer_number_limit_info = (plan_level = "basic") => {
+    return seletedPlanCustomerContext(plan_level)["max_customers_limit"]
+  }
+
+  const cost_info = (plan_level = "basic") => {
+    return seletedPlanCustomerContext(plan_level)["costFormat"]
+  }
+
   return (
     <StickyContainer className="plans">
       <Sticky>
@@ -85,6 +107,24 @@ const Plans = ({props}) => {
               title={props.i18n.plan_info.caption}
               sticky={true}
             />
+
+            <div className="padding-around centerize customers-number-selection">
+              <div>
+                {props.i18n.how_many_customers_do_you_have}
+              </div>
+              <select name="plan_rank" onChange={(event) => seleteRank(event.target.value)} value={selected_rank}>
+                {props.plans["basic"].details["ranks"].map(plan_context => {
+                  const customer_number_contexts = props.plans["basic"].details["ranks"]
+
+                  return (
+                    <option value={plan_context.rank} key={plan_context.rank}>
+                      {plan_context.max_customers_limit ? plan_context.max_customers_limit : `${customer_number_contexts[customer_number_contexts.length - 2].max_customers_limit}+`}
+                    </option>
+                  )
+                })}
+              </select>{I18n.t("common.person_unit")}
+            </div>
+
             <div className="thead">
               <div className="col"></div>
               <div className={`col free ${isCurrentPlan("free") && "current"}`}>
@@ -105,15 +145,17 @@ const Plans = ({props}) => {
                   </span>
                 </div>
               </div>
-              <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
-                {premiumPlan.details.title}
-                <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
-                  <i className="fa fa-check-circle" aria-hidden="true" />
-                  <span>
-                    {basicPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
-                  </span>
+              {premiumPlan?.details && (
+                <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
+                  {premiumPlan.details.title}
+                  <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
+                    <i className="fa fa-check-circle" aria-hidden="true" />
+                    <span>
+                      {basicPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}
@@ -121,31 +163,60 @@ const Plans = ({props}) => {
       <div className="tbody">
         {
           [
+            {header: I18n.t("plans.headers.customer_management")},
+            "customer_number",
+            {header: I18n.t("plans.headers.reservation_management")},
             "shop_can_set",
             "staff_in_charge",,
-            "max_customer_per_reservation",
             "reservation_restriction",
-            "private_schedule",
-            "customer_info",
-            "customer_group_limit",
-            "customer_filter",
-            "print_address",
-            "add_staff"
+            {header: I18n.t("plans.headers.online_booking")},
+            "booking_page_number",
+            {header: I18n.t("plans.headers.online_service")},
+            "online_service_number",
+            {header: I18n.t("plans.headers.sale_promotion")},
+            "sale_page_number",
+            "message_template",
+            {header: I18n.t("plans.headers.support")},
+            "support"
           ].map((labelName) => {
-            return (
-              <div className="table-row" key={labelName}>
-                <div className="col th">{props.plan_labels[labelName]}</div>
-                <div className={`col`}>
-                  {freePlan.details[labelName]}
+            if (typeof(labelName) === 'object') {
+              return (
+                <div className="table-row" key={labelName.header}>
+                  <div className="col th header">{labelName.header}</div>
                 </div>
-                <div className={`col`}>
-                  {basicPlan.details[labelName]}
+              )
+            }
+            else if (labelName === "customer_number") {
+              return (
+                  <div className="table-row" key={labelName}>
+                  <div className="col th">{props.plan_labels[labelName]}</div>
+                  <div className={`col`}>
+                    {freePlan.details[labelName]}
+                  </div>
+                  <div className={`col`}>
+                    {customer_number_limit_info("basic")}{props.i18n.up_to_customers_limit}
+                  </div>
                 </div>
-                <div className={`col`}>
-                  {premiumPlan.details[labelName]}
+              )
+            }
+            else {
+              return (
+                <div className="table-row" key={labelName}>
+                  <div className="col th">{props.plan_labels[labelName]}</div>
+                  <div className={`col`}>
+                    {freePlan.details[labelName]}
+                  </div>
+                  <div className={`col`}>
+                    {basicPlan.details[labelName]}
+                  </div>
+                  {premiumPlan?.details?.[labelName] && (
+                    <div className={`col`}>
+                      {premiumPlan.details[labelName]}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )
+              )
+            }
           })
         }
       </div>
@@ -155,24 +226,26 @@ const Plans = ({props}) => {
           <div className={`col`}>
             <label>
               <div>{freePlan.details.period}</div>
-              <div className="price-amount">無料</div>
+              <div className="price-amount">{I18n.t("common.free_price")}</div>
             </label>
             {renderSaveOrPayButton("free")}
           </div>
           <div className={`col`}>
             <label>
               <div>{basicPlan.details.period}</div>
-              <div className="price-amount">{basicPlan.costFormat}</div>
+              <div className="price-amount">{cost_info("basic")}</div>
             </label>
             {renderSaveOrPayButton("basic")}
           </div>
-          <div className={`col`}>
-            <label>
-              <div>{premiumPlan.details.period}</div>
-              <div className="price-amount">{premiumPlan.costFormat}</div>
-            </label>
-            {renderSaveOrPayButton("premium")}
-          </div>
+          {premiumPlan?.details && (
+            <div className={`col`}>
+              <label>
+                <div>{premiumPlan.details.period}</div>
+                <div className="price-amount">{cost_info("premium")}</div>
+              </label>
+              {renderSaveOrPayButton("premium")}
+            </div>
+          ) }
         </div>
         <div className="table-row">
           <div className="col">
@@ -194,8 +267,9 @@ const Plans = ({props}) => {
         stripe_key={props.stripe_key}
         header="Trouya"
         plan_key={selectedPlan()?.key}
+        rank={selected_rank}
         desc={selectedPlan()?.name}
-        details_desc={`${premiumPlan.details.period}: ${selectedPlan()?.costFormat}`}
+        details_desc={`${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path()}
         props={props}

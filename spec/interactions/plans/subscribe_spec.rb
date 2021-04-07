@@ -5,12 +5,14 @@ require "rails_helper"
 RSpec.describe Plans::Subscribe do
   let(:user) { subscription.user }
   let(:plan) { Plan.free_level.take }
+  let(:rank) { 0 }
   let(:authorize_token) { SecureRandom.hex }
   let(:change_immediately) { true }
   let(:args) do
     {
       user: user,
       plan: plan,
+      rank: rank,
       authorize_token: authorize_token,
       change_immediately: change_immediately
     }

@@ -22,12 +22,6 @@ module Subscriptions
         user_email: user.email
       }
       charge.save!
-
-      Notifiers::Subscriptions::ChargeShopFee.perform_later(
-        receiver: user,
-        user: user,
-        subscription_charge: charge
-      )
       charge
     end
   end
