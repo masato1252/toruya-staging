@@ -405,6 +405,17 @@ const OnlineServices = {
       responseType: "json"
     })
   },
+  update: ({online_service_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_service_path(online_service_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
 }
 
 const BusinessScheduleServices = {

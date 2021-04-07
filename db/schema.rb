@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_133210) do
+ActiveRecord::Schema.define(version: 2021_03_29_094612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -329,6 +329,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_133210) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "start_at"
     t.index ["slug"], name: "index_online_services_on_slug"
     t.index ["user_id"], name: "index_online_services_on_user_id"
   end

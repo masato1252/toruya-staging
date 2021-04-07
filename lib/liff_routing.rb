@@ -40,5 +40,6 @@ class LiffRouting
   map :new_booking_setting, :new_lines_user_bot_booking_url
   map :new_sales, :new_lines_user_bot_sales_url
   map :new_online_service, :new_lines_user_bot_service_url
+  map :online_services, :lines_user_bot_services_url
   map :notifications, :lines_user_bot_notifications_url
 end

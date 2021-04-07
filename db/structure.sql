@@ -916,7 +916,8 @@ CREATE TABLE public.online_services (
     company_id bigint NOT NULL,
     slug character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    start_at timestamp without time zone
 );
 
 
@@ -4065,6 +4066,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210226134008'),
 ('20210311112133'),
 ('20210318082320'),
-('20210323133210');
-
-
+('20210323133210'),
+('20210329094612');

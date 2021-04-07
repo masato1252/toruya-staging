@@ -2,6 +2,7 @@
 
 import React from "react";
 import ReactSelect from "react-select";
+import _ from "lodash";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";

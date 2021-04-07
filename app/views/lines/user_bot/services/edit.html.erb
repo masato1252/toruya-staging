@@ -1,0 +1,19 @@
+<%= react_component("user_bot/services/edit", {
+  props: {
+    service: OnlineServiceSerializer.new(@service).attributes_hash,
+    attribute: @attribute,
+    companies: current_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
+      CompanyInfoSerializer.new(current_user.profile).attributes_hash
+    ),
+    upsell_sales: current_user.sale_pages.includes(:product, :sale_template).map do |sale_page|
+      hash = SalePageOptionSerializer.new(sale_page).attributes_hash
+
+      {
+        label: hash[:label],
+        value: hash
+      }
+    end
+  }
+},
+{ camelize_props: false }
+) %>

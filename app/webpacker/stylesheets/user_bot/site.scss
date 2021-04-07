@@ -550,3 +550,12 @@ h3.header {
   margin: 30px 0;
   padding: 10px;
 }
+
+.preview-mark {
+  background-color: $pink-background;
+  border: 1px solid $pink-border;
+  color: $pink-color;
+  font-size: 10px;
+  padding: 4px 6px;
+  height: 24px;
+}
