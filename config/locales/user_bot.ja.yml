@@ -184,6 +184,44 @@ ja:
         create_a_sale_page: 販売ページを使うと ネットで予約募集できます
         create_a_sale_page_btn: 販売ページを作成
       sales:
+        edit:
+          sale_pages: 販売ページ
+          sales_about: ページ概要
+          selling_product: 販売商品
+          selling_start_at: 販売開始
+          selling_end_at: 販売終了
+          selling_solutions: 販売方法
+          selling_price: 販売価格
+          normal_price: 通常価格
+          selling_number: 販売個数
+          page_content: 販売ページコンテンツ
+          content_header: ヘッドライン
+          content_video: ヘッダー動画
+          why_content: 購入理由
+          staff: 担当スタッフ
+          flow: サービスの流れ
+          delete_sale_page: 販売ページを削除
+          flow_steps: "%{flow_number}ステップ"
+          share_code_btn: 購入ボタンをコピー
+        form:
+          start_time_title: ページ概要
+          start_time_subtitle: "販売開始"
+          end_time_title: ページ概要
+          end_time_subtitle: 販売終了
+          normal_price_title: 販売方法
+          normal_price_subtitle: 通常価格
+          quantity_title: 販売方法
+          quantity_subtitle: 販売個数
+          sale_template_variables_title: 販売ページコンテンツ
+          sale_template_variables_subtitle: ヘッドライン
+          introduction_video_url_title: 販売ページコンテンツ
+          introduction_video_url_subtitle: ヘッダー動画
+          why_content_title: 販売ページコンテンツ
+          why_content_subtitle: 購入理由
+          staff_title: 販売ページコンテンツ
+          staff_subtitle: 担当スタッフ
+          flow_title: 販売ページコンテンツ
+          flow_subtitle: サービスの流れ
         new:
           what_to_sale: この販売ページの目的は何ですか？
           online_booking: オンライン予約募集

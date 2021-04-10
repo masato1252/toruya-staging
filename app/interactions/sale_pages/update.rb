@@ -1,0 +1,68 @@
+# frozen_string_literal: true
+
+module SalePages
+  class Update < ActiveInteraction::Base
+    object :sale_page
+    string :update_attribute
+
+    hash :attrs, default: nil do
+      hash :sale_template_variables, strip: false, default: nil
+      string :introduction_video_url, default: nil
+      string :selling_end_at, default: nil
+      string :selling_start_at, default: nil
+      integer :quantity, default: nil
+      integer :normal_price, default: nil
+      hash :why_content, default: nil do
+        file :picture, default: nil
+        string :desc1, default: nil
+        string :desc2, default: nil
+      end
+      hash :staff, default: nil do
+        integer :id, default: nil
+        file :picture, default: nil
+        string :introduction, default: nil
+      end
+      array :flow, default: nil do
+        string
+      end
+    end
+
+    def execute
+      sale_page.with_lock do
+        case update_attribute
+        when "sale_template_variables", "introduction_video_url", "flow", "quantity"
+          sale_page.update(attrs.slice(update_attribute))
+        when "normal_price"
+          sale_page.update(normal_price_amount_cents: attrs[:normal_price])
+        when "why_content"
+          picture = attrs[:why_content].delete(:picture)
+
+          sale_page.update(content: attrs[:why_content])
+          if picture
+            sale_page.picture.purge_later
+            sale_page.update(picture: picture)
+          end
+        when "end_time"
+          sale_page.update(selling_end_at: attrs[:selling_end_at] ? Time.zone.parse(attrs[:selling_end_at]).end_of_day : nil)
+        when "start_time"
+          sale_page.update(selling_start_at: attrs[:selling_start_at] ? Time.zone.parse(attrs[:selling_start_at]).beginning_of_day : nil)
+        when "staff"
+          responsible_staff = sale_page.user.staffs.find(attrs[:staff][:id])
+          sale_page.update(staff: responsible_staff)
+          if attrs[:staff][:picture]
+            responsible_staff.picture.purge
+            responsible_staff.picture = attrs[:staff][:picture]
+          end
+          responsible_staff.introduction = attrs[:staff][:introduction]
+          responsible_staff.save!
+        end
+
+        if sale_page.errors.present?
+          errors.merge!(sale_page.errors)
+        end
+      end
+
+      sale_page
+    end
+  end
+end

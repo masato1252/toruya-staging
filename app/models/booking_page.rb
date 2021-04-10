@@ -45,8 +45,28 @@ class BookingPage < ApplicationRecord
   scope :started, -> { where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
 
+  def primary_product
+    @primary_product ||= booking_options.order(amount_cents: :asc).first
+  end
+
+  def product_name
+    @product_name ||= primary_product.display_name.presence || primary_product.name.presence || name
+  end
+
+  def product_price
+    @product_price ||= primary_product.amount
+  end
+
   def start_time
     start_at || created_at
+  end
+
+  def start_time_text
+    start_at ? I18n.l(start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
+  end
+
+  def end_time_text
+    end_at ? I18n.l(end_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_forever")
   end
 
   def available_booking_start_date

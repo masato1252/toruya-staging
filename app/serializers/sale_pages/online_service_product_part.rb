@@ -4,20 +4,36 @@ module SalePages::OnlineServiceProductPart
   extend ActiveSupport::Concern
 
   included do
+    attribute :normal_price, :price
+
     attribute :product do |sale_page|
       sale_page.product.is_a?(BookingPage) ? ::BookingPageSerializer.new(sale_page.product).attributes_hash : ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
     end
 
-    attribute :introduction_video do |object|
-      { url: object.introduction_video_url }
+    attribute :normal_price_option do |object|
+      if object.normal_price_amount_cents
+        {
+          price_type: "cost",
+          price_amount: object.normal_price_amount.format(symbol: false)
+        }
+      else
+        {
+          price_type: "free"
+        }
+      end
     end
 
-    attribute :price do |object|
-      { price_amount: object.selling_price_amount&.format(symbol: false) }
-    end
-
-    attribute :normal_price do |object|
-      { price_amount: object.normal_price_amount&.format(symbol: false) }
+    attribute :quantity_option do |object|
+      if object.quantity
+        {
+          quantity_type: "limited",
+          quantity_value: object.quantity
+        }
+      else
+        {
+          quantity_type: "unlimited"
+        }
+      end
     end
   end
 end

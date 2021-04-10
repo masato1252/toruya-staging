@@ -7,6 +7,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
+import FlowEdit from "components/user_bot/sales/flow_edit";
 
 const StaffSetupStep = ({step, next, prev, jump}) => {
   const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview } = useGlobalContext()
@@ -37,63 +38,33 @@ const StaffSetupStep = ({step, next, prev, jump}) => {
       <h4 className="header centerize"
         dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.booking_page_creation.introduce_who_do_this") }} />
       <div className="product-content-deails">
-        {selected_staff && (
-          <ImageUploader
-            defaultImages={selected_staff?.picture_url?.length ? [selected_staff.picture_url] : []}
-            withIcon={false}
-            withPreview={true}
-            withLabel={false}
-            singleImage={true}
-            buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_picture_requirement_tip")}
-            onChange={onDrop}
-            imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
-            maxFileSize={5242880}
-          />
-        )}
-        <ReactSelect
-          Value={selected_staff ? { label: selected_staff.name } : ""}
-          defaultValue={selected_staff ?  { label: selected_staff.name } : ""}
-          placeholder={I18n.t("common.select_a_staff")}
-          options={props.staffs}
-          onChange={
-            (staff_option)=> {
+        <StaffEdit
+          staffs={props.staffs}
+          selected_staff={selected_staff}
+          handleStaffChange={(attr, value) => {
+            if (attr === "selected_staff") {
               dispatch({
                 type: "SET_ATTRIBUTE",
                 payload: {
                   attribute: "selected_staff",
-                  value: staff_option.value
+                  value: value
                 }
               })
             }
-          }
-        />
-
-        {selected_staff?.editable ? (
-          <TextareaAutosize
-            className="extend with-border"
-            value={selected_staff?.introduction || ""}
-            placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_introduction")}
-            onChange={(event) => {
+            else if (attr === "introduction") {
               dispatch({
                 type: "SET_NESTED_ATTRIBUTE",
                 payload: {
                   parent_attribute: "selected_staff",
                   attribute: "introduction",
-                  value: event.target.value
+                  value: value
                 }
               })
-            }}
-          />
+            }
+          }}
+          handlePictureChange={onDrop}
+        />
 
-        ) : (
-          <p className="break-line-content">
-            {selected_staff?.introduction}
-          </p>
-        )}
-
-        <p className="message margin-around centerize">
-          {I18n.t("user_bot.dashboards.sales.booking_page_creation.staff_change_tip")}
-        </p>
         <div className="action-block">
           <button onClick={prev} className="btn btn-tarco">
             {I18n.t("action.prev_step")}

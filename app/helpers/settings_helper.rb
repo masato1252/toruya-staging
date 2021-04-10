@@ -14,6 +14,10 @@ module SettingsHelper
   end
 
   def booking_page_share_button_link(page)
+    share_button_link(t("settings.booking_page.share_button_text"), booking_url(page))
+  end
+
+  def share_button_link(btn_text, url)
     style = <<-STYLE.strip_heredoc.gsub!("\n", "")
       display: inline-block;
       background-color: #aecfc8;
@@ -31,7 +35,7 @@ module SettingsHelper
       padding: 0 10px;
     STYLE
 
-    link_to(t("settings.booking_page.share_button_text"), booking_url(page), style: style, target: "_blank")
+    link_to(btn_text, url, style: style, target: "_blank")
   end
 
   def booking_option_item(booking_option)

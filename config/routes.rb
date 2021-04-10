@@ -143,16 +143,16 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :sales, only: [:new, :create, :index, :show, :edit, :update] do
+      resources :sales, only: [:new, :index, :show, :edit, :update, :destroy] do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
+      end
 
-        scope module: :sales do
-          resources :booking_pages, only: [:new, :create]
-          resources :online_services, only: [:new, :create]
-        end
+      scope module: :sales, as: :sales, path: :sales do
+        resources :booking_pages, only: [:new, :create]
+        resources :online_services, only: [:new, :create]
       end
 
       resources :booking_pages do
