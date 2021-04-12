@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: menus
@@ -14,6 +13,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  deleted_at        :datetime
+#  online            :boolean          default(FALSE)
 #
 # Indexes
 #

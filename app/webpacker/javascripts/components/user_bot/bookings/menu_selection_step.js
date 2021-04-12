@@ -9,7 +9,7 @@ import { useGlobalContext } from "context/user_bots/bookings/global_state";
 import BookingFlowStepIndicator from "./booking_flow_step_indicator";
 
 const MenuSelectionStep = ({next, jump, step}) => {
-  const { selected_menu, props, i18n, dispatch, menus, booking_options, new_menu_name, new_menu_minutes } = useGlobalContext()
+  const { selected_menu, props, i18n, dispatch, menus, booking_options, new_menu_name, new_menu_minutes, new_menu_online_state } = useGlobalContext()
   const [creatingNewMenu, setCreatingNewMenu] = useState(false)
   const menuNameInpuRef = useRef()
 
@@ -99,12 +99,37 @@ const MenuSelectionStep = ({next, jump, step}) => {
                         value: minute
                       }
                     })
+                  }
+                }
+              >
+                {minute} {I18n.t("common.minute")}
+              </button>
+            ))}
+          </div>
+        )
+      }
+      else if (!new_menu_online_state) {
+        return (
+          <div className="centerize">
+            <h3 className="header">{I18n.t("user_bot.dashboards.booking_page_creation.is_menu_online")}</h3>
+
+            {["online", "local"].map(online_state => (
+              <button key={online_state} className="btn btn-tarco btn-extend btn-tall"
+                onClick={
+                  () => {
+                    dispatch({
+                      type: "SET_ATTRIBUTE",
+                      payload: {
+                        attribute: "new_menu_online_state",
+                        value: online_state
+                      }
+                    })
 
                     next()
                   }
                 }
               >
-                {minute} {I18n.t("common.minute")}
+                {I18n.t(`user_bot.dashboards.booking_page_creation.menu_${online_state}`)}
               </button>
             ))}
           </div>

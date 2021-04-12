@@ -56,4 +56,10 @@ class BookingOption < ApplicationRecord
       base_booking_option_menus.permutation(base_booking_option_menus.size)
     end
   end
+
+  def online?
+    return @is_online_ if defined?(@is_online)
+
+    @is_online = menus.where(online: true).exists?
+  end
 end

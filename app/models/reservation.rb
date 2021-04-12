@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: reservations
@@ -20,6 +19,7 @@
 #  deleted_at         :datetime
 #  prepare_time       :datetime
 #  user_id            :integer
+#  online             :boolean          default(FALSE)
 #
 # Indexes
 #

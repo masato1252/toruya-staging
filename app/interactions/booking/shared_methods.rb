@@ -65,7 +65,8 @@ module Booking
                   overlap_restriction: overlap_restriction,
                   overbooking_restriction: overbooking_restriction,
                   skip_before_interval_time_validation: skip_before_interval_time_validation,
-                  skip_after_interval_time_validation: skip_after_interval_time_validation
+                  skip_after_interval_time_validation: skip_after_interval_time_validation,
+                  online_reservation: booking_option.online?
                 )
 
                 Rails.logger.debug("==date: #{date}, #{menu_book_start_at.to_s(:time)}~#{menu_book_end_at.to_s(:time)}, staff: #{candidate_staff_ids}, overlap_restriction: #{overlap_restriction}, overbooking_restriction: #{overbooking_restriction}, skip_before_interval_time_validation: #{skip_before_interval_time_validation}, skip_after_interval_time_validation: #{skip_after_interval_time_validation} ")
@@ -206,7 +207,8 @@ module Booking
               number_of_customer: same_time_reservation.count_of_customers + 1,
               overbooking_restriction: booking_page.overbooking_restriction,
               skip_before_interval_time_validation: skip_before_interval_time_validation,
-              skip_after_interval_time_validation: skip_after_interval_time_validation
+              skip_after_interval_time_validation: skip_after_interval_time_validation,
+              online_reservation: booking_option.online?
             )
 
             if present_reservable_reservation_outcome.valid?

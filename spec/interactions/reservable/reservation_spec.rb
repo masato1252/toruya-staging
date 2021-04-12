@@ -517,7 +517,7 @@ RSpec.describe Reservable::Reservation do
       context "when some staffs already had reservation in other shops" do
         let!(:reservation) do
           FactoryBot.create(:reservation, shop: FactoryBot.create(:shop),
-                             staffs: [staff2], start_time: time_range.first, end_time: time_range.last)
+                            staffs: [staff2], start_time: start_time, end_time: end_time)
         end
 
         it "is invalid" do
@@ -573,6 +573,25 @@ RSpec.describe Reservable::Reservation do
               start_time: start_time,
               end_time: end_time,
               staff_ids: [staff1.id, staff2.id]
+            )
+
+            expect(outcome).to be_valid
+          end
+        end
+
+        # XXX: If this new reservation is online, it doesn't matter where your existing reservation, only take of the time
+        context "when it is is online reservation booking" do
+          let(:menu1) { FactoryBot.create(:menu, :with_reservation_setting, shop: shop, minutes: time_minutes) }
+
+          it "is valid" do
+            outcome = Reservable::Reservation.run(
+              shop: shop, date: date,
+              menu_id: menu1.id,
+              menu_required_time: menu1.minutes,
+              start_time: start_time.advance(hours: 2),
+              end_time: end_time.advance(hours: 2),
+              staff_ids: [staff1.id, staff2.id],
+              online_reservation: true
             )
 
             expect(outcome).to be_valid

@@ -165,6 +165,9 @@ ja:
         what_is_menu_name: メニュー名は何ですか？
         input_menu_name: メニュー名を入力
         what_is_menu_time: メニューの所用時間は何分ですか？
+        is_menu_online: このメニューはオンライン開催ですか？
+        menu_online: はい、オンライン開催です
+        menu_local: いいえ、店舗に来店されます
         current_booking_options_label: 既存の予約価格から選択
         create_new_booking_option: 新しい価格を作成する
         how_much_of_this_price: 幾らで販売しますか？

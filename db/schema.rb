@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_29_094612) do
+ActiveRecord::Schema.define(version: 2021_03_31_134109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -285,6 +285,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_094612) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.boolean "online", default: false
     t.index ["user_id", "deleted_at"], name: "index_menus_on_user_id_and_deleted_at"
   end
 
@@ -517,6 +518,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_094612) do
     t.datetime "deleted_at"
     t.datetime "prepare_time"
     t.integer "user_id"
+    t.boolean "online", default: false
     t.index ["user_id", "shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_query_index"
     t.index ["user_id", "shop_id", "deleted_at"], name: "reservation_user_shop_index"
   end

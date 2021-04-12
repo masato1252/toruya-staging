@@ -10,6 +10,7 @@ module Reservations
     hash :params do
       time :start_time
       time :end_time, default: nil
+      boolean :online, default: false
       array :customers_list, default: [] do
         hash do
           string :state
@@ -69,7 +70,8 @@ module Reservations
             reservation_id: reservation.id,
             number_of_customer: number_of_customer,
             skip_before_interval_time_validation: skip_before_interval_time_validation,
-            skip_after_interval_time_validation: skip_after_interval_time_validation
+            skip_after_interval_time_validation: skip_after_interval_time_validation,
+            online_reservation: reservation.online
           )
 
           errors_list << outcome.errors
@@ -84,7 +86,8 @@ module Reservations
           menu_required_time: nil,
           staff_ids: [],
           reservation_id: reservation.id,
-          number_of_customer: number_of_customer
+          number_of_customer: number_of_customer,
+          online_reservation: reservation.online
         )
       end
       errors_with_warnings = {}
