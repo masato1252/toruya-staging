@@ -31,6 +31,10 @@ FactoryBot.define do
       min_staffs_number { 2 }
     end
 
+    trait :online do
+      online { true }
+    end
+
     trait :with_reservation_setting do
       after(:create) do |menu|
         FactoryBot.create(:reservation_setting, menu: menu, user: menu.user, day_type: "business_days")
