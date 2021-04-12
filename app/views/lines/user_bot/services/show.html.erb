@@ -1,0 +1,67 @@
+<div class="service-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_services_path, title: I18n.t("user_bot.dashboards.services.service_page") %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.service_about") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.name") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :name), title: @service.name %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
+    <span class="dotdotdot"><%= @service.content["url"] %></span>
+    <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
+  <% end %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
+    <span><%= @service.sale_page&.product&.name %></span>
+    <% if @upsell_sale_page && @upsell_sale_page[:price][:price_amount] %>
+      <div class="desc">
+        <%= @upsell_sale_page[:price][:price_amount] %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :start_time), title: @service.start_time_text %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.end_time") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :end_time), title: @service.end_time_text %>
+
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
+
+    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+      <i class="fa fa-share-square fa-2x"></i>
+      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog booking-preview-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("user_bot.dashboards.services.preview_the_service") %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-right">
+          <span class="preview-mark">
+            <%= I18n.t("common.preview") %>
+          </span>
+        </div>
+        <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+      </div>
+      <div class="modal-footer centerize">
+        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @service.slug), class: "btn btn-tarco" %>
+      </div>
+    </div>
+  </div>
+</div>

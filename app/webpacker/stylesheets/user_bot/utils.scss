@@ -8,8 +8,16 @@ $line-margin: 20px;
   }
 }
 
+.padding-around {
+  padding: $line-margin;
+}
+
 .text-align-left {
   text-align: left;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .relative {

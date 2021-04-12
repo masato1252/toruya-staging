@@ -34,6 +34,12 @@
 
     &.th {
       font-weight: bold;
+      align-items: flex-start !important;
+
+      &.header {
+        background-color: $gray2;
+        font-weight: normal;
+      }
     }
   }
 
@@ -52,6 +58,10 @@
       border-top: 1px solid #dddddd;
       border-top-left-radius: 10px;
       border-top-right-radius: 10px;
+
+      &:nth-of-type(1) {
+        border-width: 0;
+      }
     }
 
     .free {
@@ -117,7 +127,6 @@
       &:first-child {
         & > .col.th {
           border-top: 1px solid #dddddd;
-          border-top-left-radius: 10px;
         }
 
         & > .col {
@@ -154,5 +163,9 @@
       font-weight: bold;
       margin-top: 12px;
     }
+  }
+
+  .customers-number-selection {
+    background-color: #ffffff;
   }
 }

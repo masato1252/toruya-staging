@@ -9,7 +9,7 @@ module SayHi
 
   def say_hi
     if Rails.configuration.x.env.production?
-      Slack::Web::Client.new.chat_postMessage(channel: 'sayhi', text: hi_message)
+      HiJob.perform_later(self)
     end
   end
 end

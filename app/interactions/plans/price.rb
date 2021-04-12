@@ -2,31 +2,34 @@
 
 module Plans
   class Price < ActiveInteraction::Base
-    BUSINESS_SIGNUP_FEE = { jpy: 8_800 }.freeze
-
     object :user
     object :plan
-    boolean :with_shop_fee, default: false
-    boolean :with_business_signup_fee, default: false
+    integer :rank, default: nil
 
     def execute
-      plan_cost =
-        if plan.is_child?
-          user.subscription_charges.completed.exists? ? plan.cost_with_currency.second : plan.cost_with_currency.first
-        else
-          plan.cost_with_currency
-        end
+      plan_cost = plan.cost_with_currency(charging_rank)
 
-
-      if plan.business_level? && with_business_signup_fee
-        plan_cost = plan_cost + Money.new(BUSINESS_SIGNUP_FEE[Money.default_currency.id], Money.default_currency.id)
+      if !plan.free_level? && !plan_cost.positive?
+        errors.add(:plan, :invalid_price)
       end
 
-      if with_shop_fee
-        plan_cost = plan_cost + compose(Plans::Fee, user: user, plan: plan)
+      [plan_cost, charging_rank]
+    end
+
+    private
+
+    def charging_rank
+      return @charging_rank if defined?(@charging_rank)
+
+      @charging_rank = Plan.rank(plan.level, user.customers.size)
+
+      # XXX: We upgrade users rank automatically, but won't downgrade automatically for them,
+      # because our goal is grow up our users' business, there is no reason to let users to decrease their customers
+      if user.subscription.plan == plan
+        @charging_rank = [@charging_rank, user.subscription.rank, rank].compact.max
       end
 
-      plan_cost
+      @charging_rank
     end
   end
 end

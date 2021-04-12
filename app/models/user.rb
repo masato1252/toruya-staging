@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: users
@@ -27,6 +26,7 @@
 #  contacts_sync_at       :datetime
 #  referral_token         :string
 #  phone_number           :string
+#  customers_count        :integer          default(0)
 #
 # Indexes
 #
@@ -203,11 +203,11 @@ class User < ApplicationRecord
     Ability.new(self, self)
   end
 
-  private
-
   def hi_message
     "👩 New user joined, user_id: #{id}"
   end
+
+  private
 
   def today_reservations
     reservations.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)

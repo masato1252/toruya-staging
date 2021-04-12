@@ -6,7 +6,7 @@ RSpec.describe Subscriptions::Refund do
   before do
     StripeMock.start
     stripe_charge = Stripe::Charge.create({
-      amount: subscription_charge.plan.cost,
+      amount: subscription_charge.plan.cost(0),
       currency: Money.default_currency.iso_code,
       customer: stripe_customer_id,
     })

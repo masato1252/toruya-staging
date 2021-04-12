@@ -1,3 +1,5 @@
+<%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) if !ability(current_user).can?(:create, SalePage) %>
+
 <%= react_component("user_bot/sales/booking_page_creation_flow", {
   props: {
     social_account_add_friend_url: super_user.social_accounts.first&.add_friend_url,

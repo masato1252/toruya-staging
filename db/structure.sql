@@ -917,7 +917,8 @@ CREATE TABLE public.online_services (
     company_id bigint NOT NULL,
     slug character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    start_at timestamp without time zone
 );
 
 
@@ -2090,7 +2091,8 @@ CREATE TABLE public.subscription_charges (
     order_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    details jsonb
+    details jsonb,
+    rank integer DEFAULT 0
 );
 
 
@@ -2126,7 +2128,8 @@ CREATE TABLE public.subscriptions (
     recurring_day integer,
     expired_date date,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    rank integer DEFAULT 0
 );
 
 
@@ -2176,7 +2179,8 @@ CREATE TABLE public.users (
     updated_at timestamp without time zone NOT NULL,
     contacts_sync_at timestamp without time zone,
     referral_token character varying,
-    phone_number character varying
+    phone_number character varying,
+    customers_count integer DEFAULT 0
 );
 
 
@@ -4062,8 +4066,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210222071432'),
 ('20210223140239'),
 ('20210226134008'),
-('20210311112133');
+('20210311112133'),
+('20210318082320'),
+('20210323133210'),
 ('20210329094612'),
 ('20210331134109');
-
-

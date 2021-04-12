@@ -2,3 +2,4 @@ ja:
   sales:
     expire_after_n_days: "購入後%{days}日後まで"
     never_expire: ずっと利用可能
+    sale_now: 購入後すぐ

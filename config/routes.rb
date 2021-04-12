@@ -135,9 +135,11 @@ Rails.application.routes.draw do
           post :page
         end
       end
-      resources :services, only: [:new, :create] do
+
+      resources :services, only: [:new, :create, :index, :show, :edit, :update] do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
 
@@ -200,6 +202,7 @@ Rails.application.routes.draw do
         collection do
           get :create_reservation
           get :create_booking_page
+          get :check_reservation_content
         end
       end
 
@@ -208,6 +211,8 @@ Rails.application.routes.draw do
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
       end
+
+      resources :social_user_messages, only: [:create]
     end
   end
 

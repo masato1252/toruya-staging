@@ -4,7 +4,8 @@ FactoryBot.define do
   factory :subscription_charge do
     association :user
     plan { Plan.second } # basic plan
-    amount { plan.cost.is_a?(Array) ? plan.cost.first : plan.cost }
+    rank { 0 }
+    amount { plan.cost(rank).is_a?(Array) ? plan.cost(rank).first : plan.cost(rank) }
     charge_date { Subscription.today }
     expired_date { Subscription.today.advance(months: 1) }
 
