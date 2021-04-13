@@ -37,19 +37,43 @@ const SalePageEdit =({props}) => {
 
   const onSubmit = async (data) => {
     let error, response;
+    let submittedData;
+
+    switch(props.attribute) {
+      case "quantity":
+        submittedData = { quantity: quantity && quantity["quantity_value"] }
+        break
+      case "normal_price":
+        submittedData = { normal_price: normal_price && normal_price['price_amount'] }
+        break
+      case "end_time":
+        submittedData = { selling_end_at: end_time && end_time["end_time_date_part"] }
+        break
+          case "start_time":
+        submittedData = { selling_start_at: start_time && start_time["start_time_date_part"] }
+        break
+      case "why_content":
+        submittedData = { why_content: _.pick(why_content, "desc1", "desc2", "picture") }
+        break
+      case "staff":
+        submittedData = { staff: _.pick(staff, "id", "picture", "introduction") }
+        break
+      case "flow":
+        submittedData = { flow: flow }
+        break
+      case "introduction_video_url":
+        break
+      case "sale_template_variables":
+        submittedData = { sale_template_variables: template_variables }
+        break
+    }
+
 
     [error, response] = await SaleServices.update({
       sale_page_id: props.sale_page.id,
       data: _.assign( data, {
         attribute: props.attribute,
-        sale_template_variables: template_variables,
-        why_content: _.pick(why_content, "desc1", "desc2", "picture"),
-        staff: _.pick(staff, "id", "picture", "introduction"),
-        flow: flow,
-        selling_end_at: end_time && end_time["end_time_date_part"],
-        selling_start_at: start_time && start_time["start_time_date_part"],
-        normal_price: normal_price && normal_price['price_amount'],
-        quantity: quantity && quantity["quantity_value"],
+        ...submittedData
       })
     })
 
