@@ -99,6 +99,7 @@ group :development do
   gem "memory_profiler"
   gem "benchmark-memory"
   gem "magic_frozen_string_literal"
+  gem "strong_migrations"
 end
 
 group :test do
