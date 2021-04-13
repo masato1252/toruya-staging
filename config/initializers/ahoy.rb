@@ -1,7 +1,7 @@
 class Ahoy::Store < Ahoy::DatabaseStore
   def track_visit(data)
     if request.params[:social_user_id] || request.cookies[:line_social_user_id_of_customer]
-      data[:line_social_user_id_of_customer] = request.params[:social_user_id] || request.cookies[:line_social_user_id_of_customer]
+      data[:customer_social_user_id] = request.params[:social_user_id] || request.cookies[:line_social_user_id_of_customer]
     end
 
     super(data)
