@@ -74,6 +74,7 @@ gem "newrelic_rpm"
 gem "scout_apm"
 gem "mixpanel-ruby"
 gem "video_thumb"
+gem "strong_migrations"
 gem "ahoy_matey"
 
 group :development, :test do
@@ -100,7 +101,6 @@ group :development do
   gem "memory_profiler"
   gem "benchmark-memory"
   gem "magic_frozen_string_literal"
-  gem "strong_migrations"
 end
 
 group :test do
