@@ -17,6 +17,8 @@ class Lines::UserBotDashboardController < ActionController::Base
   include UserBotExceptionHandler
   include ControllerHelpers
 
+  skip_before_action :track_ahoy_visit
+
   def current_user
     @current_user ||= User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
   end

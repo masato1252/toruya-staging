@@ -2,6 +2,7 @@
 
 import React from "react";
 import I18n from 'i18n-js/index.js.erb';
+import ahoy from "ahoy.js";
 import Routes from 'js-routes.js';
 import Countdown from 'shared/countdown';
 import { DemoEditButton } from 'shared/components';
