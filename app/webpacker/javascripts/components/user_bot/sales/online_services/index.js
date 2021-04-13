@@ -4,6 +4,7 @@ import React from "react";
 import SaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 import PriceBlock from "components/user_bot/sales/online_services/price_block";
 import I18n from 'i18n-js/index.js.erb';
+import ahoy from "ahoy.js";
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
   price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url}) => {

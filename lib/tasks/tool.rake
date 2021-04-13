@@ -21,4 +21,12 @@ namespace :tools do
 
     Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] restart dyno") if Rails.configuration.x.env.production?
   end
+
+  task :clean_track_data => :environment do
+    Ahoy::Visit.find_in_batches do |visits|
+      visit_ids = visits.map(&:id)
+      Ahoy::Event.where(visit_id: visit_ids).delete_all
+      Ahoy::Visit.where(id: visit_ids).delete_all
+    end
+  end
 end

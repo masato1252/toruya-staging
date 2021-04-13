@@ -11,6 +11,7 @@ class DashboardController < ActionController::Base
   include ExceptionHandler
   include Sentry
 
+  skip_before_action :track_ahoy_visit
   before_action :profile_required
   before_action :set_paper_trail_whodunnit
 
