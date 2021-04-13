@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Settings::DashboardsController < ActionController::Base
+  skip_before_action :track_ahoy_visit
   abstract!
 
   layout "settings"

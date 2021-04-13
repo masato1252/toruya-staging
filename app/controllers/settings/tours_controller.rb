@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Settings::ToursController < ActionController::Base
+  skip_before_action :track_ahoy_visit
   abstract!
 
   layout false
