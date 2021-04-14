@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_13_145402) do
+ActiveRecord::Schema.define(version: 2021_04_14_010243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -89,7 +89,12 @@ ActiveRecord::Schema.define(version: 2021_04_13_145402) do
     t.string "platform"
     t.datetime "started_at"
     t.string "customer_social_user_id"
+    t.string "owner_id"
+    t.integer "product_id"
+    t.string "product_type"
     t.index ["customer_social_user_id"], name: "index_ahoy_visits_on_customer_social_user_id"
+    t.index ["owner_id"], name: "index_ahoy_visits_on_owner_id"
+    t.index ["product_type", "product_id"], name: "index_ahoy_visits_on_product_type_and_product_id"
     t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
   end

@@ -29,12 +29,17 @@
 #  platform                :string
 #  started_at              :datetime
 #  customer_social_user_id :string
+#  owner_id                :string
+#  product_id              :integer
+#  product_type            :string
 #
 # Indexes
 #
-#  index_ahoy_visits_on_customer_social_user_id  (customer_social_user_id)
-#  index_ahoy_visits_on_user_id                  (user_id)
-#  index_ahoy_visits_on_visit_token              (visit_token) UNIQUE
+#  index_ahoy_visits_on_customer_social_user_id      (customer_social_user_id)
+#  index_ahoy_visits_on_owner_id                     (owner_id)
+#  index_ahoy_visits_on_product_type_and_product_id  (product_type,product_id)
+#  index_ahoy_visits_on_user_id                      (user_id)
+#  index_ahoy_visits_on_visit_token                  (visit_token) UNIQUE
 #
 
 class Ahoy::Visit < ApplicationRecord
@@ -42,4 +47,12 @@ class Ahoy::Visit < ApplicationRecord
 
   has_many :events, class_name: "Ahoy::Event"
   belongs_to :user, optional: true
+  belongs_to :owner, class_name: "User", optional: true
+  belongs_to :product, polymorphic: true, optional: true
+
+  after_commit :visit_improvement
+
+  def visit_improvement
+    VisitImprovementJob.perform_later(self)
+  end
 end

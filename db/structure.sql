@@ -221,7 +221,10 @@ CREATE TABLE public.ahoy_visits (
     os_version character varying,
     platform character varying,
     started_at timestamp without time zone,
-    customer_social_user_id character varying
+    customer_social_user_id character varying,
+    owner_id character varying,
+    product_id integer,
+    product_type character varying
 );
 
 
@@ -3438,6 +3441,20 @@ CREATE INDEX index_ahoy_visits_on_customer_social_user_id ON public.ahoy_visits 
 
 
 --
+-- Name: index_ahoy_visits_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ahoy_visits_on_owner_id ON public.ahoy_visits USING btree (owner_id);
+
+
+--
+-- Name: index_ahoy_visits_on_product_type_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_ahoy_visits_on_product_type_and_product_id ON public.ahoy_visits USING btree (product_type, product_id);
+
+
+--
 -- Name: index_ahoy_visits_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4238,6 +4255,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210329094612'),
 ('20210331134109'),
 ('20210413122216'),
-('20210413145402');
+('20210413145402'),
+('20210414010243');
 
 
