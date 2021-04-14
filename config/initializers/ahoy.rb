@@ -20,3 +20,5 @@ Ahoy.api = true
 # we recommend configuring local geocoding first
 # see https://github.com/ankane/ahoy#geocoding
 Ahoy.geocode = false
+Ahoy.job_queue = :low_priority
+Ahoy.visit_duration = 16.hours
