@@ -2,6 +2,7 @@
 
 import React, { useContext } from "react";
 import { GlobalContext } from "context/chats/global_state";
+import { zeroPad } from "libraries/helper";
 
 export default () => {
   const { selected_customer, dispatch, subscription }= useContext(GlobalContext)
@@ -26,6 +27,9 @@ export default () => {
         </p>
         <p>
           {address}
+        </p>
+        <p>
+          ({zeroPad(selected_customer.shop_customer.id || 0, 7)})
         </p>
       </div>
       <button className="btn btn-orange" onClick={disconnectCustomer} >

@@ -14,15 +14,15 @@ import FinalStep from "./final_step"
 const CreationFlow = ({props}) => {
   return (
     <GlobalProvider props={props}>
-      <FlowController>
-        { ({next, step}) => <GoalSelectionStep step={step} next={next} /> }
-        { ({next, step}) => <SolutionStep step={step} next={next} /> }
-        { ({next, step}) => <NameStep step={step} next={next} /> }
-        { ({next, step}) => <CompanyInfoStep step={step} next={next} /> }
-        { ({next, step}) => <EndtimeStep step={step} next={next} /> }
-        { ({next, step}) => <UpsellStep step={step} next={next} /> }
-        { ({next, step, jump}) => <ConfirmationStep step={step} next={next} jump={jump} /> }
-        { ({step}) => <FinalStep step={step} /> }
+      <FlowController new_version={true}>
+        <GoalSelectionStep />
+        <SolutionStep />
+        <NameStep />
+        <CompanyInfoStep />
+        <EndtimeStep />
+        <UpsellStep />
+        <ConfirmationStep />
+        <FinalStep />
       </FlowController>
     </GlobalProvider>
   )

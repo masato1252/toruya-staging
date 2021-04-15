@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import _ from "lodash";
+import Popup from 'reactjs-popup';
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { BottomNavigationBar, TopNavigationBar, SelectOptions } from "shared/components"
@@ -34,16 +35,53 @@ const TopBar = () => {
 }
 
 const BottomBar = ({handleSubmit, onSubmit}) => {
-  const { selected_customer, props } = useGlobalContext()
+  const { selected_customer, props, deleteCustomer } = useGlobalContext()
+  let history = useHistory();
 
   return (
     <BottomNavigationBar klassName="centerize">
+      {selected_customer && (
+        <Popup
+          modal
+          trigger={
+            <button className="btn btn-orange btn-circle btn-delete btn-tweak btn-with-word">
+              <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+              <div className="word">{I18n.t("action.delete")}</div>
+            </button>
+          }>
+            {close => (
+              <div>
+                <div className="modal-body centerize">
+                  <div className="margin-around">
+                    {I18n.t("user_bot.dashboards.customer.delete_confirmation_message")}
+                  </div>
+                </div>
+                <div className="modal-footer flex justify-between">
+                  <button
+                    className="btn btn-orange"
+                    onClick={() => {
+                      deleteCustomer(selected_customer.id)
+                      history.goBack()
+                    }}>
+                    {I18n.t("action.delete2")}
+                  </button>
+                  <button
+                    className="btn btn-tarco"
+                    onClick={close}>
+                    {I18n.t("action.cancel")}
+                  </button>
+                </div>
+              </div>
+            )}
+        </Popup>
+      )}
       <span>{selected_customer?.id ? props.i18n.updated_date : props.i18n.unsave } {selected_customer.lastUpdatedAt}</span>
 
       <button
-        className="btn btn-yellow btn-circle btn-save"
+        className="btn btn-yellow btn-circle btn-save btn-with-word btn-tweak"
         onClick={handleSubmit(onSubmit)} >
         <i className="fa fa-save fa-2x"></i>
+        <div className="word">{I18n.t("action.save")}</div>
       </button>
     </BottomNavigationBar>
   )

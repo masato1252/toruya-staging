@@ -9,6 +9,12 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/create_booking_page"
   end
 
+  def check_reservation_content
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/check_reservation_content"
+  end
+
   def create_reservation
     @owner = User.find(params[:owner_id])
     @shop = Shop.find_by(id: params[:shop_id])
@@ -19,10 +25,6 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
              "empty_reservation_setting_user_modal"
            elsif @shop && user_ability.cannot?(:create_shop_reservations_with_menu, @shop)
              "empty_menu_shop_modal"
-           elsif user_ability.cannot?(:create, :daily_reservations)
-             @owner == current_user ? "admin_upgrade_daily_reservations_limit_modal" : "staff_upgrade_daily_reservations_limit_modal"
-           elsif user_ability.cannot?(:create, :total_reservations)
-             @owner == current_user ? "admin_upgrade_total_reservations_limit_modal" : "staff_upgrade_total_reservations_limit_modal"
            else
              Rollbar.warning('Unexpected input', request: request, parameters: params)
              "default_creation_reservation_warning"

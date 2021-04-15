@@ -5,12 +5,12 @@ import { PaymentServices } from "components/user_bot/api"
 import ProcessingBar from "shared/processing_bar";
 import ChargeFailedModal from "components/management/plans/charge_failed";
 
-const StripeCheckoutModal = ({plan_key, props, ...rest}) => {
+const StripeCheckoutModal = ({plan_key, rank, props, ...rest}) => {
   const [processing, setProcessing] = useState(false)
 
   const handleToken = async (token) => {
     setProcessing(true)
-    const [error, response] = await PaymentServices.payPlan({token: token, plan: plan_key})
+    const [error, response] = await PaymentServices.payPlan({token: token, plan: plan_key, rank})
     setProcessing(false)
 
     if (error) {

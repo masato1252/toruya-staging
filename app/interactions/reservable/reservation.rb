@@ -17,6 +17,7 @@ module Reservable
     boolean :overbooking_restriction, default: true
     boolean :skip_before_interval_time_validation, default: false
     boolean :skip_after_interval_time_validation, default: false
+    boolean :online_reservation, default: false
 
     def execute
       time_outcome = Reservable::Time.run(shop: shop, date: date)
@@ -253,10 +254,16 @@ module Reservable
       # all the staffs connected with this user
       related_staff_ids = staff.staff_account.user&.staff_accounts&.pluck(:staff_id) || staff.id
 
-      other_shop_reservation_exist = ReservationStaff.
+      scope = ReservationStaff.
         overlap_reservations_scope(staff_ids: related_staff_ids, reservation_id: reservation_id).
-        where("reservations.shop_id != ?", shop.id).
-        where("reservation_staffs.work_start_at > ? and reservation_staffs.work_end_at < ?", beginning_of_day, end_of_day).exists?
+        where("reservations.shop_id != ?", shop.id)
+
+      other_shop_reservation_exist =
+        if online_reservation
+          scope.where("reservation_staffs.work_start_at < ? and reservation_staffs.work_end_at > ?", end_time, start_time).exists?
+        else
+          scope.where("reservation_staffs.work_start_at > ? and reservation_staffs.work_end_at < ?", beginning_of_day, end_of_day).exists?
+        end
 
       if other_shop_reservation_exist
         errors.add(:staff_ids, :other_shop, staff_id: staff.id, menu_id: menu_id)

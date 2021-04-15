@@ -17,6 +17,7 @@ module Menus
       array :category_ids, default: []
       array :staff_menus_attributes, default: []
       array :shop_menus_attributes, default: []
+      boolean :online, default: false
     end
 
     integer :reservation_setting_id, default: nil

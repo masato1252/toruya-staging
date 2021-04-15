@@ -3,14 +3,143 @@
 require "rails_helper"
 
 RSpec.describe Plan do
+  describe ".rank" do
+    context "when plan is free" do
+      context "when customers is 49" do
+        it "returns rank 0" do
+          expect(Plan.rank(Plan::FREE_LEVEL, 49)).to eq(0)
+        end
+      end
+
+      context "when customers is 50" do
+        it "returns rank 0" do
+          expect(Plan.rank(Plan::FREE_LEVEL, 50)).to eq(0)
+        end
+      end
+
+      context "when customers is 51" do
+        it "returns rank 0" do
+          expect(Plan.rank(Plan::FREE_LEVEL, 51)).to eq(1)
+        end
+      end
+    end
+
+    context "when plan is basic" do
+      context "when customers is 199" do
+        it "returns rank 0" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 199)).to eq(0)
+        end
+      end
+
+      context "when customers is 200" do
+        it "returns rank 0" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 200)).to eq(0)
+        end
+      end
+
+      context "when customers is 201" do
+        it "returns rank 1" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 201)).to eq(1)
+        end
+      end
+
+      context "when customers is 499" do
+        it "returns rank 3" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 499)).to eq(2)
+        end
+      end
+
+      context "when customers is 500" do
+        it "returns rank 3" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 500)).to eq(2)
+        end
+      end
+
+      context "when customers is 501" do
+        it "returns rank 4" do
+          expect(Plan.rank(Plan::BASIC_LEVEL, 501)).to eq(3)
+        end
+      end
+    end
+  end
+
+  describe ".max_customers_limit" do
+    context "when plan is free" do
+      context "when rank is 0" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::FREE_LEVEL, 0)).to eq(50)
+        end
+      end
+    end
+
+    context "when plan is basic" do
+      context "when rank is 0" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 0)).to eq(200)
+        end
+      end
+
+      context "when rank is 1" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 1)).to eq(300)
+        end
+      end
+
+      context "when rank is 2" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 2)).to eq(500)
+        end
+      end
+
+      context "when rank is 3" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 3)).to eq(800)
+        end
+      end
+
+      context "when rank is 7" do
+        it "returns expected max_customers_limit" do
+          expect(Plan.max_customers_limit(Plan::BASIC_LEVEL, 7)).to eq(Float::INFINITY)
+        end
+      end
+    end
+  end
+
+  describe ".max_sale_pages_limit" do
+    context "when plan is free" do
+      context "when rank is 0" do
+        it "returns expected max_sale_pages_limit" do
+          expect(Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)).to eq(3)
+        end
+      end
+    end
+
+    context "when plan is basic" do
+      context "when rank is 0" do
+        it "returns expected max_sale_pages_limit" do
+          expect(Plan.max_sale_pages_limit(Plan::BASIC_LEVEL, 0)).to eq(nil)
+        end
+      end
+    end
+  end
+
   describe ".cost_with_currency" do
     it "returns expected cost" do
-      expect(Plan.cost_with_currency(Plan::BASIC_PLAN)).to eq(Money.new(2_200, :jpy))
+      expect(Plan.cost_with_currency(Plan::BASIC_PLAN, 0)).to eq(Money.new(2_200, :jpy))
+    end
 
-      expect(Plan.cost_with_currency(Plan::CHILD_BASIC_PLAN)).to eq([
-        Money.new(19_800, :jpy),
-        Money.new(22_000, :jpy),
-      ])
+    context "when plan is basic" do
+      context "when rank is 0" do
+        it "returns expected cost" do
+          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 0)).to eq(2_200.to_money)
+        end
+      end
+
+      context "when rank is 7" do
+        it "returns expected cost" do
+          expect(Plan.cost_with_currency(Plan::BASIC_LEVEL, 7)).to eq(8_250.to_money)
+        end
+      end
     end
   end
 

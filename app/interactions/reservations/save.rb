@@ -45,6 +45,7 @@ module Reservations
       end
       string :memo, default: nil
       boolean :with_warnings, default: false
+      boolean :online, default: false
       integer :by_staff_id, default: nil
     end
 
@@ -119,9 +120,6 @@ module Reservations
         reservation.try_accept
         reservation.count_of_customers = reservation.reservation_customers.active.count
         reservation.save!
-
-        compose(Reservations::DailyLimitReminder, user: user, reservation: reservation)
-        compose(Reservations::TotalLimitReminder, user: user, reservation: reservation)
 
         # XXX: Mean this reservation created by a staff, not customer(from booking page)
         if params[:by_staff_id].present? && reservation.start_time >= Time.zone.now

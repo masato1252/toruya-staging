@@ -61,7 +61,7 @@ class Customer < ApplicationRecord
   has_one :social_customer
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
-  belongs_to :user
+  belongs_to :user, counter_cache: true
   belongs_to :updated_by_user, class_name: "User", required: false
   belongs_to :contact_group, required: false
   belongs_to :rank, required: false
@@ -359,11 +359,11 @@ class Customer < ApplicationRecord
     end
   end
 
-  private
-
   def hi_message
-    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}"
+    "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}, customers count: #{user.customers.size}"
   end
+
+  private
 
   def primary_value(values)
     return unless values

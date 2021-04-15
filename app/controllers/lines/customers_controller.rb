@@ -4,6 +4,7 @@ require "message_encryptor"
 
 class Lines::CustomersController < ActionController::Base
   layout "booking"
+  include UserBotCookies
 
   protect_from_forgery with: :exception, prepend: true
   abstract!
@@ -26,4 +27,9 @@ class Lines::CustomersController < ActionController::Base
     raise NotImplementedError, "Subclass must implement this method"
   end
   helper_method :current_owner
+
+  def current_toruy_social_user
+    @current_toruy_social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+  end
+  helper_method :current_toruy_social_user
 end

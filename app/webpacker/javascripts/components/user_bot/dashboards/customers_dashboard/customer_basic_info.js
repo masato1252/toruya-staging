@@ -1,6 +1,7 @@
 "use strict"
 
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { NotificationMessages } from "shared/components"
@@ -24,6 +25,7 @@ const CustomerTopRightAction = () => {
 
 const CustomerBasicInfo = () => {
   const { dispatch, selected_customer, notification_messages, props } = useGlobalContext()
+  let history = useHistory();
 
   return (
     <div>
@@ -38,6 +40,7 @@ const CustomerBasicInfo = () => {
               else {
                 dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
                 dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+                history.goBack()
               }
             }} >
               <i className="fa fa-angle-left fa-2x"></i>

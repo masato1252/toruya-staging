@@ -57,4 +57,8 @@ class Shop < ApplicationRecord
       "〒#{zip_code} #{address}"
     end
   end
+
+  def company_name
+    display_name
+  end
 end

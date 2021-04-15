@@ -4,6 +4,7 @@ import React from "react";
 import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import I18n from 'i18n-js/index.js.erb';
+import ahoy from "ahoy.js";
 
 const SaleBookingPage = (
   {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,

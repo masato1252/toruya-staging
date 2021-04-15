@@ -344,7 +344,7 @@ a {
   line-height: $bar-height;
   z-index: 998;
   box-shadow: 0px -3px 6px #00000029;
-  font-size: $tiny-font-size;
+  font-size: $small-font-size;
 
   &.sticky {
     position: sticky;
@@ -549,4 +549,13 @@ h3.header {
   border: 1px solid $pink-border;
   margin: 30px 0;
   padding: 10px;
+}
+
+.preview-mark {
+  background-color: $pink-background;
+  border: 1px solid $pink-border;
+  color: $pink-color;
+  font-size: 10px;
+  padding: 4px 6px;
+  height: 24px;
 }

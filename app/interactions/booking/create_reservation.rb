@@ -94,7 +94,7 @@ module Booking
         if customer_info&.compact.present?
           # regular customer
           customer = user.customers.find(customer_info["id"])
-          customer.update(reminder_permission: customer_reminder_permission)
+          customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
         end
 
         if customer ||= social_customer&.customer
@@ -239,7 +239,8 @@ module Booking
                       menu_staffs_list: valid_menus_spots,
                       staff_states: staff_states,
                       memo: "",
-                      with_warnings: false
+                      with_warnings: false,
+                      online: booking_option.online?
                     }
                   )
 

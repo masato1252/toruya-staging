@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Settings::DashboardsController < ActionController::Base
+  skip_before_action :track_ahoy_visit
   abstract!
 
   layout "settings"
@@ -12,11 +13,6 @@ class Settings::DashboardsController < ActionController::Base
   include Sentry
 
   def index
-    @subscription = current_user.subscription
-    @today_reservations_count = current_user.today_reservations_count
-    @total_reservations_limit = Reservations::TotalLimit::TOTAL_RESERVATIONS_LIMITS[current_user.permission_level]
-    @total_reservations_count = current_user.total_reservations_count
-
     # only the profile setting is finished
     if previous_controller_is("users/profiles")
       session[:settings_tour] = true

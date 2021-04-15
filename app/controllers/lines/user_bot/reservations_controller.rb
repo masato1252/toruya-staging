@@ -115,7 +115,6 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
   end
 
   def create
-    authorize! :create_reservation, shop
     authorize! :manage_shop_reservations, shop
 
     outcome = ::Reservations::Save.run(reservation: shop.reservations.new, params: reservation_params_hash)

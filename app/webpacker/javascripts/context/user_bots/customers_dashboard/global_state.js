@@ -27,9 +27,11 @@ export const GlobalProvider = ({ props, children }) => {
   const initialValue = useMemo(() => {
     return _.merge(
       reducers(),
+      { customer_states: { total_customers_number: props.total_customers_number }},
       { notification_states: { notification_messages: props.notification_messages }}
     )
   }, [])
+  console.log("initialValue", initialValue)
 
   const [state, dispatch] = useReducer(reducers, initialValue)
   const { customers, query_type, filter_pattern_number } = state.customer_states
@@ -62,6 +64,22 @@ export const GlobalProvider = ({ props, children }) => {
       payload: {
         customer: response.data.customer
       }
+    })
+  }
+
+  const deleteCustomer = async (customer_id) => {
+    const [error, response] = await CustomerServices.delete(props.super_user_id, customer_id)
+
+    dispatch({
+      type: "DELETE_CUSTOMER",
+      payload: {
+        customer_id: customer_id
+      }
+    })
+
+    dispatch({
+      type: "CHANGE_VIEW",
+      payload: { view: "customers_list" }
     })
   }
 
@@ -184,7 +202,8 @@ export const GlobalProvider = ({ props, children }) => {
       updateCustomer,
       searchCustomers,
       filterCustomers,
-      selectCustomer
+      selectCustomer,
+      deleteCustomer
     }}
     >
       {children}

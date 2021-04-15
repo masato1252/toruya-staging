@@ -190,6 +190,19 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  delete: (user_id, id) => {
+    return request({
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.delete_lines_user_bot_customers_path({user_id: user_id, format: "json"}),
+      params: {
+        id,
+      },
+      responseType: "json"
+    })
+  },
   toggle_reminder_premission: (user_id, customer_id) => {
     return request({
       method: "POST",
@@ -233,7 +246,7 @@ const CustomerServices = {
 }
 
 const PaymentServices = {
-  payPlan: ({token, plan}) => {
+  payPlan: ({token, plan, rank}) => {
     return request({
       method: "POST",
       headers: {
@@ -242,7 +255,8 @@ const PaymentServices = {
       url: Routes.lines_user_bot_settings_payments_path({format: "json"}),
       data: {
         token,
-        plan
+        plan,
+        rank
       },
       responseType: "json"
     })
@@ -391,6 +405,17 @@ const OnlineServices = {
       responseType: "json"
     })
   },
+  update: ({online_service_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_service_path(online_service_id, {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
 }
 
 const BusinessScheduleServices = {
@@ -422,6 +447,20 @@ const ShopServices = {
   },
 }
 
+const SocialUserMessagesServices = {
+  create: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_social_user_messages_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -436,5 +475,6 @@ export {
   SaleServices,
   OnlineServices,
   BusinessScheduleServices,
-  ShopServices
+  ShopServices,
+  SocialUserMessagesServices
 }

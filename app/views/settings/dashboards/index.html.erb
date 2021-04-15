@@ -6,42 +6,6 @@
 </div>
 
 <%= content_tag(:div, id: "settingForm") do %>
-  <div class="dashboard">
-    <div class="cell">
-      <div>
-        <%= t("settings.dashboard.current_plan_is") %>
-      </div>
-      <div>
-        <strong class="big"><%= current_user.member_plan_name %></strong>
-      </div>
-      <div>
-        <%= link_to t("settings.dashboard.check_plan"), settings_payments_path, class: "btn btn-yellow" %>
-      </div>
-    </div>
-    <div class="cell">
-      <div>
-        <%= t("settings.dashboard.today_had_created") %>
-      </div>
-      <div>
-        <strong><span class="big"><%= @today_reservations_count %></span><span> / <%= current_user.premium_member? ? t("settings.dashboard.no_limit") : Reservations::DailyLimit::RESERVATION_DAILY_LIMIT %></span></strong>
-      </div>
-      <div>
-        <%= t("settings.dashboard.do_reservations_created") %>
-      </div>
-    </div>
-    <div class="cell">
-      <div>
-        <%= t("settings.dashboard.total_had_created") %>
-      </div>
-      <div>
-        <strong><span class="big"><%= @total_reservations_count %></span><span> / <%= @total_reservations_limit || t("settings.dashboard.no_limit") %></span></strong>
-      </div>
-      <div>
-        <%= t("settings.dashboard.reservations_created") %>
-      </div>
-    </div>
-  </div>
-
   <% unless basic_settings_presenter.completed? %>
     <%= jump_out_modal(settings_tours_current_step_warning_path) if session[:settings_tour] %>
     <%= render "tour", presenter: basic_settings_presenter %>

@@ -31,11 +31,11 @@ RSpec.describe Plans::Property do
         level: "free",
         key: "free",
         selectable: true,
-        cost: 0,
-        costWithFee: 0,
-        costFormat: "¥0",
         name: I18n.t("plan.level.free"),
-        details: I18n.t("settings.plans")[:free]
+        details: I18n.t("plans")[:free].merge!(
+          customer_number: I18n.t("plans.free.customer_number", customer_limit:  Plan.max_customers_limit(Plan::FREE_LEVEL, 0)),
+          sale_page_number: I18n.t("plans.free.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0))
+        )
       })
 
       it_behaves_like "plan property", :basic_level,
@@ -43,27 +43,16 @@ RSpec.describe Plans::Property do
         level: "basic",
         key: "basic",
         selectable: true,
-        cost: 2_200,
-        costWithFee: 2_200,
-        costFormat: "¥2,200",
         name: I18n.t("plan.level.basic"),
-        details: I18n.t("settings.plans")[:basic]
-      })
-
-      it_behaves_like "plan property", :premium_level,
-        Hashie::Mash.new({
-        level: "premium",
-        key: "premium",
-        selectable: true,
-        cost: 5_500,
-        costWithFee: 5_500,
-        costFormat: "¥5,500",
-        name: I18n.t("plan.level.premium"),
-        details: I18n.t("settings.plans")[:premium]
+        details: I18n.t("plans")[:basic].merge!(
+          customer_number: I18n.t("plans.free.customer_number", customer_limit:  Plan.max_customers_limit(Plan::FREE_LEVEL, 0)),
+          sale_page_number: I18n.t("plans.free.sale_page_number", sale_page_limit:  Plan.max_sale_pages_limit(Plan::FREE_LEVEL, 0)),
+          ranks: Plan::DETAILS[Plan::BASIC_LEVEL].map { |rank_context| rank_context.merge!(costFormat: rank_context[:cost].to_money.format) }
+        )
       })
     end
 
-    context "when user is business member" do
+    xcontext "when user is business member" do
       let(:subscription) { FactoryBot.create(:subscription, :business) }
 
       it_behaves_like "plan property", :business_level,
@@ -79,7 +68,7 @@ RSpec.describe Plans::Property do
       })
     end
 
-    context "when user is child member" do
+    xcontext "when user is child member" do
       context "when user was never be charged before" do
         let!(:referral) { factory.create_referral(state: :pending, referrer: user) }
         let(:subscription) { FactoryBot.create(:subscription, :free) }

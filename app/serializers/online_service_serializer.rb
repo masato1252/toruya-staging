@@ -2,7 +2,7 @@
 
 class OnlineServiceSerializer
   include JSONAPI::Serializer
-  attribute :id, :name, :content, :solution_type
+  attribute :id, :name, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text
   attribute :product_name, &:name
 
   attribute :company_info do |service|
@@ -17,17 +17,7 @@ class OnlineServiceSerializer
     I18n.t("user_bot.dashboards.online_service_creation.solutions.#{service.solution_type}.title")
   end
 
-  attribute :start_time_text do |service|
-    "購入後すぐ"
-  end
-
-  attribute :end_time_text do |service|
-    if service.end_on_days
-      I18n.t("sales.expire_after_n_days", days: service.end_on_days)
-    elsif service.end_at
-      I18n.l(service.end_at, format: :date_with_wday)
-    else
-      I18n.t("sales.never_expire")
-    end
+  attribute :content_url do |service|
+    service.content["url"]
   end
 end

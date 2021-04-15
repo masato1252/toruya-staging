@@ -23,7 +23,7 @@ class Plan < ApplicationRecord
 
   ANNUAL_CHARGE_PLANS = [BUSINESS_PLAN, CHILD_BASIC_PLAN, CHILD_PREMIUM_PLAN].freeze
   CHILD_PLANS = [CHILD_BASIC_PLAN, CHILD_PREMIUM_PLAN].freeze
-  REGULAR_PLANS = [FREE_PLAN, BASIC_PLAN, PREMIUM_PLAN].freeze
+  REGULAR_PLANS = [FREE_PLAN, BASIC_PLAN].freeze
 
   enum level: {
     free: 0,
@@ -34,52 +34,151 @@ class Plan < ApplicationRecord
     child_premium: 5,
   }, _suffix: true
 
-  COST = {
-    jpy: {
-      "free" => 0,
-      "basic" => 2_200,
-      "premium" => 5_500,
-    },
+  DETAILS = {
+    Plan::FREE_LEVEL => [
+      {
+        rank: 0,
+        max_customers_limit: 50,
+        max_sale_pages_limit: 3,
+        cost: 0
+      },
+      {
+        rank: 1,
+        max_customers_limit: 100,
+        max_sale_pages_limit: 3,
+        cost: 0
+      },
+      {
+        rank: 2,
+        max_customers_limit: Float::INFINITY,
+      }
+    ],
+    Plan::BASIC_LEVEL => [
+      {
+        rank: 0,
+        max_customers_limit: 200,
+        cost: 2_200,
+      },
+      {
+        rank: 1,
+        max_customers_limit: 300,
+        cost: 2_750,
+      },
+      {
+        rank: 2,
+        max_customers_limit: 500,
+        cost: 3_300
+      },
+      {
+        rank: 3,
+        max_customers_limit: 800,
+        cost: 4_400
+      },
+      {
+        rank: 4,
+        max_customers_limit: 1000,
+        cost: 4_950
+      },
+      {
+        rank: 5,
+        max_customers_limit: 1500,
+        cost: 6_600
+      },
+      {
+        rank: 6,
+        max_customers_limit: 2000,
+        cost: 8_250
+      },
+      {
+        rank: 7,
+        max_customers_limit: Float::INFINITY,
+        cost: 8_250
+      }
+    ],
+    Plan::PREMIUM_LEVEL => [
+      {
+        rank: 0,
+        max_customers_limit: 200,
+        cost: 5_500,
+      },
+      {
+        rank: 1,
+        max_customers_limit: 300,
+        cost: 6_270,
+      },
+      {
+        rank: 2,
+        max_customers_limit: 500,
+        cost: 7_040
+      },
+      {
+        rank: 3,
+        max_customers_limit: 800,
+        cost: 8_580
+      },
+      {
+        rank: 4,
+        max_customers_limit: 1000,
+        cost: 9_350
+      },
+      {
+        rank: 5,
+        max_customers_limit: 1500,
+        cost: 11_660
+      },
+      {
+        rank: 6,
+        max_customers_limit: 2000,
+        cost: 13_970
+      },
+      {
+        rank: 7,
+        max_customers_limit: Float::INFINITY,
+        cost: 13_970
+      }
+    ]
   }.freeze
 
-  ANNUAL_COST = {
-    jpy: {
-      "business" => 55_000,
-      "child_basic" => [19_800, 22_000],
-      "child_premium" => [49_500, 55_000],
-    }
-  }.freeze
+  def self.max_legal_rank
+    Plan::DETAILS[Plan::BASIC_LEVEL].max{ |a, b| a[:rank] <=> b[:rank] }[:rank] - 1 #6
+  end
 
-  def self.cost(plan_level)
-    @@costs ||= Hash.new do |h, key|
-      h[key] = COST[Money.default_currency.id][key]
-      h[key] ||= ANNUAL_COST[Money.default_currency.id][key]
+  def self.rank(plan_level, customers_count)
+    DETAILS[plan_level].each do |context|
+      if customers_count <= context[:max_customers_limit]
+        return context[:rank]
+      end
     end
-
-    @@costs[plan_level.to_s]
   end
 
-  def self.cost_with_currency(plan_level)
-    @@cost_with_currency ||= Hash.new do |h, key|
-      h[key] =
-        if cost(key).is_a?(Array)
-          cost(key).map do |price|
-            Money.new(price, Money.default_currency.id)
-          end
-        else
-          Money.new(cost(key), Money.default_currency.id)
-        end
-    end
-
-    @@cost_with_currency[plan_level.to_s]
+  def self.max_customers_limit(plan_level, rank)
+    plan_details(plan_level, rank)[:max_customers_limit]
   end
 
-  def cost
-    self.class.cost(level)
+  def self.max_sale_pages_limit(plan_level, rank)
+    plan_details(plan_level, rank)[:max_sale_pages_limit]
   end
 
-  def cost_with_currency
-    self.class.cost_with_currency(level)
+  def self.plan_details(plan_level, rank)
+    DETAILS[plan_level].find { |context| context[:rank] == rank } || DETAILS[plan_level].find { |context| context[:rank] == 0 }
+  end
+
+  def self.cost(plan_level, _rank)
+    @@costs ||= {}
+    @@costs["#{plan_level}-#{_rank}"] ||= plan_details(plan_level, _rank)[:cost]
+  end
+
+  def self.cost_with_currency(plan_level, _rank)
+    @@cost_with_currency ||= {}
+    @@cost_with_currency["#{plan_level}-#{_rank}"] ||= Money.new(cost(plan_level, _rank), Money.default_currency.id)
+  end
+
+  def cost(_rank)
+    self.class.cost(level, _rank)
+  end
+
+  def cost_with_currency(_rank)
+    self.class.cost_with_currency(level, _rank)
   end
 
   def name

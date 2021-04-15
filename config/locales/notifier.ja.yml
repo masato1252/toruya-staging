@@ -17,14 +17,16 @@ ja:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\nToruya"
       trial_member_day_ago_reminder:
         message: "%{user_name} 様\n\n日頃より、予約管理システムToruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間が終了いたしました。\n\n設定画面からプラン変更をすることで、引き続き同じ機能をご利用いただけます。\n\nToruya"
-      daily_reservations_limit_by_admin_reminder:
-        message: "%{user_name} 様\n\nご利用プランに基づいた今日の予約上限数に達しました。\n\n設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
-      daily_reservations_limit_by_staff_reminder:
-        message: "%{user_name} 様\n\n先ほど、%{shop_name}のスタッフが今日の予約上限数を超えて予約を作成しようとしました。設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
-      total_reservations_limit_by_admin_reminder:
-        message: "%{user_name} 様\n\nご利用プランに基づいた累計の予約上限数に達しました。設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけます。\n\nToruya"
-      total_reservations_limit_by_staff_reminder:
-        message: "%{user_name} 様\n\n先ほど、%{shop_name}のスタッフが累計の予約上限数を超えて予約を作成しようとしました。\n\n設定画面からプレミアムプランへ変更することで、予約上限数を無制限でご利用いただけす。\n\nToruya"
+      free_plan_reach_customers_limit:
+        message:  "%{user_name}様\n\n顧客数が上限に達しました。\n\nこれ以降、オンライン予約ページから作成された新規顧客の情報確認や予約の承認が確認できなくなります。\n\nこれまで通りご利用いただくには、設定画面よりご利用プランを変更してください。"
+      free_plan_close_customers_limit:
+        message:  "%{user_name}様\n\n間もなく顧客数が上限に達します。\n\n顧客数が%{max_customers_limit}を超えると、新規顧客の情報が確認したり、その顧客の予約を承認できなくなります。\n\nこれまで通りご利用いただくには、設定画面よりご利用プランを変更してください。"
+      paid_plan_close_customers_limit:
+        message: "%{user_name}様\n\n間もなく顧客数が上限に達します。\n\n顧客数が%{current_max_customer_limit}を超えると、ご利用プランがランク%{next_max_customer_limit}に自動的に切り替わります。\n\n尚、新しいランクによるご請求は、次回ご請求からとなります。"
+      paid_plan_reach_customers_limit:
+        message: "%{user_name}様\n\n顧客数が上限に達しました。\n\n次回ご請求からランク%{next_max_customer_limit}でご請求させていただきます。\n\n今後も、%{user_last_name}様の更なるご活躍をサポートできるよう、より良いサービス構築に勤めてまいります。"
+      paid_plan_reach_whole_customers_limit:
+        message: "%{user_name}様\n\n顧客数が上限に達しました。\n\nこれ以降、オンライン予約ページから作成された新規顧客の情報は確認できなくなります。\n\nこれまで通りご利用いただくために、特別なご利用プランをご案内差し上げますので、設定画面からお問い合わせください。"
     subscriptions:
       charge_successfully:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n本日、ご利用料金のご請求が完了いたしました。\n\n今後ともご愛顧の程よろしくお願い申し上げます。\n\nToruya"

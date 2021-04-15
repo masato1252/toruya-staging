@@ -17,7 +17,7 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  details               :jsonb
-#  rank_level            :integer          default(0)
+#  rank                  :integer          default(0)
 #
 # Indexes
 #
@@ -43,10 +43,11 @@ class SubscriptionCharge < ApplicationRecord
     refunded: 2,
     auth_failed: 3,
     processor_failed: 4,
-    refund_failed: 5
+    refund_failed: 5,
+    bonus: 6
   }
 
-  monetize :amount_cents, numericality: { greater_than: 0 }
+  monetize :amount_cents
   validates :order_id, uniqueness: true
 
   scope :manual, -> { where(manual: true) }

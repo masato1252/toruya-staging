@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_18_082320) do
+ActiveRecord::Schema.define(version: 2021_04_14_010243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -48,6 +48,55 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "ahoy_events", force: :cascade do |t|
+    t.bigint "visit_id"
+    t.bigint "user_id"
+    t.string "name"
+    t.jsonb "properties"
+    t.datetime "time"
+    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time"
+    t.index ["properties"], name: "index_ahoy_events_on_properties", opclass: :jsonb_path_ops, using: :gin
+    t.index ["user_id"], name: "index_ahoy_events_on_user_id"
+    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id"
+  end
+
+  create_table "ahoy_visits", force: :cascade do |t|
+    t.string "visit_token"
+    t.string "visitor_token"
+    t.bigint "user_id"
+    t.string "ip"
+    t.text "user_agent"
+    t.text "referrer"
+    t.string "referring_domain"
+    t.text "landing_page"
+    t.string "browser"
+    t.string "os"
+    t.string "device_type"
+    t.string "country"
+    t.string "region"
+    t.string "city"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "utm_source"
+    t.string "utm_medium"
+    t.string "utm_term"
+    t.string "utm_content"
+    t.string "utm_campaign"
+    t.string "app_version"
+    t.string "os_version"
+    t.string "platform"
+    t.datetime "started_at"
+    t.string "customer_social_user_id"
+    t.string "owner_id"
+    t.integer "product_id"
+    t.string "product_type"
+    t.index ["customer_social_user_id"], name: "index_ahoy_visits_on_customer_social_user_id"
+    t.index ["owner_id"], name: "index_ahoy_visits_on_owner_id"
+    t.index ["product_type", "product_id"], name: "index_ahoy_visits_on_product_type_and_product_id"
+    t.index ["user_id"], name: "index_ahoy_visits_on_user_id"
+    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true
   end
 
   create_table "booking_codes", force: :cascade do |t|
@@ -285,6 +334,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.boolean "online", default: false
     t.index ["user_id", "deleted_at"], name: "index_menus_on_user_id_and_deleted_at"
   end
 
@@ -329,6 +379,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "start_at"
     t.index ["slug"], name: "index_online_services_on_slug"
     t.index ["user_id"], name: "index_online_services_on_user_id"
   end
@@ -516,6 +567,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.datetime "deleted_at"
     t.datetime "prepare_time"
     t.integer "user_id"
+    t.boolean "online", default: false
     t.index ["user_id", "shop_id", "aasm_state", "menu_id", "start_time", "ready_time"], name: "reservation_query_index"
     t.index ["user_id", "shop_id", "deleted_at"], name: "reservation_user_shop_index"
   end
@@ -742,7 +794,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "details"
-    t.integer "rank_level", default: 0
+    t.integer "rank", default: 0
     t.index "((details ->> 'type'::text))", name: "subscription_charge_type_index"
     t.index ["order_id"], name: "order_id_index"
     t.index ["plan_id"], name: "index_subscription_charges_on_plan_id"
@@ -758,7 +810,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.date "expired_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "rank_level", default: 0
+    t.integer "rank", default: 0
     t.index ["plan_id"], name: "index_subscriptions_on_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id", unique: true
   end
@@ -786,6 +838,7 @@ ActiveRecord::Schema.define(version: 2021_03_18_082320) do
     t.datetime "contacts_sync_at"
     t.string "referral_token"
     t.string "phone_number"
+    t.integer "customers_count", default: 0
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
