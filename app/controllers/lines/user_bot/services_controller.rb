@@ -104,7 +104,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
 
   def show
     @service = current_user.online_services.find(params[:id])
-    @upsell_sale_page = SalePages::OnlineServiceSerializer.new(@service.sale_page).attributes_hash if @service.sale_page
+    @upsell_sale_page = @service.sale_page.serializer.attributes_hash if @service.sale_page
     @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
   end
 

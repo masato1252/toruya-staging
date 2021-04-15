@@ -3,11 +3,37 @@
 import React from "react";
 import SaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 import PriceBlock from "components/user_bot/sales/online_services/price_block";
+import StaffView from "components/user_bot/sales/staff_view";
+import FlowView from "components/user_bot/sales/flow_view";
+import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
-import ahoy from "ahoy.js";
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url}) => {
+  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow}) => {
+
+  if (preview) {
+    return (
+      <div className="sale-page centerize">
+        <SaleTemplateView
+          company_info={product.company_info}
+          product={product}
+          demo={demo}
+          template={template}
+          template_variables={template_variables}
+          introduction_video={introduction_video}
+          social_account_add_friend_url={social_account_add_friend_url}
+          jump={jump}
+          price={price}
+          normal_price={normal_price}
+          quantity={quantity}
+          start_at={start_at}
+          is_started={is_started}
+          is_ended={is_ended}
+          purchase_url={purchase_url}
+        />
+      </div>
+    )
+  }
   return (
     <div className="sale-page centerize">
       <SaleTemplateView
@@ -28,35 +54,9 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         purchase_url={purchase_url}
       />
 
-      <div className="product-content content">
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(9)}>
-            <i className="fa fa-pencil-alt"></i>
-            {I18n.t("action.edit")}
-          </span>
-        )}
-        <h3 className="header centerize">
-          {content.desc1}
-        </h3>
-        <img className="product-picture" src={content.picture_url} />
-        <p>
-          {content.desc2}
-        </p>
-      </div>
-
-      <div className="staff-content content">
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(10)}>
-            <i className="fa fa-pencil-alt"></i>
-            {I18n.t("action.edit")}
-          </span>
-        )}
-        <img className="staff-picture" src={staff.picture_url} />
-        <b className="name">{staff.name}</b>
-        <p>
-          {staff.introduction}
-        </p>
-      </div>
+      <WhyContentView content={content} demo={demo} jumpTo={() => jump(9)} />
+      <StaffView staff={staff} demo={demo} jumpTo={() => jump(10)} />
+      <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>

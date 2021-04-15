@@ -4,6 +4,7 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
+import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 
 const SellingNumberStep = ({step, next, prev, lastStep}) => {
   const { dispatch, quantity, isQuantitySetup, isReadyForPreview } = useGlobalContext()
@@ -13,69 +14,18 @@ const SellingNumberStep = ({step, next, prev, lastStep}) => {
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_number")}</h3>
 
-      <div className="margin-around">
-        <label className="">
-          <div>
-            <input name="quantity_type" type="radio" value="limited"
-              checked={quantity.quantity_type === "limited"}
-              onChange={() => {
-                dispatch({
-                  type: "SET_ATTRIBUTE",
-                  payload: {
-                    attribute: "quantity",
-                    value: {
-                      quantity_type: "limited"
-                    }
-                  }
-                })
-              }}
-            />
-            {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_limit_number")}
-          </div>
-          {quantity.quantity_type === "limited" && (
-            <>
-                <input
-                name="quantity"
-                type="tel"
-                value={quantity.quantity_value || ""}
-                onChange={(event) => {
-                  dispatch({
-                    type: "SET_ATTRIBUTE",
-                    payload: {
-                      attribute: "quantity",
-                      value: {
-                        quantity_type: "limited",
-                        quantity_value: event.target.value
-                      }
-                    }
-                  })
-                }}
-              />
-              {I18n.t("user_bot.dashboards.sales.online_service_creation.until_people_number")}
-            </>
-          )}
-        </label>
-      </div>
-
-      <div className="margin-around">
-        <label className="">
-          <input name="quantity_type" type="radio" value="never"
-            checked={quantity.quantity_type === "unlimited"}
-            onChange={() => {
-              dispatch({
-                type: "SET_ATTRIBUTE",
-                payload: {
-                  attribute: "quantity",
-                  value: {
-                    quantity_type: "unlimited",
-                  }
-                }
-              })
-            }}
-          />
-          {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_unlimit_number")}
-        </label>
-      </div>
+      <SellingNumberEdit
+        quantity={quantity}
+        handleQuantityChange={(quantity_value) => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "quantity",
+              value: quantity_value
+            }
+          })
+        }}
+      />
 
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">

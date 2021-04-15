@@ -1,0 +1,119 @@
+<div class="service-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_sales_path, title: I18n.t("user_bot.dashboards.sales.edit.sale_pages") %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.sales_about") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_product") %></div>
+  <%= render "lines/user_bot/field_row", title: @sale_page.product_name %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_start_at") %></div>
+  <% if @sale_page.is_booking_page? %>
+    <%= render "lines/user_bot/field_row", title: @sale_page.product.start_time_text %>
+  <% else %>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :start_time), title: @sale_page.start_time_text %>
+  <% end %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_end_at") %></div>
+  <% if @sale_page.is_booking_page? %>
+    <%= render "lines/user_bot/field_row", title: @sale_page.product.end_time_text %>
+  <% else %>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :end_time), title: @sale_page.end_time_text %>
+  <% end %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.selling_solutions") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_price") %></div>
+  <% if @sale_page.is_booking_page? %>
+    <%= render "lines/user_bot/field_row", title: "#{@sale_page.product.product_price.format(:ja_default_format)}#{@sale_page.product.product_price.zero? ? "" : "(#{I18n.t('common.tax_included')})" }" %>
+  <% else %>
+    <%= render "lines/user_bot/field_row",
+      title: "#{@sale_page.selling_price_text}#{!@sale_page.selling_price_amount_cents ? "" : "(#{I18n.t('common.tax_included')})" }" %>
+  <% end %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.normal_price") %></div>
+  <% if @sale_page.is_booking_page? %>
+    <%= render "lines/user_bot/field_row", title: I18n.t("common.no_setup") %>
+  <% else %>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_sale_path(@sale_page, attribute: :normal_price),
+      title: "#{@sale_page.normal_price_text}#{!@sale_page.normal_price_amount_cents ? "" : "(#{I18n.t('common.tax_included')})" }" %>
+  <% end %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_number") %></div>
+  <% if @sale_page.is_booking_page? %>
+    <%= render "lines/user_bot/field_row", title: I18n.t("common.no_setup") %>
+  <% else %>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :quantity), title: @sale_page.quantity_text %>
+  <% end %>
+
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.page_content") %></div>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.content_header") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :sale_template_variables), title: "#{I18n.t('common.template')}-#{@sale_page.sale_template_id}" %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.content_video") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :introduction_video_url) do %>
+    <% if @sale_page.introduction_video_url %>
+      <span class="dotdotdot"><%= @sale_page.introduction_video_url %></span>
+      <%= image_tag(@sale_page.introduction_video_thumbnail_url, class: "preview-image") if @sale_page.introduction_video_thumbnail_url %>
+    <% else %>
+      <span class="dotdotdot"><%= I18n.t("common.no_setup") %></span>
+    <% end %>
+  <% end %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.why_content") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :why_content), title: @sale_page.content["desc1"].presence || I18n.t("common.no_setup") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.staff") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :staff), title: @sale_page.staff.name.presence || I18n.t("common.no_setup") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.flow") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :flow), title: @sale_page.flow&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.flow_steps", flow_number: @sale_page.flow&.size) : I18n.t("common.no_setup") %>
+
+  <div class="action-block margin-around">
+    <%= link_to lines_user_bot_sale_path(@sale_page), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
+      <i class="fa fa-minus"></i> <span><%= I18n.t("user_bot.dashboards.sales.edit.delete_sale_page") %></span>
+    <% end %>
+  </div>
+
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@sale_page.updated_at, format: :long_date) %></span>
+
+    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+      <i class="fa fa-share-square fa-2x"></i>
+      <div class="word"><%= I18n.t("action.share") %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog booking-preview-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("user_bot.dashboards.services.preview_the_service") %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-right">
+          <span class="preview-mark">
+            <%= I18n.t("common.preview") %>
+          </span>
+        </div>
+        <%= react_component(
+          "user_bot/sales/#{@sale_page.product.class.table_name}",
+          @sale_page.serializer.attributes_hash.merge(demo: false, preview: true),
+          { camelize_props: false }
+        ) %>
+      </div>
+      <div class="modal-footer centerize">
+        <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
+          data: {
+          controller: "clipboard",
+          action: "click->clipboard#copy",
+          clipboard_text: sale_page_url(slug: @sale_page.slug),
+          clipboard_popup_text: t("common.copied")
+        } %>
+        <%= button_tag I18n.t("user_bot.dashboards.sales.edit.share_code_btn"), class: "btn btn-tarco", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_text: share_button_link(I18n.t("user_bot.dashboards.sales.edit.share_code_btn"), sale_page_url(slug: @sale_page.slug)), clipboard_popup_text: t("common.copied") } %>
+      </div>
+    </div>
+  </div>
+</div>

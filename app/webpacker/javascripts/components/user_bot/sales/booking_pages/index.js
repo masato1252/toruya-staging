@@ -3,12 +3,32 @@
 import React from "react";
 import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
+import StaffView from "components/user_bot/sales/staff_view";
+import FlowView from "components/user_bot/sales/flow_view";
+import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
-import ahoy from "ahoy.js";
 
 const SaleBookingPage = (
   {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  shop, flow}) => {
+    shop, flow, preview, introduction_video}) => {
+
+  if (preview) {
+    return (
+      <div className="sale-page centerize">
+        <SaleTemplateView
+          shop={shop}
+          product={product}
+          demo={demo}
+          template={template}
+          template_variables={template_variables}
+          introduction_video={introduction_video}
+          social_account_add_friend_url={social_account_add_friend_url}
+          jump={jump}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="sale-page centerize">
       <SaleTemplateView
@@ -17,63 +37,14 @@ const SaleBookingPage = (
         demo={demo}
         template={template}
         template_variables={template_variables}
+        introduction_video={introduction_video}
         social_account_add_friend_url={social_account_add_friend_url}
         jump={jump}
       />
 
-      <div className="product-content content">
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(4)}>
-            <i className="fa fa-pencil-alt"></i>
-            {I18n.t("action.edit")}
-          </span>
-        )}
-        <h3 className="header centerize">
-          {content.desc1}
-        </h3>
-        <img className="product-picture" src={content.picture_url} />
-        <p>
-          {content.desc2}
-        </p>
-      </div>
-
-      <div className="staff-content content">
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(5)}>
-            <i className="fa fa-pencil-alt"></i>
-            {I18n.t("action.edit")}
-          </span>
-        )}
-        <img className="staff-picture" src={staff.picture_url} />
-        <b className="name">{staff.name}</b>
-        <p>
-          {staff.introduction}
-        </p>
-      </div>
-
-      <div className="flow-content content">
-        {demo && (
-          <span className="btn btn-yellow edit-mark" onClick={() => jump(6)}>
-            <i className="fa fa-pencil-alt"></i>
-            {I18n.t("action.edit")}
-          </span>
-        )}
-        <h3 className="header centerize">
-          {I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_header")}
-        </h3>
-        {flow.map((flowStep, index) => {
-          return (
-            <div className="flow-step" key={`flow-step-${index}`}>
-              <div className="number-step-header">
-                <div className="number-step">{index + 1}</div>
-              </div>
-              <p>
-                {flowStep}
-              </p>
-            </div>
-          )
-        })}
-      </div>
+      <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
+      <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
+      <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>

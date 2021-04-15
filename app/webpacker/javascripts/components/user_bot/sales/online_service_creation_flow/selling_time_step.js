@@ -4,6 +4,7 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
+import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 
 const SellingTimeStep = ({step, next, prev, lastStep}) => {
   const { dispatch, end_time, isEndTimeSetup, isReadyForPreview } = useGlobalContext()
@@ -13,66 +14,18 @@ const SellingTimeStep = ({step, next, prev, lastStep}) => {
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.what_selling_end_at")}</h3>
 
-      <div className="margin-around">
-        <label className="">
-          <div>
-            <input name="end_type" type="radio" value="end_at"
-              checked={end_time.end_type === "end_at"}
-              onChange={() => {
-                dispatch({
-                  type: "SET_ATTRIBUTE",
-                  payload: {
-                    attribute: "end_time",
-                    value: {
-                      end_type: "end_at"
-                    }
-                  }
-                })
-              }}
-            />
-            {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_end_on")}
-          </div>
-          {end_time.end_type === "end_at" && (
-            <input
-              name="end_time_date_part"
-              type="date"
-              value={end_time.end_time_date_part || ""}
-              onChange={(event) => {
-                dispatch({
-                  type: "SET_ATTRIBUTE",
-                  payload: {
-                    attribute: "end_time",
-                    value: {
-                      end_type: "end_at",
-                      end_time_date_part: event.target.value
-                    }
-                  }
-                })
-              }}
-            />
-          )}
-        </label>
-      </div>
-
-      <div className="margin-around">
-        <label className="">
-          <input name="end_type" type="radio" value="never"
-            checked={end_time.end_type === "never"}
-            onChange={() => {
-              dispatch({
-                type: "SET_ATTRIBUTE",
-                payload: {
-                  attribute: "end_time",
-                  value: {
-                    end_type: "never",
-                  }
-                }
-              })
-            }}
-          />
-          {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_forever")}
-        </label>
-      </div>
+      <SellingEndTimeEdit
+        end_time={end_time}
+        handleEndTimeChange={(end_time_value) => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "end_time",
+              value: end_time_value
+            }
+          })
+        }}
+      />
 
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">

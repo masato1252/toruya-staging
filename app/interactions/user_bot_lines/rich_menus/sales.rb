@@ -47,6 +47,19 @@ module UserBotLines
                 url: LiffRouting.liff_url(:new_sales)
               )
             },
+            {
+              # 3
+              "bounds": {
+                "x": 1667,
+                "y": 0,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.sales"),
+                url: LiffRouting.liff_url(:sales)
+              )
+            },
           ]
         }
 

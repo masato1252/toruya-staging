@@ -391,6 +391,18 @@ const SaleServices = {
       responseType: "json"
     })
   },
+  update: ({sale_page_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.lines_user_bot_sale_path(sale_page_id, {format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
 }
 
 const OnlineServices = {
