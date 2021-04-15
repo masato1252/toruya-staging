@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Callbacks::StaffAccountsController < ActionController::Base
+  skip_before_action :track_ahoy_visit
   include Devise::Controllers::Rememberable
 
   def create

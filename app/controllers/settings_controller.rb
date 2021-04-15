@@ -17,6 +17,7 @@ class SettingsController < ActionController::Base
   before_action :authorize_manager_level_permission
   before_action :profile_required
   before_action :enable_tour_warning
+  skip_before_action :track_ahoy_visit
 
   def profile_required
     unless current_user.profile

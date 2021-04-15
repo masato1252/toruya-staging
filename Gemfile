@@ -74,6 +74,8 @@ gem "newrelic_rpm"
 gem "scout_apm"
 gem "mixpanel-ruby"
 gem "video_thumb"
+gem "strong_migrations"
+gem "ahoy_matey"
 
 group :development, :test do
   gem "byebug", platform: :mri

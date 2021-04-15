@@ -11,6 +11,7 @@ class Lines::UserBotController < ActionController::Base
   helper_method :social_user
 
   before_action :authenticate_social_user!
+  skip_before_action :track_ahoy_visit
 
   def authenticate_social_user!
     if params[:social_service_user_id]

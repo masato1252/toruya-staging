@@ -3,6 +3,7 @@
 require "message_encryptor"
 
 class Callbacks::ReminderPermissionsController < ActionController::Base
+  skip_before_action :track_ahoy_visit
   def create
     # params[:encrypted_data]
     # {
