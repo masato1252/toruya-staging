@@ -11,6 +11,7 @@ module SalePages
       string :selling_end_at, default: nil
       string :selling_start_at, default: nil
       integer :quantity, default: nil
+      integer :selling_price, default: nil
       integer :normal_price, default: nil
       hash :why_content, default: nil do
         file :picture, default: nil
@@ -34,6 +35,8 @@ module SalePages
           sale_page.update(attrs.slice(update_attribute))
         when "normal_price"
           sale_page.update(normal_price_amount_cents: attrs[:normal_price])
+        when "selling_price"
+          sale_page.update(selling_price_amount_cents: attrs[:selling_price])
         when "why_content"
           picture = attrs[:why_content].delete(:picture)
 

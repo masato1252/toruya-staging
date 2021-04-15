@@ -7,14 +7,25 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 
 const SellingPriceStep = ({step, next, prev}) => {
-  const { price } = useGlobalContext()
+  const { dispatch, price } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.sell_what_price")}</h3>
 
-      <SellingPriceEdit price={price} />
+      <SellingPriceEdit
+        price={price}
+        handlePriceChange={(price_value) => {
+          dispatch({
+            type: "SET_ATTRIBUTE",
+            payload: {
+              attribute: "price",
+              value: price_value
+            }
+          })
+        }}
+      />
 
       <div className="action-block">
         <button onClick={prev} className="btn btn-tarco">

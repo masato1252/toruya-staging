@@ -16,6 +16,7 @@ import FlowEdit from "components/user_bot/sales/flow_edit";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_edit";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
+import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 
 const SalePageEdit =({props}) => {
@@ -27,6 +28,7 @@ const SalePageEdit =({props}) => {
   const [end_time, setEndTime] = useState(props.sale_page.end_time)
   const [start_time, setStartTime] = useState(props.sale_page.start_time)
   const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option)
+  const [selling_price, setSellingPrice] = useState(props.sale_page.selling_price_option)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
@@ -42,6 +44,9 @@ const SalePageEdit =({props}) => {
     switch(props.attribute) {
       case "quantity":
         submittedData = { quantity: quantity && quantity["quantity_value"] }
+        break
+      case "selling_price":
+        submittedData = { selling_price: selling_price && selling_price['price_amount'] }
         break
       case "normal_price":
         submittedData = { normal_price: normal_price && normal_price['price_amount'] }
@@ -87,6 +92,14 @@ const SalePageEdit =({props}) => {
           <SellingNumberEdit
             quantity={quantity}
             handleQuantityChange={setQuantity}
+          />
+        )
+        break
+      case "selling_price":
+        return (
+          <SellingPriceEdit
+            price={selling_price}
+            handlePriceChange={setSellingPrice}
           />
         )
         break
