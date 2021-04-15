@@ -7,7 +7,6 @@ import StaffView from "components/user_bot/sales/staff_view";
 import FlowView from "components/user_bot/sales/flow_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
-import ahoy from "ahoy.js";
 
 const SaleBookingPage = (
   {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
