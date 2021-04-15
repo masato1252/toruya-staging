@@ -9,8 +9,8 @@ class SalePagesController < ActionController::Base
 
     case @main_product
     when BookingPage
-      product = @main_product.booking_options.order(amount_cents: :asc).first
-      @product_name = product.display_name.presence || product.name.presence
+      product = @main_product.primary_product
+      @product_name = @sale_page.product_name
 
       @keywords =
         [
@@ -21,7 +21,6 @@ class SalePagesController < ActionController::Base
           @main_product.shop.company_full_address
       ].compact
 
-      @serializer = SalePages::BookingPageSerializer
     when OnlineService
       @product_name = @main_product.name
 
@@ -33,8 +32,6 @@ class SalePagesController < ActionController::Base
         @main_product.name,
         company_info["address"]
       ].compact
-
-      @serializer = SalePages::OnlineServiceSerializer
     end
   end
 end

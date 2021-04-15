@@ -43,4 +43,92 @@ class SalePage < ApplicationRecord
 
   monetize :selling_price_amount_cents, allow_nil: true
   monetize :normal_price_amount_cents, allow_nil: true
+
+  def is_booking_page?
+    product_type == "BookingPage"
+  end
+
+  def product_name
+    product.name
+  end
+
+  def selling_price_text
+    selling_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+  end
+
+  def serializer
+    @serializer ||=
+      if is_booking_page?
+        SalePages::BookingPageSerializer.new(self)
+      else
+        SalePages::OnlineServiceSerializer.new(self)
+      end
+  end
+
+  def start_time
+    if selling_start_at
+      {
+        start_type: "start_at",
+        start_time_date_part: selling_start_at.to_s(:date)
+      }
+    else
+      {
+        start_type: "now"
+      }
+    end
+  end
+
+  def start_time_text
+    if selling_start_at
+      I18n.l(selling_start_at, format: :date_with_wday)
+    else
+      I18n.t("sales.sale_now")
+    end
+  end
+
+  def end_time
+    if selling_end_at
+      {
+        end_type: "end_at",
+        end_time_date_part: selling_end_at.to_s(:date)
+      }
+    else
+      {
+        end_type: "never"
+      }
+    end
+  end
+
+  def end_time_text
+    if selling_end_at
+      I18n.l(selling_end_at, format: :date_with_wday)
+    else
+      I18n.t("sales.never_expire")
+    end
+  end
+
+  def normal_price
+    { price_amount: normal_price_amount&.format(symbol: false) }
+  end
+
+  def price
+    { price_amount: selling_price_amount&.format(symbol: false) }
+  end
+
+  def normal_price_text
+    normal_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+  end
+
+  def quantity_text
+    quantity || I18n.t("user_bot.dashboards.sales.online_service_creation.sell_unlimit_number")
+  end
+
+  def introduction_video_thumbnail_url
+    return @introduction_video_thumbnail_url if defined?(@introduction_video_thumbnail_url)
+
+    @introduction_video_thumbnail_url =
+      if introduction_video_url
+        VideoThumb::get(introduction_video_url, "medium") || ThumbnailOfVideo.get(introduction_video_url)
+      end
+  end
 end

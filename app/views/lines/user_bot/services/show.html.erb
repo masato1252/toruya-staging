@@ -18,11 +18,6 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
     <span><%= @service.sale_page&.product&.name %></span>
-    <% if @upsell_sale_page && @upsell_sale_page[:price][:price_amount] %>
-      <div class="desc">
-        <%= @upsell_sale_page[:price][:price_amount] %>
-      </div>
-    <% end %>
   <% end %>
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>

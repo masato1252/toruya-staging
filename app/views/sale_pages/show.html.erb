@@ -15,6 +15,6 @@
 
 <%= react_component(
   "user_bot/sales/#{@main_product.class.table_name}",
-  @serializer.new(@sale_page).attributes_hash.merge(demo: false),
+  @sale_page.serializer.attributes_hash.merge(demo: false),
   { camelize_props: false, prerender: true }
 ) %>

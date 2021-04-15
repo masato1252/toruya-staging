@@ -20,4 +20,8 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   attribute :purchase_url do |object|
     Rails.application.routes.url_helpers.new_lines_customers_online_service_purchases_url(slug: object.slug)
   end
+
+  attribute :company_info do |object|
+    CompanyInfoSerializer.new(object.product.company).attributes_hash
+  end
 end

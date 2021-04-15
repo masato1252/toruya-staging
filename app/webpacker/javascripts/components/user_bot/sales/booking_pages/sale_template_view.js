@@ -6,7 +6,9 @@ import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import { Template } from "shared/builders"
 import I18n from 'i18n-js/index.js.erb';
 
-const SaleTemplateView = ({shop, product, demo, template, template_variables, social_account_add_friend_url, jump, no_action}) => (
+import OnlineServiceSolution from "components/user_bot/services/online_service_page/solution";
+
+const SaleTemplateView = ({shop, product, demo, template, template_variables, social_account_add_friend_url, jump, no_action, introduction_video}) => (
   <SaleTemplateContainer shop={shop} product={product}>
     {demo && (
       <span className="btn btn-yellow edit-mark" onClick={() => jump(1)}>
@@ -18,6 +20,16 @@ const SaleTemplateView = ({shop, product, demo, template, template_variables, so
       {...template_variables}
       product_name={product.product_name}
     />
+
+    {introduction_video?.url && (
+      <div>
+        <OnlineServiceSolution
+          solution_type="video"
+          content={introduction_video}
+          light={false}
+        />
+      </div>
+    )}
 
     <PriceBlock
       product={product}
