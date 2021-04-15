@@ -208,6 +208,8 @@ ja:
           start_time_subtitle: "販売開始"
           end_time_title: ページ概要
           end_time_subtitle: 販売終了
+          selling_price_title: 販売方法
+          selling_price_subtitle: 販売価格
           normal_price_title: 販売方法
           normal_price_subtitle: 通常価格
           quantity_title: 販売方法

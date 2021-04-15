@@ -16,7 +16,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
               })
             }}
           />
-          <span className="line-through">１回払い</span>
+          <span>１回払い</span>
           <br />
           {price.price_type === "one_time" && (
             <>
@@ -54,7 +54,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
               value="free"
               checked={price.price_type === "free"}
               onChange={() => {
-                handleNormalPriceChange({
+                handlePriceChange({
                   price_type: "free"
                 })
               }}

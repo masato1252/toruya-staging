@@ -23,6 +23,19 @@ module SalePages::OnlineServiceProductPart
       end
     end
 
+    attribute :selling_price_option do |object|
+      if object.selling_price_amount_cents
+        {
+          price_type: "one_time",
+          price_amount: object.selling_price_amount.format(symbol: false)
+        }
+      else
+        {
+          price_type: "free"
+        }
+      end
+    end
+
     attribute :quantity_option do |object|
       if object.quantity
         {
