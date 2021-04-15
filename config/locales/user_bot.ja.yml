@@ -266,7 +266,7 @@ ja:
           what_buyer_future: 予約メニューの売りや購入者の未来像を、文章で入力
           what_buyer_future_tip: ※改行１回で行替え、改行２回で段落替え
           staff_introduction: 主に担当するスタッフのプロフィール
-          staff_change_tip: ※この情報は、全ての予約ページに反映されます。
+          staff_change_tip: ※この情報は全ての販売ページに反映されます。
           introduce_who_do_this: 主に担当するスタッフを紹介してください
           content_picture_requirement_tip: "画像を設定\n 幅335px以上、高185px以上"
           staff_picture_requirement_tip: "画像を設定\n 幅180px以上 高さ180px以上"

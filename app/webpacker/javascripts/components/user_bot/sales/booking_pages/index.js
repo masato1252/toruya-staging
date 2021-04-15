@@ -38,6 +38,7 @@ const SaleBookingPage = (
         demo={demo}
         template={template}
         template_variables={template_variables}
+        introduction_video={introduction_video}
         social_account_add_friend_url={social_account_add_friend_url}
         jump={jump}
       />

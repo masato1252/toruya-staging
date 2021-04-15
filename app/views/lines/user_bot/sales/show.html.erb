@@ -22,16 +22,18 @@
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.selling_solutions") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_price") %></div>
   <% if @sale_page.is_booking_page? %>
-    <%= render "lines/user_bot/field_row", title: @sale_page.product.product_price.format(:ja_default_format) %>
+    <%= render "lines/user_bot/field_row", title: "#{@sale_page.product.product_price.format(:ja_default_format)}(#{I18n.t('common.tax_included')})" %>
   <% else %>
-    <%= render "lines/user_bot/field_row", title: @sale_page.selling_price_text %>
+    <%= render "lines/user_bot/field_row", title: "#{@sale_page.selling_price_text}(#{I18n.t('common.tax_included')})" %>
   <% end %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.normal_price") %></div>
   <% if @sale_page.is_booking_page? %>
     <%= render "lines/user_bot/field_row", title: I18n.t("common.no_setup") %>
   <% else %>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :normal_price), title: @sale_page.normal_price_text %>
+    <%= render "lines/user_bot/field_row",
+      path: edit_lines_user_bot_sale_path(@sale_page, attribute: :normal_price),
+      title: "#{@sale_page.normal_price_text}(#{I18n.t('common.tax_included')})" %>
   <% end %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_number") %></div>
