@@ -7,7 +7,7 @@ module SocialAccounts
 
       def execute
         social_account.transaction do
-          if rich_menu = social_account.social_rich_menus.find_by(social_name: SocialAccounts::RichMenus::CustomerReservations::KEY)
+          social_account.social_rich_menus.where(social_name: SocialAccounts::RichMenus::CustomerReservations::KEY).find_each do |rich_menu|
             compose(SocialAccounts::RichMenus::Delete, social_rich_menu: rich_menu)
           end
 
