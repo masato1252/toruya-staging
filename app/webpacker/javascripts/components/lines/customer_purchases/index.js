@@ -6,12 +6,24 @@ import LineIdentificationView from "components/lines/customer_identifications/sh
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
 import { SaleServices } from "user_bot/api";
 import { CheckInLineBtn } from "shared/booking";
+import ServiceCheckoutModal from "shared/service_checkout_modal";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
   useEffect(() => {
-    SaleServices.purchase({ data: purcahse_data })
+    if (props.sale_page.is_free) {
+      SaleServices.purchase({ data: purcahse_data })
+    }
   }, [])
+
+  if (!props.sale_page.is_free && !props.customer_subscirbed) {
+    return (
+      <ServiceCheckoutModal
+        stripe_key={props.stripe_key}
+        purcahse_data={purcahse_data}
+      />
+    )
+  }
 
   return (
     <div className="done-view">

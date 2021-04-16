@@ -29,10 +29,16 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     pending: 0,
     free: 1,
     paid: 2,
+    auth_failed: 3,
+    processor_failed: 4,
   }, _suffix: true
 
   enum permission_state: {
     pending: 0,
     active: 1,
   }
+
+  def purchased?
+    free_payment_state? || paid_payment_state?
+  end
 end

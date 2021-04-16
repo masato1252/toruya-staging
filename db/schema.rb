@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_010243) do
+ActiveRecord::Schema.define(version: 2021_04_16_033009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -269,6 +269,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_010243) do
     t.jsonb "phone_numbers_details", default: []
     t.jsonb "emails_details", default: []
     t.jsonb "address_details", default: {}
+    t.string "stripe_customer_id"
+    t.jsonb "stripe_charge_details"
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin

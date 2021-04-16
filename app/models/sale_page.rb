@@ -44,6 +44,10 @@ class SalePage < ApplicationRecord
   monetize :selling_price_amount_cents, allow_nil: true
   monetize :normal_price_amount_cents, allow_nil: true
 
+  def free?
+    selling_price_amount_cents.nil?
+  end
+
   def is_booking_page?
     product_type == "BookingPage"
   end

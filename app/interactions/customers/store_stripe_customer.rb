@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-module Payments
+module Customers
   class StoreStripeCustomer < ActiveInteraction::Base
-    object :user
+    object :customer
     string :authorize_token
 
     def execute
-      stripe_customer_id = user.subscription.stripe_customer_id
+      stripe_customer_id = customer.stripe_customer_id
 
       if stripe_customer_id
         # update customer a new card
@@ -23,9 +23,9 @@ module Payments
         end
       end
 
-      stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email, phone: user.phone_number)
-      user.subscription.stripe_customer_id = stripe_customer.id
-      user.subscription.save
+      stripe_customer = Stripe::Customer.create(source: authorize_token, email: customer.email, phone: customer.phone_number)
+      customer.stripe_customer_id = stripe_customer.id
+      customer.save
       stripe_customer.id
     end
   end

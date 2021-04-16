@@ -13,7 +13,7 @@ const CARD_ELEMENT_OPTIONS = {
   hidePostalCode: true
 };
 
-const CheckoutForm = ({header, desc, pay_btn, details_desc, payment_path, handleToken, handleFailure}) => {
+const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleFailure}) => {
   const stripe = useStripe();
   const elements = useElements();
 

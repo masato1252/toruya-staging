@@ -5,5 +5,9 @@ FactoryBot.define do
     association :user
     access_token { SecureRandom.uuid }
     refresh_token { SecureRandom.uuid }
+
+    trait :stripe do
+      provider { "stripe_connect" }
+    end
   end
 end

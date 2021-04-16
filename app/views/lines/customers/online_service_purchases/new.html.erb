@@ -1,9 +1,12 @@
+<%# TODO: Confirm what stripe key need to pass here %>
 <%= react_component("lines/customer_purchases", {
   props: {
     social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id },
     sale_page_slug: @sale_page.slug,
     line_login_url: line_login_url(current_owner.social_account, request.url),
     add_friend_url: current_owner.social_accounts.first&.add_friend_url,
+    sale_page: @sale_page.serializer.attributes_hash,
+    stripe_key: current_owner.stripe_provider.publishable_key,
     i18n: {
     }.merge!([
       t("booking_page"),

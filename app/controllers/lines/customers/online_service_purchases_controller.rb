@@ -9,10 +9,11 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   def create
     outcome = Sales::OnlineServices::Purchase.run(
       sale_page: @sale_page,
-      customer: current_customer
+      customer: current_customer,
+      authenticity_token: params[:token]
     )
 
-    return_json_response(outcome)
+    return_json_response(outcome, { redirect_to: new_lines_customers_online_service_purchases_path(slug: params[:slug]) })
   end
 
   private

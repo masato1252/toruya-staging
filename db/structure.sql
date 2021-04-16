@@ -712,7 +712,9 @@ CREATE TABLE public.customers (
     reminder_permission boolean DEFAULT false,
     phone_numbers_details jsonb DEFAULT '[]'::jsonb,
     emails_details jsonb DEFAULT '[]'::jsonb,
-    address_details jsonb DEFAULT '{}'::jsonb
+    address_details jsonb DEFAULT '{}'::jsonb,
+    stripe_customer_id character varying,
+    stripe_charge_details jsonb
 );
 
 
@@ -4258,6 +4260,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210331134109'),
 ('20210413122216'),
 ('20210413145402'),
-('20210414010243');
+('20210414010243'),
+('20210416033009');
 
 
