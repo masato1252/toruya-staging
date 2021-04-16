@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_010243) do
+ActiveRecord::Schema.define(version: 2021_04_16_094449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -227,6 +227,16 @@ ActiveRecord::Schema.define(version: 2021_04_14_010243) do
     t.boolean "bind_all"
     t.index ["user_id", "bind_all"], name: "index_contact_groups_on_user_id_and_bind_all", unique: true
     t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true
+  end
+
+  create_table "custom_messages", force: :cascade do |t|
+    t.string "scenario", null: false
+    t.string "service_type", null: false
+    t.bigint "service_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_type", "service_id"], name: "index_custom_messages_on_service_type_and_service_id"
   end
 
   create_table "custom_schedules", id: :serial, force: :cascade do |t|

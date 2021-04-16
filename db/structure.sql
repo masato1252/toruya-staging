@@ -647,6 +647,40 @@ ALTER SEQUENCE public.contact_groups_id_seq OWNED BY public.contact_groups.id;
 
 
 --
+-- Name: custom_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.custom_messages (
+    id bigint NOT NULL,
+    scenario character varying NOT NULL,
+    service_type character varying NOT NULL,
+    service_id bigint NOT NULL,
+    content text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: custom_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.custom_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: custom_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.custom_messages_id_seq OWNED BY public.custom_messages.id;
+
+
+--
 -- Name: custom_schedules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2474,6 +2508,13 @@ ALTER TABLE ONLY public.contact_groups ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: custom_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.custom_messages ALTER COLUMN id SET DEFAULT nextval('public.custom_messages_id_seq'::regclass);
+
+
+--
 -- Name: custom_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2929,6 +2970,14 @@ ALTER TABLE ONLY public.contact_group_rankings
 
 ALTER TABLE ONLY public.contact_groups
     ADD CONSTRAINT contact_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: custom_messages custom_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.custom_messages
+    ADD CONSTRAINT custom_messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -3564,6 +3613,13 @@ CREATE INDEX index_contact_group_rankings_on_rank_id ON public.contact_group_ran
 --
 
 CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
+
+
+--
+-- Name: index_custom_messages_on_service_type_and_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_custom_messages_on_service_type_and_service_id ON public.custom_messages USING btree (service_type, service_id);
 
 
 --
@@ -4256,6 +4312,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210331134109'),
 ('20210413122216'),
 ('20210413145402'),
-('20210414010243');
+('20210416094449');
 
 
