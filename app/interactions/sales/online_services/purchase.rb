@@ -28,7 +28,7 @@ module Sales
         if relation.save
           unless persisted_record
             if custom_message = CustomMessage.where(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
-              ::LineClient.send(social_customer, Translator.perform(custom_message.content, { customer_name: customer.name }))
+              ::LineClient.send(social_customer, Translator.perform(custom_message.content, { customer_name: customer.name, service_title: sale_page.product.name }))
             else
               ::LineClient.send(social_customer, I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name))
             end
