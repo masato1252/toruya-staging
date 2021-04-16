@@ -2,6 +2,7 @@
 
 require "line_client"
 require "message_encryptor"
+require "translator"
 
 module Sales
   module OnlineServices
@@ -26,7 +27,11 @@ module Sales
 
         if relation.save
           unless persisted_record
-            ::LineClient.send(social_customer, I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name))
+            if custom_message = CustomMessage.where(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
+              ::LineClient.send(social_customer, Translator.perform(custom_message.content, { customer_name: customer.name }))
+            else
+              ::LineClient.send(social_customer, I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name))
+            end
           end
 
           ::LineClient.flex(
