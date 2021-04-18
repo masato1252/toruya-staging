@@ -2,6 +2,7 @@
 
 class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersController
   before_action :sale_page
+  skip_before_action :track_ahoy_visit
 
   def new
   end
