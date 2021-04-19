@@ -18,7 +18,8 @@ module SalePages::OnlineServiceProductPart
       if object.normal_price_amount_cents
         {
           price_type: "cost",
-          price_amount: object.normal_price_amount.format(symbol: false)
+          price_amount: object.normal_price_amount.fractional,
+          price_amount_format: object.normal_price_amount.format
         }
       else
         {
@@ -31,7 +32,8 @@ module SalePages::OnlineServiceProductPart
       if object.selling_price_amount_cents
         {
           price_type: "one_time",
-          price_amount: object.selling_price_amount.format(symbol: false)
+          price_amount: object.selling_price_amount.fractional,
+          price_amount_format: object.selling_price_amount.format
         }
       else
         {

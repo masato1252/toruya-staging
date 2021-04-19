@@ -13,7 +13,9 @@ module Customers
         begin
           Stripe::Customer.update(stripe_customer_id, {
             source: authorize_token,
-          })
+          },
+          stripe_account: customer.user.stripe_provider.uid
+          )
           return stripe_customer_id
         rescue => e
           Rollbar.error(e)
@@ -23,7 +25,12 @@ module Customers
         end
       end
 
-      stripe_customer = Stripe::Customer.create(source: authorize_token, email: customer.email, phone: customer.phone_number)
+      stripe_customer = Stripe::Customer.create(
+        {
+          source: authorize_token, email: customer.email, phone: customer.phone_number
+        },
+        stripe_account: customer.user.stripe_provider.uid
+      )
       customer.stripe_customer_id = stripe_customer.id
       customer.save
       stripe_customer.id

@@ -24,4 +24,16 @@
 #
 
 class CustomerPayment < ApplicationRecord
+  belongs_to :product, polymorphic: true
+  monetize :amount_cents
+
+  enum state: {
+    active: 0,
+    completed: 1,
+    refunded: 2,
+    auth_failed: 3,
+    processor_failed: 4,
+    refund_failed: 5,
+    bonus: 6
+  }
 end

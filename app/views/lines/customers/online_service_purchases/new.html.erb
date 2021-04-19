@@ -7,6 +7,7 @@
     add_friend_url: current_owner.social_accounts.first&.add_friend_url,
     sale_page: @sale_page.serializer.attributes_hash,
     stripe_key: current_owner.stripe_provider.publishable_key,
+    customer_subscirbed: !!@relation&.purchased?,
     i18n: {
     }.merge!([
       t("booking_page"),

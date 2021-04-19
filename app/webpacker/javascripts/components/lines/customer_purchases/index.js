@@ -21,6 +21,9 @@ const FinalPaidPage = ({props, purcahse_data}) => {
       <ServiceCheckoutModal
         stripe_key={props.stripe_key}
         purcahse_data={purcahse_data}
+        company_name={props.sale_page.company_info.name}
+        service_name={props.sale_page.product.name}
+        price={props.sale_page.selling_price_option.price_amount_format}
       />
     )
   }

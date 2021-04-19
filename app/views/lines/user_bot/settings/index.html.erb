@@ -77,10 +77,6 @@
     <% end %>
   <% end %>
 
-    <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path),
-      class: "btn-stripe-connect" do %>
-      Connect with Stripe
-    <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>
   <%= link_to lines_user_bot_settings_shops_path, class: "field-row" do %>
     <span><%= I18n.t("user_bot.dashboards.settings.shop.shop_info_label") %></span><i class="fa fa-angle-right"></i>
@@ -88,6 +84,13 @@
   <%= link_to shops_lines_user_bot_settings_business_schedules_path, class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
   <% end %>
+
+  <div class="action-block">
+    <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path),
+      class: "btn-stripe-connect btn btn-tarco" do %>
+      <%= current_user.stripe_provider ? "Connected with Stripe" : "Connect with Stripe" %>
+    <% end %>
+  </div>
 
   <div class="bottom-navigation-bar centerize">
     <%= sprintf("%07d", current_user.id) %>

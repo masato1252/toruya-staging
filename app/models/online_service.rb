@@ -97,7 +97,7 @@ class OnlineService < ApplicationRecord
     @thumbnail_url ||=
       case solution_type
       when "video"
-        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content&["url"]
+        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content && content["url"]
       else
       end
   end

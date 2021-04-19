@@ -5,13 +5,18 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
   skip_before_action :track_ahoy_visit
 
   def new
+    @relation =
+      if current_customer
+        product = sale_page.product
+        product.online_service_customer_relations.find_by(online_service: product, customer: current_customer)
+      end
   end
 
   def create
     outcome = Sales::OnlineServices::Purchase.run(
       sale_page: @sale_page,
       customer: current_customer,
-      authenticity_token: params[:token]
+      authorize_token: params[:token]
     )
 
     return_json_response(outcome, { redirect_to: new_lines_customers_online_service_purchases_path(slug: params[:slug]) })

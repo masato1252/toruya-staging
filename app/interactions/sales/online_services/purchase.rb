@@ -21,10 +21,17 @@ module Sales
           .find_or_create_by(online_service: product, customer: customer)
 
         unless relation.purchased?
+          custom_message = CustomMessage.where(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
+
+          if custom_message
+            custom_message_content = Translator.perform(custom_message.content, { customer_name: customer.name, service_title: sale_page.product.name })
+          end
+
           if sale_page.free?
             relation.permission_state = :active
             relation.expire_at = product.current_expire_time
             relation.free_payment_state!
+            message_content = custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
           else
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
             purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
@@ -32,24 +39,15 @@ module Sales
             # credit card charge is synchronous request, it would return final status immediately
             if purchase_outcome.valid?
               relation.permission_state = :active
-              relation.expire_at = purchase_outcome.result.expire_at
+              relation.paid_at = purchase_outcome.result.created_at
+              relation.expire_at = purchase_outcome.result.expired_at
               relation.paid_payment_state!
+              message_content = custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
             end
           end
         end
 
         if relation.purchased?
-          custom_message = CustomMessage.where(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
-          if custom_message
-            custom_message_content = Translator.perform(custom_message.content, { customer_name: customer.name, service_title: sale_page.product.name })
-          end
-
-          if relation.payment_state_changed?(from: "pending", to: "free")
-            custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
-          elsif relation.payment_state_changed?(from: "pending", to: "paid")
-            custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
-          end
-
           if message_content
             ::LineClient.send(social_customer, message_content)
           end

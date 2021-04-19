@@ -62,6 +62,7 @@ class Customer < ApplicationRecord
   has_one :social_customer
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
+  has_many :customer_payments
   belongs_to :user, counter_cache: true
   belongs_to :updated_by_user, class_name: "User", required: false
   belongs_to :contact_group, required: false
