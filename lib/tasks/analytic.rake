@@ -10,7 +10,7 @@ namespace :analytic do
     # Only reports on Monday
     if Time.now.wday == 1
       # Send report of previous week
-      Ahoy::Visit.where(started_at: period).where.not(owner_id: nil).select(:owner_id).distinct(:owner_id).find_each do |visit|
+      Ahoy::Visit.where(started_at: period).where.not(owner_id: nil).select(:owner_id, :id).distinct(:owner_id).find_each do |visit|
         VisitAnalyticReportJob.perform_later(visit.owner_id)
       end
     end
