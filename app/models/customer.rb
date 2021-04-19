@@ -27,8 +27,8 @@
 #  phone_numbers_details    :jsonb
 #  emails_details           :jsonb
 #  address_details          :jsonb
-#  stripe_customer_id       :string
 #  stripe_charge_details    :jsonb
+#  stripe_customer_id       :string
 #
 # Indexes
 #

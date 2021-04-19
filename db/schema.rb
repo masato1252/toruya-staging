@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_033009) do
+ActiveRecord::Schema.define(version: 2021_04_19_025345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -230,6 +230,16 @@ ActiveRecord::Schema.define(version: 2021_04_16_033009) do
     t.index ["user_id", "google_uid", "google_group_id", "backup_google_group_id"], name: "contact_groups_google_index", unique: true
   end
 
+  create_table "custom_messages", force: :cascade do |t|
+    t.string "scenario", null: false
+    t.string "service_type", null: false
+    t.bigint "service_id", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["service_type", "service_id"], name: "index_custom_messages_on_service_type_and_service_id"
+  end
+
   create_table "custom_schedules", id: :serial, force: :cascade do |t|
     t.integer "shop_id"
     t.integer "staff_id"
@@ -243,6 +253,24 @@ ActiveRecord::Schema.define(version: 2021_04_16_033009) do
     t.index ["shop_id", "open", "start_time", "end_time"], name: "shop_custom_schedules_index"
     t.index ["staff_id", "open", "start_time", "end_time"], name: "staff_custom_schedules_index"
     t.index ["user_id", "open", "start_time", "end_time"], name: "personal_schedule_index"
+  end
+
+  create_table "customer_payments", force: :cascade do |t|
+    t.bigint "customer_id"
+    t.decimal "amount_cents"
+    t.string "amount_currency"
+    t.integer "product_id"
+    t.string "product_type"
+    t.integer "state", default: 0, null: false
+    t.datetime "charge_at"
+    t.datetime "expired_at"
+    t.boolean "manual", default: false, null: false
+    t.jsonb "stripe_charge_details"
+    t.string "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_payments_on_customer_id"
+    t.index ["product_id", "product_type"], name: "index_customer_payments_on_product_id_and_product_type"
   end
 
   create_table "customers", id: :serial, force: :cascade do |t|
@@ -269,8 +297,8 @@ ActiveRecord::Schema.define(version: 2021_04_16_033009) do
     t.jsonb "phone_numbers_details", default: []
     t.jsonb "emails_details", default: []
     t.jsonb "address_details", default: {}
-    t.string "stripe_customer_id"
     t.jsonb "stripe_charge_details"
+    t.string "stripe_customer_id"
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin

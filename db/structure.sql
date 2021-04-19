@@ -648,6 +648,40 @@ ALTER SEQUENCE public.contact_groups_id_seq OWNED BY public.contact_groups.id;
 
 
 --
+-- Name: custom_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.custom_messages (
+    id bigint NOT NULL,
+    scenario character varying NOT NULL,
+    service_type character varying NOT NULL,
+    service_id bigint NOT NULL,
+    content text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: custom_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.custom_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: custom_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.custom_messages_id_seq OWNED BY public.custom_messages.id;
+
+
+--
 -- Name: custom_schedules; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -685,6 +719,47 @@ ALTER SEQUENCE public.custom_schedules_id_seq OWNED BY public.custom_schedules.i
 
 
 --
+-- Name: customer_payments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_payments (
+    id bigint NOT NULL,
+    customer_id bigint,
+    amount_cents numeric,
+    amount_currency character varying,
+    product_id integer,
+    product_type character varying,
+    state integer DEFAULT 0 NOT NULL,
+    charge_at timestamp without time zone,
+    expired_at timestamp without time zone,
+    manual boolean DEFAULT false NOT NULL,
+    stripe_charge_details jsonb,
+    order_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_payments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_payments_id_seq OWNED BY public.customer_payments.id;
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -713,8 +788,8 @@ CREATE TABLE public.customers (
     phone_numbers_details jsonb DEFAULT '[]'::jsonb,
     emails_details jsonb DEFAULT '[]'::jsonb,
     address_details jsonb DEFAULT '{}'::jsonb,
-    stripe_customer_id character varying,
-    stripe_charge_details jsonb
+    stripe_charge_details jsonb,
+    stripe_customer_id character varying
 );
 
 
@@ -2477,10 +2552,24 @@ ALTER TABLE ONLY public.contact_groups ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: custom_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.custom_messages ALTER COLUMN id SET DEFAULT nextval('public.custom_messages_id_seq'::regclass);
+
+
+--
 -- Name: custom_schedules id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.custom_schedules ALTER COLUMN id SET DEFAULT nextval('public.custom_schedules_id_seq'::regclass);
+
+
+--
+-- Name: customer_payments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_payments ALTER COLUMN id SET DEFAULT nextval('public.customer_payments_id_seq'::regclass);
 
 
 --
@@ -2935,11 +3024,27 @@ ALTER TABLE ONLY public.contact_groups
 
 
 --
+-- Name: custom_messages custom_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.custom_messages
+    ADD CONSTRAINT custom_messages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: custom_schedules custom_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.custom_schedules
     ADD CONSTRAINT custom_schedules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_payments customer_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_payments
+    ADD CONSTRAINT customer_payments_pkey PRIMARY KEY (id);
 
 
 --
@@ -3567,6 +3672,27 @@ CREATE INDEX index_contact_group_rankings_on_rank_id ON public.contact_group_ran
 --
 
 CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.contact_groups USING btree (user_id, bind_all);
+
+
+--
+-- Name: index_custom_messages_on_service_type_and_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_custom_messages_on_service_type_and_service_id ON public.custom_messages USING btree (service_type, service_id);
+
+
+--
+-- Name: index_customer_payments_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments USING btree (customer_id);
+
+
+--
+-- Name: index_customer_payments_on_product_id_and_product_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
 
 
 --
@@ -4261,6 +4387,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210413122216'),
 ('20210413145402'),
 ('20210414010243'),
-('20210416033009');
+('20210416033009'),
+('20210416094449'),
+('20210419025345');
 
 
