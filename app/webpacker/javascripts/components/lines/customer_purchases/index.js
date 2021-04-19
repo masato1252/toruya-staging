@@ -11,7 +11,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
   useEffect(() => {
-    if (props.sale_page.is_free) {
+    if (props.sale_page.is_free || props.customer_subscirbed) {
       SaleServices.purchase({ data: purcahse_data })
     }
   }, [])
