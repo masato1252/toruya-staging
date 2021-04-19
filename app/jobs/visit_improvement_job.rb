@@ -8,7 +8,7 @@ class VisitImprovementJob < ApplicationJob
     when /booking_pages\/(\w+)/
       booking_page_slug = $1
 
-      booking_page = BookingPage.find_by(slug: booking_page_slug) || BookingPage.find(booking_page_slug)
+      booking_page = BookingPage.find_by(slug: booking_page_slug) || BookingPage.find_by(id: booking_page_slug)
       ahoy_visit.update_columns(owner_id: booking_page.user_id, product_id: booking_page.id, product_type: "BookingPage")
     when /sale_pages\/(\w+)/
       sale_page_slug = $1

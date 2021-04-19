@@ -16,10 +16,12 @@ class VisitAnalyticReportJob < ApplicationJob
       where(started_at: period, owner_id: owner_id).
       group(:product_type, :product_id).count.each do |(product_type, product_id), count|
       # product name, visit, customer visit
-      product = product_type.constantize.find(product_id)
-      customer_visit = Ahoy::Visit.where(started_at: period, owner_id: owner_id, product: product).where.not(customer_social_user_id: nil).count
+      product = product_type.constantize.find_by(id: product_id)
+      if product
+        customer_visit = Ahoy::Visit.where(started_at: period, owner_id: owner_id, product: product).where.not(customer_social_user_id: nil).count
 
-      report << "Name: #{product.name}, anonymous visit: #{count}, customer visit: #{customer_visit}"
+        report << "Name: #{product.try(:name) || product.product_name}#{product.is_a?(SalePage) ? "(Sale Page)" : ""}, anonymous visit: #{count}, customer visit: #{customer_visit}"
+      end
     end
 
     Slack::Web::Client.new.chat_postMessage(channel: 'sayhi', text: report.join("\n"))
