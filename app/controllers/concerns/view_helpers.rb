@@ -138,11 +138,11 @@ module ViewHelpers
 
   def member_shop_ids
     @member_shop_ids ||= begin
-      if cookies.encrypted[:member_shops].nil?
-        cookies.encrypted[:member_shops] = manage_shop_options(include_user_own: true).map(&:shop_id).join(",")
+      if cookies[:member_shops].nil?
+        cookies[:member_shops] = manage_shop_options(include_user_own: true).map(&:shop_id).join(",")
       end
 
-      @member_shop_ids ||= cookies.encrypted[:member_shops].split(",") & manage_shop_options(include_user_own: true).map { |o| o.shop_id.to_s }
+      @member_shop_ids ||= cookies[:member_shops].split(",") & manage_shop_options(include_user_own: true).map { |o| o.shop_id.to_s }
     end
   end
 
@@ -172,11 +172,11 @@ module ViewHelpers
   end
 
   def in_personal_dashboard?
-    cookies.encrypted[:dashboard_mode] == "user"
+    cookies[:dashboard_mode] == "user"
   end
 
   def shop_dashboard_id
-    cookies.encrypted[:dashboard_mode]
+    cookies[:dashboard_mode]
   end
 
   def working_time_range

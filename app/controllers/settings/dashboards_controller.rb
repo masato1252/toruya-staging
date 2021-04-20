@@ -32,7 +32,7 @@ class Settings::DashboardsController < ActionController::Base
   end
 
   def hide_tour_warning
-    cookies.encrypted[:basic_settings_tour_warning_hidden] = { value: true, expires: Time.current.advance(months: 1) }
+    cookies[:basic_settings_tour_warning_hidden] = { value: true, expires: Time.current.advance(months: 1) }
 
     redirect_to member_path
   end

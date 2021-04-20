@@ -50,7 +50,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     uri.query = URI.encode_www_form(queries)
 
     if outcome.result.social_user_id.present?
-      cookies.encrypted.permanent[:line_social_user_id_of_customer] = outcome.result.social_user_id
+      cookies.permanent[:line_social_user_id_of_customer] = outcome.result.social_user_id
     end
 
     redirect_to uri.to_s
