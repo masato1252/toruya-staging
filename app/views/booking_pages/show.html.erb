@@ -18,7 +18,7 @@
 <%
   page_booking_options = @booking_page.booking_options.active.map { |option| booking_option_item(option) }
   customer_info_hash = customer_info_as_json(@customer)
-  cookies[:oauth_social_account_id] = @social_account&.id
+  cookies.encrypted[:oauth_social_account_id] = @social_account&.id
 %>
 <%= react_component("booking/booking_reservation_form", {
   timezone: Time.zone.tzinfo.name,

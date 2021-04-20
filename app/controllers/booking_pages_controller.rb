@@ -17,13 +17,13 @@ class BookingPagesController < ActionController::Base
     end
 
     @customer =
-      if params[:social_user_id] || cookies[:line_social_user_id_of_customer]
-        @booking_page.user.social_customers.find_by(social_user_id: params[:social_user_id] || cookies[:line_social_user_id_of_customer])&.customer
+      if params[:social_user_id] || cookies.encrypted[:line_social_user_id_of_customer]
+        @booking_page.user.social_customers.find_by(social_user_id: params[:social_user_id] || cookies.encrypted[:line_social_user_id_of_customer])&.customer
       end
 
     @customer ||=
-      if cookies[:booking_customer_id]
-        @booking_page.user.customers.find_by(id: cookies[:booking_customer_id])
+      if cookies.encrypted[:booking_customer_id]
+        @booking_page.user.customers.find_by(id: cookies.encrypted[:booking_customer_id])
       end
 
     if @customer
@@ -103,7 +103,7 @@ class BookingPagesController < ActionController::Base
       result = outcome.result
       customer = result[:customer]
 
-      cookies.permanent[:booking_customer_id] = customer&.id
+      cookies.encrypted.permanent[:booking_customer_id] = customer&.id
 
       Booking::FinalizeCode.run(booking_page: booking_page, uuid: params[:uuid], customer: customer, reservation: result[:reservation])
 
@@ -134,7 +134,7 @@ class BookingPagesController < ActionController::Base
     )
 
     if customer
-      cookies.permanent[:booking_customer_id] = customer.id
+      cookies.encrypted.permanent[:booking_customer_id] = customer.id
 
       render json: {
         customer_info: view_context.customer_info_as_json(customer),

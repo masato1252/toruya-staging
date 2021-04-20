@@ -7,7 +7,7 @@ class MembersController < DashboardController
     @date = params[:reservation_date].present? ? Time.zone.parse(params[:reservation_date]).to_date : Time.zone.now.to_date
 
     if request.post?
-      cookies[:member_shops] = params[:member_shops]&.join(",") || ""
+      cookies.encrypted[:member_shops] = params[:member_shops]&.join(",") || ""
 
       if params[:reservation_date]
         redirect_to date_member_path(reservation_date: @date.to_s(:date))
@@ -58,6 +58,6 @@ class MembersController < DashboardController
   private
 
   def set_current_dashboard_mode
-    cookies[:dashboard_mode] = "user"
+    cookies.encrypted[:dashboard_mode] = "user"
   end
 end

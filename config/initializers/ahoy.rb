@@ -3,8 +3,8 @@ require "message_encryptor"
 class Ahoy::Store < Ahoy::DatabaseStore
   def track_visit(data)
     data[:customer_social_user_id] =
-      if request.params[:social_user_id] || request.cookies[:line_social_user_id_of_customer]
-        request.params[:social_user_id] || request.cookies[:line_social_user_id_of_customer]
+      if request.params[:social_user_id] || request.cookie.encrypted[:line_social_user_id_of_customer]
+        request.params[:social_user_id] || request.cookie.encrypted[:line_social_user_id_of_customer]
       elsif request.params[:encrypted_social_service_user_id]
         MessageEncryptor.decrypt(request.params[:encrypted_social_service_user_id])
       end

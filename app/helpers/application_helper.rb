@@ -98,7 +98,7 @@ module ApplicationHelper
   # line_login_url(current_owner.social_account, request.url, foo: "bar"),
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     options = args.extract_options!
-    cookies[:oauth_social_account_id] = social_account&.id
+    cookies.encrypted[:oauth_social_account_id] = social_account&.id
 
     if social_account&.is_login_available?
       options.merge!(

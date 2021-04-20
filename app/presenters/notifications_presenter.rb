@@ -135,7 +135,7 @@ class NotificationsPresenter
         data = Notifications::BasicSettingTourPresenter.new(h, current_user).data
 
         if data
-          if h.cookies[:basic_settings_tour_warning_hidden]
+          if h.cookies.encrypted[:basic_settings_tour_warning_hidden]
             nil # basic_settings_tour doesn't finish but don't show it
           else
             [data]
