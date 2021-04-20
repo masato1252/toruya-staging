@@ -161,7 +161,10 @@ class Ability
 
     # manage_shop_dashboard only use to check add/edit reservation currently
     can :manage_shop_reservations, Shop do |shop|
-      super_user.valid_shop_ids.include?(shop.id)
+      # XXX: Comment this out, since we don't support multiple features for now,
+      # this permission need to re-think when we introudce the shop management feature
+      # super_user.valid_shop_ids.include?(shop.id)
+      true
     end
 
     can :create_shop_reservations_with_menu, Shop do |shop|

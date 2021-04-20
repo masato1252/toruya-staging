@@ -173,11 +173,12 @@ class User < ApplicationRecord
   end
 
   def valid_shop_ids
-    @valid_shop_ids ||= if premium_member?
-                          shop_ids
-                        else
-                          shop_ids.sort.slice(0, 1)
-                        end
+    @valid_shop_ids ||=
+      if premium_member?
+        shop_ids
+      else
+        shop_ids.sort.slice(0, 1)
+      end
   end
 
   def has_invalid_shops?
