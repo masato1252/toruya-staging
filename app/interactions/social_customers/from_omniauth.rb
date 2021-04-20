@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "line_client"
+require "message_encryptor"
 
 module SocialCustomers
   class FromOmniauth < ActiveInteraction::Base
@@ -8,7 +9,7 @@ module SocialCustomers
     hash :param, strip: false
 
     def execute
-      social_account = SocialAccount.find(param["oauth_social_account_id"])
+      social_account = SocialAccount.find(MessageEncryptor.decrypt(param["oauth_social_account_id"]))
 
       social_customer =
         SocialCustomer
