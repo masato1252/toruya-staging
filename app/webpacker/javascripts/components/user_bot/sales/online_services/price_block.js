@@ -4,7 +4,7 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action}) => {
+const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action, payable}) => {
   const renderActions = () => {
     if (no_action) return <></>
 
@@ -24,11 +24,26 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
         </>
       )
     }
-    else {
+    else if (payable) {
       return (
         <a href={purchase_url || "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
           <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
         </a>
+      )
+    }
+    else {
+      return (
+        <div>
+          <h3 className="warning">
+            Please set up your stripe account in setting page to receive customers payment.
+          </h3>
+
+          <div className="action-block">
+            <a className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank" disabled>
+              <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
+            </a>
+          </div>
+        </div>
       )
     }
   }
