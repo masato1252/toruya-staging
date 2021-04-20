@@ -129,22 +129,24 @@ class Ability
 
   def staff_member_ability
     can :edit, Staff do |staff|
-      if staff.user_id == super_user.id
-        if super_user.premium_member?
-          admin_level || manager_level || current_user_staff == staff
-        elsif admin_level
-          current_user_staff == staff
-        end
-      end
+      # if staff.user_id == super_user.id
+      #   if super_user.premium_member?
+      #     admin_level || manager_level || current_user_staff == staff
+      #   elsif admin_level
+      #     current_user_staff == staff
+      #   end
+      # end
+      true
     end
 
     can :edit, Reservation do |reservation|
-      super_user.valid_shop_ids.include?(reservation.shop_id) && (
-        super_user.premium_member? || (
-          admin? &&
-          (reservation.staff_ids.length == 0 || (reservation.staff_ids.uniq.length == 1 && reservation.staff_ids.uniq.first == current_user_staff.try(:id)))
-        )
-      )
+      # super_user.valid_shop_ids.include?(reservation.shop_id) && (
+      #   super_user.premium_member? || (
+      #     admin? &&
+      #     (reservation.staff_ids.length == 0 || (reservation.staff_ids.uniq.length == 1 && reservation.staff_ids.uniq.first == current_user_staff.try(:id)))
+      #   )
+      # )
+      true
     end
 
     can :check_content, Reservation do |reservation|
@@ -161,7 +163,8 @@ class Ability
 
     # manage_shop_dashboard only use to check add/edit reservation currently
     can :manage_shop_reservations, Shop do |shop|
-      super_user.valid_shop_ids.include?(shop.id)
+      # super_user.valid_shop_ids.include?(shop.id)
+      true
     end
 
     can :create_shop_reservations_with_menu, Shop do |shop|
