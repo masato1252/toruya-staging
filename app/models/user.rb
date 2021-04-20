@@ -174,11 +174,14 @@ class User < ApplicationRecord
   end
 
   def valid_shop_ids
-    @valid_shop_ids ||= if premium_member?
-                          shop_ids
-                        else
-                          shop_ids.sort.slice(0, 1)
-                        end
+    @valid_shop_ids ||=
+      if true || premium_member?
+        # XXX: Since we don't support multiple features for now, we allow users to use all the shop they own now
+        # this permission need to re-think when we introudce the shop management feature
+        shop_ids
+      else
+        shop_ids.sort.slice(0, 1)
+      end
   end
 
   def has_invalid_shops?

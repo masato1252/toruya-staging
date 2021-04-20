@@ -7,7 +7,7 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
-import FlowEdit from "components/user_bot/sales/flow_edit";
+import StaffEdit from "components/user_bot/sales/staff_edit";
 
 const StaffSetupStep = ({step, next, prev, jump}) => {
   const { props, selected_staff, dispatch, isStaffSetup, isReadyForPreview } = useGlobalContext()
