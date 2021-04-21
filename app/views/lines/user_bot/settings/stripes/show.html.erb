@@ -1,0 +1,13 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: "Stripe Account Connect" %>
+
+  <div class="centerize action-block">
+    <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path),
+      class: "btn-stripe-connect btn btn-tarco" do %>
+      <%= current_user.stripe_provider ? "Connected with Stripe" : "Connect with Stripe" %>
+    <% end %>
+  </div>
+  <div class="margin-round centerize">
+    Some description about stripe
+  </div>
+</div>

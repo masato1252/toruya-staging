@@ -75,6 +75,7 @@ Rails.application.routes.draw do
       end
 
       namespace :settings do
+        resource :stripe, only: %i[show]
         resource :profile, only: %i[show] do
           collection do
             get :company
