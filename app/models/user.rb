@@ -207,6 +207,10 @@ class User < ApplicationRecord
     Ability.new(self, self)
   end
 
+  def payable?
+    stripe_provider&.publishable_key&.present?
+  end
+
   def hi_message
     "👩 New user joined, user_id: #{id}"
   end

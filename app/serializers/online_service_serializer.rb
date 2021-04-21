@@ -20,4 +20,8 @@ class OnlineServiceSerializer
   attribute :content_url do |service|
     service.content["url"]
   end
+
+  attribute :charge_required do |service|
+    service.charge_required?
+  end
 end

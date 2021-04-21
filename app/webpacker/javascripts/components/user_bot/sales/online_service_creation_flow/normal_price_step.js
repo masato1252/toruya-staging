@@ -6,8 +6,8 @@ import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 
-const NormalPriceStep = ({step, next, prev, lastStep}) => {
-  const { dispatch, normal_price, isNormalPriceSetup, isReadyForPreview } = useGlobalContext()
+const NormalPriceStep = ({step, next, prev, jump, lastStep}) => {
+  const { dispatch, normal_price, isNormalPriceSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
@@ -28,7 +28,14 @@ const NormalPriceStep = ({step, next, prev, lastStep}) => {
       />
 
       <div className="action-block">
-        <button onClick={prev} className="btn btn-tarco">
+        <button onClick={() => {
+          if (selected_online_service.charge_required) {
+            prev()
+          }
+          else {
+            jump(0)
+          }
+        }} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
         <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow"
