@@ -44,25 +44,6 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
           </div>
         </label>
       </div>
-
-      <div className="margin-around">
-        <label className="">
-          <div>
-            <input
-              name="selling_type"
-              type="radio"
-              value="free"
-              checked={price.price_type === "free"}
-              onChange={() => {
-                handlePriceChange({
-                  price_type: "free"
-                })
-              }}
-            />
-            {I18n.t("user_bot.dashboards.sales.online_service_creation.sell_free_price")}
-          </div>
-        </label>
-      </div>
     </>
 )
 
