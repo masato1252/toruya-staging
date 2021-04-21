@@ -114,6 +114,11 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+        stripe:
+          title: オンライン精算
+          connection_title: Stripeアカウント連携
+          stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
+          stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
       services:
         online_service: オンラインサービス
         service_page: サービスページ
@@ -335,6 +340,7 @@ ja:
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
         create_sale_page: 作成したサービスページをシェアしましょう
+        stripe_required_warning: サービスを有料販売するには、Stripeアカウントの連携設定が必要です。
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

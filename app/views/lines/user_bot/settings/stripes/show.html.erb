@@ -1,13 +1,19 @@
 <div class="settings-dashboard form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: "Stripe Account Connect" %>
-
-  <div class="centerize action-block">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.stripe.connection_title") %>
+  <div class="margin-around centerize">
+    <%= t("user_bot.dashboards.settings.stripe.stripe_desc1_html") %>
+  </div>
+  <div class="centerize">
     <%= button_to user_stripe_connect_omniauth_authorize_path(oauth_redirect_to_url: lines_user_bot_settings_path),
-      class: "btn-stripe-connect btn btn-tarco" do %>
-      <%= current_user.stripe_provider ? "Connected with Stripe" : "Connect with Stripe" %>
+      class: "btn-stripe-connect btn btn-yellow" do %>
+      <%= current_user.stripe_provider ? t("action.stripe_connected") : t("action.stripe_connect") %>
     <% end %>
   </div>
-  <div class="margin-round centerize">
-    Some description about stripe
+
+  <div class="margin-around centerize">
+    <%= t("user_bot.dashboards.settings.stripe.stripe_desc2_html") %>
+  </div>
+  <div class="centerize">
+    <%= link_to t("action.stripe_sign_up"), "https://stripe.com", class: "btn btn-tarco", target: "_blank" %>
   </div>
 </div>

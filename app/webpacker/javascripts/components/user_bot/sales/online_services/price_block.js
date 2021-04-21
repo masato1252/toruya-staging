@@ -8,6 +8,20 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
   const renderActions = () => {
     if (no_action) return <></>
 
+    if (!payable)
+      return (
+        <div className="booking-info">
+          <div className="unpayable-view">
+            <div className="title">
+              <h3>{I18n.t("common.preparing")}</h3>
+
+              <div className="message break-line-content">
+                {I18n.t("online_service_page.under_construction")}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     if (!is_started) {
       return (
         <>
@@ -24,26 +38,11 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
         </>
       )
     }
-    else if (payable) {
+    else {
       return (
         <a href={purchase_url || "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
           <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
         </a>
-      )
-    }
-    else {
-      return (
-        <div>
-          <h3 className="warning">
-            Please set up your stripe account in setting page to receive customers payment.
-          </h3>
-
-          <div className="action-block">
-            <a className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank" disabled>
-              <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
-            </a>
-          </div>
-        </div>
       )
     }
   }

@@ -50,8 +50,13 @@ ja:
     open_sale_page: 販売ページを開く
     add_as_friend: お友だち登録
     unsubscribe: 解約する
+    stripe_setting_btn: Stripeを設定する
+    stripe_connect: Stripeに連携
+    stripe_connected: 連携中
+    stripe_sign_up: Stripeに新規登録
   common:
     processing: 送信中
+    preparing: 準備中です
     date: 日付
     day: 曜日
     time: 時間
