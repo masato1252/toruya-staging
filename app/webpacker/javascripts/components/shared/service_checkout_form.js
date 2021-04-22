@@ -1,14 +1,13 @@
 "use strict";
 
 import React, { useState } from 'react';
-import Popup from 'reactjs-popup';
 
 import StripeCheckoutForm from "shared/stripe_checkout_form"
 import { SaleServices } from "user_bot/api";
 import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
-const ServiceCheckoutModal = ({stripe_key, purcahse_data, company_name, service_name, price}) => {
+const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_name, price}) => {
   const [processing, setProcessing] = useState(false)
 
   const handleToken = async (token) => {
@@ -24,24 +23,16 @@ const ServiceCheckoutModal = ({stripe_key, purcahse_data, company_name, service_
   }
 
   return (
-    <Popup
-      trigger={<></>}
-      open={true}
-      modal
-      >
-        <div>
-          <StripeCheckoutForm
-            stripe_key={stripe_key}
-            handleToken={handleToken}
-            handleFailure={handleFailure}
-            header={company_name}
-            desc={service_name}
-            pay_btn={I18n.t("action.pay")}
-            details_desc={price}
-          />
-        </div>
-    </Popup>
+    <StripeCheckoutForm
+      stripe_key={stripe_key}
+      handleToken={handleToken}
+      handleFailure={handleFailure}
+      header={company_name}
+      desc={service_name}
+      pay_btn={I18n.t("action.pay")}
+      details_desc={price}
+    />
   )
 }
 
-export default ServiceCheckoutModal;
+export default ServiceCheckoutForm;
