@@ -26,6 +26,6 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   end
 
   attribute :payable do |object|
-    object.free? || (!object.free? && object.user.payable?)
+    object.free? || object.user.payable?
   end
 end

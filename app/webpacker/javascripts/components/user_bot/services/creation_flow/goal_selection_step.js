@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useState } from "react";
+import React from "react";
 import Popup from 'reactjs-popup';
 import Routes from 'js-routes.js';
 
@@ -10,7 +10,6 @@ import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 
 const GoalSelectionStep = ({next, step}) => {
   const { props, dispatch } = useGlobalContext()
-  const [warningPopupOpen, setWarningPopupOpen] = useState(false)
 
   return (
     <div className="form settings-flow centerize">

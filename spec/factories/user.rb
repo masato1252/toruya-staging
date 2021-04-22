@@ -11,11 +11,13 @@ FactoryBot.define do
     transient do
       skip_default_data { false }
       with_google_user { false }
+      with_stripe_user { false }
     end
 
     after(:create) do |user, proxy|
       Users::BuildDefaultData.run!(user: user) unless proxy.skip_default_data
-      FactoryBot.create(:access_provider, user: user) if proxy.with_google_user
+      FactoryBot.create(:access_provider, :google, user: user) if proxy.with_google_user
+      FactoryBot.create(:access_provider, :stripe, user: user) if proxy.with_stripe_user
 
       user.save!
     end
