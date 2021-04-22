@@ -9,5 +9,9 @@ FactoryBot.define do
     trait :stripe do
       provider { "stripe_connect" }
     end
+
+    trait :google do
+      provider { "google_oauth2" }
+    end
   end
 end

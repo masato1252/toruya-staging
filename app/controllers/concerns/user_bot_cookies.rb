@@ -12,7 +12,7 @@ module UserBotCookies
   end
 
   def delete_user_bot_cookies(key)
-    cookies.encrypted.delete(prepend_key(key))
+    cookies.delete(prepend_key(key))
   end
 
   def prepend_key(key)
