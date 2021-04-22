@@ -118,7 +118,7 @@ module Notifiers
           social_customer: target_line_user,
           content: message,
           message_type: SocialMessage.message_types[:bot],
-          readed: false
+          readed: true
         )
       else
         LineClient.send(target_line_user, message)
