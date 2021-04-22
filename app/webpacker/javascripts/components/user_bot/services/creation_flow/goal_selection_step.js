@@ -33,6 +33,7 @@ const GoalSelectionStep = ({next, step}) => {
                 </button>
               }
               modal
+              nested
             >
               <>
                 <div className="modal-body">
