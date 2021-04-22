@@ -6,7 +6,7 @@ import LineIdentificationView from "components/lines/customer_identifications/sh
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
 import { SaleServices } from "user_bot/api";
 import { CheckInLineBtn } from "shared/booking";
-import ServiceCheckoutModal from "shared/service_checkout_modal";
+import ServiceCheckoutForm from "shared/service_checkout_form";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
@@ -18,7 +18,7 @@ const FinalPaidPage = ({props, purcahse_data}) => {
 
   if (!props.sale_page.is_free && !props.customer_subscirbed) {
     return (
-      <ServiceCheckoutModal
+      <ServiceCheckoutForm
         stripe_key={props.stripe_key}
         purcahse_data={purcahse_data}
         company_name={props.sale_page.company_info.name}
