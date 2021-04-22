@@ -7,12 +7,16 @@ import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 
 const NormalPriceStep = ({step, next, prev, jump, lastStep}) => {
-  const { dispatch, normal_price, isNormalPriceSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
+  const { dispatch, price, normal_price, isNormalPriceSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}</h3>
+      <h3 className="header centerize line-break-content">
+        {price.price_type === "free" ? (
+          I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price_for_free_service")
+        ) : I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}
+      </h3>
 
       <NormalPriceEdit
         normal_price={normal_price}
