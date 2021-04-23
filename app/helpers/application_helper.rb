@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "message_encryptor"
+
 module ApplicationHelper
  BOOTSTRAP_FLASH_MSG = {
     'success' => 'alert-success',
@@ -98,11 +100,12 @@ module ApplicationHelper
   # line_login_url(current_owner.social_account, request.url, foo: "bar"),
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     options = args.extract_options!
-    cookies[:oauth_social_account_id] = social_account&.id
+    encrypted_id = MessageEncryptor.encrypt(social_account&.id)
+    cookies[:oauth_social_account_id] = encrypted_id
 
     if social_account&.is_login_available?
       options.merge!(
-        prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, oauth_social_account_id: social_account&.id
+        prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, oauth_social_account_id: encrypted_id
       )
 
       user_line_omniauth_authorize_path(options)

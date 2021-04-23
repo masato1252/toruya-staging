@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "message_encryptor"
+
 class OmniauthSetup
   # OmniAuth expects the class passed to setup to respond to the #call method.
   # env - Rack environment
@@ -21,7 +23,7 @@ class OmniauthSetup
 
   # Use the subdomain in the request to find the account with credentials
   def custom_credentials
-    account = SocialAccount.find(@request.cookies["oauth_social_account_id"])
+    account = SocialAccount.find(MessageEncryptor.decrypt(@request.cookies["oauth_social_account_id"]))
 
     {
       client_id: account.login_channel_id,
