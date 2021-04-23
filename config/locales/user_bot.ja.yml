@@ -340,7 +340,7 @@ ja:
         select_upsell_product: セールスページを選択
         below_is_what_you_want: 以下のサービスを作成してよろしいですか？
         create_by_this_setting: この設定でサービスを作成する
-        create_sale_page: 作成したサービスページをシェアしましょう
+        create_a_sale_page: 作成したサービスを販売する 販売ページを作成しましょう
         stripe_required_warning: サービスを有料販売するには、Stripeアカウントの連携設定が必要です。
       notifications:
         title: 以下の新着データがあります
