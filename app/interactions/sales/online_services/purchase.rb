@@ -41,7 +41,7 @@ module Sales
         end
 
         if relation.purchased?
-           Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
+           Notifiers::OnlineServices::Purchased.run(receiver: social_customer, customer: customer, sale_page: sale_page)
 
           ::LineClient.flex(
             social_customer,
