@@ -14,11 +14,7 @@ module Notifiers
           custom_message_content = Translator.perform(custom_message.content, { customer_name: customer.name, service_title: sale_page.product.name })
         end
 
-        if sale_page.free?
-          custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
-        else
-          custom_message_content || I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name)
-        end
+        custom_message_content || I18n.t("notifier.online_service.purchased.message", service_title: sale_page.product.name)
       end
     end
   end

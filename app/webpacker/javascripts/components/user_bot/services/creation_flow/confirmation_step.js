@@ -20,7 +20,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
       <ServiceFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.below_is_what_you_want")}</h3>
       <div className="preview-hint">
-        {I18n.t("user_bot.dashboards.sales.booking_page_creation.sale_page_like_this")}
+        {I18n.t("user_bot.dashboards.online_service_creation.sale_page_like_this")}
       </div>
       <OnlineServicePage
         company_info={company_info}
