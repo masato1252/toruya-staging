@@ -66,7 +66,8 @@ CREATE TABLE public.access_providers (
     user_id integer,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    email character varying
+    email character varying,
+    publishable_key character varying
 );
 
 
@@ -718,6 +719,47 @@ ALTER SEQUENCE public.custom_schedules_id_seq OWNED BY public.custom_schedules.i
 
 
 --
+-- Name: customer_payments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.customer_payments (
+    id bigint NOT NULL,
+    customer_id bigint,
+    amount_cents numeric,
+    amount_currency character varying,
+    product_id integer,
+    product_type character varying,
+    state integer DEFAULT 0 NOT NULL,
+    charge_at timestamp without time zone,
+    expired_at timestamp without time zone,
+    manual boolean DEFAULT false NOT NULL,
+    stripe_charge_details jsonb,
+    order_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: customer_payments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.customer_payments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: customer_payments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.customer_payments_id_seq OWNED BY public.customer_payments.id;
+
+
+--
 -- Name: customers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -745,7 +787,9 @@ CREATE TABLE public.customers (
     reminder_permission boolean DEFAULT false,
     phone_numbers_details jsonb DEFAULT '[]'::jsonb,
     emails_details jsonb DEFAULT '[]'::jsonb,
-    address_details jsonb DEFAULT '{}'::jsonb
+    address_details jsonb DEFAULT '{}'::jsonb,
+    stripe_charge_details jsonb,
+    stripe_customer_id character varying
 );
 
 
@@ -2522,6 +2566,13 @@ ALTER TABLE ONLY public.custom_schedules ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: customer_payments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_payments ALTER COLUMN id SET DEFAULT nextval('public.customer_payments_id_seq'::regclass);
+
+
+--
 -- Name: customers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2986,6 +3037,14 @@ ALTER TABLE ONLY public.custom_messages
 
 ALTER TABLE ONLY public.custom_schedules
     ADD CONSTRAINT custom_schedules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customer_payments customer_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.customer_payments
+    ADD CONSTRAINT customer_payments_pkey PRIMARY KEY (id);
 
 
 --
@@ -3620,6 +3679,20 @@ CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.conta
 --
 
 CREATE INDEX index_custom_messages_on_service_type_and_service_id ON public.custom_messages USING btree (service_type, service_id);
+
+
+--
+-- Name: index_customer_payments_on_customer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments USING btree (customer_id);
+
+
+--
+-- Name: index_customer_payments_on_product_id_and_product_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
 
 
 --
@@ -4299,6 +4372,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201228140930'),
 ('20210109234255'),
 ('20210111070239'),
+('20210113140743'),
 ('20210127073815'),
 ('20210129122718'),
 ('20210202020409'),
@@ -4312,6 +4386,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210331134109'),
 ('20210413122216'),
 ('20210413145402'),
-('20210416094449');
+('20210414010243'),
+('20210416033009'),
+('20210416094449'),
+('20210419025345');
 
 

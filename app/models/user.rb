@@ -52,7 +52,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable, :lockable, :omniauthable
 
-  has_one :access_provider, dependent: :destroy
+  has_one :access_provider, -> { where(provider: "google_oauth2")}, dependent: :destroy
+  has_one :stripe_provider, -> { where(provider: "stripe_connect")}, dependent: :destroy, class_name: "AccessProvider"
   has_one :profile, dependent: :destroy
   has_one :subscription, dependent: :destroy
   has_many :reservations, -> { active }
@@ -204,6 +205,10 @@ class User < ApplicationRecord
 
   def owner_ability
     Ability.new(self, self)
+  end
+
+  def payable?
+    stripe_provider&.publishable_key&.present?
   end
 
   def hi_message

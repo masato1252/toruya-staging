@@ -9,31 +9,41 @@ module Sales
     class Purchase < ActiveInteraction::Base
       object :sale_page
       object :customer
+      string :authorize_token, default: nil
 
       validate :validate_product
+      validate :validate_token
 
       def execute
         relation =
           product.online_service_customer_relations
           .create_with(sale_page: sale_page)
-          .find_or_initialize_by(
-            online_service: product,
-            customer: customer)
+          .find_or_create_by(online_service: product, customer: customer)
 
-        relation.payment_state = :free
-        relation.permission_state = :active
-        relation.expire_at = product.current_expire_time
-        persisted_record = relation.persisted?
+        unless relation.purchased?
+          if sale_page.free?
+            relation.permission_state = :active
+            relation.expire_at = product.current_expire_time
+            relation.free_payment_state!
 
-        if relation.save
-          unless persisted_record
-            if custom_message = CustomMessage.where(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
-              ::LineClient.send(social_customer, Translator.perform(custom_message.content, { customer_name: customer.name, service_title: sale_page.product.name }))
-            else
-              ::LineClient.send(social_customer, I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name))
+            Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
+          else
+            compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
+            purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
+
+            # credit card charge is synchronous request, it would return final status immediately
+            if purchase_outcome.valid?
+              relation.permission_state = :active
+              relation.paid_at = purchase_outcome.result.created_at
+              relation.expire_at = purchase_outcome.result.expired_at
+              relation.paid_payment_state!
+
+              Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
             end
           end
+        end
 
+        if relation.purchased?
           ::LineClient.flex(
             social_customer,
             LineMessages::FlexTemplateContainer.template(
@@ -70,6 +80,12 @@ module Sales
       def validate_product
         if !product.is_a?(OnlineService)
           errors.add(:sale_page, :invalid_product)
+        end
+      end
+
+      def validate_token
+        if !sale_page.free? && authorize_token.blank?
+          errors.add(:authorize_token, :invalid_token)
         end
       end
     end

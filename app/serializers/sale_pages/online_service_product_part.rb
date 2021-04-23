@@ -6,6 +6,10 @@ module SalePages::OnlineServiceProductPart
   included do
     attribute :normal_price, :price
 
+    attribute :is_free do |sale_page|
+      sale_page.free?
+    end
+
     attribute :product do |sale_page|
       sale_page.product.is_a?(BookingPage) ? ::BookingPageSerializer.new(sale_page.product).attributes_hash : ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
     end
@@ -14,7 +18,22 @@ module SalePages::OnlineServiceProductPart
       if object.normal_price_amount_cents
         {
           price_type: "cost",
-          price_amount: object.normal_price_amount.format(symbol: false)
+          price_amount: object.normal_price_amount.fractional,
+          price_amount_format: object.normal_price_amount.format
+        }
+      else
+        {
+          price_type: "free"
+        }
+      end
+    end
+
+    attribute :selling_price_option do |object|
+      if object.selling_price_amount_cents
+        {
+          price_type: "one_time",
+          price_amount: object.selling_price_amount.fractional,
+          price_amount_format: object.selling_price_amount.format
         }
       else
         {

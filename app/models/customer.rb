@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: customers
@@ -28,6 +27,8 @@
 #  phone_numbers_details    :jsonb
 #  emails_details           :jsonb
 #  address_details          :jsonb
+#  stripe_charge_details    :jsonb
+#  stripe_customer_id       :string
 #
 # Indexes
 #
@@ -61,6 +62,7 @@ class Customer < ApplicationRecord
   has_one :social_customer
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
+  has_many :customer_payments
   belongs_to :user, counter_cache: true
   belongs_to :updated_by_user, class_name: "User", required: false
   belongs_to :contact_group, required: false

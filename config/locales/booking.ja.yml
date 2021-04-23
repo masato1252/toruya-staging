@@ -76,6 +76,7 @@ ja:
   online_service_page:
     special_price_time: 特別価格の購入期限まで
     register_now: 今すぐ登録する
+    under_construction: 有料販売の準備中です。 詳細は販売元にお問合せください。
   online_service_purchases:
     free_service:
       purchased_notification_message: "この度は、%{service_title}のご購入ありがとうございました。\n\n「試聴する」ボタンからご覧ください。"

@@ -23,7 +23,7 @@ module Payments
         end
       end
 
-      stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email)
+      stripe_customer = Stripe::Customer.create(source: authorize_token, email: user.email, phone: user.phone_number)
       user.subscription.stripe_customer_id = stripe_customer.id
       user.subscription.save
       stripe_customer.id

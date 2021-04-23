@@ -4,10 +4,24 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action}) => {
+const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action, payable}) => {
   const renderActions = () => {
     if (no_action) return <></>
 
+    if (!payable)
+      return (
+        <div className="booking-info">
+          <div className="unpayable-view">
+            <div className="title">
+              <h3>{I18n.t("common.preparing")}</h3>
+
+              <div className="message break-line-content">
+                {I18n.t("online_service_page.under_construction")}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     if (!is_started) {
       return (
         <>

@@ -24,4 +24,8 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   attribute :company_info do |object|
     CompanyInfoSerializer.new(object.product.company).attributes_hash
   end
+
+  attribute :payable do |object|
+    object.free? || object.user.payable?
+  end
 end

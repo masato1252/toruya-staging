@@ -64,7 +64,6 @@
   <%= link_to login_api_lines_user_bot_settings_social_account_path, class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.dashboard.line_login_api_label") %></span><i class="fa fa-angle-right"></i>
   <% end %>
-
   <% if @social_account %>
     <%= link_to edit_lines_user_bot_settings_social_account_rich_menu_path, class: "field-row" do %>
       <span><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></span>
@@ -75,6 +74,11 @@
         <i class="fa fa-angle-right"></i>
       </span>
     <% end %>
+  <% end %>
+
+  <div class="field-header"><%= t("user_bot.dashboards.settings.stripe.title") %></div>
+  <%= link_to lines_user_bot_settings_stripe_path, class: "field-row" do %>
+    <span><%= "Stripe" %></span><i class="fa fa-angle-right"></i>
   <% end %>
 
   <div class="field-header"><%= t("user_bot.dashboards.settings.business_schedules.reservation_management") %></div>

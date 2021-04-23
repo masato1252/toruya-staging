@@ -28,6 +28,90 @@
 require "thumbnail_of_video"
 
 class OnlineService < ApplicationRecord
+  VIDEO_SOLUTION = {
+    key: "video",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.description"),
+    enabled: true
+  }
+
+  AUDIO_SOLUTION = {
+    key: "audio",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.description"),
+    enabled: false
+  }
+
+  PDF_SOLUTION = {
+    key: "pdf",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
+    enabled: false
+  }
+
+  QUESTIONNAIRE_SOLUTION = {
+    key: "questionnaire",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.description"),
+    enabled: false
+  }
+
+  DIAGNOSIS_SOLUTION = {
+    key: "diagnosis",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.description"),
+    enabled: false
+  }
+
+  GOALS = [
+    {
+      key: "collection",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
+      enabled: true,
+      stripe_required: false,
+      solutions: [
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION,
+        PDF_SOLUTION,
+        QUESTIONNAIRE_SOLUTION,
+        DIAGNOSIS_SOLUTION
+      ]
+    },
+    {
+      key: "customers",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.description"),
+      enabled: true,
+      stripe_required: true,
+      solutions: [
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION
+      ]
+    },
+    {
+      key: "price",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.price.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.price.description"),
+      enabled: true,
+      stripe_required: true,
+      solutions: [
+        VIDEO_SOLUTION,
+        AUDIO_SOLUTION
+      ]
+    },
+    {
+      key: "upsell",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.description"),
+      enabled: false,
+      stripe_required: true,
+      solutions: [
+        VIDEO_SOLUTION
+      ]
+    }
+  ]
+
   include DateTimeAccessor
   date_time_accessor :start_at, :end_at, accessor_only: true
   belongs_to :user
@@ -35,6 +119,10 @@ class OnlineService < ApplicationRecord
   belongs_to :company, polymorphic: true
 
   has_many :online_service_customer_relations
+
+  def charge_required?
+    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required]
+  end
 
   def start_time
     if start_at
@@ -97,7 +185,7 @@ class OnlineService < ApplicationRecord
     @thumbnail_url ||=
       case solution_type
       when "video"
-        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"])
+        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content && content["url"]
       else
       end
   end

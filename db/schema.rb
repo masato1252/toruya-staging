@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_094449) do
+ActiveRecord::Schema.define(version: 2021_04_19_025345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2021_04_16_094449) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "publishable_key"
     t.index ["provider", "uid"], name: "index_access_providers_on_provider_and_uid"
   end
 
@@ -254,6 +255,24 @@ ActiveRecord::Schema.define(version: 2021_04_16_094449) do
     t.index ["user_id", "open", "start_time", "end_time"], name: "personal_schedule_index"
   end
 
+  create_table "customer_payments", force: :cascade do |t|
+    t.bigint "customer_id"
+    t.decimal "amount_cents"
+    t.string "amount_currency"
+    t.integer "product_id"
+    t.string "product_type"
+    t.integer "state", default: 0, null: false
+    t.datetime "charge_at"
+    t.datetime "expired_at"
+    t.boolean "manual", default: false, null: false
+    t.jsonb "stripe_charge_details"
+    t.string "order_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_customer_payments_on_customer_id"
+    t.index ["product_id", "product_type"], name: "index_customer_payments_on_product_id_and_product_type"
+  end
+
   create_table "customers", id: :serial, force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "contact_group_id"
@@ -278,6 +297,8 @@ ActiveRecord::Schema.define(version: 2021_04_16_094449) do
     t.jsonb "phone_numbers_details", default: []
     t.jsonb "emails_details", default: []
     t.jsonb "address_details", default: {}
+    t.jsonb "stripe_charge_details"
+    t.string "stripe_customer_id"
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin

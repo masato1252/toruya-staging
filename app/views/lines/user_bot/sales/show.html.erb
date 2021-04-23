@@ -25,6 +25,7 @@
     <%= render "lines/user_bot/field_row", title: "#{@sale_page.product.product_price.format(:ja_default_format)}#{@sale_page.product.product_price.zero? ? "" : "(#{I18n.t('common.tax_included')})" }" %>
   <% else %>
     <%= render "lines/user_bot/field_row",
+      path: @sale_page.product.charge_required? ? edit_lines_user_bot_sale_path(@sale_page, attribute: :selling_price) : nil,
       title: "#{@sale_page.selling_price_text}#{!@sale_page.selling_price_amount_cents ? "" : "(#{I18n.t('common.tax_included')})" }" %>
   <% end %>
 

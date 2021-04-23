@@ -42,4 +42,8 @@ class SalePageOptionSerializer
   attribute :template_variables do |sale_page|
     sale_page.sale_template_variables
   end
+
+  attribute :introduction_video do |object|
+    { url: object.introduction_video_url }
+  end
 end
