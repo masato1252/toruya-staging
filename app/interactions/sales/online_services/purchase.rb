@@ -26,7 +26,6 @@ module Sales
             relation.expire_at = product.current_expire_time
             relation.free_payment_state!
 
-            Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
           else
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
             purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
@@ -37,13 +36,13 @@ module Sales
               relation.paid_at = purchase_outcome.result.created_at
               relation.expire_at = purchase_outcome.result.expired_at
               relation.paid_payment_state!
-
-              Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
             end
           end
         end
 
         if relation.purchased?
+           Notifiers::OnlineServices::Purchased.run(receiver: social_customer, sale_page: sale_page)
+
           ::LineClient.flex(
             social_customer,
             LineMessages::FlexTemplateContainer.template(

@@ -12,6 +12,9 @@ ja:
     booking:
       shop_owner_reservation_booked_notification:
         message: "%{user_name} 様\n\n%{booking_page_title}より新しいご予約が入りました。\n\n予約カレンダーよりご確認ください。\n\nToruya"
+    online_service:
+      purchased:
+        message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「試聴する」ボタンからご覧ください。"
     reminders:
       trial_member_week_ago_reminder:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\nToruya"
