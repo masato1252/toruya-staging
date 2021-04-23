@@ -1,6 +1,6 @@
 <%= react_component("user_bot/services/creation_flow", {
   props: {
-    service_goals: OnlineService::GOALS,
+    service_goals: ::OnlineService::GOALS,
     user_payable: current_user.payable?,
     companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(
       CompanyInfoSerializer.new(super_user.profile).attributes_hash
