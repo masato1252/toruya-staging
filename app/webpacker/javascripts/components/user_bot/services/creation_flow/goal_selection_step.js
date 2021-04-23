@@ -14,7 +14,7 @@ const GoalSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.stripe_required_warning")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_goal")}</h3>
       {props.service_goals.map((goal) => {
         if (goal.stripe_required && !props.user_payable) {
           return (
@@ -36,7 +36,7 @@ const GoalSelectionStep = ({next, step}) => {
             >
               <>
                 <div className="modal-body">
-                  {I18n.t("user_bot.dashboards.online_service_creation.what_is_end_time")}
+                  {I18n.t("user_bot.dashboards.online_service_creation.stripe_required_warning")}
                 </div>
                 <div className="modal-footer centerize">
                   <a
