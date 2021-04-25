@@ -46,7 +46,7 @@ module Sales
           ::LineClient.flex(
             social_customer,
             LineMessages::FlexTemplateContainer.template(
-              altText: I18n.t("online_service_purchases.free_service.purchased_notification_message", service_title: sale_page.product.name),
+              altText: I18n.t("notifier.online_service.purchased.message", service_title: sale_page.product.name),
               contents: LineMessages::FlexTemplateContent.content7(
                 picture_url: sale_page.product.thumbnail_url || sale_page.introduction_video_url,
                 content_url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug),
