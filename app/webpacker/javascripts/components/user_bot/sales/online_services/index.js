@@ -73,6 +73,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           is_started={is_started}
           is_ended={is_ended}
           purchase_url={purchase_url}
+          payable={payable}
         />
       </div>
 
