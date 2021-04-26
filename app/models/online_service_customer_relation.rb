@@ -27,6 +27,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :sale_page
   belongs_to :customer
 
+  scope :available, -> { active.where("expire_at is NULL or expire_at >= ?", Time.current) }
+
   enum payment_state: {
     pending: 0,
     free: 1,
