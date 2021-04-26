@@ -113,4 +113,8 @@ module ApplicationHelper
       nil
     end
   end
+
+  def embed_tour_video(key)
+    %Q|<iframe width='100%' height='auto' src='https://www.youtube.com/embed/#{TOURS_VIDEOS[key]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>|.html_safe
+  end
 end

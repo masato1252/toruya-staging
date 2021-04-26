@@ -208,6 +208,11 @@ Rails.application.routes.draw do
         end
       end
 
+      scope module: :tours, path: :tours, as: :tours do
+        get :line_settings_required_for_online_service
+        get :line_settings_required_for_booking_page
+      end
+
       resources :notifications, only: [:index] do
         collection do
           get "/social_service_user_id/:social_service_user_id", action: "index"
