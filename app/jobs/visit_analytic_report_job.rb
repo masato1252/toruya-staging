@@ -20,7 +20,7 @@ class VisitAnalyticReportJob < ApplicationJob
       if product
         customer_visit = Ahoy::Visit.where(started_at: period, owner_id: owner_id, product: product).where.not(customer_social_user_id: nil).count
 
-        report << "Name: #{product.try(:name) || product.product_name}#{product.is_a?(SalePage) ? "(Sale Page)" : ""}, anonymous visit: #{count}, customer visit: #{customer_visit}"
+        report << "Name: #{product.try(:name) || product.product_name}#{product.is_a?(SalePage) ? "(Sale Page)" : ""}, Total visit: #{count}, customer visit: #{customer_visit}"
       end
     end
 
