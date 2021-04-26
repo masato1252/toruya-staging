@@ -46,7 +46,7 @@ class OnlineService < ApplicationRecord
     key: "pdf",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
-    enabled: false
+    enabled: true
   }
 
   QUESTIONNAIRE_SOLUTION = {

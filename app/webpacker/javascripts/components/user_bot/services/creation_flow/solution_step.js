@@ -5,6 +5,7 @@ import React from "react";
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import VideoContentSetup from "./contents/video_content_setup";
+import PdfContentSetup from "./contents/pdf_content_setup";
 
 const SolutionStep = ({next, step}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
@@ -13,12 +14,9 @@ const SolutionStep = ({next, step}) => {
   if (selected_solution) {
     switch (selected_solution) {
       case "video":
-        return (
-          <VideoContentSetup
-            next={next}
-            step={step}
-          />
-        );
+        return <VideoContentSetup next={next} step={step} />
+      case "pdf":
+        return <PdfContentSetup next={next} step={step} />
     }
   }
 

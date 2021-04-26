@@ -5,10 +5,10 @@ import ReactPlayer from 'react-player';
 import I18n from 'i18n-js/index.js.erb';
 
 const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
+  if (!content?.url) return <></>
+
   switch (solution_type) {
     case "video":
-      if (!content?.url) return <></>
-
       return (
         <div className='video-player-wrapper'>
           <ReactPlayer
@@ -20,6 +20,10 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
             {...rest}
           />
         </div>
+      );
+    case "pdf":
+      return (
+        <a href={content.url}>PDF Link</a>
       );
     default:
       return <></>
