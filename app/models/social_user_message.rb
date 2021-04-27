@@ -33,7 +33,7 @@ class SocialUserMessage < ApplicationRecord
 
   def hi_message
     if user?
-      "💭 New toruya user message, user: #{social_user.social_user_name}, content: #{raw_content}"
+      "💭 New toruya user message, user: #{social_user.social_user_name}, content: #{raw_content}, #{Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_service_user_id)}"
     end
   end
 end
