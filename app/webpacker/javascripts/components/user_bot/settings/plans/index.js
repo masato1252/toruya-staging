@@ -58,7 +58,7 @@ const Plans = ({props}) => {
           trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
           content={props.i18n.unsubscribe_modal_content}
           btn={props.i18n.unsubscribe_modal_button}
-          reply={props.i18n.unsubscribe_modal_reply_html}
+          reply={I18n.t("common.support_reply_html")}
         />
       )
     };

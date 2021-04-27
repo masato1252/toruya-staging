@@ -219,7 +219,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :social_user_messages, only: [:create]
+      resources :social_user_messages, only: [:new, :create]
     end
   end
 
