@@ -46,7 +46,6 @@ ja:
       pdf: 今すぐダウンロード
       questionnaire: アンケートに答える
       diagnosis: 今すぐ登録する
-    watch: 視聴する
     open_sale_page: 販売ページを開く
     add_as_friend: お友だち登録
     unsubscribe: 解約する
@@ -54,6 +53,12 @@ ja:
     stripe_connect: Stripeに連携
     stripe_connected: 連携中
     stripe_sign_up: Stripeに新規登録
+    online_service_actions:
+      video: 視聴する
+      audio: 視聴する
+      pdf: ダウンロード
+      questionnaire: アンケートに答える
+      diagnosis: 登録する
   common:
     processing: 送信中
     preparing: 準備中です
