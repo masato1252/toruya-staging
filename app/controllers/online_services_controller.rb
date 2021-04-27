@@ -6,7 +6,7 @@ class OnlineServicesController < Lines::CustomersController
   before_action :online_service
 
   def show
-    @is_service_member = online_service.online_service_customer_relations.active.where(customer: current_customer).exists?
+    @is_service_member = online_service.online_service_customer_relations.available.where(customer: current_customer).exists?
     @is_owner = current_toruy_social_user&.user == current_owner
     @online_service_hash = OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false, light: false)
   end
