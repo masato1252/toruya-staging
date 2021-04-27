@@ -8,14 +8,14 @@
     </a>
 
     <% if params[:_higoogle] %>
-      <p>
-        <%= button_to user_google_oauth2_omniauth_authorize_path, class: "google-button" do %>
-          <img class="google-button__icon" src="<%= asset_pack_path("media/assets/management/btn_google_signin.svg") %>" />
-          <span class="google-button__text">
-            Googleでログイン
-          </span>
+      <div style="border: 1px solid black; padding: 10px; margin: 10px;">
+        <h3>管理者ログイン</h3>
+        <p>
+        <%= button_to toruya_line_login_url(root_url), class: "btn line-button with-wording only-word" do %>
+          管理者としてログイン
         <% end %>
-      </p>
+        </p>
+      </div>
     <% end %>
   </main>
   <aside id="signup">

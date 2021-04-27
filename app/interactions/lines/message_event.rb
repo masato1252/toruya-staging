@@ -26,6 +26,14 @@ class Lines::MessageEvent < ActiveInteraction::Base
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
+        when "services"
+          is_keyword = true
+
+          if social_customer.customer
+            Lines::Actions::ActiveOnlineServices.run(social_customer: social_customer)
+          else
+            compose(Lines::Menus::Guest, social_customer: social_customer)
+          end
         when I18n.t("line.bot.keywords.contacts")
           is_keyword = true
 
