@@ -101,7 +101,7 @@ module ApplicationHelper
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
-    cookies[:oauth_social_account_id] = encrypted_id
+    cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 10.minutes }
 
     if social_account&.is_login_available?
       options.merge!(
@@ -112,5 +112,17 @@ module ApplicationHelper
     else
       nil
     end
+  end
+
+  def toruya_line_login_url(oauth_redirect_to_url, *args)
+    options = args.extract_options!
+    encrypted_content = MessageEncryptor.encrypt(CallbacksController::TORUYA_USER)
+    cookies[:who] = { value: encrypted_content, expires: 10.minutes }
+
+    options.merge!(
+      prompt: "consent", bot_prompt: "aggressive", oauth_redirect_to_url: oauth_redirect_to_url, who: encrypted_content
+    )
+
+    user_line_omniauth_authorize_path(options)
   end
 end

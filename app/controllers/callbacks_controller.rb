@@ -2,6 +2,7 @@
 
 class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
+  TORUYA_USER = "toruya_user"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
@@ -50,26 +51,42 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def line
     param = request.env["omniauth.params"]
 
-    outcome = ::SocialCustomers::FromOmniauth.run(
-      auth: request.env["omniauth.auth"],
-      param: param,
-    )
+    if param["who"] && MessageEncryptor.decrypt(param["who"]) == TORUYA_USER
+      outcome = ::SocialUsers::FromOmniauth.run(
+        auth: request.env["omniauth.auth"],
+      )
 
-    param.delete("bot_prompt")
-    param.delete("prompt")
-    oauth_redirect_to_url = param.delete("oauth_redirect_to_url")
+      if outcome.valid? && outcome.result&.user
+        user = outcome.result.user
+        remember_me(user)
+        sign_in(user)
 
-    uri = URI.parse(oauth_redirect_to_url)
-    queries = {
-      status: outcome.valid?,
-      social_user_id: outcome.result.social_user_id
-    }.merge(param)
-    uri.query = URI.encode_www_form(queries)
+        redirect_to admin_chats_path
+      else
+        redirect_to root_path
+      end
+    else
+      outcome = ::SocialCustomers::FromOmniauth.run(
+        auth: request.env["omniauth.auth"],
+        param: param,
+      )
 
-    if outcome.result.social_user_id.present?
-      cookies.permanent[:line_social_user_id_of_customer] = outcome.result.social_user_id
+      param.delete("bot_prompt")
+      param.delete("prompt")
+      oauth_redirect_to_url = param.delete("oauth_redirect_to_url")
+
+      uri = URI.parse(oauth_redirect_to_url)
+      queries = {
+        status: outcome.valid?,
+        social_user_id: outcome.result.social_user_id
+      }.merge(param)
+      uri.query = URI.encode_www_form(queries)
+
+      if outcome.result.social_user_id.present?
+        cookies.permanent[:line_social_user_id_of_customer] = outcome.result.social_user_id
+      end
+
+      redirect_to uri.to_s
     end
-
-    redirect_to uri.to_s
   end
 end
