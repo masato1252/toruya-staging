@@ -150,3 +150,7 @@ ja:
     no_setup: 設定なし
     template: テンプレート
     tax_included: 税込
+    support_reply_html: ありがとうございます。<br>サポートチームよりできるだけ早くご連絡差し上げます。
+    support_content: サポートチームがお手伝いしますので、お困りの内容をお聞かせください。
+    support_btn: サポートを要請する
+    need_support_btn: サポートが必要ですか？

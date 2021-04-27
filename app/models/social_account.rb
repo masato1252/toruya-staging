@@ -36,6 +36,10 @@ class SocialAccount < ApplicationRecord
     }
   end
 
+  def line_settings_finished?
+    is_login_available? && bot_data_finished?
+  end
+
   def is_login_available?
     login_channel_id && login_channel_secret && raw_login_channel_secret
   end

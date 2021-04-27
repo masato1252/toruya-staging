@@ -1,0 +1,13 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-body">
+      <%= t("tours.line_settings_required_for_booking_page_html") %>
+      <div class="centerize">
+        <%= embed_tour_video(:line_settings_required_for_booking_page) %>
+      </div>
+    </div>
+    <div class="modal-footer centerize">
+      <%= link_to t("common.need_support_btn"), new_lines_user_bot_social_user_message_path, class: "btn btn-yellow" %>
+    </div>
+  </div>
+</div>

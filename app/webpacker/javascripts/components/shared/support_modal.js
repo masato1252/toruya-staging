@@ -7,7 +7,7 @@ import { useForm  } from "react-hook-form";
 import { SocialUserMessagesServices } from "user_bot/api";
 import { SubmitButton } from "shared/components";
 
-const SupportModal = ({trigger_btn, content, btn, reply}) => {
+const SupportModal = ({trigger_btn, content, btn, reply, defaultOpen}) => {
   const [submitted, setSubmitted] = useState(false)
   const { formState, register, handleSubmit} = useForm({})
 
@@ -24,8 +24,9 @@ const SupportModal = ({trigger_btn, content, btn, reply}) => {
 
   return (
     <Popup
-      trigger={trigger_btn}
-        modal
+      trigger={trigger_btn || <></>}
+      modal
+      defaultOpen={defaultOpen}
       >
         <>
           {submitted ? (
