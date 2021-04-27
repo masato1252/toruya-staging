@@ -249,6 +249,7 @@ const SubmitButton = ({handleSubmit, submitCallback, btnWord}) => {
 
   return (
     <button
+      type="submit"
       className="btn btn-yellow"
       disabled={submitting}
       onClick={async () => {

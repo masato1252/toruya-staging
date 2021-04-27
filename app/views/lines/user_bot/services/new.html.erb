@@ -1,3 +1,5 @@
+<%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_online_service_path, static: true) unless current_user.social_account&.line_settings_finished? %>
+
 <%= react_component("user_bot/services/creation_flow", {
   props: {
     service_goals: ::OnlineService::GOALS,
