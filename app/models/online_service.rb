@@ -28,6 +28,8 @@
 require "thumbnail_of_video"
 
 class OnlineService < ApplicationRecord
+  PDF_LOGO_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/pdf_logo.png"
+
   VIDEO_SOLUTION = {
     key: "video",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
@@ -186,6 +188,8 @@ class OnlineService < ApplicationRecord
       case solution_type
       when "video"
         VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content && content["url"]
+      when "pdf"
+        PDF_LOGO_URL
       else
       end
   end
