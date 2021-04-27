@@ -19,6 +19,7 @@
 #
 
 class SocialUserMessage < ApplicationRecord
+  include SayHi
   belongs_to :social_user, touch: true
 
   scope :unread, -> { where(readed_at: nil) }
@@ -29,4 +30,10 @@ class SocialUserMessage < ApplicationRecord
     user: 2,
     user_reply_bot: 3
   }
+
+  def hi_message
+    if user?
+      "💭 New toruya user message, user: #{social_user.social_user_name}, content: #{raw_content}"
+    end
+  end
 end
