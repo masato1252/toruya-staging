@@ -20,6 +20,8 @@
 
 class SocialUserMessage < ApplicationRecord
   include SayHi
+  hi_channel_name "toruya_users_support"
+
   belongs_to :social_user, touch: true
 
   scope :unread, -> { where(readed_at: nil) }
