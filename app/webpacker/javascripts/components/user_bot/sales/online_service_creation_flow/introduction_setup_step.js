@@ -1,13 +1,19 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactPlayer from 'react-player';
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 
 const IntroductionSetupStep = ({step, next, prev, lastStep}) => {
-  const { props, dispatch, introduction_video, isReadyForPreview } = useGlobalContext()
+  const { props, dispatch, introduction_video, isReadyForPreview, selected_online_service } = useGlobalContext()
+
+  useEffect(() => {
+    if (!selected_online_service.introduction_video_required) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow centerize">

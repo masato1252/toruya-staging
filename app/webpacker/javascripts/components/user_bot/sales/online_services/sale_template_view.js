@@ -22,14 +22,16 @@ const SaleTemplateView = ({company_info, product, demo, template, template_varia
       product_name={product.product_name}
     />
 
-    <div>
-      <DemoEditButton demo={demo} jump={() => jump(8)} />
-      <OnlineServiceSolution
-        solution_type="video"
-        content={introduction_video}
-        light={false}
-      />
-    </div>
+    {introduction_video?.url && (
+      <div>
+        <DemoEditButton demo={demo} jump={() => jump(8)} />
+        <OnlineServiceSolution
+          solution_type="video"
+          content={introduction_video}
+          light={false}
+        />
+      </div>
+    )}
 
     <div>
       <DemoEditButton demo={demo} jump={() => jump(1)} />

@@ -34,36 +34,49 @@ class OnlineService < ApplicationRecord
     key: "video",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.description"),
-    enabled: true
+    enabled: true,
+    introduction_video_required: true
   }
 
   AUDIO_SOLUTION = {
     key: "audio",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.description"),
-    enabled: false
+    enabled: false,
+    introduction_video_required: false
   }
 
   PDF_SOLUTION = {
     key: "pdf",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
-    enabled: true
+    enabled: true,
+    introduction_video_required: false
   }
 
   QUESTIONNAIRE_SOLUTION = {
     key: "questionnaire",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.description"),
-    enabled: false
+    enabled: false,
+    introduction_video_required: false
   }
 
   DIAGNOSIS_SOLUTION = {
     key: "diagnosis",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.description"),
-    enabled: false
+    enabled: false,
+    introduction_video_required: false
   }
+
+  SOLUTIONS = [
+    VIDEO_SOLUTION,
+    AUDIO_SOLUTION,
+    PDF_SOLUTION,
+    QUESTIONNAIRE_SOLUTION,
+    DIAGNOSIS_SOLUTION
+  ]
 
   GOALS = [
     {
@@ -124,6 +137,10 @@ class OnlineService < ApplicationRecord
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required]
+  end
+
+  def introduction_video_required?
+    SOLUTIONS.find { |solution| solution_type == solution[:key] }[:introduction_video_required]
   end
 
   def start_time
