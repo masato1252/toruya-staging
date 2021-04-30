@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 class VisitAnalyticReportJob < ApplicationJob
   queue_as :low_priority
 
@@ -24,6 +26,6 @@ class VisitAnalyticReportJob < ApplicationJob
       end
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'sayhi', text: report.join("\n"))
+    SlackClient.send(channel: 'sayhi', text: report.join("\n"))
   end
 end

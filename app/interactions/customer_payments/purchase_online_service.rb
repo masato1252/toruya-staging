@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   object :sale_page
   object :customer
@@ -41,7 +43,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       payment.completed!
 
       if Rails.configuration.x.env.production?
-        Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] 🎉Sale Page #{sale_page.id} Stripe charge💰")
+        SlackClient.send(channel: 'development', text: "[OK] 🎉Sale Page #{sale_page.id} Stripe charge💰")
       end
     rescue Stripe::CardError => error
       payment.stripe_charge_details = error.json_body[:error]

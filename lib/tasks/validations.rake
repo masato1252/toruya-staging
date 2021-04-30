@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 namespace :validations do
   task :google_contact_api => :environment do
     begin
-      client = Slack::Web::Client.new
       user = User.find_by(email: "lake.ilakela@gmail.com")
       contact_group_id = user.contact_groups.connected.first.id
       rank_id = user.ranks.first.id
@@ -20,9 +21,9 @@ namespace :validations do
       Customers::Delete.run!(customer: updated_customer, soft_delete: false)
       puts "Done. validations:google_contact_api"
 
-      client.chat_postMessage(channel: 'development', text: "[OK] Google Contact Api Test successfully")
+      SlackClient.send(channel: 'development', text: "[OK] Google Contact Api Test successfully")
     rescue => e
-      client.chat_postMessage(channel: 'development', text: "[ALERTING] Google Contact Api Test failed")
+      SlackClient.send(channel: 'development', text: "[ALERTING] Google Contact Api Test failed")
       Rollbar.error(e)
       raise e
     end

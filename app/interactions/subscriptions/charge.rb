@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 module Subscriptions
   class Charge < ActiveInteraction::Base
     object :user
@@ -52,7 +54,7 @@ module Subscriptions
           charge.completed!
 
           if Rails.configuration.x.env.production?
-            Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] 🎉Subscription Stripe charge💰")
+            SlackClient.send(channel: 'development', text: "[OK] 🎉Subscription Stripe charge user: #{user.id} 💰")
           end
         rescue Stripe::CardError => error
           charge.stripe_charge_details = error.json_body[:error]

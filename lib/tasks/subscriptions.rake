@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 namespace :subscriptions do
   task :charge => :environment do
     today = Subscription.today
@@ -8,7 +10,7 @@ namespace :subscriptions do
       SubscriptionChargeJob.perform_later(subscription)
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge task") if Rails.configuration.x.env.production?
+    SlackClient.send(channel: 'development', text: "[OK] subscription charge task") if Rails.configuration.x.env.production?
   end
 
   task :charge_reminder => :environment do
@@ -22,7 +24,7 @@ namespace :subscriptions do
       )
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription charge reminder task") if Rails.configuration.x.env.production?
+    SlackClient.send(channel: 'development', text: "[OK] subscription charge reminder task") if Rails.configuration.x.env.production?
   end
 
   task :trial_member_reminder => :environment do
@@ -43,6 +45,6 @@ namespace :subscriptions do
       end
     end
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
+    SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
   end
 end

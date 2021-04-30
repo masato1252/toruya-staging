@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'platform-api'
+require "slack_client"
 
 namespace :tools do
   task :stop_staging_scheduler do
@@ -19,7 +20,7 @@ namespace :tools do
     heroku = PlatformAPI.connect_oauth(ENV['HEROKU_OAUTH_TOKEN'])
     heroku.dyno.restart("toruya-production", "web.1")
 
-    Slack::Web::Client.new.chat_postMessage(channel: 'development', text: "[OK] restart dyno") if Rails.configuration.x.env.production?
+    SlackClient.send(channel: 'development', text: "[OK] restart dyno") if Rails.configuration.x.env.production?
   end
 
   task :clean_track_data => :environment do
