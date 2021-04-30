@@ -103,6 +103,7 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
     setIdentificationCode(response.data.identification_code)
     setAskingIdentificationCode(false)
     askIdentificationCodeCall = null;
+    document.getElementById("booking-code").focus();
 
     if (errors) setAskingIdentificationCode(errors.message)
   }
@@ -118,6 +119,7 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
             {message.booking_code_message}
           </div>
           <input
+            id="booking-code"
             className="booking-code"
             placeholder="012345"
             type="tel"
