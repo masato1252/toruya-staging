@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: social_messages
@@ -13,6 +12,8 @@
 #  updated_at         :datetime         not null
 #  readed_at          :datetime
 #  message_type       :integer          default("bot")
+#  schedule_at        :datetime
+#  sent_at            :datetime
 #
 # Indexes
 #

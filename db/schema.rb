@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_19_025345) do
+ActiveRecord::Schema.define(version: 2021_04_30_052825) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -724,6 +724,8 @@ ActiveRecord::Schema.define(version: 2021_04_19_025345) do
     t.datetime "updated_at", null: false
     t.datetime "readed_at"
     t.integer "message_type", default: 0
+    t.datetime "schedule_at"
+    t.datetime "sent_at"
     t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
   end
 

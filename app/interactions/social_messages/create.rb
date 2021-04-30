@@ -10,6 +10,7 @@ module SocialMessages
     string :content
     boolean :readed
     integer :message_type
+    time :schedule_at, default: nil
     boolean :send_line, default: true
 
     def execute
@@ -65,7 +66,11 @@ module SocialMessages
         # end
       elsif !Rails.env.development? && send_line
         # From staff or bot
-        LineClient.send(social_customer, content)
+        if schedule_at
+          SocialMessages::Send.perform_at(schedule_at: schedule_at, social_message: message)
+        else
+          SocialMessages::Send.run(social_message: message)
+        end
       end
 
       message

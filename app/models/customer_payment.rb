@@ -8,7 +8,7 @@
 #  amount_currency       :string
 #  product_id            :integer
 #  product_type          :string
-#  state                 :integer          default(0), not null
+#  state                 :integer          default("active"), not null
 #  charge_at             :datetime
 #  expired_at            :datetime
 #  manual                :boolean          default(FALSE), not null

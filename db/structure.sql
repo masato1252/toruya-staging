@@ -1973,7 +1973,9 @@ CREATE TABLE public.social_messages (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     readed_at timestamp without time zone,
-    message_type integer DEFAULT 0
+    message_type integer DEFAULT 0,
+    schedule_at timestamp without time zone,
+    sent_at timestamp without time zone
 );
 
 
@@ -4389,6 +4391,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210414010243'),
 ('20210416033009'),
 ('20210416094449'),
-('20210419025345');
+('20210419025345'),
+('20210430052825');
 
 
