@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "translator"
+
 module Notifiers
   module OnlineServices
     class Purchased < Base
