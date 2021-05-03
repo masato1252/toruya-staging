@@ -60,6 +60,10 @@ $message_size: 8px;
     .staff > .message-content {
       background-color: $line-self-message;
       color: $black;
+
+      &.unsend {
+        opacity: 0.3;
+      }
     }
 
     .customer > .message-content {

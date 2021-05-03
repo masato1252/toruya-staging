@@ -244,6 +244,21 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  delete_message: ({user_id, customer_id, message_id}) => {
+    return request({
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.delete_message_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        user_id,
+        customer_id,
+        message_id
+      },
+      responseType: "json"
+    })
+  },
 }
 
 const PaymentServices = {

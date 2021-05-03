@@ -19,18 +19,25 @@ const CustomerMessageForm = () => {
     setSubmitting(false)
 
     if (response?.data?.status == "successful") {
-      dispatch({
-        type: "APPEND_NEW_MESSAGE",
-        payload: {
-          message: {
-            message_type: "staff",
-            text: ref.current.value,
-            formatted_created_at: moment(Date.now()).format("llll")
+      if (response?.data?.redirect_to) {
+        window.location.replace(response?.data?.redirect_to)
+      }
+      else {
+        dispatch({
+          type: "APPEND_NEW_MESSAGE",
+          payload: {
+            message: {
+              message_type: "staff",
+              text: ref.current.value,
+              formatted_created_at: moment(Date.now()).format("llll"),
+              formatted_schedule_at: schedule_at ? moment(schedule_at).format("llll") : null,
+              sent: !schedule_at
+            }
           }
-        }
-      })
+        })
 
-      ref.current.value = null;
+        ref.current.value = null;
+      }
     }
   }
 

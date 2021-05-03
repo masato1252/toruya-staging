@@ -137,7 +137,17 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
     )
 
-    render json: json_response(outcome)
+    render json: json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: "customer_messages") : nil})
+  end
+
+  def delete_message
+    super_user.social_account.social_messages.find(params[:message_id]).destroy
+    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+
+    render json: {
+      status: "successful",
+      redirect_to: SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: "customer_messages")
+    }
   end
 
   def find_duplicate_customers
