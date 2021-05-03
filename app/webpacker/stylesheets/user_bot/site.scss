@@ -47,7 +47,6 @@ body {
   }
 
   @include media-breakpoint-up(tablet) {
-    width: 500px;
     margin-top: 36px;
   }
 }
