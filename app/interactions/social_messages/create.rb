@@ -20,6 +20,7 @@ module SocialMessages
         staff: staff,
         raw_content: content,
         readed_at: readed ? Time.zone.now : nil,
+        schedule_at: schedule_at,
         message_type: message_type
       )
 

@@ -229,7 +229,7 @@ const CustomerServices = {
       responseType: "json"
     })
   },
-  reply_message: ({customer_id, message}) => {
+  reply_message: ({customer_id, message, schedule_at}) => {
     return request({
       method: "POST",
       headers: {
@@ -239,6 +239,7 @@ const CustomerServices = {
       data: {
         customer_id,
         message,
+        schedule_at
       },
       responseType: "json"
     })

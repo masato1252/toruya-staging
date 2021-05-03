@@ -133,7 +133,8 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       staff: current_user_staff,
       content: params[:message],
       readed: true,
-      message_type: SocialMessage.message_types[:staff]
+      message_type: SocialMessage.message_types[:staff],
+      schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
     )
 
     render json: json_response(outcome)
