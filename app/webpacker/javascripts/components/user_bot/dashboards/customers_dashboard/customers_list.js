@@ -90,12 +90,7 @@ const UserBotCustomersList = ({}) => {
   }, [])
 
   if (view !== "customers_list") {
-    return (
-      <div className="customers-dashboard">
-        <div className="customers-list-dashboard">
-        </div>
-      </div>
-    )
+    return <></>
   }
 
   return (

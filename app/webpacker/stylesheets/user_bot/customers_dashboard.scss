@@ -121,7 +121,7 @@
 $indent: 12px;
 
 .customer-view {
-  padding-bottom:  $bar-height * 2;
+  padding-bottom:  $bar-height;
 
   .customer-basic-info {
     position: relative;
@@ -256,6 +256,7 @@ $indent: 12px;
     textarea {
       margin: 12px;
       width: 80%;
+      min-height: 100px;
     }
   }
 }

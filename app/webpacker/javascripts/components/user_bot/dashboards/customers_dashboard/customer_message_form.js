@@ -41,7 +41,7 @@ const CustomerMessageForm = () => {
         <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
       </div>
       <div className="text-align-left">
-        <div className="margin-around m10">
+        <div className="margin-around m10 mt-0">
           <label>
             <input
               type="radio" name="schedule_at"
