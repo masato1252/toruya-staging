@@ -53,6 +53,13 @@ $message_size: 8px;
       white-space: pre-wrap;
     }
 
+    .message-icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row-reverse;
+    }
+
     .bot > .message-content {
       background-color: $palette-color4;
     }
@@ -60,6 +67,10 @@ $message_size: 8px;
     .staff > .message-content {
       background-color: $line-self-message;
       color: $black;
+
+      &.unsend {
+        background-color: rgba(176,247,132, 0.3)
+      }
     }
 
     .customer > .message-content {

@@ -10,21 +10,26 @@ module SocialMessages
     string :content
     boolean :readed
     integer :message_type
-    boolean :send_line, default: true
+    time :schedule_at, default: nil
+    boolean :send_line, default: true # false is for recording some behavior, usually do this with some bot flex messages
 
     def execute
+      is_message_from_customer = message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
+
       message = SocialMessage.create(
         social_account: social_customer.social_account,
         social_customer: social_customer,
         staff: staff,
         raw_content: content,
         readed_at: readed ? Time.zone.now : nil,
+        sent_at: is_message_from_customer || !send_line ? Time.current : nil,
+        schedule_at: schedule_at,
         message_type: message_type
       )
 
       if message.errors.present?
         errors.merge!(message.errors)
-      elsif message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
+      elsif is_message_from_customer
         # Switch user rich menu to tell users there are new messages
         if !readed && message_type == SocialMessage.message_types[:customer] && social_customer.customer
           UserBotLines::Actions::SwitchRichMenu.run(
@@ -65,7 +70,11 @@ module SocialMessages
         # end
       elsif !Rails.env.development? && send_line
         # From staff or bot
-        LineClient.send(social_customer, content)
+        if schedule_at
+          SocialMessages::Send.perform_at(schedule_at: schedule_at, social_message: message)
+        else
+          SocialMessages::Send.run(social_message: message)
+        end
       end
 
       message
