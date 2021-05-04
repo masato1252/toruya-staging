@@ -15,6 +15,7 @@ const MenuEdit =({props}) => {
       ...props.menu,
     }
   });
+  const online = watch("online")
 
   const onSubmit = async (data) => {
     if (formState.isSubmitting) return;
@@ -52,6 +53,28 @@ const MenuEdit =({props}) => {
             {I18n.t("common.minute")}
           </div>
         );
+        break;
+      case "online":
+        return (
+          <div className="field-row">
+            <Controller
+              control={control}
+              name='online'
+              defaultValue={online}
+              render={({ onChange, value }) => (
+                <SwitchButton
+                  offWord="Local"
+                  onWord="Online"
+                  name="online"
+                  checked={value.toString() === 'true'}
+                  onChange={() => {
+                    onChange(value === 'true' ? 'false' : 'true')
+                  }}
+                />
+              )}
+            />
+          </div>
+        )
         break;
       case "menu_shops":
         return (

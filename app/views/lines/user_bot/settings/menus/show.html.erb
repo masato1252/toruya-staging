@@ -30,4 +30,6 @@
       <% end %>
     </div>
   <% end %>
+  <div class="field-header"><%= "Online" %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :online), title: @menu.online ? "Online" : "Local" %>
 </div>

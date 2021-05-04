@@ -11,6 +11,7 @@ module Menus
       integer :minutes, default: nil
       integer :interval, default: nil
       array :menu_shops, default: nil
+      boolean :online, default: nil
     end
 
     def execute
@@ -20,7 +21,7 @@ module Menus
         case update_attribute
         when "name"
           menu.update(name: attrs[:name], short_name: attrs[:short_name])
-        when "minutes", "interval"
+        when "minutes", "interval", "online"
           menu.update(attrs.slice(update_attribute))
         when "menu_shops"
           menu.transaction do
