@@ -88,6 +88,9 @@
   <%= link_to shops_lines_user_bot_settings_business_schedules_path, class: "field-row" do %>
     <span><%= t("user_bot.dashboards.settings.business_schedules.business_time") %></span><i class="fa fa-angle-right"></i>
   <% end %>
+  <%= link_to lines_user_bot_settings_menus_path, class: "field-row" do %>
+    <span><%= "Menus" %></span><i class="fa fa-angle-right"></i>
+  <% end %>
 
   <div class="bottom-navigation-bar centerize">
     <%= sprintf("%07d", current_user.id) %>

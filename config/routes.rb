@@ -113,8 +113,8 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :shops, only: [:index, :show, :update, :edit] do
-        end
+        resources :shops, only: [:index, :show, :update, :edit]
+        resources :menus, only: [:index, :show, :update, :edit]
       end
 
       resources :settings, only: [:index] do

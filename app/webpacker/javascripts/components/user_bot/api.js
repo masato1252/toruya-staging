@@ -459,6 +459,20 @@ const ShopServices = {
   },
 }
 
+const MenuServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_settings_menu_path(data['id'], {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 const SocialUserMessagesServices = {
   create: ({data}) => {
     return request({
@@ -488,5 +502,6 @@ export {
   OnlineServices,
   BusinessScheduleServices,
   ShopServices,
+  MenuServices,
   SocialUserMessagesServices
 }
