@@ -25,7 +25,7 @@ module Booking
       schedules = compose(CalendarSchedules::Create, rules: rules, date_range: date_range)
       available_booking_dates = []
 
-      booking_options = compose(
+      @booking_options = compose(
         BookingOptions::Prioritize,
         booking_options: shop.user.booking_options.where(id: booking_option_ids).includes(:menus)
       )
@@ -90,13 +90,18 @@ module Booking
 
     private
 
+    def booking_options_updated_at
+      @booking_options_updated_at ||= @booking_options.map(&:updated_at)
+    end
+
     def cache_key(date)
       [
         booking_page,
         date,
         shop.reservations.in_date(date).order("updated_at").last,
         CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids).order("updated_at").last,
-        BusinessSchedule.where(shop: shop).order("updated_at").last
+        BusinessSchedule.where(shop: shop).order("updated_at").last,
+        booking_options_updated_at
       ]
     end
 

@@ -67,6 +67,9 @@ module Menus
 
         if menu.errors.present?
           errors.merge!(menu.errors)
+        else
+          # XXX: Update the cache key that used in Booking::Calendar
+          BookingOption.where(id: BookingOptionMenu.where(menu: menu.id).pluck(:booking_option_id)).update_all(updated_at: Time.current)
         end
       end
 
