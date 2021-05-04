@@ -3,6 +3,7 @@ import moment from "moment-timezone";
 
 import { useGlobalContext } from "context/user_bots/customers_dashboard/global_state";
 import { CustomerServices } from "components/user_bot/api"
+import I18n from 'i18n-js/index.js.erb';
 
 const CustomerMessageForm = () => {
   moment.locale('ja');
@@ -57,7 +58,7 @@ const CustomerMessageForm = () => {
                 () => setScheduleAt(null)
               }
             />
-            Send Now
+            {I18n.t("common.send_now_label")}
           </label>
         </div>
         <div className="margin-around m10">

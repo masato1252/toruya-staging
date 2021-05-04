@@ -2,6 +2,7 @@
 
 import React from "react";
 import { CustomerServices } from "components/user_bot/api"
+import I18n from 'i18n-js/index.js.erb';
 
 const Message = ({message}) => {
   return (
@@ -20,7 +21,7 @@ const Message = ({message}) => {
           onClick={async () => {
             if (message.sent) return;
 
-            if (confirm("Are you sure to delete this message?")) {
+            if (confirm(I18n.t("common.message_delete_confirmation_message"))) {
               const [error, response] = await CustomerServices.delete_message({ user_id: message.user_id, customer_id: message.toruya_customer_id, message_id: message.id })
               window.location.replace(response?.data?.redirect_to)
             }

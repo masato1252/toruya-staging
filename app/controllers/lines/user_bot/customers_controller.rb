@@ -141,13 +141,13 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
   end
 
   def delete_message
-    message = super_user.social_account.social_messages.find(params[:message_id])
+    message = current_user.social_account.social_messages.find(params[:message_id])
 
     unless message.sent_at
       message.destroy
     end
 
-    customer = super_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
 
     render json: {
       status: "successful",

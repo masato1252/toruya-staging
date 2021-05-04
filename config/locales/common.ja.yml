@@ -154,3 +154,5 @@ ja:
     support_content: サポートチームがお手伝いしますので、お困りの内容をお聞かせください。
     support_btn: サポートを要請する
     need_support_btn: サポートが必要ですか？
+    send_now_label: 今すぐ送信
+    message_delete_confirmation_message: このメッセージを削除してよろしいですか？
