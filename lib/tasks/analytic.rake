@@ -8,7 +8,7 @@ namespace :analytic do
     period = start_time..end_time
 
     # Only reports on Monday
-    if Time.now.wday == 1
+    if Time.now.in_time_zone('Tokyo').wday == 1
       # Send report of previous week
       uniq_visits = Ahoy::Visit.where(started_at: period).where.not(owner_id: nil).select(:owner_id).distinct(:owner_id)
       uniq_visits.each do |visit|
