@@ -2,7 +2,7 @@
 
 module Subscriptions
   class Bonus < ActiveInteraction::Base
-    object :user
+    object :subscription
     object :plan, default: nil
     integer :rank, default: nil
     date :expired_date
@@ -11,10 +11,10 @@ module Subscriptions
     validate :validate_expired_date
 
     def execute
-      subscription = user.subscription
       subscription.with_lock do
         order_id = SecureRandom.hex(8).upcase
 
+        user = subscription.user
         charge = user.subscription_charges.create!(
           plan: plan || subscription.plan,
           rank: rank || subscription.rank,
