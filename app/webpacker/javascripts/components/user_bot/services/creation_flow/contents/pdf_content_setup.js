@@ -11,9 +11,9 @@ const VideoContentSetup = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">{"What is pdf provide"}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}</h3>
       <input
-        placeholder={"What is pdf"}
+        placeholder={I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}
         value={content?.url || ""}
         onChange={(event) =>
             dispatch({
@@ -30,7 +30,7 @@ const VideoContentSetup = ({next, step}) => {
         className="extend with-border"
       />
       <p className="margin-around text-align-left">
-        {"pdf hint"}
+        {I18n.t("user_bot.dashboards.online_service_creation.pdf_hint")}
       </p>
 
       {content?.url && (
