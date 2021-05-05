@@ -170,7 +170,7 @@ class User < ApplicationRecord
   end
 
   def trial_expired_date
-    @trial_expired_date ||= created_at.advance(days: Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
+    @trial_expired_date ||= created_at.advance(days: subscription.trial_days || Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
   end
 
   def valid_shop_ids

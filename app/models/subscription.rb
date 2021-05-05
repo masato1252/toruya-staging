@@ -13,6 +13,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  rank               :integer          default(0)
+#  trial_days         :integer
 #
 # Indexes
 #
