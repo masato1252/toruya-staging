@@ -16,6 +16,10 @@ class SocialUserMessageSerializer
     message.readed_at.present?
   end
 
+  attribute :sent do |message|
+    true
+  end
+
   attribute :formatted_created_at do |message|
     I18n.l(message.created_at, format: :long_date_with_wday)
   end
