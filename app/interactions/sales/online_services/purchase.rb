@@ -46,7 +46,7 @@ module Sales
           ::LineClient.flex(
             social_customer,
             LineMessages::FlexTemplateContainer.template(
-              altText: I18n.t("notifier.online_service.purchased.message", service_title: sale_page.product.name),
+              altText: I18n.t("notifier.online_service.purchased.#{sale_page.product.solution_type}.message", service_title: sale_page.product.name),
               contents: compose(Templates::OnlineService, sale_page: sale_page, online_service: sale_page.product, social_customer: social_customer)
             )
           )
