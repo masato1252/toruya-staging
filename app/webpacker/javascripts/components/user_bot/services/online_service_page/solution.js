@@ -23,7 +23,16 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
       );
     case "pdf":
       return (
-        <a href={content.url}>PDF Link</a>
+        <div>
+          <p className="desc margin-around">
+            {I18n.t("online_service_page.please_download_pdf_here")}
+          </p>
+          <a
+            className="btn btn-tarco btn-icon"
+            href={content.url}>
+            <i class="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
+          </a>
+        </div>
       );
     default:
       return <></>
