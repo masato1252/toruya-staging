@@ -326,6 +326,8 @@ ja:
         what_is_this_video_provide: どの動画をサービス提供しますか？
         what_is_video_url: YouTube等のURLを入力
         video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
+        what_is_pdf_url: どのPDFをサービス提供しますか？
+        pdf_hint: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
         what_is_service_name: サービス名は何ですか？
         this_is_company_info: 以下の店舗のサービスとして作成します
         edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。

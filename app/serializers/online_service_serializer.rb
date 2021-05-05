@@ -24,4 +24,8 @@ class OnlineServiceSerializer
   attribute :charge_required do |service|
     service.charge_required?
   end
+
+  attribute :introduction_video_required do |service|
+    service.introduction_video_required?
+  end
 end

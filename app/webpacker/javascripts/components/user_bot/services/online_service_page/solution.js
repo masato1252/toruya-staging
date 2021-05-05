@@ -5,10 +5,10 @@ import ReactPlayer from 'react-player';
 import I18n from 'i18n-js/index.js.erb';
 
 const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
+  if (!content?.url) return <></>
+
   switch (solution_type) {
     case "video":
-      if (!content?.url) return <></>
-
       return (
         <div className='video-player-wrapper'>
           <ReactPlayer
@@ -19,6 +19,19 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
             controls={true}
             {...rest}
           />
+        </div>
+      );
+    case "pdf":
+      return (
+        <div>
+          <p className="desc margin-around">
+            {I18n.t("online_service_page.please_download_pdf_here")}
+          </p>
+          <a
+            className="btn btn-tarco btn-icon"
+            href={content.url}>
+            <i class="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
+          </a>
         </div>
       );
     default:

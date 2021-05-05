@@ -16,20 +16,7 @@ class Lines::Actions::ActiveOnlineServices < ActiveInteraction::Base
       sale_page = relation.sale_page
       product = relation.online_service
 
-      LineMessages::FlexTemplateContent.content7(
-        picture_url: product.thumbnail_url || sale_page.introduction_video_url,
-        content_url: Rails.application.routes.url_helpers.online_service_url(slug: product.slug),
-        title1: product.name,
-        label: I18n.t("common.responsible_by"),
-        context: sale_page.staff.name,
-        action_templates: [
-          LineActions::Uri.new(
-            label: I18n.t("action.watch"),
-            url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
-            btn: "primary"
-          )
-        ].map(&:template)
-      )
+      compose(Templates::OnlineService, sale_page: sale_page, online_service: product, social_customer: social_customer)
     end
 
     if contents.blank?

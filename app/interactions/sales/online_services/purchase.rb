@@ -47,20 +47,7 @@ module Sales
             social_customer,
             LineMessages::FlexTemplateContainer.template(
               altText: I18n.t("notifier.online_service.purchased.message", service_title: sale_page.product.name),
-              contents: LineMessages::FlexTemplateContent.content7(
-                picture_url: sale_page.product.thumbnail_url || sale_page.introduction_video_url,
-                content_url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug),
-                title1: sale_page.product.name,
-                label: I18n.t("common.responsible_by"),
-                context: sale_page.staff.name,
-                action_templates: [
-                  LineActions::Uri.new(
-                    label: I18n.t("action.watch"),
-                    url: Rails.application.routes.url_helpers.online_service_url(slug: sale_page.product.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
-                    btn: "primary"
-                  )
-                ].map(&:template)
-              )
+              contents: compose(Templates::OnlineService, sale_page: sale_page, online_service: sale_page.product, social_customer: social_customer)
             )
           )
         end

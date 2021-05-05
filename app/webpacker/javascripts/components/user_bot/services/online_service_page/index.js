@@ -27,27 +27,33 @@ const OnlineServicePage = ({company_info, name, solution_type, content, upsell_s
             light={light}
           />
         </div>
-        <h3 className="margin-around">
-          {upsell_sale_page?.label}
-          {upsell_sale_page && <DemoEditButton demo={demo} jump={() => jump(5)} />}
-        </h3>
-        {upsell_sale_page?.end_at && (
-          <div className="upsell">
-            <p className="margin-around">
-              {I18n.t("online_service_page.special_price_time")}
-            </p>
-            <Countdown end_at={upsell_sale_page.end_at} />
-          </div>
-        )}
-
-        {upsell_sale_page?.slug && (
-          <div className="margin-around">
-            <a href={Routes.sale_page_url(upsell_sale_page?.slug)} className="btn btn-tarco btn-icon" target="_blank">
-              <i className="fa fa-credit-card"></i>{I18n.t("online_service_page.register_now")}
-            </a>
-          </div>
-        )}
       </div>
+      {
+        upsell_sale_page && (
+          <div className="centerize">
+            <h3 className="margin-around">
+              {upsell_sale_page.label}
+              <DemoEditButton demo={demo} jump={() => jump(5)} />
+            </h3>
+            {upsell_sale_page.end_at && (
+              <div className="upsell">
+                <p className="margin-around">
+                  {I18n.t("online_service_page.special_price_time")}
+                </p>
+                <Countdown end_at={upsell_sale_page.end_at} />
+              </div>
+            )}
+
+            {upsell_sale_page.slug && (
+              <div className="margin-around">
+                <a href={Routes.sale_page_url(upsell_sale_page?.slug)} className="btn btn-tarco btn-icon" target="_blank">
+                  <i className="fa fa-credit-card"></i>{I18n.t("online_service_page.register_now")}
+                </a>
+              </div>
+            )}
+          </div>
+        )
+      }
     </div>
   )
 }

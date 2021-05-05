@@ -77,6 +77,8 @@ ja:
     special_price_time: 特別価格の購入期限まで
     register_now: 今すぐ登録する
     under_construction: 有料販売の準備中です。 詳細は販売元にお問合せください。
+    please_download_pdf_here: こちらからPDFをダウンロードしてください。
+    download: ダウンロードする
   online_service_purchases:
     service_content: サービスコンテンツを
     please_check_in_line: LINEでお届けしましたので<br>ご確認ください
