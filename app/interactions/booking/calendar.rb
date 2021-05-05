@@ -50,7 +50,7 @@ module Booking
               special_date_end_at = Time.zone.parse("#{json_parsed_date[END_AT_DATE_PART]}-#{json_parsed_date[END_AT_TIME_PART]}")
 
               Rails.cache.fetch(cache_key(special_date)) do
-                test_available_booking_date(booking_options, special_date, special_date_start_at, special_date_end_at)
+                test_available_booking_date(@booking_options, special_date, special_date_start_at, special_date_end_at)
               end
             end.compact
           # else
@@ -69,14 +69,14 @@ module Booking
           # if true || Rails.env.test?
             available_working_dates.map do |date|
               Rails.cache.fetch(cache_key(date)) do
-                test_available_booking_date(booking_options, date)
+                test_available_booking_date(@booking_options, date)
               end
             end.compact
           # else
           #   # XXX: Parallel doesn't work properly in test mode,
           #   # some data might be stay in transaction of test thread and would lost in test while using Parallel.
           #   Parallel.map(available_working_dates) do |date|
-          #     test_available_booking_date(booking_options, date)
+          #     test_available_booking_date(@booking_options, date)
           #   end.compact
           # end
       end
