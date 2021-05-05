@@ -31,7 +31,6 @@ module Subscriptions
 
         subscription.plan = plan
         subscription.rank = rank
-        subscription.next_plan = nil
         subscription.recurring_day = expired_date.day
         subscription.expired_date = expired_date
         subscription.save!
