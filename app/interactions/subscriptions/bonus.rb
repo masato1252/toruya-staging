@@ -3,8 +3,8 @@
 module Subscriptions
   class Bonus < ActiveInteraction::Base
     object :subscription
-    object :plan
-    integer :rank
+    object :plan, default: nil
+    integer :rank, default: nil
     date :expired_date
     string :reason
 
@@ -16,8 +16,8 @@ module Subscriptions
 
         user = subscription.user
         charge = user.subscription_charges.create!(
-          plan: plan,
-          rank: rank,
+          plan: plan || subscription.plan,
+          rank: rank || subscription.rank,
           amount: Money.zero,
           charge_date: Subscription.today,
           expired_date: expired_date,
@@ -29,9 +29,8 @@ module Subscriptions
           }
         )
 
-        subscription.plan = plan
-        subscription.rank = rank
-        subscription.next_plan = nil
+        subscription.plan = plan if plan
+        subscription.rank = rank if rank
         subscription.recurring_day = expired_date.day
         subscription.expired_date = expired_date
         subscription.save!
