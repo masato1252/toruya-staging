@@ -23,14 +23,9 @@ class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDas
   def demo
     booking_page = super_user.booking_pages.find(params[:booking_page_id])
 
-    custom_message_content = Translator.perform(params[:template], {
-      customer_name: current_user.name,
-      shop_name: booking_page.shop.display_name,
-      shop_phone_number: booking_page.shop.phone_number,
-      booking_time: "#{I18n.l(Time.current, format: :long_date_with_wday)} ~ #{I18n.l(Time.current.advance(hours: 1), format: :time_only)}"
-    })
+    message = CustomMessages::Update.run!(service: booking_page, template: params[:template], scenario: params[:scenario])
+    message.demo_message_for_owner
 
-    ::LineClient.send(current_user.social_user, custom_message_content)
     head :ok
   end
 end
