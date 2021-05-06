@@ -489,6 +489,31 @@ const SocialUserMessagesServices = {
   },
 }
 
+const CustomMessageServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.update_scenario_lines_user_bot_booking_page_custom_messages_path({booking_page_id: data.service_id, scenario: data.scenario, format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+  demo: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.demo_lines_user_bot_booking_page_custom_messages_path({booking_page_id: data.service_id}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -504,5 +529,6 @@ export {
   OnlineServices,
   BusinessScheduleServices,
   ShopServices,
-  SocialUserMessagesServices
+  SocialUserMessagesServices,
+  CustomMessageServices,
 }

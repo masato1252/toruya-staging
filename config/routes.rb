@@ -166,6 +166,14 @@ Rails.application.routes.draw do
           delete "/booking_options/:booking_option_id", action: "delete_option", as: :delete_option
           get :preview_modal
         end
+
+        resources :custom_messages, only: [:index], module: "booking_pages" do
+          collection do
+            get "/:scenario", action: "edit_scenario", as: :edit_scenario
+            put "/:scenario", action: "update_scenario", as: :update_scenario
+            post :demo
+          end
+        end
       end
 
       resources :booking_options do
