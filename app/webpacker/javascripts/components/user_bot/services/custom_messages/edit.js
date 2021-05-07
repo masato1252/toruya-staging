@@ -60,15 +60,13 @@ const CustomMessageEdit =({props}) => {
 
   const renderCorrespondField = () => {
     switch(props.scenario) {
-      case "booking_page_booked":
+      case "online_service_purchased":
         return (
           <>
             <h3 className="field-row">Personalize keyword</h3>
             <div className="field-row flex-start">
               <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> Customer Name </button>
-              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{shop_name}") }}> Shop Name </button>
-              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{shop_phone_number}") }}> Shop phone number</button>
-              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{booking_time}") }}> Reservation time </button>
+              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> Service Title </button>
             </div>
             <div className="field-row">
               <textarea
@@ -105,7 +103,7 @@ const CustomMessageEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_booking_page_custom_messages_path(props.message.service_id)}>
+          <a href={Routes.lines_user_bot_service_custom_messages_path(props.message.service_id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }

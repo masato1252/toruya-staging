@@ -143,6 +143,19 @@ Rails.application.routes.draw do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
+
+        resources :custom_messages, only: [:index], module: "services" do
+          collection do
+            get "/:scenario", action: "edit_scenario", as: :edit_scenario
+          end
+        end
+      end
+
+      resources :custom_messages, only: [] do
+        collection do
+          put :update
+          post :demo
+        end
       end
 
       resources :sales, only: [:new, :index, :show, :edit, :update, :destroy] do
@@ -170,8 +183,6 @@ Rails.application.routes.draw do
         resources :custom_messages, only: [:index], module: "booking_pages" do
           collection do
             get "/:scenario", action: "edit_scenario", as: :edit_scenario
-            put "/:scenario", action: "update_scenario", as: :update_scenario
-            post :demo
           end
         end
       end

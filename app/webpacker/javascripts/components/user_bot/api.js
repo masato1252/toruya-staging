@@ -496,7 +496,7 @@ const CustomMessageServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken()
       },
-      url: Routes.update_scenario_lines_user_bot_booking_page_custom_messages_path({booking_page_id: data.service_id, scenario: data.scenario, format: "json"}),
+      url: Routes.lines_user_bot_custom_messages_path({format: "json"}),
       data: data,
       responseType: "json"
     })
@@ -507,7 +507,7 @@ const CustomMessageServices = {
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
       },
-      url: Routes.demo_lines_user_bot_booking_page_custom_messages_path({booking_page_id: data.service_id}),
+      url: Routes.demo_lines_user_bot_custom_messages_path(),
       data: data,
       responseType: "json"
     })
