@@ -45,8 +45,6 @@ const splitChunksConfig = {
 
 // environment.splitChunks()
 environment.config.merge(splitChunksConfig)
-environment.config.set('output.filename', 'js/[name].js')
-environment.config.set('output.chunkFilename', 'js/[name].js')
 environment.loaders.prepend('erb', erb)
 
 module.exports = environment
