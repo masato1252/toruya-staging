@@ -1,0 +1,10 @@
+<%= react_component("user_bot/settings/profiles/edit", {
+  props: {
+    profile: @profile.attributes,
+    attribute: params[:attribute],
+    previous_path: @previous_path,
+    title: @title
+  }
+},
+{ camelize_props: false }
+) %>
