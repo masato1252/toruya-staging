@@ -114,7 +114,11 @@ Rails.application.routes.draw do
         end
 
         resources :shops, only: [:index, :show, :update, :edit]
-        resources :menus, only: [:index, :show, :update, :edit]
+        resources :menus, only: [:index, :show, :update, :edit] do
+          collection do
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
+        end
       end
 
       resources :settings, only: [:index] do
