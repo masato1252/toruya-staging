@@ -284,7 +284,7 @@ const DemoEditButton = ({demo, jump}) => {
   )
 }
 
-const SwitchButton = ({checked, onChange, name, offWord, onWord}) => {
+const SwitchButton = ({checked, onChange, name, offWord, onWord, nosize}) => {
   return (
     <>
       <input
@@ -294,7 +294,7 @@ const SwitchButton = ({checked, onChange, name, offWord, onWord}) => {
         checked={checked}
         onChange={onChange}
       />
-      <label className="checkbox-button-label" htmlFor={name} data-before-content={offWord} data-after-content={onWord}></label>
+      <label className={`checkbox-button-label ${nosize ? "nosize" : ""}`} htmlFor={name} data-before-content={offWord} data-after-content={onWord}></label>
     </>
   )
 }

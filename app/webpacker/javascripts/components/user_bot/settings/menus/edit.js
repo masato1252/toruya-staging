@@ -63,10 +63,11 @@ const MenuEdit =({props}) => {
               defaultValue={online}
               render={({ onChange, value }) => (
                 <SwitchButton
-                  offWord="Local"
-                  onWord="Online"
+                  offWord={I18n.t("user_bot.dashboards.settings.menu.methods.local")}
+                  onWord={I18n.t("user_bot.dashboards.settings.menu.methods.online")}
                   name="online"
                   checked={value.toString() === 'true'}
+                  nosize={true}
                   onChange={() => {
                     onChange(value === 'true' ? 'false' : 'true')
                   }}
@@ -82,42 +83,50 @@ const MenuEdit =({props}) => {
             {menu_shops_options.map((option) => {
               return (
                 <div className="field-row flex-start" key={option.shop_id}>
-                  <SwitchButton
-                    offWord="OFF"
-                    onWord="ON"
-                    checked={option.checked}
-                    name={option.name}
-                    onChange={() => {
-                      setMenuShops((menu_options) => {
-                        const new_menu_options = menu_options.map((menu_option) => {
-                          return menu_option.shop_id == option.shop_id ? {...menu_option, checked: !menu_option.checked} : menu_option
-                        })
-
-                        return new_menu_options
-                      })
-                    }}
-                  />
-                  {option.name}
-
-                  {option.checked && (
-                    <input
-                      type="tel"
-                      value={option.max_seat_number}
-                      onChange={(event) => {
-                        const val = event.target.value;
+                  <div className="flex justify-between w-full">
+                    {option.name}
+                    <SwitchButton
+                      offWord="OFF"
+                      onWord="ON"
+                      checked={option.checked}
+                      name={option.name}
+                      onChange={() => {
                         setMenuShops((menu_options) => {
                           const new_menu_options = menu_options.map((menu_option) => {
-                            return menu_option.shop_id == option.shop_id ? {...menu_option, max_seat_number: val} : menu_option
+                            return menu_option.shop_id == option.shop_id ? {...menu_option, checked: !menu_option.checked} : menu_option
                           })
 
                           return new_menu_options
                         })
                       }}
                     />
+                  </div>
+
+                  {option.checked && (
+                    <div>
+                      {I18n.t("user_bot.dashboards.settings.menu.full_seat_number_title")}
+                      <input
+                        type="tel"
+                        value={option.max_seat_number}
+                        onChange={(event) => {
+                          const val = event.target.value;
+                          setMenuShops((menu_options) => {
+                            const new_menu_options = menu_options.map((menu_option) => {
+                              return menu_option.shop_id == option.shop_id ? {...menu_option, max_seat_number: val} : menu_option
+                            })
+
+                            return new_menu_options
+                          })
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               )
             })}
+            <div className="field-row hint no-border margin-around justify-center">
+              <div className="centerize" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.settings.menu.form.hint") }} />
+            </div>
           </>
         )
     }

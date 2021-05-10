@@ -1,11 +1,13 @@
 <div class="settings-dashboard form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_menus_path, title: t("user_bot.dashboards.settings.shop.shop_info_label") %>
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.settings.menu.basic_settings") %></div>
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_menus_path, title: t("common.menu") %>
+  <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.menu.basic_settings") %></div>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.name") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :name) do %>
     <div>
       <%= @menu.name %><br />
+      <p class="desc">
       <%= @menu.short_name %>
+      </p>
     </div>
   <% end %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.menu.minutes") %></div>
@@ -20,16 +22,19 @@
       <%= @menu.interval %>
     </div>
   <% end %>
-  <div class="field-header"><%= "利用店舗 席数" %></div>
+  <div class="field-header"><%= t("user_bot.dashboards.settings.menu.menu_shops") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :menu_shops) do %>
     <div>
       <% @menu_shops.each do |menu_shop| %>
         <div class="dotdotdot">
-          <%= menu_shop.shop.display_name %> <span class="desc">席数<%= menu_shop.max_seat_number %></span>
+          <%= menu_shop.shop.display_name %>
+          <p class="desc">
+          <%= t("user_bot.dashboards.settings.menu.full_seat_number_title") %>: <%= menu_shop.max_seat_number %>
+          </p>
         </div>
       <% end %>
     </div>
   <% end %>
-  <div class="field-header"><%= "Online" %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :online), title: @menu.online ? "Online" : "Local" %>
+  <div class="field-header"><%= t("user_bot.dashboards.settings.menu.method") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_menu_path(id: @menu.id, attribute: :online), title: t("user_bot.dashboards.settings.menu.methods.#{@menu.online ? "online" : "local"}") %>
 </div>
