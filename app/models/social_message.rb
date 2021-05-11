@@ -27,6 +27,7 @@ class SocialMessage < ApplicationRecord
 
   scope :unread, -> { where(readed_at: nil) }
   scope :handleable, -> { includes(social_customer: :customer).where.not(social_customers: { customer_id: nil }) }
+  scope :ordered, -> { order("(CASE WHEN social_messages.sent_at IS NULL THEN social_messages.created_at ELSE social_messages.sent_at END) DESC, social_messages.id DESC")  }
 
   enum message_type: {
     bot: 0,
