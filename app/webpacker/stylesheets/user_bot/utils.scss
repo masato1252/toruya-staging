@@ -36,10 +36,24 @@ $line-margin: 20px;
   text-decoration: line-through;
 }
 
+
+/* Tailwindcss*/
 .flex {
   display: flex;
 }
 
 .justify-between {
   justify-content: space-between;
+}
+
+.bg-gray {
+  background-color: $basic-gray-background;
+}
+
+.rounded {
+  border-radius: 0.25em;
+}
+
+.p-6 {
+  padding: 1.5rem;
 }
