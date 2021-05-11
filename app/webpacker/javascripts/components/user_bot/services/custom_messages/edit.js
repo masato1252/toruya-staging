@@ -63,11 +63,8 @@ const CustomMessageEdit =({props}) => {
       case "online_service_purchased":
         return (
           <>
-            <h3 className="field-row">Personalize keyword</h3>
-            <div className="field-row flex-start">
-              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> Customer Name </button>
-              <button className="btn btn-tarco margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> Service Title </button>
-            </div>
+            <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}</div>
+            <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
               <textarea
                 ref={textareaRef}
@@ -85,13 +82,22 @@ const CustomMessageEdit =({props}) => {
                 }}
               />
             </div>
+            <div className="field-row flex-start">
+              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
+              <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_title")} </button>
+            </div>
+            <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.preview")}</div>
             <div className="field-row">
-              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemo)}>
-                Send Me Mock message
-              </button>
               <div className="field-row hint no-border break-line-content">
-                {Translator(template, {...props.message})}
+                <p className="p-6 bg-gray rounded">
+                  {Translator(template, {...props.message})}
+                </p>
               </div>
+            </div>
+            <div className="margin-around centerize">
+              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemo)}>
+                {I18n.t("user_bot.dashboards.settings.custom_message.buttons.send_me_mock_message")}
+              </button>
             </div>
           </>
         );
@@ -107,9 +113,9 @@ const CustomMessageEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={"title"}
+        title={I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label")}
       />
-      <div className="field-header">{"subtitle"}</div>
+      <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <span></span>
