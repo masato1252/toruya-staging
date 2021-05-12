@@ -1,0 +1,30 @@
+<div class="service-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_customers_path(service_id: @online_service.id), title: t("user_bot.dashboards.settings.service_customer_relation.service_register") %>
+
+  <div class="field-group-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></div>
+  <div class="field-header" id="name"><%= t("common.customer_name") %></div>
+  <%= render "lines/user_bot/field_row", title: @customer.name %>
+
+  <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
+  <div class="flex">
+    <span class="state <%= @relation.state %>"></span>
+    <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.state}") %>
+  </div>
+
+  <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_state") %></div>
+  <div class="flex">
+    <span class="state <%= @relation.payment_state %>"></span>
+    <%= render "lines/user_bot/field_row" do  %>
+      <span><%= t("user_bot.dashboards.settings.service_customer_relation.payment_states.#{@relation.payment_state}") %></span>
+      <% if @relation.paid_at %>
+        <%= I18n.l(@relation.paid_at, format: :long_date_with_wday) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.signup_date") %></div>
+  <%= render "lines/user_bot/field_row", title: I18n.l(@relation.created_at, format: :long_date_with_wday) %>
+
+  <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
+  <%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
+</div>

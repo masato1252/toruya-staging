@@ -153,6 +153,8 @@ Rails.application.routes.draw do
             get "/:scenario", action: "edit_scenario", as: :edit_scenario
           end
         end
+
+        resources :customers, only: [:index, :show], module: :services
       end
 
       resources :custom_messages, only: [] do

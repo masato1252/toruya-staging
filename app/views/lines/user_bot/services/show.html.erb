@@ -30,6 +30,14 @@
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
 
+  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>
+  <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customers_path(@service) do %>
+    <div class="flex justify-between">
+      <span><%= t("user_bot.dashboards.settings.service_customer_relation.register") %></span>
+      <span><%= t("common.total") %><%= @registers_count %><%= t("common.person_unit") %></span>
+    </div>
+  <% end %>
+
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
