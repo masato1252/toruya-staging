@@ -1,0 +1,9 @@
+<div class="settings-dashboard form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.menu.menus_list") %>
+  <div class="field-header"><%= t("common.menu") %></div>
+  <% @menus.each do |menu| %>
+    <%= link_to lines_user_bot_settings_menu_path(menu.id), class: "field-row" do %>
+      <span><%= menu.name %></span><i class="fa fa-angle-right"></i>
+    <% end %>
+  <% end %>
+</div>

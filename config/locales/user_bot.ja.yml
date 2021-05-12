@@ -114,6 +114,33 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+        menu:
+          basic_settings: メニュー基本設定
+          name: メニュー名
+          short_name: 短縮名
+          minutes: 所要時間
+          interval: インターバル
+          menu_shops: 利用店舗（満席数）
+          full_seat_number_title: 満席数
+          menus_list: メニュー一覧
+          method: 開催方法
+          methods:
+            local: 店舗で
+            online: オンラインで
+          form:
+            name_title: メニュー基本設定
+            short_name_title: メニュー基本設定
+            minutes_title: メニュー基本設定
+            interval_title: メニュー基本設定
+            menu_shops_title: 利用店舗
+            online_title: 開催方法
+            name_subtitle: メニュー名
+            short_name_subtitle: 短縮名
+            minutes_subtitle: 所要時間
+            interval_subtitle: インターバル
+            menu_shops_subtitle: 利用店舗（満席数）
+            online_subtitle: 開催方法
+            hint: オンライン予約ページで<br>こちらで設定した席数分が<br>予約可能となります。
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携

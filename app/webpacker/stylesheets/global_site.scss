@@ -72,6 +72,13 @@
     border-bottom-right-radius: .3em;
     width: 4em;
   }
+
+  &.nosize {
+    &::before,
+    &::after {
+      width: initial;
+    }
+  }
 }
 
 @media (max-width: 600px) {
