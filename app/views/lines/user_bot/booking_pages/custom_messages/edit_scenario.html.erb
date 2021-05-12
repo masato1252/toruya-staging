@@ -1,0 +1,16 @@
+<%= react_component("user_bot/booking_pages/custom_messages/edit", {
+  props: {
+    scenario: params[:scenario],
+    message: {
+      service_id: @booking_page.id,
+      service_type: @booking_page.class.name,
+      template: @template,
+      customer_name: current_user.name,
+      shop_name: @booking_page.shop.display_name,
+      shop_phone_number: @booking_page.shop.phone_number,
+      booking_time: "#{I18n.l(Time.current, format: :long_date_with_wday)} ~ #{I18n.l(Time.current.advance(hours: 1), format: :time_only)}"
+    }
+  }
+},
+{ camelize_props: false }
+) %>

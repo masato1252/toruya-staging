@@ -514,6 +514,31 @@ const SocialUserMessagesServices = {
   },
 }
 
+const CustomMessageServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_custom_messages_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+  demo: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.demo_lines_user_bot_custom_messages_path(),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 export {
   IdentificationCodesServices,
   UsersServices,
@@ -530,5 +555,6 @@ export {
   BusinessScheduleServices,
   ShopServices,
   MenuServices,
-  SocialUserMessagesServices
+  SocialUserMessagesServices,
+  CustomMessageServices,
 }

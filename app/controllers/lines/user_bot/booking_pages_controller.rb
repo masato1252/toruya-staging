@@ -16,7 +16,7 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
     @attribute = params[:attribute]
 
     if @attribute == "new_option"
-      @options = BookingPages::AvailableBookingOptions.run!(shop: @booking_page.shop)
+      @options = ::BookingPages::AvailableBookingOptions.run!(shop: @booking_page.shop)
     end
   end
 

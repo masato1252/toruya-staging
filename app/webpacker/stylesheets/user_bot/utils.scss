@@ -7,6 +7,10 @@ $line-margin: 20px;
     margin: 10px;
   }
 
+  &.m-3 {
+    margin: 3px;
+  }
+
   &.mt-0 {
     margin-top: 0px;
   }
@@ -32,6 +36,8 @@ $line-margin: 20px;
   text-decoration: line-through;
 }
 
+
+/* Tailwindcss*/
 .flex {
   display: flex;
 }
@@ -46,4 +52,16 @@ $line-margin: 20px;
 
 .w-full {
   width: 100%;
+}
+
+.bg-gray {
+  background-color: $basic-gray-background;
+}
+
+.rounded {
+  border-radius: 0.25em;
+}
+
+.p-6 {
+  padding: 1.5rem;
 }
