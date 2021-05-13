@@ -1,0 +1,19 @@
+module Broadcasts
+  class Send < ActiveInteraction::Base
+    object :broadcast
+
+    def execute
+      broadcast.with_lock do
+        return if broadcast.draft?
+
+        customers = compose(Broadcasts::FilterCustomers)
+
+        customers.find_each do |customer|
+          Notifiers::Broadcast.perform_later(receiver: customer, broadcast: broadcast)
+        end
+
+        broadcast.update(sent_at: Time.current)
+      end
+    end
+  end
+end
