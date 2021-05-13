@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS btree_gin WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION btree_gin; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION btree_gin IS 'support for indexing common datatypes in GIN';
+
+
+--
 -- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -478,6 +492,42 @@ ALTER SEQUENCE public.booking_pages_id_seq OWNED BY public.booking_pages.id;
 
 
 --
+-- Name: broadcasts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.broadcasts (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    content text NOT NULL,
+    query jsonb,
+    schedule_at timestamp without time zone,
+    sent_at timestamp without time zone,
+    state integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: broadcasts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.broadcasts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: broadcasts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.broadcasts_id_seq OWNED BY public.broadcasts.id;
+
+
+--
 -- Name: business_applications; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -789,7 +839,9 @@ CREATE TABLE public.customers (
     emails_details jsonb DEFAULT '[]'::jsonb,
     address_details jsonb DEFAULT '{}'::jsonb,
     stripe_charge_details jsonb,
-    stripe_customer_id character varying
+    stripe_customer_id character varying,
+    menu_ids character varying[] DEFAULT '{}'::character varying[],
+    online_service_ids character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -2520,6 +2572,13 @@ ALTER TABLE ONLY public.booking_pages ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: broadcasts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.broadcasts ALTER COLUMN id SET DEFAULT nextval('public.broadcasts_id_seq'::regclass);
+
+
+--
 -- Name: business_applications id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2984,6 +3043,14 @@ ALTER TABLE ONLY public.booking_page_special_dates
 
 ALTER TABLE ONLY public.booking_pages
     ADD CONSTRAINT booking_pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: broadcasts broadcasts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.broadcasts
+    ADD CONSTRAINT broadcasts_pkey PRIMARY KEY (id);
 
 
 --
@@ -3643,6 +3710,13 @@ CREATE UNIQUE INDEX index_booking_pages_on_slug ON public.booking_pages USING bt
 
 
 --
+-- Name: index_broadcasts_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_broadcasts_on_user_id ON public.broadcasts USING btree (user_id);
+
+
+--
 -- Name: index_business_applications_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4224,6 +4298,13 @@ CREATE UNIQUE INDEX unique_staff_account_index ON public.staff_accounts USING bt
 
 
 --
+-- Name: used_services_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX used_services_index ON public.customers USING gin (user_id, menu_ids, online_service_ids);
+
+
+--
 -- Name: user_state_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4394,6 +4475,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210416094449'),
 ('20210419025345'),
 ('20210430052825'),
-('20210505090646');
+('20210505090646'),
+('20210513053055'),
+('20210513103250');
 
 

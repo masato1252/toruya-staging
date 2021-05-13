@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_090646) do
+ActiveRecord::Schema.define(version: 2021_05_13_103250) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gin"
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -177,6 +178,18 @@ ActiveRecord::Schema.define(version: 2021_05_05_090646) do
     t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
   end
 
+  create_table "broadcasts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "content", null: false
+    t.jsonb "query"
+    t.datetime "schedule_at"
+    t.datetime "sent_at"
+    t.integer "state", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_broadcasts_on_user_id"
+  end
+
   create_table "business_applications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "state", default: 0, null: false
@@ -299,12 +312,15 @@ ActiveRecord::Schema.define(version: 2021_05_05_090646) do
     t.jsonb "address_details", default: {}
     t.jsonb "stripe_charge_details"
     t.string "stripe_customer_id"
+    t.string "menu_ids", default: [], array: true
+    t.string "online_service_ids", default: [], array: true
     t.index ["first_name"], name: "customer_names_on_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["last_name"], name: "customer_names_on_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_first_name"], name: "customer_names_on_phonetic_first_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["phonetic_last_name"], name: "customer_names_on_phonetic_last_name_idx", opclass: :gin_trgm_ops, using: :gin
     t.index ["user_id", "contact_group_id", "deleted_at"], name: "customers_basic_index"
     t.index ["user_id", "google_uid", "google_contact_id"], name: "customers_google_index", unique: true
+    t.index ["user_id", "menu_ids", "online_service_ids"], name: "used_services_index", using: :gin
     t.index ["user_id", "phonetic_last_name", "phonetic_first_name"], name: "jp_name_index"
   end
 
