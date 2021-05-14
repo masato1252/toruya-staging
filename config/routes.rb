@@ -46,6 +46,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :broadcasts, only: [:index, :new] do
+        collection do
+          get "/new/social_service_user_id/:social_service_user_id", action: "new"
+          get "/social_service_user_id/:social_service_user_id", action: "index"
+        end
+      end
+
       resources :customers, only: [:index] do
         collection do
           get :details
