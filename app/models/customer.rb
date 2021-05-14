@@ -79,6 +79,7 @@ class Customer < ApplicationRecord
 
   scope :jp_chars_order, -> { order(Arel.sql('phonetic_last_name COLLATE "C" ASC')) }
   scope :active, -> { where(deleted_at: nil) }
+  scope :active_in, ->(time_ago) { active.where("updated_at > ?", time_ago) }
   scope :contact_groups_scope, ->(staff) { where(contact_group_id: staff.readable_contact_group_ids) }
 
   def with_google_contact

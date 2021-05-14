@@ -22,7 +22,11 @@ RSpec.describe Sales::OnlineServices::Purchase do
   describe "#execute" do
     context "when sale page was free" do
       it "create a free relation" do
-        outcome
+        expect {
+          outcome
+        }.to change {
+          customer.updated_at
+        }
 
         relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer).take
         expect(relation).to be_free_payment_state
@@ -34,12 +38,30 @@ RSpec.describe Sales::OnlineServices::Purchase do
     context "when sale page was paid version" do
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :paid_version) }
       it "create a paid relation" do
-        outcome
+        expect {
+          outcome
+        }.to change {
+          customer.updated_at
+        }
 
         relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer).take
         expect(relation).to be_paid_payment_state
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
+      end
+    end
+
+    context "when customers already registered this online service" do
+      let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation) }
+      let(:sale_page) { online_service_customer_relation.sale_page }
+      let(:customer) { online_service_customer_relation.customer }
+
+      it "doesn't touch customer" do
+        expect {
+          outcome
+        }.not_to change {
+          customer.updated_at
+        }
       end
     end
   end

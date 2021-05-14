@@ -6,6 +6,8 @@ module Broadcasts
       scoped = user.customers
       return scoped if query.blank?
 
+      scoped = scoped.active_in(1.year.ago)
+
       filter = query["filters"][0]
 
       scoped =

@@ -29,6 +29,7 @@ RSpec.describe Broadcasts::FilterCustomers do
     context "A or B" do
       let!(:matched_customer) { FactoryBot.create(:customer, user: user, menu_ids: [1]) }
       let!(:unmatched_customer) { FactoryBot.create(:customer, user: user, menu_ids: [3]) }
+      let!(:unmatched_customer2) { FactoryBot.create(:customer, user: user, menu_ids: [1], updated_at: Time.current.advance(years: -1, days: -1)) }
 
       let(:query) do
         {
@@ -53,6 +54,7 @@ RSpec.describe Broadcasts::FilterCustomers do
 
         expect(result).to include(matched_customer)
         expect(result).not_to include(unmatched_customer)
+        expect(result).not_to include(unmatched_customer2)
       end
     end
 
