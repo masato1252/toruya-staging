@@ -87,12 +87,10 @@ const CustomMessageEdit =({props}) => {
               <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{service_title}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.service_title")} </button>
             </div>
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.preview")}</div>
-            <div className="field-row">
-              <div className="field-row hint no-border break-line-content">
-                <p className="p-6 bg-gray rounded">
-                  {Translator(template, {...props.message})}
-                </p>
-              </div>
+            <div className="field-row hint no-border">
+              <p className="p-6 bg-gray rounded break-line-content">
+                {Translator(template, {...props.message})}
+              </p>
             </div>
             <div className="margin-around centerize">
               <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemo)}>

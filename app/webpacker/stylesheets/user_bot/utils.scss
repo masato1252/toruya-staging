@@ -46,6 +46,18 @@ $line-margin: 20px;
   justify-content: space-between;
 }
 
+.bg-gray {
+  background-color: $basic-gray-background;
+}
+
+.rounded {
+  border-radius: 0.25em;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
 .justify-center {
   justify-content: center;
 }

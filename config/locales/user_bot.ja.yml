@@ -114,6 +114,27 @@ ja:
           website_label: Webサイト
           logo_label: 店舗ロゴ
           logo_limit_description: 390×135ピクセル以内、30KB未満のPNGまたはGIF形式の画像
+        custom_message:
+          line_message_title: LINEメッセージ設定
+          auto_message_label: 自動送信メッセージ
+          send_message_label: 送信メッセージ
+          content: メッセージ内容
+          preview: プレビュー
+          buttons:
+            customer_name: 顧客氏名
+            shop_name: 店舗名
+            shop_phone_number: 店舗の電話番号
+            reservation_time: 予約時間
+            service_title: サービス名
+            send_me_mock_message: 自分にテスト送信
+          booking_page:
+            online_booking: オンライン予約
+            page_label: 予約ページ
+            booking_page_booked: 仮予約の作成
+          online_service:
+            section_title: オンラインサービス
+            service_page_title: サービスページ
+            online_service_purchased: サービス登録
         menu:
           basic_settings: メニュー基本設定
           name: メニュー名
