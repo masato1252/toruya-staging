@@ -25,7 +25,6 @@ module Sales
             relation.permission_state = :active
             relation.expire_at = product.current_expire_time
             relation.free_payment_state!
-
           else
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
             purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
@@ -39,6 +38,10 @@ module Sales
             else
               relation.failed_payment_state!
             end
+          end
+
+          if relation.purchased?
+            customer.update(online_service_ids: customer.online_service_ids.concat([sale_page.product.id]).uniq)
           end
         end
 
