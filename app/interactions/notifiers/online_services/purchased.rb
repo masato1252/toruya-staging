@@ -11,13 +11,9 @@ module Notifiers
 
       def message
         online_service = sale_page.product
-        custom_message = CustomMessage.where(service: online_service, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED).take
+        template = CustomMessage.template_of(online_service, CustomMessage::ONLINE_SERVICE_PURCHASED)
 
-        if custom_message
-          custom_message_content = Translator.perform(custom_message.content, { customer_name: customer.name, service_title: online_service.name })
-        end
-
-        custom_message_content || I18n.t("notifier.online_service.purchased.#{online_service.solution_type}.message", service_title: online_service.name)
+        Translator.perform(template, { customer_name: customer.name, service_title: online_service.name })
       end
     end
   end

@@ -1,0 +1,14 @@
+<%= react_component("user_bot/services/custom_messages/edit", {
+  props: {
+    scenario: params[:scenario],
+    message: {
+      service_id: @online_service.id,
+      service_type: @online_service.class.name,
+      template: @template,
+      customer_name: current_user.name,
+      service_title: @online_service.name
+    }
+  }
+},
+{ camelize_props: false }
+) %>

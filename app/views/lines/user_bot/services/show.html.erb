@@ -27,6 +27,9 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.end_time") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :end_time), title: @service.end_time_text %>
 
+  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
+  <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 

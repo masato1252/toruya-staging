@@ -81,6 +81,9 @@
   <div class="field-group-header" id="draft"><%= I18n.t("settings.booking_page.form.privacy_status") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :draft), title: @booking_page.draft ? I18n.t("settings.booking_page.form.private") : I18n.t("settings.booking_page.form.public") %>
 
+  <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
+  <%= render "lines/user_bot/field_row", path: lines_user_bot_booking_page_custom_messages_path(@booking_page), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+
   <div class="action-block">
     <%= link_to lines_user_bot_booking_page_path(@booking_page), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("settings.booking_page.form.delete_page") %></span>
