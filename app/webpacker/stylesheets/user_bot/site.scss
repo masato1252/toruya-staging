@@ -221,7 +221,10 @@ a {
 .reservation-state
 {
   &.reserved,
-  &.accepted {
+  &.accepted,
+  &.available,
+  &.free,
+  &.paid {
     background-color: $palette-color2-1;
     border-color: $palette-color2-2;
   }
@@ -246,9 +249,15 @@ a {
     border: 1px solid #c87d56;
   }
 
-  &.pending {
+  &.pending,
+  &.failed {
     background-color: #ca4e0e;
     border: 1px #b0450d solid;
+  }
+
+  &.inactive {
+    background-color: $gray-background;
+    border: 1px solid $gray;
   }
 }
 
@@ -344,6 +353,7 @@ a {
   z-index: 998;
   box-shadow: 0px -3px 6px #00000029;
   font-size: $small-font-size;
+  margin-top: 10px;
 
   &.sticky {
     position: sticky;

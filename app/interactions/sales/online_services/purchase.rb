@@ -36,6 +36,8 @@ module Sales
               relation.paid_at = purchase_outcome.result.created_at
               relation.expire_at = purchase_outcome.result.expired_at
               relation.paid_payment_state!
+            else
+              relation.failed_payment_state!
             end
           end
         end
