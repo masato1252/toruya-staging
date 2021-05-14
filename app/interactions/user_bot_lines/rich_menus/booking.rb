@@ -8,8 +8,8 @@ module UserBotLines
       KEY = "user_booking".freeze
 
       # 2500x1686
-      # | 1 | 2 |
-      # | 3 | 4 |
+      # |  1  |  2  |
+      # | 3 | 4 | 5 |
       def execute
         body = {
           "size": {
@@ -53,25 +53,38 @@ module UserBotLines
               "bounds": {
                 "x": 0,
                 "y": 843,
-                "width": 1250,
+                "width": 833,
                 "height": 843
               },
               "action": LineActions::Uri.template(
-                label: I18n.t("toruya_line.actions.label.booking"),
-                url: LiffRouting.liff_url(:booking_pages)
+                label: I18n.t("toruya_line.actions.label.menus"),
+                url: LiffRouting.liff_url(:menus)
               )
             },
             {
               # 4
               "bounds": {
-                "x": 1250,
+                "x": 834,
                 "y": 843,
-                "width": 1250,
+                "width": 833,
                 "height": 843
               },
               "action": LineActions::Uri.template(
                 label: I18n.t("toruya_line.actions.label.booking"),
                 url: LiffRouting.liff_url(:booking_options)
+              )
+            },
+            {
+              # 5
+              "bounds": {
+                "x": 1667,
+                "y": 843,
+                "width": 833,
+                "height": 843
+              },
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.booking"),
+                url: LiffRouting.liff_url(:booking_pages)
               )
             },
           ]

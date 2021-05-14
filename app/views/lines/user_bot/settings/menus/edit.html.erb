@@ -1,0 +1,9 @@
+<%= react_component("user_bot/settings/menus/edit", {
+  props: {
+    menu: MenuSerializer.new(@menu).attributes_hash,
+    attribute: params[:attribute],
+    menu_shops_options: @menu_shops_options
+  }
+},
+{ camelize_props: false }
+) %>

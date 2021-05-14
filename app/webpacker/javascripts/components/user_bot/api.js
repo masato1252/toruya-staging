@@ -60,6 +60,17 @@ const UsersServices = {
       url: Routes.personal_working_schedule_lines_user_bot_calendars_path({date: date, format: "json"}),
       responseType: "json"
     })
+  },
+  updateProfile: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_user_bot_settings_profile_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
   }
 }
 
@@ -475,6 +486,20 @@ const ShopServices = {
   },
 }
 
+const MenuServices = {
+  update: ({data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: Routes.lines_user_bot_settings_menu_path(data['id'], {format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 const SocialUserMessagesServices = {
   create: ({data}) => {
     return request({
@@ -529,6 +554,7 @@ export {
   OnlineServices,
   BusinessScheduleServices,
   ShopServices,
+  MenuServices,
   SocialUserMessagesServices,
   CustomMessageServices,
 }

@@ -2,22 +2,8 @@
   <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("settings.profile.user_info") %>
 
   <div class="field-header"><%= t("common.name") %></div>
-  <%= link_to "#", class: "field-row" do %>
-    <span><%= @profile.name %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header"><%= Profile.human_attribute_name(:address) %></div>
-  <%= link_to "#", class: "field-row" do %>
-    <span><%= @profile.personal_full_address %></span><i class="fa fa-angle-right"></i>
-  <% end %>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_profile_path(attribute: :name), title: @profile.name %>
 
   <div class="field-header"><%= Profile.human_attribute_name(:phone_number) %></div>
-  <%= link_to "#", class: "field-row" do %>
-    <span><%= current_user.phone_number %></span><i class="fa fa-angle-right"></i>
-  <% end %>
-
-  <div class="field-header">Email</div>
-  <%= link_to "#", class: "field-row" do %>
-    <span><%= current_user.email %></span><i class="fa fa-angle-right"></i>
-  <% end %>
+  <%= render "lines/user_bot/field_row", title: current_user.phone_number %>
 </div>

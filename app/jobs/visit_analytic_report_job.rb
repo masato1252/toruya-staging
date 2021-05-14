@@ -6,7 +6,7 @@ class VisitAnalyticReportJob < ApplicationJob
   queue_as :low_priority
 
   def perform(owner_id)
-    prev_week = Time.now.prev_week
+    prev_week = Time.now.in_time_zone('Tokyo').prev_week
     start_time = prev_week.beginning_of_week
     end_time = prev_week.end_of_week
     period = start_time..end_time

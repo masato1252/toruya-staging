@@ -83,8 +83,11 @@ ja:
     name2: お名前
     last_name: 姓
     first_name: 名
+    phonetic_name: ふりがな
     phonetic_last_name: せい
     phonetic_first_name: めい
+    company_name: 社名・屋号
+    website: Webサイト
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
     delete_successfully_message: 削除完了

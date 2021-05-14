@@ -77,7 +77,7 @@ Rails.application.routes.draw do
 
       namespace :settings do
         resource :stripe, only: %i[show]
-        resource :profile, only: %i[show] do
+        resource :profile, only: %i[show edit update] do
           collection do
             get :company
           end
@@ -114,7 +114,11 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :shops, only: [:index, :show, :update, :edit] do
+        resources :shops, only: [:index, :show, :update, :edit]
+        resources :menus, only: [:index, :show, :update, :edit] do
+          collection do
+            get "/social_service_user_id/:social_service_user_id", action: "index"
+          end
         end
       end
 

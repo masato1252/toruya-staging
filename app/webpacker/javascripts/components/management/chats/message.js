@@ -8,12 +8,7 @@ const Message = ({message}) => {
   return (
     <div className="row message">
       <div className={`${message.message_type}`} >
-        <div
-          className={`col-sm-10 message-content ${message.sent ? "" : "unsend"}`}
-          data-controller="clipboard"
-          data-action="click->clipboard#copy"
-          data-clipboard-text={message.text}
-          data-clipboard-popup-text={`${I18n.t("common.copied")}`}>
+        <div className={`col-sm-10 message-content ${message.sent ? "" : "unsend"}`}>
           {message.text}
         </div>
         <div

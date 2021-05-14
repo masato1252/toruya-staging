@@ -15,6 +15,7 @@ ja:
         notifications: "Notifications"
         sales: "Sales"
         online_service: "Online Service"
+        menus: "Menus"
     page:
       user_sign_up:
         shop_info:
