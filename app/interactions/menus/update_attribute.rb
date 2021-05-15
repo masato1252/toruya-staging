@@ -28,13 +28,13 @@ module Menus
             menu.shop_menus.destroy_all
             checked_menu_shops = attrs[:menu_shops].select{ |attribute| attribute["checked"].present? }
             new_shop_attrs = checked_menu_shops.map do |attr|
-              { shop_id: attr[:shop_id], max_seat_number: attr[:max_seat_number] }
+              { shop_id: attr[:shop_id], max_seat_number: attr[:max_seat_number].presence || 1 }
             end
             menu.shop_menus.create(new_shop_attrs)
 
             # XXX: If this menu was responsible by one staff(or no need manpower), then for sure, all the staffs had capability to handle it.
             if menu.min_staffs_number <= 1
-              menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number] }.max)
+              menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number].presence || 1 }.max)
             end
           end
         # when "sale_template_variables", "introduction_video_url", "flow", "quantity"
