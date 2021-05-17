@@ -1,3 +1,5 @@
+<%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_online_service_path, static: true) unless current_user.social_account&.line_settings_finished? %>
+
 <div class="settings-dashboard form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_settings_path, title: t("user_bot.dashboards.settings.rich_menu.title") %>
   <div class="field-header"><%= t("user_bot.dashboards.settings.dashboard.line_rich_menu") %></div>
