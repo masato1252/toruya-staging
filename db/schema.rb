@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_13_103250) do
+ActiveRecord::Schema.define(version: 2021_05_17_044404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -742,6 +742,8 @@ ActiveRecord::Schema.define(version: 2021_05_13_103250) do
     t.integer "message_type", default: 0
     t.datetime "schedule_at"
     t.datetime "sent_at"
+    t.integer "broadcast_id"
+    t.index ["broadcast_id"], name: "index_social_messages_on_broadcast_id"
     t.index ["social_account_id", "social_customer_id"], name: "social_message_customer_index"
   end
 

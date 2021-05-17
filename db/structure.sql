@@ -2027,7 +2027,8 @@ CREATE TABLE public.social_messages (
     readed_at timestamp without time zone,
     message_type integer DEFAULT 0,
     schedule_at timestamp without time zone,
-    sent_at timestamp without time zone
+    sent_at timestamp without time zone,
+    broadcast_id integer
 );
 
 
@@ -3962,6 +3963,13 @@ CREATE INDEX index_social_customers_on_social_rich_menu_key ON public.social_cus
 
 
 --
+-- Name: index_social_messages_on_broadcast_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_social_messages_on_broadcast_id ON public.social_messages USING btree (broadcast_id);
+
+
+--
 -- Name: index_social_rich_menus_on_social_account_id_and_social_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4477,6 +4485,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210430052825'),
 ('20210505090646'),
 ('20210513053055'),
-('20210513103250');
+('20210513103250'),
+('20210517044404');
 
 

@@ -8,7 +8,17 @@ module Notifiers
     object :broadcast
 
     def message
-      Translator.perform(broadcast.content, { customer_name: customer.name })
+      Translator.perform(broadcast.content, { customer_name: receiver.name })
+    end
+
+    def send_line
+      SocialMessages::Create.run(
+        social_customer: target_line_user,
+        content: message,
+        message_type: SocialMessage.message_types[:bot],
+        readed: true,
+        broadcast: broadcast
+      )
     end
   end
 end

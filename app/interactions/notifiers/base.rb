@@ -43,8 +43,8 @@ module Notifiers
 
     # User, StaffAccount, SocialUser, Customer, SocialCustomer
     object :receiver, class: ApplicationRecord
-    object :user, default: nil
-    object :customer, default: nil
+    object :user, default: nil # used for sending SMS
+    object :customer, default: nil # used for sending SMS
 
     def execute
       if delivered_by_priority.present?

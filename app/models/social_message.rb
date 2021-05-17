@@ -14,16 +14,19 @@
 #  message_type       :integer          default("bot")
 #  schedule_at        :datetime
 #  sent_at            :datetime
+#  broadcast_id       :integer
 #
 # Indexes
 #
-#  social_message_customer_index  (social_account_id,social_customer_id)
+#  index_social_messages_on_broadcast_id  (broadcast_id)
+#  social_message_customer_index          (social_account_id,social_customer_id)
 #
 
 class SocialMessage < ApplicationRecord
   belongs_to :social_account
   belongs_to :social_customer, touch: true
   belongs_to :staff, optional: true
+  belongs_to :broadcast, optional: true
 
   scope :unread, -> { where(readed_at: nil) }
   scope :handleable, -> { includes(social_customer: :customer).where.not(social_customers: { customer_id: nil }) }
