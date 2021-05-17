@@ -2,6 +2,7 @@ import Rails from "rails-ujs";
 import _ from "lodash";
 import request from "libraries/request";
 import { serialize } from 'object-to-formdata';
+import Routes from 'js-routes.js'
 
 const IdentificationCodesServices = {
   create: (data) => {
@@ -457,6 +458,20 @@ const OnlineServices = {
   },
 }
 
+const CommonServices = {
+  create: ({url, data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+      },
+      url: url,
+      data: data,
+      responseType: "json"
+    })
+  },
+}
+
 const BusinessScheduleServices = {
   update: ({data}) => {
     return request({
@@ -544,6 +559,7 @@ export {
   UsersServices,
   ReservationServices,
   CustomerServices,
+  CommonServices,
   PaymentServices,
   BookingPageServices,
   BookingOptionServices,

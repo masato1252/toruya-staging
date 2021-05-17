@@ -114,7 +114,7 @@ module Notifiers
           readed: true
         )
       when SocialCustomer
-        SocialMessages::Create.run(
+          SocialMessages::Create.run(
           social_customer: target_line_user,
           content: message,
           message_type: SocialMessage.message_types[:bot],

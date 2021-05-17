@@ -6,7 +6,7 @@ module Broadcasts
       broadcast.with_lock do
         return if broadcast.draft?
 
-        customers = compose(Broadcasts::FilterCustomers)
+        customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
 
         customers.find_each do |customer|
           Notifiers::Broadcast.perform_later(receiver: customer, broadcast: broadcast)

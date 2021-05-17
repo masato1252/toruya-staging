@@ -24,10 +24,6 @@ $line-margin: 20px;
   text-align: left;
 }
 
-.text-right {
-  text-align: right;
-}
-
 .relative {
   position: relative;
 }
@@ -76,4 +72,12 @@ $line-margin: 20px;
 
 .p-6 {
   padding: 1.5rem;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
 }

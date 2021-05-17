@@ -5,5 +5,26 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def new
+    shop_menus_options =
+      ShopMenu.includes(:menu).where(shop: current_user.shops).map do |shop_menu|
+        ::Options::MenuOption.new(
+          id: shop_menu.menu_id,
+          name: shop_menu.menu.display_name,
+          min_staffs_number: shop_menu.menu.min_staffs_number,
+          available_seat: shop_menu.max_seat_number,
+          minutes: shop_menu.menu.minutes,
+          interval: shop_menu.menu.interval
+        )
+      end
+    @menus = ::Menus::CategoryGroup.run!(menu_options: shop_menus_options)
+  end
+
+  def create
+    outcome = Broadcasts::Create.run(user: current_user, params: params[:broadcast].permit!.to_h)
+
+    render json: {
+      status: "successful",
+      redirect_to: lines_user_bot_broadcasts_path
+    }
   end
 end
