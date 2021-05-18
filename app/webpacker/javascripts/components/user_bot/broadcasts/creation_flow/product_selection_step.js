@@ -19,7 +19,7 @@ const FroductSelectionStep = ({next, step}) => {
           <>
             <ReactSelect
               className="text-left"
-              placeholder={"i18n.select_a_menu"}
+              placeholder={I18n.t("common.select_a_menu")}
               value={ _.isEmpty(selected_menu) ? "" : selected_menu}
               options={props.menus}
               onChange={

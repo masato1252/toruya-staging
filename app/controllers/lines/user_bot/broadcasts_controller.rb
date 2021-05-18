@@ -2,6 +2,11 @@
 
 class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def index
+    @broadcasts = current_user.broadcasts.order("id DESC")
+  end
+
+  def show
+    @broadcast = current_user.broadcasts.find(params[:id])
   end
 
   def new
@@ -22,9 +27,6 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   def create
     outcome = Broadcasts::Create.run(user: current_user, params: params[:broadcast].permit!.to_h)
 
-    render json: {
-      status: "successful",
-      redirect_to: lines_user_bot_broadcasts_path
-    }
+    return_json_response(outcome, { redirect_to: lines_user_bot_broadcasts_path })
   end
 end

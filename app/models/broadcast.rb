@@ -26,4 +26,20 @@ class Broadcast < ApplicationRecord
     final: 0,
     draft: 1
   }
+
+  def targets
+    return I18n.t("broadcast.targets.all_customers") if query.blank?
+
+    query["filters"].map do |filter|
+      product_name =
+        case filter["field"]
+        when "menu_ids"
+          user.menus.find(filter["value"]).name
+        when "online_service_ids"
+          user.online_services.find(filter["value"]).name
+        end
+
+      "#{I18n.t("broadcast.targets.fields.#{filter["field"]}")} #{I18n.t("broadcast.targets.conditions.#{filter["condition"]}")} #{product_name}"
+    end.join(", ")
+  end
 end

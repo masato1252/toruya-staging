@@ -4,7 +4,7 @@ module Broadcasts
 
     def execute
       broadcast.with_lock do
-        return if broadcast.draft?
+        return if broadcast.draft? || broadcast.sent_at.present?
 
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
 

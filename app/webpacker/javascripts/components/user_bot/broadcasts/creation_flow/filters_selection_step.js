@@ -53,7 +53,7 @@ const FiltersSelectionStep = ({next, step}) => {
         }}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
-        <h4>{"Select Menu"}</h4>
+        <h4>{"Customers ever used a menu"}</h4>
       </button>
       <button
         onClick={() => {
@@ -69,7 +69,7 @@ const FiltersSelectionStep = ({next, step}) => {
         }}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
-        <h4>{"Select Online Service"}</h4>
+        <h4>{"Customers ever used a service"}</h4>
       </button>
     </div>
   )

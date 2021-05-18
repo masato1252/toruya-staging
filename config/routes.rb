@@ -46,7 +46,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :broadcasts, only: [:index, :new, :create] do
+      resources :broadcasts, only: [:index, :new, :create, :show] do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"

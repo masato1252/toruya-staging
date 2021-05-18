@@ -1,0 +1,9 @@
+ja:
+  broadcast:
+    targets:
+      all_customers: "All Customers"
+      fields:
+        online_service_ids: サービス
+        menu_ids: メニュー
+      conditions:
+        contains: 是
