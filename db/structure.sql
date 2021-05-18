@@ -503,6 +503,7 @@ CREATE TABLE public.broadcasts (
     schedule_at timestamp without time zone,
     sent_at timestamp without time zone,
     state integer DEFAULT 0,
+    recipients_count integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

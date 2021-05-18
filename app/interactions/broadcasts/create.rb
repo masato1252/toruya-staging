@@ -11,6 +11,9 @@ module Broadcasts
       broadcast = user.broadcasts.create(params)
 
       if broadcast.valid?
+        customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
+        broadcast.update(recipients_count: customers.count)
+
         Broadcasts::Send.perform_at(schedule_at: broadcast.schedule_at, broadcast: broadcast)
       end
 

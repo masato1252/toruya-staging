@@ -7,6 +7,7 @@ class CreateBroadcasts < ActiveRecord::Migration[5.2]
       t.datetime :schedule_at, null: true
       t.datetime :sent_at, null: true
       t.integer :state, default: 0
+      t.integer :recipients_count, default: 0
       t.timestamps
     end
   end

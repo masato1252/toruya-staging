@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2021_05_17_044404) do
     t.datetime "schedule_at"
     t.datetime "sent_at"
     t.integer "state", default: 0
+    t.integer "recipients_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_broadcasts_on_user_id"

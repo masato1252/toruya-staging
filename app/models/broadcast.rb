@@ -1,18 +1,18 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: broadcasts
 #
-#  id          :bigint(8)        not null, primary key
-#  user_id     :bigint(8)        not null
-#  content     :text             not null
-#  query       :jsonb
-#  schedule_at :datetime
-#  sent_at     :datetime
-#  state       :integer          default("final")
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
+#  id               :bigint(8)        not null, primary key
+#  user_id          :bigint(8)        not null
+#  content          :text             not null
+#  query            :jsonb
+#  schedule_at      :datetime
+#  sent_at          :datetime
+#  state            :integer          default("final")
+#  recipients_count :integer          default(0)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 # Indexes
 #

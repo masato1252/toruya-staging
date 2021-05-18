@@ -12,7 +12,7 @@ module Broadcasts
           Notifiers::Broadcast.perform_later(receiver: customer, broadcast: broadcast)
         end
 
-        broadcast.update(sent_at: Time.current)
+        broadcast.update(sent_at: Time.current, recipients_count: customers.size)
       end
     end
   end

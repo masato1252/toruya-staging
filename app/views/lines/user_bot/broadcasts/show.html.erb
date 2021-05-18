@@ -1,15 +1,18 @@
 <div class="form with-top-bar">
   <%= render "lines/user_bot/top_navigation_bar", path: lines_user_bot_broadcasts_path, title: "配信条件一覧" %>
 
-  <div class="field-header"><%= t("common.menu") %></div>
+  <div class="field-header"><%= "Content" %></div>
   <%= render "lines/user_bot/field_row" do %>
     <p class="p-6 bg-gray rounded break-line-content">
       <%= @broadcast.content %>
     </p>
   <% end %>
 
-  <div class="field-header"><%= t("common.menu") %></div>
+  <div class="field-header"><%= "Target" %></div>
   <%= render "lines/user_bot/field_row", title: @broadcast.targets %>
+
+  <div class="field-header"><%= "Recipient Count" %></div>
+  <%= render "lines/user_bot/field_row", title: @broadcast.recipients_count %>
 
   <div class="field-header"><%= "Schedule At" %></div>
   <%= render "lines/user_bot/field_row", title: I18n.l(@broadcast.schedule_at || @broadcast.created_at, format: :long_date_with_wday) %>
