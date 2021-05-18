@@ -16,6 +16,7 @@ ja:
         sales: "Sales"
         online_service: "Online Service"
         menus: "Menus"
+        broadcasts: "Broadcasts"
     page:
       user_sign_up:
         shop_info:

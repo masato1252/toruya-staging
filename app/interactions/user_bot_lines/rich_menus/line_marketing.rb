@@ -4,17 +4,16 @@ require "liff_routing"
 
 module UserBotLines
   module RichMenus
-    class Promotions < ActiveInteraction::Base
-      KEY = "user_promotions".freeze
+    class LineMarketing < ActiveInteraction::Base
+      KEY = "user_line_marketing".freeze
 
       # 2500x1686
-      # | 1 | 2 |
-      # | 3 | 4 |
+      # | 1 | 2 | 3 |
       def execute
         body = {
           "size": {
             "width": 2500,
-            "height": 1686
+            "height": 843
           },
           "selected": true,
           "name": KEY,
@@ -25,44 +24,40 @@ module UserBotLines
               "bounds": {
                 "x": 0,
                 "y": 0,
-                "width": 1250,
+                "width": 833,
                 "height": 843
               },
               "action": LineActions::Postback.template(
                 action: UserBotLines::Actions::SwitchRichMenu.class_name,
                 enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::Dashboard::KEY },
+                params: { rich_menu_key: UserBotLines::RichMenus::Promotions::KEY },
                 displayText: false
               )
             },
             {
               # 2
               "bounds": {
-                "x": 1250,
+                "x": 834,
                 "y": 0,
-                "width": 1250,
+                "width": 833,
                 "height": 843
               },
-              "action": LineActions::Postback.template(
-                action: UserBotLines::Actions::SwitchRichMenu.class_name,
-                enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::Sales::KEY },
-                displayText: false
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.broadcasts"),
+                url: LiffRouting.liff_url(:new_broadcast)
               )
             },
             {
-              # 4
+              # 3
               "bounds": {
-                "x": 1250,
-                "y": 843,
-                "width": 1250,
+                "x": 1667,
+                "y": 0,
+                "width": 833,
                 "height": 843
               },
-              "action": LineActions::Postback.template(
-                action: UserBotLines::Actions::SwitchRichMenu.class_name,
-                enabled: true,
-                params: { rich_menu_key: UserBotLines::RichMenus::LineMarketing::KEY },
-                displayText: false
+              "action": LineActions::Uri.template(
+                label: I18n.t("toruya_line.actions.label.broadcasts"),
+                url: LiffRouting.liff_url(:broadcasts)
               )
             },
           ]
