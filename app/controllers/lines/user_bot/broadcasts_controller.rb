@@ -10,18 +10,11 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
   end
 
   def new
-    shop_menus_options =
-      ShopMenu.includes(:menu).where(shop: current_user.shops).map do |shop_menu|
-        ::Options::MenuOption.new(
-          id: shop_menu.menu_id,
-          name: shop_menu.menu.display_name,
-          min_staffs_number: shop_menu.menu.min_staffs_number,
-          available_seat: shop_menu.max_seat_number,
-          minutes: shop_menu.menu.minutes,
-          interval: shop_menu.menu.interval
-        )
+    menus_options =
+      current_user.menus.map do |menu|
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name)
       end
-    @menus = ::Menus::CategoryGroup.run!(menu_options: shop_menus_options)
+    @menus = ::Menus::CategoryGroup.run!(menu_options: menus_options)
   end
 
   def edit
