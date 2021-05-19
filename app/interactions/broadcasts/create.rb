@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Broadcasts
   class Create < ActiveInteraction::Base
     object :user
@@ -8,7 +10,7 @@ module Broadcasts
     end
 
     def execute
-      broadcast = user.broadcasts.create(params)
+      broadcast = Broadcast.create(params.merge!(user: user))
 
       if broadcast.valid?
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)

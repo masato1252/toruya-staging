@@ -22,6 +22,7 @@ export const GlobalProvider = ({ props, children }) => {
       reducers(),
       {
         broadcast_creation_states: {
+          ...props.broadcast
         }
       }
     )
@@ -33,12 +34,24 @@ export const GlobalProvider = ({ props, children }) => {
   }
 
   const createBroadcast = async () => {
-    const [error, response] = await CommonServices.create(
-      {
-        url: Routes.lines_user_bot_broadcasts_path({format: "json"}),
-        data: broadcastData()
-      }
-    )
+    let error, response
+
+    if (state.broadcast_creation_states.id) {
+      [error, response] = await CommonServices.update(
+        {
+          url: Routes.lines_user_bot_broadcast_path(state.broadcast_creation_states.id, {format: "json"}),
+          data: broadcastData()
+        }
+      )
+    }
+    else {
+      [error, response] = await CommonServices.create(
+        {
+          url: Routes.lines_user_bot_broadcasts_path({format: "json"}),
+          data: broadcastData()
+        }
+      )
+    }
 
     if (response?.data?.status == "successful") {
        window.location = response.data.redirect_to

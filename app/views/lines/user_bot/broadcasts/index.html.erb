@@ -3,19 +3,15 @@
 
   <div class="field-header"><%= t("common.menu") %></div>
   <% @broadcasts.each do |broadcast| %>
-    <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast) do %>
-      <div class="dotdotdot">
-        <h3><%= broadcast.content %></h3>
-        <div class="desc">
-          <% if broadcast.sent_at %>
-            Send at: <%= I18n.l(broadcast.sent_at, format: :long_date_with_wday) %>
-          <% elsif broadcast.schedule_at %>
-            Schedule At: <%= I18n.l(broadcast.schedule_at, format: :long_date_with_wday) %>
-          <% else %>
-            Send at: <%= I18n.l(broadcast.created_at, format: :long_date_with_wday) %>
-          <% end %>
+    <%= render "lines/user_bot/field_state", state: broadcast.state do %>
+      <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast), state: broadcast.state do %>
+        <div class="dotdotdot">
+          <h3><%= broadcast.content %></h3>
+          <div class="desc">
+            <%= I18n.l(broadcast.broadcast_at, format: :long_date_with_wday) %>
+          </div>
         </div>
-      </div>
+      <% end %>
     <% end %>
   <% end %>
 </div>

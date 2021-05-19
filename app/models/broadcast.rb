@@ -22,10 +22,19 @@
 class Broadcast < ApplicationRecord
   belongs_to :user
 
+  scope :available, -> { where(state: %i[active draft final]) }
+  scope :ordered, -> { order("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC")  }
+
   enum state: {
-    final: 0,
-    draft: 1
+    active: 0,
+    draft: 1,
+    final: 2,
+    disabled: 3
   }
+
+  def broadcast_at
+    sent_at || schedule_at || created_at
+  end
 
   def targets
     return I18n.t("broadcast.targets.all_customers") if query.blank?

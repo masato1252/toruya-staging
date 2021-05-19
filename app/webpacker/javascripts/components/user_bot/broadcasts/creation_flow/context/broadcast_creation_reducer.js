@@ -1,6 +1,7 @@
 import _ from "lodash";
 
 const initialState = {
+  id: null,
   query_type: null,
   query: null,
   content: "",

@@ -470,6 +470,17 @@ const CommonServices = {
       responseType: "json"
     })
   },
+  update: ({url, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: url,
+      data: data,
+      responseType: "json"
+    })
+  },
 }
 
 const BusinessScheduleServices = {
