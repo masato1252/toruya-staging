@@ -14,7 +14,7 @@ module Broadcasts
     def execute
       broadcast.with_lock do
         if broadcast.draft?
-          broadcast.disabled!
+          broadcast.destroy!
           compose(Broadcasts::Create, user: broadcast.user, params: params)
         end
       end

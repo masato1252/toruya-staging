@@ -21,14 +21,14 @@ RSpec.describe Broadcasts::Update do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "disabled original broadcast and create a new one" do
+    it "destroy original broadcast and create a new one" do
       expect {
         outcome
       }.not_to change {
         user.broadcasts.count
       }
 
-      expect(broadcast).to be_disabled
+      expect { broadcast.reload }.to raise_error ActiveRecord::RecordNotFound
     end
 
     context "when state is not draft" do

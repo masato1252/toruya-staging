@@ -22,14 +22,12 @@
 class Broadcast < ApplicationRecord
   belongs_to :user
 
-  scope :available, -> { where(state: %i[active draft final]) }
   scope :ordered, -> { order("(CASE WHEN sent_at IS NULL THEN created_at ELSE sent_at END) DESC, id DESC")  }
 
   enum state: {
     active: 0,
     draft: 1,
-    final: 2,
-    disabled: 3
+    final: 2
   }
 
   def broadcast_at

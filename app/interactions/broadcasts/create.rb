@@ -10,7 +10,7 @@ module Broadcasts
     end
 
     def execute
-      broadcast = Broadcast.create(params.merge!(user: user))
+      broadcast = user.broadcasts.create(params)
 
       if broadcast.valid?
         customers = compose(Broadcasts::FilterCustomers, broadcast: broadcast)
