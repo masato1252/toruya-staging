@@ -7,9 +7,9 @@ const StepIndicator = ({step}) => {
   return (
     <FlowStepIndicator
       steps={[
-        {icon: "fa-file-alt", wording: I18n.t("user_bot.dashboards.service_creation.content_step"), steps: [1, 2]},
-        {icon: "fa-hourglass-half", wording: I18n.t("user_bot.dashboards.service_creation.time_step"), steps: [3]},
-        {icon: "fa-cart-plus", wording: I18n.t("user_bot.dashboards.service_creation.upsell_step"), steps: [4]}
+        {icon: "fa-users", wording: I18n.t("user_bot.dashboards.service_creation.content_step"), steps: [0, 1]},
+        {icon: "fa-comment", wording: I18n.t("user_bot.dashboards.service_creation.time_step"), steps: [2]},
+        {icon: "fa-calendar-alt", wording: I18n.t("user_bot.dashboards.service_creation.upsell_step"), steps: [3]}
       ]}
       current_step={step}
     />
