@@ -32,6 +32,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_free_payment_state
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
+        expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
       end
     end
 
@@ -48,6 +49,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_paid_payment_state
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
+        expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
       end
     end
 

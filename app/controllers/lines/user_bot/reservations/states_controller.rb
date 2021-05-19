@@ -9,7 +9,7 @@ class Lines::UserBot::Reservations::StatesController < Lines::UserBotDashboardCo
     redirect_back fallback_location: lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")
   end
 
-    def accept
+  def accept
     outcome = ::Reservations::Accept.run(reservation: reservation, current_staff: current_user_staff)
 
     redirect_back fallback_location: lines_user_bot_schedules_path, notice: I18n.t("reservation.update_successfully_message")

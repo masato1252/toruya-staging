@@ -4,5 +4,17 @@ FactoryBot.define do
   factory :broadcast do
     association :user
     content { Faker::Lorem.word }
+
+    trait :draft do
+      state { :draft }
+    end
+
+    trait :active do
+      state { :active }
+    end
+
+    trait :final do
+      state { :final }
+    end
   end
 end
