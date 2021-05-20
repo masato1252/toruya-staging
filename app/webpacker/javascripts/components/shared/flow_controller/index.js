@@ -26,7 +26,6 @@ export const FlowController = ({ new_version, children }) => {
     setStep(childrenArray.length - pre)
   }
 
-
   if (new_version) {
     return (
       React.cloneElement(childrenArray[step], {next, prev, jump, step, lastStep})

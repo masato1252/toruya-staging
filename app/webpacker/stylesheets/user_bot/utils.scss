@@ -32,6 +32,9 @@ $line-margin: 20px;
   text-decoration: line-through;
 }
 
+.p10 {
+  padding: 10px;
+}
 
 /* Tailwindcss*/
 .flex {
@@ -40,18 +43,6 @@ $line-margin: 20px;
 
 .justify-between {
   justify-content: space-between;
-}
-
-.bg-gray {
-  background-color: $basic-gray-background;
-}
-
-.rounded {
-  border-radius: 0.25em;
-}
-
-.p-6 {
-  padding: 1.5rem;
 }
 
 .justify-center {

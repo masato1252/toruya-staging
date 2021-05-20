@@ -33,6 +33,8 @@ ja:
     pay: 支払う
     reply: 返信
     send: 送信する
+    send_now: 配信する
+    save_as_schedule: 配信予約を保存
     call: 電話する
     send_message: メッセージ送信する
     next_step: 次　へ

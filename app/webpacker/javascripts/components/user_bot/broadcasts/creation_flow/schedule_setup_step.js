@@ -6,14 +6,14 @@ import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
 import { SubmitButton } from "shared/components";
 
-const ScheduleSetupStep = ({next, step}) => {
+const ScheduleSetupStep = ({next, step, prev}) => {
   const { props, dispatch, schedule_at, createBroadcast } = useGlobalContext()
   moment.locale('ja');
 
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      <h3 className="header centerize">{"When you want to send"}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.when_do_you_want_to_send")}</h3>
       <div className="text-left">
         <div className="margin-around m10 mt-0">
           <label>
@@ -78,9 +78,12 @@ const ScheduleSetupStep = ({next, step}) => {
         </div>
       </div>
       <div className="action-block">
+        <button onClick={prev} className="btn btn-tarco">
+          {I18n.t("action.prev_step")}
+        </button>
         <SubmitButton
           handleSubmit={createBroadcast}
-          btnWord={I18n.t("action.save")}
+          btnWord={schedule_at ? I18n.t("action.save_as_schedule") : I18n.t("action.send_now")}
         />
       </div>
     </div>

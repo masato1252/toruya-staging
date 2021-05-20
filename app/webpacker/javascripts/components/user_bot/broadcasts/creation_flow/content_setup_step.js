@@ -5,7 +5,7 @@ import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
 import { Translator } from "libraries/helper";
 
-const ContentSetupStep = ({next, step}) => {
+const ContentSetupStep = ({next, step, prev, jump}) => {
   const { props, dispatch, content } = useGlobalContext()
   const textareaRef = useRef();
   const [cursorPosition, setCursorPosition] = useState(0)
@@ -27,9 +27,9 @@ const ContentSetupStep = ({next, step}) => {
   }
 
   return (
-    <div className="form settings-flow centerize">
+    <div className="form settings-flow">
       <FlowStepIndicator step={step} />
-      <h3 className="header centerize">{"Write the content"}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_content_do_you_want")}</h3>
       <textarea
         ref={textareaRef}
         autoFocus={true}
@@ -55,7 +55,12 @@ const ContentSetupStep = ({next, step}) => {
       <p className="p-6 bg-gray rounded break-line-content">
         {Translator(content, {...props.message})}
       </p>
-      <div className="action-block">
+      <div className="action-block centerize">
+        <button onClick={() => {
+          jump(0)
+        }} className="btn btn-tarco">
+          {I18n.t("action.prev_step")}
+        </button>
         <button onClick={next} className="btn btn-yellow" disabled={!content}>
           {I18n.t("action.next_step")}
         </button>

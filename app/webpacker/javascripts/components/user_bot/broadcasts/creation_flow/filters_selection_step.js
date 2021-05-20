@@ -14,7 +14,7 @@ const FiltersSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      <h3 className="header centerize">{"Select what group customers you want to send"}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
       <button
         onClick={() => {
           dispatch({
@@ -37,7 +37,10 @@ const FiltersSelectionStep = ({next, step}) => {
         }}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
-        <h4>{"All Customers"}</h4>
+        <h4>{I18n.t("user_bot.dashboards.broadcast_creation.all_customers")}</h4>
+        <p class="break-line-content">
+          {I18n.t("user_bot.dashboards.broadcast_creation.all_customers_desc")}
+        </p>
       </button>
       <button
         onClick={() => {
@@ -53,7 +56,10 @@ const FiltersSelectionStep = ({next, step}) => {
         }}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
-        <h4>{"Customers ever used a menu"}</h4>
+        <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_menu_customers")}</h4>
+        <p class="break-line-content">
+          {I18n.t("user_bot.dashboards.broadcast_creation.specific_menu_customers_desc")}
+        </p>
       </button>
       <button
         onClick={() => {
@@ -69,7 +75,10 @@ const FiltersSelectionStep = ({next, step}) => {
         }}
         className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
         >
-        <h4>{"Customers ever used a service"}</h4>
+        <h4>{I18n.t("user_bot.dashboards.broadcast_creation.specific_service_customers")}</h4>
+        <p class="break-line-content">
+          {I18n.t("user_bot.dashboards.broadcast_creation.specific_service_customers_desc")}
+        </p>
       </button>
     </div>
   )

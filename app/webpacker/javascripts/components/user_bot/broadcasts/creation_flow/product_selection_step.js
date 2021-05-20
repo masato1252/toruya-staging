@@ -5,7 +5,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
 
-const FroductSelectionStep = ({next, step}) => {
+const FroductSelectionStep = ({next, step, prev}) => {
   const { props, dispatch, query_type, selected_menu, selected_online_service } = useGlobalContext()
 
   useEffect(() => {
@@ -119,9 +119,14 @@ const FroductSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      <h3 className="header centerize">{"Select product you want to send"}</h3>
+      <h3 className="header centerize">
+        {query_type === "menu" ? I18n.t("user_bot.dashboards.broadcast_creation.what_menu_do_you_want") : I18n.t("user_bot.dashboards.broadcast_creation.what_service_do_you_want")}
+      </h3>
       {renderProductDropDown()}
       <div className="action-block">
+        <button onClick={prev} className="btn btn-tarco">
+          {I18n.t("action.prev_step")}
+        </button>
         <button onClick={next} className="btn btn-yellow" disabled={!selected_online_service && !selected_menu}>
           {I18n.t("action.next_step")}
         </button>

@@ -6,9 +6,9 @@
     <%= render "lines/user_bot/field_state", state: broadcast.state do %>
       <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast), state: broadcast.state do %>
         <div class="dotdotdot">
-          <h3><%= broadcast.content %></h3>
+          <h3><%= I18n.l(broadcast.broadcast_at, format: :long_date_with_wday) %></h3>
           <div class="desc">
-            <%= I18n.l(broadcast.broadcast_at, format: :long_date_with_wday) %>
+            <%= broadcast.content %>
           </div>
         </div>
       <% end %>
