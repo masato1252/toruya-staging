@@ -33,6 +33,27 @@ export const GlobalProvider = ({ props, children }) => {
     return _.pick(state.broadcast_creation_states, ["query", "content", "schedule_at"])
   }
 
+  const fetchCustomersCount = async () => {
+    if (state.broadcast_creation_states.query === null) return;
+
+    const [error, response] = await CommonServices.update(
+      {
+        url: Routes.customers_count_lines_user_bot_broadcasts_path({format: "json"}),
+        data: {
+          query: state.broadcast_creation_states.query
+        }
+      }
+    )
+
+    dispatch({
+      type: "SET_ATTRIBUTE",
+      payload: {
+        attribute: "customers_count",
+        value: response.data.customers_count
+      }
+    })
+  }
+
   const createBroadcast = async () => {
     let error, response
 
@@ -65,7 +86,8 @@ export const GlobalProvider = ({ props, children }) => {
       props,
       ...state.broadcast_creation_states,
       dispatch,
-      createBroadcast
+      createBroadcast,
+      fetchCustomersCount
     }}
     >
       {children}

@@ -459,6 +459,14 @@ const OnlineServices = {
 }
 
 const CommonServices = {
+  get: ({url, data}) => {
+    return request({
+      method: "GET",
+      url: url,
+      params: data,
+      responseType: "json"
+    })
+  },
   create: ({url, data}) => {
     return request({
       method: "POST",

@@ -6,6 +6,7 @@ const initialState = {
   query: null,
   content: "",
   schedule_at: null,
+  customers_count: null
 }
 
 export default (state = initialState, action) => {

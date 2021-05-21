@@ -44,4 +44,10 @@ class Lines::UserBot::BroadcastsController < Lines::UserBotDashboardController
 
     redirect_to lines_user_bot_broadcast_path(broadcast)
   end
+
+  def customers_count
+    outcome = Broadcasts::QueryCustomers.run(user: current_user, query: params[:query].permit!.to_h)
+
+    return_json_response(outcome, { customers_count: outcome.result.count })
+  end
 end

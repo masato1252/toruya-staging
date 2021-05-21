@@ -52,9 +52,8 @@ const ContentSetupStep = ({next, step, prev, jump}) => {
         }}
       />
       <button className="btn btn-gray margin-around m-3" onClick={() => { insertKeyword("%{customer_name}") }}> {I18n.t("user_bot.dashboards.settings.custom_message.buttons.customer_name")} </button>
-      <p className="p-6 bg-gray rounded break-line-content">
-        {Translator(content, {...props.message})}
-      </p>
+      <div className="preview-hint">{I18n.t("user_bot.dashboards.broadcast_creation.preview")}</div>
+      <p className="margin-around p10 bg-gray rounded break-line-content">{Translator(content, {...props.message})}</p>
       <div className="action-block centerize">
         <button onClick={() => {
           jump(0)

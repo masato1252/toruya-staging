@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         collection do
           get "/new/social_service_user_id/:social_service_user_id", action: "new"
           get "/social_service_user_id/:social_service_user_id", action: "index"
+          put :customers_count
         end
 
         member do

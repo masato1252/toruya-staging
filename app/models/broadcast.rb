@@ -34,6 +34,21 @@ class Broadcast < ApplicationRecord
     sent_at || schedule_at || created_at
   end
 
+  def target
+    return I18n.t("broadcast.targets.all_customers") if query.blank?
+
+    filter = query["filters"][0]
+    product_name =
+      case filter["field"]
+      when "menu_ids"
+        user.menus.find(filter["value"]).name
+      when "online_service_ids"
+        user.online_services.find(filter["value"]).name
+      end
+
+    I18n.t("broadcast.target.specific_product", product_name: product_name)
+  end
+
   def targets
     return I18n.t("broadcast.targets.all_customers") if query.blank?
 

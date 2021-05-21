@@ -4,19 +4,25 @@ import ReactSelect from "react-select";
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
+import { CommonServices } from "user_bot/api";
 
 const FroductSelectionStep = ({next, step, prev}) => {
-  const { props, dispatch, query_type, selected_menu, selected_online_service } = useGlobalContext()
+  const { props, dispatch, query, query_type, selected_menu, selected_online_service, customers_count, fetchCustomersCount } = useGlobalContext()
 
   useEffect(() => {
     if (query_type === "all") next()
   }, [])
+
+  useEffect(() => {
+    fetchCustomersCount()
+  }, [query])
 
   const renderProductDropDown = () => {
     switch (query_type) {
       case "menu":
         return (
           <>
+            <div className="margin-around">
             <ReactSelect
               className="text-left"
               placeholder={I18n.t("common.select_a_menu")}
@@ -51,6 +57,15 @@ const FroductSelectionStep = ({next, step, prev}) => {
                 }
               }
             />
+            </div>
+            {selected_menu && (
+              <div className="item-container">
+                <div className="item-element">
+                  <span>{I18n.t("user_bot.dashboards.broadcast_creation.approximate_customers_count")}</span>
+                  <span className="item-data">{customers_count}</span>
+                </div>
+              </div>
+            )}
           </>
         )
         break
@@ -107,6 +122,10 @@ const FroductSelectionStep = ({next, step, prev}) => {
                 <div className="item-element">
                   <span>{I18n.t("user_bot.dashboards.sales.online_service_creation.service_end")}</span>
                   <span className="item-data">{selected_online_service?.end_time_text}</span>
+                </div>
+                <div className="item-element">
+                  <span>{I18n.t("user_bot.dashboards.broadcast_creation.approximate_customers_count")}</span>
+                  <span className="item-data">{customers_count}</span>
                 </div>
               </div>
             )}

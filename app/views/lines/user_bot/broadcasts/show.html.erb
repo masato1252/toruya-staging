@@ -3,19 +3,17 @@
 
   <div class="field-header"><%= t("user_bot.dashboards.broadcasts.content") %></div>
   <%= render "lines/user_bot/field_row" do %>
-    <p class="p10 bg-gray rounded break-line-content w-full">
-      <%= @broadcast.content %>
-    </p>
+    <p class="p10 bg-gray rounded break-line-content w-full"><%= @broadcast.content %></p>
   <% end %>
 
   <div class="field-header"><%= t("user_bot.dashboards.broadcasts.audiences") %></div>
-  <%= render "lines/user_bot/field_row", title: @broadcast.targets %>
+  <%= render "lines/user_bot/field_row", title: @broadcast.target %>
 
   <div class="field-header"><%= t("user_bot.dashboards.broadcasts.recipients_count") %></div>
   <%= render "lines/user_bot/field_row", title: @broadcast.recipients_count %>
 
   <div class="field-header"><%= t("user_bot.dashboards.broadcasts.state") %></div>
-  <%= render "lines/user_bot/field_row", title: @broadcast.state %>
+  <%= render "lines/user_bot/field_row", title: t("broadcast.states.#{@broadcast.state}") %>
 
   <div class="field-header"><%= t("user_bot.dashboards.broadcasts.time") %></div>
   <%= render "lines/user_bot/field_row", title: I18n.l(@broadcast.broadcast_at, format: :long_date_with_wday) %>
@@ -24,7 +22,7 @@
     <% if @broadcast.active? %>
       <%= t("user_bot.dashboards.broadcasts.stop_desc") %>
     <% elsif @broadcast.draft? %>
-      After you finish the broadcast editing, the broadcast would become active.
+      <%= t("user_bot.dashboards.broadcasts.active_desc") %>
     <% end %>
   </p>
 
