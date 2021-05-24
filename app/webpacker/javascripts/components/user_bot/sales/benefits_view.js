@@ -7,7 +7,7 @@ const BenefitsView = ({benefits}) => {
   if (!benefits) return <></>
 
   return (
-    <div className="flow-content content">
+    <div className="content">
       <h3 className="header centerize">
         {"この動画セミナーで出来ること"}
       </h3>

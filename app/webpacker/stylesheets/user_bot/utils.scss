@@ -41,6 +41,10 @@ $line-margin: 20px;
   display: flex;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .justify-between {
   justify-content: space-between;
 }

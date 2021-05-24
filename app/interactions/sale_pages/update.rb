@@ -29,6 +29,7 @@ module SalePages
       array :benefits, default: nil do
         string
       end
+      array :faq, default: nil
     end
 
     def execute

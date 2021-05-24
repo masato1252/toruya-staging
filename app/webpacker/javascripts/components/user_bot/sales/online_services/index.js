@@ -5,7 +5,8 @@ import SaleTemplateView from "components/user_bot/sales/online_services/sale_tem
 import PriceBlock from "components/user_bot/sales/online_services/price_block";
 import StaffView from "components/user_bot/sales/staff_view";
 import FlowView from "components/user_bot/sales/flow_view";
-import BenefitsView from "components/user_bot/sales/flow_view";
+import BenefitsView from "components/user_bot/sales/benefits_view";
+import FaqView from "components/user_bot/sales/faq_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
@@ -61,6 +62,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
       <StaffView staff={staff} demo={demo} jumpTo={() => jump(10)} />
       <BenefitsView benefits={sections_context.benefits} />
       <FlowView flow={flow} jump={jump} demo={demo} />
+      <FaqView faq={sections_context.faq} />
 
       <div className="apply-content content">
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>

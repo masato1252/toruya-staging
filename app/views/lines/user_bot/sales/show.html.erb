@@ -71,6 +71,9 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.benefits") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :benefits), title: @sale_page.sections_context["benefits"]&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.flow_steps", flow_number: @sale_page.sections_context["benefits"]&.size) : I18n.t("common.no_setup") %>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.faq") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :faq), title: @sale_page.sections_context["faq"]&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.flow_steps", flow_number: @sale_page.sections_context["faq"]&.size) : I18n.t("common.no_setup") %>
+
   <div class="action-block margin-around">
     <%= link_to lines_user_bot_sale_path(@sale_page), method: :delete, data: { confirm: I18n.t("common.are_you_sure_message") }, class: "btn btn-orange" do %>
       <i class="fa fa-minus"></i> <span><%= I18n.t("user_bot.dashboards.sales.edit.delete_sale_page") %></span>

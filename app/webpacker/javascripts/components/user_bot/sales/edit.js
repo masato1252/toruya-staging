@@ -14,6 +14,7 @@ import WhyContentEdit from "components/user_bot/sales/why_content_edit";
 import StaffEdit from "components/user_bot/sales/staff_edit";
 import FlowEdit from "components/user_bot/sales/flow_edit";
 import BenefitsEdit from "components/user_bot/sales/benefits_edit";
+import FaqEdit from "components/user_bot/sales/faq_edit";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_edit";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
@@ -226,6 +227,33 @@ const SalePageEdit =({props}) => {
                     break
                   case "REMOVE_BENEFIT":
                     setBenefits(benefits.filter((_, index) => payload.index !== index))
+                    break
+                }}
+              }
+            />
+          </>
+        )
+        break
+      case "faq":
+        return (
+          <>
+            <h3 className="header centerize break-line-content">
+              {"この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。"}
+            </h3>
+            <FaqEdit
+              faq={faq}
+              handleFaqChange={(action) => {
+                const payload = action.payload
+
+                switch(action.type) {
+                  case "SET_FAQ":
+                    setFaq(faq.map((item, index) => payload.index == index ? {...item, [payload.attr]: payload.value} : item))
+                    break
+                  case "ADD_FAQ":
+                    setFaq([...faq, ""])
+                    break
+                  case "REMOVE_FAQ":
+                    setFaq(faq.filter((_, index) => payload.index !== index))
                     break
                 }}
               }
