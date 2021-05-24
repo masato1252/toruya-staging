@@ -45,10 +45,10 @@ const SaleBookingPage = (
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
-      <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
       <BenefitsView benefits={sections_context.benefits} />
-      <FlowView flow={flow} jump={jump} demo={demo} />
+      <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
       <FaqView faq={sections_context.faq} />
+      <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>

@@ -20,6 +20,7 @@ import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_e
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
+import I18n from 'i18n-js/index.js.erb';
 
 const SalePageEdit =({props}) => {
   const [focus_field, setFocusField] = useState()
@@ -183,7 +184,7 @@ const SalePageEdit =({props}) => {
         return (
           <>
             <h3 className="header centerize break-line-content">
-              {"予約からご利用までの 流れを説明してください。"}
+              {I18n.t('user_bot.dashboards.sales.form.flow_header')}
             </h3>
             <FlowEdit
               flow_tips={props.flow_tips}
@@ -211,7 +212,7 @@ const SalePageEdit =({props}) => {
         return (
           <>
             <h3 className="header centerize break-line-content">
-              {"この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。"}
+              {I18n.t('user_bot.dashboards.sales.form.benefits_header')}
             </h3>
             <BenefitsEdit
               benefits={benefits}
@@ -238,7 +239,7 @@ const SalePageEdit =({props}) => {
         return (
           <>
             <h3 className="header centerize break-line-content">
-              {"この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。"}
+              {I18n.t('user_bot.dashboards.sales.form.faq_header')}
             </h3>
             <FaqEdit
               faq={faq}

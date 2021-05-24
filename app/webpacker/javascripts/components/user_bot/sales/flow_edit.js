@@ -5,7 +5,10 @@ import I18n from 'i18n-js/index.js.erb';
 
 const FlowEdit = ({flow_tips, flow, handleFlowChange}) => {
   return (
-    <>
+    <div className="p10 margin-around border border-solid border-black rounded-md">
+      <h3 className="header centerize">
+        {I18n.t("user_bot.dashboards.sales.booking_page_creation.flow_header")}
+      </h3>
       {flow.map((flowStep, index) => {
         return (
           <div className="flow-step" key={`flow-step-${index}`}>
@@ -40,7 +43,7 @@ const FlowEdit = ({flow_tips, flow, handleFlowChange}) => {
           {I18n.t("action.add_step")}
         </button>
       </div>
-    </>
+    </div>
   )
 }
 

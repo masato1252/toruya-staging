@@ -7,7 +7,7 @@ const BenefitsEdit = ({benefits, handleBenefitsChange}) => {
   return (
     <div className="p10 margin-around border border-solid border-black rounded-md">
       <h3 className="header centerize break-line-content">
-        {"この動画セミナーで出来ること"}
+        {I18n.t('user_bot.dashboards.sales.form.benefits_content_header')}
       </h3>
       {benefits.map((benefit, index) => {
         return (
@@ -35,7 +35,7 @@ const BenefitsEdit = ({benefits, handleBenefitsChange}) => {
       })}
       <div className="action-block">
         <button className="btn btn-yellow" onClick={() => handleBenefitsChange({ type: "ADD_BENEFIT" }) }>
-          {I18n.t("action.add_step")}
+          {I18n.t('user_bot.dashboards.sales.form.add_benefit')}
         </button>
       </div>
     </div>

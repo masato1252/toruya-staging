@@ -317,7 +317,9 @@ ja:
           content_header: ヘッドライン
           content_video: ヘッダー動画
           why_content: 購入理由
+          benefits: 利益
           staff: 担当スタッフ
+          faq: よくある質問
           flow: サービスの流れ
           delete_sale_page: 販売ページを削除
           flow_steps: "%{flow_number}ステップ"
@@ -339,10 +341,23 @@ ja:
           introduction_video_url_subtitle: ヘッダー動画
           why_content_title: 販売ページコンテンツ
           why_content_subtitle: 購入理由
+          benefits_title: 販売ページコンテンツ
+          benefits_subtitle: 利益
+          benefits_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
+          benefits_content_header: この動画セミナーで出来ること
+          add_benefit: 項目を追加
           staff_title: 販売ページコンテンツ
           staff_subtitle: 担当スタッフ
           flow_title: 販売ページコンテンツ
           flow_subtitle: サービスの流れ
+          flow_header: 予約からご利用までの 流れを説明してください。
+          faq_title: 販売ページコンテンツ
+          faq_subtitle: よくある質問
+          faq_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
+          faq_content_header: よくある質問
+          faq_question_placeholder: 質問を入力
+          faq_answer_placeholder: 質問への答えを入力
+          add_faq: 質問を追加
         new:
           what_to_sale: この販売ページの目的は何ですか？
           online_booking: オンライン予約募集

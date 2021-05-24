@@ -7,7 +7,7 @@ const FaqEdit = ({faq, handleFaqChange}) => {
   return (
     <div className="p10 margin-around border border-solid border-black rounded-md">
       <h3 className="header centerize break-line-content">
-        {"よくある質問"}
+        {I18n.t('user_bot.dashboards.sales.form.faq_content_header')}
       </h3>
       {faq.map((faq_item, index) => {
         return (
@@ -17,6 +17,7 @@ const FaqEdit = ({faq, handleFaqChange}) => {
               <input
                 type="text"
                 value={faq_item?.question || ""}
+                placeholder={I18n.t('user_bot.dashboards.sales.form.faq_question_placeholder')}
                 onChange={(event) => {
                   handleFaqChange({
                     type: "SET_FAQ",
@@ -30,6 +31,7 @@ const FaqEdit = ({faq, handleFaqChange}) => {
               />
               <TextareaAutosize
                 className="centerize extend with-border text-left my-4"
+                placeholder={I18n.t('user_bot.dashboards.sales.form.faq_answer_placeholder')}
                 rows={1}
                 value={faq_item?.answer || ""}
                 onChange={(event) => {
@@ -52,7 +54,7 @@ const FaqEdit = ({faq, handleFaqChange}) => {
       })}
       <div className="action-block">
         <button className="btn btn-yellow" onClick={() => handleFaqChange({ type: "ADD_FAQ" }) }>
-          {I18n.t("action.add_step")}
+          {I18n.t('user_bot.dashboards.sales.form.add_faq')}
         </button>
       </div>
     </div>

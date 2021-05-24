@@ -9,7 +9,7 @@ const BenefitsView = ({benefits}) => {
   return (
     <div className="content">
       <h3 className="header centerize">
-        {"この動画セミナーで出来ること"}
+        {I18n.t('user_bot.dashboards.sales.form.benefits_content_header')}
       </h3>
       {benefits.map((benefit, index) => {
         return (
