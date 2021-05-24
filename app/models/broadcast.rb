@@ -9,7 +9,7 @@
 #  query            :jsonb
 #  schedule_at      :datetime
 #  sent_at          :datetime
-#  state            :integer          default("final")
+#  state            :integer          default("active")
 #  recipients_count :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null

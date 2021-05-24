@@ -5,12 +5,13 @@ import SaleTemplateView from "components/user_bot/sales/booking_pages/sale_templ
 import PriceBlock from "components/user_bot/sales/booking_pages/price_block";
 import StaffView from "components/user_bot/sales/staff_view";
 import FlowView from "components/user_bot/sales/flow_view";
+import BenefitsView from "components/user_bot/sales/benefits_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
   {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-    shop, flow, preview, introduction_video}) => {
+    shop, flow, preview, introduction_video, sections_context}) => {
 
   if (preview) {
     return (
@@ -44,6 +45,7 @@ const SaleBookingPage = (
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
       <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
+      <BenefitsView benefits={sections_context.benefits} />
       <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">

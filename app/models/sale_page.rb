@@ -21,6 +21,7 @@
 #  selling_start_at           :datetime
 #  normal_price_amount_cents  :decimal(, )
 #  selling_price_amount_cents :decimal(, )
+#  sections_context           :jsonb
 #
 # Indexes
 #

@@ -1728,7 +1728,8 @@ CREATE TABLE public.sale_pages (
     selling_end_at timestamp without time zone,
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
-    selling_price_amount_cents numeric
+    selling_price_amount_cents numeric,
+    sections_context jsonb
 );
 
 
@@ -4487,6 +4488,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210505090646'),
 ('20210513053055'),
 ('20210513103250'),
-('20210517044404');
+('20210517044404'),
+('20210524020657');
 
 

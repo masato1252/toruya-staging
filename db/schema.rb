@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_17_044404) do
+ActiveRecord::Schema.define(version: 2021_05_24_020657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -638,6 +638,7 @@ ActiveRecord::Schema.define(version: 2021_05_17_044404) do
     t.datetime "selling_start_at"
     t.decimal "normal_price_amount_cents"
     t.decimal "selling_price_amount_cents"
+    t.jsonb "sections_context"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
     t.index ["slug"], name: "index_sale_pages_on_slug", unique: true

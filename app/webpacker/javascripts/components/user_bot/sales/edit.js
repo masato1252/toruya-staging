@@ -13,6 +13,7 @@ import { Template, HintTitle } from "shared/builders"
 import WhyContentEdit from "components/user_bot/sales/why_content_edit";
 import StaffEdit from "components/user_bot/sales/staff_edit";
 import FlowEdit from "components/user_bot/sales/flow_edit";
+import BenefitsEdit from "components/user_bot/sales/benefits_edit";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_edit";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
@@ -24,7 +25,10 @@ const SalePageEdit =({props}) => {
   const [template_variables, setTemplateVariables] = useState(props.sale_page.template_variables)
   const [why_content, setWhyContent] = useState(props.sale_page.content)
   const [staff, setStaff] = useState(props.sale_page.staff)
-  const [flow, setFlow] = useState(props.sale_page.flow || [])
+  const [flow, setFlow] = useState(props.sale_page.sections_context?.flow || props.sale_page.flow || [])
+  const [benefits, setBenefits] = useState(props.sale_page.sections_context?.benefits || [])
+  const [reviews, setReviews] = useState(props.sale_page.sections_context?.reviews || [])
+  const [faq, setFaq] = useState(props.sale_page.sections_context?.faq || [])
   const [end_time, setEndTime] = useState(props.sale_page.end_time)
   const [start_time, setStartTime] = useState(props.sale_page.start_time)
   const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option)
@@ -64,7 +68,16 @@ const SalePageEdit =({props}) => {
         submittedData = { staff: _.pick(staff, "id", "picture", "introduction") }
         break
       case "flow":
-        submittedData = { flow: flow }
+        submittedData = { flow }
+        break
+      case "benefits":
+        submittedData = { benefits }
+        break
+      case "reviews":
+        submittedData = { reviews }
+        break
+      case "faq":
+        submittedData = { faq }
         break
       case "introduction_video_url":
         break
@@ -167,25 +180,57 @@ const SalePageEdit =({props}) => {
         break
       case "flow":
         return (
-          <FlowEdit
-            flow_tips={props.flow_tips}
-            flow={flow}
-            handleFlowChange={(action) => {
-              const payload = action.payload
+          <>
+            <h3 className="header centerize break-line-content">
+              {"予約からご利用までの 流れを説明してください。"}
+            </h3>
+            <FlowEdit
+              flow_tips={props.flow_tips}
+              flow={flow}
+              handleFlowChange={(action) => {
+                const payload = action.payload
 
-              switch(action.type) {
-                case "SET_FLOW":
-                  setFlow(flow.map((item, flowIndex) => payload.index == flowIndex ? payload.value : item))
-                  break
-                case "ADD_FLOW":
-                  setFlow([...flow, ""])
-                  break
-                case "REMOVE_FLOW":
-                  setFlow(flow.filter((_, index) => payload.index !== index))
-                  break
-              }}
-            }
-          />
+                switch(action.type) {
+                  case "SET_FLOW":
+                    setFlow(flow.map((item, flowIndex) => payload.index == flowIndex ? payload.value : item))
+                    break
+                  case "ADD_FLOW":
+                    setFlow([...flow, ""])
+                    break
+                  case "REMOVE_FLOW":
+                    setFlow(flow.filter((_, index) => payload.index !== index))
+                    break
+                }}
+              }
+            />
+          </>
+        )
+        break
+      case "benefits":
+        return (
+          <>
+            <h3 className="header centerize break-line-content">
+              {"この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。"}
+            </h3>
+            <BenefitsEdit
+              benefits={benefits}
+              handleBenefitsChange={(action) => {
+                const payload = action.payload
+
+                switch(action.type) {
+                  case "SET_BENEFITS":
+                    setBenefits(benefits.map((item, index) => payload.index == index ? payload.value : item))
+                    break
+                  case "ADD_BENEFIT":
+                    setBenefits([...benefits, ""])
+                    break
+                  case "REMOVE_BENEFIT":
+                    setBenefits(benefits.filter((_, index) => payload.index !== index))
+                    break
+                }}
+              }
+            />
+          </>
         )
         break
       case "introduction_video_url":

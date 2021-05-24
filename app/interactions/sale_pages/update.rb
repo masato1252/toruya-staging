@@ -26,6 +26,9 @@ module SalePages
       array :flow, default: nil do
         string
       end
+      array :benefits, default: nil do
+        string
+      end
     end
 
     def execute
@@ -33,6 +36,10 @@ module SalePages
         case update_attribute
         when "sale_template_variables", "introduction_video_url", "flow", "quantity"
           sale_page.update(attrs.slice(update_attribute))
+        when "benefits", "reviews", "faq"
+          sale_page.sections_context ||= {}
+          sale_page.sections_context.merge!(attrs.slice(update_attribute))
+          sale_page.save
         when "normal_price"
           sale_page.update(normal_price_amount_cents: attrs[:normal_price])
         when "selling_price"
