@@ -15,6 +15,7 @@ import StaffEdit from "components/user_bot/sales/staff_edit";
 import FlowEdit from "components/user_bot/sales/flow_edit";
 import BenefitsEdit from "components/user_bot/sales/benefits_edit";
 import FaqEdit from "components/user_bot/sales/faq_edit";
+import ReviewsEdit from "components/user_bot/sales/reviews_edit";
 import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit";
 import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_edit";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
@@ -29,8 +30,8 @@ const SalePageEdit =({props}) => {
   const [staff, setStaff] = useState(props.sale_page.staff)
   const [flow, setFlow] = useState(props.sale_page.sections_context?.flow || props.sale_page.flow || [])
   const [benefits, setBenefits] = useState(props.sale_page.sections_context?.benefits || [])
-  const [reviews, setReviews] = useState(props.sale_page.sections_context?.reviews || [])
   const [faq, setFaq] = useState(props.sale_page.sections_context?.faq || [])
+  const [reviews, setReviews] = useState(props.sale_page.reviews)
   const [end_time, setEndTime] = useState(props.sale_page.end_time)
   const [start_time, setStartTime] = useState(props.sale_page.start_time)
   const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option)
@@ -76,7 +77,7 @@ const SalePageEdit =({props}) => {
         submittedData = { benefits }
         break
       case "reviews":
-        submittedData = { reviews }
+        submittedData = { reviews: reviews.map((review) => _.pick(review, "customer_name", "content", "picture", "filename")) }
         break
       case "faq":
         submittedData = { faq }
@@ -256,6 +257,33 @@ const SalePageEdit =({props}) => {
                     break
                   case "REMOVE_FAQ":
                     setFaq(faq.filter((_, index) => payload.index !== index))
+                    break
+                }}
+              }
+            />
+          </>
+        )
+        break
+      case "reviews":
+        return (
+          <>
+            <h3 className="header centerize break-line-content">
+              {I18n.t('user_bot.dashboards.sales.form.reviews_header')}
+            </h3>
+            <ReviewsEdit
+              reviews={reviews}
+              handleReviewChange={(action) => {
+                const payload = action.payload
+
+                switch(action.type) {
+                  case "SET_REVIEW":
+                    setReviews(reviews.map((item, index) => payload.index == index ? {...item, ...payload.value} : item))
+                    break
+                  case "ADD_REVIEW":
+                    setReviews([...reviews, ""])
+                    break
+                  case "REMOVE_REVIEW":
+                    setReviews(reviews.filter((_, index) => payload.index !== index))
                     break
                 }}
               }

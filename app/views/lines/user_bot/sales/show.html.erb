@@ -68,6 +68,9 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.staff") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :staff), title: @sale_page.staff.name.presence || I18n.t("common.no_setup") %>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.reviews") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :reviews), title: @sale_page.sections_context&.[]("reviews")&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.review_items", review_number: @sale_page.sections_context&.[]("reviews")&.size) : I18n.t("common.no_setup") %>
+
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.faq") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :faq), title: @sale_page.sections_context&.[]("faq")&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.question_items", question_number: @sale_page.sections_context&.[]("faq")&.size) : I18n.t("common.no_setup") %>
 

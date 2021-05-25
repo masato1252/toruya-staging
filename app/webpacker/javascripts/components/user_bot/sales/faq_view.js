@@ -9,7 +9,7 @@ const FaqView = ({faq}) => {
   return (
     <div className="content">
       <h3 className="header centerize">
-        {"よくある質問"}
+        {I18n.t('user_bot.dashboards.sales.form.faq_content_header')}
       </h3>
       {faq.map((faq_item, index) => {
         return (

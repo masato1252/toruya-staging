@@ -45,6 +45,10 @@ $line-margin: 20px;
   flex-direction: column;
 }
 
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
 .justify-between {
   justify-content: space-between;
 }

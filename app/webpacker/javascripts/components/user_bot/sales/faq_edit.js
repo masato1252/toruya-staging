@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import TextareaAutosize from 'react-autosize-textarea';
 
 import I18n from 'i18n-js/index.js.erb';

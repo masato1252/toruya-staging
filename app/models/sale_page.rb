@@ -39,6 +39,7 @@ class SalePage < ApplicationRecord
   belongs_to :user
 
   has_one_attached :picture # content picture
+  has_many_attached :customer_pictures
 
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
 
