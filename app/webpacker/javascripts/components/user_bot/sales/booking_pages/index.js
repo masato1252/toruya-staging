@@ -45,9 +45,9 @@ const SaleBookingPage = (
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
-      <BenefitsView benefits={sections_context.benefits} />
+      <BenefitsView benefits={sections_context?.benefits} />
       <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
-      <FaqView faq={sections_context.faq} />
+      <FaqView faq={sections_context?.faq} />
       <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">
