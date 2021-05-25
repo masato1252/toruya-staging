@@ -136,4 +136,12 @@ class SalePage < ApplicationRecord
         VideoThumb::get(introduction_video_url, "medium") || ThumbnailOfVideo.get(introduction_video_url)
       end
   end
+
+  def solution_type
+    if is_booking_page?
+      "menu"
+    else
+      product.solution_type
+    end
+  end
 end

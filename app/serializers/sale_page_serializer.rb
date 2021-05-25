@@ -2,7 +2,7 @@
 
 class SalePageSerializer
   include JSONAPI::Serializer
-  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context
+  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type
 
   attribute :content do |sale_page|
     sale_page.content.merge(

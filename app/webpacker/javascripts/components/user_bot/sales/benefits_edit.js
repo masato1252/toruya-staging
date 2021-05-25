@@ -3,11 +3,11 @@ import TextareaAutosize from 'react-autosize-textarea';
 
 import I18n from 'i18n-js/index.js.erb';
 
-const BenefitsEdit = ({benefits, handleBenefitsChange}) => {
+const BenefitsEdit = ({benefits, handleBenefitsChange, solution_type}) => {
   return (
     <div className="p10 margin-around border border-solid border-black rounded-md">
       <h3 className="header centerize break-line-content">
-        {I18n.t('user_bot.dashboards.sales.form.benefits_content_header')}
+        {I18n.t(`user_bot.dashboards.sales.form.benefits_content_header.${solution_type}`)}
       </h3>
       {benefits.map((benefit, index) => {
         return (

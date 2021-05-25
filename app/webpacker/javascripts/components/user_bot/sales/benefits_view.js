@@ -3,13 +3,13 @@
 import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 
-const BenefitsView = ({benefits}) => {
+const BenefitsView = ({benefits, solution_type}) => {
   if (!benefits) return <></>
 
   return (
     <div className="content">
       <h3 className="header centerize">
-        {I18n.t('user_bot.dashboards.sales.form.benefits_content_header')}
+        {I18n.t(`user_bot.dashboards.sales.form.benefits_content_header.${solution_type}`)}
       </h3>
       {benefits.map((benefit, index) => {
         return (

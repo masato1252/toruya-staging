@@ -12,7 +12,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
   {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-    shop, flow, preview, introduction_video, sections_context}) => {
+    shop, flow, preview, introduction_video, sections_context, solution_type}) => {
 
   if (preview) {
     return (
@@ -45,7 +45,7 @@ const SaleBookingPage = (
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(4)} />
-      <BenefitsView benefits={sections_context?.benefits} />
+      <BenefitsView benefits={sections_context?.benefits} solution_type={solution_type} />
       <StaffView staff={staff} demo={demo} jumpTo={() => jump(5)} />
       <FaqView faq={sections_context?.faq} />
       <FlowView flow={flow} jump={jump} demo={demo} />

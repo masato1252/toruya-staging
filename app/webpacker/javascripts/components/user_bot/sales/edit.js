@@ -215,6 +215,7 @@ const SalePageEdit =({props}) => {
               {I18n.t('user_bot.dashboards.sales.form.benefits_header')}
             </h3>
             <BenefitsEdit
+              solution_type={props.sale_page.solution_type}
               benefits={benefits}
               handleBenefitsChange={(action) => {
                 const payload = action.payload
