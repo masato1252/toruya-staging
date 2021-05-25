@@ -303,6 +303,8 @@ ja:
         create_a_sale_page: 販売ページを使うと ネットで予約募集できます
         create_a_sale_page_btn: 販売ページを作成
       sales:
+        modal:
+          title: 販売ページを確認
         edit:
           sale_pages: 販売ページ
           sales_about: ページ概要
