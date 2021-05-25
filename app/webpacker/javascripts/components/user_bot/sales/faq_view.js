@@ -13,8 +13,8 @@ const FaqView = ({faq}) => {
       </h3>
       {faq.map((faq_item, index) => {
         return (
-          <div className="flex my-4" key={`faq-item-${index}`}>
-            <i className="fa fa-question-circle"></i>
+          <div className="flex my-4 text-gray-500" key={`faq-item-${index}`}>
+            <i className="fa fa-question-circle mt-1"></i>
             <div className="flex flex-col w-full text-left">
               <b className="ml-1">{faq_item.question}</b>
               <p className="break-line-content ml-1">

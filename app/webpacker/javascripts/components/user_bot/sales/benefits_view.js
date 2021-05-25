@@ -13,8 +13,8 @@ const BenefitsView = ({benefits}) => {
       </h3>
       {benefits.map((benefit, index) => {
         return (
-          <div className="flex my-4" key={`benefit-item-${index}`}>
-            <i className="fa fa-check-circle"></i>
+          <div className="flex my-4 text-gray-500" key={`benefit-item-${index}`}>
+            <i className="fa fa-check-circle mt-1"></i>
             <p className="break-line-content text-left ml-1">
               {benefit}
             </p>
