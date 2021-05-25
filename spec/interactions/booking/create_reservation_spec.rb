@@ -212,10 +212,12 @@ RSpec.describe Booking::CreateReservation do
           customer = result[:customer]
           reservation = result[:reservation]
 
+          customer.reload
           expect(customer.last_name).to eq("foo")
           expect(customer.first_name).to eq("bar")
           expect(customer.phonetic_last_name).to eq("baz")
           expect(customer.phonetic_first_name).to eq("qux")
+          expect(customer.menu_ids).to eq(reservation.menu_ids.map(&:to_s))
 
           reservation_customer = reservation.reservation_customers.first
           expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({

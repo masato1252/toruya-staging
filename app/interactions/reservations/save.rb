@@ -103,10 +103,21 @@ module Reservations
         end
 
         if customers_list.present?
-          reservation.reservation_customers.destroy_all
+          reservation_customers = reservation.reservation_customers.to_a
 
-          customers_list.each do |h|
-            reservation.reservation_customers.create(h)
+          customers_list.each do |customer_data|
+            if reservation_customer = reservation_customers.find { |reservation_customer| reservation_customer.customer_id == customer_data[:customer_id] }
+              reservation_customer.update(customer_data)
+            else
+              ReservationCustomers::Create.run(reservation: reservation, customer_data: customer_data)
+            end
+          end
+
+          customer_ids = customers_list.map { |customer| customer[:customer_id] }
+          reservation_customers.each do |reservation_customer|
+            if customer_ids.exclude?(reservation_customer.customer_id)
+              reservation_customer.destroy
+            end
           end
         end
 
