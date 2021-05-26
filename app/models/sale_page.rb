@@ -53,7 +53,7 @@ class SalePage < ApplicationRecord
   end
 
   def product_name
-    product.name
+    product&.name
   end
 
   def selling_price_text
