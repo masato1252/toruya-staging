@@ -27,5 +27,15 @@ RSpec.describe Reservations::CheckOut do
 
       expect(reservation).to be_checked_out
     end
+
+    context "when there are customers" do
+      let(:reservation) { FactoryBot.create(:reservation, :checked_in, customers: [customer]) }
+      it "checks out reservation and update customer's menu_ids" do
+        outcome
+
+        expect(reservation).to be_checked_out
+        expect(customer.reload.menu_ids).to eq(reservation.menu_ids.map(&:to_s))
+      end
+    end
   end
 end

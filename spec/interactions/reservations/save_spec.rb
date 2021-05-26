@@ -145,7 +145,6 @@ RSpec.describe Reservations::Save do
           expect(second_reservation_staff.staff).to eq(staff)
 
           expect(result.menu_ids).to eq([menu.id, menu2.id])
-          expect(customer.reload.menu_ids).to eq(reservation.menu_ids.map(&:to_s))
         end
 
         context "when there are three menus responsible by three staffs" do
