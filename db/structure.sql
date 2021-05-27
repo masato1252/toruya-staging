@@ -454,7 +454,8 @@ CREATE TABLE public.booking_pages (
     draft boolean DEFAULT true NOT NULL,
     booking_limit_day integer DEFAULT 1 NOT NULL,
     line_sharing boolean DEFAULT true,
-    slug character varying
+    slug character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1675,7 +1676,8 @@ CREATE TABLE public.sale_pages (
     selling_end_at timestamp without time zone,
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
-    selling_price_amount_cents numeric
+    selling_price_amount_cents numeric,
+    deleted_at timestamp without time zone
 );
 
 
@@ -3422,7 +3424,7 @@ ALTER TABLE ONLY public.web_push_subscriptions
 -- Name: booking_page_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX booking_page_index ON public.booking_pages USING btree (user_id, draft, line_sharing, start_at);
+CREATE INDEX booking_page_index ON public.booking_pages USING btree (user_id, deleted_at, draft);
 
 
 --
@@ -4126,6 +4128,13 @@ CREATE INDEX reservation_user_shop_index ON public.reservations USING btree (use
 
 
 --
+-- Name: sale_page_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sale_page_index ON public.sale_pages USING btree (user_id, deleted_at);
+
+
+--
 -- Name: shop_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4394,6 +4403,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210416094449'),
 ('20210419025345'),
 ('20210430052825'),
-('20210505090646');
+('20210505090646'),
+('20210527015333'),
+('20210527025229');
 
 

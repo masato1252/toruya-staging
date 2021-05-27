@@ -277,7 +277,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def booking_page
-    @booking_page ||= BookingPage.find_by(slug: params[:id]) || BookingPage.find(params[:id])
+    @booking_page ||= BookingPage.active.find_by(slug: params[:id]) || BookingPage.active.find(params[:id])
   end
 
   def redirect_to_booking_show_page(exception)
