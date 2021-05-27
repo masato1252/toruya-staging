@@ -1676,7 +1676,8 @@ CREATE TABLE public.sale_pages (
     selling_end_at timestamp without time zone,
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
-    selling_price_amount_cents numeric
+    selling_price_amount_cents numeric,
+    deleted_at timestamp without time zone
 );
 
 
@@ -4127,6 +4128,13 @@ CREATE INDEX reservation_user_shop_index ON public.reservations USING btree (use
 
 
 --
+-- Name: sale_page_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sale_page_index ON public.sale_pages USING btree (user_id, deleted_at);
+
+
+--
 -- Name: shop_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4396,6 +4404,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210419025345'),
 ('20210430052825'),
 ('20210505090646'),
-('20210527015333');
+('20210527015333'),
+('20210527025229');
 
 
