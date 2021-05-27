@@ -38,10 +38,10 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
   def destroy
     booking_page = super_user.booking_pages.find(params[:id])
 
-    if booking_page.destroy
-      redirect_to lines_user_bot_booking_pages_path(super_user), notice: I18n.t("common.delete_successfully_message")
+    if booking_page.update(deleted_at: Time.current)
+      redirect_to lines_user_bot_booking_pages_path, notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_booking_pages_path(super_user)
+      redirect_to lines_user_bot_booking_pages_path
     end
   end
 

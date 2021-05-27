@@ -8,7 +8,7 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
   const renderActions = () => {
     if (no_action) return <></>
 
-    if (!payable)
+    if (!payable) {
       return (
         <div className="booking-info">
           <div className="unpayable-view">
@@ -22,18 +22,20 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
           </div>
         </div>
       )
-    if (!is_started) {
+    }
+
+    if (is_ended) {
       return (
         <>
-          <ServiceStartInfo start_at={start_at} />
+          <ServiceEndInfo />
           <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
         </>
       )
     }
-    else if (is_ended) {
+    else if (!is_started) {
       return (
         <>
-          <ServiceEndInfo />
+          <ServiceStartInfo start_at={start_at} />
           <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
         </>
       )

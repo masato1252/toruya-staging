@@ -946,12 +946,12 @@ class BookingReservationForm extends React.Component {
       return this.renderBookingDownView()
     }
 
-    if (!is_started) {
-      return this.renderBookingStartedYetView()
-    }
-
     if (is_ended) {
       return this.renderBookingEndedView()
+    }
+
+    if (!is_started) {
+      return this.renderBookingStartedYetView()
     }
 
     if (is_single_booking_time && is_single_option) {

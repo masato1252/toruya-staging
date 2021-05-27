@@ -82,7 +82,7 @@ class User < ApplicationRecord
   end
   has_many :custom_schedules, dependent: :destroy
   has_many :booking_options
-  has_many :booking_pages
+  has_many :booking_pages, -> { active }
   has_many :referrals, foreign_key: :referee_id
   has_one :reference, foreign_key: :referrer_id, class_name: "Referral"
   has_many :payments, foreign_key: :receiver_id
@@ -93,7 +93,7 @@ class User < ApplicationRecord
   has_one :business_application
   has_one :social_user
   has_many :web_push_subscriptions
-  has_many :sale_pages
+  has_many :sale_pages, -> { active }
   has_many :online_services
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true

@@ -8,18 +8,18 @@ const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) =
   const renderActions = () => {
     if (no_action) return <></>
 
-    if (!product.is_started) {
+    if (product.is_ended) {
       return (
         <>
-          <BookingStartInfo start_at={product.start_at} />
+          <BookingEndInfo />
           <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
         </>
       )
     }
-    else if (product.is_ended) {
+    else if (!product.is_started) {
       return (
         <>
-          <BookingEndInfo />
+          <BookingStartInfo start_at={product.start_at} />
           <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
         </>
       )
