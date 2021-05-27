@@ -5,7 +5,7 @@
       service_id: @online_service.id,
       service_type: @online_service.class.name,
       template: @template,
-      customer_name: current_user.name,
+      customer_name: current_user.display_last_name,
       service_title: @online_service.name
     }
   }

@@ -121,7 +121,7 @@ ja:
           content: メッセージ内容
           preview: プレビュー
           buttons:
-            customer_name: 顧客氏名
+            customer_name: 顧客名字
             shop_name: 店舗名
             shop_phone_number: 店舗の電話番号
             reservation_time: 予約時間
@@ -169,7 +169,7 @@ ja:
           content: メッセージ内容
           preview: プレビュー
           buttons:
-            customer_name: 顧客氏名
+            customer_name: 顧客名字
             shop_name: 店舗名
             shop_phone_number: 店舗の電話番号
             reservation_time: 予約時間
