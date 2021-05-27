@@ -250,9 +250,9 @@ ja:
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
         specific_menu_customers: 特定メニューの利用客
-        specific_menu_customers_desc: ある特定のメニューの利用履歴があるアクティブ顧客
+        specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客にアフターフォローする
         specific_service_customers: 特定サービスの利用客
-        specific_service_customers_desc: ある特定のオンラインサービスの利用履歴があるアクティブ顧客
+        specific_service_customers_desc: 特定のオンラインサービスの利用履歴があるアクティブ顧客にアフターフォローする
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？
         what_service_do_you_want: どのサービスの利用客に配信しますか？
