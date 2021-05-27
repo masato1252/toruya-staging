@@ -12,6 +12,7 @@ module SocialMessages
     integer :message_type
     time :schedule_at, default: nil
     boolean :send_line, default: true # false is for recording some behavior, usually do this with some bot flex messages
+    object :broadcast, default: nil
 
     def execute
       is_message_from_customer = message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
@@ -24,7 +25,8 @@ module SocialMessages
         readed_at: readed ? Time.zone.now : nil,
         sent_at: is_message_from_customer || !send_line ? Time.current : nil,
         schedule_at: schedule_at,
-        message_type: message_type
+        message_type: message_type,
+        broadcast: broadcast
       )
 
       if message.errors.present?

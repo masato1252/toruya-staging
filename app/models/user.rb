@@ -61,6 +61,7 @@ class User < ApplicationRecord
   has_many :menus, -> { active }
   has_many :staffs, -> { active }
   has_many :customers, -> { active }
+  has_many :broadcasts
   has_many :reservation_settings
   has_many :categories
   has_many :ranks, dependent: :destroy
@@ -97,6 +98,7 @@ class User < ApplicationRecord
 
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
+  delegate :display_last_name, to: :profile, allow_nil: true
   delegate :current_plan, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount

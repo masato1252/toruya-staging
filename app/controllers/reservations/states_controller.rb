@@ -34,7 +34,7 @@ class Reservations::StatesController < DashboardController
   end
 
   def check_out
-    reservation.check_out!
+    Reservations::CheckOut.run(reservation: reservation)
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.update_successfully_message")
   end
 

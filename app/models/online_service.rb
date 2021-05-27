@@ -134,6 +134,7 @@ class OnlineService < ApplicationRecord
   belongs_to :company, polymorphic: true
 
   has_many :online_service_customer_relations
+  has_many :customers, through: :online_service_customer_relations
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required]

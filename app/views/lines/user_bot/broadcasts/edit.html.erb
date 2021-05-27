@@ -1,0 +1,17 @@
+<%= react_component("user_bot/broadcasts/creation_flow", {
+  props: {
+    broadcast: BroadcastSerializer.new(@broadcast).attributes_hash,
+    menus: menu_group_options(@menus[:category_with_menu_options], :minutes, :interval, :min_staffs_number),
+    online_services: current_user.online_services.includes(:company, sale_page: [:product, :sale_template]).map { |service|
+      {
+        label: service.name,
+        value: OnlineServiceSerializer.new(service).attributes_hash
+      }
+    },
+    message: {
+      customer_name: current_user.display_last_name,
+    }
+  }
+},
+{ camelize_props: false }
+) %>

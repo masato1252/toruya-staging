@@ -198,7 +198,7 @@ module Booking
                       }
                     )
                   else
-                    same_content_reservation.reservation_customers.create(
+                    ReservationCustomers::Create.run(reservation: same_content_reservation, customer_data: {
                       customer_id: customer.id,
                       state: "pending",
                       booking_page_id: booking_page.id,
@@ -210,7 +210,7 @@ module Booking
                       details: {
                         new_customer_info: new_customer_info.attributes.compact,
                       }
-                    )
+                    })
                     same_content_reservation.count_of_customers = same_content_reservation.reservation_customers.active.count
                     same_content_reservation.save
                   end

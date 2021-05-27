@@ -1,0 +1,17 @@
+<div class="form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", title: t("user_bot.dashboards.broadcasts.broadcast_title") %>
+
+  <div class="field-header"><%= t("common.menu") %></div>
+  <% @broadcasts.each do |broadcast| %>
+    <%= render "lines/user_bot/field_state", state: broadcast.state do %>
+      <%= render "lines/user_bot/field_row", path: lines_user_bot_broadcast_path(broadcast), state: broadcast.state do %>
+        <div class="dotdotdot">
+          <h3><%= I18n.l(broadcast.broadcast_at, format: :long_date_with_wday) %></h3>
+          <div class="desc">
+            <%= broadcast.content %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

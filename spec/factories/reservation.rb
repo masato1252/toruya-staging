@@ -26,6 +26,10 @@ FactoryBot.define do
       aasm_state { "reserved" }
     end
 
+    trait :checked_in do
+      aasm_state { "checked_in" }
+    end
+
     trait :fully_occupied do
       customers do
         [

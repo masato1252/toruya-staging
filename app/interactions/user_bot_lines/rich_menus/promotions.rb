@@ -50,6 +50,21 @@ module UserBotLines
                 displayText: false
               )
             },
+            {
+              # 4
+              "bounds": {
+                "x": 1250,
+                "y": 843,
+                "width": 1250,
+                "height": 843
+              },
+              "action": LineActions::Postback.template(
+                action: UserBotLines::Actions::SwitchRichMenu.class_name,
+                enabled: true,
+                params: { rich_menu_key: UserBotLines::RichMenus::LineMarketing::KEY },
+                displayText: false
+              )
+            },
           ]
         }
 

@@ -48,7 +48,7 @@ const CustomerMessageForm = () => {
       <div>
         <textarea ref={ref} className="extend with-border" placeholder={I18n.t("common.message_content_placholder")}/>
       </div>
-      <div className="text-align-left">
+      <div className="text-left">
         <div className="margin-around m10 mt-0">
           <label>
             <input
