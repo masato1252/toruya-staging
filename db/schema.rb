@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_05_090646) do
+ActiveRecord::Schema.define(version: 2021_05_27_015333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -172,9 +172,10 @@ ActiveRecord::Schema.define(version: 2021_05_05_090646) do
     t.integer "booking_limit_day", default: 1, null: false
     t.boolean "line_sharing", default: true
     t.string "slug"
+    t.datetime "deleted_at"
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
     t.index ["slug"], name: "index_booking_pages_on_slug", unique: true
-    t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
+    t.index ["user_id", "deleted_at", "draft"], name: "booking_page_index"
   end
 
   create_table "business_applications", force: :cascade do |t|

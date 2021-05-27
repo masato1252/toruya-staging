@@ -20,10 +20,11 @@
 #  booking_limit_day       :integer          default(1), not null
 #  line_sharing            :boolean          default(TRUE)
 #  slug                    :string
+#  deleted_at              :datetime
 #
 # Indexes
 #
-#  booking_page_index              (user_id,draft,line_sharing,start_at)
+#  booking_page_index              (user_id,deleted_at,draft)
 #  index_booking_pages_on_shop_id  (shop_id)
 #  index_booking_pages_on_slug     (slug) UNIQUE
 #
@@ -42,7 +43,8 @@ class BookingPage < ApplicationRecord
   belongs_to :user
   belongs_to :shop
 
-  scope :started, -> { where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
+  scope :active, -> { where(deleted_at: nil) }
+  scope :started, -> { active.where(start_at: nil).or(where("booking_pages.start_at < ?", Time.current)) }
   validates :booking_limit_day, numericality: { greater_than_or_equal_to: 0 }
 
   def primary_product
@@ -78,7 +80,7 @@ class BookingPage < ApplicationRecord
   end
 
   def ended?
-    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at)
+    (end_at && Time.zone.now > end_at) || (booking_page_special_dates.exists? && available_booking_start_date > booking_page_special_dates.last.start_at) || deleted_at.present?
   end
 
   def only_specail_dates_booking?
