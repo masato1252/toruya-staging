@@ -206,6 +206,7 @@ ja:
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
       broadcasts:
+        broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧
         content: メッセージ内容
         audiences: 配信相手
