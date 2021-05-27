@@ -1730,11 +1730,8 @@ CREATE TABLE public.sale_pages (
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
     selling_price_amount_cents numeric,
-<<<<<<< HEAD
-    sections_context jsonb
-=======
+    sections_context jsonb,
     deleted_at timestamp without time zone
->>>>>>> master
 );
 
 

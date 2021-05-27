@@ -36,6 +36,22 @@ $line-margin: 20px;
   padding: 10px;
 }
 
+.text-10px {
+  font-size: 10px;
+}
+
+.text-12px {
+  font-size: 12px;
+}
+
+.ml-2-5 {
+  margin-left: 0.625rem;
+}
+
+.mr-2-5 {
+  margin-right: 0.625rem;
+}
+
 /* Tailwindcss*/
 .flex {
   display: flex;
@@ -55,6 +71,18 @@ $line-margin: 20px;
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .w-full {
@@ -119,4 +147,8 @@ $line-margin: 20px;
 
 .mt-1 {
   margin-top: 0.25rem;
+}
+
+.w-5 {
+  width: 1.25rem;
 }

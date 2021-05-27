@@ -36,7 +36,7 @@ const ReviewsEdit = ({reviews, handleReviewChange}) => {
                 imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
                 maxFileSize={5242880}
               />
-              <div className="flex flex-col">
+              <div className={`flex flex-col w-full ${index % 2 == 0 ? "ml-2-5" : "mr-2-5"}`}>
                 <TextareaAutosize
                   className="centerize extend with-border text-left my-4"
                   placeholder={I18n.t('user_bot.dashboards.sales.form.review_content_placeholder')}
@@ -54,27 +54,30 @@ const ReviewsEdit = ({reviews, handleReviewChange}) => {
                     })
                   }}
                 />
-                <input
-                  type="text"
-                  value={review?.customer_name || ""}
-                  placeholder={I18n.t('user_bot.dashboards.sales.form.review_customer_name_placeholder')}
-                  onChange={(event) => {
-                    handleReviewChange({
-                      type: "SET_REVIEW",
-                      payload: {
-                        index: index,
-                        value: {
-                          customer_name: event.target.value
+                <div className="flex items-center justify-end">
+                  <input
+                    type="text"
+                    value={review?.customer_name || ""}
+                    placeholder={I18n.t('user_bot.dashboards.sales.form.review_customer_name_placeholder')}
+                    onChange={(event) => {
+                      handleReviewChange({
+                        type: "SET_REVIEW",
+                        payload: {
+                          index: index,
+                          value: {
+                            customer_name: event.target.value
+                          }
                         }
-                      }
-                    })
-                  }}
-                />
+                      })
+                    }}
+                  />
+                  <span className="text-10px w-5">{I18n.t("common.mr")}</span>
+                  <button className="btn btn-orange" onClick={() => handleReviewChange({ type: "REMOVE_REVIEW", payload: { index } }) }>
+                    <i className="fa fa-minus"></i>
+                  </button>
+                </div>
               </div>
             </div>
-            <button className="btn btn-orange" onClick={() => handleReviewChange({ type: "REMOVE_REVIEW", payload: { index } }) }>
-              <i className="fa fa-minus"></i>
-            </button>
           </div>
         )
       })}

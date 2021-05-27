@@ -329,7 +329,7 @@ ja:
           flow_steps: "%{flow_number}ステップ"
           benefit_items: "%{benefit_number}項目"
           question_items: "%{question_number}問"
-          review_items: "%{review_number}声"
+          review_items: "%{review_number}名の声"
           share_code_btn: 購入ボタンをコピー
         form:
           start_time_title: ページ概要

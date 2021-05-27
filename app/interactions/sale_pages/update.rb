@@ -86,7 +86,7 @@ module SalePages
           responsible_staff = sale_page.user.staffs.find(attrs[:staff][:id])
           sale_page.update(staff: responsible_staff)
           if attrs[:staff][:picture]
-              responsible_staff.picture.purge
+            responsible_staff.picture.purge
             responsible_staff.picture = attrs[:staff][:picture]
           end
           responsible_staff.introduction = attrs[:staff][:introduction]
