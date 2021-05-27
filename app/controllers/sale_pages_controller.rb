@@ -4,7 +4,7 @@ class SalePagesController < ActionController::Base
   layout "booking"
 
   def show
-    @sale_page ||= SalePage.find_by(slug: params[:slug]) || SalePage.find(params[:slug])
+    @sale_page ||= SalePage.active.find_by(slug: params[:slug]) || SalePage.active.find(params[:slug])
     @main_product = @sale_page.product
 
     case @main_product

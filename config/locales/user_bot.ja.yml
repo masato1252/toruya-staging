@@ -121,7 +121,7 @@ ja:
           content: メッセージ内容
           preview: プレビュー
           buttons:
-            customer_name: 顧客氏名
+            customer_name: 顧客名字
             shop_name: 店舗名
             shop_phone_number: 店舗の電話番号
             reservation_time: 予約時間
@@ -169,7 +169,7 @@ ja:
           content: メッセージ内容
           preview: プレビュー
           buttons:
-            customer_name: 顧客氏名
+            customer_name: 顧客名字
             shop_name: 店舗名
             shop_phone_number: 店舗の電話番号
             reservation_time: 予約時間
@@ -206,6 +206,7 @@ ja:
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
       broadcasts:
+        broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧
         content: メッセージ内容
         audiences: 配信相手
@@ -250,9 +251,9 @@ ja:
         all_customers: 全ての顧客
         all_customers_desc: 顧客情報が連携されている全てのLINEフレンド
         specific_menu_customers: 特定メニューの利用客
-        specific_menu_customers_desc: ある特定のメニューの利用履歴があるアクティブ顧客
+        specific_menu_customers_desc: 特定のメニューで利用履歴(チェックアウト済み)があるアクティブ顧客にアフターフォローする
         specific_service_customers: 特定サービスの利用客
-        specific_service_customers_desc: ある特定のオンラインサービスの利用履歴があるアクティブ顧客
+        specific_service_customers_desc: 特定のオンラインサービスの利用履歴があるアクティブ顧客にアフターフォローする
         approximate_customers_count: 配信予定数
         what_menu_do_you_want: どのメニューの利用客に配信しますか？
         what_service_do_you_want: どのサービスの利用客に配信しますか？

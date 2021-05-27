@@ -212,6 +212,7 @@ RSpec.describe Booking::CreateReservation do
           customer = result[:customer]
           reservation = result[:reservation]
 
+          customer.reload
           expect(customer.last_name).to eq("foo")
           expect(customer.first_name).to eq("bar")
           expect(customer.phonetic_last_name).to eq("baz")

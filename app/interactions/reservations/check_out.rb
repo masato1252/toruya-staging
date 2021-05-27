@@ -14,7 +14,7 @@ module Reservations
         reservation.check_out!
 
         reservation.customers.each do |customer|
-          customer.update(menu_ids: customer.menu_ids.concat(reservation.menu_ids).uniq)
+          customer.update(menu_ids: (customer.menu_ids.concat(reservation.menu_ids.map(&:to_s))).uniq)
         end
         reservation
       end

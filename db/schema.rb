@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_24_020657) do
+ActiveRecord::Schema.define(version: 2021_05_27_025229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -173,9 +173,10 @@ ActiveRecord::Schema.define(version: 2021_05_24_020657) do
     t.integer "booking_limit_day", default: 1, null: false
     t.boolean "line_sharing", default: true
     t.string "slug"
+    t.datetime "deleted_at"
     t.index ["shop_id"], name: "index_booking_pages_on_shop_id"
     t.index ["slug"], name: "index_booking_pages_on_slug", unique: true
-    t.index ["user_id", "draft", "line_sharing", "start_at"], name: "booking_page_index"
+    t.index ["user_id", "deleted_at", "draft"], name: "booking_page_index"
   end
 
   create_table "broadcasts", force: :cascade do |t|
@@ -639,11 +640,12 @@ ActiveRecord::Schema.define(version: 2021_05_24_020657) do
     t.decimal "normal_price_amount_cents"
     t.decimal "selling_price_amount_cents"
     t.jsonb "sections_context"
+    t.datetime "deleted_at"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"
     t.index ["slug"], name: "index_sale_pages_on_slug", unique: true
     t.index ["staff_id"], name: "index_sale_pages_on_staff_id"
-    t.index ["user_id"], name: "index_sale_pages_on_user_id"
+    t.index ["user_id", "deleted_at"], name: "sale_page_index"
   end
 
   create_table "sale_templates", force: :cascade do |t|

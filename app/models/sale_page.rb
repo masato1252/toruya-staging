@@ -22,6 +22,7 @@
 #  normal_price_amount_cents  :decimal(, )
 #  selling_price_amount_cents :decimal(, )
 #  sections_context           :jsonb
+#  deleted_at                 :datetime
 #
 # Indexes
 #
@@ -29,7 +30,7 @@
 #  index_sale_pages_on_sale_template_id             (sale_template_id)
 #  index_sale_pages_on_slug                         (slug) UNIQUE
 #  index_sale_pages_on_staff_id                     (staff_id)
-#  index_sale_pages_on_user_id                      (user_id)
+#  sale_page_index                                  (user_id,deleted_at)
 #
 
 class SalePage < ApplicationRecord
@@ -41,6 +42,7 @@ class SalePage < ApplicationRecord
   has_one_attached :picture # content picture
   has_many_attached :customer_pictures
 
+  scope :active, -> { where(deleted_at: nil) }
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
 
   monetize :selling_price_amount_cents, allow_nil: true
@@ -55,7 +57,7 @@ class SalePage < ApplicationRecord
   end
 
   def product_name
-    product.name
+    product&.name
   end
 
   def selling_price_text

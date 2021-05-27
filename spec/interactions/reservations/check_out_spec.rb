@@ -22,7 +22,7 @@ RSpec.describe Reservations::CheckOut do
     end
 
 
-    it "checks out reservation and update customer's menu_ids" do
+    it "checks out reservation" do
       outcome
 
       expect(reservation).to be_checked_out

@@ -8,7 +8,7 @@ module Notifiers
     object :broadcast
 
     def message
-      Translator.perform(broadcast.content, { customer_name: receiver.name })
+      Translator.perform(broadcast.content, { customer_name: receiver.display_last_name })
     end
 
     def send_line
