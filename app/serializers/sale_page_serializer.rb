@@ -36,7 +36,7 @@ class SalePageSerializer
 
   attribute :reviews do |object|
     if object.sections_context&.[]("reviews").blank?
-      []
+      nil
     else
       picture_url_mapping =
         object.customer_pictures.each_with_object({}) do |customer_picture, h|

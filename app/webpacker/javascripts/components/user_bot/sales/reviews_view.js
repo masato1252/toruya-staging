@@ -5,6 +5,7 @@ import I18n from 'i18n-js/index.js.erb';
 
 const ReviewsView = ({reviews}) => {
   if (!reviews) return <></>
+  if (!reviews.length) return <></>
 
   return (
     <div className="content">

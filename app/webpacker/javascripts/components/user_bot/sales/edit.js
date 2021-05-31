@@ -31,7 +31,7 @@ const SalePageEdit =({props}) => {
   const [flow, setFlow] = useState(props.sale_page.sections_context?.flow || props.sale_page.flow || [])
   const [benefits, setBenefits] = useState(props.sale_page.sections_context?.benefits || [])
   const [faq, setFaq] = useState(props.sale_page.sections_context?.faq || [])
-  const [reviews, setReviews] = useState(props.sale_page.reviews)
+  const [reviews, setReviews] = useState(props.sale_page.reviews || [])
   const [end_time, setEndTime] = useState(props.sale_page.end_time)
   const [start_time, setStartTime] = useState(props.sale_page.start_time)
   const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option)
