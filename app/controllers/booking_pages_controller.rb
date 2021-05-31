@@ -76,6 +76,12 @@ class BookingPagesController < ActionController::Base
             @single_booking_time = { booking_date: booking_time.to_s(:date), booking_at: booking_time.to_s(:time) }
           end
         end
+      else
+        first_special_date = @booking_page.booking_page_special_dates.order("start_at").first
+
+        if first_special_date && first_special_date.start_at > Time.current
+          @default_selected_date = first_special_date.start_at.to_s(:date)
+        end
       end
     end
 

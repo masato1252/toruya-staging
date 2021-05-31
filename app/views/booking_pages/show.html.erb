@@ -40,7 +40,8 @@
     dayNames: I18n.t("date.abbr_day_names"),
     monthNames: I18n.t("date.abbr_month_names").compact,
     dateSelectedCallbackPath: booking_times_booking_page_path(@booking_page),
-    schedulePath: calendar_booking_page_path(@booking_page, format: :json)
+    schedulePath: calendar_booking_page_path(@booking_page, format: :json),
+    selectedDate: @default_selected_date
   },
   booking_reservation_form: {
     regular: @customer ? "yes" : nil,
