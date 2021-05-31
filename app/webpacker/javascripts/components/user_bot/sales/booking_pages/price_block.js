@@ -33,12 +33,16 @@ const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) =
     }
   }
 
+  const isFree = () => {
+    return product.price_number === 0
+  }
+
   return (
     <>
       <div className="product-price-block">
-        <div className="price-label">{I18n.t("common.booking_price")}</div>
+        <div className="price-label">{isFree() ? I18n.t("common.today_price_label") : I18n.t("common.booking_price")}</div>
         <div className="price">
-          {product.price_number}<span className="price-with-tax">{I18n.t("common.unit")}+{I18n.t("common.tax")}</span>
+          {isFree() ? I18n.t("common.free_price") : product.price_number}{!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}+{I18n.t("common.tax")}</span>}
         </div>
       </div>
 
