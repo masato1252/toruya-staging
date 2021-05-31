@@ -24,7 +24,7 @@ namespace :db do
       User.all.find_each do |user|
         user.password = "password123"
         user.password_confirmation = "password123"
-        user.save!
+        user.save(validate: false)
       end
       puts "Done."
     end
