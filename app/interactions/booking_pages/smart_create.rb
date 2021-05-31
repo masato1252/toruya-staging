@@ -102,7 +102,7 @@ module BookingPages
     end
 
     def reservation_setting
-      super_user.reservation_settings.where(day_type: ReservationSetting::BUSINESS_DAYS).first ||
+      super_user.reservation_settings.where(day_type: ReservationSetting::BUSINESS_DAYS, start_time: nil, end_time: nil).first ||
         super_user.reservation_settings.create(
           name: I18n.t("common.full_working_time"),
           short_name: I18n.t("common.full_working_time"),
