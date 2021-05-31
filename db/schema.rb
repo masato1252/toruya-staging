@@ -639,6 +639,7 @@ ActiveRecord::Schema.define(version: 2021_05_27_025229) do
     t.datetime "selling_start_at"
     t.decimal "normal_price_amount_cents"
     t.decimal "selling_price_amount_cents"
+    t.jsonb "sections_context"
     t.datetime "deleted_at"
     t.index ["product_type", "product_id"], name: "index_sale_pages_on_product_type_and_product_id"
     t.index ["sale_template_id"], name: "index_sale_pages_on_sale_template_id"

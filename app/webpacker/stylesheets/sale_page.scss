@@ -113,6 +113,15 @@
     }
   }
 
+  img.customer-picture {
+    width: 90px;
+    min-width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid $black;
+  }
+
   .flow-content {
     .number-step-header {
       justify-content: center;
@@ -168,7 +177,6 @@
     height: 24px;
   }
 }
-
 
 .flow-step {
   margin-bottom: 30px;

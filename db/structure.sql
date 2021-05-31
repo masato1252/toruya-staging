@@ -1730,6 +1730,7 @@ CREATE TABLE public.sale_pages (
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
     selling_price_amount_cents numeric,
+    sections_context jsonb,
     deleted_at timestamp without time zone
 );
 
@@ -4497,6 +4498,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210513053055'),
 ('20210513103250'),
 ('20210517044404'),
+('20210524020657'),
 ('20210527015333'),
 ('20210527025229');
 

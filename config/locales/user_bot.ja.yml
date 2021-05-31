@@ -304,6 +304,8 @@ ja:
         create_a_sale_page: 販売ページを使うと ネットで予約募集できます
         create_a_sale_page_btn: 販売ページを作成
       sales:
+        modal:
+          title: 販売ページを確認
         edit:
           sale_pages: 販売ページ
           sales_about: ページ概要
@@ -318,10 +320,16 @@ ja:
           content_header: ヘッドライン
           content_video: ヘッダー動画
           why_content: 購入理由
+          benefits: 利益
           staff: 担当スタッフ
+          faq: よくある質問
           flow: サービスの流れ
+          reviews: 顧客の声
           delete_sale_page: 販売ページを削除
           flow_steps: "%{flow_number}ステップ"
+          benefit_items: "%{benefit_number}項目"
+          question_items: "%{question_number}問"
+          review_items: "%{review_number}名の声"
           share_code_btn: 購入ボタンをコピー
         form:
           start_time_title: ページ概要
@@ -340,10 +348,35 @@ ja:
           introduction_video_url_subtitle: ヘッダー動画
           why_content_title: 販売ページコンテンツ
           why_content_subtitle: 購入理由
+          benefits_title: 販売ページコンテンツ
+          benefits_subtitle: 利益
+          benefits_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
+          benefits_content_header:
+            video: この動画セミナーで出来ること
+            pdf: このPDFで出来ること
+            audio: この音声セミナーで出来ること
+            menu: このメニューで出来ること
+          add_benefit: 項目を追加
           staff_title: 販売ページコンテンツ
           staff_subtitle: 担当スタッフ
           flow_title: 販売ページコンテンツ
           flow_subtitle: サービスの流れ
+          flow_header: 予約からご利用までの 流れを説明してください。
+          faq_title: 販売ページコンテンツ
+          faq_subtitle: よくある質問
+          faq_header: この商品を購入する利益や恩恵を 具体的にリスト書きにしてください。
+          faq_content_header: よくある質問
+          faq_question_placeholder: 質問を入力
+          faq_answer_placeholder: 質問への答えを入力
+          reviews_title: 販売ページコンテンツ
+          reviews_subtitle: 顧客の声
+          reviews_header: 顧客の声を入力してください。
+          review_content_header: お客様の声
+          review_content_placeholder: お客様の声を入力
+          review_customer_name_placeholder: お客様のお名前
+          add_faq: 質問を追加
+          add_review: 顧客の声を追加
+          customer_picture_requirement_tip: 顧客画像
         new:
           what_to_sale: この販売ページの目的は何ですか？
           online_booking: オンライン予約募集

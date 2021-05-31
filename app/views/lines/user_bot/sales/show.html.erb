@@ -64,8 +64,17 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.why_content") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :why_content), title: @sale_page.content["desc1"].presence || I18n.t("common.no_setup") %>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.benefits") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :benefits), title: @sale_page.sections_context&.[]("benefits")&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.benefit_items", benefit_number: @sale_page.sections_context&.[]("benefits")&.size) : I18n.t("common.no_setup") %>
+
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.staff") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :staff), title: @sale_page.staff.name.presence || I18n.t("common.no_setup") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.reviews") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :reviews), title: @sale_page.sections_context&.[]("reviews")&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.review_items", review_number: @sale_page.sections_context&.[]("reviews")&.size) : I18n.t("common.no_setup") %>
+
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.faq") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :faq), title: @sale_page.sections_context&.[]("faq")&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.question_items", question_number: @sale_page.sections_context&.[]("faq")&.size) : I18n.t("common.no_setup") %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.flow") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_sale_path(@sale_page, attribute: :flow), title: @sale_page.flow&.size.to_i > 0 ? I18n.t("user_bot.dashboards.sales.edit.flow_steps", flow_number: @sale_page.flow&.size) : I18n.t("common.no_setup") %>
@@ -76,7 +85,7 @@
     <% end %>
   </div>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@sale_page.updated_at, format: :long_date) %></span>
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
@@ -92,7 +101,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title">
-          <%= t("user_bot.dashboards.services.preview_the_service") %>
+          <%= t("user_bot.dashboards.sales.modal.title") %>
         </h4>
       </div>
       <div class="modal-body">

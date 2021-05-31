@@ -26,6 +26,23 @@ module SalePages
       array :flow, default: nil do
         string
       end
+      array :benefits, default: nil do
+        string
+      end
+      array :faq, default: nil do
+        hash do
+          string :answer
+          string :question
+        end
+      end
+      array :reviews, default: nil do
+        hash do
+          file :picture, default: nil
+          string :filename, default: nil
+          string :customer_name
+          string :content
+        end
+      end
     end
 
     def execute
@@ -33,6 +50,22 @@ module SalePages
         case update_attribute
         when "sale_template_variables", "introduction_video_url", "flow", "quantity"
           sale_page.update(attrs.slice(update_attribute))
+        when "benefits", "faq"
+          sale_page.sections_context ||= {}
+          sale_page.sections_context.merge!(attrs.slice(update_attribute))
+          sale_page.save
+        when "reviews"
+          sale_page.sections_context ||= {}
+          attrs[update_attribute].each do |attr|
+            if picture = attr.delete(:picture)
+              sale_page.customer_pictures.attach(io: picture, filename: picture.original_filename)
+              attr.merge!(filename: picture.original_filename)
+            end
+          end
+
+          sale_page.sections_context.merge!(attrs.slice(update_attribute))
+          # TODO: handle purge
+          sale_page.save
         when "normal_price"
           sale_page.update(normal_price_amount_cents: attrs[:normal_price])
         when "selling_price"

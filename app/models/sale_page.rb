@@ -21,6 +21,7 @@
 #  selling_start_at           :datetime
 #  normal_price_amount_cents  :decimal(, )
 #  selling_price_amount_cents :decimal(, )
+#  sections_context           :jsonb
 #  deleted_at                 :datetime
 #
 # Indexes
@@ -39,6 +40,7 @@ class SalePage < ApplicationRecord
   belongs_to :user
 
   has_one_attached :picture # content picture
+  has_many_attached :customer_pictures
 
   scope :active, -> { where(deleted_at: nil) }
   validates :product_type, inclusion: { in: %w[OnlineService BookingPage] }
@@ -136,5 +138,13 @@ class SalePage < ApplicationRecord
       if introduction_video_url
         VideoThumb::get(introduction_video_url, "medium") || ThumbnailOfVideo.get(introduction_video_url)
       end
+  end
+
+  def solution_type
+    if is_booking_page?
+      "menu"
+    else
+      product.solution_type
+    end
   end
 end

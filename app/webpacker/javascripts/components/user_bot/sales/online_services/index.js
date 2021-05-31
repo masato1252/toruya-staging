@@ -5,11 +5,14 @@ import SaleTemplateView from "components/user_bot/sales/online_services/sale_tem
 import PriceBlock from "components/user_bot/sales/online_services/price_block";
 import StaffView from "components/user_bot/sales/staff_view";
 import FlowView from "components/user_bot/sales/flow_view";
+import BenefitsView from "components/user_bot/sales/benefits_view";
+import ReviewsView from "components/user_bot/sales/reviews_view";
+import FaqView from "components/user_bot/sales/faq_view";
 import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow, payable}) => {
+  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews}) => {
 
   if (preview) {
     return (
@@ -57,7 +60,10 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(9)} />
+      <BenefitsView benefits={sections_context?.benefits} solution_type={solution_type} />
       <StaffView staff={staff} demo={demo} jumpTo={() => jump(10)} />
+      <ReviewsView reviews={reviews} />
+      <FaqView faq={sections_context?.faq} />
       <FlowView flow={flow} jump={jump} demo={demo} />
 
       <div className="apply-content content">
