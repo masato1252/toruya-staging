@@ -89,141 +89,117 @@ module Booking
       #  use Booking::SharedMethods loop_for_reserable_spot to find the available staffs 
 
       Reservation.transaction do
-        reservation = nil
+        ActiveRecord::Base.with_advisory_lock("customer_booking_in_user_#{user.id}") do
+          reservation = nil
 
-        if customer_info&.compact.present?
-          # regular customer
-          customer = user.customers.find(customer_info["id"])
-          customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
-        end
+          if customer_info&.compact.present?
+            # regular customer
+            customer = user.customers.find(customer_info["id"])
+            customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
+          end
 
-        if customer ||= social_customer&.customer
-          if customer_phonetic_last_name && customer_phonetic_first_name
-            customer_outcome = Customers::Store.run(
+          if customer ||= social_customer&.customer
+            if customer_phonetic_last_name && customer_phonetic_first_name
+              customer_outcome = Customers::Store.run(
+                user: user,
+                current_user: user,
+                params: {
+                  id: customer.id.to_s,
+                  last_name: customer_last_name,
+                  first_name: customer_first_name,
+                  phonetic_last_name: customer_phonetic_last_name,
+                  phonetic_first_name: customer_phonetic_first_name,
+                  phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
+                  emails_details: [{ type: "mobile", value: customer_email }],
+                }.compact
+              )
+
+              if customer_outcome.valid?
+                customer = customer_outcome.result
+              end
+            end
+
+            customer.update(reminder_permission: customer_reminder_permission)
+          else
+            # new customer
+            customer_outcome = Customers::Create.run(
               user: user,
-              current_user: user,
-              params: {
-                id: customer.id.to_s,
-                last_name: customer_last_name,
-                first_name: customer_first_name,
-                phonetic_last_name: customer_phonetic_last_name,
-                phonetic_first_name: customer_phonetic_first_name,
-                phone_numbers_details: [{ type: "mobile", value: customer_phone_number }],
-                emails_details: [{ type: "mobile", value: customer_email }],
-              }.compact
+              customer_last_name: customer_last_name,
+              customer_first_name: customer_first_name,
+              customer_phonetic_last_name: customer_phonetic_last_name,
+              customer_phonetic_first_name: customer_phonetic_first_name,
+              customer_phone_number: customer_phone_number,
+              customer_email: customer_email,
+              customer_reminder_permission: customer_reminder_permission
             )
 
-            if customer_outcome.valid?
-              customer = customer_outcome.result
+            # XXX: Don't have to find a available reservation, since customer is invalid
+            if customer_outcome.invalid?
+              errors.merge!(customer_outcome.errors)
+
+              raise ActiveRecord::Rollback
             end
+
+            customer = customer_outcome.result
           end
 
-          customer.update(reminder_permission: customer_reminder_permission)
-        else
-          # new customer
-          customer_outcome = Customers::Create.run(
-            user: user,
-            customer_last_name: customer_last_name,
-            customer_first_name: customer_first_name,
-            customer_phonetic_last_name: customer_phonetic_last_name,
-            customer_phonetic_first_name: customer_phonetic_first_name,
-            customer_phone_number: customer_phone_number,
-            customer_email: customer_email,
-            customer_reminder_permission: customer_reminder_permission
-          )
-
-          # XXX: Don't have to find a available reservation, since customer is invalid
-          if customer_outcome.invalid?
-            errors.merge!(customer_outcome.errors)
-
-            raise ActiveRecord::Rollback
+          if social_customer
+            social_customer.update!(customer_id: customer.id)
           end
 
-          customer = customer_outcome.result
-        end
-
-        if social_customer
-          social_customer.update!(customer_id: customer.id)
-        end
-
-        catch :booked_reservation do
-          unless reservation
-            catch :next_working_date do
-              loop_for_reserable_spot(
-                shop: shop,
-                booking_page: booking_page,
-                booking_option: booking_option,
-                date: date,
-                booking_start_at: booking_start_at,
-                overbooking_restriction: booking_page.overbooking_restriction
-              ) do |valid_menus_spots, staff_states, same_content_reservation|
-                # valid_menus_spots likes
-                # [
-                #   {
-                #     menu_id: menu_id,
-                #     position: $position,
-                #     menu_interval_time: 10,
-                #     menu_required_time: 60,
-                #     staff_ids: [
-                #       {
-                #         staff_id: $staff_id
-                #         state: pending/accepted
-                #       },
-                #       ...
-                #     ],
-                #   }
-                # ]
-                #
-                # staff_states
-                # [
-                #   {
-                #     staff_id: $staff_id
-                #     state: pending/accepted
-                #   },
-                # ]
-                #
-                # same_content_reservation
-                # A reservation active_record object
-                if same_content_reservation
-                  if reservation_customer = same_content_reservation.reservation_customers.find_by(customer: customer)
-                    reservation_customer.update(
-                      booking_page_id: booking_page.id,
-                      booking_option_id: booking_option_id,
-                      booking_amount_cents: booking_option.amount.fractional,
-                      booking_amount_currency: booking_option.amount.currency.to_s,
-                      tax_include: booking_option.tax_include,
-                      booking_at: Time.current,
-                      details: {
-                        new_customer_info: new_customer_info.attributes.compact,
-                      }
-                    )
-                  else
-                    ReservationCustomers::Create.run(reservation: same_content_reservation, customer_data: {
-                      customer_id: customer.id,
-                      state: "pending",
-                      booking_page_id: booking_page.id,
-                      booking_option_id: booking_option_id,
-                      booking_amount_cents: booking_option.amount.fractional,
-                      booking_amount_currency: booking_option.amount.currency.to_s,
-                      tax_include: booking_option.tax_include,
-                      booking_at: Time.current,
-                      details: {
-                        new_customer_info: new_customer_info.attributes.compact,
-                      }
-                    })
-                    same_content_reservation.count_of_customers = same_content_reservation.reservation_customers.active.count
-                    same_content_reservation.save
-                  end
-
-                  reservation = same_content_reservation
-                  throw :booked_reservation
-                else
-                  reservation_outcome = Reservations::Save.run(
-                    reservation: shop.reservations.new,
-                    params: {
-                      start_time: booking_start_at,
-                      end_time: booking_end_at,
-                      customers_list: [{
+          catch :booked_reservation do
+            unless reservation
+              catch :next_working_date do
+                loop_for_reserable_spot(
+                  shop: shop,
+                  booking_page: booking_page,
+                  booking_option: booking_option,
+                  date: date,
+                  booking_start_at: booking_start_at,
+                  overbooking_restriction: booking_page.overbooking_restriction
+                ) do |valid_menus_spots, staff_states, same_content_reservation|
+                  # valid_menus_spots likes
+                  # [
+                  #   {
+                  #     menu_id: menu_id,
+                  #     position: $position,
+                  #     menu_interval_time: 10,
+                  #     menu_required_time: 60,
+                  #     staff_ids: [
+                  #       {
+                  #         staff_id: $staff_id
+                  #         state: pending/accepted
+                  #       },
+                  #       ...
+                  #     ],
+                  #   }
+                  # ]
+                  #
+                  # staff_states
+                  # [
+                  #   {
+                  #     staff_id: $staff_id
+                  #     state: pending/accepted
+                  #   },
+                  # ]
+                  #
+                  # same_content_reservation
+                  # A reservation active_record object
+                  if same_content_reservation
+                    if reservation_customer = same_content_reservation.reservation_customers.find_by(customer: customer)
+                      reservation_customer.update(
+                        booking_page_id: booking_page.id,
+                        booking_option_id: booking_option_id,
+                        booking_amount_cents: booking_option.amount.fractional,
+                        booking_amount_currency: booking_option.amount.currency.to_s,
+                        tax_include: booking_option.tax_include,
+                        booking_at: Time.current,
+                        details: {
+                          new_customer_info: new_customer_info.attributes.compact,
+                        }
+                      )
+                    else
+                      ReservationCustomers::Create.run(reservation: same_content_reservation, customer_data: {
                         customer_id: customer.id,
                         state: "pending",
                         booking_page_id: booking_page.id,
@@ -235,38 +211,64 @@ module Booking
                         details: {
                           new_customer_info: new_customer_info.attributes.compact,
                         }
-                      }],
-                      menu_staffs_list: valid_menus_spots,
-                      staff_states: staff_states,
-                      memo: "",
-                      with_warnings: false,
-                      online: booking_option.online?
-                    }
-                  )
+                      })
+                      same_content_reservation.count_of_customers = same_content_reservation.reservation_customers.active.count
+                      same_content_reservation.save
+                    end
 
-                  if reservation_outcome.valid?
-                    reservation = reservation_outcome.result
+                    reservation = same_content_reservation
                     throw :booked_reservation
                   else
-                    errors.merge!(reservation.errors)
+                    reservation_outcome = Reservations::Save.run(
+                      reservation: shop.reservations.new,
+                      params: {
+                        start_time: booking_start_at,
+                        end_time: booking_end_at,
+                        customers_list: [{
+                          customer_id: customer.id,
+                          state: "pending",
+                          booking_page_id: booking_page.id,
+                          booking_option_id: booking_option_id,
+                          booking_amount_cents: booking_option.amount.fractional,
+                          booking_amount_currency: booking_option.amount.currency.to_s,
+                          tax_include: booking_option.tax_include,
+                          booking_at: Time.current,
+                          details: {
+                            new_customer_info: new_customer_info.attributes.compact,
+                          }
+                        }],
+                        menu_staffs_list: valid_menus_spots,
+                        staff_states: staff_states,
+                        memo: "",
+                        with_warnings: false,
+                        online: booking_option.online?
+                      }
+                    )
+
+                    if reservation_outcome.valid?
+                      reservation = reservation_outcome.result
+                      throw :booked_reservation
+                    else
+                      errors.merge!(reservation.errors)
+                    end
                   end
                 end
               end
             end
           end
-        end
 
-        if customer.persisted? && reservation
-          ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
-        else
-          errors.add(:base, :reservation_something_wrong)
-          raise ActiveRecord::Rollback
-        end
+          if customer.persisted? && reservation
+            ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
+          else
+            errors.add(:base, :reservation_something_wrong)
+            raise ActiveRecord::Rollback
+          end
 
-        {
-          customer: customer,
-          reservation: reservation
-        }
+          {
+            customer: customer,
+            reservation: reservation
+          }
+        end
       end
     end
 

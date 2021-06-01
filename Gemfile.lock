@@ -592,6 +592,8 @@ GEM
     week_of_month (1.2.6)
     wicked_pdf (1.2.2)
       activesupport
+    with_advisory_lock (4.6.0)
+      activerecord (>= 4.2)
     wkhtmltopdf-binary (0.12.4)
 
 PLATFORMS
@@ -689,6 +691,7 @@ DEPENDENCIES
   webpush
   week_of_month
   wicked_pdf
+  with_advisory_lock
   wkhtmltopdf-binary
 
 RUBY VERSION
