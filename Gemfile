@@ -77,6 +77,7 @@ gem "mixpanel-ruby"
 gem "video_thumb"
 gem "strong_migrations"
 gem "ahoy_matey"
+gem "with_advisory_lock"
 
 group :development, :test do
   gem "byebug", platform: :mri
