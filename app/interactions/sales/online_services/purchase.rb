@@ -16,9 +16,15 @@ module Sales
 
       def execute
         relation =
-          product.online_service_customer_relations
-          .create_with(sale_page: sale_page)
-          .find_or_create_by(online_service: product, customer: customer)
+          begin
+            OnlineServiceCustomerRelation.transaction do
+              product.online_service_customer_relations
+                .create_with(sale_page: sale_page)
+                .find_or_create_by(online_service: product, customer: customer)
+            end
+          rescue ActiveRecord::RecordNotUnique
+            retry
+          end
 
         unless relation.purchased?
           if sale_page.free?
@@ -46,7 +52,7 @@ module Sales
         end
 
         if relation.purchased?
-           Notifiers::OnlineServices::Purchased.run(receiver: social_customer, customer: customer, sale_page: sale_page)
+          Notifiers::OnlineServices::Purchased.run(receiver: social_customer, customer: customer, sale_page: sale_page)
 
           ::LineClient.flex(
             social_customer,
