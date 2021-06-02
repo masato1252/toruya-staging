@@ -45,43 +45,10 @@ class BookingPagesController < ActionController::Base
     @is_single_booking_option = active_booking_options_number == 1
 
     if @is_single_booking_option
-      is_single_special_date = @booking_page.booking_page_special_dates.count == 1
+      first_special_date = @booking_page.booking_page_special_dates.order("start_at").first
 
-      if is_single_special_date
-        booking_dates = @booking_page.booking_page_special_dates.map do |matched_special_date|
-          {
-            start_at_date_part: matched_special_date.start_at_date,
-            start_at_time_part: matched_special_date.start_at_time,
-            end_at_date_part:   matched_special_date.end_at_date,
-            end_at_time_part:   matched_special_date.end_at_time
-          }.to_json
-        end
-
-        outcome = Booking::AvailableBookingTimes.run(
-          shop: @booking_page.shop,
-          booking_page: @booking_page,
-          special_dates: booking_dates,
-          booking_option_ids: @booking_page.booking_option_ids,
-          interval: @booking_page.interval,
-          overbooking_restriction: @booking_page.overbooking_restriction,
-          limit: 2
-        )
-
-        if outcome.valid?
-          available_booking_times = outcome.result.keys
-
-          if available_booking_times.length == 1
-            booking_time = available_booking_times.first
-
-            @single_booking_time = { booking_date: booking_time.to_s(:date), booking_at: booking_time.to_s(:time) }
-          end
-        end
-      else
-        first_special_date = @booking_page.booking_page_special_dates.order("start_at").first
-
-        if first_special_date && first_special_date.start_at > Time.current
-          @default_selected_date = first_special_date.start_at.to_s(:date)
-        end
+      if first_special_date && first_special_date.start_at > Time.current
+        @default_selected_date = first_special_date.start_at.to_s(:date)
       end
     end
 
