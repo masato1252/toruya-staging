@@ -28,7 +28,6 @@
   booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
     shop_name: @booking_page.shop.name,
-    is_single_booking_time: !!@single_booking_time,
     is_single_option: @is_single_booking_option,
     is_started: @booking_page.started?,
     is_ended: @booking_page.ended?,
@@ -47,7 +46,6 @@
     regular: @customer ? "yes" : nil,
     use_default_customer: !!(@customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number),
     found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number ? true : nil,
-    single_booking_time: @single_booking_time,
     booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
     remember_me: true,
     booking_options: custom_options(page_booking_options),

@@ -30,7 +30,7 @@ class BookingReservationForm extends React.Component {
     // false: couldn't find customer
     super(props);
     moment.locale("ja");
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { is_single_option } = this.props.booking_page
 
     this.focusOnError = createFocusDecorator();
     this.calculator = createChangesDecorator(
@@ -47,16 +47,6 @@ class BookingReservationForm extends React.Component {
       }
     )
   };
-
-  componentDidMount = () => {
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
-    const { booking_options, single_booking_time } = this.booking_reservation_form_values
-
-    if (is_single_booking_time && is_single_option) {
-      this.booking_reservation_form.change("booking_reservation_form[booking_date]", single_booking_time.booking_date)
-      this.booking_reservation_form.change("booking_reservation_form[booking_at]", single_booking_time.booking_at)
-    }
-  }
 
   renderDraftWarning = () => {
     if (this.props.booking_page.draft) {
@@ -675,7 +665,7 @@ class BookingReservationForm extends React.Component {
       booking_failed_message
     } = this.booking_reservation_form_values;
     const { reset_button } = this.props.i18n;
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { is_single_option } = this.props.booking_page
 
     if (!booking_failed) return;
 
@@ -683,7 +673,7 @@ class BookingReservationForm extends React.Component {
       <div className="booking-failed-message">
         <ErrorMessage error={booking_failed_message} />
         {
-          (!is_single_option || !is_single_booking_time) &&
+          (!is_single_option) &&
           <button onClick={this.resetBookingFailedValues} className="btn btn-orange reset">
             {reset_button}
           </button>
@@ -938,7 +928,7 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingFlow = () => {
-    const { is_single_option, is_single_booking_time, is_started, is_ended } = this.props.booking_page
+    const { is_single_option, is_started, is_ended } = this.props.booking_page
     const { booking_options, special_date, booking_option_id, is_done } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
@@ -954,19 +944,7 @@ class BookingReservationForm extends React.Component {
       return this.renderBookingStartedYetView()
     }
 
-    if (is_single_booking_time && is_single_option) {
-      return (
-        <div>
-          {this.renderBookingDatetime()}
-          {this.renderSelectedBookingOption()}
-          {this.isBookingFlowEnd() && !this.isSocialLoginChecked() && this.renderSocialCustomerLogin()}
-          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderRegularCustomersOption()}
-          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderBookingCode()}
-          {this.isBookingFlowEnd() && this.isSocialLoginChecked() && this.renderCurrentCustomerInfo()}
-          {this.isSocialLoginChecked() && this.renderBookingReservationButton()}
-        </div>
-      )
-    } else if (is_single_option) {
+    if (is_single_option) {
       return (
         <div>
           {this.renderSelectedBookingOption()}
@@ -1279,12 +1257,9 @@ class BookingReservationForm extends React.Component {
   }
 
   resetBookingFailedValues = () => {
-    const { is_single_option, is_single_booking_time } = this.props.booking_page
+    const { is_single_option } = this.props.booking_page
 
-    if (is_single_option && is_single_booking_time) {
-      return;
-    }
-    else if (is_single_option) {
+    if (is_single_option) {
       this.resetValues([
         "booking_date",
         "booking_at",
