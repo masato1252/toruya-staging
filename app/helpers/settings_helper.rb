@@ -18,7 +18,7 @@ module SettingsHelper
   end
 
   def share_button_link(btn_text, url)
-    style = <<-STYLE.strip_heredoc.gsub!("\n", "")
+    style = <<-STYLE.strip_heredoc.gsub("\n", "")
       display: inline-block;
       background-color: #aecfc8;
       border: 1px solid #84b3aa;
