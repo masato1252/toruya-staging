@@ -1,23 +1,25 @@
 <%= jump_out_modal(create_booking_page_lines_user_bot_warnings_path, static: true) unless ability(super_user).can?(:create, BookingPage) %>
 <%= jump_out_modal(lines_user_bot_tours_line_settings_required_for_booking_page_path, static: true) unless current_user.social_account&.line_settings_finished? %>
 
-<%= react_component("user_bot/bookings/creation_flow", {
-  props: {
-    super_user_id: super_user.id,
-    selected_shop: @shop ? react_attribute(@shop.attributes.merge!(logo_url: shop_logo_url(shop, "260"))) : {},
-    note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
-    shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| react_attribute(s.attributes.merge(address: s.company_full_address, logo_url: shop_logo_url(s, "260"))) },
-    i18n: {
-    }.merge!([
-      t("activerecord.attributes.menu"),
-      t("activerecord.attributes.shop"),
-      t("settings.booking_option.form"),
-      t("settings.booking_page.form"),
-      t("user_bot.dashboards.booking_page_creation"),
-      t("action").slice(:save, :edit),
-      t("common").slice(:required_time, :select_a_menu, :minute, :person_unit, :unit, :preview),
-    ].inject(:merge!))
-  }
-},
-{ camelize_props: false }
-) %>
+<% if ability(super_user).can?(:create, BookingPage) && current_user.social_account&.line_settings_finished? %>
+  <%= react_component("user_bot/bookings/creation_flow", {
+    props: {
+      super_user_id: super_user.id,
+      selected_shop: @shop ? react_attribute(@shop.attributes.merge!(logo_url: shop_logo_url(shop, "260"))) : {},
+      note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),
+      shops: @shop ? [] : super_user.shops.includes(logo_attachment: :blob).map { |s| react_attribute(s.attributes.merge(address: s.company_full_address, logo_url: shop_logo_url(s, "260"))) },
+      i18n: {
+      }.merge!([
+        t("activerecord.attributes.menu"),
+        t("activerecord.attributes.shop"),
+        t("settings.booking_option.form"),
+        t("settings.booking_page.form"),
+        t("user_bot.dashboards.booking_page_creation"),
+        t("action").slice(:save, :edit),
+        t("common").slice(:required_time, :select_a_menu, :minute, :person_unit, :unit, :preview),
+      ].inject(:merge!))
+    }
+  },
+  { camelize_props: false }
+  ) %>
+<% end %>

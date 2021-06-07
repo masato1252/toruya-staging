@@ -61,8 +61,8 @@ const SaleBookingPage = (
       <div className="shop-content content">
         <div><b>{shop.name}</b></div>
         <div>{shop.address}</div>
-        <div><i className="fa fa-phone"></i> <a href={`tel:${shop.phone_number}`}>{shop.phone_number}</a></div>
-        <div><i className="fa fa-envelope"></i> {shop.email}</div>
+        {shop.phone_number && <div><i className="fa fa-phone"></i> <a href={`tel:${shop.phone_number}`}>{shop.phone_number}</a></div>}
+        {shop.email && <div><i className="fa fa-envelope"></i> {shop.email}</div>}
       </div>
     </div>
   )

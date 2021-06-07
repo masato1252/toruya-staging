@@ -18,4 +18,4 @@
   }
 },
 { camelize_props: false }
-) %>
+) if current_user.social_account&.line_settings_finished? %>

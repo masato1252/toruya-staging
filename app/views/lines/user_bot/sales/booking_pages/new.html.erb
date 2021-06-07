@@ -22,4 +22,4 @@
   }
 },
 { camelize_props: false }
-) %>
+) if ability(current_user).can?(:create, SalePage) %>
