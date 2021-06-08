@@ -459,6 +459,17 @@ const OnlineServices = {
 }
 
 const CommonServices = {
+  delete: ({url, data}) => {
+    return request({
+      method: "DELETE",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: url,
+      params: data,
+      responseType: "json"
+    })
+  },
   get: ({url, data}) => {
     return request({
       method: "GET",

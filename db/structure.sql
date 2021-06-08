@@ -2098,7 +2098,9 @@ CREATE TABLE public.social_user_messages (
     readed_at timestamp without time zone,
     raw_content text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    schedule_at timestamp without time zone,
+    sent_at timestamp without time zone
 );
 
 
@@ -4500,6 +4502,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210517044404'),
 ('20210524020657'),
 ('20210527015333'),
-('20210527025229');
+('20210527025229'),
+('20210608032458');
 
 

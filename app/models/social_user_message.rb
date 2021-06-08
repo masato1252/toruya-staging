@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: social_user_messages
@@ -12,6 +11,8 @@
 #  raw_content    :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  schedule_at    :datetime
+#  sent_at        :datetime
 #
 # Indexes
 #
