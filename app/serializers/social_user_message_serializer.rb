@@ -17,10 +17,14 @@ class SocialUserMessageSerializer
   end
 
   attribute :sent do |message|
-    true
+    message.sent_at.present?
   end
 
   attribute :formatted_created_at do |message|
-    I18n.l(message.created_at, format: :long_date_with_wday)
+    I18n.l(message.sent_at || message.created_at, format: :long_date_with_wday)
+  end
+
+  attribute :formatted_schedule_at do |message|
+    I18n.l(message.schedule_at, format: :long_date_with_wday) if message.schedule_at
   end
 end

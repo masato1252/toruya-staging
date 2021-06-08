@@ -1,8 +1,9 @@
 "use strict";
 
 import React from "react";
-import { CustomerServices } from "components/user_bot/api"
+import { CustomerServices, CommonServices } from "components/user_bot/api"
 import I18n from 'i18n-js/index.js.erb';
+import Routes from 'js-routes.js'
 
 const Message = ({message}) => {
   return (
@@ -17,7 +18,20 @@ const Message = ({message}) => {
             if (message.sent) return;
 
             if (confirm(I18n.t("common.message_delete_confirmation_message"))) {
-              const [error, response] = await CustomerServices.delete_message({ user_id: message.user_id, customer_id: message.toruya_customer_id, message_id: message.id })
+              let error, response;
+
+              if (message.message_type === 'admin') {
+                [error, response] = await CommonServices.delete({
+                  url: Routes.admin_chat_path({id: message.id, format: "json"}),
+                  data: {
+                    customer_id: message.customer_id
+                  }
+                })
+              }
+              else {
+                [error, response] = await CustomerServices.delete_message({ user_id: message.user_id, customer_id: message.toruya_customer_id, message_id: message.id })
+              }
+
               window.location.replace(response?.data?.redirect_to)
             }
           }}

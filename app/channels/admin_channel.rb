@@ -17,15 +17,6 @@ class AdminChannel < ApplicationCable::Channel
     stop_all_streams
   end
 
-  def send_message(data)
-    SocialUserMessages::Create.run!(
-      social_user: SocialUser.find_by!(social_service_user_id: data["customer_id"]),
-      content: data["text"],
-      readed: true,
-      message_type: SocialUserMessage.message_types[:admin]
-    )
-  end
-
   def get_messages(data)
     return unless data["customer_id"]
 
