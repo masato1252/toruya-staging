@@ -23,6 +23,9 @@ export default ({ customer }) => {
           { customer.name }
           { customer.shop_customer ? `(${customer.shop_customer.name})` : ""}
           { customer.unread_message_count ? `(${customer.unread_message_count})` : "" }
+          <p>
+            { customer.memo && customer.memo.slice(0, 10) }
+          </p>
         </div>
       </div>
     </div>

@@ -496,6 +496,7 @@ Rails.application.routes.draw do
       get "/", to: "dashboards#index"
 
       resources :chats, only: [:index, :create, :destroy]
+      resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
         member do
           post "approve"

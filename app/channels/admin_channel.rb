@@ -44,7 +44,7 @@ class AdminChannel < ApplicationCable::Channel
     return unless data["channel_id"]
 
     social_users = SocialUser
-      .includes(:social_user_messages)
+      .includes(:social_user_messages, :memos)
       .order("social_users.updated_at DESC")
 
     _users = social_users.map { |user| SocialUserSerializer.new(user).attributes_hash }

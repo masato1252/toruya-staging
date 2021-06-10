@@ -27,4 +27,8 @@ class SocialUserSerializer
   attribute :picture_url do |social_user|
     social_user.social_user_picture_url.presence || "https://via.placeholder.com/60"
   end
+
+  attribute :memo do |social_user|
+    social_user.memo_list[0]
+  end
 end
