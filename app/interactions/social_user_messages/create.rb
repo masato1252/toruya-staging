@@ -40,6 +40,8 @@ module SocialUserMessages
           LineClient.send_video(social_user, content)
         end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
+        message.update(sent_at: Time.current)
+
         AdminChannel.broadcast_to(
           AdminChannel::CHANNEL_NAME,
           {

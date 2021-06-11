@@ -17,7 +17,7 @@ class SocialUserMessageSerializer
   end
 
   attribute :sent do |message|
-    message.sent_at.present?
+    message.schedule_at.present? ? message.sent_at.present? : true
   end
 
   attribute :formatted_created_at do |message|
