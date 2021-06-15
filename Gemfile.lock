@@ -263,7 +263,7 @@ GEM
       multi_json (>= 1.9.2)
       webrick
     hkdf (0.3.0)
-    holidays (8.3.0)
+    holidays (8.4.1)
     httparty (0.16.4)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -634,7 +634,7 @@ DEPENDENCIES
   fog-aws (~> 3.5.2)
   google_contacts_api!
   hashie (~> 3.4.4)
-  holidays (~> 8.3.0)
+  holidays
   i18n-js
   image_processing (~> 1.2)
   jbuilder
