@@ -86,7 +86,7 @@ const CustomerBasicInfo = () => {
             <a
               data-id="customer-reminder-toggler"
               onClick={() => {
-                const [error, response] = CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
+                CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
 
                 const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
                   trigger: "manual",
@@ -102,7 +102,7 @@ const CustomerBasicInfo = () => {
                 dispatch({
                   type: "UPDATE_CUSTOMER_REMINDER_PERMISSION",
                   payload: {
-                    reminderPermission: response.data.reminder_permission
+                    reminderPermission: !selected_customer.reminderPermission
                   }
                 })
             }}>
