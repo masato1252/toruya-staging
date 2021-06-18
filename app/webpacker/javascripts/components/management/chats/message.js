@@ -10,7 +10,7 @@ const Message = ({message}) => {
     <div className="row message">
       <div className={`${message.message_type}`} >
         <div className={`col-sm-10 message-content ${message.sent ? "" : "unsend"}`}>
-          {message.text.previewImageUrl ? <img className="w-full" src={message.text.previewImageUrl} /> : message.text}
+          {message.text.previewImageUrl ? <img className="w-full" src={message.text.previewImageUrl || ""} /> : message.text}
         </div>
         <div
           className="message-icons"
