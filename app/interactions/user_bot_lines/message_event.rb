@@ -12,6 +12,17 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
   def execute
     if event.present?
       case event["message"]["type"]
+      when "image"
+        compose(
+          SocialUserMessages::Create,
+          social_user: social_user,
+          content: {
+            originalContentUrl: event["message"]["originalContentUrl"],
+            previewImageUrl: event["message"]["previewImageUrl"]
+          }.to_json,
+          readed: false,
+          message_type: SocialUserMessage.message_types[:user]
+        )
       when "text"
         compose(
           SocialUserMessages::Create,

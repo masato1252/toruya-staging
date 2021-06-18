@@ -9,7 +9,11 @@ class SocialUserMessageSerializer
   end
 
   attribute :text do |message|
-    message.raw_content
+    begin
+      JSON.parse(message.raw_content)
+    rescue JSON::ParserError
+      message.raw_content
+    end
   end
 
   attribute :readed do |message|

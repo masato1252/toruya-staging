@@ -60,6 +60,21 @@ class LineClient
     end
   end
 
+  def self.send_image(social_customer, raw_message)
+    error_handler(__method__, social_customer.id, raw_message) do
+      message = JSON.parse(raw_message)
+
+      social_customer.client.push_message(
+        social_customer.social_user_id,
+        {
+          type: "image",
+          originalContentUrl: message["originalContentUrl"],
+          previewImageUrl: message["previewImageUrl"]
+        }
+      )
+    end
+  end
+
   def self.reply(social_customer, reply_token, message)
     error_handler(__method__, social_customer.id, reply_token, message) do
       social_customer.client.reply_message(reply_token, message)

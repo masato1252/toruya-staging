@@ -5,9 +5,15 @@ require "line_client"
 
 module SocialMessages
   class Create < ActiveInteraction::Base
+    TEXT_TYPE = "text"
+    VIDEO_TYPE = "video"
+    IMAGE_TYPE = "image"
+    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE].freeze
+
     object :social_customer
     object :staff, default: nil
     string :content
+    string :content_type, default: TEXT_TYPE
     boolean :readed
     integer :message_type
     time :schedule_at, default: nil

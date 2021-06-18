@@ -12,6 +12,17 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
     if event.present?
       case event["message"]["type"]
+      when "image"
+        compose(
+          SocialMessages::Create,
+          social_customer: social_customer,
+          content: {
+            originalContentUrl: event["message"]["originalContentUrl"],
+            previewImageUrl: event["message"]["previewImageUrl"]
+          }.to_json,
+          readed: false,
+          message_type: SocialMessage.message_types[:customer]
+        )
       when "text"
         case event["message"]["text"].strip
         when I18n.t("line.bot.keywords.booking_pages")
