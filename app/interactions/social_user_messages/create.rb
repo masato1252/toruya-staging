@@ -46,6 +46,17 @@ module SocialUserMessages
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         message.update(sent_at: Time.current)
 
+        case content_type
+        when IMAGE_TYPE
+          message_body = JSON.parse(content)
+          response = LineClient.message_content(social_customer: social_user, message_id: message_body["messageId"])
+
+          tf = Tempfile.open("content", binmode: true)
+          tf.write(response.body)
+          tf.rewind
+          message.image.attach(io: tf, filename: "img.jpg", content_type: "image/jpg")
+        end
+
         AdminChannel.broadcast_to(
           AdminChannel::CHANNEL_NAME,
           {

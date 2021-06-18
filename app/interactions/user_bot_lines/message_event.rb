@@ -17,8 +17,9 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
           SocialUserMessages::Create,
           social_user: social_user,
           content: {
-            originalContentUrl: event["message"]["originalContentUrl"],
-            previewImageUrl: event["message"]["previewImageUrl"]
+            messageId: event["message"]["id"],
+            originalContentUrl: event["message"]["contentProvider"]["originalContentUrl"],
+            previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
           }.to_json,
           readed: false,
           message_type: SocialUserMessage.message_types[:user]

@@ -135,4 +135,8 @@ class LineClient
   def self.unlink_rich_menu(social_customer:)
     social_customer.client.unlink_user_rich_menu(social_customer.social_user_id)
   end
+
+  def self.message_content(social_customer:, message_id:)
+    social_customer.client.get_message_content(message_id)
+  end
 end

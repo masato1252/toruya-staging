@@ -46,6 +46,21 @@ module SocialMessages
           )
         end
 
+        case content_type
+        when IMAGE_TYPE
+          message_body = JSON.parse(content)
+          response = LineClient.message_content(social_customer: social_customer, message_id: message_body["messageId"])
+          case response
+          when Net::HTTPSuccess
+            tf = Tempfile.open("content", binmode: true)
+            tf.write(response.body)
+            tf.rewind
+            message.image.attach(io: tf, filename: "img.jpg", content_type: "image/jpg")
+            # message.image = tf
+            message.save
+          end
+        end
+
         # From normal customer
         # UserChannel.broadcast_to(
         #   social_customer.user,

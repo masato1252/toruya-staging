@@ -19,8 +19,9 @@ class Lines::MessageEvent < ActiveInteraction::Base
           SocialMessages::Create,
           social_customer: social_customer,
           content: {
-            originalContentUrl: event["message"]["originalContentUrl"],
-            previewImageUrl: event["message"]["previewImageUrl"]
+            messageId: event["message"]["id"],
+            originalContentUrl: event["message"]["contentProvider"]["originalContentUrl"],
+            previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
           }.to_json,
           readed: false,
           message_type: SocialMessage.message_types[:customer]
