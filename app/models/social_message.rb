@@ -27,6 +27,7 @@ class SocialMessage < ApplicationRecord
   belongs_to :social_customer, touch: true
   belongs_to :staff, optional: true
   belongs_to :broadcast, optional: true
+  has_one_attached :image
 
   scope :unread, -> { where(readed_at: nil) }
   scope :handleable, -> { includes(social_customer: :customer).where.not(social_customers: { customer_id: nil }) }
