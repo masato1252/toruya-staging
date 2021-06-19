@@ -17,10 +17,12 @@ class MessageSerializer
   end
 
   attribute :is_image do |message|
-    JSON.parse(json)
-    return true
-  rescue JSON::ParserError => e
-    return false
+    begin
+      JSON.parse(message.raw_content)
+      true
+    rescue JSON::ParserError => e
+      false
+    end
   end
 
   attribute :text do |message|

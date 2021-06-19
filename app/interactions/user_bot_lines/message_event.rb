@@ -22,6 +22,7 @@ class UserBotLines::MessageEvent < ActiveInteraction::Base
             previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
           }.to_json,
           readed: false,
+          content_type: SocialUserMessages::Create::IMAGE_TYPE,
           message_type: SocialUserMessage.message_types[:user]
         )
       when "text"

@@ -24,6 +24,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
             previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
           }.to_json,
           readed: false,
+          content_type: SocialMessages::Create::IMAGE_TYPE,
           message_type: SocialMessage.message_types[:customer]
         )
       when "text"
