@@ -12,6 +12,7 @@ const MenuSelectionStep = ({next, jump, step}) => {
   const { selected_menu, props, i18n, dispatch, menus, booking_options, new_menu_name, new_menu_minutes, new_menu_online_state } = useGlobalContext()
   const [creatingNewMenu, setCreatingNewMenu] = useState(false)
   const menuNameInpuRef = useRef()
+  const menuMinutesRef = useRef()
 
   const renderFilterBookingOptions = () => {
     const filter_options = selected_menu.value ?
@@ -104,8 +105,26 @@ const MenuSelectionStep = ({next, jump, step}) => {
               >
                 {minute} {I18n.t("common.minute")}
               </button>
-            ))}
-          </div>
+              ))}
+              <div className="action-block">
+                <input type="tel" ref={menuMinutesRef} /> {I18n.t("common.minute")}
+
+                <button className="btn btn-yellow"
+                  onClick={
+                    () => {
+                      dispatch({
+                        type: "SET_ATTRIBUTE",
+                        payload: {
+                          attribute: "new_menu_minutes",
+                          value: menuMinutesRef.current.value || 60
+                        }
+                      })
+                    }
+                  }>
+                  {I18n.t("action.next_step")}
+                </button>
+              </div>
+            </div>
         )
       }
       else if (!new_menu_online_state) {
