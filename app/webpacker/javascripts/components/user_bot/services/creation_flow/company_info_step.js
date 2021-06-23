@@ -16,14 +16,8 @@ const CompanyInfoStep = ({next, step}) => {
         <ServiceFlowStepIndicator step={step} />
         <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.this_is_company_info")}</h3>
 
-
         <div className="margin-around">
-          <h3 className="header">{I18n.t("common.short_shop_name")}</h3>
-          <p>
-            {company_info.short_name}
-          </p>
-
-          <h3 className="header">{I18n.t("common.company_info")}</h3>
+          <h3 className="header">{company_info.type === "Shop" ? I18n.t("common.shop_info") : I18n.t("common.company_info")}</h3>
           <p>{company_info.name}</p>
           <p>{company_info.address}</p>
           <p>{company_info.phone_number}</p>
@@ -36,7 +30,7 @@ const CompanyInfoStep = ({next, step}) => {
             </button>
           </div>
           <p className="margin-around">
-            {I18n.t("user_bot.dashboards.online_service_creation.edit_shop_in_setting_page")}
+            {company_info.type === "Shop" ? I18n.t("user_bot.dashboards.online_service_creation.edit_shop_in_setting_page") : I18n.t("user_bot.dashboards.online_service_creation.edit_company_in_setting_page")}
           </p>
         </div>
       </div>

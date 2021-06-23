@@ -277,7 +277,8 @@ ja:
         booking_note: 注意事項
         book_which_shop: どの店舗の予約を受け付けますか？
         book_for_this_shop: 以下の店舗の予約受付ページを作成します
-        company_info: 会社情報
+        company_info: 企業情報
+        shop_info: 店舗情報
         shop_logo: 店舗ロゴ
         shop_without_logo: 店舗ロゴがありません
         create_page_from_this_shop: この店舗で作成する
@@ -479,6 +480,7 @@ ja:
         what_is_service_name: サービス名は何ですか？
         this_is_company_info: 以下の店舗のサービスとして作成します
         edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。
+        edit_company_in_setting_page: 企業情報は管理画面から編集してください。
         what_company_info: サービス名どの店舗として提供しますか？
         what_is_end_time: このサービスは、利用期限がありますか？
         expire_after_n_days: 購入後X日後まで
