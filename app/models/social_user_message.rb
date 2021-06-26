@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: social_user_messages
@@ -12,6 +11,8 @@
 #  raw_content    :text
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  schedule_at    :datetime
+#  sent_at        :datetime
 #
 # Indexes
 #
@@ -23,6 +24,7 @@ class SocialUserMessage < ApplicationRecord
   hi_channel_name "toruya_users_support"
 
   belongs_to :social_user, touch: true
+  has_one_attached :image
 
   scope :unread, -> { where(readed_at: nil) }
 

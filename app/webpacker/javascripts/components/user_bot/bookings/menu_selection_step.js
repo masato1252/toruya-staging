@@ -12,6 +12,7 @@ const MenuSelectionStep = ({next, jump, step}) => {
   const { selected_menu, props, i18n, dispatch, menus, booking_options, new_menu_name, new_menu_minutes, new_menu_online_state } = useGlobalContext()
   const [creatingNewMenu, setCreatingNewMenu] = useState(false)
   const menuNameInpuRef = useRef()
+  const menuMinutesRef = useRef()
 
   const renderFilterBookingOptions = () => {
     const filter_options = selected_menu.value ?
@@ -88,23 +89,24 @@ const MenuSelectionStep = ({next, jump, step}) => {
           <div className="centerize">
             <h3 className="header">{I18n.t("user_bot.dashboards.booking_page_creation.what_is_menu_time")}</h3>
 
-            {[30, 60, 90].map(minute => (
-              <button key={minute} className="btn btn-tarco btn-extend btn-tall"
+            <input type="tel" ref={menuMinutesRef} /> {I18n.t("common.minute")}
+
+            <div className="action-block">
+              <button className="btn btn-yellow"
                 onClick={
                   () => {
                     dispatch({
                       type: "SET_ATTRIBUTE",
                       payload: {
                         attribute: "new_menu_minutes",
-                        value: minute
+                        value: menuMinutesRef.current.value || 60
                       }
                     })
                   }
-                }
-              >
-                {minute} {I18n.t("common.minute")}
+                }>
+                {I18n.t("action.next_step")}
               </button>
-            ))}
+            </div>
           </div>
         )
       }

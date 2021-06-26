@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <%#XXX stylesheet_pack_tag and javascript_pack_tag couldn't use the same file name booking.js, booking.scss %>
     <%= stylesheet_packs_with_chunks_tag "booking_stylesheets" %>
-    <%= javascript_packs_with_chunks_tag "booking",  "booking_stylesheets" %>
+    <%= javascript_packs_with_chunks_tag "booking" %>
+    <%= javascript_packs_with_chunks_tag "booking_stylesheets" if Rails.env.development? %>
     <%= yield :script if content_for?(:script) %>
     <link rel="manifest" href="/manifest.json" />
     <meta name="apple-mobile-web-app-capable" content="yes">

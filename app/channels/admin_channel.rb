@@ -17,15 +17,6 @@ class AdminChannel < ApplicationCable::Channel
     stop_all_streams
   end
 
-  def send_message(data)
-    SocialUserMessages::Create.run!(
-      social_user: SocialUser.find_by!(social_service_user_id: data["customer_id"]),
-      content: data["text"],
-      readed: true,
-      message_type: SocialUserMessage.message_types[:admin]
-    )
-  end
-
   def get_messages(data)
     return unless data["customer_id"]
 
@@ -53,7 +44,7 @@ class AdminChannel < ApplicationCable::Channel
     return unless data["channel_id"]
 
     social_users = SocialUser
-      .includes(:social_user_messages)
+      .includes(:social_user_messages, :memos)
       .order("social_users.updated_at DESC")
 
     _users = social_users.map { |user| SocialUserSerializer.new(user).attributes_hash }

@@ -495,7 +495,8 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
-      resources :chats, only: [:index]
+      resources :chats, only: [:index, :create, :destroy]
+      resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
         member do
           post "approve"

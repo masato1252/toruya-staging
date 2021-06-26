@@ -840,7 +840,6 @@ CREATE TABLE public.customers (
     phone_numbers_details jsonb DEFAULT '[]'::jsonb,
     emails_details jsonb DEFAULT '[]'::jsonb,
     address_details jsonb DEFAULT '{}'::jsonb,
-    stripe_charge_details jsonb,
     stripe_customer_id character varying,
     menu_ids character varying[] DEFAULT '{}'::character varying[],
     online_service_ids character varying[] DEFAULT '{}'::character varying[]
@@ -1327,9 +1326,9 @@ CREATE TABLE public.profiles (
     city character varying,
     street1 character varying,
     street2 character varying,
-    template_variables json,
     personal_address_details jsonb,
-    company_address_details jsonb
+    company_address_details jsonb,
+    template_variables json
 );
 
 
@@ -1730,8 +1729,8 @@ CREATE TABLE public.sale_pages (
     selling_start_at timestamp without time zone,
     normal_price_amount_cents numeric,
     selling_price_amount_cents numeric,
-    sections_context jsonb,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    sections_context jsonb
 );
 
 
@@ -2098,7 +2097,9 @@ CREATE TABLE public.social_user_messages (
     readed_at timestamp without time zone,
     raw_content text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    schedule_at timestamp without time zone,
+    sent_at timestamp without time zone
 );
 
 
@@ -2378,6 +2379,73 @@ CREATE SEQUENCE public.subscriptions_id_seq
 --
 
 ALTER SEQUENCE public.subscriptions_id_seq OWNED BY public.subscriptions.id;
+
+
+--
+-- Name: taggings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.taggings (
+    id integer NOT NULL,
+    tag_id integer,
+    taggable_type character varying,
+    taggable_id integer,
+    tagger_type character varying,
+    tagger_id integer,
+    context character varying(128),
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.taggings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tags (
+    id integer NOT NULL,
+    name character varying,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    taggings_count integer DEFAULT 0
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -2934,6 +3002,20 @@ ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3467,6 +3549,22 @@ ALTER TABLE ONLY public.subscriptions
 
 
 --
+-- Name: taggings taggings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.taggings
+    ADD CONSTRAINT taggings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3904,13 +4002,6 @@ CREATE INDEX index_sale_pages_on_staff_id ON public.sale_pages USING btree (staf
 
 
 --
--- Name: index_sale_pages_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_sale_pages_on_user_id ON public.sale_pages USING btree (user_id);
-
-
---
 -- Name: index_shop_menu_repeating_dates_on_menu_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4048,6 +4139,55 @@ CREATE INDEX index_subscriptions_on_plan_id ON public.subscriptions USING btree 
 --
 
 CREATE UNIQUE INDEX index_subscriptions_on_user_id ON public.subscriptions USING btree (user_id);
+
+
+--
+-- Name: index_taggings_on_context; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_context ON public.taggings USING btree (context);
+
+
+--
+-- Name: index_taggings_on_tag_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_tag_id ON public.taggings USING btree (tag_id);
+
+
+--
+-- Name: index_taggings_on_taggable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_taggable_id ON public.taggings USING btree (taggable_id);
+
+
+--
+-- Name: index_taggings_on_taggable_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_taggable_type ON public.taggings USING btree (taggable_type);
+
+
+--
+-- Name: index_taggings_on_tagger_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_tagger_id ON public.taggings USING btree (tagger_id);
+
+
+--
+-- Name: index_taggings_on_tagger_id_and_tagger_type; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_taggings_on_tagger_id_and_tagger_type ON public.taggings USING btree (tagger_id, tagger_type);
+
+
+--
+-- Name: index_tags_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_tags_on_name ON public.tags USING btree (name);
 
 
 --
@@ -4310,6 +4450,27 @@ CREATE INDEX subscription_charge_type_index ON public.subscription_charges USING
 
 
 --
+-- Name: taggings_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX taggings_idx ON public.taggings USING btree (tag_id, taggable_id, taggable_type, context, tagger_id, tagger_type);
+
+
+--
+-- Name: taggings_idy; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX taggings_idy ON public.taggings USING btree (taggable_id, taggable_type, tagger_id, context);
+
+
+--
+-- Name: taggings_taggable_context_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX taggings_taggable_context_idx ON public.taggings USING btree (taggable_id, taggable_type, context);
+
+
+--
 -- Name: unique_staff_account_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4328,6 +4489,14 @@ CREATE INDEX used_services_index ON public.customers USING gin (user_id, menu_id
 --
 
 CREATE INDEX user_state_index ON public.subscription_charges USING btree (user_id, state);
+
+
+--
+-- Name: taggings fk_rails_9fcd2e236b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.taggings
+    ADD CONSTRAINT fk_rails_9fcd2e236b FOREIGN KEY (tag_id) REFERENCES public.tags(id);
 
 
 --
@@ -4500,6 +4669,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210517044404'),
 ('20210524020657'),
 ('20210527015333'),
-('20210527025229');
+('20210527025229'),
+('20210608032458'),
+('20210610005359'),
+('20210610005360'),
+('20210610005361'),
+('20210610005362'),
+('20210610005363'),
+('20210610005364'),
+('20210610005365');
 
 

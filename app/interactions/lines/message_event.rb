@@ -12,7 +12,24 @@ class Lines::MessageEvent < ActiveInteraction::Base
 
     if event.present?
       case event["message"]["type"]
+      when "image"
+        Rollbar.warning("Line image message", event: event)
+
+        compose(
+          SocialMessages::Create,
+          social_customer: social_customer,
+          content: {
+            messageId: event["message"]["id"],
+            originalContentUrl: event["message"]["contentProvider"]["originalContentUrl"],
+            previewImageUrl: event["message"]["contentProvider"]["previewImageUrl"]
+          }.to_json,
+          readed: false,
+          content_type: SocialMessages::Create::IMAGE_TYPE,
+          message_type: SocialMessage.message_types[:customer]
+        )
       when "text"
+        Rollbar.warning("Line text message", event: event)
+
         case event["message"]["text"].strip
         when I18n.t("line.bot.keywords.booking_pages")
           is_keyword = true

@@ -34,7 +34,7 @@ module Menus
 
             # XXX: If this menu was responsible by one staff(or no need manpower), then for sure, all the staffs had capability to handle it.
             if menu.min_staffs_number <= 1
-              menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number].presence || 1 }.max)
+              menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number].presence || "1" }.max)
             end
           end
         # when "sale_template_variables", "introduction_video_url", "flow", "quantity"

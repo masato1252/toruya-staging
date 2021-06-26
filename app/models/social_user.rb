@@ -21,6 +21,8 @@
 require "user_bot_social_account"
 
 class SocialUser < ApplicationRecord
+  acts_as_taggable_on :memos
+
   belongs_to :user, optional: true
   has_many :social_user_messages
 

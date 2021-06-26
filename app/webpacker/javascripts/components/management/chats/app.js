@@ -121,11 +121,11 @@ export default ({ props }) => {
 
   return (
     <>
-      <div className="col-sm-2">
+      <div className="col-sm-3">
         <NotificationPermission />
         <CusomterList />
       </div>
-      <div className="col-sm-8">
+      <div className="col-sm-7">
         <div id="chat-box">
           <ChatBody />
         </div>

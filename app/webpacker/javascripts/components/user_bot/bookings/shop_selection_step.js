@@ -22,16 +22,16 @@ const ShopSelectionStep = ({next, step}) => {
           <h3 className="header">{i18n.book_for_this_shop}</h3>
           <div className="shop-info">
             <b>{i18n.short_name}</b>
-            <p>{selected_shop.shortName}</p>
+            <p>{selected_shop.short_name}</p>
 
-            <b>{i18n.company_info}</b>
+            <b>{i18n.shop_info}</b>
             <p>
               {selected_shop.address}<br />
-              {selected_shop.phoneNumber}
+              {selected_shop.phone_number}
             </p>
             <b>{i18n.shop_logo}</b>
             <p>
-              {selected_shop.logoUrl ?  <img className="logo" src={selected_shop.logoUrl} /> : i18n.shop_without_logo}
+              {selected_shop.logo_url ?  <img className="logo" src={selected_shop.logo_url} /> : i18n.shop_without_logo}
             </p>
 
             <div className="centerize">

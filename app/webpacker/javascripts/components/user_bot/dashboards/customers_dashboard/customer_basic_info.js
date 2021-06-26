@@ -85,12 +85,12 @@ const CustomerBasicInfo = () => {
           <div className="notifiers">
             <a
               data-id="customer-reminder-toggler"
-              onClick={async () => {
-                const [error, response] = await CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
+              onClick={() => {
+                CustomerServices.toggle_reminder_premission(props.super_user_id, selected_customer.id)
 
                 const tooltip = $("[data-id='customer-reminder-toggler']").tooltip({
                   trigger: "manual",
-                  title: `${props.i18n.reminder_changed_message} ${response.data.reminder_permission ? "ON" : "OFF"}`
+                  title: `${props.i18n.reminder_changed_message} ${selected_customer.reminderPermission ? "OFF" : "ON"}`
                 })
 
                 tooltip.tooltip("show")
@@ -102,7 +102,7 @@ const CustomerBasicInfo = () => {
                 dispatch({
                   type: "UPDATE_CUSTOMER_REMINDER_PERMISSION",
                   payload: {
-                    reminderPermission: response.data.reminder_permission
+                    reminderPermission: !selected_customer.reminderPermission
                   }
                 })
             }}>

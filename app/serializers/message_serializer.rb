@@ -16,8 +16,26 @@ class MessageSerializer
     message.social_customer.user_id
   end
 
+  attribute :is_image do |message|
+    begin
+      JSON.parse(message.raw_content)
+      true
+    rescue JSON::ParserError => e
+      false
+    end
+  end
+
   attribute :text do |message|
-    message.raw_content
+    begin
+      content = JSON.parse(message.raw_content)
+      if message.image.attached?
+        content["previewImageUrl"] = Rails.application.routes.url_helpers.url_for(message.image.variant(combine_options: { resize: "750", flatten: true }))
+      end
+
+      content
+    rescue JSON::ParserError
+      message.raw_content
+    end
   end
 
   attribute :readed do |message|

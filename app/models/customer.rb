@@ -27,7 +27,6 @@
 #  phone_numbers_details    :jsonb
 #  emails_details           :jsonb
 #  address_details          :jsonb
-#  stripe_charge_details    :jsonb
 #  stripe_customer_id       :string
 #  menu_ids                 :string           default([]), is an Array
 #  online_service_ids       :string           default([]), is an Array

@@ -22,18 +22,6 @@ export const GlobalProvider = ({ children }) => {
   //   customer: {...}
   // }
 
-  const staffNewMessage = (customer_with_message) => {
-    dispatch({
-      type: "STAFF_NEW_MESSAGE",
-      payload: customer_with_message
-    })
-
-    subscription.perform("send_message", {
-      customer_id: customer_with_message["customer_id"],
-      text: customer_with_message["message"]["text"]
-    })
-  }
-
   const customerNewMessage = ({ customer, message }) => {
     dispatch({
       type: "CUSTOMER_NEW_MESSAGE",
@@ -91,7 +79,6 @@ export const GlobalProvider = ({ children }) => {
       ...state.customer,
       dispatch,
       customerNewMessage,
-      staffNewMessage,
       getMessages,
       prependMessages,
       getCustomers,
