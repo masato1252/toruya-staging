@@ -4,11 +4,24 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_started, start_at, is_ended, purchase_url, social_account_add_friend_url, no_action, payable}) => {
+const PriceBlock = ({
+  demo,
+  solution_type,
+  selling_price,
+  normal_price,
+  is_started,
+  start_at,
+  is_ended,
+  purchase_url,
+  social_account_add_friend_url,
+  no_action,
+  payable,
+  is_external
+}) => {
   const renderActions = () => {
     if (no_action) return <></>
 
-    if (!payable) {
+    if (!payable && !is_external) {
       return (
         <div className="booking-info">
           <div className="unpayable-view">
@@ -75,9 +88,9 @@ const PriceBlock = ({demo, solution_type, selling_price, normal_price, is_starte
           <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
         </button>
       ) :
-        renderActions()
+          renderActions()
       }
-      </>
+    </>
   )
 }
 

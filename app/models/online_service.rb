@@ -70,12 +70,21 @@ class OnlineService < ApplicationRecord
     introduction_video_required: false
   }
 
+  EXTERNAL_SOLUTION = {
+    key: "external",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
+    enabled: true,
+    introduction_video_required: false
+  }
+
   SOLUTIONS = [
     VIDEO_SOLUTION,
     AUDIO_SOLUTION,
     PDF_SOLUTION,
     QUESTIONNAIRE_SOLUTION,
-    DIAGNOSIS_SOLUTION
+    DIAGNOSIS_SOLUTION,
+    EXTERNAL_SOLUTION
   ]
 
   GOALS = [
@@ -124,6 +133,16 @@ class OnlineService < ApplicationRecord
       solutions: [
         VIDEO_SOLUTION
       ]
+    },
+    {
+      key: "external",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.external.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
+      enabled: true,
+      stripe_required: false,
+      solutions: [
+        EXTERNAL_SOLUTION
+      ]
     }
   ]
 
@@ -137,11 +156,15 @@ class OnlineService < ApplicationRecord
   has_many :customers, through: :online_service_customer_relations
 
   def charge_required?
-    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required]
+    GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
   end
 
   def introduction_video_required?
     SOLUTIONS.find { |solution| solution_type == solution[:key] }[:introduction_video_required]
+  end
+
+  def external?
+    goal_type == 'external'
   end
 
   def start_time

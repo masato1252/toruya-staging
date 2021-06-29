@@ -12,7 +12,7 @@ import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleOnlineService = ({product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
-  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews}) => {
+  price, normal_price, quantity, introduction_video, is_started, start_at, is_ended, purchase_url, preview, flow, payable, sections_context, solution_type, reviews, is_external}) => {
 
   if (preview) {
     return (
@@ -34,6 +34,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           is_ended={is_ended}
           purchase_url={purchase_url}
           payable={payable}
+          is_external={is_external}
         />
       </div>
     )
@@ -57,6 +58,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
         is_ended={is_ended}
         purchase_url={purchase_url}
         payable={payable}
+        is_external={is_external}
       />
 
       <WhyContentView content={content} demo={demo} jumpTo={() => jump(9)} />
@@ -80,6 +82,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
           is_ended={is_ended}
           purchase_url={purchase_url}
           payable={payable}
+          is_external={is_external}
         />
       </div>
 

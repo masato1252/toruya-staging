@@ -1,15 +1,28 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import VideoContentSetup from "./contents/video_content_setup";
 import PdfContentSetup from "./contents/pdf_content_setup";
+import ExternalContentSetup from "./contents/external_content_setup";
 
 const SolutionStep = ({next, step}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
   const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions
+
+  useEffect(() => {
+    if (solutions.length == 1) {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "selected_solution",
+          value: solutions[0].key
+        }
+      })
+    }
+  }, [])
 
   if (selected_solution) {
     switch (selected_solution) {
@@ -17,6 +30,8 @@ const SolutionStep = ({next, step}) => {
         return <VideoContentSetup next={next} step={step} />
       case "pdf":
         return <PdfContentSetup next={next} step={step} />
+      case "external":
+        return <ExternalContentSetup next={next} step={step} />
     }
   }
 

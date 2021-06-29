@@ -196,10 +196,11 @@ ja:
             pending: 保留
             inactive: 利用不可
           payment_states:
+            pending: 支払い待ち
             free: 無料
             paid: 支払い完了
-            failed: エラー発生
-            refunded: 払い戻し
+            failed: 失敗
+            refunded: 返金済み
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携
@@ -454,6 +455,9 @@ ja:
           upsell:
             title: 継続購入
             description: あなたから購入し続けてもらう為の定額制サービスページを作成
+          external:
+            title: 外部サービスを販売
+            description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
         solutions:
           video:
             title: 動画セミナー
@@ -470,6 +474,9 @@ ja:
           diagnosis:
             title: 診断
             description: LINE自動メッセージを利用した診断の回答結果から、アップセルサービスの購入を促すサービス
+          external:
+            title: 外部サービスを販売
+            description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
         what_is_your_goal: このサービスの目的は何ですか？
         what_is_your_solution: このサービスで提供する内容は何ですか？
         what_is_this_video_provide: どの動画をサービス提供しますか？
@@ -477,6 +484,9 @@ ja:
         video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
         what_is_pdf_url: どのPDFをサービス提供しますか？
         pdf_hint: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
+        what_is_external_url: 顧客はどこでサービス購入しますか？
+        external_input_placeholder: 購入ページのURLを入力
+        external_hint: 顧客がこのサービスに登録する際、顧客情報を入力した後に、このURLが表示されます。
         what_is_service_name: サービス名は何ですか？
         this_is_company_info: 以下の店舗のサービスとして作成します
         edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。

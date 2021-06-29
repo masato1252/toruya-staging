@@ -5,15 +5,15 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../context/global_state";
 import ServiceFlowStepIndicator from "../services_flow_step_indicator";
 
-const PdfContentSetup = ({next, step}) => {
+const ExternalContentSetup = ({next, step}) => {
   const { props, dispatch, content } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_external_url")}</h3>
       <input
-        placeholder={I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}
+        placeholder={I18n.t("user_bot.dashboards.online_service_creation.external_input_placeholder")}
         value={content?.url || ""}
         onChange={(event) =>
             dispatch({
@@ -30,7 +30,7 @@ const PdfContentSetup = ({next, step}) => {
         className="extend with-border"
       />
       <p className="margin-around text-align-left">
-        {I18n.t("user_bot.dashboards.online_service_creation.pdf_hint")}
+        {I18n.t("user_bot.dashboards.online_service_creation.external_hint")}
       </p>
 
       {content?.url && (
@@ -45,4 +45,4 @@ const PdfContentSetup = ({next, step}) => {
 
 }
 
-export default PdfContentSetup
+export default ExternalContentSetup

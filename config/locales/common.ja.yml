@@ -48,6 +48,7 @@ ja:
       pdf: 今すぐダウンロード
       questionnaire: アンケートに答える
       diagnosis: 今すぐ登録する
+      external: 今すぐ登録する
     open_sale_page: 販売ページを開く
     add_as_friend: お友だち登録
     unsubscribe: 解約する
@@ -61,6 +62,7 @@ ja:
       pdf: ダウンロード
       questionnaire: アンケートに答える
       diagnosis: 登録する
+      external: 登録する
   common:
     processing: 送信中
     preparing: 準備中です

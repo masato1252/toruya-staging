@@ -10,6 +10,10 @@ module SalePages::OnlineServiceProductPart
       sale_page.free?
     end
 
+    attribute :is_external do |sale_page|
+      sale_page.external?
+    end
+
     attribute :product do |sale_page|
       sale_page.product.is_a?(BookingPage) ? ::BookingPageSerializer.new(sale_page.product).attributes_hash : ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
     end
