@@ -16,7 +16,7 @@ module Seeders
       json = PLANS_FILE.read
       # Remove comments from the file. Note that JSON doesn't actually allow
       # comments, but we want them anyways.
-      json.gsub!(/^\s*\#.*\n/, "")
+      json = json.gsub(/^\s*\#.*\n/, "")
 
       new(JSON.parse(json)) && true
     end
