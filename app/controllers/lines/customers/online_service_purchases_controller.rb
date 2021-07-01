@@ -19,7 +19,7 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       authorize_token: params[:token]
     )
 
-    return_json_response(outcome, { redirect_to: new_lines_customers_online_service_purchases_path(slug: params[:slug]) })
+    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content["url"] : new_lines_customers_online_service_purchases_path(slug: params[:slug]) })
   end
 
   private

@@ -31,23 +31,17 @@ module Sales
             relation.permission_state = :active
             relation.expire_at = product.current_expire_time
             relation.free_payment_state!
-          else
+            customer.update(online_service_ids: customer.online_service_ids.concat([sale_page.product.id]).uniq)
+          elsif !sale_page.external?
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
             purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
 
             # credit card charge is synchronous request, it would return final status immediately
             if purchase_outcome.valid?
-              relation.permission_state = :active
-              relation.paid_at = purchase_outcome.result.created_at
-              relation.expire_at = purchase_outcome.result.expired_at
-              relation.paid_payment_state!
+              Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product, notify: false)
             else
               relation.failed_payment_state!
             end
-          end
-
-          if relation.purchased?
-            customer.update(online_service_ids: customer.online_service_ids.concat([sale_page.product.id]).uniq)
           end
         end
 
@@ -81,7 +75,7 @@ module Sales
       end
 
       def validate_token
-        if !sale_page.free? && authorize_token.blank?
+        if !sale_page.free? && !sale_page.external? && authorize_token.blank?
           errors.add(:authorize_token, :invalid_token)
         end
       end

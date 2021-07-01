@@ -166,7 +166,11 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :customers, only: [:index, :show], module: :services
+        resources :customers, only: [:index, :show], module: :services do
+          member do
+            post :approve
+          end
+        end
       end
 
       resources :custom_messages, only: [] do

@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactSelect from "react-select";
 import _ from "lodash";
 
@@ -10,8 +10,24 @@ import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sal
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
 const UpsellStep = ({next, prev, step}) => {
-  const { props, dispatch, upsell } = useGlobalContext()
+  const { props, dispatch, upsell, selected_goal } = useGlobalContext()
   const sale_page = upsell.sale_page;
+
+  useEffect(() => {
+    if (selected_goal === 'external') {
+      dispatch({
+        type: "SET_ATTRIBUTE",
+        payload: {
+          attribute: "upsell",
+          value: {
+            type: "no",
+          }
+        }
+      })
+
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow centerize">

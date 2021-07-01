@@ -1,6 +1,6 @@
 "use strict";
 
-import React, { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 
 import LineIdentificationView from "components/lines/customer_identifications/shared/line_identification_view"
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
@@ -10,13 +10,21 @@ import ServiceCheckoutForm from "shared/service_checkout_form";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
-  useEffect(() => {
-    if (props.sale_page.is_free || props.customer_subscirbed) {
-      SaleServices.purchase({ data: purcahse_data })
+  const purchase = async () => {
+    if (props.sale_page.is_free || props.customer_subscirbed || props.sale_page.is_external) {
+      const [error, response] = await SaleServices.purchase({ data: purcahse_data })
+
+      if (props.sale_page.is_external) {
+        window.location.replace(response.data.redirect_to)
+      }
     }
+  }
+
+  useLayoutEffect(() => {
+    purchase()
   }, [])
 
-  if (!props.sale_page.is_free && !props.customer_subscirbed) {
+  if (!props.sale_page.is_free && !props.sale_page.is_external && !props.customer_subscirbed) {
     return (
       <ServiceCheckoutForm
         stripe_key={props.stripe_key}
@@ -27,6 +35,8 @@ const FinalPaidPage = ({props, purcahse_data}) => {
       />
     )
   }
+
+  if (props.sale_page.is_external) return <></>
 
   return (
     <div className="done-view">
