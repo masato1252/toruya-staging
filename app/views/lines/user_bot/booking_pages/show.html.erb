@@ -25,9 +25,11 @@
         </div>
       </div>
       <div class="option-action">
-        <%= link_to delete_option_lines_user_bot_booking_page_path(@booking_page, booking_option), class: "btn btn-orange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message")  } do %>
-          <i class="fa fa-minus"></i> <%= I18n.t("action.delete") %>
+        <% if @booking_page.booking_page_options.count > 1 %>
+          <%= link_to delete_option_lines_user_bot_booking_page_path(@booking_page, booking_option), class: "btn btn-orange", method: :delete, data: { confirm: I18n.t("common.are_you_sure_message")  } do %>
+            <i class="fa fa-minus"></i> <%= I18n.t("action.delete") %>
         <% end %>
+      <% end %>
       </div>
     </div>
   <% end %>

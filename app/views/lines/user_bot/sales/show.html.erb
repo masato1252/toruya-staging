@@ -22,7 +22,7 @@
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.selling_solutions") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_price") %></div>
   <% if @sale_page.is_booking_page? %>
-    <% if @sale_page.product %>
+    <% if @sale_page.product && @sale_page.product.primary_product %>
       <%= render "lines/user_bot/field_row", title: "#{@sale_page.product.product_price.format(:ja_default_format)}#{@sale_page.product.product_price.zero? ? "" : "(#{I18n.t('common.tax_included')})" }" %>
     <% end %>
   <% else %>

@@ -52,11 +52,11 @@ class BookingPage < ApplicationRecord
   end
 
   def product_name
-    @product_name ||= primary_product.display_name.presence || primary_product.name.presence || name
+    @product_name ||= primary_product&.display_name.presence || primary_product&.name.presence || name
   end
 
   def product_price
-    @product_price ||= primary_product.amount
+    @product_price ||= primary_product&.amount
   end
 
   def start_time

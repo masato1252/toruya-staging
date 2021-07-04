@@ -9,11 +9,11 @@ class BookingPageSerializer
   end
 
   attribute :price_number do |booking_page|
-    booking_page.product_price.fractional
+    booking_page.product_price&.fractional
   end
 
   attribute :price do |booking_page|
-    booking_page.product_price.format(:ja_default_format)
+    booking_page.product_price&.format(:ja_default_format)
   end
 
   attribute :start_time do |booking_page|

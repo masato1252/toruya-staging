@@ -30,9 +30,14 @@ class Lines::UserBot::BookingPagesController < Lines::UserBotDashboardController
 
   def delete_option
     @booking_page = super_user.booking_pages.find(params[:id])
-    @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id]).destroy
 
-    redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option")
+    if @booking_page.booking_page_options.count > 1
+      @booking_page.booking_page_options.find_by(booking_option_id: params[:booking_option_id]).destroy
+
+      redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option")
+    else
+      redirect_to lines_user_bot_booking_page_path(@booking_page.id, anchor: "new_option"), alert: "You should have at least one booking price"
+    end
   end
 
   def destroy
