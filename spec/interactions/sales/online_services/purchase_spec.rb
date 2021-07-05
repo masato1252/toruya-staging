@@ -6,8 +6,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
   before { StripeMock.start }
   after { StripeMock.stop }
 
-  let(:user) { FactoryBot.create(:access_provider, :stripe, user: sale_page.user).user }
-  let(:sale_page) { FactoryBot.create(:sale_page, :online_service) }
+  let(:user) { FactoryBot.create(:access_provider, :stripe).user }
+  let(:sale_page) { FactoryBot.create(:sale_page, :online_service, user: user) }
   let(:customer) { FactoryBot.create(:social_customer, user: user).customer }
   let(:authorize_token) { StripeMock.create_test_helper.generate_card_token }
   let(:args) do
@@ -25,7 +25,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect {
           outcome
         }.to change {
-          customer.updated_at
+          customer.reload.updated_at
         }
 
         relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer).take
@@ -53,8 +53,25 @@ RSpec.describe Sales::OnlineServices::Purchase do
       end
     end
 
+    context "when sale page's product was online service" do
+      let(:sale_page) { FactoryBot.create(:sale_page, product: FactoryBot.create(:online_service, :external, user: user)) }
+      it "create a pending relation" do
+        expect {
+          outcome
+        }.not_to change {
+          customer.updated_at
+        }
+
+        relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer).take
+        expect(relation).to be_pending_payment_state
+        expect(relation).to be_pending
+        expect(relation.expire_at).to be_nil
+        expect(customer.reload.online_service_ids).to be_empty
+      end
+    end
+
     context "when customers already registered this online service" do
-      let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation) }
+      let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free) }
       let(:sale_page) { online_service_customer_relation.sale_page }
       let(:customer) { online_service_customer_relation.customer }
 

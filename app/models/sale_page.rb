@@ -53,9 +53,7 @@ class SalePage < ApplicationRecord
   end
 
   def external?
-    unless is_booking_page?
-      product.external?
-    end
+    !is_booking_page? && product.external?
   end
 
   def is_booking_page?

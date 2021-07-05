@@ -31,14 +31,14 @@ module Sales
             relation.permission_state = :active
             relation.expire_at = product.current_expire_time
             relation.free_payment_state!
-            customer.update(online_service_ids: customer.online_service_ids.concat([sale_page.product.id]).uniq)
+            customer.update(online_service_ids: customer.read_attribute(:online_service_ids).concat([sale_page.product.id]).uniq)
           elsif !sale_page.external?
             compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
             purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
 
             # credit card charge is synchronous request, it would return final status immediately
             if purchase_outcome.valid?
-              Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product, notify: false)
+              Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product)
             else
               relation.failed_payment_state!
             end
@@ -46,8 +46,6 @@ module Sales
         end
 
         if relation.purchased?
-          Notifiers::OnlineServices::Purchased.run(receiver: social_customer, customer: customer, sale_page: sale_page)
-
           ::LineClient.flex(
             social_customer,
             LineMessages::FlexTemplateContainer.template(

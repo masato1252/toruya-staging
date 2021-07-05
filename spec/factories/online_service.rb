@@ -8,5 +8,10 @@ FactoryBot.define do
     solution_type { "video" }
     company { FactoryBot.create(:profile, user: user) }
     slug { SecureRandom.hex  }
+
+    trait :external do
+      goal_type { "external" }
+      solution_type { "external" }
+    end
   end
 end
