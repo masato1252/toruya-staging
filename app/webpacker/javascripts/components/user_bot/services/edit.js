@@ -28,7 +28,7 @@ const OnlineServiceEdit =({props}) => {
 
     [error, response] = await OnlineServices.update({
       online_service_id: props.service.id,
-      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page.id, end_time: end_time, start_time: start_time })
+      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time: end_time, start_time: start_time })
     })
 
     window.location = response.data.redirect_to
