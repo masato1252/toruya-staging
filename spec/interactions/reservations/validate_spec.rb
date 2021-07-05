@@ -221,7 +221,7 @@ RSpec.describe Reservations::Validate do
     context "when menu was over" do
       context "when rule had a particular end date" do
         before do
-          menu2.menu_reservation_setting_rule.update_attributes(end_date: Date.yesterday)
+          menu2.menu_reservation_setting_rule.update(end_date: Date.yesterday)
         end
 
         it "returns expected error" do

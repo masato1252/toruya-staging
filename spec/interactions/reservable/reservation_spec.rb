@@ -285,7 +285,7 @@ RSpec.describe Reservable::Reservation do
 
         context "when rule had a particular end date" do
           before do
-            menu1.menu_reservation_setting_rule.update_attributes(end_date: Date.yesterday)
+            menu1.menu_reservation_setting_rule.update(end_date: Date.yesterday)
           end
 
           it "is invalid" do
@@ -305,7 +305,7 @@ RSpec.describe Reservable::Reservation do
         context "when rule is repeating and over last date" do
           let(:now) { Time.zone.now.tomorrow.tomorrow }
           before do
-            menu1.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
+            menu1.menu_reservation_setting_rule.update(reservation_type: "repeating", repeats: 2)
             FactoryBot.create(:shop_menu_repeating_date, shop: shop, menu: menu1)
           end
 

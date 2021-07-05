@@ -54,7 +54,7 @@ module Menus
 
         menu.build_menu_reservation_setting_rule unless menu.menu_reservation_setting_rule
         if (menu_reservation_setting_rule_attributes && menu_reservation_setting_rule_attributes[:start_date]) || !menu.menu_reservation_setting_rule.new_record?
-          menu.menu_reservation_setting_rule.update_attributes(menu_reservation_setting_rule_attributes)
+          menu.menu_reservation_setting_rule.update(menu_reservation_setting_rule_attributes)
         end
 
         menu.reservation_setting = ReservationSetting.find(reservation_setting_id) if reservation_setting_id

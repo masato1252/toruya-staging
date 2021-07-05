@@ -12,7 +12,7 @@ class Reservations::SavedFiltersController < DashboardController
   def create
     query = FilterQueryPayload.run!(param: params.permit!.to_h)
     @filter = if params[:id]
-                super_user.reservation_query_filters.find(params[:id]).tap{ |filter| filter.update_attributes(name: params[:name], query: query)}
+                super_user.reservation_query_filters.find(params[:id]).tap{ |filter| filter.update(name: params[:name], query: query)}
               else
                 super_user.reservation_query_filters.create(name: params[:name], query: query)
               end

@@ -44,7 +44,7 @@ RSpec.describe Reservable::Menus do
 
         context "when menu is repeating rule" do
           before do
-            menu.menu_reservation_setting_rule.update_attributes(reservation_type: "repeating", repeats: 2)
+            menu.menu_reservation_setting_rule.update(reservation_type: "repeating", repeats: 2)
             FactoryBot.create(:shop_menu_repeating_date, shop: shop, menu: menu)
           end
 
@@ -55,7 +55,7 @@ RSpec.describe Reservable::Menus do
 
         context "when menu is due date rule" do
           before do
-            menu.menu_reservation_setting_rule.update_attributes(reservation_type: "date", end_date: Time.zone.now.tomorrow.to_date)
+            menu.menu_reservation_setting_rule.update(reservation_type: "date", end_date: Time.zone.now.tomorrow.to_date)
             FactoryBot.create(:shop_menu_repeating_date, shop: shop, menu: menu)
           end
 

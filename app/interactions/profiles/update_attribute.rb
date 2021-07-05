@@ -34,7 +34,7 @@ module Profiles
           if address.invalid?
             errors.add(:attrs, :address_invalid)
           else
-            profile.update_attributes(
+            profile.update(
               company_address: address.pure_address,
               company_zip_code: address.zip_code,
               company_address_details: address.as_json
