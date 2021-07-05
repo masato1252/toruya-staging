@@ -34,7 +34,10 @@ const SalePageEdit =({props}) => {
   const [reviews, setReviews] = useState(props.sale_page.reviews || ["", ""])
   const [end_time, setEndTime] = useState(props.sale_page.end_time)
   const [start_time, setStartTime] = useState(props.sale_page.start_time)
-  const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option)
+  const [normal_price, setNormalPrice] = useState(props.sale_page.normal_price_option || {
+    price_type: "cost",
+    price_amount: null
+  })
   const [selling_price, setSellingPrice] = useState(props.sale_page.selling_price_option)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 

@@ -2,7 +2,7 @@
 
 class SalePageSerializer
   include JSONAPI::Serializer
-  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type
+  attribute :id, :introduction_video_url, :flow, :end_time, :start_time, :sections_context, :solution_type, :normal_price
 
   attribute :content do |sale_page|
     sale_page.content.merge(
@@ -32,6 +32,20 @@ class SalePageSerializer
 
   attribute :introduction_video do |object|
     { url: object.introduction_video_url }
+  end
+
+  attribute :normal_price_option do |object|
+    if object.normal_price_amount_cents
+      {
+        price_type: "cost",
+        price_amount: object.normal_price_amount.fractional,
+        price_amount_format: object.normal_price_amount.format
+      }
+    else
+      {
+        price_type: "free"
+      }
+    end
   end
 
   attribute :reviews do |object|

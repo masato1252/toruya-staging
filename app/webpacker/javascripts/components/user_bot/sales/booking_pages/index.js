@@ -12,7 +12,7 @@ import WhyContentView from "components/user_bot/sales/why_content_view";
 import I18n from 'i18n-js/index.js.erb';
 
 const SaleBookingPage = (
-  {product, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
+  {product, normal_price, social_account_add_friend_url, template, template_variables, content, staff, demo, dispatch, jump,
     shop, flow, preview, introduction_video, sections_context, solution_type, reviews}) => {
 
   if (preview) {
@@ -26,6 +26,7 @@ const SaleBookingPage = (
           template_variables={template_variables}
           introduction_video={introduction_video}
           social_account_add_friend_url={social_account_add_friend_url}
+          normal_price={normal_price}
           jump={jump}
         />
       </div>
@@ -42,6 +43,7 @@ const SaleBookingPage = (
         template_variables={template_variables}
         introduction_video={introduction_video}
         social_account_add_friend_url={social_account_add_friend_url}
+        normal_price={normal_price}
         jump={jump}
       />
 
@@ -55,7 +57,11 @@ const SaleBookingPage = (
       <div className="apply-content content">
         <h3 className="header centerize">{I18n.t("common.apply_now")}</h3>
 
-        <PriceBlock product={product} demo={demo} />
+        <PriceBlock
+          product={product}
+          demo={demo}
+          normal_price={normal_price?.price_amount}
+        />
       </div>
 
       <div className="shop-content content">

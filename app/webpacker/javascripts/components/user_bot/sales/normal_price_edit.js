@@ -9,7 +9,7 @@ const NormalPriceEdit = ({normal_price, handleNormalPriceChange}) => (
         <div>
           <input
             name="selling_type" type="radio" value="cost"
-            checked={normal_price.price_type === "cost"}
+            checked={normal_price?.price_type === "cost"}
             onChange={() => {
               handleNormalPriceChange({
                 price_type: "cost"
@@ -18,7 +18,7 @@ const NormalPriceEdit = ({normal_price, handleNormalPriceChange}) => (
           />
           {I18n.t("user_bot.dashboards.sales.online_service_creation.normal_price_cost")}
           <br />
-          {normal_price.price_type === "cost" && (
+          {normal_price?.price_type === "cost" && (
             <>
               <input
                 type="tel"
@@ -43,7 +43,7 @@ const NormalPriceEdit = ({normal_price, handleNormalPriceChange}) => (
             name="selling_type"
             type="radio"
             value="free"
-            checked={normal_price.price_type === "free"}
+            checked={normal_price?.price_type === "free"}
             onChange={() => {
               handleNormalPriceChange({
                 price_type: "free"

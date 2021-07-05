@@ -4,7 +4,13 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo } from "shared/booking";
 
-const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) => {
+const PriceBlock = ({
+  product,
+  demo,
+  social_account_add_friend_url,
+  no_action,
+  normal_price,
+}) => {
   const renderActions = () => {
     if (no_action) return <></>
 
@@ -40,9 +46,23 @@ const PriceBlock = ({product, demo, social_account_add_friend_url, no_action}) =
   return (
     <>
       <div className="product-price-block">
-        <div className="price-label">{isFree() ? I18n.t("common.today_price_label") : I18n.t("common.booking_price")}</div>
         <div className="price">
-          {isFree() ? I18n.t("common.free_price") : product.price_number}{!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}+{I18n.t("common.tax")}</span>}
+          {normal_price && (
+            <>
+              <span className="normal-price">
+                <div className="label">{I18n.t("common.normal_price_label")}</div>
+                <div className="amount">{normal_price}<span className="price-with-tax">{I18n.t("common.unit")}+{I18n.t("common.tax")}</span></div>
+              </span>
+
+              <i className="fa fa-arrow-right"></i>
+            </>
+          )}
+          <span className="special-price">
+            <div>
+              <div className="label">{isFree() ? I18n.t("common.today_price_label") : I18n.t("common.booking_price")}</div>
+              {isFree() ? I18n.t("common.free_price") : product.price_number}{!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}+{I18n.t("common.tax")}</span>}
+            </div>
+          </span>
         </div>
       </div>
 

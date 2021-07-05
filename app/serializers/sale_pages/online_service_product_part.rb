@@ -4,7 +4,7 @@ module SalePages::OnlineServiceProductPart
   extend ActiveSupport::Concern
 
   included do
-    attribute :normal_price, :price
+    attribute :price
 
     attribute :is_free do |sale_page|
       sale_page.free?
@@ -16,20 +16,6 @@ module SalePages::OnlineServiceProductPart
 
     attribute :product do |sale_page|
       sale_page.product.is_a?(BookingPage) ? ::BookingPageSerializer.new(sale_page.product).attributes_hash : ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
-    end
-
-    attribute :normal_price_option do |object|
-      if object.normal_price_amount_cents
-        {
-          price_type: "cost",
-          price_amount: object.normal_price_amount.fractional,
-          price_amount_format: object.normal_price_amount.format
-        }
-      else
-        {
-          price_type: "free"
-        }
-      end
     end
 
     attribute :selling_price_option do |object|
