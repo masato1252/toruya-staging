@@ -15,7 +15,7 @@ ja:
     online_service:
       purchased:
         video:
-          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「試聴する」ボタンからご覧ください。"
+          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご覧ください。"
         pdf:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
         external:
