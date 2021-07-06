@@ -1,12 +1,13 @@
 "use strict";
 
 import React from "react";
+import I18n from 'i18n-js/index.js.erb';
 
 import { useGlobalContext } from "context/user_bots/bookings/global_state";
 import BookingFlowStepIndicator from "./booking_flow_step_indicator";
 
 const PriceSetupStep = ({next, step}) => {
-  const { props, i18n, dispatch, new_booking_option_price, new_booking_option_tax_include } = useGlobalContext()
+  const { props, i18n, dispatch, new_booking_option_price } = useGlobalContext()
 
   return (
     <div className="booking-creation-flow centerize form">
@@ -28,42 +29,7 @@ const PriceSetupStep = ({next, step}) => {
             })
           }
         } />
-        {i18n.unit}
-      </div>
-      <div className="booking-tax-types">
-        <label>
-          <input
-            type="radio" name="tax_include"
-            checked={new_booking_option_tax_include == "true"}
-            onChange={
-              () =>
-                dispatch({
-                  type: "SET_ATTRIBUTE",
-                  payload: {
-                    attribute: "new_booking_option_tax_include",
-                    value: "true"
-                  }
-                })
-            }
-          />
-          {i18n.tax_include}
-        </label>
-        <label>
-          <input type="radio" name="tax_include"
-            checked={new_booking_option_tax_include == "false"}
-            onChange={
-              ()=>
-                dispatch({
-                  type: "SET_ATTRIBUTE",
-                  payload: {
-                    attribute: "new_booking_option_tax_include",
-                    value: "false"
-                  }
-                })
-            }
-          />
-          {i18n.tax_excluded}
-        </label>
+        {i18n.unit}({I18n.t("common.tax_included")})
       </div>
       <div className="action-block">
         <button
