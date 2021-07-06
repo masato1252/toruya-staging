@@ -30,6 +30,7 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
                   })
                 }} />
                 {I18n.t("common.unit")}
+                ({I18n.t("common.tax_included")})
               </>
           )}
           </div>
