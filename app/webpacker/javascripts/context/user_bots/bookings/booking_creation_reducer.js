@@ -5,7 +5,7 @@ const initialState = {
   selected_menu: {},
   selected_booking_option: {},
   new_booking_option_price: 0,
-  new_booking_option_tax_include: false,
+  new_booking_option_tax_include: true,
   new_menu_name: null,
   new_menu_minutes: null,
   note: null,

@@ -19,7 +19,7 @@ const FinalStep = ({step}) => {
         <h4 className="margin-around break-line-content">{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page")}</h4>
 
         <a href={Routes.new_lines_user_bot_sales_booking_page_url({booking_page_id: booking_page_id})} className="btn btn-yellow btn-flexible">
-          <i class="fa fa-cart-arrow-down fa-4x"></i>
+          <i className="fa fa-cart-arrow-down fa-4x"></i>
           <h4>{I18n.t("user_bot.dashboards.booking_page_creation.create_a_sale_page_btn")}</h4>
         </a>
       </div>
