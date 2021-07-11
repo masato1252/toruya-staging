@@ -2358,7 +2358,8 @@ CREATE TABLE public.subscriptions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     rank integer DEFAULT 0,
-    trial_days integer
+    trial_days integer,
+    trial_expired_date date
 );
 
 
@@ -4677,6 +4678,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210610005362'),
 ('20210610005363'),
 ('20210610005364'),
-('20210610005365');
+('20210610005365'),
+('20210711140109');
 
 

@@ -99,7 +99,7 @@ class User < ApplicationRecord
   delegate :access_token, :refresh_token, :uid, to: :access_provider, allow_nil: true
   delegate :name, to: :profile, allow_nil: true
   delegate :display_last_name, to: :profile, allow_nil: true
-  delegate :current_plan, to: :subscription
+  delegate :current_plan, :trial_expired_date, to: :subscription
   delegate :social_service_user_id, to: :social_user, allow_nil: true
   delegate :client, to: UserBotSocialAccount
 
@@ -169,10 +169,6 @@ class User < ApplicationRecord
 
   def business_member?
     member_plan == Plan::BUSINESS_PLAN
-  end
-
-  def trial_expired_date
-    @trial_expired_date ||= created_at.advance(days: subscription.trial_days || Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
   end
 
   def valid_shop_ids
