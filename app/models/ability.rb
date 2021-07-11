@@ -235,7 +235,9 @@ class Ability
 
   def check_customers_limit(customer_ids)
     case super_user.permission_level
-    when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
+    when Plan::FREE_LEVEL
+      false
+    when Plan::TRIAL_LEVEL
       customers_count = super_user.customers.size
       free_max_customers_limit = Plan.max_customers_limit(Plan::FREE_LEVEL, super_user.subscription.rank)
 
