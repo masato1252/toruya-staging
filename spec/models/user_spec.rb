@@ -8,14 +8,16 @@ RSpec.describe User do
     context "when member subscription is free level" do
       let(:subscription) { FactoryBot.create(:subscription, :free) }
 
-      context "when member sign up in 3 months" do
+      context "when member was in trial_expired_date" do
         it "returns trial" do
           expect(subscription.user.permission_level).to eq("trial")
         end
       end
 
-      context "when member sign up over 3 months" do
-        before { subscription.user.update_columns(created_at: Time.zone.now.advance(months: -3, seconds: -1)) }
+      context "when today was over member's trial_expired_date" do
+        before do
+          subscription.update(trial_expired_date: Date.today.yesterday)
+        end
 
         it "returns free" do
           expect(subscription.user.permission_level).to eq("free")

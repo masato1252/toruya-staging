@@ -11,7 +11,11 @@ module Users
       end
 
       unless user.subscription
-        user.build_subscription(plan: Plan.free_level.take)
+        user.build_subscription(
+          plan: Plan.free_level.take,
+          trial_days: Plan::TRIAL_PLAN_THRESHOLD_DAYS,
+          trial_expired_date: Time.current.advance(days: Plan::TRIAL_PLAN_THRESHOLD_DAYS).to_date
+        )
       end
     end
   end

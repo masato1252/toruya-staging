@@ -7,6 +7,8 @@ FactoryBot.define do
     stripe_customer_id { SecureRandom.hex }
     recurring_day { Subscription.today.day }
     expired_date { Subscription.today.advance(months: 1) }
+    trial_days { Plan::TRIAL_PLAN_THRESHOLD_DAYS }
+    trial_expired_date { user.created_at.advance(days: trial_days).to_date}
     rank { 0 }
 
     trait :free do

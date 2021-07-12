@@ -98,6 +98,20 @@ class Subscription < ApplicationRecord
     expired_date..recurring_date(expired_date.year, expired_date.next_month.month)
   end
 
+  def set_trial_expired_date(expired_date)
+    self.update(
+      trial_days: (expired_date - user.created_at.to_date).to_i,
+      trial_expired_date: expired_date
+    )
+  end
+
+  def set_trial_days(days)
+    self.update(
+      trial_days: days,
+      trial_expired_date: user.created_at.advance(days: days)
+    )
+  end
+
   private
 
   def next_charge_date
