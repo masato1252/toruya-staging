@@ -300,6 +300,14 @@ RSpec.describe Ability do
       end
 
       context "when user is under free plan" do
+        let(:current_user) { FactoryBot.create(:subscription, :free_after_trial).user }
+
+        it "returns false" do
+          expect(ability.can?(:check_content, reservation)).to eq(false)
+        end
+      end
+
+      context "when user is under trial plan" do
         let(:free_customer_limit) { 1 }
         before do
           stub_const("Plan::DETAILS", {

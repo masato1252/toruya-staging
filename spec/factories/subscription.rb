@@ -15,6 +15,11 @@ FactoryBot.define do
       plan { Plan.free_level.take }
     end
 
+    trait :free_after_trial do
+      plan { Plan.free_level.take }
+      trial_expired_date { Subscription.today.advance(days: -1) }
+    end
+
     trait :basic do
       plan { Plan.basic_level.take }
     end
