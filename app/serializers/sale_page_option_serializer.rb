@@ -12,6 +12,10 @@ class SalePageOptionSerializer
     sale_page.product.name
   end
 
+  attribute :product do |sale_page|
+    sale_page.product.is_a?(BookingPage) ? ::BookingPageSerializer.new(sale_page.product).attributes_hash : ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
+  end
+
   attribute :start_time do |sale_page|
     start_at = sale_page.product.is_a?(BookingPage) ? sale_page.product.start_at : sale_page.selling_start_at
 

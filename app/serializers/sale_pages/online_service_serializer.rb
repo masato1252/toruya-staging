@@ -5,6 +5,10 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   include SalePages::OnlineServiceProductPart
   attribute :quantity
 
+  attribute :product do |sale_page|
+    ::OnlineServiceSerializer.new(sale_page.product).attributes_hash
+  end
+
   attribute :start_at do |object|
     object.selling_start_at ? I18n.l(object.selling_start_at, format: :long_date_with_wday) : I18n.t("settings.booking_page.form.sale_now")
   end

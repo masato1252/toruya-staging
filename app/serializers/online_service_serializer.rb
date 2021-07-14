@@ -10,7 +10,7 @@ class OnlineServiceSerializer
   end
 
   attribute :upsell_sale_page do |service|
-    service.upsell_sale_page_id ? SalePageOptionSerializer.new(service.sale_page).attributes_hash : nil
+    service.upsell_sale_page_id ? SalePageSerializer.new(service.sale_page).attributes_hash : nil
   end
 
   attribute :solution do |service|
