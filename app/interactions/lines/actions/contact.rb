@@ -11,21 +11,27 @@ class Lines::Actions::Contact < ActiveInteraction::Base
 
     actions =
       if user.shops.count == 1 || user.shops.pluck(:phone_number).uniq.count == 1
-        [
-          LineActions::Uri.new(
-            label: I18n.t("action.call"),
-            url: "tel:#{user.shops.first.phone_number}",
-            btn: "secondary"
-          )
-        ]
+        if user.shops.first.phone_number.present?
+          [
+            LineActions::Uri.new(
+              label: I18n.t("action.call"),
+              url: "tel:#{user.shops.first.phone_number}",
+              btn: "secondary"
+            )
+          ]
+        else
+          []
+        end
       else
         user.shops.map do |shop|
-          LineActions::Uri.new(
-            label: "#{shop.short_name}#{I18n.t("action.call")}",
-            url: "tel:#{shop.phone_number}",
-            btn: "secondary"
-          )
-        end
+          if shop.phone_number.present?
+            LineActions::Uri.new(
+              label: "#{shop.short_name}#{I18n.t("action.call")}",
+              url: "tel:#{shop.phone_number}",
+              btn: "secondary"
+            )
+          end
+        end.compact
       end
 
     actions.unshift(
