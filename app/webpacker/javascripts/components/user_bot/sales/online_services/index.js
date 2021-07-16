@@ -89,7 +89,7 @@ const SaleOnlineService = ({product, social_account_add_friend_url, template, te
       <div className="shop-content content">
         <div><b>{product.company_info.name}</b></div>
         <div>{product.company_info.address}</div>
-        <div><i className="fa fa-phone"></i> <a href={`tel:${product.company_info.phone_number}`}>{product.company_info.phone_number}</a></div>
+        {product.company_info.phone_number && <div><i className="fa fa-phone"></i> <a href={`tel:${product.company_info.phone_number}`}>{product.company_info.phone_number}</a></div>}
       </div>
     </div>
   )
