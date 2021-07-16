@@ -1,0 +1,15 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("warnings.trial_end.upgrade_title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("warnings.trial_end.upgrade_content_html") %>
+    </div>
+    <div class="modal-footer centerize">
+      <%= link_to t("action.upgrade_to_basic"), lines_user_bot_settings_plans_path(upgrade: Plan::BASIC_LEVEL), class: "btn btn-tarco" %>
+    </div>
+  </div>
+</div>

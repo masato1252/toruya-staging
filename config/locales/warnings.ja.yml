@@ -4,5 +4,8 @@ ja:
       upgrade_title: 予約ページはこれ以上追加できません
       upgrade_content_html: <p>既に%{sale_page_limit}つの販売ページをお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
     create_reservation_content:
-      upgrade_title: 予約ページはこれ以上追加できません
+      upgrade_title: 顧客情報が上限に達しました
       upgrade_content_html: <p>既に%{customers_limit}以上の顧客情報をお持ちですね。Toruyaを気に入っていただけて嬉しいです。</p><p>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
+    trial_end:
+      upgrade_title: 試用期間は終了しました
+      upgrade_content_html: <p>試用期間が終了したため、予約や顧客情報の管理ができなくなりました。<br>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
