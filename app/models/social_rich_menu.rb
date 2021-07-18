@@ -4,10 +4,10 @@
 #
 # Table name: social_rich_menus
 #
-#  id                  :bigint(8)        not null, primary key
+#  id                  :bigint           not null, primary key
+#  social_name         :string
 #  social_account_id   :integer
 #  social_rich_menu_id :string
-#  social_name         :string
 #
 # Indexes
 #

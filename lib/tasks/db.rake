@@ -47,12 +47,4 @@ namespace :db do
     end
     puts "Done."
   end
-
-  namespace :structure do
-    task :dump do
-      Seeders::Plan.dump!
-      Rake::Task["db:schema:dump"].invoke
-      `annotate -i -e tests,serializers`
-    end
-  end
 end

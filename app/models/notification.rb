@@ -4,15 +4,15 @@
 #
 # Table name: notifications
 #
-#  id             :bigint(8)        not null, primary key
-#  user_id        :integer
-#  phone_number   :string
-#  content        :text
-#  customer_id    :integer
-#  reservation_id :integer
+#  id             :bigint           not null, primary key
 #  charged        :boolean          default(FALSE)
+#  content        :text
+#  phone_number   :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  customer_id    :integer
+#  reservation_id :integer
+#  user_id        :integer
 #
 # Indexes
 #

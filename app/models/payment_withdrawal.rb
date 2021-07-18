@@ -4,15 +4,15 @@
 #
 # Table name: payment_withdrawals
 #
-#  id              :bigint(8)        not null, primary key
-#  receiver_id     :integer          not null
-#  state           :integer          default("pending"), not null
+#  id              :bigint           not null, primary key
 #  amount_cents    :decimal(, )      not null
 #  amount_currency :string           not null
-#  order_id        :string
 #  details         :jsonb
+#  state           :integer          default("pending"), not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  order_id        :string
+#  receiver_id     :integer          not null
 #
 # Indexes
 #

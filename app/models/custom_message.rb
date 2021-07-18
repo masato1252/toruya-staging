@@ -15,6 +15,9 @@
 #  index_custom_messages_on_service_type_and_service_id  (service_type,service_id)
 #
 
+# position
+# after_last_message_days
+# receiver_ids
 require "translator"
 require "line_client"
 
@@ -43,8 +46,8 @@ class CustomMessage < ApplicationRecord
     LineClient.send(user.social_user, custom_message_content)
   end
 
-  def self.template_of(product, scenario)
-    message = CustomMessage.find_by(service: product, scenario: scenario)
+  def self.template_of(product, scenario, position)
+    message = CustomMessage.find_by(service: product, scenario: scenario, position: position)
 
     return message.content if message
 

@@ -873,7 +873,7 @@ ActiveRecord::Schema.define(version: 2021_07_11_140109) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id", unique: true
   end
 
-  create_table "taggings", id: :serial, force: :cascade do |t|
+  create_table "taggings", id: :integer, default: nil, force: :cascade do |t|
     t.integer "tag_id"
     t.string "taggable_type"
     t.integer "taggable_id"
@@ -892,7 +892,7 @@ ActiveRecord::Schema.define(version: 2021_07_11_140109) do
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", id: :serial, force: :cascade do |t|
+  create_table "tags", id: :integer, default: nil, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -3,21 +3,21 @@
 #
 # Table name: online_services
 #
-#  id                  :bigint(8)        not null, primary key
-#  user_id             :bigint(8)
-#  name                :string           not null
-#  goal_type           :string           not null
-#  solution_type       :string           not null
+#  id                  :bigint           not null, primary key
+#  company_type        :string           not null
+#  content             :json
 #  end_at              :datetime
 #  end_on_days         :integer
-#  upsell_sale_page_id :integer
-#  content             :json
-#  company_type        :string           not null
-#  company_id          :bigint(8)        not null
+#  goal_type           :string           not null
+#  name                :string           not null
 #  slug                :string
+#  solution_type       :string           not null
+#  start_at            :datetime
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  start_at            :datetime
+#  company_id          :bigint           not null
+#  upsell_sale_page_id :integer
+#  user_id             :bigint
 #
 # Indexes
 #

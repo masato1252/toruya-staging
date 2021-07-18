@@ -4,16 +4,16 @@
 #
 # Table name: booking_codes
 #
-#  id              :bigint(8)        not null, primary key
-#  uuid            :string
+#  id              :bigint           not null, primary key
 #  code            :string
+#  phone_number    :string
+#  uuid            :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #  booking_page_id :integer
 #  customer_id     :integer
 #  reservation_id  :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
 #  user_id         :integer
-#  phone_number    :string
 #
 # Indexes
 #

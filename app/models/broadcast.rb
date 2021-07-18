@@ -3,16 +3,16 @@
 #
 # Table name: broadcasts
 #
-#  id               :bigint(8)        not null, primary key
-#  user_id          :bigint(8)        not null
+#  id               :bigint           not null, primary key
 #  content          :text             not null
 #  query            :jsonb
+#  recipients_count :integer          default(0)
 #  schedule_at      :datetime
 #  sent_at          :datetime
 #  state            :integer          default("active")
-#  recipients_count :integer          default(0)
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  user_id          :bigint           not null
 #
 # Indexes
 #

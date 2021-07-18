@@ -3,17 +3,18 @@
 #
 # Table name: subscriptions
 #
-#  id                 :bigint(8)        not null, primary key
-#  plan_id            :bigint(8)
-#  next_plan_id       :integer
-#  user_id            :bigint(8)
-#  stripe_customer_id :string
-#  recurring_day      :integer
+#  id                 :bigint           not null, primary key
 #  expired_date       :date
+#  rank               :integer          default(0)
+#  recurring_day      :integer
+#  trial_days         :integer
+#  trial_expired_date :date
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  rank               :integer          default(0)
-#  trial_days         :integer
+#  next_plan_id       :integer
+#  plan_id            :bigint
+#  stripe_customer_id :string
+#  user_id            :bigint
 #
 # Indexes
 #

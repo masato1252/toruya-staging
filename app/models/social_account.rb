@@ -4,17 +4,17 @@
 #
 # Table name: social_accounts
 #
-#  id                   :bigint(8)        not null, primary key
-#  user_id              :integer          not null
-#  channel_id           :string
-#  channel_token        :string
+#  id                   :bigint           not null, primary key
 #  channel_secret       :string
+#  channel_token        :string
+#  label                :string
+#  login_channel_secret :string
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  label                :string
 #  basic_id             :string
+#  channel_id           :string
 #  login_channel_id     :string
-#  login_channel_secret :string
+#  user_id              :integer          not null
 #
 # Indexes
 #
