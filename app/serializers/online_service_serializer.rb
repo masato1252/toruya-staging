@@ -9,8 +9,12 @@ class OnlineServiceSerializer
     CompanyInfoSerializer.new(service.company).attributes_hash
   end
 
-  attribute :upsell_sale_page do |service|
-    service.upsell_sale_page_id ? SalePageSerializer.new(service.sale_page).attributes_hash : nil
+  attribute :upsell_sale_page do |service, params|
+    if params[:from_upsell]
+      nil
+    else
+      service.upsell_sale_page_id ? SalePageOptionSerializer.new(service.sale_page, params: { from_upsell: true }).attributes_hash : nil
+    end
   end
 
   attribute :solution do |service|
