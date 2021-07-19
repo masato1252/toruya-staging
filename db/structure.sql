@@ -710,7 +710,10 @@ CREATE TABLE public.custom_messages (
     service_id bigint NOT NULL,
     content text NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    "position" integer DEFAULT 0,
+    after_last_message_days integer DEFAULT 3,
+    receiver_ids character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -2399,25 +2402,6 @@ CREATE TABLE public.taggings (
 
 
 --
--- Name: taggings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.taggings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: taggings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.taggings_id_seq OWNED BY public.taggings.id;
-
-
---
 -- Name: tags; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2428,25 +2412,6 @@ CREATE TABLE public.tags (
     updated_at timestamp without time zone,
     taggings_count integer DEFAULT 0
 );
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.tags_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
@@ -3000,20 +2965,6 @@ ALTER TABLE ONLY public.subscription_charges ALTER COLUMN id SET DEFAULT nextval
 --
 
 ALTER TABLE ONLY public.subscriptions ALTER COLUMN id SET DEFAULT nextval('public.subscriptions_id_seq'::regclass);
-
-
---
--- Name: taggings id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.taggings ALTER COLUMN id SET DEFAULT nextval('public.taggings_id_seq'::regclass);
-
-
---
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
 
 
 --
@@ -3856,13 +3807,6 @@ CREATE UNIQUE INDEX index_contact_groups_on_user_id_and_bind_all ON public.conta
 
 
 --
--- Name: index_custom_messages_on_service_type_and_service_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_custom_messages_on_service_type_and_service_id ON public.custom_messages USING btree (service_type, service_id);
-
-
---
 -- Name: index_customer_payments_on_customer_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4360,6 +4304,13 @@ CREATE INDEX sale_page_index ON public.sale_pages USING btree (user_id, deleted_
 
 
 --
+-- Name: sequence_message_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX sequence_message_index ON public.custom_messages USING btree (service_type, service_id, scenario);
+
+
+--
 -- Name: shop_custom_schedules_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4679,6 +4630,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210610005363'),
 ('20210610005364'),
 ('20210610005365'),
-('20210711140109');
+('20210711140109'),
+('20210718021056'),
+('20210718022411');
 
 

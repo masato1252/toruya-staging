@@ -30,6 +30,7 @@ module Notifiers
         self.mailer ||= options[:mailer]
         self.mailer_method ||= options[:mailer_method]
       end
+
     end
 
     class_attribute :delivered_by_priority, instance_writer: false
@@ -153,5 +154,14 @@ module Notifiers
     def url_helpers
       Rails.application.routes.url_helpers
     end
+
+    private
+
+    def receiver_should_be_customer
+      unless receiver.is_a?(Customer)
+        errors.add(:receiver, :should_be_customer)
+      end
+    end
+
   end
 end

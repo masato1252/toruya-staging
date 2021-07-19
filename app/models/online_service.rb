@@ -154,6 +154,8 @@ class OnlineService < ApplicationRecord
 
   has_many :online_service_customer_relations
   has_many :customers, through: :online_service_customer_relations
+  has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
+  has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
