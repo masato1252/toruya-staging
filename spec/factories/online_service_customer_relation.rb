@@ -10,5 +10,11 @@ FactoryBot.define do
       payment_state { "free" }
       permission_state { "active" }
     end
+
+    trait :paid do
+      payment_state { "paid" }
+      permission_state { "active" }
+      paid_at { Time.current }
+    end
   end
 end

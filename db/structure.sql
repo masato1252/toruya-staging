@@ -711,8 +711,7 @@ CREATE TABLE public.custom_messages (
     content text NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    "position" integer DEFAULT 0,
-    after_last_message_days integer DEFAULT 3,
+    after_days integer,
     receiver_ids character varying[] DEFAULT '{}'::character varying[]
 );
 
@@ -4307,7 +4306,7 @@ CREATE INDEX sale_page_index ON public.sale_pages USING btree (user_id, deleted_
 -- Name: sequence_message_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX sequence_message_index ON public.custom_messages USING btree (service_type, service_id, scenario);
+CREATE INDEX sequence_message_index ON public.custom_messages USING btree (service_type, service_id, scenario, after_days);
 
 
 --

@@ -42,6 +42,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     active: 1
   }
 
+  def approved_at
+    paid_at || created_at if active?
+  end
+
   def state
     if pending?
       "pending"

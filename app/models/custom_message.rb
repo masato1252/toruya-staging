@@ -2,20 +2,19 @@
 #
 # Table name: custom_messages
 #
-#  id                      :bigint           not null, primary key
-#  after_last_message_days :integer          default(3)
-#  content                 :text             not null
-#  position                :integer          default(0)
-#  receiver_ids            :string           default([]), is an Array
-#  scenario                :string           not null
-#  service_type            :string           not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  service_id              :bigint           not null
+#  id           :bigint           not null, primary key
+#  after_days   :integer
+#  content      :text             not null
+#  receiver_ids :string           default([]), is an Array
+#  scenario     :string           not null
+#  service_type :string           not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  service_id   :bigint           not null
 #
 # Indexes
 #
-#  sequence_message_index  (service_type,service_id,scenario)
+#  sequence_message_index  (service_type,service_id,scenario,after_days)
 #
 
 require "translator"
@@ -46,12 +45,8 @@ class CustomMessage < ApplicationRecord
     LineClient.send(user.social_user, custom_message_content)
   end
 
-  def template
-    CustomMessage.template_of(service, scenario, position)
-  end
-
-  def self.template_of(product, scenario, position = 0)
-    message = CustomMessage.find_by(service: product, scenario: scenario, position: position)
+  def self.template_of(product, scenario)
+    message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil)
 
     return message.content if message
 

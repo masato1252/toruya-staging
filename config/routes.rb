@@ -162,7 +162,7 @@ Rails.application.routes.draw do
 
         resources :custom_messages, only: [:index], module: "services" do
           collection do
-            get "/:scenario", action: "edit_scenario", as: :edit_scenario
+            get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
           end
         end
 

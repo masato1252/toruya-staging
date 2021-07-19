@@ -1,13 +1,21 @@
 class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardController
   def update
     service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
-    outcome = CustomMessages::Update.run(
-      service: service ,
-      template: params[:template],
-      scenario: params[:scenario],
-      position: params[:position],
-      after_last_message_days: params[:after_last_message_days],
-    )
+
+    if params[:id]
+      outcome = CustomMessages::Update.run(
+        message: CustomMessage.find_by!(id: params[:id], service: service),
+        template: params[:template],
+        after_days: params[:after_days].presence
+      )
+    else
+      outcome = CustomMessages::Create.run(
+        service: service,
+        scenario: params[:scenario],
+        template: params[:template],
+        after_days: params[:after_days].presence
+      )
+    end
 
     redirect_path =
       case service

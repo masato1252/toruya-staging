@@ -18,6 +18,7 @@ const CustomMessageEdit =({props}) => {
   });
   const textareaRef = useRef();
   const [template, setTemplate] = useState(props.message.template)
+  const [after_days, setAfterDays] = useState(props.message.send_right_after_approved === "true" ? "" :  (props.message.after_days || 3))
   const [cursorPosition, setCursorPosition] = useState(0)
 
   useEffect(() => {
@@ -29,10 +30,13 @@ const CustomMessageEdit =({props}) => {
 
     [error, response] = await CustomMessageServices.demo({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        after_days: after_days,
+        send_right_after_approved: isSendRightAfterApproved(),
       })
     })
   }
@@ -42,10 +46,13 @@ const CustomMessageEdit =({props}) => {
 
     [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        after_days: after_days,
+        send_right_after_approved: isSendRightAfterApproved(),
       })
     })
 
@@ -58,12 +65,36 @@ const CustomMessageEdit =({props}) => {
     setTemplate(newTemplate)
   }
 
+  const isSendRightAfterApproved = () => {
+    return props.message.send_right_after_approved === "true"
+  }
+
   const renderCorrespondField = () => {
     switch(props.scenario) {
       case "online_service_purchased":
         return (
           <>
-            <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}</div>
+            {isSendRightAfterApproved() && <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}</div>}
+            {!isSendRightAfterApproved() &&
+                (
+                  <>
+                    <div className="field-header">
+                      {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days")}
+                    </div>
+                    <div className="field-row">
+                      <span>
+                        <input
+                          type='tel'
+                          value={after_days}
+                          onChange={(event) => {
+                            setAfterDays(event.target.value)
+                          }}
+                        />
+                        {I18n.t('common.day_word')}
+                      </span>
+                    </div>
+                  </>
+            )}
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
               <textarea

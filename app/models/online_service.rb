@@ -169,6 +169,10 @@ class OnlineService < ApplicationRecord
     goal_type == 'external'
   end
 
+  def start_at_for_customer(customer)
+    start_at || self.online_service_customer_relations.find_by!(customer: customer).approved_at
+  end
+
   def start_time
     if start_at
       {

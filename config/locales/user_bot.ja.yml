@@ -135,6 +135,7 @@ ja:
             section_title: オンラインサービス
             service_page_title: サービスページ
             online_service_purchased: サービス登録
+            after_days: Send after service start
         menu:
           basic_settings: メニュー基本設定
           name: メニュー名
@@ -183,6 +184,7 @@ ja:
             section_title: オンラインサービス
             service_page_title: サービスページ
             online_service_purchased: サービス登録
+            after_days: Send after service start
         service_customer_relation:
           service_register: サービス利用者
           register: 利用者

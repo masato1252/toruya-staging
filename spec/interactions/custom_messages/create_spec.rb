@@ -2,20 +2,18 @@
 
 require "rails_helper"
 
-RSpec.describe CustomMessages::Update do
+RSpec.describe CustomMessages::Create do
   let(:user) { FactoryBot.create(:user) }
   let(:service) { FactoryBot.create(:online_service, user: user) }
   let(:template) { "foo" }
   let(:scenario) { CustomMessage::ONLINE_SERVICE_PURCHASED }
-  let(:position) { 0 }
-  let(:after_last_message_days) { 3 }
+  let(:after_days) { 3 }
   let(:args) do
     {
       service: service,
       template: template,
       scenario: scenario,
-      position: position,
-      after_last_message_days: after_last_message_days,
+      after_days: after_days,
     }
   end
   let(:outcome) { described_class.run(args) }
