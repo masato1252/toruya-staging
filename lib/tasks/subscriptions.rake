@@ -8,6 +8,7 @@ namespace :subscriptions do
 
     Subscription.charge_required.recurring_chargeable_at(today).chargeable(today).find_each do |subscription|
       SubscriptionChargeJob.perform_later(subscription)
+      sleep(0.01)
     end
 
     SlackClient.send(channel: 'development', text: "[OK] subscription charge task") if Rails.configuration.x.env.production?
@@ -22,6 +23,7 @@ namespace :subscriptions do
         user: subscription.user,
         subscription: subscription
       )
+      sleep(0.01)
     end
 
     SlackClient.send(channel: 'development', text: "[OK] subscription charge reminder task") if Rails.configuration.x.env.production?
@@ -46,6 +48,7 @@ namespace :subscriptions do
       when 1
         Notifiers::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
       end
+      sleep(0.01)
     end
 
     SlackClient.send(channel: 'development', text: "[OK] subscription trial_member_reminder task") if Rails.configuration.x.env.production?
