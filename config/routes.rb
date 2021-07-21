@@ -173,7 +173,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :custom_messages, only: [] do
+      resources :custom_messages, only: [:destroy] do
         collection do
           put :update
           post :demo

@@ -42,4 +42,20 @@ class Lines::UserBot::CustomMessagesController < Lines::UserBotDashboardControll
 
     head :ok
   end
+
+  def destroy
+    service = params[:service_type].constantize.find_by(user: current_user, id: params[:service_id])
+    message = CustomMessage.find_by!(id: params[:id], service: service)
+
+    message.destroy
+    redirect_path =
+      case service
+      when OnlineService
+        lines_user_bot_service_custom_messages_path(params[:service_id])
+      when BookingPage
+        lines_user_bot_booking_page_custom_messages_path(params[:service_id])
+      end
+
+    redirect_to redirect_path
+  end
 end

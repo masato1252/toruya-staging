@@ -147,6 +147,15 @@ const CustomMessageEdit =({props}) => {
       <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
+        {!isSendRightAfterApproved() && (
+          <a className="btn btn-orange btn-circle btn-delete"
+            data-confirm={I18n.t("common.message_delete_confirmation_message")}
+            rel="nofollow"
+            data-method="delete"
+            href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
+            <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+          </a>
+        )}
         <span></span>
         <CiricleButtonWithWord
           disabled={formState.isSubmitting}
