@@ -6,5 +6,23 @@
   <%= render "lines/user_bot/field_row", title: @booking_page.name %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(@booking_page, scenario: CustomMessage::BOOKING_PAGE_BOOKED), title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") %>
+
+  <% if @sequence_messages.exists? %>
+    <% @sequence_messages.each do |message| %>
+      <%= render "lines/user_bot/field_row",
+        path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+          @booking_page,
+          scenario: CustomMessage::BOOKING_PAGE_BOOKED,
+          id: message.id,
+          send_right_after_approved: !message.after_days),
+        title: message.after_days ? "after service start #{message.after_days} days" : t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") %>
+    <% end %>
+  <% else %>
+    <%= render "lines/user_bot/field_row",
+      path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+        @booking_page,
+        scenario: CustomMessage::BOOKING_PAGE_BOOKED,
+        send_right_after_approved: true),
+      title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") %>
+  <% end %>
 </div>

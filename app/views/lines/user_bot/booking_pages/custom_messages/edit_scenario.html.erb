@@ -2,6 +2,7 @@
   props: {
     scenario: params[:scenario],
     message: {
+      id: @message&.id,
       service_id: @booking_page.id,
       service_type: @booking_page.class.name,
       template: @template,

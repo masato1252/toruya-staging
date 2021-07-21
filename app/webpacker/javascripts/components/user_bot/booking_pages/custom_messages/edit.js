@@ -29,6 +29,7 @@ const CustomMessageEdit =({props}) => {
 
     [error, response] = await CustomMessageServices.demo({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
@@ -42,6 +43,7 @@ const CustomMessageEdit =({props}) => {
 
     [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
