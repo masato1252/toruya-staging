@@ -80,6 +80,7 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
     event.preventDefault();
 
     if (askIdentificationCodeCall) return;
+    if (!customer_phone_number) return;
 
     setAskingIdentificationCode(true)
     setIdentificationCodeError(null)
