@@ -18,11 +18,13 @@ RSpec.describe OnlineService do
     end
 
     context "when online_service doesn't have start time" do
+      before { Timecop.freeze(3.days.ago.round) }
+
       context "when online_service service was a paid required service" do
         let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :paid, online_service: online_service) }
 
         it "returns relation paid time" do
-          expect(online_service.start_at_for_customer(customer)).to eq(online_service_customer_relation.paid_at)
+          expect(online_service.start_at_for_customer(customer).round).to eq(online_service_customer_relation.paid_at.round)
         end
       end
 
@@ -30,7 +32,7 @@ RSpec.describe OnlineService do
         let!(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free, online_service: online_service) }
 
         it "returns relation created time" do
-          expect(online_service.start_at_for_customer(customer)).to eq(online_service_customer_relation.created_at)
+          expect(online_service.start_at_for_customer(customer).round).to eq(online_service_customer_relation.created_at.round)
         end
       end
     end
