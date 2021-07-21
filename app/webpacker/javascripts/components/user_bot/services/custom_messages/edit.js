@@ -18,7 +18,7 @@ const CustomMessageEdit =({props}) => {
   });
   const textareaRef = useRef();
   const [template, setTemplate] = useState(props.message.template)
-  const [after_days, setAfterDays] = useState(props.message.send_right_after_approved === "true" ? "" :  (props.message.after_days || 3))
+  const [after_days, setAfterDays] = useState(props.message.send_right_after_approved === "true" ? "" :  props.message.after_days)
   const [cursorPosition, setCursorPosition] = useState(0)
 
   useEffect(() => {
@@ -27,6 +27,7 @@ const CustomMessageEdit =({props}) => {
 
   const onDemo = async (data) => {
     let error, response;
+    if (!isSendRightAfterApproved() && after_days === '') return;
 
     [error, response] = await CustomMessageServices.demo({
       data: _.assign( data, {
@@ -43,6 +44,7 @@ const CustomMessageEdit =({props}) => {
 
   const onSubmit = async (data) => {
     let error, response;
+    if (!isSendRightAfterApproved() && after_days === '') return;
 
     [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
@@ -147,7 +149,7 @@ const CustomMessageEdit =({props}) => {
       <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
-        {!isSendRightAfterApproved() && (
+        {!isSendRightAfterApproved() && props.message.id && (
           <a className="btn btn-orange btn-circle btn-delete"
             data-confirm={I18n.t("common.message_delete_confirmation_message")}
             rel="nofollow"
@@ -158,7 +160,7 @@ const CustomMessageEdit =({props}) => {
         )}
         <span></span>
         <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
+          disabled={formState.isSubmitting || (!isSendRightAfterApproved() && after_days === '')}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
           word={I18n.t("action.save")}

@@ -6,6 +6,9 @@ module CustomMessages
     string :template
     integer :after_days, default: nil
 
+    validate :validate_purchased_message
+    validate :validate_after_days
+
     def execute
       message.content = template
       message.after_days = after_days
@@ -28,6 +31,20 @@ module CustomMessages
 
       message.save
       message
+    end
+
+    private
+
+    def validate_purchased_message
+      if after_days.nil? && CustomMessage.where(service: message.service, scenario: message.scenario, after_days: nil).where.not(id: message.id).exists?
+        errors.add(:after_days, :only_allow_one_purchased_message)
+      end
+    end
+
+    def validate_after_days
+      if !after_days.nil? && after_days < 0
+        errors.add(:after_days, :need_to_be_positive)
+      end
     end
   end
 end
