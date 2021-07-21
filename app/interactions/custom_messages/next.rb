@@ -12,11 +12,15 @@ module CustomMessages
     def execute
       if next_custom_messages&.exists?
         next_custom_messages.find_each do |next_custom_message|
-          Notifiers::CustomMessages::Send.perform_at(
-            schedule_at: message_product.start_at_for_customer(receiver).advance(days: next_custom_message.after_days).change(hour: 9),
-            custom_message: next_custom_message,
-            receiver: receiver
-          )
+          schedule_at = message_product.start_at_for_customer(receiver).advance(days: next_custom_message.after_days).change(hour: 9)
+
+          if schedule_at > Time.current
+            Notifiers::CustomMessages::Send.perform_at(
+              schedule_at: schedule_at,
+              custom_message: next_custom_message,
+              receiver: receiver
+            )
+          end
         end
       end
     end

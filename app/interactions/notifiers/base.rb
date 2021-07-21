@@ -58,6 +58,8 @@ module Notifiers
         end
       end
 
+      return unless deliverable
+
       if deliver_by_email && email?
         send_email
       end
@@ -155,6 +157,10 @@ module Notifiers
       Rails.application.routes.url_helpers
     end
 
+    def deliverable
+      true
+    end
+
     private
 
     def receiver_should_be_customer
@@ -162,6 +168,5 @@ module Notifiers
         errors.add(:receiver, :should_be_customer)
       end
     end
-
   end
 end

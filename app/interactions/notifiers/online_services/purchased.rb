@@ -22,6 +22,12 @@ module Notifiers
         # XXX: Send message
         super
 
+        if custom_message = CustomMessage.find_by(service: sale_page.product, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED, after_days: nil)
+          custom_message.with_lock do
+            custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).uniq)
+          end
+        end
+
         ::CustomMessages::Next.run(
           product: sale_page.product,
           scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,

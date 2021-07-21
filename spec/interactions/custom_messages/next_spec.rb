@@ -44,6 +44,24 @@ RSpec.describe CustomMessages::Next do
 
         outcome
       end
+
+      context "when next custom_message schedule time was passed" do
+        let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free, online_service: FactoryBot.create(:online_service, start_at: 3.days.ago)) }
+
+        it "doesn't schedule next custom message" do
+          FactoryBot.create_list(
+            :custom_message,
+            2,
+            service: service,
+            scenario: prev_custom_message.scenario,
+            after_days: new_custom_message_after_days
+          )
+
+          expect(Notifiers::CustomMessages::Send).not_to receive(:perform_at)
+
+          outcome
+        end
+      end
     end
 
     context "when there is NO next custom message" do

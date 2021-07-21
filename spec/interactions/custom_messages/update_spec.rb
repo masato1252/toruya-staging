@@ -3,30 +3,44 @@
 require "rails_helper"
 
 RSpec.describe CustomMessages::Update do
-  let(:user) { FactoryBot.create(:user) }
-  let(:service) { FactoryBot.create(:online_service, user: user) }
+  let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
+  let(:service) { relation.online_service }
+  let(:custom_message) { FactoryBot.create(:custom_message, service: service, after_days: nil) }
   let(:template) { "foo" }
-  let(:scenario) { CustomMessage::ONLINE_SERVICE_PURCHASED }
-  let(:position) { 0 }
-  let(:after_last_message_days) { 3 }
+  let(:after_days) { nil }
   let(:args) do
     {
-      service: service,
+      message: custom_message,
       template: template,
-      scenario: scenario,
-      position: position,
-      after_last_message_days: after_last_message_days,
+      after_days: after_days,
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    it "creates a custom_message" do
-      expect {
-        outcome
-      }.to change {
-        CustomMessage.where(service: service, scenario: scenario, position: position).count
-      }.by(1)
+    let(:template) { "bar" }
+    let(:after_days) { 3 }
+
+    it "updates a custom_message" do
+      outcome
+
+      expect(custom_message.content).to eq(template)
+      expect(custom_message.after_days).to eq(after_days)
+    end
+
+    context "when new message's after_days is not nil or 0" do
+      let(:after_days) { 1 }
+
+      it "schedules to send all the available customers" do
+        allow(CustomMessages::Next).to receive(:perform_later)
+
+        result = outcome.result
+
+        expect(CustomMessages::Next).to have_received(:perform_later).with({
+          custom_message: result,
+          receiver: relation.customer
+        })
+      end
     end
   end
 end

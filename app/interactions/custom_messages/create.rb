@@ -17,29 +17,14 @@ module CustomMessages
         message.save
 
         case message.after_days
-        when nil
+        when nil, 0
           # For customers purchaed/booked, so do nothing when this custom message was created
-        when 0
-          if service.custom_messages.where(scenario: scenario).count == 1
-            # Send all customers already purchased
-            service.available_customers.find_each do |customer|
-              Notifiers::CustomMessages::Send.perform_later(
-                custom_message: message,
-                receiver: customer
-              )
-            end
-          end
         else
-          # Send this new message to last custom message receiver_ids
-          last_message = CustomMessage.where("after_days < ?", after_days).find_by(service: service, scenario: scenario)
-
-          if last_message
-            service.available_customers.where(id: last_message.receiver_ids).find_each do |customer|
-              CustomMessages::Next.perform_later(
-                custom_message: message,
-                receiver: customer
-              )
-            end
+          service.available_customers.find_each do |customer|
+            ::CustomMessages::Next.perform_later(
+              custom_message: message,
+              receiver: customer
+            )
           end
         end
       end
