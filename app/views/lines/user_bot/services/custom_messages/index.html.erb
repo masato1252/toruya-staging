@@ -7,7 +7,13 @@
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
   <% if @sequence_messages.exists? %>
-    <% @sequence_messages.each do |message| %>
+    <% @sequence_messages.each.with_index do |message, index| %>
+      <%= render "lines/user_bot/field_row",
+        path: edit_scenario_lines_user_bot_service_custom_messages_path(
+          @online_service,
+          scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
+          send_right_after_approved: true),
+          title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased") if index == 0 && !message.after_days.nil? %>
       <%= render "lines/user_bot/field_row",
         path: edit_scenario_lines_user_bot_service_custom_messages_path(
           @online_service,
