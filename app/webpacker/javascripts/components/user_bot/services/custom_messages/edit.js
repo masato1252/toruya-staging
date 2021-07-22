@@ -81,7 +81,7 @@ const CustomMessageEdit =({props}) => {
                 (
                   <>
                     <div className="field-header">
-                      {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days")}
+                      {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days_title")}
                     </div>
                     <div className="field-row">
                       <span>

@@ -135,7 +135,8 @@ ja:
             section_title: オンラインサービス
             service_page_title: サービスページ
             online_service_purchased: サービス登録
-            after_days: Send after service start
+            after_days: サービス開始%{after_days}日後
+            after_days_title: サービス開催、何日後に送信しますか？
         menu:
           basic_settings: メニュー基本設定
           name: メニュー名
@@ -163,28 +164,6 @@ ja:
             menu_shops_subtitle: 利用店舗（満席数）
             online_subtitle: 開催方法
             hint: オンライン予約ページで<br>こちらで設定した席数分が<br>予約可能となります。
-        custom_message:
-          line_message_title: 自動送信メッセージ
-          auto_message_label: 自動送信メッセージ
-          send_message_label: 送信メッセージ
-          content: メッセージ内容
-          preview: プレビュー
-          buttons:
-            customer_name: 顧客名字
-            shop_name: 店舗名
-            shop_phone_number: 店舗の電話番号
-            reservation_time: 予約時間
-            service_title: サービス名
-            send_me_mock_message: 自分にテスト送信
-          booking_page:
-            online_booking: オンライン予約
-            page_label: 予約ページ
-            booking_page_booked: 仮予約の作成
-          online_service:
-            section_title: オンラインサービス
-            service_page_title: サービスページ
-            online_service_purchased: サービス登録
-            after_days: Send after service start
         service_customer_relation:
           service_register: サービス利用者
           register: 利用者
