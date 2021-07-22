@@ -191,6 +191,7 @@ ja:
           payment_state: お支払い状況
           signup_date: サービス登録日
           expire_date: サービス利用期限
+          cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
           permission_states:
             available: 利用可能
             pending: 保留

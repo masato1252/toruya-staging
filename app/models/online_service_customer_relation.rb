@@ -28,13 +28,15 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :customer
 
   scope :available, -> { active.where("expire_at is NULL or expire_at >= ?", Time.current) }
+  scope :uncanceled, -> { where.not(payment_state: :canceled) }
 
   enum payment_state: {
     pending: 0,
     free: 1,
     paid: 2,
     failed: 3,
-    refunded: 4
+    refunded: 4,
+    canceled: 5,
   }, _suffix: true
 
   enum permission_state: {

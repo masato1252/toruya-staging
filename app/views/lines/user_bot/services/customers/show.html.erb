@@ -30,6 +30,12 @@
 
   <% if @relation.pending? %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+      <%= link_to cancel_lines_user_bot_service_customer_path(@online_service, @relation),
+        method: :delete,
+        data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.cancel_confirmation") },
+        class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>
+        <i class="fas fa-trash fa-2x"></i>
+      <% end %>
       <span></span>
       <%= link_to approve_lines_user_bot_service_customer_path(@online_service, @relation), method: :post, class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
         <i class="fas fa-user-check fa-2x"></i>
