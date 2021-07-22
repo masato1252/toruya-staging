@@ -9,7 +9,7 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
   def edit_scenario
     @online_service = current_user.online_services.find(params[:service_id])
     @message = CustomMessage.find_by(service: @online_service, id: params[:id])
-    @template = @message ? @message.content : CustomMessage.template_of(@online_service, params[:scenario])
+    @template = @message ? @message.content : (params[:send_right_after_approved] ? CustomMessage.template_of(@online_service, params[:scenario]) : "")
   end
 
   def update_scenario
