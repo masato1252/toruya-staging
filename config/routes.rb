@@ -169,6 +169,7 @@ Rails.application.routes.draw do
         resources :customers, only: [:index, :show], module: :services do
           member do
             post :approve
+            delete :cancel
           end
         end
       end
