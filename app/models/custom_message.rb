@@ -2,17 +2,19 @@
 #
 # Table name: custom_messages
 #
-#  id           :bigint(8)        not null, primary key
+#  id           :bigint           not null, primary key
+#  after_days   :integer
+#  content      :text             not null
+#  receiver_ids :string           default([]), is an Array
 #  scenario     :string           not null
 #  service_type :string           not null
-#  service_id   :bigint(8)        not null
-#  content      :text             not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  service_id   :bigint           not null
 #
 # Indexes
 #
-#  index_custom_messages_on_service_type_and_service_id  (service_type,service_id)
+#  sequence_message_index  (service_type,service_id,scenario,after_days)
 #
 
 require "translator"
@@ -44,7 +46,7 @@ class CustomMessage < ApplicationRecord
   end
 
   def self.template_of(product, scenario)
-    message = CustomMessage.find_by(service: product, scenario: scenario)
+    message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil)
 
     return message.content if message
 

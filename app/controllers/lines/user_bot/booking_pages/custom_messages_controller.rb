@@ -6,11 +6,13 @@ require "line_client"
 class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDashboardController
   def index
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
+    @sequence_messages = CustomMessage.where(service: @booking_page, scenario: CustomMessage::BOOKING_PAGE_BOOKED).order("after_days ASC NULLS FIRST")
   end
 
   def edit_scenario
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
-    @template = CustomMessage.template_of(@booking_page, params[:scenario])
+    @message = CustomMessage.find_by(service: @booking_page, id: params[:id])
+    @template = @message ? @message.content : CustomMessage.template_of(@booking_page, params[:scenario])
   end
 
   def update_scenario

@@ -4,9 +4,9 @@
 #
 # Table name: plans
 #
-#  id       :bigint(8)        not null, primary key
-#  position :integer
+#  id       :bigint           not null, primary key
 #  level    :integer
+#  position :integer
 #
 
 # level is kind of plan key, it doesn't mean permission level

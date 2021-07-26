@@ -162,7 +162,7 @@ Rails.application.routes.draw do
 
         resources :custom_messages, only: [:index], module: "services" do
           collection do
-            get "/:scenario", action: "edit_scenario", as: :edit_scenario
+            get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
           end
         end
 
@@ -174,7 +174,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :custom_messages, only: [] do
+      resources :custom_messages, only: [:destroy] do
         collection do
           put :update
           post :demo
@@ -205,7 +205,7 @@ Rails.application.routes.draw do
 
         resources :custom_messages, only: [:index], module: "booking_pages" do
           collection do
-            get "/:scenario", action: "edit_scenario", as: :edit_scenario
+            get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
           end
         end
       end

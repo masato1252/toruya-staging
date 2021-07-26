@@ -3,16 +3,16 @@
 #
 # Table name: social_user_messages
 #
-#  id             :bigint(8)        not null, primary key
-#  social_user_id :integer          not null
-#  admin_user_id  :integer
+#  id             :bigint           not null, primary key
 #  message_type   :integer
-#  readed_at      :datetime
 #  raw_content    :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  readed_at      :datetime
 #  schedule_at    :datetime
 #  sent_at        :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  admin_user_id  :integer
+#  social_user_id :integer          not null
 #
 # Indexes
 #

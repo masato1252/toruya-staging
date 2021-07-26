@@ -18,6 +18,7 @@ const CustomMessageEdit =({props}) => {
   });
   const textareaRef = useRef();
   const [template, setTemplate] = useState(props.message.template)
+  const [after_days, setAfterDays] = useState(props.message.send_right_after_approved === "true" ? "" :  props.message.after_days)
   const [cursorPosition, setCursorPosition] = useState(0)
 
   useEffect(() => {
@@ -26,26 +27,34 @@ const CustomMessageEdit =({props}) => {
 
   const onDemo = async (data) => {
     let error, response;
+    if (!isSendRightAfterApproved() && after_days === '') return;
 
     [error, response] = await CustomMessageServices.demo({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        after_days: after_days,
+        send_right_after_approved: isSendRightAfterApproved(),
       })
     })
   }
 
   const onSubmit = async (data) => {
     let error, response;
+    if (!isSendRightAfterApproved() && after_days === '') return;
 
     [error, response] = await CustomMessageServices.update({
       data: _.assign( data, {
+        id: props.message.id,
         scenario: props.scenario,
         template: template,
         service_id: props.message.service_id,
-        service_type: props.message.service_type
+        service_type: props.message.service_type,
+        after_days: after_days,
+        send_right_after_approved: isSendRightAfterApproved(),
       })
     })
 
@@ -58,12 +67,34 @@ const CustomMessageEdit =({props}) => {
     setTemplate(newTemplate)
   }
 
+  const isSendRightAfterApproved = () => {
+    return props.message.send_right_after_approved === "true"
+  }
+
   const renderCorrespondField = () => {
     switch(props.scenario) {
       case "online_service_purchased":
         return (
           <>
-            <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}</div>
+            {isSendRightAfterApproved() && <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")}</div>}
+            {!isSendRightAfterApproved() &&
+                (
+                  <>
+                    <div className="field-row">
+                      <span>
+                        {I18n.t("user_bot.dashboards.settings.custom_message.online_service.after_days_title")}<br />
+                        <input
+                          type='tel'
+                          value={after_days}
+                          onChange={(event) => {
+                            setAfterDays(event.target.value)
+                          }}
+                        />
+                        {I18n.t('common.day_word')}
+                      </span>
+                    </div>
+                  </>
+            )}
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
               <textarea
@@ -116,9 +147,18 @@ const CustomMessageEdit =({props}) => {
       <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
+        {!isSendRightAfterApproved() && props.message.id && (
+          <a className="btn btn-orange btn-circle btn-delete"
+            data-confirm={I18n.t("common.message_delete_confirmation_message")}
+            rel="nofollow"
+            data-method="delete"
+            href={Routes.lines_user_bot_custom_message_path(props.message.id, { service_id: props.message.service_id, service_type: props.message.service_type })}>
+            <i className="fa fa-trash fa-2x" aria-hidden="true"></i>
+          </a>
+        )}
         <span></span>
         <CiricleButtonWithWord
-          disabled={formState.isSubmitting}
+          disabled={formState.isSubmitting || (!isSendRightAfterApproved() && after_days === '')}
           onHandle={handleSubmit(onSubmit)}
           icon={formState.isSubmitting ? <i className="fa fa-spinner fa-spin fa-2x"></i> : <i className="fa fa-save fa-2x"></i>}
           word={I18n.t("action.save")}

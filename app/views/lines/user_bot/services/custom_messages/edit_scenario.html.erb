@@ -2,11 +2,14 @@
   props: {
     scenario: params[:scenario],
     message: {
+      id: @message&.id,
       service_id: @online_service.id,
       service_type: @online_service.class.name,
       template: @template,
       customer_name: current_user.display_last_name,
-      service_title: @online_service.name
+      service_title: @online_service.name,
+      after_days: @message&.after_days || 3,
+      send_right_after_approved: params[:send_right_after_approved]
     }
   }
 },

@@ -3,26 +3,26 @@
 #
 # Table name: sale_pages
 #
-#  id                         :bigint(8)        not null, primary key
-#  user_id                    :bigint(8)
-#  staff_id                   :bigint(8)
-#  product_type               :string           not null
-#  product_id                 :bigint(8)        not null
-#  sale_template_id           :bigint(8)
-#  sale_template_variables    :json
+#  id                         :bigint           not null, primary key
 #  content                    :json
+#  deleted_at                 :datetime
 #  flow                       :json
+#  introduction_video_url     :string
+#  normal_price_amount_cents  :decimal(, )
+#  product_type               :string           not null
+#  quantity                   :integer
+#  sale_template_variables    :json
+#  sections_context           :jsonb
+#  selling_end_at             :datetime
+#  selling_price_amount_cents :decimal(, )
+#  selling_start_at           :datetime
+#  slug                       :string
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
-#  slug                       :string
-#  introduction_video_url     :string
-#  quantity                   :integer
-#  selling_end_at             :datetime
-#  selling_start_at           :datetime
-#  normal_price_amount_cents  :decimal(, )
-#  selling_price_amount_cents :decimal(, )
-#  sections_context           :jsonb
-#  deleted_at                 :datetime
+#  product_id                 :bigint           not null
+#  sale_template_id           :bigint
+#  staff_id                   :bigint
+#  user_id                    :bigint
 #
 # Indexes
 #

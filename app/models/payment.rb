@@ -4,16 +4,16 @@
 #
 # Table name: payments
 #
-#  id                    :bigint(8)        not null, primary key
-#  receiver_id           :integer          not null
-#  referrer_id           :integer
-#  payment_withdrawal_id :integer
-#  charge_id             :integer
+#  id                    :bigint           not null, primary key
 #  amount_cents          :decimal(, )      not null
 #  amount_currency       :string           not null
 #  details               :jsonb
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  charge_id             :integer
+#  payment_withdrawal_id :integer
+#  receiver_id           :integer          not null
+#  referrer_id           :integer
 #
 # Indexes
 #

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_11_140109) do
+ActiveRecord::Schema.define(version: 2021_07_18_022411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gin"
@@ -252,6 +252,9 @@ ActiveRecord::Schema.define(version: 2021_07_11_140109) do
     t.text "content", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "position", default: 0
+    t.integer "after_last_message_days", default: 3
+    t.string "receiver_ids", array: true
     t.index ["service_type", "service_id"], name: "index_custom_messages_on_service_type_and_service_id"
   end
 
@@ -873,7 +876,7 @@ ActiveRecord::Schema.define(version: 2021_07_11_140109) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id", unique: true
   end
 
-  create_table "taggings", id: :serial, force: :cascade do |t|
+  create_table "taggings", id: :integer, default: nil, force: :cascade do |t|
     t.integer "tag_id"
     t.string "taggable_type"
     t.integer "taggable_id"
@@ -892,7 +895,7 @@ ActiveRecord::Schema.define(version: 2021_07_11_140109) do
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", id: :serial, force: :cascade do |t|
+  create_table "tags", id: :integer, default: nil, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"

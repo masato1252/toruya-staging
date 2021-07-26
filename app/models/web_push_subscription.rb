@@ -4,13 +4,13 @@
 #
 # Table name: web_push_subscriptions
 #
-#  id         :bigint(8)        not null, primary key
-#  user_id    :bigint(8)
+#  id         :bigint           not null, primary key
+#  auth_key   :string
 #  endpoint   :string
 #  p256dh_key :string
-#  auth_key   :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :bigint
 #
 # Indexes
 #

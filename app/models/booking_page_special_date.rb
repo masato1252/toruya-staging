@@ -4,12 +4,12 @@
 #
 # Table name: booking_page_special_dates
 #
-#  id              :bigint(8)        not null, primary key
-#  booking_page_id :bigint(8)        not null
-#  start_at        :datetime         not null
+#  id              :bigint           not null, primary key
 #  end_at          :datetime         not null
+#  start_at        :datetime         not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  booking_page_id :bigint           not null
 #
 # Indexes
 #

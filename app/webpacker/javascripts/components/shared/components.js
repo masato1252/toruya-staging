@@ -196,8 +196,9 @@ const SelectOptions = ({ options }) => {
   </>
 }
 
-const CiricleButtonWithWord = ({onHandle, icon, word}) => (
+const CiricleButtonWithWord = ({onHandle, icon, word, disabled}) => (
   <button
+    disabled={disabled}
     className="btn btn-yellow btn-circle btn-save btn-tweak btn-with-word"
     onClick={onHandle}>
     {icon}

@@ -4,11 +4,11 @@
 #
 # Table name: booking_option_menus
 #
-#  id                :bigint(8)        not null, primary key
-#  booking_option_id :bigint(8)        not null
-#  menu_id           :bigint(8)        not null
+#  id                :bigint           not null, primary key
 #  priority          :integer
 #  required_time     :integer
+#  booking_option_id :bigint           not null
+#  menu_id           :bigint           not null
 #
 # Indexes
 #

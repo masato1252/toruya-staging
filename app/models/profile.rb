@@ -4,33 +4,37 @@
 # Table name: profiles
 #
 #  id                       :integer          not null, primary key
-#  user_id                  :integer
+#  address                  :string
+#  city                     :string
+#  company_address          :string
+#  company_address_details  :jsonb
+#  company_name             :string
+#  company_phone_number     :string
+#  company_zip_code         :string
+#  email                    :string
 #  first_name               :string
 #  last_name                :string
+#  personal_address_details :jsonb
+#  phone_number             :string
 #  phonetic_first_name      :string
 #  phonetic_last_name       :string
-#  company_name             :string
-#  zip_code                 :string
-#  address                  :string
-#  phone_number             :string
-#  website                  :string
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  company_zip_code         :string
-#  company_address          :string
-#  company_phone_number     :string
-#  email                    :string
 #  region                   :string
-#  city                     :string
 #  street1                  :string
 #  street2                  :string
 #  template_variables       :json
-#  personal_address_details :jsonb
-#  company_address_details  :jsonb
+#  website                  :string
+#  zip_code                 :string
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  user_id                  :integer
 #
 # Indexes
 #
 #  index_profiles_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #
 
 class Profile < ApplicationRecord

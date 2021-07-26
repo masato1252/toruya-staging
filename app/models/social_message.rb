@@ -3,18 +3,18 @@
 #
 # Table name: social_messages
 #
-#  id                 :bigint(8)        not null, primary key
+#  id                 :bigint           not null, primary key
+#  message_type       :integer          default("bot")
+#  raw_content        :text
+#  readed_at          :datetime
+#  schedule_at        :datetime
+#  sent_at            :datetime
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  broadcast_id       :integer
 #  social_account_id  :integer          not null
 #  social_customer_id :integer          not null
 #  staff_id           :integer
-#  raw_content        :text
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  readed_at          :datetime
-#  message_type       :integer          default("bot")
-#  schedule_at        :datetime
-#  sent_at            :datetime
-#  broadcast_id       :integer
 #
 # Indexes
 #

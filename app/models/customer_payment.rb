@@ -2,20 +2,20 @@
 #
 # Table name: customer_payments
 #
-#  id                    :bigint(8)        not null, primary key
-#  customer_id           :bigint(8)
+#  id                    :bigint           not null, primary key
 #  amount_cents          :decimal(, )
 #  amount_currency       :string
-#  product_id            :integer
-#  product_type          :string
-#  state                 :integer          default("active"), not null
 #  charge_at             :datetime
 #  expired_at            :datetime
 #  manual                :boolean          default(FALSE), not null
+#  product_type          :string
+#  state                 :integer          default("active"), not null
 #  stripe_charge_details :jsonb
-#  order_id              :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  customer_id           :bigint
+#  order_id              :string
+#  product_id            :integer
 #
 # Indexes
 #

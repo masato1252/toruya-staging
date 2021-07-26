@@ -4,9 +4,9 @@
 #
 # Table name: reservation_booking_options
 #
-#  id                :bigint(8)        not null, primary key
-#  reservation_id    :bigint(8)
-#  booking_option_id :bigint(8)
+#  id                :bigint           not null, primary key
+#  booking_option_id :bigint
+#  reservation_id    :bigint
 #
 # Indexes
 #

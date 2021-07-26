@@ -4,20 +4,20 @@
 #
 # Table name: booking_options
 #
-#  id                  :bigint(8)        not null, primary key
-#  user_id             :bigint(8)        not null
-#  name                :string           not null
-#  display_name        :string
-#  minutes             :integer          not null
+#  id                  :bigint           not null, primary key
 #  amount_cents        :decimal(, )      not null
 #  amount_currency     :string           not null
-#  tax_include         :boolean          not null
-#  start_at            :datetime
+#  display_name        :string
 #  end_at              :datetime
 #  memo                :text
+#  menu_restrict_order :boolean          default(FALSE), not null
+#  minutes             :integer          not null
+#  name                :string           not null
+#  start_at            :datetime
+#  tax_include         :boolean          not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  menu_restrict_order :boolean          default(FALSE), not null
+#  user_id             :bigint           not null
 #
 # Indexes
 #

@@ -3,17 +3,17 @@
 #
 # Table name: social_customers
 #
-#  id                      :bigint(8)        not null, primary key
-#  user_id                 :bigint(8)        not null
-#  customer_id             :bigint(8)
-#  social_account_id       :integer
-#  social_user_id          :string           not null
+#  id                      :bigint           not null, primary key
+#  conversation_state      :integer          default("bot")
+#  social_rich_menu_key    :string
 #  social_user_name        :string
 #  social_user_picture_url :string
-#  conversation_state      :integer          default("bot")
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  social_rich_menu_key    :string
+#  customer_id             :bigint
+#  social_account_id       :integer
+#  social_user_id          :string           not null
+#  user_id                 :bigint           not null
 #
 # Indexes
 #

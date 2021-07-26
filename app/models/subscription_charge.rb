@@ -3,21 +3,21 @@
 #
 # Table name: subscription_charges
 #
-#  id                    :bigint(8)        not null, primary key
-#  user_id               :bigint(8)
-#  plan_id               :bigint(8)
+#  id                    :bigint           not null, primary key
 #  amount_cents          :decimal(, )
 #  amount_currency       :string
-#  state                 :integer          default("active"), not null
 #  charge_date           :date
+#  details               :jsonb
 #  expired_date          :date
 #  manual                :boolean          default(FALSE), not null
+#  rank                  :integer          default(0)
+#  state                 :integer          default("active"), not null
 #  stripe_charge_details :jsonb
-#  order_id              :string
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  details               :jsonb
-#  rank                  :integer          default(0)
+#  order_id              :string
+#  plan_id               :bigint
+#  user_id               :bigint
 #
 # Indexes
 #

@@ -4,12 +4,12 @@
 #
 # Table name: referrals
 #
-#  id          :bigint(8)        not null, primary key
-#  referrer_id :integer          not null
-#  referee_id  :integer          not null
+#  id          :bigint           not null, primary key
 #  state       :integer          default("pending"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  referee_id  :integer          not null
+#  referrer_id :integer          not null
 #
 # Indexes
 #
