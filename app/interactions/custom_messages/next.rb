@@ -14,7 +14,7 @@ module CustomMessages
         next_custom_messages.find_each do |next_custom_message|
           schedule_at = message_product.start_at_for_customer(receiver).advance(days: next_custom_message.after_days).change(hour: 9)
 
-          if schedule_at > Time.current
+          if schedule_at > Time.current || next_custom_message.after_days == 0
             Notifiers::CustomMessages::Send.perform_at(
               schedule_at: schedule_at,
               custom_message: next_custom_message,

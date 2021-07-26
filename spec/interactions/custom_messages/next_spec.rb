@@ -17,6 +17,34 @@ RSpec.describe CustomMessages::Next do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when there is after days 0 message" do
+      let(:new_custom_message_after_days ) { 0 }
+
+      it "schedules the next custom message" do
+        next_custom_message1, next_custom_message2 = FactoryBot.create_list(
+          :custom_message,
+          2,
+          service: service,
+          scenario: prev_custom_message.scenario,
+          after_days: new_custom_message_after_days
+        )
+
+        expect(Notifiers::CustomMessages::Send).to receive(:perform_at).with({
+          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message1.after_days).change(hour: 9),
+          custom_message: next_custom_message1,
+          receiver: receiver
+        })
+
+        expect(Notifiers::CustomMessages::Send).to receive(:perform_at).with({
+          schedule_at: service.start_at_for_customer(receiver).advance(days: next_custom_message2.after_days).change(hour: 9),
+          custom_message: next_custom_message2,
+          receiver: receiver
+        })
+
+        outcome
+      end
+    end
+
     context "when there is next custom message" do
       let(:prev_after_days ) { 0 }
       let(:new_custom_message_after_days ) { prev_after_days + 1 }
