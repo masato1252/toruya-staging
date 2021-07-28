@@ -24,6 +24,12 @@ module SocialCustomers
 
     def validate_customer_connection
       if SocialCustomer.where.not(id: social_customer).where(user_id: social_customer.user_id, customer_id: customer.id).exists?
+        Rollbar.warning(
+          "Customer already connected with customer",
+          new_social_customer_id: social_customer.id,
+          customer_id: customer.id
+        )
+
         errors.add(:customer, :was_connected_with_other_social_customer)
       end
     end
