@@ -51,14 +51,15 @@ RSpec.describe SocialCustomers::Contact do
         customer = user.customers.last
 
         expect(social_customer.customer).to eq(customer)
-        expect(customer.last_name).to eq("bar")
-        expect(customer.first_name).to eq("qaz")
-        expect(customer.first_name).to eq("qaz")
-        expect(customer.phonetic_last_name).to be_nil
-        expect(customer.phonetic_first_name).to be_nil
-        expect(customer.emails_details).to be_empty
-        expect(customer.phone_numbers_details).to be_empty
-        expect(customer.address_details).to be_empty
+        expect(customer).to have_attributes(
+          last_name: "bar",
+          first_name: "qaz",
+          phonetic_last_name: nil,
+          phonetic_first_name: nil,
+          emails_details: [],
+          phone_numbers_details: [],
+          address_details: {}
+        )
       end
     end
   end
