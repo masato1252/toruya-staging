@@ -3,7 +3,17 @@
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.sales.edit.sales_about") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_product") %></div>
-  <%= render "lines/user_bot/field_row", title: @sale_page.product_name %>
+  <div class="field-row with-format">
+    <div>
+      <div>
+        <span class="dotdotdot"><%= @sale_page.product_name %></span>
+      </div>
+      <div>
+        <%= t("user_bot.dashboards.online_service_creation.solutions.#{@sale_page.solution_type}.title") unless @sale_page.is_booking_page? %>
+        <%= l(@sale_page.created_at, format: :long_date_with_wday) %>
+      </div>
+    </div>
+  </div>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.selling_start_at") %></div>
   <% if @sale_page.is_booking_page? %>
