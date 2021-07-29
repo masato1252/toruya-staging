@@ -63,9 +63,10 @@ const CustomMessageEdit =({props}) => {
   const renderCorrespondField = () => {
     switch(props.scenario) {
       case "booking_page_booked":
+      case "booking_page_one_day_reminder":
         return (
           <>
-            <div className="field-row">{I18n.t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked")}</div>
+            <div className="field-row">{I18n.t(`user_bot.dashboards.settings.custom_message.booking_page.${props.scenario}`)}</div>
             <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.content")}</div>
             <div className="field-row">
               <textarea

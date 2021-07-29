@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
-require "translator"
-require "line_client"
-
 class Lines::UserBot::BookingPages::CustomMessagesController < Lines::UserBotDashboardController
   def index
     @booking_page = super_user.booking_pages.find(params[:booking_page_id])
-    @sequence_messages = CustomMessage.where(service: @booking_page, scenario: CustomMessage::BOOKING_PAGE_BOOKED).order("after_days ASC NULLS FIRST")
+    @booked_message = CustomMessage.scenario_of(@booking_page, CustomMessage::BOOKING_PAGE_BOOKED).right_away.first
+    @one_day_reminder_message = CustomMessage.scenario_of(@booking_page, CustomMessage::BOOKING_PAGE_ONE_DAY_REMINDER).right_away.first
   end
 
   def edit_scenario

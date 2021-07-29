@@ -23,6 +23,11 @@ require "line_client"
 class CustomMessage < ApplicationRecord
   ONLINE_SERVICE_PURCHASED = "online_service_purchased"
   BOOKING_PAGE_BOOKED= "booking_page_booked"
+  BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
+
+  scope :scenario_of, -> (service, scenario) { where(service: service, scenario: scenario) }
+  scope :right_away, -> { where(after_days: nil) }
+  scope :sequence, -> { where.not(after_days: nil) }
 
   belongs_to :service, polymorphic: true # OnlineService
 
@@ -46,7 +51,7 @@ class CustomMessage < ApplicationRecord
   end
 
   def self.template_of(product, scenario)
-    message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil)
+    message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil) if product
 
     return message.content if message
 
@@ -55,6 +60,8 @@ class CustomMessage < ApplicationRecord
       I18n.t("notifier.online_service.purchased.#{product.solution_type}.message")
     when BOOKING_PAGE_BOOKED
       I18n.t("customer.notifications.sms.booking")
+    when BOOKING_PAGE_ONE_DAY_REMINDER
+      I18n.t("customer.notifications.sms.reminder")
     end
   end
 end

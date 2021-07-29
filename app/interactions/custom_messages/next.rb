@@ -34,7 +34,7 @@ module CustomMessages
     def next_custom_messages
       return @next_custom_message if defined?(@next_custom_message)
 
-      scope = CustomMessage.where(scenario: scenario || custom_message.scenario, service: message_product)
+      scope = CustomMessage.scenario_of(message_product, scenario || custom_message.scenario)
       after_days = scope.where("after_days > ?", custom_message&.after_days || -100).first&.after_days
       scope.where(after_days: after_days) if after_days
     end
