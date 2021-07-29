@@ -8,9 +8,9 @@
       <div>
         <span class="dotdotdot"><%= @sale_page.product_name %></span>
       </div>
-      <div>
+      <div class="desc">
         <%= t("user_bot.dashboards.online_service_creation.solutions.#{@sale_page.solution_type}.title") unless @sale_page.is_booking_page? %>
-        <%= l(@sale_page.created_at, format: :long_date_with_wday) %>
+        (<%= l(@sale_page.created_at) %>)
       </div>
     </div>
   </div>
