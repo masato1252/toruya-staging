@@ -6,29 +6,23 @@
   <%= render "lines/user_bot/field_row", title: @booking_page.name %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
+  <%= render "lines/user_bot/field_row",
+    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
+    path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+      @booking_page,
+      scenario: CustomMessage::BOOKING_PAGE_BOOKED,
+      right_away: true,
+      id: @booked_message&.id
+    )
+  %>
 
-  <% if @sequence_messages.exists? %>
-    <% @sequence_messages.each.with_index do |message, index| %>
-      <%= render "lines/user_bot/field_row",
-        path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
-          @booking_page,
-          scenario: CustomMessage::BOOKING_PAGE_BOOKED,
-          send_right_after_approved: true),
-        title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") if index == 0 && !message.after_days.nil? %>
-      <%= render "lines/user_bot/field_row",
-        path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
-          @booking_page,
-          scenario: CustomMessage::BOOKING_PAGE_BOOKED,
-          id: message.id,
-          send_right_after_approved: !message.after_days),
-        title: message.after_days ? "after service start #{message.after_days} days" : t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") %>
-    <% end %>
-  <% else %>
-    <%= render "lines/user_bot/field_row",
-      path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
-        @booking_page,
-        scenario: CustomMessage::BOOKING_PAGE_BOOKED,
-        send_right_after_approved: true),
-      title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked") %>
-  <% end %>
+  <%= render "lines/user_bot/field_row",
+    title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
+    path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
+      @booking_page,
+      scenario: CustomMessage::BOOKING_PAGE_ONE_DAY_REMINDER,
+      right_away: true,
+      id: @one_day_reminder_message&.id
+    )
+  %>
 </div>

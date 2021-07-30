@@ -6,29 +6,25 @@
   <%= render "lines/user_bot/field_row", title: @online_service.name %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.custom_message.send_message_label") %></div>
-  <% if @sequence_messages.exists? %>
-    <% @sequence_messages.each.with_index do |message, index| %>
-      <%= render "lines/user_bot/field_row",
-        path: edit_scenario_lines_user_bot_service_custom_messages_path(
-          @online_service,
-          scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
-          send_right_after_approved: true),
-          title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased") if index == 0 && !message.after_days.nil? %>
-      <%= render "lines/user_bot/field_row",
-        path: edit_scenario_lines_user_bot_service_custom_messages_path(
-          @online_service,
-          scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
-          id: message.id,
-          send_right_after_approved: !message.after_days),
-          title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased") %>
-    <% end %>
-  <% else %>
+  <%= render "lines/user_bot/field_row",
+    title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased"),
+    path: edit_scenario_lines_user_bot_service_custom_messages_path(
+      @online_service,
+      scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
+      right_away: true,
+      id: @purchased_message&.id
+    )
+  %>
+
+  <% @sequence_messages.each.with_index do |message, index| %>
     <%= render "lines/user_bot/field_row",
       path: edit_scenario_lines_user_bot_service_custom_messages_path(
         @online_service,
         scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
-        send_right_after_approved: true),
-      title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased") %>
+        id: message.id,
+        right_away: !message.after_days),
+        title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
+    %>
   <% end %>
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>

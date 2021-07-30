@@ -36,7 +36,7 @@ module CustomMessages
     private
 
     def validate_purchased_message
-      if after_days.nil? && CustomMessage.where(service: message.service, scenario: message.scenario, after_days: nil).where.not(id: message.id).exists?
+      if after_days.nil? && CustomMessage.scenario_of(message.service, message.scenario).right_away.where.not(id: message.id).exists?
         errors.add(:after_days, :only_allow_one_purchased_message)
       end
     end

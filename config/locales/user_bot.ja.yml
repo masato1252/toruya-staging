@@ -131,6 +131,7 @@ ja:
             online_booking: オンライン予約
             page_label: 予約ページ
             booking_page_booked: 仮予約の作成
+            booking_page_one_day_reminder: 24時間前リマインダ
           online_service:
             section_title: オンラインサービス
             service_page_title: サービスページ
