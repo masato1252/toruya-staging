@@ -28,6 +28,7 @@ require "hashie_serializer"
 class ReservationCustomer < ApplicationRecord
   ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
+  hi_track_event "reservation_booked"
 
   belongs_to :reservation, touch: true
   belongs_to :customer, touch: true

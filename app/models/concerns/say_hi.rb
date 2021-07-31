@@ -6,17 +6,22 @@ module SayHi
   included do
     after_commit :say_hi, on: :create
     class_attribute :channel_name, instance_writer: false
+    class_attribute :track_event, instance_writer: false
   end
 
   def say_hi
     if Rails.configuration.x.env.production?
-      HiJob.perform_later(self, channel_name)
+      HiJob.perform_later(self, channel_name, track_event)
     end
   end
 
   class_methods do
     def hi_channel_name(channel_name)
       self.channel_name = channel_name
+    end
+
+    def hi_track_event(track_event)
+      self.track_event = track_event
     end
   end
 end

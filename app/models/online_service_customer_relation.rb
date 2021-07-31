@@ -22,6 +22,7 @@
 
 class OnlineServiceCustomerRelation < ApplicationRecord
   include SayHi
+  hi_track_event "online_service_purchased"
 
   belongs_to :online_service
   belongs_to :sale_page
