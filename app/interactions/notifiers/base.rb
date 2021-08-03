@@ -158,7 +158,7 @@ module Notifiers
     end
 
     def deliverable
-      true
+      message.present?
     end
 
     private
