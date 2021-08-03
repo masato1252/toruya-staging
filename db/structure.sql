@@ -2441,7 +2441,8 @@ CREATE TABLE public.users (
     contacts_sync_at timestamp without time zone,
     referral_token character varying,
     phone_number character varying,
-    customers_count integer DEFAULT 0
+    customers_count integer DEFAULT 0,
+    customer_latest_activity_at timestamp without time zone
 );
 
 
@@ -4142,6 +4143,13 @@ CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btre
 
 
 --
+-- Name: index_users_on_customer_latest_activity_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_customer_latest_activity_at ON public.users USING btree (customer_latest_activity_at);
+
+
+--
 -- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4631,6 +4639,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210610005365'),
 ('20210711140109'),
 ('20210718021056'),
-('20210718022411');
+('20210718022411'),
+('20210803022747');
 
 

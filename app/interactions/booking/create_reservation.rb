@@ -258,6 +258,8 @@ module Booking
           end
 
           if customer.persisted? && reservation
+            compose(Users::UpdateCustomerLatestActivityAt, user: user)
+
             ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
             errors.add(:base, :reservation_something_wrong)

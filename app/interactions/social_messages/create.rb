@@ -44,6 +44,8 @@ module SocialMessages
             social_user: social_customer.user.social_user,
             rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY
           )
+
+          compose(Users::UpdateCustomerLatestActivityAt, user: social_customer.user)
         end
 
         case content_type
