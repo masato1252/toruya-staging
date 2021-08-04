@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 namespace :notifications do
   task :pending_tasks => :environment do
     current_time = Time.now.in_time_zone('Tokyo').beginning_of_hour
@@ -19,5 +21,7 @@ namespace :notifications do
         Notifiers::PendingTasksSummary.perform_later(receiver: user, period: time_range)
       end
     end
+
+    SlackClient.send(channel: 'development', text: "[OK] daily notifications task") if Rails.configuration.x.env.production?
   end
 end
