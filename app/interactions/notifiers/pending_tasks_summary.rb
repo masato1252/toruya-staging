@@ -4,9 +4,14 @@ module Notifiers
   class PendingTasksSummary < Base
     deliver_by :line
 
-    object :period, class: Range
+    string :start_at
+    string :end_at
 
     def message
+      start_time = Time.zone.parse(start_at)
+      end_time = Time.zone.parse(end_at)
+      period = start_time..end_time
+
       pending_reservations_count =
         ReservationCustomer.joins(:reservation).where("reservations.user_id": receiver.id).where("reservation_customers.created_at": period).pending.count
       pending_messages_count = receiver.social_account.social_messages.handleable.unread.where(created_at: period).count

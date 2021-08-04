@@ -9,7 +9,8 @@ RSpec.describe Notifiers::PendingTasksSummary do
   let(:args) do
     {
       receiver: receiver,
-      period: period
+      start_at: period.first.to_s,
+      end_at: period.last.to_s
     }
   end
   let(:outcome) { described_class.run(args) }
