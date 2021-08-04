@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+namespace :notifications do
+  task :pending_tasks => :environment do
+    current_time = Time.now.in_time_zone('Tokyo').beginning_of_hour
+    hour = current_time.hour
+
+    time_range =
+      if hour == 7
+        # 17 ~ 7
+        current_time.yesterday.change(hour: 17)..current_time
+      elsif hour == 17
+        # 7 ~ 17
+        current_time.change(hour: 7)..current_time
+      end
+
+    if time_range
+      User.where(customer_latest_activity_at: time_range).find_each do |user|
+        Notifiers::PendingTasksSummary.perform_later(receiver: user, period: time_range)
+      end
+    end
+  end
+end
