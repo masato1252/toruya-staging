@@ -33,6 +33,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
         expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
+
+        expect(user.reload.customer_latest_activity_at).to be_present
       end
     end
 
@@ -53,8 +55,9 @@ RSpec.describe Sales::OnlineServices::Purchase do
       end
     end
 
-    context "when sale page's product was online service" do
-      let(:sale_page) { FactoryBot.create(:sale_page, product: FactoryBot.create(:online_service, :external, user: user)) }
+    context "when sale page's product was external online service" do
+      let(:sale_page) { FactoryBot.create(:sale_page, product: FactoryBot.create(:online_service, :external, user: user), user: user) }
+
       it "create a pending relation" do
         expect {
           outcome
@@ -67,6 +70,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_pending
         expect(relation.expire_at).to be_nil
         expect(customer.reload.online_service_ids).to be_empty
+
+        expect(user.reload.customer_latest_activity_at).to be_present
       end
     end
 

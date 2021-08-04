@@ -46,6 +46,8 @@ module Sales
           end
         end
 
+        compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
+
         if relation.purchased?
           ::LineClient.flex(
             social_customer,

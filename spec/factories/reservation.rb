@@ -85,7 +85,7 @@ FactoryBot.define do
       end
 
       Array.wrap(proxy.customers).each do |customer|
-        FactoryBot.create(:reservation_customer, :accepted, reservation: reservation, customer: customer)
+        FactoryBot.create(:reservation_customer, :pending, reservation: reservation, customer: customer)
       end
 
       reservation.update_columns(count_of_customers: reservation.reservation_customers.active.count)
