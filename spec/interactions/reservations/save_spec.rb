@@ -74,6 +74,8 @@ RSpec.describe Reservations::Save do
         expect(ReservationConfirmationJob).to receive(:perform_later).exactly(customers_list.length).times
 
         outcome
+
+        expect(user.reload.customer_latest_activity_at).to be_present
       end
 
       context "when there is only one menu" do

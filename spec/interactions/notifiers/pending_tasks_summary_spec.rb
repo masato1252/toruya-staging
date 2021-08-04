@@ -39,5 +39,19 @@ RSpec.describe Notifiers::PendingTasksSummary do
       expect(message.raw_content).to match(/2/)
       expect(message.raw_content).to match(/3/)
     end
+
+    context "when there is no pending tasks to notify" do
+      it "doesn't send line" do
+        expect(LineClient).not_to receive(:send)
+
+        expect {
+          outcome
+        }.not_to change {
+          SocialUserMessage.where(
+            social_user: receiver.social_user,
+          ).count
+        }
+      end
+    end
   end
 end

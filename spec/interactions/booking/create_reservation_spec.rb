@@ -42,6 +42,7 @@ RSpec.describe Booking::CreateReservation do
         reservation = result[:reservation]
 
         expect(customer).to eq(customer)
+        expect(user.reload.customer_latest_activity_at).to be_present
 
         expect(reservation.prepare_time).to eq(booking_start_at.advance(minutes: -booking_option.menus.first.interval))
         expect(reservation.start_time).to eq(booking_start_at)
@@ -119,6 +120,7 @@ RSpec.describe Booking::CreateReservation do
 
           outcome
           expect(reservation_customer.reload.booking_page_id).to eq(booking_page.id)
+          expect(user.reload.customer_latest_activity_at).to be_present
         end
       end
 
@@ -301,6 +303,7 @@ RSpec.describe Booking::CreateReservation do
             customer = result[:customer]
             reservation = result[:reservation]
 
+            expect(user.reload.customer_latest_activity_at).to be_present
             expect(reservation).to eq(present_reservation)
             expect(reservation.customers).to include(customer)
             expect(reservation.count_of_customers).to eq(reservation.customers.count)

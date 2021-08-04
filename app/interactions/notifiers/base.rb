@@ -48,6 +48,8 @@ module Notifiers
     object :customer, default: nil # used for sending SMS
 
     def execute
+      return unless deliverable
+
       if delivered_by_priority.present?
         delivered_by_priority.each do |notifier|
           if public_send("#{notifier}?").present?
@@ -57,8 +59,6 @@ module Notifiers
           end
         end
       end
-
-      return unless deliverable
 
       if deliver_by_email && email?
         send_email
@@ -158,7 +158,7 @@ module Notifiers
     end
 
     def deliverable
-      message.present?
+      true
     end
 
     private

@@ -4,6 +4,7 @@ require "rails_helper"
 
 RSpec.describe SocialMessages::Create do
   let!(:social_customer) { FactoryBot.create(:social_customer) }
+  let(:user) { social_customer.user }
   let(:readed) { false }
   let(:message_type) { SocialMessage.message_types[:customer] }
   let(:staff) {}
@@ -33,6 +34,7 @@ RSpec.describe SocialMessages::Create do
 
         social_message = social_customer.social_messages.last
 
+        expect(user.reload.customer_latest_activity_at).to be_present
         expect(social_message.readed_at).to be_nil
         expect(social_message.sent_at).to be_present
         expect(social_message.schedule_at).to be_nil
