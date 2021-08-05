@@ -3,24 +3,25 @@
 #
 # Table name: booking_pages
 #
-#  id                      :bigint           not null, primary key
-#  booking_limit_day       :integer          default(1), not null
-#  deleted_at              :datetime
-#  draft                   :boolean          default(TRUE), not null
-#  end_at                  :datetime
-#  greeting                :text
-#  interval                :integer
-#  line_sharing            :boolean          default(TRUE)
-#  name                    :string           not null
-#  note                    :text
-#  overbooking_restriction :boolean          default(TRUE)
-#  slug                    :string
-#  start_at                :datetime
-#  title                   :string
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  shop_id                 :bigint           not null
-#  user_id                 :bigint           not null
+#  id                           :bigint           not null, primary key
+#  booking_limit_day            :integer          default(1), not null
+#  deleted_at                   :datetime
+#  draft                        :boolean          default(TRUE), not null
+#  end_at                       :datetime
+#  greeting                     :text
+#  interval                     :integer
+#  line_sharing                 :boolean          default(TRUE)
+#  name                         :string           not null
+#  note                         :text
+#  overbooking_restriction      :boolean          default(TRUE)
+#  slug                         :string
+#  specific_booking_start_times :string           is an Array
+#  start_at                     :datetime
+#  title                        :string
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  shop_id                      :bigint           not null
+#  user_id                      :bigint           not null
 #
 # Indexes
 #
