@@ -10,6 +10,7 @@ import DateTimeFieldsRow from "shared/datetime_fields_row";
 import { BookingPageServices } from "user_bot/api"
 
 import BookingIntervalField from "./booking_interval_field";
+import BookingTimeField from "./booking_time_field";
 import BookingLimitDayField from "./booking_limit_day_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
 import LineSharingField from "./line_sharing_field";
@@ -29,7 +30,12 @@ const BookingPageEdit =({props}) => {
 
     [error, response] = await BookingPageServices.update({
       booking_page_id: props.booking_page.id,
-      data: _.assign( data, { special_dates: data.had_special_date == "true" ? data.special_dates : [] }, { attribute: props.attribute })
+      data: _.assign(
+        data,
+        { special_dates: data.had_special_date == "true" ? data.special_dates : [] },
+        { attribute: props.attribute },
+        { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : []}
+      )
     })
 
     if (response.data.status == "successful") {
@@ -49,7 +55,8 @@ const BookingPageEdit =({props}) => {
       overbooking_restriction: String(props.booking_page.overbooking_restriction),
       line_sharing: String(props.booking_page.line_sharing),
       draft: String(props.booking_page.draft),
-      had_special_date: String(props.booking_page.had_special_date)
+      had_special_date: String(props.booking_page.had_special_date),
+      had_specific_booking_start_times: String(props.booking_page.had_specific_booking_start_times),
     }
   });
 
@@ -100,6 +107,9 @@ const BookingPageEdit =({props}) => {
         break;
       case "interval":
         return <BookingIntervalField i18n={i18n} register={register} />
+        break;
+      case "booking_time":
+        return <BookingTimeField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
         break;
       case "booking_limit_day":
         return <BookingLimitDayField i18n={i18n} register={register} />

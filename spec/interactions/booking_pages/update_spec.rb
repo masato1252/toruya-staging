@@ -56,8 +56,33 @@ RSpec.describe BookingPages::Update do
       it_behaves_like "updates booking page normal attribute", "note", "foo"
     end
 
-    context "update_attribute is interval" do
-      it_behaves_like "updates booking page normal attribute", "interval", 60
+    context "update_attribute is booking_time" do
+      let(:update_attribute) { "booking_time" }
+
+      context "when updating interval" do
+        before do
+          args[:attrs][:interval] = 60
+          args[:attrs][:booking_start_times] = []
+        end
+
+        it "updates interval" do
+          outcome
+
+          expect(booking_page.interval).to eq(60)
+        end
+      end
+
+      context "when updating booking_start_times" do
+        before do
+          args[:attrs][:booking_start_times] = [{ start_time: "10:00"}, { start_time: "13:00" } ]
+        end
+
+        it "updates specific_booking_start_times" do
+          outcome
+
+          expect(booking_page.specific_booking_start_times).to eq(["10:00", "13:00"])
+        end
+      end
     end
 
     context "update_attribute is overbooking_restriction" do

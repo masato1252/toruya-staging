@@ -4,6 +4,8 @@
       shop_id: @booking_page.shop_id.to_s,
       available_booking_options: @options ? custom_options(@options.map { |option| booking_option_item(option) }) : [],
       had_special_date: @booking_page.only_specail_dates_booking?,
+      had_specific_booking_start_times: @booking_page.specific_booking_start_times.present?,
+      booking_start_times: Array.wrap(@booking_page.specific_booking_start_times).map { |start_time| { start_time: start_time } },
       interval: @booking_page.interval || 30,
       start_at_type: @booking_page.start_at ? "date" : "now",
       start_at_date_part: @booking_page.start_at_date || Date.current.to_s,

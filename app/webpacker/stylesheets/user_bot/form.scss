@@ -109,5 +109,9 @@
     font-size: 12px;
     color: $gray11;
   }
+
+  &.no-content {
+    padding: 0;
+  }
 }
 
