@@ -9,7 +9,6 @@ import { ErrorMessage, BottomNavigationBar, TopNavigationBar, SelectOptions, Cir
 import DateTimeFieldsRow from "shared/datetime_fields_row";
 import { BookingPageServices } from "user_bot/api"
 
-import BookingIntervalField from "./booking_interval_field";
 import BookingTimeField from "./booking_time_field";
 import BookingLimitDayField from "./booking_limit_day_field";
 import OverbookingRestrictionField from "./overbooking_restriction_field";
@@ -104,9 +103,6 @@ const BookingPageEdit =({props}) => {
         break
       case "special_dates":
         return <AvailableBookingDatesField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />
-        break;
-      case "interval":
-        return <BookingIntervalField i18n={i18n} register={register} />
         break;
       case "booking_time":
         return <BookingTimeField i18n={i18n} register={register} watch={watch} control={control} setValue={setValue} />

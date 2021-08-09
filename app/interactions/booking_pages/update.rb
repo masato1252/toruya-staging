@@ -67,8 +67,10 @@ module BookingPages
         when "end_at"
           booking_page.update(end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil)
         when "booking_time"
-          booking_page.update(interval: attrs[:interval])
-          booking_page.update(specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort)
+          booking_page.update(
+            interval: attrs[:interval],
+            specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort.uniq
+          )
         when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction"
           booking_page.update(attrs.slice(update_attribute))
         end
