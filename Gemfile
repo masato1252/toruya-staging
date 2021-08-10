@@ -79,7 +79,6 @@ gem "strong_migrations"
 gem "ahoy_matey"
 gem "with_advisory_lock"
 gem 'acts-as-taggable-on', '~> 7.0'
-gem 'rails_server_timings'
 
 group :development, :test do
   gem "byebug", platform: :mri
