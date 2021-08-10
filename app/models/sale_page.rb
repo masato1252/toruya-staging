@@ -77,6 +77,18 @@ class SalePage < ApplicationRecord
       end
   end
 
+  def started?
+    selling_start_at.nil? || Time.current > selling_start_at
+  end
+
+  def ended?
+    selling_end_at && Time.current > selling_end_at
+  end
+
+  def payable?
+    free? || user.payable?
+  end
+
   def start_time
     if selling_start_at
       {
