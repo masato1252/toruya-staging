@@ -14,11 +14,11 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   end
 
   attribute :is_started do |object|
-    object.selling_start_at.nil? || Time.current > object.selling_start_at
+    object.started?
   end
 
   attribute :is_ended do |object|
-    object.selling_end_at && Time.current > object.selling_end_at
+    object.ended?
   end
 
   attribute :purchase_url do |object|
