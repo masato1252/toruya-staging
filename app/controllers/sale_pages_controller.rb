@@ -23,6 +23,8 @@ class SalePagesController < ActionController::Base
 
       @is_started = @main_product.started?
       @is_ended = @main_product.ended?
+      @company = @main_product.shop
+      @payable = true
     when OnlineService
       @product_name = @main_product.name
 
@@ -37,6 +39,8 @@ class SalePagesController < ActionController::Base
 
       @is_started = @sale_page.started?
       @is_ended = @sale_page.ended?
+      @company = @main_product.company
+      @payable = @sale_page.payable?
     end
   end
 end

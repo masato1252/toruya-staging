@@ -13,7 +13,7 @@
   <meta property="og:image" content="<%= Rails.application.routes.url_helpers.url_for(@sale_page.picture.variant(combine_options: { resize: "750", flatten: true })) %>">
 <% end %>
 
-<% cache([@sale_page, @main_product, @is_started, @is_ended]) do %>
+<% cache([@sale_page, @main_product, @is_started, @is_ended, @company, @payable]) do %>
   <%= react_component(
     "user_bot/sales/#{@main_product.class.table_name}",
     @sale_page.serializer.attributes_hash.merge(demo: false),
