@@ -4,8 +4,8 @@ import React from "react";
 import { useFieldArray, Controller } from "react-hook-form";
 import moment from "moment-timezone";
 
-import useDatetimeFieldsRow from "shared/use_datetime_fields_row"
 import DatePickerField from "shared/date_picker_field"
+import I18n from 'i18n-js/index.js.erb';
 
 const SpecialDatesFields = ({special_dates_fields, register, control, setValue, i18n}) => {
   return (
@@ -26,7 +26,7 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
             />
           )}
         />
-        <input type="hidden" name={`special_dates[${index}].end_at_date_part`} ref={register({ required: true })} defaultValue={field.end_at_date_part} />
+        <input type="date" name={`special_dates[${index}].end_at_date_part`} ref={register({ required: true })} defaultValue={field.end_at_date_part} className="display-hidden"/>
         <input type="time" name={`special_dates[${index}].start_at_time_part`} ref={register({ required: true })} defaultValue={field.start_at_time_part} />
         <input type="time" name={`special_dates[${index}].end_at_time_part`} ref={register({ required: true })} defaultValue={field.end_at_time_part} />
         <button className="btn btn-orange" onClick={() => special_dates_fields.remove(index)}>
@@ -39,8 +39,6 @@ const SpecialDatesFields = ({special_dates_fields, register, control, setValue, 
 }
 
 const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) => {
-  const [newSpecialDatePeriod, DateTimeFieldsRow] = useDatetimeFieldsRow({})
-
   const special_dates_fields = useFieldArray({
     control: control,
     name: "special_dates"
@@ -59,19 +57,11 @@ const AvailableBookingDatesField = ({i18n, register, watch, control, setValue}) 
       {watch("had_special_date") == "true" &&
         <>
           <div className="field-row date-row flex-start">
-            {DateTimeFieldsRow}
             <button className="btn btn-yellow" onClick={() => {
-              if (
-                newSpecialDatePeriod.start_at_date_part &&
-                newSpecialDatePeriod.start_at_time_part &&
-                newSpecialDatePeriod.end_at_date_part &&
-                newSpecialDatePeriod.end_at_time_part
-              ) {
-                special_dates_fields.append(newSpecialDatePeriod)
-              }
-              }}>
+              special_dates_fields.append({})
+            }}>
               <i className="fa fa-plus"></i>
-              <span>{i18n.add_more}</span>
+              <span>{I18n.t('settings.booking_page.form.add_special_dates_btn')}</span>
             </button>
           </div>
           <SpecialDatesFields special_dates_fields={special_dates_fields} control={control} register={register} setValue={setValue} i18n={i18n} />

@@ -538,10 +538,12 @@ ja:
         special_dates_title: 予約可能日
         booking_dates_available_booking_datetime: 予約可能な日時
         default_available_dates_label: 全ての予約可能日に受付ける(推奨)
+        add_special_dates_btn: 指定日を追加
         special_date_label: 指定日のみ受付ける
         booking_time_interval_label: 全ての予約可能時間から自動的に表示する(推奨)
         specific_booking_start_times_label: 指定の開始時間のみ表示する
         specific_booking_start_times_desc_html: 設定された開始時間の中から<br>予約価格に必要な所要時間の空きがある<br>開始時間のみが表示されます。
+        add_booking_time_btn: 開始時間を追加
         interval_header: 予約の開始時間
         interval_period_header: 予約時間の選択肢
         interval: 予約時間の選択肢

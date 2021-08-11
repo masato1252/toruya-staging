@@ -27,9 +27,6 @@ const SpecificBookingTimeFields = ({specific_booking_time_fields, register, cont
 }
 
 const BookingTimeField = ({i18n, register, watch, control, setValue}) => {
-  const [newSpecialDatePeriod, DateTimeFieldsRow] = useDatetimeFieldsRow({})
-  const [newSpecificStartTime, setSpecificStartTime] = useState({})
-
   const specific_booking_time_fields = useFieldArray({
     control: control,
     name: "booking_start_times"
@@ -50,17 +47,11 @@ const BookingTimeField = ({i18n, register, watch, control, setValue}) => {
       {watch("had_specific_booking_start_times") === "true" && (
         <>
           <div className="field-row date-row flex-start no-border">
-            <input
-              type="time"
-              value={newSpecificStartTime}
-              onChange={(event) => setSpecificStartTime(event.target.value)}
-            />～
             <button className="btn btn-yellow" onClick={() => {
-              specific_booking_time_fields.append({start_time: newSpecificStartTime})
-              setSpecificStartTime("")
+              specific_booking_time_fields.append({start_time: ""})
             }}>
               <i className="fa fa-plus"></i>
-              <span>{i18n.add_more}</span>
+              <span>{I18n.t('settings.booking_page.form.add_booking_time_btn')}</span>
             </button>
           </div>
           <SpecificBookingTimeFields specific_booking_time_fields ={specific_booking_time_fields} control={control} register={register} setValue={setValue} i18n={i18n} />
