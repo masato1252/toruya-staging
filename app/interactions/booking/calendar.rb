@@ -126,18 +126,33 @@ module Booking
 
           booking_available_start_at ||= shop_open_at = time_range.first
 
-          loop do
-            booking_end_at = booking_available_start_at.advance(minutes: booking_option.minutes)
+          if booking_page.specific_booking_start_times.present?
+            booking_page.specific_booking_start_times.each do |start_time_time_part|
+              booking_start_at = Time.zone.parse("#{date}-#{start_time_time_part}")
+              booking_end_at = booking_start_at.advance(minutes: booking_option.minutes)
 
-            if booking_end_at > booking_available_end_at
-              break
+              if booking_end_at > booking_available_end_at
+                break
+              end
+
+              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
+                throw :next_working_date, date.to_s
+              end
             end
+          else
+            loop do
+              booking_end_at = booking_available_start_at.advance(minutes: booking_option.minutes)
 
-            loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
-              throw :next_working_date, date.to_s
+              if booking_end_at > booking_available_end_at
+                break
+              end
+
+              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
+                throw :next_working_date, date.to_s
+              end
+
+              booking_available_start_at = booking_available_start_at.advance(minutes: interval)
             end
-
-            booking_available_start_at = booking_available_start_at.advance(minutes: interval)
           end
         end
 

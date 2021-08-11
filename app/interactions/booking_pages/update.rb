@@ -17,6 +17,11 @@ module BookingPages
       string :greeting, default: nil
       string :note, default: nil
       integer :interval, default: 30
+      array :booking_start_times, default: nil do
+        hash do
+          string :start_time
+        end
+      end
       boolean :overbooking_restriction, default: true
 
       integer :new_option, default: nil
@@ -61,7 +66,12 @@ module BookingPages
           booking_page.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "end_at"
           booking_page.update(end_at: attrs[:end_at_date_part] ? Time.zone.parse("#{attrs[:end_at_date_part]}-#{attrs[:end_at_time_part]}") : nil)
-        when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "interval", "overbooking_restriction"
+        when "booking_time"
+          booking_page.update(
+            interval: attrs[:interval],
+            specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort.uniq
+          )
+        when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction"
           booking_page.update(attrs.slice(update_attribute))
         end
 

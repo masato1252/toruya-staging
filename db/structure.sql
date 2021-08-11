@@ -469,7 +469,8 @@ CREATE TABLE public.booking_pages (
     booking_limit_day integer DEFAULT 1 NOT NULL,
     line_sharing boolean DEFAULT true,
     slug character varying,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    specific_booking_start_times character varying[]
 );
 
 
@@ -4640,6 +4641,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210711140109'),
 ('20210718021056'),
 ('20210718022411'),
-('20210803022747');
+('20210803022747'),
+('20210805020614');
 
 

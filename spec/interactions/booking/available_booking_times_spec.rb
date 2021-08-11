@@ -48,6 +48,19 @@ RSpec.describe Booking::AvailableBookingTimes do
     })
   end
 
+  context "when booking page got special booking start time" do
+    let(:booking_page) { FactoryBot.create(:booking_page, specific_booking_start_times: ["09:00", "13:00"], user: user, shop: shop, overbooking_restriction: overbooking_restriction) }
+
+    it "returns expected result, returns all available booking time" do
+      result = outcome.result
+
+      expect(result).to eq({
+        Time.zone.local(2019, 5, 13, 9)  => [booking_option.id, booking_option2.id],
+        Time.zone.local(2019, 5, 13, 13) => [booking_option.id, booking_option2.id]
+      })
+    end
+  end
+
   context "when today is 2019-05-13" do
     # Default booking page limit day is 1, that means you couldn't book today
     let(:today) { Time.zone.local(2019, 5, 13) }
