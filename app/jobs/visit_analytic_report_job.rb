@@ -26,6 +26,8 @@ class VisitAnalyticReportJob < ApplicationJob
       end
     end
 
+    report << "Charging user_id: #{Subscription.charge_required.pluck(:user_id).join(", ")}"
+
     SlackClient.send(channel: 'sayhi', text: report.join("\n"))
   end
 end
