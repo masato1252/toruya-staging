@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "slack_client"
+
 namespace :analytic do
   task :landing_page_visit => :environment do
     prev_week = Time.now.in_time_zone('Tokyo').prev_week
@@ -14,6 +16,8 @@ namespace :analytic do
       uniq_visits.each do |visit|
         VisitAnalyticReportJob.perform_later(visit.owner_id)
       end
+
+      SlackClient.send(channel: 'sayhi', text: "Charging user_id: #{Subscription.charge_required.pluck(:user_id).join(", ")}")
     end
   end
 end
