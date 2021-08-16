@@ -274,6 +274,52 @@ RSpec.describe Booking::CreateReservation do
 
           expect(customer.social_customer).to be_nil
         end
+
+        context "when there is a customer with same name and phone_number" do
+          it "updates existing customer info" do
+            existing_cusomter = FactoryBot.create(
+              :customer, user: user,
+              last_name: "foo",
+              first_name: "bar",
+              phone_numbers_details: [{"type" => "mobile", "value" => "123456789"}]
+            )
+            customer_info_hash = {
+              customer_last_name: "foo",
+              customer_first_name: "bar",
+              customer_phonetic_last_name: "baz",
+              customer_phonetic_first_name: "qux",
+              customer_phone_number: "123456789",
+              customer_email: "example@email.com"
+            }
+            args.merge!(customer_info_hash)
+
+            expect {
+              outcome
+            }.not_to change {
+              user.customers.count
+            }
+            result = outcome.result
+            existing_customer = result[:customer]
+            reservation = result[:reservation]
+
+            expect(existing_customer.last_name).to eq("foo")
+            expect(existing_customer.first_name).to eq("bar")
+            expect(existing_customer.phonetic_last_name).to eq("baz")
+            expect(existing_customer.phonetic_first_name).to eq("qux")
+
+            reservation_customer = reservation.reservation_customers.first
+            expect(reservation_customer.details.new_customer_info).to eq(Hashie::Mash.new({
+              last_name: "foo",
+              first_name: "bar",
+              phonetic_last_name: "baz",
+              phonetic_first_name: "qux",
+              phone_number: "123456789",
+              email: "example@email.com"
+            }))
+
+            expect(existing_customer.social_customer).to be_nil
+          end
+        end
       end
     end
 

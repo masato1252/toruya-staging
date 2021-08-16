@@ -91,10 +91,23 @@ module Booking
       Reservation.transaction do
         ActiveRecord::Base.with_advisory_lock("customer_booking_in_user_#{user.id}") do
           reservation = nil
+          customer = nil
 
-          if customer_info&.compact.present?
+          if booking_page && customer_first_name && customer_last_name && customer_phone_number
+            customer = Booking::FindCustomer.run!(
+              booking_page: booking_page,
+              first_name: customer_first_name,
+              last_name: customer_last_name,
+              phone_number: customer_phone_number
+            )
+          end
+
+          if !customer && customer_info&.compact.present?
             # regular customer
             customer = user.customers.find(customer_info["id"])
+          end
+
+          if customer
             customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
           end
 
