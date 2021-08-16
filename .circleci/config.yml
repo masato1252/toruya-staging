@@ -42,7 +42,7 @@ jobs:
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       # Fixed: Please check the output above for any errors and make sure that `psql` is installed in your PATH and has proper permissions.
-      - run: sudo apt-get update; sudo apt-get install postgresql-client
+      - run: sudo apt update -y; sudo apt-get install postgresql-client
 
       - save_cache:
           paths:
