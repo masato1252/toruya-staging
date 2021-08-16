@@ -45,7 +45,7 @@ ja:
       booking_unexpected_failed_message: 何らかの理由で予約に失敗しました。もう一度お試しください。
       booking_code_message: 携帯電話にお送りした確認コードを入力してください。
       booking_code_failed_message: 確認コードが間違っています
-      line_reminder_messages_html: "ご予約の前日に<br>LINEでお知らせします"
+      line_reminder_messages_html: まずはLINEでログインしてください
     done:
       title: 仮予約が完了しました
       message1: LINEまたは携帯電話に

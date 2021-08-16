@@ -88,7 +88,7 @@ export const LineLoginBtn = ({social_account_login_url, children}) => (
         <span className="fab fa-line" aria-hidden="true"></span>
       </a>
       <a href={social_account_login_url} className="btn line-button with-wording" data-method="post">
-        {I18n.t("booking_page.done.add_friend_btn")}
+        {I18n.t("common.line_login_btn_word")}
       </a>
     </div>
   ) : <></>
