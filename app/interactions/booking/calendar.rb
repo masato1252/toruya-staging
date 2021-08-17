@@ -135,7 +135,7 @@ module Booking
                 break
               end
 
-              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_available_start_at, overbooking_restriction: overbooking_restriction) do
+              loop_for_reserable_spot(shop: shop, booking_page: booking_page, booking_option: booking_option, date: date, booking_start_at: booking_start_at, overbooking_restriction: overbooking_restriction) do
                 throw :next_working_date, date.to_s
               end
             end

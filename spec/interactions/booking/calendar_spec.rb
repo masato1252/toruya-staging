@@ -52,7 +52,6 @@ RSpec.describe Booking::Calendar do
     end
 
     context "when booking page got special booking start time" do
-      # XXX: Setup a werid special_date_end_at, so no start time is available
       let(:booking_page) { FactoryBot.create(:booking_page, specific_booking_start_times: ["09:01"]) }
 
       it "returns expected result, returns all available booking time" do
@@ -67,7 +66,7 @@ RSpec.describe Booking::Calendar do
           working_dates: ["2019-05-13", "2019-05-20", "2019-05-27"],
           holiday_dates: ["2019-05-01", "2019-05-02", "2019-05-03", "2019-05-04", "2019-05-05", "2019-05-06", "2019-05-12", "2019-05-19", "2019-05-26"]
         })
-        expect(result[1]).to eq([])
+        expect(result[1]).to eq(["2019-05-13"])
       end
     end
 
