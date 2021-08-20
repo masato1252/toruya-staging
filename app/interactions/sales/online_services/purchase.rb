@@ -26,22 +26,24 @@ module Sales
             retry
           end
 
-        unless relation.purchased?
-          if sale_page.free?
-            relation.permission_state = :active
-            relation.expire_at = product.current_expire_time
-            relation.free_payment_state!
+        relation.with_lock do
+          unless relation.purchased?
+            if sale_page.free?
+              relation.permission_state = :active
+              relation.expire_at = product.current_expire_time
+              relation.free_payment_state!
 
-            ::OnlineServices::Attend.run(customer: customer, online_service: product, sale_page: sale_page)
-          elsif !sale_page.external?
-            compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
-            purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
+              ::OnlineServices::Attend.run(customer: customer, online_service: product, sale_page: sale_page)
+            elsif !sale_page.external?
+              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
+              purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
 
-            # credit card charge is synchronous request, it would return final status immediately
-            if purchase_outcome.valid?
-              Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product)
-            else
-              relation.failed_payment_state!
+              # credit card charge is synchronous request, it would return final status immediately
+              if purchase_outcome.valid?
+                Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product)
+              else
+                relation.failed_payment_state!
+              end
             end
           end
         end
