@@ -28,6 +28,18 @@
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
   <%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
 
+  <% if @relation.available? && @online_service.external? %>
+    <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+      <%= link_to stop_lines_user_bot_service_customer_path(@online_service, @relation),
+        method: :delete,
+        data: { confirm: t("user_bot.dashboards.settings.service_customer_relation.stop_usage_confirmation") },
+        class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+        <i class="fas fa-ban fa-2x"></i>
+        <div class="word"><%= I18n.t("action.stop_usage") %></div>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if @relation.pending? %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
       <%= link_to cancel_lines_user_bot_service_customer_path(@online_service, @relation),

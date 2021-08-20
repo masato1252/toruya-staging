@@ -171,6 +171,7 @@ Rails.application.routes.draw do
           member do
             post :approve
             delete :cancel
+            delete :stop
           end
         end
       end

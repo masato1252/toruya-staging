@@ -6,10 +6,7 @@ module Sales
       object :relation, class: OnlineServiceCustomerRelation
 
       def execute
-        if relation.pending?
-          relation.canceled_payment_state!
-        end
-
+        relation.update(payment_state: :canceled, permission_state: :pending)
         relation
       end
     end

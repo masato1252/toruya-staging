@@ -65,14 +65,15 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     end
   end
 
+  def available?
+    state == "available"
+  end
+
   def state
-    if pending?
-      "pending"
-    elsif active? && expire_at && expire_at < Time.current
-      "inactive"
-    else
-      "available"
-    end
+    return "inactive" if !pending_payment_state? && !paid_payment_state?
+    return "pending" if pending?
+    return "inactive "if active? && expire_at && expire_at < Time.current
+    "available"
   end
 
   def purchased?

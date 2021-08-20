@@ -30,4 +30,13 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     redirect_to lines_user_bot_service_customers_path(service_id: online_service.id)
   end
+
+  def stop
+    online_service = current_user.online_services.find(params[:service_id])
+    relation = online_service.online_service_customer_relations.find(params[:id])
+
+    ::Sales::OnlineServices::Stop.run!(relation: relation)
+
+    redirect_to lines_user_bot_service_customers_path(service_id: online_service.id)
+  end
 end
