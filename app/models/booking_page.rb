@@ -88,7 +88,7 @@ class BookingPage < ApplicationRecord
     booking_page_special_dates.exists?
   end
 
-  def message_template_variables(customer_or_user, reservation)
+  def message_template_variables(customer_or_user, reservation = nil)
     booking_time =
       case customer_or_user
       when Customer

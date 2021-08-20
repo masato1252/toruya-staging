@@ -28,8 +28,9 @@ class CustomMessage < ApplicationRecord
   scope :scenario_of, -> (service, scenario) { where(service: service, scenario: scenario) }
   scope :right_away, -> { where(after_days: nil) }
   scope :sequence, -> { where.not(after_days: nil) }
+  validates :service_type, inclusion: { in: %w(OnlineService BookingPage) }
 
-  belongs_to :service, polymorphic: true # OnlineService
+  belongs_to :service, polymorphic: true # OnlineService, BookingPage
 
   def demo_message_content
     Translator.perform(content, service.message_template_variables(service.user))

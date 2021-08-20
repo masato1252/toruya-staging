@@ -6,11 +6,9 @@
       service_id: @online_service.id,
       service_type: @online_service.class.name,
       template: @template,
-      customer_name: current_user.display_last_name,
-      service_title: @online_service.name,
       after_days: @message&.after_days || 3,
       right_away: params[:right_away]
-    }
+    }.merge!(@online_service.message_template_variables(current_user))
   }
 },
 { camelize_props: false }
