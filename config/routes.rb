@@ -70,6 +70,7 @@ Rails.application.routes.draw do
           post :toggle_reminder_premission
           post :reply_message
           delete :delete_message
+          put :unread_message
           get  "/data_changed/:reservation_customer_id", to: "customers#data_changed", as: :data_changed
           patch "/save_changes/:reservation_customer_id", to: "customers#save_changes", as: :save_changes
           get "/social_service_user_id/:social_service_user_id", action: "index"

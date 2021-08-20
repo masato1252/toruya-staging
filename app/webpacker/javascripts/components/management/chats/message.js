@@ -15,10 +15,11 @@ const Message = ({message}) => {
         <div
           className="message-icons"
           onClick={async () => {
+            let error, response;
+
             if (message.sent) return;
 
             if (confirm(I18n.t("common.message_delete_confirmation_message"))) {
-              let error, response;
 
               if (message.message_type === 'admin') {
                 [error, response] = await CommonServices.delete({
@@ -36,6 +37,7 @@ const Message = ({message}) => {
             }
           }}
         >
+          {message.message_type === "customer" && message.readed && <i className="fa fa-envelope-open" aria-hidden="true"></i>}
           {message.message_type === "bot" && <i className="fa fa-robot" aria-hidden="true"></i>}
           {(message.message_type === "customer_reply_bot" || message.message_type === "user_reply_bot") && <i className="fa fa-hand-point-up" aria-hidden="true"></i> }
           {!message.sent && message.id && <i className="fa fa-trash" aria-hidden="true"></i>}

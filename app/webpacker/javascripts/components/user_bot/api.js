@@ -271,6 +271,21 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  unread_message: ({user_id, customer_id, message_id}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.unread_message_lines_user_bot_customers_path({format: "json"}),
+      params: {
+        user_id,
+        customer_id,
+        message_id
+      },
+      responseType: "json"
+    })
+  },
 }
 
 const PaymentServices = {

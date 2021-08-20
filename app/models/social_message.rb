@@ -39,4 +39,8 @@ class SocialMessage < ApplicationRecord
     customer: 2,
     customer_reply_bot: 3
   }
+
+  def unread?
+    readed_at.nil?
+  end
 end
