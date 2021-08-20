@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Notifiers::CustomMessages::Send do
-  let(:receiver) { FactoryBot.create(:social_customer).customer }
-  let(:custom_message) { FactoryBot.create(:custom_message) }
+  let(:receiver) { FactoryBot.create(:social_customer, customer: relation.customer).customer }
+  let(:custom_message) { FactoryBot.create(:custom_message, service: relation.online_service) }
+  let(:relation) { FactoryBot.create(:online_service_customer_relation) }
   let(:args) do
     {
       receiver: receiver,
@@ -15,7 +16,7 @@ RSpec.describe Notifiers::CustomMessages::Send do
 
   describe "#execute" do
     it "sends line" do
-      content = Translator.perform(custom_message.content, { customer_name: receiver.display_last_name, service_title: custom_message.service.name })
+      content = Translator.perform(custom_message.content, custom_message.service.message_template_variables(receiver))
       expect(LineClient).to receive(:send).with(receiver.social_customer, content)
       expect(CustomMessages::Next).to receive(:run).with({
         custom_message: custom_message,

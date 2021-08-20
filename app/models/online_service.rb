@@ -240,4 +240,30 @@ class OnlineService < ApplicationRecord
       else
       end
   end
+
+  def message_template_variables(customer_or_user)
+    service_start_date, service_end_date =
+      case customer_or_user
+      when Customer
+        relation = self.online_service_customer_relations.find_by!(online_service: self, customer: customer_or_user)
+
+        [
+          relation.start_date_text,
+          relation.end_date_text
+        ]
+      when User
+        # XXX: only used for demo
+        [
+          I18n.l(start_at || Time.current, format: :long_date),
+          current_expire_time ? I18n.l(current_expire_time, format: :long_date) : I18n.t("sales.never_expire")
+        ]
+      end
+
+    {
+      customer_name: customer_or_user.display_last_name,
+      service_title: name,
+      service_start_date: service_start_date,
+      service_end_date: service_end_date
+    }
+  end
 end

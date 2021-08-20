@@ -127,6 +127,8 @@ ja:
             reservation_time: 予約時間
             service_title: サービス名
             send_me_mock_message: 自分にテスト送信
+            service_start_date: サービス開始日
+            service_end_date: サービス終了日
           booking_page:
             online_booking: オンライン予約
             page_label: 予約ページ

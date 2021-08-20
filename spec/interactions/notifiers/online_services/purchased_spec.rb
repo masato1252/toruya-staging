@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe Notifiers::OnlineServices::Purchased do
-  let(:receiver) { FactoryBot.create(:social_customer).customer }
-  let(:sale_page) { FactoryBot.create(:sale_page, :online_service, user: receiver.user) }
+  let(:receiver) { FactoryBot.create(:social_customer, customer: relation.customer).customer }
+  let(:sale_page) { FactoryBot.create(:sale_page, product: relation.online_service, user: receiver.user) }
+  let(:relation) { FactoryBot.create(:online_service_customer_relation) }
   let(:args) do
     {
       receiver: receiver,
@@ -17,7 +18,7 @@ RSpec.describe Notifiers::OnlineServices::Purchased do
     it "sends line" do
       online_service = sale_page.product
       template = CustomMessage.template_of(online_service, CustomMessage::ONLINE_SERVICE_PURCHASED)
-      content = Translator.perform(template, { customer_name: receiver.display_last_name, service_title: online_service.name })
+      content = Translator.perform(template, online_service.message_template_variables(receiver))
       expect(LineClient).to receive(:send).with(receiver.social_customer, content)
       expect(CustomMessages::Next).to receive(:run).with({
         product: sale_page.product,

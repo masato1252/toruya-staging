@@ -31,23 +31,12 @@ class CustomMessage < ApplicationRecord
 
   belongs_to :service, polymorphic: true # OnlineService
 
+  def demo_message_content
+    Translator.perform(content, service.message_template_variables(service.user))
+  end
+
   def demo_message_for_owner
-    user = service.user
-
-    custom_message_content =
-      case service
-      when BookingPage
-        custom_message_content = Translator.perform(content, {
-          customer_name: user.display_last_name,
-          shop_name: service.shop.display_name,
-          shop_phone_number: service.shop.phone_number,
-          booking_time: "#{I18n.l(Time.current, format: :long_date_with_wday)} ~ #{I18n.l(Time.current.advance(hours: 1), format: :time_only)}"
-        })
-      when OnlineService
-        Translator.perform(content, { customer_name: user.display_last_name, service_title: service.name})
-      end
-
-    LineClient.send(user.social_user, custom_message_content)
+    LineClient.send(service.user.social_user, demo_message_content)
   end
 
   def self.template_of(product, scenario)
