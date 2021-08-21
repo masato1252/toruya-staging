@@ -26,6 +26,9 @@ const BookingPageEdit =({props}) => {
     console.log(data)
 
     let error, response;
+    if (props.attribute === "booking_time" && !data.booking_start_times && data.had_specific_booking_start_times === "true" && !data.interval) {
+      return;
+    }
 
     [error, response] = await BookingPageServices.update({
       booking_page_id: props.booking_page.id,
@@ -33,7 +36,7 @@ const BookingPageEdit =({props}) => {
         data,
         { special_dates: data.had_special_date == "true" ? data.special_dates : [] },
         { attribute: props.attribute },
-        { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : []}
+        { booking_start_times: data.had_specific_booking_start_times === "true" ? data.booking_start_times : [] }
       )
     })
 
