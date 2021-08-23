@@ -18,7 +18,9 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @customer = Customer.find_by(id: params[:customer_id])
     @reservation_customer = ReservationCustomer.find_by(reservation_id: @reservation.id, customer_id: params[:customer_id])
 
-    render template: params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show", layout: false
+    template = params[:from] == "customer_dashboard" ? "reservations/customer_reservation_show" : "reservations/show"
+
+    render template: template, layout: false
   end
 
   def form

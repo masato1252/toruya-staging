@@ -6,14 +6,33 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   def index
     head :unprocessable_entity if cannot?(:read, @customer)
 
-    @reservation_customers =
+    reservation_customers =
       @customer.reservation_customers
         .includes(reservation: [ :menus, :active_reservation_customers, :reservation_menus, :customers, :staffs, shop: :user, reservation_staffs: [ :menu, :staff ] ])
         .merge(Reservation.active)
         .order("reservations.start_time DESC")
 
+    relations = @customer.online_service_customer_relations.includes(:online_service).map do |relation|
+      {
+        type: 'OnlineServiceCustomerRelation',
+        id: relation.id,
+        year: relation.created_at.year,
+        date: relation.created_at.to_s(:date),
+        monthDate: I18n.l(relation.created_at, format: :month_day_wday),
+        startTime: I18n.l(relation.created_at, format: :hour_minute),
+        menu: relation.online_service.name,
+        shop: relation.online_service.company.name,
+        state: relation.state,
+        "time" => relation.created_at.to_i
+      }
+    end
+
+    reservations = view_context.reservation_customer_options(reservation_customers)
+    #XXX: reservations keys were String
+    reservations.concat(relations).sort_by! { |option| option["time"] }
+
     render json: {
-      reservations: view_context.reservation_customer_options(@reservation_customers)
+      reservations: reservations
     }
   end
 

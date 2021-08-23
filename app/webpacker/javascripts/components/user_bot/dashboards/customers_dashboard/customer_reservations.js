@@ -66,7 +66,7 @@ const UserBotCustomerReservations = () =>{
 
         return (
           <React.Fragment
-            key={`reservation-${reservation.id}`}
+            key={`reservation-${reservation.type}-${reservation.id}`}
           >
             {divider}
             <div
@@ -74,7 +74,7 @@ const UserBotCustomerReservations = () =>{
               data-controller="modal"
               data-modal-target="#dummyModal"
               data-action="click->modal#popup"
-              data-modal-path={Routes.lines_user_bot_shop_reservation_path(reservation.shopId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
+              data-modal-path={reservation.type === "Reservation" ? Routes.lines_user_bot_shop_reservation_path(reservation.shopId, reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id }) : Routes.lines_user_bot_online_service_customer_relation_path(reservation.id, { from: "customer_dashboard", customer_id: selected_customer.id })} >
               <div className={`state ${reservation.state}`}></div>
               <dd className="date">{reservation.monthDate}</dd>
               <div className="time">

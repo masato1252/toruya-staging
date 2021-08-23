@@ -223,6 +223,7 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :online_service_customer_relations, only: [:show]
       resources :shops, only: [] do
         resources :reservations, except: [:index, :edit, :new] do
           collection do
