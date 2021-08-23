@@ -28,6 +28,14 @@ const OnlineServiceSelectionStep = ({next, step}) => {
                   value: online_service_option.value
                 }
               })
+
+              dispatch({
+                type: "SET_ATTRIBUTE",
+                payload: {
+                  attribute: "template_variables",
+                  value: online_service_option.value.company_info.template_variables
+                }
+              })
             }
           }
         />

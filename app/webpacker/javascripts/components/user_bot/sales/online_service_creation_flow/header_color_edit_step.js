@@ -22,14 +22,14 @@ const HeaderColorEditStep= ({step, next, prev, lastStep}) => {
         product={selected_online_service}>
         <Template
           template={selected_template.view_body}
-          {...(_.merge(selected_online_service.company_info.template_variables, template_variables))}
+          {...template_variables}
           product_name={selected_online_service?.product_name}
         />
       </SaleTemplateContainer>
       <div className="centerize">
         <WordColorPickers
           template={selected_template.view_body}
-          {...(_.merge(selected_online_service.company_info.template_variables, template_variables))}
+          {...template_variables}
           onChange={(name, value) => {
             dispatch({
               type: "SET_TEMPLATE_VARIABLES",
@@ -49,8 +49,8 @@ const HeaderColorEditStep= ({step, next, prev, lastStep}) => {
           {I18n.t("action.prev_step")}
         </button>
         <button onClick={() => {(isReadyForPreview()) ? lastStep(2) : next()}} className="btn btn-yellow">
-          {I18n.t("action.next_step")}
-        </button>
+        {I18n.t("action.next_step")}
+      </button>
       </div>
     </div>
   )
