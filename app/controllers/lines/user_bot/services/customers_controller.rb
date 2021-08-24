@@ -3,7 +3,7 @@
 class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardController
   def index
     @online_service = current_user.online_services.find(params[:service_id])
-    @relations = @online_service.online_service_customer_relations.uncanceled.includes(:customer)
+    @relations = @online_service.online_service_customer_relations.includes(:customer).order("online_service_customer_relations.created_at DESC")
     @available_count = @online_service.online_service_customer_relations.available.size
   end
 

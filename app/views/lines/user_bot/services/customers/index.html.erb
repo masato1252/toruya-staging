@@ -11,6 +11,7 @@
     <%= render "lines/user_bot/field_state", state: relation.state do %>
       <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customer_path(service_id: @online_service.id, id: relation.id) do %>
         <span class="dotdotdot"><%= relation.customer.name %></span>
+        <div class="desc"><%= I18n.l(relation.created_at, format: :long_date_with_wday) %></div>
       <% end %>
     <% end %>
   <% end %>
