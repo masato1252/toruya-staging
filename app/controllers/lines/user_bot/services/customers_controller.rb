@@ -28,7 +28,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     ::Sales::OnlineServices::Cancel.run!(relation: relation)
 
-    redirect_to lines_user_bot_service_customers_path(service_id: online_service.id)
+    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
   end
 
   def stop
@@ -37,6 +37,6 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
 
     ::Sales::OnlineServices::Stop.run!(relation: relation)
 
-    redirect_to lines_user_bot_service_customers_path(service_id: online_service.id)
+    redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
   end
 end

@@ -27,7 +27,11 @@ module Sales
           end
 
         relation.with_lock do
-          unless relation.purchased?
+          if !relation.purchased?
+            if relation.inactive?
+              # TODO: Create a new relation to replace the old one
+            end
+
             if sale_page.free?
               relation.permission_state = :active
               relation.expire_at = product.current_expire_time

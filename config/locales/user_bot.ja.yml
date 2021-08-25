@@ -189,6 +189,7 @@ ja:
             paid: 支払い完了
             failed: 失敗
             refunded: 返金済み
+            canceled: 中止
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携

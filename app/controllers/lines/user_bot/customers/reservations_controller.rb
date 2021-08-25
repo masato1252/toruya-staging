@@ -12,7 +12,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
         .merge(Reservation.active)
         .order("reservations.start_time DESC")
 
-    relations = @customer.online_service_customer_relations.includes(:online_service).map do |relation|
+    relations = @customer.online_service_customer_applications.includes(:online_service).map do |relation|
       {
         type: 'OnlineServiceCustomerRelation',
         id: relation.id,
@@ -29,7 +29,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
 
     reservations = view_context.reservation_customer_options(reservation_customers)
     #XXX: reservations keys were String
-    reservations.concat(relations).sort_by! { |option| option["time"] }
+    reservations.concat(relations).sort_by! { |option| option["time"] }.reverse!
 
     render json: {
       reservations: reservations

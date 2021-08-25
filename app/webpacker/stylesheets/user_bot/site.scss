@@ -230,6 +230,7 @@ a {
     border-color: $palette-color2-2;
   }
 
+  &.inactive,
   &.checked_out {
     background-color: $gray5;
     border: 1px solid $gray7;
@@ -257,7 +258,6 @@ a {
     border: 1px #b0450d solid;
   }
 
-  &.inactive,
   &.final {
     background-color: $gray-background;
     border: 1px solid $gray;

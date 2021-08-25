@@ -16,7 +16,8 @@ module Notifiers
       end
 
       def deliverable
-        custom_message.receiver_ids.exclude?(receiver.id.to_s)
+        custom_message.receiver_ids.exclude?(receiver.id.to_s) &&
+          custom_message.service.is_a?(OnlineService) && receiver.online_service_customer_relations.where(online_service: custom_message.service).exists?
       end
 
       def execute

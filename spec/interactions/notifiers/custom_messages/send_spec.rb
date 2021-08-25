@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe Notifiers::CustomMessages::Send do
   let(:receiver) { FactoryBot.create(:social_customer, customer: relation.customer).customer }
   let(:custom_message) { FactoryBot.create(:custom_message, service: relation.online_service) }
-  let(:relation) { FactoryBot.create(:online_service_customer_relation) }
+  let(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
   let(:args) do
     {
       receiver: receiver,
@@ -48,6 +48,20 @@ RSpec.describe Notifiers::CustomMessages::Send do
         }
 
         expect(custom_message.receiver_ids).to eq([receiver.id.to_s])
+      end
+    end
+
+    context "when this custom message's customer was unavailable to use this product" do
+      let(:relation) { FactoryBot.create(:online_service_customer_relation) }
+
+      it "doesn't send line" do
+        expect(CustomMessages::Next).not_to receive(:run)
+
+        expect {
+          outcome
+        }.not_to change {
+          SocialMessage.where(social_customer: receiver.social_customer).count
+        }
       end
     end
   end
