@@ -69,7 +69,10 @@ module Subscriptions
             )
           end
 
-          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
+          if Rails.configuration.x.env.production?
+            SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
+            Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+          end
         rescue Stripe::StripeError => error
           charge.stripe_charge_details = error.json_body[:error]
           charge.processor_failed!
@@ -83,7 +86,10 @@ module Subscriptions
             )
           end
 
-          Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
+          if Rails.configuration.x.env.production?
+            SlackClient.send(channel: 'sayhi', text: "[Failed] Subscription Stripe charge user: #{user.id}, #{error}")
+            Rollbar.error(error, toruya_charge: charge.id, stripe_charge: error.json_body[:error])
+          end
         rescue => e
           Rollbar.error(e)
           errors.add(:plan, :something_wrong)
