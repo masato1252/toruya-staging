@@ -64,6 +64,8 @@ ja:
         form_title: 顧客情報を編集
         customer_message_reply_title: 返信内容を送信します
         delete_confirmation_message: 顧客データは削除したら元には戻せません。
+        unread_confirmation_message: 未読メッセージとして後ほど通知しますか？
+        reply_later: 後で通知
       settings:
         dashboard:
           title: アカウント設定
@@ -127,6 +129,8 @@ ja:
             reservation_time: 予約時間
             service_title: サービス名
             send_me_mock_message: 自分にテスト送信
+            service_start_date: サービス開始日
+            service_end_date: サービス終了日
           booking_page:
             online_booking: オンライン予約
             page_label: 予約ページ
@@ -174,6 +178,7 @@ ja:
           signup_date: サービス登録日
           expire_date: サービス利用期限
           cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
+          stop_usage_confirmation: この顧客のサービス利用を中止しますか？
           permission_states:
             available: 利用可能
             pending: 保留
@@ -184,6 +189,7 @@ ja:
             paid: 支払い完了
             failed: 失敗
             refunded: 返金済み
+            canceled: 中止
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携

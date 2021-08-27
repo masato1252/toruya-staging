@@ -39,14 +39,7 @@ module SocialMessages
         errors.merge!(message.errors)
       elsif is_message_from_customer
         # Switch user rich menu to tell users there are new messages
-        if !readed && message_type == SocialMessage.message_types[:customer] && social_customer.customer
-          UserBotLines::Actions::SwitchRichMenu.run(
-            social_user: social_customer.user.social_user,
-            rich_menu_key: UserBotLines::RichMenus::DashboardWithNotifications::KEY
-          )
-
-          compose(Users::UpdateCustomerLatestActivityAt, user: social_customer.user)
-        end
+        ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 
         case content_type
         when IMAGE_TYPE

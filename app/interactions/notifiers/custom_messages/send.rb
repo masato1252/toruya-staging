@@ -12,11 +12,12 @@ module Notifiers
       validate :receiver_should_be_customer
 
       def message
-        Translator.perform(custom_message.content, { customer_name: receiver.display_last_name, service_title: custom_message.service.name })
+        Translator.perform(custom_message.content, custom_message.service.message_template_variables(receiver))
       end
 
       def deliverable
-        custom_message.receiver_ids.exclude?(receiver.id.to_s)
+        custom_message.receiver_ids.exclude?(receiver.id.to_s) &&
+          custom_message.service.is_a?(OnlineService) && receiver.online_service_customer_relations.where(online_service: custom_message.service).exists?
       end
 
       def execute

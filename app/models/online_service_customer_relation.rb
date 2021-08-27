@@ -46,17 +46,38 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   }
 
   def approved_at
-    paid_at || created_at if active?
+    active_at if active?
+  end
+
+  def active_at
+    paid_at || created_at
+  end
+
+  def start_date_text
+    I18n.l(online_service.start_at || active_at, format: :long_date)
+  end
+
+  def end_date_text
+    if expire_at
+      I18n.l(expire_at, format: :long_date)
+    else
+      I18n.t("sales.never_expire")
+    end
+  end
+
+  def available?
+    state == "available"
+  end
+
+  def inactive?
+    state == "inactive"
   end
 
   def state
-    if pending?
-      "pending"
-    elsif active? && expire_at && expire_at < Time.current
-      "inactive"
-    else
-      "available"
-    end
+    return "inactive" if !pending_payment_state? && !paid_payment_state? && !free_payment_state?
+    return "pending" if pending?
+    return "inactive "if active? && expire_at && expire_at < Time.current
+    "available"
   end
 
   def purchased?

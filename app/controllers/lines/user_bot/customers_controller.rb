@@ -155,6 +155,18 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
     }
   end
 
+  def unread_message
+    customer = current_user.customers.contact_groups_scope(current_user_staff).find(params[:customer_id])
+    message = current_user.social_account.social_messages.customer.where(social_customer_id: customer.social_customer.id).order("id").last
+
+    outcome = SocialMessages::Unread.run(
+      social_customer: customer.social_customer,
+      social_message: message
+    )
+
+    render json: json_response(outcome)
+  end
+
   def find_duplicate_customers
     customers = super_user
       .customers

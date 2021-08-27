@@ -15,7 +15,7 @@ module Notifiers
         online_service = sale_page.product
         template = CustomMessage.template_of(online_service, CustomMessage::ONLINE_SERVICE_PURCHASED)
 
-        Translator.perform(template, { customer_name: receiver.display_last_name, service_title: online_service.name })
+        Translator.perform(template, online_service.message_template_variables(receiver))
       end
 
       def execute
