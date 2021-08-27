@@ -37,7 +37,6 @@ const Message = ({message}) => {
             }
           }}
         >
-          {message.message_type === "customer" && message.readed && <i className="fa fa-envelope-open" aria-hidden="true"></i>}
           {message.message_type === "bot" && <i className="fa fa-robot" aria-hidden="true"></i>}
           {(message.message_type === "customer_reply_bot" || message.message_type === "user_reply_bot") && <i className="fa fa-hand-point-up" aria-hidden="true"></i> }
           {!message.sent && message.id && <i className="fa fa-trash" aria-hidden="true"></i>}
