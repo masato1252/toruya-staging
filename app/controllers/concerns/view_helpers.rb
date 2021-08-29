@@ -59,7 +59,7 @@ module ViewHelpers
   end
 
   def super_user
-    @super_user ||= User.find_by(id: from_line_bot ? user_bot_cookies(:current_super_user_id) : session[:current_super_user_id])
+    @super_user ||= User.find_by(id: from_line_bot ? (ENV["DEV_USER_ID"] || user_bot_cookies(:current_super_user_id)) : session[:current_super_user_id])
   end
 
   def current_ability
