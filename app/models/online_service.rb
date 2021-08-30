@@ -152,7 +152,7 @@ class OnlineService < ApplicationRecord
   belongs_to :sale_page, foreign_key: :upsell_sale_page_id, required: false
   belongs_to :company, polymorphic: true
 
-  has_many :online_service_customer_relations
+  has_many :online_service_customer_relations, -> { current }
   has_many :customers, through: :online_service_customer_relations
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"

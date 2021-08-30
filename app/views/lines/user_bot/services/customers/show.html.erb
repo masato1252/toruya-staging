@@ -31,7 +31,7 @@
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
   <%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
 
-  <% if @online_service.external? && @relation.available? %>
+  <% if @online_service.external? && @relation.available? && @relation.current %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
       <%= link_to stop_lines_user_bot_service_customer_path(@online_service, @relation),
         method: :delete,
@@ -43,7 +43,7 @@
     <% end %>
   <% end %>
 
-  <% if @online_service.external? && @relation.pending_payment_state? %>
+  <% if @online_service.external? && @relation.pending_payment_state? && @relation.current %>
     <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
       <%= link_to cancel_lines_user_bot_service_customer_path(@online_service, @relation),
         method: :delete,

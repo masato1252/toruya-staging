@@ -7,6 +7,8 @@ module Sales
       object :customer
       object :online_service
 
+      validate :validate_relation_current
+
       def execute
         if relation.pending?
           relation.permission_state = :active
@@ -18,6 +20,14 @@ module Sales
         end
 
         relation
+      end
+
+      private
+
+      def validate_relation_current
+        unless relation.current
+          errors.add(:relation, :current_true_is_required)
+        end
       end
     end
   end

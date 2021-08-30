@@ -1100,7 +1100,8 @@ CREATE TABLE public.online_service_customer_relations (
     expire_at timestamp without time zone,
     product_details json,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    current boolean DEFAULT true
 );
 
 
@@ -4224,7 +4225,7 @@ CREATE INDEX online_service_relation_index ON public.online_service_customer_rel
 -- Name: online_service_relation_unique_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX online_service_relation_unique_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id);
+CREATE UNIQUE INDEX online_service_relation_unique_index ON public.online_service_customer_relations USING btree (online_service_id, customer_id, current);
 
 
 --
@@ -4642,6 +4643,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210718021056'),
 ('20210718022411'),
 ('20210803022747'),
-('20210805020614');
+('20210805020614'),
+('20210830082204');
 
 
