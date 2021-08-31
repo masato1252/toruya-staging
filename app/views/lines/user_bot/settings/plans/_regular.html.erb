@@ -12,6 +12,7 @@
       plans: @plans_properties,
       default_upgrade_plan: @default_upgrade_plan,
       default_upgrade_rank: @default_upgrade_rank,
+      in_paid_plan: current_user.subscription.in_paid_plan,
       i18n: {
       }.merge!([
         t("settings.plans"),

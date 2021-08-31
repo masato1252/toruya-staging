@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { StickyContainer, Sticky  } from 'react-sticky';
 
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
+import StripeChangeCardModal from "shared/stripe_change_card_modal";
 import { TopNavigationBar } from "shared/components"
 import SubscriptionModal from "components/management/plans/subscription_modal";
 import SupportModal from "shared/support_modal";
@@ -54,12 +55,11 @@ const Plans = ({props}) => {
 
     if (subscriptionPlanIndex(planLevel) == currentPlanIndex()) {
       return (
-        <SupportModal
-          trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
-          content={props.i18n.unsubscribe_modal_content}
-          btn={props.i18n.unsubscribe_modal_button}
-          reply={I18n.t("common.support_reply_html")}
-        />
+        <div
+          className={`btn btn-yellow btn-small`}
+          onClick={() => { $("#change-card-modal").modal("show"); }}>
+          {I18n.t('plans.actions.change_card')}
+        </div>
       )
     };
 
@@ -222,7 +222,16 @@ const Plans = ({props}) => {
       </div>
       <div className="tfoot">
         <div className="table-row">
-          <div className="col"></div>
+          <div className="col">
+            {props.in_paid_plan && (
+              <SupportModal
+                trigger_btn={<button className="btn btn-orange">{props.i18n.unsubscribe}</button>}
+                content={props.i18n.unsubscribe_modal_content}
+                btn={props.i18n.unsubscribe_modal_button}
+                reply={I18n.t("common.support_reply_html")}
+              />
+            )}
+          </div>
           <div className={`col`}>
             <label>
               <div>{freePlan.details.period}</div>
@@ -272,6 +281,12 @@ const Plans = ({props}) => {
         details_desc={`${basicPlan.details.period}: ${cost_info(selected_plan_level)}`}
         pay_btn={props.i18n.pay}
         payment_path={Routes.lines_user_bot_settings_payments_path()}
+        props={props}
+      />
+      <StripeChangeCardModal
+        stripe_key={props.stripe_key}
+        header="Trouya"
+        pay_btn={I18n.t('plans.actions.change_card')}
         props={props}
       />
     </StickyContainer>
