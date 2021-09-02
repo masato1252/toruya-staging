@@ -44,7 +44,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def delete_menu
     @booking_option = super_user.booking_options.find(params[:id])
 
-    @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id]).destroy
+    @booking_option.booking_option_menus.find_by(menu_id: params[:menu_id])&.destroy
     @booking_option.update(minutes: @booking_option.booking_option_menus.sum(:required_time))
 
     redirect_to lines_user_bot_booking_option_path(@booking_option.id, anchor: "new_menu")
