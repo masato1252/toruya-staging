@@ -14,7 +14,7 @@ class Customers::ReservationsController < DashboardController
   end
 
   def accept
-    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
 
     redirect_back fallback_location: user_customers_path(super_user, customer_id: params[:customer_id])
   end

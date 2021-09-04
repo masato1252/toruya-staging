@@ -37,7 +37,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def accept
-    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
 
     redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
   end
