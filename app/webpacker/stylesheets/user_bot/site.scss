@@ -231,6 +231,7 @@ a {
   }
 
   &.inactive,
+  &.canceled,
   &.checked_out {
     background-color: $gray5;
     border: 1px solid $gray7;
@@ -244,11 +245,6 @@ a {
   &.noshow {
     background-color: #aecfc8;
     border: 1px solid #84b3aa;
-  }
-
-  &.canceled {
-    background-color: #da8356;
-    border: 1px solid #c87d56;
   }
 
   &.pending,
