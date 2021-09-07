@@ -15,7 +15,8 @@ module Reservations
           compose(
             ReservationCustomers::Accept,
             reservation_id: reservation_customer.reservation_id,
-            customer_id: reservation_customer.customer_id
+            customer_id: reservation_customer.customer_id,
+            current_staff: current_staff
           )
         end
         reservation.try_accept

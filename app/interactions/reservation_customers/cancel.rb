@@ -7,9 +7,17 @@ module ReservationCustomers
 
     def execute
       reservation_customer.canceled!
+
+      unless reservation.customers.exists?
+        compose(Reservations::Cancel, reservation: Reservation.find(reservation_id))
+      end
     end
 
     private
+
+    def reservation
+      @reservation ||= Reservation.find(reservation_id)
+    end
 
     def reservation_customer
       ReservationCustomer.find_by!(reservation_id: reservation_id, customer_id: customer_id)
