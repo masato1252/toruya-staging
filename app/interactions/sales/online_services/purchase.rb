@@ -29,7 +29,7 @@ module Sales
         relation.with_lock do
           if !relation.purchased?
             if relation.inactive?
-              # TODO: Create a new relation to replace the old one
+              relation = compose(::Sales::OnlineServices::Reapply, online_service_customer_relation: relation)
             end
 
             if sale_page.free?

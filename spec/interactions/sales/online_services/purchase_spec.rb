@@ -87,6 +87,22 @@ RSpec.describe Sales::OnlineServices::Purchase do
           customer.updated_at
         }
       end
+
+      context "when customer current state is inactive" do
+        let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled) }
+
+        it "create a pending relation" do
+          expect {
+            outcome
+          }.to change {
+            OnlineServiceCustomerRelation.where(
+              online_service: online_service_customer_relation.online_service,
+              customer: online_service_customer_relation.customer,
+              sale_page: online_service_customer_relation.sale_page
+            ).count
+          }.by(1)
+        end
+      end
     end
   end
 end

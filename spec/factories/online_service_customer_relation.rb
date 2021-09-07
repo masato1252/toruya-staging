@@ -16,5 +16,10 @@ FactoryBot.define do
       permission_state { "active" }
       paid_at { Time.current }
     end
+
+    trait :canceled do
+      payment_state { "canceled" }
+      permission_state { "pending" }
+    end
   end
 end

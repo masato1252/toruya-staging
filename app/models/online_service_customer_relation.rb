@@ -3,6 +3,7 @@
 # Table name: online_service_customer_relations
 #
 #  id                :bigint           not null, primary key
+#  current           :boolean          default(TRUE)
 #  expire_at         :datetime
 #  paid_at           :datetime
 #  payment_state     :integer          default("pending"), not null
@@ -17,10 +18,12 @@
 # Indexes
 #
 #  online_service_relation_index         (online_service_id,customer_id,permission_state)
-#  online_service_relation_unique_index  (online_service_id,customer_id) UNIQUE
+#  online_service_relation_unique_index  (online_service_id,customer_id,current) UNIQUE
 #
 
 class OnlineServiceCustomerRelation < ApplicationRecord
+  ACTIVE_STATES = %w[pending free paid_payment_state].freeze
+
   include SayHi
   hi_track_event "online_service_purchased"
 
@@ -28,8 +31,9 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :sale_page
   belongs_to :customer
 
-  scope :available, -> { active.where("expire_at is NULL or expire_at >= ?", Time.current) }
+  scope :available, -> { active.current.where("expire_at is NULL or expire_at >= ?", Time.current) }
   scope :uncanceled, -> { where.not(payment_state: :canceled) }
+  scope :current, -> { where(current: true) }
 
   enum payment_state: {
     pending: 0,
@@ -74,9 +78,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def state
-    return "inactive" if !pending_payment_state? && !paid_payment_state? && !free_payment_state?
+    return "inactive" if ACTIVE_STATES.exclude?(payment_state) || (active? && expire_at && expire_at < Time.current)
     return "pending" if pending?
-    return "inactive "if active? && expire_at && expire_at < Time.current
     "available"
   end
 
