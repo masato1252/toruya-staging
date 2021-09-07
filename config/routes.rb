@@ -101,6 +101,7 @@ Rails.application.routes.draw do
           collection do
             get :refund
             get :downgrade
+            put :change_card
           end
 
           member do

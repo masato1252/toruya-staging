@@ -93,6 +93,7 @@ ja:
     phonetic_first_name: めい
     company_name: 社名・屋号
     website: Webサイト
+    update_failed_message: 更新失敗
     update_successfully_message: 更新完了
     create_successfully_message: 作成完了
     delete_successfully_message: 削除完了

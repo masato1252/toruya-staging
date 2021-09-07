@@ -1,5 +1,7 @@
 ja:
   plans:
+    actions:
+      change_card: 精算カード変更
     labels:
       shop_can_set: 店舗数
       staff_in_charge: スタッフ数

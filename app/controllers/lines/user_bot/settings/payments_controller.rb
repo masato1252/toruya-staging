@@ -48,6 +48,12 @@ class Lines::UserBot::Settings::PaymentsController < Lines::UserBotDashboardCont
     end
   end
 
+  def change_card
+    Payments::StoreStripeCustomer.run!(user: current_user, authorize_token: params[:token])
+
+    render json: { redirect_path: lines_user_bot_settings_path }
+  end
+
   def refund
     outcome = Subscriptions::Refund.run(user: current_user)
 
