@@ -87,13 +87,6 @@ class BookingReservationForm extends React.Component {
           social_account_login_url={`${this.props.social_account_login_url}&booking_option_id=${booking_option_id}&booking_date=${booking_date}&booking_at=${booking_at}`}>
           <h3 className="desc" dangerouslySetInnerHTML={{ __html: I18n.t("booking_page.message.line_reminder_messages_html") }} />
         </LineLoginBtn>
-
-        <div
-          onClick={() => this.booking_reservation_form.change("booking_reservation_form[customer_without_social_account]", true)}
-          className="btn btn-gray skip"
-        >
-          {I18n.t("booking_page.i_dont_use_line")}
-        </div>
       </div>
     )
   }
