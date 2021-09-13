@@ -16,6 +16,7 @@ module Booking
     string :customer_phone_number, default: nil
     string :customer_email, default: nil
     string :social_user_id, default: nil
+    string :stripe_token, default: nil
     boolean :customer_reminder_permission, default: false
     # customer_info format might like
     # {
@@ -273,7 +274,20 @@ module Booking
           if customer.persisted? && reservation
             compose(Users::UpdateCustomerLatestActivityAt, user: user)
 
-            ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
+            if stripe_token
+              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: stripe_token)
+              reservation_customer = reservation.reservation_customers.find_by!(customer: customer)
+              purchase_outcome = CustomerPayments::PayReservation.run(reservation_customer: reservation_customer)
+
+              if purchase_outcome.valid?
+                reservation_customer.paid!
+              else
+                errors.add(:base, :paying_reservation_something_wrong)
+                raise ActiveRecord::Rollback
+              end
+            else
+              ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
+            end
           else
             errors.add(:base, :reservation_something_wrong)
             raise ActiveRecord::Rollback

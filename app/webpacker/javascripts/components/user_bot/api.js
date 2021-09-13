@@ -331,6 +331,17 @@ const BookingPageServices = {
       responseType: "json"
     })
   },
+  purchase: ({data}) => {
+    return request({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_customers_online_service_purchases_path({format: "json"}),
+      data: data,
+      responseType: "json"
+    })
+  },
 }
 
 const BookingOptionServices = {

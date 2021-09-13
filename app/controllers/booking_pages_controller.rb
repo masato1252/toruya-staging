@@ -69,7 +69,8 @@ class BookingPagesController < ActionController::Base
       customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
       customer_info: JSON.parse(params[:customer_info]),
       present_customer_info: JSON.parse(params[:present_customer_info]),
-      social_user_id: params[:social_user_id]
+      social_user_id: params[:social_user_id],
+      stripe_token: params[:stripe_token]
     )
 
     if outcome.valid?

@@ -20,6 +20,7 @@ import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, CheckInLineBtn, Li
 import Calendar from "shared/calendar/calendar";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
+import StripeCheckoutForm from "shared/stripe_checkout_form"
 import I18n from 'i18n-js/index.js.erb';
 
 class BookingReservationForm extends React.Component {
@@ -676,12 +677,16 @@ class BookingReservationForm extends React.Component {
   }
 
   renderBookingReservationButton = () => {
-    const { booking_failed, booking_code } = this.booking_reservation_form_values;
+    const { booking_failed, booking_code, booking_options, booking_option_id } = this.booking_reservation_form_values;
     const { reminder_desc } = this.props.i18n;
 
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo()) return;
     if (!this.isCustomerTrusted()) return;
+
+    const selected_booking_option = _.find(booking_options, (booking_option) => {
+      return booking_option.id === booking_option_id
+    })
 
     return (
       <div className="reservation-confirmation">
@@ -706,8 +711,11 @@ class BookingReservationForm extends React.Component {
             if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
+            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && !selected_booking_option.is_free) {
+              this.booking_reservation_form.change("booking_reservation_form[is_paying_booking]", true)
+            }
             else {
-              this.handleSubmit(event)
+              this.handleSubmit(null, event)
             }
           }}
           disabled={this.submitting}
@@ -878,6 +886,41 @@ class BookingReservationForm extends React.Component {
 
   }
 
+  renderChargingView = () => {
+    const {
+      booking_options,
+      booking_date,
+      booking_at,
+      booking_option_id,
+    } = this.booking_reservation_form_values;
+
+    const { time_from } = this.props.i18n;
+
+    const selected_booking_option = _.find(booking_options, (booking_option) => {
+      return booking_option.id === booking_option_id
+    })
+
+    const booking_details = `${moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone).format("llll")} ${time_from}`
+
+    // TODO: handle failed case
+    return (
+      <div className="done-view">
+        <StripeCheckoutForm
+          stripe_key={this.props.stripe_key}
+          handleToken={(token) => {
+            console.log("token", token)
+            this.stripe_token = token
+            this.handleSubmit()
+          }}
+          header={selected_booking_option.name}
+          desc={booking_details}
+          pay_btn={I18n.t("action.pay")}
+          details_desc={selected_booking_option.price}
+        />
+      </div>
+    )
+  }
+
   renderBookingDownView = () => {
     const { social_user_id } = this.booking_reservation_form_values
     const {
@@ -922,11 +965,15 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, is_done } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, is_done, is_paying_booking } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
     if (is_done) {
       return this.renderBookingDownView()
+    }
+
+    if (is_paying_booking) {
+      return this.renderChargingView()
     }
 
     if (is_ended) {
@@ -1172,12 +1219,16 @@ class BookingReservationForm extends React.Component {
       return Promise.reject(error);
     });
 
+    console.log("stripe_token", this.stripe_token)
     try {
       const response = await axios({
         method: "POST",
         url: this.props.path.save,
         params: _.merge(
-          { authenticity_token: Rails.csrfToken() },
+          {
+            authenticity_token: Rails.csrfToken(),
+            stripe_token: this.stripe_token
+          },
           _.pick(
             this.booking_reservation_form_values.booking_code,
             "uuid",

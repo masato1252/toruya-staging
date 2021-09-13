@@ -26,7 +26,7 @@
 require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
-  ACTIVE_STATES = %w[pending accepted].freeze
+  ACTIVE_STATES = %w[pending accepted paid].freeze
   include SayHi
   hi_track_event "reservation_booked"
 
@@ -41,6 +41,7 @@ class ReservationCustomer < ApplicationRecord
     accepted: 1,
     canceled: 2,
     deleted: 3,
+    paid: 4
   }
 
   monetize :booking_amount_cents, allow_nil: true
