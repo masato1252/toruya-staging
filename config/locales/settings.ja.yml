@@ -588,6 +588,9 @@ ja:
         booking_limit_day_example_html: 例えば、<strong>「１日前」</strong>と設定した場合、お客様は明日以降の予約をすることができます。
         line_sharing: LINEオンライン予約
         line_sharing_title: LINEオンライン予約
+        online_payment_enabled: オンライン精算
+        online_payment_enabled_title: オンライン精算
+        online_payment_enabled_desc_html: オンライン精算を利用すると<br>顧客は利用料金を支払わないと<br>仮予約できなくなります。
         share_in_bot: 表示する
         not_share_in_bot: 表示しない
         privacy_status: ページステータス

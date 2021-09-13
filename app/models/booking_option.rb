@@ -58,7 +58,7 @@ class BookingOption < ApplicationRecord
   end
 
   def online?
-    return @is_online_ if defined?(@is_online)
+    return @is_online if defined?(@is_online)
 
     @is_online = menus.where(online: true).exists?
   end

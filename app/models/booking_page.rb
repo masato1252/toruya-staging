@@ -13,6 +13,7 @@
 #  line_sharing                 :boolean          default(TRUE)
 #  name                         :string           not null
 #  note                         :text
+#  online_payment_enabled       :boolean          default(FALSE)
 #  overbooking_restriction      :boolean          default(TRUE)
 #  slug                         :string
 #  specific_booking_start_times :string           is an Array
