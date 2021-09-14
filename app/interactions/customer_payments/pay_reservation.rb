@@ -12,8 +12,8 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
     order_id = SecureRandom.hex(8).upcase
 
     payment = customer.customer_payments.create!(
-      product: customer_reservation,
-      amount: customer_reservation.booking_amount,
+      product: reservation_customer,
+      amount: reservation_customer.booking_amount,
       charge_at: Time.current,
       manual: true,
       order_id: order_id
@@ -22,13 +22,13 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
     begin
       stripe_charge = Stripe::Charge.create(
         {
-          amount: customer_reservation.booking_amount.fractional,
+          amount: reservation_customer.booking_amount.fractional,
           currency: Money.default_currency.iso_code,
           customer: customer.stripe_customer_id,
-          description: "#{customer_reservation.booking_page.name} - #{customer_reservation.booking_option.name}",
-          statement_descriptor: "#{customer_reservation.booking_page.name} - #{customer_reservation.booking_option.name}",
+          description: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}",
+          statement_descriptor: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}",
           metadata: {
-            reservation_customer_id: customer_reservation.id
+            reservation_customer_id: reservation_customer.id
           }
         },
         stripe_account: customer.user.stripe_provider.uid
@@ -38,7 +38,7 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
       payment.completed!
 
       if Rails.configuration.x.env.production?
-        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Booking Page #{customer_reservation.booking_page_id} Stripe charge💰")
+        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Booking Page #{reservation_customer.booking_page_id} Stripe charge💰")
       end
     rescue Stripe::CardError => error
       payment.stripe_charge_details = error.json_body[:error]

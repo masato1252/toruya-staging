@@ -10,7 +10,7 @@ module SocialUserMessages
       if response&.code == "200" || Rails.env.test?
         social_user_message.update(sent_at: Time.current)
       else
-        raise ActiveRecord::Rollback
+        errors.add(:social_user_message, :sent_failed)
       end
     end
   end
