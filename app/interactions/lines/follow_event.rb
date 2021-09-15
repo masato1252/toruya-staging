@@ -7,6 +7,5 @@ class Lines::FollowEvent < ActiveInteraction::Base
   object :social_customer
 
   def execute
-    LineClient.send(social_customer, I18n.t("line.bot.thanks_follow"))
   end
 end
