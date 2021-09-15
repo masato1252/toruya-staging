@@ -15,6 +15,7 @@ en:
         call: Call
         book: Show booking page
     bot:
+      thanks_follow: "Thank you for adding me as a friend.\n\nYou can use our online booking system through this LINE to see or change your reservations."
       connected_successfuly: "Thank you!\n\nNow your customer data and LINE account is connected."
       features:
         connect_customer:
