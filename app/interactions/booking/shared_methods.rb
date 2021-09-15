@@ -28,7 +28,7 @@ module Booking
               Rails.logger.debug("==menu_id: #{booking_option_menu.menu_id}, required_time: #{booking_option_menu.required_time} menu_position_index: #{menu_position_index}")
 
               menu = booking_option_menu.menu
-              active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.staffs.pluck(:id)
+              active_staff_ids = menu.staff_menus.order("staff_menus.priority").joins(:staff).merge(Staff.active).pluck(:staff_id) & shop.available_staffs.map(&:id)
               active_staff_ids = active_staff_ids - Array.wrap(@unactive_staff_ids[date])
 
               required_staffs_number = [menu.min_staffs_number, 1].max # XXX Avoid no manpower menu(min_staffs_number is 0) don't validate staffs

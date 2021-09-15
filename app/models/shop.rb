@@ -46,6 +46,15 @@ class Shop < ApplicationRecord
 
   scope :active, -> { where(deleted_at: nil) }
 
+  def available_staffs
+    @available_staffs ||=
+      if user.premium_member?
+        staffs.order("id").uniq.to_a
+      else
+        Array.wrap(user.current_staff(user))
+      end
+  end
+
   def staff_users
     staffs.includes(staff_account: :user).map { |staff| staff.staff_account.user }
   end
