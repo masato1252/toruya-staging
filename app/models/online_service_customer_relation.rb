@@ -22,7 +22,7 @@
 #
 
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid_payment_state].freeze
+  ACTIVE_STATES = %w[pending free paid].freeze
 
   include SayHi
   hi_track_event "online_service_purchased"
