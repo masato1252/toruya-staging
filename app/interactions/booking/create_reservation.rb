@@ -280,7 +280,7 @@ module Booking
               purchase_outcome = CustomerPayments::PayReservation.run(reservation_customer: reservation_customer)
 
               if purchase_outcome.valid?
-                reservation_customer.paid!
+                reservation_customer.payment_paid!
               else
                 errors.add(:base, :paying_reservation_something_wrong)
                 raise ActiveRecord::Rollback

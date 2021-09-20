@@ -1,0 +1,13 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("reservation.modal.refund.title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("reservation.modal.refund.message") %>
+      <%= render "refund_reservation_form", reservation_customer: @reservation_customer %>
+    </div>
+  </div>
+</div>

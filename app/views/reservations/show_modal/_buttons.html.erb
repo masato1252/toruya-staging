@@ -101,7 +101,16 @@
             modal_taget: "#dummyModal2"
           ) %>
         <% elsif user_ability.can?(:edit, reservation) %>
-          <%= link_to t("reservation.cancel"), SiteRouting.new(self).cancel_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
+          <% if reservation.reservation_customers.payment_paid.exists? %>
+            <%= modal_link_to(
+              t("reservation.customer_cancel"),
+              cancel_paid_customers_lines_user_bot_warnings_path(reservation),
+              class: "btn enhanced BTNorange",
+              modal_taget: "#dummyModal2"
+            ) %>
+          <% else %>
+            <%= link_to t("reservation.cancel"), SiteRouting.new(self).cancel_shop_reservation_states_path(reservation.shop, reservation, reservation_date: params[:reservation_date]), class: "btn enhanced BTNorange", data: { confirm: I18n.t("reservation.cancel_confirmation_message") } %>
+          <% end %>
         <% else %>
           <%= link_to t("reservation.cancel"), "#", class: "btn enhanced BTNorange disabled" %>
         <% end %>

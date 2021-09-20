@@ -5,18 +5,19 @@
 # Table name: reservation_customers
 #
 #  id                      :integer          not null, primary key
-#  reservation_id          :integer          not null
-#  customer_id             :integer          not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  booking_page_id         :integer
-#  booking_option_id       :integer
-#  state                   :integer          default("pending")
-#  booking_amount_currency :string
 #  booking_amount_cents    :decimal(, )
-#  tax_include             :boolean
+#  booking_amount_currency :string
 #  booking_at              :datetime
 #  details                 :jsonb
+#  payment_state           :integer          default("pending")
+#  state                   :integer          default("pending")
+#  tax_include             :boolean
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  booking_option_id       :integer
+#  booking_page_id         :integer
+#  customer_id             :integer          not null
+#  reservation_id          :integer          not null
 #
 # Indexes
 #
@@ -26,7 +27,7 @@
 require "hashie_serializer"
 
 class ReservationCustomer < ApplicationRecord
-  ACTIVE_STATES = %w[pending accepted paid].freeze
+  ACTIVE_STATES = %w[pending accepted].freeze
   include SayHi
   hi_track_event "reservation_booked"
 
@@ -40,10 +41,14 @@ class ReservationCustomer < ApplicationRecord
     pending: 0,
     accepted: 1,
     canceled: 2,
-    deleted: 3,
-    paid: 4,
-    refunded: 5
+    deleted: 3
   }
+
+  enum payment_state: {
+    pending: 0,
+    paid: 1,
+    refunded: 2
+  }, _prefix: :payment
 
   monetize :booking_amount_cents, allow_nil: true
 

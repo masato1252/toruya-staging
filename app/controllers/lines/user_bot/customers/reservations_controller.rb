@@ -54,6 +54,20 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
   end
 
+  def refund_modal
+    @reservation_customer = ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
+    render layout: false
+  end
+
+  def refund
+    CustomerPayments::RefundReservation.run(
+      reservation_customer: ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id]),
+      amount: Money.new(params[:amount], Money.default_currency.iso_code)
+    )
+
+    redirect_to lines_user_bot_customers_path(customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: super_user.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])
+  end
+
   private
 
   def set_customer

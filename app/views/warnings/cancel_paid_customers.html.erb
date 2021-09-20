@@ -1,0 +1,24 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <%= t("reservation.modal.cancel_warning_for_paid_customers.title") %>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <%= t("reservation.modal.cancel_warning_for_paid_customers.message") %>
+    </div>
+    <div class="modal-footer text-left">
+      <h4>
+        <%= t("reservation.modal.cancel_warning_for_paid_customers.paid_customers_title") %>
+      </h4>
+
+      <% @paid_reservation_customers.each do |paid_reservation_customer| %>
+        <div>
+          <i class="fa fa-user customer-reservation-state <%= paid_reservation_customer.state %>"></i>
+          <%= link_to paid_reservation_customer.customer.name, lines_user_bot_customers_path(customer_id: paid_reservation_customer.customer_id, reservation_id: paid_reservation_customer.reservation_id, user_id: super_user.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations]) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

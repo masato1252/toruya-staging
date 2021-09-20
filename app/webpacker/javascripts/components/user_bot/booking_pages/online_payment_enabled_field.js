@@ -7,11 +7,11 @@ const OnlinePaymentEnabledField = ({i18n, register}) => {
     <>
       <label className="field-row flex-start">
         <input name="online_payment_enabled" type="radio" value="true" ref={register({ required: true })} />
-        {"利用する"}
+        {i18n.online_payment_options.enabled}
       </label>
       <label className="field-row flex-start">
         <input name="online_payment_enabled" type="radio" value="false" ref={register({ required: true })} />
-        {"利用しない"}
+        {i18n.online_payment_options.disabled}
       </label>
       <div className="margin-around centerize">
         <div dangerouslySetInnerHTML={{ __html: i18n.online_payment_enabled_desc_html }} />

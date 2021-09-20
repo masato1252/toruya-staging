@@ -59,6 +59,11 @@ class Customer < ApplicationRecord
   include NormalizeName
   include SayHi
 
+  DASHBOARD_TARGET_VIEWS = {
+    reservations: "customer_reservations",
+    messages: "customer_messages"
+  }
+
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
   has_one :social_customer

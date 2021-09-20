@@ -6,7 +6,7 @@
     <% @messages.each do |message| %>
       <%= link_to lines_user_bot_customers_path(
         customer_id: message.social_customer.customer_id,
-        target_view: "customer_messages",
+        target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages],
         previous_path: lines_user_bot_notifications_path
       ), class: "field-row with-next-arrow" do %>
         <div>

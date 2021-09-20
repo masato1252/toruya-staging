@@ -590,6 +590,9 @@ ja:
         line_sharing_title: LINEオンライン予約
         online_payment_enabled: オンライン精算
         online_payment_enabled_title: オンライン精算
+        online_payment_options:
+          enabled: 利用する
+          disabled: 利用しない
         online_payment_enabled_desc_html: オンライン精算を利用すると<br>顧客は利用料金を支払わないと<br>仮予約できなくなります。
         share_in_bot: 表示する
         not_share_in_bot: 表示しない

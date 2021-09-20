@@ -1503,7 +1503,8 @@ CREATE TABLE public.reservation_customers (
     booking_amount_cents numeric,
     tax_include boolean,
     booking_at timestamp without time zone,
-    details jsonb
+    details jsonb,
+    payment_state integer DEFAULT 0
 );
 
 
@@ -4646,6 +4647,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210803022747'),
 ('20210805020614'),
 ('20210830082204'),
-('20210913140858');
+('20210913140858'),
+('20210917004005');
 
 
