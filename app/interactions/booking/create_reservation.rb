@@ -287,9 +287,9 @@ module Booking
                 errors.add(:base, :paying_reservation_something_wrong)
                 raise ActiveRecord::Rollback
               end
-            else
-              ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
             end
+
+            ::ReservationBookingJob.perform_later(customer, reservation, email, phone_number, booking_page, booking_option)
           else
             errors.add(:base, :reservation_something_wrong)
             raise ActiveRecord::Rollback
