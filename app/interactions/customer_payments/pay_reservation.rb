@@ -6,9 +6,6 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
   object :reservation_customer
 
   def execute
-    customer = reservation_customer.customer
-    reservation = reservation_customer.reservation
-
     order_id = SecureRandom.hex(8).upcase
 
     payment = customer.customer_payments.create!(
@@ -45,18 +42,28 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
       payment.auth_failed!
       errors.add(:customer, :auth_failed)
 
-      Rollbar.error(error, toruya_service_charge: relation.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
+      Rollbar.error(error, toruya_service_charge: payment.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
     rescue Stripe::StripeError => error
       payment.stripe_charge_details = error.json_body[:error]
       payment.processor_failed!
       errors.add(:customer, :processor_failed)
 
-      Rollbar.error(error, toruya_service_charge: relation.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
+      Rollbar.error(error, toruya_service_charge: payment.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
     rescue => e
       Rollbar.error(e)
       errors.add(:customer, :something_wrong)
     end
 
     payment
+  end
+
+  private
+
+  def customer
+    @customer ||= reservation_customer.customer
+  end
+
+  def reservation
+    @reservation ||= reservation_customer.reservation
   end
 end
