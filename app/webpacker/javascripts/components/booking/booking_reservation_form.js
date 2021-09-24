@@ -907,9 +907,9 @@ class BookingReservationForm extends React.Component {
       <div className="done-view">
         <StripeCheckoutForm
           stripe_key={this.props.stripe_key}
-          handleToken={(token) => {
+          handleToken={async (token) => {
             console.log("token", token)
-            this.stripe_token = token
+            await this.booking_reservation_form.change("booking_reservation_form[stripe_token]", token)
             this.handleSubmit()
           }}
           header={selected_booking_option.name}
@@ -973,7 +973,12 @@ class BookingReservationForm extends React.Component {
     }
 
     if (is_paying_booking) {
-      return this.renderChargingView()
+      return (
+        <div>
+          {this.renderChargingView()}
+          {this.renderBookingFailedArea()}
+        </div>
+      )
     }
 
     if (is_ended) {
@@ -1202,9 +1207,10 @@ class BookingReservationForm extends React.Component {
   }
 
   onSubmit = async (event) => {
-    if (this.bookingReserationLoading) {
-      return;
-    }
+    const { is_paying_booking, stripe_token } = this.booking_reservation_form_values
+
+    if (this.bookingReserationLoading) return;
+    if (is_paying_booking && !stripe_token) return;
 
     this.bookingReserationLoading = "loading";
 
@@ -1219,15 +1225,13 @@ class BookingReservationForm extends React.Component {
       return Promise.reject(error);
     });
 
-    console.log("stripe_token", this.stripe_token)
     try {
       const response = await axios({
         method: "POST",
         url: this.props.path.save,
-        params: _.merge(
+        data: _.merge(
           {
             authenticity_token: Rails.csrfToken(),
-            stripe_token: this.stripe_token
           },
           _.pick(
             this.booking_reservation_form_values.booking_code,
@@ -1235,6 +1239,7 @@ class BookingReservationForm extends React.Component {
           ),
           _.pick(
             this.booking_reservation_form_values,
+            "stripe_token",
             "booking_option_id",
             "booking_date",
             "booking_at",

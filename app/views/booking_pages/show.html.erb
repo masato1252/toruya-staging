@@ -63,7 +63,7 @@
     social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id
   },
   path: {
-    save: booking_reservation_booking_page_path(@booking_page),
+    save: booking_reservation_booking_page_path(@booking_page, format: :json),
     find_customer: find_customer_booking_page_path(@booking_page),
     ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
     confirm_code: confirm_code_booking_page_path(@booking_page)

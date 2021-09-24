@@ -51,19 +51,21 @@ module Booking
       hash :address_details, default: nil, strip: false do
         string :formatted_address, default: nil
         boolean :primary, default: nil
-        string :postcode, default: nil
+        string :zip_code, default: nil
         string :city, default: nil
         string :region, default: nil
-        string :street, default: nil
+        string :street1, default: nil
+        string :street2, default: nil
       end
 
       hash :original_address_details, default: nil, strip: false do
         string :formatted_address, default: nil
         boolean :primary, default: nil
-        string :postcode, default: nil
+        string :zip_code, default: nil
         string :city, default: nil
         string :region, default: nil
-        string :street, default: nil
+        string :street1, default: nil
+        string :street2, default: nil
       end
     end
     # present_customer_info and customer_info format is the same
