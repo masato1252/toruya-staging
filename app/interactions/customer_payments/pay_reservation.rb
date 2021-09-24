@@ -22,8 +22,8 @@ class CustomerPayments::PayReservation < ActiveInteraction::Base
           amount: reservation_customer.booking_amount.fractional,
           currency: Money.default_currency.iso_code,
           customer: customer.stripe_customer_id,
-          description: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}",
-          statement_descriptor: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}",
+          description: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT),
+          statement_descriptor: "#{reservation_customer.booking_page.name} - #{reservation_customer.booking_option.name}".first(STRIPE_DESCRIPTION_LIMIT),
           metadata: {
             reservation_customer_id: reservation_customer.id
           }

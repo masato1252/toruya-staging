@@ -15,3 +15,5 @@ TOURS_VIDEOS = {
 STRIPE_REFUND_STATUS = {
   succeeded: "succeeded"
 }
+
+STRIPE_DESCRIPTION_LIMIT = 20
