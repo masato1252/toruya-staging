@@ -30,7 +30,6 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
           currency: Money.default_currency.iso_code,
           customer: customer.stripe_customer_id,
           description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),
-          statement_descriptor: "Toruya #{sale_page.product_name}".first(STRIPE_DESCRIPTION_LIMIT),
           metadata: {
             relation: relation.id,
             sale_page: sale_page.id
