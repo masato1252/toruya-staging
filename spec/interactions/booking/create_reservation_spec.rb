@@ -478,5 +478,32 @@ RSpec.describe Booking::CreateReservation do
         end
       end
     end
+
+    # Customer pay online on booking page
+    context "when stripe_token exists" do
+      before do
+        StripeMock.start
+        FactoryBot.create(:access_provider, :stripe, user: user)
+      end
+      after { StripeMock.stop }
+
+      let(:stripe_token) { StripeMock.create_test_helper.generate_card_token }
+
+      it "charges customer" do
+        args[:customer_info] = { "id": customer.id }
+        args[:present_customer_info] = { "id": customer.id }
+        args[:stripe_token] = stripe_token
+
+        expect {
+          outcome
+        }.to change {
+          customer.customer_payments.count
+        }.by(1)
+
+        result = outcome.result
+        reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
+        expect(reservation_customer).to be_payment_paid
+      end
+    end
   end
 end
