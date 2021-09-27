@@ -137,7 +137,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
       schedule_at: params[:schedule_at] ? Time.zone.parse(params[:schedule_at]) : nil
     )
 
-    render json: json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: "customer_messages") : nil})
+    render json: json_response(outcome, { redirect_to: params[:schedule_at] ? SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages]) : nil})
   end
 
   def delete_message
@@ -151,7 +151,7 @@ class Lines::UserBot::CustomersController < Lines::UserBotDashboardController
 
     render json: {
       status: "successful",
-      redirect_to: SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: "customer_messages")
+      redirect_to: SiteRouting.new(view_context).customers_path(customer.user_id, customer_id: customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:messages])
     }
   end
 

@@ -12,6 +12,7 @@ module BookingPages
       string :title, default: nil
       boolean :draft, default: true
       boolean :line_sharing, default: true
+      boolean :online_payment_enabled, default: false
       integer :shop_id, default: nil
       integer :booking_limit_day, default: 1
       string :greeting, default: nil
@@ -71,7 +72,7 @@ module BookingPages
             interval: attrs[:interval],
             specific_booking_start_times: attrs[:booking_start_times].map{|h| h[:start_time]}.sort.uniq
           )
-        when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction"
+        when "name", "title", "draft", "line_sharing", "shop_id", "booking_limit_day", "greeting", "note", "overbooking_restriction", "online_payment_enabled"
           booking_page.update(attrs.slice(update_attribute))
         end
 

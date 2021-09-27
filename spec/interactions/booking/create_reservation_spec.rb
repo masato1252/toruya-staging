@@ -6,12 +6,14 @@ RSpec.describe Booking::CreateReservation do
   before do
     # Sunday, one day before booking date
     Timecop.freeze(today)
+    business_schedule
   end
 
   let(:today) { Time.zone.local(2019, 5, 12) }
-  let(:business_schedule) { FactoryBot.create(:business_schedule) } # 9:00 ~ 17:00
-  let(:shop) { business_schedule.shop }
-  let(:user) { shop.user }
+  let(:subscription) { FactoryBot.create(:subscription, :premium) }
+  let(:business_schedule) { FactoryBot.create(:business_schedule, shop: shop) } # 9:00 ~ 17:00
+  let(:shop) { FactoryBot.create(:shop, user: user) }
+  let(:user) { subscription.user }
   let(:booking_page) { FactoryBot.create(:booking_page, user: user, shop: shop) }
   let(:booking_option) { FactoryBot.create(:booking_option, :multiple_coperation_menus, user: user, booking_pages: booking_page, shops: shop, staffs: [staff, staff2]) } # required time 60, interval 10 minutes
   let(:customer) { FactoryBot.create(:customer, user: user) }
@@ -474,6 +476,33 @@ RSpec.describe Booking::CreateReservation do
             end
           end
         end
+      end
+    end
+
+    # Customer pay online on booking page
+    context "when stripe_token exists" do
+      before do
+        StripeMock.start
+        FactoryBot.create(:access_provider, :stripe, user: user)
+      end
+      after { StripeMock.stop }
+
+      let(:stripe_token) { StripeMock.create_test_helper.generate_card_token }
+
+      it "charges customer" do
+        args[:customer_info] = { "id": customer.id }
+        args[:present_customer_info] = { "id": customer.id }
+        args[:stripe_token] = stripe_token
+
+        expect {
+          outcome
+        }.to change {
+          customer.customer_payments.count
+        }.by(1)
+
+        result = outcome.result
+        reservation_customer = ReservationCustomer.find_by!(reservation: result[:reservation], customer: result[:customer])
+        expect(reservation_customer).to be_payment_paid
       end
     end
   end

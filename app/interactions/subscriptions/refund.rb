@@ -13,7 +13,7 @@ module Subscriptions
         begin
           stripe_refund = Stripe::Refund.create({charge: first_charge.stripe_charge_details["id"]})
 
-          if stripe_refund.status == "succeeded"
+          if stripe_refund.status == STRIPE_REFUND_STATUS[:succeeded]
             first_charge.refunded!
             subscription.next_plan = nil
             subscription.expire

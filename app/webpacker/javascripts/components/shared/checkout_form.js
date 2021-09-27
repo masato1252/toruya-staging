@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import {loadStripe} from '@stripe/stripe-js';
 import {
@@ -14,10 +14,12 @@ const CARD_ELEMENT_OPTIONS = {
 };
 
 const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleFailure}) => {
+  const [processing, setProcessing] = useState(false)
   const stripe = useStripe();
   const elements = useElements();
 
   const handleSubmit = async (event) => {
+    setProcessing(true)
     event.preventDefault();
 
     if (!stripe || !elements) {
@@ -32,6 +34,8 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
     } else {
       handleToken(result.token.id)
     }
+
+    setProcessing(false)
   };
 
   return (
@@ -44,7 +48,7 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
         {details_desc}
       </div>
       <CardElement options={CARD_ELEMENT_OPTIONS} />
-      <button type="submit" disabled={!stripe} className="btn btn-success btn-extend btn-large">
+      <button type="submit" disabled={!stripe || processing} className="btn btn-success btn-extend btn-large">
         {pay_btn}
       </button>
     </form>

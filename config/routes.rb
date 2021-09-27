@@ -83,6 +83,8 @@ Rails.application.routes.draw do
             get "/:reservation_id/pend/:customer_id", action: :pend, as: :pend
             get "/:reservation_id/accept/:customer_id", action: :accept, as: :accept
             get "/:reservation_id/cancel/:customer_id", action: :cancel, as: :cancel
+            get "/:reservation_id/refund_modal/:customer_id", action: :refund_modal, as: :refund_modal
+            post "/:reservation_id/refund/:customer_id", action: :refund, as: :refund
           end
         end
         resources :messages, only: [:index]
@@ -252,6 +254,7 @@ Rails.application.routes.draw do
           get :create_reservation
           get :create_booking_page
           get :check_reservation_content
+          get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
         end
       end
 

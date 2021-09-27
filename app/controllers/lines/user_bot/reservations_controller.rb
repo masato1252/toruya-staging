@@ -232,14 +232,8 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
     @menu_result = ::Menus::CategoryGroup.run!(menu_options: menu_options)
 
     @staff_options =
-      if super_user.premium_member?
-        shop.staffs.order("id").uniq.map do |staff|
-          ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
-        end
-      else
-        [
-          ::Option.new(id: current_user_staff.id, name: current_user_staff.name, handable_customers: nil)
-        ]
+      shop.available_staffs.map do |staff|
+        ::Option.new(id: staff.id, name: staff.name, handable_customers: nil)
       end
   end
 

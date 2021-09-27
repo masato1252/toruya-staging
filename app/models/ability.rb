@@ -78,6 +78,7 @@ class Ability
     can :manage, BookingPage
     can :create, Customer
     can :create, SalePage
+    can :refund, Reservation
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL

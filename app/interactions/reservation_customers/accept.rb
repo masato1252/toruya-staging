@@ -9,7 +9,7 @@ module ReservationCustomers
     def execute
       reservation_customer.accepted!
 
-      unless reservation.customers.exists?
+      if reservation.customers.count == 1
         compose(Reservations::Accept, reservation: reservation, current_staff: current_staff)
       end
     end

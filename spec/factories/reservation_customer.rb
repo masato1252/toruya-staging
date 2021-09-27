@@ -18,6 +18,10 @@ FactoryBot.define do
       state { :canceled }
     end
 
+    trait :booking_option do
+      booking_option { FactoryBot.create(:booking_option, user: customer.user) }
+    end
+
     trait :with_new_customer_info do
       details do
         {

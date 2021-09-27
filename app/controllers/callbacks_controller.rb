@@ -42,7 +42,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     )
 
     uri = URI.parse(param['oauth_redirect_to_url'])
-    queries = { status: outcome.valid? }
+    queries = URI.decode_www_form(uri.query || "") << ["status", outcome.valid?]
     uri.query = URI.encode_www_form(queries)
 
     redirect_to uri.to_s

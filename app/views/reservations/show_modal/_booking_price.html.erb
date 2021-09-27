@@ -1,7 +1,14 @@
 <div class="reservation-info-row">
-  <i class="fa fa-money"></i><span><%= t("common.booking_price") %>: 
+  <i class="fas fa-money-bill-wave"></i><span><%= t("common.booking_price") %>: 
     <% if reservation_customer.booking_amount_cents %>
       <%= reservation_customer.booking_amount.format(:ja_default_format) %> (<%= t("settings.booking_option.form.#{reservation_customer.tax_include ? "tax_include" : "tax_excluded"}") %>)
+      <% if reservation_customer.payment_refunded? %>
+        <div class="payment-states refunded"><%= t("common.refunded") %></div>
+      <% end %>
+
+      <% if reservation_customer.payment_paid? %>
+        <div class="payment-states paid"><%= t("common.paid") %></div>
+      <% end %>
     <% else %>
       No-data
     <% end %>

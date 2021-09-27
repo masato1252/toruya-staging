@@ -1,0 +1,4 @@
+<%= form_with url: refund_lines_user_bot_customer_reservations_path(reservation_customer.reservation_id, reservation_customer.customer_id) do |form| %>
+  <%= text_field_tag :amount, reservation_customer.booking_amount.fractional %><%= t("common.unit") %>
+  <%= form.submit t("reservation.modal.refund.submit_btn"), class: "btn btn-orange", data: { confirm: t("reservation.modal.refund.confirmation_message")  } %>
+<% end %>

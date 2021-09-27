@@ -25,7 +25,8 @@
   social_account_add_friend_url: @social_account&.add_friend_url,
   social_account_login_url: line_login_url(@social_account, booking_page_url(@booking_page.slug), customer_id: @customer&.id),
   social_account_login_required: @social_account&.is_login_available? && !@customer&.social_customer,
-  booking_page: @booking_page.attributes.slice("title", "greeting", "note").merge!({
+  stripe_key: @booking_page.user.stripe_provider&.publishable_key,
+  booking_page: @booking_page.attributes.slice("title", "greeting", "note", "online_payment_enabled").merge!({
     shop_logo_url: shop_logo_url(@booking_page.shop, "260"),
     shop_name: @booking_page.shop.name,
     is_single_option: @is_single_booking_option,
@@ -62,7 +63,7 @@
     social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id
   },
   path: {
-    save: booking_reservation_booking_page_path(@booking_page),
+    save: booking_reservation_booking_page_path(@booking_page, format: :json),
     find_customer: find_customer_booking_page_path(@booking_page),
     ask_confirmation_code: ask_confirmation_code_booking_page_path(@booking_page),
     confirm_code: confirm_code_booking_page_path(@booking_page)

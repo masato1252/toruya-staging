@@ -76,6 +76,11 @@
     path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :line_sharing),
     title: @booking_page.line_sharing ? I18n.t("settings.booking_page.form.share_in_bot") : I18n.t("settings.booking_page.form.not_share_in_bot")
   %>
+  <div class="field-group-header" id="online_payment_enabled"><%= "オンライン精算" %></div>
+  <%= render "lines/user_bot/field_row",
+    path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :online_payment_enabled),
+    title: @booking_page.online_payment_enabled ? "利用する" : "利用しない"
+  %>
 
   <div class="field-group-header" id="note"><%= I18n.t("settings.booking_page.form.note_label") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :note), title: @booking_page.note %>

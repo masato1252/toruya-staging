@@ -56,6 +56,7 @@ class BookingPagesController < ActionController::Base
   end
 
   def booking_reservation
+    params.permit!
     outcome = Booking::CreateReservation.run(
       booking_page_id: params[:id].to_i,
       booking_option_id: params[:booking_option_id],
@@ -67,9 +68,10 @@ class BookingPagesController < ActionController::Base
       customer_phone_number: params[:customer_phone_number],
       customer_email: params[:customer_email],
       customer_reminder_permission: ActiveModel::Type::Boolean.new.cast(params[:reminder_permission]),
-      customer_info: JSON.parse(params[:customer_info]),
-      present_customer_info: JSON.parse(params[:present_customer_info]),
-      social_user_id: params[:social_user_id]
+      customer_info: params[:customer_info].to_h,
+      present_customer_info: params[:present_customer_info].to_h,
+      social_user_id: params[:social_user_id],
+      stripe_token: params[:stripe_token]
     )
 
     if outcome.valid?

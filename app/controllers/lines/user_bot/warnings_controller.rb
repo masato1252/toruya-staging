@@ -39,6 +39,13 @@ class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
     render template: "warnings/#{view}"
   end
 
+  def cancel_paid_customers
+    @reservation = Reservation.find(params[:reservation_id])
+    @paid_reservation_customers = @reservation.reservation_customers.payment_paid.includes(:customer)
+
+    render template: "warnings/cancel_paid_customers"
+  end
+
   private
 
   def from_line_bot

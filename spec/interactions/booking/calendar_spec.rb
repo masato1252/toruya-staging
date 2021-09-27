@@ -6,6 +6,7 @@ RSpec.describe Booking::Calendar do
   before do
     # Sunday, one day before booking date
     Timecop.freeze(today)
+    allow(user).to receive(:premium_member?).and_return(true)
   end
 
   let(:today) { Time.zone.local(2019, 5, 12) }

@@ -1,0 +1,45 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe CustomerPayments::PayReservation do
+  before { StripeMock.start }
+  after { StripeMock.stop }
+  let(:booking_amount) { 1.to_money }
+  let(:customer) { FactoryBot.create(:customer, with_stripe: true) }
+  let(:reservation_customer) { FactoryBot.create(:reservation_customer, :booking_option, customer: customer, booking_amount: booking_amount) }
+
+  let(:args) do
+    {
+      reservation_customer: reservation_customer
+    }
+  end
+  let(:outcome) { described_class.run(args) }
+
+  describe "#execute" do
+    it "creates a completed payment" do
+      expect {
+        outcome
+      }.to change {
+        CustomerPayment.where(customer_id: reservation_customer.customer_id, product: reservation_customer, amount_cents: booking_amount.fractional, manual: true).completed.count
+      }.by(1)
+    end
+
+    context "when charge failed" do
+      it "create a auth_failed payment record" do
+        StripeMock.prepare_card_error(:card_declined)
+
+        outcome
+
+        payment = CustomerPayment.where(
+          customer_id: reservation_customer.customer_id,
+          product: reservation_customer,
+          amount_cents: booking_amount.fractional,
+          manual: true
+        ).last
+
+        expect(payment).to be_auth_failed
+      end
+    end
+  end
+end
