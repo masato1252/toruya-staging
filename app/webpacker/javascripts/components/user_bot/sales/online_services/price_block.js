@@ -62,6 +62,10 @@ const PriceBlock = ({
     }
   }
 
+  const isFree = () => {
+    return parseInt(selling_price) === 0
+  }
+
   return (
     <>
       <div className="product-price-block">
@@ -78,7 +82,7 @@ const PriceBlock = ({
           )}
           <span className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
-            <div>{selling_price || I18n.t("common.free_price")} {selling_price && <span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>}</div>
+            <div>{isFree() ? I18n.t("common.free_price") : selling_price} {!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>}</div>
           </span>
         </div>
       </div>
