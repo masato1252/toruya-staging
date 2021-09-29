@@ -63,7 +63,7 @@ const PriceBlock = ({
   }
 
   const isFree = () => {
-    return parseInt(selling_price) === 0
+    return parseInt(selling_price || 0) === 0
   }
 
   return (

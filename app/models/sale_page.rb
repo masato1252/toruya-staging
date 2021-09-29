@@ -49,7 +49,7 @@ class SalePage < ApplicationRecord
   monetize :normal_price_amount_cents, allow_nil: true
 
   def free?
-    selling_price_amount_cents.nil? && !external?
+    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && !external?
   end
 
   def external?
