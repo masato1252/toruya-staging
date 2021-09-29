@@ -2,11 +2,13 @@
 
 import React, { useLayoutEffect, useState } from "react";
 
+import AddressView from "shared/address_view";
 import LineIdentificationView from "components/lines/customer_identifications/shared/line_identification_view"
 import CustomerIdentificationView from "components/lines/customer_identifications/shared/identification_view"
-import { SaleServices } from "user_bot/api";
+import { SaleServices, CommonServices } from "user_bot/api";
 import { CheckInLineBtn } from "shared/booking";
 import ServiceCheckoutForm from "shared/service_checkout_form";
+import FlowController from "shared/flow_controller";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {
@@ -56,11 +58,40 @@ const FinalPaidPage = ({props, purcahse_data}) => {
 }
 
 export const CustomerPurchases = ({props}) => {
-  const { social_user_id, customer_id } = props.social_customer;
+  const { social_user_id, customer_id, had_address } = props.social_customer;
   const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
+  const [is_customer_address_created, setCustomerAddressCreated] = useState(had_address)
+
+  const handleCustomerAddressSubmit = async (address) => {
+    const [error, response] = await CommonServices.update(
+      {
+        url: Routes.lines_update_customer_address_path({format: "json"}),
+        data: {
+          address,
+          customer_id,
+          social_user_id
+        }
+      }
+    );
+
+    if (response.status == 200) {
+      setCustomerAddressCreated(true)
+    }
+  }
 
   if (!social_user_id) {
     return <LineIdentificationView line_login_url={props.line_login_url} />
+  }
+
+  if (identified_customer && !props.sale_page.is_free && !is_customer_address_created) {
+    return (
+      <>
+        <h2 className="centerize">
+          {I18n.t("common.customer_address_view_titile")}
+        </h2>
+        <AddressView handleSubmitCallback={handleCustomerAddressSubmit} />
+      </>
+    )
   }
 
   if (identified_customer) {

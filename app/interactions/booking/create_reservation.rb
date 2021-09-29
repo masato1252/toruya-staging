@@ -110,10 +110,6 @@ module Booking
             customer = user.customers.find(customer_info["id"])
           end
 
-          if customer
-            customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
-          end
-
           if customer ||= social_customer&.customer
             if customer_phonetic_last_name && customer_phonetic_first_name
               customer_outcome = Customers::Store.run(
@@ -134,8 +130,6 @@ module Booking
                 customer = customer_outcome.result
               end
             end
-
-            customer.update(reminder_permission: customer_reminder_permission)
           else
             # new customer
             customer_outcome = Customers::Create.run(
@@ -159,8 +153,21 @@ module Booking
             customer = customer_outcome.result
           end
 
-          if social_customer
-            social_customer.update!(customer_id: customer.id)
+          if customer
+            if social_customer
+              social_customer.update!(customer_id: customer.id)
+            end
+
+            if customer.address_details.blank? && customer_info[:address_details].present?
+              customer.address_details = customer_info[:address_details]
+            end
+
+            customer.assign_attributes(
+              reminder_permission: customer_reminder_permission,
+              updated_at: Time.current
+            )
+
+            customer.save
           end
 
           catch :booked_reservation do

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     post :make_contact
     get :identify_code
     get :ask_identification_code
+    put :update_customer_address
 
     scope module: :customers, path: :customers, as: :customers do
       resources :online_service_purchases, only: [:create], param: :slug do

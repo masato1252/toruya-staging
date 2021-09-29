@@ -18,6 +18,7 @@ import { SlideDown } from 'react-slidedown';
 import { Radio, Condition, Error, ErrorMessage } from "shared/components";
 import { BookingStartInfo, BookingEndInfo, AddLineFriendInfo, CheckInLineBtn, LineLoginBtn } from "shared/booking";
 import Calendar from "shared/calendar/calendar";
+import AddressView from "shared/address_view";
 import BookingPageOption from "./booking_page_option";
 import { requiredValidation, emailFormatValidator, lengthValidator, mustBeNumber, composeValidators } from "libraries/helper";
 import StripeCheckoutForm from "shared/stripe_checkout_form"
@@ -543,10 +544,6 @@ class BookingReservationForm extends React.Component {
     } = this.booking_reservation_form_values;
     const { edit, please_select_a_menu } = this.props.i18n;
 
-    const selected_booking_option = _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
-    })
-
     return (
       <Condition when="booking_reservation_form[booking_flow]" is="booking_option_first">
         <Condition when="booking_reservation_form[booking_option_id]" is="blank">
@@ -676,6 +673,14 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  selected_booking_option = () => {
+    const { booking_options, booking_option_id } = this.booking_reservation_form_values;
+
+    return _.find(booking_options, (booking_option) => {
+      return booking_option.id === booking_option_id
+    })
+  }
+
   renderBookingReservationButton = () => {
     const { booking_failed, booking_code, booking_options, booking_option_id } = this.booking_reservation_form_values;
     const { reminder_desc } = this.props.i18n;
@@ -683,10 +688,6 @@ class BookingReservationForm extends React.Component {
     if (!this.isBookingFlowEnd()) return;
     if (!this.isEnoughCustomerInfo()) return;
     if (!this.isCustomerTrusted()) return;
-
-    const selected_booking_option = _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
-    })
 
     return (
       <div className="reservation-confirmation">
@@ -711,7 +712,7 @@ class BookingReservationForm extends React.Component {
             if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
-            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && !selected_booking_option.is_free) {
+            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && !this.selected_booking_option().is_free) {
               this.booking_reservation_form.change("booking_reservation_form[is_paying_booking]", true)
             }
             else {
@@ -743,16 +744,12 @@ class BookingReservationForm extends React.Component {
 
     if (!booking_option_id) return;
 
-    const selected_booking_option = _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
-    })
-
     const selected_booking_option_content = (
       <div className="selected-booking-option" id="selected-booking-option">
         <i className="fa fa-check-circle"></i>
         <BookingPageOption
-          key={`booking_options-${selected_booking_option.id}`}
-          booking_option_value={selected_booking_option}
+          key={`booking_options-${this.selected_booking_option().id}`}
+          booking_option_value={this.selected_booking_option()}
           last_selected_option_id={last_selected_option_id}
           i18n={this.props.i18n}
           booking_start_at={moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone)}
@@ -896,10 +893,6 @@ class BookingReservationForm extends React.Component {
 
     const { time_from } = this.props.i18n;
 
-    const selected_booking_option = _.find(booking_options, (booking_option) => {
-      return booking_option.id === booking_option_id
-    })
-
     const booking_details = `${moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone).format("llll")} ${time_from}`
 
     // TODO: handle failed case
@@ -912,10 +905,10 @@ class BookingReservationForm extends React.Component {
             await this.booking_reservation_form.change("booking_reservation_form[stripe_token]", token)
             this.handleSubmit()
           }}
-          header={selected_booking_option.name}
+          header={this.selected_booking_option().name}
           desc={booking_details}
           pay_btn={I18n.t("action.pay")}
-          details_desc={selected_booking_option.price}
+          details_desc={this.selected_booking_option().price}
         />
       </div>
     )
@@ -963,16 +956,44 @@ class BookingReservationForm extends React.Component {
     )
   }
 
+  isPremiumSerivce = () => {
+    return !this.selected_booking_option().is_free
+  }
+
+  isCustomerAddressFilled = () => {
+    const { customer_info } = this.booking_reservation_form_values
+
+    return customer_info.address_details?.zip_code && customer_info.address_details?.region && customer_info.address_details?.city
+  }
+
+  renderCustomerAddressView = () => {
+    return (
+      <>
+        <h2 className="centerize">
+          {I18n.t("common.customer_address_view_titile")}
+        </h2>
+        <AddressView handleSubmitCallback={(address) => {
+          this.booking_reservation_form.change("booking_reservation_form[customer_info][address_details]", address)
+        }} />
+      </>
+    )
+  }
+
   renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, is_done, is_paying_booking } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, is_done, is_paying_booking, customer_info } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
 
     if (is_done) {
+      if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
+
       return this.renderBookingDownView()
     }
 
+
     if (is_paying_booking) {
+      if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
+
       return (
         <div>
           {this.renderChargingView()}

@@ -87,6 +87,12 @@ class LinesController < ActionController::Base
     render json: json_response(outcome)
   end
 
+  def update_customer_address
+    customer.address_details = params.permit!.to_h[:address]
+    customer.save
+    head :ok
+  end
+
   private
 
   def social_customer
