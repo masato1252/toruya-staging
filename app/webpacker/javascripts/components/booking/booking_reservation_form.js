@@ -895,7 +895,6 @@ class BookingReservationForm extends React.Component {
 
     const booking_details = `${moment.tz(`${booking_date} ${booking_at}`, "YYYY-MM-DD HH:mm", this.props.timezone).format("llll")} ${time_from}`
 
-    // TODO: handle failed case
     return (
       <div className="done-view">
         <StripeCheckoutForm

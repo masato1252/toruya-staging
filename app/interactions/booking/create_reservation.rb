@@ -158,7 +158,7 @@ module Booking
               social_customer.update!(customer_id: customer.id)
             end
 
-            if customer.address_details.blank? && customer_info[:address_details].present?
+            if customer.address_details.blank? && customer_info && customer_info[:address_details].present?
               customer.address_details = customer_info[:address_details]
             end
 
