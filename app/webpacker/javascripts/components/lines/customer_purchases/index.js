@@ -68,14 +68,14 @@ export const CustomerPurchases = ({props}) => {
   const [identified_customer, setIdentifiedCustomer] = useState(customer_id)
   const [is_customer_address_created, setCustomerAddressCreated] = useState(had_address)
 
-  const handleCustomerAddressSubmit = async (address) => {
+  const handleCustomerAddressSubmit = async (address_details) => {
     const [error, response] = await CommonServices.update(
       {
         url: Routes.lines_update_customer_address_path({format: "json"}),
         data: {
-          address,
+          address_details,
           customer_id,
-          social_user_id
+          social_service_user_id: social_user_id
         }
       }
     );
@@ -105,17 +105,6 @@ export const CustomerPurchases = ({props}) => {
           <AddressView handleSubmitCallback={handleCustomerAddressSubmit} />
         </CompanyHeader>
       </div>
-    )
-  }
-
-  if (identified_customer && !props.sale_page.is_free && !is_customer_address_created) {
-    return (
-      <>
-        <h2 className="centerize">
-          {I18n.t("common.customer_address_view_titile")}
-        </h2>
-        <AddressView handleSubmitCallback={handleCustomerAddressSubmit} />
-      </>
     )
   }
 

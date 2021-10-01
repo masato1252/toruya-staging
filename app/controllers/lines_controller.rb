@@ -88,8 +88,13 @@ class LinesController < ActionController::Base
   end
 
   def update_customer_address
-    customer.address_details = params.permit!.to_h[:address]
-    customer.save
+    if social_customer.customer != customer
+      head :unprocessable_entity
+      return
+    end
+
+    Customers::UpdateAddress.run(customer: customer, address_details: params.permit!.to_h[:address_details])
+
     head :ok
   end
 
