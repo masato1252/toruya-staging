@@ -49,8 +49,6 @@ module Booking
       string :simple_address, default: nil
       string :full_address, default: nil
       hash :address_details, default: nil, strip: false do
-        string :formatted_address, default: nil
-        boolean :primary, default: nil
         string :zip_code, default: nil
         string :city, default: nil
         string :region, default: nil
@@ -105,7 +103,7 @@ module Booking
             )
           end
 
-          if !customer && customer_info&.compact.present?
+          if !customer && customer_info&.compact.present? && customer_info["id"]
             # regular customer
             customer = user.customers.find(customer_info["id"])
           end
