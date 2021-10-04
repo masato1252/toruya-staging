@@ -9,6 +9,10 @@ class Address
 
   validates :zip_code, :region, :city, :presence => true
 
+  def exists?
+    zip_code.present? && region.present? && city.present?
+  end
+
   def display_address
     "〒#{zip_code} #{pure_address}"
   end

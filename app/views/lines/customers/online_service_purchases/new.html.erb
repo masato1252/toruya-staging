@@ -1,6 +1,6 @@
 <%= react_component("lines/customer_purchases", {
   props: {
-    social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id, had_address: current_customer&.address_details&.present? },
+    social_customer: { social_user_id: current_social_customer&.social_user_id, customer_id: current_customer&.id, had_address: current_customer&.had_address? },
     sale_page_slug: @sale_page.slug,
     line_login_url: line_login_url(current_owner.social_account, request.url),
     add_friend_url: current_owner.social_accounts.first&.add_friend_url,
