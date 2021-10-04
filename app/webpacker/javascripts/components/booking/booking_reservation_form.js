@@ -968,9 +968,9 @@ class BookingReservationForm extends React.Component {
   renderCustomerAddressView = () => {
     return (
       <>
-        <h2 className="centerize">
+        <h3 className="centerize title">
           {I18n.t("common.customer_address_view_titile")}
-        </h2>
+        </h3>
         <AddressView handleSubmitCallback={(address) => {
           this.booking_reservation_form.change("booking_reservation_form[customer_info][address_details]", address)
         }} />
