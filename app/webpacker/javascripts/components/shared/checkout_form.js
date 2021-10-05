@@ -31,11 +31,10 @@ const CheckoutForm = ({header, desc, pay_btn, details_desc, handleToken, handleF
 
     if (result.error) {
       handleFailure(result.error)
+      setProcessing(false)
     } else {
       handleToken(result.token.id)
     }
-
-    setProcessing(false)
   };
 
   return (

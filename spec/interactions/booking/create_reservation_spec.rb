@@ -138,6 +138,22 @@ RSpec.describe Booking::CreateReservation do
           expect(reservation_customer.details.new_customer_info).to eq({ "last_name" => "foo" })
         end
       end
+
+      context "when customer doesn't have address yet" do
+        it "updates customer address directly" do
+          args[:customer_info] = { "id": customer.id, "address_details": { 'zip_code': "1000001", "region": "foo", "city": "bar" } }
+          args[:present_customer_info] = { "id": customer.id }
+          result = outcome.result
+
+          expect(result[:customer].address_details).to eq({
+            "zip_code" => "1000001",
+            "region" => "foo",
+            "city" => "bar",
+            "street1" => nil,
+            "street2" => nil
+          })
+        end
+      end
     end
 
     context "when customer_info doesn't exist" do

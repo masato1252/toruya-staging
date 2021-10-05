@@ -49,8 +49,6 @@ module Booking
       string :simple_address, default: nil
       string :full_address, default: nil
       hash :address_details, default: nil, strip: false do
-        string :formatted_address, default: nil
-        boolean :primary, default: nil
         string :zip_code, default: nil
         string :city, default: nil
         string :region, default: nil
@@ -105,13 +103,9 @@ module Booking
             )
           end
 
-          if !customer && customer_info&.compact.present?
+          if !customer && customer_info&.compact.present? && customer_info["id"]
             # regular customer
             customer = user.customers.find(customer_info["id"])
-          end
-
-          if customer
-            customer.update(reminder_permission: customer_reminder_permission, updated_at: Time.current)
           end
 
           if customer ||= social_customer&.customer
@@ -134,8 +128,6 @@ module Booking
                 customer = customer_outcome.result
               end
             end
-
-            customer.update(reminder_permission: customer_reminder_permission)
           else
             # new customer
             customer_outcome = Customers::Create.run(
@@ -159,8 +151,21 @@ module Booking
             customer = customer_outcome.result
           end
 
-          if social_customer
-            social_customer.update!(customer_id: customer.id)
+          if customer
+            if social_customer
+              social_customer.update!(customer_id: customer.id)
+            end
+
+            if !customer.had_address? && customer_info && customer_info[:address_details].present?
+              customer.address_details = customer_info[:address_details]
+            end
+
+            customer.assign_attributes(
+              reminder_permission: customer_reminder_permission,
+              updated_at: Time.current
+            )
+
+            customer.save
           end
 
           catch :booked_reservation do

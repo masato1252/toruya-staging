@@ -376,6 +376,10 @@ class Customer < ApplicationRecord
     "👩 New customer joined, customer_id: #{id}, user_id: #{user_id}, customers count: #{user.customers.size}"
   end
 
+  def had_address?
+    Address.new(address_details).exists?
+  end
+
   private
 
   def primary_value(values)

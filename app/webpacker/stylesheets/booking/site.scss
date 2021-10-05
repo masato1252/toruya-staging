@@ -35,7 +35,8 @@ body {
   flex: 1 1 auto;
 
   &.extend,
-  &.sale_pages {
+  &.sale_pages,
+  &.online_service_purchases {
     padding: 0;
   }
 

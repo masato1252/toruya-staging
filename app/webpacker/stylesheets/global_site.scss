@@ -144,3 +144,138 @@
     background-color: #fefde5 !important;
   }
 }
+.address-form {
+  margin-top: 12px;
+  padding: 12px;
+
+  h4 {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    color: $black;
+    font-size: 14px;
+  }
+
+  .desc {
+    margin-bottom: 9px;
+  }
+
+  .resend-row {
+    margin-top: 9px;
+  }
+
+  .field {
+    margin-top: 6px;
+    width: 80%;
+  }
+
+  input[type="text"],
+  input[type="tel"] {
+    width: 45%;
+
+    &.expaned {
+      width: 80%;
+    }
+  }
+
+  input[type="submit"],
+  a.submit {
+    margin-top: 12px;
+  }
+}
+
+.required-label {
+  color: #fff;
+  background: #CF0003;
+  display: inline-block;
+  font-size: 10px;
+  padding: 3px 5px;
+  margin-left: 10px;
+  border-radius: 5px;
+}
+
+input[type="time"],
+input[type="date"],
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="file"],
+.DayPickerInput input {
+  padding: 10px;
+  color: $black;
+  line-height: 15px;
+  border: 1px solid $gray;
+  background-color: $palette-color6;
+  border-radius: 4px;
+  margin: 0 3px;
+  padding: 8px;
+  font-size: 14px;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
+
+  &.with-border {
+    border: 1px solid $gray;
+  }
+}
+
+.DayPickerInput input {
+  width: 90px;
+}
+
+input[type="time"] {
+  width: 85px;
+
+  &::-webkit-calendar-picker-indicator {
+    background: none; display:none;
+  }
+}
+
+select {
+  appearance: none;
+  line-height: 35px;
+  padding: 0 15px;
+  background-color: $palette-color6;
+  border: 1px solid $gray;
+  border-radius: 4px;
+
+  &.extend {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+textarea {
+  min-height: 150px;
+  color: $black;
+  border: 1px solid $gray;
+  background-color: $palette-color6;
+  line-height: 18px;
+  margin: 0 3px;
+  padding: 8px;
+  font-size: $normal-font-size;
+
+  &.extend {
+    width: 98%;
+    border: 0;
+    border-radius: 0;
+  }
+
+  &.with-border {
+    border: 1px solid $gray !important;
+  }
+}
+
+.company-header {
+  border-bottom: 1px solid #dfdfdf;
+  padding: 6px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 45px;
+  margin-bottom: 12px;
+}
