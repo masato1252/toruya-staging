@@ -748,7 +748,7 @@ class BookingReservationForm extends React.Component {
       <div className="selected-booking-option" id="selected-booking-option">
         <i className="fa fa-check-circle"></i>
         <BookingPageOption
-          key={`booking_options-${this.selected_booking_option().id}`}
+          key={`booking_options-${booking_option_id}`}
           booking_option_value={this.selected_booking_option()}
           last_selected_option_id={last_selected_option_id}
           i18n={this.props.i18n}
