@@ -101,7 +101,7 @@ module ApplicationHelper
   def line_login_url(social_account, oauth_redirect_to_url, *args)
     options = args.extract_options!
     encrypted_id = MessageEncryptor.encrypt(social_account&.id)
-    cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 10.minutes }
+    cookies[:oauth_social_account_id] = { value: encrypted_id, expires: 3.day }
 
     if social_account&.is_login_available?
       options.merge!(
