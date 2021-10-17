@@ -28,7 +28,7 @@ class OmniauthSetup
         client_id: Rails.application.secrets.toruya_line_login_id,
         client_secret: Rails.application.secrets.toruya_line_login_secret
       }
-    elsif @request.cookies["oauth_social_account_id"]
+    else
       account = SocialAccount.find(MessageEncryptor.decrypt(@request.cookies["oauth_social_account_id"]))
 
       {
