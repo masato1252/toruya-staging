@@ -15,6 +15,26 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
     $("body").scrollTop(0)
   }, [])
 
+  if (selected_solution === 'course') {
+    return (
+      <div className="form settings-flow">
+        <ServiceFlowStepIndicator step={step} />
+        <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.below_is_what_you_want")}</h3>
+        <div className="desc">
+          You could create the course content and change course details in settings page.
+        </div>
+
+        <div className="action-block margin-around">
+          <SubmitButton
+            handleSubmit={createService}
+            submitCallback={next}
+            btnWord={I18n.t("user_bot.dashboards.online_service_creation.create_by_this_setting")}
+          />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="form settings-flow">
       <ServiceFlowStepIndicator step={step} />

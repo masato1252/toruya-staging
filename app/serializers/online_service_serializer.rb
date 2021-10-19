@@ -22,7 +22,8 @@ class OnlineServiceSerializer
   end
 
   attribute :content_url do |service|
-    service.content["url"]
+    # course service content is nil
+    service.content&.dig("url")
   end
 
   attribute :charge_required do |service|

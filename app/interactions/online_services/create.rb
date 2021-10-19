@@ -13,7 +13,7 @@ module OnlineServices
     hash :upsell, default: nil do
       integer :sale_page_id, default: nil
     end
-    hash :content do
+    hash :content, default: nil do
       string :url, default: nil
     end
     hash :selected_company do

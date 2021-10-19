@@ -12,7 +12,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       selected_solution: params[:selected_solution],
       end_time: params[:end_time].permit!.to_h,
       upsell: params[:upsell].permit!.to_h,
-      content: params[:content].permit!.to_h,
+      content: params[:content]&.permit!&.to_h,
       selected_company: params[:selected_company].permit!.to_h,
     )
 

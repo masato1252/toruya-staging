@@ -52,6 +52,8 @@ const SolutionStep = ({next, step}) => {
                   value: solution.key
                 }
               })
+
+              if (solution.no_solution_content) next()
             }}
             className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
             disabled={!solution.enabled}

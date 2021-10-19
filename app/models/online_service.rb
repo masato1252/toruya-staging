@@ -78,13 +78,33 @@ class OnlineService < ApplicationRecord
     introduction_video_required: false
   }
 
+  COURSE_SOLUTION = {
+    key: "course",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.course.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.course.description"),
+    enabled: true,
+    no_solution_content: true,
+    introduction_video_required: false,
+  }
+
+  MEMBERSHIP_SOLUTION = {
+    key: "membership",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.membership.title"),
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.membership.description"),
+    enabled: false,
+    no_solution_content: true,
+    introduction_video_required: false
+  }
+
   SOLUTIONS = [
     VIDEO_SOLUTION,
     AUDIO_SOLUTION,
     PDF_SOLUTION,
     QUESTIONNAIRE_SOLUTION,
     DIAGNOSIS_SOLUTION,
-    EXTERNAL_SOLUTION
+    EXTERNAL_SOLUTION,
+    COURSE_SOLUTION,
+    MEMBERSHIP_SOLUTION
   ]
 
   GOALS = [
@@ -128,10 +148,11 @@ class OnlineService < ApplicationRecord
       key: "upsell",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.description"),
-      enabled: false,
+      enabled: true,
       stripe_required: true,
       solutions: [
-        VIDEO_SOLUTION
+        COURSE_SOLUTION,
+        MEMBERSHIP_SOLUTION
       ]
     },
     {
@@ -156,6 +177,11 @@ class OnlineService < ApplicationRecord
   has_many :customers, through: :online_service_customer_relations
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
+  has_many :chapters
+
+  def course?
+    solution_type == COURSE_SOLUTION[:key]
+  end
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'

@@ -178,6 +178,8 @@ Rails.application.routes.draw do
             delete :stop
           end
         end
+
+        resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create]
       end
 
       resources :custom_messages, only: [:destroy] do

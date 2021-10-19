@@ -467,6 +467,12 @@ ja:
           external:
             title: 外部サービス
             description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
+          course:
+            title: Course
+            description: Course description
+          membership:
+            title: Membership
+            description: Membership description
         what_is_your_goal: このサービスの目的は何ですか？
         what_is_your_solution: このサービスで提供する内容は何ですか？
         what_is_this_video_provide: どの動画をサービス提供しますか？
