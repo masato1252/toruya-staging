@@ -1,0 +1,11 @@
+<%= react_component("user_bot/services/chapters/edit", {
+  props: {
+    chapter: {
+      online_service_id: @online_service.id,
+      id: @chapter.id,
+      name: @chapter.name
+    }
+  }
+},
+{ camelize_props: false }
+) %>

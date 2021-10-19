@@ -633,6 +633,38 @@ ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
+-- Name: chapters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chapters (
+    id bigint NOT NULL,
+    online_service_id bigint,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chapters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chapters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chapters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chapters_id_seq OWNED BY public.chapters.id;
+
+
+--
 -- Name: contact_group_rankings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2643,6 +2675,13 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
+-- Name: chapters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chapters ALTER COLUMN id SET DEFAULT nextval('public.chapters_id_seq'::regclass);
+
+
+--
 -- Name: contact_group_rankings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3118,6 +3157,14 @@ ALTER TABLE ONLY public.business_schedules
 
 ALTER TABLE ONLY public.categories
     ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chapters chapters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chapters
+    ADD CONSTRAINT chapters_pkey PRIMARY KEY (id);
 
 
 --
@@ -3787,6 +3834,13 @@ CREATE INDEX index_business_applications_on_user_id ON public.business_applicati
 --
 
 CREATE INDEX index_categories_on_user_id ON public.categories USING btree (user_id);
+
+
+--
+-- Name: index_chapters_on_online_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chapters_on_online_service_id ON public.chapters USING btree (online_service_id);
 
 
 --
@@ -4648,6 +4702,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210805020614'),
 ('20210830082204'),
 ('20210913140858'),
-('20210917004005');
+('20210917004005'),
+('20211019053832');
 
 

@@ -1,5 +1,5 @@
 <% if local_assigns[:path] %>
-  <%= link_to local_assigns[:path], class: "field-row with-next-arrow with-format" do %>
+  <%= link_to local_assigns[:path], class: "field-row with-next-arrow with-format #{local_assigns[:header_row] && 'header-row'}" do %>
     <% if local_assigns[:title] %>
       <span class="dotdotdot"><%= local_assigns[:title] %></span>
     <% else %>
@@ -8,7 +8,7 @@
     <i class="fa fa-angle-right"></i>
   <% end %>
 <% else  %>
-  <div class="field-row with-format">
+  <div class="field-row with-format <%= local_assigns[:header_row] && 'header-row' %>">
     <% if local_assigns[:title] %>
       <span class="dotdotdot"><%= local_assigns[:title] %></span>
     <% else %>

@@ -11,7 +11,7 @@
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
-    <span class="dotdotdot"><%= @service.content["url"] %></span>
+    <span class="dotdotdot"><%= @service.content&.dig("url") %></span>
     <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
   <% end %>
 
@@ -29,6 +29,11 @@
 
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+
+  <% if @service.course? %>
+    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.chapters.title") %></div>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service), title: t("user_bot.dashboards.settings.chapters.label") %>
+  <% end %>
 
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customers_path(@service) do %>
