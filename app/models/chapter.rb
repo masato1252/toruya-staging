@@ -14,4 +14,5 @@
 #
 class Chapter < ApplicationRecord
   belongs_to :online_service
+  has_many :lessons
 end

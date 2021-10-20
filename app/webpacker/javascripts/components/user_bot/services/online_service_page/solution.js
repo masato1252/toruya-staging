@@ -30,7 +30,7 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
           <a
             className="btn btn-tarco btn-icon"
             href={content.url}>
-            <i class="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
+            <i className="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
           </a>
         </div>
       );

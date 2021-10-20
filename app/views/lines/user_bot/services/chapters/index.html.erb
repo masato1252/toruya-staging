@@ -7,8 +7,15 @@
     </div>
   <% end %>
 
-  <% @online_service.chapters.each do |chapter| %>
+  <% @online_service.chapters.includes(:lessons).each do |chapter| %>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_path(@online_service, chapter), title: chapter.name, header_row: true %>
+
+    <% chapter.lessons.each do |lesson| %>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, chapter, lesson), title: lesson.name %>
+    <% end %>
+    <div class="action-block">
+      <%= link_to "Add a lesson", new_lines_user_bot_service_chapter_lesson_path(@online_service, chapter), class: "btn btn-tarco btn-extend" %>
+    </div>
   <% end %>
 
   <div class="action-block">

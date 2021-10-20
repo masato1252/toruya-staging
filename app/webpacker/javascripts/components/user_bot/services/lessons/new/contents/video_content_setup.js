@@ -5,14 +5,14 @@ import ReactPlayer from 'react-player';
 
 import VideoContentPreview from "shared/video_content_preview";
 import { useGlobalContext } from "../context/global_state";
-import ServiceFlowStepIndicator from "../services_flow_step_indicator";
+import LessonFlowStepIndicator from "../lesson_flow_step_indicator";
 
 const VideoContentSetup = ({next, step}) => {
   const { props, dispatch, content } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <LessonFlowStepIndicator step={step} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_this_video_provide")}</h3>
       <VideoContentPreview
         url={content?.url}
@@ -37,7 +37,6 @@ const VideoContentSetup = ({next, step}) => {
       )}
     </div>
   )
-
 }
 
 export default VideoContentSetup

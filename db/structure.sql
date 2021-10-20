@@ -978,6 +978,39 @@ ALTER SEQUENCE public.filtered_outcomes_id_seq OWNED BY public.filtered_outcomes
 
 
 --
+-- Name: lessons; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.lessons (
+    id bigint NOT NULL,
+    chapter_id bigint,
+    name character varying,
+    solution_type character varying,
+    content json,
+    note text
+);
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.lessons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.lessons_id_seq OWNED BY public.lessons.id;
+
+
+--
 -- Name: menu_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2738,6 +2771,13 @@ ALTER TABLE ONLY public.filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: lessons id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons ALTER COLUMN id SET DEFAULT nextval('public.lessons_id_seq'::regclass);
+
+
+--
 -- Name: menu_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3229,6 +3269,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.filtered_outcomes
     ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lessons lessons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
 
 
 --
@@ -3876,6 +3924,13 @@ CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments 
 --
 
 CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
+
+
+--
+-- Name: index_lessons_on_chapter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_lessons_on_chapter_id ON public.lessons USING btree (chapter_id);
 
 
 --
@@ -4703,6 +4758,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210830082204'),
 ('20210913140858'),
 ('20210917004005'),
-('20211019053832');
+('20211019053832'),
+('20211019140435');
 
 

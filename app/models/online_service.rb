@@ -85,6 +85,10 @@ class OnlineService < ApplicationRecord
     enabled: true,
     no_solution_content: true,
     introduction_video_required: false,
+    solutions: [
+      VIDEO_SOLUTION,
+      PDF_SOLUTION
+    ]
   }
 
   MEMBERSHIP_SOLUTION = {
