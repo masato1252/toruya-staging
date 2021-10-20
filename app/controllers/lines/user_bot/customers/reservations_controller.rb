@@ -37,40 +37,19 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def accept
-    outcome = ReservationCustomers::Accept.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
-
-    if outcome.invalid?
-      Rollback.error(
-        "Unexpected ReservationCustomers::Accept",
-        errors: outcome.errors.details
-      )
-    end
+    ReservationCustomers::Accept.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
 
     redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
   end
 
   def pend
-    outcome = ReservationCustomers::Pend.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
-
-    if outcome.invalid?
-      Rollback.error(
-        "Unexpected ReservationCustomers::Pend",
-        errors: outcome.errors.details
-      )
-    end
+    ReservationCustomers::Pend.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
   end
 
   def cancel
-    outcome = ReservationCustomers::Cancel.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
-
-    if outcome.invalid?
-      Rollback.error(
-        "Unexpected ReservationCustomers::Cancel",
-        errors: outcome.errors.details
-      )
-    end
+    ReservationCustomers::Cancel.run!(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     redirect_back fallback_location: SiteRouting.new(view_context).customers_path(super_user.id, customer_id: params[:customer_id])
   end
@@ -81,17 +60,10 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
   end
 
   def refund
-    outcome = CustomerPayments::RefundReservation.run(
+    CustomerPayments::RefundReservation.run(
       reservation_customer: ReservationCustomer.find_by!(reservation_id: params[:reservation_id], customer_id: params[:customer_id]),
       amount: Money.new(params[:amount], Money.default_currency.iso_code)
     )
-
-    if outcome.invalid?
-      Rollback.error(
-        "Unexpected CustomerPayments::RefundReservation",
-        errors: outcome.errors.details
-      )
-    end
 
     redirect_to lines_user_bot_customers_path(customer_id: params[:customer_id], reservation_id: params[:reservation_id], user_id: super_user.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations])
   end
