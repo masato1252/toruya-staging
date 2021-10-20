@@ -2,7 +2,6 @@
 
 module Reservations
   class Pend < ActiveInteraction::Base
-    object :current_staff, class: Staff
     object :reservation
 
     def execute

@@ -4,7 +4,7 @@ class Reservations::StatesController < DashboardController
   before_action :authorize_reservation
 
   def pend
-    outcome = Reservations::Pend.run!(reservation: reservation, current_staff: current_user_staff)
+    outcome = Reservations::Pend.run!(reservation: reservation)
 
     redirect_back fallback_location: member_path, notice: I18n.t("reservation.update_successfully_message")
   end

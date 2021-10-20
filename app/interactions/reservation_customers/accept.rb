@@ -7,10 +7,10 @@ module ReservationCustomers
     integer :customer_id
 
     def execute
-      reservation_customer.accepted!
-
       if reservation.customers.count == 1
         compose(Reservations::Accept, reservation: reservation, current_staff: current_staff)
+      else
+        reservation_customer.accepted!
       end
     end
 

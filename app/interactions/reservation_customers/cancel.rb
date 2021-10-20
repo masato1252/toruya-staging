@@ -6,10 +6,10 @@ module ReservationCustomers
     integer :customer_id
 
     def execute
-      reservation_customer.canceled!
-
-      unless reservation.customers.exists?
-        compose(Reservations::Cancel, reservation: Reservation.find(reservation_id))
+      if reservation.customers.count == 1
+        compose(Reservations::Cancel, reservation: reservation)
+      else
+        reservation_customer.canceled!
       end
     end
 
