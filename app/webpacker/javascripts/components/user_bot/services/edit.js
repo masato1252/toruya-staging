@@ -11,6 +11,8 @@ import { OnlineServices } from "user_bot/api"
 import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
+import EditSolutionInput from "shared/edit/solution_input";
+
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
   const [end_time, setEndTime] = useState(props.service.end_time)
@@ -19,9 +21,9 @@ const OnlineServiceEdit =({props}) => {
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.service,
+      solution_type: null
     }
   });
-  const [contentUrl, setContentUrl] = useState(props.service.content?.url)
 
   const onSubmit = async (data) => {
     let error, response;
@@ -47,21 +49,16 @@ const OnlineServiceEdit =({props}) => {
         break
       case "content_url":
         return (
-          <>
-            <div className="field-row">
-              <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
-            </div>
-            <div className='video-player-wrapper'>
-              <ReactPlayer
-                className='react-player'
-                light={false}
-                url={watch("content_url") || ""}
-                width='100%'
-                height='100%'
-              />
-            </div>
-          </>
-        );
+          <EditSolutionInput
+            solutions={props.solutions}
+            attribute='content_url'
+            solution_type={watch("solution_type")}
+            placeholder={props.placeholder}
+            register={register}
+            watch={watch}
+            setValue={setValue}
+          />
+        )
         break
       case "company":
         return (

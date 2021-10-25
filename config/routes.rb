@@ -180,8 +180,10 @@ Rails.application.routes.draw do
         end
 
         resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create] do
-          resources :lessons, only: [:new, :create, :edit]
+          resources :lessons, only: [:new, :create, :show, :edit]
         end
+
+        resources :lessons, module: :services, only: [:update]
       end
 
       resources :custom_messages, only: [:destroy] do

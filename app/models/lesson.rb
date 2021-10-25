@@ -3,7 +3,7 @@
 # Table name: lessons
 #
 #  id            :bigint           not null, primary key
-#  content       :json
+#  content_url   :string
 #  name          :string
 #  note          :text
 #  solution_type :string
@@ -14,5 +14,7 @@
 #  index_lessons_on_chapter_id  (chapter_id)
 #
 class Lesson < ApplicationRecord
+  include ContentHelper
+
   belongs_to :chapter
 end

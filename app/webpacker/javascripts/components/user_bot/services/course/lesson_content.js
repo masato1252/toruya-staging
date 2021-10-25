@@ -10,9 +10,7 @@ import Solution from "../online_service_page/solution";
 //   name: $name,
 //   note: $note,
 //   solution_type: video/pdf,
-//   content: {
-//      url: $url
-//   }
+//   content_url: $url
 // }
 //
 // demo: true/false
@@ -30,7 +28,7 @@ const LessonContent = ({lesson, demo, jump, light}) => {
           <DemoEditButton demo={demo} jump={() => jump(1)} />
           <Solution
             solution_type={lesson.solution_type}
-            content={lesson.content}
+            content_url={lesson.content_url}
             light={light}
           />
         </div>

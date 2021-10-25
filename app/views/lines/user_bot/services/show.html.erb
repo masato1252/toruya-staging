@@ -8,16 +8,18 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
-    <span class="dotdotdot"><%= @service.content&.dig("url") %></span>
-    <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
-  <% end %>
+  <% unless @service.course? %>
+    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
+      <span class="dotdotdot"><%= @service.content_url %></span>
+      <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
+    <% end %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
-    <span><%= @service.sale_page&.product&.name %></span>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
+      <span><%= @service.sale_page&.product&.name %></span>
+    <% end %>
   <% end %>
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>

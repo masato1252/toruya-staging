@@ -2,7 +2,7 @@
 
 class OnlineServiceSerializer
   include JSONAPI::Serializer
-  attribute :id, :name, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text
+  attribute :id, :name, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text, :content_url
   attribute :product_name, &:name
 
   attribute :company_info do |service|
@@ -19,11 +19,6 @@ class OnlineServiceSerializer
 
   attribute :solution do |service|
     I18n.t("user_bot.dashboards.online_service_creation.solutions.#{service.solution_type}.title")
-  end
-
-  attribute :content_url do |service|
-    # course service content is nil
-    service.content&.dig("url")
   end
 
   attribute :charge_required do |service|

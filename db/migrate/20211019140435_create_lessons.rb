@@ -4,7 +4,7 @@ class CreateLessons < ActiveRecord::Migration[6.0]
       t.references :chapter
       t.string :name
       t.string :solution_type
-      t.json :content
+      t.string :content_url
       t.text :note
     end
   end

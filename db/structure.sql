@@ -986,7 +986,7 @@ CREATE TABLE public.lessons (
     chapter_id bigint,
     name character varying,
     solution_type character varying,
-    content json,
+    content_url character varying,
     note text
 );
 
@@ -1209,7 +1209,8 @@ CREATE TABLE public.online_services (
     slug character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    start_at timestamp without time zone
+    start_at timestamp without time zone,
+    content_url character varying
 );
 
 
@@ -4759,6 +4760,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210913140858'),
 ('20210917004005'),
 ('20211019053832'),
-('20211019140435');
+('20211019140435'),
+('20211023080215');
 
 

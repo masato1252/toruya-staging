@@ -8,7 +8,7 @@ import { SubmitButton } from "shared/components";
 import LessonContent from "user_bot/services/course/lesson_content";
 
 const ConfirmationStep = ({next, prev, jump, step}) => {
-  const { props, dispatch, createLesson, name, selected_solution, content, note } = useGlobalContext()
+  const { props, dispatch, createLesson, name, selected_solution, content_url, note } = useGlobalContext()
 
   useLayoutEffect(() => {
     $("body").scrollTop(0)
@@ -27,7 +27,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
             name: name,
             note: note,
             solution_type: selected_solution,
-            content: content
+            content_url: content_url
           }
         }
         demo={true}

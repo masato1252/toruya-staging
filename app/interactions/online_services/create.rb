@@ -6,6 +6,7 @@ module OnlineServices
     string :name
     string :selected_goal
     string :selected_solution
+    string :content_url, default: nil
     hash :end_time do
       integer :end_on_days, default: nil
       string :end_time_date_part, default: nil
@@ -13,13 +14,12 @@ module OnlineServices
     hash :upsell, default: nil do
       integer :sale_page_id, default: nil
     end
-    hash :content, default: nil do
-      string :url, default: nil
-    end
     hash :selected_company do
       string :type
       integer :id
     end
+
+    # TODO: validate content_url, only course could be nil
 
     def execute
       ApplicationRecord.transaction do
@@ -29,7 +29,7 @@ module OnlineServices
           solution_type: selected_solution,
           end_at: end_time[:end_time_date_part] ? Time.zone.parse(end_time[:end_time_date_part]).end_of_day : nil,
           end_on_days: end_time[:end_on_days],
-          content: content,
+          content_url: content_url,
           upsell_sale_page_id: upsell[:sale_page_id],
           company_type: selected_company[:type],
           company_id: selected_company[:id],

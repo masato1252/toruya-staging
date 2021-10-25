@@ -3,7 +3,7 @@ import _ from "lodash";
 const initialState = {
   selected_solution: null,
   name: null,
-  content: null,
+  content_url: null,
   note: null
 }
 

@@ -6,7 +6,6 @@ import { useGlobalContext } from "./context/global_state";
 import LessonFlowStepIndicator from "./lesson_flow_step_indicator";
 import VideoContentSetup from "./contents/video_content_setup";
 import PdfContentSetup from "./contents/pdf_content_setup";
-// import ExternalContentSetup from "../contents/external_content_setup";
 
 const SolutionStep = ({next, step}) => {
   const { props, dispatch, selected_solution } = useGlobalContext()
@@ -17,8 +16,6 @@ const SolutionStep = ({next, step}) => {
         return <VideoContentSetup next={next} step={step} />
       case "pdf":
         return <PdfContentSetup next={next} step={step} />
-      // case "external":
-      //   return <ExternalContentSetup next={next} step={step} />
     }
   }
 

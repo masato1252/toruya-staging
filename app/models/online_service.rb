@@ -6,6 +6,7 @@
 #  id                  :bigint           not null, primary key
 #  company_type        :string           not null
 #  content             :json
+#  content_url         :string
 #  end_at              :datetime
 #  end_on_days         :integer
 #  goal_type           :string           not null
@@ -25,10 +26,8 @@
 #  index_online_services_on_user_id  (user_id)
 #
 
-require "thumbnail_of_video"
-
 class OnlineService < ApplicationRecord
-  PDF_LOGO_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/pdf_logo.png"
+  include ContentHelper
 
   VIDEO_SOLUTION = {
     key: "video",
@@ -183,6 +182,10 @@ class OnlineService < ApplicationRecord
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
 
+  def solution_options
+    GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+  end
+
   def course?
     solution_type == COURSE_SOLUTION[:key]
   end
@@ -258,17 +261,6 @@ class OnlineService < ApplicationRecord
     elsif end_on_days
       Time.current.advance(days: end_on_days)
     end
-  end
-
-  def thumbnail_url
-    @thumbnail_url ||=
-      case solution_type
-      when "video"
-        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content && content["url"]
-      when "pdf"
-        PDF_LOGO_URL
-      else
-      end
   end
 
   def message_template_variables(customer_or_user)
