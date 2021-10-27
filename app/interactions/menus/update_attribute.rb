@@ -14,6 +14,8 @@ module Menus
       boolean :online, default: nil
     end
 
+    validate :validate_menu_usage
+
     def execute
       # TODO: Update all booking option updated_at
 
@@ -37,33 +39,6 @@ module Menus
               menu.staff_menus.update_all(max_customers: checked_menu_shops.map { |attr| attr[:max_seat_number].presence || "1" }.max)
             end
           end
-        # when "sale_template_variables", "introduction_video_url", "flow", "quantity"
-        #   sale_page.update(attrs.slice(update_attribute))
-        # when "normal_price"
-        #   sale_page.update(normal_price_amount_cents: attrs[:normal_price])
-        # when "selling_price"
-        #   sale_page.update(selling_price_amount_cents: attrs[:selling_price])
-        # when "why_content"
-        #   picture = attrs[:why_content].delete(:picture)
-        #
-        #   sale_page.update(content: attrs[:why_content])
-        #   if picture
-        #     sale_page.picture.purge_later
-        #     sale_page.update(picture: picture)
-        #   end
-        # when "end_time"
-        #   sale_page.update(selling_end_at: attrs[:selling_end_at] ? Time.zone.parse(attrs[:selling_end_at]).end_of_day : nil)
-        # when "start_time"
-        #   sale_page.update(selling_start_at: attrs[:selling_start_at] ? Time.zone.parse(attrs[:selling_start_at]).beginning_of_day : nil)
-        # when "staff"
-        #   responsible_staff = sale_page.user.staffs.find(attrs[:staff][:id])
-        #   sale_page.update(staff: responsible_staff)
-        #   if attrs[:staff][:picture]
-        #     responsible_staff.picture.purge
-        #     responsible_staff.picture = attrs[:staff][:picture]
-        #   end
-        #   responsible_staff.introduction = attrs[:staff][:introduction]
-        #   responsible_staff.save!
         end
 
         if menu.errors.present?
@@ -75,6 +50,24 @@ module Menus
       end
 
       menu
+    end
+
+    private
+
+    def validate_menu_usage
+      if update_attribute == "menu_shops" && menu.booking_option_menus.exists?
+        checked_menu_shops = attrs[:menu_shops].select{ |attribute| attribute["checked"].present? }
+
+        checked_shop_ids = checked_menu_shops.map {|attr| attr[:shop_id] }
+        unchecked_shop_ids =  menu.user.shop_ids - checked_shop_ids
+
+        booking_page_ids = BookingPageOption.where(booking_option_id: menu.booking_option_menus.pluck(:booking_option_id)).pluck(:booking_page_id)
+        still_be_used_shop_ids = BookingPage.where(id: booking_page_ids).pluck(:shop_id)
+
+        if (unchecked_shop_ids & still_be_used_shop_ids).present?
+          errors.add(:menu, :be_used_by_booking_page)
+        end
+      end
     end
   end
 end

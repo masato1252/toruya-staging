@@ -26,7 +26,12 @@ const MenuEdit =({props}) => {
       data: _.assign( data, { attribute: props.attribute, menu_shops: menu_shops_options })
     })
 
-    window.location = response.data.redirect_to
+    if (error) {
+      toastr.error(error.response.data.error_message)
+    }
+    else {
+      window.location = response.data.redirect_to
+    }
   }
 
   const renderCorrespondField = () => {

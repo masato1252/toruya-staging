@@ -43,6 +43,7 @@ class Menu < ApplicationRecord
   has_many :categories, through: :menu_categories
   has_many :reservations
   has_many :shop_menu_repeating_dates, dependent: :destroy
+  has_many :booking_option_menus
 
   has_one :reservation_setting_menu, dependent: :destroy
   has_one :reservation_setting, through: :reservation_setting_menu

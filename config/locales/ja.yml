@@ -614,6 +614,10 @@ ja:
   active_interaction:
     errors:
       models:
+        menus/update_attribute:
+          attributes:
+            menu:
+              be_used_by_booking_page: "^menu still be used by booking page"
         staff_accounts/create:
           attributes:
             staff:
