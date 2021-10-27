@@ -56,6 +56,11 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def destroy
     booking_option = super_user.booking_options.find(params[:id])
 
+    if booking_option.booking_page_options.exists?
+      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert:  "booking option was using by a booking page"}
+      return
+    end
+
     if booking_option.destroy
       redirect_to lines_user_bot_booking_options_path(super_user), notice: I18n.t("common.delete_successfully_message")
     else
