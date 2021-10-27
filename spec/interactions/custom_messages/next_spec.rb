@@ -110,6 +110,27 @@ RSpec.describe CustomMessages::Next do
       end
     end
 
+    context "when it was from new/updated custom_message" do
+      let(:current_custom_message) { FactoryBot.create(:custom_message, service: service, after_days: 3) }
+      let(:args) do
+        {
+          receiver: receiver,
+          custom_message: current_custom_message,
+          schedule_right_away: true
+        }
+      end
+
+      it "schedules the next custom message" do
+        expect(Notifiers::CustomMessages::Send).to receive(:perform_at).with({
+          schedule_at: service.start_at_for_customer(receiver).advance(days: current_custom_message.after_days).change(hour: 9),
+          custom_message: current_custom_message,
+          receiver: receiver
+        })
+
+        outcome
+      end
+    end
+
     context "when it is from first time customer purchased(without custom_message params)" do
       let(:new_custom_message_after_days ) { 0 }
       let(:custom_message) { nil }

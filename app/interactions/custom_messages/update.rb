@@ -23,7 +23,8 @@ module CustomMessages
           message.service.available_customers.find_each do |customer|
             ::CustomMessages::Next.perform_later(
               custom_message: message,
-              receiver: customer
+              receiver: customer,
+              schedule_right_away: true
             )
           end
         end

@@ -6,26 +6,33 @@ module CustomMessages
     object :product, default: nil, class: ApplicationRecord
     string :scenario, default: nil
     object :receiver, class: ApplicationRecord
+    boolean :schedule_right_away, default: false
 
     validate :validate_next_scenario
 
     def execute
-      if next_custom_messages&.exists?
+      if schedule_right_away
+        send_schedule_message(custom_message)
+      elsif next_custom_messages&.exists?
         next_custom_messages.find_each do |next_custom_message|
-          schedule_at = message_product.start_at_for_customer(receiver).advance(days: next_custom_message.after_days).change(hour: 9)
-
-          if schedule_at > Time.current || next_custom_message.after_days == 0
-            Notifiers::CustomMessages::Send.perform_at(
-              schedule_at: schedule_at,
-              custom_message: next_custom_message,
-              receiver: receiver
-            )
-          end
+          send_schedule_message(next_custom_message)
         end
       end
     end
 
     private
+
+    def send_schedule_message(message)
+      schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9)
+
+      if schedule_at > Time.current || message.after_days == 0
+        Notifiers::CustomMessages::Send.perform_at(
+          schedule_at: schedule_at,
+          custom_message: message,
+          receiver: receiver
+        )
+      end
+    end
 
     def message_product
       @message_product ||= product || custom_message.service
