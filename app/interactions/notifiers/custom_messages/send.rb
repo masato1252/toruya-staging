@@ -23,8 +23,9 @@ module Notifiers
       def execute
         super
 
-        return unless deliverable
         custom_message.with_lock do
+          return unless deliverable
+
           custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).uniq)
         end
 
