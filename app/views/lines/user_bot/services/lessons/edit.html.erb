@@ -3,7 +3,7 @@
     attribute: @attribute,
     lesson: LessonSerializer.new(@lesson).attributes_hash,
     chapter_options: custom_options(@online_service.chapters),
-    solutions: OnlineService::COURSE_SOLUTION[:solutions]
+    solutions: @online_service.solution_options
   }
 },
 { camelize_props: false }

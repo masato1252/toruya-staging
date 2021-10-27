@@ -181,9 +181,15 @@ class OnlineService < ApplicationRecord
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
+  has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
 
   def solution_options
-    GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+    case goal_type
+    when 'course'
+      COURSE_SOLUTION[:solutions]
+    else
+      GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+    end
   end
 
   def course?

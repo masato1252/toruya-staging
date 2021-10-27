@@ -101,6 +101,10 @@ $line-margin: 20px;
   padding: 1.5rem;
 }
 
+.p-3 {
+  padding: 0.75rem;
+}
+
 .text-right {
   text-align: right;
 }
@@ -120,6 +124,11 @@ $line-margin: 20px;
 .border-black {
   --tw-border-opacity: 1;
   border-color: rgba(0, 0, 0, var(--tw-border-opacity));
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgba(255, 255, 255, var(--tw-border-opacity));
 }
 
 .text-gray-500 {

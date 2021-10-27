@@ -21,19 +21,21 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
       <div className="preview-hint">
         {I18n.t("user_bot.dashboards.online_service_creation.sale_page_like_this")}
       </div>
-      <LessonContent
-        lesson={
-          {
-            name: name,
-            note: note,
-            solution_type: selected_solution,
-            content_url: content_url
+      <div className="online-service-page">
+        <LessonContent
+          lesson={
+            {
+              name: name,
+              note: note,
+              solution_type: selected_solution,
+              content_url: content_url
+            }
           }
-        }
-        demo={true}
-        light={false}
-        jump={jump}
-      />
+          demo={true}
+          light={false}
+          jump={jump}
+        />
+      </div>
 
       <div className="action-block margin-around">
         <SubmitButton

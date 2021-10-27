@@ -6,7 +6,7 @@ import Routes from 'js-routes.js';
 import Countdown from 'shared/countdown';
 import { DemoEditButton } from 'shared/components';
 
-import OnlineServiceSolution from "./solution";
+import OnlineServiceSolution from "./solution"
 
 const OnlineServicePage = ({company_info, name, solution_type, content_url, upsell_sale_page, demo, jump, light}) => {
   return (

@@ -10,7 +10,7 @@
   <% @online_service.chapters.includes(:lessons).each do |chapter| %>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_path(@online_service, chapter), title: chapter.name, header_row: true %>
 
-    <% chapter.lessons.each do |lesson| %>
+    <% chapter.lessons.order("id").each do |lesson| %>
       <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_path(@online_service, chapter, lesson), title: lesson.name %>
     <% end %>
     <div class="action-block">
