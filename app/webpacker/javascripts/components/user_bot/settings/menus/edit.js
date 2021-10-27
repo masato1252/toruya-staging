@@ -95,6 +95,7 @@ const MenuEdit =({props}) => {
                       onWord="ON"
                       checked={option.checked}
                       name={option.name}
+                      nosize={true}
                       onChange={() => {
                         setMenuShops((menu_options) => {
                           const new_menu_options = menu_options.map((menu_option) => {
