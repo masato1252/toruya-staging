@@ -40,6 +40,9 @@
     </div>
 
     <div class="modal-footer centerize">
+      <div>
+        <input type="text" value=<%= booking_url(@booking_page) %> readOnly class="extend"/>
+      </div>
       <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
         data: {
         controller: "clipboard",
