@@ -30,6 +30,7 @@ const SortableMenuOption = sortableElement(({booking_option_id, menu, i18n}) => 
       >
         {i18n.delete}
       </a>
+      {menu.no_available_shop && <div className="warning">There is no available shop for this menu, please set up the shop for this menu or remove it</div> }
     </div>
   )
 });

@@ -12,8 +12,8 @@
   <%= react_component("user_bot/booking_options/menus", {
     props: {
       booking_option: @booking_option.attributes.merge!(
-        menus: @booking_option.booking_option_menus.order("priority").map { |booking_option_menu|
-          booking_option_menu.attributes.slice("priority", "required_time").reverse_merge!(menu_group_options(@menu_result[:menu_options], :minutes, :interval).find { |option| option["value"] == booking_option_menu.menu_id })},
+        menus: @booking_option.booking_option_menus.includes(menu: :shop_menus).order("priority").map { |booking_option_menu|
+          booking_option_menu.attributes.slice("priority", "required_time").merge(no_available_shop: !booking_option_menu.menu.shop_menus.exists?).reverse_merge!(menu_group_options(@menu_result[:menu_options], :minutes, :interval).find { |option| option["value"] == booking_option_menu.menu_id } || {})},
       ),
       attribute: @attribute,
       i18n: {
