@@ -64,7 +64,9 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
 
   def menu_options
     super_user.menus.map do |menu|
-      ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
-    end
+      if menu.shop_menus.exists?
+        ::Options::MenuOption.new(id: menu.id, name: menu.display_name, minutes: menu.minutes, interval: menu.interval)
+      end
+    end.compact
   end
 end
