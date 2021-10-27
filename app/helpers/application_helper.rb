@@ -26,6 +26,19 @@ module ApplicationHelper
     nil
   end
 
+  def custom_bootstrap_flash
+    flash_messages = []
+    flash.each do |type, message|
+      type = "success" if type == "notice"
+      type = "error" if type == "alert"
+      type = "info" if type == "info"
+      type = "warning" if type == "warning"
+      text = "<script>toastr.#{type}('#{message}');</script>"
+        flash_messages << text.html_safe if message
+    end
+    flash_messages.join("\n").html_safe
+  end
+
   def notification_messages
     (@notification_messages || []).each do |message|
       concat(content_tag(:div, message, :class => "notification alert alert-info fade in") do

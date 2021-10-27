@@ -24,6 +24,7 @@
   </head>
 
   <body>
+    <%= custom_bootstrap_flash %>
     <div class="responsive-content">
       <div class="mobile-content extend <%= controller.class.name.underscore.remove(/_controller\z/).dasherize.gsub("/", " ") %>">
         <%= yield %>

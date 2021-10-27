@@ -67,6 +67,7 @@
     "safe-await": "^1.0.0",
     "stimulus": "^1.0.1",
     "swr": "^0.3.11",
+    "toastr": "^2.1.4",
     "underscore": "^1.9.1",
     "url-search-params-polyfill": "^4.0.0",
     "webpack-bundle-analyzer": "^3.1.0",
