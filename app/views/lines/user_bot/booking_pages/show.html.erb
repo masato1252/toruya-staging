@@ -15,13 +15,20 @@
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_booking_page_path(@booking_page, attribute: :shop_id), title: @booking_page.shop.name %>
 
   <div class="field-group-header" id="new_option"><%= I18n.t("settings.booking_page.form.booking_option_header") %></div>
-  <% @booking_page.booking_options.includes(:menus).each do |booking_option| %>
+  <% @booking_page.booking_options.includes(menus: :shop_menus).each do |booking_option| %>
     <div class="field-row option-row">
       <div class="option-info">
         <%= booking_option.name %><br />
         <div class="desc">
           <%= booking_option.menus.pluck(:name).join(", ") %><br />
           <%= I18n.t("settings.booking_page.form.booking_option_required_time") %><%= booking_option.minutes %><%= I18n.t("common.minute") %>
+          <% booking_option.menus.each do |menu| %>
+            <% if menu.shop_menus.map(&:shop_id).exclude?(@booking_page.shop_id) %>
+              <div class="warning">
+                Invalid menu, please check menu setting to make sure menu <%= menu.name %> is available in this shop <%= @booking_page.shop.name %>
+              </div>
+            <% end %>
+          <% end %>
         </div>
       </div>
       <div class="option-action">
