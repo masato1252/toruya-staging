@@ -17,8 +17,6 @@ module Menus
     validate :validate_menu_usage
 
     def execute
-      # TODO: Update all booking option updated_at
-
       menu.with_lock do
         case update_attribute
         when "name"
