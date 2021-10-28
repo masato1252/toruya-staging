@@ -195,6 +195,9 @@ ja:
           connection_title: Stripeアカウント連携
           stripe_desc1_html: Stripeアカウントを連携することで<br />予約時に利用料を支払ってもらったり<br />オンラインサービスを有料販売できます。
           stripe_desc2_html: Stripeアカウントが無い方は<br />あらかじめアカウント登録してください。
+        booking_options:
+          messages:
+            booking_option_was_occupied: この予約価格は、予約ページに掲載されている為、削除することができません。
       broadcasts:
         broadcast_title: 配信条件
         broadcast_conditions: 配信条件一覧

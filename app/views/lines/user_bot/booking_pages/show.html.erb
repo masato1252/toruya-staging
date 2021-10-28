@@ -25,7 +25,7 @@
           <% booking_option.menus.each do |menu| %>
             <% if menu.shop_menus.map(&:shop_id).exclude?(@booking_page.shop_id) %>
               <div class="warning">
-                Invalid menu, please check menu setting to make sure menu <%= menu.name %> is available in this shop <%= @booking_page.shop.name %>
+                <%= t("settings.booking_page.form.form_errors.invalid_menu_html", shop_name: @booking_page.shop.name, url: lines_user_bot_settings_menu_path(menu)) %>
               </div>
             <% end %>
           <% end %>

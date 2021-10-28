@@ -617,7 +617,7 @@ ja:
         menus/update_attribute:
           attributes:
             menu:
-              be_used_by_booking_page: "^menu still be used by booking page"
+              be_used_by_booking_page: "^このメニューは、予約ページで掲載されています。最低１つの店舗を利用可能に設定してください。"
         staff_accounts/create:
           attributes:
             staff:

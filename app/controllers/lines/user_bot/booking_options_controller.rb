@@ -57,7 +57,7 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
     booking_option = super_user.booking_options.find(params[:id])
 
     if booking_option.booking_page_options.exists?
-      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert:  "booking option was using by a booking page"}
+      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert:  I18n.t("user_bot.dashboards.settings.booking_options.messages.booking_option_was_occupied") }
       return
     end
 
