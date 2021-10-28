@@ -614,6 +614,10 @@ ja:
   active_interaction:
     errors:
       models:
+        booking_options/delete:
+          attributes:
+            booking_option:
+              be_used_by_booking_page: "^この予約価格は、予約ページに掲載されている為、削除することができません。"
         menus/update_attribute:
           attributes:
             menu:

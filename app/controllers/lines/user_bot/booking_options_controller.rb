@@ -56,15 +56,12 @@ class Lines::UserBot::BookingOptionsController < Lines::UserBotDashboardControll
   def destroy
     booking_option = super_user.booking_options.find(params[:id])
 
-    if booking_option.booking_page_options.exists?
-      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert:  I18n.t("user_bot.dashboards.settings.booking_options.messages.booking_option_was_occupied") }
-      return
-    end
+    outcome = BookingOptions::Delete.run(booking_option: booking_option)
 
-    if booking_option.destroy
+    if outcome.valid?
       redirect_to lines_user_bot_booking_options_path(super_user), notice: I18n.t("common.delete_successfully_message")
     else
-      redirect_to lines_user_bot_booking_options_path(super_user)
+      redirect_to lines_user_bot_booking_option_path(booking_option), flash: { alert: outcome.errors.full_messages.join(", ") }
     end
   end
 
