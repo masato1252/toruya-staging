@@ -38,7 +38,8 @@ RSpec.describe CustomMessages::Update do
 
         expect(CustomMessages::Next).to have_received(:perform_later).with({
           custom_message: result,
-          receiver: relation.customer
+          receiver: relation.customer,
+          schedule_right_away: true
         })
       end
     end

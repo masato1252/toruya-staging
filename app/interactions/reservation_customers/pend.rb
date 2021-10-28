@@ -6,10 +6,10 @@ module ReservationCustomers
     integer :customer_id
 
     def execute
+      reservation_customer.pending!
+
       if reservation.customers.count == 1
         compose(Reservations::Pend, reservation: reservation)
-      else
-        reservation_customer.pending!
       end
     end
 
