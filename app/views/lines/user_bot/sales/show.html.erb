@@ -125,6 +125,9 @@
       <% end %>
       </div>
       <div class="modal-footer centerize">
+        <div>
+          <input type="text" value=<%= sale_page_url(slug: @sale_page.slug) %> readOnly class="extend"/>
+        </div>
         <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
           data: {
           controller: "clipboard",
