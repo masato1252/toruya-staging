@@ -88,12 +88,12 @@ class LinesController < ActionController::Base
   end
 
   def update_customer_address
-    if social_customer.customer != customer
+    if customer && social_customer.customer != customer
       head :unprocessable_entity
       return
     end
 
-    Customers::UpdateAddress.run(customer: customer, address_details: params.permit!.to_h[:address_details])
+    Customers::UpdateAddress.run(customer: social_customer.customer, address_details: params.permit!.to_h[:address_details])
 
     head :ok
   end
