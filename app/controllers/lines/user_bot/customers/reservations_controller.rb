@@ -40,7 +40,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     outcome = ReservationCustomers::Accept.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id], current_staff: current_user_staff)
 
     if outcome.invalid?
-      Rollback.error(
+      Rollbar.error(
         "Unexpected ReservationCustomers::Accept",
         errors: outcome.errors.details
       )
@@ -53,7 +53,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     outcome = ReservationCustomers::Pend.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     if outcome.invalid?
-      Rollback.error(
+      Rollbar.error(
         "Unexpected ReservationCustomers::Pend",
         errors: outcome.errors.details
       )
@@ -66,7 +66,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     outcome = ReservationCustomers::Cancel.run(reservation_id: params[:reservation_id], customer_id: params[:customer_id])
 
     if outcome.invalid?
-      Rollback.error(
+      Rollbar.error(
         "Unexpected ReservationCustomers::Cancel",
         errors: outcome.errors.details
       )
@@ -87,7 +87,7 @@ class Lines::UserBot::Customers::ReservationsController < Lines::UserBotDashboar
     )
 
     if outcome.invalid?
-      Rollback.error(
+      Rollbar.error(
         "Unexpected CustomerPayments::RefundReservation",
         errors: outcome.errors.details
       )
