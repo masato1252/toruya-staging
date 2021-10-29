@@ -24,6 +24,18 @@
   }
 }
 
+.online_services {
+  .fa-check {
+    &.done {
+      color: green
+    }
+
+    &.off {
+      color: gray;
+    }
+  }
+}
+
 .countdown {
   display: flex;
   align-items: flex-end;

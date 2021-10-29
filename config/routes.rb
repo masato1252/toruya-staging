@@ -545,7 +545,11 @@ Rails.application.routes.draw do
     end
   end
   resources :sale_pages, param: :slug, only: [:show]
-  resources :online_services, param: :slug, only: [:show]
+  resources :online_services, param: :slug, only: [:show] do
+    member do
+      put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+    end
+  end
 
   resources :shops, only: [:show]
 

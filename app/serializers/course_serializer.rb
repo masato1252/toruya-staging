@@ -2,7 +2,7 @@
 
 class CourseSerializer
   include JSONAPI::Serializer
-  attribute :id, :name
+  attribute :id, :name, :slug
 
   attribute :company_info do |service|
     CompanyInfoSerializer.new(service.company).attributes_hash

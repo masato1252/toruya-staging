@@ -1167,7 +1167,8 @@ CREATE TABLE public.online_service_customer_relations (
     product_details json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    current boolean DEFAULT true
+    current boolean DEFAULT true,
+    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -4761,6 +4762,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210917004005'),
 ('20211019053832'),
 ('20211019140435'),
-('20211023080215');
+('20211023080215'),
+('20211029131328');
 
 

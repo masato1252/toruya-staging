@@ -6,7 +6,7 @@ class OnlineServicesController < Lines::CustomersController
   before_action :online_service
 
   def show
-    @is_service_member = online_service.online_service_customer_relations.available.where(customer: current_customer).exists?
+    @service_member = online_service.online_service_customer_relations.available.where(customer: current_customer).first
     @is_owner = current_toruy_social_user&.user == current_owner
 
     if @online_service.course?
@@ -14,6 +14,12 @@ class OnlineServicesController < Lines::CustomersController
     else
       @online_service_hash = OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false, light: false)
     end
+  end
+
+  def watch_lesson
+    outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
+
+    return_json_response(outcome, { watched_lesson_ids: outcome.result.watched_lesson_ids })
   end
 
   private

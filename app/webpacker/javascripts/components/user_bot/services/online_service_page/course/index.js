@@ -17,9 +17,7 @@ const LessonRow = ({lesson}) => {
   )
 }
 
-const Chapter = ({chapter, setLessonId, selected_chaper_id}) => {
-  console.log("chapter", chapter.name)
-
+const Chapter = ({chapter, setLessonId, selected_chaper_id, watched_lesson_ids}) => {
   return (
     <div data-controller="collapse" data-collapse-status={`${selected_chaper_id === chapter.id ? "open" : "closed"}`}>
       <div className="p-3 bg-gray border border-solid border-white flex justify-between" data-action="click->collapse#toggle">
@@ -37,6 +35,7 @@ const Chapter = ({chapter, setLessonId, selected_chaper_id}) => {
               key={`lesson-${lesson.id}`}
               className="p-3"
               onClick={() => setLessonId(lesson.id)}>
+              <i className={`fa fa-check ${watched_lesson_ids.includes(lesson.id.toString()) ? "done" : "off"}`}></i>
               {lesson.name}
             </div>
           )
@@ -46,8 +45,9 @@ const Chapter = ({chapter, setLessonId, selected_chaper_id}) => {
   )
 }
 
-const CoursePage = ({course, lesson_id}) => {
+const CoursePage = ({course, lesson_id, lesson_ids}) => {
   const [lessonId, setLessonId] = useState(parseInt(lesson_id))
+  const [watched_lesson_ids, setWatchLessons] = useState(lesson_ids)
   const [lessonIndex, setLessonIndex] = useState()
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const CoursePage = ({course, lesson_id}) => {
   }, [lessonId])
 
   const lesson = () => {
-    return course.lessons.find((lesson) => lesson.id === lessonId)
+    return course.lessons.find((lesson) => lesson.id === lessonId) || course.lessons[0]
   }
 
   const nextLessonId = () => {
@@ -82,8 +82,10 @@ const CoursePage = ({course, lesson_id}) => {
       </div>
       <LessonContent
         lesson={lesson()}
+        course={course}
         demo={false}
         light={false}
+        setWatchLessons={setWatchLessons}
         nextLesson={nextLessonId() ? () => setLessonId(nextLessonId()) : null}
         prevLesson={prevLessonId() ? () => setLessonId(prevLessonId()) : null}
       />
@@ -95,6 +97,7 @@ const CoursePage = ({course, lesson_id}) => {
             chapter={chapter}
             setLessonId={setLessonId}
             selected_chaper_id={lesson()?.chapter_id}
+            watched_lesson_ids={watched_lesson_ids}
           />
         )
       )}
