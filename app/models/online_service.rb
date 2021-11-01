@@ -184,7 +184,7 @@ class OnlineService < ApplicationRecord
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
 
   def solution_options
-    case goal_type
+    case solution_type
     when 'course'
       COURSE_SOLUTION[:solutions]
     else

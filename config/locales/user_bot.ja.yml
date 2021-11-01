@@ -142,6 +142,26 @@ ja:
             online_service_purchased: サービス登録
             after_days: サービス開始%{after_days}日後
             after_days_title: サービス開催、何日後に送信しますか？
+        course:
+          title: 提供コンテンツ
+          content_label: コンテンツ目次
+          add_a_chapter: 章を追加
+          add_a_lesson: レッスンを追加
+          chapters:
+            form:
+              name_title: Name
+          lessons:
+            new:
+              below_is_what_you_want: 以下のレッスンを作成してよろしいですか？
+              create_by_this_setting: この設定でレッスンを作成する
+            show:
+              title: Lesson title
+              content_label: Content label
+            form:
+              name_title: Name
+              chapter_id_title: Chapter
+              content_url_title: Content URL
+              note_title: Note
         menu:
           basic_settings: メニュー基本設定
           name: メニュー名
@@ -228,6 +248,11 @@ ja:
           upsell_sale_page_title: アップセル
           start_time_title: 利用開始
           end_time_title: 利用終了
+      course:
+        title: 提供コンテンツ
+        chapter_content: コンテンツ目次
+        add_a_chapter: 章を追加
+        add_a_lesson: レッスンを追加
       booking_pages:
         index:
           title: オンライン予約ページ

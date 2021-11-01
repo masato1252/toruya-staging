@@ -17,7 +17,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
   return (
     <div className="form settings-flow">
       <LessonFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.below_is_what_you_want")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.course.lessons.new.below_is_what_you_want")}</h3>
       <div className="preview-hint">
         {I18n.t("user_bot.dashboards.online_service_creation.sale_page_like_this")}
       </div>
@@ -41,7 +41,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
         <SubmitButton
           handleSubmit={createLesson}
           submitCallback={next}
-          btnWord={I18n.t("user_bot.dashboards.online_service_creation.create_by_this_setting")}
+          btnWord={I18n.t("user_bot.dashboards.settings.course.lessons.new.create_by_this_setting")}
         />
       </div>
     </div>

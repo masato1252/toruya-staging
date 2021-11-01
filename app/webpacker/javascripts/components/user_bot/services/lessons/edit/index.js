@@ -71,9 +71,9 @@ const LessonEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}
+        title={I18n.t(`user_bot.dashboards.settings.course.lessons.form.${props.attribute}_title`)}
       />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}</div>
+      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.course.lessons.form.${props.attribute}_title`)}</div>
       {renderCorrespondField()}
 
       <BottomNavigationBar klassName="centerize">

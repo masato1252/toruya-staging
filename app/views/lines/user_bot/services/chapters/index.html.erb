@@ -1,12 +1,6 @@
 <div class="service-show form with-top-bar">
-  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: I18n.t("user_bot.dashboards.services.service_page") %>
-  <div class="field-group-header" id="content">Table of Contents</div>
-  <% if @online_service.chapters.size == 0 %>
-    <div class="margin-around centerize">
-      Please set chapters first
-    </div>
-  <% end %>
-
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
+  <div class="field-group-header" id="content"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_label") %></div>
   <% @online_service.chapters.includes(:lessons).each do |chapter| %>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_path(@online_service, chapter), title: chapter.name, header_row: true %>
 
@@ -14,11 +8,11 @@
       <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapter_lesson_path(@online_service, chapter, lesson), title: lesson.name %>
     <% end %>
     <div class="action-block">
-      <%= link_to "Add a lesson", new_lines_user_bot_service_chapter_lesson_path(@online_service, chapter), class: "btn btn-tarco btn-extend" %>
+      <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_lesson"), new_lines_user_bot_service_chapter_lesson_path(@online_service, chapter), class: "btn btn-tarco btn-extend" %>
     </div>
   <% end %>
 
-  <div class="action-block">
-    <%= link_to "Add a chapter", new_lines_user_bot_service_chapter_path(@online_service), class: "btn btn-yellow btn-extend" %>
+  <div class="action-block border-0 border-t border-solid border-gray-500">
+    <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_chapter"), new_lines_user_bot_service_chapter_path(@online_service), class: "btn btn-yellow btn-extend my-2" %>
   </div>
 </div>

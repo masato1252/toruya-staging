@@ -52,9 +52,9 @@ const ChapterEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={I18n.t("user_bot.dashboards.settings.custom_message.auto_message_label")}
+        title={I18n.t("user_bot.dashboards.settings.course.chapters.form.name_title")}
       />
-      <div className="field-header">{I18n.t("user_bot.dashboards.settings.custom_message.send_message_label")}</div>
+      <div className="field-header">{I18n.t("user_bot.dashboards.settings.course.chapters.form.name_title")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <CiricleButtonWithWord

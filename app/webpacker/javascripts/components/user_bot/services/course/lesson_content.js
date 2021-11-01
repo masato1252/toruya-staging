@@ -35,20 +35,22 @@ const LessonContent = ({course, lesson, demo, jump, light, nextLesson, prevLesso
           light={light}
         />
       </div>
-      <div className="flex justify-between">
-        {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left"></i></div>}
-        <button
-          className="btn btn-tarco"
-          onClick={async () => {
-          const [error, response] = await CommonServices.update({
-            url: Routes.watch_lesson_online_service_path({slug: course.slug, lesson_id: lesson.id}),
-            data: {}
-          })
+      {!demo && (
+        <div className="flex justify-between">
+          {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left"></i></div>}
+          <button
+            className="btn btn-tarco"
+            onClick={async () => {
+              const [error, response] = await CommonServices.update({
+                url: Routes.watch_lesson_online_service_path({slug: course.slug, lesson_id: lesson.id}),
+                data: {}
+              })
 
-            setWatchLessons(response.data.watched_lesson_ids)
-        }}>Make Done</button>
-        {nextLesson && <div onClick={nextLesson}><i className="fas fa-2x fa-arrow-right"></i></div>}
-      </div>
+              setWatchLessons(response.data.watched_lesson_ids)
+            }}>Make Done</button>
+          {nextLesson && <div onClick={nextLesson}><i className="fas fa-2x fa-arrow-right"></i></div>}
+        </div>
+      )}
       <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
         <DemoEditButton demo={demo} jump={() => jump(2)} />
         {lesson.note}

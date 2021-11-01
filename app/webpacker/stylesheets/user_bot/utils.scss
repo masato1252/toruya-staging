@@ -113,8 +113,16 @@ $line-margin: 20px;
   text-align: left;
 }
 
+.border-0 {
+  border-width: 0px;
+}
+
 .border {
   border-width: 1px;
+}
+
+.border-t {
+  border-top-width: 1px;
 }
 
 .border-solid {
@@ -129,6 +137,11 @@ $line-margin: 20px;
 .border-white {
   --tw-border-opacity: 1;
   border-color: rgba(255, 255, 255, var(--tw-border-opacity));
+}
+
+.border-gray-500 {
+  --tw-border-opacity: 1;
+  border-color: rgba(209, 213, 219, var(--tw-border-opacity));
 }
 
 .text-gray-500 {
