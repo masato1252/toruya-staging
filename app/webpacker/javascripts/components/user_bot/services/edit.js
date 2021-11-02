@@ -166,6 +166,20 @@ const OnlineServiceEdit =({props}) => {
           <div className="centerize">
             <div className="margin-around">
               <label className="">
+                <input name="start_type" type="radio" value="now"
+                  checked={start_time.start_type === "now"}
+                  onChange={() => {
+                    setStartTime({
+                      start_type: "now",
+                    })
+                  }}
+                />
+                {I18n.t("sales.sale_now")}
+              </label>
+            </div>
+
+            <div className="margin-around">
+              <label className="">
                 <div>
                   <input name="start_type" type="radio" value="start_at"
                     checked={start_time.start_type === "start_at"}
@@ -175,7 +189,7 @@ const OnlineServiceEdit =({props}) => {
                       })
                     }}
                   />
-                  {I18n.t("user_bot.dashboards.online_service_creation.expire_at")}
+                  {I18n.t("sales.start_at")}
                 </div>
                 {start_time.start_type === "start_at" && (
                   <input
@@ -190,20 +204,6 @@ const OnlineServiceEdit =({props}) => {
                     }}
                   />
                 )}
-              </label>
-            </div>
-
-            <div className="margin-around">
-              <label className="">
-                <input name="start_type" type="radio" value="now"
-                  checked={start_time.start_type === "now"}
-                  onChange={() => {
-                    setStartTime({
-                      start_type: "now",
-                    })
-                  }}
-                />
-                {I18n.t("user_bot.dashboards.online_service_creation.never_expire")}
               </label>
             </div>
           </div>

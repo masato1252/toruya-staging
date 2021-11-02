@@ -16,7 +16,7 @@ const SellingStartTimeEdit = ({start_time, handleStartTimeChange}) => (
               })
             }}
           />
-          決まった日時から
+          {I18n.t("sales.start_at")}
         </div>
         {start_time.start_type === "start_at" && (
           <input
@@ -44,7 +44,7 @@ const SellingStartTimeEdit = ({start_time, handleStartTimeChange}) => (
             })
           }}
         />
-        今すぐ
+        {I18n.t("sales.sale_today")}
       </label>
     </div>
   </>
