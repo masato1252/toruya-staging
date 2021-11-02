@@ -33,8 +33,16 @@
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
 
   <% if @service.course? %>
-    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.chapters.title") %></div>
-    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service), title: t("user_bot.dashboards.settings.chapters.label") %>
+    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service) do %>
+      <% if @lessons_count.zero? && @chapters_count.zero? %>
+        <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+      <% elsif @lessons_count.zero? %>
+        <div class="flex"><span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
+      <% else %>
+        <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
+      <% end %>
+    <% end %>
   <% end %>
 
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>

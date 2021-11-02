@@ -28,6 +28,11 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
     @upsell_sale_page = @service.sale_page.serializer.attributes_hash if @service.sale_page
     @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
     @registers_count = @service.online_service_customer_relations.uncanceled.count
+
+    if @service.course?
+      @lessons_count = @service.lessons.count
+      @chapters_count = @service.chapters.count
+    end
   end
 
   def edit

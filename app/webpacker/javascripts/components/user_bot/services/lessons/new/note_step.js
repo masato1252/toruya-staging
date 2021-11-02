@@ -28,7 +28,7 @@ const NoteStep = ({next, prev, step}) => {
       />
 
       <div className="action-block">
-        <button onClick={next} className="btn btn-yellow" disabled={!note}>
+        <button onClick={next} className="btn btn-yellow">
           {I18n.t("action.next_step")}
         </button>
       </div>

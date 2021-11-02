@@ -4,7 +4,7 @@
 <% end %>
 <% if @service_member || @is_owner %>
   <%if @online_service.course? %>
-    <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_id: params[:lesson_id], lesson_ids: @service_member.watched_lesson_ids }, { camelize_props: false }) %>
+    <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_id: params[:lesson_id], lesson_ids: @service_member&.watched_lesson_ids || [] }, { camelize_props: false }) %>
   <% else %>
     <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
   <% end %>

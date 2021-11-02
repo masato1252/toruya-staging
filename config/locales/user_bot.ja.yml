@@ -147,7 +147,10 @@ ja:
           content_label: コンテンツ目次
           add_a_chapter: 章を追加
           add_a_lesson: レッスンを追加
+          no_content: 提供コンテンツ未設定
+          chapter_word: 章
           chapters:
+            title: 提供コンテンツ
             form:
               name_title: Name
           lessons:
@@ -155,8 +158,8 @@ ja:
               below_is_what_you_want: 以下のレッスンを作成してよろしいですか？
               create_by_this_setting: この設定でレッスンを作成する
             show:
-              title: Lesson title
-              content_label: Content label
+              title: 提供コンテンツ
+              content_label: 目次
             form:
               name_title: Name
               chapter_id_title: Chapter
@@ -248,11 +251,6 @@ ja:
           upsell_sale_page_title: アップセル
           start_time_title: 利用開始
           end_time_title: 利用終了
-      course:
-        title: 提供コンテンツ
-        chapter_content: コンテンツ目次
-        add_a_chapter: 章を追加
-        add_a_lesson: レッスンを追加
       booking_pages:
         index:
           title: オンライン予約ページ
@@ -493,11 +491,11 @@ ja:
             title: 外部サービス
             description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成
           course:
-            title: Course
-            description: Course description
+            title: オンラインコース
+            description: 複数の動画レッスンやPDFワークブックを、順番に提供していくサービスを作成
           membership:
-            title: Membership
-            description: Membership description
+            title: メンバーシップ
+            description: 複数の動画やPDFを、登録メンバー限定で提供するサービスを作成
         what_is_your_goal: このサービスの目的は何ですか？
         what_is_your_solution: このサービスで提供する内容は何ですか？
         what_is_this_video_provide: どの動画をサービス提供しますか？
