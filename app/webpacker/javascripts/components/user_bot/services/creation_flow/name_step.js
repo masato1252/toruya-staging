@@ -15,6 +15,7 @@ const NameStep = ({next, prev, step}) => {
       <input
         type="text"
         value={name || ""}
+        className="extend with-border"
         onChange={(event) =>
             dispatch({
               type: "SET_ATTRIBUTE",
