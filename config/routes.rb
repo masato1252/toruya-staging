@@ -179,11 +179,11 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create] do
+        resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do
           resources :lessons, only: [:new, :create, :show, :edit]
         end
 
-        resources :lessons, module: :services, only: [:update]
+        resources :lessons, module: :services, only: [:update, :destroy]
       end
 
       resources :custom_messages, only: [:destroy] do

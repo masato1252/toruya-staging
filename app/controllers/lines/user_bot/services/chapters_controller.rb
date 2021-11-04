@@ -40,4 +40,17 @@ class Lines::UserBot::Services::ChaptersController < Lines::UserBotDashboardCont
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
   end
+
+  def destroy
+    online_service = current_user.online_services.find(params[:service_id])
+    chapter = online_service.chapters.find(params[:id])
+
+    outcome = Chapters::Delete.run(chapter: chapter)
+
+    if outcome.invalid?
+      flash[:alert] = outcome.errors.full_messages.join(", ")
+    end
+
+    redirect_to lines_user_bot_service_chapters_path(params[:service_id])
+  end
 end

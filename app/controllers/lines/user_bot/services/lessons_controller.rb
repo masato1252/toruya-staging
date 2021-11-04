@@ -36,11 +36,18 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
   end
 
   def update
-    online_service = current_user.online_services.find(params[:service_id])
     lesson = Lesson.find(params[:id])
 
     outcome = Lessons::Update.run(lesson: lesson, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_chapter_lesson_path(params[:service_id], params[:chapter_id], params[:id], anchor: params[:attribute]) })
+  end
+
+  def destroy
+    lesson = Lesson.find(params[:id])
+
+    lesson.destroy!
+
+    redirect_to lines_user_bot_service_chapters_path(params[:service_id])
   end
 end
