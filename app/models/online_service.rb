@@ -209,7 +209,7 @@ class OnlineService < ApplicationRecord
   end
 
   def start_at_for_customer(customer)
-    start_at || self.online_service_customer_relations.find_by!(customer: customer).approved_at
+    start_at || self.online_service_customer_relations.find_by!(customer: customer).active_at
   end
 
   def start_time

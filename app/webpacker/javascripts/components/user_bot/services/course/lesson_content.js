@@ -18,7 +18,7 @@ import Solution from "../online_service_page/solution";
 // demo: true/false
 // jump: $function
 // light: true/false
-const LessonContent = ({course, lesson, demo, jump, light, nextLesson, prevLesson, setWatchLessons}) => {
+const LessonContent = ({course, lesson, demo, jump, light, done, nextLesson, prevLesson, setWatchLessons}) => {
   if (!lesson) return <></>
 
   return (
@@ -29,16 +29,19 @@ const LessonContent = ({course, lesson, demo, jump, light, nextLesson, prevLesso
       </h2>
       <div className="my-4">
         <DemoEditButton demo={demo} jump={() => jump(1)} />
-        <Solution
-          solution_type={lesson.solution_type}
-          content_url={lesson.content_url}
-          light={light}
-        />
+        {demo || lesson.started_for_customer ? (
+          <Solution
+            solution_type={lesson.solution_type}
+            content_url={lesson.content_url}
+            light={light}
+          />
+        ) : (lesson.customer_start_time)}
       </div>
       {!demo && (
         <div className="flex justify-between">
           {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left"></i></div>}
           <button
+            disabled={done || !lesson.started_for_customer}
             className="btn btn-tarco"
             onClick={async () => {
               const [error, response] = await CommonServices.update({

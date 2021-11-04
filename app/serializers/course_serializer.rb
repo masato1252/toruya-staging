@@ -8,15 +8,15 @@ class CourseSerializer
     CompanyInfoSerializer.new(service.company).attributes_hash
   end
 
-  attribute :chapters do |online_service|
+  attribute :chapters do |online_service, params|
     online_service.chapters.order("id").includes(:lessons).map do |chapter|
-      ChapterSerializer.new(chapter).attributes_hash
+      ChapterSerializer.new(chapter, params: params).attributes_hash
     end
   end
 
-  attribute :lessons do |online_service|
+  attribute :lessons do |online_service, params|
     online_service.lessons.order("id").map do |chapter|
-      LessonSerializer.new(chapter).attributes_hash
+      LessonSerializer.new(chapter, params: params).attributes_hash
     end
   end
 end

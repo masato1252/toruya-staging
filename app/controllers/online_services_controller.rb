@@ -10,7 +10,7 @@ class OnlineServicesController < Lines::CustomersController
     @is_owner = current_toruy_social_user&.user == current_owner
 
     if @online_service.course?
-      @course_hash = CourseSerializer.new(@online_service).attributes_hash
+      @course_hash = CourseSerializer.new(@online_service, { params: { service_member: @service_member, is_owner: @is_owner }}).attributes_hash
     else
       @online_service_hash = OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false, light: false)
     end
@@ -25,7 +25,7 @@ class OnlineServicesController < Lines::CustomersController
   private
 
   def online_service
-    @online_service ||= OnlineService.find_by(slug: params[:slug])
+    @online_service ||= OnlineService.find_by!(slug: params[:slug])
   end
 
   def current_owner

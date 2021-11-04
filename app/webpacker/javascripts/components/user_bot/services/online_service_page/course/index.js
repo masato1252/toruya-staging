@@ -34,9 +34,19 @@ const Chapter = ({chapter, setLessonId, selected_chaper_id, watched_lesson_ids})
             <div
               key={`lesson-${lesson.id}`}
               className="p-3"
-              onClick={() => setLessonId(lesson.id)}>
-              <i className={`fa fa-check ${watched_lesson_ids.includes(lesson.id.toString()) ? "done" : "off"}`}></i>
-              {lesson.name}
+            >
+              <div
+                onClick={() =>{
+                  if (lesson.started_for_customer) {
+                    setLessonId(lesson.id)
+                  }
+                }}>
+                <i className={`fa fa-check ${watched_lesson_ids.includes(lesson.id.toString()) ? "done" : "off"}`}></i>
+                {lesson.name}
+              </div>
+              <div>
+                {lesson.customer_start_time}
+              </div>
             </div>
           )
         })}
@@ -85,6 +95,7 @@ const CoursePage = ({course, lesson_id, lesson_ids}) => {
         course={course}
         demo={false}
         light={false}
+        done={watched_lesson_ids.includes(lessonId.toString())}
         setWatchLessons={setWatchLessons}
         nextLesson={nextLessonId() ? () => setLessonId(nextLessonId()) : null}
         prevLesson={prevLessonId() ? () => setLessonId(prevLessonId()) : null}
