@@ -11,7 +11,7 @@ const NameStep = ({next, prev, step}) => {
   return (
     <div className="form settings-flow centerize">
       <LessonFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_service_name")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.course.lessons.new.what_is_lesson_name")}</h3>
       <input
         type="text"
         value={name || ""}

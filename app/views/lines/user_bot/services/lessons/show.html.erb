@@ -7,6 +7,8 @@
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.chapter_id_title") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :chapter_id), title: @chapter.name %>
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.start_time_title") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :start_time), title: @lesson.start_time_text %>
 
   <div class="field-header"><%= I18n.t("user_bot.dashboards.settings.course.lessons.form.content_url_title") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_chapter_lesson_path(@online_service, @chapter, @lesson, attribute: :content_url) do %>

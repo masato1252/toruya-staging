@@ -12,7 +12,7 @@ const NoteStep = ({next, prev, step}) => {
   return (
     <div className="form settings-flow centerize">
       <LessonFlowStepIndicator step={step} />
-      <h3 className="header centerize">{'Note'}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.course.lessons.new.do_you_have_any_note")}</h3>
       <TextareaAutosize
         className="what-user-get-tip extend with-border"
         value={note || ""}

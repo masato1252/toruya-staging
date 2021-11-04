@@ -987,7 +987,9 @@ CREATE TABLE public.lessons (
     name character varying,
     solution_type character varying,
     content_url character varying,
-    note text
+    note text,
+    start_after_days integer,
+    start_at timestamp without time zone
 );
 
 
@@ -4763,6 +4765,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211019053832'),
 ('20211019140435'),
 ('20211023080215'),
-('20211029131328');
+('20211029131328'),
+('20211103225844');
 
 

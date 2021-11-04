@@ -5,6 +5,7 @@ import { GlobalProvider, GlobalContext } from "./context/global_state"
 import NameStep from "./name_step"
 import SolutionStep from "./solution_step"
 import NoteStep from "./note_step"
+import StartTimeStep from "./start_time_step"
 import ConfirmationStep from "./confirmation_step"
 
 const LessonNew = ({props}) => {
@@ -14,6 +15,7 @@ const LessonNew = ({props}) => {
         <NameStep />
         <SolutionStep />
         <NoteStep />
+        <StartTimeStep />
         <ConfirmationStep />
       </FlowController>
     </GlobalProvider>

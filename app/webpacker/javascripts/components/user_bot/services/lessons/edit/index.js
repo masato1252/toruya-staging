@@ -20,6 +20,8 @@ const components = {
 };
 
 const LessonEdit =({props}) => {
+  const [start_time, setStartTime] = useState(props.lesson.start_time)
+
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.lesson,
@@ -32,7 +34,7 @@ const LessonEdit =({props}) => {
 
     [error, response] = await CommonServices.update({
       url: Routes.lines_user_bot_service_lesson_path(props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
-      data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id) })
+      data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time })
     })
 
     window.location = response.data.redirect_to
@@ -45,6 +47,85 @@ const LessonEdit =({props}) => {
       case "chapter_id":
         return <EditSelectInput register={register} options={props.chapter_options} name="chapter_id" />
         break;
+      case "start_time":
+        return (
+          <div className="centerize">
+            <div className="margin-around">
+              <label className="">
+                <input name="start_type" type="radio" value="never"
+                  checked={start_time.start_type === "now"}
+                  onChange={() => {
+                    setStartTime({
+                      start_type: "now",
+                    })
+                  }}
+                />
+                {I18n.t("user_bot.dashboards.settings.course.lessons.new.right_after_service_start")}
+              </label>
+            </div>
+
+            <div className="margin-around">
+              <label className="">
+                <div>
+                  <input
+                    name="start_type" type="radio" value="start_after_days"
+                    checked={start_time.start_type === "start_after_days"}
+                    onChange={() => {
+                      setStartTime({
+                        start_type: "start_after_days"
+                      })
+                    }}
+                  />
+                  {I18n.t("user_bot.dashboards.settings.course.lessons.new.after_start_x_days")}
+                </div>
+                {start_time.start_type === "start_after_days" && (
+                  <>
+                    {I18n.t("user_bot.dashboards.online_service_creation.after_bought")}
+                    <input
+                      type="tel"
+                      value={start_time.start_after_days || ""}
+                      onChange={(event) => {
+                        setStartTime({
+                          start_type: "start_after_days",
+                          start_after_days: event.target.value
+                        })
+                      }} />
+                    {I18n.t("user_bot.dashboards.online_service_creation.after_n_days")}
+                  </>
+                )}
+              </label>
+            </div>
+
+            <div className="margin-around">
+              <label className="">
+                <div>
+                  <input name="start_type" type="radio" value="start_at"
+                    checked={start_time.start_type === "start_at"}
+                    onChange={() => {
+                      setStartTime({
+                        start_type: "start_at",
+                      })
+                    }}
+                  />
+                  {I18n.t("user_bot.dashboards.settings.course.lessons.new.start_on_specific_day")}
+                </div>
+                {start_time.start_type === "start_at" && (
+                  <input
+                    name="start_time_date_part"
+                    type="date"
+                    value={start_time.start_time_date_part || ""}
+                    onChange={(event) => {
+                      setStartTime({
+                        start_type: "start_at",
+                        start_time_date_part: event.target.value
+                      })
+                    }}
+                  />
+                )}
+              </label>
+            </div>
+          </div>
+        )
       case "content_url":
         return (
           <EditSolutionInput

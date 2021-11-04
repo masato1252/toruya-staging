@@ -22,7 +22,7 @@ const SolutionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <LessonFlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_solution")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.course.lessons.new.what_is_your_solution")}</h3>
       {props.solutions.map((solution) => {
         return (
           <button

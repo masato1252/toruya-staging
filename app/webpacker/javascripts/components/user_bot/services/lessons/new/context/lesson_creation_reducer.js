@@ -4,7 +4,8 @@ const initialState = {
   selected_solution: null,
   name: null,
   content_url: null,
-  note: null
+  note: null,
+  start_time: {}
 }
 
 export default (state = initialState, action) => {

@@ -3,8 +3,12 @@ module Lessons
     object :chapter
     string :name
     string :content_url
-    string :note
+    string :note, default: nil
     string :solution_type
+    hash :start_time, default: nil do
+      integer :start_after_days, default: nil
+      string :start_time_date_part, default: nil
+    end
 
     def execute
       lesson = chapter.lessons.create(
