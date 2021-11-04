@@ -55,7 +55,7 @@ const Chapter = ({chapter, setLessonId, selected_chaper_id, watched_lesson_ids})
   )
 }
 
-const CoursePage = ({course, lesson_id, lesson_ids}) => {
+const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
   const [lessonId, setLessonId] = useState(parseInt(lesson_id))
   const [watched_lesson_ids, setWatchLessons] = useState(lesson_ids)
   const [lessonIndex, setLessonIndex] = useState()
@@ -91,11 +91,12 @@ const CoursePage = ({course, lesson_id, lesson_ids}) => {
         {course.company_info.logo_url ?  <img className="logo" src={course.company_info.logo_url} /> : <h2>{course.company_info.name}</h2> }
       </div>
       <LessonContent
+        preview={preview}
         lesson={lesson()}
         course={course}
         demo={false}
         light={false}
-        done={watched_lesson_ids.includes(lessonId.toString())}
+        done={watched_lesson_ids.includes(lessonId?.toString())}
         setWatchLessons={setWatchLessons}
         nextLesson={nextLessonId() ? () => setLessonId(nextLessonId()) : null}
         prevLesson={prevLessonId() ? () => setLessonId(prevLessonId()) : null}

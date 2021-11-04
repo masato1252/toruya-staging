@@ -15,4 +15,37 @@
   <div class="action-block border-0 border-t border-solid border-gray-500">
     <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_chapter"), new_lines_user_bot_service_chapter_path(@online_service), class: "btn btn-yellow btn-extend my-2" %>
   </div>
+
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@online_service.updated_at, format: :long_date) %></span>
+
+    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+      <i class="fa fa-share-square fa-2x"></i>
+      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog booking-preview-modal" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">
+          <%= t("user_bot.dashboards.services.preview_the_service") %>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <div class="text-right">
+          <span class="preview-mark">
+            <%= I18n.t("common.preview") %>
+          </span>
+        </div>
+        <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_ids: [], preview: true }, { camelize_props: false }) %>
+      </div>
+      <div class="modal-footer centerize">
+        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @online_service.slug), class: "btn btn-tarco" %>
+      </div>
+    </div>
+  </div>
 </div>

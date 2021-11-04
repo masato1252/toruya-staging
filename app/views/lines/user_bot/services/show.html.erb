@@ -53,7 +53,7 @@
     </div>
   <% end %>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
@@ -78,7 +78,11 @@
             <%= I18n.t("common.preview") %>
           </span>
         </div>
-        <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+        <% if @service.course? %>
+          <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_ids: [] }, { camelize_props: false }) %>
+        <% else %>
+          <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
+        <% end %>
       </div>
       <div class="modal-footer centerize">
         <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @service.slug), class: "btn btn-tarco" %>

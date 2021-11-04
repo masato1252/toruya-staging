@@ -18,7 +18,7 @@ import Solution from "../online_service_page/solution";
 // demo: true/false
 // jump: $function
 // light: true/false
-const LessonContent = ({course, lesson, demo, jump, light, done, nextLesson, prevLesson, setWatchLessons}) => {
+const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLesson, prevLesson, setWatchLessons}) => {
   if (!lesson) return <></>
 
   return (
@@ -29,7 +29,7 @@ const LessonContent = ({course, lesson, demo, jump, light, done, nextLesson, pre
       </h2>
       <div className="my-4">
         <DemoEditButton demo={demo} jump={() => jump(1)} />
-        {demo || lesson.started_for_customer ? (
+        {demo || lesson.started_for_customer || preview ? (
           <Solution
             solution_type={lesson.solution_type}
             content_url={lesson.content_url}
