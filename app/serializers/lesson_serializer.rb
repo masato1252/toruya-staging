@@ -15,19 +15,20 @@ class LessonSerializer
   attribute :customer_start_time, if: Proc.new { |lesson, params|
     params[:is_owner] || params[:service_member].present?
   } do |lesson, params|
-    if params[:is_owner]
-    elsif !lesson.started_for_customer?(params[:service_member].customer)
-      I18n.l(lesson.start_time_for_customer(params[:service_member].customer), format: :date_with_wday)
+    if params[:service_member].present?
+      if !lesson.started_for_customer?(params[:service_member].customer)
+        I18n.l(lesson.start_time_for_customer(params[:service_member].customer), format: :date_with_wday)
+      end
     end
   end
 
   attribute :started_for_customer, if: Proc.new { |lesson, params|
-    params[:service_member].present?
+    params[:is_owner] || params[:service_member].present?
   } do |lesson, params|
-    if params[:is_owner]
-      true
-    else
+    if params[:service_member].present?
       lesson.started_for_customer?(params[:service_member].customer)
+    else
+      params[:is_owner]
     end
   end
 end

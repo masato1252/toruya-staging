@@ -41,7 +41,7 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
         <div className="flex justify-between">
           {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left"></i></div>}
           <button
-            disabled={done || !lesson.started_for_customer}
+            disabled={done || !lesson.started_for_customer || preview}
             className="btn btn-tarco"
             onClick={async () => {
               const [error, response] = await CommonServices.update({
