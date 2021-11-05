@@ -152,7 +152,8 @@ ja:
           chapters:
             title: 提供コンテンツ
             form:
-              name_title: Name
+              name_title: 提供コンテンツ
+              name_content_label: 目次
           lessons:
             new:
               below_is_what_you_want: 以下のレッスンを作成してよろしいですか？

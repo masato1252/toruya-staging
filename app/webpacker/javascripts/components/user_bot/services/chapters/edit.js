@@ -54,7 +54,7 @@ const ChapterEdit =({props}) => {
         }
         title={I18n.t("user_bot.dashboards.settings.course.chapters.form.name_title")}
       />
-      <div className="field-header">{I18n.t("user_bot.dashboards.settings.course.chapters.form.name_title")}</div>
+      <div className="field-header">{I18n.t("user_bot.dashboards.settings.course.chapters.form.name_content_label")}</div>
       {renderCorrespondField()}
       <BottomNavigationBar klassName="centerize transparent">
         <CiricleButtonWithWord

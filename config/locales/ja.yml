@@ -617,7 +617,7 @@ ja:
         chapters/delete:
           attributes:
             chapter:
-              lessons_exists: "^There is lessons still under this chapter"
+              lessons_exists: "^レッスンが設定された章は削除できません。"
         booking_options/delete:
           attributes:
             booking_option:
