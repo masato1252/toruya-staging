@@ -35,11 +35,15 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
             content_url={lesson.content_url}
             light={light}
           />
-        ) : (lesson.customer_start_time)}
+        ) : (
+          <div className="reminder-mark">
+            {I18n.t("course.lesson_start_on")}{lesson.customer_start_time}
+          </div>
+        )}
       </div>
       {!demo && (
         <div className="flex justify-between">
-          {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left"></i></div>}
+          {prevLesson && <div onClick={prevLesson}><i className="fas fa-2x fa-arrow-left text-tarco"></i></div>}
           <button
             disabled={done || !lesson.started_for_customer || preview}
             className="btn btn-tarco"
@@ -50,14 +54,16 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
               })
 
               setWatchLessons(response.data.watched_lesson_ids)
-            }}>Make Done</button>
-          {nextLesson && <div onClick={nextLesson}><i className="fas fa-2x fa-arrow-right"></i></div>}
+            }}>{I18n.t("course.mark_lesson_done")}</button>
+          {nextLesson && <div onClick={nextLesson}><i className="fas fa-2x fa-arrow-right text-tarco"></i></div>}
         </div>
       )}
-      <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
-        <DemoEditButton demo={demo} jump={() => jump(2)} />
-        {lesson.note}
-      </div>
+      {demo || lesson.started_for_customer || preview && (
+        <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
+          <DemoEditButton demo={demo} jump={() => jump(2)} />
+          {lesson.note}
+        </div>
+      )}
     </div>
   )
 }

@@ -17,7 +17,7 @@ const LessonRow = ({lesson}) => {
   )
 }
 
-const Chapter = ({chapter, setLessonId, selected_chaper_id, watched_lesson_ids}) => {
+const Chapter = ({chapter, setLessonId, lessonId, selected_chaper_id, watched_lesson_ids}) => {
   return (
     <div data-controller="collapse" data-collapse-status={`${selected_chaper_id === chapter.id ? "open" : "closed"}`}>
       <div className="p-3 bg-gray border border-solid border-white flex justify-between" data-action="click->collapse#toggle">
@@ -33,19 +33,19 @@ const Chapter = ({chapter, setLessonId, selected_chaper_id, watched_lesson_ids})
           return (
             <div
               key={`lesson-${lesson.id}`}
-              className="p-3"
+              className="p-3 flex justify-between"
+              onClick={() =>{
+                setLessonId(lesson.id)
+              }}
             >
-              <div
-                onClick={() =>{
-                  if (lesson.started_for_customer) {
-                    setLessonId(lesson.id)
-                  }
-                }}>
-                <i className={`fa fa-check ${watched_lesson_ids.includes(lesson.id.toString()) ? "done" : "off"}`}></i>
-                {lesson.name}
+              <div>
+                {watched_lesson_ids.includes(lesson.id.toString()) ? (
+                  <i class="fas fa-2x fa-check-circle mr-2"></i>
+                ) : (lesson.solution_type === 'pdf' ? <i class="fa fa-2x fa-file-pdf mr-2"></i> : <i class="fa fa-2x fa-play-circle mr-2"></i>)}
+                <span className={`${lessonId == lesson.id ? 'font-bold' : ''}`}>{lesson.name}</span>
               </div>
               <div>
-                {lesson.customer_start_time}
+                {lesson.customer_start_time}{lesson.customer_start_time && I18n.t("course.lesson_public")}
               </div>
             </div>
           )
@@ -108,6 +108,7 @@ const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
             key={`chapter-${chapter.id}`}
             chapter={chapter}
             setLessonId={setLessonId}
+            lessonId={lessonId}
             selected_chaper_id={lesson()?.chapter_id}
             watched_lesson_ids={watched_lesson_ids}
           />

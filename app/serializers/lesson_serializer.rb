@@ -17,7 +17,7 @@ class LessonSerializer
   } do |lesson, params|
     if params[:service_member].present?
       if !lesson.started_for_customer?(params[:service_member].customer)
-        I18n.l(lesson.start_time_for_customer(params[:service_member].customer), format: :date_with_wday)
+        I18n.l(lesson.start_time_for_customer(params[:service_member].customer), format: :short_date)
       end
     end
   end

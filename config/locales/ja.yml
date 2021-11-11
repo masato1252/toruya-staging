@@ -483,6 +483,7 @@ ja:
       hour_minute: "%H:%M"
       month_day_wday: "%m/%d(%a)"
       local_time: "%Y-%m-%dT%H:%M:%S"
+      short_date: "'%y/%m/%d"
     pm: PM
   datetime:
     distance_in_words:

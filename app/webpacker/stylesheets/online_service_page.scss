@@ -25,14 +25,12 @@
 }
 
 .online_services {
-  .fa-check {
-    &.done {
-      color: green
-    }
+  .fa {
+    color: #aaaaaa;
+  }
 
-    &.off {
-      color: gray;
-    }
+  .fa-check-circle {
+    color: #808080;
   }
 }
 
