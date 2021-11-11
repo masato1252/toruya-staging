@@ -294,4 +294,12 @@ class OnlineService < ApplicationRecord
       service_end_date: service_end_date
     }
   end
+
+  def solution_type_for_message
+    if course? && lessons.exists?
+      lessons.first.solution_type
+    else
+      solution_type
+    end
+  end
 end

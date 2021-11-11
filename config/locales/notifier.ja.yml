@@ -26,7 +26,7 @@ ja:
         external:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
         course:
-          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
+          message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
     reminders:
       trial_member_week_ago_reminder:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\nToruya"
