@@ -26,6 +26,7 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
     @online_service = current_user.online_services.find(params[:service_id])
     @chapter = @online_service.chapters.find(params[:chapter_id])
     @lesson = @chapter.lessons.find(params[:id])
+    @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
   end
 
   def edit

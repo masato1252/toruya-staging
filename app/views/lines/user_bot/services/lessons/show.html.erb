@@ -26,5 +26,12 @@
       class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>
       <i class="fas fa-trash fa-2x"></i>
     <% end %>
+
+    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+      <i class="fa fa-share-square fa-2x"></i>
+      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% end %>
   <% end %>
 </div>
+
+<%= render "lines/user_bot/services/preview_modal", service: @online_service, lesson: @lesson %>
