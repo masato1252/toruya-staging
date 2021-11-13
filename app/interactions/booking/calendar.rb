@@ -98,6 +98,7 @@ module Booking
       [
         booking_page,
         date,
+        shop,
         shop.reservations.in_date(date).order("updated_at").last,
         CustomSchedule.in_date(date).closed.where(user_id: staff_user_ids).order("updated_at").last,
         BusinessSchedule.where(shop: shop).order("updated_at").last,
