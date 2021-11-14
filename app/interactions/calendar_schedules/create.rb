@@ -49,7 +49,7 @@ module CalendarSchedules
     end
 
     def is_holiday_date?(date)
-      date.wday == 0 || rules[:holidays].include?(date)
+      rules[:holidays].include?(date)
     end
   end
 end
