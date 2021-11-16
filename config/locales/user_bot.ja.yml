@@ -169,13 +169,15 @@ ja:
               start_on_specific_day: 決まった日時から
             show:
               title: 提供コンテンツ
-              content_label: 目次
+              content_label: レッスン詳細
+              content_url_label: レッスンコンテンツ
+              start_time_label: レッスン提供期間
             form:
-              name_title: Name
-              chapter_id_title: Chapter
-              content_url_title: Content URL
-              note_title: Note
-              start_time_title: Start Time
+              name_title: レッスン名
+              chapter_id_title: 章
+              content_url_title: コンテンツURL
+              note_title: 文章
+              start_time_title: 提供開始
         menu:
           basic_settings: メニュー基本設定
           name: メニュー名
