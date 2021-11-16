@@ -29,6 +29,18 @@
 class OnlineService < ApplicationRecord
   include ContentHelper
 
+  VIDEO_LESSON = {
+    key: "video",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.lesson"),
+    enabled: true
+  }
+
+  PDF_LESSON = {
+    key: "pdf",
+    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.lesson"),
+    enabled: true
+  }
+
   VIDEO_SOLUTION = {
     key: "video",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
@@ -85,8 +97,8 @@ class OnlineService < ApplicationRecord
     no_solution_content: true,
     introduction_video_required: false,
     solutions: [
-      VIDEO_SOLUTION,
-      PDF_SOLUTION
+      VIDEO_LESSON,
+      PDF_LESSON
     ]
   }
 

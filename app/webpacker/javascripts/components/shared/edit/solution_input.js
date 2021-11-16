@@ -33,9 +33,11 @@ const SolutionInput = ({solutions, attribute, solution_type, placeholder, regist
               disabled={!solution.enabled}
               key={solution.key}>
               <h4>{solution.name}</h4>
-              <p className="break-line-content text-align-left">
-                {solution.description}
-              </p>
+              {solution.description && (
+                <p className="break-line-content text-align-left">
+                  {solution.description}
+                </p>
+              )}
               {!solution.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
             </button>
           )

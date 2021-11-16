@@ -173,6 +173,7 @@ ja:
               content_url_label: レッスンコンテンツ
               start_time_label: レッスン提供期間
             form:
+              title: レッスン詳細
               name_title: レッスン名
               chapter_id_title: 章
               content_url_title: コンテンツURL
@@ -487,12 +488,14 @@ ja:
         solutions:
           video:
             title: 動画セミナー
+            lesson: 動画レッスン
             description: サービス購入・登録することで、動画セミナーを視聴できるようにする
           audio:
             title: 音声配信
             description: サービス購入・登録することで、音声ポッドキャストを視聴できるようにする
           pdf:
             title: PDFダウンロード
+            lesson: PDFワークブック
             description: サービス購入・登録することで、PDFファイルをダウンロードできるようにする
           questionnaire:
             title: アンケート
