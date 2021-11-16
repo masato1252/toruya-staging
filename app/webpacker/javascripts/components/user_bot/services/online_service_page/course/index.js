@@ -40,8 +40,8 @@ const Chapter = ({chapter, setLessonId, lessonId, selected_chaper_id, watched_le
             >
               <div>
                 {watched_lesson_ids.includes(lesson.id.toString()) ? (
-                  <i class="fas fa-2x fa-check-circle mr-2"></i>
-                ) : (lesson.solution_type === 'pdf' ? <i class="fa fa-2x fa-file-pdf mr-2 text-gray-300"></i> : <i class="far fa-2x fa-play-circle mr-2 text-gray-300"></i>)}
+                  <i className="fas fa-2x fa-check-circle mr-2"></i>
+                ) : (lesson.solution_type === 'pdf' ? <i className="fa fa-2x fa-file-pdf mr-2 text-gray-300"></i> : <i className="far fa-2x fa-play-circle mr-2 text-gray-300"></i>)}
                 <span className={`${lessonId == lesson.id ? 'font-bold' : ''}`}>{lesson.name}</span>
               </div>
               <div>
