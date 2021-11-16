@@ -10,7 +10,7 @@ const OnlineServiceSolution = ({solution_type, content_url, ...rest}) => {
   switch (solution_type) {
     case "video":
       return (
-        <div className='video-player-wrapper'>
+        <div className='video-player-wrapper extend'>
           <ReactPlayer
             className='react-player'
             url={content_url}

@@ -8,6 +8,11 @@
   position: relative;
   padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
 
+  &.extend {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
   .react-player {
     position: absolute;
     top: 0;
@@ -278,4 +283,11 @@ textarea {
   justify-content: space-between;
   min-height: 45px;
   margin-bottom: 12px;
+}
+
+.modal-body {
+  &.extend {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
