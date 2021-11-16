@@ -172,13 +172,6 @@ a.btn {
     font-size: 40px;
   }
 
-  &.with-logo {
-    padding: 0 !important;
-    border: 0 !important;
-    margin-right: -5px;
-    margin-bottom: 0.05em;
-  }
-
   &.with-wording {
     background-color: $line-green !important;
     color: #ffffff !important;
@@ -190,6 +183,17 @@ a.btn {
       border-bottom-left-radius: 4px;
     }
   }
+
+  &.with-logo {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding-left: 0 !important;
+
+    img {
+      height: 35px;
+    }
+  }
+
 }
 
 .btn-flexible {
