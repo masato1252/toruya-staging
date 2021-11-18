@@ -2,16 +2,6 @@ ja:
   plans:
     actions:
       change_card: 精算カード変更
-    labels:
-      shop_can_set: 店舗数
-      staff_in_charge: スタッフ数
-      reservation_restriction: 予約件数
-      customer_number: 顧客データ
-      booking_page_number: 予約ページ
-      online_service_number: サービス
-      sale_page_number: 販売ページ
-      message_template: メッセージ テンプレート
-      support: 個別サポート
     headers:
       customer_management: 顧客管理
       reservation_management: 予約管理
@@ -19,6 +9,21 @@ ja:
       online_service: WEBサービス
       sale_promotion: 販売促進
       support: サポート
+    labels:
+      shop_can_set: 店舗数
+      staff_in_charge: スタッフ数
+      reservation_restriction: 予約件数
+      customer_number: 顧客データ
+      booking_page_number: 予約ページ
+      get_more_friends: お友だち集め
+      free_lesson: 無料レッスン
+      premium_lesson: 有料レッスン
+      online_course: オンラインコース
+      membership: 会員制サービス
+      external_service: 外部サービス連携
+      sale_page_number: 販売ページ
+      message_template: メッセージ テンプレート
+      support: 個別サポート
     free:
       title: フリー
       period: ""
@@ -27,9 +32,14 @@ ja:
       reservation_restriction: 無制限
       customer_number: "%{customer_limit}人まで"
       booking_page_number: 無制限
-      online_service_number: 無制限
+      get_more_friends:  ⃝
+      free_lesson:  ⃝
+      premium_lesson:  ⃝
+      online_course: X
+      membership: X
+      external_service:  ⃝
       sale_page_number: "%{sale_page_limit}ページ"
-      message_template: プリセット
+      message_template: テキスト
       support: なし
     basic:
       title: ベーシック
@@ -39,7 +49,29 @@ ja:
       reservation_restriction: 無制限
       customer_number: 無制限
       booking_page_number: 無制限
-      online_service_number: 無制限
+      get_more_friends:  ⃝
+      free_lesson:  ⃝
+      premium_lesson:  ⃝
+      online_course: X
+      membership: X
+      external_service:  ⃝
       sale_page_number: 無制限
-      message_template: プリセット
+      message_template: テキスト
+      support: あり
+    premium:
+      title: プレミアム
+      period: 月額
+      shop_can_set: 無制限
+      staff_in_charge: 無制限
+      reservation_restriction: 無制限
+      customer_number: 無制限
+      booking_page_number: 無制限
+      get_more_friends:  ⃝
+      free_lesson:  ⃝
+      premium_lesson:  ⃝
+      online_course:  ⃝
+      membership:  ⃝
+      external_service:  ⃝
+      sale_page_number: 無制限
+      message_template: テキスト＆カード
       support: あり

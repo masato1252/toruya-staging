@@ -145,17 +145,15 @@ const Plans = ({props}) => {
                   </span>
                 </div>
               </div>
-              {premiumPlan?.details && (
-                <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
-                  {premiumPlan.details.title}
-                  <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
-                    <i className="fa fa-check-circle" aria-hidden="true" />
-                    <span>
-                      {basicPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
-                    </span>
-                  </div>
+              <div className={`col premium ${isCurrentPlan("premium") && "current"}`}>
+                {premiumPlan.details.title}
+                <div className={`plan-column ${isCurrentPlan("premium") && "current"}`}>
+                  <i className="fa fa-check-circle" aria-hidden="true" />
+                  <span>
+                    {premiumPlan.selectable ? props.i18n.plan_info.current_plan : props.i18n.plan_info.unselectable}
+                  </span>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -172,7 +170,12 @@ const Plans = ({props}) => {
             {header: I18n.t("plans.headers.online_booking")},
             "booking_page_number",
             {header: I18n.t("plans.headers.online_service")},
-            "online_service_number",
+            "get_more_friends",
+            "free_lesson",
+            "premium_lesson",
+            "online_course",
+            "membership",
+            "external_service",
             {header: I18n.t("plans.headers.sale_promotion")},
             "sale_page_number",
             "message_template",
@@ -195,6 +198,9 @@ const Plans = ({props}) => {
                   </div>
                   <div className={`col`}>
                     {customer_number_limit_info("basic")}{props.i18n.up_to_customers_limit}
+                  </div>
+                  <div className={`col`}>
+                    {customer_number_limit_info("premium")}{props.i18n.up_to_customers_limit}
                   </div>
                 </div>
               )
@@ -271,6 +277,7 @@ const Plans = ({props}) => {
       <SubscriptionModal
         {...props}
         selectedPlan={selectedPlan()}
+        rank={selected_rank}
       />
       <StripeCheckoutModal
         stripe_key={props.stripe_key}
