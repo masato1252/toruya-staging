@@ -169,7 +169,7 @@ GEM
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
     coderay (1.1.2)
-    concurrent-ruby (1.1.8)
+    concurrent-ruby (1.1.9)
     connection_pool (2.2.2)
     crass (1.0.6)
     dalli (2.7.10)
@@ -404,8 +404,8 @@ GEM
       tty-color (~> 0.4.0)
     pg (1.1.4)
     pg_query (1.1.0)
-    pghero (2.2.1)
-      activerecord
+    pghero (2.8.1)
+      activerecord (>= 5)
     phonelib (0.6.37)
     platform-api (3.3.0)
       heroics (~> 0.1.1)
@@ -609,7 +609,7 @@ GEM
     with_advisory_lock (4.6.0)
       activerecord (>= 4.2)
     wkhtmltopdf-binary (0.12.4)
-    zeitwerk (2.4.2)
+    zeitwerk (2.5.1)
 
 PLATFORMS
   ruby
@@ -674,7 +674,7 @@ DEPENDENCIES
   parallel
   pg (~> 1.1.4)
   pg_query (~> 1.1.0)
-  pghero (~> 2.2.1)
+  pghero (~> 2.8.1)
   phonelib
   platform-api
   puma (~> 4.3.3)

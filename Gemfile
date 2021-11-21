@@ -6,7 +6,7 @@ ruby "2.6.6"
 
 gem "rails", "~> 6.0"
 gem "pg", "~> 1.1.4"
-gem "pghero", "~> 2.2.1"
+gem "pghero", "~> 2.8.1"
 gem "pg_query", "~> 1.1.0"
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
