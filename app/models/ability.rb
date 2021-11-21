@@ -79,12 +79,18 @@ class Ability
     can :create, Customer
     can :create, SalePage
     can :refund, Reservation
+    can :create_course, OnlineService
+    can :create_membership, OnlineService
 
     case super_user.permission_level
     when Plan::PREMIUM_LEVEL
+      cannot :create, Shop if super_user.shops.exists?
+      cannot :create, Staff
     when Plan::BASIC_LEVEL
       cannot :create, Shop if super_user.shops.exists?
       cannot :create, Staff
+      cannot :create_course, OnlineService
+      cannot :create_membership, OnlineService
     when Plan::TRIAL_LEVEL, Plan::FREE_LEVEL
       cannot :create, Staff
       cannot :create, Shop if super_user.shops.exists?
