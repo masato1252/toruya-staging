@@ -35,6 +35,12 @@ module Booking
               available_booking_times = []
               booking_start_at = special_date_start_at
 
+              # booking_option doesn't sell on that date
+              if booking_option.start_time.to_date > special_date ||
+                  booking_option.end_at && booking_option.end_at.to_date < special_date
+                next
+              end
+
               if booking_page.specific_booking_start_times.present?
                 booking_page.specific_booking_start_times.each do |start_time_time_part|
                   booking_start_at = Time.zone.parse("#{json_parsed_date[START_AT_DATE_PART]}-#{start_time_time_part}")

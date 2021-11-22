@@ -48,6 +48,23 @@ RSpec.describe Booking::AvailableBookingTimes do
     })
   end
 
+  context "when booking option only sells during a period" do
+    let(:booking_option) { FactoryBot.create(:booking_option, :single_menu, user: user,
+                                             start_at: Time.new(2019, 5, 14),
+                                             end_at: Time.new(2019, 5, 26)) }
+    it "returns expected result" do
+      result = outcome.result
+
+      expect(result).to eq({
+        Time.zone.local(2019, 5, 13, 9)  => [booking_option2.id],
+        Time.zone.local(2019, 5, 13, 10) => [booking_option2.id],
+        Time.zone.local(2019, 5, 13, 11) => [booking_option2.id],
+        Time.zone.local(2019, 5, 13, 12) => [booking_option2.id],
+        Time.zone.local(2019, 5, 13, 13) => [booking_option2.id]
+      })
+    end
+  end
+
   context "when booking page got special booking start time" do
     let(:booking_page) { FactoryBot.create(:booking_page, specific_booking_start_times: ["09:00", "13:00"], user: user, shop: shop, overbooking_restriction: overbooking_restriction) }
 
