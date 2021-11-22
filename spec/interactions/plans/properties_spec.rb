@@ -18,7 +18,8 @@ RSpec.describe Plans::Properties do
       it "returns expected result" do
         expect(outcome).to eq({
           Plan::FREE_PLAN => Plans::Property.run!(user: user, plan: Plan.free_level.take),
-          Plan::BASIC_PLAN => Plans::Property.run!(user: user, plan: Plan.basic_level.take)
+          Plan::BASIC_PLAN => Plans::Property.run!(user: user, plan: Plan.basic_level.take),
+          Plan::PREMIUM_PLAN => Plans::Property.run!(user: user, plan: Plan.premium_level.take)
         })
       end
     end

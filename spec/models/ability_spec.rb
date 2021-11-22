@@ -114,7 +114,7 @@ RSpec.describe Ability do
           {
             action: :create,
             ability_name: Staff,
-            permission: true
+            permission: false
           },
           {
             action: :read,
@@ -147,7 +147,7 @@ RSpec.describe Ability do
           it_behaves_like "permission management", "free", :create, Shop, false
           it_behaves_like "permission management", "trial", :create, Shop, false
           it_behaves_like "permission management", "basic", :create, Shop, false
-          it_behaves_like "permission management", "premium", :create, Shop, true
+          it_behaves_like "permission management", "premium", :create, Shop, false
         end
       end
     end
