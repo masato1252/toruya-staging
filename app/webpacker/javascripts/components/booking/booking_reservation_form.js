@@ -712,8 +712,11 @@ class BookingReservationForm extends React.Component {
             if (this.isAnyErrors()) {
               this.customerInfoFieldModalHideHandler()
             }
-            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && !this.selected_booking_option().is_free) {
+            else if (this.props.stripe_key && this.props.booking_page.online_payment_enabled && this.isPremiumSerivce()) {
               this.booking_reservation_form.change("booking_reservation_form[is_paying_booking]", true)
+            }
+            else if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) {
+              this.booking_reservation_form.change("booking_reservation_form[is_filling_address]", true)
             }
             else {
               this.handleSubmit(null, event)
@@ -966,6 +969,8 @@ class BookingReservationForm extends React.Component {
   }
 
   renderCustomerAddressView = () => {
+    const { is_filling_address } = this.booking_reservation_form_values
+
     return (
       <>
         <h3 className="centerize title">
@@ -973,6 +978,10 @@ class BookingReservationForm extends React.Component {
         </h3>
         <AddressView handleSubmitCallback={(address) => {
           this.booking_reservation_form.change("booking_reservation_form[customer_info][address_details]", address)
+
+          if (is_filling_address) {
+            this.handleSubmit()
+          }
         }} />
       </>
     )
@@ -980,8 +989,10 @@ class BookingReservationForm extends React.Component {
 
   renderBookingFlow = () => {
     const { is_single_option, is_started, is_ended } = this.props.booking_page
-    const { booking_options, special_date, booking_option_id, is_done, is_paying_booking, customer_info } = this.booking_reservation_form_values
+    const { booking_options, special_date, booking_option_id, is_done, is_paying_booking, is_filling_address, customer_info } = this.booking_reservation_form_values
     const { edit } = this.props.i18n;
+
+    if (is_filling_address && this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
 
     if (is_done) {
       if (this.isPremiumSerivce() && !this.isCustomerAddressFilled()) return this.renderCustomerAddressView()
