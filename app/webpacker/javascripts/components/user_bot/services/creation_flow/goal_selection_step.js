@@ -49,6 +49,23 @@ const GoalSelectionStep = ({next, step}) => {
             </Popup>
           )
         }
+        else if (goal.premium_member_required && !props.is_premium_member)
+          return (
+            <a href="#"
+              data-controller="modal"
+              data-modal-target="#dummyModal"
+              data-action="click->modal#popup"
+              data-modal-path={Routes.create_course_lines_user_bot_warnings_path()}
+              className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+              disabled={!goal.enabled}
+              key={goal.key}>
+              <h4>{goal.name}</h4>
+              <p className="break-line-content text-align-left">
+                {goal.description}
+              </p>
+              {!goal.enabled && <span className="preparing">{I18n.t('common.preparing')}</span>}
+            </a>
+          )
         else {
           return (
             <button

@@ -2,6 +2,7 @@
 
 <%= react_component("user_bot/services/creation_flow", {
   props: {
+    is_premium_member: current_user.premium_member?,
     service_goals: ::OnlineService::GOALS,
     user_payable: current_user.payable?,
     companies: super_user.shops.includes({ logo_attachment: :blob }).map { |s| CompanyInfoSerializer.new(s).attributes_hash }.push(

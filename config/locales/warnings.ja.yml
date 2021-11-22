@@ -9,3 +9,6 @@ ja:
     trial_end:
       upgrade_title: 試用期間は終了しました
       upgrade_content_html: <p>試用期間が終了したため、予約や顧客情報の管理ができなくなりました。<br>ご利用プランをアップグレードしていただくことで、今後もあなたのビジネス成長のお手伝いをさせていただきます。</p>
+    create_course:
+      upgrade_title: プレミアム向けです
+      upgrade_content_html: この機能はプレミアム会員向けです。<br>ご利用プランをアップグレードしていただくことで、ご利用いただけます。

@@ -260,6 +260,7 @@ Rails.application.routes.draw do
         collection do
           get :create_reservation
           get :create_booking_page
+          get :create_course
           get :check_reservation_content
           get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
         end
