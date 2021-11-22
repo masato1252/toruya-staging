@@ -29,18 +29,6 @@
 class OnlineService < ApplicationRecord
   include ContentHelper
 
-  VIDEO_LESSON = {
-    key: "video",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.lesson"),
-    enabled: true
-  }
-
-  PDF_LESSON = {
-    key: "pdf",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.lesson"),
-    enabled: true
-  }
-
   VIDEO_SOLUTION = {
     key: "video",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
@@ -49,35 +37,11 @@ class OnlineService < ApplicationRecord
     introduction_video_required: true
   }
 
-  AUDIO_SOLUTION = {
-    key: "audio",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.description"),
-    enabled: false,
-    introduction_video_required: false
-  }
-
   PDF_SOLUTION = {
     key: "pdf",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
     enabled: true,
-    introduction_video_required: false
-  }
-
-  QUESTIONNAIRE_SOLUTION = {
-    key: "questionnaire",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.description"),
-    enabled: false,
-    introduction_video_required: false
-  }
-
-  DIAGNOSIS_SOLUTION = {
-    key: "diagnosis",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.description"),
-    enabled: false,
     introduction_video_required: false
   }
 
@@ -96,30 +60,13 @@ class OnlineService < ApplicationRecord
     enabled: true,
     no_solution_content: true,
     introduction_video_required: false,
-    solutions: [
-      VIDEO_LESSON,
-      PDF_LESSON
-    ]
-  }
-
-  MEMBERSHIP_SOLUTION = {
-    key: "membership",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.membership.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.membership.description"),
-    enabled: false,
-    no_solution_content: true,
-    introduction_video_required: false
   }
 
   SOLUTIONS = [
     VIDEO_SOLUTION,
-    AUDIO_SOLUTION,
     PDF_SOLUTION,
-    QUESTIONNAIRE_SOLUTION,
-    DIAGNOSIS_SOLUTION,
     EXTERNAL_SOLUTION,
-    COURSE_SOLUTION,
-    MEMBERSHIP_SOLUTION
+    COURSE_SOLUTION
   ]
 
   GOALS = [
@@ -129,45 +76,51 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
       enabled: true,
       stripe_required: false,
+      premium_member_required: false,
       solutions: [
-        VIDEO_SOLUTION,
-        AUDIO_SOLUTION,
         PDF_SOLUTION,
-        QUESTIONNAIRE_SOLUTION,
-        DIAGNOSIS_SOLUTION
       ]
     },
     {
-      key: "customers",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.description"),
+      key: "free_lesson",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.description"),
       enabled: true,
-      stripe_required: true,
+      stripe_required: false,
+      premium_member_required: false,
       solutions: [
         VIDEO_SOLUTION,
-        AUDIO_SOLUTION
       ]
     },
     {
-      key: "price",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.price.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.price.description"),
+      key: "paid_lesson",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
       stripe_required: true,
+      premium_member_required: false,
       solutions: [
         VIDEO_SOLUTION,
-        AUDIO_SOLUTION
       ]
     },
     {
-      key: "upsell",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.description"),
+      key: "course",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.course.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
       enabled: true,
       stripe_required: true,
+      premium_member_required: true,
       solutions: [
-        COURSE_SOLUTION,
-        MEMBERSHIP_SOLUTION
+      ]
+    },
+    {
+      key: "membership",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
+      enabled: false,
+      stripe_required: true,
+      premium_member_required: true,
+      solutions: [
       ]
     },
     {
@@ -176,6 +129,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
       stripe_required: false,
+      premium_member_required: false,
       solutions: [
         EXTERNAL_SOLUTION
       ]
@@ -196,16 +150,11 @@ class OnlineService < ApplicationRecord
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
 
   def solution_options
-    case solution_type
-    when 'course'
-      COURSE_SOLUTION[:solutions]
-    else
-      GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
-    end
+    GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
   end
 
   def course?
-    solution_type == COURSE_SOLUTION[:key]
+    goal_type == COURSE_SOLUTION[:key]
   end
 
   def charge_required?

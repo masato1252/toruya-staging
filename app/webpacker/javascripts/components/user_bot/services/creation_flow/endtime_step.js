@@ -7,7 +7,7 @@ import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import { SubmitButton } from "shared/components";
 
 const EndtimeStep = ({next, prev, step, lastStep}) => {
-  const { props, dispatch, end_time, createService, selected_solution } = useGlobalContext()
+  const { props, dispatch, end_time, createService, selected_goal } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
@@ -120,7 +120,7 @@ const EndtimeStep = ({next, prev, step, lastStep}) => {
       </div>
 
       <div className="action-block">
-        {selected_solution === 'course' ? (
+        {selected_goal === 'course' ? (
           <SubmitButton
             disabled={
               !end_time.end_type ||

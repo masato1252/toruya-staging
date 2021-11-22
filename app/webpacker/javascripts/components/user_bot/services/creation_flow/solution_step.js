@@ -13,6 +13,7 @@ const SolutionStep = ({next, step}) => {
   const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions
 
   useEffect(() => {
+    if (solutions.length == 0) next()
     if (solutions.length == 1) {
       dispatch({
         type: "SET_ATTRIBUTE",

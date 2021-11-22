@@ -471,17 +471,20 @@ ja:
       online_service_creation:
         goals:
           collection:
-            title: リスト集め
-            description: あなたのサービスに興味がある人の連絡先を集める為のサービスページを作成
-          customers:
-            title: リストの顧客化
-            description: 興味がある人にあなたのサービスを試してもらう為のサービスページを作成
-          price:
-            title: リピート・単価アップ
-            description: 既存客のリピート回数や客単価を上げる為のサービスページを作成
-          upsell:
-            title: 継続購入
-            description: あなたから購入し続けてもらう為の定額制サービスページを作成
+            title: お友だち集め
+            description: 公式LINEにお友だちを集めるためのPDFダウンロードサービスを作成
+          free_lesson:
+            title: 無料レッスン
+            description: １本のビデオを使った無料レッスンを作成
+          paid_lesson:
+            title: 有料レッスン
+            description: 公式LINEにお友だちを集めるためのPDFダウンロードサービスを作成
+          course:
+            title: オンラインコース
+            description: 複数のビデオレッスンとPDFワークブックを順番に提供するオンラインコースを作成
+          membership:
+            title: 会員制サービス
+            description: 複数のビデオレッスンとPDFワークブックを継続購入してもらう会員制サービスを作成
           external:
             title: 外部サービス
             description: 外部サービスの利用者向けLINEマーケティングのためのサービスを作成

@@ -5,7 +5,7 @@ module OnlineServices
     object :user
     string :name
     string :selected_goal
-    string :selected_solution
+    string :selected_solution, default: nil # course and membership doesn't provide solution, their solution is in their lesson or subscriptions
     string :content_url, default: nil
     hash :end_time do
       integer :end_on_days, default: nil
@@ -26,7 +26,7 @@ module OnlineServices
         online_service = user.online_services.create(
           name: name,
           goal_type: selected_goal,
-          solution_type: selected_solution,
+          solution_type: selected_solution || selected_goal,
           end_at: end_time[:end_time_date_part] ? Time.zone.parse(end_time[:end_time_date_part]).end_of_day : nil,
           end_on_days: end_time[:end_on_days],
           content_url: content_url,
