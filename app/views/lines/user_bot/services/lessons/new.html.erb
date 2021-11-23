@@ -1,6 +1,6 @@
 <%= react_component("user_bot/services/lessons/new", {
   props: {
-    solutions: OnlineService::COURSE_SOLUTION[:solutions],
+    solutions: OnlineService.goal(OnlineService::COURSE_SOLUTION[:key])[:solutions],
     lesson: {
       online_service_id: @online_service.id,
       chapter_id: @lesson.chapter_id,

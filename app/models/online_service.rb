@@ -55,11 +55,7 @@ class OnlineService < ApplicationRecord
 
   COURSE_SOLUTION = {
     key: "course",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.course.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.course.description"),
-    enabled: true,
-    no_solution_content: true,
-    introduction_video_required: false,
+    introduction_video_required: false
   }
 
   SOLUTIONS = [
@@ -77,6 +73,7 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         PDF_SOLUTION,
       ]
@@ -88,6 +85,7 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -99,6 +97,7 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -110,7 +109,10 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: true,
+      skip_solution_step_on_creation: true,
       solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION,
       ]
     },
     {
@@ -120,7 +122,10 @@ class OnlineService < ApplicationRecord
       enabled: false,
       stripe_required: true,
       premium_member_required: true,
+      skip_solution_step_on_creation: true,
       solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION,
       ]
     },
     {
@@ -130,6 +135,7 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         EXTERNAL_SOLUTION
       ]
@@ -149,12 +155,16 @@ class OnlineService < ApplicationRecord
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
 
+  def self.goal(key)
+    GOALS.find { |goal| goal[:key] == key }
+  end
+
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
   end
 
   def course?
-    goal_type == COURSE_SOLUTION[:key]
+    goal_type == "course"
   end
 
   def charge_required?
