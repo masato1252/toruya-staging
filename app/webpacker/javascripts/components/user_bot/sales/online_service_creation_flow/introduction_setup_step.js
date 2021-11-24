@@ -10,9 +10,7 @@ const IntroductionSetupStep = ({step, next, prev, lastStep}) => {
   const { props, dispatch, introduction_video, isReadyForPreview, selected_online_service } = useGlobalContext()
 
   useEffect(() => {
-    if (!selected_online_service.introduction_video_required) {
-      next()
-    }
+    next()
   }, [])
 
   return (

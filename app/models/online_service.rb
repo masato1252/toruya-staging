@@ -34,7 +34,6 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.description"),
     enabled: true,
-    introduction_video_required: true
   }
 
   PDF_SOLUTION = {
@@ -42,7 +41,6 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
     enabled: true,
-    introduction_video_required: false
   }
 
   EXTERNAL_SOLUTION = {
@@ -50,19 +48,13 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
     enabled: true,
-    introduction_video_required: false
-  }
-
-  COURSE_SOLUTION = {
-    key: "course",
-    introduction_video_required: false
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
   }
 
   SOLUTIONS = [
     VIDEO_SOLUTION,
     PDF_SOLUTION,
-    EXTERNAL_SOLUTION,
-    COURSE_SOLUTION
+    EXTERNAL_SOLUTION
   ]
 
   GOALS = [
@@ -169,10 +161,6 @@ class OnlineService < ApplicationRecord
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
-  end
-
-  def introduction_video_required?
-    SOLUTIONS.find { |solution| solution_type == solution[:key] }[:introduction_video_required]
   end
 
   def external?
