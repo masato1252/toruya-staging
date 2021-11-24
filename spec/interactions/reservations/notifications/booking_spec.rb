@@ -27,14 +27,6 @@ RSpec.describe Reservations::Notifications::Booking do
   describe "#execute" do
     it "calls Sms::Create" do
       expect(Sms::Create).to receive(:run).and_return(spy(invalid?: false))
-      expect(Notifiers::Booking::ShopOwnerReservationBookedNotification).to receive(:perform_later).with(
-        receiver: booking_page.shop.user,
-        user: booking_page.shop.user,
-        customer: customer,
-        reservation: reservation,
-        booking_page: booking_page,
-        booking_option: booking_option
-      )
 
       outcome
     end

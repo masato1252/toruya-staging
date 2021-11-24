@@ -19,15 +19,6 @@ module Reservations
           ).customer_reservation_notification.deliver_later
         end
 
-        Notifiers::Booking::ShopOwnerReservationBookedNotification.perform_later(
-          receiver: booking_page.shop.user,
-          user: booking_page.shop.user,
-          customer: customer,
-          reservation: reservation,
-          booking_page: booking_page,
-          booking_option: booking_option
-        )
-
         super
       end
 
