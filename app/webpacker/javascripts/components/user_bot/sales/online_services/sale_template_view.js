@@ -46,7 +46,7 @@ const SaleTemplateView = ({
         <DemoEditButton demo={demo} jump={() => jump(8)} />
         <OnlineServiceSolution
           solution_type="video"
-          content={introduction_video}
+          content_url={introduction_video.url}
           light={false}
         />
       </div>

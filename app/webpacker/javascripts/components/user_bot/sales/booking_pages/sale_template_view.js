@@ -25,7 +25,7 @@ const SaleTemplateView = ({shop, product, normal_price, demo, template, template
       <div>
         <OnlineServiceSolution
           solution_type="video"
-          content={introduction_video}
+          content_url={introduction_video.url}
           light={false}
         />
       </div>
