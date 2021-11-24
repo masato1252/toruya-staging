@@ -478,7 +478,7 @@ ja:
             description: １本のビデオを使った無料レッスンを作成
           paid_lesson:
             title: 有料レッスン
-            description: 公式LINEにお友だちを集めるためのPDFダウンロードサービスを作成
+            description: １本のビデオを使った有料レッスンを作成
           course:
             title: オンラインコース
             description: 複数のビデオレッスンとPDFワークブックを順番に提供するオンラインコースを作成

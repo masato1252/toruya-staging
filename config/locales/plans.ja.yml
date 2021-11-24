@@ -1,7 +1,7 @@
 ja:
   plans:
     actions:
-      change_card: 精算カード変更
+      change_card: カード変更
     headers:
       customer_management: 顧客管理
       reservation_management: 予約管理

@@ -21,7 +21,7 @@ const GoalSelectionStep = ({next, step}) => {
             <Popup
               trigger={
                 <button
-                  className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+                  className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative servica-goal-btn-size"
                   disabled={!goal.enabled}
                   key={goal.key}>
                   <h4>{goal.name}</h4>
@@ -56,7 +56,7 @@ const GoalSelectionStep = ({next, step}) => {
               data-modal-target="#dummyModal"
               data-action="click->modal#popup"
               data-modal-path={Routes.create_course_lines_user_bot_warnings_path()}
-              className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+              className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative servica-goal-btn-size"
               disabled={!goal.enabled}
               key={goal.key}>
               <h4>{goal.name}</h4>
@@ -81,7 +81,7 @@ const GoalSelectionStep = ({next, step}) => {
 
                 next()
               }}
-              className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative"
+              className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative servica-goal-btn-size"
               disabled={!goal.enabled}
               key={goal.key}>
               <h4>{goal.name}</h4>
