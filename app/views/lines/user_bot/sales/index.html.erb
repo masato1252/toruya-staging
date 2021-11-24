@@ -4,6 +4,7 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.sales.edit.sale_pages") %></div>
   <div class="booking-pages-list">
     <% @sale_pages.each do |sale_page| %>
+      <% next unless sale_page.product %>
       <%= link_to lines_user_bot_sale_path(sale_page), class: "field-row with-next-arrow" do %>
         <div>
           <h3>

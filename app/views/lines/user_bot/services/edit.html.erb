@@ -6,13 +6,14 @@
       CompanyInfoSerializer.new(current_user.profile).attributes_hash
     ),
     upsell_sales: current_user.sale_pages.includes(:product, :sale_template).map do |sale_page|
+      next unless sale_page.product
       hash = SalePageOptionSerializer.new(sale_page).attributes_hash
 
       {
         label: hash[:label],
         value: hash
       }
-    end,
+    end.compact,
     solutions: @service.solution_options
   }
 },

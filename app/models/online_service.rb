@@ -147,10 +147,6 @@ class OnlineService < ApplicationRecord
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
 
-  def self.goal(key)
-    GOALS.find { |goal| goal[:key] == key }
-  end
-
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
   end
