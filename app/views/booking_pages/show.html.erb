@@ -47,7 +47,7 @@
     regular: @customer ? "yes" : nil,
     use_default_customer: !!(@customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number),
     found_customer: @customer && @customer.phonetic_last_name && @customer.phonetic_first_name && @customer.mobile_phone_number ? true : nil,
-    booking_flow: @is_single_booking_option ? "booking_option_first" : nil,
+    booking_flow: @is_single_booking_option || params[:booking_option_id].present? ? "booking_option_first" : nil,
     remember_me: true,
     booking_options: custom_options(page_booking_options),
     customer_first_name: @customer&.first_name,
@@ -57,7 +57,7 @@
     customer_info: customer_info_hash,
     present_customer_info: customer_info_hash,
     last_selected_option_id: @last_selected_option_id,
-    booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : params[:booking_option_id],
+    booking_option_id: @is_single_booking_option ? custom_options(page_booking_options)[0][:id] : params[:booking_option_id]&.to_i,
     booking_date: params[:booking_date],
     booking_at: params[:booking_at],
     social_user_id: params[:social_user_id] || @customer&.social_customer&.social_user_id

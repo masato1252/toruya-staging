@@ -510,13 +510,22 @@ class BookingReservationForm extends React.Component {
       booking_at,
       booking_times,
       last_selected_option_id,
+      booking_option_id
     } = this.booking_reservation_form_values;
 
     if (!booking_at) return;
+    let available_booking_options;
 
-    const available_booking_options = _.filter(booking_options, (booking_option) => {
-      return _.includes(booking_times[booking_at], booking_option.id)
-    })
+    if (booking_times) {
+      available_booking_options = _.filter(booking_options, (booking_option) => {
+        return _.includes(booking_times[booking_at], booking_option.id)
+      })
+    }
+    else {
+      available_booking_options = _.filter(booking_options, (booking_option) => {
+        return booking_option.id === booking_option_id
+      })
+    }
 
     return (
       <div className="result-fields booking-options">
