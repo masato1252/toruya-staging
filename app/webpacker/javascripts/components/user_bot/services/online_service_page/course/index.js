@@ -114,9 +114,9 @@ const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
           />
         )
       )}
-      {course.chapters.length === 0 && (
-        <div className="warning margin-rounded centerize">
-          there is no content yet. 
+      {course.lessons.length === 0 && (
+        <div className="reminder-mark centerize">
+          {I18n.t("course.no_lesson_yet")}
         </div>
       )}
     </div>
