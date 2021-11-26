@@ -114,6 +114,11 @@ const CoursePage = ({course, lesson_id, lesson_ids, preview}) => {
           />
         )
       )}
+      {course.chapters.length === 0 && (
+        <div className="warning margin-rounded centerize">
+          there is no content yet. 
+        </div>
+      )}
     </div>
   )
 }
