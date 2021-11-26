@@ -16,6 +16,8 @@ module Lessons
         content_url: content_url,
         note: note,
         solution_type: solution_type,
+        start_at: start_time[:start_time_date_part] ? Time.zone.parse(start_time[:start_time_date_part]).beginning_of_day : nil,
+        start_after_days: start_time[:start_after_days]
       )
 
       if lesson.errors.present?

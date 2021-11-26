@@ -16,7 +16,8 @@ class Lines::UserBot::Services::LessonsController < Lines::UserBotDashboardContr
       name: params[:name],
       content_url: params[:content_url],
       note: params[:note],
-      solution_type: params[:selected_solution]
+      solution_type: params[:selected_solution],
+      start_time: params[:start_time].permit!.to_h
     )
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
