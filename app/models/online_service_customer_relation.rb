@@ -2,18 +2,19 @@
 #
 # Table name: online_service_customer_relations
 #
-#  id                :bigint           not null, primary key
-#  current           :boolean          default(TRUE)
-#  expire_at         :datetime
-#  paid_at           :datetime
-#  payment_state     :integer          default("pending"), not null
-#  permission_state  :integer          default("pending"), not null
-#  product_details   :json
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  customer_id       :integer          not null
-#  online_service_id :integer          not null
-#  sale_page_id      :integer          not null
+#  id                 :bigint           not null, primary key
+#  current            :boolean          default(TRUE)
+#  expire_at          :datetime
+#  paid_at            :datetime
+#  payment_state      :integer          default("pending"), not null
+#  permission_state   :integer          default("pending"), not null
+#  product_details    :json
+#  watched_lesson_ids :string           default([]), is an Array
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  customer_id        :integer          not null
+#  online_service_id  :integer          not null
+#  sale_page_id       :integer          not null
 #
 # Indexes
 #

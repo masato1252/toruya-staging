@@ -12,7 +12,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       selected_solution: params[:selected_solution],
       end_time: params[:end_time].permit!.to_h,
       upsell: params[:upsell].permit!.to_h,
-      content: params[:content].permit!.to_h,
+      content_url: params[:content_url],
       selected_company: params[:selected_company].permit!.to_h,
     )
 
@@ -26,8 +26,15 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
   def show
     @service = current_user.online_services.find(params[:id])
     @upsell_sale_page = @service.sale_page.serializer.attributes_hash if @service.sale_page
-    @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
     @registers_count = @service.online_service_customer_relations.uncanceled.count
+
+    if @service.course?
+      @lessons_count = @service.lessons.count
+      @chapters_count = @service.chapters.count
+      @course_hash = CourseSerializer.new(@service, { params: { is_owner: true }}).attributes_hash
+    else
+      @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
+    end
   end
 
   def edit

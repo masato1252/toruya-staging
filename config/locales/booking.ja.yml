@@ -82,6 +82,11 @@ ja:
   online_service_purchases:
     service_content: サービスコンテンツを
     please_check_in_line: LINEでお届けしましたので<br>ご確認ください
+  course:
+    lesson_start_on: レッスン開始日
+    mark_lesson_done: 完了にする
+    lesson_public: 公開
+    no_lesson_yet: 表示できるレッスンがありません
   contact_page:
     message_form:
       title: お問合せ内容を入力して送信してください

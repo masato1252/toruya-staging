@@ -8,16 +8,18 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 
-  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
-    <span class="dotdotdot"><%= @service.content["url"] %></span>
-    <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
-  <% end %>
+  <% unless @service.course? %>
+    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
+      <span class="dotdotdot"><%= @service.content_url %></span>
+      <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
+    <% end %>
 
-  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
-  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
-    <span><%= @service.sale_page&.product&.name %></span>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
+      <span><%= @service.sale_page&.product&.name %></span>
+    <% end %>
   <% end %>
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
@@ -30,6 +32,19 @@
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
 
+  <% if @service.course? %>
+    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_chapters_path(@service) do %>
+      <% if @lessons_count.zero? && @chapters_count.zero? %>
+        <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+      <% elsif @lessons_count.zero? %>
+        <div class="flex"><span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= @lessons_count %> <%= t("common.lesson") %></span>&nbsp;/&nbsp;<%= @chapters_count %> <%= t("common.chapter") %></div>
+      <% else %>
+        <span class="flex items-center"><%= @lessons_count %> <%= t("common.lesson") %> / <%= @chapters_count %> <%= t("common.chapter") %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.service_customer_relation.service_register") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customers_path(@service) do %>
     <div class="flex justify-between">
@@ -38,7 +53,7 @@
     </div>
   <% end %>
 
-  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize sticky" do %>
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
     <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
@@ -48,26 +63,5 @@
   <% end %>
 </div>
 
-<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog booking-preview-modal" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">
-          <%= t("user_bot.dashboards.services.preview_the_service") %>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <div class="text-right">
-          <span class="preview-mark">
-            <%= I18n.t("common.preview") %>
-          </span>
-        </div>
-        <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
-      </div>
-      <div class="modal-footer centerize">
-        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: @service.slug), class: "btn btn-tarco" %>
-      </div>
-    </div>
-  </div>
-</div>
+<%= render "lines/user_bot/services/preview_modal", service: @service %>
+

@@ -4,16 +4,16 @@ import React from "react";
 import ReactPlayer from 'react-player';
 import I18n from 'i18n-js/index.js.erb';
 
-const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
-  if (!content?.url) return <></>
+const OnlineServiceSolution = ({solution_type, content_url, ...rest}) => {
+  if (!content_url) return <></>
 
   switch (solution_type) {
     case "video":
       return (
-        <div className='video-player-wrapper'>
+        <div className='video-player-wrapper extend'>
           <ReactPlayer
             className='react-player'
-            url={content.url}
+            url={content_url}
             width='100%'
             height='100%'
             controls={true}
@@ -29,8 +29,8 @@ const OnlineServiceSolution = ({solution_type, content, ...rest}) => {
           </p>
           <a
             className="btn btn-tarco btn-icon"
-            href={content.url}>
-            <i class="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
+            href={content_url}>
+            <i className="fas fa-file-pdf"></i> {I18n.t("online_service_page.download")}
           </a>
         </div>
       );

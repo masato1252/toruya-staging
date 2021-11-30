@@ -10,9 +10,11 @@ import ExternalContentSetup from "./contents/external_content_setup";
 
 const SolutionStep = ({next, step}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
-  const solutions = props.service_goals.find((goal) => goal.key === selected_goal).solutions
+  const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
+  const solutions = selected_goal_option.solutions
 
   useEffect(() => {
+    if (selected_goal_option.skip_solution_step_on_creation) next()
     if (solutions.length == 1) {
       dispatch({
         type: "SET_ATTRIBUTE",

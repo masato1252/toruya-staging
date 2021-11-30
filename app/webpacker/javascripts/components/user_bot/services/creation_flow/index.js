@@ -11,6 +11,7 @@ import UpsellStep from "./upsell_step"
 import ConfirmationStep from "./confirmation_step"
 import FinalStep from "./final_step"
 
+// Course goal's final step is EndtimeStep
 const CreationFlow = ({props}) => {
   return (
     <GlobalProvider props={props}>

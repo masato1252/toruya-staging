@@ -63,6 +63,11 @@
   text-align: left;
   width: 100%;
 
+  &.header-row {
+    background-color: $gray2;
+    font-size: $normal-font-size;
+  }
+
   &.with-next-arrow {
     > :first-child {
       width: 95%;

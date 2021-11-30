@@ -6,6 +6,7 @@
 #  id                  :bigint           not null, primary key
 #  company_type        :string           not null
 #  content             :json
+#  content_url         :string
 #  end_at              :datetime
 #  end_on_days         :integer
 #  goal_type           :string           not null
@@ -25,25 +26,14 @@
 #  index_online_services_on_user_id  (user_id)
 #
 
-require "thumbnail_of_video"
-
 class OnlineService < ApplicationRecord
-  PDF_LOGO_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/pdf_logo.png"
+  include ContentHelper
 
   VIDEO_SOLUTION = {
     key: "video",
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.video.description"),
     enabled: true,
-    introduction_video_required: true
-  }
-
-  AUDIO_SOLUTION = {
-    key: "audio",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.audio.description"),
-    enabled: false,
-    introduction_video_required: false
   }
 
   PDF_SOLUTION = {
@@ -51,23 +41,6 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.pdf.description"),
     enabled: true,
-    introduction_video_required: false
-  }
-
-  QUESTIONNAIRE_SOLUTION = {
-    key: "questionnaire",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.questionnaire.description"),
-    enabled: false,
-    introduction_video_required: false
-  }
-
-  DIAGNOSIS_SOLUTION = {
-    key: "diagnosis",
-    name: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.title"),
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.diagnosis.description"),
-    enabled: false,
-    introduction_video_required: false
   }
 
   EXTERNAL_SOLUTION = {
@@ -75,15 +48,12 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
     enabled: true,
-    introduction_video_required: false
+    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
   }
 
   SOLUTIONS = [
     VIDEO_SOLUTION,
-    AUDIO_SOLUTION,
     PDF_SOLUTION,
-    QUESTIONNAIRE_SOLUTION,
-    DIAGNOSIS_SOLUTION,
     EXTERNAL_SOLUTION
   ]
 
@@ -94,44 +64,60 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.collection.description"),
       enabled: true,
       stripe_required: false,
+      premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
-        VIDEO_SOLUTION,
-        AUDIO_SOLUTION,
         PDF_SOLUTION,
-        QUESTIONNAIRE_SOLUTION,
-        DIAGNOSIS_SOLUTION
       ]
     },
     {
-      key: "customers",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.customers.description"),
+      key: "free_lesson",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.free_lesson.description"),
       enabled: true,
-      stripe_required: true,
+      stripe_required: false,
+      premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         VIDEO_SOLUTION,
-        AUDIO_SOLUTION
       ]
     },
     {
-      key: "price",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.price.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.price.description"),
+      key: "paid_lesson",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.paid_lesson.description"),
       enabled: true,
       stripe_required: true,
+      premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         VIDEO_SOLUTION,
-        AUDIO_SOLUTION
       ]
     },
     {
-      key: "upsell",
-      name: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.title"),
-      description: I18n.t("user_bot.dashboards.online_service_creation.goals.upsell.description"),
+      key: "course",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.course.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.course.description"),
+      enabled: true,
+      stripe_required: true,
+      premium_member_required: true,
+      skip_solution_step_on_creation: true,
+      solutions: [
+        PDF_SOLUTION,
+        VIDEO_SOLUTION,
+      ]
+    },
+    {
+      key: "membership",
+      name: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.title"),
+      description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
       enabled: false,
       stripe_required: true,
+      premium_member_required: true,
+      skip_solution_step_on_creation: true,
       solutions: [
-        VIDEO_SOLUTION
+        PDF_SOLUTION,
+        VIDEO_SOLUTION,
       ]
     },
     {
@@ -140,6 +126,8 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.external.description"),
       enabled: true,
       stripe_required: false,
+      premium_member_required: false,
+      skip_solution_step_on_creation: false,
       solutions: [
         EXTERNAL_SOLUTION
       ]
@@ -156,13 +144,19 @@ class OnlineService < ApplicationRecord
   has_many :customers, through: :online_service_customer_relations
   has_many :available_online_service_customer_relations, -> { available }, class_name: "OnlineServiceCustomerRelation"
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
+  has_many :chapters
+  has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
+
+  def solution_options
+    GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
+  end
+
+  def course?
+    goal_type == "course"
+  end
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
-  end
-
-  def introduction_video_required?
-    SOLUTIONS.find { |solution| solution_type == solution[:key] }[:introduction_video_required]
   end
 
   def external?
@@ -170,7 +164,7 @@ class OnlineService < ApplicationRecord
   end
 
   def start_at_for_customer(customer)
-    start_at || self.online_service_customer_relations.find_by!(customer: customer).approved_at
+    start_at || self.online_service_customer_relations.find_by!(customer: customer).active_at
   end
 
   def start_time
@@ -230,17 +224,6 @@ class OnlineService < ApplicationRecord
     end
   end
 
-  def thumbnail_url
-    @thumbnail_url ||=
-      case solution_type
-      when "video"
-        VideoThumb::get(content["url"], "medium") || ThumbnailOfVideo.get(content["url"]) if content && content["url"]
-      when "pdf"
-        PDF_LOGO_URL
-      else
-      end
-  end
-
   def message_template_variables(customer_or_user)
     service_start_date, service_end_date =
       case customer_or_user
@@ -265,5 +248,13 @@ class OnlineService < ApplicationRecord
       service_start_date: service_start_date,
       service_end_date: service_end_date
     }
+  end
+
+  def solution_type_for_message
+    if course? && lessons.exists?
+      lessons.first.solution_type
+    else
+      solution_type
+    end
   end
 end

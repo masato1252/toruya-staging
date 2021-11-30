@@ -245,16 +245,16 @@ const BookingPageButtonCopyBtn = ({booking_page_url}) => {
   )
 }
 
-const SubmitButton = ({handleSubmit, submitCallback, btnWord}) => {
+const SubmitButton = ({handleSubmit, submitCallback, btnWord, disabled}) => {
   const [submitting, setSubmitting] = useState(false)
 
   return (
     <button
       type="submit"
       className="btn btn-yellow"
-      disabled={submitting}
+      disabled={disabled || submitting}
       onClick={async () => {
-        if (submitting) return;
+        if (disabled || submitting) return;
         setSubmitting(true)
 
         if (await handleSubmit()) {

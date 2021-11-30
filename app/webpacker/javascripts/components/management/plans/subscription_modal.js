@@ -35,6 +35,7 @@ class SubscriptionModal extends React.Component {
           <PlanCharge
             {...this.props}
             plan={this.props.selectedPlan}
+            rank={this.props.rank}
             chargeImmediately={false}
             downgrade={true}
             />

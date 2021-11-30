@@ -7,10 +7,12 @@
 
   .online-service-header {
     margin-bottom: 6px;
+    padding: 6px;
   }
 
   .online-service-body {
-    border: 1px solid #dfdfdf;
+    border-top: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
     padding: 12px;
 
     .name {
@@ -21,6 +23,16 @@
   .upsell {
     color: $red;
     font-weight: bold;
+  }
+}
+
+.online_services {
+  .fa {
+    color: #aaaaaa;
+  }
+
+  .fa-check-circle {
+    color: #808080;
   }
 }
 

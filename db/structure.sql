@@ -633,6 +633,38 @@ ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
+-- Name: chapters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.chapters (
+    id bigint NOT NULL,
+    online_service_id bigint,
+    name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chapters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.chapters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chapters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.chapters_id_seq OWNED BY public.chapters.id;
+
+
+--
 -- Name: contact_group_rankings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -946,6 +978,41 @@ ALTER SEQUENCE public.filtered_outcomes_id_seq OWNED BY public.filtered_outcomes
 
 
 --
+-- Name: lessons; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.lessons (
+    id bigint NOT NULL,
+    chapter_id bigint,
+    name character varying,
+    solution_type character varying,
+    content_url character varying,
+    note text,
+    start_after_days integer,
+    start_at timestamp without time zone
+);
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.lessons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.lessons_id_seq OWNED BY public.lessons.id;
+
+
+--
 -- Name: menu_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1102,7 +1169,8 @@ CREATE TABLE public.online_service_customer_relations (
     product_details json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    current boolean DEFAULT true
+    current boolean DEFAULT true,
+    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -1144,7 +1212,8 @@ CREATE TABLE public.online_services (
     slug character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    start_at timestamp without time zone
+    start_at timestamp without time zone,
+    content_url character varying
 );
 
 
@@ -2643,6 +2712,13 @@ ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.c
 
 
 --
+-- Name: chapters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chapters ALTER COLUMN id SET DEFAULT nextval('public.chapters_id_seq'::regclass);
+
+
+--
 -- Name: contact_group_rankings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2696,6 +2772,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.filtered_outcomes ALTER COLUMN id SET DEFAULT nextval('public.filtered_outcomes_id_seq'::regclass);
+
+
+--
+-- Name: lessons id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons ALTER COLUMN id SET DEFAULT nextval('public.lessons_id_seq'::regclass);
 
 
 --
@@ -3121,6 +3204,14 @@ ALTER TABLE ONLY public.categories
 
 
 --
+-- Name: chapters chapters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.chapters
+    ADD CONSTRAINT chapters_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contact_group_rankings contact_group_rankings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3182,6 +3273,14 @@ ALTER TABLE ONLY public.delayed_jobs
 
 ALTER TABLE ONLY public.filtered_outcomes
     ADD CONSTRAINT filtered_outcomes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lessons lessons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
 
 
 --
@@ -3790,6 +3889,13 @@ CREATE INDEX index_categories_on_user_id ON public.categories USING btree (user_
 
 
 --
+-- Name: index_chapters_on_online_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_chapters_on_online_service_id ON public.chapters USING btree (online_service_id);
+
+
+--
 -- Name: index_contact_group_rankings_on_contact_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3822,6 +3928,13 @@ CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments 
 --
 
 CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
+
+
+--
+-- Name: index_lessons_on_chapter_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_lessons_on_chapter_id ON public.lessons USING btree (chapter_id);
 
 
 --
@@ -4648,6 +4761,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210805020614'),
 ('20210830082204'),
 ('20210913140858'),
-('20210917004005');
+('20210917004005'),
+('20211019053832'),
+('20211019140435'),
+('20211023080215'),
+('20211029131328'),
+('20211103225844');
 
 

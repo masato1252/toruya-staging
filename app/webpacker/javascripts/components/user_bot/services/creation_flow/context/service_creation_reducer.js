@@ -7,7 +7,7 @@ const initialState = {
   end_time: {},
   upsell: {},
   name: null,
-  content: null
+  content_url: null
 }
 
 export default (state = initialState, action) => {

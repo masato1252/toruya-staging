@@ -24,6 +24,7 @@ class PlanCharge extends React.Component {
       let data = {
         authenticity_token: this.props.formAuthenticityToken,
         plan: this.props.plan.key,
+        rank: this.props.rank,
         change_immediately: this.props.chargeImmediately
       };
 

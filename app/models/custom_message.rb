@@ -47,7 +47,7 @@ class CustomMessage < ApplicationRecord
 
     case scenario
     when ONLINE_SERVICE_PURCHASED
-      I18n.t("notifier.online_service.purchased.#{product.solution_type}.message")
+      I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
     when BOOKING_PAGE_BOOKED
       I18n.t("customer.notifications.sms.booking")
     when BOOKING_PAGE_ONE_DAY_REMINDER

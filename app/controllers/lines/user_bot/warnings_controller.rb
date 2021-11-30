@@ -3,6 +3,12 @@
 class Lines::UserBot::WarningsController < Lines::UserBotDashboardController
   layout false
 
+  def create_course
+    write_user_bot_cookies(:redirect_to, request.referrer)
+
+    render template: "warnings/create_course"
+  end
+
   def create_booking_page
     write_user_bot_cookies(:redirect_to, request.referrer)
 

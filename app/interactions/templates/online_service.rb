@@ -10,19 +10,29 @@ module Templates
 
     def execute
       LineMessages::FlexTemplateContent.content7(
-        picture_url: online_service.thumbnail_url || sale_page.introduction_video_url,
+        picture_url: picture_url,
         content_url: Rails.application.routes.url_helpers.online_service_url(slug: online_service.slug),
         title1: online_service.name,
         label: I18n.t("common.responsible_by"),
         context: sale_page.staff.name,
         action_templates: [
           LineActions::Uri.new(
-            label: I18n.t("action.online_service_actions.#{online_service.solution_type}"),
+            label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
             url: Rails.application.routes.url_helpers.online_service_url(slug: online_service.slug, encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
             btn: "primary"
           )
         ].map(&:template)
       )
+    end
+
+    private
+
+    def picture_url
+      if online_service.course? && online_service.lessons.exists?
+        online_service.lessons.first.thumbnail_url || sale_page.introduction_video_url
+      else
+        online_service.thumbnail_url || sale_page.introduction_video_url
+      end
     end
   end
 end

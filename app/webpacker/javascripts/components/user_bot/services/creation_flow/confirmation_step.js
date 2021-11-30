@@ -8,7 +8,7 @@ import { SubmitButton } from "shared/components";
 import OnlineServicePage from "user_bot/services/online_service_page";
 
 const ConfirmationStep = ({next, prev, jump, step}) => {
-  const { props, dispatch, createService, selected_company, name, selected_solution, content, upsell } = useGlobalContext()
+  const { props, dispatch, createService, selected_company, name, selected_solution, content_url, upsell } = useGlobalContext()
   const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
 
   useLayoutEffect(() => {
@@ -26,7 +26,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
         company_info={company_info}
         name={name}
         solution_type={selected_solution}
-        content={content}
+        content_url={content_url}
         upsell_sale_page={upsell.sale_page}
         demo={true}
         light={false}

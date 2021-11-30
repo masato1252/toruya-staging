@@ -1,0 +1,19 @@
+<%= react_component("user_bot/services/chapters/edit", {
+  props: {
+    chapter: {
+      online_service_id: @online_service.id,
+      id: @chapter.id,
+      name: @chapter.name
+    }
+  }
+},
+{ camelize_props: false }
+) %>
+<%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
+  <%= link_to lines_user_bot_service_chapter_path(@online_service, @chapter),
+    method: :delete,
+    data: { confirm: t("common.are_you_sure_message") },
+    class: "btn btn-orange btn-circle btn-tweak btn-bottom-left" do %>
+    <i class="fas fa-trash fa-2x"></i>
+  <% end %>
+<% end if @chapter.persisted? %>

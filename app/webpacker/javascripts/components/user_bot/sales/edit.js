@@ -298,7 +298,7 @@ const SalePageEdit =({props}) => {
         return (
           <>
             <div className="field-row">
-              <input autoFocus={true} ref={register({ required: true })} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
+              <input autoFocus={true} ref={register} name={props.attribute} placeholder={props.placeholder} className="extend" type="text" />
             </div>
             <div className='video-player-wrapper'>
               <ReactPlayer

@@ -178,6 +178,12 @@ Rails.application.routes.draw do
             delete :stop
           end
         end
+
+        resources :chapters, module: :services, only: [:index, :new, :edit, :update, :create, :destroy] do
+          resources :lessons, only: [:new, :create, :show, :edit]
+        end
+
+        resources :lessons, module: :services, only: [:update, :destroy]
       end
 
       resources :custom_messages, only: [:destroy] do
@@ -254,6 +260,7 @@ Rails.application.routes.draw do
         collection do
           get :create_reservation
           get :create_booking_page
+          get :create_course
           get :check_reservation_content
           get "/cancel_paid_customers/:reservation_id", action: "cancel_paid_customers", as: :cancel_paid_customers
         end
@@ -539,7 +546,11 @@ Rails.application.routes.draw do
     end
   end
   resources :sale_pages, param: :slug, only: [:show]
-  resources :online_services, param: :slug, only: [:show]
+  resources :online_services, param: :slug, only: [:show] do
+    member do
+      put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+    end
+  end
 
   resources :shops, only: [:show]
 

@@ -61,7 +61,7 @@ export const GlobalProvider = ({ props, children }) => {
   const isReadyForPreview = () => {
     return selected_goal &&
       selected_solution &&
-      !_.isEmpty(content) &&
+      !content_url &&
       end_type.end_type &&
       name &&
       selected_company
