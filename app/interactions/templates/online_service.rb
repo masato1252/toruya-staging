@@ -29,7 +29,7 @@ module Templates
 
     def picture_url
       if online_service.course? && online_service.lessons.exists?
-        online_service.lessons.first.thumbnail_url
+        online_service.lessons.first.thumbnail_url || sale_page.introduction_video_url
       else
         online_service.thumbnail_url || sale_page.introduction_video_url
       end

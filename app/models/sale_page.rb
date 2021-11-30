@@ -33,6 +33,8 @@
 #  sale_page_index                                  (user_id,deleted_at)
 #
 
+require "thumbnail_of_video"
+
 class SalePage < ApplicationRecord
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff
@@ -151,7 +153,7 @@ class SalePage < ApplicationRecord
     return @introduction_video_thumbnail_url if defined?(@introduction_video_thumbnail_url)
 
     @introduction_video_thumbnail_url =
-      if introduction_video_url
+      if introduction_video_url.present?
         VideoThumb::get(introduction_video_url, "medium") || ThumbnailOfVideo.get(introduction_video_url)
       end
   end

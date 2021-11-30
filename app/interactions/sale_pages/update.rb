@@ -48,8 +48,10 @@ module SalePages
     def execute
       sale_page.with_lock do
         case update_attribute
-        when "sale_template_variables", "introduction_video_url", "flow", "quantity"
+        when "sale_template_variables", "flow", "quantity"
           sale_page.update(attrs.slice(update_attribute))
+        when "introduction_video_url"
+          sale_page.update(introduction_video_url: attrs[:introduction_video_url].presence)
         when "benefits", "faq"
           sale_page.sections_context ||= {}
           sale_page.sections_context.merge!(attrs.slice(update_attribute))

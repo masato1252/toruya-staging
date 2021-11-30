@@ -14,7 +14,7 @@ const UpsellStep = ({next, prev, step}) => {
   const sale_page = upsell.sale_page;
 
   useEffect(() => {
-    if (selected_goal === 'external' || selected_goal == 'upsell') {
+    if (selected_goal === 'external') {
       dispatch({
         type: "SET_ATTRIBUTE",
         payload: {
