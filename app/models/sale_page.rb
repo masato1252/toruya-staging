@@ -35,6 +35,8 @@
 
 require "thumbnail_of_video"
 
+# multiple_selling_prices: [1000, 1000, 1000]
+
 class SalePage < ApplicationRecord
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff

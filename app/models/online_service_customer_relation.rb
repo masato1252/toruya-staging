@@ -21,6 +21,17 @@
 #  online_service_relation_index         (online_service_id,customer_id,permission_state)
 #  online_service_relation_unique_index  (online_service_id,customer_id,current) UNIQUE
 #
+# product_details: {
+#   prices: [
+#     {
+#       amount: 1000,
+#       charge_date: Time.current.to_s, => scheduled job date
+#       order_id: XXXX => used by customer_payment order_id,
+#       state: "pending" => the same value as customer_payment state, it is a denormalize
+#     },
+#     ...
+#   ]
+# }
 
 class OnlineServiceCustomerRelation < ApplicationRecord
   ACTIVE_STATES = %w[pending free paid].freeze

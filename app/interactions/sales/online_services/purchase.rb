@@ -17,9 +17,11 @@ module Sales
       def execute
         relation =
           begin
+            # TODO: need product_details
+            # need the price type
             OnlineServiceCustomerRelation.transaction do
               product.online_service_customer_relations
-                .create_with(sale_page: sale_page)
+                .create_with(sale_page: sale_page, product_details: {})
                 .find_or_create_by(online_service: product, customer: customer)
             end
           rescue ActiveRecord::RecordNotUnique

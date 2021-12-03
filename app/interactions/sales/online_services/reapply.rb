@@ -8,9 +8,14 @@ module Sales
       validate :validate_state
 
       def execute
+        # TODO: need product_details
         OnlineServiceCustomerRelation.transaction do
           online_service_customer_relation.update_columns(current: nil)
-          online_service.online_service_customer_relations.create!(sale_page: sale_page, customer: customer)
+          online_service.online_service_customer_relations.create!(
+            sale_page: sale_page,
+            customer: customer,
+            product_details: {}
+          )
         end
       end
 
