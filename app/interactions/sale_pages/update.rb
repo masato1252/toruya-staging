@@ -12,6 +12,10 @@ module SalePages
       string :selling_start_at, default: nil
       integer :quantity, default: nil
       integer :selling_price, default: nil
+      hash :selling_multiple_times_price, default: nil do
+        integer :times, default: nil
+        integer :amount, default: nil
+      end
       integer :normal_price, default: nil
       hash :why_content, default: nil do
         file :picture, default: nil
@@ -72,6 +76,17 @@ module SalePages
           sale_page.update(normal_price_amount_cents: attrs[:normal_price])
         when "selling_price"
           sale_page.update(selling_price_amount_cents: attrs[:selling_price])
+
+          if attrs[:selling_multiple_times_price].present?
+            sale_page.update(
+              selling_multiple_times_price: Array.new(
+                attrs[:selling_multiple_times_price][:times].to_i,
+                attrs[:selling_multiple_times_price][:amount].to_i
+              )
+            )
+          else
+            sale_page.update(selling_multiple_times_price: [])
+          end
         when "why_content"
           picture = attrs[:why_content].delete(:picture)
 

@@ -3,26 +3,27 @@
 #
 # Table name: sale_pages
 #
-#  id                         :bigint           not null, primary key
-#  content                    :json
-#  deleted_at                 :datetime
-#  flow                       :json
-#  introduction_video_url     :string
-#  normal_price_amount_cents  :decimal(, )
-#  product_type               :string           not null
-#  quantity                   :integer
-#  sale_template_variables    :json
-#  sections_context           :jsonb
-#  selling_end_at             :datetime
-#  selling_price_amount_cents :decimal(, )
-#  selling_start_at           :datetime
-#  slug                       :string
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  product_id                 :bigint           not null
-#  sale_template_id           :bigint
-#  staff_id                   :bigint
-#  user_id                    :bigint
+#  id                           :bigint           not null, primary key
+#  content                      :json
+#  deleted_at                   :datetime
+#  flow                         :json
+#  introduction_video_url       :string
+#  normal_price_amount_cents    :decimal(, )
+#  product_type                 :string           not null
+#  quantity                     :integer
+#  sale_template_variables      :json
+#  sections_context             :jsonb
+#  selling_end_at               :datetime
+#  selling_multiple_times_price :string           default([]), is an Array
+#  selling_price_amount_cents   :decimal(, )
+#  selling_start_at             :datetime
+#  slug                         :string
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  product_id                   :bigint           not null
+#  sale_template_id             :bigint
+#  staff_id                     :bigint
+#  user_id                      :bigint
 #
 # Indexes
 #
@@ -35,7 +36,7 @@
 
 require "thumbnail_of_video"
 
-# multiple_selling_prices: [1000, 1000, 1000]
+# selling_multiple_times_price: [1000, 1000, 1000]
 
 class SalePage < ApplicationRecord
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
@@ -53,7 +54,7 @@ class SalePage < ApplicationRecord
   monetize :normal_price_amount_cents, allow_nil: true
 
   def free?
-    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && !external?
+    (selling_price_amount_cents.nil? || selling_price_amount.zero?)  && selling_multiple_times_price.blank? && !external?
   end
 
   def external?
@@ -68,8 +69,21 @@ class SalePage < ApplicationRecord
     product&.name
   end
 
+  def selling_prices_text
+    [selling_price_text, selling_multiple_times_price_text].compact.join(", ").presence || I18n.t("common.free_price")
+  end
+
   def selling_price_text
-    selling_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+    selling_price_amount&.format(:ja_default_format)
+  end
+
+  def selling_multiple_times_price_text
+    if selling_multiple_times_price.present?
+      times = selling_multiple_times_price.size
+      amount = selling_multiple_times_price.first
+
+      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+    end
   end
 
   def serializer
@@ -144,7 +158,7 @@ class SalePage < ApplicationRecord
   end
 
   def normal_price_text
-    normal_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+    normal_price_amount&.format(:ja_default_format) || I18n.t("common.free_price")
   end
 
   def quantity_text

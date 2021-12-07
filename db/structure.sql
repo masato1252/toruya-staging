@@ -1805,7 +1805,8 @@ CREATE TABLE public.sale_pages (
     normal_price_amount_cents numeric,
     selling_price_amount_cents numeric,
     deleted_at timestamp without time zone,
-    sections_context jsonb
+    sections_context jsonb,
+    selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -4766,6 +4767,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211019140435'),
 ('20211023080215'),
 ('20211029131328'),
-('20211103225844');
+('20211103225844'),
+('20211206143634');
 
 
