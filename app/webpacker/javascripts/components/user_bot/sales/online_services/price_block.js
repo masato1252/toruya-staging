@@ -4,10 +4,56 @@ import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
+// price: {
+//   price_types: ['free', 'one_time', 'multiple_times'],
+//   price_amounts: {
+//     one_time: {
+//       amount: 3000
+//     },
+//     multiple_times: {
+//       times: 3,
+//       amount: 1000
+//     }
+//   }
+// }
+const NormalPriceBlock = ({amount}) => {
+  if (!amount) return <></>;
+
+  return (
+    <div>
+      <div className="normal-price">
+        <div className="label">{I18n.t("common.normal_price_label")}</div>
+        <div className="amount">{amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
+      </div>
+
+      <div className="margin-around">
+        <i className="fa fa-arrow-down"></i>
+      </div>
+    </div>
+  )
+}
+
+const PriceOntTimePaymentText = ({amount}) => {
+  if (!amount) return <></>;
+
+  return <div>{amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
+}
+const PriceMultipleTimesPaymnetText = ({times, amount}) => {
+  if (!amount) return <></>;
+
+  return (
+    <div>
+      {amount}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>
+      <span className="multiple">&nbsp;X&nbsp;</span>
+      {times}<span className="small-text">{I18n.t('common.times')}</span>
+    </div>
+  )
+}
+
 const PriceBlock = ({
   demo,
   solution_type,
-  selling_price,
+  price,
   normal_price,
   is_started,
   start_at,
@@ -20,6 +66,13 @@ const PriceBlock = ({
 }) => {
   const renderActions = () => {
     if (no_action) return <></>
+    if (demo) {
+      return (
+        <button className="btn btn-tarco btn-large btn-tall btn-icon watch">
+          <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
+        </button>
+      )
+    }
 
     if (!payable && !is_external) {
       return (
@@ -63,39 +116,61 @@ const PriceBlock = ({
   }
 
   const isFree = () => {
-    return parseInt(selling_price || 0) === 0
+    return parseInt(price.price_amounts.one_time?.amount || price.price_amounts.multiple_times?.amount || 0) === 0
   }
 
-  return (
-    <>
-      <div className="product-price-block">
-        <div className="price">
-          {normal_price && (
-            <>
-              <span className="normal-price">
-                <div className="label">{I18n.t("common.normal_price_label")}</div>
-                <div className="amount">{normal_price}<span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span></div>
-              </span>
+  // one time or multiple times
+  const isSinglePrice = () => {
+    return isFree() || price.price_types.length == 1
+  }
 
-              <i className="fa fa-arrow-right"></i>
-            </>
-          )}
-          <span className="special-price">
+  if (isSinglePrice()) {
+    return (
+      <div className="product-price-block">
+        <NormalPriceBlock amount={normal_price} />
+
+        <div className="price">
+          <div className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
-            <div>{isFree() ? I18n.t("common.free_price") : selling_price} {!isFree() && <span className="price-with-tax">{I18n.t("common.unit")}({I18n.t("common.tax_included")})</span>}</div>
-          </span>
+            <PriceOntTimePaymentText amount={price.price_amounts.one_time?.amount} />
+            <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times?.amount} times={price.price_amounts.multiple_times?.times} />
+            {isFree() && <div>{I18n.t("common.free_price")}</div>}
+          </div>
+        </div>
+
+        {renderActions()}
+      </div>
+    )
+  }
+  else {
+    return (
+      <div className="product-price-block">
+        <NormalPriceBlock amount={normal_price} />
+
+        <div className="multiple-prices">
+          <div className="price">
+            <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
+            <div className="special-price">
+              <PriceOntTimePaymentText amount={price.price_amounts.one_time.amount} />
+            </div>
+          </div>
+
+          {renderActions()}
+        </div>
+
+        <div className="multiple-prices">
+          <div className="price">
+            <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
+            <div className="special-price">
+              <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times.amount} times={price.price_amounts.multiple_times?.times} />
+            </div>
+          </div>
+
+          {renderActions()}
         </div>
       </div>
-
-      {demo ? (
-        <button className="btn btn-tarco btn-large btn-tall btn-icon watch">
-          <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
-        </button>
-      ) :
-          renderActions()
-      }
-    </>
-  )
+    )
+  }
 }
 
 export default PriceBlock

@@ -154,7 +154,37 @@ class SalePage < ApplicationRecord
   end
 
   def price
-    { price_amount: selling_price_amount&.fractional }
+    price_options = {
+      price_types: [],
+      price_amounts: {}
+    }
+
+    if selling_price_amount_cents.present?
+      price_options[:price_types] << "one_time"
+      price_options[:price_amounts].merge!(
+        one_time: {
+          amount: selling_price_amount.fractional,
+          amount_format: selling_price_amount.format
+        }
+      )
+    end
+
+    if selling_multiple_times_price.present?
+      price_options[:price_types] << "multiple_times"
+      price_options[:price_amounts].merge!(
+        multiple_times: {
+          times: selling_multiple_times_price.size,
+          amount: selling_multiple_times_price.first,
+          amount_format: Money.new(selling_multiple_times_price.first).format
+        }
+      )
+    end
+
+    if selling_price_amount_cents.blank? && selling_multiple_times_price.blank?
+      price_options[:price_types] << "free"
+    end
+
+    price_options
   end
 
   def normal_price_text

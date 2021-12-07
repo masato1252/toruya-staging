@@ -38,7 +38,7 @@ const SalePageEdit =({props}) => {
     price_type: "cost",
     price_amount: null
   })
-  const [selling_price, setSellingPrice] = useState(props.sale_page.selling_price_option)
+  const [selling_price, setSellingPrice] = useState(props.sale_page.price)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
