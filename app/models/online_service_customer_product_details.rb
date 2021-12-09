@@ -1,0 +1,47 @@
+# product_details: {
+#   prices: [
+#     {
+#       amount: 1000,
+#       charge_date: Time.current.to_s, => scheduled job date
+#       order_id: XXXX => used by customer_payment order_id
+#     },
+#     ...
+#   ]
+# }
+class OnlineServiceCustomerProductDetails
+  def self.build(sale_page:, payment_type:)
+    prices =
+      case payment_type
+      when SalePage::PAYMENTS[:one_time]
+        [
+          OnlineServiceCustomerPrice.new(
+            amount: sale_page.selling_price_amount.fractional,
+            charge_at: Time.current,
+            order_id: SecureRandom.hex(8).upcase
+          ).attributes
+        ]
+      when SalePage::PAYMENTS[:multiple_times]
+        current = Time.current
+
+        sale_page.selling_multiple_times_price.map.with_index do |price, index|
+          OnlineServiceCustomerPrice.new(
+            amount: Money.new(price).fractional,
+            charge_at: current.advance(months: index),
+            order_id: SecureRandom.hex(8).upcase
+          ).attributes
+        end
+      when SalePage::PAYMENTS[:free]
+        [
+          OnlineServiceCustomerPrice.new(
+            amount: 0,
+            charge_at: Time.current
+          ).attributes
+        ]
+      end
+
+    {
+      prices: prices
+    }
+  end
+end
+

@@ -16,10 +16,11 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
     outcome = Sales::OnlineServices::Purchase.run(
       sale_page: @sale_page,
       customer: current_customer,
-      authorize_token: params[:token]
+      authorize_token: params[:token],
+      payment_type: params[:payment_type]
     )
 
-    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : new_lines_customers_online_service_purchases_path(slug: params[:slug]) })
+    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
   end
 
   private

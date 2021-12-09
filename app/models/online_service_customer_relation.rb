@@ -54,6 +54,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     failed: 3,
     refunded: 4,
     canceled: 5,
+    partial_paid: 6
   }, _suffix: true
 
   enum permission_state: {
@@ -96,10 +97,32 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def purchased?
-    free_payment_state? || paid_payment_state?
+    free_payment_state? || paid_payment_state? || partial_paid_payment_state?
   end
 
   def hi_message
     "🖥 New online_service purchased, online_service: #{online_service.slug}, sale_page: #{sale_page.slug}, customer_id: #{customer_id}, user_id: #{customer.user_id}, payment_state: #{payment_state}, permission_state: #{permission_state}, expire_at: #{expire_at ? I18n.l(expire_at, format: :long_date_with_wday) : ""}"
+  end
+
+  def price_details
+    product_details["prices"].map do |_attributes|
+      ::OnlineServiceCustomerPrice.new(_attributes.merge(amount: Money.new(_attributes["amount"])))
+    end
+  end
+
+  def total_completed_payments_amount
+    customer_payments.completed.sum(&:amount)
+  end
+
+  def product_amount
+    price_details.sum { |price| Money.new(price.amount) }
+  end
+
+  def paid_completed?
+    total_completed_payments_amount >= product_amount
+  end
+
+  def customer_payments
+    CustomerPayment.where(customer: customer, product: sale_page)
   end
 end

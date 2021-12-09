@@ -17,7 +17,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
     online_service = current_user.online_services.find(params[:service_id])
     relation = online_service.online_service_customer_relations.find(params[:id])
 
-    ::Sales::OnlineServices::Approve.run!(relation: relation, online_service: online_service, customer: relation.customer)
+    ::Sales::OnlineServices::Approve.run!(relation: relation)
 
     redirect_to lines_user_bot_service_customer_path(service_id: online_service.id, id: relation.id)
   end

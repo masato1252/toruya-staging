@@ -39,6 +39,12 @@ require "thumbnail_of_video"
 # selling_multiple_times_price: [1000, 1000, 1000]
 
 class SalePage < ApplicationRecord
+  PAYMENTS = {
+    one_time: "one_time",
+    multiple_times: "multiple_times",
+    free: "free"
+  }.freeze
+
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff
   belongs_to :sale_template
@@ -86,12 +92,16 @@ class SalePage < ApplicationRecord
     end
   end
 
-  def serializer
+  def selling_multiple_times_first_price_text
+    Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+  end
+
+  def serializer(params = {})
     @serializer ||=
       if is_booking_page?
-        SalePages::BookingPageSerializer.new(self)
+        SalePages::BookingPageSerializer.new(self, params: params.try(:permit!)&.to_h || {})
       else
-        SalePages::OnlineServiceSerializer.new(self)
+        SalePages::OnlineServiceSerializer.new(self, params: params.try(:permit!)&.to_h || {})
       end
   end
 
@@ -160,7 +170,7 @@ class SalePage < ApplicationRecord
     }
 
     if selling_price_amount_cents.present?
-      price_options[:price_types] << "one_time"
+      price_options[:price_types] << PAYMENTS[:one_time]
       price_options[:price_amounts].merge!(
         one_time: {
           amount: selling_price_amount.fractional,
@@ -170,7 +180,7 @@ class SalePage < ApplicationRecord
     end
 
     if selling_multiple_times_price.present?
-      price_options[:price_types] << "multiple_times"
+      price_options[:price_types] << PAYMENTS[:multiple_times]
       price_options[:price_amounts].merge!(
         multiple_times: {
           times: selling_multiple_times_price.size,
@@ -181,7 +191,7 @@ class SalePage < ApplicationRecord
     end
 
     if selling_price_amount_cents.blank? && selling_multiple_times_price.blank?
-      price_options[:price_types] << "free"
+      price_options[:price_types] << PAYMENTS[:free]
     end
 
     price_options
