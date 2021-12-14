@@ -25,6 +25,7 @@
 #
 
 class Shop < ApplicationRecord
+  alias_attribute :company_phone_number, :phone_number
   include ReservationChecking
   include Helpers
 

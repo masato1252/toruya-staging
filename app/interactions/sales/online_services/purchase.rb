@@ -48,7 +48,7 @@ module Sales
               # credit card charge is synchronous request, it would return final status immediately
               if purchase_outcome.valid?
                 Sales::OnlineServices::Approve.run(relation: relation)
-                Sales::OnlineServices::SchedulePayments.run(relation: relation)
+                Sales::OnlineServices::ScheduleCharges.run(relation: relation)
               else
                 relation.failed_payment_state!
               end

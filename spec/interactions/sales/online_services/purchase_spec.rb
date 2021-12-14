@@ -10,17 +10,21 @@ RSpec.describe Sales::OnlineServices::Purchase do
   let(:sale_page) { FactoryBot.create(:sale_page, :online_service, user: user) }
   let(:customer) { FactoryBot.create(:social_customer, user: user).customer }
   let(:authorize_token) { StripeMock.create_test_helper.generate_card_token }
+  let(:payment_type) { SalePage::PAYMENTS[:one_time] }
   let(:args) do
     {
       sale_page: sale_page,
       customer: customer,
-      authorize_token: authorize_token
+      authorize_token: authorize_token,
+      payment_type: payment_type
     }
   end
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
     context "when sale page was free" do
+      let(:payment_type) { SalePage::PAYMENTS[:free] }
+
       it "create a free relation" do
         expect {
           outcome
@@ -39,7 +43,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
     end
 
     context "when sale page was paid version" do
-      let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :paid_version) }
+      let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
       it "create a paid relation" do
         expect {
           outcome
@@ -56,7 +60,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
     end
 
     context "when sale page's product was external online service" do
-      let(:sale_page) { FactoryBot.create(:sale_page, product: FactoryBot.create(:online_service, :external, user: user), user: user) }
+      let(:sale_page) { FactoryBot.create(:sale_page, :one_time_payment, product: FactoryBot.create(:online_service, :external, user: user), user: user) }
 
       it "create a pending relation" do
         expect {
@@ -76,6 +80,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
     end
 
     context "when customers already registered this online service" do
+      let(:payment_type) { SalePage::PAYMENTS[:free] }
       let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free) }
       let(:sale_page) { online_service_customer_relation.sale_page }
       let(:customer) { online_service_customer_relation.customer }
@@ -89,18 +94,32 @@ RSpec.describe Sales::OnlineServices::Purchase do
       end
 
       context "when customer current state is inactive" do
-        let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled) }
+        context 'when customer already purchased this online service' do
+          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, payment_state: :paid, expire_at: 1.day.ago) }
 
-        it "create a pending relation" do
-          expect {
-            outcome
-          }.to change {
-            OnlineServiceCustomerRelation.where(
-              online_service: online_service_customer_relation.online_service,
-              customer: online_service_customer_relation.customer,
-              sale_page: online_service_customer_relation.sale_page
-            ).count
-          }.by(1)
+          it "doesn't touch customer" do
+            expect {
+              outcome
+            }.not_to change {
+              customer.updated_at
+            }
+          end
+        end
+
+        context 'when customer does NOT purchase yet' do
+          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled) }
+
+          it "create a pending relation" do
+            expect {
+              outcome
+            }.to change {
+              OnlineServiceCustomerRelation.where(
+                online_service: online_service_customer_relation.online_service,
+                customer: online_service_customer_relation.customer,
+                sale_page: online_service_customer_relation.sale_page
+              ).count
+            }.by(1)
+          end
         end
       end
     end

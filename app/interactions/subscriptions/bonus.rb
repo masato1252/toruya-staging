@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "order_id"
+
 module Subscriptions
   class Bonus < ActiveInteraction::Base
     object :subscription
@@ -12,7 +14,7 @@ module Subscriptions
 
     def execute
       subscription.with_lock do
-        order_id = SecureRandom.hex(8).upcase
+        order_id = OrderId.generate
 
         user = subscription.user
         charge = user.subscription_charges.create!(

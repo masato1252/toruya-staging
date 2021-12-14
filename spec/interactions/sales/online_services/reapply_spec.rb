@@ -7,6 +7,7 @@ RSpec.describe Sales::OnlineServices::Reapply do
   let(:args) do
     {
       online_service_customer_relation: relation,
+      payment_type: SalePage::PAYMENTS[:free]
     }
   end
   let(:outcome) { described_class.run(args) }
@@ -26,6 +27,11 @@ RSpec.describe Sales::OnlineServices::Reapply do
         current: true,
         payment_state: "pending",
         permission_state: "pending"
+      )
+      price_details = latest_relation.price_details.first
+      expect(price_details).to have_attributes(
+        amount: Money.zero,
+        order_id: nil
       )
     end
   end

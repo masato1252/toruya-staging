@@ -8,6 +8,8 @@
 #     ...
 #   ]
 # }
+require "order_id"
+
 class OnlineServiceCustomerProductDetails
   def self.build(sale_page:, payment_type:)
     prices =
@@ -17,7 +19,7 @@ class OnlineServiceCustomerProductDetails
           OnlineServiceCustomerPrice.new(
             amount: sale_page.selling_price_amount.fractional,
             charge_at: Time.current,
-            order_id: SecureRandom.hex(8).upcase
+            order_id: OrderId.generate
           ).attributes
         ]
       when SalePage::PAYMENTS[:multiple_times]
@@ -27,7 +29,7 @@ class OnlineServiceCustomerProductDetails
           OnlineServiceCustomerPrice.new(
             amount: Money.new(price).fractional,
             charge_at: current.advance(months: index),
-            order_id: SecureRandom.hex(8).upcase
+            order_id: OrderId.generate
           ).attributes
         end
       when SalePage::PAYMENTS[:free]

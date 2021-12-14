@@ -8,17 +8,17 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   boolean :first_time_charge, default: false
   boolean :manual, default: false
 
+  validate :validate_online_service_customer_relation_state
+
   def execute
-    order_id = SecureRandom.hex(8).upcase
     expire_at = online_service.current_expire_time if first_time_charge
-    online_service_customer_price ||= online_service_customer_relation.price_details.first
-    charging_price_amount = online_service_customer_price.amount.fractional
+    price_details = online_service_customer_price || online_service_customer_relation.price_details.first
+    charging_price_amount = price_details.amount.fractional
 
     payment =
       online_service_customer_relation.with_lock do
-        # return payment if this order was paid
-        if exists_payment = online_service_customer_relation.customer_payments.where(order_id: online_service_customer_price.order_id).completed.first
-          return exists_payment
+        if existing_payment = online_service_customer_relation.customer_payments.where(order_id: price_details.order_id).completed.take
+          return existing_payment
         end
 
         customer.customer_payments.create!(
@@ -27,7 +27,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
           charge_at: Time.current,
           expired_at: expire_at,
           manual: manual,
-          order_id: online_service_customer_price.order_id
+          order_id: price_details.order_id
         )
       end
 
@@ -49,6 +49,19 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       payment.stripe_charge_details = stripe_charge.as_json
       payment.completed!
 
+      if online_service_customer_relation.paid_completed?
+        online_service_customer_relation.paid_payment_state!
+      else
+        online_service_customer_relation.partial_paid_payment_state!
+      end
+
+      unless first_time_charge
+        Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
+          receiver: customer,
+          customer_payment: payment
+        )
+      end
+
       if Rails.configuration.x.env.production?
         SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Sale Page #{sale_page.id} Stripe charge💰")
       end
@@ -57,28 +70,41 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       payment.auth_failed!
       errors.add(:customer, :auth_failed)
 
+      failed_charge_notification(payment)
+
       Rollbar.error(error, toruya_service_charge: online_service_customer_relation.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
     rescue Stripe::StripeError => error
       payment.stripe_charge_details = error.json_body[:error]
       payment.processor_failed!
       errors.add(:customer, :processor_failed)
 
+      failed_charge_notification(payment)
+
       Rollbar.error(error, toruya_service_charge: online_service_customer_relation.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
     rescue => e
+      debugger
       Rollbar.error(e)
       errors.add(:customer, :something_wrong)
-    end
-
-    if online_service_customer_relation.paid_completed?
-      online_service_customer_relation.paid_payment_state!
-    else
-      online_service_customer_relation.partial_paid_payment_state!
     end
 
     payment
   end
 
   private
+
+  def failed_charge_notification(payment)
+    unless manual
+      Notifiers::CustomerPayments::ChargeFailedToOwner.run(
+        receiver: customer.user,
+        customer_payment: payment
+      )
+
+      Notifiers::CustomerPayments::ChargeFailedToCustomer.run(
+        receiver: customer,
+        customer_payment: payment
+      )
+    end
+  end
 
   def sale_page
     @sale_page ||= online_service_customer_relation.sale_page
@@ -90,5 +116,11 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
 
   def online_service
     @online_service ||= online_service_customer_relation.online_service
+  end
+
+  def validate_online_service_customer_relation_state
+    if online_service_customer_relation.paid_payment_state?
+      errors.add(:online_service_customer_relation, :was_paid)
+    end
   end
 end

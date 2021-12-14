@@ -106,7 +106,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def price_details
     product_details["prices"].map do |_attributes|
-      ::OnlineServiceCustomerPrice.new(_attributes.merge(amount: Money.new(_attributes["amount"])))
+      ::OnlineServiceCustomerPrice.new(_attributes.merge(amount: Money.new(_attributes["amount"]), charge_at: Time.parse(_attributes["charge_at"])))
     end
   end
 

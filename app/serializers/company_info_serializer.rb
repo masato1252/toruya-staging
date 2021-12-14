@@ -48,11 +48,6 @@ class CompanyInfoSerializer
   end
 
   attribute :phone_number do |object|
-    case object
-    when Shop
-      object.phone_number
-    when Profile
-      object.company_phone_number
-    end
+    object.company_phone_number
   end
 end

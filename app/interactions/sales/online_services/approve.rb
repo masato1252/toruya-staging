@@ -8,20 +8,18 @@ module Sales
       validate :validate_relation_current
 
       def execute
-        if relation.pending?
-          relation.permission_state = :active
-          relation.expire_at = relation.online_service.current_expire_time
+        relation.permission_state = :active
+        relation.expire_at = relation.online_service.current_expire_time
 
-          if relation.sale_page.free?
-            relation.free_payment_state!
-          else
-            # paid_at => bought at, when customer bought this product, it should equals first time pay.
-            relation.paid_at = Time.current
-            relation.save
-          end
-
-          ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service, sale_page: relation.sale_page)
+        if relation.sale_page.free?
+          relation.free_payment_state!
+        else
+          # paid_at => bought at, when customer bought this product, it should equals first time pay.
+          relation.paid_at = Time.current
+          relation.save
         end
+
+        ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service, sale_page: relation.sale_page)
 
         relation
       end
