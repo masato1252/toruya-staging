@@ -82,7 +82,6 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
 
       Rollbar.error(error, toruya_service_charge: online_service_customer_relation.id, stripe_charge: error.json_body[:error], rails_env: Rails.configuration.x.env)
     rescue => e
-      debugger
       Rollbar.error(e)
       errors.add(:customer, :something_wrong)
     end

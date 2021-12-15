@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Sales::OnlineServices::Apply do
-  let(:current_time) { Time.current }
+  let(:current_time) { Time.current.round }
   before do
     Time.zone = "Tokyo"
     Timecop.freeze(current_time)
@@ -55,7 +55,7 @@ RSpec.describe Sales::OnlineServices::Apply do
         price_details = relation.price_details.first
         expect(price_details).to have_attributes(
           amount: sale_page.selling_price_amount,
-          charge_at: current_time.as_json
+          charge_at: current_time
         )
         expect(price_details.order_id).to be_present
       end
@@ -74,14 +74,14 @@ RSpec.describe Sales::OnlineServices::Apply do
         first_price_details = relation.price_details.first
         expect(first_price_details).to have_attributes(
           amount: Money.new(1000),
-          charge_at: current_time.as_json
+          charge_at: current_time
         )
         expect(first_price_details.order_id).to be_present
 
         second_price_details = relation.price_details.second
         expect(second_price_details).to have_attributes(
           amount: Money.new(1000),
-          charge_at: current_time.advance(months: 1).as_json
+          charge_at: current_time.advance(months: 1)
         )
         expect(second_price_details.order_id).to be_present
       end

@@ -34,7 +34,7 @@
 # }
 
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid].freeze
+  ACTIVE_STATES = %w[pending free paid partial_paid].freeze
 
   include SayHi
   hi_track_event "online_service_purchased"
@@ -124,5 +124,18 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def customer_payments
     CustomerPayment.where(customer: customer, product: sale_page)
+  end
+
+  def selling_prices_text
+    if free_payment_state?
+      I18n.t("common.free_price")
+    elsif price_details.size == 1
+      price_details.first.amount.format(:ja_default_format)
+    else
+      times = price_details.size
+      amount = price_details.first.amount
+
+      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+    end
   end
 end

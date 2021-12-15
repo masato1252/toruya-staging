@@ -213,6 +213,7 @@ ja:
           register_info: 利用者情報
           permission_state: ご利用状況
           payment_state: お支払い状況
+          payment_plan: ご利用プラン
           signup_date: サービス登録日
           expire_date: サービス利用期限
           cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
@@ -228,6 +229,10 @@ ja:
             failed: 失敗
             refunded: 返金済み
             canceled: 中止
+          customer_payment_states:
+            completed: 支払い完了
+            auth_failed: 失敗
+            processor_failed: 失敗
         stripe:
           title: オンライン精算
           connection_title: Stripeアカウント連携
