@@ -16,6 +16,7 @@ module Sales
         else
           # paid_at => bought at, when customer bought this product, it should equals first time pay.
           relation.paid_at = Time.current
+          relation.payment_state = :paid if relation.online_service.external?
           relation.save
         end
 

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Sales::OnlineServices::Approve do
-  let(:relation) { FactoryBot.create(:online_service_customer_relation, :paid) }
+  let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment) }
   let(:customer) { relation.customer }
   let(:online_service) { relation.online_service  }
   let(:args) do
@@ -44,6 +44,19 @@ RSpec.describe Sales::OnlineServices::Approve do
         expect(relation.expire_at).to eq(online_service.current_expire_time)
         expect(relation.paid_at).to be_present
         expect(customer.reload.online_service_ids).to eq([online_service.id])
+      end
+
+      context "when service is external" do
+        let(:relation) { FactoryBot.create(:online_service_customer_relation, :one_time_payment, online_service: external_online_service) }
+        let(:external_online_service) { FactoryBot.create(:online_service, :external) }
+
+        it "marks payment_state as paid" do
+          expect {
+            outcome
+          }.to change {
+            relation.payment_state
+          }.to("paid")
+        end
       end
     end
   end
