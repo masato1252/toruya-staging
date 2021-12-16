@@ -1,0 +1,7 @@
+<%= react_component("lines/new_customer_payment", {
+  props: {
+    stripe_key: current_owner.stripe_provider&.publishable_key,
+  }
+},
+{ camelize_props: false }
+) %>

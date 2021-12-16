@@ -17,6 +17,10 @@ const FinalPaidPage = ({props, purcahse_data}) => {
     if (props.sale_page.is_free || props.customer_subscirbed || props.sale_page.is_external) {
       const [error, response] = await SaleServices.purchase({ data: { ...purcahse_data, payment_type: props.sale_page.payment_type}})
 
+      if (error) {
+        toastr.error(error.response.data.error_message)
+      }
+
       if (props.sale_page.is_external) {
         window.location.replace(response.data.redirect_to)
       }

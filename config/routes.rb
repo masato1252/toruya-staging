@@ -549,7 +549,17 @@ Rails.application.routes.draw do
   resources :online_services, param: :slug, only: [:show] do
     member do
       put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+      get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
+
+      scope module: :online_services do
+        resources :customer_payments, only: [:create] do
+          collection do
+            get "/:encrypted_social_service_user_id/new/:order_id", action: :new, as: :new
+          end
     end
+  end
+    end
+
   end
 
   resources :shops, only: [:show]

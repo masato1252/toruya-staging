@@ -11,6 +11,7 @@ class Lines::UserBot::Services::CustomersController < Lines::UserBotDashboardCon
     @online_service = current_user.online_services.find(params[:service_id])
     @relation = @online_service.online_service_customer_relations.find(params[:id])
     @customer = @relation.customer
+    @is_owner = true
   end
 
   def approve

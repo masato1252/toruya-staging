@@ -112,7 +112,7 @@ const PriceBlock = ({
     return price.price_types[0] || 'free'
   }
 
-  if (is_ended) {
+  if (!demo && is_ended) {
     return (
       <>
         <ServiceEndInfo />
@@ -121,7 +121,7 @@ const PriceBlock = ({
     )
   }
 
-  if (!is_started) {
+  if (!demo && !is_started) {
     return (
       <>
         <ServiceStartInfo start_at={start_at} />

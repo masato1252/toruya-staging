@@ -17,14 +17,6 @@ module Sales
       validates :payment_type, inclusion: { in: SalePage::PAYMENTS.values }
 
       def execute
-        relation = compose(
-          ::Sales::OnlineServices::Apply,
-          sale_page: sale_page,
-          online_service: product,
-          customer: customer,
-          payment_type: payment_type
-        )
-
         relation.with_lock do
           if !relation.purchased?
             if relation.inactive?
@@ -71,6 +63,16 @@ module Sales
 
       private
 
+      def relation
+        @relation ||= compose(
+          ::Sales::OnlineServices::Apply,
+          sale_page: sale_page,
+          online_service: product,
+          customer: customer,
+          payment_type: payment_type
+        )
+      end
+
       def product
         @product ||= sale_page.product
       end
@@ -86,7 +88,8 @@ module Sales
       end
 
       def validate_token
-        if !sale_page.free? && !sale_page.external? && authorize_token.blank?
+        # TODO: need spec
+        if !sale_page.free? && !sale_page.external? && authorize_token.blank? && !relation.purchased?
           errors.add(:authorize_token, :invalid_token)
         end
       end

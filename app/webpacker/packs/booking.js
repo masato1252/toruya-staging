@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime";
 import Routes from '../js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 import ahoy from "ahoy.js";
+import toastr from 'toastr';
 
 var BookingcomponentRequireContext = require.context("../javascripts/components", true, /^\.\/(booking|shared|lines|user_bot\/sales|user_bot\/services)/)
 var ReactRailsUJS = require("react_ujs")
@@ -18,6 +19,7 @@ application.load(definitionsFromContext(context))
 
 require.context('../assets/booking', true)
 
+window.toastr = toastr;
 window.Routes = Routes;
 window.I18n = I18n;
 

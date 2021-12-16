@@ -15,7 +15,12 @@ const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_n
     const [error, response] = await SaleServices.purchase({ data: {...purcahse_data, token, payment_type}})
     setProcessing(false)
 
-    window.location = response.data.redirect_to;
+    if (error) {
+      toastr.error(error.response.data.error_message)
+    }
+    else {
+      window.location = response.data.redirect_to;
+    }
   }
 
   const handleFailure = (error) => {

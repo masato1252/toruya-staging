@@ -21,15 +21,21 @@
   <%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
 
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
-  <%= render "lines/user_bot/field_row", title: @relation.selling_prices_text %>
+  <%= render "lines/user_bot/field_row" do %>
+    <span><%= @relation.selling_prices_text %></span>
+    <%= link_to "Change Card", "#", class: "btn btn-yellow" unless @is_owner %>
+  <% end %>
 
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_state") %></div>
   <% @relation.customer_payments.order("id DESC").each do |payment| %>
     <div class="flex">
       <span class="state <%= payment.state %>"></span>
       <%= render "lines/user_bot/field_row" do  %>
-        <span><%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %></span>
-        <%= I18n.l(payment.charge_at, format: :long_date_with_wday) %>
+        <span>
+          <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
+          <%= I18n.l(payment.charge_at) %>
+        </span>
+        <%= link_to "Pay", new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" unless @is_owner || payment.completed? %>
       <% end %>
     </div>
   <% end %>
