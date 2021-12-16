@@ -18,7 +18,10 @@ module Notifiers
           charge_date: I18n.l(online_service_customer_price.charge_at.to_date, format: :year_month_date),
           shop_name: online_service.company.company_name,
           shop_phone: online_service.company.phone_number,
-          online_service_customer_status_url: "https://url.com",
+          customer_status_online_service_url: url_helpers.customer_status_online_service_url(
+            slug: online_service_customer_relation.online_service.slug,
+            encrypted_social_service_user_id: MessageEncryptor.encrypt(online_service_customer_relation.customer.social_customer.social_user_id)
+          )
         )
       end
 

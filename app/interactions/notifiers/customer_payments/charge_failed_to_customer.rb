@@ -16,7 +16,10 @@ module Notifiers
           service_title: customer_payment.product.product_name,
           shop_name: sale_page.product.company.company_name,
           shop_phone: sale_page.product.company.company_phone_number,
-          online_service_customer_status_url: "https://url.com",
+          customer_status_online_service_url: url_helpers.customer_status_online_service_url(
+            slug: customer_payment.product.slug,
+            encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
+          )
         )
       end
 

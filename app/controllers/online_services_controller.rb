@@ -16,6 +16,15 @@ class OnlineServicesController < Lines::CustomersController
       end
   end
 
+  def customer_status
+    # authorize owner and customer
+    @relation = online_service.online_service_customer_relations.where(customer: current_customer).first
+    @customer = current_customer
+    @is_owner = current_toruy_social_user&.user == current_owner
+
+    render template: "lines/user_bot/services/customers/show", layout: "user_bot"
+  end
+
   def watch_lesson
     outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
 

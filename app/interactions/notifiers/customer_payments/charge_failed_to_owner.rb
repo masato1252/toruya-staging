@@ -13,7 +13,10 @@ module Notifiers
         I18n.t(
           "notifier.customer_payments.charge_failed_to_owner.message",
           user_name: receiver.name,
-          online_service_customer_status_url: "https://url.com",
+          customer_status_online_service_url: url_helpers.customer_status_online_service_url(
+            slug: customer_payment.product.slug,
+            encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
+          )
         )
       end
     end
