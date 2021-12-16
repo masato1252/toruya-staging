@@ -64,8 +64,10 @@ const PriceBlock = ({
   payable,
   is_external
 }) => {
+
   const renderActions = (payment_type) => {
     if (no_action) return <></>
+
     if (demo) {
       return (
         <button className="btn btn-tarco btn-large btn-tall btn-icon watch">
@@ -90,29 +92,11 @@ const PriceBlock = ({
       )
     }
 
-    if (is_ended) {
-      return (
-        <>
-          <ServiceEndInfo />
-          <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
-        </>
-      )
-    }
-    else if (!is_started) {
-      return (
-        <>
-          <ServiceStartInfo start_at={start_at} />
-          <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
-        </>
-      )
-    }
-    else {
-      return (
-        <a href={purchase_url ? `${purchase_url}/${payment_type}` : "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
-          <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
-        </a>
-      )
-    }
+    return (
+      <a href={purchase_url ? `${purchase_url}/${payment_type}` : "#"} className="btn btn-tarco btn-large btn-tall btn-icon watch" target="_blank">
+        <i className="fas fa-credit-card"></i> {I18n.t(`action.sales.${solution_type}`)}
+      </a>
+    )
   }
 
   const isFree = () => {
@@ -126,6 +110,24 @@ const PriceBlock = ({
 
   const paymentType = () => {
     return price.price_types[0] || 'free'
+  }
+
+  if (is_ended) {
+    return (
+      <>
+        <ServiceEndInfo />
+        <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+      </>
+    )
+  }
+
+  if (!is_started) {
+    return (
+      <>
+        <ServiceStartInfo start_at={start_at} />
+        <AddLineFriendInfo social_account_add_friend_url={social_account_add_friend_url} />
+      </>
+    )
   }
 
   if (isSinglePrice()) {
