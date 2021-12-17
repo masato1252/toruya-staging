@@ -22,7 +22,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
         end
 
         customer.customer_payments.create!(
-          product: sale_page,
+          product: online_service_customer_relation,
           amount: charging_price_amount,
           charge_at: Time.current,
           expired_at: expire_at,

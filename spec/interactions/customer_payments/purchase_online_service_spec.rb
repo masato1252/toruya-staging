@@ -33,7 +33,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
         }.to change {
           CustomerPayment.where(
             customer: relation.customer,
-            product: relation.sale_page,
+            product: relation,
             amount_cents: relation.price_details.first.amount.fractional,
             manual: manual
           ).completed.count
@@ -50,7 +50,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           }.to change {
             CustomerPayment.where(
               customer: relation.customer,
-              product: relation.sale_page,
+              product: relation,
               amount_cents: relation.price_details.first.amount.fractional,
               manual: manual
             ).completed.count
@@ -60,7 +60,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
       end
 
       context "when this charge order was paid" do
-        let!(:paid_payment) { FactoryBot.create(:customer_payment, :completed, product: relation.sale_page, customer: customer, order_id: relation.price_details.first.order_id) }
+        let!(:paid_payment) { FactoryBot.create(:customer_payment, :completed, product: relation, customer: customer, order_id: relation.price_details.first.order_id) }
 
         it "returns existing paid payment" do
           expect {
@@ -68,7 +68,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           }.not_to change {
             CustomerPayment.where(
               customer: relation.customer,
-              product: relation.sale_page,
+              product: relation,
               amount_cents: relation.price_details.first.amount.fractional,
               manual: manual
             ).completed.count
@@ -90,7 +90,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
         }.to change {
           CustomerPayment.where(
             customer: relation.customer,
-            product: relation.sale_page,
+            product: relation,
             amount_cents: online_service_customer_price.amount.fractional,
             manual: manual,
             order_id: order_id
@@ -120,7 +120,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
 
         payment = CustomerPayment.where(
           customer: relation.customer,
-          product: relation.sale_page,
+          product: relation,
           amount_cents: relation.price_details.first.amount.fractional,
           manual: manual,
         ).last

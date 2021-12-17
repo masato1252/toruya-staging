@@ -14,7 +14,7 @@ module Notifiers
           "notifier.customer_payments.charge_failed_to_owner.message",
           user_name: receiver.name,
           customer_status_online_service_url: url_helpers.customer_status_online_service_url(
-            slug: customer_payment.product.slug,
+            slug: customer_payment.product.sale_page.slug,
             encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
           )
         )

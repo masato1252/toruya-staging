@@ -39,6 +39,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   include SayHi
   hi_track_event "online_service_purchased"
 
+  has_many :customer_payments, as: :product
+  has_one :last_customer_payment, -> { order(id: :desc) } , as: :product, class_name: "CustomerPayment"
   belongs_to :online_service
   belongs_to :sale_page
   belongs_to :customer
@@ -120,10 +122,6 @@ class OnlineServiceCustomerRelation < ApplicationRecord
 
   def paid_completed?
     total_completed_payments_amount >= product_amount
-  end
-
-  def customer_payments
-    CustomerPayment.where(customer: customer, product: sale_page)
   end
 
   def selling_prices_text

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :customer_payment do
     association :customer
-    product { FactoryBot.create(:sale_page, user: customer.user) }
+    product { FactoryBot.create(:online_service_customer_relation, customer: customer) }
     amount { Money.new(1000) }
 
     trait :completed do
