@@ -674,7 +674,7 @@ ja:
         customers/store_stripe_customer:
           attributes:
             authorize_token:
-              something_wrong: "^Something wrong"
+              something_wrong: "^支払いに失敗しました。有効なカード番号かご確認の上、もう一度お試しください。"
         reservable/reservation:
           attributes:
             date:

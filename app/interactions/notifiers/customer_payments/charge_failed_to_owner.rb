@@ -10,14 +10,7 @@ module Notifiers
       validate :receiver_should_be_user
 
       def message
-        I18n.t(
-          "notifier.customer_payments.charge_failed_to_owner.message",
-          user_name: receiver.name,
-          customer_status_online_service_url: url_helpers.customer_status_online_service_url(
-            slug: customer_payment.product.sale_page.slug,
-            encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
-          )
-        )
+        I18n.t("notifier.customer_payments.charge_failed_to_owner.message", user_name: receiver.name)
       end
     end
   end
