@@ -62,4 +62,7 @@ class Profile < ApplicationRecord
       "〒#{company_zip_code} #{company_address}"
     end
   end
+
+  def logo_url
+  end
 end

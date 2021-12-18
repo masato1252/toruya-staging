@@ -71,4 +71,8 @@ class Shop < ApplicationRecord
   def company_name
     display_name
   end
+
+  def logo_url
+    ApplicationController.helpers.shop_logo_url(self, "260")
+  end
 end

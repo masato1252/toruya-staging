@@ -29,7 +29,7 @@ class OnlineServicesController < Lines::CustomersController
     # Not owner and no fail order
     @able_to_change_credit_card = !@is_owner && !@order_completed.values.any?(false)
 
-    render template: "lines/user_bot/services/customers/show", layout: "user_bot"
+    render layout: "user_bot"
   end
 
   def watch_lesson
