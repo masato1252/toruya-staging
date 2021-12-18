@@ -23,7 +23,9 @@
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
   <%= render "lines/user_bot/field_row" do %>
     <span><%= @relation.selling_prices_text %></span>
-    <%= link_to "Change Card", "#", class: "btn btn-yellow" unless @is_owner %>
+    <% if @able_to_change_credit_card %>
+      <%= link_to t("action.change_credit_card"), "#", data: { toggle: "modal", target: "#change-card-modal" }, class: "btn btn-yellow" %>
+    <% end %>
   <% end %>
 
   <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_state") %></div>
@@ -35,7 +37,7 @@
           <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
           <%= I18n.l(payment.charge_at) %>
         </span>
-        <%= link_to "Pay", new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" unless @is_owner || payment.completed? %>
+        <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" unless @is_owner || @order_completed.fetch(payment.order_id) %>
       <% end %>
     </div>
   <% end %>
@@ -68,3 +70,12 @@
     <% end %>
   <% end %>
 </div>
+
+<%= react_component("shared/stripe_change_card_modal", {
+  stripe_key: @online_service.user.stripe_provider&.publishable_key,
+  header: @online_service.name,
+  pay_btn: I18n.t('plans.actions.change_card'),
+  change_card_path: change_card_customer_payments_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id], format: "json")
+},
+{ camelize_props: false }
+) if @able_to_change_credit_card %>

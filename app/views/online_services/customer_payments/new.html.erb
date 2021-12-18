@@ -1,6 +1,12 @@
 <%= react_component("lines/new_customer_payment", {
   props: {
     stripe_key: current_owner.stripe_provider&.publishable_key,
+    slug: params[:slug],
+    encrypted_social_service_user_id: params[:encrypted_social_service_user_id],
+    order_id: params[:order_id],
+    company_name: @relation.online_service.company.company_name,
+    service_name: @relation.online_service.name,
+    price: @price.amount.format
   }
 },
 { camelize_props: false }

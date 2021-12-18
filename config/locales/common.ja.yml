@@ -58,6 +58,8 @@ ja:
     stripe_connect: Stripeに連携
     stripe_connected: 連携中
     stripe_sign_up: Stripeに新規登録
+    change_credit_card: 精算カード変更
+    pay_now: 今すぐ支払う
     online_service_actions:
       video: 視聴する
       audio: 視聴する

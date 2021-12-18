@@ -555,11 +555,11 @@ Rails.application.routes.draw do
         resources :customer_payments, only: [:create] do
           collection do
             get "/:encrypted_social_service_user_id/new/:order_id", action: :new, as: :new
+            put :change_card
           end
     end
   end
     end
-
   end
 
   resources :shops, only: [:show]

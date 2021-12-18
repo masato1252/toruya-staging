@@ -303,19 +303,6 @@ const PaymentServices = {
       },
       responseType: "json"
     })
-  },
-  changeCard: ({token}) => {
-    return request({
-      method: "PUT",
-      headers: {
-        "X-CSRF-Token": Rails.csrfToken()
-      },
-      url: Routes.change_card_lines_user_bot_settings_payments_path({format: "json"}),
-      data: {
-        token,
-      },
-      responseType: "json"
-    })
   }
 }
 

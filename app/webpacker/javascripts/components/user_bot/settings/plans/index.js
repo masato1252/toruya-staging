@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { StickyContainer, Sticky  } from 'react-sticky';
+import Routes from 'js-routes.js'
 
 import StripeCheckoutModal from "shared/stripe_checkout_modal";
 import StripeChangeCardModal from "shared/stripe_change_card_modal";
@@ -291,10 +292,10 @@ const Plans = ({props}) => {
         props={props}
       />
       <StripeChangeCardModal
+        change_card_path={Routes.change_card_lines_user_bot_settings_payments_path({format: "json"})}
         stripe_key={props.stripe_key}
         header="Trouya"
         pay_btn={I18n.t('plans.actions.change_card')}
-        props={props}
       />
     </StickyContainer>
   )
