@@ -16,6 +16,7 @@ ja:
         referral_code_placeholder: ある場合は入力
         confirm_customer_info: 確認コード送信
         create_customer_info: 保存してLINEと連携する
+        sms_faq: 認証コードSMSが届きませんか？
         booking_code:
           code: 確認コード
           resend: コード再送

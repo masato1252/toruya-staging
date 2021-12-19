@@ -9,7 +9,7 @@ import { ErrorMessage, RequiredLabel } from "shared/components";
 export const UserIdentificationFlow = ({props, finalView, next}) => {
   const {
     page_title, name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message,
-    phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder
+    phonetic_name, phonetic_last_name, phonetic_first_name, create_customer_info, referral_code_title, referral_code_placeholder, sms_faq
   } = props.i18n.user_sign_up;
   const { confirm, required_label } = props.i18n;
 
@@ -137,6 +137,11 @@ export const UserIdentificationFlow = ({props, finalView, next}) => {
           <div className="resend-row">
             <a href="#" onClick={handleSubmit(generateCode)} >
               {booking_code.resend}
+            </a>
+          </div>
+          <div className="margin-around">
+            <a href="https://toruya.com/faq/verification_sms/">
+              <i className="fas fa-question-circle"></i> {sms_faq}
             </a>
           </div>
         </div>
