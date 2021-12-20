@@ -82,55 +82,64 @@ const SellingPriceEdit = ({price, handlePriceChange}) => (
             <br />
             {price.price_types.includes("multiple_times") && (
               <>
-                <input
-                  type="tel"
-                  value={price.price_amounts?.multiple_times?.amount || ""}
-                  onChange={(event) => {
-                    handlePriceChange({
-                      price_types: price.price_types,
-                      price_amounts: {
-                        ...price.price_amounts,
-                        multiple_times: {
-                          ...(price.price_amounts?.multiple_times || {}),
-                          amount: parseInt(event.target.value)
+                <div>
+                  <input
+                    type="tel"
+                    value={price.price_amounts?.multiple_times?.amount || ""}
+                    onChange={(event) => {
+                      handlePriceChange({
+                        price_types: price.price_types,
+                        price_amounts: {
+                          ...price.price_amounts,
+                          multiple_times: {
+                            ...(price.price_amounts?.multiple_times || {}),
+                            amount: parseInt(event.target.value)
+                          }
                         }
-                      }
-                    })
-                  }} />
+                      })
+                    }} />
                   {I18n.t("common.unit")}
                   ({I18n.t("common.tax_included")})
-                <select
-                  name="multiple_times_times"
-                  value={price.price_amounts?.multiple_times?.times || ""}
-                  onChange={(event) => {
-                    handlePriceChange({
-                      price_types: price.price_types,
-                      price_amounts: {
-                        ...price.price_amounts,
-                        multiple_times: {
-                          ...(price.price_amounts?.multiple_times || {}),
-                          times: parseInt(event.target.value)
+                </div>
+                <div>
+                  X&nbsp;
+                  <select
+                    name="multiple_times_times"
+                    value={price.price_amounts?.multiple_times?.times || ""}
+                    onChange={(event) => {
+                      handlePriceChange({
+                        price_types: price.price_types,
+                        price_amounts: {
+                          ...price.price_amounts,
+                          multiple_times: {
+                            ...(price.price_amounts?.multiple_times || {}),
+                            times: parseInt(event.target.value)
+                          }
                         }
-                      }
-                    })
-                  }}
-                >
-                  <option value=""></option>
-                  <SelectOptions options={[
-                    { label: 2,  value: 2  },
-                    { label: 3,  value: 3  },
-                    { label: 4,  value: 4  },
-                    { label: 5,  value: 5  },
-                    { label: 6,  value: 6  },
-                    { label: 7,  value: 7  },
-                    { label: 8,  value: 8  },
-                    { label: 9,  value: 9  },
-                    { label: 10, value: 10 },
-                    { label: 11, value: 11 },
-                    { label: 12, value: 12 },
-                  ]} />
-                </select>
-                {(price.price_amounts?.multiple_times?.amount || 0) * (price.price_amounts?.multiple_times?.times || 0) }
+                      })
+                    }}
+                  >
+                    <option value=""></option>
+                    <SelectOptions options={[
+                      { label: 2,  value: 2  },
+                      { label: 3,  value: 3  },
+                      { label: 4,  value: 4  },
+                      { label: 5,  value: 5  },
+                      { label: 6,  value: 6  },
+                      { label: 7,  value: 7  },
+                      { label: 8,  value: 8  },
+                      { label: 9,  value: 9  },
+                      { label: 10, value: 10 },
+                      { label: 11, value: 11 },
+                      { label: 12, value: 12 },
+                    ]} />
+                  </select>
+                  &nbsp;{I18n.t("common.times")}
+                </div>
+                <div>
+                  {I18n.t("common.total")}&nbsp;
+                  {(price.price_amounts?.multiple_times?.amount || 0) * (price.price_amounts?.multiple_times?.times || 0) }{I18n.t("common.unit")}({I18n.t("common.tax_included")})
+                </div>
               </>
             )}
           </div>
