@@ -7,15 +7,16 @@ import { SaleServices } from "user_bot/api";
 import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
-const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_name, price}) => {
-  const [processing, setProcessing] = useState(false)
-
+const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_name, price, payment_type}) => {
   const handleToken = async (token) => {
-    setProcessing(true)
-    const [error, response] = await SaleServices.purchase({ data: {...purcahse_data, token}})
-    setProcessing(false)
+    const [error, response] = await SaleServices.purchase({ data: {...purcahse_data, token, payment_type}})
 
-    window.location = response.data.redirect_to;
+    if (error) {
+      toastr.error(error.response.data.error_message)
+    }
+    else {
+      window.location = response.data.redirect_to;
+    }
   }
 
   const handleFailure = (error) => {

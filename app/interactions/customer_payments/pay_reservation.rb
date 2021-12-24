@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 require "slack_client"
+require "order_id"
 
 class CustomerPayments::PayReservation < ActiveInteraction::Base
   object :reservation_customer
 
   def execute
-    order_id = SecureRandom.hex(8).upcase
+    order_id = OrderId.generate
 
     payment = customer.customer_payments.create!(
       product: reservation_customer,

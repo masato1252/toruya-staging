@@ -15,7 +15,7 @@ const SellingPriceStep = ({step, next, prev}) => {
         type: "SET_ATTRIBUTE",
         payload: {
           attribute: "price",
-          value: { price_type: "one_time" }
+          value: { price_types: ["one_time"] }
         }
       })
     }
@@ -24,7 +24,7 @@ const SellingPriceStep = ({step, next, prev}) => {
         type: "SET_ATTRIBUTE",
         payload: {
           attribute: "price",
-          value: { price_type: "free" }
+          value: { price_types: ["free"] }
         }
       })
       next()

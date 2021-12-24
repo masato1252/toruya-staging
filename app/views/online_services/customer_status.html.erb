@@ -1,0 +1,24 @@
+<div class="service-show form">
+  <div class="online-service-header">
+    <% if @online_service.company.logo_url %>
+      <%= image_tag @online_service.company.logo_url, class: "logo" %>
+    <% else %>
+      <h2><%= @online_service.company.name %></h2>
+    <% end %>
+  </div>
+  <div class="p6 centerize border-0 border-t border-solid border-gray-500">
+    <h1><%= @online_service.name %></h1>
+    <h1><%= t("common.usage_status") %></h1>
+  </div>
+
+  <%= render "lines/user_bot/services/customers/info" %>
+</div>
+
+<%= react_component("shared/stripe_change_card_modal", {
+  stripe_key: @online_service.user.stripe_provider&.publishable_key,
+  header: @online_service.name,
+  pay_btn: I18n.t('plans.actions.change_card'),
+  change_card_path: change_card_customer_payments_path(slug: params[:slug], encrypted_social_service_user_id: params[:encrypted_social_service_user_id], format: "json")
+},
+{ camelize_props: false }
+) if @able_to_change_credit_card %>

@@ -1,0 +1,36 @@
+<div class="field-header" id="name"><%= t("common.customer_name") %></div>
+<%= render "lines/user_bot/field_row", title: @customer.name %>
+
+<div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
+<div class="flex">
+  <span class="state <%= @relation.state %>"></span>
+  <%= render "lines/user_bot/field_row", title: t("user_bot.dashboards.settings.service_customer_relation.permission_states.#{@relation.state}") %>
+</div>
+
+<div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.signup_date") %></div>
+<%= render "lines/user_bot/field_row", title: I18n.l(@relation.created_at, format: :long_date_with_wday) %>
+
+<div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.expire_date") %></div>
+<%= render "lines/user_bot/field_row", title: @relation.expire_at ? I18n.l(@relation.expire_at, format: :long_date_with_wday) : I18n.t("sales.never_expire") %>
+
+<div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_plan") %></div>
+<%= render "lines/user_bot/field_row" do %>
+  <span><%= @relation.selling_prices_text %></span>
+  <% if @able_to_change_credit_card %>
+    <%= link_to t("action.change_credit_card"), "#", data: { toggle: "modal", target: "#change-card-modal" }, class: "btn btn-yellow" %>
+  <% end %>
+<% end %>
+
+<div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.payment_state") %></div>
+<% @relation.customer_payments.order("id DESC").each do |payment| %>
+  <div class="flex">
+    <span class="state <%= payment.state %>"></span>
+    <%= render "lines/user_bot/field_row" do  %>
+      <span>
+        <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
+        <%= I18n.l(payment.charge_at) %>
+      </span>
+      <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" unless @is_owner || @order_completed.fetch(payment.order_id) %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "slack_client"
+require "order_id"
 
 module Subscriptions
   class Charge < ActiveInteraction::Base
@@ -13,7 +14,7 @@ module Subscriptions
 
     def execute
       SubscriptionCharge.transaction do
-        order_id = SecureRandom.hex(8).upcase
+        order_id = OrderId.generate
         # XXX: business plan charged manually means, it is a registration charge, user need to pay extra signup fee
         amount, charging_rank =
           if charge_amount && rank

@@ -12,8 +12,16 @@ const initialState = {
   },
   selected_staff: null,
   price: {
-    price_type: "free",
-    price_amount: null
+    price_types: ["free"],
+    price_amounts: {
+      "one_time": {
+        amount: null
+      },
+      "multiple_times": {
+        times: null,
+        amount: null
+      }
+    }
   },
   normal_price: {
     price_type: "cost", // free/cost

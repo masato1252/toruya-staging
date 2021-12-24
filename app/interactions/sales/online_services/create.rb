@@ -10,6 +10,9 @@ module Sales
       string :introduction_video_url
       integer :normal_price, default: nil
       integer :selling_price, default: nil
+      array :selling_multiple_times_price, default: nil do
+        integer
+      end
       integer :quantity, default: nil
       string :selling_end_at, default: nil
       hash :content do
@@ -35,6 +38,7 @@ module Sales
             introduction_video_url: introduction_video_url,
             normal_price_amount_cents: normal_price,
             selling_price_amount_cents: selling_price,
+            selling_multiple_times_price: selling_multiple_times_price,
             quantity: quantity,
             selling_end_at: selling_end_at ? Time.zone.parse(selling_end_at).end_of_day : nil,
             picture: picture,

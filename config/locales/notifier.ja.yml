@@ -27,6 +27,8 @@ ja:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
         course:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
+      charge_reminder:
+        message: "%{customer_name} 様\n\n日頃より、%{shop_name}をご利用いただきまして、誠にありがとうございます。\n\n%{charge_date}に%{service_title}のご利用料金の請求をさせていただきます。\n\n詳細なご利用料金、及びお支払い方法の変更は、以下のページからご確認ください。\n\n %{customer_status_online_service_url}"
     reminders:
       trial_member_week_ago_reminder:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n試用期間の終了日が７日後に迫ってまいりました。\n\n今後も引き続き同じ機能をご利用いただくためにも、%{trial_expired_date}までにお支払い手続きをお済ませください。\n\nToruya"
@@ -51,3 +53,11 @@ ja:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n以お客様のクレジットカードにご利用料金をご請求をさせていただきました。\n\nご請求の明細は、設定画面よりご確認ください。\n\nToruya"
       charge_reminder:
         message: "%{user_name} 様\n\n日頃より、Toruyaをご利用いただきまして、誠にありがとうございます。\n\n%{charge_date}にご利用料金の請求をさせていただきます。\n\n詳細なご利用料金、及びお支払い方法の変更は設定画面よりご確認ください。\n\nToruya"
+    customer_payments:
+      charge_failed_to_owner:
+        message: "⚠️オンライン精算失敗のご連絡です⚠️\n\n%{user_name}様に代わってご請求をさせていただきましたお客様のカードの利用承認が得られませんでしたのでお知らせします。\n\nオンライン精算に失敗した顧客情報は、サービス設定のサービス利用者ページでご確認ください。\n\n今後の流れについては、以下を参考にしてください。\n\n❶当該のお客様には、ユーザー様の公式LINEを通してご請求失敗のご連絡を既に送信させていただいております。\n\n❷Toruyaからの再請求は行われませんので、お客様ご自身で①のメッセージでお送りしたURLよりお支払い方法をご変更いただくか、カード情報を正しく修正していただいてください。\n\n❸お客様のご購入プランにより、精算失敗後のサービス利用状況が異なります。詳しくはマニュアルをご参照ください。"
+      charge_failed_to_customer:
+        message: "%{customer_name} 様\n\n日頃より、%{shop_name}をご利用いただきまして、誠にありがとうございます。\n\n本日、お客様のクレジットカードに%{service_title}のご利用料金のご請求をさせていただきましたが、お支払いにご指定いただいたカードの利用承認が得られませんでしたのでお知らせします。\n\nお支払いが完了するまで、%{service_title}のご利用を一時停止させていただきます。\n\n%{service_title}のご利用の継続を希望される場合は、お手数ですが以下のページにてお支払い方法を後変更いただくか、カード情報を正しく修正してください。\n\n
+          %{customer_status_online_service_url}\n\n変更後のお支払い方法に問題がなければ、決済完了日よりご利用を再開できます。また、その場合のご利用期間はお支払い完了日より起算されます。\n\n※カードの承認が得られない理由としては、ご入力いただいたカードが無効になっていることが可能性として挙げられます。\n\nご質問等がございましたら%{shop_phone}までご連絡ください。"
+      not_first_time_charge_successfully:
+        message: "%{customer_name} 様\n\n日頃より、%{shop_name}をご利用いただきまして、誠にありがとうございます。\n\n本日、%{service_title}のご利用料金のご請求が完了いたしました。\n\n今後ともご愛顧の程よろしくお願い申し上げます。\n\n %{customer_status_online_service_url}"

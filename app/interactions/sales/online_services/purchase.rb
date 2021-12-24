@@ -10,41 +10,44 @@ module Sales
       object :sale_page
       object :customer
       string :authorize_token, default: nil
+      string :payment_type
 
       validate :validate_product
-      validate :validate_token
+      validates :payment_type, inclusion: { in: SalePage::PAYMENTS.values }
 
       def execute
-        relation =
-          begin
-            OnlineServiceCustomerRelation.transaction do
-              product.online_service_customer_relations
-                .create_with(sale_page: sale_page)
-                .find_or_create_by(online_service: product, customer: customer)
-            end
-          rescue ActiveRecord::RecordNotUnique
-            retry
-          end
+        relation = compose(
+          ::Sales::OnlineServices::Apply,
+          sale_page: sale_page,
+          online_service: product,
+          customer: customer,
+          payment_type: payment_type
+        )
 
         relation.with_lock do
           if !relation.purchased?
             if relation.inactive?
-              relation = compose(::Sales::OnlineServices::Reapply, online_service_customer_relation: relation)
+              relation = compose(
+                ::Sales::OnlineServices::Reapply,
+                online_service_customer_relation: relation,
+                payment_type: payment_type
+              )
             end
 
             if sale_page.free?
-              relation.permission_state = :active
-              relation.expire_at = product.current_expire_time
-              relation.free_payment_state!
-
-              ::OnlineServices::Attend.run(customer: customer, online_service: product, sale_page: sale_page)
+              ::Sales::OnlineServices::Approve.run(relation: relation)
             elsif !sale_page.external?
               compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
-              purchase_outcome = CustomerPayments::PurchaseOnlineService.run(sale_page: sale_page, customer: customer)
+              purchase_outcome = CustomerPayments::PurchaseOnlineService.run(
+                online_service_customer_relation: relation,
+                first_time_charge: true,
+                manual: true
+              )
 
               # credit card charge is synchronous request, it would return final status immediately
               if purchase_outcome.valid?
-                Sales::OnlineServices::Approve.run(relation: relation, customer: customer, online_service: product)
+                Sales::OnlineServices::Approve.run(relation: relation)
+                Sales::OnlineServices::ScheduleCharges.run(relation: relation)
               else
                 relation.failed_payment_state!
               end
@@ -78,12 +81,6 @@ module Sales
       def validate_product
         if !product.is_a?(OnlineService)
           errors.add(:sale_page, :invalid_product)
-        end
-      end
-
-      def validate_token
-        if !sale_page.free? && !sale_page.external? && authorize_token.blank?
-          errors.add(:authorize_token, :invalid_token)
         end
       end
     end

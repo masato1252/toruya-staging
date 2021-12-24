@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
@@ -8,6 +8,13 @@ import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 
 const NormalPriceStep = ({step, next, prev, jump, lastStep}) => {
   const { dispatch, price, normal_price, isNormalPriceSetup, isReadyForPreview, selected_online_service } = useGlobalContext()
+
+  useEffect(() => {
+    // Most of times, when you have multiple payments solution, you don't need regular price
+    if (price.price_types.length > 1) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow centerize">

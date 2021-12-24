@@ -3,26 +3,27 @@
 #
 # Table name: sale_pages
 #
-#  id                         :bigint           not null, primary key
-#  content                    :json
-#  deleted_at                 :datetime
-#  flow                       :json
-#  introduction_video_url     :string
-#  normal_price_amount_cents  :decimal(, )
-#  product_type               :string           not null
-#  quantity                   :integer
-#  sale_template_variables    :json
-#  sections_context           :jsonb
-#  selling_end_at             :datetime
-#  selling_price_amount_cents :decimal(, )
-#  selling_start_at           :datetime
-#  slug                       :string
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  product_id                 :bigint           not null
-#  sale_template_id           :bigint
-#  staff_id                   :bigint
-#  user_id                    :bigint
+#  id                           :bigint           not null, primary key
+#  content                      :json
+#  deleted_at                   :datetime
+#  flow                         :json
+#  introduction_video_url       :string
+#  normal_price_amount_cents    :decimal(, )
+#  product_type                 :string           not null
+#  quantity                     :integer
+#  sale_template_variables      :json
+#  sections_context             :jsonb
+#  selling_end_at               :datetime
+#  selling_multiple_times_price :string           default([]), is an Array
+#  selling_price_amount_cents   :decimal(, )
+#  selling_start_at             :datetime
+#  slug                         :string
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  product_id                   :bigint           not null
+#  sale_template_id             :bigint
+#  staff_id                     :bigint
+#  user_id                      :bigint
 #
 # Indexes
 #
@@ -35,7 +36,15 @@
 
 require "thumbnail_of_video"
 
+# selling_multiple_times_price: [1000, 1000, 1000]
+
 class SalePage < ApplicationRecord
+  PAYMENTS = {
+    one_time: "one_time",
+    multiple_times: "multiple_times",
+    free: "free"
+  }.freeze
+
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
   belongs_to :staff
   belongs_to :sale_template
@@ -51,7 +60,7 @@ class SalePage < ApplicationRecord
   monetize :normal_price_amount_cents, allow_nil: true
 
   def free?
-    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && !external?
+    (selling_price_amount_cents.nil? || selling_price_amount.zero?)  && selling_multiple_times_price.blank? && !external?
   end
 
   def external?
@@ -66,16 +75,33 @@ class SalePage < ApplicationRecord
     product&.name
   end
 
-  def selling_price_text
-    selling_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+  def selling_prices_text
+    [selling_price_text, selling_multiple_times_price_text].compact.join(", ").presence || I18n.t("common.free_price")
   end
 
-  def serializer
+  def selling_price_text
+    selling_price_amount&.format(:ja_default_format)
+  end
+
+  def selling_multiple_times_price_text
+    if selling_multiple_times_price.present?
+      times = selling_multiple_times_price.size
+      amount = selling_multiple_times_price.first
+
+      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+    end
+  end
+
+  def selling_multiple_times_first_price_text
+    Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+  end
+
+  def serializer(params = {})
     @serializer ||=
       if is_booking_page?
-        SalePages::BookingPageSerializer.new(self)
+        SalePages::BookingPageSerializer.new(self, params: params.try(:permit!)&.to_h || {})
       else
-        SalePages::OnlineServiceSerializer.new(self)
+        SalePages::OnlineServiceSerializer.new(self, params: params.try(:permit!)&.to_h || {})
       end
   end
 
@@ -138,11 +164,41 @@ class SalePage < ApplicationRecord
   end
 
   def price
-    { price_amount: selling_price_amount&.fractional }
+    price_options = {
+      price_types: [],
+      price_amounts: {}
+    }
+
+    if selling_price_amount_cents.present?
+      price_options[:price_types] << PAYMENTS[:one_time]
+      price_options[:price_amounts].merge!(
+        one_time: {
+          amount: selling_price_amount.fractional,
+          amount_format: selling_price_amount.format
+        }
+      )
+    end
+
+    if selling_multiple_times_price.present?
+      price_options[:price_types] << PAYMENTS[:multiple_times]
+      price_options[:price_amounts].merge!(
+        multiple_times: {
+          times: selling_multiple_times_price.size,
+          amount: selling_multiple_times_price.first,
+          amount_format: Money.new(selling_multiple_times_price.first).format
+        }
+      )
+    end
+
+    if selling_price_amount_cents.blank? && selling_multiple_times_price.blank?
+      price_options[:price_types] << PAYMENTS[:free]
+    end
+
+    price_options
   end
 
   def normal_price_text
-    normal_price_amount&.format(symbol: :ja_default_format) || I18n.t("common.free_price")
+    normal_price_amount&.format(:ja_default_format) || I18n.t("common.free_price")
   end
 
   def quantity_text

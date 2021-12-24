@@ -138,6 +138,8 @@ a {
   &.available,
   &.free,
   &.active,
+  &.completed,
+  &.partial_paid,
   &.paid {
     background-color: $palette-color2-1;
     border-color: $palette-color2-2;
@@ -162,6 +164,8 @@ a {
 
   &.pending,
   &.failed,
+  &.auth_failed,
+  &.processor_failed,
   &.draft {
     background-color: #ca4e0e;
     border: 1px #b0450d solid;

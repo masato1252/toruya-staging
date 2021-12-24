@@ -27,47 +27,71 @@
     }
   }
 
+  .fa-arrow-down {
+    font-size: 24px;
+  }
+
   .product-price-block {
     color: $red;
     font-weight: bold;
-    margin: 15px 0 20px;
+
+    .multiple-prices {
+      background-color: #ffffff;
+      padding: 12px;
+      margin: 12px;
+    }
+
+    .normal-price {
+      font-size: 24px;
+      font-weight: normal;
+      display: inline-flex;
+      flex-direction: column;
+
+      .label {
+        font-size: 16px;
+      }
+
+      .amount {
+        text-decoration: line-through;
+      }
+    }
 
     .price {
       font-size: 24px;
+      margin: 15px 0 20px;
+
+      .payment-type-title {
+        font-size: 20px;
+        color: #000000;
+      }
 
       .fa-arrow-right {
         margin: 0 12px;
       }
 
-      .price-with-tax {
+      .price-with-tax,
+      .small-text {
         font-size: 14px;
         vertical-align: text-bottom;
       }
 
-      .normal-price {
-        font-weight: normal;
-        display: inline-flex;
-        flex-direction: column;
-
-        .label {
-          font-size: 16px;
-        }
-
-        .amount {
-          text-decoration: line-through;
-        }
-      }
 
       .special-price {
         font-size: 32px;
         display: inline-flex;
         flex-direction: column;
+        font-weight: bold;
 
         .label {
           font-size: 20px;
         }
 
-        .price-with-tax {
+        .multiple {
+          font-weight: normal;
+        }
+
+        .price-with-tax,
+        .small-text {
           font-size: 14px;
         }
       }

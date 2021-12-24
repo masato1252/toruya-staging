@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 
 import StripeCheckoutForm from "shared/stripe_checkout_form"
-import { PaymentServices } from "components/user_bot/api"
+import { PaymentServices, CommonServices } from "components/user_bot/api"
 import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
-const StripeChangeCardModal = ({props, ...rest}) => {
+const StripeChangeCardModal = ({change_card_path, ...rest}) => {
   const [processing, setProcessing] = useState(false)
 
   const handleToken = async (token) => {
     setProcessing(true)
     console.log("token", token)
-    const [error, response] = await PaymentServices.changeCard({token: token})
+    const [error, response] = await CommonServices.update({
+      url: change_card_path,
+      data: { token }
+    })
     setProcessing(false)
 
     if (error) {
@@ -20,7 +23,7 @@ const StripeChangeCardModal = ({props, ...rest}) => {
     else {
       alert(I18n.t("common.update_successfully_message"));
 
-      window.location = response.data["redirect_path"];
+      window.location = response.data.redirect_to;
     }
   }
 

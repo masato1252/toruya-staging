@@ -21,13 +21,25 @@
 #  online_service_relation_index         (online_service_id,customer_id,permission_state)
 #  online_service_relation_unique_index  (online_service_id,customer_id,current) UNIQUE
 #
+# product_details: {
+#   prices: [
+#     {
+#       amount: 1000,
+#       charge_date: Time.current.to_s, => scheduled job date
+#       order_id: XXXX => used by customer_payment order_id
+#     },
+#     ...
+#   ]
+# }
 
 class OnlineServiceCustomerRelation < ApplicationRecord
-  ACTIVE_STATES = %w[pending free paid].freeze
+  ACTIVE_STATES = %w[pending free paid partial_paid].freeze
 
   include SayHi
   hi_track_event "online_service_purchased"
 
+  has_many :customer_payments, as: :product
+  has_one :last_customer_payment, -> { order(id: :desc) } , as: :product, class_name: "CustomerPayment"
   belongs_to :online_service
   belongs_to :sale_page
   belongs_to :customer
@@ -43,6 +55,7 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     failed: 3,
     refunded: 4,
     canceled: 5,
+    partial_paid: 6
   }, _suffix: true
 
   enum permission_state: {
@@ -85,10 +98,41 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def purchased?
-    free_payment_state? || paid_payment_state?
+    free_payment_state? || paid_payment_state? || partial_paid_payment_state?
   end
 
   def hi_message
     "🖥 New online_service purchased, online_service: #{online_service.slug}, sale_page: #{sale_page.slug}, customer_id: #{customer_id}, user_id: #{customer.user_id}, payment_state: #{payment_state}, permission_state: #{permission_state}, expire_at: #{expire_at ? I18n.l(expire_at, format: :long_date_with_wday) : ""}"
+  end
+
+  def price_details
+    product_details["prices"].map do |_attributes|
+      ::OnlineServiceCustomerPrice.new(_attributes.merge(amount: Money.new(_attributes["amount"]), charge_at: Time.parse(_attributes["charge_at"])))
+    end
+  end
+
+  def total_completed_payments_amount
+    customer_payments.completed.sum(&:amount)
+  end
+
+  def product_amount
+    price_details.sum { |price| Money.new(price.amount) }
+  end
+
+  def paid_completed?
+    total_completed_payments_amount >= product_amount
+  end
+
+  def selling_prices_text
+    if free_payment_state?
+      I18n.t("common.free_price")
+    elsif price_details.size == 1
+      price_details.first.amount.format(:ja_default_format)
+    else
+      times = price_details.size
+      amount = price_details.first.amount
+
+      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+    end
   end
 end

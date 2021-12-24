@@ -33,18 +33,33 @@ export const GlobalProvider = ({ props, children }) => {
   const { selected_online_service, product_content, selected_template, template_variables, selected_staff, price, normal_price, end_time, quantity, introduction_video } = state.sales_creation_states
 
   const _salePageData = () => {
-    return {
+    let submittedData = {
       ...state.sales_creation_states,
       selected_online_service_id: selected_online_service.id,
       selected_template_id: selected_template.id,
       content: _.pick(product_content, ["picture", "desc1", "desc2"]),
       staff: _.pick(selected_staff, ["id", "picture", "introduction"]),
-      selling_price: price['price_amount'],
       normal_price: normal_price['price_amount'],
       selling_end_at: end_time["end_time_date_part"],
       quantity: quantity["quantity_value"],
       introduction_video_url: introduction_video["url"]
     }
+
+    if (price && price.price_types.includes("one_time")) {
+      submittedData = {
+        ...submittedData,
+        selling_price: price.price_amounts.one_time.amount,
+      }
+    }
+
+    if (price && price.price_types.includes("multiple_times")) {
+      submittedData = {
+        ...submittedData,
+        selling_multiple_times_price: price.price_amounts.multiple_times
+      }
+    }
+
+    return submittedData
   }
 
   const createSalesOnlineServicePage = async () => {

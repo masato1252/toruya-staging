@@ -41,6 +41,7 @@ FactoryBot.define do
     end
 
     trait :with_stripe do
+      user { FactoryBot.create(:user, skip_default_data: true, with_stripe_user: true) }
       stripe_customer_id do
         Stripe.api_key = Rails.application.secrets.stripe_secret_key
         Stripe::Customer.create({

@@ -58,6 +58,8 @@ ja:
     stripe_connect: Stripeに連携
     stripe_connected: 連携中
     stripe_sign_up: Stripeに新規登録
+    change_credit_card: 精算カード変更
+    pay_now: 今すぐ支払う
     online_service_actions:
       video: 視聴する
       audio: 視聴する
@@ -71,6 +73,7 @@ ja:
     date: 日付
     day: 曜日
     time: 時間
+    times: 回
     content: 內容
     start_time: 開始時間
     end_time: 終了時間
@@ -182,3 +185,6 @@ ja:
     pay_the_payment: 料金をお支払いください
     chapter: 章
     lesson: レッスン
+    one_time_pay: １回払い
+    multiple_times_pay: 分割払い
+    usage_status: ご利用状況

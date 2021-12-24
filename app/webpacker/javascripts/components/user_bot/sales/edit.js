@@ -38,7 +38,7 @@ const SalePageEdit =({props}) => {
     price_type: "cost",
     price_amount: null
   })
-  const [selling_price, setSellingPrice] = useState(props.sale_page.selling_price_option)
+  const [selling_price, setSellingPrice] = useState(props.sale_page.price)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 
   const { register, watch, setValue, control, handleSubmit, formState } = useForm({
@@ -56,7 +56,22 @@ const SalePageEdit =({props}) => {
         submittedData = { quantity: quantity && quantity["quantity_value"] }
         break
       case "selling_price":
-        submittedData = { selling_price: selling_price && selling_price['price_amount'] }
+        submittedData = {}
+
+        if (selling_price && selling_price.price_types.includes("one_time")) {
+          submittedData = {
+            ...submittedData,
+            selling_price: selling_price.price_amounts.one_time.amount,
+          }
+        }
+
+        if (selling_price && selling_price.price_types.includes("multiple_times")) {
+          submittedData = {
+            ...submittedData,
+            selling_multiple_times_price: selling_price.price_amounts.multiple_times
+          }
+        }
+
         break
       case "normal_price":
         submittedData = { normal_price: normal_price && normal_price['price_amount'] }

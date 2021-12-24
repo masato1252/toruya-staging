@@ -13,7 +13,7 @@ Rails.application.routes.draw do
     scope module: :customers, path: :customers, as: :customers do
       resources :online_service_purchases, only: [:create], param: :slug do
         collection do
-          get "/:slug/new", action: "new", as: :new
+          get "/:slug/new/(:payment_type)", action: "new", as: :new
         end
       end
     end
@@ -549,6 +549,16 @@ Rails.application.routes.draw do
   resources :online_services, param: :slug, only: [:show] do
     member do
       put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+      get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
+
+      scope module: :online_services do
+        resources :customer_payments, only: [:create] do
+          collection do
+            get "/:encrypted_social_service_user_id/new/:order_id", action: :new, as: :new
+            put :change_card
+          end
+    end
+  end
     end
   end
 

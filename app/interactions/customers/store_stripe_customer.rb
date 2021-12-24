@@ -19,21 +19,26 @@ module Customers
           return stripe_customer_id
         rescue => e
           Rollbar.error(e)
-          # errors.add(:base, e.message)
-          # return
+          errors.add(:authorize_token, :something_wrong)
+          return
           # raise e if e.code != "resource_missing"
         end
       end
 
-      stripe_customer = Stripe::Customer.create(
-        {
-          source: authorize_token, email: customer.email, phone: customer.phone_number
-        },
-        stripe_account: customer.user.stripe_provider.uid
-      )
-      customer.stripe_customer_id = stripe_customer.id
-      customer.save
-      stripe_customer.id
+      begin
+        stripe_customer = Stripe::Customer.create(
+          {
+            source: authorize_token, email: customer.email, phone: customer.phone_number
+          },
+          stripe_account: customer.user.stripe_provider.uid
+        )
+        customer.stripe_customer_id = stripe_customer.id
+        customer.save
+        stripe_customer.id
+      rescue Stripe::InvalidRequestError => e
+        Rollbar.error(e)
+        errors.add(:authorize_token, :something_wrong)
+      end
     end
   end
 end

@@ -25,6 +25,7 @@
 
 class CustomerPayment < ApplicationRecord
   belongs_to :product, polymorphic: true
+  belongs_to :customer
   monetize :amount_cents
 
   enum state: {

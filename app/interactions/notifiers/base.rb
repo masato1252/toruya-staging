@@ -168,5 +168,11 @@ module Notifiers
         errors.add(:receiver, :should_be_customer)
       end
     end
+
+    def receiver_should_be_user
+      unless receiver.is_a?(User)
+        errors.add(:receiver, :should_be_user)
+      end
+    end
   end
 end

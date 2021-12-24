@@ -25,6 +25,7 @@
 #
 
 class Shop < ApplicationRecord
+  alias_attribute :company_phone_number, :phone_number
   include ReservationChecking
   include Helpers
 
@@ -69,5 +70,9 @@ class Shop < ApplicationRecord
 
   def company_name
     display_name
+  end
+
+  def logo_url
+    ApplicationController.helpers.shop_logo_url(self, "260")
   end
 end

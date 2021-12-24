@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "order_id"
+
 module PaymentWithdrawals
   class Create < ActiveInteraction::Base
     TRANSFER_DAY = 10
@@ -17,7 +19,7 @@ module PaymentWithdrawals
         withdrawal = PaymentWithdrawal.create(
           amount: total_amount,
           receiver: user,
-          order_id: SecureRandom.hex(8).upcase,
+          order_id: OrderId.generate,
           details: {
             payment_ids: payments.map(&:id),
             period: "#{I18n.l(period.first)}~#{I18n.l(period.last)}",

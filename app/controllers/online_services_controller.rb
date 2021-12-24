@@ -16,6 +16,22 @@ class OnlineServicesController < Lines::CustomersController
       end
   end
 
+  def customer_status
+    # authorize owner and customer
+    @relation = online_service.online_service_customer_relations.where(customer: current_customer).first
+    @customer = current_customer
+    @is_owner = false
+    @order_completed = @relation.customer_payments.order("id DESC").each_with_object({}) do |payment, h|
+      next if h[payment.order_id] == true
+
+      h[payment.order_id] = payment.completed?
+    end
+    # Not owner and no fail order
+    @able_to_change_credit_card = !@is_owner && !@order_completed.values.any?(false)
+
+    render layout: "user_bot"
+  end
+
   def watch_lesson
     outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
 

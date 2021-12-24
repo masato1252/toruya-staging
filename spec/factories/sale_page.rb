@@ -14,8 +14,12 @@ FactoryBot.define do
       product { FactoryBot.create(:booking_page, user: user) }
     end
 
-    trait :paid_version do
+    trait :one_time_payment do
       selling_price_amount_cents { 1_000 }
+    end
+
+    trait :multiple_times_payment do
+      selling_multiple_times_price { [1000, 1000] }
     end
   end
 end

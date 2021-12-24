@@ -2,18 +2,10 @@
 
 class CompanyInfoSerializer
   include JSONAPI::Serializer
-  attribute :id, :email, :template_variables
+  attribute :id, :email, :template_variables, :logo_url
 
   attribute :type do |object|
     object.class.name
-  end
-
-  attribute :logo_url do |object|
-    case object
-    when Shop
-      ApplicationController.helpers.shop_logo_url(object, "260")
-    when Profile
-    end
   end
 
   attribute :short_name do |object|
@@ -48,11 +40,6 @@ class CompanyInfoSerializer
   end
 
   attribute :phone_number do |object|
-    case object
-    when Shop
-      object.phone_number
-    when Profile
-      object.company_phone_number
-    end
+    object.company_phone_number
   end
 end

@@ -25,6 +25,13 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
     args[:selling_end_at] = params[:selling_end_at] if params[:selling_end_at].present?
     args[:quantity] = params[:quantity] if params[:quantity].present?
 
+    if params[:selling_multiple_times_price].present?
+      args[:selling_multiple_times_price] = Array.new(
+        params[:selling_multiple_times_price][:times].to_i,
+        params[:selling_multiple_times_price][:amount].to_i
+      )
+    end
+
     outcome = ::Sales::OnlineServices::Create.run(args)
 
     return_json_response(outcome, { sale_page_id: outcome.result&.slug })
