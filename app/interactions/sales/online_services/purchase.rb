@@ -24,12 +24,6 @@ module Sales
           payment_type: payment_type
         )
 
-        # TODO: need spec
-        if !sale_page.free? && !sale_page.external? && !relation.purchased? && authorize_token.blank?
-          errors.add(:authorize_token, :invalid_token)
-          return
-        end
-
         relation.with_lock do
           if !relation.purchased?
             if relation.inactive?

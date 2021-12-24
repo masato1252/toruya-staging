@@ -44,6 +44,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
 
     context "when sale page was paid version" do
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
+
       it "create a paid relation" do
         expect {
           outcome
@@ -56,6 +57,14 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
         expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
+      end
+
+      context "when authorize_token is blank" do
+        let(:authorize_token) { nil }
+
+        it "is invalid" do
+          expect(outcome).to be_invalid
+        end
       end
     end
 

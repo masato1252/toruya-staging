@@ -26,8 +26,7 @@
 #     {
 #       amount: 1000,
 #       charge_date: Time.current.to_s, => scheduled job date
-#       order_id: XXXX => used by customer_payment order_id,
-#       state: "pending" => the same value as customer_payment state, it is a denormalize
+#       order_id: XXXX => used by customer_payment order_id
 #     },
 #     ...
 #   ]
