@@ -100,7 +100,7 @@ const PriceBlock = ({
   }
 
   const isFree = () => {
-    return parseInt(price.price_amounts.one_time?.amount || price.price_amounts.multiple_times?.amount || 0) === 0
+    return parseInt(price.price_amounts?.one_time?.amount || price.price_amounts?.multiple_times?.amount || 0) === 0
   }
 
   // one time or multiple times
