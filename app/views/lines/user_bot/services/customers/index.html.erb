@@ -11,7 +11,7 @@
     <%= render "lines/user_bot/field_state", state: relation.state do %>
       <%= render "lines/user_bot/field_row", path: lines_user_bot_service_customer_path(service_id: @online_service.id, id: relation.id) do %>
         <span class="dotdotdot">
-          <% unless relation.last_customer_payment.completed? %>
+          <% if relation.last_customer_payment && !relation.last_customer_payment.completed? %>
             <span class="status danger"><i class="fa fa-exclamation-circle"></i></span>
           <% end %>
           <%= relation.customer.name %>
