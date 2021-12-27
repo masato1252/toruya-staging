@@ -28,7 +28,7 @@ const UserBotCustomerReservations = () =>{
     const [error, response] = await CustomerServices.reservations({ user_id: props.super_user_id, customer_id: selected_customer.id })
 
     dispatch({
-      type: "ASSIGN_CUSTOMER_CUSTOMERS",
+      type: "ASSIGN_CUSTOMER_RESERVATIONS",
       payload: {
         reservations: response?.data?.reservations
       }

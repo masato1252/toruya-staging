@@ -25,8 +25,12 @@ const CustomerNav = () => {
             <i className="fa fa-comment"></i> <span>Line</span>
           </a>
         </li>
-      )
-      }
+      )}
+      <li className={view == "customer_payments" ? "active" : ""}>
+        <a onClick={() => onHandleClick("customer_payments")}>
+          <i className="fas fa-money-bill-wave"></i> <span>{props.i18n.tab.customer_payments}</span>
+        </a>
+      </li>
       <li className={view == "customer_info_view" || view == "customer_info_form" ? "active" : ""}>
         <a onClick={() => onHandleClick("customer_info_view")}>
           <i className="fa fa-address-card"></i> <span>{props.i18n.tab.customer_info}</span>

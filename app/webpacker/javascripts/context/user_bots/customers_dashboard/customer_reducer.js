@@ -8,6 +8,7 @@ const initialState = {
   query_type: "recent",
   filter_pattern_number: null,
   reservations: [],
+  payments: [],
   temp_new_messages: []
 }
 
@@ -62,10 +63,15 @@ export default (state = initialState, action) => {
         selected_customer: new_selected_customer,
         customers: new_customers
       }
-    case "ASSIGN_CUSTOMER_CUSTOMERS":
+    case "ASSIGN_CUSTOMER_RESERVATIONS":
       return {
         ...state,
         reservations: action.payload.reservations,
+      }
+    case "ASSIGN_CUSTOMER_PAYMENTS":
+      return {
+        ...state,
+        payments: action.payload.payments,
       }
     case "APPEND_NEW_MESSAGE":
       return {

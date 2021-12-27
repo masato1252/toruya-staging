@@ -181,6 +181,17 @@ const CustomerServices = {
       responseType: "json"
     })
   },
+  payments: ({user_id, customer_id}) => {
+    return request({
+      method: "GET",
+      url: Routes.lines_user_bot_customer_payments_path({format: "json"}),
+      params: {
+        user_id,
+        customer_id,
+      },
+      responseType: "json"
+    })
+  },
   save: (user_id, data) => {
     return request({
       method: "POST",
