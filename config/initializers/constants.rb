@@ -17,3 +17,7 @@ STRIPE_REFUND_STATUS = {
 }
 
 STRIPE_DESCRIPTION_LIMIT = 20
+
+FROM = {
+  service_customer_show: "service_customer_show"
+}

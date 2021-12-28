@@ -31,23 +31,25 @@ const CustomerBasicInfo = () => {
     <div>
       <NotificationMessages notification_messages={notification_messages} dispatch={dispatch} />
       <div className="customer-basic-info">
-        <CustomerTopActions
-          leading={
-            <a onClick={() => {
-              if (props.previous_path) {
-                window.location = props.previous_path
-              }
-              else {
-                dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
-                dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
-                history.goBack()
-              }
-            }} >
-              <i className="fa fa-angle-left fa-2x"></i>
-            </a>
-          }
-          tail={<CustomerTopRightAction />}
-        />
+        {props.from_options.service_customer_show != props.from && (
+          <CustomerTopActions
+            leading={
+              <a onClick={() => {
+                if (props.previous_path) {
+                  window.location = props.previous_path
+                }
+                else {
+                  dispatch({ type: "CHANGE_VIEW", payload: { view: "customers_list" } })
+                  dispatch({ type: "SELECT_CUSTOMER", payload: { customer: {} } })
+                  history.goBack()
+                }
+              }} >
+                <i className="fa fa-angle-left fa-2x"></i>
+              </a>
+            }
+            tail={<CustomerTopRightAction />}
+          />
+        )}
         <div className="customer-data">
           <div className="group-rank">
             {
