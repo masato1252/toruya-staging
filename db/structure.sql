@@ -10,20 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
 -- Name: btree_gin; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -48,7 +34,7 @@ CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
 -- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+COMMENT ON EXTENSION pg_stat_statements IS 'track planning and execution statistics of all SQL statements executed';
 
 
 --
@@ -1806,7 +1792,8 @@ CREATE TABLE public.sale_pages (
     selling_price_amount_cents numeric,
     deleted_at timestamp without time zone,
     sections_context jsonb,
-    selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[]
+    selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
+    internal_name character varying
 );
 
 
@@ -4768,6 +4755,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211023080215'),
 ('20211029131328'),
 ('20211103225844'),
-('20211206143634');
+('20211206143634'),
+('20211228141116');
 
 

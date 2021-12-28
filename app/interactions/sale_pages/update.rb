@@ -7,6 +7,7 @@ module SalePages
 
     hash :attrs, default: nil do
       hash :sale_template_variables, strip: false, default: nil
+      string :internal_name, default: nil
       string :introduction_video_url, default: nil
       string :selling_end_at, default: nil
       string :selling_start_at, default: nil
@@ -52,7 +53,7 @@ module SalePages
     def execute
       sale_page.with_lock do
         case update_attribute
-        when "sale_template_variables", "flow", "quantity"
+        when "sale_template_variables", "flow", "quantity", "internal_name"
           sale_page.update(attrs.slice(update_attribute))
         when "introduction_video_url"
           sale_page.update(introduction_video_url: attrs[:introduction_video_url].presence)

@@ -10,6 +10,10 @@ class SalePageSerializer
     )
   end
 
+  attribute :internal_name do |sale_page|
+    sale_page.internal_name.presence || sale_page.product_name
+  end
+
   attribute :staff do |sale_page|
     StaffSerializer.new(sale_page.staff).attributes_hash
   end

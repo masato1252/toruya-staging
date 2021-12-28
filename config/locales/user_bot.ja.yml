@@ -348,6 +348,7 @@ ja:
           selling_end_at: 販売終了
           selling_solutions: 販売方法
           selling_price: 販売価格
+          internal_name: 販売ページ名
           normal_price: 通常価格
           selling_number: 販売個数
           page_content: 販売ページコンテンツ
@@ -368,6 +369,9 @@ ja:
         form:
           start_time_title: ページ概要
           start_time_subtitle: "販売開始"
+          internal_name_title: ページ概要
+          internal_name_subtitle: 販売ページ名
+          internal_name_desc_html: この設定内容は、管理用に使用するため<br>顧客には表示されません
           end_time_title: ページ概要
           end_time_subtitle: 販売終了
           selling_price_title: 販売方法

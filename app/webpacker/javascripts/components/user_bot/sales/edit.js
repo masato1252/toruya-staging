@@ -21,6 +21,7 @@ import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_e
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
+import TextInput from "shared/edit/text_input";
 import I18n from 'i18n-js/index.js.erb';
 
 const SalePageEdit =({props}) => {
@@ -52,6 +53,9 @@ const SalePageEdit =({props}) => {
     let submittedData;
 
     switch(props.attribute) {
+      case "internal_name":
+        submittedData = { internal_name: data.internal_name }
+        break
       case "quantity":
         submittedData = { quantity: quantity && quantity["quantity_value"] }
         break
@@ -309,6 +313,13 @@ const SalePageEdit =({props}) => {
           </>
         )
         break
+      case "internal_name":
+        return (
+          <>
+            <TextInput register={register} name={props.attribute} placeholder={props.placeholder} />
+            <p className="centerize desc margin-around" dangerouslySetInnerHTML={{ __html: I18n.t("user_bot.dashboards.sales.form.internal_name_desc_html") }} />
+          </>
+        )
       case "introduction_video_url":
         return (
           <>
