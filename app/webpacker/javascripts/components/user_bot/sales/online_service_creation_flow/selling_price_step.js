@@ -53,7 +53,12 @@ const SellingPriceStep = ({step, next, prev}) => {
         <button onClick={prev} className="btn btn-tarco">
           {I18n.t("action.prev_step")}
         </button>
-        <button onClick={next} className="btn btn-yellow">
+        <button onClick={next} className="btn btn-yellow" disabled={
+          !price ||
+            (!price.price_types.includes("one_time") && !price.price_types.includes("multiple_times")) ||
+            (price.price_types.includes("one_time") && !price.price_amounts?.one_time?.amount) ||
+            (price.price_types.includes("multiple_times") && (!price.price_amounts?.multiple_times?.amount || !price.price_amounts?.multiple_times?.times))
+          }>
           {I18n.t("action.next_step")}
         </button>
       </div>
