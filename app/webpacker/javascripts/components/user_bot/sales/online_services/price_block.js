@@ -138,8 +138,8 @@ const PriceBlock = ({
         <div className="price">
           <div className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
-            <PriceOntTimePaymentText amount={price.price_amounts.one_time?.amount} />
-            <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times?.amount} times={price.price_amounts.multiple_times?.times} />
+            <PriceOntTimePaymentText amount={price.price_amounts?.one_time?.amount} />
+            <PriceMultipleTimesPaymnetText amount={price.price_amounts?.multiple_times?.amount} times={price.price_amounts?.multiple_times?.times} />
             {isFree() && <div>{I18n.t("common.free_price")}</div>}
           </div>
         </div>
@@ -157,7 +157,7 @@ const PriceBlock = ({
           <div className="price">
             <h3 className="payment-type-title">{I18n.t("common.one_time_pay")}</h3>
             <div className="special-price">
-              <PriceOntTimePaymentText amount={price.price_amounts.one_time.amount} />
+              <PriceOntTimePaymentText amount={price.price_amounts?.one_time?.amount} />
             </div>
           </div>
 
@@ -168,7 +168,7 @@ const PriceBlock = ({
           <div className="price">
             <h3 className="payment-type-title">{I18n.t("common.multiple_times_pay")}</h3>
             <div className="special-price">
-              <PriceMultipleTimesPaymnetText amount={price.price_amounts.multiple_times.amount} times={price.price_amounts.multiple_times?.times} />
+              <PriceMultipleTimesPaymnetText amount={price.price_amounts?.multiple_times?.amount} times={price.price_amounts?.multiple_times?.times} />
             </div>
           </div>
 
