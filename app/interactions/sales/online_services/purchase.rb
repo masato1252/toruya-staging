@@ -38,14 +38,9 @@ module Sales
               ::Sales::OnlineServices::Approve.run(relation: relation)
             elsif !sale_page.external?
               compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
-              purchase_outcome = CustomerPayments::PurchaseOnlineService.run(
-                online_service_customer_relation: relation,
-                first_time_charge: true,
-                manual: true
-              )
 
               # credit card charge is synchronous request, it would return final status immediately
-              if purchase_outcome.valid?
+              if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true)
                 Sales::OnlineServices::Approve.run(relation: relation)
                 Sales::OnlineServices::ScheduleCharges.run(relation: relation)
               else
