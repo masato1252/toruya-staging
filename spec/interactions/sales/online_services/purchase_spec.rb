@@ -26,6 +26,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
       let(:payment_type) { SalePage::PAYMENTS[:free] }
 
       it "create a free relation" do
+        allow(LineClient).to receive(:flex)
+
         expect {
           outcome
         }.to change {
@@ -39,6 +41,7 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
 
         expect(user.reload.customer_latest_activity_at).to be_present
+        expect(LineClient).to have_received(:flex)
       end
     end
 
@@ -46,6 +49,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
       let(:sale_page) { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
 
       it "create a paid relation" do
+        allow(LineClient).to receive(:flex)
+
         expect {
           outcome
         }.to change {
@@ -57,12 +62,16 @@ RSpec.describe Sales::OnlineServices::Purchase do
         expect(relation).to be_active
         expect(relation.expire_at).to eq(sale_page.product.current_expire_time)
         expect(customer.reload.online_service_ids).to eq([sale_page.product_id])
+
+        expect(LineClient).to have_received(:flex)
       end
 
       context "when authorize_token is blank" do
         let(:authorize_token) { nil }
 
         it "is invalid" do
+          expect(LineClient).not_to receive(:flex)
+
           expect(outcome).to be_invalid
         end
       end
@@ -72,6 +81,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
       let(:sale_page) { FactoryBot.create(:sale_page, :one_time_payment, product: FactoryBot.create(:online_service, :external, user: user), user: user) }
 
       it "create a pending relation" do
+        expect(LineClient).not_to receive(:flex)
+
         expect {
           outcome
         }.not_to change {
@@ -90,35 +101,45 @@ RSpec.describe Sales::OnlineServices::Purchase do
 
     context "when customers already registered this online service" do
       let(:payment_type) { SalePage::PAYMENTS[:free] }
-      let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free) }
+      let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :free, customer: customer) }
       let(:sale_page) { online_service_customer_relation.sale_page }
-      let(:customer) { online_service_customer_relation.customer }
+      let(:customer) { FactoryBot.create(:social_customer, user: user).customer }
 
       it "doesn't touch customer" do
+        allow(LineClient).to receive(:flex)
+
         expect {
           outcome
         }.not_to change {
           customer.updated_at
         }
+
+        expect(LineClient).to have_received(:flex)
       end
 
       context "when customer current state is inactive" do
         context 'when customer already purchased this online service' do
-          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, payment_state: :paid, expire_at: 1.day.ago) }
+          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, payment_state: :paid, customer: customer, expire_at: 1.day.ago) }
 
           it "doesn't touch customer" do
+            allow(LineClient).to receive(:flex)
+
             expect {
               outcome
             }.not_to change {
               customer.updated_at
             }
+
+            expect(LineClient).to have_received(:flex)
           end
         end
 
         context 'when customer does NOT purchase yet' do
-          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled) }
+          let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, :canceled, customer: customer) }
 
-          it "create a pending relation" do
+          it "create a free relation" do
+            allow(LineClient).to receive(:flex)
+
             expect {
               outcome
             }.to change {
@@ -128,6 +149,8 @@ RSpec.describe Sales::OnlineServices::Purchase do
                 sale_page: online_service_customer_relation.sale_page
               ).count
             }.by(1)
+
+            expect(LineClient).to have_received(:flex)
           end
         end
       end
