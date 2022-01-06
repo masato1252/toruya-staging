@@ -11,7 +11,8 @@ module SayHi
 
   def say_hi
     if Rails.configuration.x.env.production?
-      HiJob.perform_later(self, channel_name, track_event)
+      HiJob.set(wait_until: 5.minutes.from_now).perform_later(hi_message, channel_name) if hi_message.present?
+      HiEventJob.perform_later(self, track_event) if track_event.present?
     end
   end
 

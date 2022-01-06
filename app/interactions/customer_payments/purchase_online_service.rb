@@ -63,7 +63,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       end
 
       if Rails.configuration.x.env.production?
-        SlackClient.send(channel: 'sayhi', text: "[OK] 🎉Sale Page #{sale_page.id} Stripe charge💰")
+        HiJob.set(wait_until: 5.minutes.from_now).perform_later("[OK] 🎉Sale Page #{sale_page.slug} customer_id: #{customer.id} Stripe charge💰")
       end
     rescue Stripe::CardError => error
       payment.stripe_charge_details = error.json_body[:error]
