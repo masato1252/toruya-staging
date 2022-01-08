@@ -36,6 +36,8 @@ class Settings::ReservationSettingsController < SettingsController
   def update
     if @reservation_setting.update(reservation_setting_params.reverse_merge(
       day: nil, nth_of_week: nil, days_of_week: nil, start_time: nil, end_time: nil))
+      super_user.shops.each(&:touch)
+
       if params[:from_menu]
         if params[:menu_id]
           redirect_to edit_settings_user_menu_path(super_user,id: params[:menu_id]), notice: I18n.t("common.update_successfully_message")
