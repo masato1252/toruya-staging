@@ -86,6 +86,7 @@ group :development, :test do
   gem "timecop", "~> 0.8.0"
   gem "database_cleaner"
   gem "factory_bot_rails"
+  gem 'pry-byebug'
 end
 
 group :development do
