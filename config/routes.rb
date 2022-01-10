@@ -89,6 +89,7 @@ Rails.application.routes.draw do
           end
         end
         resources :messages, only: [:index]
+        resources :payments, only: [:index]
       end
 
       namespace :settings do

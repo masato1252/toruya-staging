@@ -6,6 +6,7 @@ import UserBotCustomerInfoView from "./customer_info_view"
 import UserBotCustomerInfoForm from "./customer_info_form"
 import UserBotCustomerReservations from "./customer_reservations"
 import UserBotCustomerMessages from "./customer_messages"
+import UserBotCustomerPayments from "./customer_payments"
 import { BrowserRouter as Router } from "react-router-dom";
 import { GlobalProvider, GlobalContext } from "context/user_bots/customers_dashboard/global_state"
 
@@ -39,6 +40,8 @@ const DashboardView = () => {
       return <UserBotCustomerInfoForm />
     case "customer_messages":
       return <UserBotCustomerMessages />
+    case "customer_payments":
+      return <UserBotCustomerPayments />
     default:
       return <></>
   }

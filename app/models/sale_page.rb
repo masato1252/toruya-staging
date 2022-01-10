@@ -7,6 +7,7 @@
 #  content                      :json
 #  deleted_at                   :datetime
 #  flow                         :json
+#  internal_name                :string
 #  introduction_video_url       :string
 #  normal_price_amount_cents    :decimal(, )
 #  product_type                 :string           not null

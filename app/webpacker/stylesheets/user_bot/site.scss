@@ -311,10 +311,12 @@ a {
 
 .nav-tabs {
   li {
-    width: 33.3%;
+    width: 25.0%;
 
     a {
       margin-right: 0;
+      padding: 10px 0;
+      padding-left: 3px;
       border-color: $gray-border-1;
       border-radius: 0;
       background-color: $gray-background-1;
