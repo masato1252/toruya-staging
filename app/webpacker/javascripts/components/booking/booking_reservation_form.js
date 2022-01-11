@@ -102,7 +102,7 @@ class BookingReservationForm extends React.Component {
     if (found_customer) return;
     if (this.isCustomerTrusted()) return;
 
-    const { name, last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, confirm_customer_info } = this.props.i18n;
+    const { name, last_name, first_name, phonetic_last_name, phonetic_first_name, phone_number, next_step } = this.props.i18n;
     const { shop_name } = this.props.booking_page;
 
     return (
@@ -159,7 +159,7 @@ class BookingReservationForm extends React.Component {
         <Condition when="booking_reservation_form[found_customer]" is="null">
           <div className="centerize">
             <a href="#" className="btn btn-tarco find-customer" onClick={this.findCustomer} disabled={is_finding_customer}>
-              {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
+              {is_finding_customer ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : next_step}
             </a>
           </div>
         </Condition>
@@ -1176,6 +1176,7 @@ class BookingReservationForm extends React.Component {
     this.booking_reservation_form.change("booking_reservation_form[is_finding_customer]", null)
     this.booking_reservation_form.change("booking_reservation_form[booking_code]", booking_code)
     this.booking_reservation_form.change("booking_reservation_form[use_default_customer]", false)
+    this.booking_reservation_form.change("booking_reservation_form[booking_code][passed]", booking_code.passed)
     this.findCustomerCall = null;
   }
 
