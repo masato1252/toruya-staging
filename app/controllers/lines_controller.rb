@@ -13,6 +13,32 @@ class LinesController < ActionController::Base
 
   def identify_shop_customer; end
 
+  def customer_sign_in
+    unless customer = Customers::Find.run!(
+        user: social_customer.user,
+        first_name: params[:customer_first_name],
+        last_name: params[:customer_last_name],
+        phone_number: params[:customer_phone_number]
+    )[:found_customer]
+
+      customer = Customers::Create.run!(
+        user: social_customer.user,
+        customer_last_name: params[:customer_last_name],
+        customer_first_name: params[:customer_first_name],
+        customer_phonetic_last_name: params[:customer_phonetic_last_name],
+        customer_phonetic_first_name: params[:customer_phonetic_first_name],
+        customer_phone_number: params[:customer_phone_number]
+      )
+    end
+
+    SocialCustomers::ConnectWithCustomer.run!(social_customer: social_customer, customer: customer)
+
+    render json: {
+      identification_successful: true,
+      customer_id: customer.id
+    }
+  end
+
   def identify_code
     identification_code = Customers::VerifyIdentificationCode.run!(
       social_customer: social_customer,

@@ -103,11 +103,6 @@ class BookingPagesController < ActionController::Base
       phone_number: params[:customer_phone_number]
     )
 
-    booking_code = Booking::CreateCode.run!(
-      booking_page: booking_page,
-      phone_number: params[:customer_phone_number]
-    )
-
     if customer
       cookies.permanent[:booking_customer_id] = customer.id
 
@@ -115,14 +110,14 @@ class BookingPagesController < ActionController::Base
         customer_info: view_context.customer_info_as_json(customer),
         last_selected_option_id: customer.reservation_customers.joins(:reservation).where("reservations.aasm_state": "checked_in").last&.booking_option_id,
         booking_code: {
-          uuid: booking_code.uuid
+          passed: true
         }
       }
     else
       render json: {
         customer_info: {},
         booking_code: {
-          uuid: booking_code.uuid
+          passed: true
         },
         errors: {
           message: I18n.t("booking_page.message.unfound_customer_html")

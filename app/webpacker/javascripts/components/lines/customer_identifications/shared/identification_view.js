@@ -7,9 +7,10 @@ import axios from "axios";
 import { ErrorMessage } from "shared/components";
 
 export const CustomerIdentificationView = ({social_user_id, customer_id, identifiedCallback, i18n}) => {
-  const { name, last_name, first_name, phone_number, confirm_customer_info, booking_code, message, confirm,
+  const { name, last_name, first_name, phone_number, next_step, booking_code, message, confirm,
     title_html, phonetic_name, phonetic_last_name, phonetic_first_name, email, create_customer_info } = i18n;
 
+  const phone_number_identification_feature_enabled = false;
   const [customer_last_name, setCustomerLastName] = useState("")
   const [customer_first_name, setCustomerFirstName] = useState("")
   const [customer_phonetic_last_name, setCustomerPhoneticLastName] = useState("")
@@ -31,6 +32,37 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
   const _is_all_fields_filled = () => {
     return customer_first_name && customer_last_name && customer_phone_number
       && customer_phonetic_last_name && customer_phonetic_first_name;
+  }
+
+  const signIn = async (event) => {
+    event.preventDefault();
+    if (!(_is_all_fields_filled())) return;
+
+    const response = await axios({
+      method: "POST",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken()
+      },
+      url: Routes.lines_customer_sign_in_path(),
+      data: {
+        social_service_user_id: social_user_id,
+        customer_first_name: customer_first_name,
+        customer_last_name: customer_last_name,
+        customer_phone_number: customer_phone_number,
+        customer_phonetic_last_name: customer_phonetic_last_name,
+        customer_phonetic_first_name: customer_phonetic_first_name
+      },
+      responseType: "json"
+    })
+
+    const {
+      identification_successful,
+      errors
+    } = response.data;
+
+    setPhoneIdentified(identification_successful)
+    setIdentificationCode({...identification_code, customer_id: response.data.customer_id})
+    identifiedCallback(response.data)
   }
 
   const identifyCode = async (event) => {
@@ -212,8 +244,8 @@ export const CustomerIdentificationView = ({social_user_id, customer_id, identif
 
         {!_is_customer_found() && !identification_code.uuid ? (
           <div className="centerize">
-            <a href="#" className="btn btn-tarco find-customer" onClick={askIdentificationCode} disabled={is_asking_identification_code || !_is_all_fields_filled()}>
-              {is_asking_identification_code ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : confirm_customer_info}
+            <a href="#" className="btn btn-tarco find-customer" onClick={phone_number_identification_feature_enabled ? askIdentificationCode : signIn} disabled={is_asking_identification_code || !_is_all_fields_filled()}>
+              {is_asking_identification_code ? <i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i> : next_step}
             </a>
           </div>
         ) : null}
