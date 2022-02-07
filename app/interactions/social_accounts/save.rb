@@ -37,5 +37,11 @@ module SocialAccounts
         retry
       end
     end
+
+    private
+
+    def social_user
+      @social_user ||= user.social_user
+    end
   end
 end

@@ -37,6 +37,11 @@ module SocialAccounts
             SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: account)
           end
 
+          if account.line_settings_finished?
+            Notifiers::MessageForLineMessageSettingsFinished.perform_later(receiver: social_user)
+            Notifiers::VideoForLineMessageSettingsFinished.perform_later(receiver: social_user)
+          end
+
           account
         end
       rescue ActiveRecord::RecordNotUnique
