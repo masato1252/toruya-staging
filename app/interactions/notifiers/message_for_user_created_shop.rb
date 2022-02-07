@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Notifiers
-  class LineUserSignedUp < Base
+  class MessageForUserCreatedShop < Base
     deliver_by :line
 
     def message
-      I18n.t("user_bot.guest.user_sign_up.line.successful_message")
+      I18n.t("notifier.created_shop.message")
     end
   end
 end

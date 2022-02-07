@@ -26,8 +26,6 @@ ja:
           booking_code_message: 携帯電話にお送りした確認コードを入力してください。
           booking_code_failed_message: 確認コードが間違っています
           redirect_to_schedule_page: 予約カレンダーを読み込んでいます。
-        line:
-          successful_message: "店舗設定が完了しました！\n\nこのトーク画面下のユーザーメニューから、予約管理を始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や、LINE集客の方法を解説しています。\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1\n\n🏫サポートルーム\nToruyaユーザー様のサポート用Facebookグループです。登録申請していただければ、使い方や操作方法などを直接ご質問いただけます。\nhttps://www.facebook.com/groups/toruya?openExternalBrowser=1"
       user_connect:
         page_title: ユーザーログイン
         message:
