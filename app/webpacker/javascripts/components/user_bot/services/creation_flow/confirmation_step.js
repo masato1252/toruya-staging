@@ -7,7 +7,7 @@ import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import { SubmitButton } from "shared/components";
 import OnlineServicePage from "user_bot/services/online_service_page";
 
-const ConfirmationStep = ({next, prev, jump, step}) => {
+const ConfirmationStep = ({next, prev, jumpByKey, step}) => {
   const { props, dispatch, createService, selected_company, name, selected_solution, content_url, upsell } = useGlobalContext()
   const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
 
@@ -30,7 +30,7 @@ const ConfirmationStep = ({next, prev, jump, step}) => {
         upsell_sale_page={upsell.sale_page}
         demo={true}
         light={false}
-        jump={jump}
+        jumpByKey={jumpByKey}
       />
 
       <div className="action-block margin-around">

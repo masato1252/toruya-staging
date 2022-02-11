@@ -275,11 +275,11 @@ const SubmitButton = ({handleSubmit, submitCallback, btnWord, disabled}) => {
   )
 }
 
-const DemoEditButton = ({demo, jump}) => {
+const DemoEditButton = ({demo, jump, jumpByKey}) => {
   if (!demo) return <></>
 
   return (
-    <span className="btn btn-yellow edit-mark" onClick={jump}>
+    <span className="btn btn-yellow edit-mark" onClick={jump || jumpByKey}>
       <i className="fa fa-pencil-alt"></i>{I18n.t("action.edit")}
     </span>
   )

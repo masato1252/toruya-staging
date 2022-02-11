@@ -8,7 +8,7 @@ import { DemoEditButton } from 'shared/components';
 
 import OnlineServiceSolution from "./solution"
 
-const OnlineServicePage = ({company_info, name, solution_type, content_url, upsell_sale_page, demo, jump, light}) => {
+const OnlineServicePage = ({company_info, name, solution_type, content_url, upsell_sale_page, demo, jumpByKey, light}) => {
   return (
     <div className="online-service-page">
       <div className="online-service-header">
@@ -17,10 +17,10 @@ const OnlineServicePage = ({company_info, name, solution_type, content_url, upse
       <div className="online-service-body centerize">
         <h2 className="name">
           {name}
-          <DemoEditButton demo={demo} jump={() => jump(2)} />
+          <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("name_step")} />
         </h2>
         <div>
-          <DemoEditButton demo={demo} jump={() => jump(1)} />
+          <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("solution_step")} />
           <OnlineServiceSolution
             solution_type={solution_type}
             content_url={content_url}
@@ -33,7 +33,7 @@ const OnlineServicePage = ({company_info, name, solution_type, content_url, upse
           <div className="centerize">
             <h3 className="margin-around">
               {upsell_sale_page.label}
-              <DemoEditButton demo={demo} jump={() => jump(5)} />
+              <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("upsell_step")} />
             </h3>
             {upsell_sale_page.end_at && (
               <div className="upsell">

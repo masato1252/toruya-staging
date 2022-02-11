@@ -22,18 +22,23 @@ export const FlowController = ({ new_version, children }) => {
     setStep(step)
   }
 
+  const jumpByKey = (key) => {
+    let indexStep = childrenArray.findIndex(child => child.key === key)
+    setStep(indexStep)
+  }
+
   const lastStep = (pre = 1) => {
     setStep(childrenArray.length - pre)
   }
 
   if (new_version) {
     return (
-      React.cloneElement(childrenArray[step], {next, prev, jump, step, lastStep})
+      React.cloneElement(childrenArray[step], {next, prev, jump, jumpByKey, step, lastStep})
     )
   }
 
   return (
-    childrenArray[step]({next, prev, jump, step, lastStep})
+    childrenArray[step]({next, prev, jump, jumpByKey, step, lastStep})
   )
 }
 
