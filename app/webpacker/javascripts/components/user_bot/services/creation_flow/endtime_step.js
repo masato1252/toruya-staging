@@ -1,6 +1,6 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
@@ -8,6 +8,11 @@ import { SubmitButton } from "shared/components";
 
 const EndtimeStep = ({next, prev, step, lastStep}) => {
   const { props, dispatch, end_time, createService, selected_goal } = useGlobalContext()
+  const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
+
+  useEffect(() => {
+    if (selected_goal_option.skip_end_time_step_on_creation) next()
+  }, [])
 
   return (
     <div className="form settings-flow centerize">
