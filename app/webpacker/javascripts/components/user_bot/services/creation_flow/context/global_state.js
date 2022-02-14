@@ -30,6 +30,7 @@ export const GlobalProvider = ({ props, children }) => {
   const serviceData = () => {
     return {
       ...state.services_creation_states,
+      message_template: _.pick(state.services_creation_states.message_template, ["picture", "content"]),
       upsell: {
         sale_page_id: state.services_creation_states.upsell?.sale_page?.id
       }

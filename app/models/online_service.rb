@@ -153,6 +153,7 @@ class OnlineService < ApplicationRecord
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
+  has_one :template_message, -> { where(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
 
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]

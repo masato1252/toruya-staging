@@ -10,10 +10,11 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       name: params[:name],
       selected_goal: params[:selected_goal],
       selected_solution: params[:selected_solution],
-      end_time: params[:end_time].permit!.to_h,
-      upsell: params[:upsell].permit!.to_h,
+      end_time: params[:end_time]&.permit!&.to_h,
+      upsell: params[:upsell]&.permit!&.to_h,
       content_url: params[:content_url],
       selected_company: params[:selected_company].permit!.to_h,
+      message_template: params[:message_template].permit!.to_h
     )
 
     return_json_response(outcome, { online_service_slug: outcome.result&.slug })
