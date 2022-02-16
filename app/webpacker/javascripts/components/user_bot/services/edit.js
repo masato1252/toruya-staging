@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import ReactPlayer from 'react-player';
 import ReactSelect from "react-select";
 import _ from "lodash";
 
@@ -18,7 +17,7 @@ const OnlineServiceEdit =({props}) => {
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
 
-  const { register, watch, setValue, control, handleSubmit, formState, errors } = useForm({
+  const { register, watch, setValue, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.service,
       solution_type: null

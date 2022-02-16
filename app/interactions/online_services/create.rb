@@ -2,10 +2,14 @@
 
 module OnlineServices
   class Create < ActiveInteraction::Base
+    set_callback :type_check, :before do
+      self.message_template = nil if message_template&.dig(:picture).blank? || message_template&.dig(:content).blank?
+    end
+
     object :user
     string :name
     string :selected_goal
-    string :selected_solution, default: nil # course and membership doesn't provide solution, their solution is in their lesson or subscriptions
+    string :selected_solution, default: nil # course and membership doesn't provide solution, their solution is their lessons or episodes
     string :content_url, default: nil
     hash :end_time, default: nil do
       integer :end_on_days, default: nil
@@ -23,7 +27,7 @@ module OnlineServices
       string :content, default: nil
     end
 
-    # TODO: validate content_url, only course could be nil
+    # TODO: validate content_url, only course and membership could be nil
 
     def execute
       ApplicationRecord.transaction do
@@ -42,7 +46,7 @@ module OnlineServices
 
         if online_service.errors.present?
           errors.merge!(online_service.errors)
-        else
+        elsif message_template&.dig(:content) || message_template&.dig(:picture)
           message = CustomMessage.create(
             service: online_service,
             scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE,

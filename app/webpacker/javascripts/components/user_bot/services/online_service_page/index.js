@@ -12,7 +12,7 @@ const OnlineServicePage = ({company_info, name, solution_type, content_url, upse
   return (
     <div className="online-service-page">
       <div className="online-service-header">
-        { company_info.logo_url ?  <img className="logo" src={company_info.logo_url} /> : <h2>{company_info.name}</h2> }
+        { company_info?.logo_url ?  <img className="logo" src={company_info.logo_url} /> : <h2>{company_info?.name}</h2> }
       </div>
       <div className="online-service-body centerize">
         <h2 className="name">

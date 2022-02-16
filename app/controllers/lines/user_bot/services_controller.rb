@@ -33,6 +33,8 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       @lessons_count = @service.lessons.count
       @chapters_count = @service.chapters.count
       @course_hash = CourseSerializer.new(@service, { params: { is_owner: true }}).attributes_hash
+    elsif @service.membership?
+      @episodes_count = @service.episodes.count
     else
       @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
     end

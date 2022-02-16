@@ -106,6 +106,7 @@ class User < ApplicationRecord
   delegate :client, to: UserBotSocialAccount
 
   scope :admin, -> { where(id: ADMIN_IDS) }
+  scope :not_admin, -> { where.not.admin }
 
   def super_admin?
     ADMIN_IDS.include?(id)

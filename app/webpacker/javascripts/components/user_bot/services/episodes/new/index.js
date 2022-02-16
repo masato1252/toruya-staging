@@ -4,22 +4,24 @@ import { GlobalProvider } from "./context/global_state"
 
 import NameStep from "./name_step"
 import SolutionStep from "./solution_step"
+import TagsStep from "./tags_step"
 import NoteStep from "./note_step"
 import StartTimeStep from "./start_time_step"
 import ConfirmationStep from "./confirmation_step"
 
-const LessonNew = ({props}) => {
+const CreationFlow = ({props}) => {
   return (
     <GlobalProvider props={props}>
       <FlowController new_version={true}>
-        <NameStep />
-        <SolutionStep />
-        <NoteStep />
+        <NameStep key="name_step" />
+        <SolutionStep key="solution_step" />
+        <TagsStep key="tags_step" />
+        <NoteStep key="note_step" />
         <StartTimeStep />
-        <ConfirmationStep />
+        <ConfirmationStep key="confirmation_step" />
       </FlowController>
     </GlobalProvider>
   )
 }
 
-export default LessonNew;
+export default CreationFlow;

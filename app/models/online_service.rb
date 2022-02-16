@@ -14,6 +14,7 @@
 #  slug                :string
 #  solution_type       :string           not null
 #  start_at            :datetime
+#  tags                :string           default([]), is an Array
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  company_id          :bigint           not null
@@ -48,7 +49,6 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
     enabled: true,
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
   }
 
   SOLUTIONS = [
@@ -154,21 +154,16 @@ class OnlineService < ApplicationRecord
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
   has_one :template_message, -> { where(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
+  has_many :episodes
+
+  enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
 
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
   end
 
-  def course?
-    goal_type == "course"
-  end
-
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
-  end
-
-  def external?
-    goal_type == 'external'
   end
 
   def start_at_for_customer(customer)

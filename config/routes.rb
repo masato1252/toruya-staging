@@ -188,6 +188,8 @@ Rails.application.routes.draw do
         end
 
         resources :lessons, module: :services, only: [:update, :destroy]
+
+        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show]
       end
 
       resources :custom_messages, only: [:destroy] do
@@ -511,7 +513,7 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
+  # authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
 
@@ -535,7 +537,7 @@ Rails.application.routes.draw do
         end
       end
     end
-  end
+  # end
 
   root to: "members#show"
 

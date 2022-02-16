@@ -1,0 +1,66 @@
+# frozen_string_literal: true
+
+class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardController
+  def index
+    @online_service = current_user.online_services.find(params[:service_id])
+    #  @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
+    # @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
+  end
+
+  def show
+    @online_service = current_user.online_services.find(params[:service_id])
+    @episode = @online_service.episodes.find(params[:id])
+    # @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
+  end
+
+  def new
+    @online_service = current_user.online_services.find(params[:service_id])
+    @episode = @online_service.episodes.new
+  end
+
+  def edit
+    @online_service = current_user.online_services.find(params[:service_id])
+    @episode = @online_service.episode.find(params[:id])
+  end
+
+  def create
+    online_service = current_user.online_services.find(params[:service_id])
+
+    outcome = Episodes::Create.run(
+      online_service: online_service,
+      name: params[:name],
+      content_url: params[:content_url],
+      note: params[:note],
+      solution_type: params[:selected_solution],
+      start_time: params[:start_time].permit!.to_h,
+      tags: params[:tags]
+    )
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_episodes_path(params[:service_id]) })
+  end
+  #
+  # def update
+  #   online_service = current_user.online_services.find(params[:service_id])
+  #   chapter = online_service.chapters.find(params[:id])
+  #
+  #   outcome = Chapters::Update.run(
+  #     chapter: chapter,
+  #     name: params[:name]
+  #   )
+  #
+  #   return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
+  # end
+  #
+  # def destroy
+  #   online_service = current_user.online_services.find(params[:service_id])
+  #   chapter = online_service.chapters.find(params[:id])
+  #
+  #   outcome = Chapters::Delete.run(chapter: chapter)
+  #
+  #   if outcome.invalid?
+  #     flash[:alert] = outcome.errors.full_messages.join(", ")
+  #   end
+  #
+  #   redirect_to lines_user_bot_service_chapters_path(params[:service_id])
+  # end
+end

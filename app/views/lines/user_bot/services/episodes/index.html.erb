@@ -1,0 +1,20 @@
+<div class="service-show form with-top-bar">
+  <%= render "lines/user_bot/top_navigation_bar", previous_path: lines_user_bot_service_path(@online_service), title: I18n.t("user_bot.dashboards.settings.course.lessons.show.title") %>
+  <div class="field-group-header" id="content"><%= I18n.t("user_bot.dashboards.settings.course.lessons.show.content_label") %></div>
+  <% @online_service.episodes.each do |episode| %>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_episode_path(@online_service, episode), title: episode.name %>
+  <% end %>
+
+  <div class="action-block border-0 border-t border-solid border-gray-500">
+    <%= link_to I18n.t("user_bot.dashboards.settings.course.add_a_chapter"), new_lines_user_bot_service_episode_path(@online_service), class: "btn btn-yellow btn-extend my-2" %>
+  </div>
+
+  <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
+    <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@online_service.updated_at, format: :long_date) %></span>
+
+    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+      <i class="fa fa-share-square fa-2x"></i>
+      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% end %>
+  <% end %>
+</div>
