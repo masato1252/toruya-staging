@@ -189,7 +189,7 @@ Rails.application.routes.draw do
 
         resources :lessons, module: :services, only: [:update, :destroy]
 
-        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show]
+        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy]
       end
 
       resources :custom_messages, only: [:destroy] do

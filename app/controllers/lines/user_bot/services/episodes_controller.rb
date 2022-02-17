@@ -10,7 +10,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   def show
     @online_service = current_user.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
-    # @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
+    # @episode_hash = EpisodeSerializer.new(@episode, { params: { is_owner: true }}).attributes_hash
   end
 
   def new
@@ -20,7 +20,8 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
 
   def edit
     @online_service = current_user.online_services.find(params[:service_id])
-    @episode = @online_service.episode.find(params[:id])
+    @episode = @online_service.episodes.find(params[:id])
+    @attribute = params[:attribute]
   end
 
   def create
@@ -38,29 +39,22 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_episodes_path(params[:service_id]) })
   end
-  #
-  # def update
-  #   online_service = current_user.online_services.find(params[:service_id])
-  #   chapter = online_service.chapters.find(params[:id])
-  #
-  #   outcome = Chapters::Update.run(
-  #     chapter: chapter,
-  #     name: params[:name]
-  #   )
-  #
-  #   return_json_response(outcome, { redirect_to: lines_user_bot_service_chapters_path(params[:service_id]) })
-  # end
-  #
-  # def destroy
-  #   online_service = current_user.online_services.find(params[:service_id])
-  #   chapter = online_service.chapters.find(params[:id])
-  #
-  #   outcome = Chapters::Delete.run(chapter: chapter)
-  #
-  #   if outcome.invalid?
-  #     flash[:alert] = outcome.errors.full_messages.join(", ")
-  #   end
-  #
-  #   redirect_to lines_user_bot_service_chapters_path(params[:service_id])
-  # end
+
+  def update
+    online_service = current_user.online_services.find(params[:service_id])
+    episode = online_service.episodes.find(params[:id])
+
+    outcome = Episodes::Update.run(episode: episode, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_episode_path(params[:service_id], params[:id], anchor: params[:attribute]) })
+  end
+
+  def destroy
+    online_service = current_user.online_services.find(params[:service_id])
+    episode = online_service.episodes.find(params[:id])
+
+    episode.destroy!
+
+    redirect_to lines_user_bot_service_episodes_path(params[:service_id])
+  end
 end

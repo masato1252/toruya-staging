@@ -9,20 +9,23 @@ import { CommonServices } from "user_bot/api"
 
 import EditTextInput from "shared/edit/text_input";
 import EditTextarea from "shared/edit/textarea_input";
-import EditSelectInput from "shared/edit/select_input";
 import EditSolutionInput from "shared/edit/solution_input";
+import EditTagsInput from "user_bot/services/episodes/shared/edit_tags_input";
 
 const components = {
   name: EditTextInput,
   note: EditTextarea,
 };
 
-const LessonEdit =({props}) => {
-  const [start_time, setStartTime] = useState(props.lesson.start_time)
+const EpisodeEdit =({props}) => {
+  const [start_time, setStartTime] = useState(props.episode.start_time)
+  const [end_time, setEndTime] = useState(props.episode.end_time)
+  const [tags, setTags] = useState(props.episode.tags || [])
+  const [new_tag, setNewTag] = useState()
 
   const { register, watch, setValue, handleSubmit, formState } = useForm({
     defaultValues: {
-      ...props.lesson,
+      ...props.episode,
       solution_type: null
     }
   });
@@ -31,8 +34,8 @@ const LessonEdit =({props}) => {
     let response;
 
     [_, response] = await CommonServices.update({
-      url: Routes.lines_user_bot_service_lesson_path(props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
-      data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time })
+      url: Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id, {format: 'json'}),
+      data: _.assign( data, { attribute: props.attribute, start_time: start_time, end_time: end_time, tags: tags })
     })
 
     window.location = response.data.redirect_to
@@ -42,8 +45,6 @@ const LessonEdit =({props}) => {
     const EditComponent = components[props.attribute]
 
     switch (props.attribute) {
-      case "chapter_id":
-        return <EditSelectInput register={register} options={props.chapter_options} name="chapter_id" />
       case "start_time":
         return (
           <div className="centerize">
@@ -57,39 +58,7 @@ const LessonEdit =({props}) => {
                     })
                   }}
                 />
-                {I18n.t("user_bot.dashboards.settings.course.lessons.new.right_after_service_start")}
-              </label>
-            </div>
-
-            <div className="margin-around">
-              <label className="">
-                <div>
-                  <input
-                    name="start_type" type="radio" value="start_after_days"
-                    checked={start_time.start_type === "start_after_days"}
-                    onChange={() => {
-                      setStartTime({
-                        start_type: "start_after_days"
-                      })
-                    }}
-                  />
-                  {I18n.t("user_bot.dashboards.settings.course.lessons.new.after_start_x_days")}
-                </div>
-                {start_time.start_type === "start_after_days" && (
-                  <>
-                    {I18n.t("user_bot.dashboards.online_service_creation.after_bought")}
-                    <input
-                      type="tel"
-                      value={start_time.start_after_days || ""}
-                      onChange={(event) => {
-                        setStartTime({
-                          start_type: "start_after_days",
-                          start_after_days: event.target.value
-                        })
-                      }} />
-                    {I18n.t("user_bot.dashboards.online_service_creation.after_n_days")}
-                  </>
-                )}
+                {I18n.t("user_bot.dashboards.settings.episodes.new.right_after_service_start")}
               </label>
             </div>
 
@@ -104,7 +73,7 @@ const LessonEdit =({props}) => {
                       })
                     }}
                   />
-                  {I18n.t("user_bot.dashboards.settings.course.lessons.new.start_on_specific_day")}
+                  {I18n.t("user_bot.dashboards.settings.episodes.new.start_on_specific_day")}
                 </div>
                 {start_time.start_type === "start_at" && (
                   <input
@@ -123,6 +92,53 @@ const LessonEdit =({props}) => {
             </div>
           </div>
         )
+      case "end_time":
+        return (
+          <div className="centerize">
+            <div className="margin-around">
+              <label className="">
+                <div>
+                  <input name="end_type" type="radio" value="end_at"
+                    checked={end_time.end_type === "end_at"}
+                    onChange={() => {
+                      setEndTime({
+                        end_type: "end_at"
+                      })
+                    }}
+                  />
+                  {I18n.t("user_bot.dashboards.online_service_creation.expire_at")}
+                </div>
+                {end_time.end_type === "end_at" && (
+                  <input
+                    name="end_time_date_part"
+                    type="date"
+                    value={end_time.end_time_date_part || ""}
+                    onChange={(event) => {
+                      setEndTime({
+                        end_type: "end_at",
+                        end_time_date_part: event.target.value
+                      })
+                    }}
+                  />
+                )}
+              </label>
+            </div>
+
+            <div className="margin-around">
+              <label className="">
+                <input name="end_type" type="radio" value="never"
+                  checked={end_time.end_type === "never"}
+                  onChange={() => {
+                    setEndTime({
+                      end_type: "never",
+                    })
+                  }}
+                />
+                {I18n.t("user_bot.dashboards.online_service_creation.never_expire")}
+              </label>
+            </div>
+          </div>
+        )
       case "content_url":
         return (
           <EditSolutionInput
@@ -131,10 +147,21 @@ const LessonEdit =({props}) => {
             solution_type={watch("solution_type")}
             placeholder={props.placeholder}
             register={register}
-            errors={errors}
             watch={watch}
             setValue={setValue}
           />
+        )
+      case "tags":
+        return (
+          <div className="centerize">
+            <EditTagsInput
+              new_tag={new_tag}
+              tags={tags}
+              existing_tags={props.online_service.tags}
+              setNewTag={setNewTag}
+              setTags={setTags}
+            />
+          </div>
         )
       default:
         return <EditComponent register={register} watch={watch} name={props.attribute} placeholder={props.placeholder} />;
@@ -145,13 +172,13 @@ const LessonEdit =({props}) => {
     <div className="form with-top-bar">
       <TopNavigationBar
         leading={
-          <a href={Routes.lines_user_bot_service_chapter_lesson_path(props.lesson.online_service_id, props.lesson.chapter_id, props.lesson.id)}>
+          <a href={Routes.lines_user_bot_service_episode_path(props.episode.online_service_id, props.episode.id)}>
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={I18n.t(`user_bot.dashboards.settings.course.lessons.form.title`)}
+        title={I18n.t(`user_bot.dashboards.settings.episodes.form.title`)}
       />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.course.lessons.form.${props.attribute}_title`)}</div>
+      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.episodes.form.${props.attribute}_title`)}</div>
       {renderCorrespondField()}
 
       <BottomNavigationBar klassName="centerize">
@@ -167,4 +194,4 @@ const LessonEdit =({props}) => {
   )
 }
 
-export default LessonEdit
+export default EpisodeEdit

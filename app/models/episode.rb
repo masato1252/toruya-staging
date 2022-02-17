@@ -42,4 +42,30 @@ class Episode < ApplicationRecord
       I18n.t("sales.sale_now")
     end
   end
+
+  def end_time
+    if end_at
+      {
+        end_type: "end_at",
+        end_time_date_part: end_at.to_s(:date)
+      }
+    else
+      {
+        end_type: "never"
+      }
+    end
+  end
+
+  def end_time_text
+    if end_at
+      I18n.l(end_at, format: :date_with_wday)
+    else
+      I18n.t("sales.never_expire")
+    end
+  end
+
+  def started?
+    return true unless start_at # start right away servce
+    return Time.current >= start_at
+  end
 end
