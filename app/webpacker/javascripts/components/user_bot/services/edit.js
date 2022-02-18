@@ -11,11 +11,13 @@ import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sal
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
 import EditSolutionInput from "shared/edit/solution_input";
+import EditMessageTemplate from "user_bot/services/edit_message_template";
 
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
+  const [message_template, setMessageTemplate] = useState(props.message_template)
 
   const { register, watch, setValue, handleSubmit, formState } = useForm({
     defaultValues: {
@@ -29,7 +31,7 @@ const OnlineServiceEdit =({props}) => {
 
     [error, response] = await OnlineServices.update({
       online_service_id: props.service.id,
-      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time: end_time, start_time: start_time })
+      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, message_template })
     })
 
     window.location = response.data.redirect_to
@@ -59,7 +61,6 @@ const OnlineServiceEdit =({props}) => {
             setValue={setValue}
           />
         )
-        break
       case "company":
         return (
           <div className="centerize">
@@ -83,6 +84,21 @@ const OnlineServiceEdit =({props}) => {
               </button>
             ))}
           </div>
+        )
+      case "message_template":
+        return (
+          <EditMessageTemplate
+            service_name={props.service.name}
+            message_template={message_template}
+            handleMessageTemplateChange={(attr, value) => {
+              setMessageTemplate({...message_template, [attr]: value})
+            }}
+            handlePictureChange={(picture, pictureDataUrl) => {
+              setMessageTemplate({
+                ...message_template, picture: picture[0], picture_url: pictureDataUrl
+              })
+            }}
+          />
         )
       case "upsell_sale_page":
         return (

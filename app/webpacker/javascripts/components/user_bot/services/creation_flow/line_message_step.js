@@ -2,13 +2,11 @@
 
 import React, { useEffect } from "react";
 
-import ImageUploader from "react-images-upload";
-import TextareaAutosize from 'react-autosize-textarea';
-
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
+import EditMessageTemplate from "user_bot/services/edit_message_template";
 
-const LineMessageStep = ({next, prev, step}) => {
+const LineMessageStep = ({next, step}) => {
   const { props, dispatch, name, selected_goal, message_template } = useGlobalContext()
   const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
 
@@ -40,36 +38,21 @@ const LineMessageStep = ({next, prev, step}) => {
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} />
       <h3 className="header centerize">{'Line Message'}</h3>
-      <div className="product-content-deails">
-        <ImageUploader
-          defaultImages={message_template.picture_url.length ? [message_template.picture_url] : []}
-          withIcon={false}
-          withPreview={true}
-          withLabel={false}
-          buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
-          singleImage={true}
-          onChange={onDrop}
-          imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
-          maxFileSize={5242880}
-        />
-        <h3 className="text-left">{name}</h3>
-        <TextareaAutosize
-          className="extend with-border"
-          value={message_template.content}
-          placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.what_buyer_future")}
-          onChange={(event) => {
-            dispatch({
-              type: "SET_NESTED_ATTRIBUTE",
-              payload: {
-                parent_attribute: "message_template",
-                attribute: "content",
-                value: event.target.value
-              }
-            })
-          }}
-        />
-        <button className="btn btn-gray btn-tall w-full my-2" disabled ></button>
-      </div>
+      <EditMessageTemplate
+        service_name={name}
+        message_template={message_template}
+        handleMessageTemplateChange={(attr, value) => {
+          dispatch({
+            type: "SET_NESTED_ATTRIBUTE",
+            payload: {
+              parent_attribute: "message_template",
+              attribute: attr,
+              value: value
+            }
+          })
+        }}
+        handlePictureChange={onDrop}
+      />
 
       <div className="action-block">
         <button onClick={next} className="btn btn-yellow" disabled={false}>

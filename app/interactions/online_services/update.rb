@@ -19,6 +19,10 @@ module OnlineServices
         integer :end_on_days, default: nil
         string :end_time_date_part, default: nil
       end
+      hash :message_template, default: nil do
+        file :picture, default: nil
+        string :content, default: nil
+      end
     end
 
     def execute
@@ -43,6 +47,13 @@ module OnlineServices
           )
         when "start_at"
           online_service.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
+        when "message_template"
+          message = online_service.message_template || online_service.build_message_template(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE)
+          message.content = attrs&.dig(:message_template, :content)
+          message.picture = attrs&.dig(:message_template, :picture) if attrs&.dig(:message_template, :picture).present?
+          message.save
+
+          errors.merge!(message.errors) if message.errors.present?
         end
 
         if online_service.errors.present?

@@ -22,6 +22,15 @@
     <% end %>
   <% end %>
 
+  <% if @service.membership? %>
+    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+    <div class="field-header"><%= "LINE CARD" %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
+      <span class="dotdotdot"><%= @service.message_template.content || t("user_bot.dashboards.settings.course.no_content") %></span>
+      <%= image_tag(@service.message_template.picture, class: "preview-image") if @service.message_template.picture.attached? %>
+    <% end %>
+  <% end %>
+
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :start_time), title: @service.start_time_text %>
