@@ -2,14 +2,12 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import ReactSelect from "react-select";
 import _ from "lodash";
 
 import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
 import { CommonServices } from "user_bot/api"
 
 import EditTextInput from "shared/edit/text_input";
-import EditVideoUrl from "shared/edit/video_url";
 import EditTextarea from "shared/edit/textarea_input";
 import EditSelectInput from "shared/edit/select_input";
 import EditSolutionInput from "shared/edit/solution_input";
@@ -22,7 +20,7 @@ const components = {
 const LessonEdit =({props}) => {
   const [start_time, setStartTime] = useState(props.lesson.start_time)
 
-  const { register, watch, setValue, control, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.lesson,
       solution_type: null
@@ -134,6 +132,7 @@ const LessonEdit =({props}) => {
             solution_type={watch("solution_type")}
             placeholder={props.placeholder}
             register={register}
+            errors={errors}
             watch={watch}
             setValue={setValue}
           />

@@ -7,8 +7,10 @@ import VideoContentPreview from "shared/video_content_preview";
 import { useGlobalContext } from "../context/global_state";
 import ServiceFlowStepIndicator from "../services_flow_step_indicator";
 
+import { isValidHttpUrl } from "libraries/helper";
+
 const VideoContentSetup = ({next, step}) => {
-  const { props, dispatch, content_url } = useGlobalContext()
+  const { dispatch, content_url } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
@@ -26,7 +28,7 @@ const VideoContentSetup = ({next, step}) => {
           })
         }
       />
-      {content_url && ReactPlayer.canPlay(content_url) && (
+      {content_url && ReactPlayer.canPlay(content_url) && isValidHttpUrl(content_url) && (
         <div className="action-block">
           <button onClick={next} className="btn btn-yellow" disabled={false}>
             {I18n.t("action.next_step")}

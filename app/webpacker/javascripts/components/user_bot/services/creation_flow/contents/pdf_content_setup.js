@@ -1,9 +1,11 @@
 "use strict";
 
-import React, { useState } from "react";
+import React from "react";
 
 import { useGlobalContext } from "../context/global_state";
 import ServiceFlowStepIndicator from "../services_flow_step_indicator";
+
+import { isValidHttpUrl } from "libraries/helper";
 
 const PdfContentSetup = ({next, step}) => {
   const { props, dispatch, content_url } = useGlobalContext()
@@ -31,7 +33,7 @@ const PdfContentSetup = ({next, step}) => {
         {I18n.t("user_bot.dashboards.online_service_creation.pdf_hint")}
       </p>
 
-      {content_url && (
+      {content_url && isValidHttpUrl(content_url) && (
         <div className="action-block">
           <button onClick={next} className="btn btn-yellow" disabled={false}>
             {I18n.t("action.next_step")}

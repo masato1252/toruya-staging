@@ -1,18 +1,20 @@
 "use strict";
 
-import React, { useState } from "react";
+import React from "react";
 
 import EditTextInput from "shared/edit/text_input";
 import EditVideoUrl from "shared/edit/video_url";
+import EditUrlInput from "shared/edit/url_input";
 
-const SolutionInput = ({solutions, attribute, solution_type, placeholder, register, watch, setValue}) => {
+const SolutionInput = ({solutions, attribute, solution_type, placeholder, register, errors, watch, setValue}) => {
   const renderUrlInput = () => {
     switch (solution_type) {
       case "video":
-        return <EditVideoUrl register={register} watch={watch} name={attribute} placeholder={placeholder} />;
+        return <EditVideoUrl register={register} errors={errors} watch={watch} name={attribute} placeholder={placeholder} />;
       case "pdf":
+        return <EditUrlInput register={register} errors={errors} name={attribute} placeholder={placeholder} />;
       case "external":
-        return <EditTextInput register={register} watch={watch} name={attribute} placeholder={placeholder} />;
+        return <EditTextInput register={register} errors={errors} watch={watch} name={attribute} placeholder={placeholder} />;
       default:
         return <></>
     }

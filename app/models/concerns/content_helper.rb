@@ -7,7 +7,14 @@ module ContentHelper
     @thumbnail_url ||=
       case solution_type
       when "video"
-        VideoThumb::get(content_url, "medium") || ThumbnailOfVideo.get(content_url) if content_url
+        if content_url
+          url = begin
+            VideoThumb::get(content_url, "medium")
+          rescue URI::InvalidURIError
+          end
+
+          url || ThumbnailOfVideo.get(content_url)
+        end
       when "pdf"
         PDF_LOGO_URL
       else

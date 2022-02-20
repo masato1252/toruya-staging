@@ -18,7 +18,7 @@ const OnlineServiceEdit =({props}) => {
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
 
-  const { register, watch, setValue, control, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, control, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.service,
       solution_type: null
@@ -55,6 +55,7 @@ const OnlineServiceEdit =({props}) => {
             solution_type={watch("solution_type")}
             placeholder={props.placeholder}
             register={register}
+            errors={errors}
             watch={watch}
             setValue={setValue}
           />

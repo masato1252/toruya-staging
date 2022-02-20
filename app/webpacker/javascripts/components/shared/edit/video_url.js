@@ -2,12 +2,11 @@
 
 import React from "react";
 import ReactPlayer from 'react-player';
+import UrlInput from "shared/edit/url_input";
 
-const VideoUrl = ({register, watch, name, placeholder}) => (
+const VideoUrl = ({register, errors, watch, name, placeholder}) => (
   <>
-    <div className="field-row">
-      <input autoFocus={true} ref={register({ required: true })} name={name} placeholder={placeholder} className="extend" type="text" />
-    </div>
+    <UrlInput register={register} errors={errors} name={name} placeholder={placeholder} />
     <div className='video-player-wrapper'>
       <ReactPlayer
         className='react-player'
