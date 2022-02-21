@@ -7,7 +7,7 @@ module SocialMessages
     object :customer
 
     def execute
-      scope = SocialMessage.includes(:social_customer).where.not(message_type: SocialMessage.message_types[:customer_reply_bot]).where(social_customers: { social_user_id: customer.social_customers.pluck(:social_user_id) })
+      scope = SocialMessage.includes(:social_customer).legal.where.not(message_type: SocialMessage.message_types[:customer_reply_bot]).where(social_customers: { social_user_id: customer.social_customers.pluck(:social_user_id) })
       social_messages =
         scope
         .where(

@@ -5,5 +5,6 @@ FactoryBot.define do
     association :social_customer
     social_account { FactoryBot.create(:social_account, user: social_customer.user) }
     raw_content { Faker::Lorem.word }
+    sent_at { Time.current }
   end
 end
