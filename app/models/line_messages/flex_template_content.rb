@@ -331,5 +331,67 @@ module LineMessages
         }
       }
     end
+
+    def self.content8(picture_url:, content_url: ,title: , context:, action_templates:)
+      {
+        "type": "bubble",
+        "hero": {
+          "type": "image",
+          "url": picture_url,
+          "size": "full",
+          "aspectRatio": "20:13",
+          "aspectMode": "cover",
+          "action": {
+            "type": "uri",
+            "label": title,
+            "uri": content_url
+          }
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": title,
+              "weight": "bold",
+              "size": "lg",
+              "contents": []
+            },
+            {
+              "type": "box",
+              "layout": "vertical",
+              "spacing": "sm",
+              "margin": "lg",
+              "contents": [
+                {
+                  "type": "box",
+                  "layout": "baseline",
+                  "spacing": "sm",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": context,
+                      "size": "sm",
+                      "color": "#666666",
+                      "flex": 5,
+                      "wrap": true,
+                      "contents": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "flex": 0,
+          "spacing": "sm",
+          "contents": action_templates
+        }
+      }
+    end
   end
 end

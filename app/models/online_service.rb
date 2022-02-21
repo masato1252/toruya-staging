@@ -260,4 +260,14 @@ class OnlineService < ApplicationRecord
       solution_type
     end
   end
+
+  def picture_url
+    if course? && lessons.exists?
+      lessons.first.thumbnail_url || sale_page.introduction_video_url
+    elsif membership? && message_template.picture.attached?
+      Rails.application.routes.url_helpers.url_for(message_template.picture)
+    else
+      thumbnail_url || sale_page.introduction_video_url
+    end
+  end
 end

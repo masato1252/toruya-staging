@@ -34,7 +34,7 @@ module OnlineServices
         online_service = user.online_services.create(
           name: name,
           goal_type: selected_goal,
-          solution_type: selected_solution || selected_goal,
+          solution_type: selected_solution.presence || selected_goal,
           end_at: end_time&.dig(:end_time_date_part) ? Time.zone.parse(end_time[:end_time_date_part]).end_of_day : nil,
           end_on_days: end_time&.dig(:end_on_days),
           content_url: content_url,

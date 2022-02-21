@@ -59,6 +59,8 @@ module OnlineServices
         if online_service.errors.present?
           errors.merge!(online_service.errors)
         end
+
+        online_service
       end
     end
   end

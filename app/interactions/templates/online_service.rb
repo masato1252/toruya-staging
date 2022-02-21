@@ -10,7 +10,7 @@ module Templates
 
     def execute
       LineMessages::FlexTemplateContent.content7(
-        picture_url: picture_url,
+        picture_url: online_service.picture_url,
         content_url: Rails.application.routes.url_helpers.online_service_url(slug: online_service.slug),
         title1: online_service.name,
         label: I18n.t("common.responsible_by"),
@@ -23,16 +23,6 @@ module Templates
           )
         ].map(&:template)
       )
-    end
-
-    private
-
-    def picture_url
-      if online_service.course? && online_service.lessons.exists?
-        online_service.lessons.first.thumbnail_url || sale_page.introduction_video_url
-      else
-        online_service.thumbnail_url || sale_page.introduction_video_url
-      end
     end
   end
 end

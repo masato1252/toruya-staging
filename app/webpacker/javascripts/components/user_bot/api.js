@@ -495,6 +495,18 @@ const OnlineServices = {
       responseType: "json"
     })
   },
+  demo_message: ({online_service_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.demo_message_lines_user_bot_service_path(online_service_id, {format: "json"}),
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
 }
 
 const CommonServices = {

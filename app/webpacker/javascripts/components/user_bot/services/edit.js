@@ -26,6 +26,17 @@ const OnlineServiceEdit =({props}) => {
     }
   });
 
+  const onDemoMessage = async (data) => {
+    let error, response;
+
+    [error, response] = await OnlineServices.demo_message({
+      online_service_id: props.service.id,
+      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, message_template })
+    })
+
+    window.location = response.data.redirect_to
+  }
+
   const onSubmit = async (data) => {
     let error, response;
 
@@ -87,18 +98,25 @@ const OnlineServiceEdit =({props}) => {
         )
       case "message_template":
         return (
-          <EditMessageTemplate
-            service_name={props.service.name}
-            message_template={message_template}
-            handleMessageTemplateChange={(attr, value) => {
-              setMessageTemplate({...message_template, [attr]: value})
-            }}
-            handlePictureChange={(picture, pictureDataUrl) => {
-              setMessageTemplate({
-                ...message_template, picture: picture[0], picture_url: pictureDataUrl
-              })
-            }}
-          />
+          <>
+            <EditMessageTemplate
+              service_name={props.service.name}
+              message_template={message_template}
+              handleMessageTemplateChange={(attr, value) => {
+                setMessageTemplate({...message_template, [attr]: value})
+              }}
+              handlePictureChange={(picture, pictureDataUrl) => {
+                setMessageTemplate({
+                  ...message_template, picture: picture[0], picture_url: pictureDataUrl
+                })
+              }}
+            />
+            <div className="margin-around centerize">
+              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemoMessage)}>
+                {I18n.t("user_bot.dashboards.settings.custom_message.buttons.send_me_mock_message")}
+              </button>
+            </div>
+          </>
         )
       case "upsell_sale_page":
         return (
