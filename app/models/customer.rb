@@ -66,7 +66,8 @@ class Customer < ApplicationRecord
 
   attr_accessor :emails, :phone_numbers, :addresses, :primary_email, :primary_address, :primary_phone, :dob, :other_addresses, :google_down, :google_contact_missing
 
-  has_one :social_customer
+  has_one :social_customer, -> { order(id: :desc) }
+  has_many :social_customers
   has_many :reservation_customers
   has_many :reservations, -> { active }, through: :reservation_customers
   has_many :customer_payments
