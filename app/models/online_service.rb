@@ -265,7 +265,8 @@ class OnlineService < ApplicationRecord
     if course? && lessons.exists?
       lessons.first.thumbnail_url || sale_page.introduction_video_url
     elsif membership? && message_template.picture.attached?
-      Rails.application.routes.url_helpers.url_for(message_template.picture)
+      # use content8 ratio for the resize
+      Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
     else
       thumbnail_url || sale_page.introduction_video_url
     end
