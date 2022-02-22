@@ -269,6 +269,7 @@ ja:
           upsell_sale_page_title: アップセル
           start_time_title: 利用開始
           end_time_title: 利用終了
+          demo_button: アクションボタン
       booking_pages:
         index:
           title: オンライン予約ページ

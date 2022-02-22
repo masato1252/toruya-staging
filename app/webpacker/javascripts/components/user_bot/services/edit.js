@@ -29,6 +29,8 @@ const OnlineServiceEdit =({props}) => {
   const onDemoMessage = async (data) => {
     let error, response;
 
+    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
+
     [error, response] = await OnlineServices.demo_message({
       online_service_id: props.service.id,
       data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, message_template })
@@ -39,6 +41,8 @@ const OnlineServiceEdit =({props}) => {
 
   const onSubmit = async (data) => {
     let error, response;
+
+    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
 
     [error, response] = await OnlineServices.update({
       online_service_id: props.service.id,

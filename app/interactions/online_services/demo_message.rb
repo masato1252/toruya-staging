@@ -17,9 +17,9 @@ module OnlineServices
             context: online_service.message_template&.content || online_service.name,
             action_templates: [
               LineActions::Uri.new(
-                label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
+                label: I18n.t("user_bot.dashboards.services.form.demo_button"),
                 url: Rails.application.routes.url_helpers.online_service_url(slug: online_service.slug),
-                btn: "primary"
+                btn: "secondary"
               )
             ].map(&:template)
           )
