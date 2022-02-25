@@ -12,7 +12,7 @@ class LineClient
     response = yield
 
     if response.is_a?(Net::HTTPBadRequest)
-      Rollbar.warning(
+      Rollbar.error(
         "Line clinet Request failed",
         response: response.body,
         args: args
