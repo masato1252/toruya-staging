@@ -13,7 +13,8 @@ module ContentHelper
           rescue URI::InvalidURIError
           end
 
-          url || ThumbnailOfVideo.get(content_url)
+          # Line doesn't accept http url anyway, so we always force it to https
+          (url || ThumbnailOfVideo.get(content_url))&.gsub("http:", "https:")
         end
       when "pdf"
         PDF_LOGO_URL
