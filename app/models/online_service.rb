@@ -18,6 +18,7 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  company_id          :bigint           not null
+#  stripe_product_id   :string
 #  upsell_sale_page_id :integer
 #  user_id             :bigint
 #
@@ -117,6 +118,7 @@ class OnlineService < ApplicationRecord
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
       enabled: true,
       stripe_required: true,
+      recurring_charge: true,
       premium_member_required: true,
       skip_solution_step_on_creation: true,
       skip_end_time_step_on_creation: true,
@@ -164,6 +166,10 @@ class OnlineService < ApplicationRecord
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
+  end
+
+  def recurring_charge_required?
+    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge]
   end
 
   def start_at_for_customer(customer)

@@ -1,13 +1,19 @@
 "use strict";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import SalesFlowStepIndicator from "./sales_flow_step_indicator";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 
 const SellingNumberStep = ({step, next, prev, lastStep}) => {
-  const { dispatch, quantity, isQuantitySetup, isReadyForPreview } = useGlobalContext()
+  const { dispatch, quantity, isQuantitySetup, isReadyForPreview, selected_online_service } = useGlobalContext()
+
+  useEffect(() => {
+    if (selected_online_service.recurring_charge_required) {
+      next()
+    }
+  }, [])
 
   return (
     <div className="form settings-flow centerize">

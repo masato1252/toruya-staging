@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # product_details: {
 #   prices: [
 #     {
@@ -32,6 +34,17 @@ class OnlineServiceCustomerProductDetails
             order_id: OrderId.generate
           ).attributes
         end
+      when SalePage::PAYMENTS[:month], SalePage::PAYMENTS[:year]
+        recurring_price = sale_page.recurring_prices.find {|price| price[:interval] == payment_type && price[:active] }
+
+        [
+          OnlineServiceCustomerPrice.new(
+            amount: recurring_price[:amount],
+            order_id: OrderId.generate,
+            stripe_price_id: recurring_price[:stripe_price_id],
+            interval: payment_type
+          ).attributes
+        ]
       when SalePage::PAYMENTS[:free]
         [
           OnlineServiceCustomerPrice.new(
@@ -46,4 +59,3 @@ class OnlineServiceCustomerProductDetails
     }
   end
 end
-

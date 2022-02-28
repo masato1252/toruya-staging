@@ -13,5 +13,11 @@ FactoryBot.define do
       goal_type { "external" }
       solution_type { "external" }
     end
+
+    trait :membership do
+      goal_type { "membership" }
+      solution_type { "membership" }
+      stripe_product_id { "prod_123" }
+    end
   end
 end

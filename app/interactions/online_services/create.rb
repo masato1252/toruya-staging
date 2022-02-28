@@ -46,7 +46,10 @@ module OnlineServices
 
         if online_service.errors.present?
           errors.merge!(online_service.errors)
-        elsif message_template&.dig(:content) || message_template&.dig(:picture)
+          return
+        end
+
+        if message_template&.dig(:content) || message_template&.dig(:picture)
           message = CustomMessage.create(
             service: online_service,
             scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE,
@@ -54,6 +57,11 @@ module OnlineServices
             picture: message_template[:picture]
           )
           errors.merge!(message.errors) if message.errors.present?
+        end
+
+        if online_service.recurring_charge_required?
+          stripe_product = compose(OnlineServices::CreateStripeProduct, online_service: online_service)
+          online_service.update!(stripe_product_id: stripe_product.id)
         end
 
         online_service

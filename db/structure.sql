@@ -1195,7 +1195,8 @@ CREATE TABLE public.online_service_customer_relations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     current boolean DEFAULT true,
-    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[]
+    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[],
+    stripe_subscription_id character varying
 );
 
 
@@ -1239,7 +1240,8 @@ CREATE TABLE public.online_services (
     updated_at timestamp without time zone NOT NULL,
     start_at timestamp without time zone,
     content_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    stripe_product_id character varying
 );
 
 
@@ -1833,7 +1835,8 @@ CREATE TABLE public.sale_pages (
     deleted_at timestamp without time zone,
     sections_context jsonb,
     selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
-    internal_name character varying
+    internal_name character varying,
+    recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb
 );
 
 

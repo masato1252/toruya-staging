@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import ReactPlayer from 'react-player';
-import ReactSelect from "react-select";
 import _ from "lodash";
 
 import { BottomNavigationBar, TopNavigationBar, CiricleButtonWithWord } from "shared/components"
@@ -20,6 +19,7 @@ import SellingEndTimeEdit from "components/user_bot/sales/selling_end_time_edit"
 import SellingStartTimeEdit from "components/user_bot/sales/selling_start_time_edit";
 import NormalPriceEdit from "components/user_bot/sales/normal_price_edit";
 import SellingPriceEdit from "components/user_bot/sales/selling_price_edit";
+import SellingRecurringPriceEdit from "components/user_bot/sales/selling_recurring_price_edit";
 import SellingNumberEdit from "components/user_bot/sales/selling_number_edit";
 import TextInput from "shared/edit/text_input";
 import I18n from 'i18n-js/index.js.erb';
@@ -42,7 +42,7 @@ const SalePageEdit =({props}) => {
   const [selling_price, setSellingPrice] = useState(props.sale_page.price)
   const [quantity, setQuantity] = useState(props.sale_page.quantity_option)
 
-  const { register, watch, setValue, control, handleSubmit, formState } = useForm({
+  const { register, watch, handleSubmit, formState } = useForm({
     defaultValues: {
       ...props.sale_page,
     }
@@ -73,6 +73,20 @@ const SalePageEdit =({props}) => {
           submittedData = {
             ...submittedData,
             selling_multiple_times_price: selling_price.price_amounts.multiple_times
+          }
+        }
+
+        if (selling_price && selling_price.price_types.includes("month")) {
+          submittedData = {
+            ...submittedData,
+            monthly_price: selling_price.price_amounts.month.amount,
+          }
+        }
+
+        if (selling_price && selling_price.price_types.includes("year")) {
+          submittedData = {
+            ...submittedData,
+            yearly_price: selling_price.price_amounts.year.amount,
           }
         }
 
@@ -111,7 +125,6 @@ const SalePageEdit =({props}) => {
         break
     }
 
-
     [error, response] = await SaleServices.update({
       sale_page_id: props.sale_page.id,
       data: _.assign( data, {
@@ -132,15 +145,23 @@ const SalePageEdit =({props}) => {
             handleQuantityChange={setQuantity}
           />
         )
-        break
       case "selling_price":
-        return (
-          <SellingPriceEdit
-            price={selling_price}
-            handlePriceChange={setSellingPrice}
-          />
-        )
-        break
+        if (props.sale_page.recurring_charge_required) {
+          return (
+            <SellingRecurringPriceEdit
+              price={selling_price}
+              handlePriceChange={setSellingPrice}
+            />
+          )
+        }
+        else {
+          return (
+            <SellingPriceEdit
+              price={selling_price}
+              handlePriceChange={setSellingPrice}
+            />
+          )
+        }
       case "normal_price":
         return (
           <NormalPriceEdit
@@ -148,7 +169,6 @@ const SalePageEdit =({props}) => {
             handleNormalPriceChange={setNormalPrice}
           />
         )
-        break
       case "end_time":
         return (
           <SellingEndTimeEdit
@@ -156,7 +176,6 @@ const SalePageEdit =({props}) => {
             handleEndTimeChange={setEndTime}
           />
         )
-        break
       case "start_time":
         return (
           <SellingStartTimeEdit
@@ -164,7 +183,6 @@ const SalePageEdit =({props}) => {
             handleStartTimeChange={setStartTime}
           />
         )
-        break
       case "why_content":
         return (
           <WhyContentEdit
@@ -181,7 +199,6 @@ const SalePageEdit =({props}) => {
             }}
           />
         )
-        break
       case "staff":
         return (
           <StaffEdit
@@ -202,7 +219,6 @@ const SalePageEdit =({props}) => {
             }}
           />
         )
-        break
       case "flow":
         return (
           <>

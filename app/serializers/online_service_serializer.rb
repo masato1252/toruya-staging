@@ -24,4 +24,8 @@ class OnlineServiceSerializer
   attribute :charge_required do |service|
     service.charge_required?
   end
+
+  attribute :recurring_charge_required do |service|
+    service.recurring_charge_required?
+  end
 end

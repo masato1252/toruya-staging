@@ -59,6 +59,20 @@ export const GlobalProvider = ({ props, children }) => {
       }
     }
 
+    if (price && price.price_types.includes("month")) {
+      submittedData = {
+        ...submittedData,
+        monthly_price: price.price_amounts.month.amount,
+      }
+    }
+
+    if (price && price.price_types.includes("year")) {
+      submittedData = {
+        ...submittedData,
+        yearly_price: price.price_amounts.year.amount,
+      }
+    }
+
     return submittedData
   }
 

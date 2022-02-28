@@ -189,6 +189,8 @@ ja:
     lesson: レッスン
     one_time_pay: １回払い
     multiple_times_pay: 分割払い
+    month_pay: 月額プラン
+    year_pay: 年額プラン
     usage_status: ご利用状況
   errors:
     invalid_url: 無効なURL

@@ -108,7 +108,7 @@ group :development do
 end
 
 group :test do
-  gem "stripe-ruby-mock", "~> 2.5.4", require: "stripe_mock"
+  gem "stripe-ruby-mock", require: "stripe_mock"
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
   gem "rspec_junit_formatter"
 end

@@ -21,5 +21,24 @@ FactoryBot.define do
     trait :multiple_times_payment do
       selling_multiple_times_price { [1000, 1000] }
     end
+
+    trait :recurring_payment do
+      recurring_prices do
+        [
+          RecurringPrice.new(
+            interval: 'month',
+            amount: 1000,
+            stripe_price_id: "price_123",
+            active: true
+          ).attributes,
+          RecurringPrice.new(
+            interval: 'year',
+            amount: 10_000,
+            stripe_price_id: "price_456",
+            active: true
+          ).attributes
+        ]
+      end
+    end
   end
 end

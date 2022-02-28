@@ -13,6 +13,8 @@ module SalePages
       string :selling_start_at, default: nil
       integer :quantity, default: nil
       integer :selling_price, default: nil
+      integer :monthly_price, default: nil
+      integer :yearly_price, default: nil
       hash :selling_multiple_times_price, default: nil do
         integer :times, default: nil
         integer :amount, default: nil
@@ -87,6 +89,14 @@ module SalePages
             )
           else
             sale_page.update(selling_multiple_times_price: [])
+          end
+
+          if attrs[:monthly_price]
+            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "month", amount: attrs[:monthly_price])
+          end
+
+          if attrs[:yearly_price]
+            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "year", amount: attrs[:yearly_price])
           end
         when "why_content"
           picture = attrs[:why_content].delete(:picture)
