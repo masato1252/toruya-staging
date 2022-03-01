@@ -54,7 +54,7 @@ RSpec.describe Sales::OnlineServices::Apply do
         relation = OnlineServiceCustomerRelation.where(online_service: sale_page.product, customer: customer, sale_page: sale_page).last
         price_details = relation.price_details.first
         expect(price_details).to have_attributes(
-          amount: sale_page.selling_price_amount,
+          amount: sale_page.selling_price_amount.fractional,
           charge_at: current_time
         )
         expect(price_details.order_id).to be_present
@@ -73,14 +73,14 @@ RSpec.describe Sales::OnlineServices::Apply do
 
         first_price_details = relation.price_details.first
         expect(first_price_details).to have_attributes(
-          amount: Money.new(1000),
+          amount: 1_000,
           charge_at: current_time
         )
         expect(first_price_details.order_id).to be_present
 
         second_price_details = relation.price_details.second
         expect(second_price_details).to have_attributes(
-          amount: Money.new(1000),
+          amount: 1_000,
           charge_at: current_time.advance(months: 1)
         )
         expect(second_price_details.order_id).to be_present

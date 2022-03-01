@@ -39,7 +39,7 @@ class OnlineServiceCustomerProductDetails
 
         [
           OnlineServiceCustomerPrice.new(
-            amount: recurring_price[:amount],
+            amount: Money.new(recurring_price[:amount]).fractional,
             order_id: OrderId.generate,
             stripe_price_id: recurring_price[:stripe_price_id],
             interval: payment_type

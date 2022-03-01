@@ -14,23 +14,8 @@ class OnlineServiceCustomerPrice
 
   validate :validate_price
 
-  def validate_price
-    if interval.present?
-      # recurring price: monthly, yearly pay
-      unless recurring_price_required_conditons
-        errors.add(:base, :invalid_recurring_price)
-      end
-    elsif amount.zero?
-      # free
-      unless free_price_required_conditons
-        errors.add(:base, :invalid_free_price)
-      end
-    else
-      # one time or multiple time
-      unless non_recurring_price_required_conditons
-        errors.add(:base, :invalid_price)
-      end
-    end
+  def amount_with_currency
+    Money.new(amount)
   end
 
   def price_type
@@ -51,6 +36,25 @@ class OnlineServiceCustomerPrice
   end
 
   private
+
+  def validate_price
+    if interval.present?
+      # recurring price: monthly, yearly pay
+      unless recurring_price_required_conditons
+        errors.add(:base, :invalid_recurring_price)
+      end
+    elsif amount.zero?
+      # free
+      unless free_price_required_conditons
+        errors.add(:base, :invalid_free_price)
+      end
+    else
+      # one time or multiple time
+      unless non_recurring_price_required_conditons
+        errors.add(:base, :invalid_price)
+      end
+    end
+  end
 
   def recurring_price_required_conditons
     interval.present? && amount.positive? && stripe_price_id.present? && charge_at.blank? && order_id.blank?

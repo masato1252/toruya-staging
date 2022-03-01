@@ -13,7 +13,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   def execute
     expire_at = online_service.current_expire_time if first_time_charge
     price_details = online_service_customer_price || online_service_customer_relation.price_details.first
-    charging_price_amount = price_details.amount.fractional
+    charging_price_amount = price_details.amount_with_currency.fractional
 
     payment =
       online_service_customer_relation.with_lock do

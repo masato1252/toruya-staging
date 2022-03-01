@@ -5,8 +5,8 @@ class OnlineServiceCustomerPriceSerializer < ActiveJob::Serializers::ObjectSeria
 
   def serialize(online_service_customer_price)
     super(
-      "amount_currency" => online_service_customer_price.amount.currency.iso_code,
-      "amount_fractional" => online_service_customer_price.amount.fractional,
+      "amount_currency" => online_service_customer_price.amount_with_currency.currency.iso_code,
+      "amount_fractional" => online_service_customer_price.amount_with_currency.fractional,
       "charge_at" => online_service_customer_price.charge_at.iso8601,
       "order_id" => online_service_customer_price.order_id
     )
@@ -15,7 +15,7 @@ class OnlineServiceCustomerPriceSerializer < ActiveJob::Serializers::ObjectSeria
   def deserialize(hash)
     OnlineServiceCustomerPrice.new(
       amount: Money.new(hash["amount_fractional"], hash["amount_currency"]),
-      charge_at: Time.parse(hash["charge_at"]),
+      charge_at: hash["charge_at"] ? Time.parse(hash["charge_at"]) : nil,
       order_id: hash["order_id"]
     )
   end

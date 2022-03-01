@@ -27,7 +27,6 @@ module Sales
         relation.with_lock do
           if !relation.purchased?
             if relation.inactive?
-              # TODO: Take care sign up from different sale page, second times.
               relation = compose(
                 ::Sales::OnlineServices::Reapply,
                 online_service_customer_relation: relation,

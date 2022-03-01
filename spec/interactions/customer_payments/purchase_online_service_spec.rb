@@ -34,7 +34,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           CustomerPayment.where(
             customer: relation.customer,
             product: relation,
-            amount_cents: relation.price_details.first.amount.fractional,
+            amount_cents: relation.price_details.first.amount_with_currency.fractional,
             manual: manual
           ).completed.count
         }.by(1)
@@ -51,7 +51,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
             CustomerPayment.where(
               customer: relation.customer,
               product: relation,
-              amount_cents: relation.price_details.first.amount.fractional,
+              amount_cents: relation.price_details.first.amount_with_currency.fractional,
               manual: manual
             ).completed.count
           }.by(1)
@@ -69,7 +69,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
             CustomerPayment.where(
               customer: relation.customer,
               product: relation,
-              amount_cents: relation.price_details.first.amount.fractional,
+              amount_cents: relation.price_details.first.amount_with_currency.fractional,
               manual: manual
             ).completed.count
           }
@@ -91,7 +91,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           CustomerPayment.where(
             customer: relation.customer,
             product: relation,
-            amount_cents: online_service_customer_price.amount.fractional,
+            amount_cents: online_service_customer_price.amount_with_currency.fractional,
             manual: manual,
             order_id: order_id
           ).completed.count
@@ -121,7 +121,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
         payment = CustomerPayment.where(
           customer: relation.customer,
           product: relation,
-          amount_cents: relation.price_details.first.amount.fractional,
+          amount_cents: relation.price_details.first.amount_with_currency.fractional,
           manual: manual,
         ).last
 
