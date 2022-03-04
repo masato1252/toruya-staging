@@ -16,6 +16,12 @@ STRIPE_REFUND_STATUS = {
   succeeded: "succeeded"
 }
 
+# https://stripe.com/docs/api/subscriptions/object#subscription_object-status
+STRIPE_SUBSCRIPTION_STATUS = {
+  canceled: "canceled",
+  active: "active"
+}
+
 STRIPE_DESCRIPTION_LIMIT = 20
 
 FROM = {

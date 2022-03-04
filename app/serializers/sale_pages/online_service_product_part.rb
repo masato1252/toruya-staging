@@ -14,6 +14,10 @@ module SalePages::OnlineServiceProductPart
         sale_page.selling_price_text
       when SalePage::PAYMENTS[:multiple_times]
         sale_page.selling_multiple_times_first_price_text
+      when SalePage::PAYMENTS[:month]
+        sale_page.monthly_price_text
+      when SalePage::PAYMENTS[:year]
+        sale_page.year_price_text
       end
     end
 

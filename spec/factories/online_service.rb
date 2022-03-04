@@ -17,7 +17,12 @@ FactoryBot.define do
     trait :membership do
       goal_type { "membership" }
       solution_type { "membership" }
-      stripe_product_id { "prod_123" }
+      stripe_product_id do
+        Stripe::Product.create(
+          { name: name },
+          stripe_account: user.stripe_provider.uid
+        ).id
+      end
     end
   end
 end

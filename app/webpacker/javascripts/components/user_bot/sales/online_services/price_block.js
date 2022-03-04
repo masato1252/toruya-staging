@@ -175,7 +175,7 @@ const PriceBlock = ({
             </div>
           </div>
 
-          {renderActions('one_time')}
+          {renderActions('month')}
         </div>
 
         <div className="multiple-prices">
@@ -186,7 +186,7 @@ const PriceBlock = ({
             </div>
           </div>
 
-          {renderActions('multiple_times')}
+          {renderActions('year')}
         </div>
       </div>
     )
@@ -204,7 +204,7 @@ const PriceBlock = ({
             </div>
           </div>
 
-          {renderActions('month')}
+          {renderActions('one_time')}
         </div>
 
         <div className="multiple-prices">
@@ -215,7 +215,7 @@ const PriceBlock = ({
             </div>
           </div>
 
-          {renderActions('year')}
+          {renderActions('multiple_times')}
         </div>
       </div>
     )

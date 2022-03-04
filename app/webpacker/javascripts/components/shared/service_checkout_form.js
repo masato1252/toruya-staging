@@ -1,10 +1,9 @@
 "use strict";
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import StripeCheckoutForm from "shared/stripe_checkout_form"
 import { SaleServices } from "user_bot/api";
-import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
 const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_name, price, payment_type}) => {

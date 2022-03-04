@@ -36,9 +36,18 @@ module Sales
 
             if sale_page.free?
               ::Sales::OnlineServices::Approve.run(relation: relation)
-            elsif !sale_page.external?
+            elsif sale_page.recurring?
               compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
 
+              # credit card charge is synchronous request, it would return final status immediately
+              if compose(OnlineServiceCustomerRelations::Subscribe, relation: relation)
+                Sales::OnlineServices::Approve.run(relation: relation)
+              else
+                relation.failed_payment_state!
+              end
+            elsif !sale_page.external?
+              compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
+ 
               # credit card charge is synchronous request, it would return final status immediately
               if compose(CustomerPayments::PurchaseOnlineService, online_service_customer_relation: relation, first_time_charge: true, manual: true)
                 Sales::OnlineServices::Approve.run(relation: relation)

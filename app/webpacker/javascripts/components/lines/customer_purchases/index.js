@@ -9,7 +9,6 @@ import { SaleServices, CommonServices } from "user_bot/api";
 import CompanyHeader from "shared/company_header";
 import { CheckInLineBtn } from "shared/booking";
 import ServiceCheckoutForm from "shared/service_checkout_form";
-import FlowController from "shared/flow_controller";
 import I18n from 'i18n-js/index.js.erb';
 
 const FinalPaidPage = ({props, purcahse_data}) => {

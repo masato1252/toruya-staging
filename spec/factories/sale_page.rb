@@ -23,18 +23,37 @@ FactoryBot.define do
     end
 
     trait :recurring_payment do
+      product { FactoryBot.create(:online_service, :membership, user: user) }
       recurring_prices do
+        monthly_price = Stripe::Price.create(
+          {
+            unit_amount: 1_000,
+            currency: 'jpy',
+            recurring: { interval: "month" },
+            product: product.stripe_product_id,
+          },
+          stripe_account: user.stripe_provider.uid
+        )
+        yearly_price = Stripe::Price.create(
+          {
+            unit_amount: 10_000,
+            currency: 'jpy',
+            recurring: { interval: "year" },
+            product: product.stripe_product_id,
+          },
+          stripe_account: user.stripe_provider.uid
+        )
         [
           RecurringPrice.new(
             interval: 'month',
             amount: 1000,
-            stripe_price_id: "price_123",
+            stripe_price_id: monthly_price.id,
             active: true
           ).attributes,
           RecurringPrice.new(
             interval: 'year',
             amount: 10_000,
-            stripe_price_id: "price_456",
+            stripe_price_id: yearly_price.id,
             active: true
           ).attributes
         ]

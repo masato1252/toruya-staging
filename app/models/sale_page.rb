@@ -78,7 +78,7 @@ class SalePage < ApplicationRecord
   monetize :normal_price_amount_cents, allow_nil: true
 
   def free?
-    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && selling_multiple_times_price.blank? && !external?
+    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && selling_multiple_times_price.blank? && !recurring? && !external?
   end
 
   def external?
@@ -124,6 +124,14 @@ class SalePage < ApplicationRecord
 
   def selling_multiple_times_first_price_text
     Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+  end
+
+  def monthly_price_text
+    monthly_price ? Money.new(monthly_price.amount).format(:ja_default_format) : nil
+  end
+
+  def year_price_text
+    yearly_price ? Money.new(yearly_price.amount).format(:ja_default_format) : nil
   end
 
   def serializer(params = {})
