@@ -19,6 +19,17 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
 
     contents = reservations.map do |reservation|
       shop = reservation.shop
+      action_templates = [
+        LineActions::Uri.new(
+          label: I18n.t("action.send_message"),
+          url: Rails.application.routes.url_helpers.lines_contacts_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
+          btn: "secondary"
+        ).template,
+      ]
+
+      if shop.phone_number.present?
+        action_templates << LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
+      end
 
       LineMessages::FlexTemplateContent.content6(
         asset_url: reservation.pending? ? PENDING_ASSET_URL : ACCEPTED_ASSET_URL,
@@ -26,14 +37,7 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         title2: reservation.menus.map(&:display_name).join(", "),
         title3: shop.display_name,
         body: I18n.t("line.bot.messages.incoming_reservations.desc", shop_phone_number: shop.phone_number),
-        action_templates: [
-          LineActions::Uri.new(
-            label: I18n.t("action.send_message"),
-            url: Rails.application.routes.url_helpers.lines_contacts_url(encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)),
-            btn: "secondary"
-          ).template,
-          LineActions::Uri.new(action: "call", url: "tel:#{shop.phone_number}", btn: "secondary").template
-        ]
+        action_templates: action_templates
       )
     end
 
