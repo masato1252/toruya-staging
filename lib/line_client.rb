@@ -15,7 +15,8 @@ class LineClient
       Rollbar.error(
         "Line clinet Request failed",
         response: response.body,
-        args: args
+        args: args,
+        backtrace: caller
       )
     end
 
