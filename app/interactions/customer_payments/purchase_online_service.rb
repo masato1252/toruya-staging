@@ -13,7 +13,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
   def execute
     expire_at = online_service.current_expire_time if first_time_charge
     price_details = online_service_customer_price || online_service_customer_relation.price_details.first
-    charging_price_amount = price_details.amount_with_currency.fractional
+    charging_price_amount = price_details.amount_with_currency
 
     payment =
       online_service_customer_relation.with_lock do
@@ -34,7 +34,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
     begin
       stripe_charge = Stripe::Charge.create(
         {
-          amount: charging_price_amount,
+          amount: charging_price_amount.fractional,
           currency: Money.default_currency.iso_code,
           customer: customer.stripe_customer_id,
           description: sale_page.product_name.first(STRIPE_DESCRIPTION_LIMIT),

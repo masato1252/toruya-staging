@@ -492,6 +492,7 @@ Rails.application.routes.draw do
   namespace :webhooks do
     post "line/:channel_id", to: "lines#create", as: :line
     post "user_bot_line", to: "user_bot_lines#create", as: :user_bot_line
+    post "stripe", to: "stripe#create", as: :stripe
   end
 
   resources :calendars, only: [] do

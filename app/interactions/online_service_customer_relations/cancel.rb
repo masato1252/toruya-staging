@@ -2,10 +2,11 @@
 
 require "slack_client"
 
-# https://dashboard.stripe.com/settings/billing/automatic
-# customer be unsubscribe because of failure payment, customer could not use immediately
-class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
+# user unsubscribe a customer
+# customer could not use until the end of the period(not immediately, active, but change expire_at)
+class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
   object :relation, class: OnlineServiceCustomerRelation
+  boolean :end_of_period, default: true
 
   def execute
     relation.with_lock do
@@ -20,9 +21,9 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
           { stripe_account: relation.customer.user.stripe_provider.uid }
         )
 
-        relation.payment_state = :failed
-        relation.pending!
-        relation
+        relation.stripe_subscription_id = nil
+        relation.expire_at = Time.at(canceled_stripe_subscription.current_period_end)
+        relation.canceled_payment_state!
       rescue => e
         errors.add(:relation, :something_wrong)
       end
@@ -34,7 +35,8 @@ class OnlineServiceCustomerRelations::Unsubscribe < ActiveInteraction::Base
   private
 
   def stripe_subscription_canceled?
-    Stripe::Subscription.retrieve(relation.stripe_subscription_id, { stripe_account: relation.customer.user.stripe_provider.uid }).status == STRIPE_SUBSCRIPTION_STATUS[:canceled]
+    relation.stripe_subscription_id &&
+      Stripe::Subscription.retrieve(relation.stripe_subscription_id, { stripe_account: relation.customer.user.stripe_provider.uid }).status == STRIPE_SUBSCRIPTION_STATUS[:canceled]
   rescue Stripe::InvalidRequestError => e
     Rollbar.error(e)
 

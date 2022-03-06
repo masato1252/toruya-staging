@@ -35,6 +35,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
             customer: relation.customer,
             product: relation,
             amount_cents: relation.price_details.first.amount_with_currency.fractional,
+            amount_currency: Money.default_currency.iso_code,
             manual: manual
           ).completed.count
         }.by(1)
@@ -52,6 +53,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
               customer: relation.customer,
               product: relation,
               amount_cents: relation.price_details.first.amount_with_currency.fractional,
+              amount_currency: Money.default_currency.iso_code,
               manual: manual
             ).completed.count
           }.by(1)
@@ -70,6 +72,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
               customer: relation.customer,
               product: relation,
               amount_cents: relation.price_details.first.amount_with_currency.fractional,
+              amount_currency: Money.default_currency.iso_code,
               manual: manual
             ).completed.count
           }
@@ -92,6 +95,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
             customer: relation.customer,
             product: relation,
             amount_cents: online_service_customer_price.amount_with_currency.fractional,
+            amount_currency: Money.default_currency.iso_code,
             manual: manual,
             order_id: order_id
           ).completed.count
@@ -122,6 +126,7 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
           customer: relation.customer,
           product: relation,
           amount_cents: relation.price_details.first.amount_with_currency.fractional,
+          amount_currency: Money.default_currency.iso_code,
           manual: manual,
         ).last
 

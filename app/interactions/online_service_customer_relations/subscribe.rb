@@ -13,8 +13,11 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
 
       begin
         if relation.stripe_subscription_id
-          # TODO: Test delete need stripe_account or not
-          Stripe::Subscription.delete(relation.stripe_subscription_id)
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            { stripe_account: customer.user.stripe_provider.uid }
+          )
         end
 
         stripe_subscription = Stripe::Subscription.create(
@@ -32,6 +35,7 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
         # the first invoice is finalized as part of the request. The payment_behavior parameter determines the exact behavior of the initial payment.
         relation.paid_payment_state!
       rescue => e
+        Rollbar.error(e)
         errors.add(:relation, :something_wrong)
       end
 
@@ -46,6 +50,11 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
   end
 
   def stripe_subscription_active?
-    relation.stripe_subscription_id && Stripe::Subscription.retrieve(relation.stripe_subscription_id).status == STRIPE_SUBSCRIPTION_STATUS[:active]
+    relation.stripe_subscription_id &&
+      Stripe::Subscription.retrieve(relation.stripe_subscription_id, { stripe_account: customer.user.stripe_provider.uid }).status == STRIPE_SUBSCRIPTION_STATUS[:active]
+  rescue Stripe::InvalidRequestError => e
+    Rollbar.error(e)
+
+    false
   end
 end

@@ -7,7 +7,7 @@ class OnlineServiceCustomerPriceSerializer < ActiveJob::Serializers::ObjectSeria
     super(
       "amount_currency" => online_service_customer_price.amount_with_currency.currency.iso_code,
       "amount_fractional" => online_service_customer_price.amount_with_currency.fractional,
-      "charge_at" => online_service_customer_price.charge_at.iso8601,
+      "charge_at" => online_service_customer_price.charge_at&.iso8601,
       "order_id" => online_service_customer_price.order_id
     )
   end

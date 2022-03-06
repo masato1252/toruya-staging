@@ -2,7 +2,6 @@
 
 require "rails_helper"
 
-# TODO: Fix
 RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
   before { StripeMock.start }
   after { StripeMock.stop }
@@ -17,19 +16,22 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
-    context "when relation was not available" do
-      # expired relation
-      let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, :expired, customer: customer, permission_state: :active) }
+    context "when relation was permission pending" do
+      # pending permission relation
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, :expired, customer: customer, permission_state: :pending) }
 
       context "when stripe_subscribed was still active" do
         it "cancels old stripe subscription" do
-          old_stripe_subscription_id = relation.stripe_subscription_id
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
 
-          outcome
+            outcome
 
-          expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
-          expect(outcome.result.expire_at).to be_present
-          expect(outcome.result).to be_canceled_payment_state
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result.expire_at).to eq(Time.current)
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
         end
       end
 
@@ -51,13 +53,16 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
 
       context "when stripe_subscribed was active" do
         it "cancels old stripe subscription" do
-          old_stripe_subscription_id = relation.stripe_subscription_id
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
 
-          outcome
+            outcome
 
-          expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
-          expect(outcome.result.expire_at).to be_present
-          expect(outcome.result).to be_canceled_payment_state
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result.expire_at).to eq(Time.current)
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
         end
       end
 
@@ -67,13 +72,16 @@ RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
         end
 
         it "cancels old stripe subscription" do
-          old_stripe_subscription_id = relation.stripe_subscription_id
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
 
-          outcome
+            outcome
 
-          expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
-          expect(outcome.result.expire_at).to be_present
-          expect(outcome.result).to be_canceled_payment_state
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result.expire_at).to eq(Time.current)
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
         end
       end
     end
