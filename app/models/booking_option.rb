@@ -35,6 +35,7 @@ class BookingOption < ApplicationRecord
   has_many :booking_option_menus, -> { order("booking_option_menus.priority") }
   has_many :menus, through: :booking_option_menus
   has_many :booking_page_options
+  has_many :booking_pages, through: :booking_page_options
 
   monetize :amount_cents
 
