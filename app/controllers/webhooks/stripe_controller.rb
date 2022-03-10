@@ -1,8 +1,22 @@
 class Webhooks::StripeController < WebhooksController
   def create
     payload = request.body.read
-    data = JSON.parse(payload, symbolize_names: true)
-    event = Stripe::Event.construct_from(data)
+    sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+    event = nil
+
+    begin
+      event = Stripe::Webhook.construct_event(
+        payload, sig_header, Rails.application.secrets.stripe_webhook_secret
+      )
+    rescue JSON::ParserError => e
+      # Invalid payload
+      status 400
+      return
+    rescue Stripe::SignatureVerificationError => e
+      # Invalid signature
+      status 400
+      return
+    end
 
     outcome = StripeEvents::Handler.run(event: event)
 
