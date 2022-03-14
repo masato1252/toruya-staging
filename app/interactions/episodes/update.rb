@@ -23,8 +23,11 @@ module Episodes
     def execute
       episode.with_lock do
         case update_attribute
-        when "name", "tags"
+        when "name"
           episode.update(attrs.slice(update_attribute))
+        when "tags"
+          episode.update(attrs.slice(update_attribute))
+          online_service.update(tags: Array.wrap(online_service.tags).concat(attrs[:tags]).uniq)
         when "content_url"
           episode.update(content_url: attrs["content_url"], solution_type: attrs["solution_type"])
         when "start_time"
@@ -43,6 +46,12 @@ module Episodes
 
         episode
       end
+    end
+
+    private
+
+    def online_service
+      @online_service ||= episode.online_service
     end
   end
 end

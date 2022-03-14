@@ -18,8 +18,8 @@ import Solution from "../online_service_page/solution";
 // demo: true/false
 // jump: $function
 // light: true/false
-const EpisodeContent = ({course, episode, preview, demo, jumpByKey, light}) => {
-  if (!episode) return <></>
+const EpisodeContent = ({episode, preview, demo, jumpByKey, light}) => {
+  if (!episode?.content_url) return <></>
 
   return (
     <div className="online-service-body centerize">
@@ -29,19 +29,17 @@ const EpisodeContent = ({course, episode, preview, demo, jumpByKey, light}) => {
       </h2>
       <div className="my-4">
         <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("solution_step")} />
-        {demo || preview ? (
+        {demo || preview || episode.available ? (
           <Solution
             solution_type={episode.solution_type}
             content_url={episode.content_url}
             light={light}
           />
         ) : (
-          <div className="reminder-mark">
-            {I18n.t("course.episode_start_on")}{episode.customer_start_time}
-          </div>
+          <div className="reminder-mark">Not available</div>
         )}
       </div>
-      {demo || preview && (
+      {demo || preview || episode.note && (
         <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />
           {episode.note}

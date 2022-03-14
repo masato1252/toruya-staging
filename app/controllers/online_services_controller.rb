@@ -11,9 +11,15 @@ class OnlineServicesController < Lines::CustomersController
     @online_service_hash =
       if @online_service.course?
         CourseSerializer.new(@online_service, { params: { service_member: @service_member }}).attributes_hash
+      elsif @online_service.membership?
+        MembershipSerializer.new(@online_service).attributes_hash
       else
         OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false, light: false)
       end
+
+    if params[:episode_id]
+      @episode = @online_service.episodes.find_by(id: params[:episode_id])
+    end
   end
 
   def customer_status
@@ -36,6 +42,18 @@ class OnlineServicesController < Lines::CustomersController
     outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
 
     return_json_response(outcome, { watched_lesson_ids: outcome.result.watched_lesson_ids })
+  end
+
+  def tagged_episodes
+    episodes = Episodes::Tagged.run!(online_service: online_service, tag: params[:tag])
+
+    render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
+  end
+
+  def search_episodes
+    episodes = Episodes::Search.run!(online_service: online_service, keyword: params[:keyword])
+
+    render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
   end
 
   private

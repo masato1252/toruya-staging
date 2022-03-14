@@ -22,6 +22,12 @@
 class Episode < ApplicationRecord
   include ContentHelper
 
+  belongs_to :online_service
+
+  scope :ended_yet, -> { where("end_at is NULL or :now < end_at", now: Time.current) }
+  scope :started, -> { where("start_at is NULL or :now > start_at", now: Time.current) }
+  scope :available, -> { started.ended_yet }
+
   def start_time
     if start_at
       {
@@ -67,5 +73,14 @@ class Episode < ApplicationRecord
   def started?
     return true unless start_at # start right away servce
     return Time.current >= start_at
+  end
+
+  def ended?
+    return false unless end_at # start right away servce
+    return Time.current >= end_at
+  end
+
+  def available?
+    started? && !ended?
   end
 end

@@ -10,7 +10,7 @@ class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardCont
   def show
     @online_service = current_user.online_services.find(params[:service_id])
     @episode = @online_service.episodes.find(params[:id])
-    # @episode_hash = EpisodeSerializer.new(@episode, { params: { is_owner: true }}).attributes_hash
+    @membership_hash = MembershipSerializer.new(@online_service).attributes_hash
   end
 
   def new
