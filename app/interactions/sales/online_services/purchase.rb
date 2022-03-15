@@ -61,15 +61,27 @@ module Sales
 
         compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
 
-        if relation.purchased?
-          ::LineClient.flex(
-            social_customer,
+        return unless relation.purchased?
+        return if product.membership? && !product.episodes.available.exists?
+
+        template =
+          if product.membership?
+            contents = product.episodes.available.order("id DESC").limit(5).map do |episode|
+              compose(Templates::Episode, episode: episode, social_customer: social_customer)
+            end
+
+            LineMessages::FlexTemplateContainer.carousel_template(
+              altText: I18n.t("line.bot.messages.booking_pages.available_pages"),
+              contents: contents
+            )
+          else
             LineMessages::FlexTemplateContainer.template(
               altText: I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message", service_title: sale_page.product.name),
               contents: compose(Templates::OnlineService, sale_page: sale_page, online_service: sale_page.product, social_customer: social_customer)
             )
-          )
-        end
+          end
+
+        ::LineClient.flex(social_customer, template)
       end
 
       private

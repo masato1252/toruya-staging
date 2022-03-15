@@ -39,9 +39,15 @@ class OnlineServicesController < Lines::CustomersController
   end
 
   def watch_lesson
-    outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
+    outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: online_service.lessons.find(params[:lesson_id]))
 
     return_json_response(outcome, { watched_lesson_ids: outcome.result.watched_lesson_ids })
+  end
+
+  def watch_episode
+    outcome = Episodes::Watch.run(online_service: online_service, customer: current_customer, episode: online_service.episodes.find(params[:episode_id]))
+
+    return_json_response(outcome, { watched_episode_ids: outcome.result.watched_lesson_ids })
   end
 
   def tagged_episodes
