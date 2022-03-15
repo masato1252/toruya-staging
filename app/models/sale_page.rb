@@ -114,6 +114,10 @@ class SalePage < ApplicationRecord
     selling_end_at && Time.current > selling_end_at
   end
 
+  def sold_out?
+    quantity && OnlineServiceCustomerRelation.where(sale_page: self).available.count >= quantity
+  end
+
   def payable?
     free? || user.payable?
   end

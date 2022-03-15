@@ -17,8 +17,8 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
     object.started?
   end
 
-  attribute :is_ended do |object|
-    object.ended?
+  attribute :is_ended do |sale_page|
+    sale_page.ended? || sale_page.sold_out?
   end
 
   attribute :purchase_url do |object|
