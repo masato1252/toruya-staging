@@ -52,7 +52,7 @@ class Lines::Actions::BookingPages < ActiveInteraction::Base
   def execute
     user = social_customer.social_account.user
     # XXX: refactor to better query
-    contents = user.booking_pages.includes(:booking_options, :booking_page_special_dates).where(draft: false, line_sharing: true).started.map do |booking_page|
+    contents = user.booking_pages.includes(:booking_options, :booking_page_special_dates).where(draft: false, line_sharing: true).started.order("booking_pages.id").map do |booking_page|
       if booking_page.started? && !booking_page.ended?
         LineMessages::FlexTemplateContent.content4(
           title1: booking_page.title,
