@@ -554,6 +554,10 @@ ja:
         create_a_sale_page: 作成したサービスを販売する 販売ページを作成しましょう
         stripe_required_warning: サービスを有料販売するには、Stripeアカウントの連携設定が必要です。
         sale_page_like_this: サービスページは以下の様に表示されます
+        setup_line_bot_for_customers: ご利用中サービス一覧の 表示内容を設定
+        content_picture_requirement_tip: "画像を設定\n 幅1024px、高さ1024px以下"
+        message_description: サービス説明(60文字以内)
+        fake_action_button: アクションボタン
       notifications:
         title: 以下の新着データがあります
         unread_message_label: お問合せメッセージ

@@ -12,7 +12,7 @@ const EditMessageTemplate = ({service_name, message_template, handleMessageTempl
         withIcon={false}
         withPreview={true}
         withLabel={false}
-        buttonText={I18n.t("user_bot.dashboards.sales.booking_page_creation.content_picture_requirement_tip")}
+        buttonText={I18n.t("user_bot.dashboards.online_service_creation.content_picture_requirement_tip")}
         singleImage={true}
         onChange={handlePictureChange}
         imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
@@ -22,12 +22,12 @@ const EditMessageTemplate = ({service_name, message_template, handleMessageTempl
       <TextareaAutosize
         className="extend with-border"
         value={message_template.content}
-        placeholder={I18n.t("user_bot.dashboards.sales.booking_page_creation.what_buyer_future")}
+        placeholder={I18n.t("user_bot.dashboards.online_service_creation.message_description")}
         onChange={(event) => {
           handleMessageTemplateChange("content", event.target.value)
         }}
       />
-      <button className="btn btn-gray btn-tall w-full my-2" disabled >Action button</button>
+      <button className="btn btn-gray btn-tall w-full my-2" disabled >{I18n.t("user_bot.dashboards.online_service_creation.fake_action_button")}</button>
     </div>
   )
 }

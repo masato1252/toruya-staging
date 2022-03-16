@@ -27,6 +27,7 @@ export const GlobalProvider = ({ props, children }) => {
   }, [])
   const [state, dispatch] = useReducer(reducers, initialValue)
 
+  const { message_template } = state.services_creation_states
   const serviceData = () => {
     return {
       ...state.services_creation_states,
@@ -68,12 +69,17 @@ export const GlobalProvider = ({ props, children }) => {
       selected_company
   }
 
+  const isMessageSetup = () => {
+    return message_template?.picture_url?.length && message_template.content !== ""
+  }
+
   return (
     <GlobalContext.Provider value={{
       props,
       ...state.services_creation_states,
       dispatch,
-      createService
+      createService,
+      isMessageSetup
     }}
     >
       {children}
