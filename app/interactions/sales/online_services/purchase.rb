@@ -62,10 +62,9 @@ module Sales
         compose(Users::UpdateCustomerLatestActivityAt, user: sale_page.user)
 
         return unless relation.purchased?
-        return if product.membership? && !product.episodes.available.exists?
 
         template =
-          if product.membership?
+          if relation.available? && product.membership? && product.episodes.available.exists?
             contents = product.episodes.available.order("id DESC").limit(5).map do |episode|
               compose(Templates::Episode, episode: episode, social_customer: social_customer)
             end
