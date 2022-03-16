@@ -141,6 +141,21 @@ ja:
             online_service_purchased: サービス登録
             after_days: サービス開始%{after_days}日後
             after_days_title: サービス開催、何日後に送信しますか？
+        membership:
+          episodes:
+            title: 提供コンテンツ
+            subtitle: コンテンツ一覧
+            tag_for_the_content: このコンテンツのタグを設定
+            tag_input_placeholder: タグフレーズ
+            tag_history: 履歴から設定
+        episodes:
+          form:
+            tags_subtitle: このコンテンツのタグを設定
+            start_time_subtitle: 利用開始
+            end_time_subtitle: 利用終了
+            content_url_subtitle: 提供コンテンツ
+            note_subtitle: 文章
+            name_subtitle: メニュー名
         course:
           title: 提供コンテンツ
           content_label: コンテンツ目次
@@ -260,6 +275,7 @@ ja:
         available_period: サービス利用期間
         start_time: 利用開始
         end_time: 利用終了
+        tags: このコンテンツのタグを設定
         show_the_service: ページを表示
         preview_the_service: サービスページを確認
         line_card: LINEカード

@@ -83,4 +83,9 @@ class Episode < ApplicationRecord
   def available?
     started? && !ended?
   end
+
+  def state
+    return "available" if available?
+    "inactive"
+  end
 end

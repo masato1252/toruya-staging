@@ -176,9 +176,9 @@ const EpisodeEdit =({props}) => {
             <i className="fa fa-angle-left fa-2x"></i>
           </a>
         }
-        title={I18n.t(`user_bot.dashboards.settings.episodes.form.title`)}
+        title={I18n.t(`user_bot.dashboards.settings.membership.episodes.title`)}
       />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.episodes.form.${props.attribute}_title`)}</div>
+      <div className="field-header">{I18n.t(`user_bot.dashboards.settings.episodes.form.${props.attribute}_subtitle`)}</div>
       {renderCorrespondField()}
 
       <BottomNavigationBar klassName="centerize">

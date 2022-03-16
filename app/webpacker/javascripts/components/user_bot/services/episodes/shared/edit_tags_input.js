@@ -3,6 +3,7 @@
 import React from "react";
 
 import _ from "lodash";
+import I18n from 'i18n-js/index.js.erb';
 
 const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
   return (
@@ -10,6 +11,7 @@ const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
       <input
         type="text"
         value={new_tag || ""}
+        placeholder={I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}
         className="extend with-border"
         onChange={(event) => setNewTag(event.target.value)}
       />
@@ -24,6 +26,7 @@ const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
         className="btn btn-orange mar">
         {I18n.t("action.add_more")}
       </button>
+
       <div className="margin-around">
         {tags.map(tag => (
           <button
@@ -34,6 +37,9 @@ const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
         ))}
       </div>
 
+      <div className="field-header">
+        {I18n.t("user_bot.dashboards.settings.membership.episodes.tag_history")}
+      </div>
       <div className="margin-around">
         {existing_tags.map(tag => (
           <button

@@ -3,8 +3,6 @@
 class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardController
   def index
     @online_service = current_user.online_services.find(params[:service_id])
-    #  @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
-    # @course_hash = CourseSerializer.new(@online_service, { params: { is_owner: true }}).attributes_hash
   end
 
   def show

@@ -3,6 +3,7 @@
 import React from "react";
 
 import _ from "lodash";
+import I18n from 'i18n-js/index.js.erb';
 
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
@@ -14,7 +15,7 @@ const TagsStep  = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.course.lessons.new.when_lesson_start")}</h3>
+      <h3 className="header centerize">{I18n.t("user_bot.dashboards.settings.membership.episodes.tag_for_the_content")}</h3>
       <EditTagsInput
         new_tag={new_tag}
         tags={tags || []}
