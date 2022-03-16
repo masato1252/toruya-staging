@@ -32,6 +32,8 @@
 #     ...
 #   ]
 # }
+#
+# watched_lesson_ids was used to store watched lessons or episodes, depends on the service
 
 class OnlineServiceCustomerRelation < ApplicationRecord
   ACTIVE_STATES = %w[pending free paid partial_paid].freeze

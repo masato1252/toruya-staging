@@ -18,7 +18,7 @@ import Solution from "../online_service_page/solution";
 // demo: true/false
 // jump: $function
 // light: true/false
-const EpisodeContent = ({episode, preview, demo, jumpByKey, light}) => {
+const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service_slug, setWatchEpisodes}) => {
   if (!episode?.content_url) return <></>
 
   return (
@@ -39,6 +39,21 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light}) => {
           <div className="reminder-mark">Not available</div>
         )}
       </div>
+      {!demo && (
+        <div className="centerize">
+          <button
+            disabled={done || preview || !episode.available}
+            className="btn btn-tarco"
+            onClick={async () => {
+              const [_error, response] = await CommonServices.update({
+                url: Routes.watch_episode_online_service_path({slug: service_slug, episode_id: episode.id}),
+                data: {}
+              })
+
+              setWatchEpisodes(response.data.watched_episode_ids)
+            }}>{I18n.t("course.mark_lesson_done")}</button>
+        </div>
+      )}
       {demo || preview || episode.note && (
         <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />

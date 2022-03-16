@@ -77,10 +77,11 @@ const Episode = ({episode, setEpisode}) => {
   )
 }
 
-const MembershipPage = ({membership, default_tag, default_episode, preview}) => {
+const MembershipPage = ({membership, default_tag, default_episode, done_episode_ids, preview}) => {
   const [episode, setEpisode] = useState(default_episode)
   const [tag, setTag] = useState(default_tag || 'all')
   const [episodes, setEpisodes] = useState([])
+  const [watched_episode_ids, setWatchEpisodes] = useState(done_episode_ids)
 
   const fetchEpisodes = async () => {
     const [_error, response] = await CommonServices.get({
@@ -89,6 +90,7 @@ const MembershipPage = ({membership, default_tag, default_episode, preview}) => 
 
     setEpisodes(response.data.episodes)
   }
+
   useEffect(() => {
     fetchEpisodes()
   }, [tag])
@@ -99,8 +101,11 @@ const MembershipPage = ({membership, default_tag, default_episode, preview}) => 
         {membership.company_info.logo_url ?  <img className="logo" src={membership.company_info.logo_url} /> : <h2>{membership.company_info.name}</h2> }
       </div>
       <EpisodeContent
+        service_slug={membership.slug}
         episode={episode}
         preview={preview}
+        done={watched_episode_ids.includes(episode?.id?.toString())}
+        setWatchEpisodes={setWatchEpisodes}
       />
       {!preview  && (
         <>

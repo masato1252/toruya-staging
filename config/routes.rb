@@ -560,6 +560,7 @@ Rails.application.routes.draw do
   resources :online_services, param: :slug, only: [:show] do
     member do
       put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+      put "/episodes/:episode_id", action: :watch_episode, as: :watch_episode
       get "/episodes/:tag", action: :tagged_episodes, as: :tagged_episodes
       get "/search/:keyword", action: :search_episodes, as: :search_episodes
       get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
