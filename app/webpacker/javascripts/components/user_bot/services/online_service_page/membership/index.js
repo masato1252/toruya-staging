@@ -67,6 +67,7 @@ const Episode = ({episode, setEpisode}) => {
       className="p-3 flex justify-between border-0 border-b border-solid border-gray-500"
       onClick={() =>{
         setEpisode(episode)
+        $("body").scrollTop(0)
       }}
     >
       <div className="">
