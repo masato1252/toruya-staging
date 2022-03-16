@@ -6,7 +6,7 @@ class OnlineServicesController < Lines::CustomersController
   before_action :online_service
 
   def show
-    @service_member = online_service.online_service_customer_relations.available.where(customer: current_customer).first
+    @service_member = online_service.online_service_customer_relations.where(customer: current_customer).first
 
     @online_service_hash =
       if @online_service.course?

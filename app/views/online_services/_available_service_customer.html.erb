@@ -1,0 +1,15 @@
+<% if online_service.course? %>
+  <%= react_component("user_bot/services/online_service_page/course", { course: online_service_hash, lesson_id: params[:lesson_id], lesson_ids: service_member.watched_lesson_ids || [] }, { camelize_props: false }) %>
+<% elsif online_service.membership? %>
+  <%= react_component(
+    "user_bot/services/online_service_page/membership",
+    {
+      membership: online_service_hash,
+      default_episode: episode ? EpisodeSerializer.new(episode).attributes_hash : {},
+      done_episode_ids: service_member.watched_lesson_ids
+    },
+    { camelize_props: false }
+  ) %>
+<% else %>
+  <%= react_component("user_bot/services/online_service_page", online_service_hash, { camelize_props: false }) %>
+<% end %>

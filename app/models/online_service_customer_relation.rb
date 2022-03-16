@@ -47,7 +47,9 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :sale_page
   belongs_to :customer
 
-  scope :available, -> { active.current.where("expire_at is NULL or expire_at >= ?", Time.current) }
+  scope :available, -> { joins(:online_service).active.current
+    .where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
+    .where("expire_at is NULL or expire_at >= ?", Time.current) }
   scope :uncanceled, -> { where.not(payment_state: :canceled) }
   scope :current, -> { where(current: true) }
 
@@ -95,9 +97,9 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   end
 
   def state
-    return "inactive" if ACTIVE_STATES.exclude?(payment_state) || (active? && expire_at && expire_at < Time.current)
+    return "available" if current && active? && (expire_at.nil? || expire_at >= Time.current) && (online_service.start_at.nil? || online_service.start_at < Time.current)
     return "pending" if pending?
-    "available"
+    "inactive"
   end
 
   def purchased?
