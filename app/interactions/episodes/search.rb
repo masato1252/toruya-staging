@@ -3,12 +3,15 @@
 module Episodes
   class Search < ActiveInteraction::Base
     object :online_service
-    string :keyword
+    string :keyword, default: nil
+    boolean :available, default: true
 
     def execute
-      scope = online_service.episodes.available
+      scope = online_service.episodes
 
-      scope.where("name ilike :keyword", keyword: "%#{keyword}%")
+      scope = scope.available if available
+      scope = scope.where("name ilike :keyword", keyword: "%#{keyword}%") if keyword.present?
+      scope
     end
   end
 end

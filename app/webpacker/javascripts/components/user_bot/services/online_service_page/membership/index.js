@@ -28,14 +28,14 @@ const SearchBar = ({membership, setEpisodes}) => {
   return (
     <>
       <div className="input-group">
-        <span className="input-group-addon" id="basic-addon1">
+        <span className="input-group-addon">
           <i className="fa fa-search search-symbol" aria-hidden="true"></i>
         </span>
         <InputWithEnter
           type="search"
           ref={searchInput}
           className="form-control"
-          placeholder={'Search by title'}
+          placeholder={I18n.t("user_bot.dashboards.settings.episodes.form.search_by_name")}
           name="search"
           id="search"
           onHandleEnter={onHandleEnter}

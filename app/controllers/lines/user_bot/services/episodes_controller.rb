@@ -3,6 +3,7 @@
 class Lines::UserBot::Services::EpisodesController < Lines::UserBotDashboardController
   def index
     @online_service = current_user.online_services.find(params[:service_id])
+    @episodes = Episodes::Search.run!(online_service: @online_service, keyword: params[:keyword])
   end
 
   def show

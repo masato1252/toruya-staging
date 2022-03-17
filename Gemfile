@@ -105,6 +105,7 @@ group :development do
   gem "memory_profiler"
   gem "benchmark-memory"
   gem "magic_frozen_string_literal"
+  gem 'active_record_query_trace'
 end
 
 group :test do

@@ -156,6 +156,7 @@ ja:
             content_url_subtitle: 提供コンテンツ
             note_subtitle: 文章
             name_subtitle: メニュー名
+            search_by_name: タイトルで検索
         course:
           title: 提供コンテンツ
           content_label: コンテンツ目次

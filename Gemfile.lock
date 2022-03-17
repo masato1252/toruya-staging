@@ -90,6 +90,7 @@ GEM
     active_link_to (1.0.5)
       actionpack
       addressable
+    active_record_query_trace (1.8)
     activejob (6.0.3.7)
       activesupport (= 6.0.3.7)
       globalid (>= 0.3.6)
@@ -623,6 +624,7 @@ DEPENDENCIES
   active_attr
   active_interaction
   active_link_to
+  active_record_query_trace
   acts-as-taggable-on (~> 7.0)
   ahoy_matey
   annotate (~> 3.1.1)
