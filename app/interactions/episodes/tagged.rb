@@ -2,17 +2,12 @@
 
 module Episodes
   class Tagged < ActiveInteraction::Base
-    ALL = 'all'
-
     object :online_service
-    string :tag
+    string :tag, default: nil
 
     def execute
       scope = online_service.episodes.available
-
-      if tag != ALL
-        scope = scope.where(":tag = ANY(tags)", tag: tag)
-      end
+      scope = scope.where(":tag = ANY(tags)", tag: tag) if tag.present?
 
       scope
     end

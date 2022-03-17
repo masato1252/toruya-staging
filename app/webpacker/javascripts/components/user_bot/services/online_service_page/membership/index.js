@@ -48,6 +48,12 @@ const SearchBar = ({membership, setEpisodes}) => {
 const TagsList = ({tags, tag, setTag}) => {
   return (
     <div className="flex flex-nowrap overflow-x-auto">
+      <button
+        key='all'
+        className={`${tag == null ? 'bg-gray-600' : 'bg-gray-300'} btn mx-2 my-2`}
+        onClick={() => setTag(null)}>
+        {I18n.t("membership.all_tag")}
+      </button>
       {tags.map(t=> (
         <button
           key={t}
@@ -78,9 +84,9 @@ const Episode = ({episode, setEpisode}) => {
   )
 }
 
-const MembershipPage = ({membership, default_tag, default_episode, done_episode_ids, preview}) => {
+const MembershipPage = ({membership, default_episode, done_episode_ids, preview}) => {
   const [episode, setEpisode] = useState(default_episode)
-  const [tag, setTag] = useState(default_tag || 'all')
+  const [tag, setTag] = useState()
   const [episodes, setEpisodes] = useState([])
   const [watched_episode_ids, setWatchEpisodes] = useState(done_episode_ids)
 
@@ -110,15 +116,19 @@ const MembershipPage = ({membership, default_tag, default_episode, done_episode_
       />
       {!preview  && (
         <>
-          <SearchBar
-            membership={membership}
-            setEpisodes={setEpisodes}
-          />
-          <TagsList
-            tags={membership.tags}
-            tag={tag}
-            setTag={setTag}
-          />
+          {episodes.length !== 0 && (
+            <SearchBar
+              membership={membership}
+              setEpisodes={setEpisodes}
+            />
+          )} 
+          {membership.tags.length && (
+            <TagsList
+              tags={membership.tags}
+              tag={tag}
+              setTag={setTag}
+            />
+          )}
           {episodes.map(
             (episode) => (
               <Episode
@@ -130,7 +140,7 @@ const MembershipPage = ({membership, default_tag, default_episode, done_episode_
           )}
           {episodes.length === 0 && (
             <div className="reminder-mark centerize">
-              {I18n.t("course.no_lesson_yet")}
+              {I18n.t("membership.no_episode_yet")}
             </div>
           )}
         </>)}

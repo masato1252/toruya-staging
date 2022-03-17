@@ -148,10 +148,15 @@ const SalePageEdit =({props}) => {
       case "selling_price":
         if (props.sale_page.recurring_charge_required) {
           return (
-            <SellingRecurringPriceEdit
-              price={selling_price}
-              handlePriceChange={setSellingPrice}
-            />
+            <>
+              <SellingRecurringPriceEdit
+                price={selling_price}
+                handlePriceChange={setSellingPrice}
+              />
+              <p className="centerize warning margin-around">
+                {I18n.t("user_bot.dashboards.sales.form.selling_price_change_warning")}
+              </p>
+            </>
           )
         }
         else {

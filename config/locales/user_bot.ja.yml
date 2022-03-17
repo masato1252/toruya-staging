@@ -402,6 +402,7 @@ ja:
           end_time_subtitle: 販売終了
           selling_price_title: 販売方法
           selling_price_subtitle: 販売価格
+          selling_price_change_warning: 編集後の新しい価格は、変更前に会員登録した顧客には適応されません。
           normal_price_title: 販売方法
           normal_price_subtitle: 通常価格
           quantity_title: 販売方法
