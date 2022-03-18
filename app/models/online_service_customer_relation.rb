@@ -47,9 +47,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   belongs_to :sale_page
   belongs_to :customer
 
-  scope :available, -> { joins(:online_service).active.current
-    .where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
-    .where("expire_at is NULL or expire_at >= ?", Time.current) }
+  # Don't add this scope, where("online_services.start_at is NULL or online_services.start_at < :now", now: Time.current)
+  # because we need to a scope to filter the relations is legal to send them messages or do something even before service started
+  # So this scope couldn't guarantee customer could start to use service since it doesn't check service start time
+  scope :available, -> { active.current.where("expire_at is NULL or expire_at >= ?", Time.current) }
   scope :uncanceled, -> { where.not(payment_state: :canceled) }
   scope :current, -> { where(current: true) }
 
@@ -88,6 +89,10 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     end
   end
 
+  def accessible?
+    state == "accessible"
+  end
+
   def available?
     state == "available"
   end
@@ -96,10 +101,24 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     state == "inactive"
   end
 
+  # available means you are legal to use, but the service doesn't start yet
   def state
-    return "available" if current && active? && (expire_at.nil? || expire_at >= Time.current) && (online_service.start_at.nil? || online_service.start_at < Time.current)
-    return "pending" if pending?
+    return "accessible" if legal_to_access? && active? && service_started?
+    return "available" if legal_to_access? && active? && !service_started?
+    return "pending" if legal_to_access? && pending?
     "inactive"
+  end
+
+  def legal_to_access?
+    @legal_to_access ||= current && ACTIVE_STATES.include?(payment_state) && unexpired?
+  end
+
+  def service_started?
+    (online_service.start_at.nil? || online_service.start_at < Time.current)
+  end
+
+  def unexpired?
+    expire_at.nil? || expire_at >= Time.current
   end
 
   def purchased?
@@ -134,12 +153,12 @@ class OnlineServiceCustomerRelation < ApplicationRecord
     if free_payment_state?
       I18n.t("common.free_price")
     elsif price_details.size == 1
-      price_details.first.amount.format(:ja_default_format)
+      price_details.first.amount_with_currency.format(:ja_default_format)
     else
       times = price_details.size
-      amount = price_details.first.amount
+      amount_with_currency = price_details.first.amount_with_currency
 
-      "#{Money.new(amount).format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
+      "#{amount_with_currency.format(:ja_default_format)} X #{times} #{I18n.t("common.times")}"
     end
   end
 end

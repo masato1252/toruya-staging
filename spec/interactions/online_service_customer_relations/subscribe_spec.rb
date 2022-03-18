@@ -40,16 +40,31 @@ RSpec.describe OnlineServiceCustomerRelations::Subscribe do
       end
     end
 
-    context "when relation was available" do
+    context "when relation was legal to access" do
       context "when its stripe subscription is still active" do
-        let(:relation) { FactoryBot.create(:online_service_customer_relation, :stripe_subscribed, :monthly_payment, customer: customer, permission_state: :active) }
+        context "when relation is accessible" do
+          let(:relation) { FactoryBot.create(:online_service_customer_relation, :stripe_subscribed, :monthly_payment, customer: customer, permission_state: :active) }
 
-        it "does nothing" do
-          expect {
-            outcome
-          }.not_to change {
-            relation.stripe_subscription_id
-          }
+          it "does nothing" do
+            expect {
+              outcome
+            }.not_to change {
+              relation.stripe_subscription_id
+            }
+          end
+        end
+
+        context "when relation is available" do
+          let(:service_start_yet) { FactoryBot.build(:online_service, start_at: Time.now.tomorrow) }
+          let(:relation) { FactoryBot.create(:online_service_customer_relation, :stripe_subscribed, :monthly_payment, customer: customer, permission_state: :active, online_service: service_start_yet) }
+
+          it "does nothing" do
+            expect {
+              outcome
+            }.not_to change {
+              relation.stripe_subscription_id
+            }
+          end
         end
       end
 
@@ -57,7 +72,7 @@ RSpec.describe OnlineServiceCustomerRelations::Subscribe do
         let(:relation) { FactoryBot.create(:online_service_customer_relation, :stripe_subscribed, :monthly_payment, customer: customer, permission_state: :active) }
         before { Stripe::Subscription.delete(relation.stripe_subscription_id) }
 
-        it "does nothing" do
+        it "subscribes new one" do
           expect {
             outcome
           }.to change {

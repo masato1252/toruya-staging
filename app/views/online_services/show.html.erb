@@ -3,9 +3,9 @@
   <meta name="googlebot" content="noindex">
 <% end %>
 
-<% if @service_member && @service_member.available? %>
+<% if @service_member && @service_member.accessible? %>
   <%= render "online_services/available_service_customer", online_service: @online_service, service_member: @service_member, online_service_hash: @online_service_hash, episode: @episode %>
-<% elsif @service_member && !@service_member.available? %>
+<% elsif @service_member && !@service_member.accessible? %>
   <%= render "online_services/unavailable_service_customer", service_member: @service_member, online_service_hash: @online_service_hash %>
 <% elsif current_customer %>
   <%= render "online_services/unavailable_customer", online_service_hash: @online_service_hash %>
