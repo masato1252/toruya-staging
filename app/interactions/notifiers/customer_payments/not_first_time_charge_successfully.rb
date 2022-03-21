@@ -16,7 +16,7 @@ module Notifiers
           service_title: sale_page.product_name,
           shop_name: online_service.company.company_name,
           customer_status_online_service_url: url_helpers.customer_status_online_service_url(
-            slug: sale_page.slug,
+            slug: online_service.slug,
             encrypted_social_service_user_id: MessageEncryptor.encrypt(customer_payment.customer.social_customer.social_user_id)
           )
         )
