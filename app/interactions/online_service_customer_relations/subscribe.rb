@@ -13,11 +13,15 @@ class OnlineServiceCustomerRelations::Subscribe < ActiveInteraction::Base
 
       begin
         if relation.stripe_subscription_id
-          Stripe::Subscription.delete(
-            relation.stripe_subscription_id,
-            {},
-            { stripe_account: customer.user.stripe_provider.uid }
-          )
+          begin
+            Stripe::Subscription.delete(
+              relation.stripe_subscription_id,
+              {},
+              { stripe_account: customer.user.stripe_provider.uid }
+            )
+          rescue Stripe::InvalidRequestError => e
+            Rollbar.error(e)
+          end
         end
 
         stripe_subscription = Stripe::Subscription.create(

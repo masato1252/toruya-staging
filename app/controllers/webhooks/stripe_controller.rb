@@ -23,6 +23,10 @@ class Webhooks::StripeController < WebhooksController
     if outcome.valid?
       head :ok
     else
+      Rollbar.error("WebHook stripe error", {
+        event: event,
+        errors: outcome.errors.details
+      })
       head :bad_request
     end
   end

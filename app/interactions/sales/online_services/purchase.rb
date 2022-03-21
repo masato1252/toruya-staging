@@ -40,11 +40,7 @@ module Sales
               compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
 
               # credit card charge is synchronous request, it would return final status immediately
-              if compose(OnlineServiceCustomerRelations::Subscribe, relation: relation)
-                Sales::OnlineServices::Approve.run(relation: relation)
-              else
-                relation.failed_payment_state!
-              end
+              compose(CustomerPayments::SubscribeOnlineService, online_service_customer_relation: relation)
             elsif !sale_page.external?
               compose(Customers::StoreStripeCustomer, customer: customer, authorize_token: authorize_token)
  

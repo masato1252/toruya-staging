@@ -7,7 +7,7 @@ module Notifiers
 
       object :online_service_customer_relation
       object :online_service_customer_price, class: OnlineServiceCustomerPrice
-      time :charge_at, default: nil # recurring service's price doesn't have charge dat
+      time :charge_at, default: nil # recurring service's price object doesn't have charge date data, the time is from webhook
 
       validate :receiver_should_be_customer
 

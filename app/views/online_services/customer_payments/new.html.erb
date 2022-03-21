@@ -6,7 +6,7 @@
     order_id: params[:order_id],
     company_name: @relation.online_service.company.company_name,
     service_name: @relation.online_service.name,
-    price: @price.amount.format
+    price: @price.amount_with_currency.format
   }
 },
 { camelize_props: false }
