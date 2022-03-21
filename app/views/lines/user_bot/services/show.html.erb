@@ -75,9 +75,11 @@
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
-    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
-      <i class="fa fa-share-square fa-2x"></i>
-      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% if !@service.membership? %>
+      <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+        <i class="fa fa-share-square fa-2x"></i>
+        <div class="word"><%= I18n.t("action.preview") %></div>
+      <% end %>
     <% end %>
   <% end %>
 </div>

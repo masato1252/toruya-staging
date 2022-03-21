@@ -36,6 +36,6 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
 
     outcome = ::Sales::OnlineServices::Create.run(args)
 
-    return_json_response(outcome, { sale_page_id: outcome.result&.slug })
+    return_json_response(outcome, { sale_page_id: outcome.valid? ? outcome.result.slug : nil})
   end
 end

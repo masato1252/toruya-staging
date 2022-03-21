@@ -11,10 +11,10 @@ import { CheckInLineBtn } from "shared/booking";
 import ServiceCheckoutForm from "shared/service_checkout_form";
 import I18n from 'i18n-js/index.js.erb';
 
-const FinalPaidPage = ({props, purcahse_data}) => {
+const FinalPaidPage = ({props, purchase_data}) => {
   const purchase = async () => {
-    if (props.sale_page.is_free || props.customer_subscirbed || props.sale_page.is_external) {
-      const [error, response] = await SaleServices.purchase({ data: { ...purcahse_data, payment_type: props.sale_page.payment_type}})
+    if (props.sale_page.is_free || props.customer_subscribed || props.sale_page.is_external) {
+      const [error, response] = await SaleServices.purchase({ data: { ...purchase_data, payment_type: props.sale_page.payment_type}})
 
       if (error) {
         toastr.error(error.response.data.error_message)
@@ -30,7 +30,7 @@ const FinalPaidPage = ({props, purcahse_data}) => {
     purchase()
   }, [])
 
-  if (!props.sale_page.is_free && !props.sale_page.is_external && !props.customer_subscirbed) {
+  if (!props.sale_page.is_free && !props.sale_page.is_external && !props.customer_subscribed) {
     return (
       <div className="done-view">
         <h3 className="title">
@@ -38,7 +38,7 @@ const FinalPaidPage = ({props, purcahse_data}) => {
         </h3>
         <ServiceCheckoutForm
           stripe_key={props.stripe_key}
-          purcahse_data={purcahse_data}
+          purchase_data={purchase_data}
           company_name={props.sale_page.company_info.name}
           service_name={props.sale_page.product.name}
           price={props.sale_page.paying_amount_format}
@@ -118,7 +118,7 @@ export const CustomerPurchases = ({props}) => {
         <CompanyHeader shop={props.sale_page.company_info || props.sale_page.shop}>
           <FinalPaidPage
             props={props}
-            purcahse_data={
+            purchase_data={
               {
                 slug: props.sale_page_slug,
                 customer_id: identified_customer

@@ -1,5 +1,9 @@
 <div class="field-header" id="name"><%= t("common.customer_name") %></div>
-<%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
+<% if @is_owner %>
+  <%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
+<% else %>
+  <%= render "lines/user_bot/field_row", title: @customer.name %>
+<% end %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
 <div class="flex">

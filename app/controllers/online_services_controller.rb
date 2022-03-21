@@ -29,7 +29,7 @@ class OnlineServicesController < Lines::CustomersController
     @is_owner = false
 
     if @relation.online_service.recurring_charge_required?
-      @able_to_change_credit_card = !@is_owner && !@relation.legal_to_access?
+      @able_to_change_credit_card = !@is_owner && @relation.legal_to_access?
     else
       @order_completed = @relation.customer_payments.order("id DESC").each_with_object({}) do |payment, h|
         next if h[payment.order_id] == true
