@@ -91,12 +91,9 @@ module SalePages
             sale_page.update(selling_multiple_times_price: [])
           end
 
-          if attrs[:monthly_price]
-            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "month", amount: attrs[:monthly_price])
-          end
-
-          if attrs[:yearly_price]
-            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "year", amount: attrs[:yearly_price])
+          if attrs[:monthly_price].present? || attrs[:yearly_price].present?
+            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "month", amount: attrs[:monthly_price].presence || 0)
+            compose(SalePages::UpdateRecurringPrice, sale_page: sale_page, interval: "year", amount: attrs[:yearly_price].presence || 0)
           end
         when "why_content"
           picture = attrs[:why_content].delete(:picture)

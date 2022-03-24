@@ -7,34 +7,37 @@ module SalePages
     integer :amount
 
     validates :interval, inclusion: { in: %w[month year] }
-    validates :amount, numericality: { greater_than: 0 }
+    validates :amount, numericality: { greater_than_or_equal_to: 0 }
 
     def execute
       # monthly_price, yearly_price
-      if sale_page.public_send("#{interval}ly_price").amount != amount
+      if sale_page.public_send("#{interval}ly_price")&.amount != amount
         all_recurring_prices = sale_page.all_recurring_prices
         all_recurring_prices.each do |price|
           price.active = false if price.interval == interval
         end
 
-        recurring_price = RecurringPrice.new(
-          interval: interval,
-          amount: amount,
-          stripe_price_id: compose(
-            Sales::OnlineServices::CreateStripePrice,
-            online_service: sale_page.product,
+        unless amount.zero?
+          recurring_price = RecurringPrice.new(
             interval: interval,
-            amount: amount
-          ).id,
-          active: true
-        )
+            amount: amount,
+            stripe_price_id: compose(
+              Sales::OnlineServices::CreateStripePrice,
+              online_service: sale_page.product,
+              interval: interval,
+              amount: amount
+            ).id,
+            active: true
+          )
 
-        if recurring_price.invalid?
-          errors.merge!(recurring_price.errors)
-          return
+          if recurring_price.invalid?
+            errors.merge!(recurring_price.errors)
+            return
+          end
+
+          all_recurring_prices.push(recurring_price)
         end
 
-        all_recurring_prices.push(recurring_price)
         sale_page.update(recurring_prices: all_recurring_prices.map(&:attributes))
       end
 
