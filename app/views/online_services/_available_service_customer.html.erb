@@ -6,7 +6,7 @@
     {
       membership: online_service_hash,
       default_episode: episode ? EpisodeSerializer.new(episode).attributes_hash : {},
-      done_episode_ids: service_member.watched_lesson_ids
+      done_episode_ids: service_member.watched_lesson_ids || []
     },
     { camelize_props: false }
   ) %>

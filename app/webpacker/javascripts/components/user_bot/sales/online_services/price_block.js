@@ -150,6 +150,8 @@ const PriceBlock = ({
         <div className="price">
           <div className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
+            {price?.price_amounts?.month?.amount && <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>}
+            {price?.price_amounts?.year?.amount && <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>}
             <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />
             <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />
             <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />
