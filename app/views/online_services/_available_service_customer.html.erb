@@ -5,6 +5,7 @@
     "user_bot/services/online_service_page/membership",
     {
       membership: online_service_hash,
+      no_available_episodes: !online_service.episodes.available.exists?,
       default_episode: episode ? EpisodeSerializer.new(episode).attributes_hash : {},
       done_episode_ids: service_member.watched_lesson_ids || []
     },

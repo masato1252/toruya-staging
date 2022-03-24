@@ -9,16 +9,17 @@ import { InputWithEnter } from "shared/components";
 
 import { CommonServices } from "components/user_bot/api"
 
-const SearchBar = ({membership, setEpisodes}) => {
+const SearchBar = ({membership, setEpisodes, setLoading}) => {
   const searchInput = useRef()
-
 
   const onHandleEnter = async () => {
     if (searchInput.current.value) {
+      setLoading(true)
       const [_error, response] = await CommonServices.get({
         url: Routes.search_episodes_online_service_path(membership.slug, searchInput.current.value,  {format: "json"})
       })
 
+      setLoading(false)
       setEpisodes(response.data.episodes)
       searchInput.current.blur()
       searchInput.current.value = ""
@@ -84,17 +85,20 @@ const Episode = ({episode, setEpisode}) => {
   )
 }
 
-const MembershipPage = ({membership, default_episode, done_episode_ids, preview}) => {
+const MembershipPage = ({membership, default_episode, done_episode_ids, preview, no_available_episodes}) => {
   const [episode, setEpisode] = useState(default_episode)
+  const [loading, setLoading] = useState(false)
   const [tag, setTag] = useState()
   const [episodes, setEpisodes] = useState([])
   const [watched_episode_ids, setWatchEpisodes] = useState(done_episode_ids)
 
   const fetchEpisodes = async () => {
+    setLoading(true)
     const [_error, response] = await CommonServices.get({
       url: Routes.tagged_episodes_online_service_path(membership.slug, tag, {format: "json"})
     })
 
+    setLoading(false)
     setEpisodes(response.data.episodes)
   }
 
@@ -120,6 +124,7 @@ const MembershipPage = ({membership, default_episode, done_episode_ids, preview}
             <SearchBar
               membership={membership}
               setEpisodes={setEpisodes}
+              setLoading={setLoading}
             />
           )} 
           {membership.tags.length && (
@@ -129,18 +134,25 @@ const MembershipPage = ({membership, default_episode, done_episode_ids, preview}
               setTag={setTag}
             />
           )}
-          {episodes.map(
-            (episode) => (
-              <Episode
-                key={`episode-${episode.id}`}
-                episode={episode}
-                setEpisode={setEpisode}
-              />
-            )
-          )}
-          {episodes.length === 0 && (
+          {loading ?
+            <div className="centerize"><i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i></div> : (
+              episodes.map(
+                (episode) => (
+                  <Episode
+                    key={`episode-${episode.id}`}
+                    episode={episode}
+                    setEpisode={setEpisode}
+                  />
+                ))
+            )}
+          {no_available_episodes && (
             <div className="reminder-mark centerize">
               {I18n.t("membership.no_episode_yet")}
+            </div>
+          )}
+          {!no_available_episodes && episodes.length == 0 && (
+            <div className="reminder-mark centerize">
+              No matched contents
             </div>
           )}
         </>)}
