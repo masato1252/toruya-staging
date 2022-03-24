@@ -60,7 +60,7 @@ module Sales
         return unless relation.purchased?
 
         template =
-          if relation.available? && product.membership? && product.episodes.available.exists?
+          if relation.legal_to_access? && product.membership? && product.episodes.available.exists?
             contents = product.episodes.available.order("id DESC").limit(5).map do |episode|
               compose(Templates::Episode, episode: episode, social_customer: social_customer)
             end
