@@ -8,13 +8,15 @@ import I18n from 'i18n-js/index.js.erb';
 const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
   return (
     <>
-      <input
-        type="text"
-        value={new_tag || ""}
-        placeholder={I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}
-        className="extend with-border"
-        onChange={(event) => setNewTag(event.target.value)}
-      />
+      <div className="margin-around">
+        <input
+          type="text"
+          value={new_tag || ""}
+          placeholder={I18n.t("user_bot.dashboards.settings.membership.episodes.tag_input_placeholder")}
+          className="extend with-border"
+          onChange={(event) => setNewTag(event.target.value)}
+        />
+      </div>
       <button
         disabled={!new_tag}
         onClick={() => {

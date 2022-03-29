@@ -3,7 +3,7 @@
 import React from "react";
 import I18n from 'i18n-js/index.js.erb';
 
-const SellingEndTimeEdit = ({end_time, handleEndTimeChange}) => (
+const SellingEndTimeEdit = ({end_time, handleEndTimeChange, default_option = "end_at"}) => (
   <>
     <div className="margin-around">
       <label className="">
@@ -16,7 +16,7 @@ const SellingEndTimeEdit = ({end_time, handleEndTimeChange}) => (
               })
             }}
           />
-          {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_end_on")}
+          {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_end_on")}{default_option == "end_at" ? I18n.t("common.recommend") : ""}
         </div>
         {end_time.end_type === "end_at" && (
           <input
@@ -44,7 +44,7 @@ const SellingEndTimeEdit = ({end_time, handleEndTimeChange}) => (
             })
           }}
         />
-        {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_forever")}
+        {I18n.t("user_bot.dashboards.sales.online_service_creation.selling_forever")}{default_option == "never" ? I18n.t("common.recommend") : ""}
       </label>
     </div>
   </>

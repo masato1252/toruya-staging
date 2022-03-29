@@ -192,5 +192,6 @@ ja:
     month_pay: 月額プラン
     year_pay: 年額プラン
     usage_status: ご利用状況
+    recommend: (推奨)
   errors:
     invalid_url: 無効なURL

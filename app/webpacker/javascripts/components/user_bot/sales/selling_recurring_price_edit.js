@@ -28,7 +28,7 @@ const SellingRecurringPriceEdit = ({price, handlePriceChange}) => (
               }
             }}
           />
-          <span>Monthly</span>
+          <span>{I18n.t("common.month_pay")}</span>
           <br />
           {price.price_types.includes("month") && (
             <>
@@ -77,7 +77,7 @@ const SellingRecurringPriceEdit = ({price, handlePriceChange}) => (
                 }
               }}
             />
-            <span>Yearly</span>
+            <span>{I18n.t("common.year_pay")}</span>
             <br />
             {price.price_types.includes("year") && (
               <>
