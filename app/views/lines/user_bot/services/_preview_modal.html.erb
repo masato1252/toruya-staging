@@ -20,7 +20,9 @@
             "user_bot/services/online_service_page/membership",
             {
               membership: @membership_hash,
+              no_available_episodes: false,
               default_episode: local_assigns[:episode] ? EpisodeSerializer.new(local_assigns[:episode]).attributes_hash : {},
+              done_episode_ids: [],
               preview: true
             },
             { camelize_props: false }
