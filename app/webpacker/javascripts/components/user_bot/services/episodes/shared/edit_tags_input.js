@@ -32,6 +32,7 @@ const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
       <div className="margin-around">
         {tags.map(tag => (
           <button
+            key={tag}
             className="btn btn-gray mx-2 my-2"
             onClick={() => setTags(tags.filter(item => item !== tag))}>
             {tag}
@@ -45,6 +46,7 @@ const EditTagsInput = ({new_tag, tags, existing_tags, setNewTag, setTags}) => {
       <div className="margin-around">
         {existing_tags.map(tag => (
           <button
+            key={tag}
             className="btn btn-gray mx-2 my-2"
             onClick={() => setTags(_.uniq([...tags, tag]))}>
             {tag}

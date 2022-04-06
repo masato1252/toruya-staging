@@ -149,14 +149,28 @@ ja:
             tag_input_placeholder: タグフレーズ
             tag_history: 履歴から設定
         episodes:
+          new:
+            what_is_episode_name: コンテンツ名は何ですか？
+            what_is_your_solution: このコンテンツで提供する内容は何ですか？
+            do_you_have_any_note: コンテンツページに備考を表示しますか？
+            below_is_what_you_want: 以下のコンテンツを作成してよろしいですか？
+            create_by_this_setting: この設定でコンテンツを作成する
+          show:
+            title: 提供コンテンツ
+            content_label: コンテンツ詳細
+            content_url_label: コンテンツ
+            start_time_label: コンテンツ提供期間
           form:
             tags_subtitle: このコンテンツのタグを設定
             start_time_subtitle: 利用開始
             end_time_subtitle: 利用終了
+            content_url_title: コンテンツURL
             content_url_subtitle: 提供コンテンツ
             note_subtitle: 文章
+            name_title: コンテンツ名
             name_subtitle: メニュー名
             search_by_name: タイトルで検索
+            start_time_title: 提供開始
         course:
           title: 提供コンテンツ
           content_label: コンテンツ目次
@@ -233,6 +247,7 @@ ja:
           cancel_confirmation: この顧客の登録をキャンセルしてよろしいですか？
           stop_usage_confirmation: この顧客のサービス利用を中止しますか？
           permission_states:
+            accessible: 利用可能
             available: 利用可能
             pending: 保留
             inactive: 利用不可
