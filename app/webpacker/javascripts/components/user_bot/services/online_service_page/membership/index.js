@@ -28,7 +28,7 @@ const SearchBar = ({membership, setEpisodes, setLoading}) => {
 
   return (
     <>
-      <div className="input-group">
+      <div className="input-group border-0 border-b border-solid border-gray-500">
         <span className="input-group-addon">
           <i className="fa fa-search search-symbol" aria-hidden="true"></i>
         </span>
@@ -67,20 +67,18 @@ const TagsList = ({tags, tag, setTag}) => {
   )
 }
 
-const Episode = ({episode, setEpisode}) => {
+const Episode = ({episode, setEpisode, index}) => {
   return (
     <div
       key={`episode-${episode.id}`}
-      className="p-3 flex justify-between border-0 border-b border-solid border-gray-500"
+      className={`p-3 flex items-center border-0 ${index == 0 ? "border-t" : ""} border-b border-solid border-gray-500`}
       onClick={() =>{
         setEpisode(episode)
         $("body").scrollTop(0)
       }}
     >
-      <div className="">
-        <img className="preview-image" src={episode.thumbnail_url || ""} />
-        <span>{episode.name}</span>
-      </div>
+      <img className="preview-image" src={episode.thumbnail_url || ""} />
+      <span className="line-break-content dotdotdot">{episode.name}</span>
     </div>
   )
 }
@@ -111,13 +109,13 @@ const MembershipPage = ({membership, default_episode, done_episode_ids, preview,
       <div className="online-service-header">
         {membership.company_info.logo_url ?  <img className="logo" src={membership.company_info.logo_url} /> : <h2>{membership.company_info.name}</h2> }
       </div>
-      <EpisodeContent
-        service_slug={membership.slug}
-        episode={episode}
-        preview={preview}
-        done={watched_episode_ids.includes(episode?.id?.toString())}
-        setWatchEpisodes={setWatchEpisodes}
-      />
+        <EpisodeContent
+          service_slug={membership.slug}
+          episode={episode}
+          preview={preview}
+          done={watched_episode_ids.includes(episode?.id?.toString())}
+          setWatchEpisodes={setWatchEpisodes}
+        />
       {!preview  && (
         <>
           {episodes.length !== 0 && (
@@ -137,8 +135,9 @@ const MembershipPage = ({membership, default_episode, done_episode_ids, preview,
           {loading ?
             <div className="centerize"><i className="fa fa-spinner fa-spin fa-fw fa-2x" aria-hidden="true"></i></div> : (
               episodes.map(
-                (episode) => (
+                (episode, index) => (
                   <Episode
+                    index={index}
                     key={`episode-${episode.id}`}
                     episode={episode}
                     setEpisode={setEpisode}

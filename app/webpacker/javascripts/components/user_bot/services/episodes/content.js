@@ -22,7 +22,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
   if (!episode?.content_url) return <></>
 
   return (
-    <div className="online-service-body centerize">
+    <div className="online-service-body centerize pb-6">
       <h2 className="name">
         {episode.name}
         <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("name_step")} />
@@ -55,7 +55,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
         </div>
       )}
       {demo || preview || episode.note && (
-        <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
+        <div className="text-left break-line-content rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />
           {episode.note}
         </div>

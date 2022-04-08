@@ -66,7 +66,7 @@ module Sales
             end
 
             LineMessages::FlexTemplateContainer.carousel_template(
-              altText: I18n.t("line.bot.messages.booking_pages.available_pages"),
+              altText: I18n.t("line.bot.messages.online_services.available_episodes"),
               contents: contents
             )
           else
