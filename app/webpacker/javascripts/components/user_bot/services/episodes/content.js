@@ -29,7 +29,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
       </h2>
       <div className="my-4">
         <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("solution_step")} />
-        {demo || preview || episode.available ? (
+        {(demo || preview || episode.available) ? (
           <Solution
             solution_type={episode.solution_type}
             content_url={episode.content_url}
@@ -54,7 +54,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
             }}>{I18n.t("course.mark_lesson_done")}</button>
         </div>
       )}
-      {demo || preview || episode.note && (
+      {(demo || preview || episode.note) && (
         <div className="text-left break-line-content rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />
           {episode.note}

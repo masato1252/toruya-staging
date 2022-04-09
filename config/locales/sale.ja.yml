@@ -1,6 +1,6 @@
 ja:
   sales:
-    expire_after_n_days: "購入後%{days}日後まで"
+    expire_after_n_days: "購入後%{days}日後から"
     never_expire: ずっと利用可能
     sale_now: 購入後すぐ
     start_at: 決まった日時から
