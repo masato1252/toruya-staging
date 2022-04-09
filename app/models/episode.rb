@@ -23,6 +23,7 @@ class Episode < ApplicationRecord
   include ContentHelper
 
   belongs_to :online_service
+  belongs_to :user
 
   scope :ended_yet, -> { where("end_at is NULL or :now < end_at", now: Time.current) }
   scope :started, -> { where("start_at is NULL or :now > start_at", now: Time.current) }

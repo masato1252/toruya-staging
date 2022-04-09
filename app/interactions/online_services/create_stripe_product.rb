@@ -9,7 +9,7 @@ module OnlineServices
         { name: online_service.name },
         stripe_account: online_service.user.stripe_provider.uid
       )
-    rescue Stripe::StripeError => e
+    rescue => e
       Rollbar.error(e)
       errors.add(:online_service, :something_wrong)
     end

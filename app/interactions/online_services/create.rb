@@ -27,7 +27,8 @@ module OnlineServices
       string :content, default: nil
     end
 
-    # TODO: validate content_url, only course and membership could be nil
+    validate :validate_content_url
+    validate :validate_solution
 
     def execute
       ApplicationRecord.transaction do
@@ -66,6 +67,24 @@ module OnlineServices
 
         online_service
       end
+    end
+
+    private
+
+    def validate_content_url
+      if content_url.blank? && not_membership_or_course
+        errors.add(:content_url, :invalid)
+      end
+    end
+
+    def validate_solution
+      if selected_solution.blank? && not_membership_or_course
+        errors.add(:selected_solution, :invalid)
+      end
+    end
+
+    def not_membership_or_course
+      [OnlineService.goal_types[:membership], OnlineService.goal_types[:course]].exclude?(selected_goal)
     end
   end
 end

@@ -10,15 +10,15 @@ class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
 
   def execute
     relation.with_lock do
-      if (relation.pending? || relation.inactive?) && stripe_subscription_canceled?
+      if !relation.legal_to_access? && stripe_subscription_canceled?
         return relation
       end
 
       begin
-        canceled_stripe_subscription = Stripe::Subscription.delete(
-          relation.stripe_subscription_id,
-          {},
-          { stripe_account: relation.customer.user.stripe_provider.uid }
+        canceled_stripe_subscription = compose(
+          StripeSubscriptions::Delete,
+          stripe_subscription_id: relation.stripe_subscription_id,
+          stripe_account: relation.customer.user.stripe_provider.uid
         )
 
         relation.stripe_subscription_id = nil
@@ -35,11 +35,10 @@ class OnlineServiceCustomerRelations::Cancel < ActiveInteraction::Base
   private
 
   def stripe_subscription_canceled?
-    relation.stripe_subscription_id &&
-      Stripe::Subscription.retrieve(relation.stripe_subscription_id, { stripe_account: relation.customer.user.stripe_provider.uid }).status == STRIPE_SUBSCRIPTION_STATUS[:canceled]
-  rescue Stripe::InvalidRequestError => e
-    Rollbar.error(e)
-
-    true
+    compose(
+      StripeSubscriptions::IsCanceled,
+      stripe_subscription_id: relation.stripe_subscription_id,
+      stripe_account: relation.customer.user.stripe_provider.uid
+    )
   end
 end

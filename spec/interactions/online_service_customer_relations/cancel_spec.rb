@@ -34,7 +34,11 @@ RSpec.describe OnlineServiceCustomerRelations::Cancel do
 
       context "when stripe_subscribed was canceled" do
         before do
-          Stripe::Subscription.delete(relation.stripe_subscription_id)
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            stripe_account: customer.user.stripe_provider.uid
+          )
         end
 
         it "does nothing" do
@@ -62,7 +66,11 @@ RSpec.describe OnlineServiceCustomerRelations::Cancel do
 
       context "when stripe_subscribed was canceled" do
         before do
-          Stripe::Subscription.delete(relation.stripe_subscription_id)
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            stripe_account: customer.user.stripe_provider.uid
+          )
         end
 
         it "cancels old stripe subscription" do

@@ -41,6 +41,8 @@ class OnlineServiceCustomerRelation < ApplicationRecord
   include SayHi
   hi_track_event "online_service_purchased"
 
+  alias_attribute :watched_episode_ids, :watched_lesson_ids
+
   has_many :customer_payments, as: :product
   has_one :last_customer_payment, -> { order(id: :desc) } , as: :product, class_name: "CustomerPayment"
   belongs_to :online_service

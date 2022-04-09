@@ -70,7 +70,13 @@ RSpec.describe OnlineServiceCustomerRelations::Subscribe do
 
       context "when its stripe subscription is canceled" do
         let(:relation) { FactoryBot.create(:online_service_customer_relation, :stripe_subscribed, :monthly_payment, customer: customer, permission_state: :active) }
-        before { Stripe::Subscription.delete(relation.stripe_subscription_id) }
+        before do
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            stripe_account: customer.user.stripe_provider.uid
+          )
+        end
 
         it "subscribes new one" do
           expect {
