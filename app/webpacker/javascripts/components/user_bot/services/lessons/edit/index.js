@@ -20,7 +20,7 @@ const components = {
 const LessonEdit =({props}) => {
   const [start_time, setStartTime] = useState(props.lesson.start_time)
 
-  const { register, watch, setValue, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.lesson,
       solution_type: null

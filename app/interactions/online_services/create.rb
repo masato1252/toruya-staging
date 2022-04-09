@@ -2,10 +2,6 @@
 
 module OnlineServices
   class Create < ActiveInteraction::Base
-    set_callback :type_check, :before do
-      self.message_template = nil if message_template&.dig(:picture).blank? || message_template&.dig(:content).blank?
-    end
-
     object :user
     string :name
     string :selected_goal

@@ -19,34 +19,43 @@ const OnlineServiceEdit =({props}) => {
   const [start_time, setStartTime] = useState(props.service.start_time)
   const [message_template, setMessageTemplate] = useState(props.message_template)
 
-  const { register, watch, setValue, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.service,
       solution_type: null
     }
   });
 
+  const requestData = (data) => {
+    let request_data;
+
+    request_data  = _.assign(data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time })
+    if (props.attribute == "message_template") request_data = { ...request_data, message_template }
+
+    return request_data
+  }
+
   const onDemoMessage = async (data) => {
-    let error, response;
+    let response;
 
     if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
 
-    [error, response] = await OnlineServices.demo_message({
+    [_, response] = await OnlineServices.demo_message({
       online_service_id: props.service.id,
-      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, message_template })
+      data: requestData(data)
     })
 
     window.location = response.data.redirect_to
   }
 
   const onSubmit = async (data) => {
-    let error, response;
+    let response;
 
     if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
 
-    [error, response] = await OnlineServices.update({
+    [_, response] = await OnlineServices.update({
       online_service_id: props.service.id,
-      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time, message_template })
+      data: requestData(data)
     })
 
     window.location = response.data.redirect_to

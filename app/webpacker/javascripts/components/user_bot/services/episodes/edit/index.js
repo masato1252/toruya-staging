@@ -23,7 +23,7 @@ const EpisodeEdit =({props}) => {
   const [tags, setTags] = useState(props.episode.tags || [])
   const [new_tag, setNewTag] = useState()
 
-  const { register, watch, setValue, handleSubmit, formState } = useForm({
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.episode,
       solution_type: null
@@ -147,6 +147,7 @@ const EpisodeEdit =({props}) => {
             solution_type={watch("solution_type")}
             placeholder={props.placeholder}
             register={register}
+            errors={errors}
             watch={watch}
             setValue={setValue}
           />

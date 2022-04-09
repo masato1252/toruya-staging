@@ -29,13 +29,20 @@ export const GlobalProvider = ({ props, children }) => {
 
   const { message_template } = state.services_creation_states
   const serviceData = () => {
-    return {
+    let request_data;
+
+    request_data = {
       ...state.services_creation_states,
-      message_template: _.pick(state.services_creation_states.message_template, ["picture", "content"]),
       upsell: {
         sale_page_id: state.services_creation_states.upsell?.sale_page?.id
       }
     }
+
+    if (state.services_creation_states.message_template.picture && state.services_creation_states.message_template.content) {
+      request_data = { ...request_data, message_template: _.pick(state.services_creation_states.message_template, ["picture", "content"]) }
+    }
+
+    return request_data
   }
 
   const createService = async () => {
