@@ -166,6 +166,7 @@ ja:
             end_time_subtitle: 利用終了
             content_url_title: コンテンツURL
             content_url_subtitle: 提供コンテンツ
+            note_title: 文章
             note_subtitle: 文章
             name_title: コンテンツ名
             name_subtitle: メニュー名
