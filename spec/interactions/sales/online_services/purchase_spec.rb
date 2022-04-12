@@ -106,15 +106,13 @@ RSpec.describe Sales::OnlineServices::Purchase do
       let(:customer) { FactoryBot.create(:social_customer, user: user).customer }
 
       it "doesn't touch customer" do
-        allow(LineClient).to receive(:flex)
+        expect(LineClient).not_to receive(:flex)
 
         expect {
           outcome
         }.not_to change {
           customer.updated_at
         }
-
-        expect(LineClient).to have_received(:flex)
       end
 
       context "when customer current state is inactive" do
@@ -122,15 +120,13 @@ RSpec.describe Sales::OnlineServices::Purchase do
           let(:online_service_customer_relation) { FactoryBot.create(:online_service_customer_relation, payment_state: :paid, customer: customer, expire_at: 1.day.ago) }
 
           it "doesn't touch customer" do
-            allow(LineClient).to receive(:flex)
+            expect(LineClient).not_to receive(:flex)
 
             expect {
               outcome
             }.not_to change {
               customer.updated_at
             }
-
-            expect(LineClient).to have_received(:flex)
           end
         end
 

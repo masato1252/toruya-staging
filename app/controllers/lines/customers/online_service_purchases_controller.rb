@@ -20,15 +20,14 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       payment_type: params[:payment_type]
     )
 
-    if outcome.valid?
-      return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : sale_page_path(slug: params[:slug]) })
-    else
+    if outcome.invalid?
       Rollbar.error("Sales::OnlineServices::Purchase failed", {
         errors: outcome.errors.details,
         params: params
       })
-      return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
     end
+
+    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
   end
 
   private
