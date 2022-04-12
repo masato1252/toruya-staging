@@ -29,7 +29,7 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
       </h2>
       <div className="my-4">
         <DemoEditButton demo={demo} jump={() => jump(1)} />
-        {demo || lesson.started_for_customer || preview ? (
+        {(demo || lesson.started_for_customer || preview) ? (
           <Solution
             solution_type={lesson.solution_type}
             content_url={lesson.content_url}
@@ -58,8 +58,8 @@ const LessonContent = ({course, lesson, preview, demo, jump, light, done, nextLe
           {nextLesson && <div onClick={nextLesson}><i className="fas fa-2x fa-arrow-right text-tarco"></i></div>}
         </div>
       )}
-      {demo || lesson.started_for_customer || preview && (
-        <div className="text-left break-line-content border border-solid p-3 rounded mt-1">
+      {(demo || lesson.started_for_customer || preview) && (
+        <div className="text-left break-line-content rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jump(2)} />
           {lesson.note}
         </div>

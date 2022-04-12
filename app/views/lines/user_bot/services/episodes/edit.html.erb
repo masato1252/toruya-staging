@@ -1,0 +1,12 @@
+<%= react_component("user_bot/services/episodes/edit", {
+  props: {
+    attribute: @attribute,
+    episode: EpisodeSerializer.new(@episode).attributes_hash,
+    solutions: @online_service.solution_options,
+    online_service: {
+      tags: @online_service.tags
+    }
+  }
+},
+{ camelize_props: false }
+) %>

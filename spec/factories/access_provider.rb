@@ -7,10 +7,12 @@ FactoryBot.define do
     refresh_token { SecureRandom.uuid }
 
     trait :stripe do
+      uid { SecureRandom.uuid }
       provider { "stripe_connect" }
     end
 
     trait :google do
+      uid { SecureRandom.uuid }
       provider { "google_oauth2" }
     end
   end

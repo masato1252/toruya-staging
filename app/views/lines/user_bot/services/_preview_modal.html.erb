@@ -15,22 +15,34 @@
         </div>
         <% if service.course? %>
           <%= react_component("user_bot/services/online_service_page/course", { course: @course_hash, lesson_ids: [], preview: true, lesson_id: local_assigns[:lesson]&.id }, { camelize_props: false }) %>
+        <% elsif service.membership? %>
+          <%= react_component(
+            "user_bot/services/online_service_page/membership",
+            {
+              membership: @membership_hash,
+              no_available_episodes: false,
+              default_episode: local_assigns[:episode] ? EpisodeSerializer.new(local_assigns[:episode]).attributes_hash : {},
+              done_episode_ids: [],
+              preview: true
+            },
+            { camelize_props: false }
+          ) %>
         <% else %>
           <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
         <% end %>
       </div>
       <div class="modal-footer centerize">
         <div>
-          <input type="text" value=<%= online_service_url(slug: service.slug) %> readOnly class="extend"/>
+          <input type="text" value=<%= online_service_url(slug: service.slug, lesson_id: local_assigns[:lesson]&.id, episode_id: local_assigns[:episode]&.id) %> readOnly class="extend"/>
         </div>
         <%= button_tag t("action.copy_url2"), class: "btn btn-tarco",
           data: {
           controller: "clipboard",
           action: "click->clipboard#copy",
-          clipboard_text: online_service_url(slug: service.slug, lesson_id: local_assigns[:lesson]&.id),
+          clipboard_text: online_service_url(slug: service.slug, lesson_id: local_assigns[:lesson]&.id, episode_id: local_assigns[:episode]&.id),
           clipboard_popup_text: t("common.copied")
         } %>
-        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: service.slug), class: "btn btn-tarco" %>
+        <%= link_to I18n.t("user_bot.dashboards.services.show_the_service"), online_service_url(slug: service.slug, lesson_id: local_assigns[:lesson]&.id, episode_id: local_assigns[:episode]&.id), class: "btn btn-tarco" %>
       </div>
     </div>
   </div>

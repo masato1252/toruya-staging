@@ -14,9 +14,11 @@
 #  slug                :string
 #  solution_type       :string           not null
 #  start_at            :datetime
+#  tags                :string           default([]), is an Array
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  company_id          :bigint           not null
+#  stripe_product_id   :string
 #  upsell_sale_page_id :integer
 #  user_id             :bigint
 #
@@ -48,7 +50,6 @@ class OnlineService < ApplicationRecord
     name: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.title"),
     description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
     enabled: true,
-    description: I18n.t("user_bot.dashboards.online_service_creation.solutions.external.description"),
   }
 
   SOLUTIONS = [
@@ -66,6 +67,7 @@ class OnlineService < ApplicationRecord
       stripe_required: false,
       premium_member_required: false,
       skip_solution_step_on_creation: false,
+      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
       ]
@@ -78,6 +80,7 @@ class OnlineService < ApplicationRecord
       stripe_required: false,
       premium_member_required: false,
       skip_solution_step_on_creation: false,
+      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -90,6 +93,7 @@ class OnlineService < ApplicationRecord
       stripe_required: true,
       premium_member_required: false,
       skip_solution_step_on_creation: false,
+      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -102,6 +106,7 @@ class OnlineService < ApplicationRecord
       stripe_required: true,
       premium_member_required: true,
       skip_solution_step_on_creation: true,
+      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -111,10 +116,13 @@ class OnlineService < ApplicationRecord
       key: "membership",
       name: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.title"),
       description: I18n.t("user_bot.dashboards.online_service_creation.goals.membership.description"),
-      enabled: false,
+      enabled: true,
       stripe_required: true,
+      recurring_charge: true,
       premium_member_required: true,
       skip_solution_step_on_creation: true,
+      skip_end_time_step_on_creation: true,
+      skip_line_message_step_on_creation: false,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -128,6 +136,7 @@ class OnlineService < ApplicationRecord
       stripe_required: false,
       premium_member_required: false,
       skip_solution_step_on_creation: false,
+      skip_line_message_step_on_creation: true,
       solutions: [
         EXTERNAL_SOLUTION
       ]
@@ -146,21 +155,21 @@ class OnlineService < ApplicationRecord
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
+  has_one :message_template, -> { where(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
+  has_many :episodes
+
+  enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
 
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
-  end
-
-  def course?
-    goal_type == "course"
   end
 
   def charge_required?
     GOALS.find { |goal| goal_type == goal[:key] }[:stripe_required] || goal_type == 'external'
   end
 
-  def external?
-    goal_type == 'external'
+  def recurring_charge_required?
+    GOALS.find { |goal| goal_type == goal[:key] }[:recurring_charge]
   end
 
   def start_at_for_customer(customer)
@@ -255,6 +264,17 @@ class OnlineService < ApplicationRecord
       lessons.first.solution_type
     else
       solution_type
+    end
+  end
+
+  def picture_url
+    if course? && lessons.exists?
+      lessons.first.thumbnail_url || sale_page&.introduction_video_url
+    elsif membership? && message_template.picture.attached?
+      # use content8 ratio for the resize
+      Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
+    else
+      thumbnail_url || sale_page&.introduction_video_url
     end
   end
 end

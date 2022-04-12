@@ -31,6 +31,8 @@ ja:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「ダウンロード」ボタンからご利用ください。"
         course:
           message: "この度は、%{service_title}をご利用ありがとうございました。\n\n「視聴する」ボタンからご利用ください。"
+        membership:
+          message: "この度は、%{service_title}にご登録ありがとうございました。\n\nまずはこちらのコンテンツからご覧ください。"
       charge_reminder:
         message: "%{customer_name} 様\n\n日頃より、%{shop_name}をご利用いただきまして、誠にありがとうございます。\n\n%{charge_date}に%{service_title}のご利用料金の請求をさせていただきます。\n\n詳細なご利用料金、及びお支払い方法の変更は、以下のページからご確認ください。\n\n %{customer_status_online_service_url}"
     reminders:

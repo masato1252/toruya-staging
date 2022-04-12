@@ -10,10 +10,11 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       name: params[:name],
       selected_goal: params[:selected_goal],
       selected_solution: params[:selected_solution],
-      end_time: params[:end_time].permit!.to_h,
-      upsell: params[:upsell].permit!.to_h,
+      end_time: params[:end_time]&.permit!&.to_h,
+      upsell: params[:upsell]&.permit!&.to_h,
       content_url: params[:content_url],
       selected_company: params[:selected_company].permit!.to_h,
+      message_template: params[:message_template].permit!.to_h
     )
 
     return_json_response(outcome, { online_service_slug: outcome.result&.slug })
@@ -32,6 +33,8 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       @lessons_count = @service.lessons.count
       @chapters_count = @service.chapters.count
       @course_hash = CourseSerializer.new(@service, { params: { is_owner: true }}).attributes_hash
+    elsif @service.membership?
+      @episodes_count = @service.episodes.count
     else
       @online_service_hash = OnlineServiceSerializer.new(@service).attributes_hash.merge(demo: false, light: false)
     end
@@ -46,6 +49,15 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
     service = current_user.online_services.find(params[:id])
 
     outcome = OnlineServices::Update.run(online_service: service, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+
+    return_json_response(outcome, { redirect_to: lines_user_bot_service_path(service.id, anchor: params[:attribute]) })
+  end
+
+  def demo_message
+    service = current_user.online_services.find(params[:id])
+
+    online_service = OnlineServices::Update.run!(online_service: service, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+    outcome = OnlineServices::DemoMessage.run(online_service: online_service)
 
     return_json_response(outcome, { redirect_to: lines_user_bot_service_path(service.id, anchor: params[:attribute]) })
   end

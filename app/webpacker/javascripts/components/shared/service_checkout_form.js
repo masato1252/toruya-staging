@@ -1,15 +1,14 @@
 "use strict";
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import StripeCheckoutForm from "shared/stripe_checkout_form"
 import { SaleServices } from "user_bot/api";
-import ProcessingBar from "shared/processing_bar";
 import I18n from 'i18n-js/index.js.erb';
 
-const ServiceCheckoutForm = ({stripe_key, purcahse_data, company_name, service_name, price, payment_type}) => {
+const ServiceCheckoutForm = ({stripe_key, purchase_data, company_name, service_name, price, payment_type}) => {
   const handleToken = async (token) => {
-    const [error, response] = await SaleServices.purchase({ data: {...purcahse_data, token, payment_type}})
+    const [error, response] = await SaleServices.purchase({ data: {...purchase_data, token, payment_type}})
 
     if (error) {
       toastr.error(error.response.data.error_message)

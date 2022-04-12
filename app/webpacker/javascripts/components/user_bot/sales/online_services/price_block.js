@@ -5,7 +5,7 @@ import I18n from 'i18n-js/index.js.erb';
 import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/booking";
 
 // price: {
-//   price_types: ['free', 'one_time', 'multiple_times'],
+//   price_types: ['free', 'one_time', 'multiple_times', 'month', 'year'],
 //   price_amounts: {
 //     one_time: {
 //       amount: 3000
@@ -13,6 +13,12 @@ import { ServiceStartInfo, ServiceEndInfo, AddLineFriendInfo } from "shared/book
 //     multiple_times: {
 //       times: 3,
 //       amount: 1000
+//     },
+//     month: {
+//       amount: 3000
+//     },
+//     year: {
+//       amount: 30000
 //     }
 //   }
 // }
@@ -100,7 +106,13 @@ const PriceBlock = ({
   }
 
   const isFree = () => {
-    return parseInt(price?.price_amounts?.one_time?.amount || price?.price_amounts?.multiple_times?.amount || 0) === 0
+    return parseInt(
+      price?.price_amounts?.one_time?.amount ||
+      price?.price_amounts?.multiple_times?.amount ||
+      price?.price_amounts?.month?.amount ||
+      price?.price_amounts?.year?.amount ||
+      0
+    ) === 0
   }
 
   // one time or multiple times
@@ -138,13 +150,46 @@ const PriceBlock = ({
         <div className="price">
           <div className="special-price">
             <div className="label">{I18n.t("common.today_price_label")}</div>
+            {price?.price_amounts?.month?.amount && <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>}
+            {price?.price_amounts?.year?.amount && <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>}
             <PriceOntTimePaymentText amount={price?.price_amounts?.one_time?.amount} />
             <PriceMultipleTimesPaymnetText amount={price?.price_amounts?.multiple_times?.amount} times={price?.price_amounts?.multiple_times?.times} />
+            <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />
+            <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />
             {isFree() && <div>{I18n.t("common.free_price")}</div>}
           </div>
         </div>
 
         {renderActions(paymentType())}
+      </div>
+    )
+  }
+  else if (price?.price_amounts?.month?.amount && price?.price_amounts?.year?.amount) {
+    return (
+      <div className="product-price-block">
+        <NormalPriceBlock amount={normal_price} />
+
+        <div className="multiple-prices">
+          <div className="price">
+            <h3 className="payment-type-title">{I18n.t("common.month_pay")}</h3>
+            <div className="special-price">
+              <PriceOntTimePaymentText amount={price?.price_amounts?.month?.amount} />
+            </div>
+          </div>
+
+          {renderActions('month')}
+        </div>
+
+        <div className="multiple-prices">
+          <div className="price">
+            <h3 className="payment-type-title">{I18n.t("common.year_pay")}</h3>
+            <div className="special-price">
+              <PriceOntTimePaymentText amount={price?.price_amounts?.year?.amount} />
+            </div>
+          </div>
+
+          {renderActions('year')}
+        </div>
       </div>
     )
   }

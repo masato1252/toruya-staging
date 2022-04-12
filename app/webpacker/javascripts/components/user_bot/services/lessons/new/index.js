@@ -1,6 +1,6 @@
 import React from "react";
 import FlowController from "shared/flow_controller";
-import { GlobalProvider, GlobalContext } from "./context/global_state"
+import { GlobalProvider } from "./context/global_state"
 
 import NameStep from "./name_step"
 import SolutionStep from "./solution_step"

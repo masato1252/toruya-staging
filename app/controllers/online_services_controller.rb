@@ -6,14 +6,20 @@ class OnlineServicesController < Lines::CustomersController
   before_action :online_service
 
   def show
-    @service_member = online_service.online_service_customer_relations.available.where(customer: current_customer).first
+    @service_member = online_service.online_service_customer_relations.where(customer: current_customer).first
 
     @online_service_hash =
       if @online_service.course?
         CourseSerializer.new(@online_service, { params: { service_member: @service_member }}).attributes_hash
+      elsif @online_service.membership?
+        MembershipSerializer.new(@online_service).attributes_hash
       else
         OnlineServiceSerializer.new(@online_service).attributes_hash.merge(demo: false, light: false)
       end
+
+    if params[:episode_id]
+      @episode = @online_service.episodes.find_by(id: params[:episode_id])
+    end
   end
 
   def customer_status
@@ -21,21 +27,44 @@ class OnlineServicesController < Lines::CustomersController
     @relation = online_service.online_service_customer_relations.where(customer: current_customer).first
     @customer = current_customer
     @is_owner = false
-    @order_completed = @relation.customer_payments.order("id DESC").each_with_object({}) do |payment, h|
-      next if h[payment.order_id] == true
 
-      h[payment.order_id] = payment.completed?
+    if @relation.online_service.recurring_charge_required?
+      @able_to_change_credit_card = !@is_owner && @relation.legal_to_access?
+    else
+      @order_completed = @relation.customer_payments.order("id DESC").each_with_object({}) do |payment, h|
+        next if h[payment.order_id] == true
+
+        h[payment.order_id] = payment.completed?
+      end
+      # Not owner and no fail order
+      @able_to_change_credit_card = !@is_owner && !@order_completed.values.any?(false)
     end
-    # Not owner and no fail order
-    @able_to_change_credit_card = !@is_owner && !@order_completed.values.any?(false)
 
     render layout: "user_bot"
   end
 
   def watch_lesson
-    outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: Lesson.find(params[:lesson_id]))
+    outcome = Lessons::Watch.run(online_service: online_service, customer: current_customer, lesson: online_service.lessons.find(params[:lesson_id]))
 
     return_json_response(outcome, { watched_lesson_ids: outcome.result.watched_lesson_ids })
+  end
+
+  def watch_episode
+    outcome = Episodes::Watch.run(customer: current_customer, episode: online_service.episodes.find(params[:episode_id]))
+
+    return_json_response(outcome, { watched_episode_ids: outcome.result.watched_episode_ids })
+  end
+
+  def tagged_episodes
+    episodes = Episodes::Tagged.run!(online_service: online_service, tag: params[:tag])
+
+    render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
+  end
+
+  def search_episodes
+    episodes = Episodes::Search.run!(online_service: online_service, keyword: params[:keyword])
+
+    render json: { episodes: episodes.map { |episode| EpisodeSerializer.new(episode).attributes_hash } }
   end
 
   private

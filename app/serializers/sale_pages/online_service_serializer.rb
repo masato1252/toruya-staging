@@ -32,4 +32,8 @@ class SalePages::OnlineServiceSerializer < SalePageSerializer
   attribute :payable do |object|
     object.payable?
   end
+
+  attribute :recurring_charge_required do |object|
+    object.product.recurring_charge_required?
+  end
 end

@@ -105,10 +105,11 @@ group :development do
   gem "memory_profiler"
   gem "benchmark-memory"
   gem "magic_frozen_string_literal"
+  gem 'active_record_query_trace'
 end
 
 group :test do
-  gem "stripe-ruby-mock", "~> 2.5.4", require: "stripe_mock"
+  gem "stripe-ruby-mock", "~> 3.1.0.rc3", github: "stripe-ruby-mock/stripe-ruby-mock", require: "stripe_mock"
   gem "faker", git: "https://github.com/stympy/faker.git", branch: "master"
   gem "rspec_junit_formatter"
 end

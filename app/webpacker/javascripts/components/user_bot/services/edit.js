@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import ReactPlayer from 'react-player';
 import ReactSelect from "react-select";
 import _ from "lodash";
 
@@ -12,25 +11,51 @@ import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sal
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
 import EditSolutionInput from "shared/edit/solution_input";
+import EditMessageTemplate from "user_bot/services/edit_message_template";
 
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
   const [end_time, setEndTime] = useState(props.service.end_time)
   const [start_time, setStartTime] = useState(props.service.start_time)
+  const [message_template, setMessageTemplate] = useState(props.message_template)
 
-  const { register, watch, setValue, control, handleSubmit, formState, errors } = useForm({
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.service,
       solution_type: null
     }
   });
 
-  const onSubmit = async (data) => {
-    let error, response;
+  const requestData = (data) => {
+    let request_data;
 
-    [error, response] = await OnlineServices.update({
+    request_data  = _.assign(data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time, start_time })
+    if (props.attribute == "message_template") request_data = { ...request_data, message_template }
+
+    return request_data
+  }
+
+  const onDemoMessage = async (data) => {
+    let response;
+
+    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
+
+    [_, response] = await OnlineServices.demo_message({
       online_service_id: props.service.id,
-      data: _.assign( data, { attribute: props.attribute, upsell_sale_page_id: sale_page?.id, end_time: end_time, start_time: start_time })
+      data: requestData(data)
+    })
+
+    window.location = response.data.redirect_to
+  }
+
+  const onSubmit = async (data) => {
+    let response;
+
+    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
+
+    [_, response] = await OnlineServices.update({
+      online_service_id: props.service.id,
+      data: requestData(data)
     })
 
     window.location = response.data.redirect_to
@@ -60,7 +85,6 @@ const OnlineServiceEdit =({props}) => {
             setValue={setValue}
           />
         )
-        break
       case "company":
         return (
           <div className="centerize">
@@ -84,6 +108,28 @@ const OnlineServiceEdit =({props}) => {
               </button>
             ))}
           </div>
+        )
+      case "message_template":
+        return (
+          <>
+            <EditMessageTemplate
+              service_name={props.service.name}
+              message_template={message_template}
+              handleMessageTemplateChange={(attr, value) => {
+                setMessageTemplate({...message_template, [attr]: value})
+              }}
+              handlePictureChange={(picture, pictureDataUrl) => {
+                setMessageTemplate({
+                  ...message_template, picture: picture[0], picture_url: pictureDataUrl
+                })
+              }}
+            />
+            <div className="margin-around centerize">
+              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemoMessage)}>
+                {I18n.t("user_bot.dashboards.settings.custom_message.buttons.send_me_mock_message")}
+              </button>
+            </div>
+          </>
         )
       case "upsell_sale_page":
         return (
@@ -299,7 +345,7 @@ const OnlineServiceEdit =({props}) => {
         }
         title={I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}
       />
-      <div className="field-header">{I18n.t(`user_bot.dashboards.services.form.${props.attribute}_title`)}</div>
+      <div className="field-header">{I18n.t(`user_bot.dashboards.services.form.${props.attribute}_subtitle`)}</div>
       {renderCorrespondField()}
       {props.attribute !== 'company' && (
         <BottomNavigationBar klassName="centerize">

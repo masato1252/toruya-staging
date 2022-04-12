@@ -24,7 +24,7 @@ FactoryBot.define do
     end
 
     trait :one_time_payment do
-      sale_page { FactoryBot.create(:sale_page, :online_service, :one_time_payment) }
+      sale_page { FactoryBot.create(:sale_page, :online_service, :one_time_payment, user: customer.user) }
       product_details {
         OnlineServiceCustomerProductDetails.build(
           sale_page: sale_page,
@@ -34,7 +34,7 @@ FactoryBot.define do
     end
 
     trait :multiple_times_payment do
-      sale_page { FactoryBot.create(:sale_page, :online_service, :multiple_times_payment) }
+      sale_page { FactoryBot.create(:sale_page, :online_service, :multiple_times_payment, user: customer.user) }
       product_details {
         OnlineServiceCustomerProductDetails.build(
           sale_page: sale_page,
@@ -43,9 +43,48 @@ FactoryBot.define do
       }
     end
 
+    trait :monthly_payment do
+      sale_page { FactoryBot.create(:sale_page, :recurring_payment, user: customer.user) }
+      product_details {
+        OnlineServiceCustomerProductDetails.build(
+          sale_page: sale_page,
+          payment_type: SalePage::PAYMENTS[:month]
+        )
+      }
+    end
+
+    trait :yearly_payment do
+      sale_page { FactoryBot.create(:sale_page, :recurring_payment, user: customer.user) }
+      product_details {
+        OnlineServiceCustomerProductDetails.build(
+          sale_page: sale_page,
+          payment_type: SalePage::PAYMENTS[:month]
+        )
+      }
+    end
+
     trait :canceled do
       payment_state { "canceled" }
       permission_state { "pending" }
+    end
+
+    trait :expired do
+      permission_state { "active" }
+      expire_at { 1.day.ago }
+    end
+
+    trait :stripe_subscribed do
+      stripe_subscription_id do
+        Stripe::Subscription.create(
+          {
+            customer: customer.stripe_customer_id,
+            items: [
+              { price: sale_page.monthly_price.stripe_price_id },
+            ],
+          },
+          stripe_account: customer.user.stripe_provider.uid
+        ).id
+      end
     end
   end
 end

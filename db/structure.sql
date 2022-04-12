@@ -927,6 +927,45 @@ ALTER SEQUENCE public.delayed_jobs_id_seq OWNED BY public.delayed_jobs.id;
 
 
 --
+-- Name: episodes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.episodes (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    online_service_id bigint NOT NULL,
+    name character varying NOT NULL,
+    solution_type character varying NOT NULL,
+    content_url character varying NOT NULL,
+    note text,
+    start_at timestamp without time zone,
+    end_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[]
+);
+
+
+--
+-- Name: episodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.episodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: episodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.episodes_id_seq OWNED BY public.episodes.id;
+
+
+--
 -- Name: filtered_outcomes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1156,7 +1195,8 @@ CREATE TABLE public.online_service_customer_relations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     current boolean DEFAULT true,
-    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[]
+    watched_lesson_ids character varying[] DEFAULT '{}'::character varying[],
+    stripe_subscription_id character varying
 );
 
 
@@ -1199,7 +1239,9 @@ CREATE TABLE public.online_services (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     start_at timestamp without time zone,
-    content_url character varying
+    content_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    stripe_product_id character varying
 );
 
 
@@ -1793,7 +1835,8 @@ CREATE TABLE public.sale_pages (
     deleted_at timestamp without time zone,
     sections_context jsonb,
     selling_multiple_times_price character varying[] DEFAULT '{}'::character varying[],
-    internal_name character varying
+    internal_name character varying,
+    recurring_prices jsonb DEFAULT '{"default": {}}'::jsonb
 );
 
 
@@ -2756,6 +2799,13 @@ ALTER TABLE ONLY public.delayed_jobs ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: episodes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.episodes ALTER COLUMN id SET DEFAULT nextval('public.episodes_id_seq'::regclass);
+
+
+--
 -- Name: filtered_outcomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3253,6 +3303,14 @@ ALTER TABLE ONLY public.customers
 
 ALTER TABLE ONLY public.delayed_jobs
     ADD CONSTRAINT delayed_jobs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: episodes episodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.episodes
+    ADD CONSTRAINT episodes_pkey PRIMARY KEY (id);
 
 
 --
@@ -3916,6 +3974,13 @@ CREATE INDEX index_customer_payments_on_customer_id ON public.customer_payments 
 --
 
 CREATE INDEX index_customer_payments_on_product_id_and_product_type ON public.customer_payments USING btree (product_id, product_type);
+
+
+--
+-- Name: index_episodes_on_online_service_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_episodes_on_online_service_id ON public.episodes USING btree (online_service_id);
 
 
 --
@@ -4756,6 +4821,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211029131328'),
 ('20211103225844'),
 ('20211206143634'),
-('20211228141116');
+('20211228141116'),
+('20220215085728'),
+('20220216154732'),
+('20220223132827');
 
 

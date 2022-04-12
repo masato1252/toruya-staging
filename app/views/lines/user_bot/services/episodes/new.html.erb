@@ -1,0 +1,11 @@
+<%= react_component("user_bot/services/episodes/new", {
+  props: {
+    solutions: @online_service.solution_options,
+    online_service: {
+      id: @online_service.id,
+      tags: @online_service.tags
+    }
+  }
+},
+{ camelize_props: false }
+) %>

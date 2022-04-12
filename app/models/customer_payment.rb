@@ -37,4 +37,8 @@ class CustomerPayment < ApplicationRecord
     refund_failed: 5,
     bonus: 6
   }
+
+  def failed?
+    auth_failed? || processor_failed?
+  end
 end

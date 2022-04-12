@@ -8,7 +8,7 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 
-  <% unless @service.course? %>
+  <% if !@service.course? && !@service.membership? %>
     <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
     <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
@@ -22,6 +22,15 @@
     <% end %>
   <% end %>
 
+  <% if @service.membership? %>
+    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.line_card") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
+      <span class="dotdotdot"><%= @service.message_template.content || t("user_bot.dashboards.settings.course.no_content") %></span>
+      <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") if @service.message_template.picture.attached? %>
+    <% end %>
+  <% end %>
+
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :start_time), title: @service.start_time_text %>
@@ -31,6 +40,16 @@
 
   <div class="field-group-header" id="auto_message"><%= t("user_bot.dashboards.settings.custom_message.line_message_title") %></div>
   <%= render "lines/user_bot/field_row", path: lines_user_bot_service_custom_messages_path(@service), title: t("user_bot.dashboards.settings.custom_message.auto_message_label") %>
+  <% if @service.membership? %>
+    <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
+    <%= render "lines/user_bot/field_row", path: lines_user_bot_service_episodes_path(@service) do %>
+      <% if @episodes_count.zero? %>
+        <span class="warning flex items-center"><i class="fas fa-exclamation-circle"></i>&nbsp;<%= t("user_bot.dashboards.settings.course.no_content") %></span>
+      <% else %>
+        <span class="flex items-center"><%= @episodes_count %></span>
+      <% end %>
+    <% end %>
+  <% end %>
 
   <% if @service.course? %>
     <div class="field-group-header" id="chapters"><%= t("user_bot.dashboards.settings.course.chapters.title") %></div>
@@ -56,12 +75,14 @@
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "centerize" do %>
     <span><%= I18n.t("common.updated_date") %> <%= I18n.l(@service.updated_at, format: :long_date) %></span>
 
-    <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
-      <i class="fa fa-share-square fa-2x"></i>
-      <div class="word"><%= I18n.t("action.preview") %></div>
+    <% if !@service.membership? %>
+      <%= link_to "#", data: { toggle: "modal", target: "#previewModal" }, class: "btn btn-tarco btn-circle btn-save btn-tweak btn-with-word" do %>
+        <i class="fa fa-share-square fa-2x"></i>
+        <div class="word"><%= I18n.t("action.preview") %></div>
+      <% end %>
     <% end %>
   <% end %>
 </div>
 
-<%= render "lines/user_bot/services/preview_modal", service: @service %>
+<%= render "lines/user_bot/services/preview_modal", service: @service if !@service.membership? %>
 

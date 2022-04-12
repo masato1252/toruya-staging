@@ -2,85 +2,13 @@
   <meta name="robots" content="noindex">
   <meta name="googlebot" content="noindex">
 <% end %>
-<% if @service_member %>
-  <%if @online_service.course? %>
-    <%= react_component("user_bot/services/online_service_page/course", { course: @online_service_hash, lesson_id: params[:lesson_id], lesson_ids: @service_member.watched_lesson_ids || [] }, { camelize_props: false }) %>
-  <% else %>
-    <%= react_component("user_bot/services/online_service_page", @online_service_hash, { camelize_props: false }) %>
-  <% end %>
+
+<% if @service_member && @service_member.accessible? %>
+  <%= render "online_services/available_service_customer", online_service: @online_service, service_member: @service_member, online_service_hash: @online_service_hash, episode: @episode %>
+<% elsif @service_member && !@service_member.accessible? %>
+  <%= render "online_services/unavailable_service_customer", service_member: @service_member, online_service_hash: @online_service_hash %>
 <% elsif current_customer %>
-  <div class="booking-content">
-    <div class="header border-0 border-b border-solid border-gray-500">
-      <div class="header-title-part">
-        <% if @online_service_hash[:logo_url] %>
-          <img class="logo" src='<%= @online_service_hash[:logo_url] %>' />
-        <% else %>
-          <h2><%= @online_service_hash[:company_info][:name] %></h2>
-        <% end %>
-      </div>
-    </div>
-    <div class="done-view">
-      <h2 class="title">
-        <%= @online_service_hash[:name] %>
-      </h2>
-      <h3 class="reminder-mark desc">
-        <%= I18n.t("common.only_for_login_user") %>
-      </h3>
-      <div class="message break-line-content centerize"><%= t("common.read_required_login_user_html") %></div>
-
-      <% if current_owner.social_account&.add_friend_url %>
-        <div class="message centerize">
-          <h3 class="desc break-line-content"><%= t("common.login_add_friend_to_follow_information_html") %></h3>
-
-          <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording with-logo">
-            <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
-            <%= I18n.t("booking_page.done.add_friend_btn") %>
-          </a>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <%= render "online_services/unavailable_customer", online_service_hash: @online_service_hash %>
 <% else %>
-  <div class="booking-content">
-    <div class="header border-0 border-b border-solid border-gray-500">
-      <div class="header-title-part">
-        <% if @online_service_hash[:logo_url] %>
-          <img class="logo" src='<%= @online_service_hash[:logo_url] %>' />
-        <% else %>
-          <h2><%= @online_service_hash[:company_info][:name] %></h2>
-        <% end %>
-      </div>
-    </div>
-    <div class="done-view">
-      <h2 class="title">
-        <%= @online_service_hash[:name] %>
-      </h2>
-      <h3 class="reminder-mark desc">
-        <%= I18n.t("common.only_for_login_user") %>
-      </h3>
-      <div class="message break-line-content centerize"><%= t("common.read_required_login_user_html") %></div>
-
-      <% if line_login_url(current_owner.social_account, request.url) %>
-        <div class="message centerize">
-          <h3 class="desc break-line-content"><%= t("common.login_to_watch_html") %></h3>
-
-          <a href="<%= line_login_url(current_owner.social_account, request.url) %>" class="btn line-button with-wording with-logo" data-method="post">
-            <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
-            <%= I18n.t("common.line_login_btn_word") %>
-          </a>
-        </div>
-      <% end %>
-
-      <% if current_owner.social_account&.add_friend_url %>
-        <div class="message centerize">
-          <h3 class="desc break-line-content"><%= t("common.add_friend_to_follow_information_html") %></h3>
-
-          <a href=<%= current_owner.social_account&.add_friend_url %> class="btn line-button with-wording with-logo">
-            <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
-            <%= I18n.t("action.add_as_friend") %>
-          </a>
-        </div>
-      <% end %>
-    </div>
-  </div>
+  <%= render "online_services/guest", online_service_hash: @online_service_hash %>
 <% end %>

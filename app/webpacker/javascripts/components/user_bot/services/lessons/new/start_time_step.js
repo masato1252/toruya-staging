@@ -5,8 +5,8 @@ import React from "react";
 import { useGlobalContext } from "./context/global_state";
 import LessonFlowStepIndicator from "./lesson_flow_step_indicator";
 
-const NoteStep = ({next, prev, step}) => {
-  const { props, dispatch, start_time } = useGlobalContext()
+const StartTimeStep  = ({next, step}) => {
+  const { dispatch, start_time } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
@@ -133,4 +133,4 @@ const NoteStep = ({next, prev, step}) => {
   )
 }
 
-export default NoteStep
+export default StartTimeStep

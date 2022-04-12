@@ -33,7 +33,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   end
 
   def stripe_connect
-    current_user = User.find_by(id: user_bot_cookies(:current_user_id))
+    current_user = User.find_by(id: ENV["DEV_USER_ID"] || user_bot_cookies(:current_user_id))
     param = request.env["omniauth.params"]
 
     outcome = Users::FromStripeOmniauth.run(

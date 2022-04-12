@@ -476,9 +476,10 @@ const OnlineServices = {
       method: "POST",
       headers: {
         "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: Routes.lines_user_bot_services_path({format: "json"}),
-      data: data,
+      data: serialize(data),
       responseType: "json"
     })
   },
@@ -486,10 +487,23 @@ const OnlineServices = {
     return request({
       method: "PUT",
       headers: {
-        "X-CSRF-Token": Rails.csrfToken()
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
       },
       url: Routes.lines_user_bot_service_path(online_service_id, {format: "json"}),
-      data: data,
+      data: serialize(data),
+      responseType: "json"
+    })
+  },
+  demo_message: ({online_service_id, data}) => {
+    return request({
+      method: "PUT",
+      headers: {
+        "X-CSRF-Token": Rails.csrfToken(),
+        "content-type": "multipart/form-data"
+      },
+      url: Routes.demo_message_lines_user_bot_service_path(online_service_id, {format: "json"}),
+      data: serialize(data),
       responseType: "json"
     })
   },

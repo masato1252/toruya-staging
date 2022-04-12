@@ -1,0 +1,96 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe OnlineServiceCustomerRelations::Unsubscribe do
+  before { StripeMock.start }
+  after { StripeMock.stop }
+  let(:subscription) { FactoryBot.create(:subscription, :with_stripe) }
+  let(:customer) { FactoryBot.create(:customer, user: subscription.user, with_stripe: true) }
+
+  let(:args) do
+    {
+      relation: relation
+    }
+  end
+  let(:outcome) { described_class.run(args) }
+
+  describe "#execute" do
+    context "when relation was permission pending" do
+      # pending permission relation
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, :expired, customer: customer, permission_state: :pending) }
+
+      context "when stripe_subscribed was still active" do
+        it "cancels old stripe subscription" do
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
+
+            outcome
+
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
+        end
+      end
+
+      context "when stripe_subscribed was canceled" do
+        before do
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            stripe_account: customer.user.stripe_provider.uid
+          )
+        end
+
+        it "does nothing" do
+          outcome
+
+          expect(outcome.result).to eq(relation)
+        end
+      end
+    end
+
+    context "when relation was available" do
+      let(:relation) { FactoryBot.create(:online_service_customer_relation, :monthly_payment, :stripe_subscribed, customer: customer, permission_state: :active) }
+
+      context "when stripe_subscribed was active" do
+        it "cancels old stripe subscription" do
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
+
+            outcome
+
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result.expire_at).to be_nil
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
+        end
+      end
+
+      context "when stripe_subscribed was canceled" do
+        before do
+          Stripe::Subscription.delete(
+            relation.stripe_subscription_id,
+            {},
+            stripe_account: customer.user.stripe_provider.uid
+          )
+        end
+
+        it "cancels old stripe subscription" do
+          Timecop.freeze(Time.current) do
+            old_stripe_subscription_id = relation.stripe_subscription_id
+
+            outcome
+
+            expect(Stripe::Subscription.retrieve(old_stripe_subscription_id).status).to eq(STRIPE_SUBSCRIPTION_STATUS[:canceled])
+            expect(outcome.result.expire_at).to be_nil
+            expect(outcome.result).to be_failed_payment_state
+            expect(outcome.result).to be_pending
+          end
+        end
+      end
+    end
+  end
+end

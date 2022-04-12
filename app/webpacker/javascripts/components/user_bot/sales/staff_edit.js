@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import ImageUploader from "react-images-upload";
 import TextareaAutosize from 'react-autosize-textarea';
-import ReactSelect from "react-select";
 
 import I18n from 'i18n-js/index.js.erb';
 

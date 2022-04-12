@@ -169,6 +169,10 @@ Rails.application.routes.draw do
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
 
+        member do
+          put :demo_message
+        end
+
         resources :custom_messages, only: [:index], module: "services" do
           collection do
             get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
@@ -188,6 +192,8 @@ Rails.application.routes.draw do
         end
 
         resources :lessons, module: :services, only: [:update, :destroy]
+
+        resources :episodes, module: :services, only: [:index, :edit, :new, :create, :show, :update, :destroy]
       end
 
       resources :custom_messages, only: [:destroy] do
@@ -486,6 +492,7 @@ Rails.application.routes.draw do
   namespace :webhooks do
     post "line/:channel_id", to: "lines#create", as: :line
     post "user_bot_line", to: "user_bot_lines#create", as: :user_bot_line
+    post "stripe", to: "stripe#create", as: :stripe
   end
 
   resources :calendars, only: [] do
@@ -511,7 +518,7 @@ Rails.application.routes.draw do
     end
   end
 
-  authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
+  # authenticated :user, -> user { user.super_admin? || Rails.env.development? } do
     mount Delayed::Web::Engine, at: "/_jobs"
     mount PgHero::Engine, at: "/_pghero"
 
@@ -535,7 +542,7 @@ Rails.application.routes.draw do
         end
       end
     end
-  end
+  # end
 
   root to: "members#show"
 
@@ -553,12 +560,15 @@ Rails.application.routes.draw do
   resources :online_services, param: :slug, only: [:show] do
     member do
       put "/lessons/:lesson_id", action: :watch_lesson, as: :watch_lesson
+      put "/episodes/:episode_id", action: :watch_episode, as: :watch_episode
+      get "/episodes(/:tag)", action: :tagged_episodes, as: :tagged_episodes
+      get "/search/:keyword", action: :search_episodes, as: :search_episodes
       get "/customer_status/:encrypted_social_service_user_id", action: :customer_status, as: :customer_status
 
       scope module: :online_services do
         resources :customer_payments, only: [:create] do
           collection do
-            get "/:encrypted_social_service_user_id/new/:order_id", action: :new, as: :new
+            get "/:encrypted_social_service_user_id/new(/:order_id)", action: :new, as: :new
             put :change_card
           end
     end

@@ -1,5 +1,9 @@
 <div class="field-header" id="name"><%= t("common.customer_name") %></div>
-<%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
+<% if @is_owner %>
+  <%= render "lines/user_bot/field_row", title: @customer.name, path: lines_user_bot_customers_path(customer_id: @customer.id, target_view: Customer::DASHBOARD_TARGET_VIEWS[:reservations], from: FROM[:service_customer_show]) %>
+<% else %>
+  <%= render "lines/user_bot/field_row", title: @customer.name %>
+<% end %>
 
 <div class="field-header" id="name"><%= t("user_bot.dashboards.settings.service_customer_relation.permission_state") %></div>
 <div class="flex">
@@ -30,7 +34,11 @@
         <%= t("user_bot.dashboards.settings.service_customer_relation.customer_payment_states.#{payment.state}") %>
         <%= I18n.l(payment.charge_at) %>
       </span>
-      <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" unless @is_owner || @order_completed.fetch(payment.order_id) %>
+      <% if @relation.online_service.recurring_charge_required? %>
+        <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id]), class: "btn btn-yellow" if !@is_owner && payment.failed? && !@relation.legal_to_access? %>
+      <% else %>
+        <%= link_to t("action.pay_now"), new_customer_payments_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id], order_id: payment.order_id), class: "btn btn-yellow" if !@is_owner && !@order_completed.fetch(payment.order_id) %>
+      <% end %>
     <% end %>
   </div>
 <% end %>

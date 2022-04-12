@@ -12,6 +12,7 @@
 #  normal_price_amount_cents    :decimal(, )
 #  product_type                 :string           not null
 #  quantity                     :integer
+#  recurring_prices             :jsonb
 #  sale_template_variables      :json
 #  sections_context             :jsonb
 #  selling_end_at               :datetime
@@ -38,12 +39,28 @@
 require "thumbnail_of_video"
 
 # selling_multiple_times_price: [1000, 1000, 1000]
+# recurring_prices: [
+#   {
+#     interval: 'month',
+#     amount: 2000,
+#     stripe_price_id: "price_xxx",
+#     active: true
+#   },
+#   {
+#     interval: 'year',
+#     amount: 2000,
+#     stripe_price_id: "price_xeexx",
+#     active: true
+#   }
+# ]
 
 class SalePage < ApplicationRecord
   PAYMENTS = {
     one_time: "one_time",
     multiple_times: "multiple_times",
-    free: "free"
+    free: "free",
+    month: "month",
+    year: "year"
   }.freeze
 
   belongs_to :product, polymorphic: true # OnlineService/BookingPage
@@ -61,11 +78,15 @@ class SalePage < ApplicationRecord
   monetize :normal_price_amount_cents, allow_nil: true
 
   def free?
-    (selling_price_amount_cents.nil? || selling_price_amount.zero?)  && selling_multiple_times_price.blank? && !external?
+    (selling_price_amount_cents.nil? || selling_price_amount.zero?) && selling_multiple_times_price.blank? && !recurring? && !external?
   end
 
   def external?
     !is_booking_page? && product.external?
+  end
+
+  def recurring?
+    recurring_prices.present?
   end
 
   def is_booking_page?
@@ -77,7 +98,7 @@ class SalePage < ApplicationRecord
   end
 
   def selling_prices_text
-    [selling_price_text, selling_multiple_times_price_text].compact.join(", ").presence || I18n.t("common.free_price")
+    [selling_price_text, selling_multiple_times_price_text, recurring_prices_text].compact.join(", ").presence || I18n.t("common.free_price")
   end
 
   def selling_price_text
@@ -93,8 +114,24 @@ class SalePage < ApplicationRecord
     end
   end
 
+  def recurring_prices_text
+    Array.wrap(recurring_prices).map do |recurring_price|
+      # I18n.t("common.#{recurring_price['interval']}_pay")
+      # month_pay, year_pay
+      "#{Money.new(recurring_price["amount"]).format(:ja_default_format)} #{I18n.t("common.#{recurring_price['interval']}_pay")}"
+    end
+  end
+
   def selling_multiple_times_first_price_text
     Money.new(selling_multiple_times_price&.first).format(:ja_default_format)
+  end
+
+  def monthly_price_text
+    monthly_price ? Money.new(monthly_price.amount).format(:ja_default_format) : nil
+  end
+
+  def year_price_text
+    yearly_price ? Money.new(yearly_price.amount).format(:ja_default_format) : nil
   end
 
   def serializer(params = {})
@@ -195,11 +232,42 @@ class SalePage < ApplicationRecord
       )
     end
 
-    if selling_price_amount_cents.blank? && selling_multiple_times_price.blank?
+    if recurring_prices.present?
+      recurring_prices.each do |recurring_price|
+        price_options[:price_types] << recurring_price.interval
+
+        price_options[:price_amounts].merge!(
+          recurring_price.interval => {
+            amount: recurring_price.amount,
+            amount_format: Money.new(recurring_price.amount).format
+          }
+        )
+      end
+    end
+
+    if selling_price_amount_cents.blank? && selling_multiple_times_price.blank? && recurring_prices.blank?
       price_options[:price_types] << PAYMENTS[:free]
     end
 
     price_options
+  end
+
+  def all_recurring_prices
+    Array.wrap(self[:recurring_prices]).map do |recurring_price|
+      RecurringPrice.new(recurring_price)
+    end
+  end
+
+  def recurring_prices
+    all_recurring_prices.select { |price| price.active }.sort_by(&:amount)
+  end
+
+  def monthly_price
+    recurring_prices.find { |price| price.interval == "month" }
+  end
+
+  def yearly_price
+    recurring_prices.find { |price| price.interval == "year" }
   end
 
   def normal_price_text

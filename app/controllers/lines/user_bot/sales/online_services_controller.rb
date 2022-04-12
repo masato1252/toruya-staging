@@ -24,6 +24,8 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
     args[:normal_price] = params[:normal_price] if params[:normal_price].present?
     args[:selling_end_at] = params[:selling_end_at] if params[:selling_end_at].present?
     args[:quantity] = params[:quantity] if params[:quantity].present?
+    args[:monthly_price] = params[:monthly_price] if params[:monthly_price].present?
+    args[:yearly_price] = params[:yearly_price] if params[:yearly_price].present?
 
     if params[:selling_multiple_times_price].present?
       args[:selling_multiple_times_price] = Array.new(
@@ -34,6 +36,6 @@ class Lines::UserBot::Sales::OnlineServicesController < Lines::UserBotDashboardC
 
     outcome = ::Sales::OnlineServices::Create.run(args)
 
-    return_json_response(outcome, { sale_page_id: outcome.result&.slug })
+    return_json_response(outcome, { sale_page_id: outcome.valid? ? outcome.result.slug : nil})
   end
 end

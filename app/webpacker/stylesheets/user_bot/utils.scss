@@ -61,6 +61,15 @@ $line-margin: 20px;
   flex-direction: column;
 }
 
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .flex-row-reverse {
   flex-direction: row-reverse;
 }
@@ -89,8 +98,20 @@ $line-margin: 20px;
   width: 100%;
 }
 
+.w-11-12 {
+  width: 91.666667%;
+}
+
 .bg-gray {
   background-color: $basic-gray-background;
+}
+
+.bg-gray-300 {
+  background-color: rgb(209, 213, 219);
+}
+
+.bg-gray-600 {
+  background-color: rgb(75, 85, 99);
 }
 
 .rounded {
@@ -101,8 +122,20 @@ $line-margin: 20px;
   padding: 1.5rem;
 }
 
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+
+.p-4 {
+  padding: 1.00rem;
+}
+
 .p-3 {
   padding: 0.75rem;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .text-right {
@@ -127,6 +160,10 @@ $line-margin: 20px;
 
 .border-b {
   border-bottom-width: 1px;
+}
+
+.border-l-0 {
+  border-left-width: 0px;
 }
 
 .border-solid {
@@ -167,9 +204,18 @@ $line-margin: 20px;
   margin-bottom: 0.5rem;
 }
 
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+
+.ml-0 {
+  margin-left: 0rem;
 }
 
 .ml-1 {
@@ -182,6 +228,10 @@ $line-margin: 20px;
 
 .mt-1 {
   margin-top: 0.25rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
 }
 
 .w-5 {

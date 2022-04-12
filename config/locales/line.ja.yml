@@ -67,6 +67,8 @@ ja:
         booking_pages:
           no_available_pages: 申し訳ありませんが、現在、表示できる予約ページがありません。
           available_pages: ご利用いただける予約ページをお送りします。
+        online_services:
+          available_episodes: ご利用いただけるコンテンツをお送りします。
         contact:
           contact_us: お問い合わせ
           contact_us_with_text_or_phone: メッセージ送信、またはお電話にてお問い合わせください。

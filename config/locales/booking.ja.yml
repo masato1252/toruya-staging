@@ -83,6 +83,9 @@ ja:
   online_service_purchases:
     service_content: サービスコンテンツを
     please_check_in_line: LINEでお届けしましたので<br>ご確認ください
+  membership:
+    all_tag: すべて
+    no_episode_yet: まだコンテンツ準備中です。
   course:
     lesson_start_on: レッスン開始日
     mark_lesson_done: 完了にする

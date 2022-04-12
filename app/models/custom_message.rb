@@ -22,6 +22,7 @@ require "line_client"
 
 class CustomMessage < ApplicationRecord
   ONLINE_SERVICE_PURCHASED = "online_service_purchased"
+  ONLINE_SERVICE_MESSAGE_TEMPLATE = "online_service_message_template"
   BOOKING_PAGE_BOOKED= "booking_page_booked"
   BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
 
@@ -31,6 +32,8 @@ class CustomMessage < ApplicationRecord
   validates :service_type, inclusion: { in: %w(OnlineService BookingPage) }
 
   belongs_to :service, polymorphic: true # OnlineService, BookingPage
+
+  has_one_attached :picture # content picture
 
   def demo_message_content
     Translator.perform(content, service.message_template_variables(service.user))

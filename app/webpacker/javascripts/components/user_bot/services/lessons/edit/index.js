@@ -20,7 +20,7 @@ const components = {
 const LessonEdit =({props}) => {
   const [start_time, setStartTime] = useState(props.lesson.start_time)
 
-  const { register, watch, setValue, control, handleSubmit, formState, errors } = useForm({
+  const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
       ...props.lesson,
       solution_type: null
@@ -28,9 +28,9 @@ const LessonEdit =({props}) => {
   });
 
   const onSubmit = async (data) => {
-    let error, response;
+    let response;
 
-    [error, response] = await CommonServices.update({
+    [_, response] = await CommonServices.update({
       url: Routes.lines_user_bot_service_lesson_path(props.lesson.online_service_id, props.lesson.id, {format: 'json'}),
       data: _.assign( data, { attribute: props.attribute, chapter_id: (data.chapter_id || props.lesson.chapter_id), start_time: start_time })
     })
@@ -44,7 +44,6 @@ const LessonEdit =({props}) => {
     switch (props.attribute) {
       case "chapter_id":
         return <EditSelectInput register={register} options={props.chapter_options} name="chapter_id" />
-        break;
       case "start_time":
         return (
           <div className="centerize">
@@ -137,7 +136,6 @@ const LessonEdit =({props}) => {
             setValue={setValue}
           />
         )
-        break;
       default:
         return <EditComponent register={register} watch={watch} name={props.attribute} placeholder={props.placeholder} />;
     }

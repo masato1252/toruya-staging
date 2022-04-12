@@ -4,9 +4,10 @@ import React from "react";
 
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
+import { SubmitButton } from "shared/components";
 
-const CompanyInfoStep = ({next, step}) => {
-  const { props, dispatch, selected_company } = useGlobalContext()
+const CompanyInfoStep = ({next, step, lastStep}) => {
+  const { props, dispatch, createService, selected_company, selected_goal } = useGlobalContext()
 
   if (selected_company) {
     const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
@@ -25,9 +26,17 @@ const CompanyInfoStep = ({next, step}) => {
           {company_info.logo_url && <img className="logo" src={company_info.logo_url} />}
 
           <div className="action-block">
-            <button onClick={next} className="btn btn-yellow" disabled={false}>
-              {I18n.t("action.next_step")}
-            </button>
+            {selected_goal === 'membership' ? (
+              <SubmitButton
+                handleSubmit={createService}
+                submitCallback={lastStep}
+                btnWord={I18n.t("user_bot.dashboards.online_service_creation.create_by_this_setting")}
+              />
+            ) : (
+              <button onClick={next} className="btn btn-yellow" disabled={false}>
+                {I18n.t("action.next_step")}
+              </button>
+            )}
           </div>
           <p className="margin-around">
             {company_info.type === "Shop" ? I18n.t("user_bot.dashboards.online_service_creation.edit_shop_in_setting_page") : I18n.t("user_bot.dashboards.online_service_creation.edit_company_in_setting_page")}

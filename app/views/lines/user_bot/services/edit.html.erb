@@ -14,7 +14,8 @@
         value: hash
       }
     end.compact,
-    solutions: @service.solution_options
+    solutions: @service.solution_options,
+    message_template: @service.message_template ? CustomMessageSerializer.new(@service.message_template).attributes_hash : nil
   }
 },
 { camelize_props: false }
