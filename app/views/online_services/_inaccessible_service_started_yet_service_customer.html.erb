@@ -5,13 +5,11 @@
       <%= online_service_hash[:name] %>
     </h2>
     <h3 class="reminder-mark desc">
-      <%= t("online_service_page.service_unavailable") %>
+      <%= t("online_service_page.coming_soon") %>
     </h3>
 
     <div class="message centerize">
-      <div>
-        <%= t("online_service_page.service_unavailable_description_html") %>
-      </div>
+      <div><%= t("online_service_page.start_time_reminder_html", start_date: service_member.start_date_text) %></div>
     </div>
   </div>
 </div>

@@ -4,7 +4,9 @@
 <% end %>
 
 <% if @service_member && @service_member.accessible? %>
-  <%= render "online_services/inaccessible_service_customer", online_service: @online_service, service_member: @service_member, online_service_hash: @online_service_hash, episode: @episode %>
+  <%= render "online_services/accessible_service_customer", online_service: @online_service, service_member: @service_member, online_service_hash: @online_service_hash, episode: @episode %>
+<% elsif @service_member && !@service_member.service_started? %>
+  <%= render "online_services/inaccessible_service_started_yet_service_customer", service_member: @service_member, online_service_hash: @online_service_hash %>
 <% elsif @service_member && !@service_member.accessible? %>
   <%= render "online_services/inaccessible_service_customer", service_member: @service_member, online_service_hash: @online_service_hash %>
 <% elsif current_customer %>

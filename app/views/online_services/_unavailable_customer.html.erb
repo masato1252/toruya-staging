@@ -1,13 +1,5 @@
 <div class="booking-content">
-  <div class="header border-0 border-b border-solid border-gray-500">
-    <div class="header-title-part">
-      <% if online_service_hash[:logo_url] %>
-        <img class="logo" src='<%= online_service_hash[:logo_url] %>' />
-      <% else %>
-        <h2><%= online_service_hash[:company_info][:name] %></h2>
-      <% end %>
-    </div>
-  </div>
+  <%= render "service_header", online_service_hash: online_service_hash %>
   <div class="done-view">
     <h2 class="title">
       <%= online_service_hash[:name] %>
