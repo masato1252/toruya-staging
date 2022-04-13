@@ -1,9 +1,10 @@
 "use strict";
 
 import React from "react";
+import Autolinker from 'autolinker';
+
 import Rails from "rails-ujs";
 import { Form, Field } from "react-final-form";
-import { FieldArray } from 'react-final-form-arrays'
 import arrayMutators from 'final-form-arrays'
 import axios from "axios";
 import _ from "lodash";
@@ -11,7 +12,6 @@ import moment from 'moment-timezone';
 import arrayMove from "array-move"
 import createFocusDecorator from "final-form-focus";
 import createChangesDecorator from "final-form-calculate";
-import { CSSTransition } from 'react-transition-group'
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 import { SlideDown } from 'react-slidedown';
 
@@ -701,7 +701,7 @@ class BookingReservationForm extends React.Component {
     return (
       <div className="reservation-confirmation">
         <div className="note">
-          {this.props.booking_page.note}
+          <div dangerouslySetInnerHTML={{ __html: Autolinker.link(this.props.booking_page.note) }} />
         </div>
 
         <div className="reminder-permission">

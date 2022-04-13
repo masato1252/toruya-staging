@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+import Autolinker from 'autolinker';
+
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js'
 import { DemoEditButton } from 'shared/components';
@@ -57,7 +59,7 @@ const EpisodeContent = ({episode, preview, demo, jumpByKey, light, done, service
       {(demo || preview || episode.note) && (
         <div className="text-left break-line-content rounded mt-1">
           <DemoEditButton demo={demo} jump={() => jumpByKey("note_step")} />
-          {episode.note}
+          <div dangerouslySetInnerHTML={{ __html: Autolinker.link(episode.note) }} />
         </div>
       )}
     </div>

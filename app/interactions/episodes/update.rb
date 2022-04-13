@@ -7,6 +7,7 @@ module Episodes
 
     hash :attrs, default: nil do
       string :name, default: nil
+      string :note, default: nil
       string :content_url, default: nil
       string :solution_type, default: nil
       hash :start_time, default: nil do
@@ -23,7 +24,7 @@ module Episodes
     def execute
       episode.with_lock do
         case update_attribute
-        when "name"
+        when "name", "note"
           episode.update(attrs.slice(update_attribute))
         when "tags"
           episode.update(attrs.slice(update_attribute))
