@@ -21,8 +21,7 @@ const OnlineServiceEdit =({props}) => {
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
-      ...props.service,
-      solution_type: null
+      ...props.service
     }
   });
 
