@@ -16,6 +16,9 @@
       <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
     <% end %>
 
+    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.note_title") %></div>
+    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :note), title: @service.note %>
+
     <div class="field-header"><%= I18n.t("user_bot.dashboards.services.upsell") %></div>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :upsell_sale_page) do %>
       <span><%= @service.sale_page&.product&.name %></span>

@@ -300,6 +300,8 @@ ja:
           name_title: サービス名
           company_title: 提供店舗
           content_url_title: 提供コンテンツ
+          note_title: 文章
+          note_subtitle: 文章
           upsell_sale_page_title: アップセル
           start_time_title: 利用開始
           end_time_title: 利用終了

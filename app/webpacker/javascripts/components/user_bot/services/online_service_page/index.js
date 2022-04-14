@@ -1,6 +1,8 @@
 "use strict";
 
 import React from "react";
+import Autolinker from 'autolinker';
+
 import I18n from 'i18n-js/index.js.erb';
 import Routes from 'js-routes.js';
 import Countdown from 'shared/countdown';
@@ -8,7 +10,7 @@ import { DemoEditButton } from 'shared/components';
 
 import OnlineServiceSolution from "./solution"
 
-const OnlineServicePage = ({company_info, name, solution_type, content_url, upsell_sale_page, demo, jumpByKey, light}) => {
+const OnlineServicePage = ({company_info, name, note, solution_type, content_url, upsell_sale_page, demo, jumpByKey, light}) => {
   return (
     <div className="online-service-page">
       <div className="online-service-header">
@@ -19,7 +21,7 @@ const OnlineServicePage = ({company_info, name, solution_type, content_url, upse
           {name}
           <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("name_step")} />
         </h2>
-        <div>
+        <div className="my-4">
           <DemoEditButton demo={demo} jumpByKey={() => jumpByKey("solution_step")} />
           <OnlineServiceSolution
             solution_type={solution_type}
@@ -27,6 +29,11 @@ const OnlineServicePage = ({company_info, name, solution_type, content_url, upse
             light={light}
           />
         </div>
+        {note && (
+          <div className="text-left break-line-content rounded mt-1">
+            <div dangerouslySetInnerHTML={{ __html: Autolinker.link(note) }} />
+          </div>
+        )}
       </div>
       {
         upsell_sale_page && (
