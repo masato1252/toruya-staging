@@ -1,4 +1,5 @@
 import React from "react";
+import ReactSelect from "react-select";
 import ImageUploader from "react-images-upload";
 import TextareaAutosize from 'react-autosize-textarea';
 
