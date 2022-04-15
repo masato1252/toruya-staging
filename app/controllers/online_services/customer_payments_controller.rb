@@ -24,13 +24,13 @@ module OnlineServices
             online_service_customer_relation: relation
           )
         else
-      price = relation.price_details.find { |price| price.order_id == params[:order_id] }
+          price = relation.price_details.find { |price| price.order_id == params[:order_id] }
 
           CustomerPayments::PurchaseOnlineService.run(
-        online_service_customer_relation: relation,
-        online_service_customer_price: price,
-        manual: true
-      )
+            online_service_customer_relation: relation,
+            online_service_customer_price: price,
+            manual: true
+          )
         end
 
       return_json_response(outcome, {

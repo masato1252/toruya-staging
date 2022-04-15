@@ -161,6 +161,10 @@ class OnlineService < ApplicationRecord
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
 
+  def external_url
+    external_purchase_url.presence || content_url
+  end
+
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
   end
