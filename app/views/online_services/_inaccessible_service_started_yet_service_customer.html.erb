@@ -1,0 +1,15 @@
+<div class="booking-content">
+  <%= render "service_header", online_service_hash: online_service_hash %>
+  <div class="done-view">
+    <h2 class="title">
+      <%= online_service_hash[:name] %>
+    </h2>
+    <h3 class="reminder-mark desc">
+      <%= t("online_service_page.coming_soon") %>
+    </h3>
+
+    <div class="message centerize">
+      <div><%= t("online_service_page.start_time_reminder_html", start_date: service_member.start_date_text) %></div>
+    </div>
+  </div>
+</div>

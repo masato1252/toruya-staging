@@ -80,6 +80,10 @@ ja:
     under_construction: 有料販売の準備中です。 詳細は販売元にお問合せください。
     please_download_pdf_here: こちらからPDFをダウンロードしてください。
     download: ダウンロードする
+    coming_soon: 近日公開
+    start_time_reminder_html: "このサービスは%{start_date}公開です。<br />公開までしばらくお待ちください。"
+    service_unavailable: 現在ご利用いただけません
+    service_unavailable_description_html: このサービスは現在ご利用いただけません。
   online_service_purchases:
     service_content: サービスコンテンツを
     please_check_in_line: LINEでお届けしましたので<br>ご確認ください

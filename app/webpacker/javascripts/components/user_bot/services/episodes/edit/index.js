@@ -25,8 +25,7 @@ const EpisodeEdit =({props}) => {
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
-      ...props.episode,
-      solution_type: null
+      ...props.episode
     }
   });
 

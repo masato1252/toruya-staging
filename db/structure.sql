@@ -1241,7 +1241,8 @@ CREATE TABLE public.online_services (
     start_at timestamp without time zone,
     content_url character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
-    stripe_product_id character varying
+    stripe_product_id character varying,
+    note text
 );
 
 
@@ -4824,6 +4825,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211228141116'),
 ('20220215085728'),
 ('20220216154732'),
-('20220223132827');
+('20220223132827'),
+('20220414131015');
 
 

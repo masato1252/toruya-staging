@@ -2,7 +2,7 @@
 
 class OnlineServiceSerializer
   include JSONAPI::Serializer
-  attribute :id, :name, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text, :content_url
+  attribute :id, :name, :note, :content, :solution_type, :upsell_sale_page_id, :end_time, :end_time_text, :start_time, :start_time_text, :content_url
   attribute :product_name, &:name
 
   attribute :company_info do |service|

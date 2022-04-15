@@ -22,8 +22,7 @@ const LessonEdit =({props}) => {
 
   const { register, watch, setValue, handleSubmit, formState, errors } = useForm({
     defaultValues: {
-      ...props.lesson,
-      solution_type: null
+      ...props.lesson
     }
   });
 

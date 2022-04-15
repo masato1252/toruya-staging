@@ -11,6 +11,7 @@
 #  end_on_days         :integer
 #  goal_type           :string           not null
 #  name                :string           not null
+#  note                :text
 #  slug                :string
 #  solution_type       :string           not null
 #  start_at            :datetime
