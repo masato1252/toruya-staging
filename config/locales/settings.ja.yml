@@ -477,8 +477,8 @@ ja:
         price_title: 販売予定価格
         price: 定価
         tax_label: 税表示
-        tax_include: 内税
-        tax_excluded: 外税
+        tax_include: 税込
+        tax_excluded: 税込
         sale_period: 販売期間
         sale_now: 今すぐ
         sale_on: 指定日
