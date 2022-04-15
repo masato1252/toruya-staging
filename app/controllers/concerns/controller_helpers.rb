@@ -13,6 +13,12 @@ module ControllerHelpers
   end
 
   def return_json_response(outcome, data = {})
+    if outcome.invalid?
+      Rollbar.error("Some service failed", {
+        class: outcome.class,
+        errors: outcome.errors.details
+      })
+    end
     render json: json_response(outcome, data), status: outcome.valid? ? :ok : :bad_request
   end
 end
