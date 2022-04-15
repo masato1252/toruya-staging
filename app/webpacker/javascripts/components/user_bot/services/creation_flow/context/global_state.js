@@ -38,6 +38,7 @@ export const GlobalProvider = ({ props, children }) => {
       }
     }
 
+    delete request_data.message_template;
     if (state.services_creation_states.message_template.picture && state.services_creation_states.message_template.content) {
       request_data = { ...request_data, message_template: _.pick(state.services_creation_states.message_template, ["picture", "content"]) }
     }
