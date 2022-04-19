@@ -5,12 +5,12 @@ import React from "react";
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 
-const FinalStep = ({step}) => {
+const FinalStep = ({step, step_key}) => {
   const { online_service_slug } = useGlobalContext()
 
   return (
     <div className="form settings-flow">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.create_a_sale_page")}</h3>
 
       <div className="action-block">

@@ -67,8 +67,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
       ]
@@ -80,8 +78,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -93,8 +89,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -106,8 +100,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: true,
-      skip_solution_step_on_creation: true,
-      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -121,9 +113,6 @@ class OnlineService < ApplicationRecord
       stripe_required: true,
       recurring_charge: true,
       premium_member_required: true,
-      skip_solution_step_on_creation: true,
-      skip_end_time_step_on_creation: true,
-      skip_line_message_step_on_creation: false,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -136,8 +125,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         EXTERNAL_SOLUTION
       ]

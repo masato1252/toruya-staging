@@ -8,13 +8,12 @@ import VideoContentSetup from "./contents/video_content_setup";
 import PdfContentSetup from "./contents/pdf_content_setup";
 import ExternalContentSetup from "./contents/external_content_setup";
 
-const SolutionStep = ({next, step}) => {
+const SolutionStep = ({next, step, step_key}) => {
   const { props, dispatch, selected_goal, selected_solution } = useGlobalContext()
   const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
   const solutions = selected_goal_option.solutions
 
   useEffect(() => {
-    if (selected_goal_option.skip_solution_step_on_creation) next()
     if (solutions.length == 1) {
       dispatch({
         type: "SET_ATTRIBUTE",
@@ -29,17 +28,17 @@ const SolutionStep = ({next, step}) => {
   if (selected_solution) {
     switch (selected_solution) {
       case "video":
-        return <VideoContentSetup next={next} step={step} />
+        return <VideoContentSetup next={next} step={step} step_key={step_key} />
       case "pdf":
-        return <PdfContentSetup next={next} step={step} />
+        return <PdfContentSetup next={next} step={step} step_key={step_key} />
       case "external":
-        return <ExternalContentSetup next={next} step={step} />
+        return <ExternalContentSetup next={next} step={step} step_key={step_key} />
     }
   }
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_solution")}</h3>
       {solutions.map((solution) => {
         return (

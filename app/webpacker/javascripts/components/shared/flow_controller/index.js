@@ -27,13 +27,21 @@ export const FlowController = ({ new_version, children }) => {
     setStep(indexStep)
   }
 
+  const stepKey = () => {
+    return step_keys()[step]
+  }
+
   const lastStep = (pre = 1) => {
     setStep(childrenArray.length - pre)
   }
 
+  const step_keys = () => {
+    return childrenArray.map(child => child.key)
+  }
+
   if (new_version) {
     return (
-      React.cloneElement(childrenArray[step], {next, prev, jump, jumpByKey, step, lastStep})
+      React.cloneElement(childrenArray[step], {next, prev, jump, jumpByKey, step, lastStep, step_key: stepKey()})
     )
   }
 

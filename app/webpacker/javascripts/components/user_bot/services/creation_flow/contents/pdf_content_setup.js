@@ -7,12 +7,12 @@ import ServiceFlowStepIndicator from "../services_flow_step_indicator";
 
 import { isValidHttpUrl } from "libraries/helper";
 
-const PdfContentSetup = ({next, step}) => {
+const PdfContentSetup = ({next, step, step_key}) => {
   const { props, dispatch, content_url } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}</h3>
       <input
         placeholder={I18n.t("user_bot.dashboards.online_service_creation.what_is_pdf_url")}

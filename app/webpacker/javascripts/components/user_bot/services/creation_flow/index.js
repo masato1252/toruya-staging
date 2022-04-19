@@ -1,6 +1,6 @@
 import React from "react";
 import FlowController from "shared/flow_controller";
-import { GlobalProvider, GlobalContext } from "./context/global_state"
+import { GlobalProvider, useGlobalContext } from "./context/global_state"
 
 import GoalSelectionStep from "./goal_selection_step"
 import SolutionStep from "./solution_step"
@@ -12,22 +12,63 @@ import UpsellStep from "./upsell_step"
 import ConfirmationStep from "./confirmation_step"
 import FinalStep from "./final_step"
 
-// Course goal's final step is EndtimeStep
-// Membership goal's final step is CompanyInfoStep
+const GoalFlowDispatcher = ({}) => {
+  const { selected_goal } = useGlobalContext()
+
+  switch (selected_goal) {
+    case 'collection':
+    case 'free_lesson':
+    case 'paid_lesson':
+      return (
+        <FlowController new_version={true}>
+          <SolutionStep key="solution_step" />
+          <NameStep key="name_step" />
+          <CompanyInfoStep key="company_step" />
+          <EndtimeStep key="endtime_step" />
+          <UpsellStep key="upsell_step" />
+          <ConfirmationStep key="confirmation_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
+    case 'course':
+      return (
+        <FlowController new_version={true}>
+          <NameStep key="name_step" />
+          <CompanyInfoStep key="company_step" />
+          <EndtimeStep key="endtime_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
+    case 'membership':
+      return (
+        <FlowController new_version={true}>
+          <NameStep key="name_step" />
+          <LineMessageStep key="line_message_step" />
+          <CompanyInfoStep key="company_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
+    case 'external':
+      return (
+        <FlowController new_version={true}>
+          <SolutionStep key="solution_step" />
+          <NameStep key="name_step" />
+          <CompanyInfoStep key="company_step" />
+          <EndtimeStep key="endtime_step" />
+          <UpsellStep key="upsell_step" />
+          <ConfirmationStep key="confirmation_step" />
+          <FinalStep key="final_step" />
+        </FlowController>
+      )
+    default:
+      return <GoalSelectionStep key="goal_selection_step" />
+  }
+}
+
 const CreationFlow = ({props}) => {
   return (
     <GlobalProvider props={props}>
-      <FlowController new_version={true}>
-        <GoalSelectionStep key="goal_selection_step" />
-        <SolutionStep key="solution_step" />
-        <NameStep key="name_step" />
-        <LineMessageStep key="line_message_step" />
-        <CompanyInfoStep key="company_step" />
-        <EndtimeStep key="endtime_step" />
-        <UpsellStep key="upsell_step" />
-        <ConfirmationStep key="confirmation_step" />
-        <FinalStep />
-      </FlowController>
+      <GoalFlowDispatcher />
     </GlobalProvider>
   )
 }

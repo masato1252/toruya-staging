@@ -5,12 +5,12 @@ import React from "react";
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 
-const NameStep = ({next, prev, step}) => {
+const NameStep = ({next, step, step_key}) => {
   const { props, dispatch, name } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_service_name")}</h3>
       <input
         type="text"
