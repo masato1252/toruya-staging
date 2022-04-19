@@ -35,7 +35,15 @@ const OnlineServiceSolution = ({solution_type, content_url, ...rest}) => {
         </div>
       );
     default:
-      return <></>
+      return (
+        <div>
+          <a
+            className="btn btn-tarco btn-icon"
+            href={content_url}>
+            URL
+          </a>
+        </div>
+      )
   }
 }
 
