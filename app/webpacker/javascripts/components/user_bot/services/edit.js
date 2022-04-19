@@ -198,7 +198,7 @@ const OnlineServiceEdit =({props}) => {
                       const [error, response] = await OnlineServices.update({
                         online_service_id: props.service.id,
                         data: _.assign( {
-                          upsell_sale_page_id: null,
+                          upsell_sale_page_id: 0,
                         }, { attribute: props.attribute })
                       })
 
