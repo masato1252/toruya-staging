@@ -11,7 +11,7 @@ const ServiceFlowStepIndicator = ({step, step_key}) => {
         {
           icon: "fa-file-alt",
           wording: I18n.t("user_bot.dashboards.service_creation.content_step"),
-          steps: ["solution_step", "name_step", "company_step"]
+          steps: ["solution_step", "external_purchase_url_step", "name_step", "company_step"]
         },
         {icon: "fa-hourglass-half", wording: I18n.t("user_bot.dashboards.service_creation.time_step"), steps: ["endtime_step"]},
         {icon: "fa-cart-plus", wording: I18n.t("user_bot.dashboards.service_creation.upsell_step"), steps: ["upsell_step"]},

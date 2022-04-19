@@ -6,7 +6,7 @@ import { useGlobalContext } from "../context/global_state";
 import ServiceFlowStepIndicator from "../services_flow_step_indicator";
 
 const ExternalContentSetup = ({next, step, step_key}) => {
-  const { props, dispatch, content_url } = useGlobalContext()
+  const { dispatch, content_url } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">

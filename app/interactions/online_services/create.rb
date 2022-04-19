@@ -7,6 +7,7 @@ module OnlineServices
     string :selected_goal
     string :selected_solution, default: nil # course and membership doesn't provide solution, their solution is their lessons or episodes
     string :content_url, default: nil
+    string :external_purchase_url, default: nil
     hash :end_time, default: nil do
       integer :end_on_days, default: nil
       string :end_time_date_part, default: nil
@@ -35,6 +36,7 @@ module OnlineServices
           end_at: end_time&.dig(:end_time_date_part) ? Time.zone.parse(end_time[:end_time_date_part]).end_of_day : nil,
           end_on_days: end_time&.dig(:end_on_days),
           content_url: content_url,
+          external_purchase_url: external_purchase_url,
           upsell_sale_page_id: upsell&.dig(:sale_page_id),
           company_type: selected_company[:type],
           company_id: selected_company[:id],

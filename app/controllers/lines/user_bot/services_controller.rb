@@ -13,6 +13,7 @@ class Lines::UserBot::ServicesController < Lines::UserBotDashboardController
       end_time: params[:end_time]&.permit!&.to_h,
       upsell: params[:upsell]&.permit!&.to_h,
       content_url: params[:content_url],
+      external_purchase_url: params[:external_purchase_url],
       selected_company: params[:selected_company].permit!.to_h,
       message_template: params[:message_template]&.permit!&.to_h
     )

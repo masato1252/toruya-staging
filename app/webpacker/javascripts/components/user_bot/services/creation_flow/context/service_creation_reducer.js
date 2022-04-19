@@ -8,6 +8,7 @@ const initialState = {
   upsell: {},
   name: null,
   content_url: null,
+  external_purchase_url: null,
   message_template: {
     picture: null,
     picture_url: [],

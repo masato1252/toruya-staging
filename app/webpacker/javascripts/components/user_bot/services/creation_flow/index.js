@@ -4,6 +4,7 @@ import { GlobalProvider, useGlobalContext } from "./context/global_state"
 
 import GoalSelectionStep from "./goal_selection_step"
 import SolutionStep from "./solution_step"
+import ExternalPurchaseUrlStep from "./external_purchase_url_step"
 import NameStep from "./name_step"
 import LineMessageStep from "./line_message_step"
 import CompanyInfoStep from "./company_info_step"
@@ -52,6 +53,7 @@ const GoalFlowDispatcher = ({}) => {
       return (
         <FlowController new_version={true}>
           <SolutionStep key="solution_step" />
+          <ExternalPurchaseUrlStep key="external_purchase_url_step" />
           <NameStep key="name_step" />
           <CompanyInfoStep key="company_step" />
           <EndtimeStep key="endtime_step" />

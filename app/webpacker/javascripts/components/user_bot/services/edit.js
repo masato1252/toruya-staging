@@ -13,6 +13,7 @@ import ServiceSaleTemplateView from "components/user_bot/sales/online_services/s
 import EditSolutionInput from "shared/edit/solution_input";
 import EditMessageTemplate from "user_bot/services/edit_message_template";
 import EditTextarea from "shared/edit/textarea_input";
+import EditUrlInput from "shared/edit/url_input";
 
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
@@ -74,7 +75,11 @@ const OnlineServiceEdit =({props}) => {
         break
       case "note":
         return (
-          <EditTextarea register={register} watch={watch} name={props.attribute} placeholder={props.placeholder} />
+          <EditTextarea register={register} errors={errors} watch={watch} name={props.attribute} placeholder={props.placeholder} />
+        )
+      case "external_purchase_url":
+        return (
+          <EditUrlInput register={register} errors={errors} name={props.attribute} placeholder={props.placeholder} />
         )
       case "content_url":
         return (

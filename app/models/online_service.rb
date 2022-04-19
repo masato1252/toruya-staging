@@ -3,25 +3,26 @@
 #
 # Table name: online_services
 #
-#  id                  :bigint           not null, primary key
-#  company_type        :string           not null
-#  content             :json
-#  content_url         :string
-#  end_at              :datetime
-#  end_on_days         :integer
-#  goal_type           :string           not null
-#  name                :string           not null
-#  note                :text
-#  slug                :string
-#  solution_type       :string           not null
-#  start_at            :datetime
-#  tags                :string           default([]), is an Array
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  company_id          :bigint           not null
-#  stripe_product_id   :string
-#  upsell_sale_page_id :integer
-#  user_id             :bigint
+#  id                    :bigint           not null, primary key
+#  company_type          :string           not null
+#  content               :json
+#  content_url           :string
+#  end_at                :datetime
+#  end_on_days           :integer
+#  external_purchase_url :string
+#  goal_type             :string           not null
+#  name                  :string           not null
+#  note                  :text
+#  slug                  :string
+#  solution_type         :string           not null
+#  start_at              :datetime
+#  tags                  :string           default([]), is an Array
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  company_id            :bigint           not null
+#  stripe_product_id     :string
+#  upsell_sale_page_id   :integer
+#  user_id               :bigint
 #
 # Indexes
 #
