@@ -14,8 +14,7 @@ module ControllerHelpers
 
   def return_json_response(outcome, data = {})
     if outcome.invalid?
-      Rollbar.error("Some service failed", {
-        class: outcome.class,
+      Rollbar.error("#{outcome.class} service failed", {
         errors: outcome.errors.details
       })
     end
