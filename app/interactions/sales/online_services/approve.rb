@@ -21,6 +21,7 @@ module Sales
         end
 
         ::OnlineServices::Attend.run(customer: relation.customer, online_service: relation.online_service, sale_page: relation.sale_page)
+        ::Sales::OnlineServices::SendLineCard.run(relation: relation)
 
         relation
       end
