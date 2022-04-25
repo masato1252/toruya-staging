@@ -43,7 +43,7 @@ class Lines::MessageEvent < ActiveInteraction::Base
           else
             compose(Lines::Menus::Guest, social_customer: social_customer)
           end
-        when "services"
+        when I18n.t("line.bot.keywords.services")
           is_keyword = true
 
           if social_customer.customer
