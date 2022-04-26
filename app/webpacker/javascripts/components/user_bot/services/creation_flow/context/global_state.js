@@ -39,8 +39,8 @@ export const GlobalProvider = ({ props, children }) => {
     }
 
     delete request_data.message_template;
-    if (state.services_creation_states.message_template.picture && state.services_creation_states.message_template.content) {
-      request_data = { ...request_data, message_template: _.pick(state.services_creation_states.message_template, ["picture", "content"]) }
+    if (state.services_creation_states.message_template.picture) {
+      request_data = { ...request_data, message_template: _.pick(state.services_creation_states.message_template, ["picture"]) }
     }
 
     return request_data
@@ -78,7 +78,7 @@ export const GlobalProvider = ({ props, children }) => {
   }
 
   const isMessageSetup = () => {
-    return message_template?.picture_url?.length && message_template.content !== ""
+    return message_template?.picture_url?.length
   }
 
   return (

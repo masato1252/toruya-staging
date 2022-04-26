@@ -52,7 +52,7 @@ module OnlineServices
           message = CustomMessage.create(
             service: online_service,
             scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE,
-            content: message_template[:content],
+            content: message_template[:content] || "",
             picture: message_template[:picture]
           )
           errors.merge!(message.errors) if message.errors.present?
