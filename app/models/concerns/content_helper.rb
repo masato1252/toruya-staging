@@ -1,7 +1,8 @@
 require "thumbnail_of_video"
 
 module ContentHelper
-  PDF_LOGO_URL = "https://toruya.s3-ap-southeast-1.amazonaws.com/public/pdf_logo.png"
+  PDF_THUMBNAIL_URL = "https://toruya.s3.ap-southeast-1.amazonaws.com/public/linethumb_pdf.png"
+  VIDEO_THUMBNAIL_URL = "https://toruya.s3.ap-southeast-1.amazonaws.com/public/linethumb_video.png"
 
   def thumbnail_url
     @thumbnail_url ||=
@@ -15,9 +16,10 @@ module ContentHelper
 
           # Line doesn't accept http url anyway, so we always force it to https
           (url || ThumbnailOfVideo.get(content_url))&.gsub("http:", "https:")
+
         end
       when "pdf"
-        PDF_LOGO_URL
+        PDF_THUMBNAIL_URL
       else
       end
   end

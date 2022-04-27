@@ -261,13 +261,13 @@ class OnlineService < ApplicationRecord
   end
 
   def picture_url
-    if course? && lessons.exists?
-      lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url
-    elsif message_template&.picture&.attached?
+    if message_template&.picture&.attached?
       # use content8 ratio for the resize
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
+    elsif course? && lessons.exists?
+      lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
     else
-      thumbnail_url || sale_page&.introduction_video_thumbnail_url
+      thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
     end
   end
 end
