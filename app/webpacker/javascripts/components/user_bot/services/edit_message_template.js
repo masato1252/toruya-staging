@@ -8,7 +8,7 @@ const EditMessageTemplate = ({service_name, message_template, handleMessageTempl
   return (
     <div className="product-content-deails">
       <ImageUploader
-        defaultImages={message_template.picture_url?.length ? [message_template.picture_url] : []}
+        defaultImages={message_template?.picture_url?.length ? [message_template.picture_url] : []}
         withIcon={false}
         withPreview={true}
         withLabel={false}
@@ -18,8 +18,6 @@ const EditMessageTemplate = ({service_name, message_template, handleMessageTempl
         imgExtension={[".jpg", ".png", ".jpeg", ".gif"]}
         maxFileSize={5242880}
       />
-      <h3 className="text-left">{service_name}</h3>
-      <button className="btn btn-gray btn-tall w-full my-2" disabled >{I18n.t("user_bot.dashboards.online_service_creation.fake_action_button")}</button>
     </div>
   )
 }

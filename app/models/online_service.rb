@@ -260,6 +260,10 @@ class OnlineService < ApplicationRecord
     end
   end
 
+  def default_picture_url
+    solution_type_for_message == 'pdf' ? ContentHelper::PDF_THUMBNAIL_URL : ContentHelper::VIDEO_THUMBNAIL_URL
+  end
+
   def picture_url
     if message_template&.picture&.attached?
       # use content8 ratio for the resize

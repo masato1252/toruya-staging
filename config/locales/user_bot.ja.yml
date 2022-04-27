@@ -295,7 +295,8 @@ ja:
         tags: このコンテンツのタグを設定
         show_the_service: ページを表示
         preview_the_service: サービスページを確認
-        line_card: LINEカード
+        card_image: サムネイル
+        default_card_image: デフォルト画像
         form:
           name_title: サービス名
           company_title: 提供店舗
@@ -315,8 +316,8 @@ ja:
           end_time_subtitle: 利用終了
           external_purchase_url_subtitle: 顧客が購入する場所
           demo_button: アクションボタン
-          message_template_title: LINEカード
-          message_template_subtitle: カード詳細
+          message_template_title: サービス概要
+          message_template_subtitle: サムネイル
       booking_pages:
         index:
           title: オンライン予約ページ
