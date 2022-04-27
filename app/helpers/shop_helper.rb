@@ -42,16 +42,19 @@ module ShopHelper
   end
 
   def staff_picture_url(staff, size)
-    @staff_picture_urls ||= {}
-
     if staff.picture.attached?
-      @staff_picture_urls[staff.id] ||=
-        Rails.application.routes.url_helpers.url_for(staff.picture.variant(
-          combine_options: {
-            resize: "#{size}",
-            flatten: true
-          }
-      ))
+      variant = staff.picture.variant(
+        combine_options: {
+          resize: "#{size}",
+          flatten: true
+        }
+      )
+
+      if staff.picture.service.exist?(variant.key)
+        Rails.application.routes.url_helpers.url_for(variant)
+      else
+        Rails.application.routes.url_helpers.url_for(staff.picture)
+      end
     end
   end
 
