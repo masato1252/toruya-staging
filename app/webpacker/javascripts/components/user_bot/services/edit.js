@@ -36,19 +36,6 @@ const OnlineServiceEdit =({props}) => {
     return request_data
   }
 
-  const onDemoMessage = async (data) => {
-    let response;
-
-    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
-
-    [_, response] = await OnlineServices.demo_message({
-      online_service_id: props.service.id,
-      data: requestData(data)
-    })
-
-    window.location = response.data.redirect_to
-  }
-
   const onSubmit = async (data) => {
     let response;
 
@@ -133,11 +120,6 @@ const OnlineServiceEdit =({props}) => {
                 })
               }}
             />
-            <div className="margin-around centerize">
-              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemoMessage)}>
-                {I18n.t("user_bot.dashboards.settings.custom_message.buttons.send_me_mock_message")}
-              </button>
-            </div>
           </>
         )
       case "upsell_sale_page":

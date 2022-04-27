@@ -169,10 +169,6 @@ Rails.application.routes.draw do
           get "/social_service_user_id/:social_service_user_id", action: "index"
         end
 
-        member do
-          put :demo_message
-        end
-
         resources :custom_messages, only: [:index], module: "services" do
           collection do
             get "/:scenario(/:id)", action: "edit_scenario", as: :edit_scenario
