@@ -5,6 +5,7 @@ module Profiles
     object :user
     object :social_user
     hash :params do
+      string :company_name, default: nil
       string :zip_code
       string :region
       string :city
@@ -24,7 +25,7 @@ module Profiles
             phone_number: user.phone_number,
             company_phone_number: user.phone_number,
             email: user.email,
-            company_name: "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}",
+            company_name: params[:company_name].presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}",
             company_address_details: address.as_json,
             personal_address_details: address.as_json
           )

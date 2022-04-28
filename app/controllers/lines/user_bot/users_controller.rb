@@ -73,6 +73,7 @@ class Lines::UserBot::UsersController < Lines::UserBotController
       user: current_user,
       social_user: social_user,
       params: {
+        company_name: params[:company_name],
         zip_code: params[:zip_code],
         region: params[:region],
         city: params[:city],

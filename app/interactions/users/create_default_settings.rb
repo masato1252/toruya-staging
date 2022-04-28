@@ -6,7 +6,7 @@ module Users
 
     def execute
       if user.profile && user.profile.address.present? && !user.shops.exists?
-        shop_name = "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
+        shop_name = user.profile.company_name.presence || "#{user.name} #{I18n.t("common.of")}#{I18n.t("common.shop")}"
 
         shop = Shops::Create.run(
           user: user,
