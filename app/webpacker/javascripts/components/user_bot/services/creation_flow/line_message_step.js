@@ -6,13 +6,9 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import EditMessageTemplate from "user_bot/services/edit_message_template";
 
-const LineMessageStep = ({next, step}) => {
+const LineMessageStep = ({next, step, step_key}) => {
   const { props, dispatch, name, selected_goal, message_template, isMessageSetup } = useGlobalContext()
   const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
-
-  useEffect(() => {
-    if (selected_goal_option.skip_line_message_step_on_creation) next()
-  }, [])
 
   const onDrop = (picture, pictureDataUrl)=> {
     dispatch({
@@ -36,7 +32,7 @@ const LineMessageStep = ({next, step}) => {
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.setup_line_bot_for_customers")}</h3>
       <EditMessageTemplate
         service_name={name}

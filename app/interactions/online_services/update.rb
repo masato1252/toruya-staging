@@ -9,6 +9,7 @@ module OnlineServices
       string :name, default: nil
       string :note, default: nil
       string :content_url, default: nil
+      string :external_purchase_url, default: nil
       string :solution_type, default: nil
       string :company_type, default: nil
       integer :company_id, default: nil
@@ -29,7 +30,7 @@ module OnlineServices
     def execute
       online_service.with_lock do
         case update_attribute
-        when "name", "note"
+        when "name", "note", "external_purchase_url"
           online_service.update(attrs.slice(update_attribute))
         when "content_url"
           online_service.update(content_url: attrs[:content_url], solution_type: attrs[:solution_type])
@@ -51,7 +52,7 @@ module OnlineServices
           online_service.update(start_at: attrs[:start_at_date_part] ? Time.zone.parse("#{attrs[:start_at_date_part]}-#{attrs[:start_at_time_part]}") : nil)
         when "message_template"
           message = online_service.message_template || online_service.build_message_template(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE)
-          message.content = attrs&.dig(:message_template, :content)
+          message.content = attrs&.dig(:message_template, :content) || ''
           message.picture = attrs&.dig(:message_template, :picture) if attrs&.dig(:message_template, :picture).present?
           message.save
 

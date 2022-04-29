@@ -3,25 +3,26 @@
 #
 # Table name: online_services
 #
-#  id                  :bigint           not null, primary key
-#  company_type        :string           not null
-#  content             :json
-#  content_url         :string
-#  end_at              :datetime
-#  end_on_days         :integer
-#  goal_type           :string           not null
-#  name                :string           not null
-#  note                :text
-#  slug                :string
-#  solution_type       :string           not null
-#  start_at            :datetime
-#  tags                :string           default([]), is an Array
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  company_id          :bigint           not null
-#  stripe_product_id   :string
-#  upsell_sale_page_id :integer
-#  user_id             :bigint
+#  id                    :bigint           not null, primary key
+#  company_type          :string           not null
+#  content               :json
+#  content_url           :string
+#  end_at                :datetime
+#  end_on_days           :integer
+#  external_purchase_url :string
+#  goal_type             :string           not null
+#  name                  :string           not null
+#  note                  :text
+#  slug                  :string
+#  solution_type         :string           not null
+#  start_at              :datetime
+#  tags                  :string           default([]), is an Array
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  company_id            :bigint           not null
+#  stripe_product_id     :string
+#  upsell_sale_page_id   :integer
+#  user_id               :bigint
 #
 # Indexes
 #
@@ -67,8 +68,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
       ]
@@ -80,8 +79,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -93,8 +90,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         VIDEO_SOLUTION,
       ]
@@ -106,8 +101,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: true,
       premium_member_required: true,
-      skip_solution_step_on_creation: true,
-      skip_line_message_step_on_creation: true,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -121,9 +114,6 @@ class OnlineService < ApplicationRecord
       stripe_required: true,
       recurring_charge: true,
       premium_member_required: true,
-      skip_solution_step_on_creation: true,
-      skip_end_time_step_on_creation: true,
-      skip_line_message_step_on_creation: false,
       solutions: [
         PDF_SOLUTION,
         VIDEO_SOLUTION,
@@ -136,8 +126,6 @@ class OnlineService < ApplicationRecord
       enabled: true,
       stripe_required: false,
       premium_member_required: false,
-      skip_solution_step_on_creation: false,
-      skip_line_message_step_on_creation: true,
       solutions: [
         EXTERNAL_SOLUTION
       ]
@@ -160,6 +148,10 @@ class OnlineService < ApplicationRecord
   has_many :episodes
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }
+
+  def external_url
+    external_purchase_url.presence || content_url
+  end
 
   def solution_options
     GOALS.find {|solution| solution[:key] == goal_type}[:solutions]
@@ -268,14 +260,18 @@ class OnlineService < ApplicationRecord
     end
   end
 
+  def default_picture_url
+    solution_type_for_message == 'pdf' ? ContentHelper::PDF_THUMBNAIL_URL : ContentHelper::VIDEO_THUMBNAIL_URL
+  end
+
   def picture_url
-    if course? && lessons.exists?
-      lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url
-    elsif membership? && message_template.picture.attached?
+    if message_template&.picture&.attached?
       # use content8 ratio for the resize
       Rails.application.routes.url_helpers.url_for(message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }))
+    elsif course? && lessons.exists?
+      lessons.first.thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
     else
-      thumbnail_url || sale_page&.introduction_video_thumbnail_url
+      thumbnail_url || sale_page&.introduction_video_thumbnail_url || ContentHelper::VIDEO_THUMBNAIL_URL
     end
   end
 end

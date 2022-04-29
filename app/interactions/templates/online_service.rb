@@ -29,10 +29,14 @@ module Templates
 
     def content_url
       @content_url ||=
-        Rails.application.routes.url_helpers.online_service_url(
-          slug: online_service.slug,
-          encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)
-        )
+        if online_service.external?
+          online_service.content_url
+        else
+          Rails.application.routes.url_helpers.online_service_url(
+            slug: online_service.slug,
+            encrypted_social_service_user_id: MessageEncryptor.encrypt(social_customer.social_user_id)
+          )
+        end
     end
   end
 end

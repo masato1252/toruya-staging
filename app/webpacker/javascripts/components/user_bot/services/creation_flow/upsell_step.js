@@ -9,7 +9,7 @@ import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import BookingSaleTemplateView from "components/user_bot/sales/booking_pages/sale_template_view";
 import ServiceSaleTemplateView from "components/user_bot/sales/online_services/sale_template_view";
 
-const UpsellStep = ({next, prev, step}) => {
+const UpsellStep = ({next, prev, step, step_key}) => {
   const { props, dispatch, upsell, selected_goal } = useGlobalContext()
   const sale_page = upsell.sale_page;
 
@@ -31,7 +31,7 @@ const UpsellStep = ({next, prev, step}) => {
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize break-line-content">{I18n.t("user_bot.dashboards.online_service_creation.what_want_to_upsell")}</h3>
       <div className="margin-around">
         <label className="text-align-left">

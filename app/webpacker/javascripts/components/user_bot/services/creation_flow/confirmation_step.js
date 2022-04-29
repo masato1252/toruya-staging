@@ -7,7 +7,7 @@ import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import { SubmitButton } from "shared/components";
 import OnlineServicePage from "user_bot/services/online_service_page";
 
-const ConfirmationStep = ({next, prev, jumpByKey, step}) => {
+const ConfirmationStep = ({next, prev, jumpByKey, step, step_key}) => {
   const { props, dispatch, createService, selected_company, name, selected_solution, content_url, upsell } = useGlobalContext()
   const company_info = props.companies.find((company) => company.id == selected_company.id && company.type == selected_company.type)
 
@@ -17,7 +17,7 @@ const ConfirmationStep = ({next, prev, jumpByKey, step}) => {
 
   return (
     <div className="form settings-flow">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.below_is_what_you_want")}</h3>
       <div className="preview-hint">
         {I18n.t("user_bot.dashboards.online_service_creation.sale_page_like_this")}

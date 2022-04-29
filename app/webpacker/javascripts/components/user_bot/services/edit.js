@@ -13,6 +13,7 @@ import ServiceSaleTemplateView from "components/user_bot/sales/online_services/s
 import EditSolutionInput from "shared/edit/solution_input";
 import EditMessageTemplate from "user_bot/services/edit_message_template";
 import EditTextarea from "shared/edit/textarea_input";
+import EditUrlInput from "shared/edit/url_input";
 
 const OnlineServiceEdit =({props}) => {
   const [sale_page, setSalePage] = useState(props.service.upsell_sale_page)
@@ -33,19 +34,6 @@ const OnlineServiceEdit =({props}) => {
     if (props.attribute == "message_template") request_data = { ...request_data, message_template }
 
     return request_data
-  }
-
-  const onDemoMessage = async (data) => {
-    let response;
-
-    if (props.attribute == "message_template" && !message_template.picture_url.length && !message_template.picture) return;
-
-    [_, response] = await OnlineServices.demo_message({
-      online_service_id: props.service.id,
-      data: requestData(data)
-    })
-
-    window.location = response.data.redirect_to
   }
 
   const onSubmit = async (data) => {
@@ -74,7 +62,11 @@ const OnlineServiceEdit =({props}) => {
         break
       case "note":
         return (
-          <EditTextarea register={register} watch={watch} name={props.attribute} placeholder={props.placeholder} />
+          <EditTextarea register={register} errors={errors} watch={watch} name={props.attribute} placeholder={props.placeholder} />
+        )
+      case "external_purchase_url":
+        return (
+          <EditUrlInput register={register} errors={errors} name={props.attribute} placeholder={props.placeholder} />
         )
       case "content_url":
         return (
@@ -128,11 +120,6 @@ const OnlineServiceEdit =({props}) => {
                 })
               }}
             />
-            <div className="margin-around centerize">
-              <button className="btn btn-tarco margin-around m-3" onClick={handleSubmit(onDemoMessage)}>
-                {I18n.t("user_bot.dashboards.settings.custom_message.buttons.send_me_mock_message")}
-              </button>
-            </div>
           </>
         )
       case "upsell_sale_page":

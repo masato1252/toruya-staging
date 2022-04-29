@@ -8,12 +8,29 @@
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.shop") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :company), title: @service.company.company_name %>
 
+  <div class="field-header"><%= I18n.t("user_bot.dashboards.services.card_image") %></div>
+  <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
+    <% if @service.message_template&.picture&.attached? %>
+      <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") %>
+    <% else %>
+      <div><%= t("user_bot.dashboards.services.default_card_image") %></div>
+      <%= image_tag(@service.default_picture_url, class: "preview-image") %>
+    <% end %>
+  <% end %>
+
   <% if !@service.course? && !@service.membership? %>
     <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
     <div class="field-header"><%= I18n.t("user_bot.dashboards.services.provided_content") %></div>
     <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :content_url) do %>
       <span class="dotdotdot"><%= @service.content_url %></span>
       <%= image_tag(@service.thumbnail_url, class: "preview-image") if @service.thumbnail_url %>
+    <% end %>
+
+    <% if @service.external? %>
+      <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.external_purchase_url_title") %></div>
+      <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :external_purchase_url) do %>
+        <span class="dotdotdot"><%= @service.external_purchase_url %></span>
+      <% end %>
     <% end %>
 
     <div class="field-header"><%= I18n.t("user_bot.dashboards.services.form.note_title") %></div>
@@ -25,14 +42,7 @@
     <% end %>
   <% end %>
 
-  <% if @service.membership? %>
-    <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
-    <div class="field-header"><%= I18n.t("user_bot.dashboards.services.line_card") %></div>
-    <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_service_path(@service, attribute: :message_template) do %>
-      <span class="dotdotdot"><%= @service.message_template.content || t("user_bot.dashboards.settings.course.no_content") %></span>
-      <%= image_tag(@service.message_template.picture.variant(combine_options: { resize: "640x416", flatten: true }), class: "preview-image") if @service.message_template.picture.attached? %>
-    <% end %>
-  <% end %>
+  <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.content") %></div>
 
   <div class="field-group-header" id="name"><%= I18n.t("user_bot.dashboards.services.available_period") %></div>
   <div class="field-header"><%= I18n.t("user_bot.dashboards.services.start_time") %></div>

@@ -295,7 +295,8 @@ ja:
         tags: このコンテンツのタグを設定
         show_the_service: ページを表示
         preview_the_service: サービスページを確認
-        line_card: LINEカード
+        card_image: サムネイル
+        default_card_image: デフォルト画像
         form:
           name_title: サービス名
           company_title: 提供店舗
@@ -305,6 +306,7 @@ ja:
           upsell_sale_page_title: アップセル
           start_time_title: 利用開始
           end_time_title: 利用終了
+          external_purchase_url_title: 購入URL
           demo_button: アクションボタン
           name_subtitle: サービス名
           company_subtitle: 提供店舗
@@ -312,9 +314,10 @@ ja:
           upsell_sale_page_subtitle: アップセル
           start_time_subtitle: 利用開始
           end_time_subtitle: 利用終了
+          external_purchase_url_subtitle: 顧客が購入する場所
           demo_button: アクションボタン
-          message_template_title: LINEカード
-          message_template_subtitle: カード詳細
+          message_template_title: サービス概要
+          message_template_subtitle: サムネイル
       booking_pages:
         index:
           title: オンライン予約ページ
@@ -579,9 +582,12 @@ ja:
         video_hint: YouTubeご利用の場合は「限定公開」に設定すると、URLを知らない人には公開されなくなります。
         what_is_pdf_url: どのPDFをサービス提供しますか？
         pdf_hint: PDFの提供にGoogleドライブを使う場合、シェアリンクを「リンクを知っている全員」に設定してください。
-        what_is_external_url: 顧客はどこでサービス購入しますか？
-        external_input_placeholder: 購入ページのURLを入力
-        external_hint: 顧客がこのサービスに登録する際、顧客情報を入力した後に、このURLが表示されます。
+        what_is_external_url: サービス提供先はどこですか？
+        external_input_placeholder: サービス提供先URLを入力
+        external_hint: このサービスに登録した顧客に、このURLが送信されます
+        what_is_external_purchase_url: 顧客はどこでサービス購入しますか？
+        external_purchase_url_input_placeholder: 購入ページのURLを入力
+        external_purchase_url_hint: 顧客がこのサービスに登録する際、顧客情報を入力した後に、このURLが表示されます。
         what_is_service_name: サービス名は何ですか？
         this_is_company_info: 以下の店舗のサービスとして作成します
         edit_shop_in_setting_page: 店舗情報は管理画面から編集してください。

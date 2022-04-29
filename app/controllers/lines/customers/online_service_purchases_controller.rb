@@ -27,7 +27,7 @@ class Lines::Customers::OnlineServicePurchasesController < Lines::CustomersContr
       })
     end
 
-    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.content_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
+    return_json_response(outcome, { redirect_to: @sale_page.external? ? @sale_page.product.external_url : new_lines_customers_online_service_purchases_path(slug: params[:slug], payment_type: params[:payment_type]) })
   end
 
   private

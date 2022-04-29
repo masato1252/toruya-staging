@@ -6,17 +6,13 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import { SubmitButton } from "shared/components";
 
-const EndtimeStep = ({next, prev, step, lastStep}) => {
+const EndtimeStep = ({next, prev, step, lastStep, step_key}) => {
   const { props, dispatch, end_time, createService, selected_goal } = useGlobalContext()
   const selected_goal_option = props.service_goals.find((goal) => goal.key === selected_goal)
 
-  useEffect(() => {
-    if (selected_goal_option.skip_end_time_step_on_creation) next()
-  }, [])
-
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_end_time")}</h3>
 
       <div className="margin-around">

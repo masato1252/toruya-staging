@@ -9,12 +9,12 @@ import ServiceFlowStepIndicator from "../services_flow_step_indicator";
 
 import { isValidHttpUrl } from "libraries/helper";
 
-const VideoContentSetup = ({next, step}) => {
+const VideoContentSetup = ({next, step, step_key}) => {
   const { dispatch, content_url } = useGlobalContext()
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_this_video_provide")}</h3>
       <VideoContentPreview
         url={content_url}

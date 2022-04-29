@@ -9,11 +9,13 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 
 const GoalSelectionStep = ({next, step}) => {
-  const { props, dispatch } = useGlobalContext()
+  const { props, dispatch, selected_goal } = useGlobalContext()
+
+  if (selected_goal) return <></>
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key="goal_step" />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_goal")}</h3>
       {props.service_goals.map((goal) => {
         if (goal.stripe_required && !props.user_payable) {
@@ -78,8 +80,6 @@ const GoalSelectionStep = ({next, step}) => {
                     value: goal.key
                   }
                 })
-
-                next()
               }}
               className="btn btn-tarco btn-extend btn-flexible margin-around m10 relative servica-goal-btn-size"
               disabled={!goal.enabled}

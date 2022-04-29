@@ -6,7 +6,7 @@ import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
 import { SubmitButton } from "shared/components";
 
-const CompanyInfoStep = ({next, step, lastStep}) => {
+const CompanyInfoStep = ({next, step, lastStep, step_key}) => {
   const { props, dispatch, createService, selected_company, selected_goal } = useGlobalContext()
 
   if (selected_company) {
@@ -14,7 +14,7 @@ const CompanyInfoStep = ({next, step, lastStep}) => {
 
     return (
       <div className="form settings-flow">
-        <ServiceFlowStepIndicator step={step} />
+        <ServiceFlowStepIndicator step={step} step_key={step_key} />
         <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.this_is_company_info")}</h3>
 
         <div className="margin-around">
@@ -48,7 +48,7 @@ const CompanyInfoStep = ({next, step, lastStep}) => {
 
   return (
     <div className="form settings-flow centerize">
-      <ServiceFlowStepIndicator step={step} />
+      <ServiceFlowStepIndicator step={step} step_key={step_key} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_company_info")}</h3>
       {props.companies.map(company => (
         <button
