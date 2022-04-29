@@ -144,7 +144,7 @@ class OnlineService < ApplicationRecord
   has_many :available_customers, through: :available_online_service_customer_relations, source: :customer, class_name: "Customer"
   has_many :chapters
   has_many :lessons, -> { order(chapter_id: :asc, id: :asc) }, through: :chapters
-  has_one :message_template, -> { where(scenario: CustomMessage::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
+  has_one :message_template, -> { where(scenario: ::CustomMessages::Template::ONLINE_SERVICE_MESSAGE_TEMPLATE) }, class_name: "CustomMessage", as: :service
   has_many :episodes
 
   enum goal_type: GOALS.each_with_object({}) {|goal, h| h[goal[:key]] = goal[:key] }

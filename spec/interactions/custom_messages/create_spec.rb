@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe CustomMessages::Create do
   let(:service) { relation.online_service }
   let(:template) { "foo" }
-  let(:scenario) { CustomMessage::ONLINE_SERVICE_PURCHASED }
+  let(:scenario) { CustomMessages::Template::ONLINE_SERVICE_PURCHASED }
   let!(:relation) { FactoryBot.create(:online_service_customer_relation, :free) }
   let(:after_days) { nil }
   let(:args) do

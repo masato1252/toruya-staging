@@ -10,7 +10,7 @@
     title: t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased"),
     path: edit_scenario_lines_user_bot_service_custom_messages_path(
       @online_service,
-      scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
+      scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED,
       right_away: true,
       id: @purchased_message&.id
     )
@@ -20,7 +20,7 @@
     <%= render "lines/user_bot/field_row",
       path: edit_scenario_lines_user_bot_service_custom_messages_path(
         @online_service,
-        scenario: CustomMessage::ONLINE_SERVICE_PURCHASED,
+        scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED,
         id: message.id,
         right_away: !message.after_days),
         title: message.after_days ? t("user_bot.dashboards.settings.custom_message.online_service.after_days", { after_days: message.after_days }) : t("user_bot.dashboards.settings.custom_message.online_service.online_service_purchased")
@@ -29,7 +29,7 @@
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
     <span></span>
-    <%= link_to edit_scenario_lines_user_bot_service_custom_messages_path(@online_service, scenario: CustomMessage::ONLINE_SERVICE_PURCHASED), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
+    <%= link_to edit_scenario_lines_user_bot_service_custom_messages_path(@online_service, scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED), class: "btn btn-yellow btn-circle btn-save btn-tweak btn-with-word" do %>
       <i class="fas fa-plus fa-2x"></i>
       <div class="word"><%= I18n.t("action.add_more") %></div>
     <% end %>
