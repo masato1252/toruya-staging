@@ -44,7 +44,7 @@ const UsersServices = {
         "X-CSRF-Token": Rails.csrfToken()
       },
       url: Routes.lines_user_bot_create_shop_profile_path({format: "json"}),
-      data: _.pick(data, ['zip_code', 'region', 'city', 'street1', 'street2', 'company_name']),
+      data: _.pick(data, ['zip_code', 'region', 'city', 'street1', 'street2', 'company_name', 'company_phone_number']),
       responseType: "json"
     })
   },

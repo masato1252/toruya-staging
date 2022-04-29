@@ -11,6 +11,7 @@ export const UserShopInfo = ({props, finalView}) => {
   const [is_shop_profile_created, setShopProfile] = useState(false)
   const [is_shop_profile_checked, setCheckShopProfile] = useState(false)
   const [company_name, setCompanyName] = useState()
+  const [company_phone_number, setCompanyPhoneNumber] = useState()
   const { page_title, save_btn, successful_message_html } = props.i18n.shop_info;
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export const UserShopInfo = ({props, finalView}) => {
 
 
   const onSubmit = async (data) => {
-    const [error, response] = await UsersServices.createShop({...data, company_name});
+    const [error, response] = await UsersServices.createShop({...data, company_name, company_phone_number});
 
     if (response.status == 200) {
       setShopProfile(true)
@@ -54,6 +55,16 @@ export const UserShopInfo = ({props, finalView}) => {
           <input
             value={company_name || ''}
             onChange={(e) => setCompanyName(e.target.value)}
+            type="text"
+          />
+        </div>
+        <h4>
+          <label>{I18n.t("common.shop_phone_number")}</label>
+        </h4>
+        <div className="field">
+          <input
+            value={company_phone_number || ''}
+            onChange={(e) => setCompanyPhoneNumber(e.target.value)}
             type="text"
           />
         </div>
