@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     scope module: :customers, path: :customers, as: :customers do
       resources :online_service_purchases, only: [:create], param: :slug do
         collection do
-          get "/:slug/new/:payment_type", action: "new", as: :new
+          get "/:slug/new/(:payment_type)", action: "new", as: :new
         end
       end
     end
