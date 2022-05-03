@@ -3,6 +3,7 @@
 class CallbacksController < Devise::OmniauthCallbacksController
   BUSINESS_LOGIN = "business_login"
   TORUYA_USER = "toruya_user"
+  SHOP_OWNER_CUSTOMER_SELF = "shop_owner_customer_self"
 
   include Devise::Controllers::Rememberable
   include UserBotCookies
@@ -69,6 +70,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       outcome = ::SocialCustomers::FromOmniauth.run(
         auth: request.env["omniauth.auth"],
         param: param,
+        who: param["who"] && MessageEncryptor.decrypt(param["who"])
       )
 
       param.delete("bot_prompt")

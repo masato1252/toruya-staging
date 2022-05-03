@@ -2100,7 +2100,8 @@ CREATE TABLE public.social_customers (
     conversation_state integer DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    social_rich_menu_key character varying
+    social_rich_menu_key character varying,
+    is_owner boolean DEFAULT false
 );
 
 
@@ -4828,6 +4829,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220216154732'),
 ('20220223132827'),
 ('20220414131015'),
-('20220418132425');
+('20220418132425'),
+('20220504105105');
 
 

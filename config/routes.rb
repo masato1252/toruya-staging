@@ -13,6 +13,10 @@ Rails.application.routes.draw do
     get :ask_identification_code
     put :update_customer_address
 
+    scope module: :verification, path: :verification, as: :verification do
+      get "/:encrypted_social_service_user_id", action: "show"
+    end
+
     scope module: :customers, path: :customers, as: :customers do
       resources :online_service_purchases, only: [:create], param: :slug do
         collection do

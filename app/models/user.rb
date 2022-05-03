@@ -92,6 +92,7 @@ class User < ApplicationRecord
   has_many :social_accounts
   has_one :social_account, -> { order("id") }
   has_many :social_customers
+  has_one :owner_social_customer, -> { where(is_owner: true) }, class_name: "SocialCustomer"
   has_one :business_application
   has_one :social_user
   has_many :web_push_subscriptions

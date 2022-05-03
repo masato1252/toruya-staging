@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "message_encryptor"
+
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def message_api
     @social_account = current_user.social_account || current_user.social_accounts.new
@@ -24,11 +26,17 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
   def update
     outcome = SocialAccounts::Update.run(user: current_user, attrs: params.permit!.to_h, update_attribute: params[:attribute])
 
-    case params[:attribute]
-    when "login_channel_id", "login_channel_secret"
-      render json: json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+    social_account  = current_user.social_account
+
+    if outcome.valid? && social_account&.line_settings_finished? && (!social_account&.login_api_verified? || !social_account&.message_api_verified?)
+      render json: json_response(outcome, { redirect_to: lines_verification_path(MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)) })
     else
-      render json: json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+      case params[:attribute]
+      when "login_channel_id", "login_channel_secret"
+        render json: json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+      else
+        render json: json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
+      end
     end
   end
 
