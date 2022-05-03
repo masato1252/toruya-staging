@@ -28,8 +28,8 @@ class Lines::CustomersController < ActionController::Base
   end
   helper_method :current_owner
 
-  def current_toruy_social_user
-    @current_toruy_social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
+  def current_toruya_social_user
+    @current_toruya_social_user ||= SocialUser.find_by(social_service_user_id: user_bot_cookies(:social_service_user_id))
   end
-  helper_method :current_toruy_social_user
+  helper_method :current_toruya_social_user
 end
