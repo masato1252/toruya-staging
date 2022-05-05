@@ -50,22 +50,24 @@ class Lines::Actions::IncomingReservations < ActiveInteraction::Base
         message_type: SocialMessage.message_types[:bot]
       )
     else
-      compose(
-        SocialMessages::Create,
-        social_customer: social_customer,
-        content: I18n.t("line.actions.label.incoming_reservations"),
-        readed: true,
-        message_type: SocialMessage.message_types[:bot],
-        send_line: false
-      )
-
-      LineClient.flex(
+      line_response = LineClient.flex(
         social_customer,
         LineMessages::FlexTemplateContainer.carousel_template(
           altText: I18n.t("line.actions.label.incoming_reservations"),
           contents: contents
         )
       )
+
+      if line_response.is_a?(Net::HTTPOK)
+        compose(
+          SocialMessages::Create,
+          social_customer: social_customer,
+          content: I18n.t("line.actions.label.incoming_reservations"),
+          readed: true,
+          message_type: SocialMessage.message_types[:bot],
+          send_line: false
+        )
+      end
     end
   end
 

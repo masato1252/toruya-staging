@@ -40,6 +40,11 @@ class Lines::VerificationController < ActionController::Base
     end
   end
 
+  def current_user
+    @current_user ||= SocialUser.find_by(social_service_user_id: MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))&.user
+  end
+  helper_method :current_user
+
   private
 
   def line_settings_required
@@ -53,9 +58,4 @@ class Lines::VerificationController < ActionController::Base
       return
     end
   end
-
-  def current_user
-    @current_user ||= SocialUser.find_by(social_service_user_id: MessageEncryptor.decrypt(params[:encrypted_social_service_user_id]))&.user
-  end
-  helper_method :current_user
 end
