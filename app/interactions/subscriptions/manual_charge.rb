@@ -65,7 +65,7 @@ module Subscriptions
           }
           charge.save!
 
-          Notifiers::Subscriptions::ChargeSuccessfully.run(receiver: subscription.user, user: subscription.user)
+          Notifiers::Users::Subscriptions::ChargeSuccessfully.run(receiver: subscription.user, user: subscription.user)
         else
           errors.merge!(charge_outcome.errors)
         end

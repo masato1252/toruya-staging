@@ -18,7 +18,7 @@ namespace :subscriptions do
     seven_days_later = Subscription.today.advance(days: 7)
 
     Subscription.charge_required.recurring_chargeable_at(seven_days_later).chargeable(seven_days_later).find_each do |subscription|
-      Notifiers::Subscriptions::ChargeReminder.perform_later(
+      Notifiers::Users::Subscriptions::ChargeReminder.perform_later(
         receiver: subscription.user,
         user: subscription.user,
         subscription: subscription
@@ -44,9 +44,9 @@ namespace :subscriptions do
 
       case before_trial_expired_days
       when 7
-        Notifiers::Reminders::TrialMemberWeekAgoReminder.perform_later(receiver: user, user: user)
+        Notifiers::Users::Reminders::TrialMemberWeekAgoReminder.perform_later(receiver: user, user: user)
       when 1
-        Notifiers::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
+        Notifiers::Users::Reminders::TrialMemberDayAgoReminder.perform_later(receiver: user, user: user)
       end
       sleep(0.01)
     end

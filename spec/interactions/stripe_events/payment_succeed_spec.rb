@@ -21,7 +21,7 @@ RSpec.describe StripeEvents::PaymentSucceed do
 
   describe "#execute" do
     it "creates a completed payment" do
-      allow(Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully).to receive(:run)
+      allow(Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully).to receive(:run)
 
       expect {
         outcome
@@ -35,7 +35,7 @@ RSpec.describe StripeEvents::PaymentSucceed do
         order_id: event.data.object.id,
         state: "completed"
       )
-      expect(Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully).to have_received(:run).with(
+      expect(Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully).to have_received(:run).with(
         receiver: outcome.result.customer,
         customer_payment: outcome.result,
       )

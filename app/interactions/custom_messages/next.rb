@@ -26,7 +26,7 @@ module CustomMessages
       schedule_at = message_product.start_at_for_customer(receiver).advance(days: message.after_days).change(hour: 9)
 
       if schedule_at > Time.current || message.after_days == 0
-        Notifiers::CustomMessages::Send.perform_at(
+        Notifiers::Customers::CustomMessages::Send.perform_at(
           schedule_at: schedule_at,
           custom_message: message,
           receiver: receiver

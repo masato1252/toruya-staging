@@ -9,9 +9,9 @@ class CustomersLimitReminderJob < ApplicationJob
     max_customers_limit = Plan.max_customers_limit(user.subscription.plan.level, user.subscription.rank)
 
     if user.customers.size == max_customers_limit
-      Notifiers::Reminders::ReachCustomersLimit.perform_later(receiver: user, user: user)
+      Notifiers::Users::Reminders::ReachCustomersLimit.perform_later(receiver: user, user: user)
     elsif user.customers.size == max_customers_limit - GAP_TO_LIMIT
-      Notifiers::Reminders::CloseCustomersLimit.perform_later(receiver: user, user: user)
+      Notifiers::Users::Reminders::CloseCustomersLimit.perform_later(receiver: user, user: user)
     end
   end
 end

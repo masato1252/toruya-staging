@@ -34,8 +34,8 @@ module Profiles
         # XXX: The user and social_user was connected, what I want to do is change_rich_menu here
         compose(SocialUsers::Connect, user: user, social_user: social_user, change_rich_menu: true)
         Users::CreateDefaultSettings.run(user: user)
-        Notifiers::MessageForUserCreatedShop.perform_later(receiver: social_user)
-        Notifiers::VideoForUserCreatedShop.perform_later(receiver: social_user)
+        Notifiers::Users::MessageForUserCreatedShop.perform_later(receiver: social_user)
+        Notifiers::Users::VideoForUserCreatedShop.perform_later(receiver: social_user)
       end
     end
 

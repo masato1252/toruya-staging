@@ -10,7 +10,7 @@ module OnlineServices
       customer.write_attribute(:online_service_ids, (customer.read_attribute(:online_service_ids).concat([online_service.id.to_s])).uniq)
       customer.save
 
-      Notifiers::OnlineServices::Purchased.run(receiver: customer, sale_page: sale_page)
+      Notifiers::Customers::OnlineServices::Purchased.run(receiver: customer, sale_page: sale_page)
     end
   end
 end

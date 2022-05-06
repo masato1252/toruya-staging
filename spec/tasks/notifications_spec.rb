@@ -18,7 +18,7 @@ RSpec.describe "rake notifications:pending_tasks" do
     let(:current_time) { Time.use_zone("Tokyo") { Time.zone.local(2021, 8, 4, 8, 0, 1) } }
 
     it "do nothing" do
-      expect(Notifiers::PendingTasksSummary).not_to receive(:perform_later)
+      expect(Notifiers::Users::PendingTasksSummary).not_to receive(:perform_later)
 
       task.execute
     end
@@ -28,7 +28,7 @@ RSpec.describe "rake notifications:pending_tasks" do
     let(:current_time) { Time.zone.local(2018, 6, 19, 7, 59, 59) }
 
     it "sends the jobs to user" do
-      expect(Notifiers::PendingTasksSummary).to receive(:perform_later).once
+      expect(Notifiers::Users::PendingTasksSummary).to receive(:perform_later).once
       task.execute
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe "rake notifications:pending_tasks" do
     let(:current_time) { Time.zone.local(2018, 6, 19, 17, 59, 59) }
 
     it "sends the jobs to user" do
-      expect(Notifiers::PendingTasksSummary).to receive(:perform_later).once
+      expect(Notifiers::Users::PendingTasksSummary).to receive(:perform_later).once
       task.execute
     end
   end

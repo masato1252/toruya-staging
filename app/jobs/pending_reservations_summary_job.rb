@@ -8,7 +8,7 @@ class PendingReservationsSummaryJob < ApplicationJob
     end_time = Time.zone.parse(end_time)
     user = User.find(user_id)
 
-    Notifiers::PendingReservationsSummary.run(
+    Notifiers::Users::PendingReservationsSummary.run(
       receiver: user,
       user: user,
       start_time: start_time,

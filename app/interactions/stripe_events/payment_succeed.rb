@@ -50,7 +50,7 @@ module StripeEvents
         end
 
         if data_object['billing_reason'] == 'subscription_cycle'
-          Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
+          Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
             receiver: customer,
             customer_payment: payment
           )

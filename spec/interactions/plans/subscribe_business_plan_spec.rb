@@ -24,12 +24,12 @@ RSpec.describe Plans::SubscribeBusinessPlan do
 
   xdescribe "#execute" do
     it "creates charge cost 55,000 yen annual plan fee and 8,800 yen registration fee" do
-      allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+      allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
       outcome
 
       subscription.reload
       charge = subscription.user.subscription_charges.find_by(amount_cents: 63_800, amount_currency: "JPY")
-      expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+      expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
       expect(subscription.plan).to eq(plan)
       expect(subscription.user.reload.member_plan).to eq(Plan::BUSINESS_PLAN)
       expect(subscription.next_plan).to be_nil
@@ -54,7 +54,7 @@ RSpec.describe Plans::SubscribeBusinessPlan do
         "residual_value" => Money.zero.format
       })
 
-      expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run)
+      expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run)
     end
 
     context "when user is a referrer" do
@@ -64,7 +64,7 @@ RSpec.describe Plans::SubscribeBusinessPlan do
       before { factory.create_referral(referee: referee, referrer: user, state: :active) }
 
       it "The referee gets 5,500 yen pending payment and referral was canceled" do
-        allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+        allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
         outcome
 
         expect(subscription.user.reload).to be_business_member
@@ -77,7 +77,7 @@ RSpec.describe Plans::SubscribeBusinessPlan do
           "type" => Payment::TYPES[:referral_disconnect]
         })
         expect(user.reference).to be_referrer_canceled
-        expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+        expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
       end
     end
   end

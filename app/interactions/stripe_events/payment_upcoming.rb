@@ -17,7 +17,7 @@ module StripeEvents
         return
       end
 
-      Notifiers::OnlineServices::ChargeReminder.perform_later(
+      Notifiers::Customers::OnlineServices::ChargeReminder.perform_later(
         receiver: relation.customer,
         online_service_customer_relation: relation,
         online_service_customer_price: relation.price_details.first,

@@ -18,7 +18,7 @@ namespace :notifications do
 
     if time_range
       User.where(customer_latest_activity_at: time_range).find_each do |user|
-        Notifiers::PendingTasksSummary.perform_later(receiver: user, start_at: time_range.first.to_s, end_at: time_range.last.to_s)
+        Notifiers::Users::PendingTasksSummary.perform_later(receiver: user, start_at: time_range.first.to_s, end_at: time_range.last.to_s)
       end
 
       SlackClient.send(channel: 'development', text: "[OK] daily notifications task") if Rails.configuration.x.env.production?

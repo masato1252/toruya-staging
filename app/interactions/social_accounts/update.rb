@@ -37,10 +37,10 @@ module SocialAccounts
             SocialAccounts::RichMenus::CustomerReservations.perform_later(social_account: account)
           end
 
-          if account.line_settings_finished? && !account.line_settings_verified?
-            Notifiers::LineSettingsFinished.perform_later(receiver: user.social_user)
-            Notifiers::CardForLineSettingsFinished.perform_later(receiver: user.social_user)
-            Notifiers::VideoForLineSettingsFinished.perform_later(receiver: user.social_user)
+          if account.line_settings_finished?
+            Notifiers::Users::LineSettingsFinished.perform_later(receiver: user.social_user)
+            Notifiers::Users::CardForLineSettingsFinished.perform_later(receiver: user.social_user)
+            Notifiers::Users::VideoForLineSettingsFinished.perform_later(receiver: user.social_user)
           end
 
           account
