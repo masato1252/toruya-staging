@@ -6,6 +6,7 @@ module CustomMessages
     ONLINE_SERVICE_MESSAGE_TEMPLATE = "online_service_message_template"
     BOOKING_PAGE_BOOKED= "booking_page_booked"
     BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
+    USER_SIGN_UP = "user_sign_up"
 
     object :product, class: ApplicationRecord, default: nil
     string :scenario
@@ -17,6 +18,8 @@ module CustomMessages
       return message.content if message
 
       template = case scenario
+                 when USER_SIGN_UP
+                   "Toruya×LINEで顧客とのやり取りはどう変わる？"
                  when BOOKING_PAGE_BOOKED
                    I18n.t("customer.notifications.sms.booking")
                  when BOOKING_PAGE_ONE_DAY_REMINDER
@@ -35,7 +38,7 @@ module CustomMessages
     private
 
     def validate_product_type
-      if !product.nil? && [OnlineService, BookingPage].exclude?(product.class)
+      if product.present? && [OnlineService, BookingPage].exclude?(product.class)
         errors.add(:product, :invalid_type)
       end
     end

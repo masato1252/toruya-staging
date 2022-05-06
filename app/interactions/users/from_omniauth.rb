@@ -28,6 +28,8 @@ module Users
           referral_token && (referee = User.find_by(referral_token: referral_token)) &&
           referee.business_member?
         compose(Referrals::Build, referee: referee, referrer: user)
+        Notifiers::Users::LineUserSignedUp.run(receiver: user)
+        # TODO: Send sequence message
       end
       compose(GoogleOauth::Create, user: user, auth: auth)
       compose(Users::BuildDefaultData, user: user)
@@ -36,6 +38,7 @@ module Users
       if social_service_user_id
         compose(SocialUsers::Connect, user: user, social_user: SocialUser.find_by!(social_service_user_id: social_service_user_id))
       end
+
       user
     end
   end

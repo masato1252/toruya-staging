@@ -20,6 +20,9 @@
 require "translator"
 require "line_client"
 
+# TODO
+# When service is nil, that's toruya's custom message
+
 class CustomMessage < ApplicationRecord
   scope :scenario_of, -> (service, scenario) { where(service: service, scenario: scenario) }
   scope :right_away, -> { where(after_days: nil) }

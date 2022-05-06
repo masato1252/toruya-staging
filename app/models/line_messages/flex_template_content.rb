@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# https://www.notion.so/gardencities/LINE-feature-362b327e785242668716e365f26ae640#836483afcd7a46e5bde2ff1e9e80f35a
 module LineMessages
   class FlexTemplateContent
     def self.content1(title1: ,title2:, body:, action_templates:)
