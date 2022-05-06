@@ -10,7 +10,7 @@
     title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_booked"),
     path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
       @booking_page,
-      scenario: CustomMessage::BOOKING_PAGE_BOOKED,
+      scenario: ::CustomMessages::Template::BOOKING_PAGE_BOOKED,
       right_away: true,
       id: @booked_message&.id
     )
@@ -20,7 +20,7 @@
     title: t("user_bot.dashboards.settings.custom_message.booking_page.booking_page_one_day_reminder"),
     path: edit_scenario_lines_user_bot_booking_page_custom_messages_path(
       @booking_page,
-      scenario: CustomMessage::BOOKING_PAGE_ONE_DAY_REMINDER,
+      scenario: ::CustomMessages::Template::BOOKING_PAGE_ONE_DAY_REMINDER,
       right_away: true,
       id: @one_day_reminder_message&.id
     )

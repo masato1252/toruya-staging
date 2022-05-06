@@ -3,7 +3,7 @@
 class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboardController
   def index
     @online_service = current_user.online_services.find(params[:service_id])
-    scope = CustomMessage.scenario_of(@online_service, CustomMessage::ONLINE_SERVICE_PURCHASED)
+    scope = CustomMessage.scenario_of(@online_service, CustomMessages::Template::ONLINE_SERVICE_PURCHASED)
     @purchased_message = scope.right_away.first
     @sequence_messages = scope.sequence.order("after_days ASC")
   end
@@ -11,7 +11,7 @@ class Lines::UserBot::Services::CustomMessagesController < Lines::UserBotDashboa
   def edit_scenario
     @online_service = current_user.online_services.find(params[:service_id])
     @message = CustomMessage.find_by(service: @online_service, id: params[:id])
-    @template = @message ? @message.content : (params[:right_away] ? CustomMessage.template_of(@online_service, params[:scenario]) : "")
+    @template = @message ? @message.content : (params[:right_away] ? ::CustomMessages::Template.run!(product: @online_service, scenario: params[:scenario]) : "")
   end
 
   def update_scenario
