@@ -20,9 +20,7 @@ const NormalPriceStep = ({step, next, prev, jump, lastStep}) => {
     <div className="form settings-flow centerize">
       <SalesFlowStepIndicator step={step} />
       <h3 className="header centerize line-break-content">
-        {price.price_type === "free" ? (
-          I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price_for_free_service")
-        ) : I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}
+        {I18n.t("user_bot.dashboards.sales.online_service_creation.what_normal_price")}
       </h3>
 
       <NormalPriceEdit

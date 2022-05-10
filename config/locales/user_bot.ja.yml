@@ -483,8 +483,7 @@ ja:
           service_end: 利用終了
           sell_what_price: この販売ページでは、幾らで販売しますか？
           sell_free_price: 無料で提供
-          what_normal_price: 先ほど入力した価格とは別に 通常価格がありますか？
-          what_normal_price_for_free_service: 先ほど設定したサービスに 通常価格はありますか
+          what_normal_price: このサービスに通常価格はありますか？
           normal_price_cost: はい、あります
           normal_price_free: いいえ、ありません
           what_selling_end_at: いつまで販売しますか？
