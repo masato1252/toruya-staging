@@ -27,6 +27,10 @@ const SellingPriceStep = ({step, next, prev}) => {
           value: { price_types: [default_price_type] }
         }
       })
+
+    if (default_price_type == "free") {
+      next()
+    }
   }, [])
 
   return (
