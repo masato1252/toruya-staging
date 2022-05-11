@@ -36,16 +36,23 @@ class SocialAccount < ApplicationRecord
     }
   end
 
+  def line_settings_finished?
+    is_login_available? && bot_data_finished?
+  end
+
+  def line_settings_verified?
+    login_api_verified? && message_api_verified?
+  end
+
   def login_api_verified?
     user.owner_social_customer.present?
   end
 
   def message_api_verified?
-    social_messages.where(social_customer: user.owner_social_customer).where.not(sent_at: nil).bot.exists?
-  end
-
-  def line_settings_finished?
-    is_login_available? && bot_data_finished?
+    social_messages.where(
+      social_customer: user.owner_social_customer,
+      raw_content: user.social_user.social_service_user_id
+    ).customer.exists?
   end
 
   def is_login_available?

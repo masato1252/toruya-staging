@@ -1,4 +1,11 @@
 ja:
+  line_verification:
+    line_login_confirm_title: "LINE連携の確認"
+    line_login_confirm_desc_html: "連携が正しくできているか確認するために<br>LINEでログインしてください。"
+    confirmation_message:
+      title1: Messaging APIテスト
+      title2: あなたのユーザー情報を元に、顧客データを作成しました。「動作テスト」ボタンを押して、Messaging APIの動作テストを行ってください。
+      action: 動作テスト
   toruya_line:
     keywords:
       settings: 設定

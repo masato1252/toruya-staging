@@ -10,32 +10,53 @@ class Lines::VerificationController < ActionController::Base
 
   def show
     @login_api_ready = current_user.social_account&.login_api_verified?
+
+    if @login_api_ready
+      redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
+      return
+    end
+  end
+
+  def message_api_status
+    @login_api_ready = current_user.social_account&.login_api_verified?
+
+    if !@login_api_ready
+      redirect_to lines_verification_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
+      return
+    end
+
     @message_api_ready = current_user.social_account&.message_api_verified?
 
-    if @login_api_ready && !@message_api_ready
+    if !@message_api_ready
       line_response = LineClient.flex(
         current_user.owner_social_customer,
         LineMessages::FlexTemplateContainer.template(
-          altText: 'Customer test message',
+          altText: I18n.t("line_verification.confirmation_message.title1"),
           contents: LineMessages::FlexTemplateContent.content5(
-            title1: 'header1',
-            title2: 'header2',
-            action_templates: [ LineActions::Message.new(text: 'Customer test message', btn: 'primary').template ]
+            title1: I18n.t("line_verification.confirmation_message.title1"),
+            title2: I18n.t("line_verification.confirmation_message.title2"),
+            action_templates: [
+              LineActions::Message.new(
+                label: I18n.t("line_verification.confirmation_message.action"),
+                text: current_user.social_user.social_service_user_id,
+                btn: 'primary'
+              ).template
+            ]
           )
         )
       )
 
+      # send successfully as sign to interify
       if line_response.is_a?(Net::HTTPOK)
         SocialMessages::Create.run(
           social_customer: current_user.owner_social_customer,
-          content: 'Owner test message',
+          content: I18n.t("line_verification.confirmation_message.title1"),
           readed: true,
           message_type: SocialMessage.message_types[:bot],
           send_line: false
         )
-
-        # redirect back to verification page to check message_api again
-        redirect_to lines_verification_path(params[:encrypted_social_service_user_id])
+      elsif line_response.is_a?(Net::BAD_REQUEST)
+        # Send message to Torua user
       end
     end
   end

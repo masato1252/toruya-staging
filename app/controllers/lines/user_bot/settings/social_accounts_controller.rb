@@ -28,15 +28,11 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
 
     social_account  = current_user.social_account
 
-    if outcome.valid? && social_account&.line_settings_finished? && (!social_account&.login_api_verified? || !social_account&.message_api_verified?)
-      render json: json_response(outcome, { redirect_to: lines_verification_path(MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)) })
+    case params[:attribute]
+    when "login_channel_id", "login_channel_secret"
+      render json: json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
     else
-      case params[:attribute]
-      when "login_channel_id", "login_channel_secret"
-        render json: json_response(outcome, { redirect_to: login_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
-      else
-        render json: json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
-      end
+      render json: json_response(outcome, { redirect_to: message_api_lines_user_bot_settings_social_account_path(anchor: params[:attribute]) })
     end
   end
 

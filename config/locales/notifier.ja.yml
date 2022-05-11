@@ -2,8 +2,10 @@ ja:
   notifier:
     created_shop:
       message: "店舗設定が完了しました！\n\n次に管理画面から、LINE公式アカウントの連携設定をしてください。\n\n📝LINE連携マニュアル\n\nhttps://toruya.com/help/line_sync/?openExternalBrowser=1"
-    line_message_api_settings_finished:
-      message: "LINE連携の設定が完了しました！\n\n連携が正しくできた方は、ユーザーメニューからLINEマーケティングを始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や、LINE集客の方法を解説しています。\n\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1\n\n🏫サポートルーム\nToruyaユーザー様のサポート用Facebookグループです。登録申請していただければ、使い方や操作方法などを直接ご質問いただけます。\nhttps://www.facebook.com/groups/toruya?openExternalBrowser=1"
+    line_api_settings_finished:
+      message: "LINE連携の設定が完了しました！\n\n連携が正しくできた方は、ユーザーメニューからLINEマーケティングを始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や、LINE集客の方法を解説しています。\n\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1\n\n🏫サポートルーム\nToruyaユーザー様のサポート用Facebookグループです。登録申請していただければ、使い方や操作方法などを直接ご質問いただけます。\nhttps://www.facebook.com/groups/toruya?openExternalBrowser=1\n\n%{verification_url}"
+    line_api_settings_verified:
+      message: "LINE連携の設定が完了しました！\n\n連携が正しくできた方は、ユーザーメニューからLINEマーケティングを始めましょう。\n\n💡オフィシャルYouTube\nToruyaの使い方や、LINE集客の方法を解説しています。\n\nhttps://www.youtube.com/channel/UCXgU7ZUCDSEQMUp85WeyR0g?openExternalBrowser=1\n\n🏫サポートルーム\nToruyaユーザー様のサポート用Facebookグループです。登録申請していただければ、使い方や操作方法などを直接ご質問いただけます。\nhttps://www.facebook.com/groups/toruya?openExternalBrowser=1\n\n"
     pending_tasks_summary:
       base_message: "%{user_name} 様\n\n確認が必要なデータがございますので、ユーザーメニューよりご確認ください。\n\n"
       pending_customer_message:       "□未対応メッセージ　  %{number}件\n"

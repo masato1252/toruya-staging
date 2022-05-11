@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
     scope module: :verification, path: :verification, as: :verification do
       get "/:encrypted_social_service_user_id", action: "show"
+      get "/message_api_status/:encrypted_social_service_user_id", action: "message_api_status", as: :message_api_status
     end
 
     scope module: :customers, path: :customers, as: :customers do

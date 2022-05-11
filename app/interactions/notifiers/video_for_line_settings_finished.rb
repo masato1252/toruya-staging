@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Notifiers
-  class VideoForLineMessageSettingsFinished < Base
+  class VideoForLineSettingsFinished < Base
     deliver_by :line
 
     def message

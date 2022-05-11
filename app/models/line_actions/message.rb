@@ -18,7 +18,7 @@ module LineActions
       result = {
         "type": "message",
         "label": label || text,
-        "text": label || text,
+        "text": text || label,
       }
 
       if btn
