@@ -55,8 +55,8 @@ class Lines::VerificationController < ActionController::Base
           message_type: SocialMessage.message_types[:bot],
           send_line: false
         )
-      elsif line_response.is_a?(Net::BAD_REQUEST)
-        # Send message to Torua user
+      elsif line_response.is_a?(Net::HTTPBadRequest)
+        Notifiers::Users::LineVerificationMessageFailed.run(receiver: current_user.social_user)
       end
     end
   end

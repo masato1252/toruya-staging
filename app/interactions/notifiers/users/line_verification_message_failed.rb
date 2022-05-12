@@ -2,11 +2,11 @@
 
 module Notifiers
   module Users
-    class LineSettingsFinished < Base
+    class LineVerificationMessageFailed < Base
       deliver_by :line
 
       def message
-        I18n.t("notifier.line_api_settings_finished.message")
+        I18n.t("notifier.line_verification_failed.message")
       end
     end
   end

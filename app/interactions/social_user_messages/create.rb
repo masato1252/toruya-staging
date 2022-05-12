@@ -23,7 +23,7 @@ module SocialUserMessages
     def execute
       message = SocialUserMessage.create(
         social_user: social_user,
-        raw_content: content,
+        raw_content: content_type == FLEX_TYPE ? content["altText"] : content,
         readed_at: readed ? Time.zone.now : nil,
         message_type: message_type,
         schedule_at: schedule_at
