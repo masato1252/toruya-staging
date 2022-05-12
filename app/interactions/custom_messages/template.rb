@@ -7,7 +7,7 @@ module CustomMessages
     BOOKING_PAGE_BOOKED= "booking_page_booked"
     BOOKING_PAGE_ONE_DAY_REMINDER = "booking_page_one_day_reminder"
 
-    object :product, class: ApplicationRecord
+    object :product, class: ApplicationRecord, default: nil
     string :scenario
 
     validate :validate_product_type
@@ -16,25 +16,20 @@ module CustomMessages
       message = CustomMessage.find_by(service: product, scenario: scenario, after_days: nil)
       return message.content if message
 
-      if product.is_a?(BookingPage)
-        template = case scenario
-                   when BOOKING_PAGE_BOOKED
-                     I18n.t("customer.notifications.sms.booking")
-                   when BOOKING_PAGE_ONE_DAY_REMINDER
-                     I18n.t("customer.notifications.sms.reminder")
-                   end
+      template = case scenario
+                 when BOOKING_PAGE_BOOKED
+                   I18n.t("customer.notifications.sms.booking")
+                 when BOOKING_PAGE_ONE_DAY_REMINDER
+                   I18n.t("customer.notifications.sms.reminder")
+                 when ONLINE_SERVICE_PURCHASED
+                   I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
+                 end
 
-        if product.shop.phone_number.present?
-          template = "#{template}#{I18n.t("customer.notifications.sms.change_from_phone_number")}"
-        end
-
-        template
-      elsif product.is_a?(OnlineService)
-        case scenario
-        when ONLINE_SERVICE_PURCHASED
-          I18n.t("notifier.online_service.purchased.#{product.solution_type_for_message}.message")
-        end
+      if product&.is_a?(BookingPage) && product.shop.phone_number.present?
+        template = "#{template}#{I18n.t("customer.notifications.sms.change_from_phone_number")}"
       end
+
+      template
     end
 
     private
