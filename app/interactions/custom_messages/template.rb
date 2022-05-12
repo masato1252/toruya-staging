@@ -35,7 +35,7 @@ module CustomMessages
     private
 
     def validate_product_type
-      if [OnlineService, BookingPage].exclude?(product.class)
+      if !product.nil? && [OnlineService, BookingPage].exclude?(product.class)
         errors.add(:product, :invalid_type)
       end
     end
