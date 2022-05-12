@@ -1,12 +1,13 @@
 <div class="message centerize">
   <% if !@message_api_ready %>
-    We already send the confirmation message to your line customer,
-    You should receive a card message like the below, please click the cofirm button to let us confirm your message api setting is done.
-    <br/ >
-    <br/ >
-    If you didn't please check your message api and line login api should be in the same provider and the linked OA is what you expected. <br />
-    You could get more troubleshoot information from this help link.
+    <h3 class="desc break-line-content"><%= t("line_verification.message_api_confirm_title") %></h3>
+    <div class="text-left">
+      <%= t("line_verification.message_api_confirm_desc_html") %>
+    </div>
   <% else %>
-    Done
+    <h3 class="desc break-line-content"><%= t("line_verification.done_page_title") %></h3>
+    <div class="text-left">
+      <%= t("line_verification.done_page_html") %>
+    </div>
   <% end %>
 </div>
