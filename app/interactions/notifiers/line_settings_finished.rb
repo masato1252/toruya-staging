@@ -7,10 +7,7 @@ module Notifiers
     deliver_by :line
 
     def message
-      I18n.t(
-        "notifier.line_api_settings_finished.message",
-        verification_url: Rails.application.routes.url_helpers.lines_verification_url(MessageEncryptor.encrypt(receiver.social_service_user_id))
-      )
+      I18n.t("notifier.line_api_settings_finished.message")
     end
   end
 end

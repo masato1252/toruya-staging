@@ -8,10 +8,11 @@ module SocialUserMessages
     TEXT_TYPE = "text"
     VIDEO_TYPE = "video"
     IMAGE_TYPE = "image"
-    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE].freeze
+    FLEX_TYPE = "flex"
+    CONTENT_TYPES = [TEXT_TYPE, VIDEO_TYPE, IMAGE_TYPE, FLEX_TYPE].freeze
 
     object :social_user
-    string :content
+    object :content, class: Object # hash or string
     string :content_type, default: TEXT_TYPE
     boolean :readed
     integer :message_type
@@ -42,6 +43,8 @@ module SocialUserMessages
           LineClient.send_video(social_user, content)
         when IMAGE_TYPE
           LineClient.send_image(social_user, content)
+        when FLEX_TYPE
+          LineClient.flex(social_user, content)
         end
       elsif !readed && message_type == SocialUserMessage.message_types[:user]
         message.update(sent_at: Time.current)
@@ -49,36 +52,6 @@ module SocialUserMessages
         case content_type
         when IMAGE_TYPE
           SocialUserMessages::FetchImage.perform_later(social_user_message: message)
-        end
-
-        AdminChannel.broadcast_to(
-          AdminChannel::CHANNEL_NAME,
-          {
-            type: "customer_new_message",
-            data: {
-              customer: SocialUserSerializer.new(social_user).attributes_hash,
-              message: SocialUserMessageSerializer.new(message).attributes_hash
-            }
-          }
-        )
-
-        WebPushSubscription.where(user_id: User.admin.pluck(:id)).each do |subscription|
-          begin
-            WebpushClient.send(
-              subscription: subscription,
-              message: {
-                title: "#{social_user.social_user_name} send a message",
-                body: content,
-                url: Rails.application.routes.url_helpers.admin_chats_url(social_service_user_id: social_user.social_user_id)
-              }
-            )
-          rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
-            Rollbar.error(e)
-
-            subscription.destroy
-          rescue => e
-            Rollbar.error(e)
-          end
         end
       end
 
