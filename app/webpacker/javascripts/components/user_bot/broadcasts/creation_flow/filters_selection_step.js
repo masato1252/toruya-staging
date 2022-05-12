@@ -1,8 +1,6 @@
 "use strict";
 
 import React from "react";
-import Popup from 'reactjs-popup';
-import Routes from 'js-routes.js';
 
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
@@ -14,6 +12,7 @@ const FiltersSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
+      {props.line_settings_verified ? "" : <div className="warning">You don't verified your line settings yet, if this is your first time, we encourage you to finished our line verification flow to make sure all the service works correctly</div>}
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
       <button
         onClick={() => {
