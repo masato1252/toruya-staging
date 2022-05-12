@@ -14,6 +14,19 @@ RSpec.describe ::CustomMessages::Template do
   let(:outcome) { described_class.run(args) }
 
   describe "#execute" do
+    context "when product is nil" do
+      let(:scenario) { described_class::BOOKING_PAGE_BOOKED }
+
+      context "when shop had no phone number" do
+        let(:shop) { FactoryBot.create(:shop, phone_number: nil) }
+        let(:product) { FactoryBot.create(:booking_page, shop: shop) }
+
+        it "returns template without phone number part message" do
+          expect(outcome.result).to eq(I18n.t("customer.notifications.sms.booking"))
+        end
+      end
+    end
+
     context "when product is a booking page" do
       let(:product) { FactoryBot.create(:booking_page) }
       let(:scenario) { described_class::BOOKING_PAGE_BOOKED }
