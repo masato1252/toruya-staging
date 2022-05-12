@@ -15,6 +15,7 @@
 
   <div class="field-header"><%= t("settings.social_account.form.login_channel_secret_title") %></div>
   <%= render "lines/user_bot/field_row", path: edit_lines_user_bot_settings_social_account_path(attribute: :login_channel_secret), title: @social_account.raw_login_channel_secret %>
+  <%= render "lines/user_bot/settings/social_accounts/line_verification", social_account: @social_account %>
 
   <%= render "lines/user_bot/bottom_navigation_bar", klass: "transparent" do %>
     <span></span>
