@@ -72,6 +72,7 @@ class Lines::UserBot::ReservationsController < Lines::UserBotDashboardController
           value: customer&.id,
           address: customer&.address,
           details: reservation_customer.details.to_json,
+          reminderPermission: customer&.reminder_permission,
           booking_price: render_to_string(partial: "reservations/show_modal/booking_price", locals: { reservation_customer: reservation_customer }),
           booking_from: render_to_string(
             partial: "reservations/show_modal/booking_from",
