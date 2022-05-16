@@ -4,6 +4,7 @@
 <% if ability(super_user).can?(:create, BookingPage) && current_user.social_account&.line_settings_finished? %>
   <%= react_component("user_bot/bookings/creation_flow", {
     props: {
+      line_settings_verified: current_user.social_account.line_settings_verified?,
       super_user_id: super_user.id,
       selected_shop: @shop ? CompanyInfoSerializer.new(@shop).attributes_hash : {},
       note: I18n.t("user_bot.dashboards.booking_page_creation.default_note"),

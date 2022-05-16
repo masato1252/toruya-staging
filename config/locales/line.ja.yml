@@ -10,6 +10,7 @@ ja:
       title1: Messaging APIテスト
       title2: あなたのユーザー情報を元に、顧客データを作成しました。「動作テスト」ボタンを押して、Messaging APIの動作テストを行ってください。
       action: 動作テスト
+    unverified_warning_message: LINEメッセージをお客様に送信できるように、LINE連携の動作テストを完了してください。動作テストを完了するまで、この機能が期待どおりに機能するかどうかわかりません。
   toruya_line:
     keywords:
       settings: 設定

@@ -1,5 +1,9 @@
 <div class="form">
   <h3 class="centerize header"><%= I18n.t("user_bot.dashboards.sales.new.what_to_sale") %></h3>
+  <% if !current_user.social_account.line_settings_verified? %>
+    <div class="warning"><%= t("line_verification.unverified_warning_message") %></div>
+  <% end %>
+
   <div class="action-block centerize">
     <%= link_to new_lines_user_bot_sales_booking_page_path, class: "btn btn-tarco btn-extend btn-flexible" do %>
       <i class="fa fa-calendar-alt fa-4x"></i>

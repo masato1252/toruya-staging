@@ -17,6 +17,7 @@ const GoalSelectionStep = ({next, step}) => {
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} step_key="goal_step" />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_goal")}</h3>
+      {props.line_settings_verified ? "" : <div className="warning">{I18n.t("line_verification.unverified_warning_message")}</div>}
       {props.service_goals.map((goal) => {
         if (goal.stripe_required && !props.user_payable) {
           return (

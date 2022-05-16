@@ -12,7 +12,7 @@ const FiltersSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
-      {props.line_settings_verified ? "" : <div className="warning">You don't verified your line settings yet, if this is your first time, we encourage you to finished our line verification flow to make sure all the service works correctly</div>}
+      {props.line_settings_verified ? "" : <div className="warning">{I18n.t("line_verification.unverified_warning_message")}</div>}
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
       <button
         onClick={() => {
