@@ -14,6 +14,8 @@ class Lines::VerificationController < ActionController::Base
     if @login_api_ready
       redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
       return
+    else
+      Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
     end
   end
 
@@ -28,6 +30,8 @@ class Lines::VerificationController < ActionController::Base
     @message_api_ready = current_user.social_account&.message_api_verified?
 
     if !@message_api_ready
+      Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
+
       line_response = LineClient.flex(
         current_user.owner_social_customer,
         LineMessages::FlexTemplateContainer.template(
@@ -56,7 +60,8 @@ class Lines::VerificationController < ActionController::Base
           send_line: false
         )
       elsif line_response.is_a?(Net::HTTPBadRequest)
-        Notifiers::Users::LineVerificationMessageFailed.run(receiver: current_user.social_user)
+        Notifiers::Users::LineSettings::VerifyFailedMessage.run(receiver: current_user.social_user)
+        Notifiers::Users::LineSettings::VerifyFailedVideo.run(receiver: current_user.social_user)
       end
     end
   end

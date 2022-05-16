@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+module Notifiers
+  module Users
+    module LineSettings
+      class VerifiedVideo < Base
+        deliver_by :line
+
+        def message
+          {
+            originalContentUrl: "https://toruya.com/user-bot/userbot_shopsettingdone202205.mp4",
+            previewImageUrl: "https://toruya.com/user-bot/userbot_shopsettingdone202205.png"
+          }.to_json
+        end
+
+        def content_type
+          SocialUserMessages::Create::VIDEO_TYPE
+        end
+      end
+    end
+  end
+end

@@ -43,8 +43,8 @@ module SocialMessages
 
         # Shop owner customer self send a confirmation message to torua shop owner user
         if social_customer.is_owner && content == social_user.social_service_user_id
-          Notifiers::Users::LineSettingsVerified.perform_later(receiver: social_user)
-          Notifiers::Users::VideoForLineSettingsVerified.perform_later(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedMessage.perform_later(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedVideo.perform_later(receiver: social_user)
         end
 
         case content_type
