@@ -1,6 +1,7 @@
 <div class="margin-around centerize">
-  <div>The verification button could help you verify your line setting</div>
-  <%= button_to social_account.line_settings_verified? ? "Line verified" : "Line verification",
+  <div><%= t("user_bot.dashboards.settings.social_account.verification_hint_message") %></div>
+
+  <%= button_to t("action.verify_line"),
     lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
     class: "btn btn-yellow",
     method: :get,

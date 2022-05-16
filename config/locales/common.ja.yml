@@ -69,6 +69,7 @@ ja:
       diagnosis: 登録する
       external: 利用する
       membership: 登録する
+    verify_line: 動作テスト
   common:
     processing: 送信中
     preparing: 準備中です
