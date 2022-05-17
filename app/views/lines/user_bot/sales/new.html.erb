@@ -1,7 +1,14 @@
 <div class="form">
   <h3 class="centerize header"><%= I18n.t("user_bot.dashboards.sales.new.what_to_sale") %></h3>
   <% if !current_user.social_account.line_settings_verified? %>
-    <div class="warning"><%= t("line_verification.unverified_warning_message") %></div>
+    <div class="warning centerize">
+      <%= t("line_verification.unverified_warning_message") %>
+      <%= button_to t("action.verify_line"),
+        lines_verification_path(encrypted_social_service_user_id: MessageEncryptor.encrypt(current_user.social_user.social_service_user_id)),
+        class: "btn btn-yellow",
+        method: :get
+      %>
+    </div>
   <% end %>
 
   <div class="action-block centerize">

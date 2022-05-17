@@ -7,6 +7,7 @@ import Routes from 'js-routes.js';
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import ServiceFlowStepIndicator from "./services_flow_step_indicator";
+import LineVerificationWarning from 'shared/line_verification_warning';
 
 const GoalSelectionStep = ({next, step}) => {
   const { props, dispatch, selected_goal } = useGlobalContext()
@@ -17,7 +18,7 @@ const GoalSelectionStep = ({next, step}) => {
     <div className="form settings-flow centerize">
       <ServiceFlowStepIndicator step={step} step_key="goal_step" />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.online_service_creation.what_is_your_goal")}</h3>
-      {props.line_settings_verified ? "" : <div className="warning">{I18n.t("line_verification.unverified_warning_message")}</div>}
+      <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
       {props.service_goals.map((goal) => {
         if (goal.stripe_required && !props.user_payable) {
           return (
