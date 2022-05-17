@@ -45,7 +45,7 @@ class AdminChannel < ApplicationCable::Channel
 
     social_users = SocialUser
       .includes(:social_user_messages, :memos)
-      .order("social_users.updated_at DESC")
+      .order("social_users.updated_at DESC").limit(10)
 
     _users = social_users.map { |user| SocialUserSerializer.new(user).attributes_hash }
     Rails.logger.debug("===users #{_users.size}")

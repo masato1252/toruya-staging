@@ -40,6 +40,20 @@ export default () => {
     window.location.replace(response.data.redirect_to)
   }
 
+  const handleUnsubscribe = async () => {
+    if (confirm("Are you sure?")) {
+      const [error, response] = await CommonServices.delete({
+        url: Routes.admin_subscription_path({format: "json"}),
+        data: {
+          customer_id: selected_customer.id
+        }
+      })
+
+      alert("Done")
+      window.location.replace(response.data.redirect_to)
+    }
+  }
+
   useEffect(() => {
     setMemo(selected_customer.memo)
   }, [selected_customer.id])
@@ -65,6 +79,45 @@ export default () => {
         handleSubmit={handleSubmit}
         btnWord={I18n.t("action.save")}
       />
+      <ul>
+        <li>
+          {selected_customer.line_settings_finished ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} Line settings finished
+        </li>
+        <li>
+          {selected_customer.login_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>} Line login verified
+        </li>
+        <li>
+          {selected_customer.message_api_verified ? <i className='fa fa-check-circle successful'></i> : <i className='fa fa-times danger'></i>}  Message api verified
+        </li>
+        <li>
+          {selected_customer.member_plan_name}
+        </li>
+        <li>
+          {selected_customer.booking_pages_count} booking pages
+        </li>
+        <li>
+          {selected_customer.online_services_count} online services
+        </li>
+        <li>
+          {selected_customer.sale_pages_count} sales pages
+        </li>
+        <li>
+          {selected_customer.customers_count} customers
+        </li>
+        <li>
+          {selected_customer.reservations_count} reservations
+        </li>
+        <li>
+          next charge at {selected_customer.next_charge_date}
+        </li>
+        <li>
+          <SubmitButton
+            handleSubmit={handleUnsubscribe}
+            btnWord={I18n.t("action.unsubscribe")}
+            disabled={!selected_customer.in_paid_plan}
+          />
+        </li>
+      </ul>
     </>
   )
 }
