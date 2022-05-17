@@ -14,8 +14,6 @@ class Lines::VerificationController < ActionController::Base
     if @login_api_ready
       redirect_to lines_verification_message_api_status_path(encrypted_social_service_user_id: params[:encrypted_social_service_user_id])
       return
-    else
-      Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
     end
   end
 
