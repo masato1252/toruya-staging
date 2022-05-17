@@ -30,6 +30,7 @@ class Lines::VerificationController < ActionController::Base
     @message_api_ready = current_user.social_account&.message_api_verified?
 
     if !@message_api_ready
+      Notifiers::Users::LineSettings::LineLoginVerificationMessage.run(receiver: current_user.social_user)
       Notifiers::Users::LineSettings::LineLoginVerificationVideo.run(receiver: current_user.social_user)
 
       line_response = LineClient.flex(
