@@ -9,12 +9,11 @@ module Templates
     object :social_customer
 
     def execute
-      LineMessages::FlexTemplateContent.content7(
+      LineMessages::FlexTemplateContent.video_description_card(
         picture_url: online_service.picture_url,
         content_url: content_url,
-        title1: online_service.name,
-        label: I18n.t("common.responsible_by"),
-        context: sale_page.staff.name,
+        title: online_service.name,
+        context: "#{I18n.t("common.responsible_by")} #{sale_page.staff.name}",
         action_templates: [
           LineActions::Uri.new(
             label: I18n.t("action.online_service_actions.#{online_service.solution_type_for_message}"),
