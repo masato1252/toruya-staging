@@ -44,7 +44,7 @@ RSpec.describe Subscriptions::RecurringCharge do
       let(:subscription) { FactoryBot.create(:subscription, :premium) }
 
       it "charges user" do
-        allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+        allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
         outcome
 
         subscription.reload
@@ -54,7 +54,7 @@ RSpec.describe Subscriptions::RecurringCharge do
         expect(subscription.next_plan).to be_nil
         expect(subscription.expired_date).to eq(Date.new(2018, 2, 28))
         expect(subscription.user.subscription_charges.last.expired_date).to eq(Date.new(2018, 2, 28))
-        expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+        expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
 
         plan = Plan.premium_level.take
         fee = Plans::Fee.run!(user: user, plan: plan)
@@ -78,8 +78,8 @@ RSpec.describe Subscriptions::RecurringCharge do
         end
 
         it "doesn't change subscription and create failed charge" do
-          expect(Notifiers::Subscriptions::ChargeSuccessfully).not_to receive(:run)
-          expect(Notifiers::Subscriptions::ChargeFailed).to receive(:run)
+          expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).not_to receive(:run)
+          expect(Notifiers::Users::Subscriptions::ChargeFailed).to receive(:run)
 
           expect(outcome).to be_invalid
 
@@ -163,7 +163,7 @@ RSpec.describe Subscriptions::RecurringCharge do
           let(:next_plan) { Plan.child_premium_level.take }
 
           xit "changes subscription to next plan" do
-            allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+            allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
 
             outcome
 
@@ -203,7 +203,7 @@ RSpec.describe Subscriptions::RecurringCharge do
               "type" => Payment::TYPES[:referral_connect]
             })
 
-            expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+            expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
           end
         end
 
@@ -226,7 +226,7 @@ RSpec.describe Subscriptions::RecurringCharge do
           let(:next_plan) { Plan.business_level.take }
 
           it "changes subscription to next plan" do
-            allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+            allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
 
             outcome
 
@@ -266,7 +266,7 @@ RSpec.describe Subscriptions::RecurringCharge do
             })
             expect(referral.reload).to be_referrer_canceled
 
-            expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+            expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
           end
         end
       end

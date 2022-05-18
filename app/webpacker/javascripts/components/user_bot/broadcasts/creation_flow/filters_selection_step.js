@@ -1,12 +1,11 @@
 "use strict";
 
 import React from "react";
-import Popup from 'reactjs-popup';
-import Routes from 'js-routes.js';
 
 import I18n from 'i18n-js/index.js.erb';
 import { useGlobalContext } from "./context/global_state";
 import FlowStepIndicator from "./flow_step_indicator";
+import LineVerificationWarning from 'shared/line_verification_warning';
 
 const FiltersSelectionStep = ({next, step}) => {
   const { props, dispatch } = useGlobalContext()
@@ -14,6 +13,7 @@ const FiltersSelectionStep = ({next, step}) => {
   return (
     <div className="form settings-flow centerize">
       <FlowStepIndicator step={step} />
+      <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
       <h3 className="header centerize">{I18n.t("user_bot.dashboards.broadcast_creation.what_is_your_audiences")}</h3>
       <button
         onClick={() => {

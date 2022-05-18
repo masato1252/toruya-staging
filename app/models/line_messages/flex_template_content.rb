@@ -393,5 +393,18 @@ module LineMessages
         }
       }
     end
+
+    def self.content9(action_templates:)
+      {
+        "type": "bubble",
+        "direction": "ltr",
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "spacing": "md",
+          "contents": action_templates
+        }
+      }
+    end
   end
 end

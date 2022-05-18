@@ -5,6 +5,7 @@
 #
 #  id                      :bigint           not null, primary key
 #  conversation_state      :integer          default("bot")
+#  is_owner                :boolean          default(FALSE)
 #  social_rich_menu_key    :string
 #  social_user_name        :string
 #  social_user_picture_url :string

@@ -24,7 +24,7 @@ module SocialMessages
       is_message_from_customer = message_type == SocialMessage.message_types[:customer] || message_type == SocialMessage.message_types[:customer_reply_bot]
 
       message = SocialMessage.create(
-        social_account: social_customer.social_account,
+        social_account: social_account,
         social_customer: social_customer,
         staff: staff,
         raw_content: content,
@@ -41,41 +41,16 @@ module SocialMessages
         # Switch user rich menu to tell users there are new messages
         ::SocialMessages::HandleUnread.run(social_customer: social_customer, social_message: message)
 
+        # Shop owner customer self send a confirmation message to torua shop owner user
+        if social_customer.is_owner && content == social_user.social_service_user_id
+          Notifiers::Users::LineSettings::VerifiedMessage.perform_later(receiver: social_user)
+          Notifiers::Users::LineSettings::VerifiedVideo.perform_later(receiver: social_user)
+        end
+
         case content_type
         when IMAGE_TYPE
           SocialMessages::FetchImage.perform_later(social_message: message)
         end
-
-        # From normal customer
-        # UserChannel.broadcast_to(
-        #   social_customer.user,
-        #   {
-        #     type: "customer_new_message",
-        #     data: {
-        #       customer: SocialCustomerSerializer.new(social_customer).attributes_hash,
-        #       message: MessageSerializer.new(message).attributes_hash
-        #     }
-        #   }
-        # )
-
-        # WebPushSubscription.where(user_id: social_customer.user.owner_staff_accounts.active.pluck(:user_id)).each do |subscription|
-        #   begin
-        #     WebpushClient.send(
-        #       subscription: subscription,
-        #       message: {
-        #         title: "#{social_customer.social_user_name} send a message",
-        #         body: content,
-        #         url: Rails.application.routes.url_helpers.user_chats_url(social_customer.user, customer_id: social_customer.social_user_id)
-        #       }
-        #     )
-        #   rescue Webpush::InvalidSubscription, Webpush::ExpiredSubscription, Webpush::Unauthorized => e
-        #     Rollbar.error(e)
-        #
-        #     subscription.destroy
-        #   rescue => e
-        #     Rollbar.error(e)
-        #   end
-        # end
       elsif !Rails.env.development? && send_line
         # From staff or bot
         if schedule_at
@@ -86,6 +61,20 @@ module SocialMessages
       end
 
       message
+    end
+
+    private
+
+    def social_account
+      @social_account ||= social_customer.social_account
+    end
+
+    def user
+      @user ||= social_account.user
+    end
+
+    def social_user
+      @social_user ||= user.social_user
     end
   end
 end

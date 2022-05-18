@@ -83,6 +83,7 @@ ja:
         social_account:
           line_developer: LINEデベロッパーズ
           copy_url_btn: コピーURL
+          verification_hint_message: Toruyaの利用を始める前に、LINE連携の動作テストを完了してください。
         rich_menu:
           auto: 自動
           manual: 手動

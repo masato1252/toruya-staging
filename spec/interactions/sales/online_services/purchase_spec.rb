@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+require "line_client"
 
 RSpec.describe Sales::OnlineServices::Purchase do
   before { StripeMock.start }

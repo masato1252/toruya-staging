@@ -63,7 +63,7 @@ module Subscriptions
           errors.add(:plan, :auth_failed)
 
           unless manual
-            Notifiers::Subscriptions::ChargeFailed.run(
+            Notifiers::Users::Subscriptions::ChargeFailed.run(
               receiver: user,
               user: user,
               subscription_charge: charge
@@ -80,7 +80,7 @@ module Subscriptions
           errors.add(:plan, :processor_failed)
 
           unless manual
-            Notifiers::Subscriptions::ChargeFailed.run(
+            Notifiers::Users::Subscriptions::ChargeFailed.run(
               receiver: user,
               user: user,
               subscription_charge: charge

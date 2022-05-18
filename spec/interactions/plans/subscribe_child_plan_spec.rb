@@ -26,13 +26,13 @@ RSpec.describe Plans::SubscribeChildPlan do
 
   xdescribe "#execute" do
     it "creates charge cost 19,800 yen annual plan fee and referee got 1,980 yen bonus" do
-      allow(Notifiers::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
+      allow(Notifiers::Users::Subscriptions::ChargeSuccessfully).to receive(:run).with(receiver: subscription.user, user: subscription.user).and_return(double(deliver_now: true))
       expect(user.reference).to be_pending
       outcome
 
       subscription.reload
       charge = subscription.user.subscription_charges.find_by(amount_cents: 19_800, amount_currency: "JPY")
-      expect(Notifiers::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
+      expect(Notifiers::Users::Subscriptions::ChargeSuccessfully).to have_received(:run).with(receiver: subscription.user, user: subscription.user)
       expect(subscription.plan).to eq(plan)
       expect(subscription.user.reload.member_plan).to eq(Plan::CHILD_BASIC_PLAN)
       expect(subscription.next_plan).to be_nil

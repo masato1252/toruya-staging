@@ -24,7 +24,7 @@ RSpec.describe PendingReservationsSummaryJob do
 
     it "send a pending reservation summary mail" do
       # Pending reservations between today 8:00AM ~ today 7:59PM summary email
-      expect(Notifiers::PendingReservationsSummary).to receive(:run).and_call_original
+      expect(Notifiers::Users::PendingReservationsSummary).to receive(:run).and_call_original
       expect(ReservationMailer).to receive(:pending_summary).with([matched_pending_reservation1, matched_pending_reservation2], user).and_return(double(deliver_now: true))
 
       described_class.perform_now(user.id, time_range.first.to_s, time_range.last.to_s)

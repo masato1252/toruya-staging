@@ -12,7 +12,7 @@ module Sales
       def execute
         relation.price_details.each do |price_details|
           unless relation.customer_payments.where(order_id: price_details.order_id).completed.exists?
-            Notifiers::OnlineServices::ChargeReminder.perform_at(
+            Notifiers::Customers::OnlineServices::ChargeReminder.perform_at(
               schedule_at: price_details.charge_at.advance(days: -REMINDER_DAYS),
               receiver: relation.customer,
               online_service_customer_relation: relation,

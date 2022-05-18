@@ -3,6 +3,9 @@
 import React, { useEffect } from "react";
 import { useGlobalContext } from "context/user_bots/bookings/global_state";
 import BookingFlowStepIndicator from "./booking_flow_step_indicator";
+import I18n from 'i18n-js/index.js.erb';
+
+import LineVerificationWarning from 'shared/line_verification_warning';
 
 const ShopSelectionStep = ({next, step}) => {
   const { selected_shop, props, i18n, dispatch, fetchShopMenus } = useGlobalContext()
@@ -20,6 +23,7 @@ const ShopSelectionStep = ({next, step}) => {
       {selected_shop.id ? (
         <>
           <h3 className="header">{i18n.book_for_this_shop}</h3>
+          <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
           <div className="shop-info">
             <b>{i18n.short_name}</b>
             <p>{selected_shop.short_name}</p>
@@ -46,6 +50,7 @@ const ShopSelectionStep = ({next, step}) => {
       ) : (
         <>
           <h3 className="header">{i18n.book_which_shop}</h3>
+          <LineVerificationWarning line_settings_verified={props.line_settings_verified} line_verification_url={props.line_verification_url} />
           {props.shops.map(shop => (
           <div key={`shop-${shop.id}-btn`}>
             <button

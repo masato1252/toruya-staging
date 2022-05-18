@@ -8,7 +8,7 @@ module Lines
       object :social_customer
 
       def execute
-        LineClient.flex(
+        line_response = LineClient.flex(
           social_customer,
           LineMessages::FlexTemplateContainer.template(
             altText: context[:desc],
@@ -20,13 +20,15 @@ module Lines
           )
         )
 
-        SocialMessages::Create.run!(
-          social_customer: social_customer,
-          content: chatroom_owner_message_content,
-          readed: true,
-          message_type: SocialMessage.message_types[:bot],
-          send_line: false
-        )
+        if line_response.is_a?(Net::HTTPOK)
+          SocialMessages::Create.run(
+            social_customer: social_customer,
+            content: chatroom_owner_message_content,
+            readed: true,
+            message_type: SocialMessage.message_types[:bot],
+            send_line: false
+          )
+        end
       end
 
       private

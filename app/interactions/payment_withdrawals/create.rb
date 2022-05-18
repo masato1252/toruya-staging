@@ -33,7 +33,7 @@ module PaymentWithdrawals
         if withdrawal.valid?
           payments.update_all(payment_withdrawal_id: withdrawal.id)
 
-          Notifiers::WithdrawalMonthlyReport.perform_later(
+          Notifiers::Users::WithdrawalMonthlyReport.perform_later(
             receiver: withdrawal.receiver,
             user: withdrawal.receiver,
             withdrawal: withdrawal

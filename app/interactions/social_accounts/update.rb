@@ -38,8 +38,9 @@ module SocialAccounts
           end
 
           if account.line_settings_finished?
-            Notifiers::MessageForLineMessageSettingsFinished.perform_later(receiver: user.social_user)
-            Notifiers::VideoForLineMessageSettingsFinished.perform_later(receiver: user.social_user)
+            Notifiers::Users::LineSettings::FinishedMessage.perform_later(receiver: user.social_user)
+            Notifiers::Users::LineSettings::FinishedFlex.perform_later(receiver: user.social_user)
+            Notifiers::Users::LineSettings::FinishedVideo.perform_later(receiver: user.social_user)
           end
 
           account

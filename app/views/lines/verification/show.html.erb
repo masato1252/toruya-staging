@@ -1,0 +1,11 @@
+<div class="message centerize">
+  <h3 class="desc break-line-content"><%= t("line_verification.line_login_confirm_title") %></h3>
+  <p class="desc">
+  <%= t("line_verification.line_login_confirm_desc_html") %>
+  </p>
+
+  <a href="<%= line_login_url(current_user.social_account, request.url, who: MessageEncryptor.encrypt(CallbacksController::SHOP_OWNER_CUSTOMER_SELF)) %>" class="btn line-button with-wording with-logo" data-method="post">
+    <%= image_pack_tag "media/assets/booking/btn_login_base.png" %>
+    <%= I18n.t("common.line_login_btn_word") %>
+  </a>
+</div>

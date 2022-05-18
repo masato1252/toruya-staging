@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+require "translator"
+
+module Notifiers
+  module Customers
+    module OnlineServices
+      class Purchased < Base
+        deliver_by :line
+
+        object :sale_page
+
+        validate :receiver_should_be_customer
+
+        def message
+          online_service = sale_page.product
+          template = ::CustomMessages::Template.run!(product: online_service, scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED)
+
+          Translator.perform(template, online_service.message_template_variables(receiver))
+        end
+
+        def execute
+          # XXX: Send message
+          super
+
+          if custom_message = CustomMessage.scenario_of(sale_page.product, ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED).right_away.first
+            custom_message.with_lock do
+              custom_message.update(receiver_ids: custom_message.receiver_ids.push(receiver.id).uniq)
+            end
+          end
+
+          ::CustomMessages::Next.run(
+            product: sale_page.product,
+            scenario: ::CustomMessages::Template::ONLINE_SERVICE_PURCHASED,
+            receiver: receiver
+          )
+        end
+      end
+    end
+  end
+end

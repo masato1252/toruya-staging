@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "message_encryptor"
+
 class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboardController
   def message_api
     @social_account = current_user.social_account || current_user.social_accounts.new
@@ -23,6 +25,8 @@ class Lines::UserBot::Settings::SocialAccountsController < Lines::UserBotDashboa
 
   def update
     outcome = SocialAccounts::Update.run(user: current_user, attrs: params.permit!.to_h, update_attribute: params[:attribute])
+
+    social_account  = current_user.social_account
 
     case params[:attribute]
     when "login_channel_id", "login_channel_secret"

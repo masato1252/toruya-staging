@@ -44,12 +44,12 @@ module StripeEvents
     private
 
     def failed_charge_notification(payment)
-      Notifiers::CustomerPayments::ChargeFailedToOwner.run(
+      Notifiers::Users::CustomerPayments::ChargeFailedToOwner.run(
         receiver: payment.product.customer.user,
         customer_payment: payment
       )
 
-      Notifiers::CustomerPayments::ChargeFailedToCustomer.run(
+      Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer.run(
         receiver: payment.product.customer,
         customer_payment: payment
       )

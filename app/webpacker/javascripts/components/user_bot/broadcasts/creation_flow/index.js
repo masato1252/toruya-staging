@@ -1,7 +1,7 @@
 import React from "react";
 
 import FlowController from "shared/flow_controller";
-import { GlobalProvider, GlobalContext } from "./context/global_state"
+import { GlobalProvider } from "./context/global_state"
 
 import FiltersSelectionStep from "./filters_selection_step"
 import FroductSelectionStep from "./product_selection_step"

@@ -18,8 +18,8 @@ RSpec.describe StripeEvents::PaymentFailed do
 
   describe "#execute" do
     it "creates a failed payment" do
-      allow(Notifiers::CustomerPayments::ChargeFailedToOwner).to receive(:run)
-      allow(Notifiers::CustomerPayments::ChargeFailedToCustomer).to receive(:run)
+      allow(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to receive(:run)
+      allow(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to receive(:run)
 
       expect {
         outcome
@@ -34,12 +34,12 @@ RSpec.describe StripeEvents::PaymentFailed do
         state: "processor_failed"
       )
 
-      expect(Notifiers::CustomerPayments::ChargeFailedToOwner).to have_received(:run).with(
+      expect(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to have_received(:run).with(
         receiver: customer.user,
         customer_payment: CustomerPayment.processor_failed.last
       )
 
-      expect(Notifiers::CustomerPayments::ChargeFailedToCustomer).to have_received(:run).with(
+      expect(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to have_received(:run).with(
         receiver: customer,
         customer_payment: CustomerPayment.processor_failed.last
       )

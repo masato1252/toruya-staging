@@ -105,11 +105,11 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
 
     context "when it is not first time charge" do
       it "notifies customer when they where charged successfully" do
-        allow(Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully).to receive(:run)
+        allow(Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully).to receive(:run)
 
         outcome
 
-        expect(Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully).to have_received(:run).with(
+        expect(Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully).to have_received(:run).with(
           receiver: customer,
           customer_payment: CustomerPayment.completed.last
         )
@@ -137,20 +137,20 @@ RSpec.describe CustomerPayments::PurchaseOnlineService do
         let(:manual) { false }
 
         it "notifies owner" do
-          allow(Notifiers::CustomerPayments::ChargeFailedToOwner).to receive(:run)
+          allow(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to receive(:run)
 
           outcome
-          expect(Notifiers::CustomerPayments::ChargeFailedToOwner).to have_received(:run).with(
+          expect(Notifiers::Users::CustomerPayments::ChargeFailedToOwner).to have_received(:run).with(
             receiver: customer.user,
             customer_payment: CustomerPayment.auth_failed.last
           )
         end
 
         it "notifies customer" do
-          allow(Notifiers::CustomerPayments::ChargeFailedToCustomer).to receive(:run)
+          allow(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to receive(:run)
 
           outcome
-          expect(Notifiers::CustomerPayments::ChargeFailedToCustomer).to have_received(:run).with(
+          expect(Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer).to have_received(:run).with(
             receiver: customer,
             customer_payment: CustomerPayment.auth_failed.last
           )

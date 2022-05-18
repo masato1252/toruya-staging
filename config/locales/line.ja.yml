@@ -1,4 +1,17 @@
 ja:
+  line_verification:
+    line_login_confirm_title: "LINE連携の確認"
+    line_login_confirm_desc_html: "連携が正しくできているか確認するために<br>LINEでログインしてください。"
+    message_api_confirm_title: "メッセージは届きましたか？"
+    message_api_confirm_desc_html: "<p>Toruyaと連携したLINE公式アカウントにお友だち登録して、Toruya上にあなた自身の顧客情報が作られました。</p><p>LINEログイン設定が正しければ、連携したLINE公式アカウントに、Toruyaから以下の様なメッセージが届いています。</p><iframe src='https://player.vimeo.com/video/710582368?h=577d1f0941' frameborder='0' allow='autoplay; fullscreen' allowfullscreen></iframe><p>もしメッセージが届かない場合は、LINEデベロッパーズ側の設定が間違っている可能性が高いです。</p><p>✅LINEログインは、Messaging APIと同じプロバイダ上にありますか？<br>✅LINEログインの「リンクされたボット」に表示されている「＠」から始まる文字が、Toruyaと連携したMessaging APIのベーシックIDと同じですか？</p><p>LINEデベロッパーズで設定し直せたら、Toruyaの設定画面から「動作テスト」ボタンをクリックして、もう一度テストし直してください。</p>"
+    done_page_title: LINE連携が確認できました
+    done_page_html: "<p>LINE連携は、正しくできていると思われます。</p><p>ただ、今回の確認作業でも回避できない問題が発生する可能性があります。</p><p>問題がある場合は、Toruya公式LINEより、サポートにお問い合わせください。</p>"
+    confirmation_message:
+      title1: Messaging APIテスト
+      title2: あなたのユーザー情報を元に、顧客データを作成しました。「動作テスト」ボタンを押して、Messaging APIの動作テストを行ってください。
+      action: 動作テスト
+    unverified_warning_message: LINEメッセージをお客様に送信できるように、LINE連携の動作テストを完了してください。動作テストを完了するまで、この機能が期待どおりに機能するかどうかわかりません。
+    message_api_notification_message: "Toruyaと連携したLINE公式アカウントにお友だち登録して、Toruya上にあなた自身の顧客情報が作られました。\n\nLINEログイン設定が正しければ、連携したLINE公式アカウントに、Toruyaから以下の様なメッセージが届いています。"
   toruya_line:
     keywords:
       settings: 設定

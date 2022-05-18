@@ -56,7 +56,7 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
       end
 
       unless first_time_charge
-        Notifiers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
+        Notifiers::Customers::CustomerPayments::NotFirstTimeChargeSuccessfully.run(
           receiver: customer,
           customer_payment: payment
         )
@@ -93,12 +93,12 @@ class CustomerPayments::PurchaseOnlineService < ActiveInteraction::Base
 
   def failed_charge_notification(payment)
     unless manual
-      Notifiers::CustomerPayments::ChargeFailedToOwner.run(
+      Notifiers::Users::CustomerPayments::ChargeFailedToOwner.run(
         receiver: customer.user,
         customer_payment: payment
       )
 
-      Notifiers::CustomerPayments::ChargeFailedToCustomer.run(
+      Notifiers::Customers::CustomerPayments::ChargeFailedToCustomer.run(
         receiver: customer,
         customer_payment: payment
       )

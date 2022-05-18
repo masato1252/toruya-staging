@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     get :ask_identification_code
     put :update_customer_address
 
+    scope module: :verification, path: :verification, as: :verification do
+      get "/:encrypted_social_service_user_id", action: "show"
+      get "/message_api_status/:encrypted_social_service_user_id", action: "message_api_status", as: :message_api_status
+    end
+
     scope module: :customers, path: :customers, as: :customers do
       resources :online_service_purchases, only: [:create], param: :slug do
         collection do
@@ -522,6 +527,7 @@ Rails.application.routes.draw do
       get "as_user"
       get "/", to: "dashboards#index"
 
+      resource :subscription, only: [:destroy]
       resources :chats, only: [:index, :create, :destroy]
       resource :memo, only: [:create]
       resources :business_applications, only: [:index] do
