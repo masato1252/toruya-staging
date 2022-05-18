@@ -30,7 +30,6 @@ module Users
         compose(Referrals::Build, referee: referee, referrer: user)
       end
 
-      Notifiers::Users::UserSignedUp.run(receiver: user) if user.new_record?
       compose(GoogleOauth::Create, user: user, auth: auth)
       compose(Users::BuildDefaultData, user: user)
       user.save!

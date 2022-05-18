@@ -11,5 +11,9 @@ FactoryBot.define do
       service { nil }
       scenario { ::CustomMessages::Users::Template::USER_SIGN_UP }
     end
+
+    trait :flex do
+      content_type { CustomMessage::FLEX_TYPE }
+    end
   end
 end

@@ -49,5 +49,34 @@ RSpec.describe Notifiers::Users::CustomMessages::Send do
         expect(custom_message.receiver_ids).to eq([receiver.id.to_s])
       end
     end
+
+    context "custom message is flex type" do
+      let(:custom_message) do
+        FactoryBot.create(
+          :custom_message,
+          :user_signed_up_scenario,
+          :flex,
+          flex_template: "video_description_card",
+          content: {
+            title: "title",
+            picture_url: "picture_url",
+            content_url: "content_url",
+            context: "context"
+          }.to_json
+        )
+      end
+
+      it "sends flex message" do
+        expect(LineClient).to receive(:flex)
+        expect {
+          outcome
+        }.to change {
+          SocialUserMessage.where(
+            social_user: receiver.social_user,
+            raw_content: "title"
+          ).count
+        }.by(1)
+      end
+    end
   end
 end
