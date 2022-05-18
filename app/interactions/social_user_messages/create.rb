@@ -19,6 +19,7 @@ module SocialUserMessages
     time :schedule_at, default: nil
 
     validates :content_type, presence: true, inclusion: { in: CONTENT_TYPES }
+    validates :content, presence: true
 
     def execute
       message = SocialUserMessage.create(
